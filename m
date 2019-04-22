@@ -2,102 +2,381 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FFCC282E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 05:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B1AC282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 05:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF1C20811
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 05:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31CB320859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 05:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfDVFOC (ORCPT
+        id S1726599AbfDVFbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 01:14:02 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55359 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfDVFOB (ORCPT
+        Mon, 22 Apr 2019 01:31:37 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:5831 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726211AbfDVFbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 01:14:01 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1hIRH7-0007F6-09; Mon, 22 Apr 2019 07:13:53 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1hIRH3-0004YP-Vg; Mon, 22 Apr 2019 07:13:49 +0200
-Date:   Mon, 22 Apr 2019 07:13:49 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     David Miller <davem@davemloft.net>
-Cc:     paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org,
-        robh+dt@kernel.org, jcliburn@gmail.com, chris.snook@gmail.com,
-        mark.rutland@arm.com, kernel@pengutronix.de,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, john@phrozen.org, nbd@nbd.name,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] net: ethernet: add ag71xx driver
-Message-ID: <20190422051349.67awwpyat5sjbd7j@pengutronix.de>
-References: <20190418052620.20835-1-o.rempel@pengutronix.de>
- <20190418052620.20835-4-o.rempel@pengutronix.de>
- <20190419.143519.94034508850689697.davem@davemloft.net>
+        Mon, 22 Apr 2019 01:31:36 -0400
+X-UUID: 44736677494640a499f85a382be85b93-20190422
+X-UUID: 44736677494640a499f85a382be85b93-20190422
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1398404416; Mon, 22 Apr 2019 13:31:06 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 22 Apr 2019 13:31:04 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 22 Apr 2019 13:31:04 +0800
+Message-ID: <1555911064.26524.14.camel@mtksdaap41>
+Subject: Re: [PATCH v4 08/12] soc: mediatek: cmdq: add packet encoder
+ function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Date:   Mon, 22 Apr 2019 13:31:04 +0800
+In-Reply-To: <20190415125833.38704-9-bibby.hsieh@mediatek.com>
+References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+         <20190415125833.38704-9-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190419.143519.94034508850689697.davem@davemloft.net>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:12:35 up 93 days,  9:54, 71 users,  load average: 0.01, 0.02,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: AB15B137B71F4061418FACF8B73442B323286AFF44814BFDDC2DC95D6CF009C32000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi, Bibby:
 
-On Fri, Apr 19, 2019 at 02:35:19PM -0700, David Miller wrote:
-> From: Oleksij Rempel <o.rempel@pengutronix.de>
-> Date: Thu, 18 Apr 2019 07:26:20 +0200
+On Mon, 2019-04-15 at 20:58 +0800, Bibby Hsieh wrote:
+> Implement a function can encode the GCE instructions
 > 
-> > +static int ag71xx_remove(struct platform_device *pdev)
-> > +{
-> > +	struct net_device *ndev = platform_get_drvdata(pdev);
-> > +	struct ag71xx *ag;
-> > +
-> > +	if (!ndev)
-> > +		return 0;
-> > +
-> > +	ag = netdev_priv(ndev);
-> > +	ag71xx_phy_disconnect(ag);
-> > +	ag71xx_mdio_remove(ag);
-> > +	unregister_netdev(ndev);
-> > +	platform_set_drvdata(pdev, NULL);
-> > +
-> > +	return 0;
-> > +}
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 125 ++++++++++++++++-------
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+>  include/linux/soc/mediatek/mtk-cmdq.h    |  14 +--
+>  3 files changed, 99 insertions(+), 42 deletions(-)
 > 
-> You should unregister the netdev before you disconnect the PHY and remove
-> the MDIO.
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index ff9fef5a032b..d3873ab21db3 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -9,11 +9,43 @@
+>  #include <linux/mailbox_controller.h>
+>  #include <linux/soc/mediatek/mtk-cmdq.h>
+>  
+> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
+> +#define CMDQ_GET_ARG_B(arg)	(((arg) & GENMASK(31, 16)) >> 16)
+> +#define CMDQ_GET_ARG_C(arg)	((arg) & GENMASK(15, 0))
+>  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+>  #define CMDQ_EOC_IRQ_EN		BIT(0)
+>  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+>  				<< 32 | CMDQ_EOC_IRQ_EN)
+> +#define CMDQ_IMMEDIATE_VALUE	0
+> +#define CMDQ_REG_TYPE		1
+> +
+> +struct cmdq_instruction {
+> +	s16 arg_c:16;
+> +	s16 arg_b:16;
+> +	s16 arg_a:16;
+> +	u8 s_op:5;
+> +	u8 arg_c_type:1;
+> +	u8 arg_b_type:1;
+> +	u8 arg_a_type:1;
+> +	u8 op:8;
+> +};
+> +
+> +static void cmdq_pkt_instr_encoder(struct cmdq_pkt *pkt, s16 arg_c, s16 arg_b,
+> +				   s16 arg_a, u8 s_op, u8 arg_c_type,
+> +				   u8 arg_b_type, u8 arg_a_type, u8 op)
+> +{
+> +	struct cmdq_instruction *cmdq_inst;
+> +
+> +	cmdq_inst = pkt->va_base + pkt->cmd_buf_size;
+> +	cmdq_inst->op = op;
+> +	cmdq_inst->arg_a_type = arg_a_type;
+> +	cmdq_inst->arg_b_type = arg_b_type;
+> +	cmdq_inst->arg_c_type = arg_c_type;
+> +	cmdq_inst->s_op = s_op;
+> +	cmdq_inst->arg_a = arg_a;
+> +	cmdq_inst->arg_b = arg_b;
+> +	cmdq_inst->arg_c = arg_c;
+> +	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+> +}
+>  
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+> @@ -110,10 +142,11 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_destroy);
+>  
+> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+> -				   u32 arg_a, u32 arg_b)
+> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, s16 arg_c, s16 arg_b,
+> +				   s16 arg_a, u8 s_op, u8 arg_c_type,
+> +				   u8 arg_b_type, u8 arg_a_type,
+> +				   enum cmdq_code code)
+>  {
+> -	u64 *cmd_ptr;
+>  
+>  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+>  		/*
+> @@ -129,65 +162,72 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  			__func__, (u32)pkt->buf_size);
+>  		return -ENOMEM;
+>  	}
+> -	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
+> -	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+> +	cmdq_pkt_instr_encoder(pkt, arg_c, arg_b, arg_a, s_op, arg_c_type,
+> +			       arg_b_type, arg_a_type, code);
+>  
+>  	return 0;
+>  }
+>  
+> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
+> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+>  {
+> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+> -		    (subsys << CMDQ_SUBSYS_SHIFT);
+> -
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
+> +	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
+> +				       CMDQ_GET_ARG_B(value), offset, subsys,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE, CMDQ_CODE_WRITE);
 
-ok.
+I do not understand why you invent a encoder function. It neither reduce
+the code size, nor make code easier for reading. If for easier reading,
+I suggest this way:
 
-> Also you need to call free_netdev() afterwards otherwise you will leak it.
+struct cmdq_instruction {
+	union {
+		struct {
+			u32 value;
+			u16 offset;
+			u8 subsys;
+		};
 
-ndev is allocated with devm_alloc_etherdev(). Are you sure free_netdev()
-should be used here?
+		struct {
+			...
+		};
+	};
+	u8 op;
+};
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+struct cmdq_instruction *inst;
+
+inst = cmdq_pkt_append_command(pkt);
+if (!inst)
+	return -ENOMEM;
+
+inst->op = CMDQ_CODE_WRITE;
+inst->subsys = subsys;
+inst->offset = offset;
+inst->value = value;
+
+Regards,
+CK
+
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write);
+>  
+> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+> -			u32 subsys, u32 offset, u32 mask)
+> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
+> +			u32 value, u32 mask)
+>  {
+>  	u32 offset_mask = offset;
+>  	int err = 0;
+>  
+>  	if (mask != 0xffffffff) {
+> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
+> +		err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(~mask),
+> +					      CMDQ_GET_ARG_B(~mask),
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_CODE_MASK);
+>  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+>  	}
+> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+> +	err |= cmdq_pkt_write(pkt, subsys, offset_mask, value);
+>  
+>  	return err;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write_mask);
+>  
+> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
+> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+>  {
+> -	u32 arg_b;
+> -
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * WFE arg_b
+> -	 * bit 0-11: wait value
+> -	 * bit 15: 1 - wait, 0 - no wait
+> -	 * bit 16-27: update value
+> -	 * bit 31: 1 - update, 0 - no update
+> -	 */
+> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
+> -
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
+> +	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(CMDQ_WFE_OPTION),
+> +				       CMDQ_GET_ARG_B(CMDQ_WFE_OPTION), event,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_CODE_WFE);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_wfe);
+>  
+> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
+> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  {
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+> -				       CMDQ_WFE_UPDATE);
+> +	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(CMDQ_WFE_UPDATE),
+> +				       CMDQ_GET_ARG_B(CMDQ_WFE_UPDATE), event,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_CODE_WFE);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+> @@ -196,10 +236,25 @@ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  	int err;
+>  
+>  	/* insert EOC and generate IRQ for each command iteration */
+> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> -
+> +	err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(CMDQ_EOC_IRQ_EN),
+> +				      CMDQ_GET_ARG_B(CMDQ_EOC_IRQ_EN),
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_CODE_EOC);
+> +	if (err < 0)
+> +		return err;
+>  	/* JUMP to end */
+> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> +	err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(CMDQ_JUMP_PASS),
+> +				      CMDQ_GET_ARG_B(CMDQ_JUMP_PASS),
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_IMMEDIATE_VALUE,
+> +				      CMDQ_CODE_JUMP);
+>  
+>  	return err;
+>  }
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index 911475da7a53..f21801d32a3a 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -19,6 +19,8 @@
+>  #define CMDQ_WFE_UPDATE			BIT(31)
+>  #define CMDQ_WFE_WAIT			BIT(15)
+>  #define CMDQ_WFE_WAIT_VALUE		0x1
+> +#define CMDQ_WFE_OPTION                 (CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
+> +					CMDQ_WFE_WAIT_VALUE)
+>  /** cmdq event maximum */
+>  #define CMDQ_MAX_EVENT			0x3ff
+>  
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 4e8899972db4..52f69c8db8de 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -60,26 +60,26 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
+>  /**
+>   * cmdq_pkt_write() - append write command to the CMDQ packet
+>   * @pkt:	the CMDQ packet
+> - * @value:	the specified target register value
+>   * @subsys:	the CMDQ sub system code
+>   * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset);
+> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value);
+>  
+>  /**
+>   * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
+>   * @pkt:	the CMDQ packet
+> - * @value:	the specified target register value
+>   * @subsys:	the CMDQ sub system code
+>   * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+>   * @mask:	the specified target register mask
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+> -			u32 subsys, u32 offset, u32 mask);
+> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
+> +			u32 value, u32 mask);
+>  
+>  /**
+>   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
+> @@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+>  
+>  /**
+>   * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
+> @@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
+>   *
+>   * Return: 0 for success; else the error code is returned
+>   */
+> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
+> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+>  
+>  /**
+>   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+
+
