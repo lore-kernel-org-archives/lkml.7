@@ -4,58 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00988C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E900C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3E52087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5728520652
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940217;
-	bh=qKGkZy0wckgbd8u0jxZj2/BOAOwYeccxNRctW54KYtQ=;
+	s=default; t=1555940222;
+	bh=LoVqz2u+tDPoHf7CsSOPxAaFDLJvwzeTnB46wBQcGwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eRJ20ZHB1R2s8AmTHvkMN5+v1EJtuSsT+Xbj/Qh8eYhjSj3m02GBLwC1k+/1Gk6pz
-	 1nTGhVr6FINh52RPrMbosKjzcV2b3JkgY1nH10WgTYrfzfXEIWhXAPaV77gdoVQGmY
-	 i5zZGSuPjRPUjCZPe5PgzHioae9uGlFMtgZhUhqY=
+	b=anX+N8Bsp/5Sw5nkyajm3GmqK9OQecL7E8v0h4JQ7q9pqWPJ4mZiod6Vel0CuCSur
+	 YtZcjPP3whvAENybzX/hGe0J8wYPNBBb9pshVNkra/0OA/1KYuBBG89J/d9sC+ST5C
+	 rwArqaJQPFYFhZ+vqHB9G4UVJYQKARhPzPwIwRBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbfDVNgq (ORCPT
+        id S1727879AbfDVNgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:36:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36838 "EHLO
+        Mon, 22 Apr 2019 09:36:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36818 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbfDVN2O (ORCPT
+        with ESMTP id S1727383AbfDVN2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:28:14 -0400
+        Mon, 22 Apr 2019 09:28:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hlM64J+ST8GRbucxLotQuBavmDhT3Ciw0I0bthGxh70=; b=rHvm7aCoH+VU5m179Ru4TZ5JJR
-        PB916wps82ZNzDQemjFRDgm0JgDPprbtsLTmPgYE567zcD/AobFiBbhhWbZ1OFnUCTv1Vjv7HCDnr
-        nC19bOJtYfmG+rBhHuV5b/eeOApCgV3hPB+/8JThrmBNiFOrY9RXxhN/17aW1Bh5aFF6mt1oN9/XG
-        vARUtVys+LtEmTuy52lykakzEyG0HMi3q8tPpgf7C4OneY7VU9En4p/5mx+x3vFcGC/NXJFHAik8m
-        JMQwmD0BMjYxki9hkgFsulJ/UPVHCydSSba8OwBAVdvPLIyjU13H0UUhTbhnc4zbXe7wF+ZqPFJyp
-        3O7tu+EA==;
+        bh=Jbr16GxxuI4esPCa35I0iAJnnS2drYlse62rH5Aj288=; b=t6Ziv8DkWDFr6QehmDnZiSvtP9
+        5QKSvQJ9RNWRAdxx5gWK9YGtpjupt4azJvqLFzZmqq0m/YA8maP8o8PKrxWcmOa3m1DrdOCQFzisP
+        qnppNeQvCpSBYfZqo3U0Jg4ySi2nuD+Vl01mewmLiH1HqUTvyVNTWyJPaUQ5kJqdnkUdoEQCk6G3y
+        mJoz68cc6EWJJehbyX9MTaisPIoytTJwkz3QdNn5cH1YMOkK/v3XaedeNLHSUWXP53qxUz2aB3kPg
+        6kJYz65S/+DcaXGLakHjoObXTtP+Qgo8T9KSCQPQ1h0NYwoBvy3Bks5+Qxe00Mo3GOpJk0SDbdgTU
+        d4y61QPg==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzV-0005Hm-3M; Mon, 22 Apr 2019 13:28:13 +0000
+        id 1hIYzU-0005HU-Ii; Mon, 22 Apr 2019 13:28:12 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzS-0005lA-TW; Mon, 22 Apr 2019 10:28:10 -0300
+        id 1hIYzS-0005jh-B7; Mon, 22 Apr 2019 10:28:10 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>
-Subject: [PATCH v2 22/79] docs: mic: convert docs to ReST and rename to *.rst
-Date:   Mon, 22 Apr 2019 10:27:11 -0300
-Message-Id: <c9342b7180ecd0b170758b02cc78012c757f7cf3.1555938376.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 04/79] docs: aoe: convert docs to ReST and rename to *.rst
+Date:   Mon, 22 Apr 2019 10:26:53 -0300
+Message-Id: <35035d4d07997776805a483b03a2af96f9d7c754.1555938375.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -66,41 +63,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Intel Many Integrated Core architecture docs to ReST.
+There are only two files within Documentation/aoe dir that are
+documentation. The remaining ones are examples and shell
+scripts.
 
-The conversion is trivial: just add title and literal block
-markups, and adjust some identation.
+Convert the two AoE files to ReST format, and add the others
+as literal, as they're part of the documentation.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/mic/index.rst                   | 18 ++++++
- .../{mic_overview.txt => mic_overview.rst}    |  6 +-
- .../{scif_overview.txt => scif_overview.rst}  | 58 +++++++++++--------
- 3 files changed, 57 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/mic/index.rst
- rename Documentation/mic/{mic_overview.txt => mic_overview.rst} (96%)
- rename Documentation/mic/{scif_overview.txt => scif_overview.rst} (76%)
+ Documentation/aoe/{aoe.txt => aoe.rst}   | 63 +++++++++++++-----------
+ Documentation/aoe/examples.rst           | 23 +++++++++
+ Documentation/aoe/index.rst              | 19 +++++++
+ Documentation/aoe/{todo.txt => todo.rst} |  3 ++
+ Documentation/aoe/udev.txt               |  2 +-
+ 5 files changed, 81 insertions(+), 29 deletions(-)
+ rename Documentation/aoe/{aoe.txt => aoe.rst} (79%)
+ create mode 100644 Documentation/aoe/examples.rst
+ create mode 100644 Documentation/aoe/index.rst
+ rename Documentation/aoe/{todo.txt => todo.rst} (98%)
 
-diff --git a/Documentation/mic/index.rst b/Documentation/mic/index.rst
+diff --git a/Documentation/aoe/aoe.txt b/Documentation/aoe/aoe.rst
+similarity index 79%
+rename from Documentation/aoe/aoe.txt
+rename to Documentation/aoe/aoe.rst
+index c71487d399d1..58747ecec71d 100644
+--- a/Documentation/aoe/aoe.txt
++++ b/Documentation/aoe/aoe.rst
+@@ -1,3 +1,6 @@
++Introduction
++============
++
+ ATA over Ethernet is a network protocol that provides simple access to
+ block storage on the LAN.
+ 
+@@ -22,7 +25,8 @@ document the use of the driver and are not necessary if you install
+ the aoetools.
+ 
+ 
+-CREATING DEVICE NODES
++Creating Device Nodes
++=====================
+ 
+   Users of udev should find the block device nodes created
+   automatically, but to create all the necessary device nodes, use the
+@@ -38,7 +42,8 @@ CREATING DEVICE NODES
+   confusing when an AoE device is not present the first time the a
+   command is run but appears a second later.
+ 
+-USING DEVICE NODES
++Using Device Nodes
++==================
+ 
+   "cat /dev/etherd/err" blocks, waiting for error diagnostic output,
+   like any retransmitted packets.
+@@ -55,7 +60,7 @@ USING DEVICE NODES
+   by sysfs counterparts.  Using the commands in aoetools insulates
+   users from these implementation details.
+ 
+-  The block devices are named like this:
++  The block devices are named like this::
+ 
+ 	e{shelf}.{slot}
+ 	e{shelf}.{slot}p{part}
+@@ -64,7 +69,8 @@ USING DEVICE NODES
+   first shelf (shelf address zero).  That's the whole disk.  The first
+   partition on that disk would be "e0.2p1".
+ 
+-USING SYSFS
++Using sysfs
++===========
+ 
+   Each aoe block device in /sys/block has the extra attributes of
+   state, mac, and netif.  The state attribute is "up" when the device
+@@ -78,29 +84,29 @@ USING SYSFS
+ 
+   There is a script in this directory that formats this information in
+   a convenient way.  Users with aoetools should use the aoe-stat
+-  command.
++  command::
+ 
+-  root@makki root# sh Documentation/aoe/status.sh 
+-     e10.0            eth3              up
+-     e10.1            eth3              up
+-     e10.2            eth3              up
+-     e10.3            eth3              up
+-     e10.4            eth3              up
+-     e10.5            eth3              up
+-     e10.6            eth3              up
+-     e10.7            eth3              up
+-     e10.8            eth3              up
+-     e10.9            eth3              up
+-      e4.0            eth1              up
+-      e4.1            eth1              up
+-      e4.2            eth1              up
+-      e4.3            eth1              up
+-      e4.4            eth1              up
+-      e4.5            eth1              up
+-      e4.6            eth1              up
+-      e4.7            eth1              up
+-      e4.8            eth1              up
+-      e4.9            eth1              up
++    root@makki root# sh Documentation/aoe/status.sh
++       e10.0            eth3              up
++       e10.1            eth3              up
++       e10.2            eth3              up
++       e10.3            eth3              up
++       e10.4            eth3              up
++       e10.5            eth3              up
++       e10.6            eth3              up
++       e10.7            eth3              up
++       e10.8            eth3              up
++       e10.9            eth3              up
++        e4.0            eth1              up
++        e4.1            eth1              up
++        e4.2            eth1              up
++        e4.3            eth1              up
++        e4.4            eth1              up
++        e4.5            eth1              up
++        e4.6            eth1              up
++        e4.7            eth1              up
++        e4.8            eth1              up
++        e4.9            eth1              up
+ 
+   Use /sys/module/aoe/parameters/aoe_iflist (or better, the driver
+   option discussed below) instead of /dev/etherd/interfaces to limit
+@@ -113,12 +119,13 @@ USING SYSFS
+   for this purpose.  You can also directly use the
+   /dev/etherd/discover special file described above.
+ 
+-DRIVER OPTIONS
++Driver Options
++==============
+ 
+   There is a boot option for the built-in aoe driver and a
+   corresponding module parameter, aoe_iflist.  Without this option,
+   all network interfaces may be used for ATA over Ethernet.  Here is a
+-  usage example for the module parameter.
++  usage example for the module parameter::
+ 
+     modprobe aoe_iflist="eth1 eth3"
+ 
+diff --git a/Documentation/aoe/examples.rst b/Documentation/aoe/examples.rst
 new file mode 100644
-index 000000000000..082fa8f6a260
+index 000000000000..91f3198e52c1
 --- /dev/null
-+++ b/Documentation/mic/index.rst
-@@ -0,0 +1,18 @@
++++ b/Documentation/aoe/examples.rst
+@@ -0,0 +1,23 @@
++Example of udev rules
++---------------------
++
++ .. include:: udev.txt
++    :literal:
++
++Example of udev install rules script
++------------------------------------
++
++ .. literalinclude:: udev-install.sh
++    :language: shell
++
++Example script to get status
++----------------------------
++
++ .. literalinclude:: status.sh
++    :language: shell
++
++Example of AoE autoload script
++------------------------------
++
++ .. literalinclude:: autoload.sh
++    :language: shell
+diff --git a/Documentation/aoe/index.rst b/Documentation/aoe/index.rst
+new file mode 100644
+index 000000000000..4394b9b7913c
+--- /dev/null
++++ b/Documentation/aoe/index.rst
+@@ -0,0 +1,19 @@
 +:orphan:
 +
-+=============================================
-+Intel Many Integrated Core (MIC) architecture
-+=============================================
++=======================
++ATA over Ethernet (AoE)
++=======================
 +
 +.. toctree::
 +    :maxdepth: 1
 +
-+    mic_overview
-+    scif_overview
++    aoe
++    todo
++    examples
 +
 +.. only::  subproject and html
 +
@@ -108,128 +261,33 @@ index 000000000000..082fa8f6a260
 +   =======
 +
 +   * :ref:`genindex`
-diff --git a/Documentation/mic/mic_overview.txt b/Documentation/mic/mic_overview.rst
-similarity index 96%
-rename from Documentation/mic/mic_overview.txt
-rename to Documentation/mic/mic_overview.rst
-index 074adbdf83a4..17d956bdaf7c 100644
---- a/Documentation/mic/mic_overview.txt
-+++ b/Documentation/mic/mic_overview.rst
-@@ -1,3 +1,7 @@
-+======================================================
-+Intel Many Integrated Core (MIC) architecture overview
-+======================================================
+diff --git a/Documentation/aoe/todo.txt b/Documentation/aoe/todo.rst
+similarity index 98%
+rename from Documentation/aoe/todo.txt
+rename to Documentation/aoe/todo.rst
+index c09dfad4aed8..dea8db5a33e1 100644
+--- a/Documentation/aoe/todo.txt
++++ b/Documentation/aoe/todo.rst
+@@ -1,3 +1,6 @@
++TODO
++====
 +
- An Intel MIC X100 device is a PCIe form factor add-in coprocessor
- card based on the Intel Many Integrated Core (MIC) architecture
- that runs a Linux OS. It is a PCIe endpoint in a platform and therefore
-@@ -45,7 +49,7 @@ Here is a block diagram of the various components described above. The
- virtio backends are situated on the host rather than the card given better
- single threaded performance for the host compared to MIC, the ability of
- the host to initiate DMA's to/from the card using the MIC DMA engine and
--the fact that the virtio block storage backend can only be on the host.
-+the fact that the virtio block storage backend can only be on the host::
+ There is a potential for deadlock when allocating a struct sk_buff for
+ data that needs to be written out to aoe storage.  If the data is
+ being written from a dirty page in order to free that page, and if
+diff --git a/Documentation/aoe/udev.txt b/Documentation/aoe/udev.txt
+index 1f06daf03f5b..54feda5a0772 100644
+--- a/Documentation/aoe/udev.txt
++++ b/Documentation/aoe/udev.txt
+@@ -11,7 +11,7 @@
+ #   udev_rules="/etc/udev/rules.d/"
+ #   bash# ls /etc/udev/rules.d/
+ #   10-wacom.rules  50-udev.rules
+-#   bash# cp /path/to/linux-2.6.xx/Documentation/aoe/udev.txt \
++#   bash# cp /path/to/linux/Documentation/aoe/udev.txt \
+ #           /etc/udev/rules.d/60-aoe.rules
+ #  
  
-                +----------+           |             +----------+
-                | Card OS  |           |             | Host OS  |
-diff --git a/Documentation/mic/scif_overview.txt b/Documentation/mic/scif_overview.rst
-similarity index 76%
-rename from Documentation/mic/scif_overview.txt
-rename to Documentation/mic/scif_overview.rst
-index 0a280d986731..4c8ad9e43706 100644
---- a/Documentation/mic/scif_overview.txt
-+++ b/Documentation/mic/scif_overview.rst
-@@ -1,3 +1,7 @@
-+========================================
-+Symmetric Communication Interface (SCIF)
-+========================================
-+
- The Symmetric Communication Interface (SCIF (pronounced as skiff)) is a low
- level communications API across PCIe currently implemented for MIC. Currently
- SCIF provides inter-node communication within a single host platform, where a
-@@ -8,8 +12,11 @@ is to deliver the maximum possible performance given the communication
- abilities of the hardware. SCIF has been used to implement an offload compiler
- runtime and OFED support for MPI implementations for MIC coprocessors.
- 
--==== SCIF API Components ====
-+SCIF API Components
-+===================
-+
- The SCIF API has the following parts:
-+
- 1. Connection establishment using a client server model
- 2. Byte stream messaging intended for short messages
- 3. Node enumeration to determine online nodes
-@@ -28,9 +35,12 @@ can also register local memory which is followed by data transfer using either
- DMA, CPU copies or remote memory mapping via mmap. SCIF supports both user and
- kernel mode clients which are functionally equivalent.
- 
--==== SCIF Performance for MIC ====
-+SCIF Performance for MIC
-+========================
-+
- DMA bandwidth comparison between the TCP (over ethernet over PCIe) stack versus
--SCIF shows the performance advantages of SCIF for HPC applications and runtimes.
-+SCIF shows the performance advantages of SCIF for HPC applications and
-+runtimes::
- 
-              Comparison of TCP and SCIF based BW
- 
-@@ -66,33 +76,33 @@ space API similar to the kernel API in scif.h. The SCIF user space library
- is distributed @ https://software.intel.com/en-us/mic-developer
- 
- Here is some pseudo code for an example of how two applications on two PCIe
--nodes would typically use the SCIF API:
-+nodes would typically use the SCIF API::
- 
--Process A (on node A)			Process B (on node B)
-+  Process A (on node A)			Process B (on node B)
- 
--/* get online node information */
--scif_get_node_ids(..)			scif_get_node_ids(..)
--scif_open(..)				scif_open(..)
--scif_bind(..)				scif_bind(..)
--scif_listen(..)
--scif_accept(..)				scif_connect(..)
--/* SCIF connection established */
-+  /* get online node information */
-+  scif_get_node_ids(..)			scif_get_node_ids(..)
-+  scif_open(..)				scif_open(..)
-+  scif_bind(..)				scif_bind(..)
-+  scif_listen(..)
-+  scif_accept(..)				scif_connect(..)
-+  /* SCIF connection established */
- 
--/* Send and receive short messages */
--scif_send(..)/scif_recv(..)		scif_send(..)/scif_recv(..)
-+  /* Send and receive short messages */
-+  scif_send(..)/scif_recv(..)		scif_send(..)/scif_recv(..)
- 
--/* Register memory */
--scif_register(..)			scif_register(..)
-+  /* Register memory */
-+  scif_register(..)			scif_register(..)
- 
--/* RDMA */
--scif_readfrom(..)/scif_writeto(..)	scif_readfrom(..)/scif_writeto(..)
-+  /* RDMA */
-+  scif_readfrom(..)/scif_writeto(..)	scif_readfrom(..)/scif_writeto(..)
- 
--/* Fence DMAs */
--scif_fence_signal(..)			scif_fence_signal(..)
-+  /* Fence DMAs */
-+  scif_fence_signal(..)			scif_fence_signal(..)
- 
--mmap(..)				mmap(..)
-+  mmap(..)				mmap(..)
- 
--/* Access remote registered memory */
-+  /* Access remote registered memory */
- 
--/* Close the endpoints */
--scif_close(..)				scif_close(..)
-+  /* Close the endpoints */
-+  scif_close(..)				scif_close(..)
 -- 
 2.20.1
 
