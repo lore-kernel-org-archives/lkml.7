@@ -2,31 +2,31 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADD4C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69875C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBAB20896
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2821B20896
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfDVVFs (ORCPT
+        id S1729473AbfDVVF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 17:05:48 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:42998 "EHLO ale.deltatee.com"
+        Mon, 22 Apr 2019 17:05:56 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:42970 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729282AbfDVVFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 17:05:40 -0400
+        id S1729246AbfDVVFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 17:05:39 -0400
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hIg85-0004ie-Rq; Mon, 22 Apr 2019 15:05:37 -0600
+        id 1hIg85-0004iY-Rq; Mon, 22 Apr 2019 15:05:36 -0600
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1hIg83-0003zk-1g; Mon, 22 Apr 2019 15:05:31 -0600
+        id 1hIg82-0003zT-EL; Mon, 22 Apr 2019 15:05:30 -0600
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com,
         linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
@@ -38,17 +38,15 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Serge Semin <fancer.lancer@gmail.com>,
         Eric Pilmore <epilmore@gigaio.com>,
         Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 22 Apr 2019 15:05:24 -0600
-Message-Id: <20190422210528.15289-7-logang@deltatee.com>
+Date:   Mon, 22 Apr 2019 15:05:18 -0600
+Message-Id: <20190422210528.15289-1-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190422210528.15289-1-logang@deltatee.com>
-References: <20190422210528.15289-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
 X-SA-Exim-Rcpt-To: linux-ntb@googlegroups.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, jdmason@kudzu.us, joro@8bytes.org, bhelgaas@google.com, dave.jiang@intel.com, allenbh@gmail.com, fancer.lancer@gmail.com, epilmore@gigaio.com, logang@deltatee.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v4 06/10] NTB: Introduce MSI library
+Subject: [PATCH v4 00/10]  Support using MSI interrupts in ntb_transport
 X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,591 +54,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The NTB MSI library allows passing MSI interrupts across a memory
-window. This offers similar functionality to doorbells or messages
-except will often have much better latency and the client can
-potentially use significantly more remote interrupts than typical hardware
-provides for doorbells. (Which can be important in high-multiport
-setups.)
+This is version 4 of the MSI interrupts for ntb_transport patchset.
+It's mostly a resend of v3 but with spelling and grammar fixes found by Bjorn.
 
-The library utilizes one memory window per peer and uses the highest
-index memory windows. Before any ntb_msi function may be used, the user
-must call ntb_msi_init(). It may then setup and tear down the memory
-windows when the link state changes using ntb_msi_setup_mws() and
-ntb_msi_clear_mws().
+I've addressed the feedback so far and rebased on the latest kernel
+and would like this to be considered for merging this cycle.
 
-The peer which receives the interrupt must call ntb_msim_request_irq()
-to assign the interrupt handler (this function is functionally
-similar to devm_request_irq()) and the returned descriptor must be
-transferred to the peer which can use it to trigger the interrupt.
-The triggering peer, once having received the descriptor, can
-trigger the interrupt by calling ntb_msi_peer_trigger().
+The only outstanding issue I know of is that it still will not work
+with IDT hardware, but ntb_transport doesn't work with IDT hardware
+and there is still no sensible common infrastructure to support
+ntb_peer_mw_set_trans(). Thus, I decline to consider that complication
+in this patchset. However, I'll be happy to review work that adds this
+feature in the future.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Cc: Jon Mason <jdmason@kudzu.us>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Allen Hubbe <allenbh@gmail.com>
----
- drivers/ntb/Kconfig  |  11 ++
- drivers/ntb/Makefile |   3 +-
- drivers/ntb/msi.c    | 415 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/ntb.h  |  73 ++++++++
- 4 files changed, 501 insertions(+), 1 deletion(-)
+Also, as the port number and resource index stuff is a bit complicated,
+I made a quick out of tree test fixture to ensure it's correct[1]. As
+an excerise I also wrote some test code[2] using the upcomming KUnit
+feature.
+
+Logan
+
+[1] https://repl.it/repls/ExcitingPresentFile
+[2] https://github.com/sbates130272/linux-p2pmem/commits/ntb_kunit
+
+--
+
+Changes in v4:
+
+* Rebased onto v5.1-rc6 (No changes)
+
+* Numerous grammar and spelling mistakes spotted by Bjorn
+
+--
+
+Changes in v3:
+
+* Rebased onto v5.1-rc1 (Dropped the first two patches as they have
+  been merged, and cleaned up some minor conflicts in the PCI tree)
+
+* Added a new patch (#3) to calculate logical port numbers that
+  are port numbers from 0 to (number of ports - 1). This is
+  then used in ntb_peer_resource_idx() to fix the issues brought
+  up by Serge.
+
+* Fixed missing __iomem and iowrite calls (as noticed by Serge)
+
+* Added patch 10 which describes ntb_msi_test in the documentation
+  file (as requested by Serge)
+
+* A couple other minor nits and documentation fixes
+
+--
+
+Changes in v2:
+
+* Cleaned up the changes in intel_irq_remapping.c to make them
+  less confusing and add a comment. (Per discussion with Jacob and
+  Joerg)
+
+* Fixed a nit from Bjorn and collected his Ack
+
+* Added a Kconfig dependancy on CONFIG_PCI_MSI for CONFIG_NTB_MSI
+  as the Kbuild robot hit a random config that didn't build
+  without it.
+
+* Worked in a callback for when the MSI descriptor changes so that
+  the clients can resend the new address and data values to the peer.
+  On my test system this was never necessary, but there may be
+  other platforms where this can occur. I tested this by hacking
+  in a path to rewrite the MSI descriptor when I change the cpu
+  affinity of an IRQ. There's a bit of uncertainty over the latency
+  of the change, but without hardware this can acctually occur on
+  we can't test this. This was the result of a discussion with Dave.
+
+--
+
+This patch series adds optional support for using MSI interrupts instead
+of NTB doorbells in ntb_transport. This is desirable seeing doorbells on
+current hardware are quite slow and therefore switching to MSI interrupts
+provides a significant performance gain. On switchtec hardware, a simple
+apples-to-apples comparison shows ntb_netdev/iperf numbers going from
+3.88Gb/s to 14.1Gb/s when switching to MSI interrupts.
+
+To do this, a couple changes are required outside of the NTB tree:
+
+1) The IOMMU must know to accept MSI requests from aliased bused numbers
+seeing NTB hardware typically sends proxied request IDs through
+additional requester IDs. The first patch in this series adds support
+for the Intel IOMMU. A quirk to add these aliases for switchtec hardware
+was already accepted. See commit ad281ecf1c7d ("PCI: Add DMA alias quirk
+for Microsemi Switchtec NTB") for a description of NTB proxy IDs and why
+this is necessary.
+
+2) NTB transport (and other clients) may often need more MSI interrupts
+than the NTB hardware actually advertises support for. However, seeing
+these interrupts will not be triggered by the hardware but through an
+NTB memory window, the hardware does not actually need support or need
+to know about them. Therefore we add the concept of Virtual MSI
+interrupts which are allocated just like any other MSI interrupt but
+are not programmed into the hardware's MSI table. This is done in
+Patch 2 and then made use of in Patch 3.
+
+The remaining patches in this series add a library for dealing with MSI
+interrupts, a test client and finally support in ntb_transport.
+
+The series is based off of v5.1-rc6 plus the patches in ntb-next.
+A git repo is available here:
+
+https://github.com/sbates130272/linux-p2pmem/ ntb_transport_msi_v4
+
+Thanks,
+
+Logan
+
+--
+
+Logan Gunthorpe (10):
+  PCI/MSI: Support allocating virtual MSI interrupts
+  PCI/switchtec: Add module parameter to request more interrupts
+  NTB: Introduce helper functions to calculate logical port number
+  NTB: Introduce functions to calculate multi-port resource index
+  NTB: Rename ntb.c to support multiple source files in the module
+  NTB: Introduce MSI library
+  NTB: Introduce NTB MSI Test Client
+  NTB: Add ntb_msi_test support to ntb_test
+  NTB: Add MSI interrupt support to ntb_transport
+  NTB: Describe the ntb_msi_test client in the documentation.
+
+ Documentation/ntb.txt                   |  27 ++
+ drivers/ntb/Kconfig                     |  11 +
+ drivers/ntb/Makefile                    |   3 +
+ drivers/ntb/{ntb.c => core.c}           |   0
+ drivers/ntb/msi.c                       | 415 +++++++++++++++++++++++
+ drivers/ntb/ntb_transport.c             | 169 ++++++++-
+ drivers/ntb/test/Kconfig                |   9 +
+ drivers/ntb/test/Makefile               |   1 +
+ drivers/ntb/test/ntb_msi_test.c         | 433 ++++++++++++++++++++++++
+ drivers/pci/msi.c                       |  54 ++-
+ drivers/pci/switch/switchtec.c          |  12 +-
+ include/linux/msi.h                     |   8 +
+ include/linux/ntb.h                     | 196 ++++++++++-
+ include/linux/pci.h                     |   9 +
+ tools/testing/selftests/ntb/ntb_test.sh |  54 ++-
+ 15 files changed, 1386 insertions(+), 15 deletions(-)
+ rename drivers/ntb/{ntb.c => core.c} (100%)
  create mode 100644 drivers/ntb/msi.c
+ create mode 100644 drivers/ntb/test/ntb_msi_test.c
 
-diff --git a/drivers/ntb/Kconfig b/drivers/ntb/Kconfig
-index 95944e52fa36..5760764052be 100644
---- a/drivers/ntb/Kconfig
-+++ b/drivers/ntb/Kconfig
-@@ -12,6 +12,17 @@ menuconfig NTB
- 
- if NTB
- 
-+config NTB_MSI
-+	bool "MSI Interrupt Support"
-+	depends on PCI_MSI
-+	help
-+	 Support using MSI interrupt forwarding instead of (or in addition to)
-+	 hardware doorbells. MSI interrupts typically offer lower latency
-+	 than doorbells and more MSI interrupts can be made available to
-+	 clients. However this requires an extra memory window and support
-+	 in the hardware driver for creating the MSI interrupts.
-+
-+	 If unsure, say N.
- source "drivers/ntb/hw/Kconfig"
- 
- source "drivers/ntb/test/Kconfig"
-diff --git a/drivers/ntb/Makefile b/drivers/ntb/Makefile
-index 537226f8e78d..cc27ad2ef150 100644
---- a/drivers/ntb/Makefile
-+++ b/drivers/ntb/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_NTB) += ntb.o hw/ test/
- obj-$(CONFIG_NTB_TRANSPORT) += ntb_transport.o
- 
--ntb-y := core.o
-+ntb-y			:= core.o
-+ntb-$(CONFIG_NTB_MSI)	+= msi.o
-diff --git a/drivers/ntb/msi.c b/drivers/ntb/msi.c
-new file mode 100644
-index 000000000000..9dddf133658f
---- /dev/null
-+++ b/drivers/ntb/msi.c
-@@ -0,0 +1,415 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+
-+#include <linux/irq.h>
-+#include <linux/module.h>
-+#include <linux/ntb.h>
-+#include <linux/msi.h>
-+#include <linux/pci.h>
-+
-+MODULE_LICENSE("Dual BSD/GPL");
-+MODULE_VERSION("0.1");
-+MODULE_AUTHOR("Logan Gunthorpe <logang@deltatee.com>");
-+MODULE_DESCRIPTION("NTB MSI Interrupt Library");
-+
-+struct ntb_msi {
-+	u64 base_addr;
-+	u64 end_addr;
-+
-+	void (*desc_changed)(void *ctx);
-+
-+	u32 __iomem *peer_mws[];
-+};
-+
-+/**
-+ * ntb_msi_init() - Initialize the MSI context
-+ * @ntb:	NTB device context
-+ *
-+ * This function must be called before any other ntb_msi function.
-+ * It initializes the context for MSI operations and maps
-+ * the peer memory windows.
-+ *
-+ * This function reserves the last N outbound memory windows (where N
-+ * is the number of peers).
-+ *
-+ * Return: Zero on success, otherwise a negative error number.
-+ */
-+int ntb_msi_init(struct ntb_dev *ntb,
-+		 void (*desc_changed)(void *ctx))
-+{
-+	phys_addr_t mw_phys_addr;
-+	resource_size_t mw_size;
-+	size_t struct_size;
-+	int peer_widx;
-+	int peers;
-+	int ret;
-+	int i;
-+
-+	peers = ntb_peer_port_count(ntb);
-+	if (peers <= 0)
-+		return -EINVAL;
-+
-+	struct_size = sizeof(*ntb->msi) + sizeof(*ntb->msi->peer_mws) * peers;
-+
-+	ntb->msi = devm_kzalloc(&ntb->dev, struct_size, GFP_KERNEL);
-+	if (!ntb->msi)
-+		return -ENOMEM;
-+
-+	ntb->msi->desc_changed = desc_changed;
-+
-+	for (i = 0; i < peers; i++) {
-+		peer_widx = ntb_peer_mw_count(ntb) - 1 - i;
-+
-+		ret = ntb_peer_mw_get_addr(ntb, peer_widx, &mw_phys_addr,
-+					   &mw_size);
-+		if (ret)
-+			goto unroll;
-+
-+		ntb->msi->peer_mws[i] = devm_ioremap(&ntb->dev, mw_phys_addr,
-+						     mw_size);
-+		if (!ntb->msi->peer_mws[i]) {
-+			ret = -EFAULT;
-+			goto unroll;
-+		}
-+	}
-+
-+	return 0;
-+
-+unroll:
-+	for (i = 0; i < peers; i++)
-+		if (ntb->msi->peer_mws[i])
-+			devm_iounmap(&ntb->dev, ntb->msi->peer_mws[i]);
-+
-+	devm_kfree(&ntb->dev, ntb->msi);
-+	ntb->msi = NULL;
-+	return ret;
-+}
-+EXPORT_SYMBOL(ntb_msi_init);
-+
-+/**
-+ * ntb_msi_setup_mws() - Initialize the MSI inbound memory windows
-+ * @ntb:	NTB device context
-+ *
-+ * This function sets up the required inbound memory windows. It should be
-+ * called from a work function after a link up event.
-+ *
-+ * Over the entire network, this function will reserves the last N
-+ * inbound memory windows for each peer (where N is the number of peers).
-+ *
-+ * ntb_msi_init() must be called before this function.
-+ *
-+ * Return: Zero on success, otherwise a negative error number.
-+ */
-+int ntb_msi_setup_mws(struct ntb_dev *ntb)
-+{
-+	struct msi_desc *desc;
-+	u64 addr;
-+	int peer, peer_widx;
-+	resource_size_t addr_align, size_align, size_max;
-+	resource_size_t mw_size = SZ_32K;
-+	resource_size_t mw_min_size = mw_size;
-+	int i;
-+	int ret;
-+
-+	if (!ntb->msi)
-+		return -EINVAL;
-+
-+	desc = first_msi_entry(&ntb->pdev->dev);
-+	addr = desc->msg.address_lo + ((uint64_t)desc->msg.address_hi << 32);
-+
-+	for (peer = 0; peer < ntb_peer_port_count(ntb); peer++) {
-+		peer_widx = ntb_peer_highest_mw_idx(ntb, peer);
-+		if (peer_widx < 0)
-+			return peer_widx;
-+
-+		ret = ntb_mw_get_align(ntb, peer, peer_widx, &addr_align,
-+				       NULL, NULL);
-+		if (ret)
-+			return ret;
-+
-+		addr &= ~(addr_align - 1);
-+	}
-+
-+	for (peer = 0; peer < ntb_peer_port_count(ntb); peer++) {
-+		peer_widx = ntb_peer_highest_mw_idx(ntb, peer);
-+		if (peer_widx < 0) {
-+			ret = peer_widx;
-+			goto error_out;
-+		}
-+
-+		ret = ntb_mw_get_align(ntb, peer, peer_widx, NULL,
-+				       &size_align, &size_max);
-+		if (ret)
-+			goto error_out;
-+
-+		mw_size = round_up(mw_size, size_align);
-+		mw_size = max(mw_size, size_max);
-+		if (mw_size < mw_min_size)
-+			mw_min_size = mw_size;
-+
-+		ret = ntb_mw_set_trans(ntb, peer, peer_widx,
-+				       addr, mw_size);
-+		if (ret)
-+			goto error_out;
-+	}
-+
-+	ntb->msi->base_addr = addr;
-+	ntb->msi->end_addr = addr + mw_min_size;
-+
-+	return 0;
-+
-+error_out:
-+	for (i = 0; i < peer; i++) {
-+		peer_widx = ntb_peer_highest_mw_idx(ntb, peer);
-+		if (peer_widx < 0)
-+			continue;
-+
-+		ntb_mw_clear_trans(ntb, i, peer_widx);
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(ntb_msi_setup_mws);
-+
-+/**
-+ * ntb_msi_clear_mws() - Clear all inbound memory windows
-+ * @ntb:	NTB device context
-+ *
-+ * This function tears down the resources used by ntb_msi_setup_mws().
-+ */
-+void ntb_msi_clear_mws(struct ntb_dev *ntb)
-+{
-+	int peer;
-+	int peer_widx;
-+
-+	for (peer = 0; peer < ntb_peer_port_count(ntb); peer++) {
-+		peer_widx = ntb_peer_highest_mw_idx(ntb, peer);
-+		if (peer_widx < 0)
-+			continue;
-+
-+		ntb_mw_clear_trans(ntb, peer, peer_widx);
-+	}
-+}
-+EXPORT_SYMBOL(ntb_msi_clear_mws);
-+
-+struct ntb_msi_devres {
-+	struct ntb_dev *ntb;
-+	struct msi_desc *entry;
-+	struct ntb_msi_desc *msi_desc;
-+};
-+
-+static int ntb_msi_set_desc(struct ntb_dev *ntb, struct msi_desc *entry,
-+			    struct ntb_msi_desc *msi_desc)
-+{
-+	u64 addr;
-+
-+	addr = entry->msg.address_lo +
-+		((uint64_t)entry->msg.address_hi << 32);
-+
-+	if (addr < ntb->msi->base_addr || addr >= ntb->msi->end_addr) {
-+		dev_warn_once(&ntb->dev,
-+			      "IRQ %d: MSI Address not within the memory window (%llx, [%llx %llx])\n",
-+			      entry->irq, addr, ntb->msi->base_addr,
-+			      ntb->msi->end_addr);
-+		return -EFAULT;
-+	}
-+
-+	msi_desc->addr_offset = addr - ntb->msi->base_addr;
-+	msi_desc->data = entry->msg.data;
-+
-+	return 0;
-+}
-+
-+static void ntb_msi_write_msg(struct msi_desc *entry, void *data)
-+{
-+	struct ntb_msi_devres *dr = data;
-+
-+	WARN_ON(ntb_msi_set_desc(dr->ntb, entry, dr->msi_desc));
-+
-+	if (dr->ntb->msi->desc_changed)
-+		dr->ntb->msi->desc_changed(dr->ntb->ctx);
-+}
-+
-+static void ntbm_msi_callback_release(struct device *dev, void *res)
-+{
-+	struct ntb_msi_devres *dr = res;
-+
-+	dr->entry->write_msi_msg = NULL;
-+	dr->entry->write_msi_msg_data = NULL;
-+}
-+
-+static int ntbm_msi_setup_callback(struct ntb_dev *ntb, struct msi_desc *entry,
-+				   struct ntb_msi_desc *msi_desc)
-+{
-+	struct ntb_msi_devres *dr;
-+
-+	dr = devres_alloc(ntbm_msi_callback_release,
-+			  sizeof(struct ntb_msi_devres), GFP_KERNEL);
-+	if (!dr)
-+		return -ENOMEM;
-+
-+	dr->ntb = ntb;
-+	dr->entry = entry;
-+	dr->msi_desc = msi_desc;
-+
-+	devres_add(&ntb->dev, dr);
-+
-+	dr->entry->write_msi_msg = ntb_msi_write_msg;
-+	dr->entry->write_msi_msg_data = dr;
-+
-+	return 0;
-+}
-+
-+/**
-+ * ntbm_msi_request_threaded_irq() - allocate an MSI interrupt
-+ * @ntb:	NTB device context
-+ * @handler:	Function to be called when the IRQ occurs
-+ * @thread_fn:  Function to be called in a threaded interrupt context. NULL
-+ *              for clients which handle everything in @handler
-+ * @devname:    An ascii name for the claiming device, dev_name(dev) if NULL
-+ * @dev_id:     A cookie passed back to the handler function
-+ *
-+ * This function assigns an interrupt handler to an unused
-+ * MSI interrupt and returns the descriptor used to trigger
-+ * it. The descriptor can then be sent to a peer to trigger
-+ * the interrupt.
-+ *
-+ * The interrupt resource is managed with devres so it will
-+ * be automatically freed when the NTB device is torn down.
-+ *
-+ * If an IRQ allocated with this function needs to be freed
-+ * separately, ntbm_free_irq() must be used.
-+ *
-+ * Return: IRQ number assigned on success, otherwise a negative error number.
-+ */
-+int ntbm_msi_request_threaded_irq(struct ntb_dev *ntb, irq_handler_t handler,
-+				  irq_handler_t thread_fn,
-+				  const char *name, void *dev_id,
-+				  struct ntb_msi_desc *msi_desc)
-+{
-+	struct msi_desc *entry;
-+	struct irq_desc *desc;
-+	int ret;
-+
-+	if (!ntb->msi)
-+		return -EINVAL;
-+
-+	for_each_pci_msi_entry(entry, ntb->pdev) {
-+		desc = irq_to_desc(entry->irq);
-+		if (desc->action)
-+			continue;
-+
-+		ret = devm_request_threaded_irq(&ntb->dev, entry->irq, handler,
-+						thread_fn, 0, name, dev_id);
-+		if (ret)
-+			continue;
-+
-+		if (ntb_msi_set_desc(ntb, entry, msi_desc)) {
-+			devm_free_irq(&ntb->dev, entry->irq, dev_id);
-+			continue;
-+		}
-+
-+		ret = ntbm_msi_setup_callback(ntb, entry, msi_desc);
-+		if (ret) {
-+			devm_free_irq(&ntb->dev, entry->irq, dev_id);
-+			return ret;
-+		}
-+
-+
-+		return entry->irq;
-+	}
-+
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL(ntbm_msi_request_threaded_irq);
-+
-+static int ntbm_msi_callback_match(struct device *dev, void *res, void *data)
-+{
-+	struct ntb_dev *ntb = dev_ntb(dev);
-+	struct ntb_msi_devres *dr = res;
-+
-+	return dr->ntb == ntb && dr->entry == data;
-+}
-+
-+/**
-+ * ntbm_msi_free_irq() - free an interrupt
-+ * @ntb:	NTB device context
-+ * @irq:	Interrupt line to free
-+ * @dev_id:	Device identity to free
-+ *
-+ * This function should be used to manually free IRQs allocated with
-+ * ntbm_request_[threaded_]irq().
-+ */
-+void ntbm_msi_free_irq(struct ntb_dev *ntb, unsigned int irq, void *dev_id)
-+{
-+	struct msi_desc *entry = irq_get_msi_desc(irq);
-+
-+	entry->write_msi_msg = NULL;
-+	entry->write_msi_msg_data = NULL;
-+
-+	WARN_ON(devres_destroy(&ntb->dev, ntbm_msi_callback_release,
-+			       ntbm_msi_callback_match, entry));
-+
-+	devm_free_irq(&ntb->dev, irq, dev_id);
-+}
-+EXPORT_SYMBOL(ntbm_msi_free_irq);
-+
-+/**
-+ * ntb_msi_peer_trigger() - Trigger an interrupt handler on a peer
-+ * @ntb:	NTB device context
-+ * @peer:	Peer index
-+ * @desc:	MSI descriptor data which triggers the interrupt
-+ *
-+ * This function triggers an interrupt on a peer. It requires
-+ * the descriptor structure to have been passed from that peer
-+ * by some other means.
-+ *
-+ * Return: Zero on success, otherwise a negative error number.
-+ */
-+int ntb_msi_peer_trigger(struct ntb_dev *ntb, int peer,
-+			 struct ntb_msi_desc *desc)
-+{
-+	int idx;
-+
-+	if (!ntb->msi)
-+		return -EINVAL;
-+
-+	idx = desc->addr_offset / sizeof(*ntb->msi->peer_mws[peer]);
-+
-+	iowrite32(desc->data, &ntb->msi->peer_mws[peer][idx]);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ntb_msi_peer_trigger);
-+
-+/**
-+ * ntb_msi_peer_addr() - Get the DMA address to trigger a peer's MSI interrupt
-+ * @ntb:	NTB device context
-+ * @peer:	Peer index
-+ * @desc:	MSI descriptor data which triggers the interrupt
-+ * @msi_addr:   Physical address to trigger the interrupt
-+ *
-+ * This function allows using DMA engines to trigger an interrupt
-+ * (for example, trigger an interrupt to process the data after
-+ * sending it). To trigger the interrupt, write @desc.data to the address
-+ * returned in @msi_addr
-+ *
-+ * Return: Zero on success, otherwise a negative error number.
-+ */
-+int ntb_msi_peer_addr(struct ntb_dev *ntb, int peer,
-+		      struct ntb_msi_desc *desc,
-+		      phys_addr_t *msi_addr)
-+{
-+	int peer_widx = ntb_peer_mw_count(ntb) - 1 - peer;
-+	phys_addr_t mw_phys_addr;
-+	int ret;
-+
-+	ret = ntb_peer_mw_get_addr(ntb, peer_widx, &mw_phys_addr, NULL);
-+	if (ret)
-+		return ret;
-+
-+	if (msi_addr)
-+		*msi_addr = mw_phys_addr + desc->addr_offset;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(ntb_msi_peer_addr);
-diff --git a/include/linux/ntb.h b/include/linux/ntb.h
-index 66552830544b..2abf30caf4a7 100644
---- a/include/linux/ntb.h
-+++ b/include/linux/ntb.h
-@@ -58,9 +58,11 @@
- 
- #include <linux/completion.h>
- #include <linux/device.h>
-+#include <linux/interrupt.h>
- 
- struct ntb_client;
- struct ntb_dev;
-+struct ntb_msi;
- struct pci_dev;
- 
- /**
-@@ -426,6 +428,10 @@ struct ntb_dev {
- 	spinlock_t			ctx_lock;
- 	/* block unregister until device is fully released */
- 	struct completion		released;
-+
-+#ifdef CONFIG_NTB_MSI
-+	struct ntb_msi *msi;
-+#endif
- };
- #define dev_ntb(__dev) container_of((__dev), struct ntb_dev, dev)
- 
-@@ -1627,4 +1633,71 @@ static inline int ntb_peer_highest_mw_idx(struct ntb_dev *ntb, int pidx)
- 	return ntb_mw_count(ntb, pidx) - ret - 1;
- }
- 
-+struct ntb_msi_desc {
-+	u32 addr_offset;
-+	u32 data;
-+};
-+
-+#ifdef CONFIG_NTB_MSI
-+
-+int ntb_msi_init(struct ntb_dev *ntb, void (*desc_changed)(void *ctx));
-+int ntb_msi_setup_mws(struct ntb_dev *ntb);
-+void ntb_msi_clear_mws(struct ntb_dev *ntb);
-+int ntbm_msi_request_threaded_irq(struct ntb_dev *ntb, irq_handler_t handler,
-+				  irq_handler_t thread_fn,
-+				  const char *name, void *dev_id,
-+				  struct ntb_msi_desc *msi_desc);
-+void ntbm_msi_free_irq(struct ntb_dev *ntb, unsigned int irq, void *dev_id);
-+int ntb_msi_peer_trigger(struct ntb_dev *ntb, int peer,
-+			 struct ntb_msi_desc *desc);
-+int ntb_msi_peer_addr(struct ntb_dev *ntb, int peer,
-+		      struct ntb_msi_desc *desc,
-+		      phys_addr_t *msi_addr);
-+
-+#else /* not CONFIG_NTB_MSI */
-+
-+static inline int ntb_msi_init(struct ntb_dev *ntb,
-+			       void (*desc_changed)(void *ctx))
-+{
-+	return -EOPNOTSUPP;
-+}
-+static inline int ntb_msi_setup_mws(struct ntb_dev *ntb)
-+{
-+	return -EOPNOTSUPP;
-+}
-+static inline void ntb_msi_clear_mws(struct ntb_dev *ntb) {}
-+static inline int ntbm_msi_request_threaded_irq(struct ntb_dev *ntb,
-+						irq_handler_t handler,
-+						irq_handler_t thread_fn,
-+						const char *name, void *dev_id,
-+						struct ntb_msi_desc *msi_desc)
-+{
-+	return -EOPNOTSUPP;
-+}
-+static inline void ntbm_msi_free_irq(struct ntb_dev *ntb, unsigned int irq,
-+				     void *dev_id) {}
-+static inline int ntb_msi_peer_trigger(struct ntb_dev *ntb, int peer,
-+				       struct ntb_msi_desc *desc)
-+{
-+	return -EOPNOTSUPP;
-+}
-+static inline int ntb_msi_peer_addr(struct ntb_dev *ntb, int peer,
-+				    struct ntb_msi_desc *desc,
-+				    phys_addr_t *msi_addr)
-+{
-+	return -EOPNOTSUPP;
-+
-+}
-+
-+#endif /* CONFIG_NTB_MSI */
-+
-+static inline int ntbm_msi_request_irq(struct ntb_dev *ntb,
-+				       irq_handler_t handler,
-+				       const char *name, void *dev_id,
-+				       struct ntb_msi_desc *msi_desc)
-+{
-+	return ntbm_msi_request_threaded_irq(ntb, handler, NULL, name,
-+					     dev_id, msi_desc);
-+}
-+
- #endif
--- 
+--
 2.20.1
-
