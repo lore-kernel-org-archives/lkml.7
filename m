@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C22C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EF0C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC78204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458BC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963683;
-	bh=aev05JR5K1uOO+rGkKRJPev3i2jWTAfuVCBFaSHotv8=;
+	s=default; t=1555963689;
+	bh=FuDcAin+IjuMiPtgjpgAA5UrwqlL8qLDmzQSajn3e9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GE5fzziGYFKMo3UPK5Y0AUV5h7W4Hp+mhO/w39c1xWOpCiL9qlpC9UPBpQA1baWY6
-	 GPbqwkex2Us26MTMwgfK+mXoea5KVseR7MLhkTCRo3NJ50BOn+RiRcuG1JkeAWAyPv
-	 WTXcD3Zg5/zorPLJCFkhWk/POylm0oPMLracQRS0=
+	b=qm1WN3f3LmZUkGzBur3yqunY1LPA64hCorPXd3CvZ+UAow2lIbcDB6x1MzcooFjL8
+	 pasqeOf169xqEUmNRgDhKttXyA20I1XEDFL798cOjFDQx4Y+1HKUdKKTFAy8Q7sBzg
+	 QpoJNAx/xBTSEk75X4UC2iupUiZemBjOcgHYML+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732425AbfDVUIC (ORCPT
+        id S1728801AbfDVTn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:08:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44880 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:43:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728862AbfDVToC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:02 -0400
+        id S1729309AbfDVTn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:43:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CFEF218FF;
-        Mon, 22 Apr 2019 19:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB8C521901;
+        Mon, 22 Apr 2019 19:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962241;
-        bh=aev05JR5K1uOO+rGkKRJPev3i2jWTAfuVCBFaSHotv8=;
+        s=default; t=1555962236;
+        bh=FuDcAin+IjuMiPtgjpgAA5UrwqlL8qLDmzQSajn3e9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LeMvxCbHlPSDlY1vBH4f7+e9pbQHCiOIHZJC+kExzVfuUbhqHsM9hpEAF8mlx3led
-         6iNtLZARzQBBl0E6jhsRXLjVFkufLU+t+iFDiQTruyNnhaZV0dQNWrUjBACM3A1lUG
-         nIu+PYGm4poi3xvzRbs9pfwbJCGPS4XXW7+e4wto=
+        b=hLOnVKpXsVm/qqo2NmIC8Mmr8x4Lz+PCpa7+WlBruiYcVFaQxQi0syM2L6q0Jt2ms
+         xRAbhuxSArNN9cISmKGN/JPxg5tpAVutFwnaWjiyCPexkbs9T9W/8W0nDKhk9CdBiN
+         nsOKtB4AOLaLwN4A2gitWLPGfAiI86j+zEE/PiA0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>, Yi Zhang <yi.zhang@redhat.com>,
-        "jianchao.wang" <jianchao.w.wang@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 59/98] sbitmap: order READ/WRITE freed instance and setting clear bit
-Date:   Mon, 22 Apr 2019 15:41:26 -0400
-Message-Id: <20190422194205.10404-59-sashal@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.0 56/98] drm/meson: Fix invalid pointer in meson_drv_unbind()
+Date:   Mon, 22 Apr 2019 15:41:23 -0400
+Message-Id: <20190422194205.10404-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -59,116 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-[ Upstream commit e6d1fa584e0dd9bfebaf345e9feea588cf75ead2 ]
+[ Upstream commit 776e78677f514ecddd12dba48b9040958999bd5a ]
 
-Inside sbitmap_queue_clear(), once the clear bit is set, it will be
-visiable to allocation path immediately. Meantime READ/WRITE on old
-associated instance(such as request in case of blk-mq) may be
-out-of-order with the setting clear bit, so race with re-allocation
-may be triggered.
+meson_drv_bind() registers a meson_drm struct as the device's privdata,
+but meson_drv_unbind() tries to retrieve a drm_device. This may cause a
+segfault on shutdown:
 
-Adds one memory barrier for ordering READ/WRITE of the freed associated
-instance with setting clear bit for avoiding race with re-allocation.
+[ 5194.593429] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000197
+ ...
+[ 5194.788850] Call trace:
+[ 5194.791349]  drm_dev_unregister+0x1c/0x118 [drm]
+[ 5194.795848]  meson_drv_unbind+0x50/0x78 [meson_drm]
 
-The following kernel oops triggerd by block/006 on aarch64 may be fixed:
+Retrieve the right pointer in meson_drv_unbind().
 
-[  142.330954] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000330
-[  142.338794] Mem abort info:
-[  142.341554]   ESR = 0x96000005
-[  142.344632]   Exception class = DABT (current EL), IL = 32 bits
-[  142.350500]   SET = 0, FnV = 0
-[  142.353544]   EA = 0, S1PTW = 0
-[  142.356678] Data abort info:
-[  142.359528]   ISV = 0, ISS = 0x00000005
-[  142.363343]   CM = 0, WnR = 0
-[  142.366305] user pgtable: 64k pages, 48-bit VAs, pgdp = 000000002a3c51c0
-[  142.372983] [0000000000000330] pgd=0000000000000000, pud=0000000000000000
-[  142.379777] Internal error: Oops: 96000005 [#1] SMP
-[  142.384613] Modules linked in: null_blk ib_isert iscsi_target_mod ib_srpt target_core_mod ib_srp scsi_transport_srp vfat fat rpcrdma sunrpc rdma_ucm ib_iser rdma_cm iw_cm libiscsi ib_umad scsi_transport_iscsi ib_ipoib ib_cm mlx5_ib ib_uverbs ib_core sbsa_gwdt crct10dif_ce ghash_ce ipmi_ssif sha2_ce ipmi_devintf sha256_arm64 sg sha1_ce ipmi_msghandler ip_tables xfs libcrc32c mlx5_core sdhci_acpi mlxfw ahci_platform at803x sdhci libahci_platform qcom_emac mmc_core hdma hdma_mgmt i2c_dev [last unloaded: null_blk]
-[  142.429753] CPU: 7 PID: 1983 Comm: fio Not tainted 5.0.0.cki #2
-[  142.449458] pstate: 00400005 (nzcv daif +PAN -UAO)
-[  142.454239] pc : __blk_mq_free_request+0x4c/0xa8
-[  142.458830] lr : blk_mq_free_request+0xec/0x118
-[  142.463344] sp : ffff00003360f6a0
-[  142.466646] x29: ffff00003360f6a0 x28: ffff000010e70000
-[  142.471941] x27: ffff801729a50048 x26: 0000000000010000
-[  142.477232] x25: ffff00003360f954 x24: ffff7bdfff021440
-[  142.482529] x23: 0000000000000000 x22: 00000000ffffffff
-[  142.487830] x21: ffff801729810000 x20: 0000000000000000
-[  142.493123] x19: ffff801729a50000 x18: 0000000000000000
-[  142.498413] x17: 0000000000000000 x16: 0000000000000001
-[  142.503709] x15: 00000000000000ff x14: ffff7fe000000000
-[  142.509003] x13: ffff8017dcde09a0 x12: 0000000000000000
-[  142.514308] x11: 0000000000000001 x10: 0000000000000008
-[  142.519597] x9 : ffff8017dcde09a0 x8 : 0000000000002000
-[  142.524889] x7 : ffff8017dcde0a00 x6 : 000000015388f9be
-[  142.530187] x5 : 0000000000000001 x4 : 0000000000000000
-[  142.535478] x3 : 0000000000000000 x2 : 0000000000000000
-[  142.540777] x1 : 0000000000000001 x0 : ffff00001041b194
-[  142.546071] Process fio (pid: 1983, stack limit = 0x000000006460a0ea)
-[  142.552500] Call trace:
-[  142.554926]  __blk_mq_free_request+0x4c/0xa8
-[  142.559181]  blk_mq_free_request+0xec/0x118
-[  142.563352]  blk_mq_end_request+0xfc/0x120
-[  142.567444]  end_cmd+0x3c/0xa8 [null_blk]
-[  142.571434]  null_complete_rq+0x20/0x30 [null_blk]
-[  142.576194]  blk_mq_complete_request+0x108/0x148
-[  142.580797]  null_handle_cmd+0x1d4/0x718 [null_blk]
-[  142.585662]  null_queue_rq+0x60/0xa8 [null_blk]
-[  142.590171]  blk_mq_try_issue_directly+0x148/0x280
-[  142.594949]  blk_mq_try_issue_list_directly+0x9c/0x108
-[  142.600064]  blk_mq_sched_insert_requests+0xb0/0xd0
-[  142.604926]  blk_mq_flush_plug_list+0x16c/0x2a0
-[  142.609441]  blk_flush_plug_list+0xec/0x118
-[  142.613608]  blk_finish_plug+0x3c/0x4c
-[  142.617348]  blkdev_direct_IO+0x3b4/0x428
-[  142.621336]  generic_file_read_iter+0x84/0x180
-[  142.625761]  blkdev_read_iter+0x50/0x78
-[  142.629579]  aio_read.isra.6+0xf8/0x190
-[  142.633409]  __io_submit_one.isra.8+0x148/0x738
-[  142.637912]  io_submit_one.isra.9+0x88/0xb8
-[  142.642078]  __arm64_sys_io_submit+0xe0/0x238
-[  142.646428]  el0_svc_handler+0xa0/0x128
-[  142.650238]  el0_svc+0x8/0xc
-[  142.653104] Code: b9402a63 f9000a7f 3100047f 540000a0 (f9419a81)
-[  142.659202] ---[ end trace 467586bc175eb09d ]---
-
-Fixes: ea86ea2cdced20057da ("sbitmap: ammortize cost of clearing bits")
-Reported-and-bisected_and_tested-by: Yi Zhang <yi.zhang@redhat.com>
-Cc: Yi Zhang <yi.zhang@redhat.com>
-Cc: "jianchao.wang" <jianchao.w.wang@oracle.com>
-Reviewed-by: Omar Sandoval <osandov@fb.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: bbbe775ec5b5 ("drm: Add support for Amlogic Meson Graphic Controller")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190322152657.13752-1-jean-philippe.brucker@arm.com
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- lib/sbitmap.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/gpu/drm/meson/meson_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-index 5b382c1244ed..155fe38756ec 100644
---- a/lib/sbitmap.c
-+++ b/lib/sbitmap.c
-@@ -591,6 +591,17 @@ EXPORT_SYMBOL_GPL(sbitmap_queue_wake_up);
- void sbitmap_queue_clear(struct sbitmap_queue *sbq, unsigned int nr,
- 			 unsigned int cpu)
- {
-+	/*
-+	 * Once the clear bit is set, the bit may be allocated out.
-+	 *
-+	 * Orders READ/WRITE on the asssociated instance(such as request
-+	 * of blk_mq) by this bit for avoiding race with re-allocation,
-+	 * and its pair is the memory barrier implied in __sbitmap_get_word.
-+	 *
-+	 * One invariant is that the clear bit has to be zero when the bit
-+	 * is in use.
-+	 */
-+	smp_mb__before_atomic();
- 	sbitmap_deferred_clear_bit(&sbq->sb, nr);
+diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+index 12ff47b13668..c1115a96453f 100644
+--- a/drivers/gpu/drm/meson/meson_drv.c
++++ b/drivers/gpu/drm/meson/meson_drv.c
+@@ -336,8 +336,8 @@ static int meson_drv_bind(struct device *dev)
  
- 	/*
+ static void meson_drv_unbind(struct device *dev)
+ {
+-	struct drm_device *drm = dev_get_drvdata(dev);
+-	struct meson_drm *priv = drm->dev_private;
++	struct meson_drm *priv = dev_get_drvdata(dev);
++	struct drm_device *drm = priv->drm;
+ 
+ 	if (priv->canvas) {
+ 		meson_canvas_free(priv->canvas, priv->canvas_id_osd1);
 -- 
 2.19.1
 
