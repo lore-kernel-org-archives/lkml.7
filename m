@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136D2C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FAAC282E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE21721473
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB2CA20881
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939746;
-	bh=450gjr4kBEu1zb1JNvdnkMKxCVdwzJ09k+iqAPwmbI0=;
+	s=default; t=1555939751;
+	bh=jopus0pFzcw9HtkeNnTVjqIJPOD2csV/2upCidv2hhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uXEyfwLkVifYqseQ1Cac9MH9ARlFWh4a/Fx5Gfa8U92p1fzaY/ZS5tklSP2jpDYOj
-	 8cBkfppJzPu72xvNsU/Wt2EBOjSWvYbRWJhLQmb8GXATohb7OQklFM30sXJ+abw4pu
-	 R9GAowGIHnryT0R4e/N08in+FLsSS/3Z63i37ruo=
+	b=ydViL/6ILAAJo/OyybpkI5hYOjkZBRiemjZh2URBD0JdHX0MQ0IVhq826VkaQHFPh
+	 oyXAv5cGAVW79OV4lZ/j5hZ1J4JfP7/0y5Uff0LsFO89drlyRxI/cUd+RdHIb5uzHH
+	 K7KFSuj7Hmu14KNGFasYn/2K9CLH55CTkq2NgbsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbfDVN2m (ORCPT
+        id S1727802AbfDVN2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:28:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37768 "EHLO
+        Mon, 22 Apr 2019 09:28:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37712 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbfDVN2V (ORCPT
+        with ESMTP id S1727549AbfDVN2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 09:28:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,27 +33,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Xgp9K2E3/AiwjL0mYh03usUsFh3eZrw9uB7Ke6y66R4=; b=ty50b5WhFYK5lxoDK8yw2FuQph
-        bRbJzKFNTV1vGKjVtSWwz72XAwBsUVBGZy9ysMzm37Afw7XBfQPCaDH2WJKYnQ5Ere8WqYb2YeBZl
-        WqFB2yhx6V3sNof8+vFAXJNpsm9AIGhZDUP/iVfp48j7eNysS7tVbeNvDHhwea9RF8nuy6CTh0uQ/
-        XoC3eDJHG29swduw2W6D5B2O3mhzJ6YOL6DU1DImAegxPQTEaqqiO+2D0OoIY+n6aTxyjJPGXrRjW
-        IhovJDUNXi8VqSroBuJiEMRgqt6T1xvnLzHBl7O6YZL3Fh/8vvpytKGGsygsqEqgTHThwUToluuei
-        WMpfHoSQ==;
+        bh=saJ5wzpF8nHr9iYOCK91J3rutoZ4h+j622rnksjsDls=; b=L9643lTXCqDJ54lJu+pUI1auVp
+        oZnUF/rb1jEfCGhe5OFQ0situKmdTGKh6oEa2lxg/4La6jqhLCKKbTFtEYKkvkHbmD61eZBtSGryZ
+        jZY0abP4R4nN/mZVs00sOnS2MUO2Hqf+9A66O5lQb9m+dGP5wSLr9jSeH4nXZtXYmtfF8voFriZJ/
+        MPZGUu6ECJj+G15E2raBjoSoGFWz9AVZ+WdBMbUaaR8skOWe1bGHam7RrXvwmmhkJl2zez/dp+UKi
+        nM3p2I99Rq/vC4pbo/778IIIL6suMtCzo/uDIHemssyhQPGqGII6G6fYi/ZIcREtT+cAs++Clnosg
+        ajV5Jg3g==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYzb-0005Ht-WB; Mon, 22 Apr 2019 13:28:20 +0000
+        id 1hIYzb-0005Ho-4X; Mon, 22 Apr 2019 13:28:19 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzT-0005mq-Gk; Mon, 22 Apr 2019 10:28:11 -0300
+        id 1hIYzT-0005nC-Kt; Mon, 22 Apr 2019 10:28:11 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Milo Kim <milo.kim@ti.com>
-Subject: [PATCH v2 42/79] docs: lp855x-driver.txt: convert to ReST and move to kernel-api
-Date:   Mon, 22 Apr 2019 10:27:31 -0300
-Message-Id: <a774a888eeec42df4446b7a8e30787e91e5d9392.1555938376.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 46/79] docs: pti_intel_mid.txt: convert it to pti_intel_mid.rst
+Date:   Mon, 22 Apr 2019 10:27:35 -0300
+Message-Id: <2d67fa4c4031c7568ff43b282221fb2862d5a01d.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -65,200 +63,239 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This small file seems to be an attempt to start documenting
-backlight drivers.
+Convert this small file to ReST format and rename it.
 
-It contains descriptions of the controls for the driver
-with could sound as an somewhat user-faced description, but
-it's main focus is to describe, instead, the data that should
-be passed via platform data and some driver-specific stuff.
+Most of the conversion were related to adjusting whitespaces
+in order for each section to be properly parsed.
 
-While this is not part of the driver-api book, mark it as
-:orphan:, in order to avoid build warnings.
+While this is not part of any book, mark it as :orphan:, in order
+to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/backlight/lp855x-driver.rst | 83 +++++++++++++++++++++++
- Documentation/backlight/lp855x-driver.txt | 66 ------------------
- MAINTAINERS                               |  2 +-
- 3 files changed, 84 insertions(+), 67 deletions(-)
- create mode 100644 Documentation/backlight/lp855x-driver.rst
- delete mode 100644 Documentation/backlight/lp855x-driver.txt
+ Documentation/pti/pti_intel_mid.rst | 106 ++++++++++++++++++++++++++++
+ Documentation/pti/pti_intel_mid.txt |  99 --------------------------
+ 2 files changed, 106 insertions(+), 99 deletions(-)
+ create mode 100644 Documentation/pti/pti_intel_mid.rst
+ delete mode 100644 Documentation/pti/pti_intel_mid.txt
 
-diff --git a/Documentation/backlight/lp855x-driver.rst b/Documentation/backlight/lp855x-driver.rst
+diff --git a/Documentation/pti/pti_intel_mid.rst b/Documentation/pti/pti_intel_mid.rst
 new file mode 100644
-index 000000000000..62b7ed847a77
+index 000000000000..ea05725174cb
 --- /dev/null
-+++ b/Documentation/backlight/lp855x-driver.rst
-@@ -0,0 +1,83 @@
++++ b/Documentation/pti/pti_intel_mid.rst
+@@ -0,0 +1,106 @@
 +:orphan:
 +
-+====================
-+Kernel driver lp855x
-+====================
++=============
++Intel MID PTI
++=============
 +
-+Backlight driver for LP855x ICs
++The Intel MID PTI project is HW implemented in Intel Atom
++system-on-a-chip designs based on the Parallel Trace
++Interface for MIPI P1149.7 cJTAG standard.  The kernel solution
++for this platform involves the following files::
 +
-+Supported chips:
++	./include/linux/pti.h
++	./drivers/.../n_tracesink.h
++	./drivers/.../n_tracerouter.c
++	./drivers/.../n_tracesink.c
++	./drivers/.../pti.c
 +
-+	Texas Instruments LP8550, LP8551, LP8552, LP8553, LP8555, LP8556 and
-+	LP8557
++pti.c is the driver that enables various debugging features
++popular on platforms from certain mobile manufacturers.
++n_tracerouter.c and n_tracesink.c allow extra system information to
++be collected and routed to the pti driver, such as trace
++debugging data from a modem.  Although n_tracerouter
++and n_tracesink are a part of the complete PTI solution,
++these two line disciplines can work separately from
++pti.c and route any data stream from one /dev/tty node
++to another /dev/tty node via kernel-space.  This provides
++a stable, reliable connection that will not break unless
++the user-space application shuts down (plus avoids
++kernel->user->kernel context switch overheads of routing
++data).
 +
-+Author: Milo(Woogyom) Kim <milo.kim@ti.com>
++An example debugging usage for this driver system:
 +
-+Description
-+-----------
++  * Hook /dev/ttyPTI0 to syslogd.  Opening this port will also start
++    a console device to further capture debugging messages to PTI.
++  * Hook /dev/ttyPTI1 to modem debugging data to write to PTI HW.
++    This is where n_tracerouter and n_tracesink are used.
++  * Hook /dev/pti to a user-level debugging application for writing
++    to PTI HW.
++  * `Use mipi_` Kernel Driver API in other device drivers for
++    debugging to PTI by first requesting a PTI write address via
++    mipi_request_masterchannel(1).
 +
-+* Brightness control
++Below is example pseudo-code on how a 'privileged' application
++can hook up n_tracerouter and n_tracesink to any tty on
++a system.  'Privileged' means the application has enough
++privileges to successfully manipulate the ldisc drivers
++but is not just blindly executing as 'root'. Keep in mind
++the use of ioctl(,TIOCSETD,) is not specific to the n_tracerouter
++and n_tracesink line discpline drivers but is a generic
++operation for a program to use a line discpline driver
++on a tty port other than the default n_tty::
 +
-+  Brightness can be controlled by the pwm input or the i2c command.
-+  The lp855x driver supports both cases.
++  /////////// To hook up n_tracerouter and n_tracesink /////////
 +
-+* Device attributes
++  // Note that n_tracerouter depends on n_tracesink.
++  #include <errno.h>
++  #define ONE_TTY "/dev/ttyOne"
++  #define TWO_TTY "/dev/ttyTwo"
 +
-+  1) bl_ctl_mode
++  // needed global to hand onto ldisc connection
++  static int g_fd_source = -1;
++  static int g_fd_sink  = -1;
 +
-+  Backlight control mode.
++  // these two vars used to grab LDISC values from loaded ldisc drivers
++  // in OS.  Look at /proc/tty/ldiscs to get the right numbers from
++  // the ldiscs loaded in the system.
++  int source_ldisc_num, sink_ldisc_num = -1;
++  int retval;
 +
-+  Value: pwm based or register based
++  g_fd_source = open(ONE_TTY, O_RDWR); // must be R/W
++  g_fd_sink   = open(TWO_TTY, O_RDWR); // must be R/W
 +
-+  2) chip_id
++  if (g_fd_source <= 0) || (g_fd_sink <= 0) {
++     // doubt you'll want to use these exact error lines of code
++     printf("Error on open(). errno: %d\n",errno);
++     return errno;
++  }
 +
-+  The lp855x chip id.
++  retval = ioctl(g_fd_sink, TIOCSETD, &sink_ldisc_num);
++  if (retval < 0) {
++     printf("Error on ioctl().  errno: %d\n", errno);
++     return errno;
++  }
 +
-+  Value: lp8550/lp8551/lp8552/lp8553/lp8555/lp8556/lp8557
++  retval = ioctl(g_fd_source, TIOCSETD, &source_ldisc_num);
++  if (retval < 0) {
++     printf("Error on ioctl().  errno: %d\n", errno);
++     return errno;
++  }
 +
-+Platform data for lp855x
-+------------------------
++  /////////// To disconnect n_tracerouter and n_tracesink ////////
 +
-+For supporting platform specific data, the lp855x platform data can be used.
++  // First make sure data through the ldiscs has stopped.
 +
-+* name:
-+	Backlight driver name. If it is not defined, default name is set.
-+* device_control:
-+	Value of DEVICE CONTROL register.
-+* initial_brightness:
-+	Initial value of backlight brightness.
-+* period_ns:
-+	Platform specific PWM period value. unit is nano.
-+	Only valid when brightness is pwm input mode.
-+* size_program:
-+	Total size of lp855x_rom_data.
-+* rom_data:
-+	List of new eeprom/eprom registers.
++  // Second, disconnect ldiscs.  This provides a
++  // little cleaner shutdown on tty stack.
++  sink_ldisc_num = 0;
++  source_ldisc_num = 0;
++  ioctl(g_fd_uart, TIOCSETD, &sink_ldisc_num);
++  ioctl(g_fd_gadget, TIOCSETD, &source_ldisc_num);
 +
-+Examples
-+========
-+
-+1) lp8552 platform data: i2c register mode with new eeprom data::
-+
-+    #define EEPROM_A5_ADDR	0xA5
-+    #define EEPROM_A5_VAL	0x4f	/* EN_VSYNC=0 */
-+
-+    static struct lp855x_rom_data lp8552_eeprom_arr[] = {
-+	{EEPROM_A5_ADDR, EEPROM_A5_VAL},
-+    };
-+
-+    static struct lp855x_platform_data lp8552_pdata = {
-+	.name = "lcd-bl",
-+	.device_control = I2C_CONFIG(LP8552),
-+	.initial_brightness = INITIAL_BRT,
-+	.size_program = ARRAY_SIZE(lp8552_eeprom_arr),
-+	.rom_data = lp8552_eeprom_arr,
-+    };
-+
-+2) lp8556 platform data: pwm input mode with default rom data::
-+
-+    static struct lp855x_platform_data lp8556_pdata = {
-+	.device_control = PWM_CONFIG(LP8556),
-+	.initial_brightness = INITIAL_BRT,
-+	.period_ns = 1000000,
-+    };
-diff --git a/Documentation/backlight/lp855x-driver.txt b/Documentation/backlight/lp855x-driver.txt
++  // Three, program closes connection, and cleanup:
++  close(g_fd_uart);
++  close(g_fd_gadget);
++  g_fd_uart = g_fd_gadget = NULL;
+diff --git a/Documentation/pti/pti_intel_mid.txt b/Documentation/pti/pti_intel_mid.txt
 deleted file mode 100644
-index 01bce243d3d7..000000000000
---- a/Documentation/backlight/lp855x-driver.txt
+index e7a5b6d1f7a9..000000000000
+--- a/Documentation/pti/pti_intel_mid.txt
 +++ /dev/null
-@@ -1,66 +0,0 @@
--Kernel driver lp855x
--====================
+@@ -1,99 +0,0 @@
+-The Intel MID PTI project is HW implemented in Intel Atom
+-system-on-a-chip designs based on the Parallel Trace
+-Interface for MIPI P1149.7 cJTAG standard.  The kernel solution
+-for this platform involves the following files:
 -
--Backlight driver for LP855x ICs
+-./include/linux/pti.h
+-./drivers/.../n_tracesink.h
+-./drivers/.../n_tracerouter.c
+-./drivers/.../n_tracesink.c
+-./drivers/.../pti.c
 -
--Supported chips:
--	Texas Instruments LP8550, LP8551, LP8552, LP8553, LP8555, LP8556 and
--	LP8557
+-pti.c is the driver that enables various debugging features
+-popular on platforms from certain mobile manufacturers.
+-n_tracerouter.c and n_tracesink.c allow extra system information to
+-be collected and routed to the pti driver, such as trace
+-debugging data from a modem.  Although n_tracerouter
+-and n_tracesink are a part of the complete PTI solution,
+-these two line disciplines can work separately from
+-pti.c and route any data stream from one /dev/tty node
+-to another /dev/tty node via kernel-space.  This provides
+-a stable, reliable connection that will not break unless
+-the user-space application shuts down (plus avoids
+-kernel->user->kernel context switch overheads of routing
+-data).
 -
--Author: Milo(Woogyom) Kim <milo.kim@ti.com>
+-An example debugging usage for this driver system:
+-   *Hook /dev/ttyPTI0 to syslogd.  Opening this port will also start
+-    a console device to further capture debugging messages to PTI.
+-   *Hook /dev/ttyPTI1 to modem debugging data to write to PTI HW.
+-    This is where n_tracerouter and n_tracesink are used.
+-   *Hook /dev/pti to a user-level debugging application for writing
+-    to PTI HW.
+-   *Use mipi_* Kernel Driver API in other device drivers for
+-    debugging to PTI by first requesting a PTI write address via
+-    mipi_request_masterchannel(1).
 -
--Description
-------------
+-Below is example pseudo-code on how a 'privileged' application
+-can hook up n_tracerouter and n_tracesink to any tty on
+-a system.  'Privileged' means the application has enough
+-privileges to successfully manipulate the ldisc drivers
+-but is not just blindly executing as 'root'. Keep in mind
+-the use of ioctl(,TIOCSETD,) is not specific to the n_tracerouter
+-and n_tracesink line discpline drivers but is a generic
+-operation for a program to use a line discpline driver
+-on a tty port other than the default n_tty.
 -
--* Brightness control
+-/////////// To hook up n_tracerouter and n_tracesink /////////
 -
--Brightness can be controlled by the pwm input or the i2c command.
--The lp855x driver supports both cases.
+-// Note that n_tracerouter depends on n_tracesink.
+-#include <errno.h>
+-#define ONE_TTY "/dev/ttyOne"
+-#define TWO_TTY "/dev/ttyTwo"
 -
--* Device attributes
+-// needed global to hand onto ldisc connection
+-static int g_fd_source = -1;
+-static int g_fd_sink  = -1;
 -
--1) bl_ctl_mode
--Backlight control mode.
--Value : pwm based or register based
+-// these two vars used to grab LDISC values from loaded ldisc drivers
+-// in OS.  Look at /proc/tty/ldiscs to get the right numbers from
+-// the ldiscs loaded in the system.
+-int source_ldisc_num, sink_ldisc_num = -1;
+-int retval;
 -
--2) chip_id
--The lp855x chip id.
--Value : lp8550/lp8551/lp8552/lp8553/lp8555/lp8556/lp8557
+-g_fd_source = open(ONE_TTY, O_RDWR); // must be R/W
+-g_fd_sink   = open(TWO_TTY, O_RDWR); // must be R/W
 -
--Platform data for lp855x
--------------------------
+-if (g_fd_source <= 0) || (g_fd_sink <= 0) {
+-   // doubt you'll want to use these exact error lines of code
+-   printf("Error on open(). errno: %d\n",errno);
+-   return errno;
+-}
 -
--For supporting platform specific data, the lp855x platform data can be used.
+-retval = ioctl(g_fd_sink, TIOCSETD, &sink_ldisc_num);
+-if (retval < 0) {
+-   printf("Error on ioctl().  errno: %d\n", errno);
+-   return errno;
+-}
 -
--* name : Backlight driver name. If it is not defined, default name is set.
--* device_control : Value of DEVICE CONTROL register.
--* initial_brightness : Initial value of backlight brightness.
--* period_ns : Platform specific PWM period value. unit is nano.
--	     Only valid when brightness is pwm input mode.
--* size_program : Total size of lp855x_rom_data.
--* rom_data : List of new eeprom/eprom registers.
+-retval = ioctl(g_fd_source, TIOCSETD, &source_ldisc_num);
+-if (retval < 0) {
+-   printf("Error on ioctl().  errno: %d\n", errno);
+-   return errno;
+-}
 -
--example 1) lp8552 platform data : i2c register mode with new eeprom data
+-/////////// To disconnect n_tracerouter and n_tracesink ////////
 -
--#define EEPROM_A5_ADDR	0xA5
--#define EEPROM_A5_VAL	0x4f	/* EN_VSYNC=0 */
+-// First make sure data through the ldiscs has stopped.
 -
--static struct lp855x_rom_data lp8552_eeprom_arr[] = {
--	{EEPROM_A5_ADDR, EEPROM_A5_VAL},
--};
+-// Second, disconnect ldiscs.  This provides a
+-// little cleaner shutdown on tty stack.
+-sink_ldisc_num = 0;
+-source_ldisc_num = 0;
+-ioctl(g_fd_uart, TIOCSETD, &sink_ldisc_num);
+-ioctl(g_fd_gadget, TIOCSETD, &source_ldisc_num);
 -
--static struct lp855x_platform_data lp8552_pdata = {
--	.name = "lcd-bl",
--	.device_control = I2C_CONFIG(LP8552),
--	.initial_brightness = INITIAL_BRT,
--	.size_program = ARRAY_SIZE(lp8552_eeprom_arr),
--	.rom_data = lp8552_eeprom_arr,
--};
--
--example 2) lp8556 platform data : pwm input mode with default rom data
--
--static struct lp855x_platform_data lp8556_pdata = {
--	.device_control = PWM_CONFIG(LP8556),
--	.initial_brightness = INITIAL_BRT,
--	.period_ns = 1000000,
--};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c40b6a876f2d..f67d86aad5f0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15616,7 +15616,7 @@ F:	sound/soc/codecs/isabelle*
- TI LP855x BACKLIGHT DRIVER
- M:	Milo Kim <milo.kim@ti.com>
- S:	Maintained
--F:	Documentation/backlight/lp855x-driver.txt
-+F:	Documentation/backlight/lp855x-driver.rst
- F:	drivers/video/backlight/lp855x_bl.c
- F:	include/linux/platform_data/lp855x.h
- 
+-// Three, program closes connection, and cleanup:
+-close(g_fd_uart);
+-close(g_fd_gadget);
+-g_fd_uart = g_fd_gadget = NULL;
 -- 
 2.20.1
 
