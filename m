@@ -2,122 +2,135 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0224CC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654E7C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65E92075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:37:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="b8QPhj9V"
+	by mail.kernel.org (Postfix) with ESMTP id 3F7182075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfDVKhT (ORCPT
+        id S1727234AbfDVKhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 06:37:19 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42576 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfDVKhT (ORCPT
+        Mon, 22 Apr 2019 06:37:45 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:42718 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfDVKho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 06:37:19 -0400
-Received: by mail-lf1-f66.google.com with SMTP id w23so8628887lfc.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 03:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4rWXg1dzH1/8yZZSlBOjiEiuiUUWVE78MmUlO9qZyjI=;
-        b=b8QPhj9V37Y8sqX927Pjrce6uTf08Mm1qygRByTBVuqZvrwZpQbNzOg/yl0ad0ao2f
-         7PoedmxAo/rx7fpdvTZbG6XNccEXGGhTDEVVgCP1Z23G7KR+npNE270+go4jqkDUDqC3
-         3LfK4HRCr9mUGNzDXbBIPb+3f3LE2P3my1upEvL7nXEgOQ/eRHMrhrg3Hbw5kOfh64Hm
-         NwqgODk2Lgy1oJM2n/Iw9pEV26CzITwDwvzXNfPf8MExohKFUY3Pvnl+0ZPdlxxFWYKE
-         DdBJ+H4QrXoRFWOgRACSbxoUORm+Q60WLejLFNSDagodsIiui96BzDk/sGuKSvp2NBT+
-         5oiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4rWXg1dzH1/8yZZSlBOjiEiuiUUWVE78MmUlO9qZyjI=;
-        b=AxAsHZwKUbNpCgSD462kBQuljER6JtywmQ8uer1RHsKZYIBJ94ejiphp7PySV5M0Vg
-         /JaRN3BIO4+VLfRqw8KGgFA1KZde7eLw54ThHy956b0Z+e7KJwcF+ZljK5KMdmaLLUvz
-         kb1HpA1QIkjG+YE8soF2olx3QW2JLxlIbjTvYmvZVbjNEB5YrB4DR9Vx4jcr4V1HGTd2
-         6gdGbUVxnKxwUDHJdBda1dQXZq3Re+OevyggkOJw5+8kVYLs3W+EaiczKzKQtKJgkD2L
-         b1uuk3jMNlxFXsFuUH5P6BffhsX8GcRqBqhx3YKtseHDTWPrP/xgLLKa6fO15KQLZt0r
-         xptA==
-X-Gm-Message-State: APjAAAX5g9PaHLnsmVYgdeH2+0QjhRxN04Aa0dSb8nyp4eBPZB8LJBcV
-        bo1nh1jqPruk9und4XMT/Dp9oFl7Xf0Z2DrZmuroLQ==
-X-Google-Smtp-Source: APXvYqzqqtybG8tC+k5j8M2rjW/J+AJbY2+JlqX3pyZhm3c/Z9aaDAs1oqL5Pl+jMLWMMaE6rqGGNWGltrUgiUIrEp0=
-X-Received: by 2002:ac2:5307:: with SMTP id c7mr1040291lfh.58.1555929436962;
- Mon, 22 Apr 2019 03:37:16 -0700 (PDT)
+        Mon, 22 Apr 2019 06:37:44 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 545E19E8C28;
+        Mon, 22 Apr 2019 11:37:42 +0100 (BST)
+Date:   Mon, 22 Apr 2019 11:37:40 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <andriy.shevchenko@linux.intel.com>,
+        <namhyung@kernel.org>, <mingo@kernel.org>
+Subject: Re: [PATCH 1/2] lib: add __sysfs_match_string_with_gaps() helper
+Message-ID: <20190422113740.6ef66205@archlinux>
+In-Reply-To: <20190422083257.21805-1-alexandru.ardelean@analog.com>
+References: <20190422083257.21805-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190422065623.49364-1-weizhenliang@huawei.com>
-In-Reply-To: <20190422065623.49364-1-weizhenliang@huawei.com>
-From:   Christian Brauner <christian@brauner.io>
-Date:   Mon, 22 Apr 2019 12:37:05 +0200
-Message-ID: <CAHrFyr4rD04qzwDb30h3RMLGPq+OLVGk1Kr8izfAaizkVE43UQ@mail.gmail.com>
-Subject: Re: [PATCH v2] signal: trace_signal_deliver when signal_group_exit
-To:     Zhenliang Wei <weizhenliang@huawei.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>, colona@arista.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 8:57 AM Zhenliang Wei <weizhenliang@huawei.com> wrote:
->
-> In the following commit, removing SIGKILL from each thread signal mask
-> and executing "goto fatal" directly will skip the call to
-> "trace_signal_deliver". At this point, the delivery tracking of the SIGKILL
-> signal will be inaccurate.
->
-> commit cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
->
-> Therefore, we need to add trace_signal_deliver before "goto fatal"
-> after executing sigdelset.
->
-> Note: The action[SIGKILL] must be SIG_DFL, and SEND_SIG_NOINFO matches
-> the fact that SIGKILL doesn't have any info.
->
-> Signed-off-by: Zhenliang Wei <weizhenliang@huawei.com>
+On Mon, 22 Apr 2019 11:32:56 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-Just a nit below otherwise
+> This helper is similar to __sysfs_match_string() with the exception that it
+> ignores NULL elements within the array.
+> It takes an extra parameter (called `gaps`) which when true will ignore
+> the NULL elements. When false, this function behaves exactly like
+> `__sysfs_match_string()`.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Acked-by: Christian Brauner <christian@brauner.io>
+Hi Alex,
 
-You should probably make the line:
-commit cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
-a Fixes-line right above your commit:
-Fixes cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
+The existence of that gaps parameter does seem a little odd.
+Why not just have the exposed _gaps form wrap a version that
+takes that parameter and always set it to true?
+
+Otherwise looks good to me.
+
+Jonathan
 
 > ---
->  kernel/signal.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 227ba170298e..0f69ada376ef 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2441,6 +2441,7 @@ bool get_signal(struct ksignal *ksig)
->         if (signal_group_exit(signal)) {
->                 ksig->info.si_signo = signr = SIGKILL;
->                 sigdelset(&current->pending.signal, SIGKILL);
-> +               trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO, SIG_DFL);
->                 recalc_sigpending();
->                 goto fatal;
->         }
-> --
-> 2.14.1.windows.1
->
->
+>  include/linux/string.h |  9 ++++++++-
+>  lib/string.c           | 14 ++++++++++----
+>  2 files changed, 18 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 7927b875f80c..30595ed483dc 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -189,7 +189,14 @@ static inline int strtobool(const char *s, bool *res)
+>  }
+>  
+>  int match_string(const char * const *array, size_t n, const char *string);
+> -int __sysfs_match_string(const char * const *array, size_t n, const char *s);
+> +int __sysfs_match_string_with_gaps(const char * const *array, size_t n,
+> +				   const char *str, bool gaps);
+> +
+> +static inline int __sysfs_match_string(const char * const *array, size_t n,
+> +				       const char *str)
+> +{
+> +	return __sysfs_match_string_with_gaps(array, n, str, false);
+> +}
+>  
+>  /**
+>   * sysfs_match_string - matches given string in an array
+> diff --git a/lib/string.c b/lib/string.c
+> index 38e4ca08e757..8ddac3cd292a 100644
+> --- a/lib/string.c
+> +++ b/lib/string.c
+> @@ -659,30 +659,36 @@ int match_string(const char * const *array, size_t n, const char *string)
+>  EXPORT_SYMBOL(match_string);
+>  
+>  /**
+> - * __sysfs_match_string - matches given string in an array
+> + * __sysfs_match_string_with_gaps - matches string in array ignoring NULLs
+>   * @array: array of strings
+>   * @n: number of strings in the array or -1 for NULL terminated arrays
+>   * @str: string to match with
+> + * @gaps: boolean to ignore NULL elements within the array
+>   *
+>   * Returns index of @str in the @array or -EINVAL, just like match_string().
+>   * Uses sysfs_streq instead of strcmp for matching.
+> + * Ignores NULL pointers within the @array if @gaps is true.
+>   */
+> -int __sysfs_match_string(const char * const *array, size_t n, const char *str)
+> +int __sysfs_match_string_with_gaps(const char * const *array, size_t n,
+> +				   const char *str, bool gaps)
+>  {
+>  	const char *item;
+>  	int index;
+>  
+>  	for (index = 0; index < n; index++) {
+>  		item = array[index];
+> -		if (!item)
+> +		if (!item) {
+> +			if (gaps)
+> +				continue;
+>  			break;
+> +		}
+>  		if (sysfs_streq(item, str))
+>  			return index;
+>  	}
+>  
+>  	return -EINVAL;
+>  }
+> -EXPORT_SYMBOL(__sysfs_match_string);
+> +EXPORT_SYMBOL(__sysfs_match_string_with_gaps);
+>  
+>  #ifndef __HAVE_ARCH_MEMSET
+>  /**
+
