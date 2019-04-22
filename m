@@ -2,32 +2,32 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91489C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E491CC282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5179921738
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0DB21738
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfDVS6m (ORCPT
+        id S1728807AbfDVS6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 14:58:42 -0400
-Received: from mga11.intel.com ([192.55.52.93]:60347 "EHLO mga11.intel.com"
+        Mon, 22 Apr 2019 14:58:50 -0400
+Received: from mga11.intel.com ([192.55.52.93]:60353 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfDVS6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 14:58:41 -0400
+        id S1728748AbfDVS6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 14:58:47 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 11:58:41 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 11:58:45 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,382,1549958400"; 
-   d="scan'208";a="136417117"
+   d="scan'208";a="136417161"
 Received: from linksys13920.jf.intel.com (HELO rpedgeco-DESK5.jf.intel.com) ([10.54.75.11])
-  by orsmga008.jf.intel.com with ESMTP; 22 Apr 2019 11:58:40 -0700
+  by orsmga008.jf.intel.com with ESMTP; 22 Apr 2019 11:58:42 -0700
 From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
 To:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
         Ingo Molnar <mingo@redhat.com>
@@ -41,156 +41,165 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
         kernel-hardening@lists.openwall.com, linux-mm@kvack.org,
         will.deacon@arm.com, ard.biesheuvel@linaro.org,
         kristen@linux.intel.com, deneen.t.dock@intel.com,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>
-Subject: [PATCH v4 00/23] Merge text_poke fixes and executable lockdowns
-Date:   Mon, 22 Apr 2019 11:57:42 -0700
-Message-Id: <20190422185805.1169-1-rick.p.edgecombe@intel.com>
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH v4 15/23] mm: Make hibernate handle unmapped pages
+Date:   Mon, 22 Apr 2019 11:57:57 -0700
+Message-Id: <20190422185805.1169-16-rick.p.edgecombe@intel.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190422185805.1169-1-rick.p.edgecombe@intel.com>
+References: <20190422185805.1169-1-rick.p.edgecombe@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Make hibernate handle unmapped pages on the direct map when
+CONFIG_ARCH_HAS_SET_ALIAS is set. These functions allow for setting pages
+to invalid configurations, so now hibernate should check if the pages have
+valid mappings and handle if they are unmapped when doing a hibernate
+save operation.
 
-Picking this up again after seeing how things shook out around the issue
-raised here: https://lkml.org/lkml/2019/2/22/702
+Previously this checking was already done when CONFIG_DEBUG_PAGEALLOC
+was configured. It does not appear to have a big hibernating performance
+impact. The speed of the saving operation before this change was measured
+as 819.02 MB/s, and after was measured at 813.32 MB/s.
 
-This patchset improves several overlapping issues around stale TLB entries and
-W^X violations. It is combined from "x86/alternative: text_poke() enhancements
-v7" [1] and "Don’t leave executable TLB entries to freed pages v2" [2] patchsets
-that were conflicting.
+Before:
+[    4.670938] PM: Wrote 171996 kbytes in 0.21 seconds (819.02 MB/s)
 
-The related issues that this fixes:
-1. Fixmap PTEs that are used for patching are available for access from
-   other cores and might be exploited. They are not even flushed from
-   the TLB in remote cores, so the risk is even higher. Address this
-   issue by introducing a temporary mm that is only used during
-   patching. Unfortunately, due to init ordering, fixmap is still used
-   during boot-time patching. Future patches can eliminate the need for
-   it.
-2. Missing lockdep assertion to ensure text_mutex is taken. It is
-   actually not always taken, so fix the instances that were found not
-   to take the lock (although they should be safe even without taking
-   the lock).
-3. Module_alloc returning memory that is RWX until a module is finished
-   loading.
-4. Sometimes when memory is freed via the module subsystem, an
-   executable permissioned TLB entry can remain to a freed page. If the
-   page is re-used to back an address that will receive data from
-   userspace, it can result in user data being mapped as executable in
-   the kernel. The root of this behavior is vfree lazily flushing the
-   TLB, but not lazily freeing the underlying pages.
+After:
+[    4.504714] PM: Wrote 178932 kbytes in 0.22 seconds (813.32 MB/s)
 
-Changes v3 to v4:
- - Remove the size parameter from tramp_free() [Steven]
- - Remove caching of hw_breakpoint_active() [Sean]
- - Prevent the use of bpf_probe_write_user() while using temporary mm [Jann]
- - Fix build issues on other archs
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Borislav Petkov <bp@alien8.de>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+---
+ arch/x86/mm/pageattr.c  |  4 ----
+ include/linux/mm.h      | 18 ++++++------------
+ kernel/power/snapshot.c |  5 +++--
+ mm/page_alloc.c         |  7 +++++--
+ 4 files changed, 14 insertions(+), 20 deletions(-)
 
-Changes v2 to v3:
- - Fix commit messages and comments [Boris]
- - Rename VM_HAS_SPECIAL_PERMS [Boris]
- - Remove unnecessary local variables [Boris]
- - Rename set_alias_*() functions [Boris, Andy]
- - Save/restore DR registers when using temporary mm
- - Move line deletion from patch 10 to patch 17
-
-Changes v1 to v2:
- - Adding “Reviewed-by tag” [Masami]
- - Comment instead of code to warn against module removal while
-   patching [Masami]
- - Avoiding open-coded TLB flush [Andy]
- - Remove "This patch" [Borislav Petkov]
- - Not set global bit during text poking [Andy, hpa]
- - Add Ack from [Pavel Machek]
- - Split patch 16 "Plug in new special vfree flag" into 4 patches (16-19)
-   to make it easier to review. There were no code changes.
-
-The changes from "Don’t leave executable TLB entries to freed pages
-v2" to v1:
- - Add support for case of hibernate trying to save an unmapped page
-   on the directmap. (Ard Biesheuvel)
- - No week arch breakout for vfree-ing special memory (Andy Lutomirski)
- - Avoid changing deferred free code by moving modules init free to work
-   queue (Andy Lutomirski)
- - Plug in new flag for kprobes and ftrace
- - More arch generic names for set_pages functions (Ard Biesheuvel)
- - Fix for TLB not always flushing the directmap (Nadav Amit)
+diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
+index 3574550192c6..daf4d645e537 100644
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -2257,7 +2257,6 @@ int set_direct_map_default_noflush(struct page *page)
+ 	return __set_pages_p(page, 1);
+ }
  
-Changes from "x86/alternative: text_poke() enhancements v7" to v1
- - Fix build failure on CONFIG_RANDOMIZE_BASE=n (Rick)
- - Remove text_poke usage from ftrace (Nadav)
+-#ifdef CONFIG_DEBUG_PAGEALLOC
+ void __kernel_map_pages(struct page *page, int numpages, int enable)
+ {
+ 	if (PageHighMem(page))
+@@ -2302,11 +2301,8 @@ bool kernel_page_present(struct page *page)
+ 	pte = lookup_address((unsigned long)page_address(page), &level);
+ 	return (pte_val(*pte) & _PAGE_PRESENT);
+ }
+-
+ #endif /* CONFIG_HIBERNATION */
  
-[1] https://lkml.org/lkml/2018/12/5/200
-[2] https://lkml.org/lkml/2018/12/11/1571
-
-
-Andy Lutomirski (1):
-  x86/mm: Introduce temporary mm structs
-
-Nadav Amit (15):
-  Fix "x86/alternatives: Lockdep-enforce text_mutex in text_poke*()"
-  x86/jump_label: Use text_poke_early() during early init
-  x86/mm: Save DRs when loading a temporary mm
-  fork: Provide a function for copying init_mm
-  x86/alternative: Initialize temporary mm for patching
-  x86/alternative: Use temporary mm for text poking
-  x86/kgdb: Avoid redundant comparison of patched code
-  x86/ftrace: Set trampoline pages as executable
-  x86/kprobes: Set instruction page as executable
-  x86/module: Avoid breaking W^X while loading modules
-  x86/jump-label: Remove support for custom poker
-  x86/alternative: Remove the return value of text_poke_*()
-  x86/alternative: Comment about module removal races
-  tlb: provide default nmi_uaccess_okay()
-  bpf: Fail bpf_probe_write_user() while mm is switched
-
-Rick Edgecombe (7):
-  x86/mm/cpa: Add set_direct_map_ functions
-  mm: Make hibernate handle unmapped pages
-  vmalloc: Add flag for free of special permsissions
-  modules: Use vmalloc special flag
-  bpf: Use vmalloc special flag
-  x86/ftrace: Use vmalloc special flag
-  x86/kprobes: Use vmalloc special flag
-
- arch/Kconfig                         |   4 +
- arch/x86/Kconfig                     |   1 +
- arch/x86/include/asm/fixmap.h        |   2 -
- arch/x86/include/asm/mmu_context.h   |  56 ++++++++
- arch/x86/include/asm/pgtable.h       |   3 +
- arch/x86/include/asm/set_memory.h    |   3 +
- arch/x86/include/asm/text-patching.h |   7 +-
- arch/x86/include/asm/tlbflush.h      |   2 +
- arch/x86/kernel/alternative.c        | 201 ++++++++++++++++++++-------
- arch/x86/kernel/ftrace.c             |  22 +--
- arch/x86/kernel/jump_label.c         |  21 ++-
- arch/x86/kernel/kgdb.c               |  25 +---
- arch/x86/kernel/kprobes/core.c       |  19 ++-
- arch/x86/kernel/module.c             |   2 +-
- arch/x86/mm/init_64.c                |  36 +++++
- arch/x86/mm/pageattr.c               |  16 ++-
- arch/x86/xen/mmu_pv.c                |   2 -
- include/asm-generic/tlb.h            |   9 ++
- include/linux/filter.h               |  18 +--
- include/linux/mm.h                   |  18 +--
- include/linux/sched/task.h           |   1 +
- include/linux/set_memory.h           |  11 ++
- include/linux/vmalloc.h              |  15 ++
- init/main.c                          |   3 +
- kernel/bpf/core.c                    |   1 -
- kernel/fork.c                        |  24 +++-
- kernel/module.c                      |  82 ++++++-----
- kernel/power/snapshot.c              |   5 +-
- kernel/trace/bpf_trace.c             |   8 ++
- mm/page_alloc.c                      |   7 +-
- mm/vmalloc.c                         | 113 ++++++++++++---
- 31 files changed, 542 insertions(+), 195 deletions(-)
-
+-#endif /* CONFIG_DEBUG_PAGEALLOC */
+-
+ int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
+ 				   unsigned numpages, unsigned long page_flags)
+ {
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 6b10c21630f5..083d7b4863ed 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2610,37 +2610,31 @@ static inline void kernel_poison_pages(struct page *page, int numpages,
+ 					int enable) { }
+ #endif
+ 
+-#ifdef CONFIG_DEBUG_PAGEALLOC
+ extern bool _debug_pagealloc_enabled;
+-extern void __kernel_map_pages(struct page *page, int numpages, int enable);
+ 
+ static inline bool debug_pagealloc_enabled(void)
+ {
+-	return _debug_pagealloc_enabled;
++	return IS_ENABLED(CONFIG_DEBUG_PAGEALLOC) && _debug_pagealloc_enabled;
+ }
+ 
++#if defined(CONFIG_DEBUG_PAGEALLOC) || defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP)
++extern void __kernel_map_pages(struct page *page, int numpages, int enable);
++
+ static inline void
+ kernel_map_pages(struct page *page, int numpages, int enable)
+ {
+-	if (!debug_pagealloc_enabled())
+-		return;
+-
+ 	__kernel_map_pages(page, numpages, enable);
+ }
+ #ifdef CONFIG_HIBERNATION
+ extern bool kernel_page_present(struct page *page);
+ #endif	/* CONFIG_HIBERNATION */
+-#else	/* CONFIG_DEBUG_PAGEALLOC */
++#else	/* CONFIG_DEBUG_PAGEALLOC || CONFIG_ARCH_HAS_SET_DIRECT_MAP */
+ static inline void
+ kernel_map_pages(struct page *page, int numpages, int enable) {}
+ #ifdef CONFIG_HIBERNATION
+ static inline bool kernel_page_present(struct page *page) { return true; }
+ #endif	/* CONFIG_HIBERNATION */
+-static inline bool debug_pagealloc_enabled(void)
+-{
+-	return false;
+-}
+-#endif	/* CONFIG_DEBUG_PAGEALLOC */
++#endif	/* CONFIG_DEBUG_PAGEALLOC || CONFIG_ARCH_HAS_SET_DIRECT_MAP */
+ 
+ #ifdef __HAVE_ARCH_GATE_AREA
+ extern struct vm_area_struct *get_gate_vma(struct mm_struct *mm);
+diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+index f08a1e4ee1d4..bc9558ab1e5b 100644
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -1342,8 +1342,9 @@ static inline void do_copy_page(long *dst, long *src)
+  * safe_copy_page - Copy a page in a safe way.
+  *
+  * Check if the page we are going to copy is marked as present in the kernel
+- * page tables (this always is the case if CONFIG_DEBUG_PAGEALLOC is not set
+- * and in that case kernel_page_present() always returns 'true').
++ * page tables. This always is the case if CONFIG_DEBUG_PAGEALLOC or
++ * CONFIG_ARCH_HAS_SET_DIRECT_MAP is not set. In that case kernel_page_present()
++ * always returns 'true'.
+  */
+ static void safe_copy_page(void *dst, struct page *s_page)
+ {
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d96ca5bc555b..34a70681a4af 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1131,7 +1131,9 @@ static __always_inline bool free_pages_prepare(struct page *page,
+ 	}
+ 	arch_free_page(page, order);
+ 	kernel_poison_pages(page, 1 << order, 0);
+-	kernel_map_pages(page, 1 << order, 0);
++	if (debug_pagealloc_enabled())
++		kernel_map_pages(page, 1 << order, 0);
++
+ 	kasan_free_nondeferred_pages(page, order);
+ 
+ 	return true;
+@@ -2001,7 +2003,8 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
+ 	set_page_refcounted(page);
+ 
+ 	arch_alloc_page(page, order);
+-	kernel_map_pages(page, 1 << order, 1);
++	if (debug_pagealloc_enabled())
++		kernel_map_pages(page, 1 << order, 1);
+ 	kasan_alloc_pages(page, order);
+ 	kernel_poison_pages(page, 1 << order, 1);
+ 	set_page_owner(page, order, gfp_flags);
 -- 
 2.17.1
 
