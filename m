@@ -4,47 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C03C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D73AC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4C221904
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F27021906
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962468;
-	bh=kKSg9CKcEJ+JF+KJ8Z7C0kIhnyeUyt4CjM1tQIH4960=;
+	s=default; t=1555962471;
+	bh=TCBvTTRKZHS3c6gaxnl+fS+JAr0sXq8FdcBmO+KAwho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LzD5wdleuUS5EE7OEvc8hCudugFD0kaSzYnnINOVGF6XL2xNS8ufTRoEG3qln38OU
-	 3JkOZiTovdPBOqRMO2+VI76VmKjNOG9CQp0BATn5g9rQUPngW2liRBZqkiZD8HE9MB
-	 BlNCg9654YIV39C6HX9Kn58PDBfUK8bwMHCGt/RA=
+	b=na5asYsylWgRVDZZ36dRtpZFvViSHzDf5tcrwxg61QDQqR8kO+l+xiSaD6yPxt4R7
+	 SY+e3n0tr/WCiav6t8Q+Myg2v/ErQvWBWmWBLLJa+I8DYpaOidGCXiTNzOqX/E07gj
+	 aDB7OQKEYx0a9mvlaF+8CnVgfsP//9/VigrztbSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbfDVTrq (ORCPT
+        id S1730380AbfDVTru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50620 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730337AbfDVTrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:47:42 -0400
+        id S1730368AbfDVTrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:47:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C1421902;
-        Mon, 22 Apr 2019 19:47:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3F5A218FD;
+        Mon, 22 Apr 2019 19:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962461;
-        bh=kKSg9CKcEJ+JF+KJ8Z7C0kIhnyeUyt4CjM1tQIH4960=;
+        s=default; t=1555962466;
+        bh=TCBvTTRKZHS3c6gaxnl+fS+JAr0sXq8FdcBmO+KAwho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O1/C1rA7KeOCQ/sK1g3TCnxxQzB80/ItoeytpcyxQ8FIu4tcsSx06LNfO6VAzYN2b
-         WcjNLizmpYhTPzuy3twsCxRvcDH6+fDpC78aB9/8d1p6Ai61U4dhWPJnVBunGmN6Ml
-         QVk1w3j2jIIfqJP2lFTB/lUiQX/Vrjyd+FpX8XdI=
+        b=whekB88LN/d6/tByH0+7N/VSXZeHNKjjeVls5EZYryyU/dBwOpSkqHikEM0FR7/n7
+         hg2s8r4wH33sniatoaTZfNKLENns8wiMDZ8Tv+iIMm3G+jRyr8zsAlsKa8axXH7/9j
+         7UdbPg9raC940KXwrn6wV9IosumFQjVALl8So4BY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.14 09/43] KVM: arm/arm64: vgic-its: Take the srcu lock when parsing the memslots
-Date:   Mon, 22 Apr 2019 15:46:53 -0400
-Message-Id: <20190422194727.12495-9-sashal@kernel.org>
+Cc:     Guido Kiener <guido@kiener-muenchen.de>,
+        Guido Kiener <guido.kiener@rohde-schwarz.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 11/43] usb: gadget: net2280: Fix net2280_dequeue()
+Date:   Mon, 22 Apr 2019 15:46:55 -0400
+Message-Id: <20190422194727.12495-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194727.12495-1-sashal@kernel.org>
 References: <20190422194727.12495-1-sashal@kernel.org>
@@ -57,98 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Guido Kiener <guido@kiener-muenchen.de>
 
-[ Upstream commit 7494cec6cb3ba7385a6a223b81906384f15aae34 ]
+[ Upstream commit f1d3fba17cd4eeea20397f1324b7b9c69a6a935c ]
 
-Calling kvm_is_visible_gfn() implies that we're parsing the memslots,
-and doing this without the srcu lock is frown upon:
+When a request must be dequeued with net2280_dequeue() e.g. due
+to a device clear action and the same request is finished by the
+function scan_dma_completions() then the function net2280_dequeue()
+does not find the request in the following search loop and
+returns the error -EINVAL without restoring the status ep->stopped.
+Thus the endpoint keeps blocked and does not receive any data
+anymore.
+This fix restores the status and does not issue an error message.
 
-[12704.164532] =============================
-[12704.164544] WARNING: suspicious RCU usage
-[12704.164560] 5.1.0-rc1-00008-g600025238f51-dirty #16 Tainted: G        W
-[12704.164573] -----------------------------
-[12704.164589] ./include/linux/kvm_host.h:605 suspicious rcu_dereference_check() usage!
-[12704.164602] other info that might help us debug this:
-[12704.164616] rcu_scheduler_active = 2, debug_locks = 1
-[12704.164631] 6 locks held by qemu-system-aar/13968:
-[12704.164644]  #0: 000000007ebdae4f (&kvm->lock){+.+.}, at: vgic_its_set_attr+0x244/0x3a0
-[12704.164691]  #1: 000000007d751022 (&its->its_lock){+.+.}, at: vgic_its_set_attr+0x250/0x3a0
-[12704.164726]  #2: 00000000219d2706 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[12704.164761]  #3: 00000000a760aecd (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[12704.164794]  #4: 000000000ef8e31d (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[12704.164827]  #5: 000000007a872093 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[12704.164861] stack backtrace:
-[12704.164878] CPU: 2 PID: 13968 Comm: qemu-system-aar Tainted: G        W         5.1.0-rc1-00008-g600025238f51-dirty #16
-[12704.164887] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
-[12704.164896] Call trace:
-[12704.164910]  dump_backtrace+0x0/0x138
-[12704.164920]  show_stack+0x24/0x30
-[12704.164934]  dump_stack+0xbc/0x104
-[12704.164946]  lockdep_rcu_suspicious+0xcc/0x110
-[12704.164958]  gfn_to_memslot+0x174/0x190
-[12704.164969]  kvm_is_visible_gfn+0x28/0x70
-[12704.164980]  vgic_its_check_id.isra.0+0xec/0x1e8
-[12704.164991]  vgic_its_save_tables_v0+0x1ac/0x330
-[12704.165001]  vgic_its_set_attr+0x298/0x3a0
-[12704.165012]  kvm_device_ioctl_attr+0x9c/0xd8
-[12704.165022]  kvm_device_ioctl+0x8c/0xf8
-[12704.165035]  do_vfs_ioctl+0xc8/0x960
-[12704.165045]  ksys_ioctl+0x8c/0xa0
-[12704.165055]  __arm64_sys_ioctl+0x28/0x38
-[12704.165067]  el0_svc_common+0xd8/0x138
-[12704.165078]  el0_svc_handler+0x38/0x78
-[12704.165089]  el0_svc+0x8/0xc
-
-Make sure the lock is taken when doing this.
-
-Fixes: bf308242ab98 ("KVM: arm/arm64: VGIC/ITS: protect kvm_read_guest() calls with SRCU lock")
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-its.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/udc/net2280.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
-index d72b8481f250..dc06f5e40041 100644
---- a/virt/kvm/arm/vgic/vgic-its.c
-+++ b/virt/kvm/arm/vgic/vgic-its.c
-@@ -704,8 +704,9 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
- 	int l1_tbl_size = GITS_BASER_NR_PAGES(baser) * SZ_64K;
- 	u64 indirect_ptr, type = GITS_BASER_TYPE(baser);
- 	int esz = GITS_BASER_ENTRY_SIZE(baser);
--	int index;
-+	int index, idx;
- 	gfn_t gfn;
-+	bool ret;
- 
- 	switch (type) {
- 	case GITS_BASER_TYPE_DEVICE:
-@@ -732,7 +733,8 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
- 
- 		if (eaddr)
- 			*eaddr = addr;
--		return kvm_is_visible_gfn(its->dev->kvm, gfn);
-+
-+		goto out;
+diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
+index a071ab0c163b..170327f84ea1 100644
+--- a/drivers/usb/gadget/udc/net2280.c
++++ b/drivers/usb/gadget/udc/net2280.c
+@@ -1277,9 +1277,9 @@ static int net2280_dequeue(struct usb_ep *_ep, struct usb_request *_req)
+ 			break;
+ 	}
+ 	if (&req->req != _req) {
++		ep->stopped = stopped;
+ 		spin_unlock_irqrestore(&ep->dev->lock, flags);
+-		dev_err(&ep->dev->pdev->dev, "%s: Request mismatch\n",
+-								__func__);
++		ep_dbg(ep->dev, "%s: Request mismatch\n", __func__);
+ 		return -EINVAL;
  	}
  
- 	/* calculate and check the index into the 1st level */
-@@ -766,7 +768,12 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
- 
- 	if (eaddr)
- 		*eaddr = indirect_ptr;
--	return kvm_is_visible_gfn(its->dev->kvm, gfn);
-+
-+out:
-+	idx = srcu_read_lock(&its->dev->kvm->srcu);
-+	ret = kvm_is_visible_gfn(its->dev->kvm, gfn);
-+	srcu_read_unlock(&its->dev->kvm->srcu, idx);
-+	return ret;
- }
- 
- static int vgic_its_alloc_collection(struct vgic_its *its,
 -- 
 2.19.1
 
