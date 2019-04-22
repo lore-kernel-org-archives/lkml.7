@@ -2,112 +2,103 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF9EC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 05:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11AEC282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 06:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49AAC20859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 05:39:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e+3kQonw"
+	by mail.kernel.org (Postfix) with ESMTP id 74A7D2147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 06:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555912910;
+	bh=ERp3AUcbxNL/NNK9WJkRCB59rPqO28F1ePzU79i4F+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J8JCVOzgQRglnJdRE+zM4pffQ8R8VFP1aq0UqTBfET66Ux5G9dCKjlK+X3KWnFI/L
+	 d2WACXWmm5SJsYcnJM+sHFahzWvcS3kkR4tPU/nvMaj0FgB2sMsvZfI2f7MuWziyY4
+	 aZreJ2m64JyLYAZ2pdpqCsFYF+GF/tCNFEuJpifo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfDVFjz (ORCPT
+        id S1726683AbfDVGBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 01:39:55 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47719 "EHLO ozlabs.org"
+        Mon, 22 Apr 2019 02:01:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfDVFjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 01:39:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725914AbfDVGBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 02:01:48 -0400
+Received: from localhost (unknown [171.61.90.205])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44nb4l5l7nz9s55;
-        Mon, 22 Apr 2019 15:39:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555911591;
-        bh=5gXmPWSkXyOLYChjl6b8S8muQNAnO0yX3ZyMpGazfSc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=e+3kQonwGrzxDA9M5KI97a7dweLNQYKaWwf8id67/8ag7ImTaEItuapQrghja1FVM
-         qrkNYgh2YQRLlVzonl/hYk+qIFtA+5svb5NQnBACL7wXBmsH8ExXpg6G8kt+H7VmPW
-         usf8HTc5SkoyZO5yuxhpuQV8Wnz39Vq946uhJyuR3xb+qZJGsJAClGIk8/U+O8PD6+
-         lsnR4RhCQC4oRv0L/f8pusi61hPzom5AabOP4GzeJGBu8DjHhPP3Lh4ZXprregqwm9
-         C/aFp0TLsRnQaY2hc/1dfKoTB5YP+ivD5hojWyiDXfNKgcTMT/XHHrNkuZqPlVwLHi
-         IbvW68OeT3ZAQ==
-Date:   Mon, 22 Apr 2019 15:39:49 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: linux-next: Fixes tag needs some work in the powerpc-fixes tree
-Message-ID: <20190422153950.4488fd7e@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id A480F20811;
+        Mon, 22 Apr 2019 06:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555912908;
+        bh=ERp3AUcbxNL/NNK9WJkRCB59rPqO28F1ePzU79i4F+8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uBnM6ASprLwnsi4IMrnl5wP5M2nS744fe8UDuh8zrXQvU2+h99OkTRYb3wKbWiLTZ
+         gQfeok/Kzq1EbotjfO4FaENrL5UGClB0vJlPqN3oC6jhjHG4N6oYYazU4vWSOfFdu/
+         SQ4+yPBFw9CvW8aXkUuPRGf9UWsqK1aPmgUA7a6A=
+Date:   Mon, 22 Apr 2019 11:31:41 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2 2/2] regmap: soundwire: fix Kconfig select/depend issue
+Message-ID: <20190422060141.GW28103@vkoul-mobl>
+References: <20190419194649.18467-1-pierre-louis.bossart@linux.intel.com>
+ <20190419194649.18467-3-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/M8qfRr2dOHX9cZdNwPpP24Q"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190419194649.18467-3-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/M8qfRr2dOHX9cZdNwPpP24Q
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 19-04-19, 14:46, Pierre-Louis Bossart wrote:
+> The mechanism should be
+> 
+> config CODEC_XYX_SDW
+>        depends on SOUNDWIRE
+>        select REGMAP_SOUNDWIRE
+> 
+> config REGMAP_SOUNDWIRE
+>        select SOUNDWIRE_BUS
+> 
+> SOUNDWIRE_BUS can be independently selected by the SOC driver. The SOC
+> driver should not know or care about REGMAP_SOUNDWIRE.
 
-Hi all,
+lgtm, Mark can I have ypu ack so that I can carry the series thru
+soundwire tree
 
-In commit
+Thanks
 
-  7a3a4d763837 ("powerpc/mm_iommu: Allow pinning large regions")
+> Fixes: 7c22ce6e2184 ('03fc8746f7915b5a391d8227f7e1')
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/base/regmap/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
+> index 6ad5ef48b61e..c12e3f1fb110 100644
+> --- a/drivers/base/regmap/Kconfig
+> +++ b/drivers/base/regmap/Kconfig
+> @@ -44,7 +44,7 @@ config REGMAP_IRQ
+>  
+>  config REGMAP_SOUNDWIRE
+>  	tristate
+> -	depends on SOUNDWIRE_BUS
+> +	select SOUNDWIRE_BUS
+>  
+>  config REGMAP_SCCB
+>  	tristate
+> -- 
+> 2.17.1
 
-Fixes tag
-
-  Fixes: 678e174c4c16 ("powerpc/mm/iommu: allow migration of cma allocated =
-pages during mm_iommu_do_alloc", 2019-03-05)
-
-has these problem(s):
-
-  - the ", 2019-03-05" is unexpected in a Fixes tag
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
-In commit
-
-  eb9d7a62c386 ("powerpc/mm_iommu: Fix potential deadlock")
-
-Fixes tag
-
-  Fixes: c10c21efa4bc ("powerpc/vfio/iommu/kvm: Do not pin device memory", =
-2018-12-19)
-
-has these problem(s):
-
-  - the ", 2018-12-19" is unexpected in a Fixes tag
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/M8qfRr2dOHX9cZdNwPpP24Q
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly9U6YACgkQAVBC80lX
-0GzuwQf/Tg5k2+JLzmQv71XXAvomr8zCS4BkJSMEjYmBlJU/n+QbiamyueqJX3Wb
-PHYZQaPROrgZ5zCwuqpNA529ZUXvmRWtNWYVeEMz830VRtJzfapi6IsRlhRUkClU
-jSH0joMAHnasT5Z13IDEBUaFY3UaDrXL8fTBu3OUwrUB8ei730wLg9nJKoeVHrLl
-zWmAodxzHVK4sDKBJcDDSqEedL7lHancj8ATWuspJ2zAOaMRWQ8hJ3lobmahWBV4
-TRVKLMLCrF5FVIUprbdsNARk2r0UPTHrVNIET6faU0rmaHp5nP5xcyY5qN3+1kbB
-7kdAjVR69dc4fcGFwQ/GUaaik/4usg==
-=0q47
------END PGP SIGNATURE-----
-
---Sig_/M8qfRr2dOHX9cZdNwPpP24Q--
+-- 
+~Vinod
