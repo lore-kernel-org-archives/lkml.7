@@ -2,246 +2,213 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6CFC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E01C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B8320896
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE5D20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:14:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="HvKEXY4P";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BYwL66vU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbfDVVMD (ORCPT
+        id S1729811AbfDVVOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 17:12:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50788 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728796AbfDVVMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 17:12:02 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6CD34308FEDE;
-        Mon, 22 Apr 2019 21:12:01 +0000 (UTC)
-Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 24F1C60C64;
-        Mon, 22 Apr 2019 21:12:00 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 15:11:59 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Alexandru Gagniuc <mr.nuke.me@gmail.com>, austin_bolen@dell.com,
-        alex_gagniuc@dellteam.com, keith.busch@intel.com,
-        Shyam_Iyer@Dell.com, lukas@wunner.de, okaya@kernel.org,
-        torvalds@linux-foundation.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/LINK: bw_notification: Do not leave interrupt
- handler NULL
-Message-ID: <20190422151159.1452501b@x1.home>
-In-Reply-To: <20190419150827.5040897e@x1.home>
-References: <20190320193504.GC251185@google.com>
-        <20190323003700.7294-1-mr.nuke.me@gmail.com>
-        <20190325222502.GC24180@google.com>
-        <20190419150827.5040897e@x1.home>
-Organization: Red Hat
+        Mon, 22 Apr 2019 17:14:03 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:39008 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729544AbfDVVOC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 17:14:02 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3ML5Ov5027209;
+        Mon, 22 Apr 2019 14:13:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=dfcwkdCFb1ITGBunPP8DPIpmZ1z/oQrqiaAjsmIYB3w=;
+ b=HvKEXY4P+mzelgP00ZEEBv5R97uDD/qSRJ8nX43QEa995QUgsJuurDbgy4sBWz8+sYAW
+ Y7T6bKbHKRmrzheALaYUzc2oP9R/Pt2nVLNgKA6iRbsqbqc8zsKKHHNkBJUwesSgmndF
+ P7N9yIv7uP3IQ/o0reOXNUPOLX+jPCSwdFo= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2s1k6mrk81-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 22 Apr 2019 14:13:08 -0700
+Received: from frc-hub04.TheFacebook.com (2620:10d:c021:18::174) by
+ frc-hub05.TheFacebook.com (2620:10d:c021:18::175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 22 Apr 2019 14:13:08 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.183.28)
+ by o365-in.thefacebook.com (192.168.177.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Mon, 22 Apr 2019 14:13:08 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dfcwkdCFb1ITGBunPP8DPIpmZ1z/oQrqiaAjsmIYB3w=;
+ b=BYwL66vUUjRwzpIDgMmyFDHS/fYGIWA7IqhmXgCXtcOnz1QsUsx2XU/Wmplgvyczq2XjOVLkZhGpQQFKF8Q3q6/Z+fALHcfu8ylDNuz77nP3H0aFaHEeLAAAW/PSw4k6JOkAOQ962C42F4l3vjPkUQ7sWu3lKBGnY06TCE1ag9Q=
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.59.17) by
+ BYAPR15MB2773.namprd15.prod.outlook.com (20.179.158.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.16; Mon, 22 Apr 2019 21:13:06 +0000
+Received: from BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::750c:2d8e:bf62:4d0d]) by BYAPR15MB3384.namprd15.prod.outlook.com
+ ([fe80::750c:2d8e:bf62:4d0d%5]) with mapi id 15.20.1813.017; Mon, 22 Apr 2019
+ 21:13:06 +0000
+From:   Yonghong Song <yhs@fb.com>
+To:     Matt Mullins <mmullins@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Andrew Hall <hall@fb.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>
+CC:     Song Liu <songliubraving@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "shuah@kernel.org" <shuah@kernel.org>, Martin Lau <kafai@fb.com>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>
+Subject: Re: [PATCH bpf-next v3 5/5] selftests: bpf: test writable buffers in
+ raw tps
+Thread-Topic: [PATCH bpf-next v3 5/5] selftests: bpf: test writable buffers in
+ raw tps
+Thread-Index: AQHU9vOZImYJPp9DbEuPi8caOMwjQ6ZIhW2AgAAPZACAAB2dgA==
+Date:   Mon, 22 Apr 2019 21:13:06 +0000
+Message-ID: <7a82ca1d-dc92-cd03-0dff-3329d8f11774@fb.com>
+References: <20190419210409.5021-1-mmullins@fb.com>
+ <20190419210409.5021-6-mmullins@fb.com>
+ <7f32dd3c-a1e1-2965-3a98-3fa9e54e8501@fb.com>
+ <7a40c2851cd6f708a11cd003a05ab79c8644b10d.camel@fb.com>
+In-Reply-To: <7a40c2851cd6f708a11cd003a05ab79c8644b10d.camel@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR0201CA0096.namprd02.prod.outlook.com
+ (2603:10b6:301:75::37) To BYAPR15MB3384.namprd15.prod.outlook.com
+ (2603:10b6:a03:10e::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:417e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 02da6bfc-8cfb-4f7e-1b29-08d6c7675019
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2773;
+x-ms-traffictypediagnostic: BYAPR15MB2773:
+x-microsoft-antispam-prvs: <BYAPR15MB277396980D9D103A35804C26D3220@BYAPR15MB2773.namprd15.prod.outlook.com>
+x-forefront-prvs: 00159D1518
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(376002)(396003)(346002)(136003)(199004)(189003)(6506007)(102836004)(386003)(446003)(53546011)(476003)(53936002)(71200400001)(6116002)(2906002)(6486002)(229853002)(4326008)(25786009)(6246003)(76176011)(5660300002)(31686004)(2616005)(46003)(71190400001)(52116002)(186003)(6436002)(486006)(99286004)(316002)(5024004)(7416002)(14444005)(2501003)(54906003)(73956011)(110136005)(7736002)(305945005)(97736004)(256004)(66476007)(14454004)(68736007)(478600001)(11346002)(66446008)(64756008)(66556008)(66946007)(6512007)(8676002)(81156014)(81166006)(8936002)(93886005)(31696002)(86362001)(36756003)(2201001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2773;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 0+szDqD78IZs+tkLDirkqwn98DUY2T4VSwjwSW7Q6y23h3XiZNWjTKnvt7tqsWFDNuJL90NXg2lIfnItclhviQtcXkrqzOnEixDYLhaFjvZFTvYh4wL1pYlcjaZqU4lxU839szcdDB0G71LuJEiv+DRqAw5XoGG/Yp+5uaDpoeOhsw11/LZ+CY/Vr8trGaqgeK9aEAcDJnRPyvabn2euxlrxBZ79RdiwLUyUEgEcFt5xwqV/6dsUOqYbMgG5lrZgViw/lsnVHMtMAQFEM3Wz3SUQcQPQsyjMCIrWCKmbT5JWKxoXYpqXSl2l9n4SzziQ4XxZPhrLlvDCYcZpPSL64Vj8xJw/JEBEjLWY1NWhRzIqhZN2WTH+JnGxQE1A/wkZNySTXm5i8pBI8jrDTrwkCRS1x8FTFiKjb8QTx7Et4Ac=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8D87CCEF36ACA04590AB037FD189B376@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 22 Apr 2019 21:12:01 +0000 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02da6bfc-8cfb-4f7e-1b29-08d6c7675019
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2019 21:13:06.2668
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2773
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-22_01:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Apr 2019 15:08:27 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
-
-> On Mon, 25 Mar 2019 17:25:02 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > On Fri, Mar 22, 2019 at 07:36:51PM -0500, Alexandru Gagniuc wrote:  
-> > > A threaded IRQ with a NULL handler does not work with level-triggered
-> > > interrupts. request_threaded_irq() will return an error:
-> > > 
-> > >   genirq: Threaded irq requested with handler=NULL and !ONESHOT for irq 16
-> > >   pcie_bw_notification: probe of 0000:00:1b.0:pcie010 failed with error -22
-> > > 
-> > > For level interrupts we need to silence the interrupt before exiting
-> > > the IRQ handler, so just clear the PCI_EXP_LNKSTA_LBMS bit there.
-> > > 
-> > > Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
-> > > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > > Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>    
-> > 
-> > Applied with the following subject line to for-linus for v5.1, thanks!
-> > 
-> >   PCI/LINK: Supply IRQ handler so level-triggered IRQs are acked  
-> 
-> That made it a little tricky to track down this thread.  I get a
-> regression bisected back to this when trying to do vfio device
-> assignment.  I haven't dug further than the bisection, but I assume bus
-> resets are triggering this link bandwidth notifier code and nobody
-> thinks it's their interrupt:
-
-I'm not sure what to do with this, I think it bisects back to commit
-3e82a7f9031f simply because the interrupt was failing to register prior
-to that, so the bandwidth notifier code was never activated (how was
-this tested?).  When I assign a GPU to a VM, the VM is manipulating the
-device to change the link speed, I would have thought this would
-trigger the autonomous bandwidth notification, but I can clearly see
-BWMgmt+ ABWMgmt- in lspci.  The root port shows:
-
-  Interrupt: pin A routed to IRQ 25
-
-And the BW notifier interrupt is registered here:
-
-25: 0 ... 0 IR-IO-APIC    8-fasteoi   PCIe BW notif
-
-There's no interrupt count for any CPU on this vector.  For all I know,
-this IRQ routing has never been exercised and could be broken in the
-BIOS, resulting in the a random spurious IRQ victim.  There seems to be
-no good way to disable this driver other than manually unbinding root
-ports via sysfs.  That's not a great solution.  The system is an Intel
-X79 based workstation.  Suggestions for further debugging? Thanks,
-
-Alex
-
-> [  119.910738] irq 16: nobody cared (try booting with the "irqpoll" option)
-> [  119.917455] CPU: 18 PID: 0 Comm: swapper/18 Not tainted 5.1.0-rc1+ #29
-> [  119.923998] Hardware name: Hewlett-Packard HP Z820 Workstation/158B, BIOS J63 v03.69 03/25/2014
-> [  119.932715] Call Trace:
-> [  119.935169]  <IRQ>
-> [  119.937200]  dump_stack+0x46/0x60
-> [  119.940534]  __report_bad_irq+0x37/0xae
-> [  119.944380]  note_interrupt.cold.9+0xa/0x69
-> [  119.948580]  handle_irq_event_percpu+0x6a/0x80
-> [  119.953037]  handle_irq_event+0x3d/0x5a
-> [  119.956887]  handle_fasteoi_irq+0x8b/0x140
-> [  119.961003]  handle_irq+0xbf/0x100
-> [  119.964420]  do_IRQ+0x49/0xd0
-> [  119.967398]  common_interrupt+0xf/0xf
-> [  119.971074]  </IRQ>
-> [  119.973190] RIP: 0010:cpuidle_enter_state+0xb4/0x460
-> [  119.978167] Code: 24 0f 1f 44 00 00 31 ff e8 69 bf a3 ff 80 7c 24 13 00 74 12 9c 58 f6 c4 02 0f 85 7d 03 00 00 31 ff e8 60 cf a9 ff fb 45 85 e4 <0f> 88 ae 02 00 00 49 63 cc 4c 8b 3c 24 4c 2b 7c 24 08 48 8d 04 49
-> [  119.996967] RSP: 0018:ffffb6740330fe98 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffda
-> [  120.004549] RAX: ffff9dbfc19a1d80 RBX: ffffffff82d2c940 RCX: 000000000000001f
-> [  120.011700] RDX: 0000001beb3c9b05 RSI: 00000000315975dc RDI: 0000000000000000
-> [  120.018845] RBP: ffff9dbfc19acc00 R08: 0000000000000002 R09: 0000000000021640
-> [  120.025990] R10: 0000027ae2689456 R11: ffff9dbfc19a0e64 R12: 0000000000000004
-> [  120.033146] R13: ffffffff82d2cad8 R14: 0000000000000004 R15: 0000000000000000
-> [  120.040303]  ? cpuidle_enter_state+0x97/0x460
-> [  120.044679]  do_idle+0x1f1/0x230
-> [  120.047918]  cpu_startup_entry+0x19/0x20
-> [  120.051856]  start_secondary+0x172/0x1c0
-> [  120.055796]  secondary_startup_64+0xb6/0xc0
-> [  120.059993] handlers:
-> [  120.062283] [<0000000054c59383>] usb_hcd_irq
-> [  120.066563] Disabling IRQ #16
-> [  122.885627] irq 16: nobody cared (try booting with the "irqpoll" option)
-> [  122.892326] CPU: 18 PID: 0 Comm: swapper/18 Not tainted 5.1.0-rc1+ #29
-> [  122.898847] Hardware name: Hewlett-Packard HP Z820 Workstation/158B, BIOS J63 v03.69 03/25/2014
-> [  122.907532] Call Trace:
-> [  122.909985]  <IRQ>
-> [  122.912009]  dump_stack+0x46/0x60
-> [  122.915325]  __report_bad_irq+0x37/0xae
-> [  122.919159]  note_interrupt.cold.9+0xa/0x69
-> [  122.923338]  handle_irq_event_percpu+0x6a/0x80
-> [  122.927781]  handle_irq_event+0x3d/0x5a
-> [  122.931630]  handle_fasteoi_irq+0x8b/0x140
-> [  122.935730]  handle_irq+0xbf/0x100
-> [  122.939137]  do_IRQ+0x49/0xd0
-> [  122.942108]  common_interrupt+0xf/0xf
-> [  122.945772]  </IRQ>
-> [  122.947881] RIP: 0010:cpuidle_enter_state+0xb4/0x460
-> [  122.952845] Code: 24 0f 1f 44 00 00 31 ff e8 69 bf a3 ff 80 7c 24 13 00 74 12 9c 58 f6 c4 02 0f 85 7d 03 00 00 31 ff e8 60 cf a9 ff fb 45 85 e4 <0f> 88 ae 02 00 00 49 63 cc 4c 8b 3c 24 4c 2b 7c 24 08 48 8d 04 49
-> [  122.971629] RSP: 0018:ffffb6740330fe98 EFLAGS: 00000202 ORIG_RAX: ffffffffffffffda
-> [  122.979212] RAX: ffff9dbfc19a1d80 RBX: ffffffff82d2c940 RCX: 000000000000001f
-> [  122.986361] RDX: 0000001c9c8daa6e RSI: 00000000315975dc RDI: 0000000000000000
-> [  122.993517] RBP: ffff9dbfc19acc00 R08: 0000000000000002 R09: 0000000000021640
-> [  123.000655] R10: 0000027cae52b176 R11: ffff9dbfc19a0e64 R12: 0000000000000004
-> [  123.007777] R13: ffffffff82d2cad8 R14: 0000000000000004 R15: 0000000000000000
-> [  123.014906]  ? cpuidle_enter_state+0x97/0x460
-> [  123.019270]  do_idle+0x1f1/0x230
-> [  123.022502]  cpu_startup_entry+0x19/0x20
-> [  123.026426]  start_secondary+0x172/0x1c0
-> [  123.030352]  secondary_startup_64+0xb6/0xc0
-> [  123.034536] handlers:
-> [  123.036821] [<0000000054c59383>] usb_hcd_irq
-> [  123.041106] [<000000006da712f0>] vfio_intx_handler [vfio_pci]
-> [  123.046847] [<000000006da712f0>] vfio_intx_handler [vfio_pci]
-> [  123.052592] [<000000006da712f0>] vfio_intx_handler [vfio_pci]
-> [  123.058336] [<000000006da712f0>] vfio_intx_handler [vfio_pci]
-> [  123.064090] [<000000006da712f0>] vfio_intx_handler [vfio_pci]
-> [  123.069843] Disabling IRQ #16
-> 
-> Thanks,
-> Alex
->  
-> > > ---
-> > > Changes since v1:
-> > >  - move pcie_update_link_speed() to irq to prevent duplicate read of link_status
-> > >  - Add Fixes: to commit message
-> > >  
-> > >  drivers/pci/pcie/bw_notification.c | 19 ++++++++++++++-----
-> > >  1 file changed, 14 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
-> > > index d2eae3b7cc0f..c48746f1cf3c 100644
-> > > --- a/drivers/pci/pcie/bw_notification.c
-> > > +++ b/drivers/pci/pcie/bw_notification.c
-> > > @@ -44,11 +44,10 @@ static void pcie_disable_link_bandwidth_notification(struct pci_dev *dev)
-> > >  	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnk_ctl);
-> > >  }
-> > >  
-> > > -static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
-> > > +static irqreturn_t pcie_bw_notification_irq(int irq, void *context)
-> > >  {
-> > >  	struct pcie_device *srv = context;
-> > >  	struct pci_dev *port = srv->port;
-> > > -	struct pci_dev *dev;
-> > >  	u16 link_status, events;
-> > >  	int ret;
-> > >  
-> > > @@ -58,6 +57,17 @@ static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
-> > >  	if (ret != PCIBIOS_SUCCESSFUL || !events)
-> > >  		return IRQ_NONE;
-> > >  
-> > > +	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
-> > > +	pcie_update_link_speed(port->subordinate, link_status);
-> > > +	return IRQ_WAKE_THREAD;
-> > > +}
-> > > +
-> > > +static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
-> > > +{
-> > > +	struct pcie_device *srv = context;
-> > > +	struct pci_dev *port = srv->port;
-> > > +	struct pci_dev *dev;
-> > > +
-> > >  	/*
-> > >  	 * Print status from downstream devices, not this root port or
-> > >  	 * downstream switch port.
-> > > @@ -67,8 +77,6 @@ static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
-> > >  		__pcie_print_link_status(dev, false);
-> > >  	up_read(&pci_bus_sem);
-> > >  
-> > > -	pcie_update_link_speed(port->subordinate, link_status);
-> > > -	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
-> > >  	return IRQ_HANDLED;
-> > >  }
-> > >  
-> > > @@ -80,7 +88,8 @@ static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
-> > >  	if (!pcie_link_bandwidth_notification_supported(srv->port))
-> > >  		return -ENODEV;
-> > >  
-> > > -	ret = request_threaded_irq(srv->irq, NULL, pcie_bw_notification_handler,
-> > > +	ret = request_threaded_irq(srv->irq, pcie_bw_notification_irq,
-> > > +				   pcie_bw_notification_handler,
-> > >  				   IRQF_SHARED, "PCIe BW notif", srv);
-> > >  	if (ret)
-> > >  		return ret;
-> > > -- 
-> > > 2.19.2
-> > >     
-> 
-
+DQoNCk9uIDQvMjIvMTkgMTI6MjcgUE0sIE1hdHQgTXVsbGlucyB3cm90ZToNCj4gT24gTW9uLCAy
+MDE5LTA0LTIyIGF0IDE4OjMyICswMDAwLCBZb25naG9uZyBTb25nIHdyb3RlOg0KPj4NCj4+IE9u
+IDQvMTkvMTkgMjowNCBQTSwgTWF0dCBNdWxsaW5zIHdyb3RlOg0KPj4+IFRoaXMgdGVzdHMgdGhh
+dDoNCj4+PiAgICAgKiBhIEJQRl9QUk9HX1RZUEVfUkFXX1RSQUNFUE9JTlRfV1JJVEFCTEUgY2Fu
+bm90IGJlIGF0dGFjaGVkIGlmIGl0DQo+Pj4gICAgICAgdXNlcyBlaXRoZXI6DQo+Pj4gICAgICAg
+KiBhIHZhcmlhYmxlIG9mZnNldCB0byB0aGUgdHJhY2Vwb2ludCBidWZmZXIsIG9yDQo+Pj4gICAg
+ICAgKiBhbiBvZmZzZXQgYmV5b25kIHRoZSBzaXplIG9mIHRoZSB0cmFjZXBvaW50IGJ1ZmZlcg0K
+Pj4+ICAgICAqIGEgdHJhY2VyIGNhbiBtb2RpZnkgdGhlIGJ1ZmZlciBwcm92aWRlZCB3aGVuIGF0
+dGFjaGVkIHRvIGEgd3JpdGFibGUNCj4+PiAgICAgICB0cmFjZXBvaW50IGluIGJwZl9wcm9nX3Rl
+c3RfcnVuDQo+Pj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBNYXR0IE11bGxpbnMgPG1tdWxsaW5zQGZi
+LmNvbT4NCj4+PiAtLS0NCj4+PiAgICBpbmNsdWRlL3RyYWNlL2V2ZW50cy9icGZfdGVzdF9ydW4u
+aCAgICAgICAgICAgfCA1MCArKysrKysrKysrKysNCj4+PiAgICBuZXQvYnBmL3Rlc3RfcnVuLmMg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNCArDQo+Pj4gICAgLi4uL3Jhd190cF93cml0
+YWJsZV9yZWplY3RfbmJkX2ludmFsaWQuYyAgICAgIHwgNDAgKysrKysrKysrKw0KPj4+ICAgIC4u
+Li9icGYvcHJvZ190ZXN0cy9yYXdfdHBfd3JpdGFibGVfdGVzdF9ydW4uYyB8IDgwICsrKysrKysr
+KysrKysrKysrKysNCj4+PiAgICAuLi4vc2VsZnRlc3RzL2JwZi92ZXJpZmllci9yYXdfdHBfd3Jp
+dGFibGUuYyAgfCAzNCArKysrKysrKw0KPj4+ICAgIDUgZmlsZXMgY2hhbmdlZCwgMjA4IGluc2Vy
+dGlvbnMoKykNCj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS90cmFjZS9ldmVudHMv
+YnBmX3Rlc3RfcnVuLmgNCj4+PiAgICBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvdGVzdGluZy9z
+ZWxmdGVzdHMvYnBmL3Byb2dfdGVzdHMvcmF3X3RwX3dyaXRhYmxlX3JlamVjdF9uYmRfaW52YWxp
+ZC5jDQo+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2Jw
+Zi9wcm9nX3Rlc3RzL3Jhd190cF93cml0YWJsZV90ZXN0X3J1bi5jDQo+Pj4gICAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IHRvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2JwZi92ZXJpZmllci9yYXdfdHBfd3Jp
+dGFibGUuYw0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvdHJhY2UvZXZlbnRzL2JwZl90
+ZXN0X3J1bi5oIGIvaW5jbHVkZS90cmFjZS9ldmVudHMvYnBmX3Rlc3RfcnVuLmgNCj4+PiBuZXcg
+ZmlsZSBtb2RlIDEwMDY0NA0KPj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uYWJmNDY2ODM5ZWE0DQo+
+Pj4gLS0tIC9kZXYvbnVsbA0KPj4+ICsrKyBiL2luY2x1ZGUvdHJhY2UvZXZlbnRzL2JwZl90ZXN0
+X3J1bi5oDQo+Pj4gQEAgLTAsMCArMSw1MCBAQA0KPj4+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRp
+ZmllcjogR1BMLTIuMCAqLw0KPj4+ICsjdW5kZWYgVFJBQ0VfU1lTVEVNDQo+Pj4gKyNkZWZpbmUg
+VFJBQ0VfU1lTVEVNIGJwZl90ZXN0X3J1bg0KPj4+ICsNCj4+PiArI2lmICFkZWZpbmVkKF9UUkFD
+RV9OQkRfSCkgfHwgZGVmaW5lZChUUkFDRV9IRUFERVJfTVVMVElfUkVBRCkNCj4+PiArI2RlZmlu
+ZSBfVFJBQ0VfQlBGX1RFU1RfUlVOX0gNCj4+PiArDQo+Pj4gKyNpbmNsdWRlIDxsaW51eC90cmFj
+ZXBvaW50Lmg+DQo+Pj4gKw0KPj4+ICtERUNMQVJFX0VWRU5UX0NMQVNTKGJwZl90ZXN0X2Zpbmlz
+aCwNCj4+PiArDQo+Pj4gKwlUUF9QUk9UTyhpbnQgKmVyciksDQo+Pj4gKw0KPj4+ICsJVFBfQVJH
+UyhlcnIpLA0KPj4+ICsNCj4+PiArCVRQX1NUUlVDVF9fZW50cnkoDQo+Pj4gKwkJX19maWVsZChp
+bnQsIGVycikNCj4+PiArCSksDQo+Pj4gKw0KPj4+ICsJVFBfZmFzdF9hc3NpZ24oDQo+Pj4gKwkJ
+X19lbnRyeS0+ZXJyID0gKmVycjsNCj4+PiArCSksDQo+Pj4gKw0KPj4+ICsJVFBfcHJpbnRrKCJi
+cGZfdGVzdF9maW5pc2ggd2l0aCBlcnI9JWQiLCBfX2VudHJ5LT5lcnIpDQo+Pj4gKyk7DQo+Pj4g
+Kw0KPj4+ICsjaWZkZWYgREVGSU5FX0VWRU5UX1dSSVRBQkxFDQo+Pj4gKyN1bmRlZiBCUEZfVEVT
+VF9SVU5fREVGSU5FX0VWRU5UDQo+Pj4gKyNkZWZpbmUgQlBGX1RFU1RfUlVOX0RFRklORV9FVkVO
+VCh0ZW1wbGF0ZSwgY2FsbCwgcHJvdG8sIGFyZ3MsIHNpemUpCVwNCj4+PiArCURFRklORV9FVkVO
+VF9XUklUQUJMRSh0ZW1wbGF0ZSwgY2FsbCwgUEFSQU1TKHByb3RvKSwJCVwNCj4+PiArCQkJICAg
+ICAgUEFSQU1TKGFyZ3MpLCBzaXplKQ0KPj4+ICsjZWxzZQ0KPj4+ICsjdW5kZWYgQlBGX1RFU1Rf
+UlVOX0RFRklORV9FVkVOVA0KPj4+ICsjZGVmaW5lIEJQRl9URVNUX1JVTl9ERUZJTkVfRVZFTlQo
+dGVtcGxhdGUsIGNhbGwsIHByb3RvLCBhcmdzLCBzaXplKQlcDQo+Pj4gKwlERUZJTkVfRVZFTlQo
+dGVtcGxhdGUsIGNhbGwsIFBBUkFNUyhwcm90byksIFBBUkFNUyhhcmdzKSkNCj4+PiArI2VuZGlm
+DQo+Pj4gKw0KPj4+ICtCUEZfVEVTVF9SVU5fREVGSU5FX0VWRU5UKGJwZl90ZXN0X2ZpbmlzaCwg
+YnBmX3Rlc3RfZmluaXNoLA0KPj4+ICsNCj4+PiArCVRQX1BST1RPKGludCAqZXJyKSwNCj4+PiAr
+DQo+Pj4gKwlUUF9BUkdTKGVyciksDQo+Pj4gKw0KPj4+ICsJc2l6ZW9mKGludCkNCj4+PiArKTsN
+Cj4+PiArDQo+Pj4gKyNlbmRpZg0KPj4+ICsNCj4+PiArLyogVGhpcyBwYXJ0IG11c3QgYmUgb3V0
+c2lkZSBwcm90ZWN0aW9uICovDQo+Pj4gKyNpbmNsdWRlIDx0cmFjZS9kZWZpbmVfdHJhY2UuaD4N
+Cj4+PiBkaWZmIC0tZ2l0IGEvbmV0L2JwZi90ZXN0X3J1bi5jIGIvbmV0L2JwZi90ZXN0X3J1bi5j
+DQo+Pj4gaW5kZXggZmFiMTQyYjc5NmVmLi4yNWU3NTcxMDI1OTUgMTAwNjQ0DQo+Pj4gLS0tIGEv
+bmV0L2JwZi90ZXN0X3J1bi5jDQo+Pj4gKysrIGIvbmV0L2JwZi90ZXN0X3J1bi5jDQo+Pj4gQEAg
+LTEzLDYgKzEzLDkgQEANCj4+PiAgICAjaW5jbHVkZSA8bmV0L3NvY2suaD4NCj4+PiAgICAjaW5j
+bHVkZSA8bmV0L3RjcC5oPg0KPj4+ICAgIA0KPj4+ICsjZGVmaW5lIENSRUFURV9UUkFDRV9QT0lO
+VFMNCj4+PiArI2luY2x1ZGUgPHRyYWNlL2V2ZW50cy9icGZfdGVzdF9ydW4uaD4NCj4+PiArDQo+
+Pj4gICAgc3RhdGljIGludCBicGZfdGVzdF9ydW4oc3RydWN0IGJwZl9wcm9nICpwcm9nLCB2b2lk
+ICpjdHgsIHUzMiByZXBlYXQsDQo+Pj4gICAgCQkJdTMyICpyZXR2YWwsIHUzMiAqdGltZSkNCj4+
+PiAgICB7DQo+Pj4gQEAgLTEwMCw2ICsxMDMsNyBAQCBzdGF0aWMgaW50IGJwZl90ZXN0X2Zpbmlz
+aChjb25zdCB1bmlvbiBicGZfYXR0ciAqa2F0dHIsDQo+Pj4gICAgCWlmIChlcnIgIT0gLUVOT1NQ
+QykNCj4+PiAgICAJCWVyciA9IDA7DQo+Pj4gICAgb3V0Og0KPj4+ICsJdHJhY2VfYnBmX3Rlc3Rf
+ZmluaXNoKCZlcnIpOw0KPj4+ICAgIAlyZXR1cm4gZXJyOw0KPj4+ICAgIH0NCj4+PiAgICANCj4+
+PiBkaWZmIC0tZ2l0IGEvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMvYnBmL3Byb2dfdGVzdHMvcmF3
+X3RwX3dyaXRhYmxlX3JlamVjdF9uYmRfaW52YWxpZC5jIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVz
+dHMvYnBmL3Byb2dfdGVzdHMvcmF3X3RwX3dyaXRhYmxlX3JlamVjdF9uYmRfaW52YWxpZC5jDQo+
+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjMyOGQ1YzRi
+MDg0Yg0KPj4+IC0tLSAvZGV2L251bGwNCj4+PiArKysgYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0
+cy9icGYvcHJvZ190ZXN0cy9yYXdfdHBfd3JpdGFibGVfcmVqZWN0X25iZF9pbnZhbGlkLmMNCj4+
+PiBAQCAtMCwwICsxLDQwIEBADQo+Pj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwt
+Mi4wDQo+Pj4gKw0KPj4+ICsjaW5jbHVkZSA8dGVzdF9wcm9ncy5oPg0KPj4+ICsjaW5jbHVkZSA8
+bGludXgvbmJkLmg+DQo+Pj4gKw0KPj4+ICt2b2lkIHRlc3RfcmF3X3RwX3dyaXRhYmxlX3JlamVj
+dF9uYmRfaW52YWxpZCh2b2lkKQ0KPj4+ICt7DQo+Pj4gKwlfX3UzMiBkdXJhdGlvbiA9IDA7DQo+
+Pj4gKwljaGFyIGVycm9yWzQwOTZdOw0KPj4+ICsJaW50IGJwZl9mZCA9IC0xLCB0cF9mZCA9IC0x
+Ow0KPj4+ICsNCj4+PiArCWNvbnN0IHN0cnVjdCBicGZfaW5zbiBwcm9ncmFtW10gPSB7DQo+Pj4g
+KwkJLyogcjYgaXMgb3VyIHRwIGJ1ZmZlciAqLw0KPj4+ICsJCUJQRl9MRFhfTUVNKEJQRl9EVywg
+QlBGX1JFR182LCBCUEZfUkVHXzEsIDApLA0KPj4+ICsJCUJQRl9MRFhfTUVNKEJQRl9EVywgQlBG
+X1JFR18wLCBCUEZfUkVHXzYsIDEyOCksDQo+Pg0KPj4gVGhlIG51bWJlciAiMTI4IiBpcyBhIGxp
+dHRsZSBjcnlwdGljLiBNYXliZSB5b3UgY2FuIHVzZSBzb21ldGhpbmcgbGlrZQ0KPj4gc2l6ZW9m
+KHN0cnVjdCBuYmRfcmVxdWVzdCk/DQo+IA0KPiBUaGF0IHdhcyBleHBsaWNpdGx5IGNob3NlbiB0
+byBiZSAoZmFyKSBsYXJnZXIgdGhhbiBhbiBuYmRfcmVxdWVzdCwgYXMNCj4gdGhpcyBwcm9ncmFt
+IHNob3VsZCBiZSByZWplY3RlZCBieSB0aGUgdmVyaWZpZXIuICBJZiB5b3UgcmVhbGx5IHdhbnQs
+IEkNCj4gY2FuIGRvIGBzaXplb2Yoc3RydWN0IG5iZF9yZXF1ZXN0KSArIHNvbWUgY29uc3RhbnRg
+IGFuZCBhZGQgYSBjb21tZW50Lg0KPiBCdXQgdGhlIHNpemUgb2YgYW4gbmJkIHJlcXVlc3Qgc2hv
+dWxkIG5ldmVyIGNoYW5nZSwgYXMgdGhhdCdzIGEgbmV0d29yaw0KPiBwcm90b2NvbC4NCg0KSSB0
+aGluayBgc2l6ZW9mKHN0cnVjdCBuYmRfcmVxdWVzdCkgKyBzb21lIGNvbnN0YW50YCBpcyBiZXR0
+ZXIgdGhhbiANCm51bWJlciBgMTI4YC4NCg==
