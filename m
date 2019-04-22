@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BA8C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC8DC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8B5204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C47C2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963237;
-	bh=bHUgYP+U7nbcyYBqraeuudEMBgsZuclqOTqty8qukew=;
+	s=default; t=1555963242;
+	bh=ZHd8cY/Lekvr3XmOT7i7yQqXMLCCVCE0JV36ZwjVrZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAUe+lr5C4oKdx/WuHh1j/3TVFvI/YJvHn1bY9VVcDQby8ZY/KWXfjcmVUvoz0gtn
-	 PfGk4fgZE6kDvoNxFLgCSd5gAT4KxGKEXC2ov1cY7fvreKe+gqWLB2yT/MK3alut0y
-	 FK51bHHbeH+eShGrgPpCcDRu7J7zr4bGNoJHXFcA=
+	b=M5XngO6bv10Jm7YkBk/70kX33i1v7zoPaT4m+Zce1IWuQ/hJAaCrMce/q325U92XW
+	 UDeVL2J8Z2Ti5tWNk9vnM9k+O/oReo5f55ASRaDt9VzDDqk0BkRdu3wCIUY03lcex4
+	 88yycalUyhCNfRpkLBv8L0/wfv+DCFpP1GkoQZ4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731915AbfDVUAf (ORCPT
+        id S1730212AbfDVTrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:00:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49962 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:47:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730217AbfDVTrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:47:15 -0400
+        id S1730184AbfDVTrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:47:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6B9321906;
-        Mon, 22 Apr 2019 19:47:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E06218D9;
+        Mon, 22 Apr 2019 19:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962434;
-        bh=bHUgYP+U7nbcyYBqraeuudEMBgsZuclqOTqty8qukew=;
+        s=default; t=1555962431;
+        bh=ZHd8cY/Lekvr3XmOT7i7yQqXMLCCVCE0JV36ZwjVrZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOLtcF173dvG0TjnYgw8htkGKXLDNXTBgFev5+4nz2gWj1n+e4/wlZh96UP5AaOxE
-         57fEsMjBG3Onc7HA5malVPjTtS7pD5nxo1v+TGUP2Ryrpzo2eN23m06aTXGf0CHfR6
-         wrf8XmSgn5r3K2Q2R9i/koKeJVvjilc8CGlNHbcg=
+        b=OxtItNq0eKrunVoIvbpABLzHvb7t5U7tDaEjPRzFladd8WQkvWnUvEBeEPuTKkNRi
+         Bz6Ust/hjyyhEOJulCBC8y1W8Up+pA2duH8sHgroIfrhtZr3wu6SpugWhU9Qd8DgXY
+         C1aF/3XzFuyekZ+uVTmz/XFq6MjSisu5PYe21B54=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin George <marting@netapp.com>,
-        Gargi Srinivas <sring@netapp.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 62/68] nvme-multipath: relax ANA state check
-Date:   Mon, 22 Apr 2019 15:45:10 -0400
-Message-Id: <20190422194516.11634-62-sashal@kernel.org>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Craig Bergstrom <craigb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sander Eikelenboom <linux@eikelenboom.it>,
+        Sean Young <sean@mess.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 59/68] x86/mm: Don't exceed the valid physical address space
+Date:   Mon, 22 Apr 2019 15:45:07 -0400
+Message-Id: <20190422194516.11634-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -61,45 +68,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin George <marting@netapp.com>
+From: Ralph Campbell <rcampbell@nvidia.com>
 
-[ Upstream commit cc2278c413c3a06a93c23ee8722e4dd3d621de12 ]
+[ Upstream commit 92c77f7c4d5dfaaf45b2ce19360e69977c264766 ]
 
-When undergoing state transitions I/O might be requeued, hence
-we should always call nvme_mpath_set_live() to schedule requeue_work
-whenever the nvme device is live, independent on whether the
-old state was live or not.
+valid_phys_addr_range() is used to sanity check the physical address range
+of an operation, e.g., access to /dev/mem. It uses __pa(high_memory)
+internally.
 
-Signed-off-by: Martin George <marting@netapp.com>
-Signed-off-by: Gargi Srinivas <sring@netapp.com>
-Signed-off-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+If memory is populated at the end of the physical address space, then
+__pa(high_memory) is outside of the physical address space because:
+
+   high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
+
+For the comparison in valid_phys_addr_range() this is not an issue, but if
+CONFIG_DEBUG_VIRTUAL is enabled, __pa() maps to __phys_addr(), which
+verifies that the resulting physical address is within the valid physical
+address space of the CPU. So in the case that memory is populated at the
+end of the physical address space, this is not true and triggers a
+VIRTUAL_BUG_ON().
+
+Use __pa(high_memory - 1) to prevent the conversion from going beyond
+the end of valid physical addresses.
+
+Fixes: be62a3204406 ("x86/mm: Limit mmap() of /dev/mem to valid physical addresses")
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Craig Bergstrom <craigb@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sander Eikelenboom <linux@eikelenboom.it>
+Cc: Sean Young <sean@mess.org>
+
+Link: https://lkml.kernel.org/r/20190326001817.15413-2-rcampbell@nvidia.com
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/x86/mm/mmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index da8f5ad30c71..260248fbb8fe 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -349,15 +349,12 @@ static inline bool nvme_state_is_live(enum nvme_ana_state state)
- static void nvme_update_ns_ana_state(struct nvme_ana_group_desc *desc,
- 		struct nvme_ns *ns)
+diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
+index 1e95d57760cf..b69f7d428443 100644
+--- a/arch/x86/mm/mmap.c
++++ b/arch/x86/mm/mmap.c
+@@ -230,7 +230,7 @@ bool mmap_address_hint_valid(unsigned long addr, unsigned long len)
+ /* Can we access it for direct reading/writing? Must be RAM: */
+ int valid_phys_addr_range(phys_addr_t addr, size_t count)
  {
--	enum nvme_ana_state old;
--
- 	mutex_lock(&ns->head->lock);
--	old = ns->ana_state;
- 	ns->ana_grpid = le32_to_cpu(desc->grpid);
- 	ns->ana_state = desc->state;
- 	clear_bit(NVME_NS_ANA_PENDING, &ns->flags);
- 
--	if (nvme_state_is_live(ns->ana_state) && !nvme_state_is_live(old))
-+	if (nvme_state_is_live(ns->ana_state))
- 		nvme_mpath_set_live(ns);
- 	mutex_unlock(&ns->head->lock);
+-	return addr + count <= __pa(high_memory);
++	return addr + count - 1 <= __pa(high_memory - 1);
  }
+ 
+ /* Can we access it through mmap? Must be a valid physical address: */
 -- 
 2.19.1
 
