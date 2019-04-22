@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D95C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F9DC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE84218FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB4721906
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962375;
-	bh=6Ui+mNxebeUcMct9JOd+3C8FA4FTpDJkta54H57FEFU=;
+	s=default; t=1555962379;
+	bh=AnIoBIBEzcHVFwqfNpbyFlvJCgq+EYuLA6Mxe5Oz4PQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T3kcwz+MiucvbHUY1qAugF4Z7Ijp7Raj+1Bf+jVd7v4G9rsKqkOl1LcGelYgJwXI/
-	 BVs6R/LoC7NatSUBz8n0DOZeosSdMBPzMkh8yeFUPBjXh6+5WtHi60zps/R6bMaL3M
-	 boLQE8CAddTjNL5m9JVGs2ceAyWs/vrWS32n6aR8=
+	b=gERPEXtIPrg/7vOLqdim0C1FnLn4Ug1tMFhwQsjcava8HDngGpKvd9gh8E6X/W0Wn
+	 uE1Ui/2p6avgp4Hs3MSKtuF/haWS8WDPYXn+EdYUIltee/o8pnarG5a4iqbvKzYHLp
+	 zTo3FzxNpbgYwP8hl2467/owyQZweatB71WcE/CU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbfDVTqO (ORCPT
+        id S1729462AbfDVTqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48174 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729913AbfDVTqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:46:05 -0400
+        id S1729935AbfDVTqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:46:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED822218FC;
-        Mon, 22 Apr 2019 19:46:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60D5E21903;
+        Mon, 22 Apr 2019 19:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962364;
-        bh=6Ui+mNxebeUcMct9JOd+3C8FA4FTpDJkta54H57FEFU=;
+        s=default; t=1555962371;
+        bh=AnIoBIBEzcHVFwqfNpbyFlvJCgq+EYuLA6Mxe5Oz4PQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aUToCuDbmk8PLp9BOw/TLvUIjjWC7t6V/9tQKbZeJKP5fkWkKHKijZTope4+bm+dS
-         nRpFlp+zRd6OJ5VrufWFL2MgteuQh/XufYBLCL6AL24l91UD6dTcWtcHWcjvNTym8P
-         wrXmqy0BRjgCaIoVts+p3WeQ6k0B6UMGcuFfJX1c=
+        b=o2J3k5vjGWwpChi/1It0KD9H6MfxEBbkj5SxKG1hMSyZXx/e3xqLwllsmRey1E3K9
+         Q0fwB9h8xoDfUqtJN3qNVTsoav+WMHAN5Pd1W3LJ+JYBME12T0XNCVDYC9kQm5w79+
+         F/GgFK1b994espuPoW1vheUYble3jfM/YsQy+RUk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guido Kiener <guido@kiener-muenchen.de>,
-        Guido Kiener <guido.kiener@rohde-schwarz.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/68] usb: gadget: net2272: Fix net2272_dequeue()
-Date:   Mon, 22 Apr 2019 15:44:32 -0400
-Message-Id: <20190422194516.11634-24-sashal@kernel.org>
+Cc:     Lukas Wunner <lukas@wunner.de>, Frank Pavlic <f.pavlic@kunbus.de>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 27/68] net: ks8851: Dequeue RX packets explicitly
+Date:   Mon, 22 Apr 2019 15:44:35 -0400
+Message-Id: <20190422194516.11634-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -60,41 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guido Kiener <guido@kiener-muenchen.de>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit 091dacc3cc10979ab0422f0a9f7fcc27eee97e69 ]
+[ Upstream commit 536d3680fd2dab5c39857d62a3e084198fc74ff9 ]
 
-Restore the status of ep->stopped in function net2272_dequeue().
+The ks8851 driver lets the chip auto-dequeue received packets once they
+have been read in full. It achieves that by setting the ADRFE flag in
+the RXQCR register ("Auto-Dequeue RXQ Frame Enable").
 
-When the given request is not found in the endpoint queue
-the function returns -EINVAL without restoring the state of
-ep->stopped. Thus the endpoint keeps blocked and does not transfer
-any data anymore.
+However if allocation of a packet's socket buffer or retrieval of the
+packet over the SPI bus fails, the packet will not have been read in
+full and is not auto-dequeued. Such partial retrieval of a packet
+confuses the chip's RX queue management:  On the next RX interrupt,
+the first packet read from the queue will be the one left there
+previously and this one can be retrieved without issues. But for any
+newly received packets, the frame header status and byte count registers
+(RXFHSR and RXFHBCR) contain bogus values, preventing their retrieval.
 
-This fix is only compile-tested, since we do not have a
-corresponding hardware. An analogous fix was tested in the sibling
-driver. See "usb: gadget: net2280: Fix net2280_dequeue()"
+The chip allows explicitly dequeueing a packet from the RX queue by
+setting the RRXEF flag in the RXQCR register ("Release RX Error Frame").
+This could be used to dequeue the packet in case of an error, but if
+that error is a failed SPI transfer, it is unknown if the packet was
+transferred in full and was auto-dequeued or if it was only transferred
+in part and requires an explicit dequeue. The safest approach is thus
+to always dequeue packets explicitly and forgo auto-dequeueing.
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Without this change, I've witnessed packet retrieval break completely
+when an SPI DMA transfer fails, requiring a chip reset. Explicit
+dequeueing magically fixes this and makes packet retrieval absolutely
+robust for me.
+
+The chip's documentation suggests auto-dequeuing and uses the RRXEF
+flag only to dequeue error frames which the driver doesn't want to
+retrieve. But that seems to be a fair-weather approach.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/net2272.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/micrel/ks8851.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/net2272.c b/drivers/usb/gadget/udc/net2272.c
-index b77f3126580e..c2011cd7df8c 100644
---- a/drivers/usb/gadget/udc/net2272.c
-+++ b/drivers/usb/gadget/udc/net2272.c
-@@ -945,6 +945,7 @@ net2272_dequeue(struct usb_ep *_ep, struct usb_request *_req)
- 			break;
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index bd6e9014bc74..a93f8e842c07 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -535,9 +535,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
+ 		/* set dma read address */
+ 		ks8851_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI | 0x00);
+ 
+-		/* start the packet dma process, and set auto-dequeue rx */
+-		ks8851_wrreg16(ks, KS_RXQCR,
+-			       ks->rc_rxqcr | RXQCR_SDA | RXQCR_ADRFE);
++		/* start DMA access */
++		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
+ 
+ 		if (rxlen > 4) {
+ 			unsigned int rxalign;
+@@ -568,7 +567,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
+ 			}
+ 		}
+ 
+-		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
++		/* end DMA access and dequeue packet */
++		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_RRXEF);
  	}
- 	if (&req->req != _req) {
-+		ep->stopped = stopped;
- 		spin_unlock_irqrestore(&ep->dev->lock, flags);
- 		return -EINVAL;
- 	}
+ }
+ 
 -- 
 2.19.1
 
