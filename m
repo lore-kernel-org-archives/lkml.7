@@ -2,112 +2,141 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89767C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089FBC282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB6B20685
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1FB720685
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 09:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfDVJUq (ORCPT
+        id S1726754AbfDVJWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 05:20:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34259 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfDVJUp (ORCPT
+        Mon, 22 Apr 2019 05:22:14 -0400
+Received: from relay03.nicmail.ru ([195.208.3.4]:61090 "EHLO
+        relay03.nicmail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbfDVJWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 05:20:45 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hIV7y-00027o-PN; Mon, 22 Apr 2019 09:20:43 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 2/2] Bluetooth: btusb: Disable LE Advertising on system suspend
-Date:   Mon, 22 Apr 2019 17:20:34 +0800
-Message-Id: <20190422092034.21461-2-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190422092034.21461-1-kai.heng.feng@canonical.com>
-References: <20190422092034.21461-1-kai.heng.feng@canonical.com>
+        Mon, 22 Apr 2019 05:22:14 -0400
+X-Greylist: delayed 895 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Apr 2019 05:22:13 EDT
+Received: from [109.70.25.186] (port=54594 helo=sghpc.hn.golosunov.pp.ru)
+        by f19.mail.nic.ru with esmtp (Exim 5.55)
+        (envelope-from <stepan@golosunov.pp.ru>)
+        id 1hIUux-000NPk-Ck; Mon, 22 Apr 2019 12:07:16 +0300
+Received: from [46.0.38.82] (account sghpc@golosunov.pp.ru HELO sghpc.hn.golosunov.pp.ru)
+        by proxy07.mail.nic.ru (Exim 5.55)
+        with id 1hIUux-0000tC-Rl; Mon, 22 Apr 2019 12:07:15 +0300
+Received: from stepan by sghpc.hn.golosunov.pp.ru with local (Exim 4.89)
+        (envelope-from <stepan@golosunov.pp.ru>)
+        id 1hIUut-0002Yb-0e; Mon, 22 Apr 2019 13:07:11 +0400
+Date:   Mon, 22 Apr 2019 13:07:10 +0400
+From:   Stepan Golosunov <stepan@golosunov.pp.ru>
+To:     Lukasz Majewski <lukma@denx.de>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>, libc-alpha@sourceware.org,
+        Paul Eggert <eggert@cs.ucla.edu>,
+        Joseph Myers <joseph@codesourcery.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] y2038: linux: Provide __clock_settime64
+ implementation
+Message-ID: <20190422090710.bmxdhhankurhafxq@sghpc.golosunov.pp.ru>
+References: <20190414220841.20243-1-lukma@denx.de>
+ <20190414220841.20243-4-lukma@denx.de>
+ <20190420002009.l65upn2t3qqoj5uy@sghpc.golosunov.pp.ru>
+ <20190420132112.131f449b@jawa>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190420132112.131f449b@jawa>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-System may freeze during suspend, and it's caused by btusb early wakeup:
+20.04.2019 в 13:21:12 +0200 Lukasz Majewski написал:
+> Hi Stepan,
+> 
+> > 15.04.2019 в 00:08:38 +0200 Lukasz Majewski написал:
+> > > +# if defined __NR_clock_settime64
+> > > +  /* Make sure that passed __timespec64 struct pad is 0.  */
+> > > +  struct __timespec64 ts = *tp;
+> > > +  ts.tv_pad = 0;
+> > > +  return INLINE_SYSCALL_CALL (clock_settime64, clock_id, &ts);  
+> > 
+> > Isn't kernel supposed to zero out padding on its own?
+> > At least comment in kernel's get_timespec64 says so:
+> > 
+> > 	/* Zero out the padding for 32 bit systems or in compat mode
+> > */ if (IS_ENABLED(CONFIG_64BIT_TIME) && in_compat_syscall())
+> > 		kts.tv_nsec &= 0xFFFFFFFFUL;
+> > 
+> 
+> For ARM (and x86) 32 bit machines I do use following syscalls (like
+> clock_settime64):
+> https://elixir.bootlin.com/linux/v5.1-rc4/source/arch/arm/tools/syscall.tbl#L420
+> 
+> which are providing 64 bit time support on 32 bit systems.
+> 
+> Yes. In those systems the upper part (32 bits) of tv_nsec is cleared up
+> with mask in the kernel.
 
-kernel: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
-kernel: dpm_run_callback(): pci_pm_suspend+0x0/0x130 returns -16
-kernel: PM: Device 0000:00:14.0 failed to suspend async: error -16
-kernel: PM: Some devices failed to suspend, or early wake event detected
-kernel: usb usb1: usb resume
-kernel: hub 1-0:1.0: hub_resume
-kernel: usb usb1-port1: status 0507 change 0000
-kernel: usb usb1-port6: status 0103 change 0004
-kernel: usb usb1-port10: status 0107 change 0000
+Is it? The kernel (5.1-rc6) code looks to me like
 
-where btusb is connecte to usb1-port6.
+	/* Zero out the padding for 32 bit systems or in compat mode */
+	if (false && false)
+		kts.tv_nsec &= 0xFFFFFFFFUL;
 
-The expirement shows that the early wakeup is caused by LE Advertising
-packet.
+in 32-bit kernels. And like
 
-Disabling it via event mask can prevent the issue from happening.
+	if (false && true)
+		kts.tv_nsec &= 0xFFFFFFFFUL;
 
-BugLink: https://bugs.launchpad.net/bugs/1823029
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/bluetooth/btusb.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+for COMPAT syscalls in 64-bit kernels.
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 10c8f9872ee5..f03fcf5687e4 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -490,6 +490,7 @@ struct btusb_data {
- 	int (*setup_on_usb)(struct hci_dev *hdev);
- 
- 	int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
-+	bool suspended;
- };
- 
- static inline void btusb_free_frags(struct btusb_data *data)
-@@ -3316,12 +3317,18 @@ static void btusb_disconnect(struct usb_interface *intf)
- static int btusb_suspend(struct usb_interface *intf, pm_message_t message)
- {
- 	struct btusb_data *data = usb_get_intfdata(intf);
-+	struct hci_dev *hdev = data->hdev;
- 
- 	BT_DBG("intf %p", intf);
- 
- 	if (data->suspend_count++)
- 		return 0;
- 
-+	if (!PMSG_IS_AUTO(message)) {
-+		hci_disable_le_advertising(hdev);
-+		data->suspended = true;
-+	}
-+
- 	spin_lock_irq(&data->txlock);
- 	if (!(PMSG_IS_AUTO(message) && data->tx_in_flight)) {
- 		set_bit(BTUSB_SUSPENDING, &data->flags);
-@@ -3427,6 +3434,11 @@ static int btusb_resume(struct usb_interface *intf)
- 	spin_unlock_irq(&data->txlock);
- 	schedule_work(&data->work);
- 
-+	if (data->suspended) {
-+		hci_enable_le_advertising(hdev);
-+		data->suspended = false;
-+	}
-+
- 	return 0;
- 
- failed:
--- 
-2.17.1
+It should probably be changed into
 
+	if (!IS_ENABLED(CONFIG_64BIT) || in_compat_syscall())
+		kts.tv_nsec &= 0xFFFFFFFFUL;
+
+(Or into something like
+
+	if (!IS_ENABLED(CONFIG_64BIT) || in_compat_syscall() && !COMPAT_USE_64BIT_TIME)
+		kts.tv_nsec &= 0xFFFFFFFFUL;
+
+if x32 should retain 64-bit tv_nsec.)
+
+> However, I would prefer not to pass random data
+> to the kernel, and hence I do clear it up explicitly in glibc.
+
+If the kernel does not ignore padding on its own, then zeroing it out
+is required everywhere timespec is passed to kernel, including via
+code not known to glibc. (Does anyone promise that there won't be any
+ioctls that accept timespec, for example?) That seems to be
+error-prone (and might requre copying larger structes).
+
+On the other hand, if kernel 5.1+ ignores padding as intended there is
+no need to create additional copy of structs in glibc code that calls
+into clock_settime64 (or into timer_settime64 that accepts larger
+struct, for example).
+
+> > The code looks buggy though. It fails to zero out the padding in
+> > 32-bit kernels.
+> 
+> For the 32 bit systems without Y2038 support enabled in glibc - the
+> clock_settime would be used, which corresponds to sys_clock_settime32()
+> in the kernel.
+
+I am talking about kernels with Y2038 support.
+
+> > That part is probably broken since
+> > 98f76206b3350 ("compat: Cleanup in_compat_syscall() callers").
+> > 
+> > And, hmm, is CONFIG_64BIT_TIME enabled anywhere?
+
+I guess that the remaining CONFIG_64BIT_TIME in kernel should be
+replaced with CONFIG_COMPAT_32BIT_TIME or removed.
