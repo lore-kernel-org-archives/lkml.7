@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD04C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155D4C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B117204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5CA52177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962669;
-	bh=RZHhLtnbYR92Tt2A5Oo+4YI0+QJ9PPVF76ew02vkmuQ=;
+	s=default; t=1555962672;
+	bh=Mb2q87IzouOCuKM3pAL7VCUHmjVY874jKc/zTHaCFxQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZU+KWlP6G95FOGTyjs8ks2bWyWv8oKlCrqrfi7EipiZNiF43TkbpQpuHQN/oahyr+
-	 I74u+nMD1AlttHLzrq0rGZ9r2GpSbGP+jKfOzUdN19EEgSjT0rtdlYyEFD8D+i9GIz
-	 jjyw+etyvFfNyDywMEp6Ld+IsP4peZrWfERp9+fc=
+	b=fgspwT/h5d/4pLbjbMMBv1AIQhxHCl6RiyrHpEZa6UBF/5x+ytDx96WDoGVqBzYBE
+	 gZch1qVT86HE7x3cxdobPPp+BNrx1KHdDrQAsQhSanw/AQDV/FT3ZK7wpET96VOf8d
+	 FNcd7jgtSFm5lTxriuTQi/RSTcV6tUKd5wmRIMr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731264AbfDVTvI (ORCPT
+        id S1731252AbfDVTvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54990 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731214AbfDVTuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731204AbfDVTuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 15:50:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D4B920643;
-        Mon, 22 Apr 2019 19:50:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47046218CD;
+        Mon, 22 Apr 2019 19:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962651;
-        bh=RZHhLtnbYR92Tt2A5Oo+4YI0+QJ9PPVF76ew02vkmuQ=;
+        s=default; t=1555962650;
+        bh=Mb2q87IzouOCuKM3pAL7VCUHmjVY874jKc/zTHaCFxQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VkOIYJCYQrldUma3wHwduNSv8Inx3EJIv+yNGrTc3cEqvJNQ4LrhDRxraOOEtdKKO
-         e3B88+R78bhdHVWhX+wR3rZHWB77FkYZzrRp9t6FvFEjV8JfOMg1fr+aEW2PcvZ+cE
-         ypzjuSAV7TopjJcawu/XK9Y1tiU91ecWEbKLIG7U=
+        b=zP//5QUK2Fbw7AQyfGkzuQC2lQLnfkUiYaRWGMY43yzjyCdE6Pdv8Un36e2QDeqYt
+         SFwV6uZIyjLDmvILQiUmc0z9G9YtFzI3F7WYrEeFiiB048Nor48GNeKzDOhcK1MSRc
+         gOc1MEJ6qYAnV/k1TXSl5QqQmhAZszAUJvZsUyWU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     raymond pang <raymondpangxd@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 14/15] libata: fix using DMA buffers on stack
-Date:   Mon, 22 Apr 2019 15:50:21 -0400
-Message-Id: <20190422195022.13760-14-sashal@kernel.org>
+Cc:     Steffen Maier <maier@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 13/15] scsi: zfcp: reduce flood of fcrscn1 trace records on multi-element RSCN
+Date:   Mon, 22 Apr 2019 15:50:20 -0400
+Message-Id: <20190422195022.13760-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422195022.13760-1-sashal@kernel.org>
 References: <20190422195022.13760-1-sashal@kernel.org>
@@ -58,87 +58,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: raymond pang <raymondpangxd@gmail.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-[ Upstream commit dd08a8d9a66de4b54575c294a92630299f7e0fe7 ]
+[ Upstream commit c8206579175c34a2546de8a74262456278a7795a ]
 
-When CONFIG_VMAP_STACK=y, __pa() returns incorrect physical address for
-a stack virtual address. Stack DMA buffers must be avoided.
+If an incoming ELS of type RSCN contains more than one element, zfcp
+suboptimally causes repeated erp trigger NOP trace records for each
+previously failed port. These could be ports that went away.  It loops over
+each RSCN element, and for each of those in an inner loop over all
+zfcp_ports.
 
-Signed-off-by: raymond pang <raymondpangxd@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+The trigger to recover failed ports should be just the reception of some
+RSCN, no matter how many elements it has. So we can loop over failed ports
+separately, and only then loop over each RSCN element to handle the
+non-failed ports.
+
+The call chain was:
+
+  zfcp_fc_incoming_rscn
+    for (i = 1; i < no_entries; i++)
+      _zfcp_fc_incoming_rscn
+        list_for_each_entry(port, &adapter->port_list, list)
+          if (masked port->d_id match) zfcp_fc_test_link
+          if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"   <===
+
+In order the reduce the "flooding" of the REC trace area in such cases, we
+factor out handling the failed ports to be outside of the entries loop:
+
+  zfcp_fc_incoming_rscn
+    if (no_entries > 1)                                     <===
+      list_for_each_entry(port, &adapter->port_list, list)  <===
+        if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"     <===
+    for (i = 1; i < no_entries; i++)
+      _zfcp_fc_incoming_rscn
+        list_for_each_entry(port, &adapter->port_list, list)
+          if (masked port->d_id match) zfcp_fc_test_link
+
+Abbreviated example trace records before this code change:
+
+Tag            : fcrscn1
+WWPN           : 0x500507630310d327
+ERP want       : 0x02
+ERP need       : 0x02
+
+Tag            : fcrscn1
+WWPN           : 0x500507630310d327
+ERP want       : 0x02
+ERP need       : 0x00                 NOP => superfluous trace record
+
+The last trace entry repeats if there are more than 2 RSCN elements.
+
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/ata/libata-zpodd.c | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+ drivers/s390/scsi/zfcp_fc.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
-index 0ad96c647541..7017a81d53cf 100644
---- a/drivers/ata/libata-zpodd.c
-+++ b/drivers/ata/libata-zpodd.c
-@@ -51,38 +51,52 @@ static int eject_tray(struct ata_device *dev)
- /* Per the spec, only slot type and drawer type ODD can be supported */
- static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
- {
--	char buf[16];
-+	char *buf;
- 	unsigned int ret;
--	struct rm_feature_desc *desc = (void *)(buf + 8);
-+	struct rm_feature_desc *desc;
- 	struct ata_taskfile tf;
- 	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
- 			2,      /* only 1 feature descriptor requested */
- 			0, 3,   /* 3, removable medium feature */
- 			0, 0, 0,/* reserved */
--			0, sizeof(buf),
-+			0, 16,
- 			0, 0, 0,
- 	};
- 
-+	buf = kzalloc(16, GFP_KERNEL);
-+	if (!buf)
-+		return ODD_MECH_TYPE_UNSUPPORTED;
-+	desc = (void *)(buf + 8);
-+
- 	ata_tf_init(dev, &tf);
- 	tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_DEVICE;
- 	tf.command = ATA_CMD_PACKET;
- 	tf.protocol = ATAPI_PROT_PIO;
--	tf.lbam = sizeof(buf);
-+	tf.lbam = 16;
- 
- 	ret = ata_exec_internal(dev, &tf, cdb, DMA_FROM_DEVICE,
--				buf, sizeof(buf), 0);
--	if (ret)
-+				buf, 16, 0);
-+	if (ret) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
- 
--	if (be16_to_cpu(desc->feature_code) != 3)
-+	if (be16_to_cpu(desc->feature_code) != 3) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
- 
--	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1)
-+	if (desc->mech_type == 0 && desc->load == 0 && desc->eject == 1) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_SLOT;
--	else if (desc->mech_type == 1 && desc->load == 0 && desc->eject == 1)
-+	} else if (desc->mech_type == 1 && desc->load == 0 &&
-+		   desc->eject == 1) {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_DRAWER;
--	else
-+	} else {
-+		kfree(buf);
- 		return ODD_MECH_TYPE_UNSUPPORTED;
-+	}
+diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
+index ca28e1c66115..f9d59262da88 100644
+--- a/drivers/s390/scsi/zfcp_fc.c
++++ b/drivers/s390/scsi/zfcp_fc.c
+@@ -195,10 +195,6 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
+ 	list_for_each_entry(port, &adapter->port_list, list) {
+ 		if ((port->d_id & range) == (ntoh24(page->rscn_fid) & range))
+ 			zfcp_fc_test_link(port);
+-		if (!port->d_id)
+-			zfcp_erp_port_reopen(port,
+-					     ZFCP_STATUS_COMMON_ERP_FAILED,
+-					     "fcrscn1");
+ 	}
+ 	read_unlock_irqrestore(&adapter->port_list_lock, flags);
  }
+@@ -206,6 +202,7 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
+ static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
+ {
+ 	struct fsf_status_read_buffer *status_buffer = (void *)fsf_req->data;
++	struct zfcp_adapter *adapter = fsf_req->adapter;
+ 	struct fc_els_rscn *head;
+ 	struct fc_els_rscn_page *page;
+ 	u16 i;
+@@ -218,6 +215,22 @@ static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
+ 	/* see FC-FS */
+ 	no_entries = head->rscn_plen / sizeof(struct fc_els_rscn_page);
  
- /* Test if ODD is zero power ready by sense code */
++	if (no_entries > 1) {
++		/* handle failed ports */
++		unsigned long flags;
++		struct zfcp_port *port;
++
++		read_lock_irqsave(&adapter->port_list_lock, flags);
++		list_for_each_entry(port, &adapter->port_list, list) {
++			if (port->d_id)
++				continue;
++			zfcp_erp_port_reopen(port,
++					     ZFCP_STATUS_COMMON_ERP_FAILED,
++					     "fcrscn1");
++		}
++		read_unlock_irqrestore(&adapter->port_list_lock, flags);
++	}
++
+ 	for (i = 1; i < no_entries; i++) {
+ 		/* skip head and start with 1st element */
+ 		page++;
 -- 
 2.19.1
 
