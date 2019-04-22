@@ -2,128 +2,119 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15945C282E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 07:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342E7C282E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 07:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84E920857
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 07:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0388720857
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 07:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Wi6frBnN";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JQmuOtU2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ig18VicH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfDVHKy (ORCPT
+        id S1726941AbfDVHLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 03:10:54 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46022 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfDVHKy (ORCPT
+        Mon, 22 Apr 2019 03:11:33 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38577 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfDVHLd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 03:10:54 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B24F6615E6; Mon, 22 Apr 2019 07:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555917052;
-        bh=uAi5cYsiLvl7oGhOuwY5p/liIWrZ/Lrhjglq9hnUl30=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Wi6frBnNeHaQCUYQDXOynObh9f4+b1pDnzN1iRQ2rs0+DOMg80SltYoS7xx7De6sh
-         4btrlahjphjQ3S5AYGoVy8y9bIr8RWjfgnxIiCDfZHyP3HgQ+PrIU3OVy5fIUdpS2T
-         pRDiaKha55RU5KrOzdU7rI3YeFPDT7Loi8WB280U=
-Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C9B2604BE;
-        Mon, 22 Apr 2019 07:10:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555917051;
-        bh=uAi5cYsiLvl7oGhOuwY5p/liIWrZ/Lrhjglq9hnUl30=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JQmuOtU2ah7B6C7mVcRpEkmW2qLjBOh3hpxe/xQt/+0ryoq3WpXiVr+hq4YF25L8+
-         iG5rmswtXF5+lbpN8arkLctshQLYZj/RhRaWM2MvRnvXy6vHCG73oQ7aixh4p6N0D5
-         qMAVQn8R5jNLad6CeQCSVb4cnnENWYALoYs4ZHSY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0C9B2604BE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-To:     joro@8bytes.org, will.deacon@arm.com, robin.murphy@arm.com,
-        iommu@lists.linux-foundation.org
-Cc:     vivek.gautam@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org
-Subject: [PATCH v2 1/1] iommu/arm-smmu: Log CBFRSYNRA register on context fault
-Date:   Mon, 22 Apr 2019 12:40:36 +0530
-Message-Id: <20190422071036.32671-1-vivek.gautam@codeaurora.org>
-X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
+        Mon, 22 Apr 2019 03:11:33 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f36so5390980plb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 00:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fuu/HgA3Zck7zUDGxDbhlOoVzdybExIgvR3jeuv+sjs=;
+        b=ig18VicHKk8Rw/qe7ccl4KHcbu6bDhuD5OMZuE0huyrXrUTOEflofw9HL5G0O5sI7q
+         F8IuWbzcdsNka3SNKpNH9kUCwPbN8PTmpO+XmCWYETNfRJVh8HS+jW8lq9iMDfSdBzJB
+         jPvR2AF7ezPHNnj3W3ACHvfSWyAGjQxod1zPRTnsCiCoANLvRdBBWhZCprGuYvjdxUcY
+         ubICmfYPj9RsfYsaoyS9Er6Hh2xkpuJnrxMKzDbGDHaMztB+AYjuawPPAjcx7i+t+cCY
+         xQ+xqeBzqj6mr2fuXqgeGxbMyS/5ZSGnQlpoOHdsBj5EdtCNWIkXax1CDPTUEiEr1Ymu
+         l35A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fuu/HgA3Zck7zUDGxDbhlOoVzdybExIgvR3jeuv+sjs=;
+        b=l/qOt8tZMQWK8YH3Fp+S9zv2qGIvoNlt5Zw/Jkoujp/2nx4Roo1ya7qylDP7uSEF32
+         ZPHRse42dAR80LRBy4J+nJ6baAeM160GGsQLYIe+Oj4xKLXK0FD9YCidMwBDXqG/twJx
+         M7ieGwEhNdtfMCl9MZhd9xYP/rraKVYXLcx4H9IAxePZDOuIbYF445SMlqZPlOV2iJMP
+         enqMWl6VxhhLH6jwIgSCt6TMscwtMEBbzphtsKQy4g+WnhMZcmxN9F3fWPX20U4tEkmA
+         tLfZcH1RkBke5SyLzPhYcMlsepeIH/fSNWBa+aQpoPx2C1ixGTbK47tJr4XUmNCIhOL7
+         ZJoQ==
+X-Gm-Message-State: APjAAAWkQmtEAHNt78UrH0rMtj/CqrPl3NgfV/PS8Cb2mQBXk+AtnzWF
+        elXkQcJj3p3dBGkRBA79EqVWAQ==
+X-Google-Smtp-Source: APXvYqyR4OF+DNTsKPnb7mdRvFuV/v8ycBt8AejFu30hTf1XlslAFyXq+n1QcvRzpBj/6wqvKISdLg==
+X-Received: by 2002:a17:902:3324:: with SMTP id a33mr18792821plc.186.1555917092584;
+        Mon, 22 Apr 2019 00:11:32 -0700 (PDT)
+Received: from localhost ([122.166.139.136])
+        by smtp.gmail.com with ESMTPSA id n65sm29065250pfb.160.2019.04.22.00.11.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 00:11:31 -0700 (PDT)
+Date:   Mon, 22 Apr 2019 12:41:29 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     mohankumar718@gmail.com
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkp@intel.com
+Subject: Re: [RESEND] drivers: cpufreq: use kstrtoul instead of obsolete
+ simple_strtoul issue fixed
+Message-ID: <20190422071129.mttd3t3646rli4lc@vireshk-i7>
+References: <20190421150556.23341-1-mohankumar718@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190421150556.23341-1-mohankumar718@gmail.com>
+User-Agent: NeoMutt/20180323-120-3dd1ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bits[15:0] in CBFRSYNRA register contain information about
-StreamID of the incoming transaction that generated the
-fault. Dump CBFRSYNRA register to get this info.
-This is specially useful in a distributed SMMU architecture
-where multiple masters are connected to the SMMU.
-SID information helps to quickly identify the faulting
-master device.
+You mentioned RESEND in $subject, which is incorrect. This isn't a
+simple resend but you changed the code. You should have mentioned V2
+in $subject and ...
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+On 21-04-19, 18:05, mohankumar718@gmail.com wrote:
+> From: Mohan Kumar <mohankumar718@gmail.com>
+> 
+> Replace the obsolte simple_strtoul function with kstrtoul.
+> 
+> Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+> ---
 
-Changes since v1:
- - Addressed review comments, given by Bjorn, for nits.
+Mentioned V1->V2 diff right here in the patch.
 
- drivers/iommu/arm-smmu-regs.h | 2 ++
- drivers/iommu/arm-smmu.c      | 7 +++++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
+>  drivers/cpufreq/elanfreq.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpufreq/elanfreq.c b/drivers/cpufreq/elanfreq.c
+> index 03419f064752..6d861c2364e2 100644
+> --- a/drivers/cpufreq/elanfreq.c
+> +++ b/drivers/cpufreq/elanfreq.c
+> @@ -184,7 +184,8 @@ static int elanfreq_cpu_init(struct cpufreq_policy *policy)
+>   */
+>  static int __init elanfreq_setup(char *str)
+>  {
+> -	max_freq = simple_strtoul(str, &str, 0);
+> +	unsigned long int val = 0;
 
-diff --git a/drivers/iommu/arm-smmu-regs.h b/drivers/iommu/arm-smmu-regs.h
-index a1226e4ab5f8..e9132a926761 100644
---- a/drivers/iommu/arm-smmu-regs.h
-+++ b/drivers/iommu/arm-smmu-regs.h
-@@ -147,6 +147,8 @@ enum arm_smmu_s2cr_privcfg {
- #define CBAR_IRPTNDX_SHIFT		24
- #define CBAR_IRPTNDX_MASK		0xff
- 
-+#define ARM_SMMU_GR1_CBFRSYNRA(n)	(0x400 + ((n) << 2))
-+
- #define ARM_SMMU_GR1_CBA2R(n)		(0x800 + ((n) << 2))
- #define CBA2R_RW64_32BIT		(0 << 0)
- #define CBA2R_RW64_64BIT		(1 << 0)
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 045d93884164..e000473f8205 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -575,7 +575,9 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
- 	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
- 	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	void __iomem *gr1_base = ARM_SMMU_GR1(smmu);
- 	void __iomem *cb_base;
-+	u32 cbfrsynra;
- 
- 	cb_base = ARM_SMMU_CB(smmu, cfg->cbndx);
- 	fsr = readl_relaxed(cb_base + ARM_SMMU_CB_FSR);
-@@ -585,10 +587,11 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
- 
- 	fsynr = readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
- 	iova = readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
-+	cbfrsynra = readl_relaxed(gr1_base + ARM_SMMU_GR1_CBFRSYNRA(cfg->cbndx));
- 
- 	dev_err_ratelimited(smmu->dev,
--	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cb=%d\n",
--			    fsr, iova, fsynr, cfg->cbndx);
-+	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
-+			    fsr, iova, fsynr, cbfrsynra, cfg->cbndx);
- 
- 	writel(fsr, cb_base + ARM_SMMU_CB_FSR);
- 	return IRQ_HANDLED;
+A blank line here would be nice.
+
+> +	max_freq = kstrtoul(str, 0, &val);
+
+And this looks wrong. The value isn't returned by kstrtoul but an
+error message or 0.
+
+>  	pr_warn("You're using the deprecated elanfreq command line option. Use elanfreq.max_freq instead, please!\n");
+>  	return 1;
+>  }
+> -- 
+> 2.17.1
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+viresh
