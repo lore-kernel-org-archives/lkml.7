@@ -3,262 +3,182 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25491C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F75AC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EA92064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555940412;
-	bh=bELYdU20kXQtDdCJx2stGpStz6flReMe7DNfqabCDSw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=l1lI6ZFd9f3Qpj6g5DN0cD92vfd4yERXiKJnJC7XOtgv4UJS+yGt4fZX5ssghfiea
-	 tyQ2GVrpoO2gCwMM7CUsMK97aqVMzFhLpwhtvW5fsrFbSf/vlvzWpTpOckXqN4HVfX
-	 NmGrT9kc/XoUAeEGYBeIc+SOGIma5cHC8oiyAcPc=
+	by mail.kernel.org (Postfix) with ESMTP id 4074120685
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:43:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VXvP9Nr3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbfDVNkK (ORCPT
+        id S1727448AbfDVNne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:40:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41148 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbfDVNkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:40:10 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 771ED21473;
-        Mon, 22 Apr 2019 13:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555940408;
-        bh=bELYdU20kXQtDdCJx2stGpStz6flReMe7DNfqabCDSw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=My2PGPbkXCN4LcbRO+ur4ALNmcWs7R/0sVpBLZ6fg+7oDi1f1mW+2PTVxD8BrYShp
-         YdAI4c8CC1gQvI9vug0zovFU92nZk3gBO4EL14lxzGAEIEIaaqMOMxfM45N2wR4YkD
-         gK9nFJa9y/6ioF8BQDA/6oacjKjrESdTub0RNWLU=
-Received: by mail-qt1-f170.google.com with SMTP id w26so5287619qto.13;
-        Mon, 22 Apr 2019 06:40:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAWrjOnHy2SG9PT9vZaDAtfT/lf26KJkmmEHsCP1PpsEhs22/vUs
-        5OpkVw79Hp7otaTVKzKiNiPtvRDooPn9mj2vSA==
-X-Google-Smtp-Source: APXvYqwKjV1O7na+j0LqP55p9ndz4b1/75v+MoEkHCD9LkbBe5OX/XaNqaKC4DAJuhhamDRIPnBAv8kHguPSsvhIkqs=
-X-Received: by 2002:ac8:610f:: with SMTP id a15mr7923908qtm.257.1555940407602;
- Mon, 22 Apr 2019 06:40:07 -0700 (PDT)
+        Mon, 22 Apr 2019 09:43:34 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:60731 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727212AbfDVNne (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 09:43:34 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190422134332epoutp0147bba6c3fea9a17b4df11cd7065ae9ea~Xz740L1uV2207522075epoutp011
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 13:43:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190422134332epoutp0147bba6c3fea9a17b4df11cd7065ae9ea~Xz740L1uV2207522075epoutp011
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1555940612;
+        bh=Eollxodl1iSBFBD6n5kK6/yIyrhANd8zRovulBS+xeg=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=VXvP9Nr3r6u/9Jj5pHMIuHFrILlHXZpdNySyClkK3vlxPuka2YoG5ICd+SgMuL9TB
+         cC7ojO5pB/GvXHrmwC27uCmATOPs0pHkBDs9K2yergrrsbKmzWkhVo2Q+QHbvUZpgH
+         kXAiHkvsV5r5348sZn8y8HaJ6FY3viLlPqy8H+dM=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20190422134331epcas5p3ddc61f0da70dc38a7950712fe59fe93f~Xz74PV4II1733117331epcas5p3R;
+        Mon, 22 Apr 2019 13:43:31 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6E.77.04067.305CDBC5; Mon, 22 Apr 2019 22:43:31 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190422134330epcas5p2105a2dd5545c7e3164dd9bcbcddcad20~Xz73IK03_2826228262epcas5p2E;
+        Mon, 22 Apr 2019 13:43:30 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190422134330epsmtrp2ac6827b9126ad9367fdbb4034745ca48~Xz73FD0lP2592225922epsmtrp2t;
+        Mon, 22 Apr 2019 13:43:30 +0000 (GMT)
+X-AuditID: b6c32a4b-78bff70000000fe3-ac-5cbdc5033808
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        40.63.03692.205CDBC5; Mon, 22 Apr 2019 22:43:30 +0900 (KST)
+Received: from JOSHIK01 (unknown [107.111.93.135]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20190422134329epsmtip1949dba93da3cfe88086a2b5a435a2032~Xz718vHHP1320213202epsmtip1K;
+        Mon, 22 Apr 2019 13:43:28 +0000 (GMT)
+From:   "kanchan" <joshi.k@samsung.com>
+To:     "'Jan Kara'" <jack@suse.cz>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-nvme@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-ext4@vger.kernel.org>, <prakash.v@samsung.com>
+In-Reply-To: <20190418135223.GK28541@quack2.suse.cz>
+Subject: RE: [PATCH v4 5/7] nvme: register stream info with block layer
+Date:   Mon, 22 Apr 2019 19:13:20 +0530
+Message-ID: <009d01d4f911$5ec3af70$1c4b0e50$@samsung.com>
 MIME-Version: 1.0
-References: <20190417165514.18689-1-angus@akkea.ca> <20190417165514.18689-2-angus@akkea.ca>
- <20190418151350.GC32345@bogus> <79d43377285d6897847ac1452afbb18a@www.akkea.ca>
-In-Reply-To: <79d43377285d6897847ac1452afbb18a@www.akkea.ca>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 22 Apr 2019 08:39:55 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLZwUWrLO-m4BC6vXjBVDyY7hf8LE-amyDNgaJz3-=n0g@mail.gmail.com>
-Message-ID: <CAL_JsqLZwUWrLO-m4BC6vXjBVDyY7hf8LE-amyDNgaJz3-=n0g@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] arm64: dts: fsl: librem5: Add a device tree for
- the Librem5 devkit
-To:     Angus Ainslie <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm, Marco Felsch <m.felsch@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Guo Ren <guoren@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Bruno Thomsen <bruno.thomsen@gmail.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQK8/LoE/AuxJQqBdxKlIaVgudw56QHF1WnNAplKfBECo7wDuqRAENqw
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBKsWRmVeSWpSXmKPExsWy7bCmpi7z0b0xBqufiFvMnt7MZLH3lrbF
+        zHl32Cz27D3JYnF51xw2i/nLnrJbXJmyiNmB3WPzknqPvi2rGD3OLDjC7vF5k1wASxSXTUpq
+        TmZZapG+XQJXxrY3l5kL3ohWrN7ewNjA+E2wi5GTQ0LARGLimQ62LkYuDiGB3YwSP1d3Qjmf
+        GCW2bzjBDuF8Y5S49WA/O0zL958nWSASexklPt/9ygzhPGeUOHZ1HStIFZuAqsS9H71sILaI
+        gLzEjGXPGUGKmAX2M0o031jPCJLgBBrV83Il2FhhAXeJOTe3MYPYLEDNnXOXgtXwClhKbDtw
+        gg3CFpQ4OfMJC4jNDDR0+9s5zBAnKUjs/nSUFWKZm8SLZY+ZIGrEJV4ePQL2g4TAYzaJvzd3
+        MUE0uEg8/LYXqllY4tXxLVC/SUl8freXDcIulvh15ygzRHMHo8T1hpksEAl7iYt7/gIN4gDa
+        oCmxfpc+xDI+id7fT8DCEgK8Eh1tQhDVihL3Jj1lhbDFJR7OWAJle0i0tV1mmsCoOAvJa7OQ
+        vDYLyQuzEJYtYGRZxSiZWlCcm55abFpgnJdarlecmFtcmpeul5yfu4kRnH60vHcwbjrnc4hR
+        gINRiYf3w6o9MUKsiWXFlbmHGCU4mJVEeH+lAYV4UxIrq1KL8uOLSnNSiw8xSnOwKInzzpWd
+        Gy0kkJ5YkpqdmlqQWgSTZeLglGpgDCmacPj+C9MbhssdHbZ5Xlmz9WSfh/HFCocztt+2603b
+        /Ik3OqNG7OnSs7Ii3c1NJeeMzi5Z88xD2DVRdItG7pP3QplOs02f6e3/4WF0c+bV/yUtf3lW
+        MiTwC3gtn/Ox7UVR6QVlu0Lj9FS3BXP1ZvWnqVk+Tbt47pCiy4G5Lw5bXW8/Hp5YoMRSnJFo
+        qMVcVJwIAFpnvj07AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkkeLIzCtJLcpLzFFi42LZdlhJTpfp6N4Yg117OS1mT29msth7S9ti
+        5rw7bBZ79p5ksbi8aw6bxfxlT9ktrkxZxOzA7rF5Sb1H35ZVjB5nFhxh9/i8SS6AJYrLJiU1
+        J7MstUjfLoErY9uby8wFb0QrVm9vYGxg/CbYxcjJISFgIvH950mWLkYuDiGB3YwSf5rPM0Ek
+        xCWar/1gh7CFJVb+e84OUfSUUaKh/SILSIJNQFXi3o9eNhBbREBeYsay54wgRcwCRxklXh/q
+        hur4zCjx9cAeRpAqTqB9PS9Xgo0VFnCXmHNzGzOIzQI0qXPuUrAaXgFLiW0HTrBB2IISJ2c+
+        AdrGATRVT6JtI1gJM9Cy7W/nMENcpyCx+9NRVogj3CReLHvMBFEjLvHy6BH2CYzCs5BMmoUw
+        aRaSSbOQdCxgZFnFKJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7iREcQVqaOxgvL4k/xCjA
+        wajEw/th1Z4YIdbEsuLK3EOMEhzMSiK8v9KAQrwpiZVVqUX58UWlOanFhxilOViUxHmf5h2L
+        FBJITyxJzU5NLUgtgskycXBKNTDmBzxv++nayrjA/2zGBK6jCUk3ZGbouzG3ia84/JZR7eLV
+        EzNlvxnt4To8qfXoG2mWH1PFrtjMzZGpV+M/3pSYzKpykc1xVt9LSevVjEu3zpMVnZTEMtuH
+        j1FP4vqb9EnHfIMep77Pv2r2/q/huon2T+Uj0o18pjT1rj6jcOCTf4vHlxXq8k+VWIozEg21
+        mIuKEwEdiMslnAIAAA==
+X-CMS-MailID: 20190422134330epcas5p2105a2dd5545c7e3164dd9bcbcddcad20
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20190417175400epcas2p2b166bfaef69f5a02e856743be76199f3
+References: <1555523406-2380-1-git-send-email-joshi.k@samsung.com>
+        <CGME20190417175400epcas2p2b166bfaef69f5a02e856743be76199f3@epcas2p2.samsung.com>
+        <1555523406-2380-6-git-send-email-joshi.k@samsung.com>
+        <20190418135223.GK28541@quack2.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 12:44 PM Angus Ainslie <angus@akkea.ca> wrote:
->
-> Hi Rob,
->
->
-> On 2019-04-18 08:13, Rob Herring wrote:
-> > On Wed, Apr 17, 2019 at 09:55:12AM -0700, Angus Ainslie (Purism) wrote:
-> >> This is the development kit board for the Librem 5. The current level
-> >> of
-> >> support yields a working console and is able to boot userspace from
-> >> the
-> >> Network or eMMC.
-> >>
-> >> Additional subsystems that are active :
-> >>
-> >> - Both USB ports
-> >> - SD card socket
-> >> - WiFi usdhc
-> >> - WWAN modem
-> >> - GNSS
-> >> - GPIO keys
-> >> - LEDs
-> >> - gyro
-> >> - magnetometer
-> >> - touchscreen
-> >> - pwm
-> >> - backlight
-> >> - haptic motor
-> >>
-> >> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-> >> ---
-> >>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
-> >>  .../dts/freescale/imx8mq-librem5-devkit.dts   | 833
-> >> ++++++++++++++++++
-> >>  2 files changed, 834 insertions(+)
-> >>  create mode 100644
-> >> arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> >>
-> >> diff --git a/arch/arm64/boot/dts/freescale/Makefile
-> >> b/arch/arm64/boot/dts/freescale/Makefile
-> >> index 0bd122f60549..c043aca66572 100644
-> >> --- a/arch/arm64/boot/dts/freescale/Makefile
-> >> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> >> @@ -22,6 +22,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
-> >>
-> >>  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
-> >>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
-> >> +dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
-> >>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
-> >>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
-> >>  dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-> >> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> >> b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> >> new file mode 100644
-> >> index 000000000000..846a72dc7640
-> >> --- /dev/null
-> >> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> >
-> >> +&usb3_phy0 {
-> >> +    #address-cells = <1>;
-> >> +    #size-cells = <0>;
-> >> +    status = "okay";
-> >> +
-> >> +    port@0 {
-> >> +            reg = <0>;
-> >> +
-> >> +            typec_hs: endpoint {
-> >> +                    remote-endpoint = <&usb_con_hs>;
-> >> +            };
-> >> +    };
-> >> +
-> >> +    port@1 {
-> >> +            reg = <1>;
-> >> +
-> >> +            typec_ss: endpoint {
-> >> +                    remote-endpoint = <&usb_con_ss>;
-> >> +            };
-> >> +    };
-> >
-> > This is wrong. The graph should be between the USB controller and the
-> > connector. The phy is not involved.
-> >
-> >> +};
-> >> +
-> >> +&usb3_phy1 {
-> >> +    status = "okay";
-> >> +};
-> >> +
-> >> +&usb_dwc3_0 {
-> >> +    extcon = <&typec_ptn5100>;
-> >
-> > extcon is deprecated and you should only have the usb-connector
-> > binding.
-> > From the controller, you can walk the graph to the connector.
-> >
->
-> I not sure that I'm clear on what you mean. Here's what I think you want
-> it changed to.
+> This changes the current behavior, doesn't it? Previously devices with
+less than 5 hints got streams completely disabled, now they will have
+streams enabled but ids beyond supported max will be mapped to 0. I'm not
+against this but I guess it should be spelled out explicitely in the
+changelog.
 
-Yes, this looks correct.
+Yes, that is a change in current behavior. Will add that in next version,
+thanks.
 
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> index 846a72dc7640..7b8770fdc5fb 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> @@ -755,51 +755,50 @@
->   };
->
->   &uart4 { /* BT */
->          pinctrl-names = "default";
->          pinctrl-0 = <&pinctrl_uart4>, <&pinctrl_bt>;
->          uart-has-rtscts;
->          status = "okay";
->   };
->
->   &usb3_phy0 {
-> +       status = "okay";
-> +};
-> +
-> +&usb3_phy1 {
-> +       status = "okay";
-> +};
-> +
-> +&usb_dwc3_0 {
->          #address-cells = <1>;
->          #size-cells = <0>;
-> +       dr_mode = "otg";
->          status = "okay";
->
->          port@0 {
->                  reg = <0>;
->
->                  typec_hs: endpoint {
->                          remote-endpoint = <&usb_con_hs>;
->                  };
->          };
->
->          port@1 {
->                  reg = <1>;
->
->                  typec_ss: endpoint {
->                          remote-endpoint = <&usb_con_ss>;
->                  };
->          };
->   };
->
-> -&usb3_phy1 {
-> -       status = "okay";
-> -};
+-----Original Message-----
+From: Jan Kara [mailto:jack@suse.cz] 
+Sent: Thursday, April 18, 2019 7:22 PM
+To: Kanchan Joshi <joshi.k@samsung.com>
+Cc: linux-kernel@vger.kernel.org; linux-block@vger.kernel.org;
+linux-nvme@lists.infradead.org; linux-fsdevel@vger.kernel.org;
+linux-ext4@vger.kernel.org; prakash.v@samsung.com
+Subject: Re: [PATCH v4 5/7] nvme: register stream info with block layer
+
+On Wed 17-04-19 23:20:04, Kanchan Joshi wrote:
+> Make nvme driver register number of streams with block layer. Block 
+> layer will use that for write-hint to stream-id conversion. 
+> Registration is done for each namespace. Since NVMe spec allow all 
+> available streams (within subsystem) to be used by all namespaces, no 
+> attempt has been made to add reservation at namespace level.
+> 
+> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+> ---
+>  drivers/nvme/host/core.c | 23 ++++++-----------------
+>  1 file changed, 6 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c index 
+> 2c43e12..81b86fa 100644
+> --- a/drivers/nvme/host/core.c
+> +++ b/drivers/nvme/host/core.c
+> @@ -464,10 +464,6 @@ static int nvme_toggle_streams(struct nvme_ctrl
+*ctrl, bool enable)
+>  	return nvme_submit_sync_cmd(ctrl->admin_q, &c, NULL, 0);  }
+>  
+> -static int nvme_disable_streams(struct nvme_ctrl *ctrl) -{
+> -	return nvme_toggle_streams(ctrl, false);
+> -}
+>  
+>  static int nvme_enable_streams(struct nvme_ctrl *ctrl)  { @@ -510,14 
+> +506,7 @@ static int nvme_configure_directives(struct nvme_ctrl *ctrl)
+>  		return ret;
+>  
+>  	ctrl->nssa = le16_to_cpu(s.nssa);
+> -	if (ctrl->nssa < BLK_MAX_WRITE_HINTS - 1) {
+> -		dev_info(ctrl->device, "too few streams (%u) available\n",
+> -					ctrl->nssa);
+> -		nvme_disable_streams(ctrl);
+> -		return 0;
+> -	}
 > -
-> -&usb_dwc3_0 {
-> -       extcon = <&typec_ptn5100>;
-> -       dr_mode = "otg";
-> -       status = "okay";
-> -};
-> -
->   &usb_dwc3_1 {
->          dr_mode = "host";
->          status = "okay";
->   };
->
->
->
-> Thanks
-> Angus
->
-> >> +    dr_mode = "otg";
-> >> +    status = "okay";
-> >> +};
->
+> -	ctrl->nr_streams = min_t(unsigned, ctrl->nssa, BLK_MAX_WRITE_HINTS -
+1);
+> +	ctrl->nr_streams = ctrl->nssa;
+>  	dev_info(ctrl->device, "Using %u streams\n", ctrl->nr_streams);
+>  	return 0;
+>  }
+
+This changes the current behavior, doesn't it? Previously devices with less
+than 5 hints got streams completely disabled, now they will have streams
+enabled but ids beyond supported max will be mapped to 0. I'm not against
+this but I guess it should be spelled out explicitely in the changelog.
+
+								Honza
+--
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
+
