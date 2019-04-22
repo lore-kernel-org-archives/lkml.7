@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7A2C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49948C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0DA2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134DD2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963806;
-	bh=AugjpwPcIUqsJmF/AYrlVBLBuSDQk+fEb5wdIVgnD0Q=;
+	s=default; t=1555963815;
+	bh=m2VyGhpKaiCFUUZIItae6YUpt6d1B42+QDdg8sO8vAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fAX6KVuY2bWPlnstjxsOrB3Q9AlH3cnb3RLvKdemc/j1sEfwelFjKCRe1nTAVlgAH
-	 sEW7DMtAqJWX3VQSgvaupDmjDB1YJBBv96QRFTxHDCEoQjSQqWuJLaiwma/R6anFPH
-	 pxAA8N8BnCIUc+nSvi+KiZjG/c9827xRjh9leduI=
+	b=u+xkv213T48rZ/EV2nJfMnOrYHQORrqgU+zG0cYAEDGZo2651CP2JlWu//0UGUjTv
+	 BVyawIPmx36LLZcYYzizOa/P65jr8XP1RARiIM0bn5DrpjhNMKMEuBvoh9FEoVtOXx
+	 P4huVXKa8et/MtXDJ8ZTwpD0tafFbbz+hcHPI9QU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfDVTmz (ORCPT
+        id S1732541AbfDVUKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:42:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:10:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfDVTmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:42:53 -0400
+        id S1728987AbfDVTmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:42:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB3812175B;
-        Mon, 22 Apr 2019 19:42:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 842FE2177B;
+        Mon, 22 Apr 2019 19:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962172;
-        bh=AugjpwPcIUqsJmF/AYrlVBLBuSDQk+fEb5wdIVgnD0Q=;
+        s=default; t=1555962170;
+        bh=m2VyGhpKaiCFUUZIItae6YUpt6d1B42+QDdg8sO8vAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ozNBM476gKMkYhUtiCoC3RM84Dhvr11Tmvf5Hetvw08wqvwFCuiDgX830MPz23xmM
-         7CpVcgEWjaPPWUQP9jiSuowJSCvWSzWkbXaetho//5AQZe0nrGNfZI785q0i8qNQNR
-         RohbtNdS7YjlLAkTMXuklCpUIfaw6Wv6cMMUaLHk=
+        b=vwlva7ioz1HPLTxl8ENCv2D7Hl8cKfVozbDLlppehFXSIHHoE4UqgnJ2rzU3yeGNE
+         pfi7xDgSO4T23fWfNoJMi2h8Sd72ocW7BYgV7RHPnEckuH2eurKJc9QgfybwlJtwvn
+         ZjUIOFz1RizXVFK5vXs0RoI3OOW0UQPP+62mfjbU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 30/98] usb: dwc3: pci: add support for Comet Lake PCH ID
-Date:   Mon, 22 Apr 2019 15:40:57 -0400
-Message-Id: <20190422194205.10404-30-sashal@kernel.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 5.0 28/98] KVM: arm/arm64: vgic-its: Take the srcu lock when parsing the memslots
+Date:   Mon, 22 Apr 2019 15:40:55 -0400
+Message-Id: <20190422194205.10404-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -57,40 +57,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-[ Upstream commit 7ae622c978db6b2e28b4fced6ecd2a174492059d ]
+[ Upstream commit 7494cec6cb3ba7385a6a223b81906384f15aae34 ]
 
-This patch simply adds a new PCI Device ID
+Calling kvm_is_visible_gfn() implies that we're parsing the memslots,
+and doing this without the srcu lock is frown upon:
 
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+[12704.164532] =============================
+[12704.164544] WARNING: suspicious RCU usage
+[12704.164560] 5.1.0-rc1-00008-g600025238f51-dirty #16 Tainted: G        W
+[12704.164573] -----------------------------
+[12704.164589] ./include/linux/kvm_host.h:605 suspicious rcu_dereference_check() usage!
+[12704.164602] other info that might help us debug this:
+[12704.164616] rcu_scheduler_active = 2, debug_locks = 1
+[12704.164631] 6 locks held by qemu-system-aar/13968:
+[12704.164644]  #0: 000000007ebdae4f (&kvm->lock){+.+.}, at: vgic_its_set_attr+0x244/0x3a0
+[12704.164691]  #1: 000000007d751022 (&its->its_lock){+.+.}, at: vgic_its_set_attr+0x250/0x3a0
+[12704.164726]  #2: 00000000219d2706 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164761]  #3: 00000000a760aecd (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164794]  #4: 000000000ef8e31d (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164827]  #5: 000000007a872093 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
+[12704.164861] stack backtrace:
+[12704.164878] CPU: 2 PID: 13968 Comm: qemu-system-aar Tainted: G        W         5.1.0-rc1-00008-g600025238f51-dirty #16
+[12704.164887] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
+[12704.164896] Call trace:
+[12704.164910]  dump_backtrace+0x0/0x138
+[12704.164920]  show_stack+0x24/0x30
+[12704.164934]  dump_stack+0xbc/0x104
+[12704.164946]  lockdep_rcu_suspicious+0xcc/0x110
+[12704.164958]  gfn_to_memslot+0x174/0x190
+[12704.164969]  kvm_is_visible_gfn+0x28/0x70
+[12704.164980]  vgic_its_check_id.isra.0+0xec/0x1e8
+[12704.164991]  vgic_its_save_tables_v0+0x1ac/0x330
+[12704.165001]  vgic_its_set_attr+0x298/0x3a0
+[12704.165012]  kvm_device_ioctl_attr+0x9c/0xd8
+[12704.165022]  kvm_device_ioctl+0x8c/0xf8
+[12704.165035]  do_vfs_ioctl+0xc8/0x960
+[12704.165045]  ksys_ioctl+0x8c/0xa0
+[12704.165055]  __arm64_sys_ioctl+0x28/0x38
+[12704.165067]  el0_svc_common+0xd8/0x138
+[12704.165078]  el0_svc_handler+0x38/0x78
+[12704.165089]  el0_svc+0x8/0xc
+
+Make sure the lock is taken when doing this.
+
+Fixes: bf308242ab98 ("KVM: arm/arm64: VGIC/ITS: protect kvm_read_guest() calls with SRCU lock")
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ virt/kvm/arm/vgic/vgic-its.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index fdc6e4e403e8..8cced3609e24 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -29,6 +29,7 @@
- #define PCI_DEVICE_ID_INTEL_BXT_M		0x1aaa
- #define PCI_DEVICE_ID_INTEL_APL			0x5aaa
- #define PCI_DEVICE_ID_INTEL_KBP			0xa2b0
-+#define PCI_DEVICE_ID_INTEL_CMLH		0x02ee
- #define PCI_DEVICE_ID_INTEL_GLK			0x31aa
- #define PCI_DEVICE_ID_INTEL_CNPLP		0x9dee
- #define PCI_DEVICE_ID_INTEL_CNPH		0xa36e
-@@ -305,6 +306,9 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MRFLD),
- 	  (kernel_ulong_t) &dwc3_pci_mrfld_properties, },
+diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+index c41e11fd841c..fcb2fceaa4a5 100644
+--- a/virt/kvm/arm/vgic/vgic-its.c
++++ b/virt/kvm/arm/vgic/vgic-its.c
+@@ -754,8 +754,9 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
+ 	u64 indirect_ptr, type = GITS_BASER_TYPE(baser);
+ 	phys_addr_t base = GITS_BASER_ADDR_48_to_52(baser);
+ 	int esz = GITS_BASER_ENTRY_SIZE(baser);
+-	int index;
++	int index, idx;
+ 	gfn_t gfn;
++	bool ret;
  
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLH),
-+	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
+ 	switch (type) {
+ 	case GITS_BASER_TYPE_DEVICE:
+@@ -782,7 +783,8 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
+ 
+ 		if (eaddr)
+ 			*eaddr = addr;
+-		return kvm_is_visible_gfn(its->dev->kvm, gfn);
 +
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_SPTLP),
- 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
++		goto out;
+ 	}
  
+ 	/* calculate and check the index into the 1st level */
+@@ -812,7 +814,12 @@ static bool vgic_its_check_id(struct vgic_its *its, u64 baser, u32 id,
+ 
+ 	if (eaddr)
+ 		*eaddr = indirect_ptr;
+-	return kvm_is_visible_gfn(its->dev->kvm, gfn);
++
++out:
++	idx = srcu_read_lock(&its->dev->kvm->srcu);
++	ret = kvm_is_visible_gfn(its->dev->kvm, gfn);
++	srcu_read_unlock(&its->dev->kvm->srcu, idx);
++	return ret;
+ }
+ 
+ static int vgic_its_alloc_collection(struct vgic_its *its,
 -- 
 2.19.1
 
