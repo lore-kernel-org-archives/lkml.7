@@ -2,176 +2,278 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C80D8C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF89BC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9375020685
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDD820685
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 22:58:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PWU4bKJL"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jdgUBmgC";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="boVxiw1i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730414AbfDVW5b (ORCPT
+        id S1730445AbfDVW61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 18:57:31 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38422 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728965AbfDVW5b (ORCPT
+        Mon, 22 Apr 2019 18:58:27 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50388 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730415AbfDVW60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 18:57:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 10so6405548pfo.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 15:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=De7vDkdkI0IK/PB1OnL5OZWwEe1H5bkUm3rmMeiD75o=;
-        b=PWU4bKJLT6NvEomy706M0ypX/vgWZKGi63KG7M7utM7Huj3Nbzs1+AJ3O9NuLmFelq
-         8QW0hB91kvvzyRZQjrHh+AaVCAWfBKrV3rel4wGJPg9e0s/senigZ9igq2VUMX/UEWQl
-         vX+rP+gWHaudfLVesxpSLsbymNAIq3GxdGowc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=De7vDkdkI0IK/PB1OnL5OZWwEe1H5bkUm3rmMeiD75o=;
-        b=T1hRdvA7QzIO1XuIHxaLPfAeH8FCT88wxtaIkRU5L0h9Eim/2+Dk4h4RCuiAaB9PTE
-         R+jdeet9/GOoQ9T04o+Jm/l34m+lYmaGPNEu2S9EuUCT/R0us1lsIttBhfBy90RaOSPn
-         wT3hwCy2hvi9sqK/xbjQMS3VgJz1ZbDjzq5Wewr8FTnjJz0a3qO4V5GvCRj9u9GpyU1v
-         AwcTG91XWy5umTvw76Chlt9jV/HIJ8gERUCR65uaQ4POMC8dqJ+t8sBGw5OJmh1j6DkM
-         72ZCNi+0qLqBOy2S5bS06uDtVYLyFqX7NBrbvm0A0LKwwBuuHSQy7lVfZoK1VoO3k+vj
-         a9Lw==
-X-Gm-Message-State: APjAAAW8qDd86t1ejaPTlGRYsFCdNkvg/ykT5Ov5URupXMm3PKX6jHgO
-        qglxgF8fYE01Hwx4fc2yw4VYmw==
-X-Google-Smtp-Source: APXvYqzs9bj/Dh0/j+mMuCtE+5/8Qb+2ffodtXjWNbhLbGvh/+tHUyHH1iDqNqxOYIcDpRHPNZAHvA==
-X-Received: by 2002:a62:415d:: with SMTP id o90mr23036440pfa.236.1555973849956;
-        Mon, 22 Apr 2019 15:57:29 -0700 (PDT)
-Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id h189sm27896633pfc.125.2019.04.22.15.57.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Apr 2019 15:57:28 -0700 (PDT)
-Date:   Mon, 22 Apr 2019 15:57:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Ali Saidi <alisaidi@amazon.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] binfmt_elf: Move brk out of mmap when doing direct loader
- exec
-Message-ID: <20190422225727.GA21011@beast>
+        Mon, 22 Apr 2019 18:58:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2882B61637; Mon, 22 Apr 2019 22:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555973905;
+        bh=ogJvh7xESNQds26SlkHNHZxYq6DZITjmgoMw0x41fqs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jdgUBmgC6fQst9sxSOMX6uqA1kkodPsBxgISX97F9C2Khs2mvcNN7fB2pN+kehTXb
+         iRJmKZS+Y2TLBnWONyvOlKI/uBwlqoOVrmyV8gxOhu72isge9wwqyL86OKkJjbxT/S
+         NyHvnI3lECrfgkskqYw+wZPg/kGiIrSr0sLGeeLY=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92DB26115B;
+        Mon, 22 Apr 2019 22:58:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555973903;
+        bh=ogJvh7xESNQds26SlkHNHZxYq6DZITjmgoMw0x41fqs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=boVxiw1iyRpO1++uPuaNzyWFmHYjtQSnCq99VP9VKknYCDiGwyail3E/638YpSTXY
+         SsA1Tg+0h41ssfaE0ERFG4BWUxxhwNLwIOOHBZDe2RgmHSubf2zeLtu311n0Mv+PKk
+         ERCmW70GojA0S79JIRYQ2PATb8GAvUckfzlgzLJ8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92DB26115B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Mon, 22 Apr 2019 16:58:22 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Evan Green <evgreen@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 07/10] drivers: pinctrl: msm: setup GPIO irqchip
+ hierarchy
+Message-ID: <20190422225822.GA25744@codeaurora.org>
+References: <20190313211844.29416-1-ilina@codeaurora.org>
+ <20190313211844.29416-8-ilina@codeaurora.org>
+ <155266731117.20095.4543997300651173812@swboyd.mtv.corp.google.com>
+ <20190316113948.1d180259@why.wild-wind.fr.eu.org>
+ <155320527587.20095.3351235428610314272@swboyd.mtv.corp.google.com>
+ <CACRpkdYF=ibjisyedZy7eK2D5ovVcGsbFBaDBmDyEQ1NuEO+rA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
+In-Reply-To: <CACRpkdYF=ibjisyedZy7eK2D5ovVcGsbFBaDBmDyEQ1NuEO+rA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE"),
-made changes in the rare case when the ELF loader was directly invoked
-(e.g to set a non-inheritable LD_LIBRARY_PATH, testing new versions of
-the loader), by moving into the mmap region to avoid both ET_EXEC and PIE
-binaries. This had the effect of also moving the brk region into mmap,
-which could lead to the stack and brk being arbitrarily close to each
-other. An unlucky process wouldn't get its requested stack size and stack
-allocations could end up scribbling on the heap.
+On Wed, Apr 17 2019 at 07:59 -0600, Linus Walleij wrote:
+>On Thu, Mar 21, 2019 at 10:54 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>> Quoting Marc Zyngier (2019-03-16 04:39:48)> > On Fri, 15 Mar 2019 09:28:31 -0700
+>> > Stephen Boyd <swboyd@chromium.org> wrote:
+>> >
+>> > > Quoting Lina Iyer (2019-03-13 14:18:41)
+>> > > > @@ -994,6 +1092,22 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>> > > >         pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
+>> > > >         pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
+>> > > >
+>> > > > +       chip->irq.chip = &pctrl->irq_chip;
+>> > > > +       chip->irq.domain_ops = &msm_gpio_domain_ops;
+>> > > > +       chip->irq.handler = handle_edge_irq;
+>> > > > +       chip->irq.default_type = IRQ_TYPE_EDGE_RISING;
+>> > >
+>> > > This also changed from v3. It used to be IRQ_TYPE_NONE. Specifying this
+>> > > here seems to cause gpiolib to print a WARN.
+>> > >
+>> > >
+>> > >         /*
+>> > >          * Specifying a default trigger is a terrible idea if DT or ACPI is
+>> > >          * used to configure the interrupts, as you may end up with
+>> > >          * conflicting triggers. Tell the user, and reset to NONE.
+>> > >          */
+>> > >         if (WARN(np && type != IRQ_TYPE_NONE,
+>> > >                  "%s: Ignoring %u default trigger\n", np->full_name, type))
+>> > >                 type = IRQ_TYPE_NONE;
+>> > >
+>> > >
+>> > > So I guess this change should be dropped. Or at the least, it should be
+>> > > split out to it's own patch and the motivations can be discussed in the
+>> > > commit text.
+>> >
+>> > It is something I requested (although I expected this to be a
+>> > different patch, and even a clarification would have been OK).
+>> >
+>> > One way or another, the default trigger must match the flow handler. If
+>> > we set it up with IRQ_TYPE_NONE, what does it mean? The fact that
+>> > IRQ_TYPE_NONE acts as a wildcard doesn't mean the handle_edge_irq flow
+>> > handler is a good match for all interrupt types (it is rarely OK for
+>> > level interrupts).
+>>
+>> I think this is a question for Thierry or Linus. I'm not sure why this
+>> check was put in place in the code. I tried to dig into it really quick
+>> but I didn't find anything obvious and then I gave up.
+>>
+>> Maybe with hierarchical irqdomains we can drop this check? I don't think
+>> the gpiolib core ever uses this 'default_type' or 'handler' for anything
+>> once we replace the irqdomain that's used for a particular gpiochip with
+>> a custom irqdomain. The only user I see, gpiochip_irq_map(), won't ever
+>> be called so it really ends up being a thing that the driver specific
+>> irqdomains should check for and reject when parsing the DT and it sees
+>> IRQ_TYPE_NONE come out.
+>>
+>> ------8<-------
+>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>> index 144af0733581..fe2f7888c473 100644
+>> --- a/drivers/gpio/gpiolib.c
+>> +++ b/drivers/gpio/gpiolib.c
+>> @@ -1922,7 +1922,7 @@ static int gpiochip_add_irqchip(struct gpio_chip *gpiochip,
+>>          * used to configure the interrupts, as you may end up with
+>>          * conflicting triggers. Tell the user, and reset to NONE.
+>>          */
+>> -       if (WARN(np && type != IRQ_TYPE_NONE,
+>> +       if (WARN(!gpiochip->irq.domain_ops && np && type != IRQ_TYPE_NONE,
+>>                  "%s: Ignoring %u default trigger\n", np->full_name, type))
+>>                 type = IRQ_TYPE_NONE;
+>
+>Sorry for taking long time to answer... this got lost in some mail
+>storms.
+>
+>It's a bit of Marc Z question really but I try to answer and
+>he can correct me.
+>
+>We are now getting used to ACPI and DT always specifying
+>the IRQ trigger type on the consumer handle: a device tells
+>the irqchip what kind of edge or level it wants.
+>
+>Things weren't always like that.
+>
+>Some boards in the kernel is still using board files. (Yeah
+>please help in modernizing them, I am doing my part.)
+>
+>Old machines with GPIO irqchip jitted to the SoC irq controller
+>sometimes had a hardcoded behavior such as edge, and the
+>consumers would only issue something really legacy
+>like
+>
+>request_irq(42, myhandler, 0, "myirq", data);
+>
+>and expect it to work, since 0 means use the default flags,
+>it might have a platform device with this irq number passed
+>as a resource, but that is a really dumb platform device still,
+>and it might not have set any irqflags for the irq number
+>it passes. It probably doesn't even know that the irq number
+>is backed by an irq descriptor.
+>
+>Since the code that e.g. DT has inside drivers/of/platform.c
+>irq_of_parse_and_map(), will incidentally create an irq
+>descriptor and set up these flags from the consumer flags in the
+>device tree and call the irqchip to set up the trigger through
+>.set_type() whenever the interrupt is requested, this is no
+>problem for DT. Or ACPI.
+>
+>But on a board file, the .set_type() will eventually be called
+>with IRQ_TYPE_NONE, which will cause a bug, or no IRQs
+>or something like that.
+>
+>So a bunch of GPIO irqchips are created passing
+>IRQ_TYPE_EDGE_* or IRQ_TYPE_LEVEL_* to set up a default
+>trigger, because all the irqs on this chip use the same trigger
+>anyway, and they only have one flow handler anyway.
+>Everything is edge, or everything is level or so.
+>irq_set_irq_type() will be called when mapping the GPIO to
+>an irq, including calls from gpiod_to_irq() and friends that
+>get used a lot in legacy code.
+>
+>This happened by simply factoring custom GPIO irqchips
+>into the gpiolib over time.
+>
+>No-one has really gotten around to tracking down
+>all the offending callers of request_irq() and their respective
+>interrupt providers and make sure the descriptors for all these
+>IRQs get set up properly in drivers or board files. As far
+>as I know. (INTERESTING WORK!)
+>
+>It is a mess, really hard to fix, essentially everything need to
+>be modernized or deleted for us to get rid of the possibility
+>to pass a default trigger.
+>
+>I guess it is possible to check all gpiochip_irqchip_add*
+>and see if there are still chips passing something else than
+>IRQ_TYPE_NONE. It would take some time to look at all of
+>them, maybe it isn't used by anything anymore? Then
+>we can simply delete this and assume it will always be
+>set up orderly. We have modernized quite a few systems
+>recently.
+>
+Thanks for the explanation Linus. Here is my understanding, pls. correct
+me if I am wrong.
 
-This is illustrated here. In the case of using the loader directly, brk
-(so helpfully identified as "[heap]") is allocated with the _loader_
-not the binary. For example, with ASLR entirely disabled, you can see
-this more clearly:
+When the GPIO irqchip is in hierarchy with GIC, as in the case here a
+driver would do the following -
+- Read GPIO from DT
+- Request virtual IRQ number from GPIO by calling gpio_to_irq()
+- Request IRQ for the virtual IRQ specifying the IRQ type etc
 
-$ /bin/cat /proc/self/maps
-555555554000-55555555c000 r-xp 00000000 ... /bin/cat
-55555575b000-55555575c000 r--p 00007000 ... /bin/cat
-55555575c000-55555575d000 rw-p 00008000 ... /bin/cat
-55555575d000-55555577e000 rw-p 00000000 ... [heap]
-...
-7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
-7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
-7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffe000-7ffff7fff000 rw-p 00000000 ...
-7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
+An example from my test code -
 
-$ /lib/x86_64-linux-gnu/ld-2.27.so /bin/cat /proc/self/maps
-...
-7ffff7bcc000-7ffff7bd4000 r-xp 00000000 ... /bin/cat
-7ffff7bd4000-7ffff7dd3000 ---p 00008000 ... /bin/cat
-7ffff7dd3000-7ffff7dd4000 r--p 00007000 ... /bin/cat
-7ffff7dd4000-7ffff7dd5000 rw-p 00008000 ... /bin/cat
-7ffff7dd5000-7ffff7dfc000 r-xp 00000000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7fb2000-7ffff7fd6000 rw-p 00000000 ...
-7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
-7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
-7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-7ffff7ffe000-7ffff8020000 rw-p 00000000 ... [heap]
-7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
+	// Step 1
+	gpio = of_get_named_gpio(pdev->dev.of_node, "test-gpios", i);
+	if (!gpio_is_valid(gpio)) {
+		pr_err("Invalid GPIO for error fatal %d\n", gpio);
+		return -EINVAL;
+	}
+	// Step 2
+	irq = gpio_to_irq(gpio);
+	if (irq < 0) {
+		pr_err("Invalid IRQ for error fatal %u\n", irq);
+		return irq;
+	}
+	// Step 3
+	ret = request_irq(irq,  test_gpio_handler,
+			  IRQF_TRIGGER_HIGH, "gpio-test", NULL);
+	if (ret < 0) {
+		pr_err("Unable to register for error fatal IRQ handler %d",
+				irq);
+		return ret;
+	}
 
-The solution is to move brk out of mmap and into ELF_ET_DYN_BASE since
-nothing is there in the direct loader case (and ET_EXEC is still far
-away at 0x400000). Anything that ran before should still work (i.e. the
-ultimately-launched binary already had the brk very far from its text, so
-this should be no different from a COMPAT_BRK standpoint). The only risk
-I see here is that if someone started to suddenly depend on the entire
-memory space lower than the mmap region being available when launching
-binaries via a direct loader execs which seems highly unlikely, I'd hope:
-this would mean a binary would _not_ work when exec()ed normally.
+Step 1 of the above, does not record the trigger type of the GPIO
+Step 2 creates the IRQ mapping without knowing the trigger type
+(therefore gpiolib uses IRQ_TYPE_NONE)
+Step 3 knows the TYPE and sets that the trigger type on the already
+created IRQ.
 
-(Note that this is only done under CONFIG_ARCH_HAS_ELF_RANDOMIZATION when
-randomization is turned on.)
+I was tracing this over and i think this warrants a new solution. The
+issue that I see if I hardcode a specific trigger type for the GPIO in
+.to_irq(), then request_irq() fails since if the driver requests a
+different trigger type. And GIC-v3 warns if the IRQ type is
+IRQ_TYPE_NONE as it expects the IRQ to be defined in DT and passed to
+the irqchip driver as is.
 
-Reported-by: Ali Saidi <alisaidi@amazon.com>
-Link: https://lkml.kernel.org/r/CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com
-Fixes: eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2: limit effect to only architectures that are expecting it! (Gunter)
----
- fs/binfmt_elf.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+I think we need a OF GPIO lib function to do step 1 and 2 in one step,
+so we could read the type correctly from the DT and request instead of
+IRQ_TYPE_NONE when creating the mapping. This should avoid the warning
+thrown by gic_irq_domain_translate() -
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index fe5668a1bbaa..8cec7a97bfb7 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1131,16 +1131,18 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	current->mm->end_data = end_data;
- 	current->mm->start_stack = bprm->p;
- 
--	/*
--	 * When executing a loader directly (ET_DYN without Interp), move
--	 * the brk area out of the mmap region (since it grows up, and may
--	 * collide early with the stack growing down), and into the unused
--	 * ELF_ET_DYN_BASE region.
--	 */
--	if (!interpreter)
--		current->mm->brk = current->mm->start_brk = ELF_ET_DYN_BASE;
--
- 	if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
-+		/*
-+		 * For architectures with ELF randomization, when executing
-+		 * a loader directly (i.e. no interpreter listed in ELF
-+		 * headers), move the brk area out of the mmap region
-+		 * (since it grows up, and may collide early with the stack
-+		 * growing down), and into the unused ELF_ET_DYN_BASE region.
-+		 */
-+		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) && !interpreter)
-+			current->mm->brk = current->mm->start_brk =
-+				ELF_ET_DYN_BASE;
-+
- 		current->mm->brk = current->mm->start_brk =
- 			arch_randomize_brk(current->mm);
- #ifdef compat_brk_randomized
--- 
-2.17.1
+	WARN_ON(*type == IRQ_TYPE_NONE && fwspec->param[0] != GIC_IRQ_TYPE_PARTITION);
 
+and avoid the failure thrown by irq_create_fwspec_mapping()-
 
--- 
-Kees Cook
+	pr_warn("type mismatch, failed to map hwirq-%lu for %s!\n",
+		hwirq, of_node_full_name(to_of_node(fwspec->fwnode)));
+
+Does that sound reasonable?
+
+Thanks,
+Lina
