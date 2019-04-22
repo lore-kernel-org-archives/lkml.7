@@ -2,134 +2,419 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7B4C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284FFC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7D420859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:44:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qoaKDLJK"
+	by mail.kernel.org (Postfix) with ESMTP id E0B7E214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbfDVQoQ (ORCPT
+        id S1728120AbfDVQqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:44:16 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38541 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbfDVQoO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:44:14 -0400
-Received: by mail-ed1-f68.google.com with SMTP id c1so3974649edk.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 09:44:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ebT1zd4br27smf6EZfBkxJgHdh7UMLcjjUXNrZyZOT8=;
-        b=qoaKDLJKDRDOLrUU1AMfafnGpgw5ntc5sL4OzwAdUD9UBmbl7AExjhkEGTNfY6XeU0
-         QQz5nKk/lTZnDs1SPLSXvCfySEq8bMWDBtdnYpckG33aRLTmmzae/a/9d/aff78DXQyI
-         ns3VXRWSR/ZycgsZVnPpeuYksYLvN1TxZNuEXIHPslOPQ3Q9FJJXzul+gh+z3j7U+Wjp
-         TjZ/Ccxg4j1GFxgdHsmv/QTrk8z3O7p5C6USfDs/xxrjPUNZV4PNIAO3GRDjo3dSpjti
-         Js/nGX73UByJQlxW/0RpL/88hum1P+lztKC3LfJUnlaKaCzO3gsKC/stEA+rV2pUKnap
-         2W1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ebT1zd4br27smf6EZfBkxJgHdh7UMLcjjUXNrZyZOT8=;
-        b=RQsb2RB/RJ8YrcYJxVr26WEfyxKsi7bd9XWUMLfdA3XhdEo7NUotuAX9fbfRI/58ug
-         1pJpNZWvreYAbmsh6tFsENFQGtrn++b2XgsZk9m/6y7SxZKgKv9O/AuhGYtRoGN4GWjk
-         rGiVrnYwlmSgVtIM0PkoKxZfhisrMEM44Nf20OPt/3DNMx68IXESFN80lh5UGIx3Tbct
-         AwB7hx4TU6BwDmsUFVaMNZQW126Ik4DqeJuRN/kyI6Sf8WZHSG5W0jU2d+z0pM74jxEo
-         yYqcM+SrnBbH1mePEZW28y2tOy4RqDzdWnsQVZYyzHV4RiJ65PYSXVXd5h8NvaJ7uRwN
-         Yuhg==
-X-Gm-Message-State: APjAAAVXHpGK/WKjMWiqG30ut4VAZAan0t34UdRUazDDnEyDKpeavrMN
-        x766s3afbLPlddsEa5X6cr7cbF6SJjoh1EeGdoITHg==
-X-Google-Smtp-Source: APXvYqy8WG5Ky42+WKuzAypEhyjWGI+ixmX4Ua2v+4AbrT0/ud6RhLx9M3ZifZz7+ve/4miI62XJdAaBebiUOJfu02o=
-X-Received: by 2002:a17:906:4b10:: with SMTP id y16mr10098502eju.19.1555951452181;
- Mon, 22 Apr 2019 09:44:12 -0700 (PDT)
+        Mon, 22 Apr 2019 12:46:12 -0400
+Received: from verein.lst.de ([213.95.11.211]:40543 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726305AbfDVQqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 12:46:12 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 0856B68AFE; Mon, 22 Apr 2019 18:45:56 +0200 (CEST)
+Date:   Mon, 22 Apr 2019 18:45:55 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 02/10] swiotlb: Factor out slot allocation and free
+Message-ID: <20190422164555.GA31181@lst.de>
+References: <20190421011719.14909-1-baolu.lu@linux.intel.com> <20190421011719.14909-3-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
-References: <20190416170701.50333-1-wvw@google.com> <1555923800.26198.30.camel@intel.com>
-In-Reply-To: <1555923800.26198.30.camel@intel.com>
-From:   Wei Wang <wvw@google.com>
-Date:   Mon, 22 Apr 2019 09:44:01 -0700
-Message-ID: <CAGXk5yoXgzYyK9eJMHietgqPqyT_QHXAby6+G_fSwXL-tKfd=Q@mail.gmail.com>
-Subject: Re: [PATCH] thermal: core: skip update disabled thermal zones after suspend
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     Wei Wang <wei.vince.wang@gmail.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190421011719.14909-3-baolu.lu@linux.intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 2:03 AM Zhang Rui <rui.zhang@intel.com> wrote:
->
-> On =E4=BA=8C, 2019-04-16 at 10:07 -0700, Wei Wang wrote:
-> > It is unnecessary to update disabled thermal zones post suspend and
-> > sometimes leads error/warning in bad behaved thermal drivers.
-> >
-> a good catch, and in fact, there are more issues about thermal handling
-> for disabled thermal zones, like we're able to read the temperature of
-> disabled thermal zones, either via sysfs or via function calls like
-> thermal_zone_device_update.
-Thanks Rui for following up. Yes, we noticed the same behavior. Right
-now, individual thermal driver can still respect set_mode and present
-value meaningful or return error when thermal zone disabled, and
-that's what we do locally.
-Currently, sysfs-api documents "Preventing kernel thermal zone driver
-actions upon trip points so that user application can take full charge
-of the thermal management.", so is it intended for some other agents
-in kernel or user land polling temperature with function call or sysfs
-respectively?
+I looked over your swiotlb modification and I don't think we really need
+them.  The only thing we really need is to split the size parameter to
+swiotlb_tbl_map_single and swiotlb_tbl_unmap_single into an alloc_size
+and a mapping_size paramter, where the latter one is rounded up to the
+iommu page size.  Below is an untested patch on top of your series to
+show what I mean.  That being said - both the current series and the one
+with my patch will still leak the content of the swiotlb buffer
+allocated but not used to the untrusted external device.  Is that
+acceptable?  If not we need to clear that part, at which point you don't
+need swiotlb changes.  Another implication is that for untrusted devices
+the size of the dma coherent allocations needs to be rounded up to the
+iommu page size (if that can ever be larger than the host page size).
 
-Thanks!
--Wei
-> For this patch, I will take it as it fixes one of the problem.
->
-> thanks,
-> rui
->
-> > Signed-off-by: Wei Wang <wvw@google.com>
-> > ---
-> >  drivers/thermal/thermal_core.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/thermal/thermal_core.c
-> > b/drivers/thermal/thermal_core.c
-> > index 6590bb5cb688..5baf5cfab999 100644
-> > --- a/drivers/thermal/thermal_core.c
-> > +++ b/drivers/thermal/thermal_core.c
-> > @@ -1494,6 +1494,7 @@ static int thermal_pm_notify(struct
-> > notifier_block *nb,
-> >                            unsigned long mode, void *_unused)
-> >  {
-> >       struct thermal_zone_device *tz;
-> > +     enum thermal_device_mode tz_mode;
-> >
-> >       switch (mode) {
-> >       case PM_HIBERNATION_PREPARE:
-> > @@ -1506,6 +1507,13 @@ static int thermal_pm_notify(struct
-> > notifier_block *nb,
-> >       case PM_POST_SUSPEND:
-> >               atomic_set(&in_suspend, 0);
-> >               list_for_each_entry(tz, &thermal_tz_list, node) {
-> > +                     tz_mode =3D THERMAL_DEVICE_ENABLED;
-> > +                     if (tz->ops->get_mode)
-> > +                             tz->ops->get_mode(tz, &tz_mode);
-> > +
-> > +                     if (tz_mode =3D=3D THERMAL_DEVICE_DISABLED)
-> > +                             continue;
-> > +
-> >                       thermal_zone_device_init(tz);
-> >                       thermal_zone_device_update(tz,
-> >                                                  THERMAL_EVENT_UNS
-> > PECIFIED);
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 8c4a078fb041..eb5c32ad4443 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -2151,10 +2151,13 @@ static int bounce_map(struct device *dev, struct iommu_domain *domain,
+ 		      void *data)
+ {
+ 	const struct iommu_ops *ops = domain->ops;
++	unsigned long page_size = domain_minimal_pgsize(domain);
+ 	phys_addr_t tlb_addr;
+ 	int prot = 0;
+ 	int ret;
+ 
++	if (WARN_ON_ONCE(size > page_size))
++		return -EINVAL;
+ 	if (unlikely(!ops->map || domain->pgsize_bitmap == 0UL))
+ 		return -ENODEV;
+ 
+@@ -2164,16 +2167,16 @@ static int bounce_map(struct device *dev, struct iommu_domain *domain,
+ 	if (dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL)
+ 		prot |= IOMMU_WRITE;
+ 
+-	tlb_addr = phys_to_dma(dev, paddr);
+-	if (!swiotlb_map(dev, &paddr, &tlb_addr, size,
+-			 dir, attrs | DMA_ATTR_BOUNCE_PAGE))
++	tlb_addr = swiotlb_tbl_map_single(dev, __phys_to_dma(dev, io_tlb_start),
++			paddr, size, page_size, dir, attrs);
++	if (tlb_addr == DMA_MAPPING_ERROR)
+ 		return -ENOMEM;
+ 
+ 	ret = ops->map(domain, addr, tlb_addr, size, prot);
+-	if (ret)
+-		swiotlb_tbl_unmap_single(dev, tlb_addr, size,
+-					 dir, attrs | DMA_ATTR_BOUNCE_PAGE);
+-
++	if (ret) {
++		swiotlb_tbl_unmap_single(dev, tlb_addr, size, page_size,
++					 dir, attrs);
++	}
+ 	return ret;
+ }
+ 
+@@ -2194,11 +2197,12 @@ static int bounce_unmap(struct device *dev, struct iommu_domain *domain,
+ 
+ 	if (unlikely(!ops->unmap))
+ 		return -ENODEV;
+-	ops->unmap(domain, ALIGN_DOWN(addr, page_size), page_size);
++	ops->unmap(domain, addr, page_size);
+ 
+-	if (tlb_addr)
+-		swiotlb_tbl_unmap_single(dev, tlb_addr, size,
+-					 dir, attrs | DMA_ATTR_BOUNCE_PAGE);
++	if (tlb_addr) {
++		swiotlb_tbl_unmap_single(dev, tlb_addr, size, page_size,
++					 dir, attrs);
++	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index 877baf2a94f4..3b6ce643bffa 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -404,7 +404,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+ 	 */
+ 	trace_swiotlb_bounced(dev, dev_addr, size, swiotlb_force);
+ 
+-	map = swiotlb_tbl_map_single(dev, start_dma_addr, phys, size, dir,
++	map = swiotlb_tbl_map_single(dev, start_dma_addr, phys, size, size, dir,
+ 				     attrs);
+ 	if (map == DMA_MAPPING_ERROR)
+ 		return DMA_MAPPING_ERROR;
+@@ -420,7 +420,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+ 		return dev_addr;
+ 
+ 	attrs |= DMA_ATTR_SKIP_CPU_SYNC;
+-	swiotlb_tbl_unmap_single(dev, map, size, dir, attrs);
++	swiotlb_tbl_unmap_single(dev, map, size, size, dir, attrs);
+ 
+ 	return DMA_MAPPING_ERROR;
+ }
+@@ -445,7 +445,7 @@ static void xen_unmap_single(struct device *hwdev, dma_addr_t dev_addr,
+ 
+ 	/* NOTE: We use dev_addr here, not paddr! */
+ 	if (is_xen_swiotlb_buffer(dev_addr))
+-		swiotlb_tbl_unmap_single(hwdev, paddr, size, dir, attrs);
++		swiotlb_tbl_unmap_single(hwdev, paddr, size, size, dir, attrs);
+ }
+ 
+ static void xen_swiotlb_unmap_page(struct device *hwdev, dma_addr_t dev_addr,
+@@ -556,6 +556,7 @@ xen_swiotlb_map_sg_attrs(struct device *hwdev, struct scatterlist *sgl,
+ 								 start_dma_addr,
+ 								 sg_phys(sg),
+ 								 sg->length,
++								 sg->length,
+ 								 dir, attrs);
+ 			if (map == DMA_MAPPING_ERROR) {
+ 				dev_warn(hwdev, "swiotlb buffer is full\n");
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 26e506e5b04c..75e60be91e5f 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -70,12 +70,6 @@
+  */
+ #define DMA_ATTR_PRIVILEGED		(1UL << 9)
+ 
+-/*
+- * DMA_ATTR_BOUNCE_PAGE: used by the IOMMU sub-system to indicate that
+- * the buffer is used as a bounce page in the DMA remapping page table.
+- */
+-#define DMA_ATTR_BOUNCE_PAGE		(1UL << 10)
+-
+ /*
+  * A dma_addr_t can hold any valid DMA or bus address for the platform.
+  * It can be given to a device to use as a DMA source or target.  A CPU cannot
+diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
+index 361f62bb4a8e..e1c738eb5baf 100644
+--- a/include/linux/swiotlb.h
++++ b/include/linux/swiotlb.h
+@@ -44,16 +44,13 @@ enum dma_sync_target {
+ 	SYNC_FOR_DEVICE = 1,
+ };
+ 
+-extern phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+-					  dma_addr_t tbl_dma_addr,
+-					  phys_addr_t phys, size_t size,
+-					  enum dma_data_direction dir,
+-					  unsigned long attrs);
+-
+-extern void swiotlb_tbl_unmap_single(struct device *hwdev,
+-				     phys_addr_t tlb_addr,
+-				     size_t size, enum dma_data_direction dir,
+-				     unsigned long attrs);
++phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
++		dma_addr_t tbl_dma_addr, phys_addr_t phys, size_t mapping_size,
++		size_t alloc_size, enum dma_data_direction dir,
++		unsigned long attrs);
++void swiotlb_tbl_unmap_single(struct device *hwdev, phys_addr_t tlb_addr,
++		size_t mapping_size, size_t alloc_size,
++		enum dma_data_direction dir, unsigned long attrs);
+ 
+ extern void swiotlb_tbl_sync_single(struct device *hwdev,
+ 				    phys_addr_t tlb_addr,
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index fcdb23e8d2fc..0edc0bf80207 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -290,7 +290,7 @@ void dma_direct_unmap_page(struct device *dev, dma_addr_t addr,
+ 		dma_direct_sync_single_for_cpu(dev, addr, size, dir);
+ 
+ 	if (unlikely(is_swiotlb_buffer(phys)))
+-		swiotlb_tbl_unmap_single(dev, phys, size, dir, attrs);
++		swiotlb_tbl_unmap_single(dev, phys, size, size, dir, attrs);
+ }
+ EXPORT_SYMBOL(dma_direct_unmap_page);
+ 
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index 96b87a11dee1..feec87196cc8 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -34,7 +34,6 @@
+ #include <linux/scatterlist.h>
+ #include <linux/mem_encrypt.h>
+ #include <linux/set_memory.h>
+-#include <linux/iommu.h>
+ #ifdef CONFIG_DEBUG_FS
+ #include <linux/debugfs.h>
+ #endif
+@@ -440,9 +439,10 @@ static void swiotlb_bounce(phys_addr_t orig_addr, phys_addr_t tlb_addr,
+ 	}
+ }
+ 
+-static phys_addr_t
+-swiotlb_tbl_alloc_tlb(struct device *hwdev, dma_addr_t tbl_dma_addr,
+-		      phys_addr_t orig_addr, size_t size)
++phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
++		dma_addr_t tbl_dma_addr, phys_addr_t orig_addr,
++		size_t mapping_size, size_t alloc_size,
++		enum dma_data_direction dir, unsigned long attrs)
+ {
+ 	unsigned long flags;
+ 	phys_addr_t tlb_addr;
+@@ -476,8 +476,8 @@ swiotlb_tbl_alloc_tlb(struct device *hwdev, dma_addr_t tbl_dma_addr,
+ 	 * For mappings greater than or equal to a page, we limit the stride
+ 	 * (and hence alignment) to a page size.
+ 	 */
+-	nslots = ALIGN(size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
+-	if (size >= PAGE_SIZE)
++	nslots = ALIGN(alloc_size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
++	if (alloc_size >= PAGE_SIZE)
+ 		stride = (1 << (PAGE_SHIFT - IO_TLB_SHIFT));
+ 	else
+ 		stride = 1;
+@@ -538,6 +538,9 @@ swiotlb_tbl_alloc_tlb(struct device *hwdev, dma_addr_t tbl_dma_addr,
+ 
+ not_found:
+ 	spin_unlock_irqrestore(&io_tlb_lock, flags);
++	if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
++		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes)\n",
++				alloc_size);
+ 	return DMA_MAPPING_ERROR;
+ found:
+ 	io_tlb_used += nslots;
+@@ -550,21 +553,34 @@ swiotlb_tbl_alloc_tlb(struct device *hwdev, dma_addr_t tbl_dma_addr,
+ 	 */
+ 	for (i = 0; i < nslots; i++)
+ 		io_tlb_orig_addr[index+i] = orig_addr + (i << IO_TLB_SHIFT);
++	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
++	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
++		swiotlb_bounce(orig_addr, tlb_addr, mapping_size,
++				DMA_TO_DEVICE);
+ 
+ 	return tlb_addr;
+ }
+ 
+-static void
+-swiotlb_tbl_free_tlb(struct device *hwdev, phys_addr_t tlb_addr, size_t size)
++/*
++ * tlb_addr is the physical address of the bounce buffer to unmap.
++ */
++void swiotlb_tbl_unmap_single(struct device *hwdev, phys_addr_t tlb_addr,
++		size_t mapping_size, size_t alloc_size,
++		enum dma_data_direction dir, unsigned long attrs)
+ {
+ 	unsigned long flags;
+-	int i, count, nslots = ALIGN(size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
++	int i, count, nslots;
+ 	int index = (tlb_addr - io_tlb_start) >> IO_TLB_SHIFT;
++	phys_addr_t orig_addr = io_tlb_orig_addr[index];
+ 
+-	/* Return directly if the tlb address is out of slot pool. */
+-	if (tlb_addr < io_tlb_start || tlb_addr + size > io_tlb_end) {
+-		dev_warn(hwdev, "invalid tlb address\n");
+-		return;
++	/*
++	 * First, sync the memory before unmapping the entry
++	 */
++	if (orig_addr != INVALID_PHYS_ADDR &&
++	    !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
++	    (dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL)) {
++		swiotlb_bounce(orig_addr, tlb_addr, mapping_size,
++				DMA_FROM_DEVICE);
+ 	}
+ 
+ 	/*
+@@ -573,6 +589,7 @@ swiotlb_tbl_free_tlb(struct device *hwdev, phys_addr_t tlb_addr, size_t size)
+ 	 * While returning the entries to the free list, we merge the entries
+ 	 * with slots below and above the pool being returned.
+ 	 */
++	nslots = ALIGN(alloc_size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
+ 	spin_lock_irqsave(&io_tlb_lock, flags);
+ 	{
+ 		count = ((index + nslots) < ALIGN(index + 1, IO_TLB_SEGSIZE) ?
+@@ -597,88 +614,6 @@ swiotlb_tbl_free_tlb(struct device *hwdev, phys_addr_t tlb_addr, size_t size)
+ 	spin_unlock_irqrestore(&io_tlb_lock, flags);
+ }
+ 
+-static unsigned long
+-get_iommu_pgsize(struct device *dev, phys_addr_t phys, size_t size)
+-{
+-	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+-
+-	return domain_minimal_pgsize(domain);
+-}
+-
+-phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+-				   dma_addr_t tbl_dma_addr,
+-				   phys_addr_t orig_addr, size_t size,
+-				   enum dma_data_direction dir,
+-				   unsigned long attrs)
+-{
+-	phys_addr_t tlb_addr;
+-	unsigned long offset = 0;
+-
+-	if (attrs & DMA_ATTR_BOUNCE_PAGE) {
+-		unsigned long pgsize = get_iommu_pgsize(hwdev, orig_addr, size);
+-
+-		offset = orig_addr & (pgsize - 1);
+-
+-		/* Don't allow the buffer to cross page boundary. */
+-		if (offset + size > pgsize)
+-			return DMA_MAPPING_ERROR;
+-
+-		tlb_addr = swiotlb_tbl_alloc_tlb(hwdev,
+-				__phys_to_dma(hwdev, io_tlb_start),
+-				ALIGN_DOWN(orig_addr, pgsize), pgsize);
+-	} else {
+-		tlb_addr = swiotlb_tbl_alloc_tlb(hwdev,
+-				tbl_dma_addr, orig_addr, size);
+-	}
+-
+-	if (tlb_addr == DMA_MAPPING_ERROR) {
+-		if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
+-			dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes)\n",
+-				 size);
+-		return DMA_MAPPING_ERROR;
+-	}
+-
+-	tlb_addr += offset;
+-	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+-	    (dir == DMA_TO_DEVICE || dir == DMA_BIDIRECTIONAL))
+-		swiotlb_bounce(orig_addr, tlb_addr, size, DMA_TO_DEVICE);
+-
+-	return tlb_addr;
+-}
+-
+-/*
+- * tlb_addr is the physical address of the bounce buffer to unmap.
+- */
+-void swiotlb_tbl_unmap_single(struct device *hwdev, phys_addr_t tlb_addr,
+-			      size_t size, enum dma_data_direction dir,
+-			      unsigned long attrs)
+-{
+-	int index = (tlb_addr - io_tlb_start) >> IO_TLB_SHIFT;
+-	phys_addr_t orig_addr = io_tlb_orig_addr[index];
+-	unsigned long offset = 0;
+-
+-	if (attrs & DMA_ATTR_BOUNCE_PAGE)
+-		offset = tlb_addr & ((1 << IO_TLB_SHIFT) - 1);
+-
+-	/*
+-	 * First, sync the memory before unmapping the entry
+-	 */
+-	if (orig_addr != INVALID_PHYS_ADDR &&
+-	    !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+-	    ((dir == DMA_FROM_DEVICE) || (dir == DMA_BIDIRECTIONAL)))
+-		swiotlb_bounce(orig_addr + offset,
+-			       tlb_addr, size, DMA_FROM_DEVICE);
+-
+-	if (attrs & DMA_ATTR_BOUNCE_PAGE) {
+-		unsigned long pgsize = get_iommu_pgsize(hwdev, tlb_addr, size);
+-
+-		swiotlb_tbl_free_tlb(hwdev,
+-				     ALIGN_DOWN(tlb_addr, pgsize), pgsize);
+-	} else {
+-		swiotlb_tbl_free_tlb(hwdev, tlb_addr, size);
+-	}
+-}
+-
+ void swiotlb_tbl_sync_single(struct device *hwdev, phys_addr_t tlb_addr,
+ 			     size_t size, enum dma_data_direction dir,
+ 			     enum dma_sync_target target)
+@@ -727,14 +662,14 @@ bool swiotlb_map(struct device *dev, phys_addr_t *phys, dma_addr_t *dma_addr,
+ 
+ 	/* Oh well, have to allocate and map a bounce buffer. */
+ 	*phys = swiotlb_tbl_map_single(dev, __phys_to_dma(dev, io_tlb_start),
+-			*phys, size, dir, attrs);
++			*phys, size, size, dir, attrs);
+ 	if (*phys == DMA_MAPPING_ERROR)
+ 		return false;
+ 
+ 	/* Ensure that the address returned is DMA'ble */
+ 	*dma_addr = __phys_to_dma(dev, *phys);
+ 	if (unlikely(!dma_capable(dev, *dma_addr, size))) {
+-		swiotlb_tbl_unmap_single(dev, *phys, size, dir,
++		swiotlb_tbl_unmap_single(dev, *phys, size, size, dir,
+ 			attrs | DMA_ATTR_SKIP_CPU_SYNC);
+ 		return false;
+ 	}
