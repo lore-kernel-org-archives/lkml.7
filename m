@@ -2,100 +2,144 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACE5C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C37C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2DE9204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962274;
-	bh=oK9PwUBGJVm84+SQmSGLYDzwd5k9Au/TTimk/r9F1kU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1GTuoF3lXg/OyVbktd8B70cjWPnh4c2GSfTVU0CnruDsB4BdX35M5/zXat2/QzSR6
-	 NoNe4pyto2YA/CbBgngg3hEtgP38RArvAsGM6C8SDp1QiLzIqG1P+HvhdlcArlJ/Xz
-	 XPVDCGJgWhgQAKu8ILUutix3/fIlnGO2dPSVWbc8=
+	by mail.kernel.org (Postfix) with ESMTP id A180A204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:44:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="MZnMJSvs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbfDVTod (ORCPT
+        id S1729518AbfDVTof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 22 Apr 2019 15:44:35 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36563 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729490AbfDVTod (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 15:44:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728966AbfDVToa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:30 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F122A204EC;
-        Mon, 22 Apr 2019 19:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962269;
-        bh=oK9PwUBGJVm84+SQmSGLYDzwd5k9Au/TTimk/r9F1kU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XtjqEUEGCQekrDY2DFgGVOvbT7XnkVjKx72JUTmB2pRbaAG7dk6SXXFsJ89WZDDJu
-         1ov+IR1jB44sj+BEGcy1PrWyMrFf8Np0vdTbulL1X9bevYW4OPHbYIANR8p72r1rNV
-         Lv6tOIuafxHHfArY/w302JA2ggdOd310yXUirF/4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Chris Healy <cphealy@gmail.com>, linux-gpio@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 77/98] gpio: of: Check propname before applying "cs-gpios" quirks
-Date:   Mon, 22 Apr 2019 15:41:44 -0400
-Message-Id: <20190422194205.10404-77-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
-References: <20190422194205.10404-1-sashal@kernel.org>
+Received: by mail-oi1-f194.google.com with SMTP id l203so9384578oia.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 12:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=be6f2f0XIlqFU7RHgEDNHdFLaZKAoDs5ON2xf3GreVs=;
+        b=MZnMJSvszGOJ69yW2f92BRR2//4YgYRkKKac5Gqy7Awh1bsWzu6rOOSWtZwJtx/tcG
+         eDw1eDkllfmunatVZlfYdB6E/H0sEhYx56nkD9/3BTyiQhK1cK3ohxtnncyN808QU9Ip
+         EHjb1faIflXV5qJO4U85TcW+zBgo6JUqMcJpYrNghYuo1YIWP/jnyZ0my2UTfw52gR0p
+         0x1xVJYtgpLLMZiiVV2/R/giaXcjlq2VvA7Z8shcCNAngnJ6VI6G+ScfLPtwzKJEy1HA
+         MzWZ1/YUvj5/eXdhJA+Ieta7O8ADe/tnz1YT0d9DikYe3aJrHMlfOTBTM/lY7uViDVxI
+         lLQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=be6f2f0XIlqFU7RHgEDNHdFLaZKAoDs5ON2xf3GreVs=;
+        b=US69COW6vqv2Cy46nWjkDNro3aLKp7XxYwRHKu+cEI9oTA2phqEVQw+qKou225dDbl
+         sdWf1hK9y7opQlPe+SvvQCjW0ktOgtqYq/jDq3Um8mDl/RzMxxXZhPyuZraON11CQ5ei
+         aSXPxOIZqtNxqj5Bv3vH5uZSIzRDQX5CXnfrAPf0cRNOXU2q3DA5HaofEYOdjb0Ui2LK
+         Jr21KwS//Z32iLU+N0zy6VwXckiuDzm3iJJQpvW4IiA/AGxA+S0X+/Htt3UXQYI7OAhW
+         mMS6WjvPcDzCBOop2Qjx6gPns3oWfFv5XgONc5cVIYmzNbdy0QVGeAlsRlaVv5jJZJuP
+         yG9w==
+X-Gm-Message-State: APjAAAUwWaWdoW/ng/1SYfl7BAz3M+/sM7GH6FgnDuy5pEtG4ka1hyMA
+        bhQkbEsrcoRR8+8WMj5KDXaDQZgmDhHGmhUn21V4GQ==
+X-Google-Smtp-Source: APXvYqy9oEwsfMU6Hmi4yVBnW8LZ4gUZmwS+KAWSnUmv484C2kN850KPfxFBG55AG8ix9yht3mk81r/aARykAzdCsRE=
+X-Received: by 2002:aca:f581:: with SMTP id t123mr11818692oih.0.1555962272101;
+ Mon, 22 Apr 2019 12:44:32 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190410040826.24371-1-pagupta@redhat.com> <20190410040826.24371-2-pagupta@redhat.com>
+ <CAPcyv4i1FjBzfcWtzeCvj-giHa9xaX0dMQ==q4LZC_L8VEqkHg@mail.gmail.com>
+ <20190412083230.GA29850@quack2.suse.cz> <x494l73z7th.fsf@segfault.boston.devel.redhat.com>
+ <CAPcyv4jrNHqW3FuGkeo==ZoJr7LKahCv4_esnokfy7enek8=2Q@mail.gmail.com>
+ <20190418161833.GA22970@infradead.org> <CAPcyv4jPOF_+R6U17J_+88+X8LC-LSPCugA6gbKxuphuuFB2gg@mail.gmail.com>
+ <x497ebm82d4.fsf@segfault.boston.devel.redhat.com>
+In-Reply-To: <x497ebm82d4.fsf@segfault.boston.devel.redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 22 Apr 2019 12:44:21 -0700
+Message-ID: <CAPcyv4gGmN2LLMPy6BzWpYhRyV7fFNVgh=xAWSAdnnAWu5APtg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] libnvdimm: nd_region flush callback support
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        david <david@fromorbit.com>, cohuck@redhat.com,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kilobyte@angband.pl,
+        yuval shaia <yuval.shaia@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+On Mon, Apr 22, 2019 at 8:59 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+>
+> Dan Williams <dan.j.williams@intel.com> writes:
+>
+> > On Thu, Apr 18, 2019 at 9:18 AM Christoph Hellwig <hch@infradead.org> wrote:
+> >>
+> >> On Thu, Apr 18, 2019 at 09:05:05AM -0700, Dan Williams wrote:
+> >> > > > I'd either add a comment about avoiding retpoline overhead here or just
+> >> > > > make ->flush == NULL mean generic_nvdimm_flush(). Just so that people don't
+> >> > > > get confused by the code.
+> >> > >
+> >> > > Isn't this premature optimization?  I really don't like adding things
+> >> > > like this without some numbers to show it's worth it.
+> >> >
+> >> > I don't think it's premature given this optimization technique is
+> >> > already being deployed elsewhere, see:
+> >> >
+> >> > https://lwn.net/Articles/774347/
+> >>
+> >> For one this one was backed by numbers, and second after feedback
+> >> from Linux we switched to the NULL pointer check instead.
+> >
+> > Ok I should have noticed the switch to NULL pointer check. However,
+> > the question still stands do we want everyone to run numbers to
+> > justify this optimization, or make it a new common kernel coding
+> > practice to do:
+> >
+> >     if (!object->op)
+> >         generic_op(object);
+> >     else
+> >         object->op(object);
+> >
+> > ...in hot paths?
+>
+> I don't think nvdimm_flush is a hot path.  Numbers of some
+> representative workload would prove one of us right.
 
-[ Upstream commit e5545c94e43b8f6599ffc01df8d1aedf18ee912a ]
-
-SPI GPIO device has more than just "cs-gpio" property in its node and
-would request those GPIOs as a part of its initialization. To avoid
-applying CS-specific quirk to all of them add a check to make sure
-that propname is "cs-gpios".
-
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- drivers/gpio/gpiolib-of.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index a1dd2f1c0d02..9470563f2506 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -119,7 +119,8 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 	 * to determine if the flags should have inverted semantics.
- 	 */
- 	if (IS_ENABLED(CONFIG_SPI_MASTER) &&
--	    of_property_read_bool(np, "cs-gpios")) {
-+	    of_property_read_bool(np, "cs-gpios") &&
-+	    !strcmp(propname, "cs-gpios")) {
- 		struct device_node *child;
- 		u32 cs;
- 		int ret;
--- 
-2.19.1
-
+I'd rather say that the if "if (!op) do_generic()" pattern is more
+readable in the general case, saves grepping for who set the op in the
+common case. The fact that it has the potential to be faster is gravy
+at that point.
