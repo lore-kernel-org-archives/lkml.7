@@ -6,55 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4793C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F43C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4F3204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CDE2204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963564;
-	bh=8P5NYuag8dkMcjMoSzPUQkd5WOIKhdU1lklgLEmKxFk=;
+	s=default; t=1555963580;
+	bh=cw95qiR+/hxhjeTr6I3fp8+CwUoEf97TOazZLESCNtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gyw4r6larHoY+/viGK9uXEom4f8m58MSZ2/Cf6yXAAzNv2SL9nxhq14to+7AeW5UP
-	 nRjAY2zK75NWK+A+9vH+/oIZUlA/10xVJxBOSED6FWLaQzqZnQVnYGgU4BvTZRjuXc
-	 5GCuse+IsdQ+GH8znicV+eD0K/+rNvQGgvFuD23o=
+	b=HYse6yF0Kbc2zCx8JNrWsRGvBxAoka63dRki21PTgSLTWF2GqdClsD+GWMM59ZK3u
+	 syTWzT5rRiKvCNuAW7Dw0Gai9qGaETpVyxFnoTTCnrUt16eEqRxFQEz9vauwMnKngV
+	 GugRWJCzmStQ0drI2fVm9YAlkppk1kPlqfvbAC9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732278AbfDVUGC (ORCPT
+        id S1732300AbfDVUGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45752 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:06:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729488AbfDVTof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:44:35 -0400
+        id S1729493AbfDVToc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:44:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C588C217D4;
-        Mon, 22 Apr 2019 19:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9116E204EC;
+        Mon, 22 Apr 2019 19:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962274;
-        bh=8P5NYuag8dkMcjMoSzPUQkd5WOIKhdU1lklgLEmKxFk=;
+        s=default; t=1555962272;
+        bh=cw95qiR+/hxhjeTr6I3fp8+CwUoEf97TOazZLESCNtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vivficklkGLgjFe3GSAy+R7HR6XJP4QOZQjOYO2TNjMhGQjUKREfm/CZjJ4RFQB2G
-         6NizNvyOSmBQDfhPxAoUtFC+G8W3QiXObUsIiMn6YrVy/u3O523qSKajDiw4G5c0sU
-         s7n+nLVzAwh/xbhr0ynyn9+MO6unBQtyHQAlQ2e8=
+        b=Vs+K7YpseBsw5ENNztF+7CoAS/iUYxgr3TaD88NPVf96r8N1BdQpB7c/Zkczg6GqI
+         CGOT4H20T1vot+kVxV2CU15DcB31H9mJX/LEfQ9b0FNdDncmORKz0biyKXAg3ICJ9H
+         GEAdElxWase2RaGZCx4+3MvSVSsMfC+jt+Z9dfjU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
-        Jim Mattson <jmattson@google.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@alien8.de>, Joerg Roedel <joro@8bytes.org>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 80/98] KVM: SVM: Workaround errata#1096 (insn_len maybe zero on SMAP violation)
-Date:   Mon, 22 Apr 2019 15:41:47 -0400
-Message-Id: <20190422194205.10404-80-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 79/98] KVM: nVMX: Do not inherit quadrant and invalid for the root shadow EPT
+Date:   Mon, 22 Apr 2019 15:41:46 -0400
+Message-Id: <20190422194205.10404-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,152 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Singh, Brijesh" <brijesh.singh@amd.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 05d5a48635259e621ea26d01e8316c6feeb34190 ]
+[ Upstream commit 552c69b1dc714854a5f4e27d37a43c6d797adf7d ]
 
-Errata#1096:
+Explicitly zero out quadrant and invalid instead of inheriting them from
+the root_mmu.  Functionally, this patch is a nop as we (should) never
+set quadrant for a direct mapped (EPT) root_mmu and nested EPT is only
+allowed if EPT is used for L1, and the root_mmu will never be invalid at
+this point.
 
-On a nested data page fault when CR.SMAP=1 and the guest data read
-generates a SMAP violation, GuestInstrBytes field of the VMCB on a
-VMEXIT will incorrectly return 0h instead the correct guest
-instruction bytes .
+Explicitly setting flags sets the stage for repurposing the legacy
+paging bits in role, e.g. nxe, cr0_wp, and sm{a,e}p_andnot_wp, at which
+point 'smm' would be the only flag to be inherited from root_mmu.
 
-Recommend Workaround:
-
-To determine what instruction the guest was executing the hypervisor
-will have to decode the instruction at the instruction pointer.
-
-The recommended workaround can not be implemented for the SEV
-guest because guest memory is encrypted with the guest specific key,
-and instruction decoder will not be able to decode the instruction
-bytes. If we hit this errata in the SEV guest then log the message
-and request a guest shutdown.
-
-Reported-by: Venkatesh Srinivas <venkateshs@google.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/x86/include/asm/kvm_host.h |  2 ++
- arch/x86/kvm/mmu.c              |  8 +++++---
- arch/x86/kvm/svm.c              | 32 ++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/vmx.c          |  6 ++++++
- 4 files changed, 45 insertions(+), 3 deletions(-)
+ arch/x86/kvm/mmu.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 71d763ad2637..9f2d890733a9 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1198,6 +1198,8 @@ struct kvm_x86_ops {
- 	int (*nested_enable_evmcs)(struct kvm_vcpu *vcpu,
- 				   uint16_t *vmcs_version);
- 	uint16_t (*nested_get_evmcs_version)(struct kvm_vcpu *vcpu);
-+
-+	bool (*need_emulation_on_page_fault)(struct kvm_vcpu *vcpu);
- };
- 
- struct kvm_arch_async_pf {
 diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index acab95dcffb6..77dbb57412cc 100644
+index 9ab33cab9486..acab95dcffb6 100644
 --- a/arch/x86/kvm/mmu.c
 +++ b/arch/x86/kvm/mmu.c
-@@ -5395,10 +5395,12 @@ emulate:
- 	 * This can happen if a guest gets a page-fault on data access but the HW
- 	 * table walker is not able to read the instruction page (e.g instruction
- 	 * page is not present in memory). In those cases we simply restart the
--	 * guest.
-+	 * guest, with the exception of AMD Erratum 1096 which is unrecoverable.
- 	 */
--	if (unlikely(insn && !insn_len))
--		return 1;
-+	if (unlikely(insn && !insn_len)) {
-+		if (!kvm_x86_ops->need_emulation_on_page_fault(vcpu))
-+			return 1;
-+	}
- 
- 	er = x86_emulate_instruction(vcpu, cr2, emulation_type, insn, insn_len);
- 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index a9b8e38d78ad..3605c5cd5f1d 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -7098,6 +7098,36 @@ static int nested_enable_evmcs(struct kvm_vcpu *vcpu,
- 	return -ENODEV;
- }
- 
-+static bool svm_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
-+{
-+	bool is_user, smap;
-+
-+	is_user = svm_get_cpl(vcpu) == 3;
-+	smap = !kvm_read_cr4_bits(vcpu, X86_CR4_SMAP);
-+
-+	/*
-+	 * Detect and workaround Errata 1096 Fam_17h_00_0Fh
-+	 *
-+	 * In non SEV guest, hypervisor will be able to read the guest
-+	 * memory to decode the instruction pointer when insn_len is zero
-+	 * so we return true to indicate that decoding is possible.
-+	 *
-+	 * But in the SEV guest, the guest memory is encrypted with the
-+	 * guest specific key and hypervisor will not be able to decode the
-+	 * instruction pointer so we will not able to workaround it. Lets
-+	 * print the error and request to kill the guest.
-+	 */
-+	if (is_user && smap) {
-+		if (!sev_guest(vcpu->kvm))
-+			return true;
-+
-+		pr_err_ratelimited("KVM: Guest triggered AMD Erratum 1096\n");
-+		kvm_make_request(KVM_REQ_TRIPLE_FAULT, vcpu);
-+	}
-+
-+	return false;
-+}
-+
- static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 	.cpu_has_kvm_support = has_svm,
- 	.disabled_by_bios = is_disabled,
-@@ -7231,6 +7261,8 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 
- 	.nested_enable_evmcs = nested_enable_evmcs,
- 	.nested_get_evmcs_version = nested_get_evmcs_version,
-+
-+	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
- };
- 
- static int __init svm_init(void)
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a0a770816429..7794c41a73bf 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7522,6 +7522,11 @@ static int enable_smi_window(struct kvm_vcpu *vcpu)
- 	return 0;
- }
- 
-+static bool vmx_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
-+{
-+	return 0;
-+}
-+
- static __init int hardware_setup(void)
+@@ -4915,11 +4915,15 @@ static union kvm_mmu_role
+ kvm_calc_shadow_ept_root_page_role(struct kvm_vcpu *vcpu, bool accessed_dirty,
+ 				   bool execonly)
  {
- 	unsigned long host_bndcfgs;
-@@ -7824,6 +7829,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
- 	.set_nested_state = NULL,
- 	.get_vmcs12_pages = NULL,
- 	.nested_enable_evmcs = NULL,
-+	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
- };
+-	union kvm_mmu_role role;
++	union kvm_mmu_role role = {0};
++	union kvm_mmu_page_role root_base = vcpu->arch.root_mmu.mmu_role.base;
  
- static void vmx_cleanup_l1d_flush(void)
+-	/* Base role is inherited from root_mmu */
+-	role.base.word = vcpu->arch.root_mmu.mmu_role.base.word;
+-	role.ext = kvm_calc_mmu_role_ext(vcpu);
++	/* Legacy paging and SMM flags are inherited from root_mmu */
++	role.base.smm = root_base.smm;
++	role.base.nxe = root_base.nxe;
++	role.base.cr0_wp = root_base.cr0_wp;
++	role.base.smep_andnot_wp = root_base.smep_andnot_wp;
++	role.base.smap_andnot_wp = root_base.smap_andnot_wp;
+ 
+ 	role.base.level = PT64_ROOT_4LEVEL;
+ 	role.base.direct = false;
+@@ -4927,6 +4931,7 @@ kvm_calc_shadow_ept_root_page_role(struct kvm_vcpu *vcpu, bool accessed_dirty,
+ 	role.base.guest_mode = true;
+ 	role.base.access = ACC_ALL;
+ 
++	role.ext = kvm_calc_mmu_role_ext(vcpu);
+ 	role.ext.execonly = execonly;
+ 
+ 	return role;
 -- 
 2.19.1
 
