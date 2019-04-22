@@ -2,136 +2,150 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C82C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8913AC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B7B20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5492120693
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555938499;
-	bh=OE4Uyda6pp9S086SNamKpeWxD6ARSUpU/OWOpUwXii4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=BnbLWUSOiR2H7VaHp+DLVHPWv5gIyJJNxlzfTWMBlo9WzxhMDqVX9CJFSH1vywcq1
-	 463WyO+gUGnsF75VtXb12OR412jSIxbAcJkDjfj1CqJsEFYSrYqVLUCbj2k/6XFyoW
-	 nE2Q4JDbQnhZFRAvu5b9mwFuFDFoKZ1lhbO/FkpE=
+	s=default; t=1555938826;
+	bh=GfKXT+ZuhRm5Jn9euYKis3qNlZMgAnLXskTaqP5QHWY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SBLHAeOcZSh9xdqXivTN2rSDZkudtmYv0BbmmkUxgboheng3dhQZiuPhWZbcUQ/DF
+	 ETwxSWrBpjXMxQUGfE+Y2evybxD1+U0FBnL8tafGpjOi+uWvji5ER/yirwwpl5Mfdc
+	 Nz2f8WblVhFUN+9Yp1IRAPkCN3c4buhgON3FI1G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfDVNIR (ORCPT
+        id S1727372AbfDVNNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:08:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47012 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 09:13:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbfDVNIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:08:17 -0400
-Received: from localhost (50-82-46-41.client.mchsi.com [50.82.46.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726057AbfDVNNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 09:13:44 -0400
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 960FA20859;
-        Mon, 22 Apr 2019 13:08:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E1AD20874;
+        Mon, 22 Apr 2019 13:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555938495;
-        bh=OE4Uyda6pp9S086SNamKpeWxD6ARSUpU/OWOpUwXii4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YmDnEgK/CJeBar11/fjiHBOK05AIv+g33sYeNoIqN+vNuAF5gbNqqRobUfqRh0/Wy
-         G3NVLDtiTMM4OA3yeWLXFtIheCzC4lxX4E5MNUStLoApVHka7zzrwwNuSS0BodXcBi
-         ihE/kh7F2y92TKOldBBexlPT+BSTrsW4izvpa6qc=
-Date:   Mon, 22 Apr 2019 08:08:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     Keijo Vaara <ferdasyn@rocketmail.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [Bug 203297] Synaptics touchpad TM-3127 functionality broken by PCI
- runtime power management patch on 4.20.2
-Message-ID: <20190422130814.GJ173520@google.com>
+        s=default; t=1555938822;
+        bh=GfKXT+ZuhRm5Jn9euYKis3qNlZMgAnLXskTaqP5QHWY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZG9bTDFzNkvt/TJR5dfwtLs3PWMCVJTAmaK7JQyYzvSDqd/Ug2CmjjzTL8E9O2OBc
+         SwlQlF5LmIWAwYcTqqwdiSLiJr6hic067OODyBTgRm3Dy/eeo8nbDdGIBpiX5/B2zJ
+         Pr+BAaKmZacbR9vidrDEuPlstodpheHsPAsWGZ0g=
+Received: by mail-qk1-f177.google.com with SMTP id w73so4178246qkb.13;
+        Mon, 22 Apr 2019 06:13:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAX5Y+OE8nZtp/MznUv4MGM5p8FeKstkMLJJOmY2Wv8dDkZ+4thL
+        BX4UsN+/M/XZ24ZPQdgkDSDCgEL8C4ArjrjDJQ==
+X-Google-Smtp-Source: APXvYqzJYG+geuHAg6kTRjqKLRTQTE5eJnRiE83Vm6KlY6wH8aAMezPzFmY1PFRTiRVSGI1WRy10cBl3QZkSCyxz1qU=
+X-Received: by 2002:a37:9186:: with SMTP id t128mr14431012qkd.326.1555938821856;
+ Mon, 22 Apr 2019 06:13:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190420122333.23662-1-luca@z3ntu.xyz>
+In-Reply-To: <20190420122333.23662-1-luca@z3ntu.xyz>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 22 Apr 2019 08:13:29 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+EJpRFRzh-dmZAJUQ84iMm6rs=sNTYstpQJzsbSboUqg@mail.gmail.com>
+Message-ID: <CAL_Jsq+EJpRFRzh-dmZAJUQ84iMm6rs=sNTYstpQJzsbSboUqg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: input: add GPIO controllable vibrator
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Coly Li <colyli@suse.de>, Lee Jones <lee.jones@linaro.org>,
+        Xiaotong Lu <xiaotong.lu@spreadtrum.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
+        <linux-input@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203297
+On Sat, Apr 20, 2019 at 7:24 AM Luca Weiss <luca@z3ntu.xyz> wrote:
+>
+> Provide a simple driver for GPIO controllable vibrators.
+> It will be used by the Fairphone 2.
+>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+> Changes from v3:
+> - Convert .txt based doc to the new yaml based format
+>
+>  .../bindings/input/gpio-vibrator.yaml         | 39 +++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> new file mode 100644
+> index 000000000000..bca1b6ea07a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/input/gpio-vibrator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: GPIO vibrator
+> +
+> +maintainers:
+> +  - Luca Weiss <luca@z3ntu.xyz>
+> +
+> +description: |+
+> +  Registers a GPIO device as vibrator, where the on/off capability is controlled by a GPIO.
+> +
+> +properties:
+> +  compatible:
 
-Regression, suspected but as yet unconfirmed cause:
+> +    items:
+> +      - const: gpio-vibrator
 
-  c5eb1190074c ("PCI / PM: Allow runtime PM without callback functions")
+These 2 lines can be simplified to just 'const: gpio-vibrator'.
 
-backported to 4.20 stable as 39e1be324c2f.
+> +
+> +  enable-gpios:
+> +    maxItems: 1
+> +
+> +  vcc-supply:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
 
-Keijo Vaara <ferdasyn@rocketmail.com> reported:
+This isn't necessary as we can do this for every occurrence of
+'*-supply'. I'll add that to the core schema.
 
-> After upgrading from 4.20.1 to 4.20.2 Synaptics touchpad TM-3127 on HP
-> 250 G5 is recognized in all logs like normal, but PCI runtime power
-> management seems to keep it from working shortly after module
-> initialization. Issuing "modprobe -r psmouse && modprobe psmouse" fixes
-> the issue but the device stops working again if inactive for a second or
-> so. This is likely caused by https://lkml.org/lkml/2019/1/11/615.
-> 
-> Possible workarounds known to work:
-> 1) Forcing psmouse module to use imps protocol works, but disables most
-> of the touchpad functionality such as two finger scrolling.
-> 2) Disabling PCI runtime power management for the device (f.e. using tlp
-> RUNTIME_PM_ON_BAT=on fixes the issue)
-> 3) Downgrade kernel to 4.20.1
-> 
-> The bug has been reported by multiple users with different software
-> setups, all with HP laptops (see
-> https://bbs.archlinux.org/viewtopic.php?id=243677 for more info).
-> 
-> The suspect commit from kernel log:
-> 
-> commit 39e1be324c2f9048b013aaa190acf91b3f23b1a8
-> Author: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> Date:   Tue Oct 23 14:45:52 2018 +0300
-> 
->     PCI / PM: Allow runtime PM without callback functions
->     
->     commit c5eb1190074cfb14c5d9cac692f1912eecf1a5e4 upstream.
->     
->     a9c8088c7988 ("i2c: i801: Don't restore config registers on runtime PM")
->     nullified the runtime PM suspend/resume callback pointers while keeping the
->     runtime PM enabled.
->     
->     This caused the SMBus PCI device to stay in D0 with
->     /sys/devices/.../power/runtime_status showing "error" when the runtime PM
->     framework attempted to autosuspend the device.  This is due to PCI bus
->     runtime PM, which checks for driver runtime PM callbacks and returns
->     -ENOSYS if they are not set.
->     
->     Since i2c-i801.c doesn't need to do anything device-specific for runtime
->     PM, Jean Delvare proposed this be fixed in the PCI core rather than adding
->     dummy runtime PM callback functions in the PCI drivers.
->     
->     Change pci_pm_runtime_suspend()/pci_pm_runtime_resume() so they allow
->     changing the PCI device power state during runtime PM transitions even if
->     the driver supplies no runtime PM callbacks.
->     
->     This fixes the runtime PM regression on i2c-i801.c.
->     
->     It is not obvious why the code previously required the runtime PM
->     callbacks.  The test has been there since the code was introduced by
->     6cbf82148ff2 ("PCI PM: Run-time callbacks for PCI bus type").
->     
->     On the other hand, a similar change was done to generic runtime PM
->     callbacks in 05aa55dddb9e ("PM / Runtime: Lenient generic runtime pm
->     callbacks").
->     
->     Fixes: a9c8088c7988 ("i2c: i801: Don't restore config registers on runtime PM")
->     Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->     Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
->     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->     Reviewed-by: Jean Delvare <jdelvare@suse.de>
->     Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->     Cc: stable@vger.kernel.org      # v4.18+
->     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+With those 2 changes:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +    description: Regulator that provides power
+> +
+> +required:
+> +  - compatible
+> +  - enable-gpios
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    vibrator {
+> +        compatible = "gpio-vibrator";
+> +        enable-gpios = <&msmgpio 86 GPIO_ACTIVE_HIGH>;
+> +        vcc-supply = <&pm8941_l18>;
+> +    };
+> --
+> 2.21.0
+>
