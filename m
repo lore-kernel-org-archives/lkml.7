@@ -2,234 +2,117 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFEEC282E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 06:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74C0C282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 06:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD7D22147C
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 06:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964AA20811
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 06:51:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Zzu3exlB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlTmgH93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfDVGrV (ORCPT
+        id S1726900AbfDVGvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 02:47:21 -0400
-Received: from mail-eopbgr690051.outbound.protection.outlook.com ([40.107.69.51]:48581
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726440AbfDVGrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 02:47:20 -0400
+        Mon, 22 Apr 2019 02:51:51 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42489 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfDVGvv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 02:51:51 -0400
+Received: by mail-ed1-f67.google.com with SMTP id u23so8421265eds.9;
+        Sun, 21 Apr 2019 23:51:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j0MB3N7p83WvuvKl3NRmiWRXsxO5i5iFks5vi7jRXkk=;
- b=Zzu3exlBlEht90gSmmWUmxvSgvf/tKN0HhcTBKaH3/ufB4CkimFmbZY8XaMoinp9amgmMUcUq+opPBQBfLJsTCK5CgGou1AmI9wjqOahJm2VRsK2NQupxyrsS1I0WlEM5ry7svIfM5gpRWwaJgFju/HXl8XPm5s+nH6cTc3u0ME=
-Received: from BN7PR02MB5124.namprd02.prod.outlook.com (20.176.26.153) by
- BN7PR02MB4180.namprd02.prod.outlook.com (52.133.220.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Mon, 22 Apr 2019 06:47:15 +0000
-Received: from BN7PR02MB5124.namprd02.prod.outlook.com
- ([fe80::fc20:6339:ab53:378e]) by BN7PR02MB5124.namprd02.prod.outlook.com
- ([fe80::fc20:6339:ab53:378e%2]) with mapi id 15.20.1813.017; Mon, 22 Apr 2019
- 06:47:15 +0000
-From:   Kalyani Akula <kalyania@xilinx.com>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-CC:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH V2 3/4] crypto: Add Xilinx SHA3 driver
-Thread-Topic: [RFC PATCH V2 3/4] crypto: Add Xilinx SHA3 driver
-Thread-Index: AQHUp/1sQxJENQki50GijbSiY6ngFqWoiP+AgJ+wkOA=
-Date:   Mon, 22 Apr 2019 06:47:15 +0000
-Message-ID: <BN7PR02MB51247DEF73128E41B3754EB0AF220@BN7PR02MB5124.namprd02.prod.outlook.com>
-References: <1547025985-7228-1-git-send-email-kalyani.akula@xilinx.com>
- <1547025985-7228-4-git-send-email-kalyani.akula@xilinx.com>
- <20190110135757.GA32218@Red>
-In-Reply-To: <20190110135757.GA32218@Red>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=kalyania@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 116028e1-66e2-47d0-552f-08d6c6ee5b25
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BN7PR02MB4180;
-x-ms-traffictypediagnostic: BN7PR02MB4180:
-x-microsoft-antispam-prvs: <BN7PR02MB4180617BBC35A3C5609E4C6FAF220@BN7PR02MB4180.namprd02.prod.outlook.com>
-x-forefront-prvs: 00159D1518
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(366004)(376002)(346002)(396003)(52314003)(13464003)(189003)(199004)(76116006)(66476007)(66556008)(73956011)(66946007)(66446008)(9686003)(14444005)(6916009)(305945005)(446003)(68736007)(256004)(64756008)(486006)(11346002)(476003)(2906002)(8676002)(76176011)(74316002)(229853002)(55016002)(25786009)(6506007)(81166006)(54906003)(52536014)(7736002)(97736004)(6116002)(3846002)(316002)(8936002)(478600001)(71190400001)(6246003)(99286004)(5660300002)(26005)(53546011)(71200400001)(14454004)(33656002)(86362001)(102836004)(7696005)(81156014)(66066001)(4326008)(186003)(53936002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4180;H:BN7PR02MB5124.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 6ZxFVvU6lRQfZRdqYHpQTSrNRkLHqh79gB00IBESlmgdCoE01z4riohNXoK6x2uYYO2TaI50ekROq4F84OTKGvM1kh8hdmcpF1Jjb+WYlaolo/WRsTHCgcuJK7BMkjanWK5eiJlau5+HYNs9NoRuNMbsOxsqIg3bMNsmp2oAFkIVpIrKJu6HJsQi2X8DCoqi+M0TgRmTyf8pxHMXNhjIPv1F2NdX4b5/33IsmZW3/XmkNgvjyGq2xnpoJQk2hvhLvZ9y9i07jSD/dppv5G6yku3l8Uli7FN1Sh8XcGtaCfyt/+tGGzEHymxM1Jed1ep6jhgsN27I42Z+2/+KV/fE1eyky6S291kXrTcQFoZF/ree2v9e3g/lGZpQJ9wJ5Uv3+d91LsyanpsWxEj0ROgH6HUAnbSx8wK6Nq2MW/yO3IA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E+t6Q7fv81q+1B4hKSJz2wKQkCSzBAWUA+nqXWE510k=;
+        b=WlTmgH93xgNZyGjRMWLMeq5JFm6qOJ1+EQGMAqyUTWeTko4HZZ2SlSkLlGHAL0myC7
+         P6DIxalNvNkxq1/wFMLiAD62wfHaO4d7SYEtqtYQVXXasfE56dsqkPwTETyUIpPZJq2x
+         VrKzl+6gpAVa9QUkV0Px3jZrXN1up3aLTQx+TuiuaV/LBiKlRQVLp6DKLMoaVvx5ma2y
+         d3df2HO6CR+16aX7+/t6rbh5T3K9rv/CctV8RosS4hXCVCn6rNMMI0epV9CJiabaUsCC
+         uPWZdUufN3e97bIXiwYVcat9vx4krRAuaehaOTjqTbgMYh0cgfY5adcjhHWQWcLt/wn1
+         rfvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E+t6Q7fv81q+1B4hKSJz2wKQkCSzBAWUA+nqXWE510k=;
+        b=T1SS+SGIw5zvADSU0ot20RsRSWT+CEVpDqU3cF8U6hGlfN8bC/VbNrTSYAf7NW6vjC
+         9QgLBelCRGGPc0GZUB3+OkN6M3t7xN0tIYgybi6FDLP0Sy26yCTKh+iHKrQeHRZiWUwf
+         EYKS2OqLEfqjwuIMKBhOOUvoIEQRNvelk8Xsxfn2Y8cVuWHOD77wDv+wm8x7mJp4m2Pf
+         RJVPXM4lY8ksujbmyNlcU+F1D6fLdXARE+ell0ezCYX/v4FA4Cqx0OmxqEzKbYFycNhK
+         aDx4diYTEi6dGaLmKrqZFbJAmmSVcfSuMVjo1nr9m1xuZIdzPK9Z/XSiZueNFltTJRXk
+         GA8A==
+X-Gm-Message-State: APjAAAU0Mx1tZMK/BE+3Agb/Uy80Cr2P2YsdCGKS1+8VhNBGnWfed9NQ
+        fJ+TaDfhtSCVTueLgR2kNa9X+SspcNVl4NmCNlQ=
+X-Google-Smtp-Source: APXvYqw1ks30fRtbavq0DpgvODh4Dgq3yMNWfoBqiSg7l1CpOQwRJxFBgsi9f15XrbdY5Om+dyx/VeyM1pTA5QDbMjY=
+X-Received: by 2002:a17:906:4c95:: with SMTP id q21mr8860352eju.14.1555915909183;
+ Sun, 21 Apr 2019 23:51:49 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 116028e1-66e2-47d0-552f-08d6c6ee5b25
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2019 06:47:15.2162
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4180
+References: <20190419202024.27314-1-daniel.baluta@nxp.com> <20190419202024.27314-2-daniel.baluta@nxp.com>
+ <20190422024427.GU19962@dragon>
+In-Reply-To: <20190422024427.GU19962@dragon>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Mon, 22 Apr 2019 09:51:37 +0300
+Message-ID: <CAEnQRZAA9_Worz8taLC_zWanx2vdujb8YWqi+1VV99bRTueWow@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mm: Add SAI nodes
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>, Jacky Bai <ping.bai@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Corentin,
-
-Sorry for the delayed response.
-Please find my responses inline.
-
-> -----Original Message-----
-> From: Corentin Labbe <clabbe.montjoie@gmail.com>
-> Sent: Thursday, January 10, 2019 7:28 PM
-> To: Kalyani Akula <kalyania@xilinx.com>
-> Cc: herbert@gondor.apana.org.au; davem@davemloft.net; linux-
-> crypto@vger.kernel.org; linux-kernel@vger.kernel.org; Kalyani Akula
-> <kalyania@xilinx.com>; Sarat Chand Savitala <saratcha@xilinx.com>
-> Subject: Re: [RFC PATCH V2 3/4] crypto: Add Xilinx SHA3 driver
->=20
-> On Wed, Jan 09, 2019 at 02:56:24PM +0530, Kalyani Akula wrote:
-> > This patch adds SHA3 driver support for the Xilinx ZynqMP SoC.
+On Mon, Apr 22, 2019 at 5:45 AM Shawn Guo <shawnguo@kernel.org> wrote:
+>
+> On Fri, Apr 19, 2019 at 08:20:39PM +0000, Daniel Baluta wrote:
+> > i.MX8MM has 5 SAI instances with the following base
+> > addresses according to RM.
 > >
-> > Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
+> > SAI1 base address: 3001_0000h
+> > SAI2 base address: 3002_0000h
+> > SAI3 base address: 3003_0000h
+> > SAI5 base address: 3005_0000h
+> > SAI6 base address: 3006_0000h
+> >
+> > Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 > > ---
-> >  drivers/crypto/Kconfig      |   10 ++
-> >  drivers/crypto/Makefile     |    1 +
-> >  drivers/crypto/zynqmp-sha.c |  305
-> > +++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 316 insertions(+), 0 deletions(-)  create mode
-> > 100644 drivers/crypto/zynqmp-sha.c
->=20
-> Hello
->=20
-> I have some comment below
->=20
-> > +static int zynqmp_sha_update(struct ahash_request *req) {
-> > +	const struct zynqmp_eemi_ops *eemi_ops =3D
-> zynqmp_pm_get_eemi_ops();
-> > +	struct zynqmp_sha_ctx *tctx =3D crypto_tfm_ctx(req->base.tfm);
-> > +	struct zynqmp_sha_dev *dd =3D tctx->dd;
-> > +	size_t dma_size =3D req->nbytes;
-> > +	dma_addr_t dma_addr;
-> > +	char *kbuf;
-> > +	int ret;
-> > +
-> > +	if (!req->nbytes)
-> > +		return 0;
-> > +
-> > +	if (!eemi_ops || !eemi_ops->sha_hash)
-> > +		return -ENOTSUPP;
-> > +
-> > +	kbuf =3D dma_alloc_coherent(dd->dev, dma_size, &dma_addr,
-> GFP_KERNEL);
-> > +	if (!kbuf)
-> > +		return -ENOMEM;
-> > +
-> > +	scatterwalk_map_and_copy(kbuf, req->src, 0, req->nbytes, 0);
-> > +	 __flush_cache_user_range((unsigned long)kbuf,
-> > +				  (unsigned long)kbuf + dma_size);
->=20
-> Since kbuf is in dma coherent memory, I dont understand why do you flush
-> cache.
-[kalyani] Agree, not required will fix in next version.
->=20
-> > +	ret =3D eemi_ops->sha_hash(dma_addr, req->nbytes,
-> ZYNQMP_SHA3_UPDATE);
-> > +	dma_free_coherent(dd->dev, dma_size, kbuf, dma_addr);
->=20
-> Since your update function does not return/write any result, I suppose th=
-at
-> the resulat is kept in hardware, so what happen if two hash process happe=
-n
-> in parallel ?
-[kalyani] yes, the result will be stored in SHA3 engine.
-Firmware don't have the support to process 2 hash requests in parallel usin=
-g IPI
-> Furthermore, how do you have tested import/export function ?
-> Anyway, I am sure they are totally buggy.
->=20
-[kalyani] I will verify and fix in the next version
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int zynqmp_sha_final(struct ahash_request *req) {
-> > +	const struct zynqmp_eemi_ops *eemi_ops =3D
-> zynqmp_pm_get_eemi_ops();
-> > +	struct zynqmp_sha_ctx *tctx =3D crypto_tfm_ctx(req->base.tfm);
-> > +	struct zynqmp_sha_dev *dd =3D tctx->dd;
-> > +	size_t dma_size =3D SHA384_DIGEST_SIZE;
-> > +	dma_addr_t dma_addr;
-> > +	char *kbuf;
-> > +	int ret;
-> > +
-> > +	if (!eemi_ops || !eemi_ops->sha_hash)
-> > +		return -ENOTSUPP;
->=20
-> You can do this check at probe time.
-[kalyani] Yes, will fix in next version
->=20
-> > +static int zynqmp_sha_finup(struct ahash_request *req) {
-> > +	zynqmp_sha_update(req);
-> > +	zynqmp_sha_final(req);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int zynqmp_sha_digest(struct ahash_request *req) {
-> > +	zynqmp_sha_init(req);
-> > +	zynqmp_sha_update(req);
-> > +	zynqmp_sha_final(req);
-> > +
-> > +	return 0;
-> > +}
->=20
-> So you ignore the return value of
-> zynqmp_sha_init/zynqmp_sha_update/zynqmp_sha_final().
->=20
-> > +static int zynqmp_sha_probe(struct platform_device *pdev) {
-> > +	struct zynqmp_sha_dev *sha_dd;
-> > +	struct device *dev =3D &pdev->dev;
-> > +	int err;
-> > +
-> > +	sha_dd =3D devm_kzalloc(&pdev->dev, sizeof(*sha_dd),
-> GFP_KERNEL);
-> > +	if (!sha_dd)
-> > +		return -ENOMEM;
-> > +
-> > +	sha_dd->dev =3D dev;
-> > +	platform_set_drvdata(pdev, sha_dd);
-> > +	INIT_LIST_HEAD(&sha_dd->list);
-> > +	spin_lock_init(&sha_dd->lock);
-> > +	crypto_init_queue(&sha_dd->queue,
-> ZYNQMP_SHA_QUEUE_LENGTH);
->=20
-> As already said in my last review, why init the queue if you do not use i=
-t ?
->=20
->=20
-> > +	spin_lock(&zynqmp_sha.lock);
-> > +	list_add_tail(&sha_dd->list, &zynqmp_sha.dev_list);
-> > +	spin_unlock(&zynqmp_sha.lock);
->=20
-> Why do you maintain a device list ?
-> Clearly your current driver support only one hardware instance.
-[kalyani] True, driver support only one HW instance , will fix in the next =
-version
+> >  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 68 +++++++++++++++++++++++
+> >  1 file changed, 68 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > index de3498c2dd44..e9a0b2b6063a 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> > @@ -171,6 +171,74 @@
+> >                       #size-cells = <1>;
+> >                       ranges;
+> >
+> > +                     sai1: sai@30010000 {
+> > +                             compatible = "fsl,imx8mq-sai",
+>
+> Should be "fsl,imx8mm-sai"?
 
-Regards,
-kalyani
->=20
-> Regards
+SAI IP on imx8mm is identical with the one on imx8mq. There is no need
+to differentiate with a compatible string.
+
+What is the common practice for such cases?
