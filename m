@@ -6,48 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7805C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0F0C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCEF2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21812218FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962644;
-	bh=K6dX4RqOYR9fSZsQsBEMT01w5cEIGbxRftSdC13OEXE=;
+	s=default; t=1555962649;
+	bh=RKA/zPAWSD/0ZlVelKuf/XlM/TfrjgbjswFVrLop6XA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y8uDutDGaqPeNbk/Rm85UOvE7UkLMBKVrjPRkeFDIGuC/3D2duleY6GQ6gt/qlOC5
-	 f9V1puIie//gVLbIipuxf42J5qT807lDgpBcx5akFLb/590fQc9xOciieFg8GBO2+W
-	 eiLPf0CYixyuTHueHB9GpF8EyBtX1fl89Zk8x1Kk=
+	b=2OK9FZGOiLdj3S5C9A8C6HG/D/cGtalp3ssX5yiN4jp6tyNy14KuAR3fXooac/vQb
+	 S0h4ecIFQpJ37P8VEeVtf/dsWhCg8eK3k4wwCWXEwo/DRyzTohRZ4MeI7C2Lhm1bIq
+	 UNDzAq/SM+owUSkyhimdLVgizubEKAtxH3mWmAxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbfDVTum (ORCPT
+        id S1731170AbfDVTus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:50:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54690 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:50:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731142AbfDVTuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:50:39 -0400
+        id S1731142AbfDVTuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:50:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18106218CD;
-        Mon, 22 Apr 2019 19:50:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E63218FD;
+        Mon, 22 Apr 2019 19:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962638;
-        bh=K6dX4RqOYR9fSZsQsBEMT01w5cEIGbxRftSdC13OEXE=;
+        s=default; t=1555962643;
+        bh=RKA/zPAWSD/0ZlVelKuf/XlM/TfrjgbjswFVrLop6XA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eoL/fUh1X6OObCgYb0nvcNClreh1SW4nDJfXF5gMIR2ANlXvJTVO/gk+VB2RkUp6I
-         Q5IQSkgG43WzJ5zPzenwTb12LKdqBfuDsTrl1X1DUArKxZQo4CudWQyrqG36WUAzda
-         zk6mV4ArepVZQgPvzXo3jzCMscrork+pP9LPCK0g=
+        b=yDXUzO5NUB62QDQtMEDcsV9nP5OokHybbGp3qPXgB4zXL+PRKzcXUYUohsSWIezv3
+         ks3Aw/ZHlE7z7lmyZLSMuDGqmtcaXXyVP6HwC0FsXeE3mp8koGnL7vRhwfHAlIidyN
+         YkCM+NMDiiMOMYfS1NfLH/TgKxFWU/qmNBllV3Js=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukas Wunner <lukas@wunner.de>, Frank Pavlic <f.pavlic@kunbus.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 06/15] net: ks8851: Delay requesting IRQ until opened
-Date:   Mon, 22 Apr 2019 15:50:13 -0400
-Message-Id: <20190422195022.13760-6-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 09/15] scsi: qla4xxx: fix a potential NULL pointer dereference
+Date:   Mon, 22 Apr 2019 15:50:16 -0400
+Message-Id: <20190422195022.13760-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422195022.13760-1-sashal@kernel.org>
 References: <20190422195022.13760-1-sashal@kernel.org>
@@ -60,94 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit d268f31552794abf5b6aa5af31021643411f25f5 ]
+[ Upstream commit fba1bdd2a9a93f3e2181ec1936a3c2f6b37e7ed6 ]
 
-The ks8851 driver currently requests the IRQ before registering the
-net_device.  Because the net_device name is used as IRQ name and is
-still "eth%d" when the IRQ is requested, it's impossibe to tell IRQs
-apart if multiple ks8851 chips are present.  Most other drivers delay
-requesting the IRQ until the net_device is opened.  Do the same.
+In case iscsi_lookup_endpoint fails, the fix returns -EINVAL to avoid NULL
+pointer dereference.
 
-The driver doesn't enable interrupts on the chip before opening the
-net_device and disables them when closing it, so there doesn't seem to
-be a need to request the IRQ already on probe.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ drivers/scsi/qla4xxx/ql4_os.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index e218e45dcf35..f90a1396535a 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -797,6 +797,15 @@ static void ks8851_tx_work(struct work_struct *work)
- static int ks8851_net_open(struct net_device *dev)
- {
- 	struct ks8851_net *ks = netdev_priv(dev);
-+	int ret;
-+
-+	ret = request_threaded_irq(dev->irq, NULL, ks8851_irq,
-+				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+				   dev->name, ks);
-+	if (ret < 0) {
-+		netdev_err(dev, "failed to get irq\n");
-+		return ret;
-+	}
- 
- 	/* lock the card, even if we may not actually be doing anything
- 	 * else at the moment */
-@@ -911,6 +920,8 @@ static int ks8851_net_stop(struct net_device *dev)
- 		dev_kfree_skb(txb);
- 	}
- 
-+	free_irq(dev->irq, ks);
-+
- 	return 0;
- }
- 
-@@ -1542,14 +1553,6 @@ static int ks8851_probe(struct spi_device *spi)
- 	ks8851_read_selftest(ks);
- 	ks8851_init_mac(ks);
- 
--	ret = request_threaded_irq(spi->irq, NULL, ks8851_irq,
--				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
--				   ndev->name, ks);
--	if (ret < 0) {
--		dev_err(&spi->dev, "failed to get irq\n");
--		goto err_irq;
--	}
--
- 	ret = register_netdev(ndev);
- 	if (ret) {
- 		dev_err(&spi->dev, "failed to register network device\n");
-@@ -1562,11 +1565,7 @@ static int ks8851_probe(struct spi_device *spi)
- 
- 	return 0;
- 
--
- err_netdev:
--	free_irq(ndev->irq, ks);
--
--err_irq:
- err_id:
- 	if (gpio_is_valid(gpio))
- 		gpio_set_value(gpio, 0);
-@@ -1587,7 +1586,6 @@ static int ks8851_remove(struct spi_device *spi)
- 		dev_info(&spi->dev, "remove\n");
- 
- 	unregister_netdev(priv->netdev);
--	free_irq(spi->irq, priv);
- 	if (gpio_is_valid(priv->gpio))
- 		gpio_set_value(priv->gpio, 0);
- 	regulator_disable(priv->vdd_reg);
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index a9fac1eb8306..28f6d5ef04e0 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -3213,6 +3213,8 @@ static int qla4xxx_conn_bind(struct iscsi_cls_session *cls_session,
+ 	if (iscsi_conn_bind(cls_session, cls_conn, is_leading))
+ 		return -EINVAL;
+ 	ep = iscsi_lookup_endpoint(transport_fd);
++	if (!ep)
++		return -EINVAL;
+ 	conn = cls_conn->dd_data;
+ 	qla_conn = conn->dd_data;
+ 	qla_conn->qla_ep = ep->dd_data;
 -- 
 2.19.1
 
