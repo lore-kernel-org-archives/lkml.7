@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4694FC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9CAC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12440204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C417204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963482;
-	bh=zcXJdbVkQ9dCRjuZ4c2PifO78xgR1cg0tfG5s/ThGjk=;
+	s=default; t=1555963487;
+	bh=gmocDgUQYMyUOkmtWP4xkpkSiaPbVgR4wZ04EOQDWz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VhSe8hdPvoWpWYLhHjGqAQq8yBDg9+G436OQX0FBFVoBw2n/EanqncjbRFIWTxmMZ
-	 Z4d4gChAcl4SO2s/yODmAA58a7XXO92egRxNMFG10IsINGu6OLoVYgwJ5KXF0R7f/k
-	 zGJ+iCLlQoC5ikUJ5uD9WgvxJuj38yBtWGL9POWU=
+	b=kQSYhXJvY1IxfywB1CGmwkqwpUDdKpU+YEqY0T1PWiDL96t9JQl8R4hB6y8LPmiCi
+	 LdSI7hu7UlIYFtC3k8UOyQXP9fPlR/gT2Zg9IH8zUwWR/k4Zi06/8252bLMgvOP9v4
+	 lWmPb6RWTi7ULHI0nCBqmO4RQeKGLiBH3Hru+mpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732201AbfDVUEe (ORCPT
+        id S1729758AbfDVTp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47320 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729771AbfDVTpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:45:33 -0400
+        id S1729692AbfDVTp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:45:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86C2F218B0;
-        Mon, 22 Apr 2019 19:45:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CDDC218FF;
+        Mon, 22 Apr 2019 19:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962332;
-        bh=zcXJdbVkQ9dCRjuZ4c2PifO78xgR1cg0tfG5s/ThGjk=;
+        s=default; t=1555962326;
+        bh=gmocDgUQYMyUOkmtWP4xkpkSiaPbVgR4wZ04EOQDWz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IyeI1bhu7FuAAooLtczqbNTMuWy2SBnGxvBmkxKTa1jwVwN773b9VddsoQyDqD3eI
-         yTqYMRQWaKvTauYfdMLttjoHnchHkriv8b8tM8ZSbUPkBVhng361oPBbyO8xykOEFW
-         iebcHKbSAnr6cS3c5zPYTn/38osHMuNFyM+IR1WE=
+        b=Vvp2LcRAPwrFVMwAtCtVbIXQxPAwnIzjXJs16yPBO/IbUEPOQelv1TQx1Z5D44sAe
+         0ZC6tu/FbobRC9sM+F1QwK9PfrIuVCjdbqWLe0g/56SPddvzJlLeLeaEgaa1uAVaHR
+         7MDSIBLZN6HrIYBgc1ELmUk1Xq3VpbuJkQ4pAjVM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.19 08/68] staging: axis-fifo: add CONFIG_OF dependency
-Date:   Mon, 22 Apr 2019 15:44:16 -0400
-Message-Id: <20190422194516.11634-8-sashal@kernel.org>
+Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/68] net: stmmac: don't set own bit too early for jumbo frames
+Date:   Mon, 22 Apr 2019 15:44:13 -0400
+Message-Id: <20190422194516.11634-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -58,49 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-[ Upstream commit 1beea6204e2304dd11600791d8dad8e7350af6ad ]
+[ Upstream commit 80acbed9f8fca1db3fbe915540b756f048aa0fd7 ]
 
-When building without CONFIG_OF, the compiler loses track of the flow
-control in axis_fifo_probe(), and thinks that many variables are used
-without an initialization even though we actually leave the function
-before the first use:
+Commit 0e80bdc9a72d ("stmmac: first frame prep at the end of xmit
+routine") overlooked jumbo frames when re-ordering the code, and as a
+result the own bit was not getting set anymore for the first jumbo frame
+descriptor. Commit 487e2e22ab79 ("net: stmmac: Set OWN bit for jumbo
+frames") tried to fix this, but now the bit is getting set too early and
+the DMA may start while we are still setting up the remaining descriptors.
+And with the chain mode the own bit remains still unset.
 
-drivers/staging/axis-fifo/axis-fifo.c: In function 'axis_fifo_probe':
-drivers/staging/axis-fifo/axis-fifo.c:900:5: error: 'rxd_tdata_width' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-  if (rxd_tdata_width != 32) {
-     ^
-drivers/staging/axis-fifo/axis-fifo.c:907:5: error: 'txd_tdata_width' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-  if (txd_tdata_width != 32) {
-     ^
-drivers/staging/axis-fifo/axis-fifo.c:914:5: error: 'has_tdest' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-  if (has_tdest) {
-     ^
-drivers/staging/axis-fifo/axis-fifo.c:919:5: error: 'has_tid' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+Fix by setting the own bit at the end of xmit also with jumbo frames.
 
-When CONFIG_OF is set, this does not happen, and since the driver cannot
-work without it, just add that option as a Kconfig dependency.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 0e80bdc9a72d ("stmmac: first frame prep at the end of xmit routine")
+Fixes: 487e2e22ab79 ("net: stmmac: Set OWN bit for jumbo frames")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Acked-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/staging/axis-fifo/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/axis-fifo/Kconfig b/drivers/staging/axis-fifo/Kconfig
-index 687537203d9c..d9725888af6f 100644
---- a/drivers/staging/axis-fifo/Kconfig
-+++ b/drivers/staging/axis-fifo/Kconfig
-@@ -3,6 +3,7 @@
- #
- config XIL_AXIS_FIFO
- 	tristate "Xilinx AXI-Stream FIFO IP core driver"
-+	depends on OF
- 	default n
- 	help
- 	  This adds support for the Xilinx AXI-Stream
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 886176be818e..3d35cbeb1028 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3197,14 +3197,16 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		stmmac_prepare_tx_desc(priv, first, 1, nopaged_len,
+ 				csum_insertion, priv->mode, 1, last_segment,
+ 				skb->len);
+-
+-		/* The own bit must be the latest setting done when prepare the
+-		 * descriptor and then barrier is needed to make sure that
+-		 * all is coherent before granting the DMA engine.
+-		 */
+-		wmb();
++	} else {
++		stmmac_set_tx_owner(priv, first);
+ 	}
+ 
++	/* The own bit must be the latest setting done when prepare the
++	 * descriptor and then barrier is needed to make sure that
++	 * all is coherent before granting the DMA engine.
++	 */
++	wmb();
++
+ 	netdev_tx_sent_queue(netdev_get_tx_queue(dev, queue), skb->len);
+ 
+ 	stmmac_enable_dma_transmission(priv, priv->ioaddr);
 -- 
 2.19.1
 
