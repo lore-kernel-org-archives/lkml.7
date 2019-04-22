@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED32CC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F5EC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62FD218FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5019C218FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962345;
-	bh=sq0eE+VglM/+8TvJTi376HaUowcFk2K39SDElKrQABA=;
+	s=default; t=1555962356;
+	bh=szBkXxqiqCEEnOvkzWxbI2WmligjzE5ZDcccd/LXTqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6tBWrnCMG74wE9nPRzBp5/NCrHhS2f103giu7WjoOONLlxPK+MQGu3jCX/jAPo+r
-	 BbUIVkgmbf0Yyb/zaVXke8/dATBJ6JdnGGYc61OS6TpWr95Cpm+1Yr5uriLVe8uVg8
-	 NZV9ftVqpXWGrh69qwcEmEpcPJiqJSM0W+SALaB4=
+	b=nRvk4oXGh7A3bRJdiD45vS8JB/MOsymywMLuJrwGwWVFyO/8oV0f2FnMNBeYDlQwv
+	 JEXCThFn5fldaFbtnr5CL5bc3tIWS0KDwv6KpjFU0tgrlNENeSh68391TMBbmfjAOf
+	 UoqTRAnebdUyHY58Nu5t4BHoTuVHSB7ayfKCgpWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbfDVTpn (ORCPT
+        id S1729876AbfDVTpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:45:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47456 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:45:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbfDVTpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:45:39 -0400
+        id S1729831AbfDVTpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:45:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5856218B0;
-        Mon, 22 Apr 2019 19:45:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3D6A218B0;
+        Mon, 22 Apr 2019 19:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962338;
-        bh=sq0eE+VglM/+8TvJTi376HaUowcFk2K39SDElKrQABA=;
+        s=default; t=1555962341;
+        bh=szBkXxqiqCEEnOvkzWxbI2WmligjzE5ZDcccd/LXTqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OTxkAxABhgP3ItnX4opP6TElhSOCJrzH5W3uYyVVtreyl0SFLlCk0Fs5UUjPLyug1
-         5On9/BQcUMoyrCia5eM7jg8+d9mEhyuAkKJjywdq/LPxUR9KH84mUsUuBZN+aYQTUq
-         g2g1nngnVleCVhE85OwDrecGYNT6hsxpI0SpNSLA=
+        b=aELPiK+Zm0fFUVwyjxFclWUMXZv4grKe1maZfPN5JFN0O649/6BJroYC4NE3y3X7D
+         1iyWN4gJiyOLao9BiYY19mGoD1Axt8QbISgW0+vsFiZF6rO7om9Hwl0wpwVCdgcK+h
+         /7Y+jaBntHlw0huehfYIiyHIgDu7wn4+0Wz1NPeM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Kangjie Lu <kjlu@umn.edu>, Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 11/68] netfilter: bridge: set skb transport_header before entering NF_INET_PRE_ROUTING
-Date:   Mon, 22 Apr 2019 15:44:19 -0400
-Message-Id: <20190422194516.11634-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 13/68] netfilter: ip6t_srh: fix NULL pointer dereferences
+Date:   Mon, 22 Apr 2019 15:44:21 -0400
+Message-Id: <20190422194516.11634-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
@@ -60,56 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit e166e4fdaced850bee3d5ee12a5740258fb30587 ]
+[ Upstream commit 6d65561f3d5ec933151939c543d006b79044e7a6 ]
 
-Since Commit 21d1196a35f5 ("ipv4: set transport header earlier"),
-skb->transport_header has been always set before entering INET
-netfilter. This patch is to set skb->transport_header for bridge
-before entering INET netfilter by bridge-nf-call-iptables.
+skb_header_pointer may return NULL. The current code dereference
+its return values without a NULL check.
 
-It also fixes an issue that sctp_error() couldn't compute a right
-csum due to unset skb->transport_header.
+The fix inserts the checks to avoid NULL pointer dereferences.
 
-Fixes: e6d8b64b34aa ("net: sctp: fix and consolidate SCTP checksumming code")
-Reported-by: Li Shuang <shuali@redhat.com>
-Suggested-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Acked-by: Florian Westphal <fw@strlen.de>
+Fixes: 202a8ff545cc ("netfilter: add IPv6 segment routing header 'srh' match")
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/bridge/br_netfilter_hooks.c | 1 +
- net/bridge/br_netfilter_ipv6.c  | 2 ++
- 2 files changed, 3 insertions(+)
+ net/ipv6/netfilter/ip6t_srh.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/bridge/br_netfilter_hooks.c b/net/bridge/br_netfilter_hooks.c
-index 3b0a03b92080..212c184c1eee 100644
---- a/net/bridge/br_netfilter_hooks.c
-+++ b/net/bridge/br_netfilter_hooks.c
-@@ -515,6 +515,7 @@ static unsigned int br_nf_pre_routing(void *priv,
- 	nf_bridge->ipv4_daddr = ip_hdr(skb)->daddr;
- 
- 	skb->protocol = htons(ETH_P_IP);
-+	skb->transport_header = skb->network_header + ip_hdr(skb)->ihl * 4;
- 
- 	NF_HOOK(NFPROTO_IPV4, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
- 		skb->dev, NULL,
-diff --git a/net/bridge/br_netfilter_ipv6.c b/net/bridge/br_netfilter_ipv6.c
-index 5811208863b7..09d5e0c7b3ba 100644
---- a/net/bridge/br_netfilter_ipv6.c
-+++ b/net/bridge/br_netfilter_ipv6.c
-@@ -235,6 +235,8 @@ unsigned int br_nf_pre_routing_ipv6(void *priv,
- 	nf_bridge->ipv6_daddr = ipv6_hdr(skb)->daddr;
- 
- 	skb->protocol = htons(ETH_P_IPV6);
-+	skb->transport_header = skb->network_header + sizeof(struct ipv6hdr);
-+
- 	NF_HOOK(NFPROTO_IPV6, NF_INET_PRE_ROUTING, state->net, state->sk, skb,
- 		skb->dev, NULL,
- 		br_nf_pre_routing_finish_ipv6);
+diff --git a/net/ipv6/netfilter/ip6t_srh.c b/net/ipv6/netfilter/ip6t_srh.c
+index 1059894a6f4c..4cb83fb69844 100644
+--- a/net/ipv6/netfilter/ip6t_srh.c
++++ b/net/ipv6/netfilter/ip6t_srh.c
+@@ -210,6 +210,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		psidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
+ 			  ((srh->segments_left + 1) * sizeof(struct in6_addr));
+ 		psid = skb_header_pointer(skb, psidoff, sizeof(_psid), &_psid);
++		if (!psid)
++			return false;
+ 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_PSID,
+ 				ipv6_masked_addr_cmp(psid, &srhinfo->psid_msk,
+ 						     &srhinfo->psid_addr)))
+@@ -223,6 +225,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		nsidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
+ 			  ((srh->segments_left - 1) * sizeof(struct in6_addr));
+ 		nsid = skb_header_pointer(skb, nsidoff, sizeof(_nsid), &_nsid);
++		if (!nsid)
++			return false;
+ 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_NSID,
+ 				ipv6_masked_addr_cmp(nsid, &srhinfo->nsid_msk,
+ 						     &srhinfo->nsid_addr)))
+@@ -233,6 +237,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 	if (srhinfo->mt_flags & IP6T_SRH_LSID) {
+ 		lsidoff = srhoff + sizeof(struct ipv6_sr_hdr);
+ 		lsid = skb_header_pointer(skb, lsidoff, sizeof(_lsid), &_lsid);
++		if (!lsid)
++			return false;
+ 		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_LSID,
+ 				ipv6_masked_addr_cmp(lsid, &srhinfo->lsid_msk,
+ 						     &srhinfo->lsid_addr)))
 -- 
 2.19.1
 
