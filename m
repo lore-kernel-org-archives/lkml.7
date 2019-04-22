@@ -2,58 +2,193 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC000C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B96C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3528204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB31204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555963024;
+	bh=oSQ4Zp9KdobFFw84Vu+aM6m8mVNMD0L5SPyOUZ8d4KM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=X//yhJoLVwGElddycnO0ERcIrUbRyU2XwVrhp87lj+rR2dy1Qg72Dbqa7Yk2ywQQ5
+	 tZeEKEqFl1cRfYSAIs4gizKOQOOmRWvQU4dmRgZ8YTWOC2BTqTEQKr0oR8QBfYBelt
+	 jahQMNNNyXU+APdBDOTMQxdOM095Blg8QAk9pH/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731658AbfDVT44 (ORCPT
+        id S1731670AbfDVT5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:56:56 -0400
-Received: from verein.lst.de ([213.95.11.211]:41780 "EHLO newverein.lst.de"
+        Mon, 22 Apr 2019 15:57:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730659AbfDVT4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:56:54 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 6446E68AFE; Mon, 22 Apr 2019 21:56:38 +0200 (CEST)
-Date:   Mon, 22 Apr 2019 21:56:38 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 11/11] riscv: Make mmap allocation top-down by
- default
-Message-ID: <20190422195638.GE2224@lst.de>
-References: <20190417052247.17809-1-alex@ghiti.fr> <20190417052247.17809-12-alex@ghiti.fr>
+        id S1729835AbfDVTsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:48:47 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C361D21905;
+        Mon, 22 Apr 2019 19:48:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555962526;
+        bh=oSQ4Zp9KdobFFw84Vu+aM6m8mVNMD0L5SPyOUZ8d4KM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=u/zRIbZNsJDFIn1IwjmKJfI7y3ViOPeSYR3IiBj8cttKVVNVpEsAzmDlCHmucXFYL
+         m0f7mP0j1VJKqd1fGIKcBCvvbhsIdYOP1iYQhFDCVe+QDU59jfJgLZWBdEw3laSlAw
+         rxkeLO9yqQVLowU9HcwjPRS17Re3uMa7ojfy8EbY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Andrei Vagin <avagin@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 42/43] ptrace: take into account saved_sigmask in PTRACE{GET,SET}SIGMASK
+Date:   Mon, 22 Apr 2019 15:47:26 -0400
+Message-Id: <20190422194727.12495-42-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190422194727.12495-1-sashal@kernel.org>
+References: <20190422194727.12495-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417052247.17809-12-alex@ghiti.fr>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+From: Andrei Vagin <avagin@gmail.com>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+[ Upstream commit fcfc2aa0185f4a731d05a21e9f359968fdfd02e7 ]
+
+There are a few system calls (pselect, ppoll, etc) which replace a task
+sigmask while they are running in a kernel-space
+
+When a task calls one of these syscalls, the kernel saves a current
+sigmask in task->saved_sigmask and sets a syscall sigmask.
+
+On syscall-exit-stop, ptrace traps a task before restoring the
+saved_sigmask, so PTRACE_GETSIGMASK returns the syscall sigmask and
+PTRACE_SETSIGMASK does nothing, because its sigmask is replaced by
+saved_sigmask, when the task returns to user-space.
+
+This patch fixes this problem.  PTRACE_GETSIGMASK returns saved_sigmask
+if it's set.  PTRACE_SETSIGMASK drops the TIF_RESTORE_SIGMASK flag.
+
+Link: http://lkml.kernel.org/r/20181120060616.6043-1-avagin@gmail.com
+Fixes: 29000caecbe8 ("ptrace: add ability to get/set signal-blocked mask")
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ include/linux/sched/signal.h | 18 ++++++++++++++++++
+ kernel/ptrace.c              | 15 +++++++++++++--
+ 2 files changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index fbf86ecd149d..bcaba7e8ca6e 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -377,10 +377,20 @@ static inline void set_restore_sigmask(void)
+ 	set_thread_flag(TIF_RESTORE_SIGMASK);
+ 	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
+ }
++
++static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	clear_tsk_thread_flag(tsk, TIF_RESTORE_SIGMASK);
++}
++
+ static inline void clear_restore_sigmask(void)
+ {
+ 	clear_thread_flag(TIF_RESTORE_SIGMASK);
+ }
++static inline bool test_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	return test_tsk_thread_flag(tsk, TIF_RESTORE_SIGMASK);
++}
+ static inline bool test_restore_sigmask(void)
+ {
+ 	return test_thread_flag(TIF_RESTORE_SIGMASK);
+@@ -398,6 +408,10 @@ static inline void set_restore_sigmask(void)
+ 	current->restore_sigmask = true;
+ 	WARN_ON(!test_thread_flag(TIF_SIGPENDING));
+ }
++static inline void clear_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	tsk->restore_sigmask = false;
++}
+ static inline void clear_restore_sigmask(void)
+ {
+ 	current->restore_sigmask = false;
+@@ -406,6 +420,10 @@ static inline bool test_restore_sigmask(void)
+ {
+ 	return current->restore_sigmask;
+ }
++static inline bool test_tsk_restore_sigmask(struct task_struct *tsk)
++{
++	return tsk->restore_sigmask;
++}
+ static inline bool test_and_clear_restore_sigmask(void)
+ {
+ 	if (!current->restore_sigmask)
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 84b1367935e4..f1c85b6c39ae 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -29,6 +29,7 @@
+ #include <linux/hw_breakpoint.h>
+ #include <linux/cn_proc.h>
+ #include <linux/compat.h>
++#include <linux/sched/signal.h>
+ 
+ /*
+  * Access another process' address space via ptrace.
+@@ -925,18 +926,26 @@ int ptrace_request(struct task_struct *child, long request,
+ 			ret = ptrace_setsiginfo(child, &siginfo);
+ 		break;
+ 
+-	case PTRACE_GETSIGMASK:
++	case PTRACE_GETSIGMASK: {
++		sigset_t *mask;
++
+ 		if (addr != sizeof(sigset_t)) {
+ 			ret = -EINVAL;
+ 			break;
+ 		}
+ 
+-		if (copy_to_user(datavp, &child->blocked, sizeof(sigset_t)))
++		if (test_tsk_restore_sigmask(child))
++			mask = &child->saved_sigmask;
++		else
++			mask = &child->blocked;
++
++		if (copy_to_user(datavp, mask, sizeof(sigset_t)))
+ 			ret = -EFAULT;
+ 		else
+ 			ret = 0;
+ 
+ 		break;
++	}
+ 
+ 	case PTRACE_SETSIGMASK: {
+ 		sigset_t new_set;
+@@ -962,6 +971,8 @@ int ptrace_request(struct task_struct *child, long request,
+ 		child->blocked = new_set;
+ 		spin_unlock_irq(&child->sighand->siglock);
+ 
++		clear_tsk_restore_sigmask(child);
++
+ 		ret = 0;
+ 		break;
+ 	}
+-- 
+2.19.1
+
