@@ -2,135 +2,139 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20E9C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 12:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB53AC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 12:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CAA320881
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 12:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A919D20811
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 12:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbfDVMX0 (ORCPT
+        id S1727327AbfDVMXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 08:23:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55006 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfDVMXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 08:23:25 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D666CC0495A3;
-        Mon, 22 Apr 2019 12:23:24 +0000 (UTC)
-Received: from xz-x1 (ovpn-12-23.pek2.redhat.com [10.72.12.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 41BBC1A8F4;
-        Mon, 22 Apr 2019 12:23:15 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 20:23:12 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>, Shaohua Li <shli@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 17/28] userfaultfd: wp: support swap and page migration
-Message-ID: <20190422122312.GB25896@xz-x1>
-References: <20190320020642.4000-1-peterx@redhat.com>
- <20190320020642.4000-18-peterx@redhat.com>
- <20190418205907.GL3288@redhat.com>
- <20190419074220.GG13323@xz-x1>
- <20190419150802.GB3311@redhat.com>
+        Mon, 22 Apr 2019 08:23:32 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2988 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726098AbfDVMXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 08:23:32 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 34C4CA6428A8C33E7A30;
+        Mon, 22 Apr 2019 20:23:25 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 22 Apr 2019 20:23:24 +0800
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 22 Apr 2019 20:23:24 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 2/3] f2fs: fix to skip recovery on readonly device
+Date:   Mon, 22 Apr 2019 20:22:37 +0800
+Message-ID: <20190422122238.78062-2-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20190422122238.78062-1-yuchao0@huawei.com>
+References: <20190422122238.78062-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190419150802.GB3311@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 22 Apr 2019 12:23:25 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 11:08:02AM -0400, Jerome Glisse wrote:
-> On Fri, Apr 19, 2019 at 03:42:20PM +0800, Peter Xu wrote:
-> > On Thu, Apr 18, 2019 at 04:59:07PM -0400, Jerome Glisse wrote:
-> > > On Wed, Mar 20, 2019 at 10:06:31AM +0800, Peter Xu wrote:
-> > > > For either swap and page migration, we all use the bit 2 of the entry to
-> > > > identify whether this entry is uffd write-protected.  It plays a similar
-> > > > role as the existing soft dirty bit in swap entries but only for keeping
-> > > > the uffd-wp tracking for a specific PTE/PMD.
-> > > > 
-> > > > Something special here is that when we want to recover the uffd-wp bit
-> > > > from a swap/migration entry to the PTE bit we'll also need to take care
-> > > > of the _PAGE_RW bit and make sure it's cleared, otherwise even with the
-> > > > _PAGE_UFFD_WP bit we can't trap it at all.
-> > > > 
-> > > > Note that this patch removed two lines from "userfaultfd: wp: hook
-> > > > userfault handler to write protection fault" where we try to remove the
-> > > > VM_FAULT_WRITE from vmf->flags when uffd-wp is set for the VMA.  This
-> > > > patch will still keep the write flag there.
-> > > > 
-> > > > Reviewed-by: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> > > > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > > 
-> > > Some missing thing see below.
-> > > 
-> > > [...]
-> > > 
-> > > > diff --git a/mm/memory.c b/mm/memory.c
-> > > > index 6405d56debee..c3d57fa890f2 100644
-> > > > --- a/mm/memory.c
-> > > > +++ b/mm/memory.c
-> > > > @@ -736,6 +736,8 @@ copy_one_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
-> > > >  				pte = swp_entry_to_pte(entry);
-> > > >  				if (pte_swp_soft_dirty(*src_pte))
-> > > >  					pte = pte_swp_mksoft_dirty(pte);
-> > > > +				if (pte_swp_uffd_wp(*src_pte))
-> > > > +					pte = pte_swp_mkuffd_wp(pte);
-> > > >  				set_pte_at(src_mm, addr, src_pte, pte);
-> > > >  			}
-> > > >  		} else if (is_device_private_entry(entry)) {
-> > > 
-> > > You need to handle the is_device_private_entry() as the migration case
-> > > too.
-> > 
-> > Hi, Jerome,
-> > 
-> > Yes I can simply add the handling, but I'd confess I haven't thought
-> > clearly yet on how userfault-wp will be used with HMM (and that's
-> > mostly because my unfamiliarity so far with HMM).  Could you give me
-> > some hint on a most general and possible scenario?
-> 
-> device private is just a temporary state with HMM you can have thing
-> like GPU or FPGA migrate some anonymous page to their local memory
-> because it is use by the GPU or the FPGA. The GPU or FPGA behave like
-> a CPU from mm POV so if it wants to write it will fault and go through
-> the regular CPU page fault.
-> 
-> That said it can still migrate a page that is UFD write protected just
-> because the device only care about reading. So if you have a UFD pte
-> to a regular page that get migrated to some device memory you want to
-> keep the UFD WP flags after the migration (in both direction when going
-> to device memory and from coming back from it).
-> 
-> As far as UFD is concern this is just another page, it just does not
-> have a valid pte entry because CPU can not access such memory. But from
-> mm point of view it just another page.
+As Park Ju Hyung reported in mailing list:
 
-I see the point.  Thanks for explaining that!
+https://sourceforge.net/p/linux-f2fs/mailman/message/36639787/
 
+generic_make_request: Trying to write to read-only block-device loop0 (partno 0)
+WARNING: CPU: 0 PID: 23437 at block/blk-core.c:2174 generic_make_request_checks+0x594/0x630
+
+ generic_make_request+0x46/0x3d0
+ submit_bio+0x30/0x110
+ __submit_merged_bio+0x68/0x390
+ f2fs_submit_page_write+0x1bb/0x7f0
+ f2fs_do_write_meta_page+0x7f/0x160
+ __f2fs_write_meta_page+0x70/0x140
+ f2fs_sync_meta_pages+0x140/0x250
+ f2fs_write_checkpoint+0x5c5/0x17b0
+ f2fs_sync_fs+0x9c/0x110
+ sync_filesystem+0x66/0x80
+ f2fs_recover_fsync_data+0x790/0xa30
+ f2fs_fill_super+0xe4e/0x1980
+ mount_bdev+0x518/0x610
+ mount_fs+0x34/0x13f
+ vfs_kern_mount.part.11+0x4f/0x120
+ do_mount+0x2d1/0xe40
+ __x64_sys_mount+0xbf/0xe0
+ do_syscall_64+0x4a/0xf0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+print_req_error: I/O error, dev loop0, sector 4096
+
+If block device is readonly, we should never trigger write IO from
+filesystem layer, but previously, orphan and journal recovery didn't
+consider such condition, result in triggering above warning, fix it.
+
+Reported-by: Park Ju Hyung <qkrwngud825@gmail.com>
+Tested-by: Park Ju Hyung <qkrwngud825@gmail.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/checkpoint.c |  6 ++++++
+ fs/f2fs/super.c      | 15 +++++++++++----
+ 2 files changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+index a7ad1b1e5750..90e1bab86269 100644
+--- a/fs/f2fs/checkpoint.c
++++ b/fs/f2fs/checkpoint.c
+@@ -674,6 +674,12 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
+ 	if (!is_set_ckpt_flags(sbi, CP_ORPHAN_PRESENT_FLAG))
+ 		return 0;
+ 
++	if (bdev_read_only(sbi->sb->s_bdev)) {
++		f2fs_msg(sbi->sb, KERN_INFO, "write access "
++			"unavailable, skipping orphan cleanup");
++		return 0;
++	}
++
+ 	if (s_flags & SB_RDONLY) {
+ 		f2fs_msg(sbi->sb, KERN_INFO, "orphan cleanup on readonly fs");
+ 		sbi->sb->s_flags &= ~SB_RDONLY;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 0c3abcc0dd27..6a89ee55efe3 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -3377,10 +3377,17 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+ 		 * mount should be failed, when device has readonly mode, and
+ 		 * previous checkpoint was not done by clean system shutdown.
+ 		 */
+-		if (f2fs_hw_is_readonly(sbi) &&
+-				!is_set_ckpt_flags(sbi, CP_UMOUNT_FLAG)) {
+-			err = -EROFS;
+-			goto free_meta;
++		if (f2fs_hw_is_readonly(sbi)) {
++			if (!is_set_ckpt_flags(sbi, CP_UMOUNT_FLAG)) {
++				err = -EROFS;
++				f2fs_msg(sb, KERN_ERR,
++					"Need to recover fsync data, but "
++					"write access unavailable");
++				goto free_meta;
++			}
++			f2fs_msg(sbi->sb, KERN_INFO, "write access "
++				"unavailable, skipping recovery");
++			goto reset_checkpoint;
+ 		}
+ 
+ 		if (need_fsck)
 -- 
-Peter Xu
+2.18.0.rc1
+
