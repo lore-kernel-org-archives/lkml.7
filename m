@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7462C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6562BC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDBF218CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328E72175B
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962564;
-	bh=ayQZfYc+DhM/2d39oHzit0L9trySP0JCBcNJALANsmA=;
+	s=default; t=1555962570;
+	bh=JDQdMdft2i9YickyGnKwmMhIlJw/ix9sMHbGZR/fblU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GgKM9RIsXTdDTCsQkxA3XAfJPJdFGSUcdJKj6nGkWID3FCwNtx3GDsNC1R+H0MqhE
-	 RM3Zt4TKytVY8jF0+639XHmNyiDW60/PirgwqVcnBMdvoCvGgh/5oM1ytOJ/EJyAkw
-	 jy2EhWGs9XmCYyLQXxAXOEA6VYGggT27sK+t26X8=
+	b=sl3+qjKpoRTZRdQbCBCP9EoW7Q3NwmsoJEqbwPgUX2ZE+86mYfeD2beU18yeWOowc
+	 1r8mKlzkjJGX3zYPtixKBdA2APhyrograSUKwLGQPuP2pvBML8DPrXkBbFbfj1dumk
+	 Lyl0yhrPj7xjPZpOSoffIApPTStiwp0tUgkXJRJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730824AbfDVTtX (ORCPT
+        id S1730854AbfDVTt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:49:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53050 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730804AbfDVTtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:49:20 -0400
+        id S1730825AbfDVTtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:49:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53919218D3;
-        Mon, 22 Apr 2019 19:49:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAF3A2075A;
+        Mon, 22 Apr 2019 19:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962559;
-        bh=ayQZfYc+DhM/2d39oHzit0L9trySP0JCBcNJALANsmA=;
+        s=default; t=1555962564;
+        bh=JDQdMdft2i9YickyGnKwmMhIlJw/ix9sMHbGZR/fblU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YWo8cpthm02hxd5rdTIZyIl9ggxG8mKPfka08Gvt+RUtdvWnSADYLUVNmCEknCI0H
-         AOftsbD4IhPfSyRUjdB/n3gXdWLGO/1XUztiZM4SPMgiPJ+7YKTg+SDgBVczx1LmUj
-         Z8QqCaWNvfQUfF2+0tiUnPHS95AmKaDqWt8ErMPY=
+        b=buiPjI0L6rFtOwiDdUpfn2FieUdKlgjG4UoQsLozIGahVmxj+MFCqw+kHh8qEjsKx
+         DTSyp0lME64qDEDxY9JDrUdlZS9FmlJi4YkVEcxw3rQ+RgLeA7og5VbTGUwol878Z6
+         KKecfxG+NTm1EEia6xgXHIGsnjHwKdyogQH6nBGI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukas Wunner <lukas@wunner.de>, Frank Pavlic <f.pavlic@kunbus.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/29] net: ks8851: Set initial carrier state to down
-Date:   Mon, 22 Apr 2019 15:48:34 -0400
-Message-Id: <20190422194848.13049-15-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 17/29] NFS: Fix a typo in nfs_init_timeout_values()
+Date:   Mon, 22 Apr 2019 15:48:36 -0400
+Message-Id: <20190422194848.13049-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194848.13049-1-sashal@kernel.org>
 References: <20190422194848.13049-1-sashal@kernel.org>
@@ -60,54 +57,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 9624bafa5f6418b9ca5b3f66d1f6a6a2e8bf6d4c ]
+[ Upstream commit 5a698243930c441afccec04e4d5dc8febfd2b775 ]
 
-The ks8851 chip's initial carrier state is down. A Link Change Interrupt
-is signaled once interrupts are enabled if the carrier is up.
+Specifying a retrans=0 mount parameter to a NFS/TCP mount, is
+inadvertently causing the NFS client to rewrite any specified
+timeout parameter to the default of 60 seconds.
 
-The ks8851 driver has it backwards by assuming that the initial carrier
-state is up. The state is therefore misrepresented if the interface is
-opened with no cable attached. Fix it.
-
-The Link Change interrupt is sometimes not signaled unless the P1MBSR
-register (which contains the Link Status bit) is read on ->ndo_open().
-This might be a hardware erratum. Read the register by calling
-mii_check_link(), which has the desirable side effect of setting the
-carrier state to down if the cable was detached while the interface was
-closed.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a956beda19a6 ("NFS: Allow the mount option retrans=0")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/nfs/client.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index ff6cab4f6343..7377dca6eb57 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -870,6 +870,7 @@ static int ks8851_net_open(struct net_device *dev)
- 	netif_dbg(ks, ifup, ks->netdev, "network device up\n");
- 
- 	mutex_unlock(&ks->lock);
-+	mii_check_link(&ks->mii);
- 	return 0;
- }
- 
-@@ -1527,6 +1528,7 @@ static int ks8851_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, ks);
- 
-+	netif_carrier_off(ks->netdev);
- 	ndev->if_port = IF_PORT_100BASET;
- 	ndev->netdev_ops = &ks8851_netdev_ops;
- 	ndev->irq = spi->irq;
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index ebecfb8fba06..28d8a57a9908 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -440,7 +440,7 @@ void nfs_init_timeout_values(struct rpc_timeout *to, int proto,
+ 	case XPRT_TRANSPORT_RDMA:
+ 		if (retrans == NFS_UNSPEC_RETRANS)
+ 			to->to_retries = NFS_DEF_TCP_RETRANS;
+-		if (timeo == NFS_UNSPEC_TIMEO || to->to_retries == 0)
++		if (timeo == NFS_UNSPEC_TIMEO || to->to_initval == 0)
+ 			to->to_initval = NFS_DEF_TCP_TIMEO * HZ / 10;
+ 		if (to->to_initval > NFS_MAX_TCP_TIMEOUT)
+ 			to->to_initval = NFS_MAX_TCP_TIMEOUT;
 -- 
 2.19.1
 
