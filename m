@@ -4,60 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426C1C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DA5C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047DC2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48C042075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963442;
-	bh=zM9sG0IzfsYUlFjFZF9jYc/HS/oFBdSZvNIYTLAxtEA=;
+	s=default; t=1555963452;
+	bh=qynrjD5BEuyxbHQS+eq3A8+Wu/GNztzTGPDWJnJyiPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ICwL3ojOneXtmYxNSHTbMJfldHdDESrH/ugb+8cDWjjSwuMkZH4JMvZKSKCdBziDL
-	 3kdFsG8ZVhWVaAJUgs+c0oNSGJiAgAG1KzDzDf/vMcT/BeFMzRZWm63qNtL60lA3Y7
-	 TvqIzaQ7tS0ce3DGmIe1iB8LzxHYxQJUe/7+k8sA=
+	b=x2CJPPh5SSbyfe+83H/mnP6LnJuuJpKXseX/82YEp01L8kM666CEVKA32ZpJmHan+
+	 Ek4NKm4fT6INHg6A1QiMl4UGH/+z5IG7jgurFaFFaglZf5MxP+nbXVmBlzFbwhLRpJ
+	 dUX4l8W46MPPYq84rpkaw63B6TcntYrUPYXrdB4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732164AbfDVUEB (ORCPT
+        id S1732184AbfDVUEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:04:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729307AbfDVTpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:45:47 -0400
+        id S1729818AbfDVTpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:45:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B11E7218EA;
-        Mon, 22 Apr 2019 19:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32CB7218EA;
+        Mon, 22 Apr 2019 19:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962346;
-        bh=zM9sG0IzfsYUlFjFZF9jYc/HS/oFBdSZvNIYTLAxtEA=;
+        s=default; t=1555962340;
+        bh=qynrjD5BEuyxbHQS+eq3A8+Wu/GNztzTGPDWJnJyiPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NzOHkq9yezILcU0A3yTTx11WuleOgG77flHp+xYRDulXJj6RJy2m4k0L1rHJyor7v
-         QjC4bdF7Ik5syz9eCJdg71Q0BjyG2fc/8D8icz40qlMmsmu6pz/E/OIqvXhEnXunvh
-         Adowh8C05yf2z7O0NCDcssheCnx8/Ppifk8jAJWU=
+        b=LpvvPSIDA1Yr+EEwaBkTKu7AtJII39zeQ7Emr+mxBHpKt6uBR0gfEN8vEdjNz4nCn
+         V1uFeICmwaB/UuI2kAkVIjUisqx/B+bdqwxPIrZRvjbZ8vePG74Sah+JWXQkcf0Jf5
+         oyzujGRGX9IHklWu8QpD7Xt2Nk/6mv9fBwZ7NSD0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Yang <wen.yang99@zte.com.cn>,
-        Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 15/68] ARM: imx51: fix a leaked reference by adding missing of_node_put
-Date:   Mon, 22 Apr 2019 15:44:23 -0400
-Message-Id: <20190422194516.11634-15-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?q?M=C3=A1t=C3=A9=20Eckl?= <ecklm94@gmail.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/68] netfilter: fix NETFILTER_XT_TARGET_TEE dependencies
+Date:   Mon, 22 Apr 2019 15:44:20 -0400
+Message-Id: <20190422194516.11634-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,45 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wen.yang99@zte.com.cn>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 0c17e83fe423467e3ccf0a02f99bd050a73bbeb4 ]
+[ Upstream commit d1fa381033eb718df5c602f64b6e88676138dfc6 ]
 
-The call to of_get_next_child returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+With NETFILTER_XT_TARGET_TEE=y and IP6_NF_IPTABLES=m, we get a link
+error when referencing the NF_DUP_IPV6 module:
 
-Detected by coccinelle with the following warnings:
-./arch/arm/mach-imx/mach-imx51.c:64:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 57, but without a corresponding object release within this function.
+net/netfilter/xt_TEE.o: In function `tee_tg6':
+xt_TEE.c:(.text+0x14): undefined reference to `nf_dup_ipv6'
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+The problem here is the 'select NF_DUP_IPV6 if IP6_NF_IPTABLES'
+that forces NF_DUP_IPV6 to be =m as well rather than setting it
+to =y as was intended here. Adding a soft dependency on
+IP6_NF_IPTABLES avoids that broken configuration.
+
+Fixes: 5d400a4933e8 ("netfilter: Kconfig: Change select IPv6 dependencies")
+Cc: Máté Eckl <ecklm94@gmail.com>
+Cc: Taehee Yoo <ap420073@gmail.com>
+Link: https://patchwork.ozlabs.org/patch/999498/
+Link: https://lore.kernel.org/patchwork/patch/960062/
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm/mach-imx/mach-imx51.c | 1 +
+ net/netfilter/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-imx/mach-imx51.c b/arch/arm/mach-imx/mach-imx51.c
-index c7169c2f94c4..08c7892866c2 100644
---- a/arch/arm/mach-imx/mach-imx51.c
-+++ b/arch/arm/mach-imx/mach-imx51.c
-@@ -59,6 +59,7 @@ static void __init imx51_m4if_setup(void)
- 		return;
- 
- 	m4if_base = of_iomap(np, 0);
-+	of_node_put(np);
- 	if (!m4if_base) {
- 		pr_err("Unable to map M4IF registers\n");
- 		return;
+diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
+index f61c306de1d0..e0fb56d67d42 100644
+--- a/net/netfilter/Kconfig
++++ b/net/netfilter/Kconfig
+@@ -1003,6 +1003,7 @@ config NETFILTER_XT_TARGET_TEE
+ 	depends on NETFILTER_ADVANCED
+ 	depends on IPV6 || IPV6=n
+ 	depends on !NF_CONNTRACK || NF_CONNTRACK
++	depends on IP6_NF_IPTABLES || !IP6_NF_IPTABLES
+ 	select NF_DUP_IPV4
+ 	select NF_DUP_IPV6 if IP6_NF_IPTABLES
+ 	---help---
 -- 
 2.19.1
 
