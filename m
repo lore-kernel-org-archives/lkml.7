@@ -2,388 +2,133 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2F3C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC53AC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F0F20811
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD8D320811
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 10:10:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSjbp2R3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lY+mBgoE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbfDVKKR (ORCPT
+        id S1727188AbfDVKKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 06:10:17 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34345 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfDVKKO (ORCPT
+        Mon, 22 Apr 2019 06:10:20 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:45456 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfDVKKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 06:10:14 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r186so13798577wmf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 03:10:12 -0700 (PDT)
+        Mon, 22 Apr 2019 06:10:19 -0400
+Received: by mail-vs1-f65.google.com with SMTP id o10so5923414vsp.12;
+        Mon, 22 Apr 2019 03:10:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yoa/fXmFxQL77CV4PGcsIWnDd0sRC4dxmU1LMsMdjCc=;
-        b=gSjbp2R3HMOUXADYIga2uSNYspu357JUTRJ3a04fpDpvyY8NI10BwIjIdZBtqCcRMY
-         /pk1ZIwoxt/d2mHy0XWbp/aIhW0Rndhc8EGCVmBjwi5hI36cbyKeMpaeh3rOSU/tgAPL
-         a19PQ7EV8UROaX4kBEHzo+WQh5MzJMHmpez07S4UxuWnvROkBbzpsmk1dnyuS1ngwACQ
-         yq0c9vXLapyrsykeM7XYh+/fwJ3Tf0izz62caQHUOBQi/pJpWvZsfa1U9X3Ba8Mobsl5
-         4c6jwkPUJoDEi4PsQNfOa6SJTeJEoBgfSXUbWRyXVWWfvnjDjMnzRv5C5j/o7fDTKnun
-         IqAw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GS8Z05FvTre7FCsFIiOVI1Bi+GxPI+23vAvfcOwLHNA=;
+        b=lY+mBgoE0p20JUSjcnD2UwgZE20ZrDbCZf6O5w7lOAbhpm5BUENGlPM0HFVx+DU8cq
+         cfoVoNdDMn7QTYZDxT6AZVg28SUrzwSEj74YQeyjLsdH8hs7UPFBT20l4VAsJCaBmU/i
+         GDjEkH6pbciPLrRtek9sSFcHnCyM8F+FM/5JpVPCEYyjpFflVKqEMMUYZbsznystj9bK
+         TQQN0lC3qRLPZ0dkbfaAV0VTPHoopNwPC7I18P16NLZ9bbj3FHT3itsWQg774E2iiN9V
+         Irgw0N6/0ZXV41Fmk73I54txNNBN0ll1WjnF1Muz9YYrytInP7U1fude8vkCzQbRGRYo
+         M88Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yoa/fXmFxQL77CV4PGcsIWnDd0sRC4dxmU1LMsMdjCc=;
-        b=Y/qkK7ZZbXCwjNI0eQ5wv1qDCxqApMsBwFRwDZiik+LoImVeFjxFCcfJWXZo9uecCS
-         +WNM+GCnHpeY+ZTSDDSO1xrcVgjB6QSnl/DhLKzGh8RAMf4VhsuRzSQXkO6ELOBrqfi8
-         abPR0rCOvk7Js9c50eaUWX3qaLYffcWZ8RhRh75HGgPNQd0BkpQc19MbwlUCvBSjp3Yw
-         ebzWBpdch109K+YLKmpr2kUAprowm8frvu40ge1grzyPG/+KVS7XPfK2SZOTP94BK4dL
-         isJ4jeM4YfoHyOtQKkD289yZIIwiwqy8dbDQcRL5YueIBLK4T/a3HBiMAVb+Xy3ngYDd
-         gxNQ==
-X-Gm-Message-State: APjAAAX1VJK0CqRBlbvFLliF9b/hZgnh5+gk5qQydgIOVEm1gZwqUFLo
-        sZh3fTTHWD4PzJbHnY+UDA3LM20f
-X-Google-Smtp-Source: APXvYqxJjVKyZEtsop+0dG46w3HqnR8PBize4sTlCvT1HaKH+lgVo42MSTqSY9PPS7I6Ts4Lmx1QlA==
-X-Received: by 2002:a1c:35c3:: with SMTP id c186mr12550826wma.135.1555927811401;
-        Mon, 22 Apr 2019 03:10:11 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id r9sm15670301wrv.82.2019.04.22.03.10.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 03:10:10 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH v2] habanalabs: use ASIC functions interface for rreg/wreg
-Date:   Mon, 22 Apr 2019 13:10:08 +0300
-Message-Id: <20190422101008.5346-2-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190422101008.5346-1-oded.gabbay@gmail.com>
-References: <20190422101008.5346-1-oded.gabbay@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GS8Z05FvTre7FCsFIiOVI1Bi+GxPI+23vAvfcOwLHNA=;
+        b=o1FEZsvTz0xjmtY5iFlet2y77G0X/MLUMdyUIZcpkJVX5V9yTfQDsnYHiAXtD5iYPU
+         Sb35LPJYbT9WfSmX35r2xzNfBcTG3WZ4fEaF+G1siRWMsrSvJ+r1eGOFhbuPHDuIfaQz
+         xhyAzAp2JhfrO81mMLxKNzdFqr2tOiRVNSXSzwxJfJxCMrqzcO45tYEKLzxxknCQ93j9
+         D6wPMWvNAanmCTFz8vCN8HmDKw6nfY3ShMHzsi00nI2wXzRgmN7QAhuYo4Gk5UOXSwsK
+         FBN1yAIroO/TryZKQm5PHLSvb8CbLSaf/EkPCh74NGKhIOrJQzvFQnfJQOzy+lJhKuts
+         i/Tw==
+X-Gm-Message-State: APjAAAW/GxAXc9jOvtgDYO4PDSSUhanGyVNXRofHe2CuhVzWRuP7c2mj
+        5Yi5MwAckZ1Zw9U4kmmUE38HC3PvL1v4bRF3Ug==
+X-Google-Smtp-Source: APXvYqyUBvKmIpnklOC846LWZrG3ZdSAmI5roLRGvV1X2Dr9Nt9FTnC6TzgqUL/VQt+rczhBvcVz/0wU+saMAlGI8/w=
+X-Received: by 2002:a67:fad8:: with SMTP id g24mr9471060vsq.231.1555927817631;
+ Mon, 22 Apr 2019 03:10:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190409065612.32652-1-rdong.ge@gmail.com> <20190422083339.ptkxqb66pombgy5g@salvia>
+ <CAN1Lvyo1CVopsB7iV=e-dAN9JDFg-SmQ8g6H6RrgD7qACAd4hQ@mail.gmail.com>
+ <20190422093502.36da6z3qf7zxpwny@breakpoint.cc> <CAN1LvyrSWPbNSvzLquQAeK9kYK=YyqyJEm7zodd3O-QWAVTC4Q@mail.gmail.com>
+In-Reply-To: <CAN1LvyrSWPbNSvzLquQAeK9kYK=YyqyJEm7zodd3O-QWAVTC4Q@mail.gmail.com>
+From:   Rundong Ge <rdong.ge@gmail.com>
+Date:   Mon, 22 Apr 2019 18:10:06 +0800
+Message-ID: <CAN1Lvyq_6ee3Rwmg8VKR0NW54HABqL9n4L2Tiw9YXs=pSu9sYw@mail.gmail.com>
+Subject: Re: [PATCH] netfilter: fix dangling pointer access of fake_rtable
+To:     Florian Westphal <fw@strlen.de>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>, kadlec@blackhole.kfki.hu,
+        Roopa Prabhu <roopa@cumulusnetworks.com>, davem@davemloft.net,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch slightly changes the macros of RREG32 and WREG32, which are
-used when reading or writing from registers.
+The hook in my testcase is at NF_BR_FORWARD, and priority is -2.
+And at this hook point both the entry->out  and entry->in  are not
+bridge device.
+But the dst was set to the bridge's fake_rtable.
 
-Instead of directly calling a function in the common code from these
-macros, the new code calls a function from the ASIC functions interface.
-
-This change allows us to share much more code between real ASICs and
-simulators, which in turn reduces the maintenance burden and
-the chances for forgetting to port code between the ASIC files.
-
-The patch also implements the hl_poll_timeout macro, instead of calling
-the generic readl_poll_timeout macro. This is required to allow use of
-this macro in the simulator files.
-
-As a result from this change, more functions in goya.c are shared with the
-simulator and therefore, should not be defined as static.
-
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/goya/goya.c  | 32 +++++++++++------------
- drivers/misc/habanalabs/goya/goyaP.h | 38 +++++++++++++++++++---------
- drivers/misc/habanalabs/habanalabs.h | 32 ++++++++++++++++++-----
- 3 files changed, 67 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 3f707e8c408a..984c854d2932 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -297,7 +297,7 @@ static u32 goya_all_events[] = {
- 	GOYA_ASYNC_EVENT_ID_DMA_BM_CH4
- };
- 
--static void goya_get_fixed_properties(struct hl_device *hdev)
-+void goya_get_fixed_properties(struct hl_device *hdev)
- {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
- 	int i;
-@@ -648,9 +648,6 @@ static int goya_sw_init(struct hl_device *hdev)
- 	goya->tpc_clk = GOYA_PLL_FREQ_LOW;
- 	goya->ic_clk = GOYA_PLL_FREQ_LOW;
- 
--	goya->mmu_prepare_reg = goya_mmu_prepare_reg;
--	goya->qman0_set_security = goya_qman0_set_security;
--
- 	hdev->asic_specific = goya;
- 
- 	/* Create DMA pool for small allocations */
-@@ -815,7 +812,7 @@ static void goya_init_dma_ch(struct hl_device *hdev, int dma_id)
-  * Initialize the H/W registers of the QMAN DMA channels
-  *
-  */
--static void goya_init_dma_qmans(struct hl_device *hdev)
-+void goya_init_dma_qmans(struct hl_device *hdev)
- {
- 	struct goya_device *goya = hdev->asic_specific;
- 	struct hl_hw_queue *q;
-@@ -968,7 +965,7 @@ static int goya_stop_external_queues(struct hl_device *hdev)
-  * Returns 0 on success
-  *
-  */
--static int goya_init_cpu_queues(struct hl_device *hdev)
-+int goya_init_cpu_queues(struct hl_device *hdev)
- {
- 	struct goya_device *goya = hdev->asic_specific;
- 	struct hl_eq *eq;
-@@ -1549,7 +1546,7 @@ static void goya_init_mme_cmdq(struct hl_device *hdev)
- 	WREG32(mmMME_CMDQ_GLBL_CFG0, CMDQ_MME_ENABLE);
- }
- 
--static void goya_init_mme_qmans(struct hl_device *hdev)
-+void goya_init_mme_qmans(struct hl_device *hdev)
- {
- 	struct goya_device *goya = hdev->asic_specific;
- 	u32 so_base_lo, so_base_hi;
-@@ -1656,7 +1653,7 @@ static void goya_init_tpc_cmdq(struct hl_device *hdev, int tpc_id)
- 	WREG32(mmTPC0_CMDQ_GLBL_CFG0 + reg_off, CMDQ_TPC_ENABLE);
- }
- 
--static void goya_init_tpc_qmans(struct hl_device *hdev)
-+void goya_init_tpc_qmans(struct hl_device *hdev)
- {
- 	struct goya_device *goya = hdev->asic_specific;
- 	u32 so_base_lo, so_base_hi;
-@@ -2373,7 +2370,7 @@ static int goya_mmu_update_asid_hop0_addr(struct hl_device *hdev, u32 asid,
- 	return 0;
- }
- 
--static int goya_mmu_init(struct hl_device *hdev)
-+int goya_mmu_init(struct hl_device *hdev)
- {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
- 	struct goya_device *goya = hdev->asic_specific;
-@@ -2649,7 +2646,7 @@ static int goya_cb_mmap(struct hl_device *hdev, struct vm_area_struct *vma,
- 	return rc;
- }
- 
--static void goya_ring_doorbell(struct hl_device *hdev, u32 hw_queue_id, u32 pi)
-+void goya_ring_doorbell(struct hl_device *hdev, u32 hw_queue_id, u32 pi)
- {
- 	u32 db_reg_offset, db_value;
- 	bool invalid_queue = false;
-@@ -2816,7 +2813,6 @@ void *goya_get_int_queue_base(struct hl_device *hdev, u32 queue_id,
- 
- static int goya_send_job_on_qman0(struct hl_device *hdev, struct hl_cs_job *job)
- {
--	struct goya_device *goya = hdev->asic_specific;
- 	struct packet_msg_prot *fence_pkt;
- 	u32 *fence_ptr;
- 	dma_addr_t fence_dma_addr;
-@@ -2847,7 +2843,7 @@ static int goya_send_job_on_qman0(struct hl_device *hdev, struct hl_cs_job *job)
- 
- 	*fence_ptr = 0;
- 
--	goya->qman0_set_security(hdev, true);
-+	goya_qman0_set_security(hdev, true);
- 
- 	/*
- 	 * goya cs parser saves space for 2xpacket_msg_prot at end of CB. For
-@@ -2889,7 +2885,7 @@ static int goya_send_job_on_qman0(struct hl_device *hdev, struct hl_cs_job *job)
- 	hdev->asic_funcs->dma_pool_free(hdev, (void *) fence_ptr,
- 					fence_dma_addr);
- 
--	goya->qman0_set_security(hdev, false);
-+	goya_qman0_set_security(hdev, false);
- 
- 	return rc;
- }
-@@ -3927,12 +3923,12 @@ void goya_add_end_of_cb_packets(u64 kernel_address, u32 len, u64 cq_addr,
- 	cq_pkt->addr = cpu_to_le64(CFG_BASE + mmPCIE_DBI_MSIX_DOORBELL_OFF);
- }
- 
--static void goya_update_eq_ci(struct hl_device *hdev, u32 val)
-+void goya_update_eq_ci(struct hl_device *hdev, u32 val)
- {
- 	WREG32(mmPSOC_GLOBAL_CONF_SCRATCHPAD_6, val);
- }
- 
--static void goya_restore_phase_topology(struct hl_device *hdev)
-+void goya_restore_phase_topology(struct hl_device *hdev)
- {
- 	int i, num_of_sob_in_longs, num_of_mon_in_longs;
- 
-@@ -4556,7 +4552,7 @@ void goya_mmu_prepare(struct hl_device *hdev, u32 asid)
- 
- 	/* zero the MMBP and ASID bits and then set the ASID */
- 	for (i = 0 ; i < GOYA_MMU_REGS_NUM ; i++)
--		goya->mmu_prepare_reg(hdev, goya_mmu_regs[i], asid);
-+		goya_mmu_prepare_reg(hdev, goya_mmu_regs[i], asid);
- }
- 
- static void goya_mmu_invalidate_cache(struct hl_device *hdev, bool is_hard)
-@@ -4829,7 +4825,9 @@ static const struct hl_asic_funcs goya_funcs = {
- 	.get_hw_state = goya_get_hw_state,
- 	.pci_bars_map = goya_pci_bars_map,
- 	.set_dram_bar_base = goya_set_ddr_bar_base,
--	.init_iatu = goya_init_iatu
-+	.init_iatu = goya_init_iatu,
-+	.rreg = hl_rreg,
-+	.wreg = hl_wreg
- };
- 
- /*
-diff --git a/drivers/misc/habanalabs/goya/goyaP.h b/drivers/misc/habanalabs/goya/goyaP.h
-index b572e0263ac5..d20f84bc1962 100644
---- a/drivers/misc/habanalabs/goya/goyaP.h
-+++ b/drivers/misc/habanalabs/goya/goyaP.h
-@@ -147,9 +147,6 @@ enum goya_fw_component {
- };
- 
- struct goya_device {
--	void (*mmu_prepare_reg)(struct hl_device *hdev, u64 reg, u32 asid);
--	void (*qman0_set_security)(struct hl_device *hdev, bool secure);
--
- 	/* TODO: remove hw_queues_lock after moving to scheduler code */
- 	spinlock_t	hw_queues_lock;
- 
-@@ -162,13 +159,32 @@ struct goya_device {
- 	u32		hw_cap_initialized;
- };
- 
-+void goya_get_fixed_properties(struct hl_device *hdev);
-+int goya_mmu_init(struct hl_device *hdev);
-+void goya_init_dma_qmans(struct hl_device *hdev);
-+void goya_init_mme_qmans(struct hl_device *hdev);
-+void goya_init_tpc_qmans(struct hl_device *hdev);
-+int goya_init_cpu_queues(struct hl_device *hdev);
-+void goya_init_security(struct hl_device *hdev);
-+void goya_late_fini(struct hl_device *hdev);
-+
-+void goya_ring_doorbell(struct hl_device *hdev, u32 hw_queue_id, u32 pi);
-+void goya_flush_pq_write(struct hl_device *hdev, u64 *pq, u64 exp_val);
-+void goya_update_eq_ci(struct hl_device *hdev, u32 val);
-+void goya_restore_phase_topology(struct hl_device *hdev);
-+
- int goya_debugfs_i2c_read(struct hl_device *hdev, u8 i2c_bus,
- 			u8 i2c_addr, u8 i2c_reg, u32 *val);
- int goya_debugfs_i2c_write(struct hl_device *hdev, u8 i2c_bus,
- 			u8 i2c_addr, u8 i2c_reg, u32 val);
-+void goya_debugfs_led_set(struct hl_device *hdev, u8 led, u8 state);
-+
-+int goya_test_queue(struct hl_device *hdev, u32 hw_queue_id);
-+int goya_test_queues(struct hl_device *hdev);
- int goya_test_cpu_queue(struct hl_device *hdev);
- int goya_send_cpu_message(struct hl_device *hdev, u32 *msg, u16 len,
- 				u32 timeout, long *result);
-+
- long goya_get_temperature(struct hl_device *hdev, int sensor_index, u32 attr);
- long goya_get_voltage(struct hl_device *hdev, int sensor_index, u32 attr);
- long goya_get_current(struct hl_device *hdev, int sensor_index, u32 attr);
-@@ -176,33 +192,31 @@ long goya_get_fan_speed(struct hl_device *hdev, int sensor_index, u32 attr);
- long goya_get_pwm_info(struct hl_device *hdev, int sensor_index, u32 attr);
- void goya_set_pwm_info(struct hl_device *hdev, int sensor_index, u32 attr,
- 			long value);
--void goya_debugfs_led_set(struct hl_device *hdev, u8 led, u8 state);
-+u64 goya_get_max_power(struct hl_device *hdev);
-+void goya_set_max_power(struct hl_device *hdev, u64 value);
-+
- void goya_set_pll_profile(struct hl_device *hdev, enum hl_pll_frequency freq);
- void goya_add_device_attr(struct hl_device *hdev,
- 			struct attribute_group *dev_attr_grp);
- int goya_armcp_info_get(struct hl_device *hdev);
--void goya_init_security(struct hl_device *hdev);
- int goya_debug_coresight(struct hl_device *hdev, void *data);
--u64 goya_get_max_power(struct hl_device *hdev);
--void goya_set_max_power(struct hl_device *hdev, u64 value);
--int goya_test_queues(struct hl_device *hdev);
-+
- void goya_mmu_prepare(struct hl_device *hdev, u32 asid);
- int goya_mmu_clear_pgt_range(struct hl_device *hdev);
- int goya_mmu_set_dram_default_page(struct hl_device *hdev);
- 
--void goya_late_fini(struct hl_device *hdev);
- int goya_suspend(struct hl_device *hdev);
- int goya_resume(struct hl_device *hdev);
--void goya_flush_pq_write(struct hl_device *hdev, u64 *pq, u64 exp_val);
-+
- void goya_handle_eqe(struct hl_device *hdev, struct hl_eq_entry *eq_entry);
- void *goya_get_events_stat(struct hl_device *hdev, u32 *size);
-+
- void goya_add_end_of_cb_packets(u64 kernel_address, u32 len, u64 cq_addr,
- 				u32 cq_val, u32 msix_vec);
- int goya_cs_parser(struct hl_device *hdev, struct hl_cs_parser *parser);
- void *goya_get_int_queue_base(struct hl_device *hdev, u32 queue_id,
--		dma_addr_t *dma_handle,	u16 *queue_len);
-+				dma_addr_t *dma_handle,	u16 *queue_len);
- u32 goya_get_dma_desc_list_size(struct hl_device *hdev, struct sg_table *sgt);
--int goya_test_queue(struct hl_device *hdev, u32 hw_queue_id);
- int goya_send_heartbeat(struct hl_device *hdev);
- void *goya_cpu_accessible_dma_pool_alloc(struct hl_device *hdev, size_t size,
- 					dma_addr_t *dma_handle);
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 86bd5298efd6..e8bbaf0f26c1 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -489,6 +489,8 @@ enum hl_pll_frequency {
-  * @pci_bars_map: Map PCI BARs.
-  * @set_dram_bar_base: Set DRAM BAR to map specific device address.
-  * @init_iatu: Initialize the iATU unit inside the PCI controller.
-+ * @rreg: Read a register. Needed for simulator support.
-+ * @wreg: Write a register. Needed for simulator support.
-  */
- struct hl_asic_funcs {
- 	int (*early_init)(struct hl_device *hdev);
-@@ -564,6 +566,8 @@ struct hl_asic_funcs {
- 	int (*pci_bars_map)(struct hl_device *hdev);
- 	int (*set_dram_bar_base)(struct hl_device *hdev, u64 addr);
- 	int (*init_iatu)(struct hl_device *hdev);
-+	u32 (*rreg)(struct hl_device *hdev, u32 reg);
-+	void (*wreg)(struct hl_device *hdev, u32 reg, u32 val);
- };
- 
- 
-@@ -1007,13 +1011,10 @@ struct hl_dbg_device_entry {
- u32 hl_rreg(struct hl_device *hdev, u32 reg);
- void hl_wreg(struct hl_device *hdev, u32 reg, u32 val);
- 
--#define hl_poll_timeout(hdev, addr, val, cond, sleep_us, timeout_us) \
--	readl_poll_timeout(hdev->rmmio + addr, val, cond, sleep_us, timeout_us)
--
--#define RREG32(reg) hl_rreg(hdev, (reg))
--#define WREG32(reg, v) hl_wreg(hdev, (reg), (v))
-+#define RREG32(reg) hdev->asic_funcs->rreg(hdev, (reg))
-+#define WREG32(reg, v) hdev->asic_funcs->wreg(hdev, (reg), (v))
- #define DREG32(reg) pr_info("REGISTER: " #reg " : 0x%08X\n",	\
--				hl_rreg(hdev, (reg)))
-+			hdev->asic_funcs->rreg(hdev, (reg)))
- 
- #define WREG32_P(reg, val, mask)				\
- 	do {							\
-@@ -1031,6 +1032,25 @@ void hl_wreg(struct hl_device *hdev, u32 reg, u32 val);
- 	WREG32(mm##reg, (RREG32(mm##reg) & ~REG_FIELD_MASK(reg, field)) | \
- 			(val) << REG_FIELD_SHIFT(reg, field))
- 
-+#define hl_poll_timeout(hdev, addr, val, cond, sleep_us, timeout_us) \
-+({ \
-+	ktime_t __timeout = ktime_add_us(ktime_get(), timeout_us); \
-+	might_sleep_if(sleep_us); \
-+	for (;;) { \
-+		(val) = RREG32(addr); \
-+		if (cond) \
-+			break; \
-+		if (timeout_us && ktime_compare(ktime_get(), __timeout) > 0) { \
-+			(val) = RREG32(addr); \
-+			break; \
-+		} \
-+		if (sleep_us) \
-+			usleep_range((sleep_us >> 2) + 1, sleep_us); \
-+	} \
-+	(cond) ? 0 : -ETIMEDOUT; \
-+})
-+
-+
- #define HL_ENG_BUSY(buf, size, fmt, ...) ({ \
- 		if (buf) \
- 			snprintf(buf, size, fmt, ##__VA_ARGS__); \
--- 
-2.17.1
-
+Rundong Ge <rdong.ge@gmail.com> =E4=BA=8E2019=E5=B9=B44=E6=9C=8822=E6=97=A5=
+=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=885:51=E5=86=99=E9=81=93=EF=BC=9A
+>
+> skb->dev is munged in setup_prerouting() to be bridge or vlan device on
+> top of bridge.
+> --Yes, but  br_nf_pre_routing_finish will set the skb->dev back to the ph=
+yindev.
+>
+> Florian Westphal <fw@strlen.de> =E4=BA=8E2019=E5=B9=B44=E6=9C=8822=E6=97=
+=A5=E5=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=885:35=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > Rundong Ge <rdong.ge@gmail.com> wrote:
+> > > br_nf_pre_routing will call the NF_INET_PRE_ROUTING hooks, at this
+> > > time both entry->state.in and entry->state.out are not bridge device.
+> > >
+> > > NF_HOOK(NFPROTO_IPV4, NF_INET_PRE_ROUTING, state->net, state->sk, skb=
+,
+> > > skb->dev, NULL,
+> > > br_nf_pre_routing_finish);
+> >
+> > skb->dev is munged in setup_prerouting() to be bridge or vlan device on
+> > top of bridge.
+> >
+> > That being said, I think we need this fix at least:
+> >
+> > diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
+> > --- a/net/netfilter/nf_queue.c
+> > +++ b/net/netfilter/nf_queue.c
+> > @@ -197,8 +197,15 @@ static int __nf_queue(struct sk_buff *skb, const s=
+truct nf_hook_state *state,
+> >                 .size   =3D sizeof(*entry) + route_key_size,
+> >         };
+> >
+> > +       if (skb_dst(skb)) {
+> > +               skb_dst_force(skb);
+> > +               if (!skb_dst(skb)) {
+> > +                       status =3D -EHOSTUNREACH;
+> > +                       goto err;
+> > +               }
+> > +       }
+> > +
+> >         nf_queue_entry_get_refs(entry);
+> > -       skb_dst_force(skb);
+> >
+> >         switch (entry->state.pf) {
+> >         case AF_INET:
+> >
+> >
+> > Then, why not add, in dev_cmp:
+> >
+> >         dst =3D skb_dst(skb);
+> >         if (dst && dst->dev->index =3D=3D index ...
+> >
+> > ?
