@@ -4,47 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E8DC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A40C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B172175B
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6B2218E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962173;
-	bh=IBqXMkRi5MIvNx0ZQReoNLOKXDOEoA5JXb9uXLx6T3c=;
+	s=default; t=1555962177;
+	bh=ecGIazeDWL2MqxytT8tCGjYl5Rs0qaq/kqXtuaFnTbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O5nsErC6b+RfZk9ShHs1R8cp6zQyaz1bq5ZBPmh4Mzaj+bfFFGvWgicqadrM7VV55
-	 3TRarQxFSZgfQ3n3M+r/mhZN3jqJ0M15xv2fuvxh5jG9frAKlIWMjY0ZgMihGWxwFq
-	 3m0k2w57wOOOm924FPslkao0dckwGloybcCnzpE0=
+	b=u0I4zLbKr/7nUqaYGZvBZkMhRTwjs6b3oy1jiB3erxq0ud6c/vf1KiNYoa8xEEsP6
+	 1EnMO9KWRVx3FhpWvagdKYP1QlB/5mmGBS3c8sdYlpPeUTnwyLSiqvryhf1BBIdeHq
+	 t89O9+GyBI9BfPsC7OQ5EIsQ2BfApXZdDhgi94iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbfDVTmw (ORCPT
+        id S1729035AbfDVTm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:42:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43262 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:42:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfDVTmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:42:49 -0400
+        id S1728995AbfDVTmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:42:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00D5C2175B;
-        Mon, 22 Apr 2019 19:42:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 915D021738;
+        Mon, 22 Apr 2019 19:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962167;
-        bh=IBqXMkRi5MIvNx0ZQReoNLOKXDOEoA5JXb9uXLx6T3c=;
+        s=default; t=1555962171;
+        bh=ecGIazeDWL2MqxytT8tCGjYl5Rs0qaq/kqXtuaFnTbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oIxJO/RXxkGvrvRpni7Bt8ZYwoenoTqJpph3H5XChXYZw+ontmd0psW9n0w0WItrC
-         h3lwxLEzMQc2qJoGbb0Ov3ibw2S3SGVhP3nJaq+MuAlN4yH8oZtdkvEOpmapixz+Dp
-         0abknR2qtXyESkKRjvpDpXP06YNgbqtkOm2w37MA=
+        b=gi9iIL6DZSfXLgeshb2FdJ9XWTuSv+zZktnM1z6kLcIflqmF9rIswD7EfUyddOdQG
+         KHzI/V6wCfRJFX0ljoXHCXRQv9vHyslKh3iOOLIZ9YmDrbxpEsZlSOlhM/Ccj/ZkZ/
+         IJ32XKDRK8HTIEuAEIQGp53taVSliXhpPdjzXpOQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 5.0 27/98] KVM: arm/arm64: vgic-its: Take the srcu lock when writing to guest memory
-Date:   Mon, 22 Apr 2019 15:40:54 -0400
-Message-Id: <20190422194205.10404-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 29/98] KVM: arm/arm64: Enforce PTE mappings at stage2 when needed
+Date:   Mon, 22 Apr 2019 15:40:56 -0400
+Message-Id: <20190422194205.10404-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -57,172 +60,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit a6ecfb11bf37743c1ac49b266595582b107b61d4 ]
+[ Upstream commit a80868f398554842b14d07060012c06efb57c456 ]
 
-When halting a guest, QEMU flushes the virtual ITS caches, which
-amounts to writing to the various tables that the guest has allocated.
+commit 6794ad5443a2118 ("KVM: arm/arm64: Fix unintended stage 2 PMD mappings")
+made the checks to skip huge mappings, stricter. However it introduced
+a bug where we still use huge mappings, ignoring the flag to
+use PTE mappings, by not reseting the vma_pagesize to PAGE_SIZE.
 
-When doing this, we fail to take the srcu lock, and the kernel
-shouts loudly if running a lockdep kernel:
+Also, the checks do not cover the PUD huge pages, that was
+under review during the same period. This patch fixes both
+the issues.
 
-[   69.680416] =============================
-[   69.680819] WARNING: suspicious RCU usage
-[   69.681526] 5.1.0-rc1-00008-g600025238f51-dirty #18 Not tainted
-[   69.682096] -----------------------------
-[   69.682501] ./include/linux/kvm_host.h:605 suspicious rcu_dereference_check() usage!
-[   69.683225]
-[   69.683225] other info that might help us debug this:
-[   69.683225]
-[   69.683975]
-[   69.683975] rcu_scheduler_active = 2, debug_locks = 1
-[   69.684598] 6 locks held by qemu-system-aar/4097:
-[   69.685059]  #0: 0000000034196013 (&kvm->lock){+.+.}, at: vgic_its_set_attr+0x244/0x3a0
-[   69.686087]  #1: 00000000f2ed935e (&its->its_lock){+.+.}, at: vgic_its_set_attr+0x250/0x3a0
-[   69.686919]  #2: 000000005e71ea54 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[   69.687698]  #3: 00000000c17e548d (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[   69.688475]  #4: 00000000ba386017 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[   69.689978]  #5: 00000000c2c3c335 (&vcpu->mutex){+.+.}, at: lock_all_vcpus+0x64/0xd0
-[   69.690729]
-[   69.690729] stack backtrace:
-[   69.691151] CPU: 2 PID: 4097 Comm: qemu-system-aar Not tainted 5.1.0-rc1-00008-g600025238f51-dirty #18
-[   69.691984] Hardware name: rockchip evb_rk3399/evb_rk3399, BIOS 2019.04-rc3-00124-g2feec69fb1 03/15/2019
-[   69.692831] Call trace:
-[   69.694072]  lockdep_rcu_suspicious+0xcc/0x110
-[   69.694490]  gfn_to_memslot+0x174/0x190
-[   69.694853]  kvm_write_guest+0x50/0xb0
-[   69.695209]  vgic_its_save_tables_v0+0x248/0x330
-[   69.695639]  vgic_its_set_attr+0x298/0x3a0
-[   69.696024]  kvm_device_ioctl_attr+0x9c/0xd8
-[   69.696424]  kvm_device_ioctl+0x8c/0xf8
-[   69.696788]  do_vfs_ioctl+0xc8/0x960
-[   69.697128]  ksys_ioctl+0x8c/0xa0
-[   69.697445]  __arm64_sys_ioctl+0x28/0x38
-[   69.697817]  el0_svc_common+0xd8/0x138
-[   69.698173]  el0_svc_handler+0x38/0x78
-[   69.698528]  el0_svc+0x8/0xc
-
-The fix is to obviously take the srcu lock, just like we do on the
-read side of things since bf308242ab98. One wonders why this wasn't
-fixed at the same time, but hey...
-
-Fixes: bf308242ab98 ("KVM: arm/arm64: VGIC/ITS: protect kvm_read_guest() calls with SRCU lock")
+Fixes : 6794ad5443a2118 ("KVM: arm/arm64: Fix unintended stage 2 PMD mappings")
+Reported-by: Zenghui Yu <yuzenghui@huawei.com>
+Cc: Zenghui Yu <yuzenghui@huawei.com>
+Cc: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm/include/asm/kvm_mmu.h   | 11 +++++++++++
- arch/arm64/include/asm/kvm_mmu.h | 11 +++++++++++
- virt/kvm/arm/vgic/vgic-its.c     |  8 ++++----
- virt/kvm/arm/vgic/vgic-v3.c      |  4 ++--
- 4 files changed, 28 insertions(+), 6 deletions(-)
+ virt/kvm/arm/mmu.c | 43 +++++++++++++++++++++----------------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
-diff --git a/arch/arm/include/asm/kvm_mmu.h b/arch/arm/include/asm/kvm_mmu.h
-index 3a875fc1b63c..cee06509f00a 100644
---- a/arch/arm/include/asm/kvm_mmu.h
-+++ b/arch/arm/include/asm/kvm_mmu.h
-@@ -381,6 +381,17 @@ static inline int kvm_read_guest_lock(struct kvm *kvm,
- 	return ret;
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index 5cc22cdaa5ba..6dccb36465e6 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1595,8 +1595,9 @@ static void kvm_send_hwpoison_signal(unsigned long address,
+ 	send_sig_mceerr(BUS_MCEERR_AR, (void __user *)address, lsb, current);
  }
  
-+static inline int kvm_write_guest_lock(struct kvm *kvm, gpa_t gpa,
-+				       const void *data, unsigned long len)
-+{
-+	int srcu_idx = srcu_read_lock(&kvm->srcu);
-+	int ret = kvm_write_guest(kvm, gpa, data, len);
-+
-+	srcu_read_unlock(&kvm->srcu, srcu_idx);
-+
-+	return ret;
-+}
-+
- static inline void *kvm_get_hyp_vector(void)
+-static bool fault_supports_stage2_pmd_mappings(struct kvm_memory_slot *memslot,
+-					       unsigned long hva)
++static bool fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
++					       unsigned long hva,
++					       unsigned long map_size)
  {
- 	switch(read_cpuid_part()) {
-diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
-index 8af4b1befa42..c246effd1b67 100644
---- a/arch/arm64/include/asm/kvm_mmu.h
-+++ b/arch/arm64/include/asm/kvm_mmu.h
-@@ -444,6 +444,17 @@ static inline int kvm_read_guest_lock(struct kvm *kvm,
- 	return ret;
- }
+ 	gpa_t gpa_start, gpa_end;
+ 	hva_t uaddr_start, uaddr_end;
+@@ -1612,34 +1613,34 @@ static bool fault_supports_stage2_pmd_mappings(struct kvm_memory_slot *memslot,
  
-+static inline int kvm_write_guest_lock(struct kvm *kvm, gpa_t gpa,
-+				       const void *data, unsigned long len)
-+{
-+	int srcu_idx = srcu_read_lock(&kvm->srcu);
-+	int ret = kvm_write_guest(kvm, gpa, data, len);
-+
-+	srcu_read_unlock(&kvm->srcu, srcu_idx);
-+
-+	return ret;
-+}
-+
- #ifdef CONFIG_KVM_INDIRECT_VECTORS
- /*
-  * EL2 vectors can be mapped and rerouted in a number of ways,
-diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
-index ab3f47745d9c..c41e11fd841c 100644
---- a/virt/kvm/arm/vgic/vgic-its.c
-+++ b/virt/kvm/arm/vgic/vgic-its.c
-@@ -1919,7 +1919,7 @@ static int vgic_its_save_ite(struct vgic_its *its, struct its_device *dev,
- 	       ((u64)ite->irq->intid << KVM_ITS_ITE_PINTID_SHIFT) |
- 		ite->collection->collection_id;
- 	val = cpu_to_le64(val);
--	return kvm_write_guest(kvm, gpa, &val, ite_esz);
-+	return kvm_write_guest_lock(kvm, gpa, &val, ite_esz);
- }
- 
- /**
-@@ -2066,7 +2066,7 @@ static int vgic_its_save_dte(struct vgic_its *its, struct its_device *dev,
- 	       (itt_addr_field << KVM_ITS_DTE_ITTADDR_SHIFT) |
- 		(dev->num_eventid_bits - 1));
- 	val = cpu_to_le64(val);
--	return kvm_write_guest(kvm, ptr, &val, dte_esz);
-+	return kvm_write_guest_lock(kvm, ptr, &val, dte_esz);
- }
- 
- /**
-@@ -2246,7 +2246,7 @@ static int vgic_its_save_cte(struct vgic_its *its,
- 	       ((u64)collection->target_addr << KVM_ITS_CTE_RDBASE_SHIFT) |
- 	       collection->collection_id);
- 	val = cpu_to_le64(val);
--	return kvm_write_guest(its->dev->kvm, gpa, &val, esz);
-+	return kvm_write_guest_lock(its->dev->kvm, gpa, &val, esz);
- }
- 
- static int vgic_its_restore_cte(struct vgic_its *its, gpa_t gpa, int esz)
-@@ -2317,7 +2317,7 @@ static int vgic_its_save_collection_table(struct vgic_its *its)
+ 	/*
+ 	 * Pages belonging to memslots that don't have the same alignment
+-	 * within a PMD for userspace and IPA cannot be mapped with stage-2
+-	 * PMD entries, because we'll end up mapping the wrong pages.
++	 * within a PMD/PUD for userspace and IPA cannot be mapped with stage-2
++	 * PMD/PUD entries, because we'll end up mapping the wrong pages.
+ 	 *
+ 	 * Consider a layout like the following:
+ 	 *
+ 	 *    memslot->userspace_addr:
+ 	 *    +-----+--------------------+--------------------+---+
+-	 *    |abcde|fgh  Stage-1 PMD    |    Stage-1 PMD   tv|xyz|
++	 *    |abcde|fgh  Stage-1 block  |    Stage-1 block tv|xyz|
+ 	 *    +-----+--------------------+--------------------+---+
+ 	 *
+ 	 *    memslot->base_gfn << PAGE_SIZE:
+ 	 *      +---+--------------------+--------------------+-----+
+-	 *      |abc|def  Stage-2 PMD    |    Stage-2 PMD     |tvxyz|
++	 *      |abc|def  Stage-2 block  |    Stage-2 block   |tvxyz|
+ 	 *      +---+--------------------+--------------------+-----+
+ 	 *
+-	 * If we create those stage-2 PMDs, we'll end up with this incorrect
++	 * If we create those stage-2 blocks, we'll end up with this incorrect
+ 	 * mapping:
+ 	 *   d -> f
+ 	 *   e -> g
+ 	 *   f -> h
  	 */
- 	val = 0;
- 	BUG_ON(cte_esz > sizeof(val));
--	ret = kvm_write_guest(its->dev->kvm, gpa, &val, cte_esz);
-+	ret = kvm_write_guest_lock(its->dev->kvm, gpa, &val, cte_esz);
- 	return ret;
+-	if ((gpa_start & ~S2_PMD_MASK) != (uaddr_start & ~S2_PMD_MASK))
++	if ((gpa_start & (map_size - 1)) != (uaddr_start & (map_size - 1)))
+ 		return false;
+ 
+ 	/*
+ 	 * Next, let's make sure we're not trying to map anything not covered
+-	 * by the memslot. This means we have to prohibit PMD size mappings
+-	 * for the beginning and end of a non-PMD aligned and non-PMD sized
++	 * by the memslot. This means we have to prohibit block size mappings
++	 * for the beginning and end of a non-block aligned and non-block sized
+ 	 * memory slot (illustrated by the head and tail parts of the
+ 	 * userspace view above containing pages 'abcde' and 'xyz',
+ 	 * respectively).
+@@ -1648,8 +1649,8 @@ static bool fault_supports_stage2_pmd_mappings(struct kvm_memory_slot *memslot,
+ 	 * userspace_addr or the base_gfn, as both are equally aligned (per
+ 	 * the check above) and equally sized.
+ 	 */
+-	return (hva & S2_PMD_MASK) >= uaddr_start &&
+-	       (hva & S2_PMD_MASK) + S2_PMD_SIZE <= uaddr_end;
++	return (hva & ~(map_size - 1)) >= uaddr_start &&
++	       (hva & ~(map_size - 1)) + map_size <= uaddr_end;
  }
  
-diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
-index 4ee0aeb9a905..89260964be73 100644
---- a/virt/kvm/arm/vgic/vgic-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-v3.c
-@@ -358,7 +358,7 @@ retry:
- 	if (status) {
- 		/* clear consumed data */
- 		val &= ~(1 << bit_nr);
--		ret = kvm_write_guest(kvm, ptr, &val, 1);
-+		ret = kvm_write_guest_lock(kvm, ptr, &val, 1);
- 		if (ret)
- 			return ret;
+ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+@@ -1678,12 +1679,6 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 		return -EFAULT;
  	}
-@@ -409,7 +409,7 @@ int vgic_v3_save_pending_tables(struct kvm *kvm)
- 		else
- 			val &= ~(1 << bit_nr);
  
--		ret = kvm_write_guest(kvm, ptr, &val, 1);
-+		ret = kvm_write_guest_lock(kvm, ptr, &val, 1);
- 		if (ret)
- 			return ret;
+-	if (!fault_supports_stage2_pmd_mappings(memslot, hva))
+-		force_pte = true;
+-
+-	if (logging_active)
+-		force_pte = true;
+-
+ 	/* Let's check if we will get back a huge page backed by hugetlbfs */
+ 	down_read(&current->mm->mmap_sem);
+ 	vma = find_vma_intersection(current->mm, hva, hva + 1);
+@@ -1694,6 +1689,12 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
  	}
+ 
+ 	vma_pagesize = vma_kernel_pagesize(vma);
++	if (logging_active ||
++	    !fault_supports_stage2_huge_mapping(memslot, hva, vma_pagesize)) {
++		force_pte = true;
++		vma_pagesize = PAGE_SIZE;
++	}
++
+ 	/*
+ 	 * The stage2 has a minimum of 2 level table (For arm64 see
+ 	 * kvm_arm_setup_stage2()). Hence, we are guaranteed that we can
+@@ -1701,11 +1702,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 	 * As for PUD huge maps, we must make sure that we have at least
+ 	 * 3 levels, i.e, PMD is not folded.
+ 	 */
+-	if ((vma_pagesize == PMD_SIZE ||
+-	     (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm))) &&
+-	    !force_pte) {
++	if (vma_pagesize == PMD_SIZE ||
++	    (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm)))
+ 		gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
+-	}
+ 	up_read(&current->mm->mmap_sem);
+ 
+ 	/* We need minimum second+third level pages */
 -- 
 2.19.1
 
