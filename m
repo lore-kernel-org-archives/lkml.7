@@ -2,155 +2,233 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82408C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 07:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328EDC282E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 07:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AED820652
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 07:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E82E520857
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 07:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GjlXi7RR"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s1Lu9PcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbfDVHjm (ORCPT
+        id S1726814AbfDVHvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 03:39:42 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:41988 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbfDVHjl (ORCPT
+        Mon, 22 Apr 2019 03:51:14 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50452 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfDVHvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 03:39:41 -0400
-Received: by mail-vs1-f68.google.com with SMTP id f15so5766573vsk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 00:39:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=POlrDuh+Uc0VeEY8jUeOoKYhZtLAgJmnd2OEWu9wIao=;
-        b=GjlXi7RR0XHYIzonq5v+6MSQEkDHk43an08aNyvkNFGnX7+efmXe+Bxf5e7GRHZSzp
-         GNrbLAtHJaC4EMmGemAA2rUPqCnd1S+KuqZjL47kMXwia32QwU3PNGcyLdRTMUircHlI
-         ii6D8kcHxmqP5ynTUQ+KPiC7gm+aVQUQa3JHY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=POlrDuh+Uc0VeEY8jUeOoKYhZtLAgJmnd2OEWu9wIao=;
-        b=kY6Dr6oA1GBojJqOvY9GorEUZK0Vv48+7PRaIr5s7+qsyNh39rO4WnKoICDkfWLA5A
-         VzI8AouW779BB+9H+MJKgTRPsjTNsYIurec/LXe1AgLP/6SxBJnqeewPk0/0e0PZ0y10
-         XLiSC3/XXe0RGgEAWw5m2CXT/0qvkI+tid4+5GUfbmLg4COu2mApxQPnL8GgC5SV2bcq
-         IN9+YiEe7zOa8dtkHc1F1nfKKNR8nT0WO/PIQMKN1Rkuh3JrgDIMYGlilKZEauVCXgJM
-         NhK5C9MoR9WN3nhu7FLESXsqUduLZgdOFb7Q33EImqkLoNFH6njt04qug9ZeHji5IaMq
-         fLEg==
-X-Gm-Message-State: APjAAAWhWwaC+tzGGbzwNZ0s7lrRIHsoq1JHCVxaEYP+e1nHxajaL2kZ
-        v19ucX2BQmFqv93wUE7CnLnQ59OpZrJvVsr14PKHuw==
-X-Google-Smtp-Source: APXvYqwJI+45d11pTG8+UmYnFOa5RsZeQnBEzs7JBRknSOsQ1NVGMsUFnAJbpdKKMbSiXjGAB4sd2yU2mkzrr7BOMlU=
-X-Received: by 2002:a67:ffc4:: with SMTP id w4mr8939270vsq.138.1555918779810;
- Mon, 22 Apr 2019 00:39:39 -0700 (PDT)
+        Mon, 22 Apr 2019 03:51:14 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3M7ovN1078686;
+        Mon, 22 Apr 2019 02:50:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555919457;
+        bh=tR+K/cW3/uS/6ipyuzJ9bzqKOfv7AFVC8VnuWezEYwI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=s1Lu9PcZvZIwh0AE3Ml0RRpxmxPrkgh/hA9PMaeC5gamHtgePLFq5wRNfRBRtyh6Q
+         fkePdrtIKtl/z8RBTUTN+Ye18dhRmirW9vCDJH4rrjudPJU4ZcOcVOyeuoTtcPyaKb
+         QuliOFRszx0M4LlMmqIrTEcyvj5/OYIQn6rEs5IU=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3M7ovY8038513
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 22 Apr 2019 02:50:57 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 22
+ Apr 2019 02:50:57 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 22 Apr 2019 02:50:57 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3M7osDc035716;
+        Mon, 22 Apr 2019 02:50:54 -0500
+Subject: Re: [PATCH] PCI: keystone: Fix build error while only
+ CONFIG_PCI_KEYSTONE is set
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+CC:     <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
+        <l.stach@pengutronix.de>, <andrew.smirnov@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+References: <20190419025855.40760-1-yuehaibing@huawei.com>
+ <20190419133137.GA173520@google.com>
+ <35486240-8c29-410d-e0f4-c87dc42fb668@huawei.com>
+ <20190419174735.GE173520@google.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <9e674a96-5d19-47f6-41a4-9a4313652b5b@ti.com>
+Date:   Mon, 22 Apr 2019 13:19:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190422061334.4243-1-akshu.agrawal@amd.com>
-In-Reply-To: <20190422061334.4243-1-akshu.agrawal@amd.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Mon, 22 Apr 2019 15:39:13 +0800
-Message-ID: <CAFv8NwKZskTeyaUQWevydfxZf0=nf+Z4kBOkYynTfiOMOq-LDA@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: DA7219: Fix failure in hw_params by
- not letting set_rate error out
-To:     "Agrawal, Akshu" <Akshu.Agrawal@amd.com>
-Cc:     "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "djkurtz@chromium.org" <djkurtz@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Adam.Thomson.Opensource@diasemi.com" 
-        <Adam.Thomson.Opensource@diasemi.com>, yuhsuan@chromium.org,
-        tzungbi@chromium.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190419174735.GE173520@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Akshu,
+Hi Bjorn,
 
+On 19/04/19 11:17 PM, Bjorn Helgaas wrote:
+> On Fri, Apr 19, 2019 at 09:46:39PM +0800, YueHaibing wrote:
+>> On 2019/4/19 21:31, Bjorn Helgaas wrote:
+>>> On Fri, Apr 19, 2019 at 10:58:55AM +0800, Yue Haibing wrote:
+>>>> From: YueHaibing <yuehaibing@huawei.com>
+>>>>
+>>>> During randconfig builds, I occasionally run into an invalid configuration
+>>>>
+>>>> drivers/pci/controller/dwc/pci-keystone.o: In function `ks_pcie_link_up':
+>>>> pci-keystone.c:(.text+0x90): undefined reference to `__dw_pcie_read_dbi'
+>>>> pci-keystone.c:(.text+0x90): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__dw_pcie_read_dbi'
+>>>> drivers/pci/controller/dwc/pci-keystone.o: In function `ks_pcie_v3_65_scan_bus':
+>>>> pci-keystone.c:(.text+0x4f0): undefined reference to `__dw_pcie_write_dbi'
+>>>> pci-keystone.c:(.text+0x4f0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__dw_pcie_write_dbi'
+>>>>
+>>>> while CONFIG_PCI_KEYSTONE is selected but CONFIG_PCIE_DW
+>>>> is not set, the building failed like this. This patch
+>>>> selects PCIE_DW to fix it.
+>>>>
+>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>> Fixes: 5709114f0a97 ("PCI: keystone: Add support for PCIe EP in AM654x Platforms")
+>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>> ---
+>>>>  drivers/pci/controller/dwc/Kconfig | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>>>> index b450ad2..641fa0f 100644
+>>>> --- a/drivers/pci/controller/dwc/Kconfig
+>>>> +++ b/drivers/pci/controller/dwc/Kconfig
+>>>> @@ -105,6 +105,7 @@ config PCIE_SPEAR13XX
+>>>>  config PCI_KEYSTONE
+>>>>  	bool "TI Keystone PCIe controller"
+>>>>  	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
+>>>> +	select PCIE_DW
+>>>
+>>> What version are you building?  In v5.0, PCI_KEYSTONE already selects
+>>> PCIE_DW_HOST:
+>>>
+>>> $ git grep -A4 PCI_KEYSTONE v5.0:drivers/pci/controller/dwc/Kconfig | cat
+>>> v5.0:drivers/pci/controller/dwc/Kconfig:config PCI_KEYSTONE
+>>> v5.0:drivers/pci/controller/dwc/Kconfig-	bool "TI Keystone PCIe controller"
+>>> v5.0:drivers/pci/controller/dwc/Kconfig-	depends on ARCH_KEYSTONE || (ARM && COMPILE_TEST)
+>>> v5.0:drivers/pci/controller/dwc/Kconfig-	depends on PCI_MSI_IRQ_DOMAIN
+>>> v5.0:drivers/pci/controller/dwc/Kconfig-	select PCIE_DW_HOST
+>>> 08:30:42 ~/history (master)$
+>>
+>> This patch based on linux-next:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=5709114f0a97
+> 
+> Oh, yep, looks like this was broken by ad5ca801bd7e ("PCI: keystone:
+> Add support for PCIe EP in AM654x Platforms"), which added
+> PCI_KEYSTONE_HOST and PCI_KEYSTONE_EP.  Those select PCIE_DW_HOST and
+> PCIE_DW_EP, respectively, which in turn select PCIE_DW.
+> 
+> But I guess it's possible to enable PCI_KEYSTONE by itself without
+> either PCI_KEYSTONE_HOST or PCI_KEYSTONE_EP.  I'm not sure what that
+> would mean, but we would still try to build pci-keystone.o
+> 
+> I'm hoping we can amend that commit before the merge window.
 
-On Mon, Apr 22, 2019 at 2:15 PM Agrawal, Akshu <Akshu.Agrawal@amd.com> wrote:
->
-> We need to set minimum bclk 64x of wclk as this is hw constraint in one
-> of the component used.
-> Since, clk_set_rate and clk is enabled in machine driver the
-> clk_set_rate in hw_params of da7219 fails and errors out and when it
-> tries to override the value.
->
-> In cases like these not only clk_set_rate of da7219 codec should fail
-> and not override the value but also should not error out.
->
-> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
-> ---
->  sound/soc/codecs/da7219.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/sound/soc/codecs/da7219.c b/sound/soc/codecs/da7219.c
-> index 5f5fa3416af3..a041dbf442af 100644
-> --- a/sound/soc/codecs/da7219.c
-> +++ b/sound/soc/codecs/da7219.c
-> @@ -1621,13 +1621,7 @@ static int da7219_hw_params(struct snd_pcm_substream *substream,
->
->                 if (bclk) {
->                         bclk_rate = frame_size * sr;
-> -                       ret = clk_set_rate(bclk, bclk_rate);
-> -                       if (ret) {
-> -                               dev_err(component->dev,
-> -                                       "Failed to set BCLK rate %lu: %d\n",
-> -                                       bclk_rate, ret);
-> -                               return ret;
-> -                       }
-> +                       clk_set_rate(bclk, bclk_rate);
+Sometime back Niklas had fixed this for DRA7xx in
 
-I think this might mask the real issue when setting rate fails.
-A more fundamental problem might be what are the acceptable ratios
-between bclk and wclk.
+commit b052835c63857e13d9ada3ebc57a8f9e1d124f3a
+Author: Niklas Cassel <niklas.cassel@axis.com>
+Date:   Wed Dec 20 00:29:28 2017 +0100
 
-From existing code of da7219 I see there are only two choices of
-frame_size: 32 or 64.
+    PCI: dwc: dra7xx: Refactor Kconfig and Makefile handling for host/ep mode
 
-In da7219_hw_params:
-...
-if (da7219->master && !da7219->tdm_en) {
-  if ((word_len * DA7219_DAI_CH_NUM_MAX) <= 32)
-     frame_size = 32;
-  else
-     frame_size = 64;
+    Refactor the Kconfig and Makefile handling for host/ep mode, since
+    the previous handling was a bit unorthodox and would have been a bit
+    bloated once more DWC based controllers added support for ep mode.
 
-And in https://lkml.org/lkml/2019/4/17/322
-the choice from machine driver is 64 or higher.
+    Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+    Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+    Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-In cz_da7219_params:
- ...
- if (bclk < (wclk * 64))
-  bclk = wclk * 64;
- return da7219_clk_enable(substream, wclk, bclk);
+Something similar is applicable for Keystone too as you mentioned without
+selecting PCI_KEYSTONE_HOST or PCI_KEYSTONE_EP, compiling pci-keystone.c
+doesn't make sense.
 
-I don't know what is the best solution to avoid this conflict.
-Maybe just set a fixed ratio from device property that can best work
-for the combination of codecs on the machine?
+Please see if below looks okay to you. This can be merged with "PCI:
+keystone:Add support for PCIe EP in AM654x Platforms"). Let me know if I have
+to send it separately with Fixes tag.
 
+8<---------------------------------------------------------
+From 8fba36048112cf72c49996fc47fd808534bf9689 Mon Sep 17 00:00:00 2001
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Date: Mon, 22 Apr 2019 11:42:32 +0530
+Subject: [PATCH] PCI: keystone: Refactor Kconfig for RC/EP mode
 
+Do not allow PCI_KEYSTONE to be visible to user and let user visible
+CONFIG symbols PCI_KEYSTONE_HOST and PCI_KEYSTONE_EP select
+PCI_KEYSTONE. This will let pci-keystone.c to be compiled only when
+either PCI_KEYSTONE_HOST or PCI_KEYSTONE_EP is selected.
 
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/controller/dwc/Kconfig | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
+diff --git a/drivers/pci/controller/dwc/Kconfig
+b/drivers/pci/controller/dwc/Kconfig
+index b450ad2823a5..90618233d15b 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -103,34 +103,32 @@ config PCIE_SPEAR13XX
+ 	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
 
->                 } else {
->                         ret = da7219_set_bclks_per_wclk(component, frame_size);
->                         if (ret) {
-> --
-> 2.17.1
->
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+ config PCI_KEYSTONE
+-	bool "TI Keystone PCIe controller"
+-	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
+-	help
+-	  Say Y here if you want to enable PCI controller support on Keystone
+-	  SoCs. The PCI controller on Keystone is based on DesignWare hardware
+-	  and therefore the driver re-uses the DesignWare core functions to
+-	  implement the driver.
+-
+-if PCI_KEYSTONE
++	bool
+
+ config PCI_KEYSTONE_HOST
+ 	bool "PCI Keystone Host Mode"
++	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
++	select PCI_KEYSTONE
+ 	default y
+ 	help
+ 	 Enables support for the PCIe controller in the Keystone SoC to work in
+-	 host mode.
++	 host mode. The PCI controller on Keystone is based on DesignWare hardware
++	 and therefore the driver re-uses the DesignWare core functions to
++	 implement the driver.
+
+ config PCI_KEYSTONE_EP
+ 	bool "PCI Keystone Endpoint Mode"
++	depends on ARCH_KEYSTONE || ARCH_K3 || ((ARM || ARM64) && COMPILE_TEST)
+ 	depends on PCI_ENDPOINT
+ 	select PCIE_DW_EP
++	select PCI_KEYSTONE
+ 	help
+ 	 Enables support for the PCIe controller in the Keystone SoC to work in
+-	 endpoint mode.
+-
+-endif
++	 endpoint mode. The PCI controller on Keystone is based on DesignWare hardware
++	 and therefore the driver re-uses the DesignWare core functions to
++	 implement the driver.
+
+ config PCI_LAYERSCAPE
+ 	bool "Freescale Layerscape PCIe controller"
+-- 
+2.17.1
