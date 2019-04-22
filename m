@@ -4,58 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DA5C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B4BC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C042075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE681204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963452;
-	bh=qynrjD5BEuyxbHQS+eq3A8+Wu/GNztzTGPDWJnJyiPU=;
+	s=default; t=1555963467;
+	bh=hEDc2s8xKXy0mGEEYMCYq5wQAaZ+d9PBBhvl0nQ+sJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x2CJPPh5SSbyfe+83H/mnP6LnJuuJpKXseX/82YEp01L8kM666CEVKA32ZpJmHan+
-	 Ek4NKm4fT6INHg6A1QiMl4UGH/+z5IG7jgurFaFFaglZf5MxP+nbXVmBlzFbwhLRpJ
-	 dUX4l8W46MPPYq84rpkaw63B6TcntYrUPYXrdB4g=
+	b=HcP7vf4pHbObG4PF6UOErsYdNI2w9U6NH5/Pr4wt6XiUhrQuXzK7t2vdGDY0BXEdP
+	 NKGlyrh33OXZSHTpj65LwK2wsU8gNdjk2cFTW+/rMFcX9GkihMtfEzmMyskOqnWIXg
+	 hdQq0i7QdCQeayLRpVuIoYglKSyRZNqjiUSRhxrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732184AbfDVUEL (ORCPT
+        id S1729776AbfDVTpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47500 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:45:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729818AbfDVTpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:45:41 -0400
+        id S1729205AbfDVTpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:45:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32CB7218EA;
-        Mon, 22 Apr 2019 19:45:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33A6F218FC;
+        Mon, 22 Apr 2019 19:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962340;
-        bh=qynrjD5BEuyxbHQS+eq3A8+Wu/GNztzTGPDWJnJyiPU=;
+        s=default; t=1555962325;
+        bh=hEDc2s8xKXy0mGEEYMCYq5wQAaZ+d9PBBhvl0nQ+sJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LpvvPSIDA1Yr+EEwaBkTKu7AtJII39zeQ7Emr+mxBHpKt6uBR0gfEN8vEdjNz4nCn
-         V1uFeICmwaB/UuI2kAkVIjUisqx/B+bdqwxPIrZRvjbZ8vePG74Sah+JWXQkcf0Jf5
-         oyzujGRGX9IHklWu8QpD7Xt2Nk/6mv9fBwZ7NSD0=
+        b=z8xtbYnDXWezERar0s4lRV4+lnPVPk4OAEmiZLP0ZIAkhDqtQ/My7AnKJtWEvDSE3
+         WlpEP/Rq1JkYa/9lEH7FpKNj3EAfO34w6hQoSNPOqbaBzEn8RXPp3ahiqM19xk6rjN
+         JoFf3dhr0rDx4ouC7khCJkePjITBjLGFf7s6MiRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?q?M=C3=A1t=C3=A9=20Eckl?= <ecklm94@gmail.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+Cc:     Li RongQing <lirongqing@baidu.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        Sasha Levin <sashal@kernel.org>, linux-wpan@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/68] netfilter: fix NETFILTER_XT_TARGET_TEE dependencies
-Date:   Mon, 22 Apr 2019 15:44:20 -0400
-Message-Id: <20190422194516.11634-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 04/68] ieee802154: hwsim: propagate genlmsg_reply return code
+Date:   Mon, 22 Apr 2019 15:44:12 -0400
+Message-Id: <20190422194516.11634-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194516.11634-1-sashal@kernel.org>
 References: <20190422194516.11634-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,47 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit d1fa381033eb718df5c602f64b6e88676138dfc6 ]
+[ Upstream commit 19b39a25388e71390e059906c979f87be4ef0c71 ]
 
-With NETFILTER_XT_TARGET_TEE=y and IP6_NF_IPTABLES=m, we get a link
-error when referencing the NF_DUP_IPV6 module:
+genlmsg_reply can fail, so propagate its return code
 
-net/netfilter/xt_TEE.o: In function `tee_tg6':
-xt_TEE.c:(.text+0x14): undefined reference to `nf_dup_ipv6'
-
-The problem here is the 'select NF_DUP_IPV6 if IP6_NF_IPTABLES'
-that forces NF_DUP_IPV6 to be =m as well rather than setting it
-to =y as was intended here. Adding a soft dependency on
-IP6_NF_IPTABLES avoids that broken configuration.
-
-Fixes: 5d400a4933e8 ("netfilter: Kconfig: Change select IPv6 dependencies")
-Cc: Máté Eckl <ecklm94@gmail.com>
-Cc: Taehee Yoo <ap420073@gmail.com>
-Link: https://patchwork.ozlabs.org/patch/999498/
-Link: https://lore.kernel.org/patchwork/patch/960062/
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/netfilter/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ieee802154/mac802154_hwsim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/Kconfig b/net/netfilter/Kconfig
-index f61c306de1d0..e0fb56d67d42 100644
---- a/net/netfilter/Kconfig
-+++ b/net/netfilter/Kconfig
-@@ -1003,6 +1003,7 @@ config NETFILTER_XT_TARGET_TEE
- 	depends on NETFILTER_ADVANCED
- 	depends on IPV6 || IPV6=n
- 	depends on !NF_CONNTRACK || NF_CONNTRACK
-+	depends on IP6_NF_IPTABLES || !IP6_NF_IPTABLES
- 	select NF_DUP_IPV4
- 	select NF_DUP_IPV6 if IP6_NF_IPTABLES
- 	---help---
+diff --git a/drivers/net/ieee802154/mac802154_hwsim.c b/drivers/net/ieee802154/mac802154_hwsim.c
+index 624bff4d3636..f1ed1744801c 100644
+--- a/drivers/net/ieee802154/mac802154_hwsim.c
++++ b/drivers/net/ieee802154/mac802154_hwsim.c
+@@ -332,7 +332,7 @@ static int hwsim_get_radio_nl(struct sk_buff *msg, struct genl_info *info)
+ 			goto out_err;
+ 		}
+ 
+-		genlmsg_reply(skb, info);
++		res = genlmsg_reply(skb, info);
+ 		break;
+ 	}
+ 
 -- 
 2.19.1
 
