@@ -2,97 +2,75 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26B2C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA80C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9E22075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:34:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="epCri5FT"
+	by mail.kernel.org (Postfix) with ESMTP id 5D84120811
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbfDVVeQ (ORCPT
+        id S1730091AbfDVVfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 17:34:16 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42441 "EHLO ozlabs.org"
+        Mon, 22 Apr 2019 17:35:38 -0400
+Received: from mga05.intel.com ([192.55.52.43]:14856 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727386AbfDVVeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 17:34:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44p0Fx0wQKz9sB8;
-        Tue, 23 Apr 2019 07:34:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555968853;
-        bh=pQ2H9T8Cy1iiiQ922EqbquGW4xLn6hkDzGVgnhr/IKM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=epCri5FT0IJe3ZukGKeolpGqzDFPr24W7pfADAA3kzyxThKYYnG2vBoeYCH6+B2pe
-         xImZhoYwF6P31oi3AKeP9Ryl0MsWtw4FBMDnlej8NQYc7uBqg1whRfcwSRi2lsBmtM
-         X0VBakGF9qq1r61ZHHJ5qkR3uQy2ScbyIHlZPh2HXfIl5yIzoKGS3HA8AaXTSp0RhT
-         QCgEYPVzJRL3dJfnavsPWN6o6b2eR9Cl3Ta70mTJ8Li0IFZTmFvjBM0+lWywaTm2ji
-         InwDrkCK0r2hHRGXmgTctfpR4FkwoFVMca1dp+9FJ1yXFSa//GV/J9UarczG4yizd7
-         noOwFV2KTg9Qw==
-Date:   Tue, 23 Apr 2019 07:34:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alasdair G Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nikos Tsironis <ntsironis@arrikto.com>
-Subject: linux-next: Fixes tag needs some work in the device-mapper tree
-Message-ID: <20190423073412.01c6376a@canb.auug.org.au>
+        id S1727386AbfDVVfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 17:35:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 14:35:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,383,1549958400"; 
+   d="scan'208";a="339802300"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga005.fm.intel.com with ESMTP; 22 Apr 2019 14:35:37 -0700
+Date:   Mon, 22 Apr 2019 14:35:37 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com
+Subject: Re: [PATCH v20 09/28] x86/sgx: Add ENCLS architectural error codes
+Message-ID: <20190422213537.GK1236@linux.intel.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190417103938.7762-10-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/N2s5W2ifAqi=VcYKPBRHU/O"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417103938.7762-10-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/N2s5W2ifAqi=VcYKPBRHU/O
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 17, 2019 at 01:39:19PM +0300, Jarkko Sakkinen wrote:
+> The SGX architecture defines an extensive set of error codes that are
+> used by ENCL{S,U,V} instructions to provide software with (somewhat)
+> precise error information.  Though they are architectural, define the
+> known error codes in a separate file from sgx_arch.h so that they can
+> be exposed to userspace.  For some ENCLS leafs, e.g. EINIT, returning
+> the exact error code on failure can enable userspace to make informed
+> decisions when an operation fails.
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
 
-Hi all,
+Your SOB needs to be last.  Several other patches have the same issue,
+e.g. 10-13, 15 and 17.
 
-In commit
-
-  e28adc3bf34e ("dm cache metadata: Fix loading discard bitset")
-
-Fixes tag
-
-  Fixes: ae4a46a1f6 ("dm cache metadata: use bitset cursor api to load disc=
-ard bitset")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/N2s5W2ifAqi=VcYKPBRHU/O
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+M1QACgkQAVBC80lX
-0GyI2Af+OvmatQ7Sy71kjrrDoXjdz/l0hjYnj30x8DLP22JF+NQbxd4ShA7KoPh9
-qegKMHykDKDdKP3A67/yVyt3R+GAaAQe5SA8ab61e3oZKvUfRHpV0YP8ljBn9c/D
-Q/4NORJL3YuV4f0EJ9hx634OvqdUQhock79kMGkM8Pn6KiughubyY9yro1dex5P8
-0SzIPvw3kta6GjbepTI1WJd0xwPe8A572EcGboZg+Zc17hg+cz2YuaxPxYNRr4ZE
-5c0TQ2Qr93k0GO/Umtwve1TKbNkpE2aDVK7BsK8WTuMgmA799oD6WT6yxGftOmSM
-Lnqezi++yIBsm7GPLMNM2Na1RuE6kA==
-=GWpp
------END PGP SIGNATURE-----
-
---Sig_/N2s5W2ifAqi=VcYKPBRHU/O--
+See commit 24a2bb90741b ("docs: Clarify the usage and sign-off requirements
+for Co-developed-by") in branch docs-next of git://git.lwn.net/linux.git.
