@@ -7,60 +7,55 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5FCC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6136BC282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94F62064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3F82064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555939834;
-	bh=7XcDrqT2xuqquOBL0BDd1vl/WCk2ddQJuQfpRgY6k2M=;
+	s=default; t=1555939853;
+	bh=dR4epI+QHLGUx72J33GvJVhYhJIyNo8PXLBT+ttkiPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGdMIl4Y0wpP4oVt7CiDGkuuR5fePjLm25Dc91KhkfpCbkgXi8I980QfInut+vZiP
-	 /IxyK+9m9bs06qv7Pg4B8pdvhQDMGAQpOIGY1prKZSO0z06sdeNcQ8tj6x2VPtXb4I
-	 Nmk8tyflgzGde3qyJx2YMfuKhBW3j8twZHlno2ho=
+	b=oW1ekPVTTZnxsAzAPLEo1TSxuXig22wCgVMO9ZaELunMf2eyx7Ailg7yyz+mroGTL
+	 ZMvJ+k4wTwTx1wH3N3V6Ow/DSF7m/nwrhM0cUkSjGq3Lrf9SwMzy4JgMeZ3gFyW0Pr
+	 P9CEn5Q0uRBc1r8I29WlKciGFdx9bRC1Hh7sQLgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfDVNab (ORCPT
+        id S1727903AbfDVNav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:30:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37746 "EHLO
+        Mon, 22 Apr 2019 09:30:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37946 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfDVN2X (ORCPT
+        with ESMTP id S1727581AbfDVN2W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:28:23 -0400
+        Mon, 22 Apr 2019 09:28:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
         To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vtktnCLv916WLDmhNAkr45ZMiAEz0f0XZ9eblFG9bXo=; b=LsnXbpEPUA46S4YhGKWWlWgbcA
-        1beOLrCxsQV3/nnikm0QGeX/oHqOX4VKp4uiOGo3PpG/sdVRZXfZTRPKRXrJfapvSDhYD5lIxniiF
-        OSqRkFvWfVOdT7uKrxDl4k4NkfKPlzwDfyKP2R/Tq+SBsfqfJUuZa7bdVKW9gMA74m8c3nRRVML2i
-        UVfHExf5oeGsKXXOAgYR4kZD2TluxpWLnX4OBNfPwUyeGAApaVOoie1wX1B9BqpYrc8jcww9ctKJw
-        0GPk5enmRKUNl2PzKtzXzBUGx6P3oNtv/QRiTnYU4u+Pz5So768b1uxap9qi6TrOkrqxL+ehgew3O
-        D/FVCEKw==;
+        bh=t6inNauNjPPCej1ovpFm2Ab77+xC/0SMEw/tosu41TU=; b=gGzQo0FVIzL0z2sCBOc4F3gbxW
+        ucIINkYThke5tAImXWMmTVkoYZS//34Gcwt7ZYW1yDYWFNf/ejs+ZJlPCWvcHeY68Uo5Wc0Muaomj
+        7k+vUCa3rMoF9P9LADhiju911M4W5LzHz82AVd2f/CcCUuY+Ajy125kYOxWuOMlI/IxxPrZUW7DM1
+        +60wt9MDsOndB0P3yDg6ffgjOvabGGpURj8Bi1iAh+3yMoq4u0Ms8a14WWNRS5RzSyKWqNBsfa/uG
+        +nZoSEfmUXhkP1AZjpbb2wx32vE/n+IXO1ZYy6Oxfo2mdbtwREUF9Icz2e1EoVwjAtuawOIjn87zv
+        Qml4JRsg==;
 Received: from 179.176.125.229.dynamic.adsl.gvt.net.br ([179.176.125.229] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIYza-0005Hw-5x; Mon, 22 Apr 2019 13:28:19 +0000
+        id 1hIYzd-0005HV-3q; Mon, 22 Apr 2019 13:28:21 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hIYzU-0005oF-3g; Mon, 22 Apr 2019 10:28:12 -0300
+        id 1hIYzT-0005mW-DO; Mon, 22 Apr 2019 10:28:11 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jiri Kosina <jikos@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH v2 59/79] docs: hid: convert to ReST
-Date:   Mon, 22 Apr 2019 10:27:48 -0300
-Message-Id: <d3afdc396fe7cb92334cda3ed4d55f12b52c0fa1.1555938376.git.mchehab+samsung@kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v2 38/79] docs: scheduler: convert docs to ReST and rename to *.rst
+Date:   Mon, 22 Apr 2019 10:27:27 -0300
+Message-Id: <2a3b2b06459e0134a3af4fbf3e6f62e6d42c4d26.1555938376.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555938375.git.mchehab+samsung@kernel.org>
 References: <cover.1555938375.git.mchehab+samsung@kernel.org>
@@ -72,2254 +67,1473 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the HID documentation files to ReST, add an
-index for them and adjust in order to produce a nice html
-output via the Sphinx build system.
+In order to prepare to add them to the Kernel API book,
+convert the files to ReST format.
 
-While here, fix the sysfs example from hid-sensor.txt, that
-has a lot of "?" instead of the proper UTF-8 characters that
-are produced by the tree command.
+The conversion is actually:
+  - add blank lines and identation in order to identify paragraphs;
+  - fix tables markups;
+  - add some lists markups;
+  - mark literal blocks;
+  - adjust title markups.
 
 At its new index.rst, let's add a :orphan: while this is not linked to
 the main index.rst file, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../hid/{hid-alps.txt => hid-alps.rst}        |  85 ++-
- .../hid/{hid-sensor.txt => hid-sensor.rst}    | 192 +++----
- .../{hid-transport.txt => hid-transport.rst}  |  82 ++-
- Documentation/hid/{hiddev.txt => hiddev.rst}  | 130 +++--
- Documentation/hid/{hidraw.txt => hidraw.rst}  |  53 +-
- Documentation/hid/index.rst                   |  18 +
- Documentation/hid/intel-ish-hid.rst           | 485 ++++++++++++++++++
- Documentation/hid/intel-ish-hid.txt           | 454 ----------------
- Documentation/hid/{uhid.txt => uhid.rst}      |  46 +-
- Documentation/input/input.rst                 |   2 +-
- MAINTAINERS                                   |   2 +-
- 11 files changed, 885 insertions(+), 664 deletions(-)
- rename Documentation/hid/{hid-alps.txt => hid-alps.rst} (64%)
- rename Documentation/hid/{hid-sensor.txt => hid-sensor.rst} (61%)
- rename Documentation/hid/{hid-transport.txt => hid-transport.rst} (93%)
- rename Documentation/hid/{hiddev.txt => hiddev.rst} (80%)
- rename Documentation/hid/{hidraw.txt => hidraw.rst} (89%)
- create mode 100644 Documentation/hid/index.rst
- create mode 100644 Documentation/hid/intel-ish-hid.rst
- delete mode 100644 Documentation/hid/intel-ish-hid.txt
- rename Documentation/hid/{uhid.txt => uhid.rst} (94%)
+ Documentation/ABI/testing/sysfs-kernel-uids   |   2 +-
+ .../{completion.txt => completion.rst}        |  38 +--
+ Documentation/scheduler/index.rst             |  29 ++
+ .../{sched-arch.txt => sched-arch.rst}        |  18 +-
+ .../{sched-bwc.txt => sched-bwc.rst}          |  30 +-
+ ...{sched-deadline.txt => sched-deadline.rst} | 295 +++++++++---------
+ ...ed-design-CFS.txt => sched-design-CFS.rst} |  15 +-
+ .../{sched-domains.txt => sched-domains.rst}  |   8 +-
+ .../{sched-energy.txt => sched-energy.rst}    |  47 +--
+ ...-nice-design.txt => sched-nice-design.rst} |   6 +-
+ ...{sched-rt-group.txt => sched-rt-group.rst} |  28 +-
+ .../{sched-stats.txt => sched-stats.rst}      |  35 ++-
+ Documentation/scheduler/text_files.rst        |   5 +
+ Documentation/vm/numa.rst                     |   2 +-
+ init/Kconfig                                  |   6 +-
+ kernel/sched/deadline.c                       |   2 +-
+ 16 files changed, 332 insertions(+), 234 deletions(-)
+ rename Documentation/scheduler/{completion.txt => completion.rst} (94%)
+ create mode 100644 Documentation/scheduler/index.rst
+ rename Documentation/scheduler/{sched-arch.txt => sched-arch.rst} (81%)
+ rename Documentation/scheduler/{sched-bwc.txt => sched-bwc.rst} (90%)
+ rename Documentation/scheduler/{sched-deadline.txt => sched-deadline.rst} (88%)
+ rename Documentation/scheduler/{sched-design-CFS.txt => sched-design-CFS.rst} (97%)
+ rename Documentation/scheduler/{sched-domains.txt => sched-domains.rst} (97%)
+ rename Documentation/scheduler/{sched-energy.txt => sched-energy.rst} (96%)
+ rename Documentation/scheduler/{sched-nice-design.txt => sched-nice-design.rst} (98%)
+ rename Documentation/scheduler/{sched-rt-group.txt => sched-rt-group.rst} (95%)
+ rename Documentation/scheduler/{sched-stats.txt => sched-stats.rst} (91%)
+ create mode 100644 Documentation/scheduler/text_files.rst
 
-diff --git a/Documentation/hid/hid-alps.txt b/Documentation/hid/hid-alps.rst
-similarity index 64%
-rename from Documentation/hid/hid-alps.txt
-rename to Documentation/hid/hid-alps.rst
-index 6b02a2447c77..e2f4c4c11e3f 100644
---- a/Documentation/hid/hid-alps.txt
-+++ b/Documentation/hid/hid-alps.rst
-@@ -1,19 +1,26 @@
-+==========================
- ALPS HID Touchpad Protocol
------------------------
-+==========================
- 
- Introduction
- ------------
- Currently ALPS HID driver supports U1 Touchpad device.
- 
--U1 devuce basic information.
-+U1 device basic information.
-+
-+==========	======
- Vender ID	0x044E
- Product ID	0x120B
- Version ID	0x0121
-+==========	======
- 
- 
- HID Descriptor
--------------
-+--------------
-+
-+=======	====================	=====	=======================================
- Byte	Field			Value	Notes
-+=======	====================	=====	=======================================
- 0	wHIDDescLength		001E	Length of HID Descriptor : 30 bytes
- 2	bcdVersion		0100	Compliant with Version 1.00
- 4	wReportDescLength	00B2	Report Descriptor is 178 Bytes (0x00B2)
-@@ -28,32 +35,42 @@ Byte	Field			Value	Notes
- 22	wProductID		120B	Product ID 0x120B
- 24	wVersionID		0121	Version 01.21
- 26	RESERVED		0000	RESERVED
-+=======	====================	=====	=======================================
- 
- 
- Report ID
--------------
--ReportID-1	(Input Reports)	(HIDUsage-Mouse) for TP&SP
--ReportID-2	(Input Reports)	(HIDUsage-keyboard) for TP
--ReportID-3	(Input Reports)	(Vendor Usage: Max 10 finger data) for TP
--ReportID-4	(Input Reports)	(Vendor Usage: ON bit data) for GP
--ReportID-5	(Feature Reports)	Feature Reports
--ReportID-6	(Input Reports)	(Vendor Usage: StickPointer data) for SP
--ReportID-7	(Feature Reports)	Flash update (Bootloader)
-+---------
-+
-+==========	=================  =========================================
-+ReportID-1	(Input Reports)	   (HIDUsage-Mouse) for TP&SP
-+ReportID-2	(Input Reports)	   (HIDUsage-keyboard) for TP
-+ReportID-3	(Input Reports)	   (Vendor Usage: Max 10 finger data) for TP
-+ReportID-4	(Input Reports)	   (Vendor Usage: ON bit data) for GP
-+ReportID-5	(Feature Reports)  Feature Reports
-+ReportID-6	(Input Reports)	   (Vendor Usage: StickPointer data) for SP
-+ReportID-7	(Feature Reports)  Flash update (Bootloader)
-+==========	=================  =========================================
- 
- 
- Data pattern
- ------------
-+
-+=====	==========	=====	=================
- Case1	ReportID_1	TP/SP	Relative/Relative
- Case2	ReportID_3	TP	Absolute
- 	ReportID_6	SP	Absolute
-+=====	==========	=====	=================
- 
- 
- Command Read/Write
- ------------------
- To read/write to RAM, need to send a commands to the device.
-+
- The command format is as below.
- 
- DataByte(SET_REPORT)
-+
-+=====	======================
- Byte1	Command Byte
- Byte2	Address - Byte 0 (LSB)
- Byte3	Address - Byte 1
-@@ -61,13 +78,19 @@ Byte4	Address - Byte 2
- Byte5	Address - Byte 3 (MSB)
- Byte6	Value Byte
- Byte7	Checksum
-+=====	======================
- 
- Command Byte is read=0xD1/write=0xD2 .
-+
- Address is read/write RAM address.
-+
- Value Byte is writing data when you send the write commands.
-+
- When you read RAM, there is no meaning.
- 
- DataByte(GET_REPORT)
-+
-+=====	======================
- Byte1	Response Byte
- Byte2	Address - Byte 0 (LSB)
- Byte3	Address - Byte 1
-@@ -75,6 +98,7 @@ Byte4	Address - Byte 2
- Byte5	Address - Byte 3 (MSB)
- Byte6	Value Byte
- Byte7	Checksum
-+=====	======================
- 
- Read value is stored in Value Byte.
- 
-@@ -82,7 +106,11 @@ Read value is stored in Value Byte.
- Packet Format
- Touchpad data byte
- ------------------
--	b7	b6	b5	b4	b3	b2	b1	b0
-+
-+
-+======= ======= ======= ======= ======= ======= ======= ======= =====
-+-	b7	b6	b5	b4	b3	b2	b1	b0
-+======= ======= ======= ======= ======= ======= ======= ======= =====
- 1	0	0	SW6	SW5	SW4	SW3	SW2	SW1
- 2	0	0	0	Fcv	Fn3	Fn2	Fn1	Fn0
- 3	Xa0_7	Xa0_6	Xa0_5	Xa0_4	Xa0_3	Xa0_2	Xa0_1	Xa0_0
-@@ -114,17 +142,25 @@ Touchpad data byte
- 25	Ya4_7	Ya4_6	Ya4_5	Ya4_4	Ya4_3	Ya4_2	Ya4_1	Ya4_0
- 26	Ya4_15	Ya4_14	Ya4_13	Ya4_12	Ya4_11	Ya4_10	Ya4_9	Ya4_8
- 27	LFB4	Zs4_6	Zs4_5	Zs4_4	Zs4_3	Zs4_2	Zs4_1	Zs4_0
-+======= ======= ======= ======= ======= ======= ======= ======= =====
- 
- 
--SW1-SW6:	SW ON/OFF status
--Xan_15-0(16bit):X Absolute data of the "n"th finger
--Yan_15-0(16bit):Y Absolute data of the "n"th finger
--Zsn_6-0(7bit):	Operation area of the "n"th finger
-+SW1-SW6:
-+	SW ON/OFF status
-+Xan_15-0(16bit):
-+	X Absolute data of the "n"th finger
-+Yan_15-0(16bit):
-+	Y Absolute data of the "n"th finger
-+Zsn_6-0(7bit):
-+	Operation area of the "n"th finger
- 
- 
- StickPointer data byte
--------------------
--	b7	b6	b5	b4	b3	b2	b1	b0
-+----------------------
-+
-+======= ======= ======= ======= ======= ======= ======= ======= =====
-+-	b7	b6	b5	b4	b3	b2	b1	b0
-+======= ======= ======= ======= ======= ======= ======= ======= =====
- Byte1	1	1	1	0	1	SW3	SW2	SW1
- Byte2	X7	X6	X5	X4	X3	X2	X1	X0
- Byte3	X15	X14	X13	X12	X11	X10	X9	X8
-@@ -132,8 +168,13 @@ Byte4	Y7	Y6	Y5	Y4	Y3	Y2	Y1	Y0
- Byte5	Y15	Y14	Y13	Y12	Y11	Y10	Y9	Y8
- Byte6	Z7	Z6	Z5	Z4	Z3	Z2	Z1	Z0
- Byte7	T&P	Z14	Z13	Z12	Z11	Z10	Z9	Z8
-+======= ======= ======= ======= ======= ======= ======= ======= =====
- 
--SW1-SW3:	SW ON/OFF status
--Xn_15-0(16bit):X Absolute data
--Yn_15-0(16bit):Y Absolute data
--Zn_14-0(15bit):Z
-+SW1-SW3:
-+	SW ON/OFF status
-+Xn_15-0(16bit):
-+	X Absolute data
-+Yn_15-0(16bit):
-+	Y Absolute data
-+Zn_14-0(15bit):
-+	Z
-diff --git a/Documentation/hid/hid-sensor.txt b/Documentation/hid/hid-sensor.rst
-similarity index 61%
-rename from Documentation/hid/hid-sensor.txt
-rename to Documentation/hid/hid-sensor.rst
-index b287752a31cd..758972e34971 100644
---- a/Documentation/hid/hid-sensor.txt
-+++ b/Documentation/hid/hid-sensor.rst
-@@ -1,6 +1,6 @@
--
-+=====================
- HID Sensors Framework
--======================
-+=====================
- HID sensor framework provides necessary interfaces to implement sensor drivers,
- which are connected to a sensor hub. The sensor hub is a HID device and it provides
- a report descriptor conforming to HID 1.12 sensor usage tables.
-@@ -15,22 +15,22 @@ the drivers themselves."
- This specification describes many usage IDs, which describe the type of sensor
- and also the individual data fields. Each sensor can have variable number of
- data fields. The length and order is specified in the report descriptor. For
--example a part of report descriptor can look like:
-+example a part of report descriptor can look like::
- 
--   INPUT(1)[INPUT]
-- ..
--    Field(2)
--      Physical(0020.0073)
--      Usage(1)
--        0020.045f
--      Logical Minimum(-32767)
--      Logical Maximum(32767)
--      Report Size(8)
--      Report Count(1)
--      Report Offset(16)
--      Flags(Variable Absolute)
--..
--..
-+     INPUT(1)[INPUT]
-+   ..
-+      Field(2)
-+        Physical(0020.0073)
-+        Usage(1)
-+          0020.045f
-+        Logical Minimum(-32767)
-+        Logical Maximum(32767)
-+        Report Size(8)
-+        Report Count(1)
-+        Report Offset(16)
-+        Flags(Variable Absolute)
-+  ..
-+  ..
- 
- The report is indicating "sensor page (0x20)" contains an accelerometer-3D (0x73).
- This accelerometer-3D has some fields. Here for example field 2 is motion intensity
-@@ -40,13 +40,14 @@ data will use this format.
- 
- 
- Implementation
--=================
-+==============
- 
- This specification defines many different types of sensors with different sets of
- data fields. It is difficult to have a common input event to user space applications,
- for different sensors. For example an accelerometer can send X,Y and Z data, whereas
- an ambient light sensor can send illumination data.
- So the implementation has two parts:
-+
- - Core hid driver
- - Individual sensor processing part (sensor drivers)
- 
-@@ -55,8 +56,11 @@ Core driver
- The core driver registers (hid-sensor-hub) registers as a HID driver. It parses
- report descriptors and identifies all the sensors present. It adds an MFD device
- with name HID-SENSOR-xxxx (where xxxx is usage id from the specification).
--For example
-+
-+For example:
-+
- HID-SENSOR-200073 is registered for an Accelerometer 3D driver.
-+
- So if any driver with this name is inserted, then the probe routine for that
- function will be called. So an accelerometer processing driver can register
- with this name and will be probed if there is an accelerometer-3D detected.
-@@ -66,7 +70,8 @@ drivers to register and get events for that usage id. Also it provides parsing
- functions, which get and set each input/feature/output report.
- 
- Individual sensor processing part (sensor drivers)
-------------
-+--------------------------------------------------
-+
- The processing driver will use an interface provided by the core driver to parse
- the report and get the indexes of the fields and also can get events. This driver
- can use IIO interface to use the standard ABI defined for a type of sensor.
-@@ -75,31 +80,34 @@ can use IIO interface to use the standard ABI defined for a type of sensor.
- Core driver Interface
- =====================
- 
--Callback structure:
--Each processing driver can use this structure to set some callbacks.
-+Callback structure::
-+
-+  Each processing driver can use this structure to set some callbacks.
- 	int (*suspend)(..): Callback when HID suspend is received
- 	int (*resume)(..): Callback when HID resume is received
- 	int (*capture_sample)(..): Capture a sample for one of its data fields
- 	int (*send_event)(..): One complete event is received which can have
-                                multiple data fields.
- 
--Registration functions:
--int sensor_hub_register_callback(struct hid_sensor_hub_device *hsdev,
-+Registration functions::
-+
-+  int sensor_hub_register_callback(struct hid_sensor_hub_device *hsdev,
- 			u32 usage_id,
- 			struct hid_sensor_hub_callbacks *usage_callback):
- 
- Registers callbacks for an usage id. The callback functions are not allowed
--to sleep.
-+to sleep::
- 
- 
--int sensor_hub_remove_callback(struct hid_sensor_hub_device *hsdev,
-+  int sensor_hub_remove_callback(struct hid_sensor_hub_device *hsdev,
- 			u32 usage_id):
- 
- Removes callbacks for an usage id.
- 
- 
--Parsing function:
--int sensor_hub_input_get_attribute_info(struct hid_sensor_hub_device *hsdev,
-+Parsing function::
-+
-+  int sensor_hub_input_get_attribute_info(struct hid_sensor_hub_device *hsdev,
- 			u8 type,
- 			u32 usage_id, u32 attr_usage_id,
- 			struct hid_sensor_hub_attribute_info *info);
-@@ -110,26 +118,27 @@ so that fields can be set or get individually.
- These indexes avoid searching every time and getting field index to get or set.
- 
- 
--Set Feature report
--int sensor_hub_set_feature(struct hid_sensor_hub_device *hsdev, u32 report_id,
-+Set Feature report::
-+
-+  int sensor_hub_set_feature(struct hid_sensor_hub_device *hsdev, u32 report_id,
- 			u32 field_index, s32 value);
- 
- This interface is used to set a value for a field in feature report. For example
- if there is a field report_interval, which is parsed by a call to
--sensor_hub_input_get_attribute_info before, then it can directly set that individual
--field.
-+sensor_hub_input_get_attribute_info before, then it can directly set that
-+individual field::
- 
- 
--int sensor_hub_get_feature(struct hid_sensor_hub_device *hsdev, u32 report_id,
-+  int sensor_hub_get_feature(struct hid_sensor_hub_device *hsdev, u32 report_id,
- 			u32 field_index, s32 *value);
- 
- This interface is used to get a value for a field in input report. For example
- if there is a field report_interval, which is parsed by a call to
--sensor_hub_input_get_attribute_info before, then it can directly get that individual
--field value.
-+sensor_hub_input_get_attribute_info before, then it can directly get that
-+individual field value::
- 
- 
--int sensor_hub_input_attr_get_raw_value(struct hid_sensor_hub_device *hsdev,
-+  int sensor_hub_input_attr_get_raw_value(struct hid_sensor_hub_device *hsdev,
- 			u32 usage_id,
- 			u32 attr_usage_id, u32 report_id);
- 
-@@ -143,6 +152,8 @@ registered callback function to process the sample.
- ----------
- 
- HID Custom and generic Sensors
-+------------------------------
-+
- 
- HID Sensor specification defines two special sensor usage types. Since they
- don't represent a standard sensor, it is not possible to define using Linux IIO
-@@ -158,66 +169,73 @@ keyboard attached/detached or lid open/close.
- To allow application to utilize these sensors, here they are exported uses sysfs
- attribute groups, attributes and misc device interface.
- 
--An example of this representation on sysfs:
--/sys/devices/pci0000:00/INT33C2:00/i2c-0/i2c-INT33D1:00/0018:8086:09FA.0001/HID-SENSOR-2000e1.6.auto$ tree -R
--.
--????????? enable_sensor
--????????? feature-0-200316
--??????? ????????? feature-0-200316-maximum
--??????? ????????? feature-0-200316-minimum
--??????? ????????? feature-0-200316-name
--??????? ????????? feature-0-200316-size
--??????? ????????? feature-0-200316-unit-expo
--??????? ????????? feature-0-200316-units
--??????? ????????? feature-0-200316-value
--????????? feature-1-200201
--??????? ????????? feature-1-200201-maximum
--??????? ????????? feature-1-200201-minimum
--??????? ????????? feature-1-200201-name
--??????? ????????? feature-1-200201-size
--??????? ????????? feature-1-200201-unit-expo
--??????? ????????? feature-1-200201-units
--??????? ????????? feature-1-200201-value
--????????? input-0-200201
--??????? ????????? input-0-200201-maximum
--??????? ????????? input-0-200201-minimum
--??????? ????????? input-0-200201-name
--??????? ????????? input-0-200201-size
--??????? ????????? input-0-200201-unit-expo
--??????? ????????? input-0-200201-units
--??????? ????????? input-0-200201-value
--????????? input-1-200202
--??????? ????????? input-1-200202-maximum
--??????? ????????? input-1-200202-minimum
--??????? ????????? input-1-200202-name
--??????? ????????? input-1-200202-size
--??????? ????????? input-1-200202-unit-expo
--??????? ????????? input-1-200202-units
--??????? ????????? input-1-200202-value
-+An example of this representation on sysfs::
-+
-+  /sys/devices/pci0000:00/INT33C2:00/i2c-0/i2c-INT33D1:00/0018:8086:09FA.0001/HID-SENSOR-2000e1.6.auto$ tree -R
-+  .
-+  │   ├──  enable_sensor
-+  │   │   ├── feature-0-200316
-+  │   │   │   ├── feature-0-200316-maximum
-+  │   │   │   ├── feature-0-200316-minimum
-+  │   │   │   ├── feature-0-200316-name
-+  │   │   │   ├── feature-0-200316-size
-+  │   │   │   ├── feature-0-200316-unit-expo
-+  │   │   │   ├── feature-0-200316-units
-+  │   │   │   ├── feature-0-200316-value
-+  │   │   ├── feature-1-200201
-+  │   │   │   ├── feature-1-200201-maximum
-+  │   │   │   ├── feature-1-200201-minimum
-+  │   │   │   ├── feature-1-200201-name
-+  │   │   │   ├── feature-1-200201-size
-+  │   │   │   ├── feature-1-200201-unit-expo
-+  │   │   │   ├── feature-1-200201-units
-+  │   │   │   ├── feature-1-200201-value
-+  │   │   ├── input-0-200201
-+  │   │   │   ├── input-0-200201-maximum
-+  │   │   │   ├── input-0-200201-minimum
-+  │   │   │   ├── input-0-200201-name
-+  │   │   │   ├── input-0-200201-size
-+  │   │   │   ├── input-0-200201-unit-expo
-+  │   │   │   ├── input-0-200201-units
-+  │   │   │   ├── input-0-200201-value
-+  │   │   ├── input-1-200202
-+  │   │   │   ├── input-1-200202-maximum
-+  │   │   │   ├── input-1-200202-minimum
-+  │   │   │   ├── input-1-200202-name
-+  │   │   │   ├── input-1-200202-size
-+  │   │   │   ├── input-1-200202-unit-expo
-+  │   │   │   ├── input-1-200202-units
-+  │   │   │   ├── input-1-200202-value
- 
- Here there is a custom sensors with four fields, two feature and two inputs.
- Each field is represented by a set of attributes. All fields except the "value"
- are read only. The value field is a RW field.
--Example
--/sys/bus/platform/devices/HID-SENSOR-2000e1.6.auto/feature-0-200316$ grep -r . *
--feature-0-200316-maximum:6
--feature-0-200316-minimum:0
--feature-0-200316-name:property-reporting-state
--feature-0-200316-size:1
--feature-0-200316-unit-expo:0
--feature-0-200316-units:25
--feature-0-200316-value:1
-+
-+Example::
-+
-+  /sys/bus/platform/devices/HID-SENSOR-2000e1.6.auto/feature-0-200316$ grep -r . *
-+  feature-0-200316-maximum:6
-+  feature-0-200316-minimum:0
-+  feature-0-200316-name:property-reporting-state
-+  feature-0-200316-size:1
-+  feature-0-200316-unit-expo:0
-+  feature-0-200316-units:25
-+  feature-0-200316-value:1
- 
- How to enable such sensor?
-+^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
- By default sensor can be power gated. To enable sysfs attribute "enable" can be
--used.
--$ echo 1 > enable_sensor
-+used::
-+
-+	$ echo 1 > enable_sensor
- 
- Once enabled and powered on, sensor can report value using HID reports.
--These reports are pushed using misc device interface in a FIFO order.
--/dev$ tree | grep HID-SENSOR-2000e1.6.auto
--??????? ????????? 10:53 -> ../HID-SENSOR-2000e1.6.auto
--????????? HID-SENSOR-2000e1.6.auto
-+These reports are pushed using misc device interface in a FIFO order::
-+
-+	/dev$ tree | grep HID-SENSOR-2000e1.6.auto
-+	│   │   │   ├── 10:53 -> ../HID-SENSOR-2000e1.6.auto
-+	│   ├──  HID-SENSOR-2000e1.6.auto
- 
- Each reports can be of variable length preceded by a header. This header
- consist of a 32 bit usage id, 64 bit time stamp and 32 bit length field of raw
-diff --git a/Documentation/hid/hid-transport.txt b/Documentation/hid/hid-transport.rst
-similarity index 93%
-rename from Documentation/hid/hid-transport.txt
-rename to Documentation/hid/hid-transport.rst
-index 3dcba9fd4a3a..6f3aaa86ce7b 100644
---- a/Documentation/hid/hid-transport.txt
-+++ b/Documentation/hid/hid-transport.rst
-@@ -1,5 +1,6 @@
--                          HID I/O Transport Drivers
--                         ===========================
-+=========================
-+HID I/O Transport Drivers
-+=========================
- 
- The HID subsystem is independent of the underlying transport driver. Initially,
- only USB was supported, but other specifications adopted the HID design and
-@@ -16,6 +17,8 @@ transport and device setup/management. HID core is responsible of
- report-parsing, report interpretation and the user-space API. Device specifics
- and quirks are handled by all layers depending on the quirk.
- 
-+::
-+
-  +-----------+  +-----------+            +-----------+  +-----------+
-  | Device #1 |  | Device #i |            | Device #j |  | Device #k |
-  +-----------+  +-----------+            +-----------+  +-----------+
-@@ -42,8 +45,9 @@ and quirks are handled by all layers depending on the quirk.
-  +----------------+  +-----------+  +------------------+  +------------------+
- 
- Example Drivers:
--  I/O: USB, I2C, Bluetooth-l2cap
--  Transport: USB-HID, I2C-HID, BT-HIDP
-+
-+  - I/O: USB, I2C, Bluetooth-l2cap
-+  - Transport: USB-HID, I2C-HID, BT-HIDP
- 
- Everything below "HID Core" is simplified in this graph as it is only of
- interest to HID device drivers. Transport drivers do not need to know the
-@@ -183,7 +187,7 @@ Other ctrl-channel requests are supported by USB-HID but are not available
- -------------------
- 
- Transport drivers normally use the following procedure to register a new device
--with HID core:
-+with HID core::
- 
- 	struct hid_device *hid;
- 	int ret;
-@@ -215,7 +219,7 @@ Once hid_add_device() is entered, HID core might use the callbacks provided in
- "custom_ll_driver". Note that fields like "country" can be ignored by underlying
- transport-drivers if not supported.
- 
--To unregister a device, use:
-+To unregister a device, use::
- 
- 	hid_destroy_device(hid);
- 
-@@ -226,73 +230,110 @@ driver callbacks.
- -----------------------------
- 
- The available HID callbacks are:
-- - int (*start) (struct hid_device *hdev)
-+
-+   ::
-+
-+      int (*start) (struct hid_device *hdev)
-+
-    Called from HID device drivers once they want to use the device. Transport
-    drivers can choose to setup their device in this callback. However, normally
-    devices are already set up before transport drivers register them to HID core
-    so this is mostly only used by USB-HID.
- 
-- - void (*stop) (struct hid_device *hdev)
-+   ::
-+
-+      void (*stop) (struct hid_device *hdev)
-+
-    Called from HID device drivers once they are done with a device. Transport
-    drivers can free any buffers and deinitialize the device. But note that
-    ->start() might be called again if another HID device driver is loaded on the
-    device.
-+
-    Transport drivers are free to ignore it and deinitialize devices after they
-    destroyed them via hid_destroy_device().
- 
-- - int (*open) (struct hid_device *hdev)
-+   ::
-+
-+      int (*open) (struct hid_device *hdev)
-+
-    Called from HID device drivers once they are interested in data reports.
-    Usually, while user-space didn't open any input API/etc., device drivers are
-    not interested in device data and transport drivers can put devices asleep.
-    However, once ->open() is called, transport drivers must be ready for I/O.
-    ->open() calls are nested for each client that opens the HID device.
- 
-- - void (*close) (struct hid_device *hdev)
-+   ::
-+
-+      void (*close) (struct hid_device *hdev)
-+
-    Called from HID device drivers after ->open() was called but they are no
-    longer interested in device reports. (Usually if user-space closed any input
-    devices of the driver).
-+
-    Transport drivers can put devices asleep and terminate any I/O of all
-    ->open() calls have been followed by a ->close() call. However, ->start() may
-    be called again if the device driver is interested in input reports again.
- 
-- - int (*parse) (struct hid_device *hdev)
-+   ::
-+
-+      int (*parse) (struct hid_device *hdev)
-+
-    Called once during device setup after ->start() has been called. Transport
-    drivers must read the HID report-descriptor from the device and tell HID core
-    about it via hid_parse_report().
- 
-- - int (*power) (struct hid_device *hdev, int level)
-+   ::
-+
-+      int (*power) (struct hid_device *hdev, int level)
-+
-    Called by HID core to give PM hints to transport drivers. Usually this is
-    analogical to the ->open() and ->close() hints and redundant.
- 
-- - void (*request) (struct hid_device *hdev, struct hid_report *report,
--                    int reqtype)
-+   ::
-+
-+      void (*request) (struct hid_device *hdev, struct hid_report *report,
-+		       int reqtype)
-+
-    Send an HID request on the ctrl channel. "report" contains the report that
-    should be sent and "reqtype" the request type. Request-type can be
-    HID_REQ_SET_REPORT or HID_REQ_GET_REPORT.
-+
-    This callback is optional. If not provided, HID core will assemble a raw
-    report following the HID specs and send it via the ->raw_request() callback.
-    The transport driver is free to implement this asynchronously.
- 
-- - int (*wait) (struct hid_device *hdev)
-+   ::
-+
-+      int (*wait) (struct hid_device *hdev)
-+
-    Used by HID core before calling ->request() again. A transport driver can use
-    it to wait for any pending requests to complete if only one request is
-    allowed at a time.
- 
-- - int (*raw_request) (struct hid_device *hdev, unsigned char reportnum,
--                       __u8 *buf, size_t count, unsigned char rtype,
--                       int reqtype)
-+   ::
-+
-+      int (*raw_request) (struct hid_device *hdev, unsigned char reportnum,
-+                          __u8 *buf, size_t count, unsigned char rtype,
-+                          int reqtype)
-+
-    Same as ->request() but provides the report as raw buffer. This request shall
-    be synchronous. A transport driver must not use ->wait() to complete such
-    requests. This request is mandatory and hid core will reject the device if
-    it is missing.
- 
-- - int (*output_report) (struct hid_device *hdev, __u8 *buf, size_t len)
-+   ::
-+
-+      int (*output_report) (struct hid_device *hdev, __u8 *buf, size_t len)
-+
-    Send raw output report via intr channel. Used by some HID device drivers
-    which require high throughput for outgoing requests on the intr channel. This
-    must not cause SET_REPORT calls! This must be implemented as asynchronous
-    output report on the intr channel!
- 
-- - int (*idle) (struct hid_device *hdev, int report, int idle, int reqtype)
-+   ::
-+
-+      int (*idle) (struct hid_device *hdev, int report, int idle, int reqtype)
-+
-    Perform SET/GET_IDLE request. Only used by USB-HID, do not implement!
- 
- 2.3) Data Path
-@@ -314,4 +355,5 @@ transport driver and not passed to hid_input_report().
- Acknowledgements to SET_REPORT requests are not of interest to HID core.
- 
- ----------------------------------------------------
-+
- Written 2013, David Herrmann <dh.herrmann@gmail.com>
-diff --git a/Documentation/hid/hiddev.txt b/Documentation/hid/hiddev.rst
-similarity index 80%
-rename from Documentation/hid/hiddev.txt
-rename to Documentation/hid/hiddev.rst
-index 638448707aa2..16c663530db2 100644
---- a/Documentation/hid/hiddev.txt
-+++ b/Documentation/hid/hiddev.rst
-@@ -1,6 +1,9 @@
+diff --git a/Documentation/ABI/testing/sysfs-kernel-uids b/Documentation/ABI/testing/sysfs-kernel-uids
+index 28f14695a852..4182b7061816 100644
+--- a/Documentation/ABI/testing/sysfs-kernel-uids
++++ b/Documentation/ABI/testing/sysfs-kernel-uids
+@@ -11,4 +11,4 @@ Description:
+ 		example would be, if User A has shares = 1024 and user
+ 		B has shares = 2048, User B will get twice the CPU
+ 		bandwidth user A will. For more details refer
+-		Documentation/scheduler/sched-design-CFS.txt
++		Documentation/scheduler/sched-design-CFS.rst
+diff --git a/Documentation/scheduler/completion.txt b/Documentation/scheduler/completion.rst
+similarity index 94%
+rename from Documentation/scheduler/completion.txt
+rename to Documentation/scheduler/completion.rst
+index e5b9df4d8078..9f039b4f4b09 100644
+--- a/Documentation/scheduler/completion.txt
++++ b/Documentation/scheduler/completion.rst
+@@ -1,3 +1,4 @@
 +================================================
- Care and feeding of your Human Interface Devices
-+================================================
+ Completions - "wait for completion" barrier APIs
+ ================================================
  
--INTRODUCTION
-+Introduction
-+============
+@@ -46,7 +47,7 @@ it has to wait for it.
  
- In addition to the normal input type HID devices, USB also uses the
- human interface device protocols for things that are not really human
-@@ -16,7 +19,7 @@ normalised event interface - see Documentation/input/input.rst
- * the hiddev interface, which provides fairly raw HID events
+ To use completions you need to #include <linux/completion.h> and
+ create a static or dynamic variable of type 'struct completion',
+-which has only two fields:
++which has only two fields::
  
- The data flow for a HID event produced by a device is something like
--the following :
-+the following::
+ 	struct completion {
+ 		unsigned int done;
+@@ -57,7 +58,7 @@ This provides the ->wait waitqueue to place tasks on for waiting (if any), and
+ the ->done completion flag for indicating whether it's completed or not.
  
-  usb.c ---> hid-core.c  ----> hid-input.c ----> [keyboard/mouse/joystick/event]
-                          |
-@@ -27,27 +30,29 @@ In addition, other subsystems (apart from USB) can potentially feed
- events into the input subsystem, but these have no effect on the hid
- device interface.
+ Completions should be named to refer to the event that is being synchronized on.
+-A good example is:
++A good example is::
  
--USING THE HID DEVICE INTERFACE
-+Using the HID Device Interface
-+==============================
+ 	wait_for_completion(&early_console_added);
  
- The hiddev interface is a char interface using the normal USB major,
- with the minor numbers starting at 96 and finishing at 111. Therefore,
--you need the following commands:
--mknod /dev/usb/hiddev0 c 180 96
--mknod /dev/usb/hiddev1 c 180 97
--mknod /dev/usb/hiddev2 c 180 98
--mknod /dev/usb/hiddev3 c 180 99
--mknod /dev/usb/hiddev4 c 180 100
--mknod /dev/usb/hiddev5 c 180 101
--mknod /dev/usb/hiddev6 c 180 102
--mknod /dev/usb/hiddev7 c 180 103
--mknod /dev/usb/hiddev8 c 180 104
--mknod /dev/usb/hiddev9 c 180 105
--mknod /dev/usb/hiddev10 c 180 106
--mknod /dev/usb/hiddev11 c 180 107
--mknod /dev/usb/hiddev12 c 180 108
--mknod /dev/usb/hiddev13 c 180 109
--mknod /dev/usb/hiddev14 c 180 110
--mknod /dev/usb/hiddev15 c 180 111
-+you need the following commands::
-+
-+	mknod /dev/usb/hiddev0 c 180 96
-+	mknod /dev/usb/hiddev1 c 180 97
-+	mknod /dev/usb/hiddev2 c 180 98
-+	mknod /dev/usb/hiddev3 c 180 99
-+	mknod /dev/usb/hiddev4 c 180 100
-+	mknod /dev/usb/hiddev5 c 180 101
-+	mknod /dev/usb/hiddev6 c 180 102
-+	mknod /dev/usb/hiddev7 c 180 103
-+	mknod /dev/usb/hiddev8 c 180 104
-+	mknod /dev/usb/hiddev9 c 180 105
-+	mknod /dev/usb/hiddev10 c 180 106
-+	mknod /dev/usb/hiddev11 c 180 107
-+	mknod /dev/usb/hiddev12 c 180 108
-+	mknod /dev/usb/hiddev13 c 180 109
-+	mknod /dev/usb/hiddev14 c 180 110
-+	mknod /dev/usb/hiddev15 c 180 111
+@@ -81,7 +82,7 @@ have taken place, even if these wait functions return prematurely due to a timeo
+ or a signal triggering.
  
- So you point your hiddev compliant user-space program at the correct
- interface for your device, and it all just works.
-@@ -56,7 +61,9 @@ Assuming that you have a hiddev compliant user-space program, of
- course. If you need to write one, read on.
+ Initializing of dynamically allocated completion objects is done via a call to
+-init_completion():
++init_completion()::
+ 
+ 	init_completion(&dynamic_object->done);
+ 
+@@ -100,7 +101,8 @@ but be aware of other races.
+ 
+ For static declaration and initialization, macros are available.
+ 
+-For static (or global) declarations in file scope you can use DECLARE_COMPLETION():
++For static (or global) declarations in file scope you can use
++DECLARE_COMPLETION()::
+ 
+ 	static DECLARE_COMPLETION(setup_done);
+ 	DECLARE_COMPLETION(setup_done);
+@@ -111,7 +113,7 @@ initialized to 'not done' and doesn't require an init_completion() call.
+ When a completion is declared as a local variable within a function,
+ then the initialization should always use DECLARE_COMPLETION_ONSTACK()
+ explicitly, not just to make lockdep happy, but also to make it clear
+-that limited scope had been considered and is intentional:
++that limited scope had been considered and is intentional::
+ 
+ 	DECLARE_COMPLETION_ONSTACK(setup_done)
+ 
+@@ -140,11 +142,11 @@ Waiting for completions:
+ ------------------------
+ 
+ For a thread to wait for some concurrent activity to finish, it
+-calls wait_for_completion() on the initialized completion structure:
++calls wait_for_completion() on the initialized completion structure::
+ 
+ 	void wait_for_completion(struct completion *done)
+ 
+-A typical usage scenario is:
++A typical usage scenario is::
+ 
+ 	CPU#1					CPU#2
+ 
+@@ -192,17 +194,17 @@ A common problem that occurs is to have unclean assignment of return types,
+ so take care to assign return-values to variables of the proper type.
+ 
+ Checking for the specific meaning of return values also has been found
+-to be quite inaccurate, e.g. constructs like:
++to be quite inaccurate, e.g. constructs like::
+ 
+ 	if (!wait_for_completion_interruptible_timeout(...))
+ 
+ ... would execute the same code path for successful completion and for the
+-interrupted case - which is probably not what you want.
++interrupted case - which is probably not what you want::
+ 
+ 	int wait_for_completion_interruptible(struct completion *done)
+ 
+ This function marks the task TASK_INTERRUPTIBLE while it is waiting.
+-If a signal was received while waiting it will return -ERESTARTSYS; 0 otherwise.
++If a signal was received while waiting it will return -ERESTARTSYS; 0 otherwise::
+ 
+ 	unsigned long wait_for_completion_timeout(struct completion *done, unsigned long timeout)
+ 
+@@ -214,7 +216,7 @@ Timeouts are preferably calculated with msecs_to_jiffies() or usecs_to_jiffies()
+ to make the code largely HZ-invariant.
+ 
+ If the returned timeout value is deliberately ignored a comment should probably explain
+-why (e.g. see drivers/mfd/wm8350-core.c wm8350_read_auxadc()).
++why (e.g. see drivers/mfd/wm8350-core.c wm8350_read_auxadc())::
+ 
+ 	long wait_for_completion_interruptible_timeout(struct completion *done, unsigned long timeout)
+ 
+@@ -225,14 +227,14 @@ jiffies if completion occurred.
+ 
+ Further variants include _killable which uses TASK_KILLABLE as the
+ designated tasks state and will return -ERESTARTSYS if it is interrupted,
+-or 0 if completion was achieved.  There is a _timeout variant as well:
++or 0 if completion was achieved.  There is a _timeout variant as well::
+ 
+ 	long wait_for_completion_killable(struct completion *done)
+ 	long wait_for_completion_killable_timeout(struct completion *done, unsigned long timeout)
+ 
+ The _io variants wait_for_completion_io() behave the same as the non-_io
+ variants, except for accounting waiting time as 'waiting on IO', which has
+-an impact on how the task is accounted in scheduling/IO stats:
++an impact on how the task is accounted in scheduling/IO stats::
+ 
+ 	void wait_for_completion_io(struct completion *done)
+ 	unsigned long wait_for_completion_io_timeout(struct completion *done, unsigned long timeout)
+@@ -243,11 +245,11 @@ Signaling completions:
+ 
+ A thread that wants to signal that the conditions for continuation have been
+ achieved calls complete() to signal exactly one of the waiters that it can
+-continue:
++continue::
+ 
+ 	void complete(struct completion *done)
+ 
+-... or calls complete_all() to signal all current and future waiters:
++... or calls complete_all() to signal all current and future waiters::
+ 
+ 	void complete_all(struct completion *done)
+ 
+@@ -268,7 +270,7 @@ probably are a design bug.
+ 
+ Signaling completion from IRQ context is fine as it will appropriately
+ lock with spin_lock_irqsave()/spin_unlock_irqrestore() and it will never
+-sleep. 
++sleep.
  
  
--THE HIDDEV API
-+The HIDDEV API
-+==============
-+
- This description should be read in conjunction with the HID
- specification, freely available from http://www.usb.org, and
- conveniently linked of http://www.linux-usb.org.
-@@ -69,12 +76,14 @@ each of which can have one or more "usages".  In the hid-core,
- each one of these usages has a single signed 32 bit value.
+ try_wait_for_completion()/completion_done():
+@@ -276,14 +278,14 @@ try_wait_for_completion()/completion_done():
  
- read():
-+-------
-+
- This is the event interface.  When the HID device's state changes,
- it performs an interrupt transfer containing a report which contains
- the changed value.  The hid-core.c module parses the report, and
- returns to hiddev.c the individual usages that have changed within
- the report.  In its basic mode, the hiddev will make these individual
--usage changes available to the reader using a struct hiddev_event:
-+usage changes available to the reader using a struct hiddev_event::
+ The try_wait_for_completion() function will not put the thread on the wait
+ queue but rather returns false if it would need to enqueue (block) the thread,
+-else it consumes one posted completion and returns true.
++else it consumes one posted completion and returns true::
  
-        struct hiddev_event {
-            unsigned hid;
-@@ -91,12 +100,18 @@ ioctl() described below.
+ 	bool try_wait_for_completion(struct completion *done)
  
+ Finally, to check the state of a completion without changing it in any way,
+ call completion_done(), which returns false if there are no posted
+ completions that were not yet consumed by waiters (implying that there are
+-waiters) and true otherwise;
++waiters) and true otherwise::
  
- ioctl(): 
-+--------
-+
- This is the control interface. There are a number of controls: 
+ 	bool completion_done(struct completion *done)
  
--HIDIOCGVERSION - int (read)
--Gets the version code out of the hiddev driver.
-+HIDIOCGVERSION
-+  - int (read)
-+
-+ Gets the version code out of the hiddev driver.
-+
-+HIDIOCAPPLICATION
-+  - (none)
- 
--HIDIOCAPPLICATION - (none)
- This ioctl call returns the HID application usage associated with the
- hid device. The third argument to ioctl() specifies which application
- index to get. This is useful when the device has more than one
-@@ -106,7 +121,9 @@ returns -1. You can find out beforehand how many application
- collections the device has from the num_applications field from the
- hiddev_devinfo structure. 
- 
--HIDIOCGCOLLECTIONINFO - struct hiddev_collection_info (read/write)
-+HIDIOCGCOLLECTIONINFO
-+  - struct hiddev_collection_info (read/write)
-+
- This returns a superset of the information above, providing not only
- application collections, but all the collections the device has.  It
- also returns the level the collection lives in the hierarchy.
-@@ -115,14 +132,20 @@ field set to the index that should be returned.  The ioctl fills in
- the other fields.  If the index is larger than the last collection 
- index, the ioctl returns -1 and sets errno to -EINVAL.
- 
--HIDIOCGDEVINFO - struct hiddev_devinfo (read)
-+HIDIOCGDEVINFO
-+  - struct hiddev_devinfo (read)
-+
- Gets a hiddev_devinfo structure which describes the device.
- 
--HIDIOCGSTRING - struct hiddev_string_descriptor (read/write)
-+HIDIOCGSTRING
-+  - struct hiddev_string_descriptor (read/write)
-+
- Gets a string descriptor from the device. The caller must fill in the
- "index" field to indicate which descriptor should be returned.
- 
--HIDIOCINITREPORT - (none)
-+HIDIOCINITREPORT
-+  - (none)
-+
- Instructs the kernel to retrieve all input and feature report values
- from the device. At this point, all the usage structures will contain
- current values for the device, and will maintain it as the device
-@@ -130,21 +153,29 @@ changes.  Note that the use of this ioctl is unnecessary in general,
- since later kernels automatically initialize the reports from the
- device at attach time.
- 
--HIDIOCGNAME - string (variable length)
-+HIDIOCGNAME
-+  - string (variable length)
-+
- Gets the device name
- 
--HIDIOCGREPORT - struct hiddev_report_info (write)
-+HIDIOCGREPORT
-+  - struct hiddev_report_info (write)
-+
- Instructs the kernel to get a feature or input report from the device,
- in order to selectively update the usage structures (in contrast to
- INITREPORT).
- 
--HIDIOCSREPORT - struct hiddev_report_info (write)
-+HIDIOCSREPORT
-+  - struct hiddev_report_info (write)
-+
- Instructs the kernel to send a report to the device. This report can
- be filled in by the user through HIDIOCSUSAGE calls (below) to fill in
- individual usage values in the report before sending the report in full
- to the device. 
- 
--HIDIOCGREPORTINFO - struct hiddev_report_info (read/write)
-+HIDIOCGREPORTINFO
-+  - struct hiddev_report_info (read/write)
-+
- Fills in a hiddev_report_info structure for the user. The report is
- looked up by type (input, output or feature) and id, so these fields
- must be filled in by the user. The ID can be absolute -- the actual
-@@ -156,19 +187,25 @@ use the relative IDs above to enumerate the valid IDs. The ioctl
- returns non-zero when there is no more next ID. The real report ID is
- filled into the returned hiddev_report_info structure. 
- 
--HIDIOCGFIELDINFO - struct hiddev_field_info (read/write)
-+HIDIOCGFIELDINFO
-+  - struct hiddev_field_info (read/write)
-+
- Returns the field information associated with a report in a
- hiddev_field_info structure. The user must fill in report_id and
- report_type in this structure, as above. The field_index should also
- be filled in, which should be a number from 0 and maxfield-1, as
- returned from a previous HIDIOCGREPORTINFO call. 
- 
--HIDIOCGUCODE - struct hiddev_usage_ref (read/write)
-+HIDIOCGUCODE
-+  - struct hiddev_usage_ref (read/write)
-+
- Returns the usage_code in a hiddev_usage_ref structure, given that
- given its report type, report id, field index, and index within the
- field have already been filled into the structure.
- 
--HIDIOCGUSAGE - struct hiddev_usage_ref (read/write)
-+HIDIOCGUSAGE
-+  - struct hiddev_usage_ref (read/write)
-+
- Returns the value of a usage in a hiddev_usage_ref structure. The
- usage to be retrieved can be specified as above, or the user can
- choose to fill in the report_type field and specify the report_id as
-@@ -176,28 +213,37 @@ HID_REPORT_ID_UNKNOWN. In this case, the hiddev_usage_ref will be
- filled in with the report and field information associated with this
- usage if it is found. 
- 
--HIDIOCSUSAGE - struct hiddev_usage_ref (write)
-+HIDIOCSUSAGE
-+  - struct hiddev_usage_ref (write)
-+
- Sets the value of a usage in an output report.  The user fills in
- the hiddev_usage_ref structure as above, but additionally fills in
- the value field.
- 
--HIDIOGCOLLECTIONINDEX - struct hiddev_usage_ref (write)
-+HIDIOGCOLLECTIONINDEX
-+  - struct hiddev_usage_ref (write)
-+
- Returns the collection index associated with this usage.  This
- indicates where in the collection hierarchy this usage sits.
- 
--HIDIOCGFLAG - int (read)
--HIDIOCSFLAG - int (write)
-+HIDIOCGFLAG
-+  - int (read)
-+HIDIOCSFLAG
-+  - int (write)
-+
- These operations respectively inspect and replace the mode flags
- that influence the read() call above.  The flags are as follows:
- 
--    HIDDEV_FLAG_UREF - read() calls will now return 
-+    HIDDEV_FLAG_UREF
-+      - read() calls will now return
-         struct hiddev_usage_ref instead of struct hiddev_event.
-         This is a larger structure, but in situations where the
-         device has more than one usage in its reports with the
-         same usage code, this mode serves to resolve such
-         ambiguity.
- 
--    HIDDEV_FLAG_REPORT - This flag can only be used in conjunction
-+    HIDDEV_FLAG_REPORT
-+      - This flag can only be used in conjunction
-         with HIDDEV_FLAG_UREF.  With this flag set, when the device
-         sends a report, a struct hiddev_usage_ref will be returned
-         to read() filled in with the report_type and report_id, but 
-diff --git a/Documentation/hid/hidraw.txt b/Documentation/hid/hidraw.rst
-similarity index 89%
-rename from Documentation/hid/hidraw.txt
-rename to Documentation/hid/hidraw.rst
-index c8436e354f44..4a4a0ba1f362 100644
---- a/Documentation/hid/hidraw.txt
-+++ b/Documentation/hid/hidraw.rst
-@@ -1,5 +1,6 @@
--      HIDRAW - Raw Access to USB and Bluetooth Human Interface Devices
--     ==================================================================
-+================================================================
-+HIDRAW - Raw Access to USB and Bluetooth Human Interface Devices
-+================================================================
- 
- The hidraw driver provides a raw interface to USB and Bluetooth Human
- Interface Devices (HIDs).  It differs from hiddev in that reports sent and
-@@ -31,6 +32,7 @@ directly under /dev (eg: /dev/hidraw0).  As this location is distribution-
- and udev rule-dependent, applications should use libudev to locate hidraw
- devices attached to the system.  There is a tutorial on libudev with a
- working example at:
-+
- 	http://www.signal11.us/oss/udev/
- 
- The HIDRAW API
-@@ -51,7 +53,7 @@ byte.  For devices which do not use numbered reports, the report data
- will begin at the first byte.
- 
- write()
----------
-+-------
- The write() function will write a report to the device. For USB devices, if
- the device has an INTERRUPT OUT endpoint, the report will be sent on that
- endpoint. If it does not, the report will be sent over the control endpoint,
-@@ -62,38 +64,52 @@ number.  If the device does not use numbered reports, the first byte should
- be set to 0. The report data itself should begin at the second byte.
- 
- ioctl()
----------
-+-------
- Hidraw supports the following ioctls:
- 
--HIDIOCGRDESCSIZE: Get Report Descriptor Size
-+HIDIOCGRDESCSIZE:
-+	Get Report Descriptor Size
-+
- This ioctl will get the size of the device's report descriptor.
- 
--HIDIOCGRDESC: Get Report Descriptor
-+HIDIOCGRDESC:
-+	Get Report Descriptor
-+
- This ioctl returns the device's report descriptor using a
- hidraw_report_descriptor struct.  Make sure to set the size field of the
- hidraw_report_descriptor struct to the size returned from HIDIOCGRDESCSIZE.
- 
--HIDIOCGRAWINFO: Get Raw Info
-+HIDIOCGRAWINFO:
-+	Get Raw Info
-+
- This ioctl will return a hidraw_devinfo struct containing the bus type, the
- vendor ID (VID), and product ID (PID) of the device. The bus type can be one
--of:
--	BUS_USB
--	BUS_HIL
--	BUS_BLUETOOTH
--	BUS_VIRTUAL
-+of::
-+
-+	- BUS_USB
-+	- BUS_HIL
-+	- BUS_BLUETOOTH
-+	- BUS_VIRTUAL
-+
- which are defined in uapi/linux/input.h.
- 
--HIDIOCGRAWNAME(len): Get Raw Name
-+HIDIOCGRAWNAME(len):
-+	Get Raw Name
-+
- This ioctl returns a string containing the vendor and product strings of
- the device.  The returned string is Unicode, UTF-8 encoded.
- 
--HIDIOCGRAWPHYS(len): Get Physical Address
-+HIDIOCGRAWPHYS(len):
-+	Get Physical Address
-+
- This ioctl returns a string representing the physical address of the device.
- For USB devices, the string contains the physical path to the device (the
- USB controller, hubs, ports, etc).  For Bluetooth devices, the string
- contains the hardware (MAC) address of the device.
- 
--HIDIOCSFEATURE(len): Send a Feature Report
-+HIDIOCSFEATURE(len):
-+	Send a Feature Report
-+
- This ioctl will send a feature report to the device.  Per the HID
- specification, feature reports are always sent using the control endpoint.
- Set the first byte of the supplied buffer to the report number.  For devices
-@@ -101,7 +117,9 @@ which do not use numbered reports, set the first byte to 0. The report data
- begins in the second byte. Make sure to set len accordingly, to one more
- than the length of the report (to account for the report number).
- 
--HIDIOCGFEATURE(len): Get a Feature Report
-+HIDIOCGFEATURE(len):
-+	Get a Feature Report
-+
- This ioctl will request a feature report from the device using the control
- endpoint.  The first byte of the supplied buffer should be set to the report
- number of the requested report.  For devices which do not use numbered
-@@ -109,11 +127,12 @@ reports, set the first byte to 0.  The report will be returned starting at
- the first byte of the buffer (ie: the report number is not returned).
- 
- Example
-----------
-+-------
- In samples/, find hid-example.c, which shows examples of read(), write(),
- and all the ioctls for hidraw.  The code may be used by anyone for any
- purpose, and can serve as a starting point for developing applications using
- hidraw.
- 
- Document by:
-+
- 	Alan Ott <alan@signal11.us>, Signal 11 Software
-diff --git a/Documentation/hid/index.rst b/Documentation/hid/index.rst
+diff --git a/Documentation/scheduler/index.rst b/Documentation/scheduler/index.rst
 new file mode 100644
-index 000000000000..af4324902622
+index 000000000000..058be77a4c34
 --- /dev/null
-+++ b/Documentation/hid/index.rst
-@@ -0,0 +1,18 @@
++++ b/Documentation/scheduler/index.rst
+@@ -0,0 +1,29 @@
 +:orphan:
 +
-+=============================
-+Human Interface Devices (HID)
-+=============================
++===============
++Linux Scheduler
++===============
 +
 +.. toctree::
-+   :maxdepth: 1
-+
-+   hiddev
-+   hidraw
-+   hid-sensor
-+   hid-transport
-+
-+   uhid
-+
-+   hid-alps
-+   intel-ish-hid
-diff --git a/Documentation/hid/intel-ish-hid.rst b/Documentation/hid/intel-ish-hid.rst
-new file mode 100644
-index 000000000000..cccbf4be17d7
---- /dev/null
-+++ b/Documentation/hid/intel-ish-hid.rst
-@@ -0,0 +1,485 @@
-+=================================
-+Intel Integrated Sensor Hub (ISH)
-+=================================
-+
-+A sensor hub enables the ability to offload sensor polling and algorithm
-+processing to a dedicated low power co-processor. This allows the core
-+processor to go into low power modes more often, resulting in the increased
-+battery life.
-+
-+There are many vendors providing external sensor hubs confirming to HID
-+Sensor usage tables, and used in several tablets, 2 in 1 convertible laptops
-+and embedded products. Linux had this support since Linux 3.9.
-+
-+Intel® introduced integrated sensor hubs as a part of the SoC starting from
-+Cherry Trail and now supported on multiple generations of CPU packages. There
-+are many commercial devices already shipped with Integrated Sensor Hubs (ISH).
-+These ISH also comply to HID sensor specification, but the  difference is the
-+transport protocol used for communication. The current external sensor hubs
-+mainly use HID over i2C or USB. But ISH doesn't use either i2c or USB.
-+
-+1. Overview
-+===========
-+
-+Using a analogy with a usbhid implementation, the ISH follows a similar model
-+for a very high speed communication::
-+
-+	-----------------		----------------------
-+	|    USB HID	|	-->	|    ISH HID	     |
-+	-----------------		----------------------
-+	-----------------		----------------------
-+	|  USB protocol	|	-->	|    ISH Transport   |
-+	-----------------		----------------------
-+	-----------------		----------------------
-+	|  EHCI/XHCI	|	-->	|    ISH IPC	     |
-+	-----------------		----------------------
-+	      PCI				 PCI
-+	-----------------		----------------------
-+        |Host controller|	-->	|    ISH processor   |
-+	-----------------		----------------------
-+	     USB Link
-+	-----------------		----------------------
-+	| USB End points|	-->	|    ISH Clients     |
-+	-----------------		----------------------
-+
-+Like USB protocol provides a method for device enumeration, link management
-+and user data encapsulation, the ISH also provides similar services. But it is
-+very light weight tailored to manage and communicate with ISH client
-+applications implemented in the firmware.
-+
-+The ISH allows multiple sensor management applications executing in the
-+firmware. Like USB endpoints the messaging can be to/from a client. As part of
-+enumeration process, these clients are identified. These clients can be simple
-+HID sensor applications, sensor calibration application or senor firmware
-+update application.
-+
-+The implementation model is similar, like USB bus, ISH transport is also
-+implemented as a bus. Each client application executing in the ISH processor
-+is registered as a device on this bus. The driver, which binds each device
-+(ISH HID driver) identifies the device type and registers with the hid core.
-+
-+2. ISH Implementation: Block Diagram
-+====================================
-+
-+::
-+
-+	 ---------------------------
-+	|  User Space Applications  |
-+	 ---------------------------
-+
-+  ----------------IIO ABI----------------
-+	 --------------------------
-+	|  IIO Sensor Drivers	  |
-+	 --------------------------
-+	 --------------------------
-+	|	 IIO core	  |
-+	 --------------------------
-+	 --------------------------
-+	|   HID Sensor Hub MFD	  |
-+	 --------------------------
-+	 --------------------------
-+	|       HID Core	  |
-+	 --------------------------
-+	 --------------------------
-+	|   HID over ISH Client   |
-+	 --------------------------
-+	 --------------------------
-+	|   ISH Transport (ISHTP) |
-+	 --------------------------
-+	 --------------------------
-+	|      IPC Drivers	  |
-+	 --------------------------
-+  OS
-+  ---------------- PCI -----------------
-+  Hardware + Firmware
-+	 ----------------------------
-+	| ISH Hardware/Firmware(FW) |
-+	 ----------------------------
-+
-+3. High level processing in above blocks
-+========================================
-+
-+3.1 Hardware Interface
-+----------------------
-+
-+The ISH is exposed as "Non-VGA unclassified PCI device" to the host. The PCI
-+product and vendor IDs are changed from different generations of processors. So
-+the source code which enumerate drivers needs to update from generation to
-+generation.
-+
-+3.2 Inter Processor Communication (IPC) driver
-+----------------------------------------------
-+
-+Location: drivers/hid/intel-ish-hid/ipc
-+
-+The IPC message used memory mapped I/O. The registers are defined in
-+hw-ish-regs.h.
-+
-+3.2.1 IPC/FW message types
-+^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+There are two types of messages, one for management of link and other messages
-+are to and from transport layers.
-+
-+TX and RX of Transport messages
-+...............................
-+
-+A set of memory mapped register offers support of multi byte messages TX and
-+RX (E.g.IPC_REG_ISH2HOST_MSG, IPC_REG_HOST2ISH_MSG). The IPC layer maintains
-+internal queues to sequence messages and send them in order to the FW.
-+Optionally the caller can register handler to get notification of completion.
-+A door bell mechanism is used in messaging to trigger processing in host and
-+client firmware side. When ISH interrupt handler is called, the ISH2HOST
-+doorbell register is used by host drivers to determine that the interrupt
-+is for ISH.
-+
-+Each side has 32 32-bit message registers and a 32-bit doorbell. Doorbell
-+register has the following format:
-+Bits 0..6: fragment length (7 bits are used)
-+Bits 10..13: encapsulated protocol
-+Bits 16..19: management command (for IPC management protocol)
-+Bit 31: doorbell trigger (signal H/W interrupt to the other side)
-+Other bits are reserved, should be 0.
-+
-+3.2.2 Transport layer interface
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+To abstract HW level IPC communication, a set of callbacks are registered.
-+The transport layer uses them to send and receive messages.
-+Refer to  struct ishtp_hw_ops for callbacks.
-+
-+3.3 ISH Transport layer
-+-----------------------
-+
-+Location: drivers/hid/intel-ish-hid/ishtp/
-+
-+3.3.1 A Generic Transport Layer
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+The transport layer is a bi-directional protocol, which defines:
-+- Set of commands to start, stop, connect, disconnect and flow control
-+(ishtp/hbm.h) for details
-+- A flow control mechanism to avoid buffer overflows
-+
-+This protocol resembles bus messages described in the following document:
-+http://www.intel.com/content/dam/www/public/us/en/documents/technical-\
-+specifications/dcmi-hi-1-0-spec.pdf "Chapter 7: Bus Message Layer"
-+
-+3.3.2 Connection and Flow Control Mechanism
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Each FW client and a protocol is identified by an UUID. In order to communicate
-+to a FW client, a connection must be established using connect request and
-+response bus messages. If successful, a pair (host_client_id and fw_client_id)
-+will identify the connection.
-+
-+Once connection is established, peers send each other flow control bus messages
-+independently. Every peer may send a message only if it has received a
-+flow-control credit before. Once it sent a message, it may not send another one
-+before receiving the next flow control credit.
-+Either side can send disconnect request bus message to end communication. Also
-+the link will be dropped if major FW reset occurs.
-+
-+3.3.3 Peer to Peer data transfer
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Peer to Peer data transfer can happen with or without using DMA. Depending on
-+the sensor bandwidth requirement DMA can be enabled by using module parameter
-+ishtp_use_dma under intel_ishtp.
-+
-+Each side (host and FW) manages its DMA transfer memory independently. When an
-+ISHTP client from either host or FW side wants to send something, it decides
-+whether to send over IPC or over DMA; for each transfer the decision is
-+independent. The sending side sends DMA_XFER message when the message is in
-+the respective host buffer (TX when host client sends, RX when FW client
-+sends). The recipient of DMA message responds with DMA_XFER_ACK, indicating
-+the sender that the memory region for that message may be reused.
-+
-+DMA initialization is started with host sending DMA_ALLOC_NOTIFY bus message
-+(that includes RX buffer) and FW responds with DMA_ALLOC_NOTIFY_ACK.
-+Additionally to DMA address communication, this sequence checks capabilities:
-+if thw host doesn't support DMA, then it won't send DMA allocation, so FW can't
-+send DMA; if FW doesn't support DMA then it won't respond with
-+DMA_ALLOC_NOTIFY_ACK, in which case host will not use DMA transfers.
-+Here ISH acts as busmaster DMA controller. Hence when host sends DMA_XFER,
-+it's request to do host->ISH DMA transfer; when FW sends DMA_XFER, it means
-+that it already did DMA and the message resides at host. Thus, DMA_XFER
-+and DMA_XFER_ACK act as ownership indicators.
-+
-+At initial state all outgoing memory belongs to the sender (TX to host, RX to
-+FW), DMA_XFER transfers ownership on the region that contains ISHTP message to
-+the receiving side, DMA_XFER_ACK returns ownership to the sender. A sender
-+needs not wait for previous DMA_XFER to be ack'ed, and may send another message
-+as long as remaining continuous memory in its ownership is enough.
-+In principle, multiple DMA_XFER and DMA_XFER_ACK messages may be sent at once
-+(up to IPC MTU), thus allowing for interrupt throttling.
-+Currently, ISH FW decides to send over DMA if ISHTP message is more than 3 IPC
-+fragments and via IPC otherwise.
-+
-+3.3.4 Ring Buffers
-+^^^^^^^^^^^^^^^^^^
-+
-+When a client initiate a connection, a ring or RX and TX buffers are allocated.
-+The size of ring can be specified by the client. HID client set 16 and 32 for
-+TX and RX buffers respectively. On send request from client, the data to be
-+sent is copied to one of the send ring buffer and scheduled to be sent using
-+bus message protocol. These buffers are required because the FW may have not
-+have processed the last message and may not have enough flow control credits
-+to send. Same thing holds true on receive side and flow control is required.
-+
-+3.3.5 Host Enumeration
-+^^^^^^^^^^^^^^^^^^^^^^
-+
-+The host enumeration bus command allow discovery of clients present in the FW.
-+There can be multiple sensor clients and clients for calibration function.
-+
-+To ease in implantation and allow independent driver handle each client
-+this transport layer takes advantage of Linux Bus driver model. Each
-+client is registered as device on the the transport bus (ishtp bus).
-+
-+Enumeration sequence of messages:
-+
-+- Host sends HOST_START_REQ_CMD, indicating that host ISHTP layer is up.
-+- FW responds with HOST_START_RES_CMD
-+- Host sends HOST_ENUM_REQ_CMD (enumerate FW clients)
-+- FW responds with HOST_ENUM_RES_CMD that includes bitmap of available FW
-+  client IDs
-+- For each FW ID found in that bitmap host sends
-+  HOST_CLIENT_PROPERTIES_REQ_CMD
-+- FW responds with HOST_CLIENT_PROPERTIES_RES_CMD. Properties include UUID,
-+  max ISHTP message size, etc.
-+- Once host received properties for that last discovered client, it considers
-+  ISHTP device fully functional (and allocates DMA buffers)
-+
-+3.4 HID over ISH Client
-+-----------------------
-+
-+Location: drivers/hid/intel-ish-hid
-+
-+The ISHTP client driver is responsible for:
-+
-+- enumerate HID devices under FW ISH client
-+- Get Report descriptor
-+- Register with HID core as a LL driver
-+- Process Get/Set feature request
-+- Get input reports
-+
-+3.5 HID Sensor Hub MFD and IIO sensor drivers
-+---------------------------------------------
-+
-+The functionality in these drivers is the same as an external sensor hub.
-+Refer to
-+Documentation/hid/hid-sensor.rst for HID sensor
-+Documentation/ABI/testing/sysfs-bus-iio for IIO ABIs to user space
-+
-+3.6 End to End HID transport Sequence Diagram
-+---------------------------------------------
-+
-+::
-+
-+  HID-ISH-CLN                    ISHTP                    IPC                             HW
-+          |                        |                       |                               |
-+          |                        |                       |-----WAKE UP------------------>|
-+          |                        |                       |                               |
-+          |                        |                       |-----HOST READY--------------->|
-+          |                        |                       |                               |
-+          |                        |                       |<----MNG_RESET_NOTIFY_ACK----- |
-+          |                        |                       |                               |
-+          |                        |<----ISHTP_START------ |                               |
-+          |                        |                       |                               |
-+          |                        |<-----------------HOST_START_RES_CMD-------------------|
-+          |                        |                       |                               |
-+          |                        |------------------QUERY_SUBSCRIBER-------------------->|
-+          |                        |                       |                               |
-+          |                        |------------------HOST_ENUM_REQ_CMD------------------->|
-+          |                        |                       |                               |
-+          |                        |<-----------------HOST_ENUM_RES_CMD--------------------|
-+          |                        |                       |                               |
-+          |                        |------------------HOST_CLIENT_PROPERTIES_REQ_CMD------>|
-+          |                        |                       |                               |
-+          |                        |<-----------------HOST_CLIENT_PROPERTIES_RES_CMD-------|
-+          |       Create new device on in ishtp bus        |                               |
-+          |                        |                       |                               |
-+          |                        |------------------HOST_CLIENT_PROPERTIES_REQ_CMD------>|
-+          |                        |                       |                               |
-+          |                        |<-----------------HOST_CLIENT_PROPERTIES_RES_CMD-------|
-+          |       Create new device on in ishtp bus        |                               |
-+          |                        |                       |                               |
-+          |                        |--Repeat HOST_CLIENT_PROPERTIES_REQ_CMD-till last one--|
-+          |                        |                       |                               |
-+       probed()
-+          |----ishtp_cl_connect--->|----------------- CLIENT_CONNECT_REQ_CMD-------------->|
-+          |                        |                       |                               |
-+          |                        |<----------------CLIENT_CONNECT_RES_CMD----------------|
-+          |                        |                       |                               |
-+          |register event callback |                       |                               |
-+          |                        |                       |                               |
-+          |ishtp_cl_send(
-+          HOSTIF_DM_ENUM_DEVICES)  |----------fill ishtp_msg_hdr struct write to HW-----  >|
-+          |                        |                       |                               |
-+          |                        |                       |<-----IRQ(IPC_PROTOCOL_ISHTP---|
-+          |                        |                       |                               |
-+          |<--ENUM_DEVICE RSP------|                       |                               |
-+          |                        |                       |                               |
-+  for each enumerated device
-+          |ishtp_cl_send(
-+          HOSTIF_GET_HID_DESCRIPTOR|----------fill ishtp_msg_hdr struct write to HW-----  >|
-+          |                        |                       |                               |
-+          ...Response
-+          |                        |                       |                               |
-+  for each enumerated device
-+          |ishtp_cl_send(
-+       HOSTIF_GET_REPORT_DESCRIPTOR|--------------fill ishtp_msg_hdr struct write to HW-- >|
-+          |                        |                       |                               |
-+          |                        |                       |                               |
-+   hid_allocate_device
-+          |                        |                       |                               |
-+   hid_add_device                  |                       |                               |
-+          |                        |                       |                               |
-+
-+
-+3.7 ISH Debugging
-+-----------------
-+
-+To debug ISH, event tracing mechanism is used. To enable debug logs
-+echo 1 > /sys/kernel/debug/tracing/events/intel_ish/enable
-+cat sys/kernel/debug/tracing/trace
-+
-+3.8 ISH IIO sysfs Example on Lenovo thinkpad Yoga 260
-+-----------------------------------------------------
-+
-+::
-+
-+  root@otcpl-ThinkPad-Yoga-260:~# tree -l /sys/bus/iio/devices/
-+  /sys/bus/iio/devices/
-+  ├── iio:device0 -> ../../../devices/0044:8086:22D8.0001/HID-SENSOR-200073.9.auto/iio:device0
-+  │   ├── buffer
-+  │   │   ├── enable
-+  │   │   ├── length
-+  │   │   └── watermark
-+  ...
-+  │   ├── in_accel_hysteresis
-+  │   ├── in_accel_offset
-+  │   ├── in_accel_sampling_frequency
-+  │   ├── in_accel_scale
-+  │   ├── in_accel_x_raw
-+  │   ├── in_accel_y_raw
-+  │   ├── in_accel_z_raw
-+  │   ├── name
-+  │   ├── scan_elements
-+  │   │   ├── in_accel_x_en
-+  │   │   ├── in_accel_x_index
-+  │   │   ├── in_accel_x_type
-+  │   │   ├── in_accel_y_en
-+  │   │   ├── in_accel_y_index
-+  │   │   ├── in_accel_y_type
-+  │   │   ├── in_accel_z_en
-+  │   │   ├── in_accel_z_index
-+  │   │   └── in_accel_z_type
-+  ...
-+  │   │   ├── devices
-+  │   │   │   │   ├── buffer
-+  │   │   │   │   │   ├── enable
-+  │   │   │   │   │   ├── length
-+  │   │   │   │   │   └── watermark
-+  │   │   │   │   ├── dev
-+  │   │   │   │   ├── in_intensity_both_raw
-+  │   │   │   │   ├── in_intensity_hysteresis
-+  │   │   │   │   ├── in_intensity_offset
-+  │   │   │   │   ├── in_intensity_sampling_frequency
-+  │   │   │   │   ├── in_intensity_scale
-+  │   │   │   │   ├── name
-+  │   │   │   │   ├── scan_elements
-+  │   │   │   │   │   ├── in_intensity_both_en
-+  │   │   │   │   │   ├── in_intensity_both_index
-+  │   │   │   │   │   └── in_intensity_both_type
-+  │   │   │   │   ├── trigger
-+  │   │   │   │   │   └── current_trigger
-+  ...
-+  │   │   │   │   ├── buffer
-+  │   │   │   │   │   ├── enable
-+  │   │   │   │   │   ├── length
-+  │   │   │   │   │   └── watermark
-+  │   │   │   │   ├── dev
-+  │   │   │   │   ├── in_magn_hysteresis
-+  │   │   │   │   ├── in_magn_offset
-+  │   │   │   │   ├── in_magn_sampling_frequency
-+  │   │   │   │   ├── in_magn_scale
-+  │   │   │   │   ├── in_magn_x_raw
-+  │   │   │   │   ├── in_magn_y_raw
-+  │   │   │   │   ├── in_magn_z_raw
-+  │   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_raw
-+  │   │   │   │   ├── in_rot_hysteresis
-+  │   │   │   │   ├── in_rot_offset
-+  │   │   │   │   ├── in_rot_sampling_frequency
-+  │   │   │   │   ├── in_rot_scale
-+  │   │   │   │   ├── name
-+  ...
-+  │   │   │   │   ├── scan_elements
-+  │   │   │   │   │   ├── in_magn_x_en
-+  │   │   │   │   │   ├── in_magn_x_index
-+  │   │   │   │   │   ├── in_magn_x_type
-+  │   │   │   │   │   ├── in_magn_y_en
-+  │   │   │   │   │   ├── in_magn_y_index
-+  │   │   │   │   │   ├── in_magn_y_type
-+  │   │   │   │   │   ├── in_magn_z_en
-+  │   │   │   │   │   ├── in_magn_z_index
-+  │   │   │   │   │   ├── in_magn_z_type
-+  │   │   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_en
-+  │   │   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_index
-+  │   │   │   │   │   └── in_rot_from_north_magnetic_tilt_comp_type
-+  │   │   │   │   ├── trigger
-+  │   │   │   │   │   └── current_trigger
-+  ...
-+  │   │   │   │   ├── buffer
-+  │   │   │   │   │   ├── enable
-+  │   │   │   │   │   ├── length
-+  │   │   │   │   │   └── watermark
-+  │   │   │   │   ├── dev
-+  │   │   │   │   ├── in_anglvel_hysteresis
-+  │   │   │   │   ├── in_anglvel_offset
-+  │   │   │   │   ├── in_anglvel_sampling_frequency
-+  │   │   │   │   ├── in_anglvel_scale
-+  │   │   │   │   ├── in_anglvel_x_raw
-+  │   │   │   │   ├── in_anglvel_y_raw
-+  │   │   │   │   ├── in_anglvel_z_raw
-+  │   │   │   │   ├── name
-+  │   │   │   │   ├── scan_elements
-+  │   │   │   │   │   ├── in_anglvel_x_en
-+  │   │   │   │   │   ├── in_anglvel_x_index
-+  │   │   │   │   │   ├── in_anglvel_x_type
-+  │   │   │   │   │   ├── in_anglvel_y_en
-+  │   │   │   │   │   ├── in_anglvel_y_index
-+  │   │   │   │   │   ├── in_anglvel_y_type
-+  │   │   │   │   │   ├── in_anglvel_z_en
-+  │   │   │   │   │   ├── in_anglvel_z_index
-+  │   │   │   │   │   └── in_anglvel_z_type
-+  │   │   │   │   ├── trigger
-+  │   │   │   │   │   └── current_trigger
-+  ...
-+  │   │   │   │   ├── buffer
-+  │   │   │   │   │   ├── enable
-+  │   │   │   │   │   ├── length
-+  │   │   │   │   │   └── watermark
-+  │   │   │   │   ├── dev
-+  │   │   │   │   ├── in_anglvel_hysteresis
-+  │   │   │   │   ├── in_anglvel_offset
-+  │   │   │   │   ├── in_anglvel_sampling_frequency
-+  │   │   │   │   ├── in_anglvel_scale
-+  │   │   │   │   ├── in_anglvel_x_raw
-+  │   │   │   │   ├── in_anglvel_y_raw
-+  │   │   │   │   ├── in_anglvel_z_raw
-+  │   │   │   │   ├── name
-+  │   │   │   │   ├── scan_elements
-+  │   │   │   │   │   ├── in_anglvel_x_en
-+  │   │   │   │   │   ├── in_anglvel_x_index
-+  │   │   │   │   │   ├── in_anglvel_x_type
-+  │   │   │   │   │   ├── in_anglvel_y_en
-+  │   │   │   │   │   ├── in_anglvel_y_index
-+  │   │   │   │   │   ├── in_anglvel_y_type
-+  │   │   │   │   │   ├── in_anglvel_z_en
-+  │   │   │   │   │   ├── in_anglvel_z_index
-+  │   │   │   │   │   └── in_anglvel_z_type
-+  │   │   │   │   ├── trigger
-+  │   │   │   │   │   └── current_trigger
-+  ...
-diff --git a/Documentation/hid/intel-ish-hid.txt b/Documentation/hid/intel-ish-hid.txt
-deleted file mode 100644
-index d48b21c71ddd..000000000000
---- a/Documentation/hid/intel-ish-hid.txt
-+++ /dev/null
-@@ -1,454 +0,0 @@
--Intel Integrated Sensor Hub (ISH)
--===============================
++    :maxdepth: 1
++
++
++    completion
++    sched-arch
++    sched-bwc
++    sched-deadline
++    sched-design-CFS
++    sched-domains
++    sched-energy
++    sched-nice-design
++    sched-rt-group
++    sched-stats
++
++    text_files
++
++.. only::  subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+diff --git a/Documentation/scheduler/sched-arch.txt b/Documentation/scheduler/sched-arch.rst
+similarity index 81%
+rename from Documentation/scheduler/sched-arch.txt
+rename to Documentation/scheduler/sched-arch.rst
+index a2f27bbf2cba..0eaec669790a 100644
+--- a/Documentation/scheduler/sched-arch.txt
++++ b/Documentation/scheduler/sched-arch.rst
+@@ -1,4 +1,6 @@
+-	CPU Scheduler implementation hints for architecture specific code
++=================================================================
++CPU Scheduler implementation hints for architecture specific code
++=================================================================
+ 
+ 	Nick Piggin, 2005
+ 
+@@ -35,9 +37,10 @@ Your cpu_idle routines need to obey the following rules:
+ 4. The only time interrupts need to be disabled when checking
+    need_resched is if we are about to sleep the processor until
+    the next interrupt (this doesn't provide any protection of
+-   need_resched, it prevents losing an interrupt).
++   need_resched, it prevents losing an interrupt):
++
++	4a. Common problem with this type of sleep appears to be::
+ 
+-	4a. Common problem with this type of sleep appears to be:
+ 	        local_irq_disable();
+ 	        if (!need_resched()) {
+ 	                local_irq_enable();
+@@ -51,10 +54,10 @@ Your cpu_idle routines need to obey the following rules:
+    although it may be reasonable to do some background work or enter
+    a low CPU priority.
+ 
+-   	5a. If TIF_POLLING_NRFLAG is set, and we do decide to enter
+-	    an interrupt sleep, it needs to be cleared then a memory
+-	    barrier issued (followed by a test of need_resched with
+-	    interrupts disabled, as explained in 3).
++      - 5a. If TIF_POLLING_NRFLAG is set, and we do decide to enter
++	an interrupt sleep, it needs to be cleared then a memory
++	barrier issued (followed by a test of need_resched with
++	interrupts disabled, as explained in 3).
+ 
+ arch/x86/kernel/process.c has examples of both polling and
+ sleeping idle functions.
+@@ -71,4 +74,3 @@ sh64 - Is sleeping racy vs interrupts? (See #4a)
+ 
+ sparc - IRQs on at this point(?), change local_irq_save to _disable.
+       - TODO: needs secondary CPUs to disable preempt (See #1)
 -
--A sensor hub enables the ability to offload sensor polling and algorithm
--processing to a dedicated low power co-processor. This allows the core
--processor to go into low power modes more often, resulting in the increased
--battery life.
+diff --git a/Documentation/scheduler/sched-bwc.txt b/Documentation/scheduler/sched-bwc.rst
+similarity index 90%
+rename from Documentation/scheduler/sched-bwc.txt
+rename to Documentation/scheduler/sched-bwc.rst
+index f6b1873f68ab..3a9064219656 100644
+--- a/Documentation/scheduler/sched-bwc.txt
++++ b/Documentation/scheduler/sched-bwc.rst
+@@ -1,8 +1,9 @@
++=====================
+ CFS Bandwidth Control
+ =====================
+ 
+ [ This document only discusses CPU bandwidth control for SCHED_NORMAL.
+-  The SCHED_RT case is covered in Documentation/scheduler/sched-rt-group.txt ]
++  The SCHED_RT case is covered in Documentation/scheduler/sched-rt-group.rst ]
+ 
+ CFS bandwidth control is a CONFIG_FAIR_GROUP_SCHED extension which allows the
+ specification of the maximum CPU bandwidth available to a group or hierarchy.
+@@ -27,7 +28,8 @@ cpu.cfs_quota_us: the total available run-time within a period (in microseconds)
+ cpu.cfs_period_us: the length of a period (in microseconds)
+ cpu.stat: exports throttling statistics [explained further below]
+ 
+-The default values are:
++The default values are::
++
+ 	cpu.cfs_period_us=100ms
+ 	cpu.cfs_quota=-1
+ 
+@@ -55,7 +57,8 @@ For efficiency run-time is transferred between the global pool and CPU local
+ on large systems.  The amount transferred each time such an update is required
+ is described as the "slice".
+ 
+-This is tunable via procfs:
++This is tunable via procfs::
++
+ 	/proc/sys/kernel/sched_cfs_bandwidth_slice_us (default=5ms)
+ 
+ Larger slice values will reduce transfer overheads, while smaller values allow
+@@ -66,6 +69,7 @@ Statistics
+ A group's bandwidth statistics are exported via 3 fields in cpu.stat.
+ 
+ cpu.stat:
++
+ - nr_periods: Number of enforcement intervals that have elapsed.
+ - nr_throttled: Number of times the group has been throttled/limited.
+ - throttled_time: The total time duration (in nanoseconds) for which entities
+@@ -78,12 +82,15 @@ Hierarchical considerations
+ The interface enforces that an individual entity's bandwidth is always
+ attainable, that is: max(c_i) <= C. However, over-subscription in the
+ aggregate case is explicitly allowed to enable work-conserving semantics
+-within a hierarchy.
++within a hierarchy:
++
+   e.g. \Sum (c_i) may exceed C
++
+ [ Where C is the parent's bandwidth, and c_i its children ]
+ 
+ 
+ There are two ways in which a group may become throttled:
++
+ 	a. it fully consumes its own quota within a period
+ 	b. a parent's quota is fully consumed within its period
+ 
+@@ -92,7 +99,7 @@ be allowed to until the parent's runtime is refreshed.
+ 
+ Examples
+ --------
+-1. Limit a group to 1 CPU worth of runtime.
++1. Limit a group to 1 CPU worth of runtime::
+ 
+ 	If period is 250ms and quota is also 250ms, the group will get
+ 	1 CPU worth of runtime every 250ms.
+@@ -100,10 +107,10 @@ Examples
+ 	# echo 250000 > cpu.cfs_quota_us /* quota = 250ms */
+ 	# echo 250000 > cpu.cfs_period_us /* period = 250ms */
+ 
+-2. Limit a group to 2 CPUs worth of runtime on a multi-CPU machine.
++2. Limit a group to 2 CPUs worth of runtime on a multi-CPU machine
+ 
+-	With 500ms period and 1000ms quota, the group can get 2 CPUs worth of
+-	runtime every 500ms.
++   With 500ms period and 1000ms quota, the group can get 2 CPUs worth of
++   runtime every 500ms::
+ 
+ 	# echo 1000000 > cpu.cfs_quota_us /* quota = 1000ms */
+ 	# echo 500000 > cpu.cfs_period_us /* period = 500ms */
+@@ -112,11 +119,10 @@ Examples
+ 
+ 3. Limit a group to 20% of 1 CPU.
+ 
+-	With 50ms period, 10ms quota will be equivalent to 20% of 1 CPU.
++   With 50ms period, 10ms quota will be equivalent to 20% of 1 CPU::
+ 
+ 	# echo 10000 > cpu.cfs_quota_us /* quota = 10ms */
+ 	# echo 50000 > cpu.cfs_period_us /* period = 50ms */
+ 
+-	By using a small period here we are ensuring a consistent latency
+-	response at the expense of burst capacity.
 -
--There are many vendors providing external sensor hubs confirming to HID
--Sensor usage tables, and used in several tablets, 2 in 1 convertible laptops
--and embedded products. Linux had this support since Linux 3.9.
++   By using a small period here we are ensuring a consistent latency
++   response at the expense of burst capacity.
+diff --git a/Documentation/scheduler/sched-deadline.txt b/Documentation/scheduler/sched-deadline.rst
+similarity index 88%
+rename from Documentation/scheduler/sched-deadline.txt
+rename to Documentation/scheduler/sched-deadline.rst
+index a7514343b660..3391e86d810c 100644
+--- a/Documentation/scheduler/sched-deadline.txt
++++ b/Documentation/scheduler/sched-deadline.rst
+@@ -1,29 +1,29 @@
+-			  Deadline Task Scheduling
+-			  ------------------------
++========================
++Deadline Task Scheduling
++========================
+ 
+-CONTENTS
+-========
++.. CONTENTS
+ 
+- 0. WARNING
+- 1. Overview
+- 2. Scheduling algorithm
+-   2.1 Main algorithm
+-   2.2 Bandwidth reclaiming
+- 3. Scheduling Real-Time Tasks
+-   3.1 Definitions
+-   3.2 Schedulability Analysis for Uniprocessor Systems
+-   3.3 Schedulability Analysis for Multiprocessor Systems
+-   3.4 Relationship with SCHED_DEADLINE Parameters
+- 4. Bandwidth management
+-   4.1 System-wide settings
+-   4.2 Task interface
+-   4.3 Default behavior
+-   4.4 Behavior of sched_yield()
+- 5. Tasks CPU affinity
+-   5.1 SCHED_DEADLINE and cpusets HOWTO
+- 6. Future plans
+- A. Test suite
+- B. Minimal main()
++    0. WARNING
++    1. Overview
++    2. Scheduling algorithm
++      2.1 Main algorithm
++      2.2 Bandwidth reclaiming
++    3. Scheduling Real-Time Tasks
++      3.1 Definitions
++      3.2 Schedulability Analysis for Uniprocessor Systems
++      3.3 Schedulability Analysis for Multiprocessor Systems
++      3.4 Relationship with SCHED_DEADLINE Parameters
++    4. Bandwidth management
++      4.1 System-wide settings
++      4.2 Task interface
++      4.3 Default behavior
++      4.4 Behavior of sched_yield()
++    5. Tasks CPU affinity
++      5.1 SCHED_DEADLINE and cpusets HOWTO
++    6. Future plans
++    A. Test suite
++    B. Minimal main()
+ 
+ 
+ 0. WARNING
+@@ -44,7 +44,7 @@ CONTENTS
+ 
+ 
+ 2. Scheduling algorithm
+-==================
++=======================
+ 
+ 2.1 Main algorithm
+ ------------------
+@@ -80,7 +80,7 @@ CONTENTS
+     a "remaining runtime". These two parameters are initially set to 0;
+ 
+   - When a SCHED_DEADLINE task wakes up (becomes ready for execution),
+-    the scheduler checks if
++    the scheduler checks if::
+ 
+                  remaining runtime                  runtime
+         ----------------------------------    >    ---------
+@@ -97,7 +97,7 @@ CONTENTS
+     left unchanged;
+ 
+   - When a SCHED_DEADLINE task executes for an amount of time t, its
+-    remaining runtime is decreased as
++    remaining runtime is decreased as::
+ 
+          remaining runtime = remaining runtime - t
+ 
+@@ -112,7 +112,7 @@ CONTENTS
+ 
+   - When the current time is equal to the replenishment time of a
+     throttled task, the scheduling deadline and the remaining runtime are
+-    updated as
++    updated as::
+ 
+          scheduling deadline = scheduling deadline + period
+          remaining runtime = remaining runtime + runtime
+@@ -129,7 +129,7 @@ CONTENTS
+  Reclamation of Unused Bandwidth) algorithm [15, 16, 17] and it is enabled
+  when flag SCHED_FLAG_RECLAIM is set.
+ 
+- The following diagram illustrates the state names for tasks handled by GRUB:
++ The following diagram illustrates the state names for tasks handled by GRUB::
+ 
+                              ------------
+                  (d)        |   Active   |
+@@ -168,7 +168,7 @@ CONTENTS
+       breaking the real-time guarantees.
+ 
+       The 0-lag time for a task entering the ActiveNonContending state is
+-      computed as
++      computed as::
+ 
+                         (runtime * dl_period)
+              deadline - ---------------------
+@@ -183,7 +183,7 @@ CONTENTS
+       the task's utilization must be removed from the previous runqueue's active
+       utilization and must be added to the new runqueue's active utilization.
+       In order to avoid races between a task waking up on a runqueue while the
+-       "inactive timer" is running on a different CPU, the "dl_non_contending"
++      "inactive timer" is running on a different CPU, the "dl_non_contending"
+       flag is used to indicate that a task is not on a runqueue but is active
+       (so, the flag is set when the task blocks and is cleared when the
+       "inactive timer" fires or when the task  wakes up).
+@@ -222,36 +222,36 @@ CONTENTS
+ 
+ 
+  Let's now see a trivial example of two deadline tasks with runtime equal
+- to 4 and period equal to 8 (i.e., bandwidth equal to 0.5):
++ to 4 and period equal to 8 (i.e., bandwidth equal to 0.5)::
+ 
+-     A            Task T1
+-     |
+-     |                               |
+-     |                               |
+-     |--------                       |----
+-     |       |                       V
+-     |---|---|---|---|---|---|---|---|--------->t
+-     0   1   2   3   4   5   6   7   8
++         A            Task T1
++         |
++         |                               |
++         |                               |
++         |--------                       |----
++         |       |                       V
++         |---|---|---|---|---|---|---|---|--------->t
++         0   1   2   3   4   5   6   7   8
+ 
+ 
+-     A            Task T2
+-     |
+-     |                               |
+-     |                               |
+-     |       ------------------------|
+-     |       |                       V
+-     |---|---|---|---|---|---|---|---|--------->t
+-     0   1   2   3   4   5   6   7   8
++         A            Task T2
++         |
++         |                               |
++         |                               |
++         |       ------------------------|
++         |       |                       V
++         |---|---|---|---|---|---|---|---|--------->t
++         0   1   2   3   4   5   6   7   8
+ 
+ 
+-     A            running_bw
+-     |
+-   1 -----------------               ------
+-     |               |               |
+-  0.5-               -----------------
+-     |                               |
+-     |---|---|---|---|---|---|---|---|--------->t
+-     0   1   2   3   4   5   6   7   8
++         A            running_bw
++         |
++       1 -----------------               ------
++         |               |               |
++      0.5-               -----------------
++         |                               |
++         |---|---|---|---|---|---|---|---|--------->t
++         0   1   2   3   4   5   6   7   8
+ 
+ 
+   - Time t = 0:
+@@ -284,7 +284,7 @@ CONTENTS
+ 
+ 
+ 2.3 Energy-aware scheduling
+-------------------------
++---------------------------
+ 
+  When cpufreq's schedutil governor is selected, SCHED_DEADLINE implements the
+  GRUB-PA [19] algorithm, reducing the CPU operating frequency to the minimum
+@@ -299,15 +299,20 @@ CONTENTS
+ 3. Scheduling Real-Time Tasks
+ =============================
+ 
+- * BIG FAT WARNING ******************************************************
+- *
+- * This section contains a (not-thorough) summary on classical deadline
+- * scheduling theory, and how it applies to SCHED_DEADLINE.
+- * The reader can "safely" skip to Section 4 if only interested in seeing
+- * how the scheduling policy can be used. Anyway, we strongly recommend
+- * to come back here and continue reading (once the urge for testing is
+- * satisfied :P) to be sure of fully understanding all technical details.
+- ************************************************************************
++
++
++ ..  BIG FAT WARNING ******************************************************
++
++ .. warning::
++
++   This section contains a (not-thorough) summary on classical deadline
++   scheduling theory, and how it applies to SCHED_DEADLINE.
++   The reader can "safely" skip to Section 4 if only interested in seeing
++   how the scheduling policy can be used. Anyway, we strongly recommend
++   to come back here and continue reading (once the urge for testing is
++   satisfied :P) to be sure of fully understanding all technical details.
++
++ .. ************************************************************************
+ 
+  There are no limitations on what kind of task can exploit this new
+  scheduling discipline, even if it must be said that it is particularly
+@@ -329,6 +334,7 @@ CONTENTS
+  sporadic with minimum inter-arrival time P is r_{j+1} >= r_j + P. Finally,
+  d_j = r_j + D, where D is the task's relative deadline.
+  Summing up, a real-time task can be described as
++
+ 	Task = (WCET, D, P)
+ 
+  The utilization of a real-time task is defined as the ratio between its
+@@ -352,13 +358,15 @@ CONTENTS
+  between the finishing time of a job and its absolute deadline).
+  More precisely, it can be proven that using a global EDF scheduler the
+  maximum tardiness of each task is smaller or equal than
++
+ 	((M − 1) · WCET_max − WCET_min)/(M − (M − 2) · U_max) + WCET_max
++
+  where WCET_max = max{WCET_i} is the maximum WCET, WCET_min=min{WCET_i}
+  is the minimum WCET, and U_max = max{WCET_i/P_i} is the maximum
+  utilization[12].
+ 
+ 3.2 Schedulability Analysis for Uniprocessor Systems
+-------------------------
++----------------------------------------------------
+ 
+  If M=1 (uniprocessor system), or in case of partitioned scheduling (each
+  real-time task is statically assigned to one and only one CPU), it is
+@@ -370,7 +378,9 @@ CONTENTS
+  a task as WCET_i/min{D_i,P_i}, and EDF is able to respect all the deadlines
+  of all the tasks running on a CPU if the sum of the densities of the tasks
+  running on such a CPU is smaller or equal than 1:
++
+ 	sum(WCET_i / min{D_i, P_i}) <= 1
++
+  It is important to notice that this condition is only sufficient, and not
+  necessary: there are task sets that are schedulable, but do not respect the
+  condition. For example, consider the task set {Task_1,Task_2} composed by
+@@ -379,7 +389,9 @@ CONTENTS
+  (Task_1 is scheduled as soon as it is released, and finishes just in time
+  to respect its deadline; Task_2 is scheduled immediately after Task_1, hence
+  its response time cannot be larger than 50ms + 10ms = 60ms) even if
++
+ 	50 / min{50,100} + 10 / min{100, 100} = 50 / 50 + 10 / 100 = 1.1
++
+  Of course it is possible to test the exact schedulability of tasks with
+  D_i != P_i (checking a condition that is both sufficient and necessary),
+  but this cannot be done by comparing the total utilization or density with
+@@ -399,7 +411,7 @@ CONTENTS
+  4 Linux uses an admission test based on the tasks' utilizations.
+ 
+ 3.3 Schedulability Analysis for Multiprocessor Systems
+-------------------------
++------------------------------------------------------
+ 
+  On multiprocessor systems with global EDF scheduling (non partitioned
+  systems), a sufficient test for schedulability can not be based on the
+@@ -428,7 +440,9 @@ CONTENTS
+  between total utilization (or density) and a fixed constant. If all tasks
+  have D_i = P_i, a sufficient schedulability condition can be expressed in
+  a simple way:
++
+ 	sum(WCET_i / P_i) <= M - (M - 1) · U_max
++
+  where U_max = max{WCET_i / P_i}[10]. Notice that for U_max = 1,
+  M - (M - 1) · U_max becomes M - M + 1 = 1 and this schedulability condition
+  just confirms the Dhall's effect. A more complete survey of the literature
+@@ -447,7 +461,7 @@ CONTENTS
+  the tasks are limited.
+ 
+ 3.4 Relationship with SCHED_DEADLINE Parameters
+-------------------------
++-----------------------------------------------
+ 
+  Finally, it is important to understand the relationship between the
+  SCHED_DEADLINE scheduling parameters described in Section 2 (runtime,
+@@ -473,6 +487,7 @@ CONTENTS
+  this task, as it is not possible to respect its temporal constraints.
+ 
+  References:
++
+   1 - C. L. Liu and J. W. Layland. Scheduling algorithms for multiprogram-
+       ming in a hard-real-time environment. Journal of the Association for
+       Computing Machinery, 20(1), 1973.
+@@ -550,7 +565,7 @@ CONTENTS
+  The interface used to control the CPU bandwidth that can be allocated
+  to -deadline tasks is similar to the one already used for -rt
+  tasks with real-time group scheduling (a.k.a. RT-throttling - see
+- Documentation/scheduler/sched-rt-group.txt), and is based on readable/
++ Documentation/scheduler/sched-rt-group.rst), and is based on readable/
+  writable control files located in procfs (for system wide settings).
+  Notice that per-group settings (controlled through cgroupfs) are still not
+  defined for -deadline tasks, because more discussion is needed in order to
+@@ -596,11 +611,13 @@ CONTENTS
+  Specifying a periodic/sporadic task that executes for a given amount of
+  runtime at each instance, and that is scheduled according to the urgency of
+  its own timing constraints needs, in general, a way of declaring:
++
+   - a (maximum/typical) instance execution time,
+   - a minimum interval between consecutive instances,
+   - a time constraint by which each instance must be completed.
+ 
+  Therefore:
++
+   * a new struct sched_attr, containing all the necessary fields is
+     provided;
+   * the new scheduling related syscalls that manipulate it, i.e.,
+@@ -658,21 +675,21 @@ CONTENTS
+ ------------------------------------
+ 
+  An example of a simple configuration (pin a -deadline task to CPU0)
+- follows (rt-app is used to create a -deadline task).
++ follows (rt-app is used to create a -deadline task)::
+ 
+- mkdir /dev/cpuset
+- mount -t cgroup -o cpuset cpuset /dev/cpuset
+- cd /dev/cpuset
+- mkdir cpu0
+- echo 0 > cpu0/cpuset.cpus
+- echo 0 > cpu0/cpuset.mems
+- echo 1 > cpuset.cpu_exclusive
+- echo 0 > cpuset.sched_load_balance
+- echo 1 > cpu0/cpuset.cpu_exclusive
+- echo 1 > cpu0/cpuset.mem_exclusive
+- echo $$ > cpu0/tasks
+- rt-app -t 100000:10000:d:0 -D5 (it is now actually superfluous to specify
+- task affinity)
++   mkdir /dev/cpuset
++   mount -t cgroup -o cpuset cpuset /dev/cpuset
++   cd /dev/cpuset
++   mkdir cpu0
++   echo 0 > cpu0/cpuset.cpus
++   echo 0 > cpu0/cpuset.mems
++   echo 1 > cpuset.cpu_exclusive
++   echo 0 > cpuset.sched_load_balance
++   echo 1 > cpu0/cpuset.cpu_exclusive
++   echo 1 > cpu0/cpuset.mem_exclusive
++   echo $$ > cpu0/tasks
++   rt-app -t 100000:10000:d:0 -D5 # it is now actually superfluous to specify
++				  # task affinity
+ 
+ 6. Future plans
+ ===============
+@@ -711,7 +728,7 @@ Appendix A. Test suite
+  rt-app is available at: https://github.com/scheduler-tools/rt-app.
+ 
+  Thread parameters can be specified from the command line, with something like
+- this:
++ this::
+ 
+   # rt-app -t 100000:10000:d -t 150000:20000:f:10 -D5
+ 
+@@ -721,27 +738,27 @@ Appendix A. Test suite
+  of 5 seconds.
+ 
+  More interestingly, configurations can be described with a json file that
+- can be passed as input to rt-app with something like this:
++ can be passed as input to rt-app with something like this::
+ 
+   # rt-app my_config.json
+ 
+  The parameters that can be specified with the second method are a superset
+  of the command line options. Please refer to rt-app documentation for more
+- details (<rt-app-sources>/doc/*.json).
++ details (`<rt-app-sources>/doc/*.json`).
+ 
+  The second testing application is a modification of schedtool, called
+  schedtool-dl, which can be used to setup SCHED_DEADLINE parameters for a
+  certain pid/application. schedtool-dl is available at:
+  https://github.com/scheduler-tools/schedtool-dl.git.
+ 
+- The usage is straightforward:
++ The usage is straightforward::
+ 
+   # schedtool -E -t 10000000:100000000 -e ./my_cpuhog_app
+ 
+  With this, my_cpuhog_app is put to run inside a SCHED_DEADLINE reservation
+  of 10ms every 100ms (note that parameters are expressed in microseconds).
+  You can also use schedtool to create a reservation for an already running
+- application, given that you know its pid:
++ application, given that you know its pid::
+ 
+   # schedtool -E -t 10000000:100000000 my_app_pid
+ 
+@@ -750,43 +767,43 @@ Appendix B. Minimal main()
+ 
+  We provide in what follows a simple (ugly) self-contained code snippet
+  showing how SCHED_DEADLINE reservations can be created by a real-time
+- application developer.
 -
--Intel® introduced integrated sensor hubs as a part of the SoC starting from
--Cherry Trail and now supported on multiple generations of CPU packages. There
--are many commercial devices already shipped with Integrated Sensor Hubs (ISH).
--These ISH also comply to HID sensor specification, but the  difference is the
--transport protocol used for communication. The current external sensor hubs
--mainly use HID over i2C or USB. But ISH doesn't use either i2c or USB.
+- #define _GNU_SOURCE
+- #include <unistd.h>
+- #include <stdio.h>
+- #include <stdlib.h>
+- #include <string.h>
+- #include <time.h>
+- #include <linux/unistd.h>
+- #include <linux/kernel.h>
+- #include <linux/types.h>
+- #include <sys/syscall.h>
+- #include <pthread.h>
 -
+- #define gettid() syscall(__NR_gettid)
+-
+- #define SCHED_DEADLINE	6
+-
+- /* XXX use the proper syscall numbers */
+- #ifdef __x86_64__
+- #define __NR_sched_setattr		314
+- #define __NR_sched_getattr		315
+- #endif
+-
+- #ifdef __i386__
+- #define __NR_sched_setattr		351
+- #define __NR_sched_getattr		352
+- #endif
+-
+- #ifdef __arm__
+- #define __NR_sched_setattr		380
+- #define __NR_sched_getattr		381
+- #endif
+-
+- static volatile int done;
+-
+- struct sched_attr {
++ application developer::
++
++   #define _GNU_SOURCE
++   #include <unistd.h>
++   #include <stdio.h>
++   #include <stdlib.h>
++   #include <string.h>
++   #include <time.h>
++   #include <linux/unistd.h>
++   #include <linux/kernel.h>
++   #include <linux/types.h>
++   #include <sys/syscall.h>
++   #include <pthread.h>
++
++   #define gettid() syscall(__NR_gettid)
++
++   #define SCHED_DEADLINE	6
++
++   /* XXX use the proper syscall numbers */
++   #ifdef __x86_64__
++   #define __NR_sched_setattr		314
++   #define __NR_sched_getattr		315
++   #endif
++
++   #ifdef __i386__
++   #define __NR_sched_setattr		351
++   #define __NR_sched_getattr		352
++   #endif
++
++   #ifdef __arm__
++   #define __NR_sched_setattr		380
++   #define __NR_sched_getattr		381
++   #endif
++
++   static volatile int done;
++
++   struct sched_attr {
+ 	__u32 size;
+ 
+ 	__u32 sched_policy;
+@@ -802,25 +819,25 @@ Appendix B. Minimal main()
+ 	__u64 sched_runtime;
+ 	__u64 sched_deadline;
+ 	__u64 sched_period;
+- };
++   };
+ 
+- int sched_setattr(pid_t pid,
++   int sched_setattr(pid_t pid,
+ 		  const struct sched_attr *attr,
+ 		  unsigned int flags)
+- {
++   {
+ 	return syscall(__NR_sched_setattr, pid, attr, flags);
+- }
++   }
+ 
+- int sched_getattr(pid_t pid,
++   int sched_getattr(pid_t pid,
+ 		  struct sched_attr *attr,
+ 		  unsigned int size,
+ 		  unsigned int flags)
+- {
++   {
+ 	return syscall(__NR_sched_getattr, pid, attr, size, flags);
+- }
++   }
+ 
+- void *run_deadline(void *data)
+- {
++   void *run_deadline(void *data)
++   {
+ 	struct sched_attr attr;
+ 	int x = 0;
+ 	int ret;
+@@ -851,10 +868,10 @@ Appendix B. Minimal main()
+ 
+ 	printf("deadline thread dies [%ld]\n", gettid());
+ 	return NULL;
+- }
++   }
+ 
+- int main (int argc, char **argv)
+- {
++   int main (int argc, char **argv)
++   {
+ 	pthread_t thread;
+ 
+ 	printf("main thread [%ld]\n", gettid());
+@@ -868,4 +885,4 @@ Appendix B. Minimal main()
+ 
+ 	printf("main dies [%ld]\n", gettid());
+ 	return 0;
+- }
++   }
+diff --git a/Documentation/scheduler/sched-design-CFS.txt b/Documentation/scheduler/sched-design-CFS.rst
+similarity index 97%
+rename from Documentation/scheduler/sched-design-CFS.txt
+rename to Documentation/scheduler/sched-design-CFS.rst
+index d1328890ef28..53b30d1967cf 100644
+--- a/Documentation/scheduler/sched-design-CFS.txt
++++ b/Documentation/scheduler/sched-design-CFS.rst
+@@ -1,9 +1,10 @@
+-                      =============
+-                      CFS Scheduler
+-                      =============
++=============
++CFS Scheduler
++=============
+ 
+ 
+ 1.  OVERVIEW
++============
+ 
+ CFS stands for "Completely Fair Scheduler," and is the new "desktop" process
+ scheduler implemented by Ingo Molnar and merged in Linux 2.6.23.  It is the
+@@ -27,6 +28,7 @@ is its actual runtime normalized to the total number of running tasks.
+ 
+ 
+ 2.  FEW IMPLEMENTATION DETAILS
++==============================
+ 
+ In CFS the virtual runtime is expressed and tracked via the per-task
+ p->se.vruntime (nanosec-unit) value.  This way, it's possible to accurately
+@@ -49,6 +51,7 @@ algorithm variants to recognize sleepers.
+ 
+ 
+ 3.  THE RBTREE
++==============
+ 
+ CFS's design is quite radical: it does not use the old data structures for the
+ runqueues, but it uses a time-ordered rbtree to build a "timeline" of future
+@@ -84,6 +87,7 @@ picked and the current task is preempted.
+ 
+ 
+ 4.  SOME FEATURES OF CFS
++========================
+ 
+ CFS uses nanosecond granularity accounting and does not rely on any jiffies or
+ other HZ detail.  Thus the CFS scheduler has no notion of "timeslices" in the
+@@ -113,6 +117,7 @@ result.
+ 
+ 
+ 5. Scheduling policies
++======================
+ 
+ CFS implements three scheduling policies:
+ 
+@@ -137,6 +142,7 @@ SCHED_IDLE.
+ 
+ 
+ 6.  SCHEDULING CLASSES
++======================
+ 
+ The new CFS scheduler has been designed in such a way to introduce "Scheduling
+ Classes," an extensible hierarchy of scheduler modules.  These modules
+@@ -197,6 +203,7 @@ This is the (partial) list of the hooks:
+ 
+ 
+ 7.  GROUP SCHEDULER EXTENSIONS TO CFS
++=====================================
+ 
+ Normally, the scheduler operates on individual tasks and strives to provide
+ fair CPU time to each task.  Sometimes, it may be desirable to group tasks and
+@@ -219,7 +226,7 @@ SCHED_BATCH) tasks.
+ 
+ When CONFIG_FAIR_GROUP_SCHED is defined, a "cpu.shares" file is created for each
+ group created using the pseudo filesystem.  See example steps below to create
+-task groups and modify their CPU share using the "cgroups" pseudo filesystem.
++task groups and modify their CPU share using the "cgroups" pseudo filesystem::
+ 
+ 	# mount -t tmpfs cgroup_root /sys/fs/cgroup
+ 	# mkdir /sys/fs/cgroup/cpu
+diff --git a/Documentation/scheduler/sched-domains.txt b/Documentation/scheduler/sched-domains.rst
+similarity index 97%
+rename from Documentation/scheduler/sched-domains.txt
+rename to Documentation/scheduler/sched-domains.rst
+index 4af80b1c05aa..f7504226f445 100644
+--- a/Documentation/scheduler/sched-domains.txt
++++ b/Documentation/scheduler/sched-domains.rst
+@@ -1,3 +1,7 @@
++=================
++Scheduler Domains
++=================
++
+ Each CPU has a "base" scheduling domain (struct sched_domain). The domain
+ hierarchy is built from these base domains via the ->parent pointer. ->parent
+ MUST be NULL terminated, and domain structures should be per-CPU as they are
+@@ -46,7 +50,9 @@ CPU's runqueue and the newly found busiest one and starts moving tasks from it
+ to our runqueue. The exact number of tasks amounts to an imbalance previously
+ computed while iterating over this sched domain's groups.
+ 
+-*** Implementing sched domains ***
++Implementing sched domains
++==========================
++
+ The "base" domain will "span" the first level of the hierarchy. In the case
+ of SMT, you'll span all siblings of the physical CPU, with each group being
+ a single virtual CPU.
+diff --git a/Documentation/scheduler/sched-energy.txt b/Documentation/scheduler/sched-energy.rst
+similarity index 96%
+rename from Documentation/scheduler/sched-energy.txt
+rename to Documentation/scheduler/sched-energy.rst
+index d97207b9accb..9580c57a52bc 100644
+--- a/Documentation/scheduler/sched-energy.txt
++++ b/Documentation/scheduler/sched-energy.rst
+@@ -1,6 +1,6 @@
+-			   =======================
+-			   Energy Aware Scheduling
+-			   =======================
++=======================
++Energy Aware Scheduling
++=======================
+ 
+ 1. Introduction
+ ---------------
+@@ -12,7 +12,7 @@ with a minimal impact on throughput. This document aims at providing an
+ introduction on how EAS works, what are the main design decisions behind it, and
+ details what is needed to get it to run.
+ 
+-Before going any further, please note that at the time of writing:
++Before going any further, please note that at the time of writing::
+ 
+    /!\ EAS does not support platforms with symmetric CPU topologies /!\
+ 
+@@ -33,13 +33,13 @@ To make it clear from the start:
+  - power = energy/time = [joule/second] = [watt]
+ 
+ The goal of EAS is to minimize energy, while still getting the job done. That
+-is, we want to maximize:
++is, we want to maximize::
+ 
+ 	performance [inst/s]
+ 	--------------------
+ 	    power [W]
+ 
+-which is equivalent to minimizing:
++which is equivalent to minimizing::
+ 
+ 	energy [J]
+ 	-----------
+@@ -97,7 +97,7 @@ domains can contain duplicate elements.
+ 
+ Example 1.
+     Let us consider a platform with 12 CPUs, split in 3 performance domains
+-    (pd0, pd4 and pd8), organized as follows:
++    (pd0, pd4 and pd8), organized as follows::
+ 
+ 	          CPUs:   0 1 2 3 4 5 6 7 8 9 10 11
+ 	          PDs:   |--pd0--|--pd4--|---pd8---|
+@@ -108,6 +108,7 @@ Example 1.
+     containing 6 CPUs. The two root domains are denoted rd1 and rd2 in the
+     above figure. Since pd4 intersects with both rd1 and rd2, it will be
+     present in the linked list '->pd' attached to each of them:
++
+        * rd1->pd: pd0 -> pd4
+        * rd2->pd: pd4 -> pd8
+ 
+@@ -159,9 +160,9 @@ Example 2.
+     Each performance domain has three Operating Performance Points (OPPs).
+     The CPU capacity and power cost associated with each OPP is listed in
+     the Energy Model table. The util_avg of P is shown on the figures
+-    below as 'PP'.
++    below as 'PP'::
+ 
+-    CPU util.
++     CPU util.
+       1024                 - - - - - - -              Energy Model
+                                                +-----------+-------------+
+                                                |  Little   |     Big     |
+@@ -188,8 +189,7 @@ Example 2.
+     (which is coherent with the behaviour of the schedutil CPUFreq
+     governor, see Section 6. for more details on this topic).
+ 
+-    Case 1. P is migrated to CPU1
+-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++    **Case 1. P is migrated to CPU1**::
+ 
+       1024                 - - - - - - -
+ 
+@@ -207,8 +207,7 @@ Example 2.
+             CPU0   CPU1     CPU2   CPU3
+ 
+ 
+-    Case 2. P is migrated to CPU3
+-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++    **Case 2. P is migrated to CPU3**::
+ 
+       1024                 - - - - - - -
+ 
+@@ -226,8 +225,7 @@ Example 2.
+             CPU0   CPU1     CPU2   CPU3
+ 
+ 
+-    Case 3. P stays on prev_cpu / CPU 0
+-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++    **Case 3. P stays on prev_cpu / CPU 0**::
+ 
+       1024                 - - - - - - -
+ 
+@@ -324,7 +322,9 @@ hardware properties and on other features of the kernel being enabled. This
+ section lists these dependencies and provides hints as to how they can be met.
+ 
+ 
+-  6.1 - Asymmetric CPU topology
++6.1 - Asymmetric CPU topology
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
+ 
+ As mentioned in the introduction, EAS is only supported on platforms with
+ asymmetric CPU topologies for now. This requirement is checked at run-time by
+@@ -347,7 +347,8 @@ significant savings on SMP platforms have been observed yet. This restriction
+ could be amended in the future if proven otherwise.
+ 
+ 
+-  6.2 - Energy Model presence
++6.2 - Energy Model presence
++^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ EAS uses the EM of a platform to estimate the impact of scheduling decisions on
+ energy. So, your platform must provide power cost tables to the EM framework in
+@@ -358,7 +359,8 @@ Please also note that the scheduling domains need to be re-built after the
+ EM has been registered in order to start EAS.
+ 
+ 
+-  6.3 - Energy Model complexity
++6.3 - Energy Model complexity
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ The task wake-up path is very latency-sensitive. When the EM of a platform is
+ too complex (too many CPUs, too many performance domains, too many performance
+@@ -388,7 +390,8 @@ two possible options:
+        hence enabling it to cope with larger EMs in reasonable time.
+ 
+ 
+-  6.4 - Schedutil governor
++6.4 - Schedutil governor
++^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ EAS tries to predict at which OPP will the CPUs be running in the close future
+ in order to estimate their energy consumption. To do so, it is assumed that OPPs
+@@ -405,7 +408,8 @@ frequency requests and energy predictions.
+ Using EAS with any other governor than schedutil is not supported.
+ 
+ 
+-  6.5 Scale-invariant utilization signals
++6.5 Scale-invariant utilization signals
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ In order to make accurate prediction across CPUs and for all performance
+ states, EAS needs frequency-invariant and CPU-invariant PELT signals. These can
+@@ -416,7 +420,8 @@ Using EAS on a platform that doesn't implement these two callbacks is not
+ supported.
+ 
+ 
+-  6.6 Multithreading (SMT)
++6.6 Multithreading (SMT)
++^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+ EAS in its current form is SMT unaware and is not able to leverage
+ multithreaded hardware to save energy. EAS considers threads as independent
+diff --git a/Documentation/scheduler/sched-nice-design.txt b/Documentation/scheduler/sched-nice-design.rst
+similarity index 98%
+rename from Documentation/scheduler/sched-nice-design.txt
+rename to Documentation/scheduler/sched-nice-design.rst
+index 3ac1e46d5365..0571f1b47e64 100644
+--- a/Documentation/scheduler/sched-nice-design.txt
++++ b/Documentation/scheduler/sched-nice-design.rst
+@@ -1,3 +1,7 @@
++=====================
++Scheduler Nice Design
++=====================
++
+ This document explains the thinking about the revamped and streamlined
+ nice-levels implementation in the new Linux scheduler.
+ 
+@@ -14,7 +18,7 @@ much stronger than they were before in 2.4 (and people were happy about
+ that change), and we also intentionally calibrated the linear timeslice
+ rule so that nice +19 level would be _exactly_ 1 jiffy. To better
+ understand it, the timeslice graph went like this (cheesy ASCII art
+-alert!):
++alert!)::
+ 
+ 
+                    A
+diff --git a/Documentation/scheduler/sched-rt-group.txt b/Documentation/scheduler/sched-rt-group.rst
+similarity index 95%
+rename from Documentation/scheduler/sched-rt-group.txt
+rename to Documentation/scheduler/sched-rt-group.rst
+index c09f7a3fee66..d27d3f3712fd 100644
+--- a/Documentation/scheduler/sched-rt-group.txt
++++ b/Documentation/scheduler/sched-rt-group.rst
+@@ -1,18 +1,18 @@
+-				Real-Time group scheduling
+-				--------------------------
++==========================
++Real-Time group scheduling
++==========================
+ 
+-CONTENTS
+-========
++.. CONTENTS
+ 
+-0. WARNING
 -1. Overview
--
--Using a analogy with a usbhid implementation, the ISH follows a similar model
--for a very high speed communication:
--
--	-----------------		----------------------
--	|    USB HID	|	-->	|    ISH HID	     |
--	-----------------		----------------------
--	-----------------		----------------------
--	|  USB protocol	|	-->	|    ISH Transport   |
--	-----------------		----------------------
--	-----------------		----------------------
--	|  EHCI/XHCI	|	-->	|    ISH IPC	     |
--	-----------------		----------------------
--	      PCI				 PCI
--	-----------------		----------------------
--        |Host controller|	-->	|    ISH processor   |
--	-----------------		----------------------
--	     USB Link
--	-----------------		----------------------
--	| USB End points|	-->	|    ISH Clients     |
--	-----------------		----------------------
--
--Like USB protocol provides a method for device enumeration, link management
--and user data encapsulation, the ISH also provides similar services. But it is
--very light weight tailored to manage and communicate with ISH client
--applications implemented in the firmware.
--
--The ISH allows multiple sensor management applications executing in the
--firmware. Like USB endpoints the messaging can be to/from a client. As part of
--enumeration process, these clients are identified. These clients can be simple
--HID sensor applications, sensor calibration application or senor firmware
--update application.
--
--The implementation model is similar, like USB bus, ISH transport is also
--implemented as a bus. Each client application executing in the ISH processor
--is registered as a device on this bus. The driver, which binds each device
--(ISH HID driver) identifies the device type and registers with the hid core.
--
--2. ISH Implementation: Block Diagram
--
--	 ---------------------------
--	|  User Space Applications  |
--	 ---------------------------
--
------------------IIO ABI----------------
--	 --------------------------
--	|  IIO Sensor Drivers	  |
--	 --------------------------
--	 --------------------------
--	|	 IIO core	  |
--	 --------------------------
--	 --------------------------
--	|   HID Sensor Hub MFD	  |
--	 --------------------------
--	 --------------------------
--	|       HID Core	  |
--	 --------------------------
--	 --------------------------
--	|   HID over ISH Client   |
--	 --------------------------
--	 --------------------------
--	|   ISH Transport (ISHTP) |
--	 --------------------------
--	 --------------------------
--	|      IPC Drivers	  |
--	 --------------------------
--OS
------------------   PCI -----------------
--Hardware + Firmware
--	 ----------------------------
--	| ISH Hardware/Firmware(FW) |
--	 ----------------------------
--
--3. High level processing in above blocks
--
--3.1 Hardware Interface
--
--The ISH is exposed as "Non-VGA unclassified PCI device" to the host. The PCI
--product and vendor IDs are changed from different generations of processors. So
--the source code which enumerate drivers needs to update from generation to
--generation.
--
--3.2 Inter Processor Communication (IPC) driver
--Location: drivers/hid/intel-ish-hid/ipc
--
--The IPC message used memory mapped I/O. The registers are defined in
--hw-ish-regs.h.
--
--3.2.1 IPC/FW message types
--
--There are two types of messages, one for management of link and other messages
--are to and from transport layers.
--
--TX and RX of Transport messages
--
--A set of memory mapped register offers support of multi byte messages TX and
--RX (E.g.IPC_REG_ISH2HOST_MSG, IPC_REG_HOST2ISH_MSG). The IPC layer maintains
--internal queues to sequence messages and send them in order to the FW.
--Optionally the caller can register handler to get notification of completion.
--A door bell mechanism is used in messaging to trigger processing in host and
--client firmware side. When ISH interrupt handler is called, the ISH2HOST
--doorbell register is used by host drivers to determine that the interrupt
--is for ISH.
--
--Each side has 32 32-bit message registers and a 32-bit doorbell. Doorbell
--register has the following format:
--Bits 0..6: fragment length (7 bits are used)
--Bits 10..13: encapsulated protocol
--Bits 16..19: management command (for IPC management protocol)
--Bit 31: doorbell trigger (signal H/W interrupt to the other side)
--Other bits are reserved, should be 0.
--
--3.2.2 Transport layer interface
--
--To abstract HW level IPC communication, a set of callbacks are registered.
--The transport layer uses them to send and receive messages.
--Refer to  struct ishtp_hw_ops for callbacks.
--
--3.3 ISH Transport layer
--Location: drivers/hid/intel-ish-hid/ishtp/
--
--3.3.1 A Generic Transport Layer
--
--The transport layer is a bi-directional protocol, which defines:
--- Set of commands to start, stop, connect, disconnect and flow control
--(ishtp/hbm.h) for details
--- A flow control mechanism to avoid buffer overflows
--
--This protocol resembles bus messages described in the following document:
--http://www.intel.com/content/dam/www/public/us/en/documents/technical-\
--specifications/dcmi-hi-1-0-spec.pdf "Chapter 7: Bus Message Layer"
--
--3.3.2 Connection and Flow Control Mechanism
--
--Each FW client and a protocol is identified by an UUID. In order to communicate
--to a FW client, a connection must be established using connect request and
--response bus messages. If successful, a pair (host_client_id and fw_client_id)
--will identify the connection.
--
--Once connection is established, peers send each other flow control bus messages
--independently. Every peer may send a message only if it has received a
--flow-control credit before. Once it sent a message, it may not send another one
--before receiving the next flow control credit.
--Either side can send disconnect request bus message to end communication. Also
--the link will be dropped if major FW reset occurs.
--
--3.3.3 Peer to Peer data transfer
--
--Peer to Peer data transfer can happen with or without using DMA. Depending on
--the sensor bandwidth requirement DMA can be enabled by using module parameter
--ishtp_use_dma under intel_ishtp.
--
--Each side (host and FW) manages its DMA transfer memory independently. When an
--ISHTP client from either host or FW side wants to send something, it decides
--whether to send over IPC or over DMA; for each transfer the decision is
--independent. The sending side sends DMA_XFER message when the message is in
--the respective host buffer (TX when host client sends, RX when FW client
--sends). The recipient of DMA message responds with DMA_XFER_ACK, indicating
--the sender that the memory region for that message may be reused.
--
--DMA initialization is started with host sending DMA_ALLOC_NOTIFY bus message
--(that includes RX buffer) and FW responds with DMA_ALLOC_NOTIFY_ACK.
--Additionally to DMA address communication, this sequence checks capabilities:
--if thw host doesn't support DMA, then it won't send DMA allocation, so FW can't
--send DMA; if FW doesn't support DMA then it won't respond with
--DMA_ALLOC_NOTIFY_ACK, in which case host will not use DMA transfers.
--Here ISH acts as busmaster DMA controller. Hence when host sends DMA_XFER,
--it's request to do host->ISH DMA transfer; when FW sends DMA_XFER, it means
--that it already did DMA and the message resides at host. Thus, DMA_XFER
--and DMA_XFER_ACK act as ownership indicators.
--
--At initial state all outgoing memory belongs to the sender (TX to host, RX to
--FW), DMA_XFER transfers ownership on the region that contains ISHTP message to
--the receiving side, DMA_XFER_ACK returns ownership to the sender. A sender
--needs not wait for previous DMA_XFER to be ack'ed, and may send another message
--as long as remaining continuous memory in its ownership is enough.
--In principle, multiple DMA_XFER and DMA_XFER_ACK messages may be sent at once
--(up to IPC MTU), thus allowing for interrupt throttling.
--Currently, ISH FW decides to send over DMA if ISHTP message is more than 3 IPC
--fragments and via IPC otherwise.
--
--3.3.4 Ring Buffers
--
--When a client initiate a connection, a ring or RX and TX buffers are allocated.
--The size of ring can be specified by the client. HID client set 16 and 32 for
--TX and RX buffers respectively. On send request from client, the data to be
--sent is copied to one of the send ring buffer and scheduled to be sent using
--bus message protocol. These buffers are required because the FW may have not
--have processed the last message and may not have enough flow control credits
--to send. Same thing holds true on receive side and flow control is required.
--
--3.3.5 Host Enumeration
--
--The host enumeration bus command allow discovery of clients present in the FW.
--There can be multiple sensor clients and clients for calibration function.
--
--To ease in implantation and allow independent driver handle each client
--this transport layer takes advantage of Linux Bus driver model. Each
--client is registered as device on the the transport bus (ishtp bus).
--
--Enumeration sequence of messages:
--- Host sends HOST_START_REQ_CMD, indicating that host ISHTP layer is up.
--- FW responds with HOST_START_RES_CMD
--- Host sends HOST_ENUM_REQ_CMD (enumerate FW clients)
--- FW responds with HOST_ENUM_RES_CMD that includes bitmap of available FW
--client IDs
--- For each FW ID found in that bitmap host sends
--HOST_CLIENT_PROPERTIES_REQ_CMD
--- FW responds with HOST_CLIENT_PROPERTIES_RES_CMD. Properties include UUID,
--max ISHTP message size, etc.
--- Once host received properties for that last discovered client, it considers
--ISHTP device fully functional (and allocates DMA buffers)
--
--3.4 HID over ISH Client
--Location: drivers/hid/intel-ish-hid
--
--The ISHTP client driver is responsible for:
--- enumerate HID devices under FW ISH client
--- Get Report descriptor
--- Register with HID core as a LL driver
--- Process Get/Set feature request
--- Get input reports
--
--3.5 HID Sensor Hub MFD and IIO sensor drivers
--
--The functionality in these drivers is the same as an external sensor hub.
--Refer to
--Documentation/hid/hid-sensor.txt for HID sensor
--Documentation/ABI/testing/sysfs-bus-iio for IIO ABIs to user space
--
--3.6 End to End HID transport Sequence Diagram
--
--HID-ISH-CLN			ISHTP			IPC				HW
--	|			|			|				|
--	|			|			|-----WAKE UP------------------>|
--	|			|			|				|
--	|			|			|-----HOST READY--------------->|
--	|			|			|				|
--	|			|			|<----MNG_RESET_NOTIFY_ACK----- |
--	|			|			|				|
--	|			|<----ISHTP_START------ |				|
--	|			|			|				|
--	|			|<-----------------HOST_START_RES_CMD-------------------|
--	|			|			|				|
--	|			|------------------QUERY_SUBSCRIBER-------------------->|
--	|			|			|				|
--	|			|------------------HOST_ENUM_REQ_CMD------------------->|
--	|			|			|				|
--	|			|<-----------------HOST_ENUM_RES_CMD--------------------|
--	|			|			|				|
--	|			|------------------HOST_CLIENT_PROPERTIES_REQ_CMD------>|
--	|			|			|				|
--	|			|<-----------------HOST_CLIENT_PROPERTIES_RES_CMD-------|
--	|	Create new device on in ishtp bus	|				|
--	|			|			|				|
--	|			|------------------HOST_CLIENT_PROPERTIES_REQ_CMD------>|
--	|			|			|				|
--	|			|<-----------------HOST_CLIENT_PROPERTIES_RES_CMD-------|
--	|	Create new device on in ishtp bus	|				|
--	|			|			|				|
--	|			|--Repeat HOST_CLIENT_PROPERTIES_REQ_CMD-till last one--|
--	|			|			|				|
--     probed()
--	|----ishtp_cl_connect-->|----------------- CLIENT_CONNECT_REQ_CMD-------------->|
--	|			|			|				|
--	|			|<----------------CLIENT_CONNECT_RES_CMD----------------|
--	|			|			|				|
--	|register event callback|			|				|
--	|			|			|				|
--	|ishtp_cl_send(
--	HOSTIF_DM_ENUM_DEVICES) |----------fill ishtp_msg_hdr struct write to HW-----  >|
--	|			|			|				|
--	|			|			|<-----IRQ(IPC_PROTOCOL_ISHTP---|
--	|			|			|				|
--	|<--ENUM_DEVICE RSP-----|			|				|
--	|			|			|				|
--for each enumerated device
--	|ishtp_cl_send(
--	HOSTIF_GET_HID_DESCRIPTOR |----------fill ishtp_msg_hdr struct write to HW---  >|
--	|			|			|				|
--	...Response
--	|			|			|				|
--for each enumerated device
--	|ishtp_cl_send(
--	HOSTIF_GET_REPORT_DESCRIPTOR |----------fill ishtp_msg_hdr struct write to HW- >|
--	|			|			|				|
--	|			|			|				|
-- hid_allocate_device
--	|			|			|				|
-- hid_add_device			|			|				|
--	|			|			|				|
--
--
--3.7 ISH Debugging
--
--To debug ISH, event tracing mechanism is used. To enable debug logs
--echo 1 > /sys/kernel/debug/tracing/events/intel_ish/enable
--cat sys/kernel/debug/tracing/trace
--
--3.8 ISH IIO sysfs Example on Lenovo thinkpad Yoga 260
--
--root@otcpl-ThinkPad-Yoga-260:~# tree -l /sys/bus/iio/devices/
--/sys/bus/iio/devices/
--├── iio:device0 -> ../../../devices/0044:8086:22D8.0001/HID-SENSOR-200073.9.auto/iio:device0
--│   ├── buffer
--│   │   ├── enable
--│   │   ├── length
--│   │   └── watermark
--...
--│   ├── in_accel_hysteresis
--│   ├── in_accel_offset
--│   ├── in_accel_sampling_frequency
--│   ├── in_accel_scale
--│   ├── in_accel_x_raw
--│   ├── in_accel_y_raw
--│   ├── in_accel_z_raw
--│   ├── name
--│   ├── scan_elements
--│   │   ├── in_accel_x_en
--│   │   ├── in_accel_x_index
--│   │   ├── in_accel_x_type
--│   │   ├── in_accel_y_en
--│   │   ├── in_accel_y_index
--│   │   ├── in_accel_y_type
--│   │   ├── in_accel_z_en
--│   │   ├── in_accel_z_index
--│   │   └── in_accel_z_type
--...
--│   │   ├── devices
--│   │   │   │   ├── buffer
--│   │   │   │   │   ├── enable
--│   │   │   │   │   ├── length
--│   │   │   │   │   └── watermark
--│   │   │   │   ├── dev
--│   │   │   │   ├── in_intensity_both_raw
--│   │   │   │   ├── in_intensity_hysteresis
--│   │   │   │   ├── in_intensity_offset
--│   │   │   │   ├── in_intensity_sampling_frequency
--│   │   │   │   ├── in_intensity_scale
--│   │   │   │   ├── name
--│   │   │   │   ├── scan_elements
--│   │   │   │   │   ├── in_intensity_both_en
--│   │   │   │   │   ├── in_intensity_both_index
--│   │   │   │   │   └── in_intensity_both_type
--│   │   │   │   ├── trigger
--│   │   │   │   │   └── current_trigger
--...
--│   │   │   │   ├── buffer
--│   │   │   │   │   ├── enable
--│   │   │   │   │   ├── length
--│   │   │   │   │   └── watermark
--│   │   │   │   ├── dev
--│   │   │   │   ├── in_magn_hysteresis
--│   │   │   │   ├── in_magn_offset
--│   │   │   │   ├── in_magn_sampling_frequency
--│   │   │   │   ├── in_magn_scale
--│   │   │   │   ├── in_magn_x_raw
--│   │   │   │   ├── in_magn_y_raw
--│   │   │   │   ├── in_magn_z_raw
--│   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_raw
--│   │   │   │   ├── in_rot_hysteresis
--│   │   │   │   ├── in_rot_offset
--│   │   │   │   ├── in_rot_sampling_frequency
--│   │   │   │   ├── in_rot_scale
--│   │   │   │   ├── name
--...
--│   │   │   │   ├── scan_elements
--│   │   │   │   │   ├── in_magn_x_en
--│   │   │   │   │   ├── in_magn_x_index
--│   │   │   │   │   ├── in_magn_x_type
--│   │   │   │   │   ├── in_magn_y_en
--│   │   │   │   │   ├── in_magn_y_index
--│   │   │   │   │   ├── in_magn_y_type
--│   │   │   │   │   ├── in_magn_z_en
--│   │   │   │   │   ├── in_magn_z_index
--│   │   │   │   │   ├── in_magn_z_type
--│   │   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_en
--│   │   │   │   │   ├── in_rot_from_north_magnetic_tilt_comp_index
--│   │   │   │   │   └── in_rot_from_north_magnetic_tilt_comp_type
--│   │   │   │   ├── trigger
--│   │   │   │   │   └── current_trigger
--...
--│   │   │   │   ├── buffer
--│   │   │   │   │   ├── enable
--│   │   │   │   │   ├── length
--│   │   │   │   │   └── watermark
--│   │   │   │   ├── dev
--│   │   │   │   ├── in_anglvel_hysteresis
--│   │   │   │   ├── in_anglvel_offset
--│   │   │   │   ├── in_anglvel_sampling_frequency
--│   │   │   │   ├── in_anglvel_scale
--│   │   │   │   ├── in_anglvel_x_raw
--│   │   │   │   ├── in_anglvel_y_raw
--│   │   │   │   ├── in_anglvel_z_raw
--│   │   │   │   ├── name
--│   │   │   │   ├── scan_elements
--│   │   │   │   │   ├── in_anglvel_x_en
--│   │   │   │   │   ├── in_anglvel_x_index
--│   │   │   │   │   ├── in_anglvel_x_type
--│   │   │   │   │   ├── in_anglvel_y_en
--│   │   │   │   │   ├── in_anglvel_y_index
--│   │   │   │   │   ├── in_anglvel_y_type
--│   │   │   │   │   ├── in_anglvel_z_en
--│   │   │   │   │   ├── in_anglvel_z_index
--│   │   │   │   │   └── in_anglvel_z_type
--│   │   │   │   ├── trigger
--│   │   │   │   │   └── current_trigger
--...
--│   │   │   │   ├── buffer
--│   │   │   │   │   ├── enable
--│   │   │   │   │   ├── length
--│   │   │   │   │   └── watermark
--│   │   │   │   ├── dev
--│   │   │   │   ├── in_anglvel_hysteresis
--│   │   │   │   ├── in_anglvel_offset
--│   │   │   │   ├── in_anglvel_sampling_frequency
--│   │   │   │   ├── in_anglvel_scale
--│   │   │   │   ├── in_anglvel_x_raw
--│   │   │   │   ├── in_anglvel_y_raw
--│   │   │   │   ├── in_anglvel_z_raw
--│   │   │   │   ├── name
--│   │   │   │   ├── scan_elements
--│   │   │   │   │   ├── in_anglvel_x_en
--│   │   │   │   │   ├── in_anglvel_x_index
--│   │   │   │   │   ├── in_anglvel_x_type
--│   │   │   │   │   ├── in_anglvel_y_en
--│   │   │   │   │   ├── in_anglvel_y_index
--│   │   │   │   │   ├── in_anglvel_y_type
--│   │   │   │   │   ├── in_anglvel_z_en
--│   │   │   │   │   ├── in_anglvel_z_index
--│   │   │   │   │   └── in_anglvel_z_type
--│   │   │   │   ├── trigger
--│   │   │   │   │   └── current_trigger
--...
-diff --git a/Documentation/hid/uhid.txt b/Documentation/hid/uhid.rst
-similarity index 94%
-rename from Documentation/hid/uhid.txt
-rename to Documentation/hid/uhid.rst
-index 958fff945304..b18cb96c885f 100644
---- a/Documentation/hid/uhid.txt
-+++ b/Documentation/hid/uhid.rst
-@@ -1,5 +1,6 @@
--      UHID - User-space I/O driver support for HID subsystem
--     ========================================================
-+======================================================
-+UHID - User-space I/O driver support for HID subsystem
-+======================================================
+-  1.1 The problem
+-  1.2 The solution
+-2. The interface
+-  2.1 System-wide settings
+-  2.2 Default behaviour
+-  2.3 Basis for grouping tasks
+-3. Future plans
++   0. WARNING
++   1. Overview
++     1.1 The problem
++     1.2 The solution
++   2. The interface
++     2.1 System-wide settings
++     2.2 Default behaviour
++     2.3 Basis for grouping tasks
++   3. Future plans
  
- UHID allows user-space to implement HID transport drivers. Please see
- hid-transport.txt for an introduction into HID transport drivers. This document
-@@ -22,9 +23,9 @@ If a new device is detected by your HID I/O Driver and you want to register this
- device with the HID subsystem, then you need to open /dev/uhid once for each
- device you want to register. All further communication is done by read()'ing or
- write()'ing "struct uhid_event" objects. Non-blocking operations are supported
--by setting O_NONBLOCK.
-+by setting O_NONBLOCK::
  
--struct uhid_event {
-+  struct uhid_event {
-         __u32 type;
-         union {
-                 struct uhid_create2_req create2;
-@@ -32,7 +33,7 @@ struct uhid_event {
-                 struct uhid_input2_req input2;
-                 ...
-         } u;
--};
-+  };
+ 0. WARNING
+@@ -159,9 +159,11 @@ Consider two sibling groups A and B; both have 50% bandwidth, but A's
+ period is twice the length of B's.
  
- The "type" field contains the ID of the event. Depending on the ID different
- payloads are sent. You must not split a single event across multiple read()'s or
-@@ -86,31 +87,31 @@ the request was handled successfully. O_NONBLOCK does not affect write() as
- writes are always handled immediately in a non-blocking fashion. Future requests
- might make use of O_NONBLOCK, though.
- 
--  UHID_CREATE2:
-+UHID_CREATE2:
-   This creates the internal HID device. No I/O is possible until you send this
-   event to the kernel. The payload is of type struct uhid_create2_req and
-   contains information about your device. You can start I/O now.
- 
--  UHID_DESTROY:
-+UHID_DESTROY:
-   This destroys the internal HID device. No further I/O will be accepted. There
-   may still be pending messages that you can receive with read() but no further
-   UHID_INPUT events can be sent to the kernel.
-   You can create a new device by sending UHID_CREATE2 again. There is no need to
-   reopen the character device.
- 
--  UHID_INPUT2:
-+UHID_INPUT2:
-   You must send UHID_CREATE2 before sending input to the kernel! This event
-   contains a data-payload. This is the raw data that you read from your device
-   on the interrupt channel. The kernel will parse the HID reports.
- 
--  UHID_GET_REPORT_REPLY:
-+UHID_GET_REPORT_REPLY:
-   If you receive a UHID_GET_REPORT request you must answer with this request.
-   You  must copy the "id" field from the request into the answer. Set the "err"
-   field to 0 if no error occurred or to EIO if an I/O error occurred.
-   If "err" is 0 then you should fill the buffer of the answer with the results
-   of the GET_REPORT request and set "size" correspondingly.
- 
--  UHID_SET_REPORT_REPLY:
-+UHID_SET_REPORT_REPLY:
-   This is the SET_REPORT equivalent of UHID_GET_REPORT_REPLY. Unlike GET_REPORT,
-   SET_REPORT never returns a data buffer, therefore, it's sufficient to set the
-   "id" and "err" fields correctly.
-@@ -120,16 +121,18 @@ read()
- read() will return a queued output report. No reaction is required to any of
- them but you should handle them according to your needs.
- 
--  UHID_START:
-+UHID_START:
-   This is sent when the HID device is started. Consider this as an answer to
-   UHID_CREATE2. This is always the first event that is sent. Note that this
-   event might not be available immediately after write(UHID_CREATE2) returns.
-   Device drivers might required delayed setups.
-   This event contains a payload of type uhid_start_req. The "dev_flags" field
-   describes special behaviors of a device. The following flags are defined:
--      UHID_DEV_NUMBERED_FEATURE_REPORTS:
--      UHID_DEV_NUMBERED_OUTPUT_REPORTS:
--      UHID_DEV_NUMBERED_INPUT_REPORTS:
+ * group A: period=100000us, runtime=50000us
 +
-+      - UHID_DEV_NUMBERED_FEATURE_REPORTS
-+      - UHID_DEV_NUMBERED_OUTPUT_REPORTS
-+      - UHID_DEV_NUMBERED_INPUT_REPORTS
+ 	- this runs for 0.05s once every 0.1s
+ 
+ * group B: period= 50000us, runtime=25000us
 +
-           Each of these flags defines whether a given report-type uses numbered
-           reports. If numbered reports are used for a type, all messages from
-           the kernel already have the report-number as prefix. Otherwise, no
-@@ -137,33 +140,35 @@ them but you should handle them according to your needs.
-           For messages sent by user-space to the kernel, you must adjust the
-           prefixes according to these flags.
+ 	- this runs for 0.025s twice every 0.1s (or once every 0.05 sec).
  
--  UHID_STOP:
-+UHID_STOP:
-   This is sent when the HID device is stopped. Consider this as an answer to
-   UHID_DESTROY.
+ This means that currently a while (1) loop in A will run for the full period of
+diff --git a/Documentation/scheduler/sched-stats.txt b/Documentation/scheduler/sched-stats.rst
+similarity index 91%
+rename from Documentation/scheduler/sched-stats.txt
+rename to Documentation/scheduler/sched-stats.rst
+index 8259b34a66ae..0cb0aa714545 100644
+--- a/Documentation/scheduler/sched-stats.txt
++++ b/Documentation/scheduler/sched-stats.rst
+@@ -1,3 +1,7 @@
++====================
++Scheduler Statistics
++====================
 +
-   If you didn't destroy your device via UHID_DESTROY, but the kernel sends an
-   UHID_STOP event, this should usually be ignored. It means that the kernel
-   reloaded/changed the device driver loaded on your HID device (or some other
-   maintenance actions happened).
+ Version 15 of schedstats dropped counters for some sched_yield:
+ yld_exp_empty, yld_act_empty and yld_both_empty. Otherwise, it is
+ identical to version 14.
+@@ -35,19 +39,23 @@ CPU statistics
+ cpu<N> 1 2 3 4 5 6 7 8 9
+ 
+ First field is a sched_yield() statistic:
 +
-   You can usually ignored any UHID_STOP events safely.
+      1) # of times sched_yield() was called
  
--  UHID_OPEN:
-+UHID_OPEN:
-   This is sent when the HID device is opened. That is, the data that the HID
-   device provides is read by some other process. You may ignore this event but
-   it is useful for power-management. As long as you haven't received this event
-   there is actually no other process that reads your data so there is no need to
-   send UHID_INPUT2 events to the kernel.
- 
--  UHID_CLOSE:
-+UHID_CLOSE:
-   This is sent when there are no more processes which read the HID data. It is
-   the counterpart of UHID_OPEN and you may as well ignore this event.
- 
--  UHID_OUTPUT:
-+UHID_OUTPUT:
-   This is sent if the HID device driver wants to send raw data to the I/O
-   device on the interrupt channel. You should read the payload and forward it to
-   the device. The payload is of type "struct uhid_output_req".
-   This may be received even though you haven't received UHID_OPEN, yet.
- 
--  UHID_GET_REPORT:
-+UHID_GET_REPORT:
-   This event is sent if the kernel driver wants to perform a GET_REPORT request
-   on the control channeld as described in the HID specs. The report-type and
-   report-number are available in the payload.
-@@ -177,11 +182,12 @@ them but you should handle them according to your needs.
-   timed out, the kernel will ignore the response silently. The "id" field is
-   never re-used, so conflicts cannot happen.
- 
--  UHID_SET_REPORT:
-+UHID_SET_REPORT:
-   This is the SET_REPORT equivalent of UHID_GET_REPORT. On receipt, you shall
-   send a SET_REPORT request to your hid device. Once it replies, you must tell
-   the kernel about it via UHID_SET_REPORT_REPLY.
-   The same restrictions as for UHID_GET_REPORT apply.
- 
- ----------------------------------------------------
+ Next three are schedule() statistics:
 +
- Written 2012, David Herrmann <dh.herrmann@gmail.com>
-diff --git a/Documentation/input/input.rst b/Documentation/input/input.rst
-index 47f86a4bf16c..0eb61e67a7b7 100644
---- a/Documentation/input/input.rst
-+++ b/Documentation/input/input.rst
-@@ -188,7 +188,7 @@ LCDs and many other purposes.
+      2) This field is a legacy array expiration count field used in the O(1)
+ 	scheduler. We kept it for ABI compatibility, but it is always set to zero.
+      3) # of times schedule() was called
+      4) # of times schedule() left the processor idle
  
- The monitor and speaker controls should be easy to add to the hid/input
- interface, but for the UPSs and LCDs it doesn't make much sense. For this,
--the hiddev interface was designed. See Documentation/hid/hiddev.txt
-+the hiddev interface was designed. See Documentation/hid/hiddev.rst
- for more information about it.
+ Next two are try_to_wake_up() statistics:
++
+      5) # of times try_to_wake_up() was called
+      6) # of times try_to_wake_up() was called to wake up the local cpu
  
- The usage of the usbhid module is very simple, it takes no parameters,
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 66bcec263dbf..4e1e598a32d9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16165,7 +16165,7 @@ M:	Benjamin Tissoires <benjamin.tissoires@redhat.com>
- L:	linux-usb@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git
- S:	Maintained
--F:	Documentation/hid/hiddev.txt
-+F:	Documentation/hid/hiddev.rst
- F:	drivers/hid/usbhid/
+ Next three are statistics describing scheduling latency:
++
+      7) sum of all time spent running by tasks on this processor (in jiffies)
+      8) sum of all time spent waiting to run by tasks on this processor (in
+         jiffies)
+@@ -67,24 +75,23 @@ The first field is a bit mask indicating what cpus this domain operates over.
+ The next 24 are a variety of load_balance() statistics in grouped into types
+ of idleness (idle, busy, and newly idle):
  
- USB INTEL XHCI ROLE MUX DRIVER
+-     1) # of times in this domain load_balance() was called when the
++    1)  # of times in this domain load_balance() was called when the
+         cpu was idle
+-     2) # of times in this domain load_balance() checked but found
++    2)  # of times in this domain load_balance() checked but found
+         the load did not require balancing when the cpu was idle
+-     3) # of times in this domain load_balance() tried to move one or
++    3)  # of times in this domain load_balance() tried to move one or
+         more tasks and failed, when the cpu was idle
+-     4) sum of imbalances discovered (if any) with each call to
++    4)  sum of imbalances discovered (if any) with each call to
+         load_balance() in this domain when the cpu was idle
+-     5) # of times in this domain pull_task() was called when the cpu
++    5)  # of times in this domain pull_task() was called when the cpu
+         was idle
+-     6) # of times in this domain pull_task() was called even though
++    6)  # of times in this domain pull_task() was called even though
+         the target task was cache-hot when idle
+-     7) # of times in this domain load_balance() was called but did
++    7)  # of times in this domain load_balance() was called but did
+         not find a busier queue while the cpu was idle
+-     8) # of times in this domain a busier queue was found while the
++    8)  # of times in this domain a busier queue was found while the
+         cpu was idle but no busier group was found
+-
+-     9) # of times in this domain load_balance() was called when the
++    9)  # of times in this domain load_balance() was called when the
+         cpu was busy
+     10) # of times in this domain load_balance() checked but found the
+         load did not require balancing when busy
+@@ -117,21 +124,25 @@ of idleness (idle, busy, and newly idle):
+         was just becoming idle but no busier group was found
+ 
+    Next three are active_load_balance() statistics:
++
+     25) # of times active_load_balance() was called
+     26) # of times active_load_balance() tried to move a task and failed
+     27) # of times active_load_balance() successfully moved a task
+ 
+    Next three are sched_balance_exec() statistics:
++
+     28) sbe_cnt is not used
+     29) sbe_balanced is not used
+     30) sbe_pushed is not used
+ 
+    Next three are sched_balance_fork() statistics:
++
+     31) sbf_cnt is not used
+     32) sbf_balanced is not used
+     33) sbf_pushed is not used
+ 
+    Next three are try_to_wake_up() statistics:
++
+     34) # of times in this domain try_to_wake_up() awoke a task that
+         last ran on a different cpu in this domain
+     35) # of times in this domain try_to_wake_up() moved a task to the
+@@ -139,10 +150,11 @@ of idleness (idle, busy, and newly idle):
+     36) # of times in this domain try_to_wake_up() started passive balancing
+ 
+ /proc/<pid>/schedstat
+-----------------
++---------------------
+ schedstats also adds a new /proc/<pid>/schedstat file to include some of
+ the same information on a per-process level.  There are three fields in
+ this file correlating for that process to:
++
+      1) time spent on the cpu
+      2) time spent waiting on a runqueue
+      3) # of timeslices run on this cpu
+@@ -151,4 +163,5 @@ A program could be easily written to make use of these extra fields to
+ report on how well a particular process or set of processes is faring
+ under the scheduler's policies.  A simple version of such a program is
+ available at
++
+     http://eaglet.rain.com/rick/linux/schedstat/v12/latency.c
+diff --git a/Documentation/scheduler/text_files.rst b/Documentation/scheduler/text_files.rst
+new file mode 100644
+index 000000000000..0bc50307b241
+--- /dev/null
++++ b/Documentation/scheduler/text_files.rst
+@@ -0,0 +1,5 @@
++Scheduler pelt c program
++------------------------
++
++.. literalinclude:: sched-pelt.c
++    :language: c
+diff --git a/Documentation/vm/numa.rst b/Documentation/vm/numa.rst
+index 0d830edae8fe..130f3cfa1c19 100644
+--- a/Documentation/vm/numa.rst
++++ b/Documentation/vm/numa.rst
+@@ -99,7 +99,7 @@ Local allocation will tend to keep subsequent access to the allocated memory
+ as long as the task on whose behalf the kernel allocated some memory does not
+ later migrate away from that memory.  The Linux scheduler is aware of the
+ NUMA topology of the platform--embodied in the "scheduling domains" data
+-structures [see Documentation/scheduler/sched-domains.txt]--and the scheduler
++structures [see Documentation/scheduler/sched-domains.rst]--and the scheduler
+ attempts to minimize task migration to distant scheduling domains.  However,
+ the scheduler does not take a task's NUMA footprint into account directly.
+ Thus, under sufficient imbalance, tasks can migrate between nodes, remote
+diff --git a/init/Kconfig b/init/Kconfig
+index 9b52c958fd92..70fa2d57ef49 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -725,7 +725,7 @@ menuconfig CGROUPS
+ 	  use with process control subsystems such as Cpusets, CFS, memory
+ 	  controls or device isolation.
+ 	  See
+-		- Documentation/scheduler/sched-design-CFS.txt	(CFS)
++		- Documentation/scheduler/sched-design-CFS.rst	(CFS)
+ 		- Documentation/cgroup-v1/ (features for grouping, isolation
+ 					  and resource control)
+ 
+@@ -826,7 +826,7 @@ config CFS_BANDWIDTH
+ 	  tasks running within the fair group scheduler.  Groups with no limit
+ 	  set are considered to be unconstrained and will run with no
+ 	  restriction.
+-	  See Documentation/scheduler/sched-bwc.txt for more information.
++	  See Documentation/scheduler/sched-bwc.rst for more information.
+ 
+ config RT_GROUP_SCHED
+ 	bool "Group scheduling for SCHED_RR/FIFO"
+@@ -837,7 +837,7 @@ config RT_GROUP_SCHED
+ 	  to task groups. If enabled, it will also make it impossible to
+ 	  schedule realtime tasks for non-root users until you allocate
+ 	  realtime bandwidth for them.
+-	  See Documentation/scheduler/sched-rt-group.txt for more information.
++	  See Documentation/scheduler/sched-rt-group.rst for more information.
+ 
+ endif #CGROUP_SCHED
+ 
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 43901fa3f269..049d795ee9d3 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -726,7 +726,7 @@ static void replenish_dl_entity(struct sched_dl_entity *dl_se,
+  * refill the runtime and set the deadline a period in the future,
+  * because keeping the current (absolute) deadline of the task would
+  * result in breaking guarantees promised to other tasks (refer to
+- * Documentation/scheduler/sched-deadline.txt for more information).
++ * Documentation/scheduler/sched-deadline.rst for more information).
+  *
+  * This function returns true if:
+  *
 -- 
 2.20.1
 
