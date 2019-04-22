@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34B3C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49FAC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8217120896
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9902720896
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYHb2K8i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XNJTS7q+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbfDVTTZ (ORCPT
+        id S1728686AbfDVTTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:19:25 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46596 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728372AbfDVTS5 (ORCPT
+        Mon, 22 Apr 2019 15:19:32 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45679 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbfDVTSz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:18:57 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h21so11214303ljk.13;
-        Mon, 22 Apr 2019 12:18:55 -0700 (PDT)
+        Mon, 22 Apr 2019 15:18:55 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y6so11209483ljd.12;
+        Mon, 22 Apr 2019 12:18:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LgD/uImHb6NwkHJPZVMHXtBTkKsMvl+ZXd/c4dnETFU=;
-        b=rYHb2K8iEd3lQ8zKFttTGCOneJAWHT1WTwhyx3WIVJ0BhbjWweozRbUACYEMyLFfQp
-         aDgfeJ1t2wpo7kXOYrjVerNLZogItOuKG+ycotMBfQbUgltONAXnw4kOMrk1BmK9RXIL
-         K1Jv+XnFMO27alqXVhw2eY5gh7jLUHh+3TgHYN4K+potbIFcZHvfnuy03u/Bmr3DDSEx
-         tzEs3ErOmYwD+rzcOmcsb1/tlWwQtD3ZmU/NBri8Rc7oF6D6hipsRj0Z2qCcUTH2pfk1
-         hsdjjPl1bydPYobWUvfZ38Dj3OQMmgK6Ex6ZMBjad5a12IT0rXkDou2CdNjtAOZmwwIZ
-         zACg==
+        bh=Qb30F3csxPMWkF7SUL4LY++a+c/C+BjbyqzAzgW0ngI=;
+        b=XNJTS7q+zEKtZBHSThIN3wotp+rEasrOU4+2l0gfHYbvdna1+sIOPttu9BN7wzJFc7
+         XgAo4aT1ZzFjrxwg4ZNer3gsaNcgLWn4xYBtVhG+PzGdaNljPzK/13T2QXLDOJnt7CgE
+         XQy8imHH5/8bt9gifRoY+lhBwS0OVEwwssmMD9MofMkceMyPzRj1iXY2TTQOQXuYtaqx
+         04ByBvyi44OAsYBLn5tCsLaKQswggmJWY+lXJJ7jQjOUz+JlclWAjfW1ojl3iBD581PX
+         K/bIaQsVNmWF/PZIJZWBzZ37Rhi351scR68aRLpFMrWCkTP3/2d+ZOcSO+C6VfRRZV8+
+         CN/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LgD/uImHb6NwkHJPZVMHXtBTkKsMvl+ZXd/c4dnETFU=;
-        b=FT/iO+LGggm3JEH5DvkAY9m8bQDOhQgQ/dGMK0d9DrBmvNTIT0j2yunWoFTmWI6XFy
-         qjqiakuCtKXuGGlEOKPvcbRxumvghvF3sxpubhhujwznbIFQrISzp8w488qkGHze5aqQ
-         ImR9Couupa1Hm30r6SCnNQEuoj0LHo0eF96HMWuAhVaSVteDgwZGFYlz53f+DaC1+fM1
-         F5OPhjw02kKh3HGhXbxl0awHJ1MvRyIxGigdkcAdAKc0K1QnEPLcre62hjO7To0INtcY
-         n3XVk4D/N+B1YGcDgtUlTmCZMQdONSKk84MQ1G3ex+DrRT9Bxk1H/NBgWlrVY+lF9QUh
-         NTwA==
-X-Gm-Message-State: APjAAAUK0no5VEnHoudMKcVw0pRlElHh/OlM03nHlNj0K7hxkvh0pd8S
-        jbuea3nK9eP1EGYDqtq6/tY=
-X-Google-Smtp-Source: APXvYqyQ4QQ0lnVzARVPt9wAqT6Do5arnX1LrulaM/w8jdqKLUnJAKKYRRGGFDy7tQ3MWXW+GWpmlQ==
-X-Received: by 2002:a2e:8582:: with SMTP id b2mr10938851lji.24.1555960734653;
-        Mon, 22 Apr 2019 12:18:54 -0700 (PDT)
+        bh=Qb30F3csxPMWkF7SUL4LY++a+c/C+BjbyqzAzgW0ngI=;
+        b=QFdZ5EqcClmNCXUbyhn8MatVo00mrQu1N8xfynhfgTRxuhiPp/SHzhSoc781b4EWvX
+         S68ybJe9d4i1P/V14Tz1g7qY5768+FhGkAYYsHssVJhx1HoNsaF3hjXlLTFzPL2I/VGI
+         rbt7AA6oNQ1K7KZGZepsw1MLJf1Pc5ITLdO07pcooa0s9W3SimrInapbvg14GBQQ+6uM
+         /A1b991kZivW14Dy8DCcUfQaMuRgwr7YS1mN1y+f5VX/NfEI3pNDx4dMokAWBMtBH114
+         O7O6oQ8nb8jj/fvM5f7dYnebKGuJrQRSnJZx0VkXzRP1KIndG098TQioatBavYHif0Ue
+         pX2g==
+X-Gm-Message-State: APjAAAU+Sdkwktx49BmjsrKkmO3jBZ2Y0djQyfEX3IEu8c1T3Tvol27b
+        E1ycZ+93rVMf/sQJz1C+FkA=
+X-Google-Smtp-Source: APXvYqyBN5s3KfbZN82OIIjtS6zhzM8jeviNGMjyWEAFmFjtKVDf+Mf7h7x8yIiqln53dBwU2zd1AQ==
+X-Received: by 2002:a2e:9155:: with SMTP id q21mr762904ljg.178.1555960732290;
+        Mon, 22 Apr 2019 12:18:52 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id l13sm2848762lji.39.2019.04.22.12.18.53
+        by smtp.gmail.com with ESMTPSA id l13sm2848762lji.39.2019.04.22.12.18.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 12:18:54 -0700 (PDT)
+        Mon, 22 Apr 2019 12:18:51 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -67,9 +67,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/7] dt-bindings: mfd: max77620: Add compatible for Maxim 77663
-Date:   Mon, 22 Apr 2019 22:13:47 +0300
-Message-Id: <20190422191350.27527-5-digetx@gmail.com>
+Subject: [PATCH v2 2/7] mfd: max77620: Support Maxim 77663
+Date:   Mon, 22 Apr 2019 22:13:45 +0300
+Message-Id: <20190422191350.27527-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190422191350.27527-1-digetx@gmail.com>
 References: <20190422191350.27527-1-digetx@gmail.com>
@@ -80,37 +80,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxim 77663 has a few minor differences in regards to hardware interface
-and available capabilities by comparing it with 77620 and 20024 models,
-hence re-use 77620 device-tree binding for the 77663.
+Add support for Maxim 77663 using the Max77620 driver. The hardware
+is very similar to Max77663/20024, although there are couple minor
+differences.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- Documentation/devicetree/bindings/mfd/max77620.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/mfd/max77620.c       | 69 +++++++++++++++++++++++++++++++++++-
+ include/linux/mfd/max77620.h |  1 +
+ 2 files changed, 69 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
-index 9c16d51cc15b..9058499051e0 100644
---- a/Documentation/devicetree/bindings/mfd/max77620.txt
-+++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-@@ -4,7 +4,8 @@ Required properties:
- -------------------
- - compatible: Must be one of
- 		"maxim,max77620"
--		"maxim,max20024".
-+		"maxim,max20024"
-+		"maxim,max77663".
- - reg: I2C device address.
+diff --git a/drivers/mfd/max77620.c b/drivers/mfd/max77620.c
+index d8ddd1a6f304..9b0009c29610 100644
+--- a/drivers/mfd/max77620.c
++++ b/drivers/mfd/max77620.c
+@@ -111,6 +111,26 @@ static const struct mfd_cell max20024_children[] = {
+ 	},
+ };
  
- Optional properties:
-@@ -105,6 +106,7 @@ Optional properties:
- Here supported time periods by device in microseconds are as follows:
- MAX77620 supports 40, 80, 160, 320, 640, 1280, 2560 and 5120 microseconds.
- MAX20024 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
-+MAX77663 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
++static const struct mfd_cell max77663_children[] = {
++	{ .name = "max77620-pinctrl", },
++	{ .name = "max77620-clock", },
++	{ .name = "max77663-pmic", },
++	{ .name = "max77620-watchdog", },
++	{
++		.name = "max77620-gpio",
++		.resources = gpio_resources,
++		.num_resources = ARRAY_SIZE(gpio_resources),
++	}, {
++		.name = "max77620-rtc",
++		.resources = rtc_resources,
++		.num_resources = ARRAY_SIZE(rtc_resources),
++	}, {
++		.name = "max77663-power",
++		.resources = power_resources,
++		.num_resources = ARRAY_SIZE(power_resources),
++	},
++};
++
+ static const struct regmap_range max77620_readable_ranges[] = {
+ 	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_DVSSD4),
+ };
+@@ -171,6 +191,35 @@ static const struct regmap_config max20024_regmap_config = {
+ 	.volatile_table = &max77620_volatile_table,
+ };
  
- -maxim,power-ok-control: configure map power ok bit
- 			1: Enables POK(Power OK) to control nRST_IO and GPIO1
++static const struct regmap_range max77663_readable_ranges[] = {
++	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_CID5),
++};
++
++static const struct regmap_access_table max77663_readable_table = {
++	.yes_ranges = max77663_readable_ranges,
++	.n_yes_ranges = ARRAY_SIZE(max77663_readable_ranges),
++};
++
++static const struct regmap_range max77663_writable_ranges[] = {
++	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_CID5),
++};
++
++static const struct regmap_access_table max77663_writable_table = {
++	.yes_ranges = max77663_writable_ranges,
++	.n_yes_ranges = ARRAY_SIZE(max77663_writable_ranges),
++};
++
++static const struct regmap_config max77663_regmap_config = {
++	.name = "power-slave",
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = MAX77620_REG_CID5 + 1,
++	.cache_type = REGCACHE_RBTREE,
++	.rd_table = &max77663_readable_table,
++	.wr_table = &max77663_writable_table,
++	.volatile_table = &max77620_volatile_table,
++};
++
+ /*
+  * MAX77620 and MAX20024 has the following steps of the interrupt handling
+  * for TOP interrupts:
+@@ -237,6 +286,9 @@ static int max77620_get_fps_period_reg_value(struct max77620_chip *chip,
+ 	case MAX20024:
+ 		fps_min_period = MAX20024_FPS_PERIOD_MIN_US;
+ 		break;
++	case MAX77663:
++		fps_min_period = MAX20024_FPS_PERIOD_MIN_US;
++		break;
+ 	case MAX77620:
+ 		fps_min_period = MAX77620_FPS_PERIOD_MIN_US;
+ 		break;
+@@ -274,6 +326,9 @@ static int max77620_config_fps(struct max77620_chip *chip,
+ 	case MAX77620:
+ 		fps_max_period = MAX77620_FPS_PERIOD_MAX_US;
+ 		break;
++	case MAX77663:
++		fps_max_period = MAX20024_FPS_PERIOD_MAX_US;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -375,6 +430,9 @@ static int max77620_initialise_fps(struct max77620_chip *chip)
+ 	}
+ 
+ skip_fps:
++	if (chip->chip_id == MAX77663)
++		return 0;
++
+ 	/* Enable wake on EN0 pin */
+ 	ret = regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG2,
+ 				 MAX77620_ONOFFCNFG2_WK_EN0,
+@@ -453,6 +511,11 @@ static int max77620_probe(struct i2c_client *client,
+ 		n_mfd_cells = ARRAY_SIZE(max20024_children);
+ 		rmap_config = &max20024_regmap_config;
+ 		break;
++	case MAX77663:
++		mfd_cells = max77663_children;
++		n_mfd_cells = ARRAY_SIZE(max77663_children);
++		rmap_config = &max77663_regmap_config;
++		break;
+ 	default:
+ 		dev_err(chip->dev, "ChipID is invalid %d\n", chip->chip_id);
+ 		return -EINVAL;
+@@ -546,6 +609,9 @@ static int max77620_i2c_suspend(struct device *dev)
+ 		return ret;
+ 	}
+ 
++	if (chip->chip_id == MAX77663)
++		goto out;
++
+ 	/* Disable WK_EN0 */
+ 	ret = regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG2,
+ 				 MAX77620_ONOFFCNFG2_WK_EN0, 0);
+@@ -581,7 +647,7 @@ static int max77620_i2c_resume(struct device *dev)
+ 	 * For MAX20024: No need to configure WKEN0 on resume as
+ 	 * it is configured on Init.
+ 	 */
+-	if (chip->chip_id == MAX20024)
++	if (chip->chip_id == MAX20024 || chip->chip_id == MAX77663)
+ 		goto out;
+ 
+ 	/* Enable WK_EN0 */
+@@ -603,6 +669,7 @@ static int max77620_i2c_resume(struct device *dev)
+ static const struct i2c_device_id max77620_id[] = {
+ 	{"max77620", MAX77620},
+ 	{"max20024", MAX20024},
++	{"max77663", MAX77663},
+ 	{},
+ };
+ 
+diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
+index b4fd5a7c2aaa..82407fe85ca2 100644
+--- a/include/linux/mfd/max77620.h
++++ b/include/linux/mfd/max77620.h
+@@ -324,6 +324,7 @@ enum max77620_fps_src {
+ enum max77620_chip_id {
+ 	MAX77620,
+ 	MAX20024,
++	MAX77663,
+ };
+ 
+ struct max77620_chip {
 -- 
 2.21.0
 
