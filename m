@@ -2,382 +2,183 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026C0C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F138C282E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE4420652
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51EB020857
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 08:49:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gHlK29Su"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfDVItg (ORCPT
+        id S1727187AbfDVIto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 04:49:36 -0400
-Received: from mga11.intel.com ([192.55.52.93]:29712 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfDVItf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 04:49:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 01:49:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,381,1549958400"; 
-   d="asc'?scan'208";a="144635093"
-Received: from zhen-hp.sh.intel.com (HELO zhen-hp) ([10.239.13.116])
-  by orsmga003.jf.intel.com with ESMTP; 22 Apr 2019 01:49:24 -0700
-Date:   Mon, 22 Apr 2019 16:37:39 +0800
-From:   Zhenyu Wang <zhenyuw@linux.intel.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, cjia@nvidia.com,
-        kvm@vger.kernel.org, aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        kwankhede@nvidia.com, eauger@redhat.com, yi.l.liu@intel.com,
-        eskultet@redhat.com, ziye.yang@intel.com, mlevitsk@redhat.com,
-        pasic@linux.ibm.com, libvir-list@redhat.com,
-        arei.gonglei@huawei.com, felipe@nutanix.com, Ken.Xue@amd.com,
-        kevin.tian@intel.com, dgilbert@redhat.com, zhenyuw@linux.intel.com,
-        alex.williamson@redhat.com, changpeng.liu@intel.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        zhi.a.wang@intel.com, jonathan.davies@nutanix.com,
-        shaopeng.he@intel.com
-Subject: Re: [PATCH 2/2] drm/i915/gvt: export mdev device version to sysfs
- for Intel vGPU
-Message-ID: <20190422083739.GZ17995@zhen-hp.sh.intel.com>
-Reply-To: Zhenyu Wang <zhenyuw@linux.intel.com>
-References: <20190419083258.19580-1-yan.y.zhao@intel.com>
- <20190419083559.19725-1-yan.y.zhao@intel.com>
+        Mon, 22 Apr 2019 04:49:44 -0400
+Received: from mail-eopbgr150078.outbound.protection.outlook.com ([40.107.15.78]:20166
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726911AbfDVItm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 04:49:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WptTQaU9vjun3nwR1Ka4gMyV7hk4b8VhHMKQ5LsdlgU=;
+ b=gHlK29Sud2wFAv4pOzJ6qd9FA/ygrauNCuSwSWZR/6uW+tKlywAjevSU1p2kyaWTTMdmwV0jcDm2cVBxuL6EmrZbzsl4fI4hJrGna7UuWNMTs3aTgRcy2Vv5HXwToKWiDOM186mi4So7pJ7NJjodID9u51G0bk6hx9920CSjTHA=
+Received: from VI1PR04MB5533.eurprd04.prod.outlook.com (20.178.122.159) by
+ VI1PR04MB6269.eurprd04.prod.outlook.com (20.179.26.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.17; Mon, 22 Apr 2019 08:48:57 +0000
+Received: from VI1PR04MB5533.eurprd04.prod.outlook.com
+ ([fe80::cca7:43cf:dc13:a822]) by VI1PR04MB5533.eurprd04.prod.outlook.com
+ ([fe80::cca7:43cf:dc13:a822%4]) with mapi id 15.20.1813.017; Mon, 22 Apr 2019
+ 08:48:57 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+CC:     "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
+        "ezequiel@collabora.com" <ezequiel@collabora.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>
+Subject: Re: [PATCH 1/2] soc: imx-sc: add i.MX system controller soc driver
+ support
+Thread-Topic: [PATCH 1/2] soc: imx-sc: add i.MX system controller soc driver
+ support
+Thread-Index: AQHU8DKsAg9Kriz6B0mooDc33xId4w==
+Date:   Mon, 22 Apr 2019 08:48:56 +0000
+Message-ID: <VI1PR04MB5533CED52723AE8292CFC305EE220@VI1PR04MB5533.eurprd04.prod.outlook.com>
+References: <1554965048-19450-1-git-send-email-Anson.Huang@nxp.com>
+ <20190421073958.GC19962@dragon> <20190421074152.GD19962@dragon>
+ <DB3PR0402MB39161C0DDFF0EEA6D8A90378F5220@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB39164B30B26CAF62EE807168F5220@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [192.88.166.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 29d42f5c-6060-4421-4426-08d6c6ff5b4b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB6269;
+x-ms-traffictypediagnostic: VI1PR04MB6269:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-microsoft-antispam-prvs: <VI1PR04MB6269EA7BCCC01F396A961705EE220@VI1PR04MB6269.eurprd04.prod.outlook.com>
+x-forefront-prvs: 00159D1518
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(346002)(136003)(376002)(39860400002)(13464003)(189003)(199004)(102836004)(186003)(54906003)(26005)(93886005)(6506007)(53546011)(476003)(446003)(486006)(25786009)(33656002)(7696005)(97736004)(76176011)(4326008)(478600001)(316002)(110136005)(44832011)(14454004)(229853002)(99286004)(6436002)(91956017)(3846002)(6116002)(68736007)(81156014)(81166006)(66476007)(7416002)(8676002)(53936002)(66446008)(64756008)(66556008)(73956011)(66946007)(52536014)(55016002)(71190400001)(2906002)(66066001)(6246003)(71200400001)(8936002)(7736002)(256004)(14444005)(5660300002)(305945005)(74316002)(76116006)(9686003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6269;H:VI1PR04MB5533.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WvEbwDSany0ojD/fG/FuZZtcq61fm+ZuwmyAbyeGzIpIhD2//CZl5BHkHO5fEDipJgtL3/lMo6fUwzK2h1+kCAGhOVZoGenaCoNXzwp69uUYozwtXlq1v41N+yHQWlR9ozWBGBBd3uI47u4UlFXkr8U0LfDFmXP6jPxYBgL0baoYEdu6EY+4MMviEeRuFemlurbisUIS8CFxUvZxrizCx9Bq2zInd/HqSRCU0aqcHK8FvAxQ1cz+3nJkt1zptdTv15cEEaBlgL8fgYwvSlhNFj3TlghacYMBwn/C3lGAdGIa7rCpBzpHAvvHcAv0a1HhSWj2fnx8G7lP0iQyQy6w1pHc96IFaiBUTaQMhKyoXc945gLn++M5+/DeOpBGWCJxhdbRP2t1WNySsLqATBM/hVUQRQvO/RE+sdYBxpEb+Vk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="HzTfXcfu7EFt5lUB"
-Content-Disposition: inline
-In-Reply-To: <20190419083559.19725-1-yan.y.zhao@intel.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29d42f5c-6060-4421-4426-08d6c6ff5b4b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2019 08:48:56.8271
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6269
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---HzTfXcfu7EFt5lUB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019.04.19 04:35:59 -0400, Yan Zhao wrote:
-> This feature implements the version attribute for Intel's vGPU mdev
-> devices.
->=20
-> version attribute is rw. It is queried by userspace software like libvirt
-> to check whether two vGPUs are compatible for live migration.
->=20
-> It consists of two parts: common part and vendor proprietary part.
-> common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
->              identifies device type. e.g., for pci device, it is
->              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-> vendor proprietary part: this part is varied in length. vendor driver can
->              specify any string to identify a device.
->=20
-> For Intel vGPU of gen8 and gen9, the vendor proprietary part currently
-> consists of 2 fields: "device id" + "mdev type".
->=20
-> Reading from a vGPU's version attribute, a string is returned in below
-> format: 00028086-<device id>-<mdev type>. e.g.
-> 00028086-193b-i915-GVTg_V5_2.
->=20
-> Writing a string to a vGPU's version attribute will trigger GVT to check
-> whether a vGPU identified by the written string is compatible with
-> current vGPU owning this version attribute. errno is returned if the two
-> vGPUs are incompatible. The length of written string is returned in
-> compatible case.
->=20
-> For other platforms, and for GVT not supporting vGPU live migration
-> feature, errnos are returned when read/write of mdev devices' version
-> attributes.
->=20
-> For old GVT versions where no version attributes exposed in sysfs, it is
-> regarded as not supporting vGPU live migration.
->=20
-> For future platforms, besides the current 2 fields in vendor proprietary
-> part, more fields may be added to identify Intel vGPU well for live
-> migration purpose.
->=20
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Erik Skultety <eskultet@redhat.com>
-> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Cc: "Tian, Kevin" <kevin.tian@intel.com>
-> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-> c: Neo Jia <cjia@nvidia.com>
-> Cc: Kirti Wankhede <kwankhede@nvidia.com>
->=20
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> ---
->  drivers/gpu/drm/i915/gvt/Makefile         |  2 +-
->  drivers/gpu/drm/i915/gvt/device_version.c | 94 +++++++++++++++++++++++
->  drivers/gpu/drm/i915/gvt/gvt.c            | 55 +++++++++++++
->  drivers/gpu/drm/i915/gvt/gvt.h            |  6 ++
->  4 files changed, 156 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/i915/gvt/device_version.c
->=20
-> diff --git a/drivers/gpu/drm/i915/gvt/Makefile b/drivers/gpu/drm/i915/gvt=
-/Makefile
-> index 271fb46d4dd0..54e209a23899 100644
-> --- a/drivers/gpu/drm/i915/gvt/Makefile
-> +++ b/drivers/gpu/drm/i915/gvt/Makefile
-> @@ -3,7 +3,7 @@ GVT_DIR :=3D gvt
->  GVT_SOURCE :=3D gvt.o aperture_gm.o handlers.o vgpu.o trace_points.o fir=
-mware.o \
->  	interrupt.o gtt.o cfg_space.o opregion.o mmio.o display.o edid.o \
->  	execlist.o scheduler.o sched_policy.o mmio_context.o cmd_parser.o debug=
-fs.o \
-> -	fb_decoder.o dmabuf.o page_track.o
-> +	fb_decoder.o dmabuf.o page_track.o device_version.o
-> =20
->  ccflags-y				+=3D -I$(src) -I$(src)/$(GVT_DIR)
->  i915-y					+=3D $(addprefix $(GVT_DIR)/, $(GVT_SOURCE))
-> diff --git a/drivers/gpu/drm/i915/gvt/device_version.c b/drivers/gpu/drm/=
-i915/gvt/device_version.c
-> new file mode 100644
-> index 000000000000..c64010d2bc54
-> --- /dev/null
-> +++ b/drivers/gpu/drm/i915/gvt/device_version.c
-> @@ -0,0 +1,94 @@
-> +/*
-> + * Copyright(c) 2011-2017 Intel Corporation. All rights reserved.
-> + *
-> + * Permission is hereby granted, free of charge, to any person obtaining=
- a
-> + * copy of this software and associated documentation files (the "Softwa=
-re"),
-> + * to deal in the Software without restriction, including without limita=
-tion
-> + * the rights to use, copy, modify, merge, publish, distribute, sublicen=
-se,
-> + * and/or sell copies of the Software, and to permit persons to whom the
-> + * Software is furnished to do so, subject to the following conditions:
-> + *
-> + * The above copyright notice and this permission notice (including the =
-next
-> + * paragraph) shall be included in all copies or substantial portions of=
- the
-> + * Software.
-> + *
-> + * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRE=
-SS OR
-> + * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILI=
-TY,
-> + * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SH=
-ALL
-> + * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR =
-OTHER
-> + * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISI=
-NG FROM,
-> + * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALING=
-S IN THE
-> + * SOFTWARE.
-> + */
-> +#include <linux/vfio.h>
-> +#include "i915_drv.h"
-> +
-> +#define GVT_VFIO_DEVICE_VENDOR_ID ((0x8086) |	\
-> +		((VFIO_DEVICE_FLAGS_PCI & 0xff) << 16))
-> +
-> +#define GVT_DEVICE_VERSION_COMMON_LEN 0x8
-> +#define GVT_DEVICE_VERSION_DEVICE_ID_LEN 0x4
-> +
-> +static bool is_compatible(const char *self, const char *remote)
-> +{
-> +	if (strlen(remote) !=3D strlen(self))
-> +		return false;
-> +
-> +	return (strncmp(self, remote, strlen(self))) ? false : true;
-> +}
-> +
-> +ssize_t intel_gvt_get_vfio_device_version_len(struct drm_i915_private *d=
-ev_priv)
-> +{
-> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-> +		return -ENODEV;
-> +
-> +	return PAGE_SIZE;
-> +}
-> +
-> +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *dev_p=
-riv,
-> +		char *buf, const char *mdev_type)
-> +{
-> +	int cnt =3D 0, ret =3D 0;
-> +	const char *str =3D NULL;
-> +
-> +	/* currently only gen8 & gen9 are supported */
-> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-> +		return -ENODEV;
-> +
-> +	/* first 32 bit common part specifying vendor id and it's a pci
-> +	 * device
-> +	 */
-> +	cnt =3D snprintf(buf, GVT_DEVICE_VERSION_COMMON_LEN + 1,
-> +			"%08x", GVT_VFIO_DEVICE_VENDOR_ID);
-> +	buf +=3D cnt;
-> +	ret +=3D cnt;
-> +
-> +	/* vendor proprietary part: device id + mdev type */
-> +	/* device id */
-> +	cnt =3D snprintf(buf, GVT_DEVICE_VERSION_DEVICE_ID_LEN + 2,
-> +			"-%04x", INTEL_DEVID(dev_priv));
-> +	buf +=3D cnt;
-> +	ret +=3D cnt;
-> +
-> +	/* mdev type */
-> +	str =3D mdev_type;
-> +	cnt =3D snprintf(buf, strlen(str) + 3, "-%s\n", mdev_type);
-> +	buf +=3D cnt;
-> +	ret +=3D cnt;
-> +
-> +	return ret;
-> +}
-> +
-> +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev=
-_priv,
-> +		const char *self, const char *remote)
-> +{
-> +
-> +	/* currently only gen8 & gen9 are supported */
-> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-> +		return -ENODEV;
-> +
-> +	if (!is_compatible(self, remote))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gv=
-t.c
-> index 43f4242062dd..e720465b93d8 100644
-> --- a/drivers/gpu/drm/i915/gvt/gvt.c
-> +++ b/drivers/gpu/drm/i915/gvt/gvt.c
-> @@ -105,14 +105,69 @@ static ssize_t description_show(struct kobject *kob=
-j, struct device *dev,
->  		       type->weight);
->  }
-> =20
-> +static ssize_t version_show(struct kobject *kobj, struct device *dev,
-> +		char *buf)
-> +{
-> +#ifdef GVT_MIGRATION_VERSION
-> +	struct drm_i915_private *i915 =3D kdev_to_i915(dev);
-> +	const char *mdev_type =3D kobject_name(kobj);
-> +
-> +	return intel_gvt_get_vfio_device_version(i915, buf, mdev_type);
-> +#else
-> +	/* do not support live migration */
-> +	return -EINVAL;
-> +#endif
-> +}
-> +
-> +static ssize_t version_store(struct kobject *kobj, struct device *dev,
-> +		const char *buf, size_t count)
-> +{
-> +#ifdef GVT_MIGRATION_VERSION
-> +	char *remote =3D NULL, *self =3D NULL;
-> +	int len, ret =3D 0;
-> +	struct drm_i915_private *i915 =3D kdev_to_i915(dev);
-> +	const char *mdev_type =3D kobject_name(kobj);
-> +
-> +	len =3D intel_gvt_get_vfio_device_version_len(i915);
-> +	if (len < 0)
-> +		return len;
-> +
-> +	self =3D kmalloc(len, GFP_KERNEL);
-> +	if (!self)
-> +		return -ENOMEM;
-> +
-> +	ret =3D intel_gvt_get_vfio_device_version(i915, self, mdev_type);
-> +	if (ret < 0)
-> +		goto out;
-> +
-
-device version string should be allocated and specified during device insta=
-nce
-setup instead of version attribute r/w time.
-
-> +	remote =3D kstrndup(buf, count, GFP_KERNEL);
-> +	if (!remote) {
-> +		ret =3D -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	ret =3D intel_gvt_check_vfio_device_version(i915, self, remote);
-> +
-> +out:
-> +	kfree(self);
-> +	kfree(remote);
-> +	return (ret < 0 ? ret : count);
-> +#else
-> +	/* do not support live migration */
-> +	return -EINVAL;
-> +#endif
-> +}
-> +
->  static MDEV_TYPE_ATTR_RO(available_instances);
->  static MDEV_TYPE_ATTR_RO(device_api);
->  static MDEV_TYPE_ATTR_RO(description);
-> +static MDEV_TYPE_ATTR_RW(version);
-> =20
->  static struct attribute *gvt_type_attrs[] =3D {
->  	&mdev_type_attr_available_instances.attr,
->  	&mdev_type_attr_device_api.attr,
->  	&mdev_type_attr_description.attr,
-> +	&mdev_type_attr_version.attr,
->  	NULL,
->  };
-> =20
-> diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gv=
-t.h
-> index f5a328b5290a..4062f6b26acf 100644
-> --- a/drivers/gpu/drm/i915/gvt/gvt.h
-> +++ b/drivers/gpu/drm/i915/gvt/gvt.h
-> @@ -687,6 +687,12 @@ void intel_gvt_debugfs_remove_vgpu(struct intel_vgpu=
- *vgpu);
->  int intel_gvt_debugfs_init(struct intel_gvt *gvt);
->  void intel_gvt_debugfs_clean(struct intel_gvt *gvt);
-> =20
-> +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *i915,
-> +		char *buf, const char *mdev_type);
-> +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev=
-_priv,
-> +		const char *self, const char *remote);
-> +ssize_t
-> +intel_gvt_get_vfio_device_version_len(struct drm_i915_private *dev_priv);
-> =20
->  #include "trace.h"
->  #include "mpt.h"
-> --=20
-> 2.17.1
->=20
-> _______________________________________________
-> intel-gvt-dev mailing list
-> intel-gvt-dev@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
-
---=20
-Open Source Technology Center, Intel ltd.
-
-$gpg --keyserver wwwkeys.pgp.net --recv-keys 4D781827
-
---HzTfXcfu7EFt5lUB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQTXuabgHDW6LPt9CICxBBozTXgYJwUCXL19UwAKCRCxBBozTXgY
-J+toAJ974MbVdoDE7bLmBvDpVxOCFXwyFQCgmFWoFkEzSEB8o9dnMDFuXRTx22U=
-=TtW/
------END PGP SIGNATURE-----
-
---HzTfXcfu7EFt5lUB--
+On 4/22/2019 9:46 AM, Anson Huang wrote:=0A=
+>> -----Original Message-----=0A=
+>> From: Anson Huang=0A=
+>>> From: Shawn Guo [mailto:shawnguo@kernel.org]=0A=
+>>> On Sun, Apr 21, 2019 at 03:40:00PM +0800, Shawn Guo wrote:=0A=
+>>>> On Thu, Apr 11, 2019 at 06:49:12AM +0000, Anson Huang wrote:=0A=
+>>>>> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller=0A=
+>>>>> inside, the system controller is in charge of controlling power,=0A=
+>>>>> clock and fuse etc..=0A=
+>>>>>=0A=
+>>>>> This patch adds i.MX system controller soc driver support, Linux=0A=
+>>>>> kernel has to communicate with system controller via MU (message=0A=
+>>>>> unit) IPC to get soc revision, uid etc..=0A=
+>>>>>=0A=
+>>>>> With this patch, soc info can be read from sysfs:=0A=
+>>>>>=0A=
+>>>>>   drivers/soc/imx/Kconfig      |   7 ++=0A=
+>>>>>   drivers/soc/imx/Makefile     |   1 +=0A=
+>>>>>   drivers/soc/imx/soc-imx-sc.c | 220=0A=
+>>>>> +++++++++++++++++++++++++++++++++++++++++++=0A=
+>>>>>   3 files changed, 228 insertions(+)  create mode 100644=0A=
+>>>>> drivers/soc/imx/soc-imx-sc.c=0A=
+>>>>=0A=
+>>>> Rather than creating a new driver, please take a look at Abel's=0A=
+>>>> generic=0A=
+>>>> i.MX8 SoC driver, and see if it can be extended to cover i.MX8QXP.=0A=
+>>=0A=
+>> Got it, I didn't notice that this patch bas been accepted, I will redo t=
+he patch=0A=
+>> based on it, thanks.=0A=
+> =0A=
+> I have sent the new patch set to support i.MX8QXP SoC revision based on g=
+eneric i.MX8=0A=
+> SoC driver, however, the Kconfig modification is NOT good, it may break i=
+.MX8MQ if IMX_SCU=0A=
+> is NOT enabled, although we can add some warp function for SCU firmware A=
+PI call to fix it,=0A=
+> but after further thought and discussion with Dong Aisheng, I think we ma=
+y need to roll back to=0A=
+> use this patch series to create a new SoC driver dedicated for i.MX8 SoCs=
+=0A=
+> with system controller inside, such as i.MX8QXP, i.MX8QM etc., the reason=
+ are as below:=0A=
+> =0A=
+> For i.MX8MQ/i.MX8MM:=0A=
+> 	1. SoC driver does NOT depends on i.MX SCU firmware, so no need to use p=
+latform driver=0A=
+> 	     probe model, just device_init phase call is good enough;=0A=
+> 	2. The SoC driver no need to depends on IMX_SCU, so it can be always bui=
+lt in, no need to=0A=
+> 	     check IMX_SCU config;=0A=
+> 	3. The fuse check for CPU speed grading, HDCP status, NoC settings etc. =
+could be added to this driver,=0A=
+> 	    but they are ONLY for i.MX8MQ/i.MX8MM etc..=0A=
+> For i.MX8QXP/i.MX8QM:=0A=
+> 	1. SoC driver MUST depends on IMX_SCU;=0A=
+> 	2. MUST use platform model to support defer probe;=0A=
+> 	3. No fuse check for CPU speed grading.=0A=
+> =0A=
+> So, I guess the reused code for i.MX8MQ and i.MX8QXP is ONLY those part o=
+f creating SoC id device node (less than=0A=
+> 30% I think), all other functions are implemented in total different ways=
+, that is why I created the imx_sc_soc driver=0A=
+> in this patch series, so do you think we can add new SoC driver for i.MX8=
+ SoC with SCU inside? Putting 2 different architecture=0A=
+> SoCs' driver into 1 file looks like NOT making enough sense.=0A=
+=0A=
++1 for separate SOC driver. The 8mq/8mm and 8qm/8qxp families are very =0A=
+different, they just happen to share the imx8 prefix.=0A=
+=0A=
+It makes sense to allow people to compile one without the other and this =
+=0A=
+is easier with distinct SOC drivers.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
