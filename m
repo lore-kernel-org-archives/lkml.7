@@ -2,79 +2,92 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A451DC282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC2BC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D40B205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E564420693
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:25:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555939535;
+	bh=IJt2s6aZb0h9l59Whc7fVCDcTaYeMBegY9jTVz4B1WE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mWuwszb8oho4AdSYOsMybkhWDTy/NfxfquMjYMP3nSN13ML9nvjlJn8nU/2e6LmF4
+	 dxvlUgTTF34pOxm1pWRbEy/KOougFHXb5OkAzwO27LnBVuub3b9dUlsTSoiSqcXyE+
+	 f5SBibxA+eNJgZHErXlBmWLeDrVMBTdl0eAVqCww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfDVNTN (ORCPT
+        id S1727253AbfDVNZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:19:13 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6672 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726407AbfDVNTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:19:12 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B29262D0E41B3BC73902;
-        Mon, 22 Apr 2019 21:18:58 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 22 Apr 2019
- 21:18:54 +0800
-From:   Hou Tao <houtao1@huawei.com>
-To:     <linux-block@vger.kernel.org>, <axboe@kernel.dk>,
-        <dan.j.williams@intel.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] brd: re-enable __GFP_HIGHMEM in brd_insert_page()
-Date:   Mon, 22 Apr 2019 21:23:21 +0800
-Message-ID: <20190422132321.100156-1-houtao1@huawei.com>
-X-Mailer: git-send-email 2.16.2.dirty
+        Mon, 22 Apr 2019 09:25:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbfDVNZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 09:25:33 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50CAF20693;
+        Mon, 22 Apr 2019 13:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555939532;
+        bh=IJt2s6aZb0h9l59Whc7fVCDcTaYeMBegY9jTVz4B1WE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DQBmks0yF962nCTirms+89Q5fDlfcE8uQTG4HgvrzWxpnyR/miJk/IDGs6a3YV7v/
+         2wu+fE3F9aTfuJ9bfhG24SD+p+U3rZawbzVCXUFrAx3sogOQzQoybeKWK8d8J17Fdx
+         TFkh4GUQklNz7RA/xKkfEniWuUchslT+zAE4qLZw=
+Date:   Mon, 22 Apr 2019 09:25:31 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@microsoft.com, linux-hyperv@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] Hyper-V commits for 5.1
+Message-ID: <20190422132531.GI17719@sasha-vm>
+References: <20190417013452.438FA20821@mail.kernel.org>
+ <20190417062854.GA24045@kroah.com>
+ <20190417124157.GA28651@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190417124157.GA28651@sasha-vm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__GFP_HIGHMEM is disabled if dax is enabled on brd, however
-dax support for brd has been removed since commit (7a862fbbdec6
-"brd: remove dax support"), so restore __GFP_HIGHMEM in
-brd_insert_page().
+ping?
 
-Also remove the no longer applicable comments about DAX and highmem.
-
-Cc: stable@vger.kernel.org
-Fixes: 7a862fbbdec6 ("brd: remove dax support")
-Signed-off-by: Hou Tao <houtao1@huawei.com>
----
- drivers/block/brd.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index c18586fccb6f..17defbf4f332 100644
---- a/drivers/block/brd.c
-+++ b/drivers/block/brd.c
-@@ -96,13 +96,8 @@ static struct page *brd_insert_page(struct brd_device *brd, sector_t sector)
- 	/*
- 	 * Must use NOIO because we don't want to recurse back into the
- 	 * block or filesystem layers from page reclaim.
--	 *
--	 * Cannot support DAX and highmem, because our ->direct_access
--	 * routine for DAX must return memory that is always addressable.
--	 * If DAX was reworked to use pfns and kmap throughout, this
--	 * restriction might be able to be lifted.
- 	 */
--	gfp_flags = GFP_NOIO | __GFP_ZERO;
-+	gfp_flags = GFP_NOIO | __GFP_ZERO | __GFP_HIGHMEM;
- 	page = alloc_page(gfp_flags);
- 	if (!page)
- 		return NULL;
--- 
-2.16.2.dirty
-
+On Wed, Apr 17, 2019 at 08:41:57AM -0400, Sasha Levin wrote:
+>On Wed, Apr 17, 2019 at 08:28:54AM +0200, Greg KH wrote:
+>>On Tue, Apr 16, 2019 at 09:34:51PM -0400, Sasha Levin wrote:
+>>> 2. Fix to show monitor data only when monitor pages are actually
+>>>allocated, also by Kimberly Brown.
+>>
+>>That's not really a "fix", more like a "new feature", right?
+>
+>This is (sadly) a fix; we access invalid memory or leak kernel memory to
+>userspace if we access the monitor sysfs files when there are no monitor
+>pages allocated.
+>
+>>> drivers/hv/vmbus_drv.c                   | 166 +++++++++++++++++++++++++------
+>>A patch this big so late in the release cycle is not good.
+>
+>Indeed, but I've had it in my queue for a few weeks now so it's been
+>receiving a good amount of testing - it's not something we came up with
+>a few days ago.
+>
+>>Can you drop this one and resend the others?  If you sent this as a
+>>patch series, I could have done it that way on my own :)
+>
+>I would prefer if you could take it in. While it's on the bigger side, a
+>lot of it is documentation (and comments!), and the code itself is
+>straightforward and was well reviewed over 6 iterations of the original
+>patch.
+>
+>--
+>Thanks,
+>Sasha
