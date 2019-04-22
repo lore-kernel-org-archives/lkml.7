@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6354CC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4DAC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31A51218B0
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DE9218B0
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962207;
-	bh=fIhX/tNaCof+lPJyKim+YQEZAb2IukfLs34A9hCcUOU=;
+	s=default; t=1555962216;
+	bh=8YGkZM6OR7xyhJ0c+lgpbxCtH7o+tZdryQuTqxaasGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pTls0RQT3TDO5itZVOVjKEPdNwZIB7CubtZHJ9b+JNzNLiMVh2icLFHuKJCHcEggi
-	 /lOYeJfi2i/HDCl4iTwCc6bx9c5d44MozvonbzNccAyAKb+d5EXhIlNwqFyusl6FHN
-	 7K4QWmWUhZw9Wp1Wfz/I/TndkFERx+PVJNZv61v8=
+	b=C6+xEyewlTfjLn+OK98efWgv0BAzLGYAyn9nkHKupgYtAxv5CxIaRHql4xdmxaEIy
+	 TBe1PsR3iSIqq/Y4jkrmv1vSMvrnVjAXQt+abTRRALkQc66mYNCGUrq7nONcTc4zF3
+	 DLlr/J/8suwiK0kKU/trFGNo8/OLyfiPG7FYx+rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbfDVTn0 (ORCPT
+        id S1729199AbfDVTnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43956 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729167AbfDVTnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:43:23 -0400
+        id S1726896AbfDVTnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:43:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABF7B2177B;
-        Mon, 22 Apr 2019 19:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3607218B0;
+        Mon, 22 Apr 2019 19:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962202;
-        bh=fIhX/tNaCof+lPJyKim+YQEZAb2IukfLs34A9hCcUOU=;
+        s=default; t=1555962211;
+        bh=8YGkZM6OR7xyhJ0c+lgpbxCtH7o+tZdryQuTqxaasGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJycx+73HQRHkrMHz7mUjIXbDwA2fU3fH27gTObvTlA7JxpEvNS9rg5lV+fUQz1lN
-         ZI8BKOxKSy914G46XWG5O2XncL29Aq9Oyo7Da5DRk51V8y+NZxvG4o3vfdBW2+L4MW
-         uvHV0YPtsqO830dwJIixRf2kdXhyN/It+MuAr10I=
+        b=Hi62RAqdfvfVEZS2aNEKjogptdu8nyrvZsShZ746mO6VGifEbjMfG+BpqFo9Lid5H
+         FVl7DeEP8qNQiSAnDkYh/VPvMLnWm0YFKqUcC3azNzvAik/BygEIIpqEcm0heW/Qm3
+         srb6t8ze2g4TNSG4NXlivDP/SS2bkxjCaEjnrSJU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lukas Wunner <lukas@wunner.de>, Frank Pavlic <f.pavlic@kunbus.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 40/98] net: ks8851: Set initial carrier state to down
-Date:   Mon, 22 Apr 2019 15:41:07 -0400
-Message-Id: <20190422194205.10404-40-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.0 41/98] staging: rtl8188eu: Fix potential NULL pointer dereference of kcalloc
+Date:   Mon, 22 Apr 2019 15:41:08 -0400
+Message-Id: <20190422194205.10404-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
@@ -61,54 +58,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 9624bafa5f6418b9ca5b3f66d1f6a6a2e8bf6d4c ]
+[ Upstream commit 7671ce0d92933762f469266daf43bd34d422d58c ]
 
-The ks8851 chip's initial carrier state is down. A Link Change Interrupt
-is signaled once interrupts are enabled if the carrier is up.
+hwxmits is allocated via kcalloc and not checked for failure before its
+dereference. The patch fixes this problem by returning error upstream
+in rtl8723bs, rtl8188eu.
 
-The ks8851 driver has it backwards by assuming that the initial carrier
-state is up. The state is therefore misrepresented if the interface is
-opened with no cable attached. Fix it.
-
-The Link Change interrupt is sometimes not signaled unless the P1MBSR
-register (which contains the Link Status bit) is read on ->ndo_open().
-This might be a hardware erratum. Read the register by calling
-mii_check_link(), which has the desirable side effect of setting the
-carrier state to down if the cable was detached while the interface was
-closed.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Acked-by: Mukesh Ojha <mojha@codeaurora.org>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/rtl8188eu/core/rtw_xmit.c    |  9 +++++++--
+ drivers/staging/rtl8188eu/include/rtw_xmit.h |  2 +-
+ drivers/staging/rtl8723bs/core/rtw_xmit.c    | 14 +++++++-------
+ drivers/staging/rtl8723bs/include/rtw_xmit.h |  2 +-
+ 4 files changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index c9faec4c5b25..b83b070a9eec 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -858,6 +858,7 @@ static int ks8851_net_open(struct net_device *dev)
- 	netif_dbg(ks, ifup, ks->netdev, "network device up\n");
+diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
+index 3b1ccd138c3f..6fb6ea29a8b6 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
++++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
+@@ -174,7 +174,9 @@ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter)
  
- 	mutex_unlock(&ks->lock);
-+	mii_check_link(&ks->mii);
- 	return 0;
+ 	pxmitpriv->free_xmit_extbuf_cnt = num_xmit_extbuf;
+ 
+-	rtw_alloc_hwxmits(padapter);
++	res = rtw_alloc_hwxmits(padapter);
++	if (res == _FAIL)
++		goto exit;
+ 	rtw_init_hwxmits(pxmitpriv->hwxmits, pxmitpriv->hwxmit_entry);
+ 
+ 	for (i = 0; i < 4; i++)
+@@ -1503,7 +1505,7 @@ exit:
+ 	return res;
  }
  
-@@ -1519,6 +1520,7 @@ static int ks8851_probe(struct spi_device *spi)
+-void rtw_alloc_hwxmits(struct adapter *padapter)
++s32 rtw_alloc_hwxmits(struct adapter *padapter)
+ {
+ 	struct hw_xmit *hwxmits;
+ 	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
+@@ -1512,6 +1514,8 @@ void rtw_alloc_hwxmits(struct adapter *padapter)
  
- 	spi_set_drvdata(spi, ks);
+ 	pxmitpriv->hwxmits = kcalloc(pxmitpriv->hwxmit_entry,
+ 				     sizeof(struct hw_xmit), GFP_KERNEL);
++	if (!pxmitpriv->hwxmits)
++		return _FAIL;
  
-+	netif_carrier_off(ks->netdev);
- 	ndev->if_port = IF_PORT_100BASET;
- 	ndev->netdev_ops = &ks8851_netdev_ops;
- 	ndev->irq = spi->irq;
+ 	hwxmits = pxmitpriv->hwxmits;
+ 
+@@ -1519,6 +1523,7 @@ void rtw_alloc_hwxmits(struct adapter *padapter)
+ 	hwxmits[1] .sta_queue = &pxmitpriv->vi_pending;
+ 	hwxmits[2] .sta_queue = &pxmitpriv->be_pending;
+ 	hwxmits[3] .sta_queue = &pxmitpriv->bk_pending;
++	return _SUCCESS;
+ }
+ 
+ void rtw_free_hwxmits(struct adapter *padapter)
+diff --git a/drivers/staging/rtl8188eu/include/rtw_xmit.h b/drivers/staging/rtl8188eu/include/rtw_xmit.h
+index 788f59c74ea1..ba7e15fbde72 100644
+--- a/drivers/staging/rtl8188eu/include/rtw_xmit.h
++++ b/drivers/staging/rtl8188eu/include/rtw_xmit.h
+@@ -336,7 +336,7 @@ s32 rtw_txframes_sta_ac_pending(struct adapter *padapter,
+ void rtw_init_hwxmits(struct hw_xmit *phwxmit, int entry);
+ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter);
+ void _rtw_free_xmit_priv(struct xmit_priv *pxmitpriv);
+-void rtw_alloc_hwxmits(struct adapter *padapter);
++s32 rtw_alloc_hwxmits(struct adapter *padapter);
+ void rtw_free_hwxmits(struct adapter *padapter);
+ s32 rtw_xmit(struct adapter *padapter, struct sk_buff **pkt);
+ 
+diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+index 625e67f39889..a36b2213d8ee 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
++++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+@@ -260,7 +260,9 @@ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter)
+ 		}
+ 	}
+ 
+-	rtw_alloc_hwxmits(padapter);
++	res = rtw_alloc_hwxmits(padapter);
++	if (res == _FAIL)
++		goto exit;
+ 	rtw_init_hwxmits(pxmitpriv->hwxmits, pxmitpriv->hwxmit_entry);
+ 
+ 	for (i = 0; i < 4; i++) {
+@@ -2144,7 +2146,7 @@ exit:
+ 	return res;
+ }
+ 
+-void rtw_alloc_hwxmits(struct adapter *padapter)
++s32 rtw_alloc_hwxmits(struct adapter *padapter)
+ {
+ 	struct hw_xmit *hwxmits;
+ 	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
+@@ -2155,10 +2157,8 @@ void rtw_alloc_hwxmits(struct adapter *padapter)
+ 
+ 	pxmitpriv->hwxmits = rtw_zmalloc(sizeof(struct hw_xmit) * pxmitpriv->hwxmit_entry);
+ 
+-	if (pxmitpriv->hwxmits == NULL) {
+-		DBG_871X("alloc hwxmits fail!...\n");
+-		return;
+-	}
++	if (!pxmitpriv->hwxmits)
++		return _FAIL;
+ 
+ 	hwxmits = pxmitpriv->hwxmits;
+ 
+@@ -2204,7 +2204,7 @@ void rtw_alloc_hwxmits(struct adapter *padapter)
+ 
+ 	}
+ 
+-
++	return _SUCCESS;
+ }
+ 
+ void rtw_free_hwxmits(struct adapter *padapter)
+diff --git a/drivers/staging/rtl8723bs/include/rtw_xmit.h b/drivers/staging/rtl8723bs/include/rtw_xmit.h
+index 1b38b9182b31..37f42b2f22f1 100644
+--- a/drivers/staging/rtl8723bs/include/rtw_xmit.h
++++ b/drivers/staging/rtl8723bs/include/rtw_xmit.h
+@@ -487,7 +487,7 @@ s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, struct adapter *padapter);
+ void _rtw_free_xmit_priv (struct xmit_priv *pxmitpriv);
+ 
+ 
+-void rtw_alloc_hwxmits(struct adapter *padapter);
++s32 rtw_alloc_hwxmits(struct adapter *padapter);
+ void rtw_free_hwxmits(struct adapter *padapter);
+ 
+ 
 -- 
 2.19.1
 
