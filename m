@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A70C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BE2C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7681E218D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220D2218D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555962162;
-	bh=a/tDOxXZmubAs3j/a20Am9PD6cFX24xUBC6esjBERXc=;
+	s=default; t=1555962165;
+	bh=p7DLkUNcQj6z2owi6qNZbpu2hBtOYk7Udeu4rvRoUVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ktmlQLL2G22hU1KPtbl+U6ePbnzuVWflRtW3AxZ0sRup5bcpyga6e6k9KjKMB3/pv
-	 ZXI3VidcqFR7Mi7vv1pyOwaYueCyn9zOlwCUw27lsDOm7MRkiA6Bzi70gGX5XEpjvc
-	 TMN/3FDktjvEJ6nE3+shS5hPMLF8b8sxr2ehjlVQ=
+	b=vceG6+JeK4owm+eZ3s8dyAzY0jD1Q0l2wG5H/mL16+rzsuMpBwVdGJDz0DVQdoBxj
+	 qtpehgi42kJ1eJc+bqtKjPlyXrmMEvFuparPoBhoiOLOHEpgH8XERFRd9SlnXo2kY6
+	 w1c3+CVkvSa3wvmQQIcmC3hAqVN+JViENhfWsVjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbfDVTml (ORCPT
+        id S1728956AbfDVTmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:42:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43034 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:42:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728824AbfDVTmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:42:38 -0400
+        id S1728905AbfDVTmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:42:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17BFE218DA;
-        Mon, 22 Apr 2019 19:42:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDDC6218D9;
+        Mon, 22 Apr 2019 19:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962157;
-        bh=a/tDOxXZmubAs3j/a20Am9PD6cFX24xUBC6esjBERXc=;
+        s=default; t=1555962156;
+        bh=p7DLkUNcQj6z2owi6qNZbpu2hBtOYk7Udeu4rvRoUVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VkIIlmA3js6Z90kBQG4PBYx4CbDXAsxKaT8kH+G5uX6jmLPqDOKWb6buFyrEvH+BH
-         Fz7JmeESmuo/9nFW3kOxuArhmKNxb+bv0VvyYiXEG443wXqQ1Cer+5fGhBWH+kT6MY
-         Ms1zzYdsMy5tmO/jT4Sbkz7+M1UaeGuMuYtq0a1Y=
+        b=Lr6uo1Wv5RE+kYemFZwlLqP/4tDzn6IzMlGToCd2jiQS6v+96xBNbnokEF37KJ9lj
+         Z8D9jviwyFCNKN0RGEvbvPKiGpAJWw4fmz+nRDo6awOg5EDsZOhP3q0yhBcsQRiXNn
+         oC3n4b+c/jtSVKiurrSxcC3UzGsiP59jpsKEWCkk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 5.0 25/98] KVM: arm64: Reset the PMU in preemptible context
-Date:   Mon, 22 Apr 2019 15:40:52 -0400
-Message-Id: <20190422194205.10404-25-sashal@kernel.org>
+Cc:     =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Andrey Batyiev <batyiev@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 24/98] serial: ar933x_uart: Fix build failure with disabled console
+Date:   Mon, 22 Apr 2019 15:40:51 -0400
+Message-Id: <20190422194205.10404-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,54 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Petr Štetiar <ynezz@true.cz>
 
-[ Upstream commit ebff0b0e3d3c862c16c487959db5e0d879632559 ]
+[ Upstream commit 72ff51d8dd262d1fef25baedc2ac35116435be47 ]
 
-We've become very cautious to now always reset the vcpu when nothing
-is loaded on the physical CPU. To do so, we now disable preemption
-and do a kvm_arch_vcpu_put() to make sure we have all the state
-in memory (and that it won't be loaded behind out back).
+Andrey has reported on OpenWrt's bug tracking system[1], that he
+currently can't use ar93xx_uart as pure serial UART without console
+(CONFIG_SERIAL_8250_CONSOLE and CONFIG_SERIAL_AR933X_CONSOLE undefined),
+because compilation ends with following error:
 
-This now causes issues with resetting the PMU, which calls into perf.
-Perf itself uses mutexes, which clashes with the lack of preemption.
-It is worth realizing that the PMU is fully emulated, and that
-no PMU state is ever loaded on the physical CPU. This means we can
-perfectly reset the PMU outside of the non-preemptible section.
+ ar933x_uart.c: In function 'ar933x_uart_console_write':
+ ar933x_uart.c:550:14: error: 'struct uart_port' has no
+                               member named 'sysrq'
 
-Fixes: e761a927bc9a ("KVM: arm/arm64: Reset the VCPU without preemption and vcpu state loaded")
-Reported-by: Julien Grall <julien.grall@arm.com>
-Tested-by: Julien Grall <julien.grall@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+So this patch moves all the code related to console handling behind
+series of CONFIG_SERIAL_AR933X_CONSOLE ifdefs.
+
+1. https://bugs.openwrt.org/index.php?do=details&task_id=2152
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Andrey Batyiev <batyiev@gmail.com>
+Reported-by: Andrey Batyiev <batyiev@gmail.com>
+Tested-by: Andrey Batyiev <batyiev@gmail.com>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm64/kvm/reset.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/ar933x_uart.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index f16a5f8ff2b4..e2a0500cd7a2 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -123,6 +123,9 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- 	int ret = -EINVAL;
- 	bool loaded;
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index db5df3d54818..3bdd56a1021b 100644
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -49,11 +49,6 @@ struct ar933x_uart_port {
+ 	struct clk		*clk;
+ };
  
-+	/* Reset PMU outside of the non-preemptible section */
-+	kvm_pmu_vcpu_reset(vcpu);
-+
- 	preempt_disable();
- 	loaded = (vcpu->cpu != -1);
- 	if (loaded)
-@@ -170,9 +173,6 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- 		vcpu->arch.reset_state.reset = false;
- 	}
- 
--	/* Reset PMU */
--	kvm_pmu_vcpu_reset(vcpu);
+-static inline bool ar933x_uart_console_enabled(void)
+-{
+-	return IS_ENABLED(CONFIG_SERIAL_AR933X_CONSOLE);
+-}
 -
- 	/* Default workaround setup is enabled (if supported) */
- 	if (kvm_arm_have_ssbd() == KVM_SSBD_KERNEL)
- 		vcpu->arch.workaround_flags |= VCPU_WORKAROUND_2_FLAG;
+ static inline unsigned int ar933x_uart_read(struct ar933x_uart_port *up,
+ 					    int offset)
+ {
+@@ -508,6 +503,7 @@ static const struct uart_ops ar933x_uart_ops = {
+ 	.verify_port	= ar933x_uart_verify_port,
+ };
+ 
++#ifdef CONFIG_SERIAL_AR933X_CONSOLE
+ static struct ar933x_uart_port *
+ ar933x_console_ports[CONFIG_SERIAL_AR933X_NR_UARTS];
+ 
+@@ -604,14 +600,7 @@ static struct console ar933x_uart_console = {
+ 	.index		= -1,
+ 	.data		= &ar933x_uart_driver,
+ };
+-
+-static void ar933x_uart_add_console_port(struct ar933x_uart_port *up)
+-{
+-	if (!ar933x_uart_console_enabled())
+-		return;
+-
+-	ar933x_console_ports[up->port.line] = up;
+-}
++#endif /* CONFIG_SERIAL_AR933X_CONSOLE */
+ 
+ static struct uart_driver ar933x_uart_driver = {
+ 	.owner		= THIS_MODULE,
+@@ -700,7 +689,9 @@ static int ar933x_uart_probe(struct platform_device *pdev)
+ 	baud = ar933x_uart_get_baud(port->uartclk, 0, AR933X_UART_MAX_STEP);
+ 	up->max_baud = min_t(unsigned int, baud, AR933X_UART_MAX_BAUD);
+ 
+-	ar933x_uart_add_console_port(up);
++#ifdef CONFIG_SERIAL_AR933X_CONSOLE
++	ar933x_console_ports[up->port.line] = up;
++#endif
+ 
+ 	ret = uart_add_one_port(&ar933x_uart_driver, &up->port);
+ 	if (ret)
+@@ -749,8 +740,9 @@ static int __init ar933x_uart_init(void)
+ {
+ 	int ret;
+ 
+-	if (ar933x_uart_console_enabled())
+-		ar933x_uart_driver.cons = &ar933x_uart_console;
++#ifdef CONFIG_SERIAL_AR933X_CONSOLE
++	ar933x_uart_driver.cons = &ar933x_uart_console;
++#endif
+ 
+ 	ret = uart_register_driver(&ar933x_uart_driver);
+ 	if (ret)
 -- 
 2.19.1
 
