@@ -3,112 +3,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79552C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7EEC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5551520693
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D5F20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 13:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfDVNOC (ORCPT
+        id S1726969AbfDVNQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 09:14:02 -0400
-Received: from [110.188.70.11] ([110.188.70.11]:5243 "EHLO spam2.hygon.cn"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726057AbfDVNOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 09:14:01 -0400
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam2.hygon.cn with ESMTP id x3MDBMM1020867;
-        Mon, 22 Apr 2019 21:11:22 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id x3MDB4Ct016123;
-        Mon, 22 Apr 2019 21:11:04 +0800 (GMT-8)
-        (envelope-from puwen@hygon.cn)
-Received: from pw-vbox.hygon.cn (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 22 Apr
- 2019 21:11:18 +0800
-From:   Pu Wen <puwen@hygon.cn>
-To:     <jdelvare@suse.com>, <bp@alien8.de>
-CC:     <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>, Pu Wen <puwen@hygon.cn>
-Subject: [RFC PATCH RESEND] i2c-piix4: Add Hygon Dhyana SMBus support
-Date:   Mon, 22 Apr 2019 21:10:07 +0800
-Message-ID: <1555938607-2865-1-git-send-email-puwen@hygon.cn>
-X-Mailer: git-send-email 2.7.4
+        Mon, 22 Apr 2019 09:16:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51114 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726057AbfDVNQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 09:16:21 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2A8AF307D848;
+        Mon, 22 Apr 2019 13:16:21 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.phx2.redhat.com [10.3.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ECFC02706A;
+        Mon, 22 Apr 2019 13:16:15 +0000 (UTC)
+Date:   Mon, 22 Apr 2019 09:16:13 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Wenwen Wang <wang6495@umn.edu>
+Cc:     "moderated list:AUDIT SUBSYSTEM" <linux-audit@redhat.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] audit: fix a memory leak bug
+Message-ID: <20190422131613.ivnshztep4e772xq@madcap2.tricolour.ca>
+References: <1555724969-15300-1-git-send-email-wang6495@umn.edu>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn x3MDBMM1020867
-X-DNSRBL: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555724969-15300-1-git-send-email-wang6495@umn.edu>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 22 Apr 2019 13:16:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Hygon Dhyana CPU has the SMBus device with PCI device ID 0x790b,
-which is the same as AMD CZ SMBus device. So add Hygon Dhyana support
-to the i2c-piix4 driver by using the code path of AMD.
+On 2019-04-19 20:49, Wenwen Wang wrote:
+> In audit_rule_change(), audit_data_to_entry() is firstly invoked to
+> translate the payload data to the kernel's rule representation. In
+> audit_data_to_entry(), depending on the audit field type, an audit tree may
+> be created in audit_make_tree(), which eventually invokes kmalloc() to
+> allocate the tree.  Since this tree is a temporary tree, it will be then
+> freed in the following execution, e.g., audit_add_rule() if the message
+> type is AUDIT_ADD_RULE or audit_del_rule() if the message type is
+> AUDIT_DEL_RULE. However, if the message type is neither AUDIT_ADD_RULE nor
+> AUDIT_DEL_RULE, i.e., the default case of the switch statement, this
+> temporary tree is not freed.
+> 
+> To fix this issue, only allocate the tree when the type is AUDIT_ADD_RULE
+> or AUDIT_DEL_RULE.
+> 
+> Signed-off-by: Wenwen Wang <wang6495@umn.edu>
 
-Cc: <stable@vger.kernel.org> # v5.0+
-Signed-off-by: Pu Wen <puwen@hygon.cn>
----
- drivers/i2c/busses/i2c-piix4.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+Looks good to me.
 
-diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
-index 90946a8..9db9d9d 100644
---- a/drivers/i2c/busses/i2c-piix4.c
-+++ b/drivers/i2c/busses/i2c-piix4.c
-@@ -289,6 +289,9 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
- 	     PIIX4_dev->revision >= 0x41) ||
- 	    (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD &&
- 	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS &&
-+	     PIIX4_dev->revision >= 0x49) ||
-+	    (PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON &&
-+	     PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS &&
- 	     PIIX4_dev->revision >= 0x49))
- 		smb_en = 0x00;
- 	else
-@@ -361,7 +364,8 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
- 		 piix4_smba, i2ccfg >> 4);
- 
- 	/* Find which register is used for port selection */
--	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD) {
-+	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD ||
-+	    PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON) {
- 		switch (PIIX4_dev->device) {
- 		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
- 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
-@@ -794,6 +798,7 @@ static const struct pci_device_id piix4_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_SBX00_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_HYGON, PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
- 		     PCI_DEVICE_ID_SERVERWORKS_OSB4) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_SERVERWORKS,
-@@ -904,11 +909,13 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if ((dev->vendor == PCI_VENDOR_ID_ATI &&
- 	     dev->device == PCI_DEVICE_ID_ATI_SBX00_SMBUS &&
- 	     dev->revision >= 0x40) ||
--	    dev->vendor == PCI_VENDOR_ID_AMD) {
-+	    dev->vendor == PCI_VENDOR_ID_AMD ||
-+	    dev->vendor == PCI_VENDOR_ID_HYGON) {
- 		bool notify_imc = false;
- 		is_sb800 = true;
- 
--		if (dev->vendor == PCI_VENDOR_ID_AMD &&
-+		if ((dev->vendor == PCI_VENDOR_ID_AMD ||
-+		     dev->vendor == PCI_VENDOR_ID_HYGON) &&
- 		    dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS) {
- 			u8 imc;
- 
--- 
-2.7.4
+Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
 
+> ---
+>  kernel/auditfilter.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/auditfilter.c b/kernel/auditfilter.c
+> index 63f8b3f..3ac71c4 100644
+> --- a/kernel/auditfilter.c
+> +++ b/kernel/auditfilter.c
+> @@ -1114,22 +1114,24 @@ int audit_rule_change(int type, int seq, void *data, size_t datasz)
+>  	int err = 0;
+>  	struct audit_entry *entry;
+>  
+> -	entry = audit_data_to_entry(data, datasz);
+> -	if (IS_ERR(entry))
+> -		return PTR_ERR(entry);
+> -
+>  	switch (type) {
+>  	case AUDIT_ADD_RULE:
+> +		entry = audit_data_to_entry(data, datasz);
+> +		if (IS_ERR(entry))
+> +			return PTR_ERR(entry);
+>  		err = audit_add_rule(entry);
+>  		audit_log_rule_change("add_rule", &entry->rule, !err);
+>  		break;
+>  	case AUDIT_DEL_RULE:
+> +		entry = audit_data_to_entry(data, datasz);
+> +		if (IS_ERR(entry))
+> +			return PTR_ERR(entry);
+>  		err = audit_del_rule(entry);
+>  		audit_log_rule_change("remove_rule", &entry->rule, !err);
+>  		break;
+>  	default:
+> -		err = -EINVAL;
+>  		WARN_ON(1);
+> +		return -EINVAL;
+>  	}
+>  
+>  	if (err || type == AUDIT_DEL_RULE) {
+> -- 
+> 2.7.4
+> 
+> --
+> Linux-audit mailing list
+> Linux-audit@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-audit
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
