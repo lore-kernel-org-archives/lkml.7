@@ -2,104 +2,77 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF04C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F04C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B480820B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:11:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="tj7tFwRH"
+	by mail.kernel.org (Postfix) with ESMTP id 40C8420B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 18:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbfDVSLB (ORCPT
+        id S1728628AbfDVSLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 14:11:01 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35373 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728349AbfDVSLB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 14:11:01 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j20so9628553lfh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 11:10:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VXcU2rwgvZNUrY/itsQwdIy2L1lPb6tI46vmzKGhR7A=;
-        b=tj7tFwRHkoz7pjmoWjo3SMm0XDlteq238wWuL6ybJvcZrsL2JxJx2ZgWmSLn87CZaz
-         3H9UMN9Vl+EtCEoBnHNDHmKqQu/kM+RDgBqSjUVbPiz3cRoziivzTkzgQ4yI7VxlAdEG
-         z+hlqrR4xJpGsf8cLtXEHPnnOmIESFfziCIA53F9ODKsp8nKGME4m7xGR0xtaqIz5fVa
-         N1r8IKclGB9PtRt2chuWfiVxo3GoN7jdHO2AXTCaAGfFL2VT6NU9NdnPVATly+Ai5x0p
-         hYa0uvK6LBrsARi+w9cDmpI7t9dulKi/5unVNe4MBSDajRLPAPEKbimUzln15UcWTYGK
-         GBag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VXcU2rwgvZNUrY/itsQwdIy2L1lPb6tI46vmzKGhR7A=;
-        b=hNjKh+tGeInoaWUJP40t0ckupAbLS0GV+kfw/5J1nAVU94B7Q6u0+mKPdFcydldvku
-         Q9Whdtb/FIHZ4yjMq30Dz2K/wn20yrozfZF3qzBDS/VJjDkfd0Eb4aF8tgIW9D284QkA
-         ERXo5pA5hH6WJo+NjYA0WQQ/wixLzR3QhSJ9bEjqyjOGoSVPDoYLz+sHU/ihTOzWCvVu
-         hvuVu0gdEjHFj+OdpiHUcE7NcxVwm5t9nRBAQlSIlmFhgw/acYWeEyWDUvW8zzfZa6zD
-         29rkrhrOxskYzBYGfL/GM8FFY6rG1p8+zo0IT3Co1+b6MvHQqNFeex2DsmtB2/OYos4X
-         u+xQ==
-X-Gm-Message-State: APjAAAXFbZ2KYhg2319lSO7XWVqDoR5WBTJymE/Zxxlizt+NCXTceYgE
-        GkgFapizTZY3ZcdYq98IyYpqtt4zknVDL3oyusfj
-X-Google-Smtp-Source: APXvYqyFxh/7LRh2OUs07TaeIwkLdmUFOzPywD7hyxv8By/XR7oy9MGpTc3jNJvUlnYKg+aAZN4R8oJKU3Cyeok7DUc=
-X-Received: by 2002:ac2:4119:: with SMTP id b25mr11052807lfi.72.1555956658518;
- Mon, 22 Apr 2019 11:10:58 -0700 (PDT)
+        Mon, 22 Apr 2019 14:11:21 -0400
+Received: from verein.lst.de ([213.95.11.211]:41053 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728309AbfDVSLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 14:11:20 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 1434668AFE; Mon, 22 Apr 2019 20:11:01 +0200 (CEST)
+Date:   Mon, 22 Apr 2019 20:11:00 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     laurentiu.tudor@nxp.com
+Cc:     hch@lst.de, robin.murphy@arm.com, m.szyprowski@samsung.com,
+        iommu@lists.linux-foundation.org, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] dma-mapping: create iommu mapping for newly
+ allocated dma coherent mem
+Message-ID: <20190422181100.GB32490@lst.de>
+References: <20190422165125.21704-1-laurentiu.tudor@nxp.com>
 MIME-Version: 1.0
-References: <cover.1555938375.git.mchehab+samsung@kernel.org> <72133d276dd8cde2d1ee8528b4e87ab2a614cbd0.1555938376.git.mchehab+samsung@kernel.org>
-In-Reply-To: <72133d276dd8cde2d1ee8528b4e87ab2a614cbd0.1555938376.git.mchehab+samsung@kernel.org>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 22 Apr 2019 14:10:47 -0400
-Message-ID: <CAHC9VhT7_vu1TeSWSFAJprf2iCgyHRYLpfpBvR48Yc40XefUcw@mail.gmail.com>
-Subject: Re: [PATCH v2 23/79] docs: netlabel: convert docs to ReST and rename
- to *.rst
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        netdev@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190422165125.21704-1-laurentiu.tudor@nxp.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 9:28 AM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
->
-> Convert netlabel documentation to ReST.
->
-> This was trivial: just add proper title markups.
->
-> At its new index.rst, let's add a :orphan: while this is not linked to
-> the main index.rst file, in order to avoid build warnings.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
->  .../{cipso_ipv4.txt => cipso_ipv4.rst}        | 19 +++++++++++------
->  Documentation/netlabel/draft_ietf.rst         |  5 +++++
->  Documentation/netlabel/index.rst              | 21 +++++++++++++++++++
->  .../{introduction.txt => introduction.rst}    | 16 +++++++++-----
->  .../{lsm_interface.txt => lsm_interface.rst}  | 16 +++++++++-----
->  5 files changed, 61 insertions(+), 16 deletions(-)
->  rename Documentation/netlabel/{cipso_ipv4.txt => cipso_ipv4.rst} (87%)
->  create mode 100644 Documentation/netlabel/draft_ietf.rst
->  create mode 100644 Documentation/netlabel/index.rst
->  rename Documentation/netlabel/{introduction.txt => introduction.rst} (91%)
->  rename Documentation/netlabel/{lsm_interface.txt => lsm_interface.rst} (88%)
+On Mon, Apr 22, 2019 at 07:51:25PM +0300, laurentiu.tudor@nxp.com wrote:
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> 
+> If possible / available call into the DMA API to get a proper iommu
+> mapping and a dma address for the newly allocated coherent dma memory.
 
-Still looks fine to me.  I should go through these docs again to make
-sure they are current (the old email address definitely is a bad
-sign).
+I don't think this is so simple.  The original use case of
+dma_declare_coherent_memory was memory that is local to a device, where
+we copy in data through a MMIO mapping and the device can then access
+it.  This use case still seems to be alive in the ohci-sm501 and
+ohci-tmio drivers.  Going through the iommu in those cases would be
+counter productive.
 
-Acked-by: Paul Moore <paul@paul-moore.com>
+The other use cases, including the OF ones seem to be (and Marek who
+added that support should correct me if I'm wrong) normal host DRAM
+that is just set aside for the device.
 
--- 
-paul moore
-www.paul-moore.com
+So if we want to support these prealloc pools with an iommu we need to
+split the use cases.  I have to say I really hate the way we do the DMA
+"coherent" allocations, so I'm all in favor of that, it just hasn't
+bubbled up towards the front of my todo list yet.
+
+My highlevel plan here would be:
+
+ a) move the two OHCI drivers away from our current DMA declare
+    coherent code, and just use a trivial genalloc allocator for
+    their MMIO space, given that the USB layer already wraps the
+    dma_alloc/free APIs anyway
+ b) move the rest of the DMA coherent stuff into the actual dma
+    map ops, similar to how we handle CMA allocations.  In fact
+    we should probably do this by a new page allocation helper
+    that tries CMA, "coherent" or the page allocator as fallback
+ b) also merge the OF-side handling of CMA vs "coherent" into a
+    single implementation.  Preferably dropping the misleading
+    "coherent" name while we are at it.
