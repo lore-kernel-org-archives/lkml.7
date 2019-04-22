@@ -2,71 +2,116 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B31C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 04:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4312DC282E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 04:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE57520859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 04:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B50120859
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 04:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbfDVEsZ (ORCPT
+        id S1726665AbfDVEsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 00:48:25 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:43298 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfDVEsZ (ORCPT
+        Mon, 22 Apr 2019 00:48:35 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55769 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfDVEsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 00:48:25 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0B4F214DB85A6;
-        Sun, 21 Apr 2019 21:48:24 -0700 (PDT)
-Date:   Sun, 21 Apr 2019 21:48:23 -0700 (PDT)
-Message-Id: <20190421.214823.1067084318038589092.davem@davemloft.net>
-To:     crag0715@gmail.com
-Cc:     netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hayeswang@realtek.com,
-        mario_limonciello@dell.com, crag.wang@dell.com, sjg@chromium.org,
-        seanpaul@chromium.org, grundler@chromium.org, david.chen7@dell.com,
-        f.fainelli@gmail.com, jslaby@suse.cz, gustavo@embeddedor.com,
-        charles.hyde@dell.corp-partner.google.com, bigeasy@linutronix.de,
-        zhongjiang@huawei.com
-Subject: Re: [PATCH v2 1/1] r8152: sync sa_family with the media type of
- network device
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <CAP-8N0jiguFSdyeop3rxMoNdYJemCRSdohyOR4z8B3HDmdUmng@mail.gmail.com>
-References: <20190422022307.19616-1-crag0715@gmail.com>
-        <20190421.194453.2169045719820345607.davem@davemloft.net>
-        <CAP-8N0jiguFSdyeop3rxMoNdYJemCRSdohyOR4z8B3HDmdUmng@mail.gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 21 Apr 2019 21:48:24 -0700 (PDT)
+        Mon, 22 Apr 2019 00:48:35 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hIQpt-0001y2-By; Mon, 22 Apr 2019 04:45:47 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com
+Cc:     linus.walleij@linaro.org, hotwater438@tutanota.com,
+        hdegoede@redhat.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] pinctrl: intel: Clear interrupt status in unmask callback
+Date:   Mon, 22 Apr 2019 12:45:39 +0800
+Message-Id: <20190422044539.16085-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Crag Wang <crag0715@gmail.com>
-Date: Mon, 22 Apr 2019 11:17:49 +0800
+Commit a939bb57cd47 ("pinctrl: intel: implement gpio_irq_enable") was
+added because clearing interrupt status bit is required to avoid
+unexpected behavior.
 
-> On Mon, Apr 22, 2019 at 10:44 AM David Miller <davem@davemloft.net> wrote:
->>
->>
->> Networking driver patches not sent to netdev@vger.kernel.org are very unlikely
->> to be integrated.
->>
->> Thank you.
-> 
-> Adding netdev@vger.kernel.org to this email, sorry about missing the
-> recipient in the first place.
+Turns out the unmask callback also needs the fix, which can solve weird
+IRQ triggering issues on I2C touchpad ELAN1200.
 
-This does not get the patch queued up in patchwork, nor allow other readers of
-netdev to see the patch so that it can be properly reviewed.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 35 ++++-----------------------
+ 1 file changed, 5 insertions(+), 30 deletions(-)
 
-You must make a new, fresh, posting of your patch.
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 3b1818184207..53878604537e 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -913,35 +913,6 @@ static void intel_gpio_irq_ack(struct irq_data *d)
+ 	}
+ }
+ 
+-static void intel_gpio_irq_enable(struct irq_data *d)
+-{
+-	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+-	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
+-	const struct intel_community *community;
+-	const struct intel_padgroup *padgrp;
+-	int pin;
+-
+-	pin = intel_gpio_to_pin(pctrl, irqd_to_hwirq(d), &community, &padgrp);
+-	if (pin >= 0) {
+-		unsigned int gpp, gpp_offset, is_offset;
+-		unsigned long flags;
+-		u32 value;
+-
+-		gpp = padgrp->reg_num;
+-		gpp_offset = padgroup_offset(padgrp, pin);
+-		is_offset = community->is_offset + gpp * 4;
+-
+-		raw_spin_lock_irqsave(&pctrl->lock, flags);
+-		/* Clear interrupt status first to avoid unexpected interrupt */
+-		writel(BIT(gpp_offset), community->regs + is_offset);
+-
+-		value = readl(community->regs + community->ie_offset + gpp * 4);
+-		value |= BIT(gpp_offset);
+-		writel(value, community->regs + community->ie_offset + gpp * 4);
+-		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+-	}
+-}
+-
+ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+@@ -963,6 +934,11 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+ 		reg = community->regs + community->ie_offset + gpp * 4;
+ 
+ 		raw_spin_lock_irqsave(&pctrl->lock, flags);
++
++		/* Clear interrupt status first to avoid unexpected interrupt */
++		if (!mask)
++			writel(BIT(gpp_offset), community->regs + community->is_offset + gpp * 4);
++
+ 		value = readl(reg);
+ 		if (mask)
+ 			value &= ~BIT(gpp_offset);
+@@ -1106,7 +1082,6 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
+ 
+ static struct irq_chip intel_gpio_irqchip = {
+ 	.name = "intel-gpio",
+-	.irq_enable = intel_gpio_irq_enable,
+ 	.irq_ack = intel_gpio_irq_ack,
+ 	.irq_mask = intel_gpio_irq_mask,
+ 	.irq_unmask = intel_gpio_irq_unmask,
+-- 
+2.17.1
+
