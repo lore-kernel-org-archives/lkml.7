@@ -2,157 +2,119 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3857C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8BDC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD85F20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:13:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="E5HfDJqO"
+	by mail.kernel.org (Postfix) with ESMTP id A1AC320874
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 16:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfDVQNN (ORCPT
+        id S1727496AbfDVQRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 12:13:13 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:56582 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfDVQNN (ORCPT
+        Mon, 22 Apr 2019 12:17:47 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:37716 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726098AbfDVQRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 12:13:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1555949588; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AgYqFhHK9+KEdoRaW0HT5/Jpbx15R9mKS2eYOPHyvQU=;
-        b=E5HfDJqOG/dKz5uh7mOGylwgUlc5MSDOmxwoLxV3ytrQ6rZo3uBZ0Zlpyy6xOSiSx8I8c5
-        MlEnkQdSxXIMDXaxULwWIbYS1Qs1Kh/lHA1gCFYAkdahEmM0QUlNkKy9c+sf7YK+RMsrpd
-        mTWOV5fLJCoyJHX1aJzVBWnLG5VlvPc=
-Date:   Mon, 22 Apr 2019 18:13:02 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 2/3] dt-bindings: Add header for the ingenic-drm driver
- bindings
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, od@zcrc.me,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <1555949582.1483.0@crapouillou.net>
-In-Reply-To: <CAAEAJfBZPvoUd6dT2C6QDO4wsPzpwMpcT-XFwo+Xr4NO+4+jtA@mail.gmail.com>
-References: <20190414200824.28348-1-paul@crapouillou.net>
-        <20190414200824.28348-2-paul@crapouillou.net>
-        <CAL_JsqKkYkRQ4jDM9NR_eP4BLaAw=M5f5f5iDYBv4sZGGDzzgA@mail.gmail.com>
-        <CAAEAJfBZPvoUd6dT2C6QDO4wsPzpwMpcT-XFwo+Xr4NO+4+jtA@mail.gmail.com>
+        Mon, 22 Apr 2019 12:17:46 -0400
+Received: (qmail 5407 invoked by uid 2102); 22 Apr 2019 12:17:45 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 22 Apr 2019 12:17:45 -0400
+Date:   Mon, 22 Apr 2019 12:17:45 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: [PATCH 1/3] tools: memory-model: Prepare for data-race detection
+Message-ID: <Pine.LNX.4.44L0.1904221211440.1384-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch makes some slight alterations to linux-kernel.cat in
+preparation for adding support for data-race detection to the
+Linux-Kernel Memory Model.
 
-Le sam. 20 avril 2019 =E0 14:23, Ezequiel Garcia=20
-<ezequiel@vanguardiasur.com.ar> a =E9crit :
-> On Wed, 17 Apr 2019 at 10:48, Rob Herring <robh+dt@kernel.org> wrote:
->>=20
->>  On Sun, Apr 14, 2019 at 3:08 PM Paul Cercueil=20
->> <paul@crapouillou.net> wrote:
->>  >
->>  > Add macros that can be used with the ingenic,lcd-mode property in=20
->> the
->>  > devicetree node that corresponds to the ingenic-drm driver.
->>=20
->>  DRM is a Linuxism.
->>=20
->>  >
->>  > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  > Tested-by: Artur Rojek <contact@artur-rojek.eu>
->>  > ---
->>  >
->>  > Notes:
->>  >     v2: No change
->>  >
->>  >     v3: s/_DRM//
->>  >
->>  >  include/dt-bindings/display/ingenic,drm.h | 28=20
->> ++++++++++++++++++++++++++++
->>=20
->>  DRM is a Linuxism...
->>=20
->>  >  1 file changed, 28 insertions(+)
->>  >  create mode 100644 include/dt-bindings/display/ingenic,drm.h
->>  >
->>  > diff --git a/include/dt-bindings/display/ingenic,drm.h=20
->> b/include/dt-bindings/display/ingenic,drm.h
->>  > new file mode 100644
->>  > index 000000000000..c749b8c346fc
->>  > --- /dev/null
->>  > +++ b/include/dt-bindings/display/ingenic,drm.h
->>  > @@ -0,0 +1,28 @@
->>  > +/* SPDX-License-Identifier: GPL-2.0 */
->>  > +/*
->>  > + *  Ingenic JZ47xx KMS driver
->>=20
->>  Pretty sure this file is not a KMS driver.
->>=20
->>  > + *
->>  > + *  Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
->>  > + */
->>  > +#ifndef __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
->>  > +#define __INCLUDE_DT_BINDINGS_DISPLAY_INGENIC_DRM_H__
->>  > +
->>  > +#define JZ_LCD_GENERIC_16BIT                   0
->>  > +#define JZ_LCD_GENERIC_18BIT                   16
->>=20
->>  We have some generic properties for defining the bus width already.
->>  Plus, in many cases this can be implied by the panel compatible. The
->>  exceptions are cases such as when both the ctrlr and panel support
->>  multiple modes.
->>=20
->=20
-> In the same direction as Rob's comment, I'd like to see these=20
-> decoupled
-> from the register value.
->=20
-> Ideally, we'd like to reuse this driver and its bindings for JZ4780,
-> and these values are already different.
+	The definitions of relations involved in Acquire, Release, and
+	unlock-lock ordering are moved up earlier in the source file.
 
-Well they are not any different on the JZ4780, I just checked on the=20
-manual.
-But yes, I don't mind getting rid of that devicetree property and its
-corresponding bindings file.
+	The rmb relation is factored through the new R4rmb class: the
+	class of reads to which rmb will apply.
 
-The major problem is that we don't have a way to map some of the values=20
-there
-to DRM macros. I sumitted a PR to add a MEDIA_BUS_FMT_RGB888_3X8_BE bus=20
-format
-(that I could detect to support 8-bit serial TFT panels, which is what=20
-the
-Ben Nanonote uses), but I miss a way to detect the special* TFT panels.
-I will leave these aside for now, but I want to support them eventually.
+	The definition of the fence relation is moved earlier, and it
+	is split up into read- and write-fences (rmb and wmb) and all
+	the others.
 
-Thanks,
--Paul
+This should not make any functional changes.
 
-* "special" TFT panels have extra pins (CLS, SPL, REV, PS) and seem to=20
-be a
-thing from Sharp. Ingenic SoCs (as well as i.MX SoCs) have the required
-hardware to drive these panels.
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
 
-> Thanks!
-> --
-> Ezequiel Garc=EDa, VanguardiaSur
-> www.vanguardiasur.com.ar
+---
 
-=
+
+ tools/memory-model/linux-kernel.cat |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+Index: usb-devel/tools/memory-model/linux-kernel.cat
+===================================================================
+--- usb-devel.orig/tools/memory-model/linux-kernel.cat
++++ usb-devel/tools/memory-model/linux-kernel.cat
+@@ -26,8 +26,14 @@ include "lock.cat"
+ (* Basic relations *)
+ (*******************)
+ 
++(* Release Acquire *)
++let acq-po = [Acquire] ; po ; [M]
++let po-rel = [M] ; po ; [Release]
++let po-unlock-rf-lock-po = po ; [UL] ; rf ; [LKR] ; po
++
+ (* Fences *)
+-let rmb = [R \ Noreturn] ; fencerel(Rmb) ; [R \ Noreturn]
++let R4rmb = R \ Noreturn	(* Reads for which rmb works *)
++let rmb = [R4rmb] ; fencerel(Rmb) ; [R4rmb]
+ let wmb = [W] ; fencerel(Wmb) ; [W]
+ let mb = ([M] ; fencerel(Mb) ; [M]) |
+ 	([M] ; fencerel(Before-atomic) ; [RMW] ; po? ; [M]) |
+@@ -36,13 +42,10 @@ let mb = ([M] ; fencerel(Mb) ; [M]) |
+ 	([M] ; po ; [UL] ; (co | po) ; [LKW] ;
+ 		fencerel(After-unlock-lock) ; [M])
+ let gp = po ; [Sync-rcu | Sync-srcu] ; po?
+-
+ let strong-fence = mb | gp
+ 
+-(* Release Acquire *)
+-let acq-po = [Acquire] ; po ; [M]
+-let po-rel = [M] ; po ; [Release]
+-let po-unlock-rf-lock-po = po ; [UL] ; rf ; [LKR] ; po
++let nonrw-fence = strong-fence | po-rel | acq-po
++let fence = nonrw-fence | wmb | rmb
+ 
+ (**********************************)
+ (* Fundamental coherence ordering *)
+@@ -65,7 +68,6 @@ let rwdep = (dep | ctrl) ; [W]
+ let overwrite = co | fr
+ let to-w = rwdep | (overwrite & int)
+ let to-r = addr | (dep ; rfi)
+-let fence = strong-fence | wmb | po-rel | rmb | acq-po
+ let ppo = to-r | to-w | fence | (po-unlock-rf-lock-po & int)
+ 
+ (* Propagation: Ordering from release operations and strong fences. *)
+
 
