@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418A7C282E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50776C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA2E2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0703D2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555963694;
-	bh=B9hfitLqx3c6/Qrr9wS8Ka+HLiv37qnrs9TxLrLSLG8=;
+	s=default; t=1555963700;
+	bh=HTlBzVVr/tRb0LUHp3BAgi+bDaV2dXdNwftjh+ug1Ig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JnViQWIHgw4iYER0mPStteTpVoCtkrmzYEnmFytafiB2CZwzKd9JLMy9bbINGY2CT
-	 o5wVX7ROtA6HS4y2/XRYQm3LYRrxpEuFgd8gH6X8hUH/4ynuNvw05I8o1keUdQy6OH
-	 +UP/oiHOHf1GEmaJi2glOOZj2bQ6i+mz6Ap6RzO0=
+	b=H8Pz74+GOj6vVx2I5NjP6EQLnhVI64FhPPX8rc+nPZTnfj2ng24wxrWql5y3aAxu5
+	 S8IVnguuP7wAvQHQ6wEM5ChwZMLOt9IrpLrHpQz3qR7iBuYtuBQUHt7LLjHJqs5OVw
+	 nYFiq2p7iSsFRS9d5XDy28vQuf4T0R5dVnb40+Ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbfDVTn6 (ORCPT
+        id S1732430AbfDVUIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44650 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 16:08:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbfDVTnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729305AbfDVTnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 22 Apr 2019 15:43:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8672A218E0;
-        Mon, 22 Apr 2019 19:43:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A290A218EA;
+        Mon, 22 Apr 2019 19:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555962234;
-        bh=B9hfitLqx3c6/Qrr9wS8Ka+HLiv37qnrs9TxLrLSLG8=;
+        s=default; t=1555962235;
+        bh=HTlBzVVr/tRb0LUHp3BAgi+bDaV2dXdNwftjh+ug1Ig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=czY76zCXwD/JCM5SBg9kJmsNjY5Dr5CKRxj7Vr4WIT3h7PVihZHk6KTL/zJXnE4No
-         QAJwpLX2oShi+OlhXaIZHrlvndd8BRaL5PsZGKwTiaTwHqH/Kz8kBwXZ/MEehIEKgv
-         jt3dGU6ZRY7cRKZ8/heWZAjRV6xcYjsN+l/TYjUo=
+        b=gML8wflSjFoJ2jc3AVWhTcPkSiH5Kzu8LVS6p2Xj3KVZnaLrGhGrByIyqqgWeN/Ix
+         g9fWM88zmtR40PD/XQAV6CPcbXFMmyJcw3V6r2bnzjyXC6A8FgoFuPhWYMuKdEyoVK
+         ii8GS+HZxlXV/t1tqO6dCq9qhtf7fBfT4gDuqmaM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.0 54/98] drm: Fix drm_release() and device unplug
-Date:   Mon, 22 Apr 2019 15:41:21 -0400
-Message-Id: <20190422194205.10404-54-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 55/98] gpio: aspeed: fix a potential NULL pointer dereference
+Date:   Mon, 22 Apr 2019 15:41:22 -0400
+Message-Id: <20190422194205.10404-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
 References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,72 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Noralf Trønnes <noralf@tronnes.org>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 3f04e0a6cfebf48152ac64502346cdc258811f79 ]
+[ Upstream commit 6cf4511e9729c00a7306cf94085f9cc3c52ee723 ]
 
-If userspace has open fd(s) when drm_dev_unplug() is run, it will result
-in drm_dev_unregister() being called twice. First in drm_dev_unplug() and
-then later in drm_release() through the call to drm_put_dev().
+In case devm_kzalloc, the patch returns ENOMEM to avoid potential
+NULL pointer dereference.
 
-Since userspace already holds a ref on drm_device through the drm_minor,
-it's not necessary to add extra ref counting based on no open file
-handles. Instead just drm_dev_put() unconditionally in drm_dev_unplug().
-
-We now have this:
-- Userpace holds a ref on drm_device as long as there's open fd(s)
-- The driver holds a ref on drm_device as long as it's bound to the
-  struct device
-
-When both sides are done with drm_device, it is released.
-
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Reviewed-by: Sean Paul <sean@poorly.run>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190208140103.28919-2-noralf@tronnes.org
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_drv.c  | 6 +-----
- drivers/gpu/drm/drm_file.c | 6 ++----
- 2 files changed, 3 insertions(+), 9 deletions(-)
+ drivers/gpio/gpio-aspeed.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-index 12e5e2be7890..7a59b8b3ed5a 100644
---- a/drivers/gpu/drm/drm_drv.c
-+++ b/drivers/gpu/drm/drm_drv.c
-@@ -381,11 +381,7 @@ void drm_dev_unplug(struct drm_device *dev)
- 	synchronize_srcu(&drm_unplug_srcu);
+diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+index 854bce4fb9e7..217507002dbc 100644
+--- a/drivers/gpio/gpio-aspeed.c
++++ b/drivers/gpio/gpio-aspeed.c
+@@ -1224,6 +1224,8 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
  
- 	drm_dev_unregister(dev);
--
--	mutex_lock(&drm_global_mutex);
--	if (dev->open_count == 0)
--		drm_dev_put(dev);
--	mutex_unlock(&drm_global_mutex);
-+	drm_dev_put(dev);
+ 	gpio->offset_timer =
+ 		devm_kzalloc(&pdev->dev, gpio->chip.ngpio, GFP_KERNEL);
++	if (!gpio->offset_timer)
++		return -ENOMEM;
+ 
+ 	return aspeed_gpio_setup_irqs(gpio, pdev);
  }
- EXPORT_SYMBOL(drm_dev_unplug);
- 
-diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
-index 46f48f245eb5..3f20f598cd7c 100644
---- a/drivers/gpu/drm/drm_file.c
-+++ b/drivers/gpu/drm/drm_file.c
-@@ -479,11 +479,9 @@ int drm_release(struct inode *inode, struct file *filp)
- 
- 	drm_file_free(file_priv);
- 
--	if (!--dev->open_count) {
-+	if (!--dev->open_count)
- 		drm_lastclose(dev);
--		if (drm_dev_is_unplugged(dev))
--			drm_put_dev(dev);
--	}
-+
- 	mutex_unlock(&drm_global_mutex);
- 
- 	drm_minor_release(minor);
 -- 
 2.19.1
 
