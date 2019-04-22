@@ -2,69 +2,117 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CB3C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D38C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E85206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555959609;
-	bh=F/jM/sbVXVAIPz9YxoPWYIlG8o6hnhhFsgoannOTewA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=JblMu7YRoqxEivQ93PVQAyintP61N3QpMmm25Fw2jBjwzMDjj2ZEP8pGFqXeC9A7x
-	 IVFp1EFMfWq9rkdtMU8eaFhAcnXBg+Ebs0flM3EJHSq9OhrMP4mN+1Mjwbu7ijw+GR
-	 587ei0nI4rMVCPigL2JLrK3jeDYWmN5WLmhDyYOA=
+	by mail.kernel.org (Postfix) with ESMTP id 52B72206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 19:00:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbfDVTAH (ORCPT
+        id S1728962AbfDVTAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 15:00:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35880 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 15:00:19 -0400
+Received: from mga11.intel.com ([192.55.52.93]:60353 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728736AbfDVTAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 15:00:05 -0400
-Subject: Re: [GIT PULL] MIPS fixes for 5.1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555959604;
-        bh=F/jM/sbVXVAIPz9YxoPWYIlG8o6hnhhFsgoannOTewA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=fl3XoOM13J7mVuiRPUcJnrFzu5JNgkby4eqcLBzCxSLjxn+qe4t++epC1p4uP3Oib
-         OmRvre4AJ1Y2o/JHkcNDMOy1hFEp8lkXESrT3eW8uRC1cK/bj9W+Fgcr9WG//RI/Uz
-         nomqgv3KkL51STMhwvf+rm8bLknt+E30VIUq4DWA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190422182744.2764mje5ohnaubz4@pburton-laptop>
-References: <20190422182744.2764mje5ohnaubz4@pburton-laptop>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190422182744.2764mje5ohnaubz4@pburton-laptop>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
- tags/mips_fixes_5.1_3
-X-PR-Tracked-Commit-Id: a1e8783db8e0d58891681bc1e6d9ada66eae8e20
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7142eaa58b49d9de492ccc16d48df7c488a5fbb6
-Message-Id: <155595960442.28094.18149253271588843434.pr-tracker-bot@kernel.org>
-Date:   Mon, 22 Apr 2019 19:00:04 +0000
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        id S1728711AbfDVS6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 14:58:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 11:58:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,382,1549958400"; 
+   d="scan'208";a="136417140"
+Received: from linksys13920.jf.intel.com (HELO rpedgeco-DESK5.jf.intel.com) ([10.54.75.11])
+  by orsmga008.jf.intel.com with ESMTP; 22 Apr 2019 11:58:41 -0700
+From:   Rick Edgecombe <rick.p.edgecombe@intel.com>
+To:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, hpa@zytor.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, linux_dti@icloud.com,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, akpm@linux-foundation.org,
+        kernel-hardening@lists.openwall.com, linux-mm@kvack.org,
+        will.deacon@arm.com, ard.biesheuvel@linaro.org,
+        kristen@linux.intel.com, deneen.t.dock@intel.com,
+        Nadav Amit <namit@vmware.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+Subject: [PATCH v4 08/23] x86/kgdb: Avoid redundant comparison of patched code
+Date:   Mon, 22 Apr 2019 11:57:50 -0700
+Message-Id: <20190422185805.1169-9-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190422185805.1169-1-rick.p.edgecombe@intel.com>
+References: <20190422185805.1169-1-rick.p.edgecombe@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 22 Apr 2019 18:27:49 +0000:
+From: Nadav Amit <namit@vmware.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git tags/mips_fixes_5.1_3
+text_poke() already ensures that the written value is the correct one
+and fails if that is not the case. There is no need for an additional
+comparison. Remove it.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7142eaa58b49d9de492ccc16d48df7c488a5fbb6
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+---
+ arch/x86/kernel/kgdb.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
-Thank you!
-
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index 2b203ee5b879..13b13311b792 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -747,7 +747,6 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long ip)
+ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+ {
+ 	int err;
+-	char opc[BREAK_INSTR_SIZE];
+ 
+ 	bpt->type = BP_BREAKPOINT;
+ 	err = probe_kernel_read(bpt->saved_instr, (char *)bpt->bpt_addr,
+@@ -766,11 +765,6 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+ 		return -EBUSY;
+ 	text_poke_kgdb((void *)bpt->bpt_addr, arch_kgdb_ops.gdb_bpt_instr,
+ 		       BREAK_INSTR_SIZE);
+-	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
+-	if (err)
+-		return err;
+-	if (memcmp(opc, arch_kgdb_ops.gdb_bpt_instr, BREAK_INSTR_SIZE))
+-		return -EINVAL;
+ 	bpt->type = BP_POKE_BREAKPOINT;
+ 
+ 	return err;
+@@ -778,9 +772,6 @@ int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt)
+ 
+ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
+ {
+-	int err;
+-	char opc[BREAK_INSTR_SIZE];
+-
+ 	if (bpt->type != BP_POKE_BREAKPOINT)
+ 		goto knl_write;
+ 	/*
+@@ -791,10 +782,7 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
+ 		goto knl_write;
+ 	text_poke_kgdb((void *)bpt->bpt_addr, bpt->saved_instr,
+ 		       BREAK_INSTR_SIZE);
+-	err = probe_kernel_read(opc, (char *)bpt->bpt_addr, BREAK_INSTR_SIZE);
+-	if (err || memcmp(opc, bpt->saved_instr, BREAK_INSTR_SIZE))
+-		goto knl_write;
+-	return err;
++	return 0;
+ 
+ knl_write:
+ 	return probe_kernel_write((char *)bpt->bpt_addr,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.17.1
+
