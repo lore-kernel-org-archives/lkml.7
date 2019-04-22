@@ -2,179 +2,225 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63DAC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25AAC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BB620811
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 829B52075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 20:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555963905;
+	bh=ErChKZpdGL3aYXcpjvSI3PUufN/rYw9ZAk+TQR7SZJQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rqdbNKAyq2iwZUsLjyxP85++34Jq/kSFmSwvaPRYmAhal/7ZEilTloYo+QMPZFPtI
+	 els6zHTRQkQxp+Dz3u1my+PWfpqo3t6pHxwj/FTwvLxiJUSBBjbm91XBY4K/5rrHm0
+	 Nf0h5YzTW8NmhH4MaOA9VYWGWDnSjotARL5/FaMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732634AbfDVULf (ORCPT
+        id S1732646AbfDVULo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 16:11:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52616 "EHLO mx1.redhat.com"
+        Mon, 22 Apr 2019 16:11:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728687AbfDVULd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 16:11:33 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728640AbfDVTmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 15:42:15 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3F1AFC13070F;
-        Mon, 22 Apr 2019 20:11:32 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9B7F05D9D4;
-        Mon, 22 Apr 2019 20:11:28 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 16:11:26 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
-        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
-        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH v12 15/31] mm: introduce
- __lru_cache_add_active_or_unevictable
-Message-ID: <20190422201126.GF14666@redhat.com>
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <20190416134522.17540-16-ldufour@linux.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id A93BB2175B;
+        Mon, 22 Apr 2019 19:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555962134;
+        bh=ErChKZpdGL3aYXcpjvSI3PUufN/rYw9ZAk+TQR7SZJQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ElcBi4b1qYDKShVO2HyeR+nnEmsKYhpSrirhEDooih6twtgySJtswIOGjNWJM43jP
+         uRs6Ni4tHITzkLkDepdXm80CXw2tziGjumNLnkmbEXkx7PU92wGbzvQzT5QZUonoGz
+         uXm1TyG+TybmOVXaBjZM/M+v7VAh9rRkL5l4f1kI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 09/98] Btrfs: fix file corruption after snapshotting due to mix of buffered/DIO writes
+Date:   Mon, 22 Apr 2019 15:40:36 -0400
+Message-Id: <20190422194205.10404-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190422194205.10404-1-sashal@kernel.org>
+References: <20190422194205.10404-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190416134522.17540-16-ldufour@linux.ibm.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 22 Apr 2019 20:11:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 03:45:06PM +0200, Laurent Dufour wrote:
-> The speculative page fault handler which is run without holding the
-> mmap_sem is calling lru_cache_add_active_or_unevictable() but the vm_flags
-> is not guaranteed to remain constant.
-> Introducing __lru_cache_add_active_or_unevictable() which has the vma flags
-> value parameter instead of the vma pointer.
-> 
-> Acked-by: David Rientjes <rientjes@google.com>
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+[ Upstream commit 609e804d771f59dc5d45a93e5ee0053c74bbe2bf ]
 
-> ---
->  include/linux/swap.h | 10 ++++++++--
->  mm/memory.c          |  8 ++++----
->  mm/swap.c            |  6 +++---
->  3 files changed, 15 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index 4bfb5c4ac108..d33b94eb3c69 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -343,8 +343,14 @@ extern void deactivate_file_page(struct page *page);
->  extern void mark_page_lazyfree(struct page *page);
->  extern void swap_setup(void);
->  
-> -extern void lru_cache_add_active_or_unevictable(struct page *page,
-> -						struct vm_area_struct *vma);
-> +extern void __lru_cache_add_active_or_unevictable(struct page *page,
-> +						unsigned long vma_flags);
-> +
-> +static inline void lru_cache_add_active_or_unevictable(struct page *page,
-> +						struct vm_area_struct *vma)
-> +{
-> +	return __lru_cache_add_active_or_unevictable(page, vma->vm_flags);
-> +}
->  
->  /* linux/mm/vmscan.c */
->  extern unsigned long zone_reclaimable_pages(struct zone *zone);
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 56802850e72c..85ec5ce5c0a8 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2347,7 +2347,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
->  		ptep_clear_flush_notify(vma, vmf->address, vmf->pte);
->  		page_add_new_anon_rmap(new_page, vma, vmf->address, false);
->  		mem_cgroup_commit_charge(new_page, memcg, false, false);
-> -		lru_cache_add_active_or_unevictable(new_page, vma);
-> +		__lru_cache_add_active_or_unevictable(new_page, vmf->vma_flags);
->  		/*
->  		 * We call the notify macro here because, when using secondary
->  		 * mmu page tables (such as kvm shadow page tables), we want the
-> @@ -2896,7 +2896,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->  	if (unlikely(page != swapcache && swapcache)) {
->  		page_add_new_anon_rmap(page, vma, vmf->address, false);
->  		mem_cgroup_commit_charge(page, memcg, false, false);
-> -		lru_cache_add_active_or_unevictable(page, vma);
-> +		__lru_cache_add_active_or_unevictable(page, vmf->vma_flags);
->  	} else {
->  		do_page_add_anon_rmap(page, vma, vmf->address, exclusive);
->  		mem_cgroup_commit_charge(page, memcg, true, false);
-> @@ -3048,7 +3048,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
->  	inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
->  	page_add_new_anon_rmap(page, vma, vmf->address, false);
->  	mem_cgroup_commit_charge(page, memcg, false, false);
-> -	lru_cache_add_active_or_unevictable(page, vma);
-> +	__lru_cache_add_active_or_unevictable(page, vmf->vma_flags);
->  setpte:
->  	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
->  
-> @@ -3327,7 +3327,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
->  		inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
->  		page_add_new_anon_rmap(page, vma, vmf->address, false);
->  		mem_cgroup_commit_charge(page, memcg, false, false);
-> -		lru_cache_add_active_or_unevictable(page, vma);
-> +		__lru_cache_add_active_or_unevictable(page, vmf->vma_flags);
->  	} else {
->  		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
->  		page_add_file_rmap(page, false);
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 3a75722e68a9..a55f0505b563 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -450,12 +450,12 @@ void lru_cache_add(struct page *page)
->   * directly back onto it's zone's unevictable list, it does NOT use a
->   * per cpu pagevec.
->   */
-> -void lru_cache_add_active_or_unevictable(struct page *page,
-> -					 struct vm_area_struct *vma)
-> +void __lru_cache_add_active_or_unevictable(struct page *page,
-> +					   unsigned long vma_flags)
->  {
->  	VM_BUG_ON_PAGE(PageLRU(page), page);
->  
-> -	if (likely((vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) != VM_LOCKED))
-> +	if (likely((vma_flags & (VM_LOCKED | VM_SPECIAL)) != VM_LOCKED))
->  		SetPageActive(page);
->  	else if (!TestSetPageMlocked(page)) {
->  		/*
-> -- 
-> 2.21.0
-> 
+When we are mixing buffered writes with direct IO writes against the same
+file and snapshotting is happening concurrently, we can end up with a
+corrupt file content in the snapshot. Example:
+
+1) Inode/file is empty.
+
+2) Snapshotting starts.
+
+2) Buffered write at offset 0 length 256Kb. This updates the i_size of the
+   inode to 256Kb, disk_i_size remains zero. This happens after the task
+   doing the snapshot flushes all existing delalloc.
+
+3) DIO write at offset 256Kb length 768Kb. Once the ordered extent
+   completes it sets the inode's disk_i_size to 1Mb (256Kb + 768Kb) and
+   updates the inode item in the fs tree with a size of 1Mb (which is
+   the value of disk_i_size).
+
+4) The dealloc for the range [0, 256Kb[ did not start yet.
+
+5) The transaction used in the DIO ordered extent completion, which updated
+   the inode item, is committed by the snapshotting task.
+
+6) Snapshot creation completes.
+
+7) Dealloc for the range [0, 256Kb[ is flushed.
+
+After that when reading the file from the snapshot we always get zeroes for
+the range [0, 256Kb[, the file has a size of 1Mb and the data written by
+the direct IO write is found. From an application's point of view this is
+a corruption, since in the source subvolume it could never read a version
+of the file that included the data from the direct IO write without the
+data from the buffered write included as well. In the snapshot's tree,
+file extent items are missing for the range [0, 256Kb[.
+
+The issue, obviously, does not happen when using the -o flushoncommit
+mount option.
+
+Fix this by flushing delalloc for all the roots that are about to be
+snapshotted when committing a transaction. This guarantees total ordering
+when updating the disk_i_size of an inode since the flush for dealloc is
+done when a transaction is in the TRANS_STATE_COMMIT_START state and wait
+is done once no more external writers exist. This is similar to what we
+do when using the flushoncommit mount option, but we do it only if the
+transaction has snapshots to create and only for the roots of the
+subvolumes to be snapshotted. The bulk of the dealloc is flushed in the
+snapshot creation ioctl, so the flush work we do inside the transaction
+is minimized.
+
+This issue, involving buffered and direct IO writes with snapshotting, is
+often triggered by fstest btrfs/078, and got reported by fsck when not
+using the NO_HOLES features, for example:
+
+  $ cat results/btrfs/078.full
+  (...)
+  _check_btrfs_filesystem: filesystem on /dev/sdc is inconsistent
+  *** fsck.btrfs output ***
+  [1/7] checking root items
+  [2/7] checking extents
+  [3/7] checking free space cache
+  [4/7] checking fs roots
+  root 258 inode 264 errors 100, file extent discount
+  Found file extent holes:
+        start: 524288, len: 65536
+  ERROR: errors found in fs roots
+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ fs/btrfs/transaction.c | 49 ++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 43 insertions(+), 6 deletions(-)
+
+diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c
+index 4ec2b660d014..7f3ece91a4d0 100644
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -1886,8 +1886,10 @@ static void btrfs_cleanup_pending_block_groups(struct btrfs_trans_handle *trans)
+        }
+ }
+ 
+-static inline int btrfs_start_delalloc_flush(struct btrfs_fs_info *fs_info)
++static inline int btrfs_start_delalloc_flush(struct btrfs_trans_handle *trans)
+ {
++	struct btrfs_fs_info *fs_info = trans->fs_info;
++
+ 	/*
+ 	 * We use writeback_inodes_sb here because if we used
+ 	 * btrfs_start_delalloc_roots we would deadlock with fs freeze.
+@@ -1897,15 +1899,50 @@ static inline int btrfs_start_delalloc_flush(struct btrfs_fs_info *fs_info)
+ 	 * from already being in a transaction and our join_transaction doesn't
+ 	 * have to re-take the fs freeze lock.
+ 	 */
+-	if (btrfs_test_opt(fs_info, FLUSHONCOMMIT))
++	if (btrfs_test_opt(fs_info, FLUSHONCOMMIT)) {
+ 		writeback_inodes_sb(fs_info->sb, WB_REASON_SYNC);
++	} else {
++		struct btrfs_pending_snapshot *pending;
++		struct list_head *head = &trans->transaction->pending_snapshots;
++
++		/*
++		 * Flush dellaloc for any root that is going to be snapshotted.
++		 * This is done to avoid a corrupted version of files, in the
++		 * snapshots, that had both buffered and direct IO writes (even
++		 * if they were done sequentially) due to an unordered update of
++		 * the inode's size on disk.
++		 */
++		list_for_each_entry(pending, head, list) {
++			int ret;
++
++			ret = btrfs_start_delalloc_snapshot(pending->root);
++			if (ret)
++				return ret;
++		}
++	}
+ 	return 0;
+ }
+ 
+-static inline void btrfs_wait_delalloc_flush(struct btrfs_fs_info *fs_info)
++static inline void btrfs_wait_delalloc_flush(struct btrfs_trans_handle *trans)
+ {
+-	if (btrfs_test_opt(fs_info, FLUSHONCOMMIT))
++	struct btrfs_fs_info *fs_info = trans->fs_info;
++
++	if (btrfs_test_opt(fs_info, FLUSHONCOMMIT)) {
+ 		btrfs_wait_ordered_roots(fs_info, U64_MAX, 0, (u64)-1);
++	} else {
++		struct btrfs_pending_snapshot *pending;
++		struct list_head *head = &trans->transaction->pending_snapshots;
++
++		/*
++		 * Wait for any dellaloc that we started previously for the roots
++		 * that are going to be snapshotted. This is to avoid a corrupted
++		 * version of files in the snapshots that had both buffered and
++		 * direct IO writes (even if they were done sequentially).
++		 */
++		list_for_each_entry(pending, head, list)
++			btrfs_wait_ordered_extents(pending->root,
++						   U64_MAX, 0, U64_MAX);
++	}
+ }
+ 
+ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
+@@ -2024,7 +2061,7 @@ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
+ 
+ 	extwriter_counter_dec(cur_trans, trans->type);
+ 
+-	ret = btrfs_start_delalloc_flush(fs_info);
++	ret = btrfs_start_delalloc_flush(trans);
+ 	if (ret)
+ 		goto cleanup_transaction;
+ 
+@@ -2040,7 +2077,7 @@ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
+ 	if (ret)
+ 		goto cleanup_transaction;
+ 
+-	btrfs_wait_delalloc_flush(fs_info);
++	btrfs_wait_delalloc_flush(trans);
+ 
+ 	btrfs_scrub_pause(fs_info);
+ 	/*
+-- 
+2.19.1
+
