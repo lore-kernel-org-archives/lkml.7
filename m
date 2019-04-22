@@ -2,189 +2,170 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E426C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 23:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80504C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 23:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CAB22073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 23:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B24720665
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 23:56:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="buBuj9f4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbfDVXvH (ORCPT
+        id S1730496AbfDVX4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 19:51:07 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:44484 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730807AbfDVXu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 19:50:59 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hIii7-00071J-6A; Mon, 22 Apr 2019 17:50:58 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hIii6-0004C1-NF; Mon, 22 Apr 2019 17:50:54 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Mon, 22 Apr 2019 17:50:52 -0600
-Message-Id: <20190422235053.16073-2-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190422235053.16073-1-logang@deltatee.com>
-References: <20190422235053.16073-1-logang@deltatee.com>
+        Mon, 22 Apr 2019 19:56:19 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37696 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729094AbfDVX4S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 19:56:18 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v84so9853574oif.4
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 16:56:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WxRI1SxnMmuoUYu4OXHuMBaZUSvFVESEx/P0NYwM8zs=;
+        b=buBuj9f4zXuqIXpMxUPgOU73BSulFe9EEaYzgYc1j5dMfKZq4WYvhimbY6AOq8IElt
+         FqIygXi803XIHxXMNI2/9Dj2tPm8s5pPlJKoS90YWrdcZdINFxxcfxRnT6PMSrgu2Xwo
+         1qdddvTpSIBObRaxbyYYGlRYCzpa4h3MMPYn2y0EzscD6c+clU17Y0/9Z6ra0OdvDS6I
+         M17d5ufPSSA3Cempfjh4gzhYNuSZ3IDdXQ8qeqatWqeETr2mzx7Vd7/wJvQXagfYQWkQ
+         Dv8+qRYXhi42wOHzZh70VMx/NG9mWIQW/NMajOu6i1Z0mwVw8FFr4dPq7KGugaumR+X5
+         IpVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WxRI1SxnMmuoUYu4OXHuMBaZUSvFVESEx/P0NYwM8zs=;
+        b=B4agysEg1C5fqxxvVS/b82uPpIyDKOf9sEG3QiXSDOR65VZ3VbWmYC8kExyHSyVg79
+         zEBGEjjEkW6XPYvBkyvjAERRbfObNQDVbIBGruOFyCClica/IApHEPvKkt7+znuI5gaK
+         znBPiOXN13D3Y9W8It3II/pDA+ZcA2MOStVKs0OM4KSDO6/qdk6Nco/wghvkO1z89eLu
+         B7Qgw6djRSfyiEd1xErNRsOhLk4dcAUiOtGKVoND+Q4f2xUzT04aNloQYlmnRJNIJaY4
+         ARUiUUQQ2Iz7isZJ3g+g5FgrfFmF2j6C/480a1bu93AOci7pbDhKQkDWdtD+C7x/oxFV
+         Ra8g==
+X-Gm-Message-State: APjAAAUQL11XFAC+6QJC3DHKcHfM1fMNwHHzLiWujo0z+kE+ZQM7wRUz
+        PhYNm3B+wsznojm2tCmAsPsIcqF4wwDO28LEzraqrA==
+X-Google-Smtp-Source: APXvYqxC3aDhJyIm3NZAgu8RFmQMCO8eer2kU9ljJ1ILfwfJouxkEu5lypjNvd7qO7H+vvnGS6hOOoTc9g1QNnnm8yg=
+X-Received: by 2002:aca:e054:: with SMTP id x81mr3814oig.146.1555977376816;
+ Mon, 22 Apr 2019 16:56:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kchow@gigaio.com, yinghai@kernel.org, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v2 1/2] PCI: Prevent 64-bit resources from being counted in 32-bit bridge region
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <748205b02961167b0926d4afe8d9ad9cb37bf6ef.camel@coelho.fi>
+ <20190417073516.24250-1-luca@coelho.fi> <20190422180723.GA20259@dhcp22.suse.cz>
+In-Reply-To: <20190422180723.GA20259@dhcp22.suse.cz>
+From:   Kirtika Ruchandani <kirtika@google.com>
+Date:   Mon, 22 Apr 2019 16:56:02 -0700
+Message-ID: <CAOXD1idHq35qKy4PSjvqt4fEvVjgT6cpfxJD7s6gs07m43qepA@mail.gmail.com>
+Subject: Re: [PATCH] iwlwifi: don't panic in error path on non-msix systems
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Luca Coelho <luca@coelho.fi>, kvalo@codeaurora.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "Grumbach, Emmanuel" <emmanuel.grumbach@intel.com>,
+        linuxwifi@intel.com, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some situations (described below), hierarchies of 32-bit resources can
-fail to be assigned when the kernel has to attempt to assign a large
-64-bit resource. When this happens, lspci will report
-some PCI BAR resources as 'ignored' and some PCI Bridge windows
-being left unset. Sample lspci lines may look like:
+On Mon, Apr 22, 2019 at 11:07 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Wed 17-04-19 10:35:16, Luca Coelho wrote:
+> > From: Shahar S Matityahu <shahar.s.matityahu@intel.com>
+> >
+> > The driver uses msix causes-register to handle both msix and non msix
+> > interrupts when performing sync nmi.  On devices that do not support
+> > msix this register is unmapped and accessing it causes a kernel panic.
+> >
+> > Solve this by differentiating the two cases and accessing the proper
+> > causes-register in each case.
 
-  Memory behind bridge: fff00000-000fffff
+Are you sure reading CSR_INT from trans.c without explicitly getting irq_lock.c
+like rx.c does, is thread-safe? I don't claim to understand this fully, but this
+smells wrong from past experience with this driver. I'll see if I can cook up
+a test case with a race condition here.
 
-or
-
-  Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-
-lspci reports a BAR as 'ignored' when the kernel does not populate
-the struct resource and the corresponding entry in either
-/proc/bus/pci/devices or /sys/bus/pci/devices/.../resource are all zero.
-Any device driver that depends on one of these BARs are likely to fail
-initializing and the device will not be usable. Typically when this
-happens, the underlying Base Address Registers in the configuration
-space are still set to whatever the firmware set them to, it's only
-the kernel's view of this that is wrong.
-
-The possible situations where this can happen will be a bit varied and
-depend highly on the exact hierarchy, what the firmware has assigned
-and what the kernel must do to properly re-assign resources. In the
-setup that first hit this bug, it failed only with the 'pci=realloc'
-command line parameter. The bug has also been hackily reproduced with
-QEMU[1] without the realloc parameter.
-
-The following things are required to hit this bug:
-
-1) A large 64-bit prefetchable BAR that can't be assigned in any
-   pass of pci_assign_unassigned_bridge_resources(). The resource must
-   be large enough that it will not be able to fit with-in the 32-bit
-   region. This resource may or may not be assignable into the 64-bit
-   prefetchable region after additional passes.
-
-2) A victim 32-bit non-prefetchable BAR that is a neighbor of the
-   large BAR (so typically it will have to be behind a switch). When
-   the bug is hit, this BAR's struct resource will not be assign and
-   lspci will report it as ignored.
-
-3) There must exist a 64-bit prefetchable window for the original large
-   BAR to fit in. Which generally implies there is no 32-bit
-   prefetchable window.
-
-4) The kernel has to have a reason to re-assign the heirarchy that
-   contains both BARs.
-
-The cause of this bug is in __pci_bus_size_bridges() which tries to
-calculate the total resource space required for each of the bridge windows
-(typically IO, 64-bit, and 32-bit / non-prefetchable). The code, as
-written, tries to allocate all the 64-bit prefetchable resources
-followed by all the remaining resources. It uses three calls to
-pbus_size_mem() for this:
-
-  1) If bridge has a 64-bit prefetchable window, find the size of all
-     64-bit prefetchable resources below the bridge
-
-  2) If bridge has no 64-bit prefetchable window, find the size
-     of all prefetchable resources below the bridge
-
-  3) Find the size of everything else (non-prefetchable resources plus
-     any prefetchable ones that couldn't be accommodated above)
-
-By the requirement (3) above, the system has a 64-bit prefetchable
-window, so the large 64-bit BAR *should* be assigned to the 64-bit
-prefetchable region. However, if the 64-bit bus resource has already
-been assigned, then this call to pbus_size_mem() will fail. (See
-the find_free_bus_resource() helper). When the first call fails, it falls
-to the second call but, by requirement (3) above, there is no 32-bit
-prefetchable window so this call also fails. Thus, it falls to the last
-call which tries to fit all the resources into the 32-bit
-catch-all window. However, because of requirement (1), the large
-BAR will overfill this region and cause the victim 32-bit BAR to not
-be assignable.
-
-Looking at the first call to pbus_size_mem(): there are only two reasons
-for it to fail: if there is no 64-bit/prefetchable bridge window, or if that
-window is already assigned. We know the former case can't be true because,
-in __pci_bus_size_bridges(), its existence is checked before making the call.
-So if the pbus_size_mem() call in question fails, the window must already
-be assigned, and in this case, the code should not try to assign
-64-bit resources into the 32-bit catch-all window.
-
-Thus, the fix for the bug is to ensure mask, type2 and type3 are set in
-cases where a 64-bit resource exists even if pbus_size_mem() fails. Once
-we do this, the large BAR resource will never be attempted to be
-assigned to the 32-bit catch-all window and the victim BAR will still
-be correctly assigned.
-
-[1] https://lore.kernel.org/lkml/de3e34d8-2ac3-e89b-30f1-a18826ce5d7d@deltatee.com/T/#u
-
-Reported-by: Kit Chow <kchow@gigaio.com>
-Fixes: 5b28541552ef ("PCI: Restrict 64-bit prefetchable bridge windows to 64-bit resources")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Yinghai Lu <yinghai@kernel.org>
----
- drivers/pci/setup-bus.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index ec44a0f3a7ac..0eb40924169b 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1228,21 +1228,20 @@ void __pci_bus_size_bridges(struct pci_bus *bus, struct list_head *realloc_head)
- 		prefmask = IORESOURCE_MEM | IORESOURCE_PREFETCH;
- 		if (b_res[2].flags & IORESOURCE_MEM_64) {
- 			prefmask |= IORESOURCE_MEM_64;
--			ret = pbus_size_mem(bus, prefmask, prefmask,
-+			pbus_size_mem(bus, prefmask, prefmask,
- 				  prefmask, prefmask,
- 				  realloc_head ? 0 : additional_mem_size,
- 				  additional_mem_size, realloc_head);
- 
- 			/*
--			 * If successful, all non-prefetchable resources
--			 * and any 32-bit prefetchable resources will go in
--			 * the non-prefetchable window.
-+			 * Given the existence of a 64-bit resource for this
-+			 * bus, all non-prefetchable resources and any 32-bit
-+			 * prefetchable resources will go in the
-+			 * non-prefetchable window.
- 			 */
--			if (ret == 0) {
--				mask = prefmask;
--				type2 = prefmask & ~IORESOURCE_MEM_64;
--				type3 = prefmask & ~IORESOURCE_PREFETCH;
--			}
-+			mask = prefmask;
-+			type2 = prefmask & ~IORESOURCE_MEM_64;
-+			type3 = prefmask & ~IORESOURCE_PREFETCH;
- 		}
- 
- 		/*
--- 
-2.20.1
-
+> >
+> > Reported-by: Michal Hocko <mhocko@kernel.org>
+> > Signed-off-by: Shahar S Matityahu <shahar.s.matityahu@intel.com>
+> > Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+>
+> $ dmesg | grep "Error sending SCAN_CFG_CMD:"
+> [49786.288548] iwlwifi 0000:01:00.0: Error sending SCAN_CFG_CMD: time out after 2000ms.
+> [53457.166877] iwlwifi 0000:01:00.0: Error sending SCAN_CFG_CMD: time out after 2000ms.
+>
+> without the oops and with the iwlwifi internal dump IIUC which is the
+> previous behavior.
+> [53457.166877] iwlwifi 0000:01:00.0: Error sending SCAN_CFG_CMD: time out after 2000ms.
+> [53457.166882] iwlwifi 0000:01:00.0: Current CMD queue read_ptr 224 write_ptr 225
+> [53457.414973] iwlwifi 0000:01:00.0: HW error, resetting before reading
+> [53457.421339] iwlwifi 0000:01:00.0: Start IWL Error Log Dump:
+> [53457.421345] iwlwifi 0000:01:00.0: Status: 0x00000100, count: 1269232956
+> [53457.421347] iwlwifi 0000:01:00.0: Loaded firmware version: 36.9f0a2d68.0
+> [53457.421350] iwlwifi 0000:01:00.0: 0x45E91306 | ADVANCED_SYSASSERT
+> [53457.421352] iwlwifi 0000:01:00.0: 0x2F58D384 | trm_hw_status0
+> [53457.421353] iwlwifi 0000:01:00.0: 0x7F1A8CFD | trm_hw_status1
+> [53457.421355] iwlwifi 0000:01:00.0: 0x07E787FD | branchlink2
+> [53457.421357] iwlwifi 0000:01:00.0: 0xE9E54368 | interruptlink1
+> [53457.421359] iwlwifi 0000:01:00.0: 0x470D9BBF | interruptlink2
+> [53457.421361] iwlwifi 0000:01:00.0: 0xAF040E7E | data1
+> [53457.421362] iwlwifi 0000:01:00.0: 0xE7FBCA48 | data2
+> [53457.421364] iwlwifi 0000:01:00.0: 0x4E4A8288 | data3
+> [53457.421366] iwlwifi 0000:01:00.0: 0x861DEA98 | beacon time
+> [53457.421368] iwlwifi 0000:01:00.0: 0xE8F23466 | tsf low
+> [53457.421369] iwlwifi 0000:01:00.0: 0xD7B19307 | tsf hi
+> [53457.421371] iwlwifi 0000:01:00.0: 0xE58934E3 | time gp1
+> [53457.421373] iwlwifi 0000:01:00.0: 0xB013FEBE | time gp2
+> [53457.421375] iwlwifi 0000:01:00.0: 0x962DCC75 | uCode revision type
+> [53457.421376] iwlwifi 0000:01:00.0: 0xFF8FB30F | uCode version major
+> [53457.421378] iwlwifi 0000:01:00.0: 0x0DD08E17 | uCode version minor
+> [53457.421380] iwlwifi 0000:01:00.0: 0x87FD70DE | hw version
+> [53457.421382] iwlwifi 0000:01:00.0: 0x853F6851 | board version
+> [53457.421384] iwlwifi 0000:01:00.0: 0x08D7F330 | hcmd
+> [53457.421385] iwlwifi 0000:01:00.0: 0x6B7E5FEE | isr0
+> [53457.421387] iwlwifi 0000:01:00.0: 0x2B1E7CD4 | isr1
+> [53457.421389] iwlwifi 0000:01:00.0: 0x3F133B16 | isr2
+> [53457.421391] iwlwifi 0000:01:00.0: 0x5D480C5A | isr3
+> [53457.421392] iwlwifi 0000:01:00.0: 0x34E93EBA | isr4
+> [53457.421394] iwlwifi 0000:01:00.0: 0x42AD8E83 | last cmd Id
+> [53457.421396] iwlwifi 0000:01:00.0: 0x1F5BBCFF | wait_event
+> [53457.421398] iwlwifi 0000:01:00.0: 0x6808B2C1 | l2p_control
+> [53457.421399] iwlwifi 0000:01:00.0: 0x0D5B1F33 | l2p_duration
+> [53457.421401] iwlwifi 0000:01:00.0: 0xF4C94535 | l2p_mhvalid
+> [53457.421403] iwlwifi 0000:01:00.0: 0x3DCE6EBB | l2p_addr_match
+> [53457.421405] iwlwifi 0000:01:00.0: 0xFDDC41FE | lmpm_pmg_sel
+> [53457.421406] iwlwifi 0000:01:00.0: 0xB53A17F5 | timestamp
+> [53457.421408] iwlwifi 0000:01:00.0: 0x5A6A4113 | flow_handler
+> [53457.421474] iwlwifi 0000:01:00.0: Start IWL Error Log Dump:
+> [53457.421477] iwlwifi 0000:01:00.0: Status: 0x00000100, count: 1182976748
+> [53457.421478] iwlwifi 0000:01:00.0: 0x62D2BDB3 | ADVANCED_SYSASSERT
+> [53457.421480] iwlwifi 0000:01:00.0: 0x4D9E5019 | umac branchlink1
+> [53457.421482] iwlwifi 0000:01:00.0: 0x8CB69F6E | umac branchlink2
+> [53457.421484] iwlwifi 0000:01:00.0: 0x9868662D | umac interruptlink1
+> [53457.421486] iwlwifi 0000:01:00.0: 0x9800F8F7 | umac interruptlink2
+> [53457.421488] iwlwifi 0000:01:00.0: 0xC71449B8 | umac data1
+> [53457.421489] iwlwifi 0000:01:00.0: 0xAB0AB17F | umac data2
+> [53457.421491] iwlwifi 0000:01:00.0: 0x6C6F9753 | umac data3
+> [53457.421493] iwlwifi 0000:01:00.0: 0xFC49D724 | umac major
+> [53457.421495] iwlwifi 0000:01:00.0: 0xA61CC627 | umac minor
+> [53457.421496] iwlwifi 0000:01:00.0: 0x45BAA0B8 | frame pointer
+> [53457.421498] iwlwifi 0000:01:00.0: 0x319D112B | stack pointer
+> [53457.421500] iwlwifi 0000:01:00.0: 0xEFD9E2E9 | last host cmd
+> [53457.421502] iwlwifi 0000:01:00.0: 0x82640FF7 | isr status reg
+> [53457.421506] ieee80211 phy0: Hardware restart was requested
+> [53457.941685] iwlwifi 0000:01:00.0: Queue 0 is inactive on fifo 0 and stuck for 2500 ms. SW [224, 225] HW [0, 0] FH TRB=0x02b759ca1
+>
+> Feel free to add
+> Tested-by: Michal Hocko <mhocko@suse.com>
+>
+> Thanks for your quick patch and sorry it took so long from my side.
+>
+> --
+> Michal Hocko
+> SUSE Labs
