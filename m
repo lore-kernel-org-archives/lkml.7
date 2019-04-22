@@ -2,111 +2,131 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB93DC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4D6C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738D5205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:40:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="FHUO8TZe"
+	by mail.kernel.org (Postfix) with ESMTP id 9CC8C206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 21:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbfDVVkA (ORCPT
+        id S1728920AbfDVVqH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 17:40:00 -0400
-Received: from mail-eopbgr730099.outbound.protection.outlook.com ([40.107.73.99]:41433
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728998AbfDVVj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 17:39:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=QTsnRQreg0HrC8C0v6qLJ0SqTsWQWl6vNgHiVzXXj4u4VTIXbYFmuzhf+mpwcKSwXEZSpQp8KafEfkUYbdPGc524LvaP7h0vVoZ6wW4MjMwfFLRDMQ+MS28pDugscDg31Lnk/Nki3/M1isrmm/cSFEOBqoE7hVNrIwcQSQtBvc0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gfUrz73Hx0S71f40M4mRGRU149kRJ/NmcY9ICmfWa1g=;
- b=s4rSxm5SMRzpn9zazBHRtVhckB1fyDXyGHdGMhN21K2E4DSMV1OIG9oYymbObiPIPfBTcugX6ZwDJwEj+WIzmwqkY8YFXDbwfnvMET0k0O/tLv+Z6vViGgfpD4cI7Xkf2qEKEXCVUXCH0d/ICrJSMTMeNByPLRo79YDmj1cToiM=
-ARC-Authentication-Results: i=1; test.office365.com 1;spf=none;dmarc=none
- action=none header.from=microsoft.com;dkim=none (message not signed);arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gfUrz73Hx0S71f40M4mRGRU149kRJ/NmcY9ICmfWa1g=;
- b=FHUO8TZexWN5yL1iojarffk6hYPPhdsRkC66O/V7f6QVFNE7pJps+Vt1N9o9DgZGuMvDLZ2oOonbjdpw7KRAETPAxtWhsLJetJNCrd1a7Bmn28p1ii8VWLuO5c4d+I0cGA9ESt5igqWE90oNfkKBqnmk8cNFoWHCUkJeJdIsvAw=
-Received: from BN8PR21MB1169.namprd21.prod.outlook.com (20.179.73.13) by
- BN8PR21MB1153.namprd21.prod.outlook.com (20.179.72.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.2; Mon, 22 Apr 2019 21:39:56 +0000
-Received: from BN8PR21MB1169.namprd21.prod.outlook.com
- ([fe80::689c:69ae:165b:1acc]) by BN8PR21MB1169.namprd21.prod.outlook.com
- ([fe80::689c:69ae:165b:1acc%8]) with mapi id 15.20.1856.000; Mon, 22 Apr 2019
- 21:39:56 +0000
-From:   Joseph Salisbury <Joseph.Salisbury@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drivers: hv: Add a module description line
-Thread-Topic: [PATCH] drivers: hv: Add a module description line
-Thread-Index: AQHU+VPtaJJJxRLfR0ipkHjKz/0RbQ==
-Date:   Mon, 22 Apr 2019 21:39:56 +0000
-Message-ID: <04eaef0e2b365317935ff756c7365ee13a6f18f8.1555967337.git.joseph.salisbury@microsoft.com>
-Reply-To: Joseph Salisbury <Joseph.Salisbury@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR13CA0016.namprd13.prod.outlook.com
- (2603:10b6:208:160::29) To BN8PR21MB1169.namprd21.prod.outlook.com
- (2603:10b6:408:74::13)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmljts@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [137.117.110.208]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a9ceba65-84dc-4a16-f177-08d6c76b0ffb
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BN8PR21MB1153;
-x-ms-traffictypediagnostic: BN8PR21MB1153:
-x-microsoft-antispam-prvs: <BN8PR21MB1153239493AA72BB695166BBAA220@BN8PR21MB1153.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:296;
-x-forefront-prvs: 00159D1518
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(376002)(396003)(366004)(346002)(199004)(189003)(81166006)(53936002)(64756008)(52116002)(81156014)(256004)(8936002)(97736004)(26005)(6512007)(99286004)(186003)(66476007)(66556008)(478600001)(486006)(14454004)(7736002)(66446008)(102836004)(386003)(50226002)(22452003)(6506007)(3450700001)(316002)(3846002)(25786009)(6116002)(10090500001)(2616005)(10290500003)(66946007)(476003)(305945005)(73956011)(5660300002)(4744005)(54906003)(6486002)(110136005)(43066004)(6436002)(8676002)(86612001)(68736007)(36756003)(2906002)(71200400001)(118296001)(71190400001)(4326008)(2501003)(7846003)(66066001)(6392003)(1511001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1153;H:BN8PR21MB1169.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: o5SHwWrqiqDxY4RngZjjh/bW0fMByEU36BdOYMbrhSAwMHzCyjXDumULHZQfBkBW7XImSAr51VuanO1l+bv8XNEvuN2Gk4LhWcmNO/23e+uGGIpMlv6IixY8kPnadyF4IykOlFWOTFfdawvljSitfhOZJc3LZyDtktSkSVoRvUmVFWVXZC7pWBdvbCnkAFK5IXvEmaNE3FcyobZD75CaI8eLwZRCwfQ4u3caOiaIeHBHa1lWy7O6fH4UTxteE12GrY88Wo3hAo4KK+8hX1FYwRBYGNz3183/1aO+DdVyPcWzvGkQT2bFP5QjegzXxe9F/X3fH0KcMV51X4h7wkUz24+/yN9QD3nLneIVByrZ1htF76w6F4iv623Y6D8ZrH+pBJugyk/yeLgLUxrgMBjOnEv0fZ7d+DtrrhvN72XVum0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 22 Apr 2019 17:46:07 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39755 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfDVVqG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 17:46:06 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h16so3533405qtk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 14:46:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tt+a5M/B7TQLGucHULuqskJ+Z0GUmxyy6884GCd0AyU=;
+        b=T3nZa8OL/bbarOFwaZHwsM7/9VSCKacmDuPWWE94MU+H5EXAIgFb8S/ud+DudTo6Lk
+         gM+t0sez8lHdYnu3zCYlzemQWgvfYn41DJ/kWekmVAbTfdGiM+wuxmmOcc7MosbaaAUI
+         mIVE7VCuu8xxTdFnYaZdgDGXVsrheQaLNf5wnZreYb6ofGfFPpVZTXTE84Vx96IhYvXr
+         n/Jv7YzpIfDyfzG+2AjP6y2wkdqKurAxZlabnuWHyZ3UzIMg3ySRzoVRyPZjq+KCjC3K
+         FA/cswxcqbIY1nmv3+ZP/XR8M9cJN5GVLRYg/QyrjUbKihWTUXuuw/hFVbPyxmahfamp
+         TxgQ==
+X-Gm-Message-State: APjAAAW1i9cCkwqqE6T7o1iLaLmS83604N940UrsQFXHyNeQEa0qswqS
+        9b6JcRb8vQQqN5bvVmAeE2gHJ8czPaU6qxdL84Y=
+X-Google-Smtp-Source: APXvYqwM/nbe1A4zyuT6kP7w9hIpLc6FF4rcQkRNl31jEHxPf+MCl+SrovB4iX5UMLsbAs8m7gI+YZ7c2Q95s+K77EM=
+X-Received: by 2002:ac8:3f38:: with SMTP id c53mr6541591qtk.152.1555969565823;
+ Mon, 22 Apr 2019 14:46:05 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9ceba65-84dc-4a16-f177-08d6c76b0ffb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2019 21:39:56.5979
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1153
+References: <20190414220841.20243-1-lukma@denx.de> <20190414220841.20243-4-lukma@denx.de>
+ <20190420002009.l65upn2t3qqoj5uy@sghpc.golosunov.pp.ru> <20190420132112.131f449b@jawa>
+ <20190422090710.bmxdhhankurhafxq@sghpc.golosunov.pp.ru>
+In-Reply-To: <20190422090710.bmxdhhankurhafxq@sghpc.golosunov.pp.ru>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 22 Apr 2019 23:45:49 +0200
+Message-ID: <CAK8P3a1+2H_XAZVivutv98S5Op8HENVfxP=zh39VPcLCx2okQg@mail.gmail.com>
+Subject: Re: [PATCH 3/6] y2038: linux: Provide __clock_settime64 implementation
+To:     Stepan Golosunov <stepan@golosunov.pp.ru>
+Cc:     Lukasz Majewski <lukma@denx.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        Paul Eggert <eggert@cs.ucla.edu>,
+        Joseph Myers <joseph@codesourcery.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogSm9zZXBoIFNhbGlzYnVyeSA8am9zZXBoLnNhbGlzYnVyeUBtaWNyb3Nv
-ZnQuY29tPg0KLS0tDQogZHJpdmVycy9odi92bWJ1c19kcnYuYyB8IDEgKw0KIDEgZmlsZSBjaGFu
-Z2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9odi92bWJ1c19kcnYu
-YyBiL2RyaXZlcnMvaHYvdm1idXNfZHJ2LmMNCmluZGV4IGFhMjVmM2JjYmRlYS4uMWNiOTQwOGIw
-ZDQwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9odi92bWJ1c19kcnYuYw0KKysrIGIvZHJpdmVycy9o
-di92bWJ1c19kcnYuYw0KQEAgLTIxNzQsNiArMjE3NCw3IEBAIHN0YXRpYyB2b2lkIF9fZXhpdCB2
-bWJ1c19leGl0KHZvaWQpDQogDQogDQogTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOw0KK01PRFVMRV9E
-RVNDUklQVElPTigiTWljcm9zb2Z0IEh5cGVyLVYgVk1CdXMgRHJpdmVyIik7DQogDQogc3Vic3lz
-X2luaXRjYWxsKGh2X2FjcGlfaW5pdCk7DQogbW9kdWxlX2V4aXQodm1idXNfZXhpdCk7DQotLSAN
-CjIuMTcuMQ0KDQo=
+On Mon, Apr 22, 2019 at 11:07 AM Stepan Golosunov
+<stepan@golosunov.pp.ru> wrote:
+> 20.04.2019 в 13:21:12 +0200 Lukasz Majewski написал:
+> Is it? The kernel (5.1-rc6) code looks to me like
+>
+>         /* Zero out the padding for 32 bit systems or in compat mode */
+>         if (false && false)
+>                 kts.tv_nsec &= 0xFFFFFFFFUL;
+>
+> in 32-bit kernels. And like
+>
+>         if (false && true)
+>                 kts.tv_nsec &= 0xFFFFFFFFUL;
+>
+> for COMPAT syscalls in 64-bit kernels.
+>
+> It should probably be changed into
+>
+>         if (!IS_ENABLED(CONFIG_64BIT) || in_compat_syscall())
+>                 kts.tv_nsec &= 0xFFFFFFFFUL;
+>
+> (Or into something like
+>
+>         if (!IS_ENABLED(CONFIG_64BIT) || in_compat_syscall() && !COMPAT_USE_64BIT_TIME)
+>                 kts.tv_nsec &= 0xFFFFFFFFUL;
+>
+> if x32 should retain 64-bit tv_nsec.)
+
+I think the problem is that at some point CONFIG_64BIT_TIME was
+meant to be enabled on both 32-bit and 64-bit kernels, but the
+definition got changed along  the way.
+
+We probably just want
+
+        if (in_compat_syscall() )
+               kts.tv_nsec &= 0xFFFFFFFFUL;
+
+here, which would then truncate the nanoseconds for all compat
+mode including x32. For native mode, we don't need to truncate
+it, since timespec64 has a 32-bit 'tv_nsec' field in the kernel.
+
+> > However, I would prefer not to pass random data
+> > to the kernel, and hence I do clear it up explicitly in glibc.
+>
+> If the kernel does not ignore padding on its own, then zeroing it out
+> is required everywhere timespec is passed to kernel, including via
+> code not known to glibc. (Does anyone promise that there won't be any
+> ioctls that accept timespec, for example?) That seems to be
+> error-prone (and might requre copying larger structes).
+>
+> On the other hand, if kernel 5.1+ ignores padding as intended there is
+> no need to create additional copy of structs in glibc code that calls
+> into clock_settime64 (or into timer_settime64 that accepts larger
+> struct, for example).
+
+The intention is that the kernel ignores the padding. If you find
+another place in the kernel that forget that, we should fix it.
+
+> > > And, hmm, is CONFIG_64BIT_TIME enabled anywhere?
+>
+> I guess that the remaining CONFIG_64BIT_TIME in kernel should be
+> replaced with CONFIG_COMPAT_32BIT_TIME or removed.
+
+We should remove CONFIG_64BIT_TIME. CONFIG_COMPAT_32BIT_TIME
+is still needed to identify architectures that don't have it, in
+particular riscv32.
+
+       Arnd
