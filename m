@@ -2,179 +2,126 @@ Return-Path: <SRS0=BnvS=SY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D49C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6B0C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6521320859
-	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:09:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u+7P1ki6"
+	by mail.kernel.org (Postfix) with ESMTP id E87BA2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 22 Apr 2019 01:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbfDVBJw (ORCPT
+        id S1726272AbfDVBNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 21 Apr 2019 21:09:52 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36935 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfDVBJw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 21 Apr 2019 21:09:52 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w23so5036156ply.4
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Apr 2019 18:09:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PYjkYcNTZnFMpLl1Ud45Nz+rQvZvAbAY0HkqRk3d/w4=;
-        b=u+7P1ki6TX3QOwwlvqXhU4Wx4+40w2bznUai3u5nQchIwh2RxXIttP/KfEGh+q+UDU
-         dt6FMgkNTnKUcYOCUi4zXgYLtIhjiEi53cIZDJ3yKw5SAh6b95khiWrhbb8W0EYT+JGp
-         tnS5XIlun7uUjrEu/dXuDX1UEBe/oA679fFJ38P00IDeqce0n2schXUiQuEW0XePGgIO
-         YojSpAQvgJndT/0M8CZs8SUKinWvZRoqPM+7prOymEx4T+4/dwNz/RrFCEr93grxG57j
-         C8O8N2HbLmnwxM/QS2q/q6NhNE3eIQmnGE7sbdyn0jO0kRjYjdNujMfhblbuky8r9nBU
-         IC5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PYjkYcNTZnFMpLl1Ud45Nz+rQvZvAbAY0HkqRk3d/w4=;
-        b=lAoZ8Q+TN9Rl+gZ2Th284cI8jAPzJxPP8+z5npECxnPBIAGZOnBRM2FOvIpqaEvccB
-         8cssCt0NVQOEb7sTi1kTULWFrZ14ppqEcn+CM+lCcV4XwLZzYQDqHem4cuDR3IQp60aH
-         zYmdH2LMaqgZ42qtND62ZUJ+bChUJcRJctOeoi0hnP6CMdOp4LNKs2l4fD6lLVeyt7rL
-         hT/0yft++Zem11vk1cYcUFLZ2LTMbDFQu+2YHujMlk/5gYqLiQfVOljU9+XxsstYd3+l
-         u3wUJbVWoH9jUlisbb3J7Qe8kR1QulLTvkLbhjY6lMerZXW2EmRWeCFsp8F64bnLYlyZ
-         3maw==
-X-Gm-Message-State: APjAAAUQEz7Eckt6UpLHO7759nkFRlo44WM18SjEqjTdifZdCfur6NTi
-        J4tPjuQwJa47f7yPeuNp6B0=
-X-Google-Smtp-Source: APXvYqytCei3XKWWbcucBiYP0cznKxL5+Vkt66ofnt1jiHbcf+8CxVBOLdCfxjVqDznWddsRo4ubEg==
-X-Received: by 2002:a17:902:2d04:: with SMTP id o4mr17638908plb.88.1555895391183;
-        Sun, 21 Apr 2019 18:09:51 -0700 (PDT)
-Received: from Asurada (c-98-248-47-108.hsd1.ca.comcast.net. [98.248.47.108])
-        by smtp.gmail.com with ESMTPSA id c3sm14691763pfo.2.2019.04.21.18.09.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 21 Apr 2019 18:09:50 -0700 (PDT)
-Date:   Sun, 21 Apr 2019 18:09:46 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     "broonie@kernel.org" <broonie@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/3 v2] ASoC: fsl_sai: Add support for runtime pm
-Message-ID: <20190422010945.GB8364@Asurada>
-References: <20190421193853.10188-1-daniel.baluta@nxp.com>
- <20190421193853.10188-3-daniel.baluta@nxp.com>
+        Sun, 21 Apr 2019 21:13:32 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:47964 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725908AbfDVBNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 21 Apr 2019 21:13:32 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x3M1CPDa012152
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Sun, 21 Apr 2019 18:12:51 -0700
+Received: from [128.224.162.188] (128.224.162.188) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sun, 21 Apr
+ 2019 18:12:41 -0700
+Subject: Re: Bug report: A commit about serial8250 cause the output disorderly
+ at the phase of startup
+To:     <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        <john.ogness@linutronix.de>, <bigeasy@linutronix.de>
+References: <5f1398dd-d505-dd8a-0ea1-8186618d56d3@windriver.com>
+From:   "Hongzhi, Song" <hongzhi.song@windriver.com>
+Message-ID: <82793501-9ddf-11ec-3f91-73872bf3bd54@windriver.com>
+Date:   Mon, 22 Apr 2019 09:12:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190421193853.10188-3-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.5.22 (2013-10-16)
+In-Reply-To: <5f1398dd-d505-dd8a-0ea1-8186618d56d3@windriver.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [128.224.162.188]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 21, 2019 at 07:39:09PM +0000, Daniel Baluta wrote:
-> Basically the same actions as for system PM, so make use
-> of pm_runtime_force_suspend/pm_runtime_force_resume.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Hi all,
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Anyone notice this issue?
 
-Thanks
 
-> ---
->  sound/soc/fsl/fsl_sai.c | 22 +++++++++++++++++-----
->  1 file changed, 17 insertions(+), 5 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-> index d9df98975cf8..8623b7f882b9 100644
-> --- a/sound/soc/fsl/fsl_sai.c
-> +++ b/sound/soc/fsl/fsl_sai.c
-> @@ -9,6 +9,7 @@
->  #include <linux/dmaengine.h>
->  #include <linux/module.h>
->  #include <linux/of_address.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
->  #include <linux/time.h>
-> @@ -900,6 +901,8 @@ static int fsl_sai_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, sai);
->  
-> +	pm_runtime_enable(&pdev->dev);
-> +
->  	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_component,
->  			&fsl_sai_dai, 1);
->  	if (ret)
-> @@ -911,6 +914,11 @@ static int fsl_sai_probe(struct platform_device *pdev)
->  		return devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
->  }
->  
-> +static int fsl_sai_remove(struct platform_device *pdev)
-> +{
-> +	pm_runtime_disable(&pdev->dev);
-> +}
-> +
->  static const struct of_device_id fsl_sai_ids[] = {
->  	{ .compatible = "fsl,vf610-sai", },
->  	{ .compatible = "fsl,imx6sx-sai", },
-> @@ -919,8 +927,8 @@ static const struct of_device_id fsl_sai_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(of, fsl_sai_ids);
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -static int fsl_sai_suspend(struct device *dev)
-> +#ifdef CONFIG_PM
-> +static int fsl_sai_runtime_suspend(struct device *dev)
->  {
->  	struct fsl_sai *sai = dev_get_drvdata(dev);
->  
-> @@ -930,7 +938,7 @@ static int fsl_sai_suspend(struct device *dev)
->  	return 0;
->  }
->  
-> -static int fsl_sai_resume(struct device *dev)
-> +static int fsl_sai_runtime_resume(struct device *dev)
->  {
->  	struct fsl_sai *sai = dev_get_drvdata(dev);
->  
-> @@ -942,14 +950,18 @@ static int fsl_sai_resume(struct device *dev)
->  	regmap_write(sai->regmap, FSL_SAI_RCSR, 0);
->  	return regcache_sync(sai->regmap);
->  }
-> -#endif /* CONFIG_PM_SLEEP */
-> +#endif /* CONFIG_PM */
->  
->  static const struct dev_pm_ops fsl_sai_pm_ops = {
-> -	SET_SYSTEM_SLEEP_PM_OPS(fsl_sai_suspend, fsl_sai_resume)
-> +	SET_RUNTIME_PM_OPS(fsl_sai_runtime_suspend,
-> +			   fsl_sai_runtime_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
->  };
->  
->  static struct platform_driver fsl_sai_driver = {
->  	.probe = fsl_sai_probe,
-> +	.remove = fsl_sai_remove,
->  	.driver = {
->  		.name = "fsl-sai",
->  		.pm = &fsl_sai_pm_ops,
-> -- 
-> 2.17.1
-> 
+--Hongzhi
+
+
+On 4/19/19 10:24 AM, Hongzhi, Song wrote:
+> 1. Issue description:
+>
+> Boot kernel( >= linux-rt-devel-v5.0.3 ) with qemu.
+> Then qemu will print following disorderly messages.
+>
+> At the beginning, the messages are disorderly. But then it becomes 
+> normally from printing "[    0.000000] 000: Linux version..."
+>
+> --------------------------------------------------
+> [    0.019000] 000: tsc: Unable to calibrate against PIT
+> [    0.002583] 000: 6199.83 BogoMIPS (lpj=3099918)
+> [    0.521247] 000: Intel(R) Core(TM)2 Duo CPU     T7700  @ 2.40GHz
+> [    0.521247] 000:  (family: 0x6, model: 0xf
+> [    0.521247] 000: , stepping: 0xb)
+> [    0.533126] 000: unsupported p6 CPU model 15
+> [    0.533318] 000: no PMU driver, software events only.
+> [    0.765082] 000: 1 ACPI AML tables successfully acquired and loaded
+> [    0.765274] 000:
+> [    0.785903] 000: Enabled 2 GPEs in block 00 to 0F
+> [    0.786128] 000:
+> [    0.835675] 000: acpi PNP0A03:00: fail to add MMCONFIG information, 
+> can't access extended PCI configuration space under this bridge.
+> [    0.892056] 000:  5
+> [    0.892289] 000:  *10
+> [    0.892416] 000:  11
+> [    0.892527] 000: )
+> [    0.892661] 000:
+>
+> /* skip some repeated contents */
+>
+> [    5.052149] 000: , 512kB Cache
+> [    0.000000] 000: Linux version 5.0.3-yocto-preempt-rt+ 
+> (hsong@pek-lpggp1) (gcc version 8.3.0 (GCC)) #24 SMP PREEMPT Thu Apr 
+> 18 03:29:58 EDT 2019
+> [    0.000000] 000: Command line: root=/dev/vda rw highres=off 
+> console=ttyS0 mem=256M ip=192.168.7.4::192.168.7.3:255.255.255.0 vga=0 
+> uvesafb.mode_opti0
+> [    0.000000] 000: x86/fpu: x87 FPU will use FXSAVE
+> [    0.000000] 000: BIOS-provided physical RAM map:
+> [    0.000000] 000: BIOS-e820: [mem 
+> 0x0000000000000000-0x000000000009fbff]
+> [    0.000000] 000: BIOS-e820: [mem 
+> 0x000000000009fc00-0x000000000009ffff]
+> [    0.000000] 000: BIOS-e820: [mem 
+> 0x00000000000f0000-0x00000000000fffff]
+> [    0.000000] 000: BIOS-e820: [mem 
+> 0x0000000000100000-0x000000000ffdbfff]
+>
+> --------------------------------------------------
+>
+> 2. Reproduce:
+> (1)build kernel: (Attachment is my .config)
+> make ARCH=x86_64 
+> CROSS_COMPILE=[path-to-my-cross-toolchain]/x86_64-wrs-linux-
+>
+> (2)boot kernel with qemu:
+>
+> qemu-system-x86_64 \
+> -drive file=qemux86-64.rootfs.ext4,if=virtio,format=raw \
+> -nographic \
+> -kernel arch/x86/boot/bzImage \
+> -append 'root=/dev/vda rw highres=off  console=ttyS0 mem=256M ip=dhcp'
+>
+> 3. Analysis:
+> I find the following commit from >=linux-rt-devel-v5.0.3. cause the 
+> issue.
+>
+> b9d460e serial: 8250: implement write_atomic
+>
