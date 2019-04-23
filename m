@@ -2,99 +2,122 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEA0C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD3CC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15DE621738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:55:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="OrOly8o8"
+	by mail.kernel.org (Postfix) with ESMTP id 78F86218EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:55:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfDWNzJ (ORCPT
+        id S1727882AbfDWNzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 23 Apr 2019 09:55:09 -0400
-Received: from mail-pg1-f176.google.com ([209.85.215.176]:43216 "EHLO
-        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727754AbfDWNzJ (ORCPT
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54822 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727500AbfDWNzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Apr 2019 09:55:09 -0400
-Received: by mail-pg1-f176.google.com with SMTP id z9so7644372pgu.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 06:55:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=luZOP+M2Br1z6JjqvbCNY8qb9/6fC4RpgjiwRzb9+fM=;
-        b=OrOly8o89edT05ye0GoFYglLRnhBVI2iEJom83aUVZS3azbqR0BfYsNQg4K3yNldrW
-         +g9wz3kH6GRB7RS2YOWrcjSEk7Gkz5xGOpOn3S5JlJ9yqedh5+FDEaOx6yFF2FOL93Px
-         FIRoMpMW0yTRsShbBKv395hY1iGxcyovrjcYARVsJPMJ9qXkWeWpwfUDYZFgbmAb3LPU
-         ZsZAuh6gYD/3ZCG1WQAZXGjhLrxl2Xa5WBWpw3u+6v4/6RZ11a5a5rXP3UX2r1W4Hdf5
-         SHtN7SU1zX6LMJbFBE787Gn7MHSfRNeowo4R7N358R1cdG2asO7DgvsbxhL43Eheda5h
-         PS+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=luZOP+M2Br1z6JjqvbCNY8qb9/6fC4RpgjiwRzb9+fM=;
-        b=Ofi2AxrWTczP3a2jP/lUQ7mvl1arMmRvzsKc40E4xwUQAtS5ys+drNBsbr3pbcTScY
-         8wp3Df2N8r39UWWz8lX+6A0UXa9InWH0PHKrvP5toYI4o9Kjxx4d8L/jWpHNjmFAJpBq
-         aDwBE+hYvCkW901/Ao7BSf1EfiTqNsBm3xcTCAzAx6y05iuJe2pAxOBdzZSu038w2HKH
-         qBmqlTGhMZqgbtp1mASXE66C+MyL4d3gVXuFsXW1hY4yArJCzMuGpwA08q1Jwh3ODZKv
-         rSUAcGEgPFgNtTLmZoYhGcXgbcmKX77iToKs2VXksJ+ZhuDBU5f70JbP7Loy/4L01xaD
-         hykg==
-X-Gm-Message-State: APjAAAVFBbArJjnIkIy8Ap2wcfrV3+NdOyATOA3J32XLZvb2roLnC9Uw
-        4J2le3guT2FRBqTmSoN5yHw7fQ==
-X-Google-Smtp-Source: APXvYqyPSeybmMUZTM8bgnWD06hCQaiW8B7Q9aMgFMFTf9FftneTu4UxQjo9GJ4QdLhH6QuMuxEgvg==
-X-Received: by 2002:a65:60c7:: with SMTP id r7mr19209315pgv.191.1556027708285;
-        Tue, 23 Apr 2019 06:55:08 -0700 (PDT)
-Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
-        by smtp.gmail.com with ESMTPSA id v15sm21933247pff.105.2019.04.23.06.55.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 06:55:07 -0700 (PDT)
-Subject: Re: next-20190408..0418: Suspend/resume problems on Thinkpad X60
-To:     Pavel Machek <pavel@ucw.cz>,
-        kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
-        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, hdegoede@redhat.com,
-        linux-ide@vger.kernel.org
-References: <20190408173928.GB13260@amd> <20190412102812.GA24977@amd>
- <20190423102239.GA15531@amd>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
-Date:   Tue, 23 Apr 2019 07:55:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NDs4G6121315
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:55:07 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s221nx1ph-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:55:07 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 23 Apr 2019 14:55:05 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 14:55:02 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NDt06C57081908
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 13:55:00 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F4A552051;
+        Tue, 23 Apr 2019 13:55:00 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.116])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id F11CA52065;
+        Tue, 23 Apr 2019 13:54:59 +0000 (GMT)
+Date:   Tue, 23 Apr 2019 15:54:58 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, frankja@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com
+Subject: Re: [PATCH v2 7/8] s390: vfio-ap: handle bind and unbind of AP
+ queue device
+In-Reply-To: <1555796980-27920-8-git-send-email-akrowiak@linux.ibm.com>
+References: <1555796980-27920-1-git-send-email-akrowiak@linux.ibm.com>
+        <1555796980-27920-8-git-send-email-akrowiak@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190423102239.GA15531@amd>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042313-0020-0000-0000-00000332C442
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042313-0021-0000-0000-00002185254D
+Message-Id: <20190423155458.65966ebf.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=765 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/19 4:22 AM, Pavel Machek wrote:
-> Hi!
-> 
->>> It boots ok (unlike mainline -- I'm debugging that), and I can suspend
->>> and resume... but then cursor in X is moving and I can talk to
->>> applications cached in memory, but any access to disk hangs.
->>
->> Mainline problem was identified.
->>
->> But resume is still broken. I took advantage of fact that I can still
->> do cached commands, and got complete dmesg. I'm attaching it.
-> 
-> Still broken in 0418. Ideas would be welcome at this point.
+On Sat, 20 Apr 2019 17:49:39 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Bisect it?
+> +void vfio_ap_mdev_probe_queue(unsigned long apid, unsigned long apqi)
+> +{
+> +	struct ap_matrix_mdev *matrix_mdev;
+> +
+> +	matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
+> +
+> +	/*
+> +	 * If the queue is assigned to the mdev device and the mdev device
+> +	 * is in use by a guest
+> +	 */
+> +	if (matrix_mdev && matrix_mdev->kvm) {
+> +		/* Plug the adapter into the guest */
+> +		set_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+> +
+> +		/* Make sure the queue is also plugged in to the guest */
+> +		if (!test_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm))
+> +			set_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm);
+> +
+> +		vfio_ap_mdev_update_crycb(matrix_mdev);
 
--- 
-Jens Axboe
+With this you effectively grant access to all the assigned domains on
+the AP identified by the apid, not only to the domain identified by
+apqi! But some of these queues may still not be bound to the vfio_ap
+driver.
+
+IMHO you should only set the apid-th bit in apm if all queues (apid, q)
+such that q-th bit is set in aqm are bound to the vfio_ap driver.
+
+BTW a 'shadow' (or effective) apm would perfectly suffice. I don't think
+you fiddle with shadow_crycb->a[qd]m, and if you do, I don't think that's
+a good idea.
+
+Regards,
+Halil
+
+> +	}
+> +}
 
