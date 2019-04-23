@@ -2,396 +2,161 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F655C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E254C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7544218C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CFE9218C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556052155;
-	bh=nQEZpo3NeKG+i9WcjYu9PIe7nPxaxY9uNpwNr2nkXSc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ga5IavANgSx2OiGOAnMbNo+/2w5zpU1/M9cMupccP+s8a4He7AC7NFAcOML0CPlD3
-	 IWqyh3Fcff0dF5hhSo7ucyPMvIHAUUgrcAXh3q3DLu/83K/GLTRcDurKfcfaFvNUHo
-	 g7WbWRQvPJTOanQmEIe3NTubS1e0ANz7wBqnYtZs=
+	s=default; t=1556052237;
+	bh=iZcjfKLoyfuYnmOUWC4K0MAFDsL7Zw7tp4jJqBMS+e8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yo2wp99vfDZrq5KTQBWA2vhtIgFw9BAfNpqrl97UGLofKpc7y+SqDqMNyWxiuZOO1
+	 HiHwPxqNxNMeexEspvZWxwjJuzOnYZLcf8Mr1AZqj3YFKNpEVHf4NQswp90Ni1tPzm
+	 2/qdRbEs8zu3Ahs2UT0Z6B9Ek6FyZ555hWiQ7BK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbfDWUme (ORCPT
+        id S1727187AbfDWUn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:42:34 -0400
-Received: from casper.infradead.org ([85.118.1.10]:35470 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfDWUmd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:42:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GPLyvnx4S/O1CsUNqkdhFx0TBaxqPL3kQ+XmiUGfv9o=; b=jgAVShwGCAqWLZLYzIDaVQAFe8
-        WCB8GtY9l5ALqD1klUZro9scvthyBD+PHQi/hp+pIKRbrEMTlbYL6L3sGikN4iRdmi094/8RhApZ0
-        0YvoE38/gjTQN/Dvu0SSp9vmeN9gGpVI9lRG4KgLp8lIUS2pvySYh2T1ubou3u88hENBVoj1n5yIB
-        pvSsXtNNBUM+xYpQgLHLXlwHPWEy5wVKwvKgu2EMNdYXyOWu+8tDRfRJGZlscHKoxo9hatWjWTH8x
-        2I1WOTbt91aydPUNi3sxrLOulIULS0670m3AzqrPAeHYCuLL28tTfgqIWbVIgkim10uFvpyerPJIy
-        Hq/Ji2Lw==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJ2FJ-0002Uq-Hn; Tue, 23 Apr 2019 20:42:30 +0000
-Date:   Tue, 23 Apr 2019 17:42:23 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 03/63] Documentation: ACPI: move enumeration.txt to
- firmware-guide/acpi and convert to reST
-Message-ID: <20190423174223.46cd298a@coco.lan>
-In-Reply-To: <20190423162932.21428-4-changbin.du@gmail.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
-        <20190423162932.21428-4-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 23 Apr 2019 16:43:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfDWUn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 16:43:56 -0400
+Received: from localhost (unknown [92.54.175.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5C5E217D9;
+        Tue, 23 Apr 2019 20:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556052235;
+        bh=iZcjfKLoyfuYnmOUWC4K0MAFDsL7Zw7tp4jJqBMS+e8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WTUg3V9wEcvbaRKi+qIskCk7Bmerv6E3JfIL2RPMgxsq/XP1rfiQmDLVfFt7pdfmW
+         FSl8DGcClxygS87yEx0PTfCwV5smLeNYFxx5npdunXMbwADMQYGXgpdBOFNJ3qdZB5
+         K4ELVmdAn3EO5Q9Hf+Wkdym5QO5EbChHLoXIDqyY=
+Date:   Tue, 23 Apr 2019 21:43:51 +0100
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH 1/2] f2fs: allow unfixed f2fs_checkpoint.checksum_offset
+Message-ID: <20190423204351.GA87257@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190422093353.61014-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190422093353.61014-1-yuchao0@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 24 Apr 2019 00:28:32 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
-
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-
-Just looking at the conversion itself, it looks good to me.
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
+On 04/22, Chao Yu wrote:
+> Previously, f2fs_checkpoint.checksum_offset points fixed position of
+> f2fs_checkpoint structure:
 > 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> "#define CP_CHKSUM_OFFSET	4092"
+> 
+> It is unnecessary, and it breaks the consecutiveness of nat and sit
+> bitmap stored across checkpoint park block and payload blocks.
+> 
+> This patch allows f2fs to handle unfixed .checksum_offset.
+> 
+> In addition, for the case checksum value is stored in the middle of
+> checkpoint park, calculating checksum value with superposition method
+> like we did for inode_checksum.
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
 > ---
->  .../acpi/enumeration.rst}                     | 135 ++++++++++--------
->  Documentation/firmware-guide/acpi/index.rst   |   1 +
->  2 files changed, 74 insertions(+), 62 deletions(-)
->  rename Documentation/{acpi/enumeration.txt => firmware-guide/acpi/enumeration.rst} (87%)
+>  fs/f2fs/checkpoint.c    | 27 +++++++++++++++++++++------
+>  include/linux/f2fs_fs.h |  4 ++++
+>  2 files changed, 25 insertions(+), 6 deletions(-)
 > 
-> diff --git a/Documentation/acpi/enumeration.txt b/Documentation/firmware-guide/acpi/enumeration.rst
-> similarity index 87%
-> rename from Documentation/acpi/enumeration.txt
-> rename to Documentation/firmware-guide/acpi/enumeration.rst
-> index 7bcf9c3d9fbe..ce755e963714 100644
-> --- a/Documentation/acpi/enumeration.txt
-> +++ b/Documentation/firmware-guide/acpi/enumeration.rst
-> @@ -1,5 +1,9 @@
-> -ACPI based device enumeration
-> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +.. SPDX-License-Identifier: GPL-2.0
+> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> index 441814607b13..a25556aef8cc 100644
+> --- a/fs/f2fs/checkpoint.c
+> +++ b/fs/f2fs/checkpoint.c
+> @@ -794,13 +794,27 @@ static void write_orphan_inodes(struct f2fs_sb_info *sbi, block_t start_blk)
+>  	}
+>  }
+>  
+> +static __u32 f2fs_checkpoint_chksum(struct f2fs_sb_info *sbi,
+> +						struct f2fs_checkpoint *ckpt)
+> +{
+> +	unsigned int chksum_ofs = le32_to_cpu(ckpt->checksum_offset);
+> +	__u32 chksum;
 > +
-> +=============================
-> +ACPI Based Device Enumeration
-> +=============================
-> +
->  ACPI 5 introduced a set of new resources (UartTSerialBus, I2cSerialBus,
->  SpiSerialBus, GpioIo and GpioInt) which can be used in enumerating slave
->  devices behind serial bus controllers.
-> @@ -11,12 +15,12 @@ that are accessed through memory-mapped registers.
->  In order to support this and re-use the existing drivers as much as
->  possible we decided to do following:
->  
-> -	o Devices that have no bus connector resource are represented as
-> -	  platform devices.
-> +  - Devices that have no bus connector resource are represented as
-> +    platform devices.
->  
-> -	o Devices behind real busses where there is a connector resource
-> -	  are represented as struct spi_device or struct i2c_device
-> -	  (standard UARTs are not busses so there is no struct uart_device).
-> +  - Devices behind real busses where there is a connector resource
-> +    are represented as struct spi_device or struct i2c_device
-> +    (standard UARTs are not busses so there is no struct uart_device).
->  
->  As both ACPI and Device Tree represent a tree of devices (and their
->  resources) this implementation follows the Device Tree way as much as
-> @@ -31,7 +35,8 @@ enumerated from ACPI namespace. This handle can be used to extract other
->  device-specific configuration. There is an example of this below.
->  
->  Platform bus support
-> -~~~~~~~~~~~~~~~~~~~~
-> +====================
-> +
->  Since we are using platform devices to represent devices that are not
->  connected to any physical bus we only need to implement a platform driver
->  for the device and add supported ACPI IDs. If this same IP-block is used on
-> @@ -39,7 +44,7 @@ some other non-ACPI platform, the driver might work out of the box or needs
->  some minor changes.
->  
->  Adding ACPI support for an existing driver should be pretty
-> -straightforward. Here is the simplest example:
-> +straightforward. Here is the simplest example::
->  
->  	#ifdef CONFIG_ACPI
->  	static const struct acpi_device_id mydrv_acpi_match[] = {
-> @@ -61,12 +66,13 @@ configuring GPIOs it can get its ACPI handle and extract this information
->  from ACPI tables.
->  
->  DMA support
-> -~~~~~~~~~~~
-> +===========
-> +
->  DMA controllers enumerated via ACPI should be registered in the system to
->  provide generic access to their resources. For example, a driver that would
->  like to be accessible to slave devices via generic API call
->  dma_request_slave_channel() must register itself at the end of the probe
-> -function like this:
-> +function like this::
->  
->  	err = devm_acpi_dma_controller_register(dev, xlate_func, dw);
->  	/* Handle the error if it's not a case of !CONFIG_ACPI */
-> @@ -74,7 +80,7 @@ function like this:
->  and implement custom xlate function if needed (usually acpi_dma_simple_xlate()
->  is enough) which converts the FixedDMA resource provided by struct
->  acpi_dma_spec into the corresponding DMA channel. A piece of code for that case
-> -could look like:
-> +could look like::
->  
->  	#ifdef CONFIG_ACPI
->  	struct filter_args {
-> @@ -114,7 +120,7 @@ provided by struct acpi_dma.
->  Clients must call dma_request_slave_channel() with the string parameter that
->  corresponds to a specific FixedDMA resource. By default "tx" means the first
->  entry of the FixedDMA resource array, "rx" means the second entry. The table
-> -below shows a layout:
-> +below shows a layout::
->  
->  	Device (I2C0)
->  	{
-> @@ -138,12 +144,13 @@ acpi_dma_request_slave_chan_by_index() directly and therefore choose the
->  specific FixedDMA resource by its index.
->  
->  SPI serial bus support
-> -~~~~~~~~~~~~~~~~~~~~~~
-> +======================
-> +
->  Slave devices behind SPI bus have SpiSerialBus resource attached to them.
->  This is extracted automatically by the SPI core and the slave devices are
->  enumerated once spi_register_master() is called by the bus driver.
->  
-> -Here is what the ACPI namespace for a SPI slave might look like:
-> +Here is what the ACPI namespace for a SPI slave might look like::
->  
->  	Device (EEP0)
->  	{
-> @@ -163,7 +170,7 @@ Here is what the ACPI namespace for a SPI slave might look like:
->  
->  The SPI device drivers only need to add ACPI IDs in a similar way than with
->  the platform device drivers. Below is an example where we add ACPI support
-> -to at25 SPI eeprom driver (this is meant for the above ACPI snippet):
-> +to at25 SPI eeprom driver (this is meant for the above ACPI snippet)::
->  
->  	#ifdef CONFIG_ACPI
->  	static const struct acpi_device_id at25_acpi_match[] = {
-> @@ -182,7 +189,7 @@ to at25 SPI eeprom driver (this is meant for the above ACPI snippet):
->  
->  Note that this driver actually needs more information like page size of the
->  eeprom etc. but at the time writing this there is no standard way of
-> -passing those. One idea is to return this in _DSM method like:
-> +passing those. One idea is to return this in _DSM method like::
->  
->  	Device (EEP0)
->  	{
-> @@ -202,7 +209,7 @@ passing those. One idea is to return this in _DSM method like:
->  		}
->  
->  Then the at25 SPI driver can get this configuration by calling _DSM on its
-> -ACPI handle like:
-> +ACPI handle like::
->  
->  	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->  	struct acpi_object_list input;
-> @@ -220,14 +227,15 @@ ACPI handle like:
->  	kfree(output.pointer);
->  
->  I2C serial bus support
-> -~~~~~~~~~~~~~~~~~~~~~~
-> +======================
-> +
->  The slaves behind I2C bus controller only need to add the ACPI IDs like
->  with the platform and SPI drivers. The I2C core automatically enumerates
->  any slave devices behind the controller device once the adapter is
->  registered.
->  
->  Below is an example of how to add ACPI support to the existing mpu3050
-> -input driver:
-> +input driver::
->  
->  	#ifdef CONFIG_ACPI
->  	static const struct acpi_device_id mpu3050_acpi_match[] = {
-> @@ -251,56 +259,57 @@ input driver:
->  	};
->  
->  GPIO support
-> -~~~~~~~~~~~~
-> +============
-> +
->  ACPI 5 introduced two new resources to describe GPIO connections: GpioIo
->  and GpioInt. These resources can be used to pass GPIO numbers used by
->  the device to the driver. ACPI 5.1 extended this with _DSD (Device
->  Specific Data) which made it possible to name the GPIOs among other things.
->  
-> -For example:
-> +For example::
->  
-> -Device (DEV)
-> -{
-> -	Method (_CRS, 0, NotSerialized)
-> +	Device (DEV)
->  	{
-> -		Name (SBUF, ResourceTemplate()
-> +		Method (_CRS, 0, NotSerialized)
->  		{
-> -			...
-> -			// Used to power on/off the device
-> -			GpioIo (Exclusive, PullDefault, 0x0000, 0x0000,
-> -				IoRestrictionOutputOnly, "\\_SB.PCI0.GPI0",
-> -				0x00, ResourceConsumer,,)
-> +			Name (SBUF, ResourceTemplate()
->  			{
-> -				// Pin List
-> -				0x0055
-> -			}
-> +				...
-> +				// Used to power on/off the device
-> +				GpioIo (Exclusive, PullDefault, 0x0000, 0x0000,
-> +					IoRestrictionOutputOnly, "\\_SB.PCI0.GPI0",
-> +					0x00, ResourceConsumer,,)
-> +				{
-> +					// Pin List
-> +					0x0055
-> +				}
-> +
-> +				// Interrupt for the device
-> +				GpioInt (Edge, ActiveHigh, ExclusiveAndWake, PullNone,
-> +					0x0000, "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer,,)
-> +				{
-> +					// Pin list
-> +					0x0058
-> +				}
-> +
-> +				...
->  
-> -			// Interrupt for the device
-> -			GpioInt (Edge, ActiveHigh, ExclusiveAndWake, PullNone,
-> -				 0x0000, "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer,,)
-> -			{
-> -				// Pin list
-> -				0x0058
->  			}
->  
-> -			...
-> -
-> +			Return (SBUF)
->  		}
->  
-> -		Return (SBUF)
-> -	}
-> -
-> -	// ACPI 5.1 _DSD used for naming the GPIOs
-> -	Name (_DSD, Package ()
-> -	{
-> -		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> -		Package ()
-> +		// ACPI 5.1 _DSD used for naming the GPIOs
-> +		Name (_DSD, Package ()
->  		{
-> -			Package () {"power-gpios", Package() {^DEV, 0, 0, 0 }},
-> -			Package () {"irq-gpios", Package() {^DEV, 1, 0, 0 }},
-> -		}
-> -	})
-> -	...
-> +			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +			Package ()
-> +			{
-> +				Package () {"power-gpios", Package() {^DEV, 0, 0, 0 }},
-> +				Package () {"irq-gpios", Package() {^DEV, 1, 0, 0 }},
-> +			}
-> +		})
-> +		...
->  
->  These GPIO numbers are controller relative and path "\\_SB.PCI0.GPI0"
->  specifies the path to the controller. In order to use these GPIOs in Linux
-> @@ -310,7 +319,7 @@ There is a standard GPIO API for that and is documented in
->  Documentation/gpio/.
->  
->  In the above example we can get the corresponding two GPIO descriptors with
-> -a code like this:
-> +a code like this::
->  
->  	#include <linux/gpio/consumer.h>
->  	...
-> @@ -334,21 +343,22 @@ See Documentation/acpi/gpio-properties.txt for more information about the
->  _DSD binding related to GPIOs.
->  
->  MFD devices
-> -~~~~~~~~~~~
-> +===========
-> +
->  The MFD devices register their children as platform devices. For the child
->  devices there needs to be an ACPI handle that they can use to reference
->  parts of the ACPI namespace that relate to them. In the Linux MFD subsystem
->  we provide two ways:
->  
-> -	o The children share the parent ACPI handle.
-> -	o The MFD cell can specify the ACPI id of the device.
-> +  - The children share the parent ACPI handle.
-> +  - The MFD cell can specify the ACPI id of the device.
->  
->  For the first case, the MFD drivers do not need to do anything. The
->  resulting child platform device will have its ACPI_COMPANION() set to point
->  to the parent device.
->  
->  If the ACPI namespace has a device that we can match using an ACPI id or ACPI
-> -adr, the cell should be set like:
-> +adr, the cell should be set like::
->  
->  	static struct mfd_cell_acpi_match my_subdevice_cell_acpi_match = {
->  		.pnpid = "XYZ0001",
-> @@ -366,7 +376,8 @@ the MFD device and if found, that ACPI companion device is bound to the
->  resulting child platform device.
->  
->  Device Tree namespace link device ID
-> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +====================================
-> +
->  The Device Tree protocol uses device identification based on the "compatible"
->  property whose value is a string or an array of strings recognized as device
->  identifiers by drivers and the driver core.  The set of all those strings may be
-> @@ -423,4 +434,4 @@ the _DSD of the device object itself or the _DSD of its ancestor in the
->  Otherwise, the _DSD itself is regarded as invalid and therefore the "compatible"
->  property returned by it is meaningless.
->  
-> -Refer to DSD-properties-rules.txt for more information.
-> +Refer to :doc:`DSD-properties-rules` for more information.
-> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-> index 210ad8acd6df..99677c73f1fb 100644
-> --- a/Documentation/firmware-guide/acpi/index.rst
-> +++ b/Documentation/firmware-guide/acpi/index.rst
-> @@ -8,3 +8,4 @@ ACPI Support
->     :maxdepth: 1
->  
->     namespace
-> +   enumeration
+> +	chksum = f2fs_crc32(sbi, ckpt, chksum_ofs);
+> +	if (chksum_ofs < CP_CHKSUM_OFFSET) {
+> +		chksum_ofs += sizeof(chksum);
+> +		chksum = f2fs_chksum(sbi, chksum, (__u8 *)ckpt + chksum_ofs,
+> +						F2FS_BLKSIZE - chksum_ofs);
 
+Do we need to cover __cp_payload(sbi) * blksize - chksum_ofs?
 
-
-Thanks,
-Mauro
+> +	}
+> +	return chksum;
+> +}
+> +
+>  static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
+>  		struct f2fs_checkpoint **cp_block, struct page **cp_page,
+>  		unsigned long long *version)
+>  {
+> -	unsigned long blk_size = sbi->blocksize;
+>  	size_t crc_offset = 0;
+> -	__u32 crc = 0;
+> +	__u32 crc;
+>  
+>  	*cp_page = f2fs_get_meta_page(sbi, cp_addr);
+>  	if (IS_ERR(*cp_page))
+> @@ -809,15 +823,16 @@ static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
+>  	*cp_block = (struct f2fs_checkpoint *)page_address(*cp_page);
+>  
+>  	crc_offset = le32_to_cpu((*cp_block)->checksum_offset);
+> -	if (crc_offset > (blk_size - sizeof(__le32))) {
+> +	if (crc_offset < CP_MIN_CHKSUM_OFFSET ||
+> +			crc_offset > CP_CHKSUM_OFFSET) {
+>  		f2fs_put_page(*cp_page, 1);
+>  		f2fs_msg(sbi->sb, KERN_WARNING,
+>  			"invalid crc_offset: %zu", crc_offset);
+>  		return -EINVAL;
+>  	}
+>  
+> -	crc = cur_cp_crc(*cp_block);
+> -	if (!f2fs_crc_valid(sbi, crc, *cp_block, crc_offset)) {
+> +	crc = f2fs_checkpoint_chksum(sbi, *cp_block);
+> +	if (crc != cur_cp_crc(*cp_block)) {
+>  		f2fs_put_page(*cp_page, 1);
+>  		f2fs_msg(sbi->sb, KERN_WARNING, "invalid crc value");
+>  		return -EINVAL;
+> @@ -1425,7 +1440,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>  	get_sit_bitmap(sbi, __bitmap_ptr(sbi, SIT_BITMAP));
+>  	get_nat_bitmap(sbi, __bitmap_ptr(sbi, NAT_BITMAP));
+>  
+> -	crc32 = f2fs_crc32(sbi, ckpt, le32_to_cpu(ckpt->checksum_offset));
+> +	crc32 = f2fs_checkpoint_chksum(sbi, ckpt);
+>  	*((__le32 *)((unsigned char *)ckpt +
+>  				le32_to_cpu(ckpt->checksum_offset)))
+>  				= cpu_to_le32(crc32);
+> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
+> index 55da9abed023..65559900d4d7 100644
+> --- a/include/linux/f2fs_fs.h
+> +++ b/include/linux/f2fs_fs.h
+> @@ -164,6 +164,10 @@ struct f2fs_checkpoint {
+>  	unsigned char sit_nat_version_bitmap[1];
+>  } __packed;
+>  
+> +#define CP_CHKSUM_OFFSET	4092	/* default chksum offset in checkpoint */
+> +#define CP_MIN_CHKSUM_OFFSET						\
+> +	(offsetof(struct f2fs_checkpoint, sit_nat_version_bitmap))
+> +
+>  /*
+>   * For orphan inode management
+>   */
+> -- 
+> 2.18.0.rc1
