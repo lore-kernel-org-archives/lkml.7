@@ -2,60 +2,171 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4F4C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DE1C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B32206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D39206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfDWPZD (ORCPT
+        id S1728421AbfDWPZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:25:03 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:49561 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbfDWPZC (ORCPT
+        Tue, 23 Apr 2019 11:25:21 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:8407 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726655AbfDWPZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:25:02 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hIxI4-0001ot-I9; Tue, 23 Apr 2019 17:25:00 +0200
-Date:   Tue, 23 Apr 2019 17:25:00 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Alleged fix for writer stall on -rcu branch dev
-Message-ID: <20190423152500.55e745nhejy2oe2p@linutronix.de>
-References: <20190409221426.GA11212@linux.ibm.com>
- <20190410181538.3ocva5lmh7ghrisr@linutronix.de>
- <20190410184105.GR14111@linux.ibm.com>
- <20190410191918.g2yqnsmuqukmzdfe@linutronix.de>
- <20190410203302.GT14111@linux.ibm.com>
- <20190411000610.GA3867@linux.ibm.com>
- <20190413142153.GA17704@linux.ibm.com>
- <20190415104047.mrtmv6w6kq5m44fp@linutronix.de>
- <20190415105645.GQ14111@linux.ibm.com>
- <20190415110403.4yivka4cofckgxwb@linutronix.de>
+        Tue, 23 Apr 2019 11:25:21 -0400
+X-UUID: 7d581653d7544a2da7c7521ea0da047e-20190423
+X-UUID: 7d581653d7544a2da7c7521ea0da047e-20190423
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 776834800; Tue, 23 Apr 2019 23:25:17 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 23 Apr 2019 23:25:09 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 23 Apr 2019 23:25:03 +0800
+Message-ID: <1556033102.20906.4.camel@mtkswgap22>
+Subject: Re: [PATCH v4 09/12] soc: mediatek: cmdq: add polling function
+From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "Sascha Hauer" <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Date:   Tue, 23 Apr 2019 23:25:02 +0800
+In-Reply-To: <20190415125833.38704-10-bibby.hsieh@mediatek.com>
+References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+         <20190415125833.38704-10-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190415110403.4yivka4cofckgxwb@linutronix.de>
-User-Agent: NeoMutt/20180716
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-15 13:04:03 [+0200], To Paul E. McKenney wrote:
-> 
-> good so nothing important so far. I hope the box gets to TREE08 soon.
+Hi Bibby,
 
-test completed. Nothing new.
 
-> > 
-> > 							Thanx, Paul
+On Mon, 2019-04-15 at 20:58 +0800, Bibby Hsieh wrote:
+> add polling function in cmdq helper functions
 > 
-Sebastian
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 30 ++++++++++++++++++++++++
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
+>  include/linux/soc/mediatek/mtk-cmdq.h    | 15 ++++++++++++
+>  3 files changed, 46 insertions(+)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index d3873ab21db3..80856b8c2385 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -231,6 +231,36 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
+> +		  u16 offset, u32 value, u32 mask)
+> +{
+> +	int err;
+> +
+> +	if (mask != 0xffffffff) {
+> +		err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(~mask),
+> +					      CMDQ_GET_ARG_B(~mask),
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_IMMEDIATE_VALUE,
+> +					      CMDQ_CODE_MASK);
+> +
+> +		if (err != 0)
+> +			return err;
+> +	}
+> +	offset = offset | 0x1;
+
+Does this "or" operation make gce use mask? If it does, maybe it should
+move into brace?
+
+
+Regards,
+Dennis
+
+> +
+> +	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
+> +				       CMDQ_GET_ARG_B(value),
+> +				       offset, subsys,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_IMMEDIATE_VALUE,
+> +				       CMDQ_CODE_POLL);
+> +}
+> +EXPORT_SYMBOL(cmdq_pkt_poll);
+> +
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+>  	int err;
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index f21801d32a3a..1dfd5ed5c8c5 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -46,6 +46,7 @@
+>  enum cmdq_code {
+>  	CMDQ_CODE_MASK = 0x02,
+>  	CMDQ_CODE_WRITE = 0x04,
+> +	CMDQ_CODE_POLL = 0x08,
+>  	CMDQ_CODE_JUMP = 0x10,
+>  	CMDQ_CODE_WFE = 0x20,
+>  	CMDQ_CODE_EOC = 0x40,
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index 52f69c8db8de..0651a0bffa54 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -99,6 +99,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
+>   */
+>  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
+>  
+> +/**
+> + * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
+> + *		     execute an instruction that wait for a specified hardware
+> + *		     register to check for the value. All GCE hardware
+> + *		     threads will be blocked by this instruction.
+> + * @pkt:	the CMDQ packet
+> + * @subsys:	the CMDQ sub system code
+> + * @offset:	register offset from CMDQ sub system
+> + * @value:	the specified target register value
+> + * @mask:	the specified target register mask
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + */
+> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
+> +		  u16 offset, u32 value, u32 mask);
+>  /**
+>   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+>   *                          packet and call back at the end of done packet
+
+
