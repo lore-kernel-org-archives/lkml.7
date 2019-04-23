@@ -2,78 +2,92 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6E4C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E911BC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2356521738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69A920652
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfDWTij convert rfc822-to-8bit (ORCPT
+        id S1726579AbfDWTlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 15:38:39 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:48553 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfDWTii (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 15:38:38 -0400
-Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
-        by mail.holtmann.org (Postfix) with ESMTPSA id AB019CF2E8;
-        Tue, 23 Apr 2019 21:46:47 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] Bluetooth: hci_qca: Fix crash with non-serdev devices
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190423181653.147804-1-mka@chromium.org>
-Date:   Tue, 23 Apr 2019 21:38:36 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Hemantg <hemantg@codeaurora.org>,
-        Rocky Liao <rjliao@codeaurora.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <5BD8642B-7178-431B-B851-68E374752751@holtmann.org>
-References: <20190423181653.147804-1-mka@chromium.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Tue, 23 Apr 2019 15:41:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50952 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfDWTlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 15:41:35 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B16CC3087942;
+        Tue, 23 Apr 2019 19:41:34 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-123-167.rdu2.redhat.com [10.10.123.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 709155C1B5;
+        Tue, 23 Apr 2019 19:41:33 +0000 (UTC)
+Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
+ negative
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <4cbd3c18-c9c0-56eb-4e01-ee355a69057a@redhat.com>
+ <20190419102647.GP7905@worktop.programming.kicks-ass.net>
+ <20190419120207.GO4038@hirez.programming.kicks-ass.net>
+ <20190419130304.GV14281@hirez.programming.kicks-ass.net>
+ <20190419131522.GW14281@hirez.programming.kicks-ass.net>
+ <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
+ <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
+ <20190423141714.GO11158@hirez.programming.kicks-ass.net>
+ <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
+ <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
+ <20190423193435.GX4038@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <88ba7be0-9ec5-941e-1b3f-80fbe05fe3a0@redhat.com>
+Date:   Tue, 23 Apr 2019 15:41:32 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190423193435.GX4038@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 23 Apr 2019 19:41:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On 4/23/19 3:34 PM, Peter Zijlstra wrote:
+> On Tue, Apr 23, 2019 at 03:12:16PM -0400, Waiman Long wrote:
+>> On 4/23/19 12:27 PM, Linus Torvalds wrote:
+>>> On Tue, Apr 23, 2019 at 7:17 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>>>> I'm not aware of an architecture where disabling interrupts is faster
+>>>> than disabling preemption.
+>>> I don't thin kit ever is, but I'd worry a bit about the
+>>> preempt_enable() just because it also checks if need_resched() is true
+>>> when re-enabling preemption.
+>>>
+>>> So doing preempt_enable() as part of rwsem_read_trylock() might cause
+>>> us to schedule in *exactly* the wrong place,
+>> You are right on that. However, there is a variant called
+>> preempt_enable_no_resched() that doesn't have this side effect. So I am
+>> going to use that one instead.
+> Only if the very next line is schedule(). Otherwise you're very much not
+> going to use that function.
 
-> qca_set_baudrate() calls serdev_device_wait_until_sent() assuming that
-> the HCI is always associated with a serdev device. This isn't true for
-> ROME controllers instantiated through ldisc, where the call causes a
-> crash due to a NULL pointer dereferentiation. Only call the function
-> when we have a serdev device. The timeout for ROME devices at the end
-> of qca_set_baudrate() is long enough to be reasonably sure that the
-> command was sent.
-> 
-> Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm Bluetooth chip wcn3990")
-> Reported-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> Reported-by: Rocky Liao <rjliao@codeaurora.org>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Rocky Liao <rjliao@codeaurora.org>
-> Tested-by: Rocky Liao <rjliao@codeaurora.org>
-> Reviewed-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> ---
-> Changes in v2:
-> - first version got corrupted for some reason, this should apply
-> - added 'Reviewed-by' tags from Rocky abd Balakrishna
-> - added 'Tested-by' tag from Rocky
-> ---
-> drivers/bluetooth/hci_qca.c | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
+May I know the reason why. I saw a number of instances of
+preempt_enable_no_resched() without right next a schedule().
 
-patch has been applied to bluetooth-next tree.
-
-Regards
-
-Marcel
+Cheers,
+Longman
 
