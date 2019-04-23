@@ -2,109 +2,113 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994C4C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478A9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F5921738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556003997;
-	bh=iAlxB2BAyRbTF5o0K830F2Oc7dRzQKAvHqLr+SZlM6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qqR7t2+Jn/CFeOFeUT/QcCEFkRGBw47tlJrrFjJwtEstuPLmXF4jdTgx2PUoRszQJ
-	 gkwLkapfiUTAh3XWoh2SwDKf91bbzOjEPdimRtlw74yNERhUOUQWliVawWV4mDhVdA
-	 BNBNo5DG8ClTMRbeEeD8OxovVXS6HmYg/L1K9lR0=
+	by mail.kernel.org (Postfix) with ESMTP id 15D152175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WYD8Z/rY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfDWHT4 (ORCPT
+        id S1726399AbfDWHUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 03:19:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34078 "EHLO mx1.suse.de"
+        Tue, 23 Apr 2019 03:20:33 -0400
+Received: from mail-eopbgr10083.outbound.protection.outlook.com ([40.107.1.83]:7175
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725888AbfDWHTz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 03:19:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8EE12AD1A;
-        Tue, 23 Apr 2019 07:19:54 +0000 (UTC)
-Date:   Tue, 23 Apr 2019 09:19:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [Question] Should direct reclaim time be bounded?
-Message-ID: <20190423071953.GC25106@dhcp22.suse.cz>
-References: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
+        id S1725888AbfDWHUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 03:20:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nzYZ8k/xwFlpnxVTDLuD7P1dR1EuyUQ5Ze98w2LnEeA=;
+ b=WYD8Z/rY0lzKAyuPKjL948Xne9K0ZApPHrbp3OytxPvE130IDDpdK3HBtvgWDGFPEeOfmTZ37EXw1HhYVE1X+luDQwKLzolz1Eqa+aR4bq8AHRu1zk4ENG3CaROLpVAUnoCv9FiZV1wVKAgfkRE0FUAwn76jiN7C+NUhConDDwc=
+Received: from DB7PR04MB4699.eurprd04.prod.outlook.com (20.176.233.28) by
+ DB7PR04MB4796.eurprd04.prod.outlook.com (20.176.233.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.14; Tue, 23 Apr 2019 07:20:29 +0000
+Received: from DB7PR04MB4699.eurprd04.prod.outlook.com
+ ([fe80::410f:7b79:6b3c:1fe5]) by DB7PR04MB4699.eurprd04.prod.outlook.com
+ ([fe80::410f:7b79:6b3c:1fe5%5]) with mapi id 15.20.1813.017; Tue, 23 Apr 2019
+ 07:20:28 +0000
+From:   Viorel Suman <viorel.suman@nxp.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "broonie@kernel.org" <broonie@kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH v3 0/3] Add runtime PM for SAI digital audio interface
+Thread-Topic: [PATCH v3 0/3] Add runtime PM for SAI digital audio interface
+Thread-Index: AQHU+T3tSn5Uzcioa0qU6cJ3oZM02aZJV5EA
+Date:   Tue, 23 Apr 2019 07:20:28 +0000
+Message-ID: <1556004028.2595.2.camel@nxp.com>
+References: <20190422190213.30726-1-daniel.baluta@nxp.com>
+In-Reply-To: <20190422190213.30726-1-daniel.baluta@nxp.com>
+Reply-To: Viorel Suman <viorel.suman@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=viorel.suman@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d42e8eaf-5f72-46aa-c7e2-08d6c7bc29e0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600141)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR04MB4796;
+x-ms-traffictypediagnostic: DB7PR04MB4796:
+x-microsoft-antispam-prvs: <DB7PR04MB47962176DF24F39A7500DEDB92230@DB7PR04MB4796.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0016DEFF96
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(39860400002)(366004)(346002)(189003)(199004)(6512007)(4326008)(5660300002)(73956011)(8936002)(66946007)(76176011)(102836004)(76116006)(66476007)(43066004)(64756008)(476003)(66556008)(6506007)(86362001)(486006)(11346002)(26005)(2616005)(91956017)(66446008)(256004)(446003)(14444005)(68736007)(8676002)(186003)(81156014)(81166006)(36756003)(99286004)(6486002)(6436002)(97736004)(2906002)(71200400001)(316002)(7736002)(305945005)(6116002)(103116003)(110136005)(7416002)(54906003)(66066001)(71190400001)(2501003)(229853002)(53936002)(14454004)(478600001)(44832011)(25786009)(3450700001)(6246003)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4796;H:DB7PR04MB4699.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: zAUx0aGBFLGqetBKh1xyFLnJsv9O1n9lG3YRARlRbq6Cb1kXKsUUh+xaS0mNdmMFXP4SqHWg+V90OMfCbU6mckohQgQCScl8+Zm5mwAuzpINRMmG/ARC6kpymzIs3iahYE/xIylHFEQrEGktlSNvxgW9HXqEU9D4a+JxEVb2WDfPgTA9TC2Pbua1K5uN7ioO8LMXgqtsedv9oVlA6x3sHHmmB8J0glE48uaGnK+q37S8vttJ3VoYOAnZFosLX8jGgRKPoqNXwfmArv4xdkaAX1SuVIcMbvCKRtYvM+dcY9JDYuizw+hRtnLYEbUusBAFdo+etEEX/Mb20HB+OPgDRyKpwpNgQODPbXMwsRYyhyhgf5fGgPckUn+tf2318QGP221BzIE2yuSJ7X3KKgxBGCKH61hgkQ6rVR/nvz8JV54=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <49DC249CD2CE524181637C22138BD5A6@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d42e8eaf-5f72-46aa-c7e2-08d6c7bc29e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 07:20:28.7978
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4796
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 22-04-19 21:07:28, Mike Kravetz wrote:
-[...]
-> However, consider the case of a 2 node system where:
-> node 0 has 2GB memory
-> node 1 has 4GB memory
-> 
-> Now, if one wants to allocate 4GB of huge pages they may be tempted to simply,
-> "echo 2048 > nr_hugepages".  At first this will go well until node 0 is out
-> of memory.  When this happens, alloc_pool_huge_page() will continue to be
-> called.  Because of that for_each_node_mask_to_alloc() macro, it will likely
-> attempt to first allocate a page from node 0.  It will call direct reclaim and
-> compaction until it fails.  Then, it will successfully allocate from node 1.
-
-Yeah, the even distribution is quite a strong statement. We just try to
-distribute somehow and it is likely to not work really great on system
-with nodes that are different in size. I know it sucks but I've been
-recommending to use the /sys/devices/system/node/node$N/hugepages/hugepages-2048kB/nr_hugepages
-because that allows the define the actual policy much better. I guess we
-want to be more specific about this in the documentation at least.
-
-> In our distro kernel, I am thinking about making allocations try "less hard"
-> on nodes where we start to see failures.  less hard == NORETRY/NORECLAIM.
-> I was going to try something like this on an upstream kernel when I noticed
-> that it seems like direct reclaim may never end/exit.  It 'may' exit, but I
-> instrumented __alloc_pages_slowpath() and saw it take well over an hour
-> before I 'tricked' it into exiting.
-> 
-> [ 5916.248341] hpage_slow_alloc: jiffies 5295742  tries 2   node 0 success
-> [ 5916.249271]                   reclaim 5295741  compact 1
-
-This is unexpected though. What does tries mean? Number of reclaim
-attempts? If yes could you enable tracing to see what takes so long in
-the reclaim path?
-
-> This is where it stalled after "echo 4096 > nr_hugepages" on a little VM
-> with 8GB total memory.
-> 
-> I have not started looking at the direct reclaim code to see exactly where
-> we may be stuck, or trying really hard.  My question is, "Is this expected
-> or should direct reclaim be somewhat bounded?"  With __alloc_pages_slowpath
-> getting 'stuck' in direct reclaim, the documented behavior for huge page
-> allocation is not going to happen.
-
-Well, our "how hard to try for hugetlb pages" is quite arbitrary. We
-used to rety as long as at least order worth of pages have been
-reclaimed but that didn't make any sense since the lumpy reclaim was
-gone. So the semantic has change to reclaim&compact as long as there is
-some progress. From what I understad above it seems that you are not
-thrashing and calling reclaim again and again but rather one reclaim
-round takes ages.
-
-That being said, I do not think __GFP_RETRY_MAYFAIL is wrong here. It
-looks like there is something wrong in the reclaim going on.
-
--- 
-Michal Hocko
-SUSE Labs
+Rm9yIHRoaXMgc2VyaWVzOg0KDQpSZXZpZXdlZC1ieTogVmlvcmVsIFN1bWFuIDx2aW9yZWwuc3Vt
+YW5AbnhwLmNvbT4NCg0KT24gTHUsIDIwMTktMDQtMjIgYXQgMTk6MDIgKzAwMDAsIERhbmllbCBC
+YWx1dGEgd3JvdGU6DQo+IEZpcnN0IHBhdGNoIGZpeGVzIGEgYnVnIGJ5IGNvcnJlY3RseSBzZXR0
+aW5nIGlzX3NsYXZlX21vZGUsIHRoZW4NCj4gc2Vjb25kIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3Ig
+cnVudGltZSBQTSBhbmQgZmluYWxseSAzcmQgcGF0Y2ggbW92ZXMNCj4gY2xvY2sgaGFuZGxpbmcg
+ZnJvbSBzdGFydHVwL3NodHVkb3duIGZ1bmN0aW9uIHRvIHJ1bnRpbWUgUE0gaGFuZGxlcnMuDQo+
+IA0KPiBDaGFuZ2VzIHNpbmNlIHYyOiAoYWZ0ZXIgVmlvcmVsJ3MgY29tbWVudHMpDQo+IAktIG5v
+IG5lZWQgdG8gY2hlY2sgZm9yIGlzX3NsYXZlX21vZGUgd2hlbiBlbmFibGluZy9kaXNhYmxpbmcg
+dGhlIGNsb2Nrcw0KPiAJYmVjYXVzZSBzYWktPm1jbGtfc3RyZWFtcyBpcyBvbmx5IHNldCB3aGVu
+IFNBSSBpcyBpbiBtYXN0ZXIgbW9kZS4NCj4gDQo+IENoYW5nZXMgc2luY2UgdjE6IChhZnRlciBO
+aWNvbGluJ3MgY29tbWVudHMpDQo+IAktIGFkZGVkIHBhdGNoIDENCj4gCS0gYWRkZWQgZnNsX3Nh
+aV9yZW1vdmUgaW4gb3JkZXIgdG8gY2FsbCBwbV9ydW50aW1lX2Rpc2FibGUNCj4gCS0gb25seSBk
+aXNhYmxlL2VuYWJsZSBtY2xrIHdoZW4gU0FJIGluIG1hc3RlciBtb2RlLg0KPiANCj4gRGFuaWVs
+IEJhbHV0YSAoMik6DQo+IMKgIEFTb0M6IGZzbF9zYWk6IFVwZGF0ZSBpc19zbGF2ZV9tb2RlIHdp
+dGggY29ycmVjdCB2YWx1ZQ0KPiDCoCBBU29DOiBmc2xfc2FpOiBBZGQgc3VwcG9ydCBmb3IgcnVu
+dGltZSBwbQ0KPiANCj4gU2hlbmdqaXUgV2FuZyAoMSk6DQo+IMKgIEFTb0M6IGZzbF9zYWk6IE1v
+dmUgY2xvY2sgb3BlcmF0aW9uIHRvIFBNIHJ1bnRpbWUNCj4gDQo+IMKgc291bmQvc29jL2ZzbC9m
+c2xfc2FpLmMgfCA3OCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLQ0K
+PiDCoDEgZmlsZSBjaGFuZ2VkLCA2MyBpbnNlcnRpb25zKCspLCAxNSBkZWxldGlvbnMoLSkNCj4g
+DQo+IC0twqANCj4gMi4xNy4xDQo+IA==
