@@ -2,159 +2,97 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B8FC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AB2C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487BB218C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556051706;
-	bh=duiLVSTGWAlDxELIUIHgMJeJDOPQakp/dato38su+Rg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hFaHGvyaWodpXDipbe5l1AdlBz8rlXZLOmdShKVIP/NkLdJY4fnalP03hV5MQb8B4
-	 4mt+nrCDsotiqHju2/n6X+HZT99bcAK7dMDmyUyDAo0kbD6Vw4chNhrC1e5OIy9+SH
-	 L4B8TEpTMxyaE8d50HMuh6PZ/cmLCLOfBi9RRbeM=
+	by mail.kernel.org (Postfix) with ESMTP id 07BC1218B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfDWUfF (ORCPT
+        id S1727245AbfDWUfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46746 "EHLO mail.kernel.org"
+        Tue, 23 Apr 2019 16:35:09 -0400
+Received: from namei.org ([65.99.196.166]:35440 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfDWUfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:35:04 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 828BC218B0;
-        Tue, 23 Apr 2019 20:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556051703;
-        bh=duiLVSTGWAlDxELIUIHgMJeJDOPQakp/dato38su+Rg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W2U50io9ilBvZjbi1VVSr+4dui9nqxZPJcyQCcX/kQUSFze3/SHRZpFIjUXNB/n3h
-         n0dJEzEljhdO+fzJioafhKjHGZnc8MFHtRL0YfSXYtipAns/yhvQTma4w0Ea5ZntQH
-         ZpZikyK+TR20efByfGynONh4J+TR6JTVQAzfq3BI=
-Date:   Tue, 23 Apr 2019 15:35:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4 06/16] PCI: dwc: Add ext config space capability
- search API
-Message-ID: <20190423203502.GE14616@google.com>
-References: <20190423082730.370-1-vidyas@nvidia.com>
- <20190423082730.370-7-vidyas@nvidia.com>
+        id S1726029AbfDWUfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 16:35:07 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x3NKZ2o0016312;
+        Tue, 23 Apr 2019 20:35:02 GMT
+Date:   Wed, 24 Apr 2019 06:35:02 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Robert Holmes <robeholmes@gmail.com>
+cc:     jeyu@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KEYS: Make use of platform keyring for module signature
+ verify
+In-Reply-To: <1556005169-4139-1-git-send-email-robeholmes@gmail.com>
+Message-ID: <alpine.LRH.2.21.1904240626430.9705@namei.org>
+References: <1556005169-4139-1-git-send-email-robeholmes@gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423082730.370-7-vidyas@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 01:57:20PM +0530, Vidya Sagar wrote:
-> Add extended configuration space capability search API using struct dw_pcie *
-> pointer
+On Tue, 23 Apr 2019, Robert Holmes wrote:
+
+> This patch completes commit 278311e417be ("kexec, KEYS: Make use of
+> platform keyring for signature verify") which, while adding the
+> platform keyring for bzImage verification, neglected to also add
+> this keyring for module verification.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+
+You should most likely add the keyrings list to the cc: for these kinds of 
+patches.
+
+> As such, kernel modules signed with keys from the MokList variable
+> were not successfully verified.
+> 
+> Signed-off-by: Robert Holmes <robeholmes@gmail.com>
 > ---
-> Changes from [v3]:
-> * None
+>  kernel/module_signing.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
-> Changes from [v2]:
-> * None
-> 
-> Changes from [v1]:
-> * This is a new patch in v2 series
-> 
->  drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h |  1 +
->  2 files changed, 42 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 6a98135244d6..ecf5fe8842f6 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->  	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
->  }
->  
-
-Please make sure there's a comment here about why
-pci_find_ext_capability() can't be used (a comment covering both this
-and pci_find_capability() is fine, if the reason is the same).
-
-> +static int dw_pcie_find_next_ext_capability(struct dw_pcie *pci, int start,
-> +					    int cap)
-> +{
-> +	u32 header;
-> +	int ttl;
-> +	int pos = PCI_CFG_SPACE_SIZE;
-> +
-> +	/* minimum 8 bytes per capability */
-> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> +
-> +	if (start)
-> +		pos = start;
-> +
-> +	header = dw_pcie_readl_dbi(pci, pos);
-> +	/*
-> +	 * If we have no capabilities, this is indicated by cap ID,
-> +	 * cap version and next pointer all being 0.
-> +	 */
-> +	if (header == 0)
-> +		return 0;
-> +
-> +	while (ttl-- > 0) {
-> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
-> +			return pos;
-> +
-> +		pos = PCI_EXT_CAP_NEXT(header);
-> +		if (pos < PCI_CFG_SPACE_SIZE)
-> +			break;
-> +
-> +		header = dw_pcie_readl_dbi(pci, pos);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int dw_pcie_find_ext_capability(struct dw_pcie *pci, int cap)
-> +{
-> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
-> +
->  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+> diff --git a/kernel/module_signing.c b/kernel/module_signing.c
+> index 6b9a926fd86b..cf94220e9154 100644
+> --- a/kernel/module_signing.c
+> +++ b/kernel/module_signing.c
+> @@ -49,6 +49,7 @@ int mod_verify_sig(const void *mod, struct load_info *info)
 >  {
->  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 35160b4ce929..67307842e003 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -249,6 +249,7 @@ struct dw_pcie {
->  		container_of((endpoint), struct dw_pcie, ep)
+>  	struct module_signature ms;
+>  	size_t sig_len, modlen = info->len;
+> +	int ret;
 >  
->  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
-> +int dw_pcie_find_ext_capability(struct dw_pcie *pci, int cap);
+>  	pr_devel("==>%s(,%zu)\n", __func__, modlen);
 >  
->  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->  int dw_pcie_write(void __iomem *addr, int size, u32 val);
-> -- 
-> 2.17.1
+> @@ -82,8 +83,15 @@ int mod_verify_sig(const void *mod, struct load_info *info)
+>  		return -EBADMSG;
+>  	}
+>  
+> -	return verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+> -				      VERIFY_USE_SECONDARY_KEYRING,
+> -				      VERIFYING_MODULE_SIGNATURE,
+> -				      NULL, NULL);
+> +	ret = verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+> +				     VERIFY_USE_SECONDARY_KEYRING,
+> +				     VERIFYING_MODULE_SIGNATURE,
+> +				     NULL, NULL);
+> +	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
+> +		ret = verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
+> +					     VERIFY_USE_PLATFORM_KEYRING,
+> +					     VERIFYING_MODULE_SIGNATURE,
+> +					     NULL, NULL);
+> +	}
+> +	return ret;
+>  }
 > 
+
+-- 
+James Morris
+<jmorris@namei.org>
+
