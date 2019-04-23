@@ -2,207 +2,110 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E799AC10F11
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D0AC10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3FC2075A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827C72075A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:36:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fKqXPPex"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5xHH4Tx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbfDWCfK (ORCPT
+        id S1731049AbfDWCgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 22:35:10 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33656 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729504AbfDWCfJ (ORCPT
+        Mon, 22 Apr 2019 22:36:22 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40569 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729502AbfDWCgV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 22:35:09 -0400
-Received: by mail-oi1-f194.google.com with SMTP id e5so10096003oii.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 19:35:09 -0700 (PDT)
+        Mon, 22 Apr 2019 22:36:21 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so6711015plr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 19:36:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/I/Tf1VpKsvh5Uxp8CHXyH8KfnFBPHA/kp4u9RlX6VQ=;
-        b=fKqXPPex1zl43XCAtjRz/NKH+nGg6RJa2Av7fTJKoQhryih3wGvi/BqCUx+78S3ye9
-         jpKh45oml9kcDDTLjL+XSlgzOWsLERkYnoG+zyzEljjYVUz9pUCJvjZWTTUycw3yeWjv
-         2PPc60XnFADuXbMiySBXQo+yuDQVW6A8biuxh2iKRH9loitvvhAXwK4+9Rv1D+bRT4oP
-         H/gtI1lM48x0nYG3fNzGpdZAdWmiUOLXfnMZdCJAOOQ/4QhrhV4I+ExcltoF6bCiuLgn
-         jRql9OFZQ16rVJTnuA3LrGgSiUsviN5TFZvGWcM1COa1D/xJmfBmu8WguOVFIrG8vtux
-         GRgg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=tb9GtvfiuyPoAzgJ59A7PgJjsI8k18M+HPWTTzVRLjI=;
+        b=X5xHH4TxYjdGPhn4FWhBAk4VpBfQ1bv2ZlXfWG9tywKFXuUKQFgsa1FCser7j01cd+
+         VD4obJNWW4/4FLU30KaGKoeTZPVd65jtVhoVhiUahtVxTw+SHwlXDeCdhYYlFLkroLXO
+         isNHTNJARDMCPyLpZfw72uW1nWYhb5j3y3YGhM5T6dz583GZIxMIgBusXo+xOv6G//wu
+         WgKLS0wp5/bJJFJNPvRU7qnZQrUm6eTDQ72PTWInh3lIuPW+TVbfnVXh9n2MWeymDeSy
+         aNG5QZ2ISoqzxe7wEbDEJwilmk/lMGhef0oy7Qy9sy/9X79PtQOGgw4L5pJw5l3TkVFE
+         eQHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/I/Tf1VpKsvh5Uxp8CHXyH8KfnFBPHA/kp4u9RlX6VQ=;
-        b=r8KVomQpo1yD3Yr2tpWLTwMOhVZKUt4afFjgzhaHk2M9UTHiLWH+8o0jnWZbVEQTyY
-         Plp2hAnD0Kik55fdxHApl0E//nmjIdnME3PJyaZH3UX1Qw74sUH2ItPW1WbbvrE442fB
-         AdN+4cqkruVMmzD7KGgCWGJyXnuiv6Amzf6ZDds6xc4QCN1yc9ORONJA3YtNvZJyUZIw
-         RXeG3JfHkUqJsVKBqqwQfHKxUiuWE7esByN+MrBAwIDYI/KwBCiyBQ7j6G7dnqvWN0zo
-         hN+uqzB5o1DkB1lmPGT7y5LumpVFOQXGbDWOsUhVBpB8u0B2ftIHnlQbmthGb6fB+16Y
-         1Ouw==
-X-Gm-Message-State: APjAAAXwT6QqGyi2EwkdaS3zOdoq3cdtoIjMdqISeXYXyMctQjJSKibQ
-        UmEzDrYB26RzbbF0wvNd1diSnMI0PpbrtrLUhsTJ+g==
-X-Google-Smtp-Source: APXvYqzaIYt+nXa2vXaE8gCFX78l2hGhNYsEIE+bQGBg9AIZgpkx5tI9u+hx/qukjCmMu1LlDBDdn406wQ1VXZFhmF4=
-X-Received: by 2002:aca:bd02:: with SMTP id n2mr325451oif.70.1555986908203;
- Mon, 22 Apr 2019 19:35:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <748205b02961167b0926d4afe8d9ad9cb37bf6ef.camel@coelho.fi>
- <20190417073516.24250-1-luca@coelho.fi> <20190422180723.GA20259@dhcp22.suse.cz>
- <CAOXD1idHq35qKy4PSjvqt4fEvVjgT6cpfxJD7s6gs07m43qepA@mail.gmail.com>
-In-Reply-To: <CAOXD1idHq35qKy4PSjvqt4fEvVjgT6cpfxJD7s6gs07m43qepA@mail.gmail.com>
-From:   Kirtika Ruchandani <kirtika@google.com>
-Date:   Mon, 22 Apr 2019 19:34:54 -0700
-Message-ID: <CAOXD1ic49hhkPb6ABPgBEim_iyxvDP82Hfn0yvz7vyFR4Rp53Q@mail.gmail.com>
-Subject: Re: [PATCH] iwlwifi: don't panic in error path on non-msix systems
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Luca Coelho <luca@coelho.fi>, kvalo@codeaurora.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "Grumbach, Emmanuel" <emmanuel.grumbach@intel.com>,
-        linuxwifi@intel.com, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tb9GtvfiuyPoAzgJ59A7PgJjsI8k18M+HPWTTzVRLjI=;
+        b=JZcVMlGjJbdD86Lrexofw7vBwfk5v016ziXEvVHo3q4FXBadojgFPdTo6NZXdGjHV+
+         w/YzKkHw9zyjRtHl0hyIrZ+dW/PzTg5czbwl3Fxg4FYSIDEVZbnmo/dOjDfbGGlr0Oku
+         W7/laGYYQQw+5V9m8P17kzDrF2y9A+mmrD1uME3zqjqjVPfMeTt8LleWS5SW1oxX5rYI
+         YZyp4KaCKwXSYJNUUVmxEeW7fmN3C7KfUnHY5y+sc49IDyTXX0+GhiZncylyGgC1W9OF
+         GoT9wBHp+4RgGTnc55CeaKTT+Zx0zqxVMgqBs36EE61g03rjwKYlH0QVpTiWOQCovgIh
+         6sow==
+X-Gm-Message-State: APjAAAUmEfEprv2A9Mv5LhJ9th3T8QNlrEGAbO9qvUTMYscpBaG4RFgq
+        Z6fgF9AQ2JvMl0glDTQXQcWrB3v92/k=
+X-Google-Smtp-Source: APXvYqxEEdR77/fPg+KRcnWW4KkxJEiMG7ESSDZlscw0UukZNxG0oYasNlQ2EpOXzvgnO4+KWEzhbQ==
+X-Received: by 2002:a17:902:e183:: with SMTP id cd3mr23742430plb.233.1555986981333;
+        Mon, 22 Apr 2019 19:36:21 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id d11sm16030511pgq.6.2019.04.22.19.36.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 19:36:20 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: vchiq_arm: Fix misuse of %x
+Date:   Tue, 23 Apr 2019 10:36:04 +0800
+Message-Id: <20190423023604.13093-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 4:56 PM Kirtika Ruchandani <kirtika@google.com> wrote:
->
-> On Mon, Apr 22, 2019 at 11:07 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Wed 17-04-19 10:35:16, Luca Coelho wrote:
-> > > From: Shahar S Matityahu <shahar.s.matityahu@intel.com>
-> > >
-> > > The driver uses msix causes-register to handle both msix and non msix
-> > > interrupts when performing sync nmi.  On devices that do not support
-> > > msix this register is unmapped and accessing it causes a kernel panic.
-> > >
-> > > Solve this by differentiating the two cases and accessing the proper
-> > > causes-register in each case.
->
-> Are you sure reading CSR_INT from trans.c without explicitly getting irq_lock.c
-> like rx.c does, is thread-safe? I don't claim to understand this fully, but this
-> smells wrong from past experience with this driver. I'll see if I can cook up
-> a test case with a race condition here.
+Pointers should be printed with %p or %px rather than
+cast to unsigned long type and printed with %lx.
+Change %lx to %pK to print the pointers.
 
-Sorry for the typos. I meant "writing (not reading) to CSR_INT in
-iwl_trans_pcie_sync_nmi
-without explicitly getting trans_pcie->irq_lock like iwl_pcie_irq_handler does".
-I spent some time playing around this, and while I don't have a black-and-white
-test-case to show this patch has side-effects (at the very least), I
-have some notes:
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-1. Repeatedly sending fw_nmi is a good test-case for the problem this patch
-is trying to solve. i.e.  I had
-$ cd /sys/kernel/debug/iwlwifi/${PCI_ID}/iwlmvm/
-$ while true; do echo 1 > fw_nmi ; done  # this is likely too harsh
-and needs a sleep in b/w
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+index 064d0db..c2c9fae 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+@@ -1486,16 +1486,16 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	if ((status == VCHIQ_SUCCESS) && (ret < 0) && (ret != -EINTR) &&
+ 		(ret != -EWOULDBLOCK))
+ 		vchiq_log_info(vchiq_arm_log_level,
+-			"  ioctl instance %lx, cmd %s -> status %d, %ld",
+-			(unsigned long)instance,
++			"  ioctl instance %pK, cmd %s -> status %d, %ld",
++			instance,
+ 			(_IOC_NR(cmd) <= VCHIQ_IOC_MAX) ?
+ 				ioctl_names[_IOC_NR(cmd)] :
+ 				"<invalid>",
+ 			status, ret);
+ 	else
+ 		vchiq_log_trace(vchiq_arm_log_level,
+-			"  ioctl instance %lx, cmd %s -> status %d, %ld",
+-			(unsigned long)instance,
++			"  ioctl instance %pK, cmd %s -> status %d, %ld",
++			instance,
+ 			(_IOC_NR(cmd) <= VCHIQ_IOC_MAX) ?
+ 				ioctl_names[_IOC_NR(cmd)] :
+ 				"<invalid>",
+-- 
+2.11.0
 
-With the current ToT driver in wireless-drivers-next, this ramoops-es
-super quickly after hitting
-the problematic MSI-X read.
-
-2. With this patch applied, I hit an ADVANCED_SYSASSERT 0x0 and it took ~800ms
-and dozens of kernel warnings before the driver "recovered".
-I've sent the full dmesg to Luca off-list.
-It didn't get any better with adding spin_lock(&trans_pcie->irq_lock)
-/ spin_unlock(&trans_pcie->irq_lock)
-around the problematic CSR_INT write in iwl_trans_sync_nmi.
-
-So I still don't have any concrete reasoning or proof, except a dmesg
-after a test that doesn't look right.
-Apologies if this discussion is moot - FWIW, the thing that caused a
-code smell in the first place
-was that historically, nothing in trans.c had mucked with writing to
-CSR_INT, except when enabling interrupts again
-with a 0xFFFFFFFF at _initialization time_ (and we've seen race
-conditions there in the past).
-You can check this with `git grep -p -w CSR_INT trans.c`.
-
-> > >
-> > > Reported-by: Michal Hocko <mhocko@kernel.org>
-> > > Signed-off-by: Shahar S Matityahu <shahar.s.matityahu@intel.com>
-> > > Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-> >
-> > $ dmesg | grep "Error sending SCAN_CFG_CMD:"
-> > [49786.288548] iwlwifi 0000:01:00.0: Error sending SCAN_CFG_CMD: time out after 2000ms.
-> > [53457.166877] iwlwifi 0000:01:00.0: Error sending SCAN_CFG_CMD: time out after 2000ms.
-> >
-> > without the oops and with the iwlwifi internal dump IIUC which is the
-> > previous behavior.
-> > [53457.166877] iwlwifi 0000:01:00.0: Error sending SCAN_CFG_CMD: time out after 2000ms.
-> > [53457.166882] iwlwifi 0000:01:00.0: Current CMD queue read_ptr 224 write_ptr 225
-> > [53457.414973] iwlwifi 0000:01:00.0: HW error, resetting before reading
-> > [53457.421339] iwlwifi 0000:01:00.0: Start IWL Error Log Dump:
-> > [53457.421345] iwlwifi 0000:01:00.0: Status: 0x00000100, count: 1269232956
-> > [53457.421347] iwlwifi 0000:01:00.0: Loaded firmware version: 36.9f0a2d68.0
-> > [53457.421350] iwlwifi 0000:01:00.0: 0x45E91306 | ADVANCED_SYSASSERT
-> > [53457.421352] iwlwifi 0000:01:00.0: 0x2F58D384 | trm_hw_status0
-> > [53457.421353] iwlwifi 0000:01:00.0: 0x7F1A8CFD | trm_hw_status1
-> > [53457.421355] iwlwifi 0000:01:00.0: 0x07E787FD | branchlink2
-> > [53457.421357] iwlwifi 0000:01:00.0: 0xE9E54368 | interruptlink1
-> > [53457.421359] iwlwifi 0000:01:00.0: 0x470D9BBF | interruptlink2
-> > [53457.421361] iwlwifi 0000:01:00.0: 0xAF040E7E | data1
-> > [53457.421362] iwlwifi 0000:01:00.0: 0xE7FBCA48 | data2
-> > [53457.421364] iwlwifi 0000:01:00.0: 0x4E4A8288 | data3
-> > [53457.421366] iwlwifi 0000:01:00.0: 0x861DEA98 | beacon time
-> > [53457.421368] iwlwifi 0000:01:00.0: 0xE8F23466 | tsf low
-> > [53457.421369] iwlwifi 0000:01:00.0: 0xD7B19307 | tsf hi
-> > [53457.421371] iwlwifi 0000:01:00.0: 0xE58934E3 | time gp1
-> > [53457.421373] iwlwifi 0000:01:00.0: 0xB013FEBE | time gp2
-> > [53457.421375] iwlwifi 0000:01:00.0: 0x962DCC75 | uCode revision type
-> > [53457.421376] iwlwifi 0000:01:00.0: 0xFF8FB30F | uCode version major
-> > [53457.421378] iwlwifi 0000:01:00.0: 0x0DD08E17 | uCode version minor
-> > [53457.421380] iwlwifi 0000:01:00.0: 0x87FD70DE | hw version
-> > [53457.421382] iwlwifi 0000:01:00.0: 0x853F6851 | board version
-> > [53457.421384] iwlwifi 0000:01:00.0: 0x08D7F330 | hcmd
-> > [53457.421385] iwlwifi 0000:01:00.0: 0x6B7E5FEE | isr0
-> > [53457.421387] iwlwifi 0000:01:00.0: 0x2B1E7CD4 | isr1
-> > [53457.421389] iwlwifi 0000:01:00.0: 0x3F133B16 | isr2
-> > [53457.421391] iwlwifi 0000:01:00.0: 0x5D480C5A | isr3
-> > [53457.421392] iwlwifi 0000:01:00.0: 0x34E93EBA | isr4
-> > [53457.421394] iwlwifi 0000:01:00.0: 0x42AD8E83 | last cmd Id
-> > [53457.421396] iwlwifi 0000:01:00.0: 0x1F5BBCFF | wait_event
-> > [53457.421398] iwlwifi 0000:01:00.0: 0x6808B2C1 | l2p_control
-> > [53457.421399] iwlwifi 0000:01:00.0: 0x0D5B1F33 | l2p_duration
-> > [53457.421401] iwlwifi 0000:01:00.0: 0xF4C94535 | l2p_mhvalid
-> > [53457.421403] iwlwifi 0000:01:00.0: 0x3DCE6EBB | l2p_addr_match
-> > [53457.421405] iwlwifi 0000:01:00.0: 0xFDDC41FE | lmpm_pmg_sel
-> > [53457.421406] iwlwifi 0000:01:00.0: 0xB53A17F5 | timestamp
-> > [53457.421408] iwlwifi 0000:01:00.0: 0x5A6A4113 | flow_handler
-> > [53457.421474] iwlwifi 0000:01:00.0: Start IWL Error Log Dump:
-> > [53457.421477] iwlwifi 0000:01:00.0: Status: 0x00000100, count: 1182976748
-> > [53457.421478] iwlwifi 0000:01:00.0: 0x62D2BDB3 | ADVANCED_SYSASSERT
-> > [53457.421480] iwlwifi 0000:01:00.0: 0x4D9E5019 | umac branchlink1
-> > [53457.421482] iwlwifi 0000:01:00.0: 0x8CB69F6E | umac branchlink2
-> > [53457.421484] iwlwifi 0000:01:00.0: 0x9868662D | umac interruptlink1
-> > [53457.421486] iwlwifi 0000:01:00.0: 0x9800F8F7 | umac interruptlink2
-> > [53457.421488] iwlwifi 0000:01:00.0: 0xC71449B8 | umac data1
-> > [53457.421489] iwlwifi 0000:01:00.0: 0xAB0AB17F | umac data2
-> > [53457.421491] iwlwifi 0000:01:00.0: 0x6C6F9753 | umac data3
-> > [53457.421493] iwlwifi 0000:01:00.0: 0xFC49D724 | umac major
-> > [53457.421495] iwlwifi 0000:01:00.0: 0xA61CC627 | umac minor
-> > [53457.421496] iwlwifi 0000:01:00.0: 0x45BAA0B8 | frame pointer
-> > [53457.421498] iwlwifi 0000:01:00.0: 0x319D112B | stack pointer
-> > [53457.421500] iwlwifi 0000:01:00.0: 0xEFD9E2E9 | last host cmd
-> > [53457.421502] iwlwifi 0000:01:00.0: 0x82640FF7 | isr status reg
-> > [53457.421506] ieee80211 phy0: Hardware restart was requested
-> > [53457.941685] iwlwifi 0000:01:00.0: Queue 0 is inactive on fifo 0 and stuck for 2500 ms. SW [224, 225] HW [0, 0] FH TRB=0x02b759ca1
-> >
-> > Feel free to add
-> > Tested-by: Michal Hocko <mhocko@suse.com>
-> >
-> > Thanks for your quick patch and sorry it took so long from my side.
-> >
-> > --
-> > Michal Hocko
-> > SUSE Labs
