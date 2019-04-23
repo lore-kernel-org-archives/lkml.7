@@ -2,101 +2,95 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCABC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C353C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383C420675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E7A20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727748AbfDWNPs (ORCPT
+        id S1727784AbfDWNRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:15:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37614 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727225AbfDWNPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:15:47 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B6DED3094506;
-        Tue, 23 Apr 2019 13:15:47 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D588227194;
-        Tue, 23 Apr 2019 13:15:39 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v2] x86: kvm: hyper-v: deal with buggy TLB flush requests from WS2012
-Date:   Tue, 23 Apr 2019 15:15:37 +0200
-Message-Id: <20190423131537.9298-1-vkuznets@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 23 Apr 2019 13:15:47 +0000 (UTC)
+        Tue, 23 Apr 2019 09:17:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60998 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726421AbfDWNRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 09:17:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8A81EABB1;
+        Tue, 23 Apr 2019 13:17:15 +0000 (UTC)
+Message-ID: <1556025416.2956.0.camel@suse.de>
+Subject: Re: [PATCH v6 00/12] mm: Sub-section memory hotplug support
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        stable <stable@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 23 Apr 2019 15:16:56 +0200
+In-Reply-To: <CAPcyv4hB47NJrVi1sm+7msL+6dJNhBD10BJbtLPZRcK2JK6+pg@mail.gmail.com>
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+         <20190417150331.90219ca42a1c0db8632d0fd5@linux-foundation.org>
+         <CAPcyv4hB47NJrVi1sm+7msL+6dJNhBD10BJbtLPZRcK2JK6+pg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It was reported that with some special Multi Processor Group configuration,
-e.g:
- bcdedit.exe /set groupsize 1
- bcdedit.exe /set maxgroup on
- bcdedit.exe /set groupaware on
-for a 16-vCPU guest WS2012 shows BSOD on boot when PV TLB flush mechanism
-is in use.
+On Wed, 2019-04-17 at 15:59 -0700, Dan Williams wrote:
+> On Wed, Apr 17, 2019 at 3:04 PM Andrew Morton <akpm@linux-foundation.
+> org> wrote:
+> > 
+> > On Wed, 17 Apr 2019 11:38:55 -0700 Dan Williams <dan.j.williams@int
+> > el.com> wrote:
+> > 
+> > > The memory hotplug section is an arbitrary / convenient unit for
+> > > memory
+> > > hotplug. 'Section-size' units have bled into the user interface
+> > > ('memblock' sysfs) and can not be changed without breaking
+> > > existing
+> > > userspace. The section-size constraint, while mostly benign for
+> > > typical
+> > > memory hotplug, has and continues to wreak havoc with 'device-
+> > > memory'
+> > > use cases, persistent memory (pmem) in particular. Recall that
+> > > pmem uses
+> > > devm_memremap_pages(), and subsequently arch_add_memory(), to
+> > > allocate a
+> > > 'struct page' memmap for pmem. However, it does not use the
+> > > 'bottom
+> > > half' of memory hotplug, i.e. never marks pmem pages online and
+> > > never
+> > > exposes the userspace memblock interface for pmem. This leaves an
+> > > opening to redress the section-size constraint.
+> > 
+> > v6 and we're not showing any review activity.  Who would be
+> > suitable
+> > people to help out here?
+> 
+> There was quite a bit of review of the cover letter from Michal and
+> David, but you're right the details not so much as of yet. I'd like
+> to
+> call out other people where I can reciprocate with some review of my
+> own. Oscar's altmap work looks like a good candidate for that.
 
-Tracing kvm_hv_flush_tlb immediately reveals the issue:
+Thanks Dan for ccing me.
+I will take a look at the patches soon.
 
- kvm_hv_flush_tlb: processor_mask 0x0 address_space 0x0 flags 0x2
-
-The only flag set in this request is HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES,
-however, processor_mask is 0x0 and no HV_FLUSH_ALL_PROCESSORS is specified.
-We don't flush anything and apparently it's not what Windows expects.
-
-TLFS doesn't say anything about such requests and newer Windows versions
-seem to be unaffected. This all feels like a WS2012 bug, which is, however,
-easy to workaround in KVM: let's flush everything when we see an empty
-flush request, over-flushing doesn't hurt.
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-Changes from v1:
-- Re-worded the comment [Paolo Bonzini, Sean Christopherson]
-- "(flush.processor_mask == 0)" => "!flush.processor_mask" [Sean Christopherson]
----
- arch/x86/kvm/hyperv.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 421899f6ad7b..537be5ab030a 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1371,7 +1371,16 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *current_vcpu, u64 ingpa,
- 
- 		valid_bank_mask = BIT_ULL(0);
- 		sparse_banks[0] = flush.processor_mask;
--		all_cpus = flush.flags & HV_FLUSH_ALL_PROCESSORS;
-+
-+		/*
-+		 * Work around possible WS2012 bug: it sends hypercalls
-+		 * with processor_mask = 0x0 and HV_FLUSH_ALL_PROCESSORS clear,
-+		 * while also expecting us to flush something and crashing if
-+		 * we don't. Let's treat processor_mask == 0 same as
-+		 * HV_FLUSH_ALL_PROCESSORS.
-+		 */
-+		all_cpus = (flush.flags & HV_FLUSH_ALL_PROCESSORS) ||
-+			!flush.processor_mask;
- 	} else {
- 		if (unlikely(kvm_read_guest(kvm, ingpa, &flush_ex,
- 					    sizeof(flush_ex))))
 -- 
-2.20.1
-
+Oscar Salvador
+SUSE L3
