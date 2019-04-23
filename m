@@ -2,74 +2,90 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB35C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B57C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5DFA20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:14:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H2HIjKph"
+	by mail.kernel.org (Postfix) with ESMTP id C101A2077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:14:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbfDWHOG (ORCPT
+        id S1726390AbfDWHOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 03:14:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35730 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfDWHOF (ORCPT
+        Tue, 23 Apr 2019 03:14:16 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:48145 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfDWHOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 03:14:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SDlbfGGT6h+AH6jrlBAq/GN8velgMypb49RBj12dJJc=; b=H2HIjKphtjzOGFQrLmcu0oOFr
-        5r3bAwWLkfQXSq9ayF7kYfnbhUjaU+tcCP3tyTatUyrT8kjp/mZymokWA2BvbP6qQr3yKHCAQRtUk
-        /rdcDAeYXJDTVFa2DQ/xmqKnEtwTMu84elAhhsiAvLjU/eBU1t8FRYkPWntVgG8l+g30dwUwM/5/Z
-        hlGqromgmM12sN2kE/0UwWS7366vJVO7iwyegEIytfYJEpPnGAAAwBc+VfAch2uGo4VcQ9qlP5wZU
-        cFF1btw7ENuY8StXWiv/d74Z1+44bgUKCwY2vlR27IP+fhLq0QnZWB5h0llfduvDthG5CrdmkV0J7
-        6BHcgY35Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIpco-0006EN-T8; Tue, 23 Apr 2019 07:13:54 +0000
-Date:   Tue, 23 Apr 2019 00:13:54 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
-Subject: Re: DISCONTIGMEM is deprecated
-Message-ID: <20190423071354.GB12114@infradead.org>
-References: <20190419094335.GJ18914@techsingularity.net>
- <20190419140521.GI7751@bombadil.infradead.org>
- <20190421063859.GA19926@rapoport-lnx>
- <20190421132606.GJ7751@bombadil.infradead.org>
- <20190421211604.GN18914@techsingularity.net>
+        Tue, 23 Apr 2019 03:14:16 -0400
+Received: from [192.168.1.115] ([95.114.123.200]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MCGag-1h9RhX3plC-009QMK; Tue, 23 Apr 2019 09:13:34 +0200
+Subject: Re: [PATCH v3 1/4] Make anon_inodes unconditional
+To:     Christian Brauner <christian@brauner.io>,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        jannh@google.com, dhowells@redhat.com, oleg@redhat.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     serge@hallyn.com, luto@kernel.org, arnd@arndb.de,
+        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
+        mtk.manpages@gmail.com, akpm@linux-foundation.org,
+        cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com
+References: <20190419120904.27502-1-christian@brauner.io>
+ <20190419120904.27502-2-christian@brauner.io>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <0dd5adcf-51e9-00a8-cc79-e9bd36b4125e@metux.net>
+Date:   Tue, 23 Apr 2019 09:13:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190421211604.GN18914@techsingularity.net>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190419120904.27502-2-christian@brauner.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:emM3eXxI05JT8S+OqULP6Kg9KAarI3ieMQsAZsbHn+2f87O1dTG
+ qruH0uUAPPSNglcBmk8TB3ixzR/0xM0ga2fJ3vtYGdIUJd+UAy6AJG2Bf737pjb6W0+THdt
+ duVJBkhI2QpJf1YGM7leKASzixipcwsC/jG5V0c5ChFaTg33DXM2gCXJus/THWxsaYk3gIe
+ KUrGN5ErNvYS4SAME6pPQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:45EFRHFi3q4=:He2yMQis37HsWQqM7YTjVB
+ YLh17sOB1jsT5Y/PgbecKXBs/ck6RIjeAHyVu5yTi8Zc8NuIusSo4Qwd82VBEOlss6zxE2I6D
+ I/OjWf1BBj9jzfQVAws2i7tqZQ84v8Y696JHbKIqs/8auXvG1TmOhCYhf3u2LzHJtO3pLAqKX
+ aE9UnrfShDqnM2vvynUds2Cb87TNdYKjtP1alongcxSf2Zy5xCTBLRwZdZ76c0ie+vFq0pZf1
+ QmjWg2kxsklwv1oJJnsz8esUTplZbZij0FPVTOip9ptkrG4mef/R8AXGUqYjJolbK0nr9aHz5
+ hx6zsCGLXKQOwdOiOE4WoZcGsCiIGGzXo1BQVbHegWl5u949Pxo+RD2EmO81eggHym47Dfvdh
+ 9d0jiWGYeKswBk8aHv0N7i3wDCZonOkpM1ijx+wj1gzuJYo+E5Jjmky92zh0hXUTs/aV5lk59
+ 3PenRXZzNX8N9M+YzYSQBw+5JhTFk1iqfpEjul6q1hL0+OtsgxsmAjPhBxGpaM0+bkYgY+XD9
+ Cy2W3mRblgDSKGdYNCbD0+FDlVMliqnK4rJCjcdy2XQPUOlEDlGpm0TTSDFlC/pdaVT38DF3h
+ WBgREpCj8If6nq3MkYFy4U5nwq1qWZGbx+VujBGn/hIiSpTKsKsgdcArpgxsyQBmQAUhDmUK7
+ 2iDU2vaZYItZhh4LvZAsqXtH87WJrySaT4GytcC5HmFdVmhUly+tFPLjWLXPUye96T05RpGBi
+ rMTLGVYNQfPhnrYLa8XxcTnmDH5AYY2YipIuY+VGWufS5KTrUKNPhautC/g=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 21, 2019 at 10:16:04PM +0100, Mel Gorman wrote:
-> 32-bit NUMA systems should be non-existent in practice. The last NUMA
-> system I'm aware of that was both NUMA and 32-bit only died somewhere
-> between 2004 and 2007. If someone is running a 64-bit capable system in
-> 32-bit mode with NUMA, they really are just punishing themselves for fun.
+On 19.04.19 14:09, Christian Brauner wrote:
 
-Can we mark it as BROKEN to see if someone shouts and then remove it
-a year or two down the road?  Or just kill it off now..
+Hi,
+
+> From: David Howells <dhowells@redhat.com>
+> 
+> Make the anon_inodes facility unconditional so that it can be used by core
+> VFS code and pidfd code.
+
+I'm not convinced this is necessary. Instead the new features should
+select ANON_INODES when enabled. And yes: these features should be
+configurable.
+
+Why ? Because embedded folks need to trim down the kernel and drop
+everything that's not absolutely needed.
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
