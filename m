@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D731C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF51C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6062C20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E76320B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ByF3Wmdm"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xm48M3KR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731558AbfDWDXW (ORCPT
+        id S1731572AbfDWDXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:23:22 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:57997 "EHLO
+        Mon, 22 Apr 2019 23:23:33 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:57801 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731386AbfDWDW5 (ORCPT
+        with ESMTP id S1731351AbfDWDWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:22:57 -0400
+        Mon, 22 Apr 2019 23:22:48 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x3N3L8LI031384;
-        Tue, 23 Apr 2019 12:21:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x3N3L8LI031384
+        by conuserg-09.nifty.com with ESMTP id x3N3L8LJ031384;
+        Tue, 23 Apr 2019 12:21:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x3N3L8LJ031384
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555989677;
-        bh=7qo1vbhArO2n/LZF4sYuHYL1/6J0V//9VqfNxacUkeY=;
+        s=dec2015msa; t=1555989678;
+        bh=dlukBYO6sgrMJOkaTgBisXwB5sU3qv4thlZ8O2ehfGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ByF3Wmdmakc6HLxf+7sO4AecDTjocpMpuNC8cuKlErGY2yh/dUHLMuh9zSFWEGTqW
-         q+KiAI+xFh2t24Ab9m1yrPP17Cyl+UhoxHAxcgFKNrCZCdOQN3cso9Mb/EXfi2daGR
-         hlvySMMI/+wVS1osaiozGonKjB5tKKgqQoKy+9b/ap9neqJLqr1tga0RknQmdLF5JK
-         mrAbzkbvLcAzZ1NxGJ9dZS3STvmHdygjzqiMUFvx18/R69eytCCnyKXuaz6EFMKoqG
-         qZ0UXSQUDTS36O4kuT/WHJOuuDNS3UAjjBtSEpPsRvPp7tR/lkpLgjI9bHexOD5AsD
-         z+jiwwsUH5rGA==
+        b=xm48M3KRfOyJ5kQVTw4Ovn149SHzUzjXnB91gR/MwjfLF0ptp5BEUN0KLVknYLbrp
+         2X/icDCYfRB9UYEbC3NAUGKwCdyo8dDDhGSx5tTGtY5HP4wqmdSP34dZKju4n+Gge+
+         49so/3DvgiDJ/GVfMURchnCnlw9DNnZeiui7LkTskHswqEbB0x2gtSC2rxId3AjZBR
+         GGo7gUXhxNWh5yHM3nD+kCXE9yK+n2f0qxD3hgG6HSsvsfV/vYDp6FrtitJ2VYs22S
+         56kVXNRMf3PkQZYnDbPEP33MV+F6/q6okJweuR2UIDtfb+ST3kPAUvQaC9zZcF4djh
+         8B1WciaXUL4Dw==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -50,9 +50,9 @@ Cc:     linux-s390@vger.kernel.org,
         Christophe Leroy <christophe.leroy@c-s.fr>,
         Mathieu Malaterre <malat@debian.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v3 07/10] powerpc/prom_init: mark prom_getprop() and prom_getproplen() as __init
-Date:   Tue, 23 Apr 2019 12:21:03 +0900
-Message-Id: <20190423032106.11960-8-yamada.masahiro@socionext.com>
+Subject: [PATCH v3 08/10] powerpc/mm/radix: mark __radix__flush_tlb_range_psize() as __always_inline
+Date:   Tue, 23 Apr 2019 12:21:04 +0900
+Message-Id: <20190423032106.11960-9-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190423032106.11960-1-yamada.masahiro@socionext.com>
 References: <20190423032106.11960-1-yamada.masahiro@socionext.com>
@@ -64,20 +64,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
 place. We need to eliminate potential issues beforehand.
 
-If it is enabled for powerpc, the following modpost warnings are
-reported:
+If it is enabled for powerpc, the following error is reported:
 
-WARNING: vmlinux.o(.text.unlikely+0x20): Section mismatch in reference from the function .prom_getprop() to the function .init.text:.call_prom()
-The function .prom_getprop() references
-the function __init .call_prom().
-This is often because .prom_getprop lacks a __init
-annotation or the annotation of .call_prom is wrong.
-
-WARNING: vmlinux.o(.text.unlikely+0x3c): Section mismatch in reference from the function .prom_getproplen() to the function .init.text:.call_prom()
-The function .prom_getproplen() references
-the function __init .call_prom().
-This is often because .prom_getproplen lacks a __init
-annotation or the annotation of .call_prom is wrong.
+arch/powerpc/mm/tlb-radix.c: In function '__radix__flush_tlb_range_psize':
+arch/powerpc/mm/tlb-radix.c:104:2: error: asm operand 3 probably doesn't match constraints [-Werror]
+  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
+  ^~~
+arch/powerpc/mm/tlb-radix.c:104:2: error: impossible constraint in 'asm'
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
@@ -86,31 +79,22 @@ Changes in v3: None
 Changes in v2:
   - split into a separate patch
 
- arch/powerpc/kernel/prom_init.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/mm/tlb-radix.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-index f33ff4163a51..241fe6b7a8cc 100644
---- a/arch/powerpc/kernel/prom_init.c
-+++ b/arch/powerpc/kernel/prom_init.c
-@@ -501,14 +501,14 @@ static int __init prom_next_node(phandle *nodep)
- 	}
+diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
+index 6a23b9ebd2a1..a2b2848f0ae3 100644
+--- a/arch/powerpc/mm/tlb-radix.c
++++ b/arch/powerpc/mm/tlb-radix.c
+@@ -928,7 +928,7 @@ void radix__tlb_flush(struct mmu_gather *tlb)
+ 	tlb->need_flush_all = 0;
  }
  
--static inline int prom_getprop(phandle node, const char *pname,
--			       void *value, size_t valuelen)
-+static inline int __init prom_getprop(phandle node, const char *pname,
-+				      void *value, size_t valuelen)
+-static inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
++static __always_inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
+ 				unsigned long start, unsigned long end,
+ 				int psize, bool also_pwc)
  {
- 	return call_prom("getprop", 4, 1, node, ADDR(pname),
- 			 (u32)(unsigned long) value, (u32) valuelen);
- }
- 
--static inline int prom_getproplen(phandle node, const char *pname)
-+static inline int __init prom_getproplen(phandle node, const char *pname)
- {
- 	return call_prom("getproplen", 2, 1, node, ADDR(pname));
- }
 -- 
 2.17.1
 
