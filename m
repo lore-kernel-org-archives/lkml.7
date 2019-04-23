@@ -2,200 +2,132 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAC5C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 04:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEB3C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 04:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D8620843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 04:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 769C320B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 04:49:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mpOLzOc7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbfDWEnT (ORCPT
+        id S1726594AbfDWEt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 00:43:19 -0400
-Received: from foss.arm.com ([217.140.101.70]:48944 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726135AbfDWEnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 00:43:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC42BA78;
-        Mon, 22 Apr 2019 21:43:16 -0700 (PDT)
-Received: from a075553-lin.blr.arm.com (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 745323F557;
-        Mon, 22 Apr 2019 21:43:12 -0700 (PDT)
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>
-Subject: [kvmtool PATCH v10 5/5] KVM: arm/arm64: Add a vcpu feature for pointer authentication
-Date:   Tue, 23 Apr 2019 10:12:38 +0530
-Message-Id: <1555994558-26349-6-git-send-email-amit.kachhap@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
-References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
+        Tue, 23 Apr 2019 00:49:28 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:12361 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfDWEt1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 00:49:27 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cbe995d0000>; Mon, 22 Apr 2019 21:49:33 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 22 Apr 2019 21:49:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 22 Apr 2019 21:49:27 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Apr
+ 2019 04:49:27 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Apr
+ 2019 04:49:26 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 23 Apr 2019 04:49:26 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cbe99530000>; Mon, 22 Apr 2019 21:49:26 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>,
+        <sagar.tv@gmail.com>, <vidyas@nvidia.com>
+Subject: [PATCH V3 1/2] PCI: dwc: Add API support to de-initialize host
+Date:   Tue, 23 Apr 2019 10:19:19 +0530
+Message-ID: <20190423044920.19663-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1555994973; bh=b/ovF9X/ed9vvfIpBkzI7xPKA8NQj7NJGZajPZ5fBxE=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=mpOLzOc7OGv4qAz+kvvRFzjG1AUwiWTtUqqK4OktmJe+/elWAG5pRy2JKr8qPjof5
+         2AsN5WPqdufFqHg1zHUUGRmKx9yXpCithYh3dZsPQEU506h/Xg0SZIgZg/cQbqVviN
+         8W1BNL5hifFNQosfRVC1hOhACTY7pYCpGuAsfxBEjst1hXP7Rp4dX6KqkRIeyrM3VF
+         dEFDArK65Wtk2B1LJPb7JfkkKya/F840IHSIu4E1g4r/UGUF+rbz/pi6TFQHe5uJol
+         Zxyp0keB8ajNimhozlRJzeh7YqQc4R9/M98wtBVjvwmFX8Dcq7wS4pTuoqlWA7JBoC
+         SST3TQ2DDAATA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a runtime capabality for KVM tool to enable Arm64 8.3
-Pointer Authentication in guest kernel. Two vcpu features
-KVM_ARM_VCPU_PTRAUTH_[ADDRESS/GENERIC] are supplied together to enable
-Pointer Authentication in KVM guest after checking the capability.
+Add an API to group all the tasks to be done to de-initialize host which
+can then be called by any DesignWare core based driver implementations
+while adding .remove() support in their respective drivers.
 
-Command line options --enable-ptrauth and --disable-ptrauth are added
-to use this feature. However, if those options are not provided then
-also this feature is enabled if host supports this capability.
-
-The macros defined in the headers are not in sync and should be replaced
-from the upstream.
-
-Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
+v3:
+* Rebased on top of linux-next top of the tree branch
 
-Changes since v9:
-* Added a error check for both enable-ptrauth and disable-ptrauth
-  option.
-* Make the error explicit when enable-ptrauth is provided [Dave Martin].
+v2:
+* s/Designware/DesignWare
 
- arm/aarch32/include/kvm/kvm-cpu-arch.h    |  1 +
- arm/aarch64/include/asm/kvm.h             |  2 ++
- arm/aarch64/include/kvm/kvm-config-arch.h |  6 +++++-
- arm/aarch64/include/kvm/kvm-cpu-arch.h    |  2 ++
- arm/include/arm-common/kvm-config-arch.h  |  2 ++
- arm/kvm-cpu.c                             | 20 ++++++++++++++++++--
- include/linux/kvm.h                       |  2 ++
- 7 files changed, 32 insertions(+), 3 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 7 +++++++
+ drivers/pci/controller/dwc/pcie-designware.h      | 5 +++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/arm/aarch32/include/kvm/kvm-cpu-arch.h b/arm/aarch32/include/kvm/kvm-cpu-arch.h
-index d28ea67..520ea76 100644
---- a/arm/aarch32/include/kvm/kvm-cpu-arch.h
-+++ b/arm/aarch32/include/kvm/kvm-cpu-arch.h
-@@ -13,4 +13,5 @@
- #define ARM_CPU_ID		0, 0, 0
- #define ARM_CPU_ID_MPIDR	5
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 77db32529319..f87c9542eb09 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -496,6 +496,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	return ret;
+ }
  
-+#define ARM_VCPU_PTRAUTH_FEATURE	0
- #endif /* KVM__KVM_CPU_ARCH_H */
-diff --git a/arm/aarch64/include/asm/kvm.h b/arm/aarch64/include/asm/kvm.h
-index 97c3478..a2546e6 100644
---- a/arm/aarch64/include/asm/kvm.h
-+++ b/arm/aarch64/include/asm/kvm.h
-@@ -102,6 +102,8 @@ struct kvm_regs {
- #define KVM_ARM_VCPU_EL1_32BIT		1 /* CPU running a 32bit VM */
- #define KVM_ARM_VCPU_PSCI_0_2		2 /* CPU uses PSCI v0.2 */
- #define KVM_ARM_VCPU_PMU_V3		3 /* Support guest PMUv3 */
-+#define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* CPU uses address pointer authentication */
-+#define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* CPU uses generic pointer authentication */
- 
- struct kvm_vcpu_init {
- 	__u32 target;
-diff --git a/arm/aarch64/include/kvm/kvm-config-arch.h b/arm/aarch64/include/kvm/kvm-config-arch.h
-index 04be43d..0279b13 100644
---- a/arm/aarch64/include/kvm/kvm-config-arch.h
-+++ b/arm/aarch64/include/kvm/kvm-config-arch.h
-@@ -8,7 +8,11 @@
- 			"Create PMUv3 device"),				\
- 	OPT_U64('\0', "kaslr-seed", &(cfg)->kaslr_seed,			\
- 			"Specify random seed for Kernel Address Space "	\
--			"Layout Randomization (KASLR)"),
-+			"Layout Randomization (KASLR)"),		\
-+	OPT_BOOLEAN('\0', "enable-ptrauth", &(cfg)->enable_ptrauth,	\
-+			"Enables pointer authentication"),		\
-+	OPT_BOOLEAN('\0', "disable-ptrauth", &(cfg)->disable_ptrauth,	\
-+			"Disables pointer authentication"),
- 
- #include "arm-common/kvm-config-arch.h"
- 
-diff --git a/arm/aarch64/include/kvm/kvm-cpu-arch.h b/arm/aarch64/include/kvm/kvm-cpu-arch.h
-index a9d8563..fcc2107 100644
---- a/arm/aarch64/include/kvm/kvm-cpu-arch.h
-+++ b/arm/aarch64/include/kvm/kvm-cpu-arch.h
-@@ -17,4 +17,6 @@
- #define ARM_CPU_CTRL		3, 0, 1, 0
- #define ARM_CPU_CTRL_SCTLR_EL1	0
- 
-+#define ARM_VCPU_PTRAUTH_FEATURE	((1UL << KVM_ARM_VCPU_PTRAUTH_ADDRESS) \
-+					| (1UL << KVM_ARM_VCPU_PTRAUTH_GENERIC))
- #endif /* KVM__KVM_CPU_ARCH_H */
-diff --git a/arm/include/arm-common/kvm-config-arch.h b/arm/include/arm-common/kvm-config-arch.h
-index 5734c46..1b4287d 100644
---- a/arm/include/arm-common/kvm-config-arch.h
-+++ b/arm/include/arm-common/kvm-config-arch.h
-@@ -10,6 +10,8 @@ struct kvm_config_arch {
- 	bool		aarch32_guest;
- 	bool		has_pmuv3;
- 	u64		kaslr_seed;
-+	bool		enable_ptrauth;
-+	bool		disable_ptrauth;
- 	enum irqchip_type irqchip;
- 	u64		fw_addr;
- };
-diff --git a/arm/kvm-cpu.c b/arm/kvm-cpu.c
-index 7780251..acd1d5f 100644
---- a/arm/kvm-cpu.c
-+++ b/arm/kvm-cpu.c
-@@ -68,6 +68,18 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
- 		vcpu_init.features[0] |= (1UL << KVM_ARM_VCPU_PSCI_0_2);
- 	}
- 
-+	/* Check Pointer Authentication command line arguments. */
-+	if (kvm->cfg.arch.enable_ptrauth && kvm->cfg.arch.disable_ptrauth)
-+		die("Both enable-ptrauth and disable-ptrauth option cannot be present");
-+	/*
-+	 * Always enable Pointer Authentication if system supports
-+	 * this extension unless disable-ptrauth option is present.
-+	 */
-+	if (kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_ADDRESS) &&
-+	    kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_GENERIC) &&
-+	    !kvm->cfg.arch.disable_ptrauth)
-+			vcpu_init.features[0] |= ARM_VCPU_PTRAUTH_FEATURE;
++void dw_pcie_host_deinit(struct pcie_port *pp)
++{
++	pci_stop_root_bus(pp->root_bus);
++	pci_remove_root_bus(pp->root_bus);
++	dw_pcie_free_msi(pp);
++}
 +
- 	/*
- 	 * If the preferred target ioctl is successful then
- 	 * use preferred target else try each and every target type
-@@ -106,8 +118,12 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
- 			die("Unable to find matching target");
- 	}
+ static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 				     u32 devfn, int where, int size, u32 *val,
+ 				     bool write)
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index deab426affd3..4f48ec78c7b9 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+ void dw_pcie_free_msi(struct pcie_port *pp);
+ void dw_pcie_setup_rc(struct pcie_port *pp);
+ int dw_pcie_host_init(struct pcie_port *pp);
++void dw_pcie_host_deinit(struct pcie_port *pp);
+ int dw_pcie_allocate_domains(struct pcie_port *pp);
+ #else
+ static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+@@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
+ 	return 0;
+ }
  
--	if (err || target->init(vcpu))
--		die("Unable to initialise vcpu");
-+	if (err || target->init(vcpu)) {
-+		if (kvm->cfg.arch.enable_ptrauth)
-+			die("Unable to initialise vcpu with pointer authentication feature");
-+		else
-+			die("Unable to initialise vcpu");
-+	}
- 
- 	coalesced_offset = ioctl(kvm->sys_fd, KVM_CHECK_EXTENSION,
- 				 KVM_CAP_COALESCED_MMIO);
-diff --git a/include/linux/kvm.h b/include/linux/kvm.h
-index 6d4ea4b..de1033b 100644
---- a/include/linux/kvm.h
-+++ b/include/linux/kvm.h
-@@ -988,6 +988,8 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ARM_VM_IPA_SIZE 165
- #define KVM_CAP_MANUAL_DIRTY_LOG_PROTECT 166
- #define KVM_CAP_HYPERV_CPUID 167
-+#define KVM_CAP_ARM_PTRAUTH_ADDRESS 169
-+#define KVM_CAP_ARM_PTRAUTH_GENERIC 170
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
++static inline void dw_pcie_host_deinit(struct pcie_port *pp)
++{
++}
++
+ static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+ {
+ 	return 0;
 -- 
-2.7.4
+2.17.1
 
