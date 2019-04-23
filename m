@@ -2,134 +2,175 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E67C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2927C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4852D20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDE8217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfDWSib (ORCPT
+        id S1726380AbfDWSjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 14:38:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60136 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbfDWSia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 14:38:30 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 29A4C319937A;
-        Tue, 23 Apr 2019 18:38:30 +0000 (UTC)
-Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C6B816BE5;
-        Tue, 23 Apr 2019 18:38:29 +0000 (UTC)
-Date:   Tue, 23 Apr 2019 12:38:28 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Alex G <mr.nuke.me@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        okaya@kernel.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/LINK: Account for BW notification in vector
- calculation
-Message-ID: <20190423123828.691bb37c@x1.home>
-In-Reply-To: <9802ef46-40d2-b83c-a0c6-8bd6ac25feaa@gmail.com>
-References: <155597243666.19387.1205950870601742062.stgit@gimli.home>
-        <d1126250-14e0-192c-f219-f143f62c9cdd@gmail.com>
-        <20190422183347.51ba522c@x1.home>
-        <84300da7-9bbd-4f32-c7fa-23724db60b88@gmail.com>
-        <20190423171050.GA37199@google.com>
-        <9802ef46-40d2-b83c-a0c6-8bd6ac25feaa@gmail.com>
-Organization: Red Hat
+        Tue, 23 Apr 2019 14:39:45 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41512 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfDWSjp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 14:39:45 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k8so1890688lja.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:39:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aoiJeyfn2JDjoLr/hsiqivn27AQGiJVv9wLuHEsyIzg=;
+        b=EK8wfndVdpAZ20neyu7DAQxLAgu59cqUSLp3vKcr/5FIvfplYYIlm78AlWCOaJ5kum
+         d9xUGU7ds8uK8z7FQhJ0jqAM7XsRNVmiiCV2aC4jMovORSTfSRE2SvjUfBQHrta8zdzW
+         CkBCX3PtNHgvds336H8nFZKmlpGJgAe1Iz39l7VeyuRXJEfr3MFomV15nODMh9E5tqN9
+         syMDKmQn4Y+6djSouixlk2A7NoJ95rcB6BNpz7cOdqAD7eV8cFNjcte7f9SMXv+16Izu
+         IAGuSupxHj1TdTGZPM9pbp+hJyxYHCL9MF/YVvhtjm3QFA1Q6QkraNIZsZLp9CKjnYHd
+         VU2g==
+X-Gm-Message-State: APjAAAUmHmA0AS4RofVlDic4FJ9QSKOEI4vxdiomtG3VGNsMrbaziVFt
+        hO+sMzC1fVnjjk8HZeKO/jM9zNZPyVJhbeMbvUw=
+X-Google-Smtp-Source: APXvYqzAFacOM4nxY0hGgMkeR3gzB3hsfu5zFzm0ofB0RnYomdWS/pCDWyvxo19vkP6u1X3tGXSWivosQG9kLA3hYWc=
+X-Received: by 2002:a2e:9010:: with SMTP id h16mr14741984ljg.16.1556044783087;
+ Tue, 23 Apr 2019 11:39:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 23 Apr 2019 18:38:30 +0000 (UTC)
+References: <20190415143821.GA46880@beast> <20190415170604.GA44415@lakrids.cambridge.arm.com>
+ <CAKwvOdk_jFQKW2C2=925So_dvZ6dm03AXMZ9Nk+O1J2xyhE2EA@mail.gmail.com>
+ <20190416170808.GC54708@lakrids.cambridge.arm.com> <CAGXu5jKJ4_uY45xJV_Fy=Q7cJzmJz9pZVRFJG0U-C3h95OiZzA@mail.gmail.com>
+ <CAKwvOdn-MGokV0vsGq2GdRK-eGHdyC6+vVHYSfwOfpqNWwQzXw@mail.gmail.com>
+ <20190423141240.GC56999@lakrids.cambridge.arm.com> <CAKwvOdmQWSO9w5WqsC0RYG-KuRjC2RWGuyckEd-VB14Pie=Osg@mail.gmail.com>
+ <CAGXu5jKjtgiViG2yd5AZnJ++=0USDo2JeZDa5GBZdK5nFumBmA@mail.gmail.com>
+In-Reply-To: <CAGXu5jKjtgiViG2yd5AZnJ++=0USDo2JeZDa5GBZdK5nFumBmA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 23 Apr 2019 20:39:26 +0200
+Message-ID: <CAK8P3a0etMY732bhnjCvARhPwQdutuFP3ezb+8pZPgZqj7oPEg@mail.gmail.com>
+Subject: Re: [PATCH v3] arm64: sysreg: make mrs_s and msr_s macros work with
+ Clang and LTO
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alex Matveev <alxmtvv@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019 12:53:07 -0500
-Alex G <mr.nuke.me@gmail.com> wrote:
+On Tue, Apr 23, 2019 at 8:25 PM Kees Cook <keescook@chromium.org> wrote:
+> On Tue, Apr 23, 2019 at 11:15 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > On Tue, Apr 23, 2019 at 7:12 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > >
+> > > On Mon, Apr 22, 2019 at 10:44:10AM -0700, Nick Desaulniers wrote:
+> > > > On Tue, Apr 16, 2019 at 9:03 PM Kees Cook <keescook@chromium.org> wrote:
+> > > > >
+> > > > > On Tue, Apr 16, 2019 at 12:08 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> > > > > >
+> > > > > > On Mon, Apr 15, 2019 at 10:22:27AM -0700, Nick Desaulniers wrote:
+> > > > > > > On Mon, Apr 15, 2019 at 10:06 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > > > > > > > It would be nice if we could simply rely on a more recent binutils these
+> > > > > > > > days, which supports the generic S<op0>_<op1>_<cn>_<Cm>_<op2> sysreg
+> > > > > > > > definition. That would mean we could get rid of the whole msr_s/mrs_s
+> > > > > > > > hack by turning that into a CPP macro which built that name.
+> > > >
+> > > > Mark, can you give me a test case for this? I'd like to check if
+> > > > clang's integrated assembler supports this or not, so we can file an
+> > > > issue and fix it if not.
+> > >
+> > > The below is a smoke test. The entire op0:op1:cn:cm:op2 space is 14
+> > > bits, so it should be feasible to generate and run an exhautive test for
+> > > all encodings.
+> > >
+> > > I've included SYS and SYSL here too, since I strongly suspect we'll need
+> > > those going forward.
+> > >
+> > > Thanks
+> > > Mark.
+> > >
+> > > ---->8----
+> > > /*
+> > >  * ${CC} -c test.c
+> > >  *
+> > >  * OLD_* encodings already exist, NEW_* encodings haven't yet be
+> > >  * allocated (per ARM DDI 0487D.a), but should assemble. All encodings
+> > >  * chosen arbitrarily.
+> > >  */
+> > >
+> > > // OSDTRRX_EL1
+> > > #define OLD_DBG_REG     "s2_0_c0_c0_2"
+> > > #define NEW_DBG_REG     "s2_7_c0_c15_0"
+> > >
+> > > // MIDR_EL1
+> > > #define OLD_SYS_REG     "s3_0_c0_c0_0"
+> > > #define NEW_SYS_REG     "s3_6_c1_c0_7"
+> > >
+> > > #define REG(r)                                  \
+> > >         asm volatile("msr " r ", xzr\n");       \
+> > >         asm volatile("mrs xzr, " r "\n")
+> > >
+> > > // DC IVAC, XZR
+> > > #define OLD_SYS "#0, c7, c6, #1"
+> > > #define NEW_SYS "#7, c15, c15, #7"
+> > >
+> > > #define NEW_SYSL_MIN    "#0, c0, c0, #0"
+> > > #define NEW_SYSL_MAX    "#7, c15, c15, #7"
+> > >
+> > > #define SYS(s)  asm volatile("sys " s ", xzr\n")
+> > > #define SYSL(s) asm volatile("sysl xzr, " s "\n")
+> > >
+> > > void test(void)
+> > > {
+> > >         REG(OLD_DBG_REG);
+> > >         REG(NEW_DBG_REG);
+> > >
+> > >         REG(OLD_SYS_REG);
+> > >         REG(NEW_SYS_REG);
+> > >
+> > >         SYS(OLD_SYS);
+> > >         SYS(NEW_SYS);
+> > >
+> > >         SYSL(NEW_SYSL_MIN);
+> > >         SYSL(NEW_SYSL_MAX);
+> > > }
+> >
+> > Hmmm...yes looks like Clang's integrated assembler is missing support.
+> > https://godbolt.org/z/wDBpz4
 
-> On 4/23/19 12:10 PM, Bjorn Helgaas wrote:
-> > On Tue, Apr 23, 2019 at 09:33:53AM -0500, Alex G wrote:  
-> >> On 4/22/19 7:33 PM, Alex Williamson wrote:  
-> >>> There is nothing wrong happening here that needs to fill logs.  I
-> >>> thought maybe if I enabled notification of autonomous bandwidth
-> >>> changes that it might categorize these as something we could
-> >>> ignore, but it doesn't.  How can we identify only cases where this
-> >>> is an erroneous/noteworthy situation?  Thanks,  
-> >>
-> >> You don't. Ethernet doesn't. USB doesn't. This logging behavior is
-> >> consistent with every other subsystem that deals with multi-speed links.  
-> > 
-> > Can you point me to the logging in these other subsystems so I can
-> > learn more about how they deal with this?  
-> 
-> I don't have any in-depth articles about the logging in these systems, 
-> but I can extract some logs from my machines.
-> 
-> Ethernet:
-> 
-> [Sun Apr 21 11:14:06 2019] e1000e: eno1 NIC Link is Down
-> [Sun Apr 21 11:14:17 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
-> Duplex, Flow Control: Rx/Tx
-> [Sun Apr 21 11:14:23 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
-> Duplex, Flow Control: Rx/Tx
-> [Sun Apr 21 23:33:31 2019] e1000e: eno1 NIC Link is Down
-> [Sun Apr 21 23:33:43 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
-> Duplex, Flow Control: Rx/Tx
-> [Sun Apr 21 23:33:48 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
-> Duplex, Flow Control: Rx/Tx
-> 
-> I used to have one of these "green" ethernet switches that went down to 
-> 100mbps automatically. You can imagine how "clogged" the logs were with 
-> link up messages. Thank goodness that switch was killed in a thunderstorm.
-> 
-> USB will log every device insertion and removal, very verbosely (see 
-> appendix A).
+It looks like you forgot to pass --target=aarch64-linux-gnu to clang here,
+which produces a build failure. This is the output with the added flag:
 
-I have a hard time putting USB insertion and removal into the same
-class, the equivalent is PCI hotplug which is logged separately.  Do
-we ever log beyond USB device discovery if a device is running at a
-lower speed than is possible?  The most directly related is the green
-ethernet switch, which you admit was a nuisance due to exactly this
-sort of logging.  It was probably confusing to see this logging, perhaps
-you wondered if the cable was bad or the switch was defective.
+https://godbolt.org/z/HYoEH1
 
-> > I agree that emitting log messages for normal and expected events will
-> > lead to user confusion and we need to do something.
-> > 
-> > e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
-> > notification") was merged in v5.1-rc1, so we still have (a little)
-> > time to figure this out before v5.1.  
-> 
-> I always viewed the system log as a system log, instead of a database of 
-> system errors. I may have extremist views, but going back to Alex's 
-> example, I prefer to see that the power saving mechanism is doing 
-> something to save power on my laptop (I'll just ignore it on a desktop).
+> > https://bugs.llvm.org/show_bug.cgi?id=41573
+> > https://github.com/ClangBuiltLinux/linux/issues/453
+> > We'll follow up on getting that fixed.
+> >
+> > Kees, are you able to respin the patch with the above requested
+> > changes from Mark to the macros?  Let me know what I can do to help.
+>
+> Doesn't this mean arm64 must raise their minimum binutils to 2.25? Is
+> that acceptable? I hadn't seen that question answered yet. (Maybe I
+> missed it?)
 
-There's a disconnect from above where similar behavior on ethernet
-behavior "clogged" the log files, but here we just want to ignore it.
-Excessive logging can also be considered a denial of service vector
-when the device generating that excessive logging is attached to a
-userspace driver.
+Generally I'd say that's a bit too new for a minimum version. On the other
+hand, most distros I could find for arm64 have at least 2.25 or later,
+the oldest
+one I found being Debian Jessie. Ubuntu Trusty (14.04) was using 2.24 but
+has its end of support date this month, after five years.
 
-> If you think increasing code complexity because people don't want things 
-> logged into the system log, then I'm certain we can work out some sane 
-> solution. It's the same problem we see with GCC, where people want 
-> warning messages here, but don't want the same messages there.
+However, there are probably still cross-compile toolchains around that use
+older aarch64-binutils, so it probably hurts someone.
 
-v5.1 is approaching quickly, can we downgrade these to pci_dbg() while
-we work on maybe some sort of driver participation in this logging?
-Thanks,
-
-Alex
+       Arnd
