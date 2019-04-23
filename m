@@ -2,196 +2,145 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC6DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51F4C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAF512175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E04F2175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfDWKKL (ORCPT
+        id S1727330AbfDWKLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:10:11 -0400
-Received: from www3345.sakura.ne.jp ([49.212.235.55]:12619 "EHLO
-        www3345.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfDWKKL (ORCPT
+        Tue, 23 Apr 2019 06:11:24 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:37472 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfDWKLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:10:11 -0400
-Received: from fsav103.sakura.ne.jp (fsav103.sakura.ne.jp [27.133.134.230])
-        by www3345.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x3NAA9BK096191;
-        Tue, 23 Apr 2019 19:10:09 +0900 (JST)
-        (envelope-from na-hoan@jinso.co.jp)
-Received: from www3345.sakura.ne.jp (49.212.235.55)
- by fsav103.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp);
- Tue, 23 Apr 2019 19:10:09 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav103.sakura.ne.jp)
-Received: from localhost (p14010-ipadfx41marunouchi.tokyo.ocn.ne.jp [61.118.107.10])
-        (authenticated bits=0)
-        by www3345.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x3NAA4hi096116
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 23 Apr 2019 19:10:09 +0900 (JST)
-        (envelope-from na-hoan@jinso.co.jp)
-From:   Nguyen An Hoan <na-hoan@jinso.co.jp>
-To:     linux-renesas-soc@vger.kernel.org,
-        ramesh.shanmugasundaram@bp.renesas.com, horms@verge.net.au
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kuninori.morimoto.gx@renesas.com, magnus.damm@gmail.com,
-        yoshihiro.shimoda.uh@renesas.com, h-inayoshi@jinso.co.jp,
-        na-hoan@jinso.co.jp, cv-dong@jinso.co.jp
-Subject: [PATCH 2/2] arm64: dts: r8a77965: Add DRIF support
-Date:   Tue, 23 Apr 2019 19:09:59 +0900
-Message-Id: <1556014199-12698-2-git-send-email-na-hoan@jinso.co.jp>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556014199-12698-1-git-send-email-na-hoan@jinso.co.jp>
-References: <1556014199-12698-1-git-send-email-na-hoan@jinso.co.jp>
+        Tue, 23 Apr 2019 06:11:23 -0400
+Received: from [167.98.27.226] (helo=[10.35.4.32])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1hIsOS-0000V0-3j; Tue, 23 Apr 2019 11:11:16 +0100
+Subject: Fwd: [PATCH 1/2] hwmon: (lm75) Add support for TMP75B
+References: <2904a750-c6e9-719b-7523-0f45e0bc82cc@codethink.co.uk>
+To:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@roeck-us.net, jdelvare@suse.com
+From:   Iker Perez del Palomar <iker.perez@codethink.co.uk>
+X-Forwarded-Message-Id: <2904a750-c6e9-719b-7523-0f45e0bc82cc@codethink.co.uk>
+Message-ID: <2effcb0e-03c6-0f7e-b154-62cbc9ad415a@codethink.co.uk>
+Date:   Tue, 23 Apr 2019 11:11:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <2904a750-c6e9-719b-7523-0f45e0bc82cc@codethink.co.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hoan Nguyen An <na-hoan@jinso.co.jp>
+The TMP75B has a different control register, supports 12-bit
+resolution and the default conversion rate is 37 Hz.
 
-Adds the DRIF controller nodes for r8a77965.\n
-
-Signed-off-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
+Signed-off-by: Iker Perez del Palomar Sustatxa <iker.perez@codethink.co.uk>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 120 ++++++++++++++++++++++++++++++
- 1 file changed, 120 insertions(+)
+  Documentation/hwmon/lm75 |  5 +++--
+  drivers/hwmon/lm75.c     | 13 +++++++++++++
+  2 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index d8b8172..f4841619 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -1443,6 +1443,126 @@
- 			};
- 		};
- 
-+		drif00: rif@e6f40000 {
-+			compatible = "renesas,r8a77965-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f40000 0 0x64>;
-+			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 515>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x20>, <&dmac2 0x20>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 515>;
-+			renesas,bonding = <&drif01>;
-+			status = "disabled";
-+		};
+diff --git a/Documentation/hwmon/lm75 b/Documentation/hwmon/lm75
+index 010583608f12..baf052935761 100644
+--- a/Documentation/hwmon/lm75
++++ b/Documentation/hwmon/lm75
+@@ -47,8 +47,8 @@ Supported chips:
+      Addresses scanned: none
+      Datasheet: Publicly available at the ST website
+             https://www.st.com/resource/en/datasheet/stlm75.pdf
+-  * Texas Instruments TMP100, TMP101, TMP105, TMP112, TMP75, TMP75C, 
+TMP175, TMP275
+-    Prefixes: 'tmp100', 'tmp101', 'tmp105', 'tmp112', 'tmp175', 
+'tmp75', 'tmp75c', 'tmp275'
++  * Texas Instruments TMP100, TMP101, TMP105, TMP112, TMP75, TMP75B, 
+TMP75C, TMP175, TMP275
++    Prefixes: 'tmp100', 'tmp101', 'tmp105', 'tmp112', 'tmp175', 
+'tmp75', 'tmp75b', 'tmp75c', 'tmp275'
+      Addresses scanned: none
+      Datasheet: Publicly available at the Texas Instruments website
+                 http://www.ti.com/product/tmp100
+@@ -56,6 +56,7 @@ Supported chips:
+                 http://www.ti.com/product/tmp105
+                 http://www.ti.com/product/tmp112
+                 http://www.ti.com/product/tmp75
++               http://www.ti.com/product/tmp75b
+                 http://www.ti.com/product/tmp75c
+                 http://www.ti.com/product/tmp175
+                 http://www.ti.com/product/tmp275
+diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
+index 62acb9f16ec5..1b5c32cbdc62 100644
+--- a/drivers/hwmon/lm75.c
++++ b/drivers/hwmon/lm75.c
+@@ -32,6 +32,7 @@
+  #include "lm75.h"
+
+
 +
-+		drif01: rif@e6f50000 {
-+			compatible = "renesas,r8a77965-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f50000 0 0x64>;
-+			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 514>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x22>, <&dmac2 0x22>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 514>;
-+			renesas,bonding = <&drif00>;
-+			status = "disabled";
-+		};
+  /*
+   * This driver handles the LM75 and compatible digital temperature 
+sensors.
+   */
+@@ -59,6 +60,7 @@ enum lm75_type {        /* keep sorted in alphabetical 
+order */
+      tmp175,
+      tmp275,
+      tmp75,
++    tmp75b,
+      tmp75c,
+  };
+
+@@ -378,6 +380,12 @@ lm75_probe(struct i2c_client *client, const struct 
+i2c_device_id *id)
+          data->resolution = 12;
+          data->sample_time = MSEC_PER_SEC / 2;
+          break;
++    case tmp75b:
++        clr_mask |= 1 << 15;        /* not one-shot mode */
++        data->resolution = 12;
++        data->sample_time = MSEC_PER_SEC / 32;
++        break;
 +
-+		drif10: rif@e6f60000 {
-+			compatible = "renesas,r8a77965-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f60000 0 0x64>;
-+			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 513>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x24>, <&dmac2 0x24>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 513>;
-+			renesas,bonding = <&drif11>;
-+			status = "disabled";
-+		};
-+
-+		drif11: rif@e6f70000 {
-+			compatible = "renesas,r8a77965-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f70000 0 0x64>;
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 512>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x26>, <&dmac2 0x26>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 512>;
-+			renesas,bonding = <&drif10>;
-+			status = "disabled";
-+		};
-+
-+		drif20: rif@e6f80000 {
-+			compatible = "renesas,r8a77965-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f80000 0 0x64>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 511>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x28>, <&dmac2 0x28>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 511>;
-+			renesas,bonding = <&drif21>;
-+			status = "disabled";
-+		};
-+
-+		drif21: rif@e6f90000 {
-+			compatible = "renesas,r8a77965-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f90000 0 0x64>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 510>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x2a>, <&dmac2 0x2a>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 510>;
-+			renesas,bonding = <&drif20>;
-+			status = "disabled";
-+		};
-+
-+		drif30: rif@e6fa0000 {
-+			compatible = "renesas,r8a77965-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6fa0000 0 0x64>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 509>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x2c>, <&dmac2 0x2c>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 509>;
-+			renesas,bonding = <&drif31>;
-+			status = "disabled";
-+		};
-+
-+		drif31: rif@e6fb0000 {
-+			compatible = "renesas,r8a77965-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6fb0000 0 0x64>;
-+			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 508>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x2e>, <&dmac2 0x2e>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-+			resets = <&cpg 508>;
-+			renesas,bonding = <&drif30>;
-+			status = "disabled";
-+		};
-+
- 		rcar_sound: sound@ec500000 {
- 			/*
- 			 * #sound-dai-cells is required
+      case tmp75c:
+          clr_mask |= 1 << 5;        /* not one-shot mode */
+          data->resolution = 12;
+@@ -438,6 +446,7 @@ static const struct i2c_device_id lm75_ids[] = {
+      { "tmp175", tmp175, },
+      { "tmp275", tmp275, },
+      { "tmp75", tmp75, },
++    { "tmp75b", tmp75b,},
+      { "tmp75c", tmp75c, },
+      { /* LIST END */ }
+  };
+@@ -537,6 +546,10 @@ static const struct of_device_id lm75_of_match[] = {
+          .data = (void *)tmp75
+      },
+      {
++        .compatible = "ti,tmp75b",
++        .data = (void *)tmp75b
++    },
++    {
+          .compatible = "ti,tmp75c",
+          .data = (void *)tmp75c
+      },
+
 -- 
-2.7.4
+2.11.0
+
+-- 
+Iker Perez del Palomar, Software Engineer
+Codethink Ltd                             35 Dale St, Manchester M1 2HF
+http://www.codethink.co.uk/          Manchester, M1 2JW, United Kingdom
+We respect your privacy.   See https://www.codethink.co.uk/privacy.html
 
