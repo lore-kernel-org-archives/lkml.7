@@ -2,170 +2,134 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2261FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8470CC282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B9D20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B3AA20843
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:24:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="P91ZeAMh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731577AbfDWDYD (ORCPT
+        id S1729659AbfDWDYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:24:03 -0400
-Received: from mga04.intel.com ([192.55.52.120]:14834 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbfDWDYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:24:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 20:24:02 -0700
-X-IronPort-AV: E=Sophos;i="5.60,384,1549958400"; 
-   d="scan'208";a="136515140"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.239.196.121]) ([10.239.196.121])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 22 Apr 2019 20:24:01 -0700
-Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
- <20190422183553.GH1236@linux.intel.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <bccc075c-68ce-6324-6f73-4d4e9a1d9683@linux.intel.com>
-Date:   Tue, 23 Apr 2019 11:23:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 22 Apr 2019 23:24:24 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:52904 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbfDWDYX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 23:24:23 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x3N3OCIE026091;
+        Tue, 23 Apr 2019 12:24:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x3N3OCIE026091
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555989853;
+        bh=ZaFZ1e3X9NvA8jIq/O0HE8feh53sYwHuO++fFuOS9nA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=P91ZeAMhtMqYylWUwrm0osI7w4pI/iDlLSWG/rgtuV4n4+wggoIrtADSDmDO1F8IT
+         9SwLYRNBLbn0b744T8wkCcKdwRp1bFydxoBb/Ez/b9cQ25oEEeJ8fGba2msUkgzzN7
+         RVgAZWUxJsGwNQ1bWOAqoinA3tgIU6FXaJx5B1L/jq2wQU/LA3xl6qMAHwZmrwSwQr
+         zRfXO4olxBoW18m482H250QJqKYOMqrg5Rb5U/oSnXgQXE947uj84smCxuOU3bNZk6
+         XQX+9jSnBFsERD0tttKHFup0w0hnVx0NFKRLwUi8nadx+s4K1Nt/08Gj7JqtqRc3FH
+         xGxtXeWji4Okg==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id c6so4301914uan.1;
+        Mon, 22 Apr 2019 20:24:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAUjKMvZKY6A3TzUKyUja3hKKYKBnxvd4QgelcLWTMR9KGoetZNB
+        xO7ziDVt7aZqc53MYUALLcQkZKwYHn6wdUpVJOE=
+X-Google-Smtp-Source: APXvYqy2+X5gAZU5b5JBqG8lKaQqh8mqoq4bQSgIgGHvQKLEeXzwh1sBxjABZmsDHRTa0MRWHTkc9sQeXvoau4eItSo=
+X-Received: by 2002:ab0:7008:: with SMTP id k8mr11599996ual.40.1555989851968;
+ Mon, 22 Apr 2019 20:24:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190422183553.GH1236@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190419094754.24667-1-yamada.masahiro@socionext.com>
+ <20190419094754.24667-7-yamada.masahiro@socionext.com> <CA+7wUsygTo=AN_giku_X6_a4mQWdJL48RoVbVB4hBqkZSKkP0Q@mail.gmail.com>
+In-Reply-To: <CA+7wUsygTo=AN_giku_X6_a4mQWdJL48RoVbVB4hBqkZSKkP0Q@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 23 Apr 2019 12:23:35 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQjQKu9GFyCyDJsQcyQjbeSGoJJPJV8YEtSXuV9JDqhqQ@mail.gmail.com>
+Message-ID: <CAK7LNAQjQKu9GFyCyDJsQcyQjbeSGoJJPJV8YEtSXuV9JDqhqQ@mail.gmail.com>
+Subject: Re: [PATCH v2 06/11] MIPS: mark __fls() as __always_inline
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, X86 ML <x86@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-mips@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/23 2:35, Sean Christopherson wrote:
-> On Mon, Apr 22, 2019 at 02:40:34PM +0800, Like Xu wrote:
->> Expose Intel V2 Extended Topology Enumeration Leaf to guest only when
->> host system has multiple software-visible die within each package.
->>
->> Signed-off-by: Like Xu <like.xu@linux.intel.com>
->> ---
->>   arch/x86/kvm/cpuid.c | 13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->> index fd39516..9fc14f2 100644
->> --- a/arch/x86/kvm/cpuid.c
->> +++ b/arch/x86/kvm/cpuid.c
->> @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
->>   	return xcr0;
->>   }
->>   
->> +/* We need to check if the host cpu has multi-chip packaging technology. */
->> +static bool kvm_supported_intel_mcp(void)
->> +{
->> +	u32 eax, ignored;
->> +
->> +	cpuid_count(0x1f, 0, &eax, &ignored, &ignored, &ignored);
->> +
->> +	return boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && (eax != 0);
->> +}
->> +
->>   #define F(x) bit(X86_FEATURE_##x)
->>   
->>   int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->> @@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
->>   	switch (function) {
->>   	case 0:
->>   		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
->> +		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry->eax;
-> 
-> This all seems unnecessary.  And by 'all', I mean the existing Intel PT
-> and XSAVE leaf checks, as well as the new mcp check.  entry->eax comes
-> directly from hardware, and unless I missed something, PT and XSAVE are
-> only exposed to the guest when they're supported in hardware.  In other
-> words, KVM will never need to adjust entry->eax to expose PT or XSAVE.
+On Sat, Apr 20, 2019 at 12:45 AM Mathieu Malaterre <malat@debian.org> wrote:
+>
+> Hi,
+>
+> On Fri, Apr 19, 2019 at 12:06 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
+> > place. We need to eliminate potential issues beforehand.
+> >
+> > If it is enabled for mips, the following errors are reported:
+> >
+> > arch/mips/mm/sc-mips.o: In function `mips_sc_prefetch_enable.part.2':
+> > sc-mips.c:(.text+0x98): undefined reference to `mips_gcr_base'
+> > sc-mips.c:(.text+0x9c): undefined reference to `mips_gcr_base'
+> > sc-mips.c:(.text+0xbc): undefined reference to `mips_gcr_base'
+> > sc-mips.c:(.text+0xc8): undefined reference to `mips_gcr_base'
+> > sc-mips.c:(.text+0xdc): undefined reference to `mips_gcr_base'
+> > arch/mips/mm/sc-mips.o:sc-mips.c:(.text.unlikely+0x44): more undefined references to `mips_gcr_base'
+>
+> Tested with success on ppc32/G4. But on CI20 (ci20_defconfig from
+> master), I get:
 
-We call this function for both case KVM_GET_SUPPORTED_CPUID and 
-KVM_GET_EMULATED_CPUID although kvm user could reconfig them via 
-KVM_SET_CPUID* path.
 
-> 
-> The original min() check was added by commit 0771671749b5 ("KVM: Enhance
-> guest cpuid management"), which doesn't provide any explicit information
-> on why KVM does min() in the first place.  
+Thanks for the test!
 
-Exposing cpuid.0.eax in a blind way (with host hardware support)
-is not a good practice for guest migration and improves compatibility 
-requirements.
+OK, I saw this error for ci20_defconfig.
 
-> Given that the original code
-> was "entry->eax = min(entry->eax, (u32)0xb);", my *guess* is that the
-> idea was to always report "Extended Topology Enumeration Leaf" as
-> supported so that userspace can enumerate the VM's topology to the guest
-> even when hardware itself doesn't do so.
+I inline'd __ffs() to fix it
+and sumitted v3.
 
-If the host cpu mode is too antiquated to support 0xb, it wouldn't 
-report 0xb for sure. The host cpuid.0.eax has been over 0xb for a long 
-time and reached 0x1f in the latest SDM.
+Thank you.
 
-AFAICT, the original code keeps minimum cpuid.0.eax out of features 
-guest just used or at least it claimed to use.
 
-> 
-> Assuming we want to allow userspace to use "V2 Extended Topology
-> Enumeration Leaf" regardless of hardware support, then this can simply be:
-> 
->    entry->eax = min(entry->eax, (u32)0x1f);
-> 
-> Or am I completely missing something?
-> 
->>   		break;
->>   	case 1:
->>   		entry->edx &= kvm_cpuid_1_edx_x86_features;
->> @@ -544,6 +555,8 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
->>   		entry->edx = edx.full;
->>   		break;
->>   	}
->> +	/* function 0x1f has additional index. */
-> 
-> The original comment is rather useless, it's obvious from the code that
-> it has additional indices.  No need to repeat its sins.  A more useful
-> comment would be to explain that 0x1f and 0xb have identical formats and
-> thus can be handled by common code.
 
-I agree and let me fix it in next version.
+>   MODPOST vmlinux.o
+> mipsel-linux-gnu-ld: arch/mips/kernel/traps.o: in function
+> `addr_gcr_err_control':
+> /home/mathieu/tmp/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:169:
+> undefined reference to `mips_gcr_base'
+> mipsel-linux-gnu-ld:
+> /home/mathieu/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:169:
+> undefined reference to `mips_gcr_base'
+> mipsel-linux-gnu-ld: arch/mips/mm/sc-mips.o: in function
+> `addr_gcr_l2_pft_control':
+> /home/mathieu/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:246:
+> undefined reference to `mips_gcr_base'
+> mipsel-linux-gnu-ld:
+> /home/mathieu/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:246:
+> undefined reference to `mips_gcr_base'
+> mipsel-linux-gnu-ld:
+> /home/mathieu/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:246:
+> undefined reference to `mips_gcr_base'
+> mipsel-linux-gnu-ld:
+> arch/mips/mm/sc-mips.o:/home/mathieu/linux/linux/ci20/../arch/mips/include/asm/mips-cm.h:246:
+> more undefined references to `mips_gcr_base' follow
 
-> 
-> Which begs the question, why does leaf 0x1f exist?  AFAICT the only
-> difference is that 0x1f supports additional "level types", but 0x1f's
-> types are backwards compatibile.  Any idea why leaf 0xb wasn't simply
-> extended for the new types?
 
-It's not just about backwards compatibility on numerical parsing.
 
-So many software (whatever OS and applications) are using 0x1b
-to get CPU topology. In most cases, they (legacy code) would assume that 
-the next level of CORE is package (at lease for Intel) not die and it's 
-a semantic conflict if we reuse 0xb.
 
-As said in SDM, Intel recommends first checking for the existence of 
-Leaf 1FH and using this if available.
-
-> 
->> +	case 0x1f:
->>   	/* function 0xb has additional index. */
->>   	case 0xb: {
->>   		int i, level_type;
->> -- 
->> 1.8.3.1
->>
-> 
-
+-- 
+Best Regards
+Masahiro Yamada
