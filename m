@@ -2,113 +2,119 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B573FC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE94C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8339020674
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DA120674
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:09:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DgmgGSxm"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Mgk9wypS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfDWXJV (ORCPT
+        id S1728657AbfDWXJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 19:09:21 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:42560 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfDWXJU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 19:09:20 -0400
-Received: by mail-ua1-f66.google.com with SMTP id h4so5368456uaj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:09:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IiKDqG7msKFJ8+FEDkvRj7+3/awlR2j/mKLsb7NA8C8=;
-        b=DgmgGSxmK0K6BTKDzWv4l6hC0tp0klvsPSgi3Xd35V0OBwL2G04gvXaluVqLlfeHMB
-         ImZAAUyM/eTe+ApvyqCJUMJOKhtYantilOsu/zrkLSOGv3VcOCgoXvDcKkDSmemY6aaL
-         8BIBF8N+rd7ZxAgCf7XvX3rA7izpW7bwJ55Xo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IiKDqG7msKFJ8+FEDkvRj7+3/awlR2j/mKLsb7NA8C8=;
-        b=pOLxH0CpR5GJ1t5q3WSQebJvcfbysXPErYALtond2zpAG8afDosgQOZ7y5XusAm5Hb
-         Lb/Qhicbob+a+L/lw9SxHGPEnExG6/aUqfDqi6nQFXiVZPLfQejYJYlWYomliPw+AISv
-         jeHKO6xSLwZcxCG60JuVfdICFOyHkOaStQD2i+/m58LM5ZTPFUgCGBo1doJK9ahhz+hD
-         HSfqPYJeNbTZG9tsqxc9BuOpZPUDyJHvd6yhhA3ju/TehvPg3Kfswq6OFtq4QQ7EYXgK
-         CCfQ/lhT9np8ukyDc7dVj9jbRF5WO4pwCKMvdDrATIsDWj5aRNcw2C11CHhSqgagv/Av
-         /xyw==
-X-Gm-Message-State: APjAAAUzqgzeFKx6uP0bKbjEtd+hOC4fdeAW1N5PPW3MeuC183TJXmES
-        u9XFHC6racSWEydcwTzHHIHoC4S4oqU=
-X-Google-Smtp-Source: APXvYqy49ssS+13X//ENe+t/PrGlgjaaX/eRejxr597AM/KPhDz4wp61VAwCHNgqIXpCy2YQW2oXBg==
-X-Received: by 2002:ab0:2248:: with SMTP id z8mr14523049uan.12.1556060959216;
-        Tue, 23 Apr 2019 16:09:19 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id k65sm4970661vkk.40.2019.04.23.16.09.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 16:09:18 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id w13so9303645vsc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:09:18 -0700 (PDT)
-X-Received: by 2002:a67:eecb:: with SMTP id o11mr15373188vsp.66.1556060957745;
- Tue, 23 Apr 2019 16:09:17 -0700 (PDT)
+        Tue, 23 Apr 2019 19:09:27 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:57437 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbfDWXJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 19:09:27 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pfKH5DXmz9sNC;
+        Wed, 24 Apr 2019 09:09:23 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556060964;
+        bh=N/Q7J83n4938J+ogqYdyJcnCuGVywdVIHRpZtpaXXtw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Mgk9wypSjOWCSPqnt+fA2xUhaPCbKwpk9nruGpl2YZXHQ+7J1Fs9Ltzi7bdgPdDT9
+         oEra3WIcsgnsI3Sq+iT/FOPLReNaR1awDIZswaqFyq8+7ppHnF1NfO4fILZkpDeBrS
+         Xm5XV5su4N4GfH3mKkXZt9y7HTF9DKNY+Ggo9vZzB7beEay8UEy+nFvbgUvV4PWLkD
+         z1sQF1mp4NbdLedcTjbzU5WFa/62cM9/rK6gNgC3gBO73euzz0h8ILSXSW+8o+HQqR
+         x6gGBTieSu3A8c9wFXcg0kPGNUq1vkDBcpjb4/KpIHZKA04lKMzkRYTfZvF8r0ZKzc
+         bxiN30VoBCcwQ==
+Date:   Wed, 24 Apr 2019 09:09:07 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Erin Lo <erin.lo@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Fabien Parent <fparent@baylibre.com>
+Subject: linux-next: manual merge of the mediatek tree with Linus' tree
+Message-ID: <20190424090907.4221e701@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190415143821.GA46880@beast> <CAGXu5jJmJLc41XDyaO3vSt=fPXLpph3m3TEtxAtdBiFMKqSrcA@mail.gmail.com>
- <CAKv+Gu-ZxvK7L90Xkf=U=GEeucGg9qJ+TDabuguFCxeUbn_GeQ@mail.gmail.com> <CAKwvOdn3DA9HbtQ7ZAXeamdmoRn+_kYn2DdQXX9oxt+nruz0kw@mail.gmail.com>
-In-Reply-To: <CAKwvOdn3DA9HbtQ7ZAXeamdmoRn+_kYn2DdQXX9oxt+nruz0kw@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 23 Apr 2019 16:09:05 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+9FFV-qoeXczhkTYiwuXcX+urmAU2eazk26XCdN476KA@mail.gmail.com>
-Message-ID: <CAGXu5j+9FFV-qoeXczhkTYiwuXcX+urmAU2eazk26XCdN476KA@mail.gmail.com>
-Subject: Re: [PATCH v3] arm64: sysreg: make mrs_s and msr_s macros work with
- Clang and LTO
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alex Matveev <alxmtvv@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/I7hSmkFkp/1rA4Ou4IxaiMY"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 4:00 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Tue, Apr 23, 2019 at 3:57 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > On Wed, 24 Apr 2019 at 00:55, Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Mon, Apr 15, 2019 at 7:38 AM Kees Cook <keescook@chromium.org> wrote:
-> > > > +#define __msr_s(r, v)                                          \
-> > > > +       DEFINE_MSR_S                                            \
-> > > > +"      msr_s " __stringify(r) ", %x0\n"                        \
-> > > > +       UNDEFINE_MSR_S : : "rZ" (v)
-> > >
-> > > BTW ... is "%x0" a typo here? Shouldn't this just be "%0"?
-> > >
-> >
-> > No, iirc, that is required to force clang to choose a x# encoding
-> > (which is the only one supported by msr/mrs instructions). Otherwise,
-> > it will infer from the operand size which encoding to use, and attempt
-> > to use w# for 32-bit system registers.
->
-> Yes: https://github.com/llvm/llvm-project/blob/80b578c7325352187d0aff7bd2bdb5a76b51cf37/llvm/lib/Target/AArch64/AArch64AsmPrinter.cpp#L466
+--Sig_/I7hSmkFkp/1rA4Ou4IxaiMY
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Cool, yeah, I see now. Thanks!
+Hi all,
 
--- 
-Kees Cook
+Today's linux-next merge of the mediatek tree got a conflict in:
+
+  Documentation/devicetree/bindings/serial/mtk-uart.txt
+
+between commit:
+
+  898a737c8a43 ("dt-bindings: serial: Add compatible for Mediatek MT8183")
+
+from Linus' tree and commit:
+
+  61a640143f68 ("dt-bindings: serial: mtk-uart: add support for MT8516")
+
+from the mediatek tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/devicetree/bindings/serial/mtk-uart.txt
+index bcfb13194f16,ca7e9dc83087..000000000000
+--- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
++++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+@@@ -16,7 -17,7 +17,8 @@@ Required properties
+    * "mediatek,mt8127-uart" for MT8127 compatible UARTS
+    * "mediatek,mt8135-uart" for MT8135 compatible UARTS
+    * "mediatek,mt8173-uart" for MT8173 compatible UARTS
+ +  * "mediatek,mt8183-uart", "mediatek,mt6577-uart" for MT8183 compatible =
+UARTS
++   * "mediatek,mt8516-uart" for MT8516 compatible UARTS
+    * "mediatek,mt6577-uart" for MT6577 and all of the above
+ =20
+  - reg: The base address of the UART register bank.
+
+--Sig_/I7hSmkFkp/1rA4Ou4IxaiMY
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/mxMACgkQAVBC80lX
+0GxRjgf/Y2cCmcpfixc9SDG1DVUNeDtLOm9wRvXAcXb2RpuDfV1Wj+TcM76fMnrK
+1DedmtBb3OQ9STbPahjG5zbAocNiUSNBidhqjK5hbirSXIO6vFO8Q7CbdOsdGBtj
+wAGhM99DJ+uwNqMMbPeHVLX3EWEO9LgVYF5YFJkJShsDmsbDPggWoYahWowiDRFg
+KIl+ZgZgRmX4l7RGeTAMCuzFE1Ck6c/0lEn2zxsgUrXAT7nfx0rmkzK8cXHTufuN
+xRx+D//0THDXEgQUXNGpKCYit8n876OT1BWot6IuqzHIgwrKJbf7OFSGI1++FTXM
+beJTNp283i7ZCRalwyj+CngRnANrMg==
+=3rE4
+-----END PGP SIGNATURE-----
+
+--Sig_/I7hSmkFkp/1rA4Ou4IxaiMY--
