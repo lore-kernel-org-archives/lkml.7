@@ -2,129 +2,106 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2EEC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD754C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828A0214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCC1214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:13:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bei/Bz11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbfDWOMq (ORCPT
+        id S1728015AbfDWOND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:12:46 -0400
-Received: from foss.arm.com ([217.140.101.70]:57234 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727180AbfDWOMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 10:12:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85984A78;
-        Tue, 23 Apr 2019 07:12:45 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BF913F238;
-        Tue, 23 Apr 2019 07:12:43 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 15:12:40 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alex Matveev <alxmtvv@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] arm64: sysreg: make mrs_s and msr_s macros work with
- Clang and LTO
-Message-ID: <20190423141240.GC56999@lakrids.cambridge.arm.com>
-References: <20190415143821.GA46880@beast>
- <20190415170604.GA44415@lakrids.cambridge.arm.com>
- <CAKwvOdk_jFQKW2C2=925So_dvZ6dm03AXMZ9Nk+O1J2xyhE2EA@mail.gmail.com>
- <20190416170808.GC54708@lakrids.cambridge.arm.com>
- <CAGXu5jKJ4_uY45xJV_Fy=Q7cJzmJz9pZVRFJG0U-C3h95OiZzA@mail.gmail.com>
- <CAKwvOdn-MGokV0vsGq2GdRK-eGHdyC6+vVHYSfwOfpqNWwQzXw@mail.gmail.com>
+        Tue, 23 Apr 2019 10:13:03 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46111 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727851AbfDWOND (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 10:13:03 -0400
+Received: by mail-lf1-f68.google.com with SMTP id k18so11861604lfj.13;
+        Tue, 23 Apr 2019 07:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5YcKL/V/Lsj3dfCPjoyLCaFyNvA/eBm6FKQwBRxx79w=;
+        b=Bei/Bz11G+p4daWEZlXbaIlI0l6LwJWq99Ci+4kjAxIBR7AIUWvSlbfpc+XGseujPX
+         8M31G/l9MXJvK7tIQJe6L8F8w9mKzIixdkHkqrecysDJNERyBV7Sr+zR0UQyPYBZ14Un
+         pgs+qTH0zJ6TwpCLdJTLgKxCGdVni7t9StTJsn/dmli9xLHPsj0CO/zxSPkFMCNpw2T3
+         OToT7GQWG5eHIWhRxtvjUgyrcdB6pOi0Nb6/+XufzhWBkfdGK11JM3brsQeJV9NbrYpo
+         jSef+7IhudQSwheCdLK582O61ZOKBONx5EYz1i2DudxirqbEjojfhKoMVmpVw6EnrLVo
+         QT+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5YcKL/V/Lsj3dfCPjoyLCaFyNvA/eBm6FKQwBRxx79w=;
+        b=VdiQfRg2bfIaAk+LUlTeoHNngUc2JPyy16W/ud940v83AQK0hterYidohQAkY4nSyO
+         2+24DOKEmH4Qbo6JYMzBhdbJT3VduPKh2IA/aJEbmbWl3YKMUWSPN2KJHlJ9GOk+2xPE
+         6m3T19TRteeF+sGexf+jDlrxEydyZFSyVp/UZ+gJ41fJ5v50raNRxPaEU1KGu6idUsyl
+         JZ3MGz+U0R2d/WsHWcrmfnvRU9llwrvmS2BpIkr78De0AjHZ3P4Ij9TMP+P1idNcXFla
+         DPGyr8NqKSy54S+4SdazyzCusMaBHWc6FAMXu+ahvGNAyM4nH2Iz5USrXZh5BaAcaaqE
+         iO1A==
+X-Gm-Message-State: APjAAAXKA7Zm87PB87HpeoDZ00chAS8ozSEZqcc4W3pZ+G/tNtsyJjXF
+        3H40SQ6cXUae04p1z9ac5PxZFrKgEz3/blZxFf8=
+X-Google-Smtp-Source: APXvYqwz/ecJZGfljAiXhGLGwNMcxrEWdVeJOltcQgEa/cDfS/+I/EAYVYRqEQZZzGo0hZI/N3roHeWhS4eo1gLTmRw=
+X-Received: by 2002:a19:f60f:: with SMTP id x15mr14036494lfe.95.1556028780653;
+ Tue, 23 Apr 2019 07:13:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdn-MGokV0vsGq2GdRK-eGHdyC6+vVHYSfwOfpqNWwQzXw@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <1556027045-5269-1-git-send-email-yibin.gong@nxp.com> <1556027045-5269-10-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1556027045-5269-10-git-send-email-yibin.gong@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 23 Apr 2019 11:12:58 -0300
+Message-ID: <CAOMZO5AT2dPJwQefKwFsfp8XqodL4k7bhKcmXQskHbc9aQ6n8A@mail.gmail.com>
+Subject: Re: [PATCH v1 09/15] dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "sean.nyekjaer@prevas.dk" <sean.nyekjaer@prevas.dk>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 10:44:10AM -0700, Nick Desaulniers wrote:
-> On Tue, Apr 16, 2019 at 9:03 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Tue, Apr 16, 2019 at 12:08 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > >
-> > > On Mon, Apr 15, 2019 at 10:22:27AM -0700, Nick Desaulniers wrote:
-> > > > On Mon, Apr 15, 2019 at 10:06 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > > > > It would be nice if we could simply rely on a more recent binutils these
-> > > > > days, which supports the generic S<op0>_<op1>_<cn>_<Cm>_<op2> sysreg
-> > > > > definition. That would mean we could get rid of the whole msr_s/mrs_s
-> > > > > hack by turning that into a CPP macro which built that name.
-> 
-> Mark, can you give me a test case for this? I'd like to check if
-> clang's integrated assembler supports this or not, so we can file an
-> issue and fix it if not.
+On Tue, Apr 23, 2019 at 10:51 AM Robin Gong <yibin.gong@nxp.com> wrote:
+>
+> ECSPI issue fixed from i.mx6ul at hardware level, no need
+> ERR009165 anymore on those chips such as i.mx8mq. Add i.mx6sx
+> from where i.mx6ul source.
+>
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  drivers/dma/imx-sdma.c | 43 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 42 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 1e20470..99c44a5 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -419,6 +419,7 @@ struct sdma_driver_data {
+>         int num_events;
+>         struct sdma_script_start_addrs  *script_addrs;
+>         bool check_ratio;
+> +       bool ecspi_fixed;
 
-The below is a smoke test. The entire op0:op1:cn:cm:op2 space is 14
-bits, so it should be feasible to generate and run an exhautive test for
-all encodings.
-
-I've included SYS and SYSL here too, since I strongly suspect we'll need
-those going forward.
-
-Thanks
-Mark.
-
----->8----
-/*
- * ${CC} -c test.c
- *
- * OLD_* encodings already exist, NEW_* encodings haven't yet be
- * allocated (per ARM DDI 0487D.a), but should assemble. All encodings
- * chosen arbitrarily.
- */
-
-// OSDTRRX_EL1
-#define OLD_DBG_REG	"s2_0_c0_c0_2"
-#define NEW_DBG_REG	"s2_7_c0_c15_0"
-
-// MIDR_EL1
-#define OLD_SYS_REG	"s3_0_c0_c0_0"
-#define NEW_SYS_REG	"s3_6_c1_c0_7"
-
-#define REG(r)					\
-	asm volatile("msr " r ", xzr\n");	\
-	asm volatile("mrs xzr, " r "\n")
-
-// DC IVAC, XZR
-#define OLD_SYS	"#0, c7, c6, #1"
-#define NEW_SYS "#7, c15, c15, #7"
-
-#define NEW_SYSL_MIN	"#0, c0, c0, #0"
-#define NEW_SYSL_MAX	"#7, c15, c15, #7"
-
-#define SYS(s)	asm volatile("sys " s ", xzr\n")
-#define SYSL(s)	asm volatile("sysl xzr, " s "\n")
-
-void test(void)
-{
-	REG(OLD_DBG_REG);
-	REG(NEW_DBG_REG);
-
-	REG(OLD_SYS_REG);
-	REG(NEW_SYS_REG);
-
-	SYS(OLD_SYS);
-	SYS(NEW_SYS);
-
-	SYSL(NEW_SYSL_MIN);
-	SYSL(NEW_SYSL_MAX);
-}
+Please state the erratum number in the variable name, such as
+has_err009165_fixed
