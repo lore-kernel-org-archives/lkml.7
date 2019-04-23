@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367C2C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DCFC10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F3A2177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6EF218B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731077AbfDWAhc (ORCPT
+        id S1731061AbfDWAhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 20:37:32 -0400
-Received: from mga11.intel.com ([192.55.52.93]:13164 "EHLO mga11.intel.com"
+        Mon, 22 Apr 2019 20:37:31 -0400
+Received: from mga11.intel.com ([192.55.52.93]:13158 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731026AbfDWAh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 20:37:28 -0400
+        id S1729135AbfDWAh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 20:37:27 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 17:37:26 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,383,1549958400"; 
-   d="scan'208";a="225774539"
+   d="scan'208";a="225774515"
 Received: from bxing-ubuntu.jf.intel.com ([10.23.30.27])
   by orsmga001.jf.intel.com with ESMTP; 22 Apr 2019 17:37:25 -0700
 From:   Cedric Xing <cedric.xing@intel.com>
@@ -44,9 +44,9 @@ Cc:     akpm@linux-foundation.org, Hansen@vger.kernel.org,
         rientjes@google.com,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Cedric Xing <cedric.xing@intel.com>
-Subject: [RFC PATCH v1 3/3] selftests/x86: Augment SGX selftest to test new __vdso_sgx_enter_enclave() and its callback interface
-Date:   Mon, 22 Apr 2019 17:37:25 -0700
-Message-Id: <f82e81c9cae31634684964d3fc4e9637e7565c69.1555965327.git.cedric.xing@intel.com>
+Subject: [RFC PATCH v1 1/3] selftests/x86: Fixed Makefile for SGX selftest
+Date:   Mon, 22 Apr 2019 17:37:23 -0700
+Message-Id: <4e463af695c92b6b5693b1f0d00a49b21fbf4656.1555965327.git.cedric.xing@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1555965327.git.cedric.xing@intel.com>
 References: <cover.1555965327.git.cedric.xing@intel.com>
@@ -57,239 +57,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Given the changes to __vdso_sgx_enter_enclave(), the selftest is augmented to
-test the newly added callback interface. This addtional test marks the whole
-enclave range as PROT_READ, and calls mprotect() upon #PFs to add necessary PTE
-permissions per PFEC (#PF Error Code) until the enclave finishes.
+The original x86/sgx/Makefile doesn't work when 'x86/sgx' is specified as the
+test target. This patch fixes that problem, along with minor changes to the
+dependencies between 'x86' and 'x86/sgx' in selftests/x86/Makefile.
 
 Signed-off-by: Cedric Xing <cedric.xing@intel.com>
 ---
- tools/testing/selftests/x86/sgx/main.c     | 123 ++++++++++++++++++---
- tools/testing/selftests/x86/sgx/sgx_call.S |  40 ++++++-
- 2 files changed, 142 insertions(+), 21 deletions(-)
+ tools/testing/selftests/x86/Makefile     | 12 +++----
+ tools/testing/selftests/x86/sgx/Makefile | 45 +++++++++---------------
+ 2 files changed, 22 insertions(+), 35 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/sgx/main.c b/tools/testing/selftests/x86/sgx/main.c
-index e2265f841fb0..234cfbad14a5 100644
---- a/tools/testing/selftests/x86/sgx/main.c
-+++ b/tools/testing/selftests/x86/sgx/main.c
-@@ -9,6 +9,7 @@
- #include <stdlib.h>
- #include <string.h>
- #include <unistd.h>
-+#include <errno.h>
- #include <sys/ioctl.h>
- #include <sys/mman.h>
- #include <sys/stat.h>
-@@ -18,6 +19,10 @@
- #include "../../../../../arch/x86/kernel/cpu/sgx/arch.h"
- #include "../../../../../arch/x86/include/uapi/asm/sgx.h"
+diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
+index 4fc9a42f56ea..1294c5f5b6ca 100644
+--- a/tools/testing/selftests/x86/Makefile
++++ b/tools/testing/selftests/x86/Makefile
+@@ -70,11 +70,11 @@ all_32: $(BINARIES_32)
  
-+#define _Q(x)	__Q(x)
-+#define __Q(x)	#x
-+#define ERRLN	"Line " _Q(__LINE__)
-+
- static const uint64_t MAGIC = 0x1122334455667788ULL;
+ all_64: $(BINARIES_64)
  
- struct vdso_symtab {
-@@ -138,7 +143,7 @@ static bool encl_create(int dev_fd, unsigned long bin_size,
- 	base = mmap(NULL, secs->size, PROT_READ | PROT_WRITE | PROT_EXEC,
- 		    MAP_SHARED, dev_fd, 0);
- 	if (base == MAP_FAILED) {
--		perror("mmap");
-+		perror(ERRLN);
- 		return false;
- 	}
+-all_64: $(SUBDIRS_64)
+-	@for DIR in $(SUBDIRS_64); do			\
+-		BUILD_TARGET=$(OUTPUT)/$$DIR;		\
+-		mkdir $$BUILD_TARGET  -p;		\
+-		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;	\
++all_64: | $(SUBDIRS_64)
++	@for DIR in $|; do					\
++		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
++		mkdir $$BUILD_TARGET  -p;			\
++		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$DIR $@;	\
+ 	done
  
-@@ -224,24 +229,113 @@ static bool encl_load(struct sgx_secs *secs, unsigned long bin_size)
- 	return false;
- }
+ EXTRA_CLEAN := $(BINARIES_32) $(BINARIES_64)
+@@ -90,7 +90,7 @@ ifeq ($(CAN_BUILD_I386)$(CAN_BUILD_X86_64),01)
+ all: warn_32bit_failure
  
--void sgx_call(void *rdi, void *rsi, void *tcs,
--	      struct sgx_enclave_exception *exception,
--	      void *eenter);
-+int sgx_call(void *rdi, void *rsi, long rdx, void *rcx, void *r8, void *r9,
-+	     void *tcs, struct sgx_enclave_exinfo *ei, void *cb, void *eenter);
-+
-+static void show_enclave_exinfo(const struct sgx_enclave_exinfo *exinfop,
-+				const char *header)
-+{
-+	printf("%s: leaf:%d", header, exinfop->leaf);
-+	if (exinfop->leaf != 4)
-+		printf(" trap#:%d ec:%d addr:0x%llx\n", exinfop->trapnr,
-+			exinfop->error_code, exinfop->address);
-+	else printf("\n");
-+}
-+
-+static void test1(void *eenter, struct sgx_secs *secs)
-+{
-+	uint64_t result = 0;
-+	struct sgx_enclave_exinfo exinfo;
-+
-+	printf("[1] Entering the enclave without callback.\n");
-+
-+	printf("Input: 0x%lx\n Expect: Same as input\n", MAGIC);
-+	sgx_call((void *)&MAGIC, &result, 0, NULL, NULL, NULL,
-+		 (void *)secs->base, &exinfo, NULL, eenter);
-+	if (result != MAGIC) {
-+		fprintf(stderr, "0x%lx != 0x%lx\n", result, MAGIC);
-+		exit(1);
-+	}
-+	printf(" Output: 0x%lx\n", result);
-+
-+	printf("Input: Null TCS\n Expect: #PF at EENTER\n");
-+	sgx_call((void *)&MAGIC, &result, 0, NULL, NULL, NULL,
-+		 NULL, &exinfo, NULL, eenter);
-+	show_enclave_exinfo(&exinfo, " Exit");
-+	if (exinfo.leaf != 2 /*EENTER*/ || exinfo.trapnr != 14 /*#PF*/)
-+		exit(1);
-+}
-+
-+static int enclave_ex_callback(long rdi, long rsi, long rdx,
-+	struct sgx_enclave_exinfo *ei, long r8, long r9, void *tcs, long ursp)
-+{
-+	show_enclave_exinfo(ei, "  callback");
-+
-+	switch (ei->leaf)
-+	{
-+	case 4:
-+		return 0;
-+	case 3:
-+	case 2:
-+		if (ei->trapnr != 14 /*#PF*/ || (ei->error_code & 1) == 0) {
-+			fprintf(stderr, ERRLN ": Unexpected exception\n");
-+			exit(1);
-+		}
-+
-+		if (mprotect((void*)(ei->address & -0x1000), 0x1000,
-+			     ((ei->error_code & 2) ? PROT_WRITE : 0) |
-+			     ((ei->error_code & 0x10) ? PROT_EXEC : 0) |
-+			     PROT_READ)) {
-+			perror(ERRLN);
-+			exit(1);
-+		}
-+
-+		return ei->leaf == 2 ? -EAGAIN : ei->leaf;
-+	}
-+	return -EINVAL;
-+}
-+
-+static void test2(void *eenter, struct sgx_secs *secs)
-+{
-+	uint64_t result = 0;
-+	struct sgx_enclave_exinfo exinfo;
-+
-+	printf("[2] Entering the enclave with callback.\n");
-+
-+	printf("Input: 0x%lx\n Expect: Same as input\n", MAGIC);
-+	sgx_call((void *)&MAGIC, &result, 0, NULL, NULL, NULL,
-+		 (void *)secs->base, &exinfo, enclave_ex_callback, eenter);
-+	if (result != MAGIC) {
-+		fprintf(stderr, "0x%lx != 0x%lx\n", result, MAGIC);
-+		exit(1);
-+	}
-+	printf(" Output: 0x%lx\n", result);
-+
-+	printf("Input: Read-only enclave (0x%lx-0x%lx)\n"
-+	       " Expect: #PFs to be fixed by callback\n",
-+	       secs->base, secs->base + (encl_bin_end - encl_bin) - 1);
-+	if (mprotect((void*)secs->base, encl_bin_end - encl_bin, PROT_READ)) {
-+		perror(ERRLN);
-+		exit(1);
-+	}
-+	while (sgx_call((void *)&MAGIC, &result, 0, NULL, NULL, NULL,
-+			(void*)secs->base, &exinfo, enclave_ex_callback,
-+			eenter) == -EAGAIN);
-+	show_enclave_exinfo(&exinfo, " Exit");
-+	if (exinfo.leaf != 4 /*EEXIT*/)
-+		exit(1);
-+}
+ warn_32bit_failure:
+-	@echo "Warning: you seem to have a broken 32-bit build" 2>&1; 	\
++	@echo "Warning: you seem to have a broken 32-bit build" 2>&1;	\
+ 	echo "environment.  This will reduce test coverage of 64-bit" 2>&1; \
+ 	echo "kernels.  If you are using a Debian-like distribution," 2>&1; \
+ 	echo "try:"; 2>&1; \
+diff --git a/tools/testing/selftests/x86/sgx/Makefile b/tools/testing/selftests/x86/sgx/Makefile
+index 1fd6f2708e81..3af15d7c8644 100644
+--- a/tools/testing/selftests/x86/sgx/Makefile
++++ b/tools/testing/selftests/x86/sgx/Makefile
+@@ -2,47 +2,34 @@ top_srcdir = ../../../../..
  
- int main(int argc, char *argv[], char *envp[])
- {
- 	unsigned long bin_size = encl_bin_end - encl_bin;
- 	unsigned long ss_size = encl_ss_end - encl_ss;
--	struct sgx_enclave_exception exception;
- 	Elf64_Sym *eenter_sym;
- 	struct vdso_symtab symtab;
- 	struct sgx_secs secs;
--	uint64_t result = 0;
- 	void *eenter;
- 	void *addr;
+ include ../../lib.mk
  
--	memset(&exception, 0, sizeof(exception));
+-HOST_CFLAGS := -Wall -Werror -g $(INCLUDES) -fPIC
+-ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIC \
++ifeq ($(shell $(CC) -dumpmachine | cut --delimiter=- -f1),x86_64)
++all: all_64
++endif
++
++HOST_CFLAGS := -Wall -Werror -g $(INCLUDES)
++ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIE \
+ 	       -fno-stack-protector -mrdrnd $(INCLUDES)
+ 
+ TEST_CUSTOM_PROGS := $(OUTPUT)/test_sgx
+ all_64: $(TEST_CUSTOM_PROGS)
+ 
+-$(TEST_CUSTOM_PROGS): $(OUTPUT)/main.o $(OUTPUT)/sgx_call.o \
+-		      $(OUTPUT)/encl_piggy.o
++$(TEST_CUSTOM_PROGS): main.c sgx_call.S $(OUTPUT)/encl_piggy.o
+ 	$(CC) $(HOST_CFLAGS) -o $@ $^
+ 
+-$(OUTPUT)/main.o: main.c
+-	$(CC) $(HOST_CFLAGS) -c $< -o $@
++$(OUTPUT)/encl_piggy.o: encl_piggy.S $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
++	$(CC) $(HOST_CFLAGS) -I$(OUTPUT) -c $< -o $@
+ 
+-$(OUTPUT)/sgx_call.o: sgx_call.S
+-	$(CC) $(HOST_CFLAGS) -c $< -o $@
 -
- 	addr = vdso_get_base_addr(envp);
- 	if (!addr)
- 		exit(1);
-@@ -266,14 +360,7 @@ int main(int argc, char *argv[], char *envp[])
- 	if (!encl_load(&secs, bin_size))
- 		exit(1);
- 
--	printf("Input: 0x%lx\n", MAGIC);
--	sgx_call((void *)&MAGIC, &result, (void *)secs.base, &exception,
--		 eenter);
--	if (result != MAGIC) {
--		fprintf(stderr, "0x%lx != 0x%lx\n", result, MAGIC);
--		exit(1);
--	}
+-$(OUTPUT)/encl_piggy.o: $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
+-	$(CC) $(HOST_CFLAGS) -c encl_piggy.S -o $@
 -
--	printf("Output: 0x%lx\n", result);
--	exit(0);
-+	test1(eenter, &secs);
-+	test2(eenter, &secs);
-+	return 0;
- }
-diff --git a/tools/testing/selftests/x86/sgx/sgx_call.S b/tools/testing/selftests/x86/sgx/sgx_call.S
-index 14bd0a044199..da8f687a60d2 100644
---- a/tools/testing/selftests/x86/sgx/sgx_call.S
-+++ b/tools/testing/selftests/x86/sgx/sgx_call.S
-@@ -7,9 +7,43 @@
+-$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf $(OUTPUT)/sgxsign
++$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf
+ 	objcopy --remove-section=.got.plt -O binary $< $@
  
- 	.global sgx_call
- sgx_call:
-+	.cfi_startproc
-+	push	%r15
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%r15, 0
-+	push	%r14
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%r14, 0
-+	push	%r13
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%r13, 0
-+	push	%r12
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%r12, 0
- 	push	%rbx
--	mov	$0x02, %rax
--	mov	%rdx, %rbx
--	call	*%r8
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%rbx, 0
-+	push	$0
-+	.cfi_adjust_cfa_offset	8
-+	push	0x48(%rsp)
-+	.cfi_adjust_cfa_offset	8
-+	push	0x48(%rsp)
-+	.cfi_adjust_cfa_offset	8
-+	push	0x48(%rsp)
-+	.cfi_adjust_cfa_offset	8
-+	mov	$2, %eax
-+	call	*0x68(%rsp)
-+	add	$0x20, %rsp
-+	.cfi_adjust_cfa_offset	-0x20
- 	pop	%rbx
-+	.cfi_adjust_cfa_offset	-8
-+	pop	%r12
-+	.cfi_adjust_cfa_offset	-8
-+	pop	%r13
-+	.cfi_adjust_cfa_offset	-8
-+	pop	%r14
-+	.cfi_adjust_cfa_offset	-8
-+	pop	%r15
-+	.cfi_adjust_cfa_offset	-8
- 	ret
-+	.cfi_endproc
+-$(OUTPUT)/encl.elf: $(OUTPUT)/encl.o $(OUTPUT)/encl_bootstrap.o
+-	$(CC) $(ENCL_CFLAGS) -T encl.lds -o $@ $^
++$(OUTPUT)/encl.elf: encl.lds encl.c encl_bootstrap.S
++	$(CC) $(ENCL_CFLAGS) -T $^ -o $@
+ 
+-$(OUTPUT)/encl.o: encl.c
+-	$(CC) $(ENCL_CFLAGS) -c $< -o $@
+-
+-$(OUTPUT)/encl_bootstrap.o: encl_bootstrap.S
+-	$(CC) $(ENCL_CFLAGS) -c $< -o $@
+-
+-$(OUTPUT)/encl.ss: $(OUTPUT)/encl.bin  $(OUTPUT)/sgxsign
+-	$(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
++$(OUTPUT)/encl.ss: $(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin
++	$^ $@
+ 
+ $(OUTPUT)/sgxsign: sgxsign.c
+ 	$(CC) -o $@ $< -lcrypto
+ 
+-EXTRA_CLEAN := $(OUTPUT)/sgx-selftest $(OUTPUT)/sgx-selftest.o \
+-	       $(OUTPUT)/sgx_call.o $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss \
+-	       $(OUTPUT)/encl.elf $(OUTPUT)/encl.o $(OUTPUT)/encl_bootstrap.o \
+-	       $(OUTPUT)/sgxsign
+-
+-.PHONY: clean
++EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(addprefix $(OUTPUT)/,	\
++		encl.elf encl.bin encl.ss encl_piggy.o sgxsign)
 -- 
 2.17.1
 
