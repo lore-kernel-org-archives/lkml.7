@@ -2,132 +2,181 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F903C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A57C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E096218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:38:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AcbA5WVs"
+	by mail.kernel.org (Postfix) with ESMTP id 4F3B1218D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:39:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfDWWiu (ORCPT
+        id S1728419AbfDWWje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:38:50 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38711 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfDWWit (ORCPT
+        Tue, 23 Apr 2019 18:39:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52238 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726075AbfDWWje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:38:49 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d13so18109147qth.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:38:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=B7VoHDQyrAF8aaybRD4S2NtHu7O5loR8kyubxlS1twM=;
-        b=AcbA5WVsJ1qws2qqoC6p3R/johDNop1WJF5YxM/jpFZL5mjKtkxwImj0nuSfZ569wx
-         72D4ulK0FBGnSexTZBrxwRL+2P0Uyg+8t0+GFj1LkAwUeAHFpZbxxn9XfyuQN0G0GYtP
-         kDZi0HiOZWUy09tB+411Su/71ZuM9LEvcPdDqsQMTzb+rSYD+BWGh8+TaDWr/eZ6N1Gk
-         /qKeUrqTelJnVAS0E2t0+VW3t0n/5netEZ5UcURLY2Uxi0q9n/BtJod8eIGT1ZBmmcfy
-         W3naOFH/SMLtpuAKFKciX90AT9GHHlvuilgrNmydrHknmESdxqwD95NhcCwY3SADsm9b
-         OcMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=B7VoHDQyrAF8aaybRD4S2NtHu7O5loR8kyubxlS1twM=;
-        b=bGaTO03uOwS+x5Zfu9kLSRZp8q2t4BngNinyTmbTPkAOuDKIDnoJHOpACuCERjdW52
-         rIYsEdfnU/8w05kwS+nJjCil6l4Gxv+V6lbHq5lbC8vtgydfl32rYEXrjPEj8E4ERCF0
-         2KYkSyb4+W826RHsyLlkHS2vdrxfOa5oQg0au73c95cYB8921ANoVnUWf4pZFpzy3guM
-         /64XJ4l2Cvnrl1aFgh8XWFklgnFMYZ2OsGJyZM8ZK1aEV6KiwhKHDoBBJMHneY3+2kb+
-         PvOf96uDHgO9a6dvfJTDEzcQxhYu4UeK2+QKXEQBXDLVYdazlsKd2lC92wzXaHJnIxOo
-         Uu0A==
-X-Gm-Message-State: APjAAAWfOBIsEtouuRtydpbrZDykV8U/h+Kvg44xlRGkesjPHhO2gpky
-        TM4zrbJBXflbO05xrvY8xyuT5Q==
-X-Google-Smtp-Source: APXvYqxC4xxysfcPHI9Kis59soe3R2cGbiNoXBk27nTuqqse/uvvA1TSIuNswOeK4EPCSVD4luPZ9w==
-X-Received: by 2002:ac8:2d62:: with SMTP id o31mr9721491qta.318.1556059128840;
-        Tue, 23 Apr 2019 15:38:48 -0700 (PDT)
-Received: from [192.168.1.169] (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
-        by smtp.gmail.com with ESMTPSA id v58sm10842707qtv.66.2019.04.23.15.38.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 15:38:48 -0700 (PDT)
-Subject: Re: [PATCH V3 3/3] thermal/cpu-cooling: Update thermal pressure in
- case of a maximum frequency capping
-To:     Quentin Perret <quentin.perret@arm.com>
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
- <1555443521-579-4-git-send-email-thara.gopinath@linaro.org>
- <20190418094833.owlobrx6x5gclvhy@queper01-lin>
-Cc:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5CBF93F6.8000109@linaro.org>
-Date:   Tue, 23 Apr 2019 18:38:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Tue, 23 Apr 2019 18:39:34 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NMd4Lm130011
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:39:33 -0400
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s28whxh8j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:39:32 -0400
+Received: from localhost
+        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
+        Tue, 23 Apr 2019 23:39:32 +0100
+Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
+        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 23:39:30 +0100
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NMdTPD25231530
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 22:39:29 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47599BE051;
+        Tue, 23 Apr 2019 22:39:29 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D6B4BE054;
+        Tue, 23 Apr 2019 22:39:27 +0000 (GMT)
+Received: from morokweng.localdomain.com (unknown [9.85.214.110])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 22:39:26 +0000 (GMT)
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Michael Bringmann <mwb@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH v4] powerpc/pseries: Remove limit in wait for dying CPU
+Date:   Tue, 23 Apr 2019 19:39:14 -0300
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-In-Reply-To: <20190418094833.owlobrx6x5gclvhy@queper01-lin>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042322-0012-0000-0000-0000172B09B7
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010983; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01193417; UDB=6.00625613; IPR=6.00974238;
+ MB=3.00026564; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-23 22:39:31
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042322-0013-0000-0000-000056FC40C0
+Message-Id: <20190423223914.3882-1-bauerman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/18/2019 05:48 AM, Quentin Perret wrote:
-> On Tuesday 16 Apr 2019 at 15:38:41 (-0400), Thara Gopinath wrote:
->> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
->> @@ -177,6 +178,9 @@ static int cpufreq_thermal_notifier(struct notifier_block *nb,
->>  
->>  		if (policy->max > clipped_freq)
->>  			cpufreq_verify_within_limits(policy, 0, clipped_freq);
->> +
->> +		sched_update_thermal_pressure(policy->cpus,
->> +				policy->max, policy->cpuinfo.max_freq);
-> 
-> Is this something we could do this CPUFreq ? Directly in
-> cpufreq_verify_within_limits() perhaps ?
-> 
-> That would re-define the 'thermal pressure' framework in a more abstract
-> way and make the scheduler look at 'frequency capping' events,
-> regardless of the reason for capping.
-> 
-> That would reflect user-defined frequency constraint into cpu_capacity,
-> in addition to the thermal stuff. I'm not sure if there is another use
-> case for frequency capping ?
-Hi Quentin,
-Thanks for the review. Sorry for the delay in response as I was on
-vacation for the past few days.
-I think there is one major difference between user-defined frequency
-constraints and frequency constraints due to thermal events in terms of
-the time period the system spends in the the constraint state.
-Typically, a user constraint lasts for seconds if not minutes and I
-think in this case cpu_capacity_orig should reflect this constraint and
-not cpu_capacity like this patch set. Also, in case of the user
-constraint, there is possibly no need to accumulate and average the
-capacity constraints and instantaneous values can be directly applied to
-cpu_capacity_orig. On the other hand thermal pressure is more spiky and
-sometimes in the order of ms and us requiring the accumulating and
-averaging.
-> 
-> Perhaps the Intel boost stuff could be factored in there ? That is,
-> at times when the boost freq is not reachable capacity_of() would appear
-> smaller ... Unless this wants to be reflected instantaneously ?
-Again, do you think intel boost is more applicable to be reflected in
-cpu_capacity_orig and not cpu_capacity?
-> 
-> Thoughts ?
-> Quentin
-> 
+When testing DLPAR CPU add/remove on a system under stress,
+pseries_cpu_die() doesn't wait long enough for a CPU to die:
 
+[  446.983944] cpu 148 (hwid 148) Ready to die...
+[  446.984062] cpu 149 (hwid 149) Ready to die...
+[  446.993518] cpu 150 (hwid 150) Ready to die...
+[  446.993543] Querying DEAD? cpu 150 (150) shows 2
+[  446.994098] cpu 151 (hwid 151) Ready to die...
+[  447.133726] cpu 136 (hwid 136) Ready to die...
+[  447.403532] cpu 137 (hwid 137) Ready to die...
+[  447.403772] cpu 138 (hwid 138) Ready to die...
+[  447.403839] cpu 139 (hwid 139) Ready to die...
+[  447.403887] cpu 140 (hwid 140) Ready to die...
+[  447.403937] cpu 141 (hwid 141) Ready to die...
+[  447.403979] cpu 142 (hwid 142) Ready to die...
+[  447.404038] cpu 143 (hwid 143) Ready to die...
+[  447.513546] cpu 128 (hwid 128) Ready to die...
+[  447.693533] cpu 129 (hwid 129) Ready to die...
+[  447.693999] cpu 130 (hwid 130) Ready to die...
+[  447.703530] cpu 131 (hwid 131) Ready to die...
+[  447.704087] Querying DEAD? cpu 132 (132) shows 2
+[  447.704102] cpu 132 (hwid 132) Ready to die...
+[  447.713534] cpu 133 (hwid 133) Ready to die...
+[  447.714064] Querying DEAD? cpu 134 (134) shows 2
 
--- 
-Regards
-Thara
+This is a race between one CPU stopping and another one calling
+pseries_cpu_die() to wait for it to stop. That function does a short busy
+loop calling RTAS query-cpu-stopped-state on the stopping CPU to verify
+that it is stopped, but I think there's a lot for the stopping CPU to do
+which may take longer than this loop allows.
+
+As can be seen in the dmesg right before or after the "Querying DEAD?"
+messages, if pseries_cpu_die() waited a little longer it would have seen
+the CPU in the stopped state.
+
+What I think is going on is that CPU 134 was inactive at the time it was
+unplugged. In that case, dlpar_offline_cpu() calls H_PROD on that CPU and
+immediately calls pseries_cpu_die(). Meanwhile, the prodded CPU activates
+and start the process of stopping itself. The busy loop is not long enough
+to allow for the CPU to wake up and complete the stopping process.
+
+This can be a problem because if the busy loop finishes too early, then the
+kernel may offline another CPU before the previous one finished dying,
+which would lead to two concurrent calls to rtas-stop-self, which is
+prohibited by the PAPR.
+
+Since the hotplug machinery already assumes that cpu_die() is going to
+work, we can simply loop until the CPU stops.
+
+Also change the loop to wait 100 µs between each call to
+smp_query_cpu_stopped() to avoid querying RTAS too often.
+
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Analyzed-by: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+---
+ arch/powerpc/platforms/pseries/hotplug-cpu.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+I have seen this problem since v4.8. Should this patch go to stable as
+well?
+
+Changes since v3:
+- Changed to loop until the CPU stops rather than for a fixed amount
+  of time.
+
+Changes since v2:
+- Increased busy loop to 200 iterations so that it can last up to 20 ms
+  (suggested by Gautham).
+- Changed commit message to include Gautham's remarks.
+
+diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+index 97feb6e79f1a..d75cee60644c 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
++++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+@@ -214,13 +214,17 @@ static void pseries_cpu_die(unsigned int cpu)
+ 			msleep(1);
+ 		}
+ 	} else if (get_preferred_offline_state(cpu) == CPU_STATE_OFFLINE) {
+-
+-		for (tries = 0; tries < 25; tries++) {
++		/*
++		 * rtas_stop_self() panics if the CPU fails to stop and our
++		 * callers already assume that we are going to succeed, so we
++		 * can just loop until the CPU stops.
++		 */
++		while (true) {
+ 			cpu_status = smp_query_cpu_stopped(pcpu);
+ 			if (cpu_status == QCSS_STOPPED ||
+ 			    cpu_status == QCSS_HARDWARE_ERROR)
+ 				break;
+-			cpu_relax();
++			udelay(100);
+ 		}
+ 	}
+ 
+
