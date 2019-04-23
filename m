@@ -2,71 +2,86 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08AEC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFFCC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A0821850
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2D8214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556039453;
+	bh=/yDo69GNbQIHWXaiPgSdIL4wlfGzv/OoO6sxsg/wy6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Eq1GJ+3EbnBVvFXhhdie/ABeUVWvci0y87GO5xqpocISp1cNceIPtRmGG1joD228E
+	 4RRyzgRAh/S/vjejT+ogVTIQgG85MKVasJihyvd8C6FSr21KBu4czSeGDdvAEYfbZZ
+	 uQnWsYClGZROstB1Y6mn7JBnOGkHQcmZoaLfsNOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbfDWRJL (ORCPT
+        id S1729308AbfDWRKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 13:09:11 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:59645 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728490AbfDWRJK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:09:10 -0400
-Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
-        by mail.holtmann.org (Postfix) with ESMTPSA id A91B5CF2E8;
-        Tue, 23 Apr 2019 19:17:19 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] Bluetooth: btbcm: Add default address for BCM43341B
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190409141550.19458-1-ftoth@exalondelft.nl>
-Date:   Tue, 23 Apr 2019 19:09:08 +0200
-Cc:     andriy.shevchenko@linux.intel.com, Daniel Wagner <wagi@monom.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <4A3856F7-29F1-47A9-BFDB-B4B07E9BA720@holtmann.org>
-References: <20190409141550.19458-1-ftoth@exalondelft.nl>
-To:     Ferry Toth <ftoth@exalondelft.nl>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Tue, 23 Apr 2019 13:10:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727740AbfDWRKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 13:10:51 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA4FC208E4;
+        Tue, 23 Apr 2019 17:10:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556039451;
+        bh=/yDo69GNbQIHWXaiPgSdIL4wlfGzv/OoO6sxsg/wy6w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tRNc2Zi8ORYU3Vca13rkylA6HheK2cWuzA+n31+v76NaWYjYKU37oK01lvxIUPApu
+         UzyHqTeA0sR/QA9uelDLUmIX+5lo8eLrdO1hhZd2XytlOtuWSBGWAKsOG+mhaktXUM
+         SfItgnwVhL2Q/rR//dAHWKptLZUOEeukfrvpHcws=
+Date:   Tue, 23 Apr 2019 12:10:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex G <mr.nuke.me@gmail.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, austin_bolen@dell.com,
+        alex_gagniuc@dellteam.com, keith.busch@intel.com,
+        Shyam_Iyer@Dell.com, lukas@wunner.de, okaya@kernel.org,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/LINK: Account for BW notification in vector
+ calculation
+Message-ID: <20190423171050.GA37199@google.com>
+References: <155597243666.19387.1205950870601742062.stgit@gimli.home>
+ <d1126250-14e0-192c-f219-f143f62c9cdd@gmail.com>
+ <20190422183347.51ba522c@x1.home>
+ <84300da7-9bbd-4f32-c7fa-23724db60b88@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84300da7-9bbd-4f32-c7fa-23724db60b88@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ferry,
-
-> The BCM43341B has the default MAC address 43:34:1B:00:1F:AC if none
-> is given. This address was found when enabling Bluetooth on multiple
-> Intel Edison modules. It also contains the sequence 43341B, the name
-> the chip identifies itself as. Using the same BD_ADDR is problematic
-> when having multiple Intel Edison modules in each others range.
-> The default address also has the LAA (locally administered address)
-> bit set which prevents a BNEP device from being created, needed for
-> BT tethering.
+On Tue, Apr 23, 2019 at 09:33:53AM -0500, Alex G wrote:
+> On 4/22/19 7:33 PM, Alex Williamson wrote:
+> > There is nothing wrong happening here that needs to fill logs.  I
+> > thought maybe if I enabled notification of autonomous bandwidth
+> > changes that it might categorize these as something we could
+> > ignore, but it doesn't.  How can we identify only cases where this
+> > is an erroneous/noteworthy situation?  Thanks,
 > 
-> Add this to the list of black listed default MAC addresses and let
-> the user configure a valid one using f.i.
-> `btmgmt -i hci0 public-addr xx:xx:xx:xx:xx:xx`
-> 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Ferry Toth <ftoth@exalondelft.nl>
-> ---
-> drivers/bluetooth/btbcm.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
+> You don't. Ethernet doesn't. USB doesn't. This logging behavior is
+> consistent with every other subsystem that deals with multi-speed links.
 
-patch has been applied to bluetooth-next tree.
+Can you point me to the logging in these other subsystems so I can
+learn more about how they deal with this?
 
-Regards
+I agree that emitting log messages for normal and expected events will
+lead to user confusion and we need to do something.
 
-Marcel
+e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
+notification") was merged in v5.1-rc1, so we still have (a little)
+time to figure this out before v5.1.
 
+Bjorn
