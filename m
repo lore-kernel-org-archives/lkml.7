@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4184C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F141C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A753C2183E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05512183E
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:32:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oeyeCJ2W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L3xeiXnp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbfDWQcf (ORCPT
+        id S1729056AbfDWQco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:32:35 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45847 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728673AbfDWQce (ORCPT
+        Tue, 23 Apr 2019 12:32:44 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35343 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728656AbfDWQcm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:32:34 -0400
-Received: by mail-pl1-f195.google.com with SMTP id o5so3458593pls.12;
-        Tue, 23 Apr 2019 09:32:33 -0700 (PDT)
+        Tue, 23 Apr 2019 12:32:42 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so7796269plp.2;
+        Tue, 23 Apr 2019 09:32:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mEABvAJPuUKquiCQJQEbI9ERMbYdpL4Xy2gvmbdj4l4=;
-        b=oeyeCJ2WsgE03nhOk/9sEgMBw+MMM5dqzZNVlTdRKjDIDDSfXCpu8cnVzwgZoSEEsM
-         UBFq9Ug8QZBwNqZ71huTudilNRhSnnAs0/jdnoTynCoYApSqwZXgmott85RLcv3/zu/Q
-         CACb0WKUhKa3gmM6BEyL+4rcO4HLTzngtZLqhEYxKciJmonuEayWOriADt0wmaA6dDjB
-         OAHQcwoSnkaOEZsnMRtxO0ozUeSMfmXqEaRETr/lQ+vw4vC9bogbt3WQBY5jqDnP6wQl
-         OI30M95rG6AHPwlPGl2yKJo29PLncri7j1dgbqz6xytZoStMqA8O2DWVe+yFzpxlFSaw
-         vVkQ==
+        bh=+Kb3yhKuecaH+tPIFeyKoNCy2Q2HKYqzIlny4c2UXFY=;
+        b=L3xeiXnpEXxmenNLrs3YPDFeZpH9FfZiKFIk4GYjcLhr2xZro8lXD4MaVnNqw7+jN7
+         +J2IpkhfT5PSmtMDaP4aHuZcPdpjSyAcRtcPy+4/2YeedvJAajM4WtMkuU6OafogY3Sk
+         FFQwZ6w+rtnQ1lAE/l0vN8BawDclFuInn33NfUGeFTZ0hsY5fOoUJdexuV4rIahaeoje
+         5m8SP4/I7OsWUcU2OnSwVsQgJPnuW7AF4GepHV8TUSXtavc7GS53blGwnwMpYxhHTkP2
+         9At0PSe0cpVBGpEQto0JOcGB1xmA2xGOwJD7dr79wAjsa7agDRnkQKXq3jYEtHSRoccZ
+         yr6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mEABvAJPuUKquiCQJQEbI9ERMbYdpL4Xy2gvmbdj4l4=;
-        b=sQnz1wJTuliocUSheKSA4JHS3xW1HIZ8UFTm6LvrFJQHIY/fZyAibRgKXftKJYNynz
-         kYXzRceymVz3ZLgvmEorQlcHPjj3bPHaIt65avK/5/jHjlA8Ucu39I2u0A+uRJ9Wdl98
-         P8fLHdsM4860mK50Ox5dnWA4Og+WeJ0+l1sBBknzZIFnrbShrjyuP4FCCtAbqedqvfjJ
-         PZonnEgFkksY4CJWZBeX4swk7FSyk3cz0PnGocKiBqcQQsuEmLojZhrjhEySUEXI0aQb
-         8OelfSmUaxRM7QiD2cxEW2V42XFUXjgRg/TSH/MEBHvjW+URcDnM/LZi7/7SZl/pJ5zs
-         1ovw==
-X-Gm-Message-State: APjAAAVX+Z+PNoJN+HGoOqKRlz0Busg+8GVkl9cL407fUjApgP0B1b7z
-        8VrWTqu+BKKa4gW9Po1dpAE=
-X-Google-Smtp-Source: APXvYqzifftwRoxPGFIrdRfAi1DPVbNnGqyi/pSYebaGrRw/87tc84tBZ4WF7JaHYuXhzDHfKfeHVg==
-X-Received: by 2002:a17:902:1105:: with SMTP id d5mr27497218pla.311.1556037153036;
-        Tue, 23 Apr 2019 09:32:33 -0700 (PDT)
+        bh=+Kb3yhKuecaH+tPIFeyKoNCy2Q2HKYqzIlny4c2UXFY=;
+        b=cPj/IZlpca685pN21K4m16xo6gCW4NGiPPN/hntaxnyS3WXfGVUbav1G+xjD+7k9Po
+         FYe1F9S0KFMpRnlMkqMUnWR0MtkM4pX0P16mx+9Umf+/KT6dMBILxOKQUwbnh6RrDpiU
+         TRFhbQ8YuvYxCfV7mYKdrjJip0sFETPigKI/fDPLliaoSUUBz1hKUjdyjBWO0cW/zeLr
+         CI74rNDQ+pA/mBxcJiWq1W5mseMpIUU1jJrXJngrxEF+6cizYYH9PtABCL5Zfp75sGO6
+         bP1dX6WtBEDWJ/NCbLIH085KVRUlk7u/+HsnREYfJCAyYWQD0KZCwNbCsLpMJX0WzZrS
+         eGqA==
+X-Gm-Message-State: APjAAAVhtT06xxOaQevO+7/qo5xM7S1AQp+G7f9Lb42A0eVThqtDVm67
+        gEXjoiqzA7MOI9OnPIaffd0=
+X-Google-Smtp-Source: APXvYqzuFBXtP4aSifoDWH3IVT1QXDqLt0k1TlsPXALgdM6up9DM5f8I9lUgUEZLrb7aoOMVFUnFqA==
+X-Received: by 2002:a17:902:e490:: with SMTP id cj16mr27286585plb.156.1556037161684;
+        Tue, 23 Apr 2019 09:32:41 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id v1sm24364801pff.81.2019.04.23.09.32.22
+        by smtp.gmail.com with ESMTPSA id v1sm24364801pff.81.2019.04.23.09.32.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 09:32:32 -0700 (PDT)
+        Tue, 23 Apr 2019 09:32:41 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
@@ -66,14 +66,13 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
         linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
         linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v4 14/63] Documentation: ACPI: move dsd/graph.txt to firmware-guide/acpi and convert to reST
-Date:   Wed, 24 Apr 2019 00:28:43 +0800
-Message-Id: <20190423162932.21428-15-changbin.du@gmail.com>
+Subject: [PATCH v4 15/63] Documentation: ACPI: move dsd/data-node-references.txt to firmware-guide/acpi and convert to reST
+Date:   Wed, 24 Apr 2019 00:28:44 +0800
+Message-Id: <20190423162932.21428-16-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190423162932.21428-1-changbin.du@gmail.com>
 References: <20190423162932.21428-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -85,256 +84,78 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- .../acpi/dsd/graph.rst}                       | 157 +++++++++---------
- Documentation/firmware-guide/acpi/index.rst   |   1 +
- 2 files changed, 81 insertions(+), 77 deletions(-)
- rename Documentation/{acpi/dsd/graph.txt => firmware-guide/acpi/dsd/graph.rst} (56%)
+ .../acpi/dsd/data-node-references.rst}        | 28 +++++++++++--------
+ Documentation/firmware-guide/acpi/index.rst   |  1 +
+ 2 files changed, 17 insertions(+), 12 deletions(-)
+ rename Documentation/{acpi/dsd/data-node-references.txt => firmware-guide/acpi/dsd/data-node-references.rst} (79%)
 
-diff --git a/Documentation/acpi/dsd/graph.txt b/Documentation/firmware-guide/acpi/dsd/graph.rst
-similarity index 56%
-rename from Documentation/acpi/dsd/graph.txt
-rename to Documentation/firmware-guide/acpi/dsd/graph.rst
-index b9ce910781dc..e0baed35b037 100644
---- a/Documentation/acpi/dsd/graph.txt
-+++ b/Documentation/firmware-guide/acpi/dsd/graph.rst
-@@ -1,8 +1,11 @@
--Graphs
+diff --git a/Documentation/acpi/dsd/data-node-references.txt b/Documentation/firmware-guide/acpi/dsd/data-node-references.rst
+similarity index 79%
+rename from Documentation/acpi/dsd/data-node-references.txt
+rename to Documentation/firmware-guide/acpi/dsd/data-node-references.rst
+index c3871565c8cf..79c5368eaecf 100644
+--- a/Documentation/acpi/dsd/data-node-references.txt
++++ b/Documentation/firmware-guide/acpi/dsd/data-node-references.rst
+@@ -1,9 +1,12 @@
+-Copyright (C) 2018 Intel Corporation
+-Author: Sakari Ailus <sakari.ailus@linux.intel.com>
+-
 +.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
  
-+======
-+Graphs
-+======
- 
- _DSD
------
-+====
- 
- _DSD (Device Specific Data) [7] is a predefined ACPI device
- configuration object that can be used to convey information on
-@@ -30,7 +33,7 @@ hierarchical data extension array on each depth.
- 
- 
- Ports and endpoints
---------------------
-+===================
- 
- The port and endpoint concepts are very similar to those in Devicetree
- [3]. A port represents an interface in a device, and an endpoint
-@@ -38,9 +41,9 @@ represents a connection to that interface.
- 
- All port nodes are located under the device's "_DSD" node in the hierarchical
- data extension tree. The data extension related to each port node must begin
--with "port" and must be followed by the "@" character and the number of the port
--as its key. The target object it refers to should be called "PRTX", where "X" is
--the number of the port. An example of such a package would be:
-+with "port" and must be followed by the "@" character and the number of the
-+port as its key. The target object it refers to should be called "PRTX", where
-+"X" is the number of the port. An example of such a package would be::
- 
-     Package() { "port@4", PRT4 }
- 
-@@ -49,7 +52,7 @@ data extension key of the endpoint nodes must begin with
- "endpoint" and must be followed by the "@" character and the number of the
- endpoint. The object it refers to should be called "EPXY", where "X" is the
- number of the port and "Y" is the number of the endpoint. An example of such a
--package would be:
-+package would be::
- 
-     Package() { "endpoint@0", EP40 }
- 
-@@ -62,85 +65,85 @@ of that port shall be zero. Similarly, if a port may only have a single
- endpoint, the number of that endpoint shall be zero.
- 
- The endpoint reference uses property extension with "remote-endpoint" property
--name followed by a reference in the same package. Such references consist of the
-+name followed by a reference in the same package. Such references consist of
- the remote device reference, the first package entry of the port data extension
- reference under the device and finally the first package entry of the endpoint
--data extension reference under the port. Individual references thus appear as:
-+data extension reference under the port. Individual references thus appear as::
- 
-     Package() { device, "port@X", "endpoint@Y" }
- 
--In the above example, "X" is the number of the port and "Y" is the number of the
--endpoint.
-+In the above example, "X" is the number of the port and "Y" is the number of
-+the endpoint.
- 
- The references to endpoints must be always done both ways, to the
- remote endpoint and back from the referred remote endpoint node.
- 
--A simple example of this is show below:
-+A simple example of this is show below::
- 
-     Scope (\_SB.PCI0.I2C2)
-     {
--	Device (CAM0)
--	{
--	    Name (_DSD, Package () {
--		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
--		Package () {
--		    Package () { "compatible", Package () { "nokia,smia" } },
--		},
--		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
--		Package () {
--		    Package () { "port@0", PRT0 },
--		}
--	    })
--	    Name (PRT0, Package() {
--		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
--		Package () {
--		    Package () { "reg", 0 },
--		},
--		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
--		Package () {
--		    Package () { "endpoint@0", EP00 },
--		}
--	    })
--	    Name (EP00, Package() {
--		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
--		Package () {
--		    Package () { "reg", 0 },
--		    Package () { "remote-endpoint", Package() { \_SB.PCI0.ISP, "port@4", "endpoint@0" } },
--		}
--	    })
--	}
-+        Device (CAM0)
-+        {
-+            Name (_DSD, Package () {
-+                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+                Package () {
-+                    Package () { "compatible", Package () { "nokia,smia" } },
-+                },
-+                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-+                Package () {
-+                    Package () { "port@0", PRT0 },
-+                }
-+            })
-+            Name (PRT0, Package() {
-+                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+                Package () {
-+                    Package () { "reg", 0 },
-+                },
-+                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-+                Package () {
-+                    Package () { "endpoint@0", EP00 },
-+                }
-+            })
-+            Name (EP00, Package() {
-+                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+                Package () {
-+                    Package () { "reg", 0 },
-+                    Package () { "remote-endpoint", Package() { \_SB.PCI0.ISP, "port@4", "endpoint@0" } },
-+                }
-+            })
-+        }
-     }
- 
-     Scope (\_SB.PCI0)
-     {
--	Device (ISP)
--	{
--	    Name (_DSD, Package () {
--		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
--		Package () {
--		    Package () { "port@4", PRT4 },
--		}
--	    })
--
--	    Name (PRT4, Package() {
--		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
--		Package () {
--		    Package () { "reg", 4 }, /* CSI-2 port number */
--		},
--		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
--		Package () {
--		    Package () { "endpoint@0", EP40 },
--		}
--	    })
--
--	    Name (EP40, Package() {
--		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
--		Package () {
--		    Package () { "reg", 0 },
--		    Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, "port@0", "endpoint@0" } },
--		}
--	    })
--	}
-+        Device (ISP)
-+        {
-+            Name (_DSD, Package () {
-+                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-+                Package () {
-+                    Package () { "port@4", PRT4 },
-+                }
-+            })
++===================================
+ Referencing hierarchical data nodes
+------------------------------------
++===================================
 +
-+            Name (PRT4, Package() {
-+                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+                Package () {
-+                    Package () { "reg", 4 }, /* CSI-2 port number */
-+                },
-+                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-+                Package () {
-+                    Package () { "endpoint@0", EP40 },
-+                }
-+            })
-+
-+            Name (EP40, Package() {
-+                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+                Package () {
-+                    Package () { "reg", 0 },
-+                    Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, "port@0", "endpoint@0" } },
-+                }
-+            })
-+        }
-     }
++:Copyright: |copy| 2018 Intel Corporation
++:Author: Sakari Ailus <sakari.ailus@linux.intel.com>
  
- Here, the port 0 of the "CAM0" device is connected to the port 4 of
-@@ -148,27 +151,27 @@ the "ISP" device and vice versa.
+ ACPI in general allows referring to device objects in the tree only.
+ Hierarchical data extension nodes may not be referred to directly, hence this
+@@ -28,13 +31,14 @@ extension key.
  
+ 
+ Example
+--------
++=======
+ 
+-	In the ASL snippet below, the "reference" _DSD property [2] contains a
+-	device object reference to DEV0 and under that device object, a
+-	hierarchical data extension key "node@1" referring to the NOD1 object
+-	and lastly, a hierarchical data extension key "anothernode" referring to
+-	the ANOD object which is also the final target node of the reference.
++In the ASL snippet below, the "reference" _DSD property [2] contains a
++device object reference to DEV0 and under that device object, a
++hierarchical data extension key "node@1" referring to the NOD1 object
++and lastly, a hierarchical data extension key "anothernode" referring to
++the ANOD object which is also the final target node of the reference.
++::
+ 
+ 	Device (DEV0)
+ 	{
+@@ -75,10 +79,10 @@ Example
+ 	    })
+ 	}
+ 
+-Please also see a graph example in graph.txt .
++Please also see a graph example in :doc:`graph`.
  
  References
 -----------
 +==========
  
- [1] _DSD (Device Specific Data) Implementation Guide.
--    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm>,
-+    http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm,
-     referenced 2016-10-03.
- 
--[2] Devicetree. <URL:http://www.devicetree.org>, referenced 2016-10-03.
-+[2] Devicetree. http://www.devicetree.org, referenced 2016-10-03.
- 
- [3] Documentation/devicetree/bindings/graph.txt
- 
- [4] Device Properties UUID For _DSD.
--    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
-+    http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf,
-     referenced 2016-10-04.
- 
- [5] Hierarchical Data Extension UUID For _DSD.
--    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
-+    http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf,
-     referenced 2016-10-04.
- 
- [6] Advanced Configuration and Power Interface Specification.
--    <URL:http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf>,
-+    http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf,
-     referenced 2016-10-04.
- 
- [7] _DSD Device Properties Usage Rules.
--    Documentation/acpi/DSD-properties-rules.txt
-+    :doc:`../DSD-properties-rules`
+ [1] Hierarchical Data Extension UUID For _DSD.
+     <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
 diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-index bedcb0b242a2..f81cfbcb6878 100644
+index f81cfbcb6878..6d4e0df4f063 100644
 --- a/Documentation/firmware-guide/acpi/index.rst
 +++ b/Documentation/firmware-guide/acpi/index.rst
-@@ -8,6 +8,7 @@ ACPI Support
-    :maxdepth: 1
+@@ -9,6 +9,7 @@ ACPI Support
  
     namespace
-+   dsd/graph
+    dsd/graph
++   dsd/data-node-references
     enumeration
     osi
     method-customizing
