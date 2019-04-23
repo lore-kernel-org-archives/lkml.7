@@ -2,179 +2,144 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E89C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9E1C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7762420645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFBE20645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:27:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aHSRLaM5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfDWI11 (ORCPT
+        id S1726632AbfDWI1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:27:27 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:36144 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfDWI10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:27:26 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x3N8Qcl1026349
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Tue, 23 Apr 2019 01:26:49 -0700
-Received: from [128.224.162.188] (128.224.162.188) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 23 Apr
- 2019 01:26:28 -0700
-Subject: Re: Bug report: A commit about serial8250 cause the output disorderly
- at the phase of startup
-To:     John Ogness <john.ogness@linutronix.de>
-CC:     <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        <bigeasy@linutronix.de>
-References: <5f1398dd-d505-dd8a-0ea1-8186618d56d3@windriver.com>
- <82793501-9ddf-11ec-3f91-73872bf3bd54@windriver.com>
- <871s1tusi8.fsf@linutronix.de>
-From:   "Hongzhi, Song" <hongzhi.song@windriver.com>
-Message-ID: <d1b07448-6518-18ad-9025-125290c5c1c1@windriver.com>
-Date:   Tue, 23 Apr 2019 16:26:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 04:27:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33617 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfDWI1i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 04:27:38 -0400
+Received: by mail-io1-f68.google.com with SMTP id u12so1275329iop.0;
+        Tue, 23 Apr 2019 01:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CNbIImTYyg/CNsNHBJ7fygvu/1OPcPfdcMzPNCLn1b8=;
+        b=aHSRLaM5DEAJOEjk+lTeYmJ1MqFRsHoNBqC/DtJEzZnCTEsNNopeRbQyx/37Iwi7yb
+         qmaL6vEbMylDKAD9Ve97o5G10yp36gRHoHjgk52BZQ+S25r7QvN7cIqU0fME+z8baQfC
+         ltkvUe3mTvUqcxEvs3zkZjSWy0PCif8ydntoL4hwAjrdUNlJHERIAHpKAuqoh4uqhPDk
+         WrImW4ZvU3Ortqgwnd14S7Ul09/Mba1bn4dm0mS2kPYQfff6NwCnJ233MmMgZi5QjYS/
+         vSBGFFFqntPYc1y9Wq5EURIjNuqkQFaArvqGiMkfcuWATt/LxQNwHNdWsjRIY6o+PCep
+         Mm3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CNbIImTYyg/CNsNHBJ7fygvu/1OPcPfdcMzPNCLn1b8=;
+        b=BFrm2A50EeNyHYIQeeJRBUebbB1tzpdCDGLTotuvY/ZdfUPxlj9b/vfhsr5JgmYRXm
+         Tb8OtkklD+5GiBJU66CQrKDWpAUUck0Meoqhut2d6v6vNOwWPQD6Z4iNM2t6dNEl7OlA
+         H78D0GLscEAvZRMlJ5ICv80uYdLSPEbl9Dup7k4+oWSSG9P7X3vTup9WL/JlYwsuguCH
+         QXKF58g3Kn07vFAK3ic1GKK6rCFUkFHCpAa0+RMdx7+khi+MECmXjUk7qmKscMlIpKtL
+         Vs5TqkpghZi1CdSNzoi6WSfacByvcA/hyHyKbfNMbuWGAvLD6bn46EQCzcpoTKSvmE1m
+         Hbeg==
+X-Gm-Message-State: APjAAAW8vGpTUxJ2NqEGH8SolCDVki4guVA1KLN6UlNoxukUD4sigElA
+        2Ufr6drpnz9Jf5Bg3TBR4mnO0+e8D5r60+61A3FBkqs5rq0=
+X-Google-Smtp-Source: APXvYqy/Xwl5lHta8DJ7Tyf3EI9FXTsse542bPVJzz3lgVeaakdpB9i9H5KvKtKvomoQFxf2RxyUfsmL/FkCbHS+OsA=
+X-Received: by 2002:a6b:cf0f:: with SMTP id o15mr9886010ioa.5.1556008057551;
+ Tue, 23 Apr 2019 01:27:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <871s1tusi8.fsf@linutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [128.224.162.188]
+References: <20190422194516.11634-1-sashal@kernel.org> <20190422194516.11634-48-sashal@kernel.org>
+In-Reply-To: <20190422194516.11634-48-sashal@kernel.org>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Tue, 23 Apr 2019 10:27:34 +0200
+Message-ID: <CAOi1vP9qzUZOO5Mv2+eoFH9Xn2Kvxf_1EiDJsFuDHLZS1843+w@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.19 48/68] libceph: fix breakage caused by
+ multipage bvecs
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/23/19 2:48 PM, John Ogness wrote:
-> On 2019-04-22, Hongzhi, Song <hongzhi.song@windriver.com> wrote:
->> Anyone notice this issue?
-> Yes, I am aware of the issue. It is actually a feature, not a bug. ;-)
-> Individual LOG_CONT messages, when classified as emergency messages, are
-> printed immediately to the console.
-
-Yes, this is what I have acquired from commit log and code.
-
-The emergency mechanism is a good way.
-
-
->   This makes them appear
-> "disorderly". It is not yet clear how best to deal with LOG_CONT
-> emergency messages.
-
-
-Extracting a part of log from my LOG_CONT message,
-
-[    0.761635] 000:  (family: 0x6, model: 0xf
-[    0.761635] 000: , stepping: 0xb)
-
-It obviously separates a full line. Maybe it is not related to LOG_CONT. ^_^
-
-
-The counterpart source code:
-
-1499     pr_cont(" (family: 0x%x, model: 0x%x", c->x86, c->x86_model);
-1500
-1501     if (c->x86_stepping || c->cpuid_level >= 0)
-1502         pr_cont(", stepping: 0x%x)\n", c->x86_stepping);
-1503     else
-1504         pr_cont(")\n");
-
-
-I don't know if the issue exists in other place except LOG_CONT.
-
-But it indeed influences customer's judgement.
-
-
-Thanks for you reply.
-
---Hongzhi
-
-
-> But I suppose we should introduce a config option to
-> disable atomic consoles altogether if users preferred buffered/delayed
-> printk output.
-
-
-
-
+On Mon, Apr 22, 2019 at 9:46 PM Sasha Levin <sashal@kernel.org> wrote:
 >
-> John Ogness
+> From: Ilya Dryomov <idryomov@gmail.com>
 >
+> [ Upstream commit 187df76325af5d9e12ae9daec1510307797e54f0 ]
 >
->> On 4/19/19 10:24 AM, Hongzhi, Song wrote:
->>> 1. Issue description:
->>>
->>> Boot kernel( >= linux-rt-devel-v5.0.3 ) with qemu.
->>> Then qemu will print following disorderly messages.
->>>
->>> At the beginning, the messages are disorderly. But then it becomes
->>> normally from printing "[    0.000000] 000: Linux version..."
->>>
->>> --------------------------------------------------
->>> [    0.019000] 000: tsc: Unable to calibrate against PIT
->>> [    0.002583] 000: 6199.83 BogoMIPS (lpj=3099918)
->>> [    0.521247] 000: Intel(R) Core(TM)2 Duo CPU     T7700  @ 2.40GHz
->>> [    0.521247] 000:  (family: 0x6, model: 0xf
->>> [    0.521247] 000: , stepping: 0xb)
->>> [    0.533126] 000: unsupported p6 CPU model 15
->>> [    0.533318] 000: no PMU driver, software events only.
->>> [    0.765082] 000: 1 ACPI AML tables successfully acquired and loaded
->>> [    0.765274] 000:
->>> [    0.785903] 000: Enabled 2 GPEs in block 00 to 0F
->>> [    0.786128] 000:
->>> [    0.835675] 000: acpi PNP0A03:00: fail to add MMCONFIG
->>> information, can't access extended PCI configuration space under
->>> this bridge.
->>> [    0.892056] 000:  5
->>> [    0.892289] 000:  *10
->>> [    0.892416] 000:  11
->>> [    0.892527] 000: )
->>> [    0.892661] 000:
->>>
->>> /* skip some repeated contents */
->>>
->>> [    5.052149] 000: , 512kB Cache
->>> [    0.000000] 000: Linux version 5.0.3-yocto-preempt-rt+
->>> (hsong@pek-lpggp1) (gcc version 8.3.0 (GCC)) #24 SMP PREEMPT Thu Apr
->>> 18 03:29:58 EDT 2019
->>> [    0.000000] 000: Command line: root=/dev/vda rw highres=off
->>> console=ttyS0 mem=256M ip=192.168.7.4::192.168.7.3:255.255.255.0
->>> vga=0 uvesafb.mode_opti0
->>> [    0.000000] 000: x86/fpu: x87 FPU will use FXSAVE
->>> [    0.000000] 000: BIOS-provided physical RAM map:
->>> [    0.000000] 000: BIOS-e820: [mem
->>> 0x0000000000000000-0x000000000009fbff]
->>> [    0.000000] 000: BIOS-e820: [mem
->>> 0x000000000009fc00-0x000000000009ffff]
->>> [    0.000000] 000: BIOS-e820: [mem
->>> 0x00000000000f0000-0x00000000000fffff]
->>> [    0.000000] 000: BIOS-e820: [mem
->>> 0x0000000000100000-0x000000000ffdbfff]
->>>
->>> --------------------------------------------------
->>>
->>> 2. Reproduce:
->>> (1)build kernel: (Attachment is my .config)
->>> make ARCH=x86_64
->>> CROSS_COMPILE=[path-to-my-cross-toolchain]/x86_64-wrs-linux-
->>>
->>> (2)boot kernel with qemu:
->>>
->>> qemu-system-x86_64 \
->>> -drive file=qemux86-64.rootfs.ext4,if=virtio,format=raw \
->>> -nographic \
->>> -kernel arch/x86/boot/bzImage \
->>> -append 'root=/dev/vda rw highres=off  console=ttyS0 mem=256M ip=dhcp'
->>>
->>> 3. Analysis:
->>> I find the following commit from >=linux-rt-devel-v5.0.3. cause the
->>> issue.
->>>
->>> b9d460e serial: 8250: implement write_atomic
+> A bvec can now consist of multiple physically contiguous pages.
+> This means that bvec_iter_advance() can move to a different page while
+> staying in the same bvec (i.e. ->bi_bvec_done != 0).
+>
+> The messenger works in terms of segments which can now be defined as
+> the smaller of a bvec and a page.  The "more bytes to process in this
+> segment" condition holds only if bvec_iter_advance() leaves us in the
+> same bvec _and_ in the same page.  On next bvec (possibly in the same
+> page) and on next page (possibly in the same bvec) we may need to set
+> ->last_piece.
+>
+> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+> ---
+>  net/ceph/messenger.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
+> index f7d7f32ac673..ef5216206bdf 100644
+> --- a/net/ceph/messenger.c
+> +++ b/net/ceph/messenger.c
+> @@ -870,6 +870,7 @@ static bool ceph_msg_data_bio_advance(struct ceph_msg_data_cursor *cursor,
+>                                         size_t bytes)
+>  {
+>         struct ceph_bio_iter *it = &cursor->bio_iter;
+> +       struct page *page = bio_iter_page(it->bio, it->iter);
+>
+>         BUG_ON(bytes > cursor->resid);
+>         BUG_ON(bytes > bio_iter_len(it->bio, it->iter));
+> @@ -881,7 +882,8 @@ static bool ceph_msg_data_bio_advance(struct ceph_msg_data_cursor *cursor,
+>                 return false;   /* no more data */
+>         }
+>
+> -       if (!bytes || (it->iter.bi_size && it->iter.bi_bvec_done))
+> +       if (!bytes || (it->iter.bi_size && it->iter.bi_bvec_done &&
+> +                      page == bio_iter_page(it->bio, it->iter)))
+>                 return false;   /* more bytes to process in this segment */
+>
+>         if (!it->iter.bi_size) {
+> @@ -929,6 +931,7 @@ static bool ceph_msg_data_bvecs_advance(struct ceph_msg_data_cursor *cursor,
+>                                         size_t bytes)
+>  {
+>         struct bio_vec *bvecs = cursor->data->bvec_pos.bvecs;
+> +       struct page *page = bvec_iter_page(bvecs, cursor->bvec_iter);
+>
+>         BUG_ON(bytes > cursor->resid);
+>         BUG_ON(bytes > bvec_iter_len(bvecs, cursor->bvec_iter));
+> @@ -940,7 +943,8 @@ static bool ceph_msg_data_bvecs_advance(struct ceph_msg_data_cursor *cursor,
+>                 return false;   /* no more data */
+>         }
+>
+> -       if (!bytes || cursor->bvec_iter.bi_bvec_done)
+> +       if (!bytes || (cursor->bvec_iter.bi_bvec_done &&
+> +                      page == bvec_iter_page(bvecs, cursor->bvec_iter)))
+>                 return false;   /* more bytes to process in this segment */
+>
+>         BUG_ON(cursor->last_piece);
+
+Hi Sasha,
+
+This shouldn't be needed.  Multipage bvecs code is new in 5.1 (commit
+07173c3ec276 ("block: enable multipage bvecs")), this commit just fixed
+the fall out.
+
+Thanks,
+
+                Ilya
