@@ -2,139 +2,109 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C167C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE4AC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105B220811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA2B217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:36:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfDWSe0 (ORCPT
+        id S1726289AbfDWSgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 14:34:26 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:51841 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726039AbfDWSe0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 14:34:26 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TQ42IuD_1556044456;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TQ42IuD_1556044456)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 24 Apr 2019 02:34:22 +0800
-Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
- eligibility
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190423175252.GP25106@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <6004f688-99d8-3f8c-a106-66ee52c1f0ee@linux.alibaba.com>
-Date:   Tue, 23 Apr 2019 11:34:13 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Tue, 23 Apr 2019 14:36:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39530 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725975AbfDWSgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 14:36:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E5FA8ABAC;
+        Tue, 23 Apr 2019 18:36:14 +0000 (UTC)
+Subject: Re: [PATCH 3/3] xen/swiotlb: remember having called
+ xen_create_contiguous_region()
+To:     Stefano Stabellini <sstabellini@kernel.org>
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, konrad.wilk@oracle.com,
+        boris.ostrovsky@oracle.com
+References: <20190423105457.17502-1-jgross@suse.com>
+ <20190423105457.17502-4-jgross@suse.com>
+ <alpine.DEB.2.10.1904230955190.24598@sstabellini-ThinkPad-X260>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e744c7eb-1685-13b6-7ae9-e952f8f53ab0@suse.com>
+Date:   Tue, 23 Apr 2019 20:36:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190423175252.GP25106@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <alpine.DEB.2.10.1904230955190.24598@sstabellini-ThinkPad-X260>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 23/04/2019 19:05, Stefano Stabellini wrote:
+> On Tue, 23 Apr 2019, Juergen Gross wrote:
+>> Instead of always calling xen_destroy_contiguous_region() in case the
+>> memory is DMA-able for the used device, do so only in case it has been
+>> made DMA-able via xen_create_contiguous_region() before.
+>>
+>> This will avoid a lot of xen_destroy_contiguous_region() calls for
+>> 64-bit capable devices.
+>>
+>> As the memory in question is owned by swiotlb-xen the PG_owner_priv_1
+>> flag of the first allocated page can be used for remembering.
+> 
+> Although the patch looks OK, this sentence puzzles me. Why do you say
+> that the memory in question is owned by swiotlb-xen? Because it was
+> returned by xen_alloc_coherent_pages? Both the x86 and the Arm
+> implementation return fresh new memory, hence, it should be safe to set
+> the PageOwnerPriv1 flag?
+> 
+> My concern with this approach is with the semantics of PG_owner_priv_1.
+> Is a page marked with PG_owner_priv_1 only supposed to be used by the
+> owner?
+
+The owner of the page is free to use the flag.
+
+Like Grant pages are marked by the grant driver using this flag. And
+Xen page tables are using it in PV-guests for indicating a "Pinned"
+page table.
 
 
-On 4/23/19 10:52 AM, Michal Hocko wrote:
-> On Wed 24-04-19 00:43:01, Yang Shi wrote:
->> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
->> vma") introduced THPeligible bit for processes' smaps. But, when checking
->> the eligibility for shmem vma, __transparent_hugepage_enabled() is
->> called to override the result from shmem_huge_enabled().  It may result
->> in the anonymous vma's THP flag override shmem's.  For example, running a
->> simple test which create THP for shmem, but with anonymous THP disabled,
->> when reading the process's smaps, it may show:
->>
->> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
->> Size:               4096 kB
->> ...
->> [snip]
->> ...
->> ShmemPmdMapped:     4096 kB
->> ...
->> [snip]
->> ...
->> THPeligible:    0
->>
->> And, /proc/meminfo does show THP allocated and PMD mapped too:
->>
->> ShmemHugePages:     4096 kB
->> ShmemPmdMapped:     4096 kB
->>
->> This doesn't make too much sense.  The anonymous THP flag should not
->> intervene shmem THP.  Calling shmem_huge_enabled() with checking
->> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
->> dax vma check since we already checked if the vma is shmem already.
-> Kirill, can we get a confirmation that this is really intended behavior
-> rather than an omission please? Is this documented? What is a global
-> knob to simply disable THP system wise?
->
-> I have to say that the THP tuning API is one giant mess :/
->
-> Btw. this patch also seem to fix khugepaged behavior because it previously
-> ignored both VM_NOHUGEPAGE and MMF_DISABLE_THP.
-
-Aha, I didn't notice this. It looks we need separate the patch to fix 
-that khugepaged problem for both 5.1-rc and LTS.
-
->
->> Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: David Rientjes <rientjes@google.com>
->> Cc: Kirill A. Shutemov <kirill@shutemov.name>
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> ---
->> v2: Check VM_NOHUGEPAGE per Michal Hocko
->>
->>   mm/huge_memory.c | 4 ++--
->>   mm/shmem.c       | 3 +++
->>   2 files changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index 165ea46..5881e82 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -67,8 +67,8 @@ bool transparent_hugepage_enabled(struct vm_area_struct *vma)
->>   {
->>   	if (vma_is_anonymous(vma))
->>   		return __transparent_hugepage_enabled(vma);
->> -	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
->> -		return __transparent_hugepage_enabled(vma);
->> +	if (vma_is_shmem(vma))
->> +		return shmem_huge_enabled(vma);
->>   
->>   	return false;
->>   }
->> diff --git a/mm/shmem.c b/mm/shmem.c
->> index 2275a0f..6f09a31 100644
->> --- a/mm/shmem.c
->> +++ b/mm/shmem.c
->> @@ -3873,6 +3873,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
->>   	loff_t i_size;
->>   	pgoff_t off;
->>   
->> +	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
->> +	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
->> +		return false;
->>   	if (shmem_huge == SHMEM_HUGE_FORCE)
->>   		return true;
->>   	if (shmem_huge == SHMEM_HUGE_DENY)
->> -- 
->> 1.8.3.1
->>
-
+Juergen
