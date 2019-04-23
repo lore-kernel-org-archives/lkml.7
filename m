@@ -2,131 +2,273 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F0DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11356C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA642054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:59:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="AAAzyGVJ"
+	by mail.kernel.org (Postfix) with ESMTP id D44B7206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbfDWL7x (ORCPT
+        id S1727523AbfDWMH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 07:59:53 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:34555 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfDWL7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 07:59:52 -0400
-Received: by mail-vs1-f65.google.com with SMTP id t78so8092769vsc.1;
-        Tue, 23 Apr 2019 04:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0xZDf+Aq9qm4iQPqRo7F3/Bdsw94R7s4kG6bB6BPk5w=;
-        b=AAAzyGVJc6M2BpZ3PWidLlBDlAo1ghs+XJ3M8cI76Ktmi4LBW3wEjIZyHKDucwNjAu
-         YMXzW2dih0S34aZzYQtiJb/YAlnL2f+dks2n818Z4lO0tqA+G0ksN8HIRPs3h3v0tKu0
-         dBChMiFBoef+Wo/zPBedMisJM5i55wjOysQIuXBdi9BUdm7BlRNlABZ7SZ71r+L0cqoS
-         0UYPiwrfpKznailkuaN9bhjcZpXFGfc84ebUbd/gi1b+C7cIKAfEtm3ZIgBss2ks0/v9
-         efDujWgoCyEt8cP/CCfNECalOAxZ46uQ0F361ZXXWDgHkYsVsb6Y7JJnLP0J2hML4ASJ
-         7Jrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0xZDf+Aq9qm4iQPqRo7F3/Bdsw94R7s4kG6bB6BPk5w=;
-        b=T3xwrwK5s0SNC9dpFmWdZqQc19vsLpDYz91qApPjrkZ7Rrjy63CXfKQjXM9QrYoPE/
-         MdpqnYkY4LnNl8qpRm6noq4iU4Rvw1F9u04ZYOKbVav9+IxsgtYvca+SgpUK0uMgJFL2
-         jyaqH9pw8nkdcfldqFzqAiVxdxI7QNjYBnMvAZHbEs79t/ckbUiJduHxAybyhLM0/HbS
-         0HUenN6gDdP58uFCRt2jDeF/ZYmWxZ863EgY5sTCs9QFi6e9LwyNufHveWxYR3qWzs+/
-         4yJXvF+5yRwb1brLqsvqulrlIfc/Urj8NCRZErQFFEhaahvPvc6NXQpom7MTenmQL+4Z
-         8RWQ==
-X-Gm-Message-State: APjAAAXyX46j9G7iKbAdsMgEO/Y89TgYyOq/D3s+WT8Eu1Uj5VD6qgPm
-        ikQrSqTVWj1QPHJNk/UMOF5oCzuhfEaXYU7Uj+c=
-X-Google-Smtp-Source: APXvYqyQZDJzMpt6eC0//frtR6D/O60R4tvzZomjDI1TZZ321D0ZcYNm/bhVdeq58awKlnE9ME/qT6rjYPGdzoUOmXM=
-X-Received: by 2002:a67:8c47:: with SMTP id o68mr3862742vsd.170.1556020791535;
- Tue, 23 Apr 2019 04:59:51 -0700 (PDT)
+        Tue, 23 Apr 2019 08:07:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59990 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfDWMH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 08:07:26 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 95E885F79C;
+        Tue, 23 Apr 2019 12:07:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C0DFBF3655;
+        Tue, 23 Apr 2019 12:07:24 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 23 Apr 2019 14:07:25 +0200 (CEST)
+Date:   Tue, 23 Apr 2019 14:07:24 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] rcu/sync: kill rcu_sync_type/gp_type
+Message-ID: <20190423120724.GA6132@redhat.com>
 MIME-Version: 1.0
-References: <20190416173216.9028-1-mathieu.desnoyers@efficios.com>
- <1770787324.668.1555530989646.JavaMail.zimbra@efficios.com>
- <1066731871.915.1555593471194.JavaMail.zimbra@efficios.com>
- <6cbfea7b-9d83-74a5-9cd2-af56a5d68818@arm.com> <1055153722.1072.1555602067220.JavaMail.zimbra@efficios.com>
- <79996d13-2ba2-ed7d-b202-e7d38f1fd870@arm.com> <604915684.1299.1555607449814.JavaMail.zimbra@efficios.com>
- <846db7ef-f75e-53b8-3c4c-461ec730a17e@arm.com> <1531569198.1389.1555611422188.JavaMail.zimbra@efficios.com>
- <a1bd2595-b7ae-b06b-9c71-802901ed8587@arm.com>
-In-Reply-To: <a1bd2595-b7ae-b06b-9c71-802901ed8587@arm.com>
-From:   Ramana Radhakrishnan <ramana.gcc@googlemail.com>
-Date:   Tue, 23 Apr 2019 12:59:38 +0100
-Message-ID: <CAJA7tRZDKHxLDzuggSmNngfxSTD31EX3mv6YQpcnNXrOtF=9qQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and
- thread creation (v8)
-To:     Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        nd <nd@arm.com>, Joseph Myers <joseph@codesourcery.com>,
-        Will Deacon <Will.Deacon@arm.com>, carlos <carlos@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 23 Apr 2019 12:07:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 12:16 PM Szabolcs Nagy <Szabolcs.Nagy@arm.com> wrote:
->
-> On 18/04/2019 19:17, Mathieu Desnoyers wrote:
-> > ----- On Apr 18, 2019, at 1:37 PM, Szabolcs Nagy Szabolcs.Nagy@arm.com wrote:
-> >> you have to add a documentation comment somewhere
-> >> explaining if RSEQ_SIG is the value that's passed to
-> >> the kernel and then aarch64 asm code has to use
-> >>
-> >> .inst endianfixup(RSEQ_SIG) // or
-> >> .word RSEQ_SIG
-> >
-> > Using ".word" won't allow objdump to show the instruction it
-> > maps to. It will consider it as data. So .inst is preferred here.
->
-> is there some specific reason you prefer .inst?
+Now that the RCU flavors were consolidated rcu_sync_type makes no sense,
+all internal update functions except .held() doesn't depend on gp_type.
 
-I believe the reasoning here is that in the disassembly you want to
-see an instruction pattern for an architecture rather than a magic bit
-pattern that appears to be an "inline" literal pool entry.  I would
-support the .inst variant so that the disassembler shows the
-instruction for what it is when debugging. If control reaches the
-marker instruction, something's gone wrong and thus from a user
-friendliness perspective I would prefer to see an instruction that
-clearly indicates that it's undefined .inst directive so that someone
-disassembling this in an assembly view in GDB sees the right thing
-(TM) instead of having to reach for the manual and disassembling this
-by hand.
+The patch adds RCU_LOCKDEP_WARN(!rcu_read_lock_sched_held()) into
+rcu_sync_is_idle() because this matches its current user, but probably
+we should simply remove this check or introduce rcu_read_lock_any_held().
 
->
-> disassembling a canary value as data (that is
-> never executed, but loaded and compared by the
-> kernel as data) sounds more semantically correct
-> to me than showing it as an instruction.
->
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ include/linux/percpu-rwsem.h  |  2 +-
+ include/linux/rcu_sync.h      | 32 ++++++-------------------
+ kernel/locking/percpu-rwsem.c |  2 +-
+ kernel/rcu/sync.c             | 55 ++++---------------------------------------
+ 4 files changed, 14 insertions(+), 77 deletions(-)
+
+diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
+index 03cb4b6..6887636 100644
+--- a/include/linux/percpu-rwsem.h
++++ b/include/linux/percpu-rwsem.h
+@@ -20,7 +20,7 @@ struct percpu_rw_semaphore {
+ #define DEFINE_STATIC_PERCPU_RWSEM(name)				\
+ static DEFINE_PER_CPU(unsigned int, __percpu_rwsem_rc_##name);		\
+ static struct percpu_rw_semaphore name = {				\
+-	.rss = __RCU_SYNC_INITIALIZER(name.rss, RCU_SCHED_SYNC),	\
++	.rss = __RCU_SYNC_INITIALIZER(name.rss),			\
+ 	.read_count = &__percpu_rwsem_rc_##name,			\
+ 	.rw_sem = __RWSEM_INITIALIZER(name.rw_sem),			\
+ 	.writer = __RCUWAIT_INITIALIZER(name.writer),			\
+diff --git a/include/linux/rcu_sync.h b/include/linux/rcu_sync.h
+index 6fc53a1..e7ae221 100644
+--- a/include/linux/rcu_sync.h
++++ b/include/linux/rcu_sync.h
+@@ -13,8 +13,6 @@
+ #include <linux/wait.h>
+ #include <linux/rcupdate.h>
+ 
+-enum rcu_sync_type { RCU_SYNC, RCU_SCHED_SYNC, RCU_BH_SYNC };
+-
+ /* Structure to mediate between updaters and fastpath-using readers.  */
+ struct rcu_sync {
+ 	int			gp_state;
+@@ -23,52 +21,36 @@ struct rcu_sync {
+ 
+ 	int			cb_state;
+ 	struct rcu_head		cb_head;
+-
+-	enum rcu_sync_type	gp_type;
+ };
+ 
+-extern void rcu_sync_lockdep_assert(struct rcu_sync *);
+-
+ /**
+  * rcu_sync_is_idle() - Are readers permitted to use their fastpaths?
+  * @rsp: Pointer to rcu_sync structure to use for synchronization
+  *
+  * Returns true if readers are permitted to use their fastpaths.
+- * Must be invoked within an RCU read-side critical section whose
+- * flavor matches that of the rcu_sync struture.
++ * Must be invoked within an RCU-sched read-side critical section.
+  */
+ static inline bool rcu_sync_is_idle(struct rcu_sync *rsp)
+ {
+-#ifdef CONFIG_PROVE_RCU
+-	rcu_sync_lockdep_assert(rsp);
+-#endif
++	RCU_LOCKDEP_WARN(!rcu_read_lock_sched_held(),
++			 "suspicious rcu_sync_is_idle() usage");
+ 	return !rsp->gp_state; /* GP_IDLE */
+ }
+ 
+-extern void rcu_sync_init(struct rcu_sync *, enum rcu_sync_type);
++extern void rcu_sync_init(struct rcu_sync *);
+ extern void rcu_sync_enter_start(struct rcu_sync *);
+ extern void rcu_sync_enter(struct rcu_sync *);
+ extern void rcu_sync_exit(struct rcu_sync *);
+ extern void rcu_sync_dtor(struct rcu_sync *);
+ 
+-#define __RCU_SYNC_INITIALIZER(name, type) {				\
++#define __RCU_SYNC_INITIALIZER(name) {					\
+ 		.gp_state = 0,						\
+ 		.gp_count = 0,						\
+ 		.gp_wait = __WAIT_QUEUE_HEAD_INITIALIZER(name.gp_wait),	\
+ 		.cb_state = 0,						\
+-		.gp_type = type,					\
+ 	}
+ 
+-#define	__DEFINE_RCU_SYNC(name, type)	\
+-	struct rcu_sync_struct name = __RCU_SYNC_INITIALIZER(name, type)
+-
+-#define DEFINE_RCU_SYNC(name)		\
+-	__DEFINE_RCU_SYNC(name, RCU_SYNC)
+-
+-#define DEFINE_RCU_SCHED_SYNC(name)	\
+-	__DEFINE_RCU_SYNC(name, RCU_SCHED_SYNC)
+-
+-#define DEFINE_RCU_BH_SYNC(name)	\
+-	__DEFINE_RCU_SYNC(name, RCU_BH_SYNC)
++#define	DEFINE_RCU_SYNC(name)	\
++	struct rcu_sync name = __RCU_SYNC_INITIALIZER(name)
+ 
+ #endif /* _LINUX_RCU_SYNC_H_ */
+diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
+index 883cf1b..3784812 100644
+--- a/kernel/locking/percpu-rwsem.c
++++ b/kernel/locking/percpu-rwsem.c
+@@ -15,7 +15,7 @@ int __percpu_init_rwsem(struct percpu_rw_semaphore *sem,
+ 		return -ENOMEM;
+ 
+ 	/* ->rw_sem represents the whole percpu_rw_semaphore for lockdep */
+-	rcu_sync_init(&sem->rss, RCU_SCHED_SYNC);
++	rcu_sync_init(&sem->rss);
+ 	__init_rwsem(&sem->rw_sem, name, rwsem_key);
+ 	rcuwait_init(&sem->writer);
+ 	sem->readers_block = 0;
+diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
+index a8304d9..ee427e1 100644
+--- a/kernel/rcu/sync.c
++++ b/kernel/rcu/sync.c
+@@ -10,65 +10,20 @@
+ #include <linux/rcu_sync.h>
+ #include <linux/sched.h>
+ 
+-#ifdef CONFIG_PROVE_RCU
+-#define __INIT_HELD(func)	.held = func,
+-#else
+-#define __INIT_HELD(func)
+-#endif
+-
+-static const struct {
+-	void (*sync)(void);
+-	void (*call)(struct rcu_head *, void (*)(struct rcu_head *));
+-	void (*wait)(void);
+-#ifdef CONFIG_PROVE_RCU
+-	int  (*held)(void);
+-#endif
+-} gp_ops[] = {
+-	[RCU_SYNC] = {
+-		.sync = synchronize_rcu,
+-		.call = call_rcu,
+-		.wait = rcu_barrier,
+-		__INIT_HELD(rcu_read_lock_held)
+-	},
+-	[RCU_SCHED_SYNC] = {
+-		.sync = synchronize_rcu,
+-		.call = call_rcu,
+-		.wait = rcu_barrier,
+-		__INIT_HELD(rcu_read_lock_sched_held)
+-	},
+-	[RCU_BH_SYNC] = {
+-		.sync = synchronize_rcu,
+-		.call = call_rcu,
+-		.wait = rcu_barrier,
+-		__INIT_HELD(rcu_read_lock_bh_held)
+-	},
+-};
+-
+ enum { GP_IDLE = 0, GP_PENDING, GP_PASSED };
+ enum { CB_IDLE = 0, CB_PENDING, CB_REPLAY };
+ 
+ #define	rss_lock	gp_wait.lock
+ 
+-#ifdef CONFIG_PROVE_RCU
+-void rcu_sync_lockdep_assert(struct rcu_sync *rsp)
+-{
+-	RCU_LOCKDEP_WARN(!gp_ops[rsp->gp_type].held(),
+-			 "suspicious rcu_sync_is_idle() usage");
+-}
+-
+-EXPORT_SYMBOL_GPL(rcu_sync_lockdep_assert);
+-#endif
+-
+ /**
+  * rcu_sync_init() - Initialize an rcu_sync structure
+  * @rsp: Pointer to rcu_sync structure to be initialized
+  * @type: Flavor of RCU with which to synchronize rcu_sync structure
+  */
+-void rcu_sync_init(struct rcu_sync *rsp, enum rcu_sync_type type)
++void rcu_sync_init(struct rcu_sync *rsp)
+ {
+ 	memset(rsp, 0, sizeof(*rsp));
+ 	init_waitqueue_head(&rsp->gp_wait);
+-	rsp->gp_type = type;
+ }
+ 
+ /**
+@@ -114,7 +69,7 @@ void rcu_sync_enter(struct rcu_sync *rsp)
+ 
+ 	WARN_ON_ONCE(need_wait && need_sync);
+ 	if (need_sync) {
+-		gp_ops[rsp->gp_type].sync();
++		synchronize_rcu();
+ 		rsp->gp_state = GP_PASSED;
+ 		wake_up_all(&rsp->gp_wait);
+ 	} else if (need_wait) {
+@@ -167,7 +122,7 @@ static void rcu_sync_func(struct rcu_head *rhp)
+ 		 * to catch a later GP.
+ 		 */
+ 		rsp->cb_state = CB_PENDING;
+-		gp_ops[rsp->gp_type].call(&rsp->cb_head, rcu_sync_func);
++		call_rcu(&rsp->cb_head, rcu_sync_func);
+ 	} else {
+ 		/*
+ 		 * We're at least a GP after rcu_sync_exit(); eveybody will now
+@@ -195,7 +150,7 @@ void rcu_sync_exit(struct rcu_sync *rsp)
+ 	if (!--rsp->gp_count) {
+ 		if (rsp->cb_state == CB_IDLE) {
+ 			rsp->cb_state = CB_PENDING;
+-			gp_ops[rsp->gp_type].call(&rsp->cb_head, rcu_sync_func);
++			call_rcu(&rsp->cb_head, rcu_sync_func);
+ 		} else if (rsp->cb_state == CB_PENDING) {
+ 			rsp->cb_state = CB_REPLAY;
+ 		}
+@@ -220,7 +175,7 @@ void rcu_sync_dtor(struct rcu_sync *rsp)
+ 	spin_unlock_irq(&rsp->rss_lock);
+ 
+ 	if (cb_state != CB_IDLE) {
+-		gp_ops[rsp->gp_type].wait();
++		rcu_barrier();
+ 		WARN_ON_ONCE(rsp->cb_state != CB_IDLE);
+ 	}
+ }
+-- 
+2.5.0
 
 
-
-Ramana
-
-
-> i guess having it as an instruction can avoid
-> issues if some tools dislike .word in .text,
-> but otherwise .word seems better.
