@@ -2,171 +2,168 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DE1C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B662C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D39206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F46521738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbfDWPZV (ORCPT
+        id S1728305AbfDWP11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:25:21 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:8407 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726655AbfDWPZV (ORCPT
+        Tue, 23 Apr 2019 11:27:27 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59246 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727180AbfDWP11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:25:21 -0400
-X-UUID: 7d581653d7544a2da7c7521ea0da047e-20190423
-X-UUID: 7d581653d7544a2da7c7521ea0da047e-20190423
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 776834800; Tue, 23 Apr 2019 23:25:17 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 23 Apr 2019 23:25:09 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 23 Apr 2019 23:25:03 +0800
-Message-ID: <1556033102.20906.4.camel@mtkswgap22>
-Subject: Re: [PATCH v4 09/12] soc: mediatek: cmdq: add polling function
-From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        "Sascha Hauer" <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        YT Shen <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
-        Frederic Chen <Frederic.Chen@mediatek.com>
-Date:   Tue, 23 Apr 2019 23:25:02 +0800
-In-Reply-To: <20190415125833.38704-10-bibby.hsieh@mediatek.com>
-References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
-         <20190415125833.38704-10-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 23 Apr 2019 11:27:27 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NFQsNx091257
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:27:26 -0400
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s23rm551h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:27:25 -0400
+Received: from localhost
+        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Tue, 23 Apr 2019 16:27:21 +0100
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 16:27:17 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NFRDRT58720436
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 15:27:13 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59F48C6055;
+        Tue, 23 Apr 2019 15:27:13 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4F687C6059;
+        Tue, 23 Apr 2019 15:27:12 +0000 (GMT)
+Received: from [9.60.75.251] (unknown [9.60.75.251])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 15:27:12 +0000 (GMT)
+Subject: Re: [PATCH v2 7/8] s390: vfio-ap: handle bind and unbind of AP queue
+ device
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, frankja@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com
+References: <1555796980-27920-1-git-send-email-akrowiak@linux.ibm.com>
+ <1555796980-27920-8-git-send-email-akrowiak@linux.ibm.com>
+ <20190423155458.65966ebf.pasic@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Tue, 23 Apr 2019 11:27:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-MTK:  N
+In-Reply-To: <20190423155458.65966ebf.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042315-0036-0000-0000-00000AAC0C96
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010981; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01193273; UDB=6.00625527; IPR=6.00974094;
+ MB=3.00026559; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-23 15:27:19
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042315-0037-0000-0000-00004B7F7A27
+Message-Id: <604cb4b6-5baa-16f9-4e6e-1459453376b6@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bibby,
-
-
-On Mon, 2019-04-15 at 20:58 +0800, Bibby Hsieh wrote:
-> add polling function in cmdq helper functions
+On 4/23/19 9:54 AM, Halil Pasic wrote:
+> On Sat, 20 Apr 2019 17:49:39 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 > 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c   | 30 ++++++++++++++++++++++++
->  include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
->  include/linux/soc/mediatek/mtk-cmdq.h    | 15 ++++++++++++
->  3 files changed, 46 insertions(+)
+>> +void vfio_ap_mdev_probe_queue(unsigned long apid, unsigned long apqi)
+>> +{
+>> +	struct ap_matrix_mdev *matrix_mdev;
+>> +
+>> +	matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
+>> +
+>> +	/*
+>> +	 * If the queue is assigned to the mdev device and the mdev device
+>> +	 * is in use by a guest
+>> +	 */
+>> +	if (matrix_mdev && matrix_mdev->kvm) {
+>> +		/* Plug the adapter into the guest */
+>> +		set_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+>> +
+>> +		/* Make sure the queue is also plugged in to the guest */
+>> +		if (!test_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm))
+>> +			set_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm);
+>> +
+>> +		vfio_ap_mdev_update_crycb(matrix_mdev);
 > 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index d3873ab21db3..80856b8c2385 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -231,6 +231,36 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_clear_event);
->  
-> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-> +		  u16 offset, u32 value, u32 mask)
-> +{
-> +	int err;
-> +
-> +	if (mask != 0xffffffff) {
-> +		err = cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(~mask),
-> +					      CMDQ_GET_ARG_B(~mask),
-> +					      CMDQ_IMMEDIATE_VALUE,
-> +					      CMDQ_IMMEDIATE_VALUE,
-> +					      CMDQ_IMMEDIATE_VALUE,
-> +					      CMDQ_IMMEDIATE_VALUE,
-> +					      CMDQ_IMMEDIATE_VALUE,
-> +					      CMDQ_CODE_MASK);
-> +
-> +		if (err != 0)
-> +			return err;
-> +	}
-> +	offset = offset | 0x1;
+> With this you effectively grant access to all the assigned domains on
+> the AP identified by the apid, not only to the domain identified by
+> apqi! But some of these queues may still not be bound to the vfio_ap
+> driver.
 
-Does this "or" operation make gce use mask? If it does, maybe it should
-move into brace?
+I have been doing some more testing since I last visited and discovered
+that there needs to be additional checking here.
+
+> 
+> IMHO you should only set the apid-th bit in apm if all queues (apid, q)
+> such that q-th bit is set in aqm are bound to the vfio_ap driver.
+
+This is partially correct. It is not necessary to verify that the
+affected queues are bound to the vfio_ap driver. It is only necessary
+to verify they are not reserved for use by a zcrypt driver since we
+are allowing assignment of APQNs for queues that are not available (see
+patch 3/8).
+
+> 
+> BTW a 'shadow' (or effective) apm would perfectly suffice. I don't think
+> you fiddle with shadow_crycb->a[qd]m, and if you do, I don't think that's
+> a good idea.
+
+I do not think it is accurate to refer to the APM in the shadow CRYCB as
+an effective mask. Effective masking is a firmware construct. The CRYCB
+of the guest may be configured with APQNs that are not available.
+
+The shadow CRYCB is in fact a copy of the guest CRYCB. Whenever the
+masks in the guest CRYCB are set, they are set from the masks in the
+shadow CRYCB. The lifespan of the shadow CRYCB is synonymous with the
+lifespan of the guest.
+
+Each of the mdev device sysfs assignment/unassignment interfaces does
+fiddle with the masks in the shadow CRYCB if a guest is using the mdev
+device. This allows us to hot plug/unplug AP resources for the guest.
+Recall that an adapter or domain can not be assigned unless each
+new APQN created is NOT reserved for use by the zcrypt drivers via
+the AP bus's apmask/aqmask sysfs interfaces, and the APQN is not 
+assigned to any other mdev device. That is how protection is
+provided against inadvertently sharing AP queues between guests or
+the guest and the host. I do have to add that verification to
+the vfio_ap_mdev_probe_queue function though.
 
 
-Regards,
-Dennis
 
-> +
-> +	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
-> +				       CMDQ_GET_ARG_B(value),
-> +				       offset, subsys,
-> +				       CMDQ_IMMEDIATE_VALUE,
-> +				       CMDQ_IMMEDIATE_VALUE,
-> +				       CMDQ_IMMEDIATE_VALUE,
-> +				       CMDQ_CODE_POLL);
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_poll);
-> +
->  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->  {
->  	int err;
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index f21801d32a3a..1dfd5ed5c8c5 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -46,6 +46,7 @@
->  enum cmdq_code {
->  	CMDQ_CODE_MASK = 0x02,
->  	CMDQ_CODE_WRITE = 0x04,
-> +	CMDQ_CODE_POLL = 0x08,
->  	CMDQ_CODE_JUMP = 0x10,
->  	CMDQ_CODE_WFE = 0x20,
->  	CMDQ_CODE_EOC = 0x40,
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> index 52f69c8db8de..0651a0bffa54 100644
-> --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -99,6 +99,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
->   */
->  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
->  
-> +/**
-> + * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
-> + *		     execute an instruction that wait for a specified hardware
-> + *		     register to check for the value. All GCE hardware
-> + *		     threads will be blocked by this instruction.
-> + * @pkt:	the CMDQ packet
-> + * @subsys:	the CMDQ sub system code
-> + * @offset:	register offset from CMDQ sub system
-> + * @value:	the specified target register value
-> + * @mask:	the specified target register mask
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + */
-> +int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
-> +		  u16 offset, u32 value, u32 mask);
->  /**
->   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
->   *                          packet and call back at the end of done packet
-
+> 
+> Regards,
+> Halil
+> 
+>> +	}
+>> +}
+> 
 
