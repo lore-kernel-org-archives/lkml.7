@@ -2,156 +2,216 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A21C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C28C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CB920674
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06DE20843
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="L6gdShw3"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MQZuPDeY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfDWI5g (ORCPT
+        id S1726866AbfDWI5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:57:36 -0400
-Received: from ozlabs.org ([203.11.71.1]:37541 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfDWI5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:57:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pHQN27vwz9sNF;
-        Tue, 23 Apr 2019 18:57:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556009852;
-        bh=WToU+0B8dub+LYRfCUVi3KWI6mDmLU3QRxuAN0m9xFA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=L6gdShw3PwGEXtYUQfGNMtQWbPuM6a2n/GcECm43ZOfNEhyitqAtS4KvbceC105zV
-         yyLwDHf7YmqCKLugD69EwF5PfDeYPggUXWqAe8z6Rww1DWwiWqF4ylgIT7cO77BxRo
-         vAO91ObnRoUE/wHwOCYhLYDydETZW22XRM40BaWzIOhoCqyMwR1XWF/EOBd2YgI8CF
-         dwgZOakN7cAS+Efb6hczhbt/G5RY0Lg1GNYU85W6N1kID11rKTyRy9RGpTFdia2Hma
-         SQSkde3mi4GyFPSEsCQc7APycu37OuaOP4z+O6/AeuFVblVKL9eoPT1FwoUxbUypjT
-         YaExuiMFHHp/w==
-Date:   Tue, 23 Apr 2019 18:57:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Laurent Vivier <lvivier@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: linux-next: manual merge of the akpm-current tree with the powerpc
- tree
-Message-ID: <20190423185730.401f8676@canb.auug.org.au>
+        Tue, 23 Apr 2019 04:57:45 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54649 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbfDWI5p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 04:57:45 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c1so17599285wml.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 01:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=X0zGNkou9jeRJIHLsoJRkphqDVwPOwPY0FOFDz22Ek4=;
+        b=MQZuPDeY8IwDiVaMxvHIYGIGfwRLTHrvY1E5y6xnkFyAGOzNNHRZ/Ek7awGLIrsYqX
+         AHCxIvFHqTbeAYL5ZY4QQWt2JCBx/kXQ1yLbIAGGADdYUla3KKwwpHbhuhOWlG7Ny/ck
+         VgS1uiivdrYot8f6Es59vai5pxVCL8Zegy5gXpA4IwsKZhWyVDqS9sqI05R2DBDjvehH
+         cOR655BJyiWh3wWa7TbARwIhdEr1tJRLt7ecUk+V17VM3vEjg9tY/r+D1ywUMm+B82oR
+         aCl23GMSX52QLWapaBckQSXPdsWfpfToWjl/UaCW7bOPlfRc8x+JMPehW+AOp9YlgZZf
+         dxIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=X0zGNkou9jeRJIHLsoJRkphqDVwPOwPY0FOFDz22Ek4=;
+        b=c0j1tYkfzOQuY5hSWZp57L0nJju2ktJNTLPhM+KaDtmeJIrdrDpZPeomJ2c4LUQ9tL
+         tapT8isri+cuQWvi6PCWBqGpe9B3YAxl3HU+4VOb/h5ZVBfbFnEN/e1v8ByfO6OnS0GN
+         4tReZealfsJb7eAn0C25A7t2nHMSzDUo6I+z6UC8jpjh/96QqeuFotDWVCGT0ey7Mbuh
+         8bqvmRCnznJUR/L7P97flPcCibmfFquDAmIxpoB2oq4UlKI9tmaAdcUyooRscyB401mu
+         2LYdyAK3WDY+1Tlim5Nnw/2xw/ub9Rv8hXnret32iaD+w9zuKaHOh/42kiYBKNbW874a
+         jO8Q==
+X-Gm-Message-State: APjAAAWosJ5MLHhZrG7n3vK89SDjJ2s/sHkYFrW5hEKDaH4Q8SaD597k
+        kNNcZ1e+V1uU99UnBUjSlw0F2A==
+X-Google-Smtp-Source: APXvYqz18jsPtX8PIWRxpZh7jjRoNi/h00c6jFJF1UG8dviYK0YldXSOluGEe+N16KebghJbj/Tn9w==
+X-Received: by 2002:a1c:f504:: with SMTP id t4mr1366507wmh.121.1556009862613;
+        Tue, 23 Apr 2019 01:57:42 -0700 (PDT)
+Received: from [10.1.3.153] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id x5sm12347287wmi.37.2019.04.23.01.57.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 01:57:41 -0700 (PDT)
+Subject: Re: [PATCH 3/3] iio: Add PAT9125 optical tracker sensor
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, baylibre-upstreaming@groups.io,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org
+References: <1554456870-8104-1-git-send-email-amergnat@baylibre.com>
+ <1554456870-8104-4-git-send-email-amergnat@baylibre.com>
+ <20190407112024.6297cbfa@archlinux>
+ <f8ffca5b-09a8-cad7-4561-bf1263388228@baylibre.com>
+ <20190422094236.537e3a01@archlinux>
+From:   Alexandre <amergnat@baylibre.com>
+Message-ID: <327a56e4-66d8-859c-7f35-458b533ac72f@baylibre.com>
+Date:   Tue, 23 Apr 2019 10:57:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Nk6HokKlb1IQryWefgKDJ2M"; protocol="application/pgp-signature"
+In-Reply-To: <20190422094236.537e3a01@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Nk6HokKlb1IQryWefgKDJ2M
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Jonathan,
 
-Hi all,
+On 4/22/19 10:42, Jonathan Cameron wrote:
+> On Tue, 16 Apr 2019 14:49:19 +0200
+> Alexandre <amergnat@baylibre.com> wrote:
+>
+>> Hello Jonathan,
+>>
+>> On 4/7/19 12:20, Jonathan Cameron wrote:
+>>> Hi Alexandre,
+>>>
+>>> So I have no problem with this as an IIO driver, but for devices that
+>>> are somewhat 'on the edge' I always like to get a clear answer to the
+>>> question: Why not input?
+>>>
+>>> I would also argue that, to actually be 'useful' we would typically need
+>>> some representation of the 'mechanicals' that are providing the motion
+>>> being measured.  Looking at the datasheet this includes, rotating shafts
+>>> (side or end on), disk edges and flat surface tracking (mouse like).
+>>>
+>>> That's easy enough to do with the iio in kernel consumer interface. These
+>>> are similar to when we handle analog electronic front ends.
+>>>
+>>> I you can, please describe what it is being used for in your application
+>>> as that may give us somewhere to start!
+>>>
+>>> + CC Dmitry and linux-input.
+>> I developed this driver to detect the board movement which can't be
+>> detected by accelerometer (very slow motion). I admit this use case can
+>> be handled by an input, and I'm agree with you, PAT9125 driver could be
+>> an input. But, like you said, this chip is able to track different kind
+>> of motion, and additionally have an interrupt GPIO, so using it like
+>> input limit the driver potential. This chip is designed to work in
+>> industrial measurement or embedded systems, and the IIO API match with
+>> these environments, so it's the best way to exploit the entire potential
+>> of this chip.
+>>
+>> As I understand (from
+>> https://www.kernel.org/doc/html/v4.12/input/event-codes.html#mice ),
+>> mouse driver must report values when the device move. This feature
+>> souldn't be mandatory for an optical tracker driver, specially for cases
+>> where user prefers to use buffer or poll only when he need data.
+>>
+>>> If 1 or 2, I would suggest that you provide absolute position to
+>>> Linux.  So add the value to a software counter and provide that.
+>>> 32 bits should be plenty of resolution for that.
+>> I can't provide absolute position, only relative. Do you mean using
+>> input driver to do that ? If not, how is built the position data?
+> Sorry, I should have been clearer on this.
+> I mean absolute relative to the start point.  So on startup you assume
+> absolute position is 0 and go from there.  What I can't work out is
+> if the device does internal tracking, or whether each time you read
+> it effectively resets it's internal counters to 0 so the next measurement
+> is relative to the previous one.
+Each time you read that reset internal counters to 0.
+>>> Silly question for you.  What happens if you set the delta values to 0?
+>>> Do we get an interrupt which is effectively data ready?
+>>> If we do, you might want to think about a scheme where that is an option.
+>>> As things currently stand we have a confusing interface where changing this
+>>> threshold effects the buffered data output.   That should only be the
+>>> case if this interface is for a trigger, not an event.
+>> I'm not sure to understand your question. Is it possible to read delta_x
+>> and delta_y = 0 in special/corner case because internal value continue
+>> to be updated after toggled motion_detect pin (used for IRQ) until
+>> values registers are read and then motion_detect pin is released:
+>>
+>>    * Chip move (i.e. +2 on X axis and 0 on Y axis)
+>>    * Motion_detect IRQ trigger and internal reg value is updated (i.e.
+>>      delta_x = 2 and delta_y = 0.
+>>    * GPIO IRQ handled but read_value isn't executed yet (timing reason)
+>>    * Chip move back to it origin point (i.e. -2 on X axis and 0 on Y axis)
+>>    * Motion_detect IRQ still low because it hasn't been reset by read
+>>      value and internal reg value is updated (i.e. delta_x = 0 and
+>>      delta_y = 0)
+>>    * Read_value is executed, we get delta values = 0.
+> Again, I was unclear.  Is it possible to set the device to interrupt
+> every time it evaluates whether motion has occured? Not only when it
+> concludes that there has been some motion.  That would allow the interrupt
+> to be used as a signal that the device has taken a measurement (data
+> ready signal in other sensors).
+>
+I don't know, the datasheet don't describe the role of each bit in 
+registers and I don't found documentation which provide that. I had to 
+do research on example code to retrieve some bits, but got nothing on 
+motion detection pin configuration.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+>>> If it is actually not possible to report the two channels separately
+>>> then don't report them at all except via the buffered interface and
+>>> set the available scan masks so that both are on.
+>> I found a way to keep the consistency between delta x and delta y
+>> (without losing data). The first part is to reset a value only when user
+>> read it (also when it's buffered). The second part is to add the new
+>> value to the old value. With these two mechanism, X and Y will always be
+>> consistent:
+>>
+>>    * as possible during a move.
+>>    * perfectly when move is finished.
+> Ah. This adding old value to a new value point is what I was getting
+> at (I think) with 'absolute' position above.
+>
+> In industrial control for example you have absolute position by using
+> limit switches to set your baseline.  Measurement devices are then
+> capable of either reporting relative position, which is the movement
+> since the last reading was taken, or 'absolute' position which is
+> referenced to some known point.  It was this form of absolute position
+> that I was suggesting you use.  If you use such a system without a
+> limit switch it is normally called unreference motion.  You can do
+> it but then the 0 is where ever your device was at power on.
+> For some systems it doesn't actually matter (conveyor belts for
+> instance where the positions you care about are between things
+> on the belt, not the position of the belt itself).
 
-  arch/powerpc/mm/mem.c
+Ok, I decided to return delta between last read/buffering to stay closer 
+to the hardware mechanism and still coherent with "IIO_CHAN_INFO_RAW". 
+If user want absolute position, he can make an addition of all received 
+value in user space, and that allow him to reset/replace the initial 
+position when he want it.
 
-between commit:
+> Thanks,
+>
+> Jonathan
+>
+>>
+>> Regards,
+>>
+>> Alexandre
+>>
 
-  f172acbfae1a ("powerpc/mm: move warning from resize_hpt_for_hotplug()")
-  26ad26718dfa ("powerpc/mm: Fix section mismatch warning")
+Thanks for your comments,
 
-from the powerpc tree and commit:
+Alexandre
 
-  fc6a586376ab ("mm, memory_hotplug: provide a more generic restrictions fo=
-r memory hotplug")
-  e8b6bc564e97 ("mm/memory_hotplug: make __remove_pages() and arch_remove_m=
-emory() never fail")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/powerpc/mm/mem.c
-index e12bec98366f,cc9425fb9056..000000000000
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@@ -109,8 -109,8 +109,8 @@@ int __weak remove_section_mapping(unsig
-  	return -ENODEV;
-  }
- =20
-- int __ref arch_add_memory(int nid, u64 start, u64 size, struct vmem_altma=
-p *altmap,
-- 			  bool want_memblock)
- -int __meminit arch_add_memory(int nid, u64 start, u64 size,
- -			struct mhp_restrictions *restrictions)
-++int __ref arch_add_memory(int nid, u64 start, u64 size,
-++			  struct mhp_restrictions *restrictions)
-  {
-  	unsigned long start_pfn =3D start >> PAGE_SHIFT;
-  	unsigned long nr_pages =3D size >> PAGE_SHIFT;
-@@@ -131,8 -131,8 +131,8 @@@
-  }
- =20
-  #ifdef CONFIG_MEMORY_HOTREMOVE
-- int __ref arch_remove_memory(int nid, u64 start, u64 size,
-- 			     struct vmem_altmap *altmap)
- -void __meminit arch_remove_memory(int nid, u64 start, u64 size,
- -				  struct vmem_altmap *altmap)
-++void __ref arch_remove_memory(int nid, u64 start, u64 size,
-++			      struct vmem_altmap *altmap)
-  {
-  	unsigned long start_pfn =3D start >> PAGE_SHIFT;
-  	unsigned long nr_pages =3D size >> PAGE_SHIFT;
-@@@ -161,10 -160,7 +160,8 @@@
-  	 */
-  	vm_unmap_aliases();
- =20
- -	resize_hpt_for_hotplug(memblock_phys_mem_size());
- +	if (resize_hpt_for_hotplug(memblock_phys_mem_size()) =3D=3D -ENOSPC)
- +		pr_warn("Hash collision while resizing HPT\n");
--=20
-- 	return ret;
-  }
-  #endif
-  #endif /* CONFIG_MEMORY_HOTPLUG */
-
---Sig_/Nk6HokKlb1IQryWefgKDJ2M
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+03oACgkQAVBC80lX
-0Gz8lgf/UMh08pAMMuEi1HXki2uwBPjULYkkOB7hT/sBlTNIsKj8PLg+HzB5AzS+
-3KLroeGactSUQPGdrOywqyE6E9dVlBulJwsWjLda5D1tVPmN4aDYkKG0eXaK7ATX
-sBRdb+AXlw4d4giNYySbvEkvUNNnOo/dd6jsdp/3jxuZVe/sq2U0s6Yfrh7hmUiN
-+pvaEiHEVZdkOiAW7ToD1ksbB56ubAz1zy4Ii9KAkAl+p80c69C8cufbOYhFASws
-83ItvUqxFfTSIehfHasJZybU1VUzAelZ5TfU460IC2addI9Q2cAAmxGiYWy8QTS3
-roYa+gqqyGScJwQmcHLnPXzSpe8Iew==
-=r82g
------END PGP SIGNATURE-----
-
---Sig_/Nk6HokKlb1IQryWefgKDJ2M--
