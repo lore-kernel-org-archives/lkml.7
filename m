@@ -6,92 +6,195 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A79C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFF3C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8E752077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3622077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfDWIIM (ORCPT
+        id S1726942AbfDWIIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:08:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59048 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbfDWIIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:08:11 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 033357E436;
-        Tue, 23 Apr 2019 08:08:11 +0000 (UTC)
-Received: from dhcp201-121.englab.pnq.redhat.com (unknown [10.65.16.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EEAA91001E81;
-        Tue, 23 Apr 2019 08:07:51 +0000 (UTC)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
-        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong.eric@gmail.com, pagupta@redhat.com,
-        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl
-Subject: [PATCH v6 5/6] ext4: disable map_sync for async flush
-Date:   Tue, 23 Apr 2019 13:36:11 +0530
-Message-Id: <20190423080612.15361-6-pagupta@redhat.com>
-In-Reply-To: <20190423080612.15361-1-pagupta@redhat.com>
-References: <20190423080612.15361-1-pagupta@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 23 Apr 2019 08:08:11 +0000 (UTC)
+        Tue, 23 Apr 2019 04:08:31 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37462 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfDWIIa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 04:08:30 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v13so69229ljk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 01:08:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/q1Sa2lpd++uYpBFwV49txKUtJewJB3Kwx6mArtfaa8=;
+        b=s4eDS6b5FmUS7bicFwTLR2TXJ8iFanWaJIYU3YqCGIdOWbZAem2RZjcd0HENFxPLLs
+         Cplq87SJ7/QASFHEYQ5ke9SVm3Xd+kV/PFOBeSUh/OApfaBNzlQJrdnHxSFLf5K7zGZY
+         eIEgS4T22tv3HG64aBZPpQu4BlA0eeQLc6eDjyLVieqiX7OPePtSiNSG1N1M08HZMqEE
+         yota8Z8Yll15z31/e7tYV73EvjBTG0PJXWOGv04JdNJ2SJxlXy7I7hPr1ZwTVyteRxL0
+         mMhREXZLFhPUU/w1zYpfIWapfIlYzm8QeF2OkLo2EY2Kbml0nhnRmzaD5SgN6bLVB5e9
+         yT/A==
+X-Gm-Message-State: APjAAAU2PZYfX9u77lSuLg8Te7LKZtQeCJMO8Xb9x13lFVOE2nQnrH2q
+        wSy4Gtc+vBmOtNqMfx+owyeawjuj7uwpLo7M694=
+X-Google-Smtp-Source: APXvYqzObg5PpksDt09cneGiKLWlaKAiIwOrrU0dzD5adIQ/pRTv1H64QAujafqscGd+RatHflCGXI7pxuNXXK9/5Wg=
+X-Received: by 2002:a2e:309:: with SMTP id 9mr13563229ljd.114.1556006908135;
+ Tue, 23 Apr 2019 01:08:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190422173838.182736-1-venture@google.com>
+In-Reply-To: <20190422173838.182736-1-venture@google.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 23 Apr 2019 10:08:11 +0200
+Message-ID: <CAK8P3a0k_8+R9FeyZsL6Egvi1Z-G0VrvR0TWXzGHryqxTr6thg@mail.gmail.com>
+Subject: Re: [PATCH] soc: add aspeed folder and misc drivers
+To:     Patrick Venture <venture@google.com>
+Cc:     gregkh <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dont support 'MAP_SYNC' with non-DAX files and DAX files
-with asynchronous dax_device. Virtio pmem provides 
-asynchronous host page cache flush mechanism. We don't
-support 'MAP_SYNC' with virtio pmem and ext4.
+On Mon, Apr 22, 2019 at 7:38 PM Patrick Venture <venture@google.com> wrote:
+>
+> Create a SoC folder for the ASPEED parts and place the misc drivers
+> currently present into this folder.  These drivers are not generic part
+> drivers, but rather only apply to the ASPEED SoCs.
+>
+> Signed-off-by: Patrick Venture <venture@google.com>
 
-Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
----
- fs/ext4/file.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Looks ok, but please resend to arm@kernel.org or soc@kernel.org
+so we can track the submission and make sure it gets applied if
+you want this to go through the arm-soc tree.
 
-diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-index 69d65d49837b..4b2ccaf1932e 100644
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -360,15 +360,16 @@ static const struct vm_operations_struct ext4_file_vm_ops = {
- static int ext4_file_mmap(struct file *file, struct vm_area_struct *vma)
- {
- 	struct inode *inode = file->f_mapping->host;
-+	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
-+	struct dax_device *dax_dev = sbi->s_daxdev;
- 
--	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb))))
-+	if (unlikely(ext4_forced_shutdown(sbi)))
- 		return -EIO;
- 
--	/*
--	 * We don't support synchronous mappings for non-DAX files. At least
--	 * until someone comes with a sensible use case.
-+	/* We don't support synchronous mappings for non-DAX files and
-+	 * for DAX files if underneath dax_device is not synchronous.
- 	 */
--	if (!IS_DAX(file_inode(file)) && (vma->vm_flags & VM_SYNC))
-+	if (!daxdev_mapping_supported(vma, dax_dev))
- 		return -EOPNOTSUPP;
- 
- 	file_accessed(file);
--- 
-2.20.1
+If Greg wants to pick it up, that's fine too.
 
+Either way,
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+
+> ---
+>  drivers/misc/Kconfig                          | 16 ----------------
+>  drivers/misc/Makefile                         |  2 --
+>  drivers/soc/Kconfig                           |  1 +
+>  drivers/soc/Makefile                          |  1 +
+>  drivers/soc/aspeed/Kconfig                    | 19 +++++++++++++++++++
+>  drivers/soc/aspeed/Makefile                   |  2 ++
+>  .../{misc => soc/aspeed}/aspeed-lpc-ctrl.c    |  0
+>  .../{misc => soc/aspeed}/aspeed-lpc-snoop.c   |  0
+>  8 files changed, 23 insertions(+), 18 deletions(-)
+>  create mode 100644 drivers/soc/aspeed/Kconfig
+>  create mode 100644 drivers/soc/aspeed/Makefile
+>  rename drivers/{misc => soc/aspeed}/aspeed-lpc-ctrl.c (100%)
+>  rename drivers/{misc => soc/aspeed}/aspeed-lpc-snoop.c (100%)
+>
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 42ab8ec92a04..b80cb6af0cb4 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -496,22 +496,6 @@ config VEXPRESS_SYSCFG
+>           bus. System Configuration interface is one of the possible means
+>           of generating transactions on this bus.
+>
+> -config ASPEED_LPC_CTRL
+> -       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
+> -       tristate "Aspeed ast2400/2500 HOST LPC to BMC bridge control"
+> -       ---help---
+> -         Control Aspeed ast2400/2500 HOST LPC to BMC mappings through
+> -         ioctl()s, the driver also provides a read/write interface to a BMC ram
+> -         region where the host LPC read/write region can be buffered.
+> -
+> -config ASPEED_LPC_SNOOP
+> -       tristate "Aspeed ast2500 HOST LPC snoop support"
+> -       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
+> -       help
+> -         Provides a driver to control the LPC snoop interface which
+> -         allows the BMC to listen on and save the data written by
+> -         the host to an arbitrary LPC I/O port.
+> -
+>  config PCI_ENDPOINT_TEST
+>         depends on PCI
+>         select CRC32
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index d5b7d3404dc7..b9affcdaa3d6 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -54,8 +54,6 @@ obj-$(CONFIG_GENWQE)          += genwqe/
+>  obj-$(CONFIG_ECHO)             += echo/
+>  obj-$(CONFIG_VEXPRESS_SYSCFG)  += vexpress-syscfg.o
+>  obj-$(CONFIG_CXL_BASE)         += cxl/
+> -obj-$(CONFIG_ASPEED_LPC_CTRL)  += aspeed-lpc-ctrl.o
+> -obj-$(CONFIG_ASPEED_LPC_SNOOP) += aspeed-lpc-snoop.o
+>  obj-$(CONFIG_PCI_ENDPOINT_TEST)        += pci_endpoint_test.o
+>  obj-$(CONFIG_OCXL)             += ocxl/
+>  obj-y                          += cardreader/
+> diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+> index c07b4a85253f..b750a88547c7 100644
+> --- a/drivers/soc/Kconfig
+> +++ b/drivers/soc/Kconfig
+> @@ -2,6 +2,7 @@ menu "SOC (System On Chip) specific Drivers"
+>
+>  source "drivers/soc/actions/Kconfig"
+>  source "drivers/soc/amlogic/Kconfig"
+> +source "drivers/soc/aspeed/Kconfig"
+>  source "drivers/soc/atmel/Kconfig"
+>  source "drivers/soc/bcm/Kconfig"
+>  source "drivers/soc/fsl/Kconfig"
+> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+> index 90b686e586c6..83a032db3e44 100644
+> --- a/drivers/soc/Makefile
+> +++ b/drivers/soc/Makefile
+> @@ -4,6 +4,7 @@
+>  #
+>
+>  obj-$(CONFIG_ARCH_ACTIONS)     += actions/
+> +obj-y                          += aspeed/
+>  obj-$(CONFIG_ARCH_AT91)                += atmel/
+>  obj-y                          += bcm/
+>  obj-$(CONFIG_ARCH_DOVE)                += dove/
+> diff --git a/drivers/soc/aspeed/Kconfig b/drivers/soc/aspeed/Kconfig
+> new file mode 100644
+> index 000000000000..457282cd1da5
+> --- /dev/null
+> +++ b/drivers/soc/aspeed/Kconfig
+> @@ -0,0 +1,19 @@
+> +menu "Aspeed SoC drivers"
+> +
+> +config ASPEED_LPC_CTRL
+> +       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
+> +       tristate "Aspeed ast2400/2500 HOST LPC to BMC bridge control"
+> +       ---help---
+> +         Control Aspeed ast2400/2500 HOST LPC to BMC mappings through
+> +         ioctl()s, the driver also provides a read/write interface to a BMC ram
+> +         region where the host LPC read/write region can be buffered.
+> +
+> +config ASPEED_LPC_SNOOP
+> +       tristate "Aspeed ast2500 HOST LPC snoop support"
+> +       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
+> +       help
+> +         Provides a driver to control the LPC snoop interface which
+> +         allows the BMC to listen on and save the data written by
+> +         the host to an arbitrary LPC I/O port.
+> +
+> +
+> diff --git a/drivers/soc/aspeed/Makefile b/drivers/soc/aspeed/Makefile
+> new file mode 100644
+> index 000000000000..cfaa9adc67b5
+> --- /dev/null
+> +++ b/drivers/soc/aspeed/Makefile
+> @@ -0,0 +1,2 @@
+> +obj-$(CONFIG_ASPEED_LPC_CTRL)  += aspeed-lpc-ctrl.o
+> +obj-$(CONFIG_ASPEED_LPC_SNOOP) += aspeed-lpc-snoop.o
+> diff --git a/drivers/misc/aspeed-lpc-ctrl.c b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
+> similarity index 100%
+> rename from drivers/misc/aspeed-lpc-ctrl.c
+> rename to drivers/soc/aspeed/aspeed-lpc-ctrl.c
+> diff --git a/drivers/misc/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> similarity index 100%
+> rename from drivers/misc/aspeed-lpc-snoop.c
+> rename to drivers/soc/aspeed/aspeed-lpc-snoop.c
+> --
+> 2.21.0.593.g511ec345e18-goog
+>
