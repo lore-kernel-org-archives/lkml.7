@@ -2,63 +2,64 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41CCC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB878C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FDB208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D76208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="QcB+IIW9"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="KkeAQpww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbfDWQSc (ORCPT
+        id S1728579AbfDWQSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:18:32 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:51050 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728523AbfDWQSc (ORCPT
+        Tue, 23 Apr 2019 12:18:36 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34344 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728523AbfDWQSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:18:32 -0400
-Received: by mail-it1-f194.google.com with SMTP id q14so1164557itk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:18:31 -0700 (PDT)
+        Tue, 23 Apr 2019 12:18:35 -0400
+Received: by mail-io1-f67.google.com with SMTP id n11so13072862ioh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:18:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=digitalocean.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=pNLBY1/NGrIYBU6rhGuEDDDc1V0YuFCt5ddYuXaekAQ=;
-        b=QcB+IIW9/MwAcbFB2Gry9lZO0uWPGo0S9gUkxrpW7zY0fN8gCm/WDMCz5j1GL3WzLw
-         3NRGO43n6PinSIfytVyAp1YIF8CtA90nVZaL316OaDm7WFBsdlr8Cu/7bXBhvvRM92er
-         MWdlCzEAQ3mqWt9fZAOxKDEph8cwRQvZLdKSc=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=5YlqB4t5Oeylx2eqRPB5pvKArp3TlTYkhE9cZx8QlnU=;
+        b=KkeAQpwwRNnbuzH4io511LGOK6N1BulJ8fFIKkva9ZNVsHZNLqei/b+UVXttC04Pf1
+         5iYVSXOlAk9uItON67O5u27al8JPb7RUze7WEyvbLUSoGoVC34qwWU0NQ3OBNXl4XX1F
+         TtM9L+ZvxvkWs5sCNC7fWfcbugt041wWIC6G4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pNLBY1/NGrIYBU6rhGuEDDDc1V0YuFCt5ddYuXaekAQ=;
-        b=lgMT1NM0JDmrJh7QQjYc6vegOI4IDUtTeCrcHa7wZHxUfRpXsHOSTIyS8HB3CxNH7e
-         zZpZn1DVJTeT03ra4rdcB0b4GdDt2H2fot0IPfwfcD9NLNLsoAVHzf3Ny7kwvFJ/+kpV
-         WPGmkW8/Z3YMYZtgU/vJg+dKt+FVsanC4FewmpPHDM2oWgy58uLtBBv+7UO7zUk8vAVU
-         lk16E0bPsBwSubARn9bsCj34WTuA3inCBf9mvDeBHbGWjP37I/uzdCgLzJt+mhfbfxFr
-         fubtHeeXD6l7DOrfRdPD1e6OyHM18TCoRpAPdW1BndsC5E0JeLf04FoL1jlo2ITgfdFQ
-         bzxw==
-X-Gm-Message-State: APjAAAVVwVcR4MXdY8xSY1BsRuStpbPUeXIii/AW+fKRBayf2H+WuiTI
-        HuCJkNktodRCKzbRo1M/INwsqQ==
-X-Google-Smtp-Source: APXvYqygIQ3soUmUU3qx61BtiEBPGJD4zSNjEYue+Er+UwWjBVuyd/7BfK5N2u1rSVvpVfqlMtJa2g==
-X-Received: by 2002:a02:1d03:: with SMTP id 3mr18595759jaj.73.1556036311271;
-        Tue, 23 Apr 2019 09:18:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=5YlqB4t5Oeylx2eqRPB5pvKArp3TlTYkhE9cZx8QlnU=;
+        b=ds1vqf+DH17j10AFiguKl+l9WwHodmto6gYYb19SogsOwBrhG3DKFonX65SqAZ9SgM
+         6PY5epItJ3SBcsMJAq+M2tBEYqIf1KZBkPLlznknZLlHgOBP01Svhapi6HwalzUJ9fQ8
+         CsyF7idFAUy39isLgK08udsxG3JSmAP0oK9ou9gNGbkDMMnHOgog7EKwgTXMzIJNW9tk
+         gzLubTla4UnR8VM6BOioQB4voRMEMCwJI+usV5PSa1OdZzw3MyErsHNIc9RIj54Vnyf9
+         PUHQMK0ECgM3wiueoRolygrLs1Dgh82mIrppc2gKHUxEYg0bRwzM4EHWvX5iBWmq92xk
+         5FSg==
+X-Gm-Message-State: APjAAAW9rPFIINaXQT2lZIs1YRyTuyTH0jFBpiYNsb9/9XlO8nu/XL+2
+        5FaLSMAu5vrSoxisItKlhYxN0Q==
+X-Google-Smtp-Source: APXvYqxjsdfM2S9krMkqCadUbi2Pv31sOPfuWC26WqxnCQXt/MicPPEw65F/6dJJ6/bL3Y9pDiYrxQ==
+X-Received: by 2002:a5d:8196:: with SMTP id u22mr16662558ion.202.1556036313802;
+        Tue, 23 Apr 2019 09:18:33 -0700 (PDT)
 Received: from swap-tester ([178.128.225.14])
-        by smtp.gmail.com with ESMTPSA id z7sm2822378iog.75.2019.04.23.09.18.30
+        by smtp.gmail.com with ESMTPSA id f5sm2327578iob.58.2019.04.23.09.18.33
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 09:18:30 -0700 (PDT)
+        Tue, 23 Apr 2019 09:18:33 -0700 (PDT)
 From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
 To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
         Julien Desfossez <jdesfossez@digitalocean.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
         tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+Cc:     linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
         fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
         Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
         Aubrey Li <aubrey.intel@gmail.com>,
@@ -66,85 +67,48 @@ Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
         Mel Gorman <mgorman@techsingularity.net>,
         Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [RFC PATCH v2 00/17] Core scheduling v2
-Date:   Tue, 23 Apr 2019 16:18:05 +0000
-Message-Id: <cover.1556025155.git.vpillai@digitalocean.com>
+Subject: [RFC PATCH v2 01/17] stop_machine: Fix stop_cpus_in_progress ordering
+Date:   Tue, 23 Apr 2019 16:18:06 +0000
+Message-Id: <c40cb6dd8fb9fcaa26734f85cde40bb2a6688758.1556025155.git.vpillai@digitalocean.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1556025155.git.vpillai@digitalocean.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+In-Reply-To: <cover.1556025155.git.vpillai@digitalocean.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Second iteration of the core-scheduling feature.
+From: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-This version fixes apparent bugs and performance issues in v1. This
-doesn't fully address the issue of core sharing between processes
-with different tags. Core sharing still happens 1% to 5% of the time
-based on the nature of workload and timing of the runnable processes.
+Make sure the entire for loop has stop_cpus_in_progress set.
 
-Changes in v2
--------------
-- rebased on mainline commit: 6d906f99817951e2257d577656899da02bb33105
-- Fixes for couple of NULL pointer dereference crashes
-  - Subhra Mazumdar
-  - Tim Chen
-- Improves priority comparison logic for process in different cpus
-  - Peter Zijlstra
-  - Aaron Lu
-- Fixes a hard lockup in rq locking
-  - Vineeth Pillai
-  - Julien Desfossez
-- Fixes a performance issue seen on IO heavy workloads
-  - Vineeth Pillai
-  - Julien Desfossez
-- Fix for 32bit build
-  - Aubrey Li
-
-Issues
-------
-- Processes with different tags can still share the core
-- A crash when disabling cpus with core-scheduling on
-   - https://paste.debian.net/plainh/fa6bcfa8
-
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
+ kernel/stop_machine.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Peter Zijlstra (16):
-  stop_machine: Fix stop_cpus_in_progress ordering
-  sched: Fix kerneldoc comment for ia64_set_curr_task
-  sched: Wrap rq::lock access
-  sched/{rt,deadline}: Fix set_next_task vs pick_next_task
-  sched: Add task_struct pointer to sched_class::set_curr_task
-  sched/fair: Export newidle_balance()
-  sched: Allow put_prev_task() to drop rq->lock
-  sched: Rework pick_next_task() slow-path
-  sched: Introduce sched_class::pick_task()
-  sched: Core-wide rq->lock
-  sched: Basic tracking of matching tasks
-  sched: A quick and dirty cgroup tagging interface
-  sched: Add core wide task selection and scheduling.
-  sched/fair: Add a few assertions
-  sched: Trivial forced-newidle balancer
-  sched: Debug bits...
-
-Vineeth Remanan Pillai (1):
-  sched: Wake up sibling if it has something to run
-
- include/linux/sched.h    |   9 +-
- kernel/Kconfig.preempt   |   7 +-
- kernel/sched/core.c      | 800 +++++++++++++++++++++++++++++++++++++--
- kernel/sched/cpuacct.c   |  12 +-
- kernel/sched/deadline.c  |  99 +++--
- kernel/sched/debug.c     |   4 +-
- kernel/sched/fair.c      | 137 +++++--
- kernel/sched/idle.c      |  42 +-
- kernel/sched/pelt.h      |   2 +-
- kernel/sched/rt.c        |  96 +++--
- kernel/sched/sched.h     | 185 ++++++---
- kernel/sched/stop_task.c |  35 +-
- kernel/sched/topology.c  |   4 +-
- kernel/stop_machine.c    |   2 +
- 14 files changed, 1145 insertions(+), 289 deletions(-)
-
+diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+index 067cb83f37ea..583119e0c51c 100644
+--- a/kernel/stop_machine.c
++++ b/kernel/stop_machine.c
+@@ -375,6 +375,7 @@ static bool queue_stop_cpus_work(const struct cpumask *cpumask,
+ 	 */
+ 	preempt_disable();
+ 	stop_cpus_in_progress = true;
++	barrier();
+ 	for_each_cpu(cpu, cpumask) {
+ 		work = &per_cpu(cpu_stopper.stop_work, cpu);
+ 		work->fn = fn;
+@@ -383,6 +384,7 @@ static bool queue_stop_cpus_work(const struct cpumask *cpumask,
+ 		if (cpu_stop_queue_work(cpu, work))
+ 			queued = true;
+ 	}
++	barrier();
+ 	stop_cpus_in_progress = false;
+ 	preempt_enable();
+ 
 -- 
 2.17.1
 
