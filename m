@@ -2,72 +2,134 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5132C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F4CC282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD69B20685
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F2F20685
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:41:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sRuMlwSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbfDWOlG (ORCPT
+        id S1728315AbfDWOlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:41:06 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:34667 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbfDWOkv (ORCPT
+        Tue, 23 Apr 2019 10:41:53 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:52627 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbfDWOlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 10:40:51 -0400
-X-Originating-IP: 90.88.147.33
-Received: from localhost.localdomain (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id D428B1BF214;
-        Tue, 23 Apr 2019 14:40:48 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Eben Upton <eben@raspberrypi.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v6 3/4] drm/vc4: Check for the binner bo before handling OOM interrupt
-Date:   Tue, 23 Apr 2019 16:40:27 +0200
-Message-Id: <20190423144028.30036-4-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190423144028.30036-1-paul.kocialkowski@bootlin.com>
-References: <20190423144028.30036-1-paul.kocialkowski@bootlin.com>
+        Tue, 23 Apr 2019 10:41:52 -0400
+Received: by mail-it1-f196.google.com with SMTP id x132so534405itf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 07:41:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n96aQRl9RFy0hPdQk7Xa/MQx25bn/TZiR6m6PTgCGiY=;
+        b=sRuMlwSJj3tx8x7QtHL0m2YRLbf8LMnIVSOaWhe5upFpwFFoEpQ70YawhsWMfzx6HA
+         F33OKNgxrugpe5kM4pTTs6KZzuTTmw4+8OfsUVqhTAb/RMMrlgvwxijHsUPxbrWeO5F2
+         KLKPdBp9nPB518gASp1WibOP5SPyTtoArxz1SUkjIo1+07Kh/qDEGAJVoDQR1i0PuHPc
+         igfP3GyDnQrZKuuiYUjZNOtuINYWem4u2I4pTWE+2SHFE0GneeQXaTLWmBLKlpTWGksz
+         cpn8KEs7QvA5xJR6PkzgzeS+ny6gbwIz1k1QRHky+jFg4ZvNVDoeyv+nwAkXXp92JRxm
+         vHRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n96aQRl9RFy0hPdQk7Xa/MQx25bn/TZiR6m6PTgCGiY=;
+        b=Wg4MNHVSSd9lHDMKrtP1wfmZzRE5coh3prc4g/ajk4RiEq53bibeVV/J9c11z2C7hF
+         p4XHjGqVS7QyhCobSt8lMG2e3w6qntMGBe/EQNL1MDxvVPXpu2iyDWHvpfmJ8Fceukyg
+         f1jm4749vVUq5IHUoIN/POfk1rdL6FsOVkpwp+H2S5yCNyuF1y/7loM8qZEqa9obxh6X
+         Fx0UwZcdCpdviQyb6nmd6RKbh4wkeubHDp7Vcnvy6q5KKQJsFc+Bpbo+tf0scbgWdarY
+         l7GKZ5qoOmCRyXvK3bUgEPGIbfVPErtRwb/0A1mxFgeOTfjFarZwCIfNO5EkjEFGRAyx
+         Dqew==
+X-Gm-Message-State: APjAAAV6neCYS86u5wW1jpwlX/jvs9Me/gE7V4ASMI6ra3uK+SCm8eaF
+        M992zx15jfpTGswWPMZWCbk5q6XQOAodjEarQ8t/hg==
+X-Google-Smtp-Source: APXvYqz3PvZSMG+Nu8zlC35uDmhyokQcJgVocQMotkVuMRYZbBN/tTGQ+UdNfB8Y7+NKek77p5QYvhDqt7eppOtzhxc=
+X-Received: by 2002:a02:c043:: with SMTP id u3mr8633027jam.35.1556030511715;
+ Tue, 23 Apr 2019 07:41:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <00000000000043fe9c058720a5d3@google.com> <ad884b18-0e03-d6be-02b0-4e5273f068ce@kernel.dk>
+ <CAHk-=wgG=RqK8T5kWiZfH7da6rBuqp3kAesP=ETgceb6RzvZng@mail.gmail.com>
+ <53a17444-9539-5810-82a0-ceeefa742508@kernel.dk> <cfa6be6d-4125-6d1e-8993-e9ec9dbaa7bb@kernel.dk>
+ <CAHk-=wh=kKEb6qbuhnSWh5S55SbQBOE33991ULSFUgVrEnzivA@mail.gmail.com>
+In-Reply-To: <CAHk-=wh=kKEb6qbuhnSWh5S55SbQBOE33991ULSFUgVrEnzivA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 23 Apr 2019 17:41:40 +0300
+Message-ID: <CACT4Y+b8dkFzQoJgaNLMiDjF4bM1AeSZaH5EWTvF_o5MQhu4Pg@mail.gmail.com>
+Subject: Re: WARNING in percpu_ref_kill_and_confirm
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        syzbot <syzbot+10d25e23199614b7721f@syzkaller.appspotmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Anvin <hpa@zytor.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the OOM interrupt directly deals with the binner bo, it doesn't
-make sense to try and handle it without a binner buffer registered.
+On Mon, Apr 22, 2019 at 7:48 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Mon, Apr 22, 2019 at 9:38 AM Jens Axboe <axboe@kernel.dk> wrote:
+> >
+> > With the mutex change in, I can trigger it in a second or so. Just ran
+> > the reproducer with that change reverted, and I'm not seeing any badness.
+> > So I do wonder if the bisect results are accurate?
+>
+> Looking at the syzbot report, it's syzbot being confused.
+>
+> The actual WARNING in percpu_ref_kill_and_confirm() only happens with
+> recent kernels.
+>
+> But then syzbot mixes it up with a completely different bug:
+>
+>    crash: BUG: MAX_STACK_TRACE_ENTRIES too low!
+>    BUG: MAX_STACK_TRACE_ENTRIES too low!
+>
+> and for some reason decides that *that* bug is the same thing entirely.
+>
+> So yeah, I think the simple percpu_ref_is_dying() check is sufficient,
+> and that the syzbot bisection is completely bogus.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- drivers/gpu/drm/vc4/vc4_irq.c | 3 +++
- 1 file changed, 3 insertions(+)
+Using crashed/not-crashed predicate gives better results overall. More
+than half kernel bugs have different manifestations due to different
+reasons. And even if we can say for sure that we see a different bug,
+we still don't know if the original bug is also there or not. See the
+following threads for details:
+https://groups.google.com/d/msg/syzkaller-bugs/nFeC8-UG1gg/y6gUEsvAAgAJ
+https://groups.google.com/d/msg/syzkaller/sR8aAXaWEF4/tTWYRgvmAwAJ
 
-diff --git a/drivers/gpu/drm/vc4/vc4_irq.c b/drivers/gpu/drm/vc4/vc4_irq.c
-index ffd0a4388752..723dc86b4511 100644
---- a/drivers/gpu/drm/vc4/vc4_irq.c
-+++ b/drivers/gpu/drm/vc4/vc4_irq.c
-@@ -64,6 +64,9 @@ vc4_overflow_mem_work(struct work_struct *work)
- 	struct vc4_exec_info *exec;
- 	unsigned long irqflags;
- 
-+	if (!bo)
-+		return;
-+
- 	bin_bo_slot = vc4_v3d_get_bin_slot(vc4);
- 	if (bin_bo_slot < 0) {
- 		DRM_ERROR("Couldn't allocate binner overflow mem\n");
--- 
-2.21.0
-
+Unrelated crashes is the most common cause of incorrect bisection
+results (66%). To enable better bisection we would need to integrate
+some meaningful precommit testing into kernel development process
+(would be tremendously useful for other reasons too). E.g. this "BUG:
+MAX_STACK_TRACE_ENTRIES too low!" is this:
+https://syzkaller.appspot.com/bug?id=dbd70f0407487a061d2d46fdc6bccc94b95ce3c0
+and the reproducer is simply opening /dev/infiniband/rdma_cm or
+/dev/vhci or something equally simple with LOCKDEP enabled. None of
+this was done in a testing environment for several weeks. And then it
+took another month to propagate the fix through all distributed kernel
+trees. For all that time simple programs crash and bisection can't be
+done and we are spending time here...
