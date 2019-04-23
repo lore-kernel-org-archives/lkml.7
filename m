@@ -2,213 +2,283 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7942FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2793BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39AAC20878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D871920878
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="DEuahUDv"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DfRDcwz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfDXFFX (ORCPT
+        id S1726927AbfDXFJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 01:05:23 -0400
-Received: from mail-eopbgr820052.outbound.protection.outlook.com ([40.107.82.52]:62747
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725919AbfDXFFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 01:05:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IGQgJ5Ius/udLWBy2o5LGNX/ow0nRMrqbedYDCxfHM8=;
- b=DEuahUDvPw9INMi1jhX4PDl4qOdMaX2tv5ZDIF3qvSIiHyENywxdeXflxy52IVJKyqpF+LkslFWGQx+EpJlPgV0YE5KhDX9MYNTwFvIfi/h5DsUNBt8PIBRJHbS7nvgxRNr+/iA8LF/xZAZbz2px5E9CAwzS6P6gWtrfyKGfvWc=
-Received: from DM6PR02MB4779.namprd02.prod.outlook.com (20.176.109.16) by
- DM6PR02MB4506.namprd02.prod.outlook.com (20.176.107.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Wed, 24 Apr 2019 05:04:39 +0000
-Received: from DM6PR02MB4779.namprd02.prod.outlook.com
- ([fe80::1970:28ec:3bfa:2305]) by DM6PR02MB4779.namprd02.prod.outlook.com
- ([fe80::1970:28ec:3bfa:2305%7]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
- 05:04:39 +0000
-From:   Naga Sureshkumar Relli <nagasure@xilinx.com>
-To:     Helmut Grohne <helmut.grohne@intenta.de>
-CC:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "nagasureshkumarrelli@gmail.com" <nagasureshkumarrelli@gmail.com>
-Subject: RE: [LINUX PATCH v14] mtd: rawnand: pl353: Add basic driver for arm
- pl353 smc nand interface
-Thread-Topic: [LINUX PATCH v14] mtd: rawnand: pl353: Add basic driver for arm
- pl353 smc nand interface
-Thread-Index: AQHU83vggkxmg2rBCEyEcIHuXS/Vp6ZJveKAgAEOs2A=
-Date:   Wed, 24 Apr 2019 05:04:38 +0000
-Message-ID: <DM6PR02MB47797E4A5ADFC87DE4B04A81AF3C0@DM6PR02MB4779.namprd02.prod.outlook.com>
-References: <1555326613-26739-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
- <20190423124525.axaprwy4qofbqfhj@laureti-dev>
-In-Reply-To: <20190423124525.axaprwy4qofbqfhj@laureti-dev>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nagasure@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9668ec92-f7fb-45ad-8f2d-08d6c8725aa3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR02MB4506;
-x-ms-traffictypediagnostic: DM6PR02MB4506:
-x-microsoft-antispam-prvs: <DM6PR02MB4506E381805A58B4D03144B3AF3C0@DM6PR02MB4506.namprd02.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(376002)(366004)(396003)(346002)(13464003)(189003)(199004)(4326008)(186003)(102836004)(14454004)(6506007)(7736002)(97736004)(305945005)(316002)(54906003)(74316002)(26005)(6246003)(25786009)(53546011)(5660300002)(3846002)(6116002)(7416002)(76176011)(86362001)(2906002)(52536014)(8936002)(53936002)(6916009)(55016002)(73956011)(76116006)(8676002)(71190400001)(66946007)(71200400001)(81166006)(6436002)(9686003)(486006)(66476007)(99286004)(68736007)(66556008)(478600001)(33656002)(229853002)(11346002)(256004)(14444005)(66066001)(66446008)(64756008)(446003)(81156014)(7696005)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB4506;H:DM6PR02MB4779.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vpCr/QnClzzDldn3PMpr+Wxvf0c4ORGX8NlELsBsZGOEcN5f7u1hskPpJD+c8JSvJcJvqnzeD2nBFHRB6BoOSRxOY5Mny6eKLte7rLU1ZjhYx5ZAN85/BQ6nvLkrbuJIX3nxBNQ/z0quo74sAgbqucsEPHpTeBgLzCV+tEA/UPRdA/x587Ih9S3bVk3ri22C2sRxly5Q9YTND4lRP56KBiA4jhTNXJ05lwpc1G1aSfTiUyRXbw617WCP8fX2z9yLTq9p+RUKT1/mMa0jt95xNR+R4FLdghcsuKhn6RH3UvgwBNDPohxcWxY/9xz+CTPJosQQisA4iNxGNpvc87UDNBSOU2Flb6iSPxn54GgGUVN4I83uriIIaE9stSSp6T/h8mnI1f40enMtoLyWA1ICLKBwcFW+zd+DjOyMPfz7m2M=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 24 Apr 2019 01:09:23 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:34884 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725919AbfDXFJX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 01:09:23 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O57iad027439
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 22:09:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=VEdpMvj5kP5nuI6Ztt7mzIbqR1F5iJNOXyr/8yu0PUA=;
+ b=DfRDcwz9GNFsTOvKcjdYUIClLw2lmbenktFncRuI/FTa8XUZ6VyjEodtAqNCMQl29Bhy
+ 1DALn7surcj2kJNETxq0jo4Hn5+pQ8NquZhMWHyKLNswPeUbmqeulLzItHee2hTbDMAc
+ zeVPjI2V9zlLEp1iFsjjb8L51n0Wi8QqcKY= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2s2atvssga-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 22:09:21 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
+ mail.thefacebook.com (2620:10d:c021:18::173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Tue, 23 Apr 2019 22:09:20 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id D5B971142D2EA; Tue, 23 Apr 2019 14:31:36 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-team@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        <cgroups@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2 6/6] mm: reparent slab memory on cgroup removal
+Date:   Tue, 23 Apr 2019 14:31:33 -0700
+Message-ID: <20190423213133.3551969-7-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190423213133.3551969-1-guro@fb.com>
+References: <20190423213133.3551969-1-guro@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9668ec92-f7fb-45ad-8f2d-08d6c8725aa3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 05:04:39.0718
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4506
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_03:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helmut,
+Let's reparent memcg slab memory on memcg offlining. This allows us
+to release the memory cgroup without waiting for the last outstanding
+kernel object (e.g. dentry used by another application).
 
-> -----Original Message-----
-> From: Helmut Grohne <helmut.grohne@intenta.de>
-> Sent: Tuesday, April 23, 2019 6:15 PM
-> To: Naga Sureshkumar Relli <nagasure@xilinx.com>
-> Cc: bbrezillon@kernel.org; miquel.raynal@bootlin.com; richard@nod.at;
-> dwmw2@infradead.org; computersforpeace@gmail.com; marek.vasut@gmail.com; =
-linux-
-> mtd@lists.infradead.org; linux-kernel@vger.kernel.org; Michal Simek <mich=
-als@xilinx.com>;
-> nagasureshkumarrelli@gmail.com
-> Subject: Re: [LINUX PATCH v14] mtd: rawnand: pl353: Add basic driver for =
-arm pl353 smc
-> nand interface
->=20
-> WARNING: This driver might brick the hardware. See below.
->=20
-> Hi Naga,
->=20
-> On Mon, Apr 15, 2019 at 04:40:13PM +0530, Naga Sureshkumar Relli wrote:
-> > Changes in v14:
-> >  - Removed legacy hooks as per Miquel comments
->=20
-> Thank you for the update.
->=20
-> > +static inline int pl353_wait_for_dev_ready(struct nand_chip *chip) {
-> > +	unsigned long timeout =3D jiffies + PL353_NAND_DEV_BUSY_TIMEOUT;
-> > +
-> > +	do {
-> > +		if (pl353_smc_get_nand_int_status_raw()) {
-> > +			pl353_smc_clr_nand_int();
-> > +			break;
->=20
-> A closing brace is missing here. This causes a compilation failure.
-While cleaning up the warnings reported by checkpatch,  this happened.
-sorry for that. I will correct it.=20
->=20
-> > +
-> > +		cpu_relax();
->=20
-> You previously used cond_resched (via nand_wait_ready) here. Why did you =
-change it to
-> cpu_relax()?
-I just replicated the pl353_wait_for_ecc_done() API definition.
-But did you see any issue with this?
-Anyway I will replace it with cond_resched(), instead of cpu_releax()
->=20
-> > +	} while (!time_after_eq(jiffies, timeout));
-> > +
-> > +	if (time_after_eq(jiffies, timeout)) {
-> > +		pr_err("%s timed out\n", __func__);
-> > +		return -ETIMEDOUT;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
->=20
->=20
-> > +static int pl353_nand_read_page_hwecc(struct nand_chip *chip,
-> > +				      u8 *buf, int oob_required, int page) {
-> > +	int i, stat, eccsize =3D chip->ecc.size;
-> > +	int eccbytes =3D chip->ecc.bytes;
-> > +	int eccsteps =3D chip->ecc.steps;
-> > +	u8 *p =3D buf;
-> > +	u8 *ecc_calc =3D chip->ecc.calc_buf;
-> > +	u8 *ecc =3D chip->ecc.code_buf;
-> > +	unsigned int max_bitflips =3D 0;
-> > +	u8 *oob_ptr;
-> > +	u32 ret;
-> > +	unsigned long data_phase_addr;
-> > +	unsigned long nand_offset =3D (unsigned long __force)xnfc->regs;
->=20
-> The variable xnfc is undeclared here. Consider swapping the line with the=
- next one.
->=20
-> > +	struct pl353_nand_controller *xnfc =3D to_pl353_nand(chip);
-> > +	struct mtd_info *mtd =3D nand_to_mtd(chip);
->=20
-> After loading the driver, the device does not work. The dmesg output is:
->=20
-> nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xda
-> nand: Micron MT29F2G08ABAEAWP
-> nand: 256 MiB, SLC, erase size: 128 KiB, page size: 2048, OOB size: 64 Ba=
-d block table not
-> found for chip 0 Bad block table not found for chip 0 Scanning device for=
- bad blocks
-> nand_bbt: error while writing BBT block -524
-> nand_bbt: error while writing BBT block -524
-> nand_bbt: error while writing BBT block -524
-> nand_bbt: error while writing BBT block -524 No space left to write bad b=
-lock table
-> nand_bbt: error while writing bad block table -28 pl353-nand e1000000.fla=
-sh: could not scan
-> the nand chip
-> pl353-nand: probe of e1000000.flash failed with error -28
-Did you follow the same thing that you tried earlier?
-i.e. updated "nand-bus-width" property and "nand-ecc-mode" ?
-I haven't seen any issue in BBT scanning, with this patch.
+So instead of reparenting all accounted slab pages, let's do reparent
+a relatively small amount of kmem_caches. Reparenting is performed as
+a part of the deactivation process.
 
->=20
-> After trying the driver, the flash chip was bricked. Neither the old driv=
-er nor the uboot-xlnx
-> driver nor the Xilinx fsbl are able to talk to the chip afterwards. This =
-behaviour persists even
-> after a full power cycle. I'll try reinitializing the flash chip next. I'=
-ve only seen this behaviour
-> once, so there is a slight chance that the cause is something else.
-Sometimes I also faced the same problem during driver development.
-What I did is, in standalone nandps driver example,  I forcibly created BBT=
- in the init and once
- it is done. I just reloaded the actual example. Then after wards u-boot an=
-d Linux are able to scan
-the BBT.
+Since the parent cgroup is already charged, everything we need to do
+is to splice the list of kmem_caches to the parent's kmem_caches list,
+swap the memcg pointer and drop the css refcounter for each kmem_cache
+and adjust the parent's css refcounter. Quite simple.
 
-Thanks,
-Naga Sureshkumar Relli
->=20
-> Helmut
+Please, note that kmem_cache->memcg_params.memcg isn't a stable
+pointer anymore. It's safe to read it under rcu_read_lock() or
+with slab_mutex held.
+
+We can race with the slab allocation and deallocation paths. It's not
+a big problem: parent's charge and slab global stats are always
+correct, and we don't care anymore about the child usage and global
+stats. The child cgroup is already offline, so we don't use or show it
+anywhere.
+
+Local slab stats (NR_SLAB_RECLAIMABLE and NR_SLAB_UNRECLAIMABLE)
+aren't used anywhere except count_shadow_nodes(). But even there it
+won't break anything: after reparenting "nodes" will be 0 on child
+level (because we're already reparenting shrinker lists), and on
+parent level page stats always were 0, and this patch won't change
+anything.
+
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ include/linux/slab.h |  4 ++--
+ mm/memcontrol.c      | 14 ++++++++------
+ mm/slab.h            | 14 +++++++++-----
+ mm/slab_common.c     | 23 ++++++++++++++++++++---
+ 4 files changed, 39 insertions(+), 16 deletions(-)
+
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 1b54e5f83342..109cab2ad9b4 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -152,7 +152,7 @@ void kmem_cache_destroy(struct kmem_cache *);
+ int kmem_cache_shrink(struct kmem_cache *);
+ 
+ void memcg_create_kmem_cache(struct mem_cgroup *, struct kmem_cache *);
+-void memcg_deactivate_kmem_caches(struct mem_cgroup *);
++void memcg_deactivate_kmem_caches(struct mem_cgroup *, struct mem_cgroup *);
+ 
+ /*
+  * Please use this macro to create slab caches. Simply specify the
+@@ -638,7 +638,7 @@ struct memcg_cache_params {
+ 			bool dying;
+ 		};
+ 		struct {
+-			struct mem_cgroup *memcg;
++			struct mem_cgroup __rcu *memcg;
+ 			struct list_head children_node;
+ 			struct list_head kmem_caches_node;
+ 			struct percpu_ref refcnt;
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index c9896105d8d5..27ae253922da 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3201,15 +3201,15 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
+ 	 */
+ 	memcg->kmem_state = KMEM_ALLOCATED;
+ 
+-	memcg_deactivate_kmem_caches(memcg);
+-
+-	kmemcg_id = memcg->kmemcg_id;
+-	BUG_ON(kmemcg_id < 0);
+-
+ 	parent = parent_mem_cgroup(memcg);
+ 	if (!parent)
+ 		parent = root_mem_cgroup;
+ 
++	memcg_deactivate_kmem_caches(memcg, parent);
++
++	kmemcg_id = memcg->kmemcg_id;
++	BUG_ON(kmemcg_id < 0);
++
+ 	/*
+ 	 * Change kmemcg_id of this cgroup and all its descendants to the
+ 	 * parent's id, and then move all entries from this cgroup's list_lrus
+@@ -3242,7 +3242,6 @@ static void memcg_free_kmem(struct mem_cgroup *memcg)
+ 	if (memcg->kmem_state == KMEM_ALLOCATED) {
+ 		WARN_ON(!list_empty(&memcg->kmem_caches));
+ 		static_branch_dec(&memcg_kmem_enabled_key);
+-		WARN_ON(page_counter_read(&memcg->kmem));
+ 	}
+ }
+ #else
+@@ -4654,6 +4653,9 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
+ 
+ 	/* The following stuff does not apply to the root */
+ 	if (!parent) {
++#ifdef CONFIG_MEMCG_KMEM
++		INIT_LIST_HEAD(&memcg->kmem_caches);
++#endif
+ 		root_mem_cgroup = memcg;
+ 		return &memcg->css;
+ 	}
+diff --git a/mm/slab.h b/mm/slab.h
+index 61110b3035e7..68c5fc6e557e 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -289,10 +289,11 @@ static __always_inline int memcg_charge_slab(struct page *page,
+ 	struct lruvec *lruvec;
+ 	int ret;
+ 
+-	memcg = s->memcg_params.memcg;
++	rcu_read_lock();
++	memcg = rcu_dereference(s->memcg_params.memcg);
+ 	ret = memcg_kmem_charge_memcg(page, gfp, order, memcg);
+ 	if (ret)
+-		return ret;
++		goto out;
+ 
+ 	lruvec = mem_cgroup_lruvec(page_pgdat(page), memcg);
+ 	mod_lruvec_state(lruvec, cache_vmstat_idx(s), 1 << order);
+@@ -300,8 +301,9 @@ static __always_inline int memcg_charge_slab(struct page *page,
+ 	/* transer try_charge() page references to kmem_cache */
+ 	percpu_ref_get_many(&s->memcg_params.refcnt, 1 << order);
+ 	css_put_many(&memcg->css, 1 << order);
+-
+-	return 0;
++out:
++	rcu_read_unlock();
++	return ret;
+ }
+ 
+ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
+@@ -310,10 +312,12 @@ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
+ 	struct mem_cgroup *memcg;
+ 	struct lruvec *lruvec;
+ 
+-	memcg = s->memcg_params.memcg;
++	rcu_read_lock();
++	memcg = rcu_dereference(s->memcg_params.memcg);
+ 	lruvec = mem_cgroup_lruvec(page_pgdat(page), memcg);
+ 	mod_lruvec_state(lruvec, cache_vmstat_idx(s), -(1 << order));
+ 	memcg_kmem_uncharge_memcg(page, order, memcg);
++	rcu_read_unlock();
+ 
+ 	percpu_ref_put_many(&s->memcg_params.refcnt, 1 << order);
+ }
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 995920222127..36673a43ed31 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -236,7 +236,7 @@ void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *memcg)
+ 		list_add(&s->root_caches_node, &slab_root_caches);
+ 	} else {
+ 		css_get(&memcg->css);
+-		s->memcg_params.memcg = memcg;
++		rcu_assign_pointer(s->memcg_params.memcg, memcg);
+ 		list_add(&s->memcg_params.children_node,
+ 			 &s->memcg_params.root_cache->memcg_params.children);
+ 		list_add(&s->memcg_params.kmem_caches_node,
+@@ -251,7 +251,8 @@ static void memcg_unlink_cache(struct kmem_cache *s)
+ 	} else {
+ 		list_del(&s->memcg_params.children_node);
+ 		list_del(&s->memcg_params.kmem_caches_node);
+-		css_put(&s->memcg_params.memcg->css);
++		mem_cgroup_put(rcu_dereference_protected(s->memcg_params.memcg,
++			lockdep_is_held(&slab_mutex)));
+ 	}
+ }
+ #else
+@@ -772,11 +773,13 @@ static void kmemcg_cache_deactivate(struct kmem_cache *s)
+ 	call_rcu(&s->memcg_params.rcu_head, kmemcg_schedule_work_after_rcu);
+ }
+ 
+-void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg)
++void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg,
++				  struct mem_cgroup *parent)
+ {
+ 	int idx;
+ 	struct memcg_cache_array *arr;
+ 	struct kmem_cache *s, *c;
++	unsigned int nr_reparented;
+ 
+ 	idx = memcg_cache_id(memcg);
+ 
+@@ -794,6 +797,20 @@ void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg)
+ 		kmemcg_cache_deactivate(c);
+ 		arr->entries[idx] = NULL;
+ 	}
++	if (memcg != parent) {
++		nr_reparented = 0;
++		list_for_each_entry(s, &memcg->kmem_caches,
++				    memcg_params.kmem_caches_node) {
++			rcu_assign_pointer(s->memcg_params.memcg, parent);
++			css_put(&memcg->css);
++			nr_reparented++;
++		}
++		if (nr_reparented) {
++			list_splice_init(&memcg->kmem_caches,
++					 &parent->kmem_caches);
++			css_get_many(&parent->css, nr_reparented);
++		}
++	}
+ 	mutex_unlock(&slab_mutex);
+ 
+ 	put_online_mems();
+-- 
+2.20.1
+
