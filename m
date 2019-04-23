@@ -2,427 +2,159 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D444AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 087FCC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADBC214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:10:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NJ8ION3X"
+	by mail.kernel.org (Postfix) with ESMTP id CF97B206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbfDWNKf (ORCPT
+        id S1728146AbfDWNKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:10:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45542 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727944AbfDWNJm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:09:42 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9bXq085808;
-        Tue, 23 Apr 2019 08:09:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556024977;
-        bh=VfH5noIGkBBuwxnZEcIzR4ny7Yk/uNiCh8CmTrOF5q0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NJ8ION3XNS5rmwWFR9ahDKASjMZ5Yj5vWNtqXBSREDxZ+eVjpADPiLSUOwdEQdfGB
-         M+6RcAdAy2a3i85Tpa1DwIHJOwadquPvFr6iZbuynWlw6RiVjQJaIHFyz+uTqHpy5w
-         kmpu6DNlCSMHnMfc+FCKqqYqktylaOqIzy3/5DSU=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3ND9bkx045777
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Apr 2019 08:09:37 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
- Apr 2019 08:09:37 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 23 Apr 2019 08:09:37 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9aRT019074;
-        Tue, 23 Apr 2019 08:09:36 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-CC:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 14/19] net: ethernet: ti: cpsw: refactor probe to group common hw initialization
-Date:   Tue, 23 Apr 2019 16:09:05 +0300
-Message-ID: <1556024950-20752-15-git-send-email-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556024950-20752-1-git-send-email-grygorii.strashko@ti.com>
-References: <1556024950-20752-1-git-send-email-grygorii.strashko@ti.com>
+        Tue, 23 Apr 2019 09:10:40 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:52196 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727944AbfDWNKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 09:10:37 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 01AB6205F9;
+        Tue, 23 Apr 2019 15:10:36 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id DDBC1205F8;
+        Tue, 23 Apr 2019 15:10:35 +0200 (CEST)
+Subject: Re: [PATCH v2 00/13] qcom: dts: thermal cleanups
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+References: <cover.1553853990.git.amit.kucheria@linaro.org>
+ <5583cae1-8fea-724a-24a4-59b38a205ac3@free.fr>
+ <CAP245DUNo02QUkGDPFfzow9535GKO9x6ZusETRjEgTmnHL4D2g@mail.gmail.com>
+ <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr>
+ <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <903fa0a6-5c40-97b4-1c01-fd84f3e51c62@free.fr>
+Date:   Tue, 23 Apr 2019 15:10:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Apr 23 15:10:36 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rework probe to group common hw initialization:
-- group resources request at the beginning of the probe
-- move net device initialization and registration at the end of the probe
-- drop cpsw_slave_init
-as preparation of refactoring of common hw initialization code to
-separate function.
+On 23/04/2019 14:56, Amit Kucheria wrote:
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw.c | 213 +++++++++++++++------------------
- 1 file changed, 97 insertions(+), 116 deletions(-)
+> On Tue, Apr 23, 2019 at 3:01 PM Marc Gonzalez wrote:
+>
+>> On 02/04/2019 20:46, Amit Kucheria wrote:
+>>
+>>> On Tue, Apr 2, 2019 at 8:58 PM Marc Gonzalez wrote:
+>>>
+>>>> On 29/03/2019 11:12, Amit Kucheria wrote:
+>>>>
+>>>>> Changes since v1:
+>>>>> - Devices that are not associated with cooling-maps use the 'hot' type
+>>>>> - Remove critical trip from such devices too and restrict that type of CPUs
+>>>>> - For 8916, add the sensor on the modem
+>>>>>
+>>>>> Description:
+>>>>> - Expose all temperature sensors on msm8916, msm996, msm8998, sdm845
+>>>>> - split up the register address map for msm8998
+>>>>> - standardize names of the various thermal-zones across boards to make it
+>>>>>   easy for test scripts to parse
+>>>>
+>>>> This is what I see on msm8998 with your patch series applied on top of
+>>>> yesterday's next:
+>>>>
+>>>> # dmesg | grep of_parse_thermal_zones
+>>>> of_parse_thermal_zones: build cpu0-thermal zone 0
+>>>> of_parse_thermal_zones: build cpu1-thermal zone 0
+>>>> of_parse_thermal_zones: build cpu2-thermal zone 0
+>>>> of_parse_thermal_zones: build cpu3-thermal zone 0
+>>>> of_parse_thermal_zones: build cpu4-thermal zone 0
+>>>> of_parse_thermal_zones: build cpu5-thermal zone 0
+>>>> of_parse_thermal_zones: build cpu6-thermal zone 0
+>>>> of_parse_thermal_zones: build cpu7-thermal zone 0
+>>>> of_parse_thermal_zones: build gpu-thermal-bottom zone 0
+>>>> of_parse_thermal_zones: build gpu-thermal-top zone 0
+>>>> of_parse_thermal_zones: build cluster0-mhm-thermal zone -22
+>>>> of_parse_thermal_zones: build cluster1-mhm-thermal zone -22
+>>>> of_parse_thermal_zones: build cluster1-l2-thermal zone 0
+>>>> of_parse_thermal_zones: build modem-thermal zone 0
+>>>> of_parse_thermal_zones: build mem-thermal zone 0
+>>>> of_parse_thermal_zones: build wlan-thermal zone 0
+>>>> of_parse_thermal_zones: build q6-dsp-thermal zone 0
+>>>> of_parse_thermal_zones: build camera-thermal zone 0
+>>>> of_parse_thermal_zones: build multimedia-thermal zone 0
+>>>> of_parse_thermal_zones: build pm8998 zone 0
+>>>> of_parse_thermal_zones: build battery-thermal zone 0
+>>>> of_parse_thermal_zones: build skin-thermal zone 0
+>>>>
+>>>> NB: -EINVAL for cluster0-mhm-thermal and cluster1-mhm-thermal
+>>>>
+>>>>
+>>>> # cat /sys/devices/virtual/thermal/thermal_zone*/temp
+>>>> 35800
+>>>> 35200
+>>>> 34500
+>>>> 34800
+>>>> 34500
+>>>> 34100
+>>>> 34100
+>>>> 33500
+>>>> 33800
+>>>> cat: /sys/devices/virtual/thermal/thermal_zone17/temp: Invalid argument
+>>>> 36100
+>>>> cat: /sys/devices/virtual/thermal/thermal_zone19/temp: Invalid argument
+>>>> 35500
+>>>> 36100
+>>>> 35800
+>>>> 35200
+>>>> 35500
+>>>> 36100
+>>>> cat: /sys/devices/virtual/thermal/thermal_zone8/temp: Invalid argument
+>>>> cat: /sys/devices/virtual/thermal/thermal_zone9/temp: Invalid argument
+>>>>
+>>>>
+>>>> Are the failures expected?
+>>>> (cluster*-mhm-thermal and thermal_zone*/temp)
+>>>
+>>> No they are not. Unfortunately, I didn't have HW to test, so
+>>> appreciate the help with testing. I'll check the 8, 9, 17 and 19 again
+>>> before resubmitting.
+>>
+>> Looks like Andy merged this series?
+> 
+> Argh! my bad, I completely forgot about the need to fix this up. I
+> need to get me one of these boards.
+> 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=for-next
+>>
+>> I was expecting a respin, or a discussion of the failures.
+>>
+>> Slightly confused. What next?
+> 
+> We can either revert that one patch for the msm8998, but I think it
+> might be better if I send a fixup patch that could fixup those 4 zones
+> instead.
+> 
+> Does that work for you?
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index c497992f01f7..ddc11f940d66 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -3181,19 +3181,6 @@ static const struct ethtool_ops cpsw_ethtool_ops = {
- 	.set_ringparam = cpsw_set_ringparam,
- };
- 
--static void cpsw_slave_init(struct cpsw_slave *slave, struct cpsw_common *cpsw,
--			    u32 slave_reg_ofs, u32 sliver_reg_ofs)
--{
--	void __iomem		*regs = cpsw->regs;
--	int			slave_num = slave->slave_num;
--	struct cpsw_slave_data	*data = cpsw->data.slave_data + slave_num;
--
--	slave->data	= data;
--	slave->regs	= regs + slave_reg_ofs;
--	slave->sliver	= regs + sliver_reg_ofs;
--	slave->port_vlan = data->dual_emac_res_vlan;
--}
--
- static int cpsw_probe_dt(struct cpsw_platform_data *data,
- 			 struct platform_device *pdev)
- {
-@@ -3476,21 +3463,6 @@ static int cpsw_probe(struct platform_device *pdev)
- 
- 	cpsw->dev = dev;
- 
--	ndev = devm_alloc_etherdev_mqs(dev, sizeof(struct cpsw_priv),
--				       CPSW_MAX_QUEUES, CPSW_MAX_QUEUES);
--	if (!ndev) {
--		dev_err(dev, "error allocating net_device\n");
--		return -ENOMEM;
--	}
--
--	platform_set_drvdata(pdev, ndev);
--	priv = netdev_priv(ndev);
--	priv->cpsw = cpsw;
--	priv->ndev = ndev;
--	priv->dev  = dev;
--	priv->msg_enable = netif_msg_init(debug_level, CPSW_DEBUG);
--	cpsw->rx_packet_max = max(rx_packet_max, 128);
--
- 	mode = devm_gpiod_get_array_optional(dev, "mode", GPIOD_OUT_LOW);
- 	if (IS_ERR(mode)) {
- 		ret = PTR_ERR(mode);
-@@ -3498,6 +3470,37 @@ static int cpsw_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	clk = devm_clk_get(dev, "fck");
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(mode);
-+		dev_err(dev, "fck is not found %d\n", ret);
-+		return ret;
-+	}
-+	cpsw->bus_freq_mhz = clk_get_rate(clk) / 1000000;
-+
-+	ss_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	ss_regs = devm_ioremap_resource(dev, ss_res);
-+	if (IS_ERR(ss_regs))
-+		return PTR_ERR(ss_regs);
-+	cpsw->regs = ss_regs;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	cpsw->wr_regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(cpsw->wr_regs))
-+		return PTR_ERR(cpsw->wr_regs);
-+
-+	/* RX IRQ */
-+	irq = platform_get_irq(pdev, 1);
-+	if (irq < 0)
-+		return irq;
-+	cpsw->irqs_table[0] = irq;
-+
-+	/* TX IRQ */
-+	irq = platform_get_irq(pdev, 2);
-+	if (irq < 0)
-+		return irq;
-+	cpsw->irqs_table[1] = irq;
-+
- 	/*
- 	 * This may be required here for child devices.
- 	 */
-@@ -3516,20 +3519,11 @@ static int cpsw_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto clean_dt_ret;
- 
--	data = &cpsw->data;
--	cpsw->rx_ch_num = 1;
--	cpsw->tx_ch_num = 1;
--
--	if (is_valid_ether_addr(data->slave_data[0].mac_addr)) {
--		memcpy(priv->mac_addr, data->slave_data[0].mac_addr, ETH_ALEN);
--		dev_info(dev, "Detected MACID = %pM\n", priv->mac_addr);
--	} else {
--		eth_random_addr(priv->mac_addr);
--		dev_info(dev, "Random MACID = %pM\n", priv->mac_addr);
--	}
--
--	memcpy(ndev->dev_addr, priv->mac_addr, ETH_ALEN);
-+	soc = soc_device_match(cpsw_soc_devices);
-+	if (soc)
-+		cpsw->quirk_irq = 1;
- 
-+	data = &cpsw->data;
- 	cpsw->slaves = devm_kcalloc(dev,
- 				    data->slaves, sizeof(struct cpsw_slave),
- 				    GFP_KERNEL);
-@@ -3537,37 +3531,14 @@ static int cpsw_probe(struct platform_device *pdev)
- 		ret = -ENOMEM;
- 		goto clean_dt_ret;
- 	}
--	for (i = 0; i < data->slaves; i++)
--		cpsw->slaves[i].slave_num = i;
- 
--	cpsw->slaves[0].ndev = ndev;
--	priv->emac_port = 0;
-+	cpsw->rx_packet_max = max(rx_packet_max, CPSW_MAX_PACKET_SIZE);
- 
--	clk = devm_clk_get(dev, "fck");
--	if (IS_ERR(clk)) {
--		dev_err(dev, "fck is not found\n");
--		ret = -ENODEV;
--		goto clean_dt_ret;
--	}
--	cpsw->bus_freq_mhz = clk_get_rate(clk) / 1000000;
--
--	ss_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	ss_regs = devm_ioremap_resource(dev, ss_res);
--	if (IS_ERR(ss_regs)) {
--		ret = PTR_ERR(ss_regs);
--		goto clean_dt_ret;
--	}
--	cpsw->regs = ss_regs;
-+	cpsw->rx_ch_num = 1;
-+	cpsw->tx_ch_num = 1;
- 
- 	cpsw->version = readl(&cpsw->regs->id_ver);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	cpsw->wr_regs = devm_ioremap_resource(dev, res);
--	if (IS_ERR(cpsw->wr_regs)) {
--		ret = PTR_ERR(cpsw->wr_regs);
--		goto clean_dt_ret;
--	}
--
- 	memset(&dma_params, 0, sizeof(dma_params));
- 	memset(&ale_params, 0, sizeof(ale_params));
- 
-@@ -3604,14 +3575,33 @@ static int cpsw_probe(struct platform_device *pdev)
- 		ret = -ENODEV;
- 		goto clean_dt_ret;
- 	}
-+
- 	for (i = 0; i < cpsw->data.slaves; i++) {
- 		struct cpsw_slave *slave = &cpsw->slaves[i];
-+		void __iomem		*regs = cpsw->regs;
-+
-+		slave->slave_num = i;
-+		slave->data	= &cpsw->data.slave_data[i];
-+		slave->regs	= regs + slave_offset;
-+		slave->sliver	= regs + sliver_offset;
-+		slave->port_vlan = slave->data->dual_emac_res_vlan;
- 
--		cpsw_slave_init(slave, cpsw, slave_offset, sliver_offset);
- 		slave_offset  += slave_size;
- 		sliver_offset += SLIVER_SIZE;
- 	}
- 
-+	ale_params.dev			= dev;
-+	ale_params.ale_ageout		= ale_ageout;
-+	ale_params.ale_entries		= data->ale_entries;
-+	ale_params.ale_ports		= CPSW_ALE_PORTS_NUM;
-+
-+	cpsw->ale = cpsw_ale_create(&ale_params);
-+	if (!cpsw->ale) {
-+		dev_err(dev, "error initializing ale engine\n");
-+		ret = -ENODEV;
-+		goto clean_dt_ret;
-+	}
-+
- 	dma_params.dev		= dev;
- 	dma_params.rxthresh	= dma_params.dmaregs + CPDMA_RXTHRESH;
- 	dma_params.rxfree	= dma_params.dmaregs + CPDMA_RXFREE;
-@@ -3636,50 +3626,56 @@ static int cpsw_probe(struct platform_device *pdev)
- 		goto clean_dt_ret;
- 	}
- 
--	soc = soc_device_match(cpsw_soc_devices);
--	if (soc)
--		cpsw->quirk_irq = 1;
-+	cpsw->cpts = cpts_create(cpsw->dev, cpts_regs, cpsw->dev->of_node);
-+	if (IS_ERR(cpsw->cpts)) {
-+		ret = PTR_ERR(cpsw->cpts);
-+		goto clean_dma_ret;
-+	}
- 
- 	ch = cpsw->quirk_irq ? 0 : 7;
- 	cpsw->txv[0].ch = cpdma_chan_create(cpsw->dma, ch, cpsw_tx_handler, 0);
- 	if (IS_ERR(cpsw->txv[0].ch)) {
- 		dev_err(dev, "error initializing tx dma channel\n");
- 		ret = PTR_ERR(cpsw->txv[0].ch);
--		goto clean_dma_ret;
-+		goto clean_cpts;
- 	}
- 
- 	cpsw->rxv[0].ch = cpdma_chan_create(cpsw->dma, 0, cpsw_rx_handler, 1);
- 	if (IS_ERR(cpsw->rxv[0].ch)) {
- 		dev_err(dev, "error initializing rx dma channel\n");
- 		ret = PTR_ERR(cpsw->rxv[0].ch);
--		goto clean_dma_ret;
-+		goto clean_cpts;
- 	}
-+	cpsw_split_res(cpsw);
- 
--	ale_params.dev			= dev;
--	ale_params.ale_ageout		= ale_ageout;
--	ale_params.ale_entries		= data->ale_entries;
--	ale_params.ale_ports		= CPSW_ALE_PORTS_NUM;
--
--	cpsw->ale = cpsw_ale_create(&ale_params);
--	if (!cpsw->ale) {
--		dev_err(dev, "error initializing ale engine\n");
--		ret = -ENODEV;
--		goto clean_dma_ret;
-+	/* setup netdev */
-+	ndev = devm_alloc_etherdev_mqs(dev, sizeof(struct cpsw_priv),
-+				       CPSW_MAX_QUEUES, CPSW_MAX_QUEUES);
-+	if (!ndev) {
-+		dev_err(dev, "error allocating net_device\n");
-+		goto clean_cpts;
- 	}
- 
--	cpsw->cpts = cpts_create(cpsw->dev, cpts_regs, cpsw->dev->of_node);
--	if (IS_ERR(cpsw->cpts)) {
--		ret = PTR_ERR(cpsw->cpts);
--		goto clean_dma_ret;
--	}
-+	platform_set_drvdata(pdev, ndev);
-+	priv = netdev_priv(ndev);
-+	priv->cpsw = cpsw;
-+	priv->ndev = ndev;
-+	priv->dev  = dev;
-+	priv->msg_enable = netif_msg_init(debug_level, CPSW_DEBUG);
-+	priv->emac_port = 0;
- 
--	ndev->irq = platform_get_irq(pdev, 1);
--	if (ndev->irq < 0) {
--		dev_err(dev, "error getting irq resource\n");
--		ret = ndev->irq;
--		goto clean_dma_ret;
-+	if (is_valid_ether_addr(data->slave_data[0].mac_addr)) {
-+		memcpy(priv->mac_addr, data->slave_data[0].mac_addr, ETH_ALEN);
-+		dev_info(dev, "Detected MACID = %pM\n", priv->mac_addr);
-+	} else {
-+		eth_random_addr(priv->mac_addr);
-+		dev_info(dev, "Random MACID = %pM\n", priv->mac_addr);
- 	}
- 
-+	memcpy(ndev->dev_addr, priv->mac_addr, ETH_ALEN);
-+
-+	cpsw->slaves[0].ndev = ndev;
-+
- 	ndev->features |= NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_VLAN_CTAG_RX;
- 
- 	ndev->netdev_ops = &cpsw_netdev_ops;
-@@ -3690,7 +3686,6 @@ static int cpsw_probe(struct platform_device *pdev)
- 	netif_tx_napi_add(ndev, &cpsw->napi_tx,
- 			  cpsw->quirk_irq ? cpsw_tx_poll : cpsw_tx_mq_poll,
- 			  CPSW_POLL_WEIGHT);
--	cpsw_split_res(cpsw);
- 
- 	/* register the network device */
- 	SET_NETDEV_DEV(ndev, dev);
-@@ -3698,7 +3693,7 @@ static int cpsw_probe(struct platform_device *pdev)
- 	if (ret) {
- 		dev_err(dev, "error registering net device\n");
- 		ret = -ENODEV;
--		goto clean_dma_ret;
-+		goto clean_cpts;
- 	}
- 
- 	if (cpsw->data.dual_emac) {
-@@ -3716,40 +3711,24 @@ static int cpsw_probe(struct platform_device *pdev)
- 	 * If anyone wants to implement support for those, make sure to
- 	 * first request and append them to irqs_table array.
- 	 */
--
--	/* RX IRQ */
--	irq = platform_get_irq(pdev, 1);
--	if (irq < 0) {
--		ret = irq;
--		goto clean_dma_ret;
--	}
--
--	cpsw->irqs_table[0] = irq;
--	ret = devm_request_irq(dev, irq, cpsw_rx_interrupt,
-+	ret = devm_request_irq(dev, cpsw->irqs_table[0], cpsw_rx_interrupt,
- 			       0, dev_name(dev), cpsw);
- 	if (ret < 0) {
- 		dev_err(dev, "error attaching irq (%d)\n", ret);
--		goto clean_dma_ret;
-+		goto clean_unregister_netdev_ret;
- 	}
- 
--	/* TX IRQ */
--	irq = platform_get_irq(pdev, 2);
--	if (irq < 0) {
--		ret = irq;
--		goto clean_dma_ret;
--	}
- 
--	cpsw->irqs_table[1] = irq;
--	ret = devm_request_irq(dev, irq, cpsw_tx_interrupt,
-+	ret = devm_request_irq(dev, cpsw->irqs_table[1], cpsw_tx_interrupt,
- 			       0, dev_name(&pdev->dev), cpsw);
- 	if (ret < 0) {
- 		dev_err(dev, "error attaching irq (%d)\n", ret);
--		goto clean_dma_ret;
-+		goto clean_unregister_netdev_ret;
- 	}
- 
- 	cpsw_notice(priv, probe,
- 		    "initialized device (regs %pa, irq %d, pool size %d)\n",
--		    &ss_res->start, ndev->irq, dma_params.descs_pool_size);
-+		    &ss_res->start, cpsw->irqs_table[0], descs_pool_size);
- 
- 	pm_runtime_put(&pdev->dev);
- 
-@@ -3757,6 +3736,8 @@ static int cpsw_probe(struct platform_device *pdev)
- 
- clean_unregister_netdev_ret:
- 	unregister_netdev(ndev);
-+clean_cpts:
-+	cpts_release(cpsw->cpts);
- clean_dma_ret:
- 	cpdma_ctlr_destroy(cpsw->dma);
- clean_dt_ret:
--- 
-2.17.1
+Sure. I can give you a Tested-by once everything works on the MEDIABOX I have.
 
+You mention the 4 thermal_zone*/temp failures.
+
+What about the cluster0-mhm-thermal and cluster1-mhm-thermal failures?
+
+Regards.
