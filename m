@@ -2,140 +2,96 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C3BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE63AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA05C2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B740218D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:26:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R71P1EHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfDWK0O (ORCPT
+        id S1727404AbfDWK0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:26:14 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:60428 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfDWK0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:26:14 -0400
-Received: from p57b772a1.dip0.t-ipconnect.de ([87.183.114.161] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hIsck-0001oz-Sc; Tue, 23 Apr 2019 12:26:02 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/bridge: dw-hdmi: fix SCDC configuration for ddc-i2c-bus
-Date:   Tue, 23 Apr 2019 12:26:02 +0200
-Message-ID: <2275367.P1g2IIHPGP@phil>
-In-Reply-To: <VE1PR03MB59031814B5BCAB2152923BDAAC210@VE1PR03MB5903.eurprd03.prod.outlook.com>
-References: <VE1PR03MB59031814B5BCAB2152923BDAAC210@VE1PR03MB5903.eurprd03.prod.outlook.com>
+        Tue, 23 Apr 2019 06:26:54 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37542 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfDWK0x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 06:26:53 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v13so437841ljk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 03:26:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1FroAomXJaDKJahsq0GryFxVKyy+ztefG4XwsaWwQLQ=;
+        b=R71P1EHtE9ho7Q7VaICQcQfxwqZxvTIIoMzw3gql1mrrGGSUukyBT6JAymY6q8nFRd
+         AekCHr6FRxyNKtmnj0b52GWN93roohjUvmdUEtBMNtd9SPDv0Rl+CZG2qkK/Qdq3pLpq
+         ILNlgEgewBdvOZNx7LJOdRl3+AVEc9fshal3/fcJ1X0gULtD+QaQOY5gFTe6UDWCSgny
+         Q2ezjf0z6XsHHW2lw18lwGk5LOwsaZR6UK9YG/g6VZl0g+9NHWEvBJjwJAOPzWuUBska
+         JooQNKqfWDYfBDjNJVkQl3RpxYhJ6fATqku8Ay5l0YwG/tVUBKgc8Tc6uu9nlnXdLkL2
+         2Wjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1FroAomXJaDKJahsq0GryFxVKyy+ztefG4XwsaWwQLQ=;
+        b=ulwd4jozBxHkQ9IysmrbCNdZBZpsSZJj05h3DkqYzzhOOsoTARUCcU+w2MPM4RrjS+
+         g+ASw5cxaB7q0ux+CFGxdkr8aAXgzho9WhK0z3gWvG5D5kxOLJ/w09bTEqYsheOWoBYI
+         2m+X/kG0RXdnSVGOHbYVJCxY5VWLdy+coya5Q56EYxN2IEq6zzumt7uWEJcpR8xAfHDV
+         0HYd2xpT2192+OgJ60MklyX9jt5uzt26yfQsOEVd4ea93WnGXAh3ug04+7rPRIJyYPzG
+         LhYkGbyh0Zh4Qznh5drjN5vykE+0PRIllPQdL5qzxPIXgsyZRY7FHcWaEmLVW5tWhipg
+         ESYA==
+X-Gm-Message-State: APjAAAVPcZo8usut+pnnwJrevJazwQeBCOBM8rGMTZ7GGYY/k4Y/crbW
+        rBOSZGZghbJm/Stxi09ElIASNaHzA47wnkcqrpcMdQ==
+X-Google-Smtp-Source: APXvYqy1KhtlaeUH//E9N6SAdKJvZtTMP6eUA5vssp6lV0Aoj05LJ++zPDdRuPPv5R+y2Et7LCBBq7eDGMc9rZA8yW4=
+X-Received: by 2002:a2e:8703:: with SMTP id m3mr12709901lji.107.1556015211519;
+ Tue, 23 Apr 2019 03:26:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <1555139666-948-1-git-send-email-hofrat@osadl.org> <1555139666-948-9-git-send-email-hofrat@osadl.org>
+In-Reply-To: <1555139666-948-9-git-send-email-hofrat@osadl.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 23 Apr 2019 12:26:40 +0200
+Message-ID: <CACRpkdbtzzYpS1wC8JpgMdgbez3mrYC+05u3vvPgXVU1GM2QSA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: u300: add missing check for kmalloc
+To:     Nicholas Mc Guire <hofrat@osadl.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Sonntag, 21. April 2019, 10:25:50 CEST schrieb Jonas Karlman:
-> When ddc-i2c-bus property is used, a NULL pointer dereference is reported:
-> 
-> [   31.041669] Unable to handle kernel NULL pointer dereference at virtual address 00000008
-> [   31.041671] pgd = 4d3c16f6
-> [   31.041673] [00000008] *pgd=00000000
-> [   31.041678] Internal error: Oops: 5 [#1] SMP ARM
-> 
-> [   31.041711] Hardware name: Rockchip (Device Tree)
-> [   31.041718] PC is at i2c_transfer+0x8/0xe4
-> [   31.041721] LR is at drm_scdc_read+0x54/0x84
-> [   31.041723] pc : [<c073273c>]    lr : [<c05926c4>]    psr: 280f0013
-> [   31.041725] sp : edffdad0  ip : 5ccb5511  fp : 00000058
-> [   31.041727] r10: 00000780  r9 : edf91608  r8 : c11b0f48
-> [   31.041728] r7 : 00000438  r6 : 00000000  r5 : 00000000  r4 : 00000000
-> [   31.041730] r3 : edffdae7  r2 : 00000002  r1 : edffdaec  r0 : 00000000
-> 
-> [   31.041908] [<c073273c>] (i2c_transfer) from [<c05926c4>] (drm_scdc_read+0x54/0x84)
-> [   31.041913] [<c05926c4>] (drm_scdc_read) from [<c0592858>] (drm_scdc_set_scrambling+0x30/0xbc)
-> [   31.041919] [<c0592858>] (drm_scdc_set_scrambling) from [<c05cc0f4>] (dw_hdmi_update_power+0x1440/0x1610)
-> [   31.041926] [<c05cc0f4>] (dw_hdmi_update_power) from [<c05cc574>] (dw_hdmi_bridge_enable+0x2c/0x70)
-> [   31.041932] [<c05cc574>] (dw_hdmi_bridge_enable) from [<c05aed48>] (drm_bridge_enable+0x24/0x34)
-> [   31.041938] [<c05aed48>] (drm_bridge_enable) from [<c0591060>] (drm_atomic_helper_commit_modeset_enables+0x114/0x220)
-> [   31.041943] [<c0591060>] (drm_atomic_helper_commit_modeset_enables) from [<c05c3fe0>] (rockchip_atomic_helper_commit_tail_rpm+0x28/0x64)
-> 
-> hdmi->i2c may not be set when ddc-i2c-bus property is used in device tree.
-> Fix this by using hdmi->ddc as the i2c adapter when calling drm_scdc_*().
-> Also report that SCDC is not supported when there is no DDC bus.
-> 
-> Fixes: 264fce6cc2c1 ("drm/bridge: dw-hdmi: Add SCDC and TMDS Scrambling support")
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Hi Nicholas,
 
-I've looked that up and yeah, hdmi->ddc seems the right thing to use
-as it points either to the external i2c or the internal one, so
+thanks for your patch!
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+On Sat, Apr 13, 2019 at 9:20 AM Nicholas Mc Guire <hofrat@osadl.org> wrote:
 
-> ---
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index 7a47c65d8ecb..fd1c319a4ee0 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -1046,6 +1046,10 @@ static bool dw_hdmi_support_scdc(struct dw_hdmi *hdmi)
->  	if (hdmi->version < 0x200a)
->  		return false;
->  
-> +	/* Disable if no DDC bus */
-> +	if (!hdmi->ddc)
-> +		return false;
-> +
->  	/* Disable if SCDC is not supported, or if an HF-VSDB block is absent */
->  	if (!display->hdmi.scdc.supported ||
->  	    !display->hdmi.scdc.scrambling.supported)
-> @@ -1683,13 +1687,13 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
->  			 * Source Devices compliant shall set the
->  			 * Source Version = 1.
->  			 */
-> -			drm_scdc_readb(&hdmi->i2c->adap, SCDC_SINK_VERSION,
-> +			drm_scdc_readb(hdmi->ddc, SCDC_SINK_VERSION,
->  				       &bytes);
-> -			drm_scdc_writeb(&hdmi->i2c->adap, SCDC_SOURCE_VERSION,
-> +			drm_scdc_writeb(hdmi->ddc, SCDC_SOURCE_VERSION,
->  				min_t(u8, bytes, SCDC_MIN_SOURCE_VERSION));
->  
->  			/* Enabled Scrambling in the Sink */
-> -			drm_scdc_set_scrambling(&hdmi->i2c->adap, 1);
-> +			drm_scdc_set_scrambling(hdmi->ddc, 1);
->  
->  			/*
->  			 * To activate the scrambler feature, you must ensure
-> @@ -1705,7 +1709,7 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
->  			hdmi_writeb(hdmi, 0, HDMI_FC_SCRAMBLER_CTRL);
->  			hdmi_writeb(hdmi, (u8)~HDMI_MC_SWRSTZ_TMDSSWRST_REQ,
->  				    HDMI_MC_SWRSTZ);
-> -			drm_scdc_set_scrambling(&hdmi->i2c->adap, 0);
-> +			drm_scdc_set_scrambling(hdmi->ddc, 0);
->  		}
->  	}
->  
-> -- 
-> 2.17.1
-> 
-> 
+>  kmalloc return for bigrxbuf_virtual was not being checked - in case
+> of failure set status, cleanup bigtxbuf_virtual and baile out.
+>
+> Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+> Fixes: c7c8c78fdf6e ("ARM: 5667/3: U300 SSP/SPI board setup and test")
 
+This code is deleted from the kernel and the code had
+zero users before that, so no need to fix it! Sorry for your
+trouble!
 
-
-
+Yours,
+Linus Walleij
