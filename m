@@ -2,107 +2,125 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B149C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29625C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C47C217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:54:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KbWflisp"
+	by mail.kernel.org (Postfix) with ESMTP id ED55321738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:55:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbfDWOyF (ORCPT
+        id S1728251AbfDWOzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:54:05 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41947 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727839AbfDWOyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 10:54:04 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k8so1266100lja.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 07:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=S148436qoCoeK0FQGD1ySRqulS61+al7UnTKDQroX5A=;
-        b=KbWflispIckU5NwQWpM+AyeKsq79+WLke7js4xDk3H3TH1alUObppwZDa2H/IOCBfk
-         egrPh77z3niIctOg5AbNM2mms+XOYRjB7FSdwZX2/CbtaubAEuZb0Kwqj0YSJGTnCWL2
-         KBfeWD8b8IQscdtGSwDK2Obw32QT+6YOjP0Sf7LezTfVMwcv+QwuyWYGnz++DyH8svhP
-         B81JW4dk8s33lv/B39+hb3EXhL3IxFbGYD595nZse40vt1tPJyn9Fx590iUq7gnLHmcW
-         rqgT1zUtyLUlpdwbiTBBJhSpi6TzeH8Om4FmsqDA2lurOVKczy4IQOXwTs1ZMnC8SdXw
-         wt+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S148436qoCoeK0FQGD1ySRqulS61+al7UnTKDQroX5A=;
-        b=BdWM8Ap9swUlEtP4c8J45s0kd6XlTB/Jbx5GebpkKVGSI8zOyil4Uc5a0ZVXjEqkP+
-         SOUmkk6w17SJ223Z06R4SLJzHI+tOWxEmpK62Mfjvh/B5EhiztKWl7WlP/kB8pMMCVZ+
-         Rjy8jMnP71xnphicQFFL7GwPvoPRxK+jPqdDNkx0YcG4x4YSuOVMU+WsdcMjQzZpIYx6
-         dMPZtP8pmerQOWLdxFomsExpGQTOi/dLXCJkN78B4bAKEdm2uQ1B/ndMS7lZ2KHdMw04
-         xtV+qOBEVp2BQ7mdHdTM1Sp04pzWVYsOwlETFBnRE6M7JZ7GTuxsaGyKUNnqOci5mf/g
-         iO+A==
-X-Gm-Message-State: APjAAAWBv+R2R+J3GYF3+6q1Jg7h1uFSuxb8UJwDjaoRkiK0ylnMKvM7
-        90fLomL60c/x3NxnCe70v4wTZw==
-X-Google-Smtp-Source: APXvYqwtE3Xbck7VgPloCq2cjRfm2LbU/XlN4Qa84xaPHbSvg8xfBdXo/v0ThbjVrpcOi/c8dtlQZg==
-X-Received: by 2002:a2e:4ca:: with SMTP id a71mr12513937ljf.39.1556031242626;
-        Tue, 23 Apr 2019 07:54:02 -0700 (PDT)
-Received: from [192.168.27.209] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id b5sm3771719lfo.16.2019.04.23.07.54.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 07:54:01 -0700 (PDT)
-Subject: Re: [PATCH] v4l: Add source event change for bit-depth
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20190415152723.2481-1-stanimir.varbanov@linaro.org>
- <20190423064326.lbi3gfprfegqecu4@kekkonen.localdomain>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <01bc9ad3-6e62-2b24-1238-60e65ea14610@linaro.org>
-Date:   Tue, 23 Apr 2019 17:54:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 10:55:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33304 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727666AbfDWOzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 10:55:12 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1793399DD9;
+        Tue, 23 Apr 2019 14:55:12 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8B97160142;
+        Tue, 23 Apr 2019 14:55:09 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 16:55:08 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH 06/12] perf tools: Do not erase uncovered maps by kcore
+Message-ID: <20190423145508.GE1730@krava>
+References: <20190416160127.30203-1-jolsa@kernel.org>
+ <20190416160127.30203-7-jolsa@kernel.org>
+ <5cd0aadb-8bfc-2e97-4260-459b076aba2d@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190423064326.lbi3gfprfegqecu4@kekkonen.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5cd0aadb-8bfc-2e97-4260-459b076aba2d@intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 23 Apr 2019 14:55:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
-
-Thanks for the comments!
-
-On 4/23/19 9:43 AM, Sakari Ailus wrote:
-> Hi Stan,
+On Tue, Apr 23, 2019 at 12:32:12PM +0300, Adrian Hunter wrote:
+> On 16/04/19 7:01 PM, Jiri Olsa wrote:
+> > Maps in kcore do not cover bpf maps, so we can't just
+> > remove everything. Keeping all kernel maps, which are
+> > not covered by kcore maps.
 > 
-> On Mon, Apr 15, 2019 at 06:27:23PM +0300, Stanimir Varbanov wrote:
->> This event indicate that the source bit-depth is changed during
->> run-time. The client must get the new format and re-allocate buffers
->> for it. This can usually happens with video decoder (encoders) when
->> the bit-stream depth is changed from 8 to 10bits or vice versa.
+> Memory for jited-bpf is allocated from the same area that is used for
+> modules.  In the case of /proc/kcore, that entire area is mapped, so there
+> won't be any bpf-maps that are not covered.  For copies of kcore made by
+> 'perf buildid-cache' the same would be true for any bpf that got allocated
+> in between modules.
 > 
-> Thanks for the patch.
+> But shouldn't the bpf map supersede the kcore map for the address range that
+> it maps?  I guess that would mean splitting the kcore map, truncating the
+> first piece and inserting the bpf map in between.
+
+I haven't considered it could get in between modules,
+I think you're right and we need to cut kcore maps
+in case bpf is mapped within.. I'll submit new version
+
+thanks,
+jirka
+
 > 
-> How about adding an event for pixelformat change, instead of bit depth? The
-> application presumably knows the formats it can work with, and can adapt to
-> that as well as a change to the bit depth.
-
-Well, I'd like to hear more opinions but in principle I'd agree with you.
-
-<cut>
-
--- 
-regards,
-Stan
+> > 
+> > Link: http://lkml.kernel.org/n/tip-9eytka8wofp0a047ul6lmejk@git.kernel.org
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/util/symbol.c | 14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > index 5cbad55cd99d..96738a7a8c14 100644
+> > --- a/tools/perf/util/symbol.c
+> > +++ b/tools/perf/util/symbol.c
+> > @@ -1166,6 +1166,18 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
+> >  	return 0;
+> >  }
+> >  
+> > +static bool in_kcore(struct kcore_mapfn_data *md, struct map *map)
+> > +{
+> > +	struct map *iter;
+> > +
+> > +	list_for_each_entry(iter, &md->maps, node) {
+> > +		if ((map->start >= iter->start) && (map->start < iter->end))
+> > +			return true;
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> >  static int dso__load_kcore(struct dso *dso, struct map *map,
+> >  			   const char *kallsyms_filename)
+> >  {
+> > @@ -1222,7 +1234,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+> >  	while (old_map) {
+> >  		struct map *next = map_groups__next(old_map);
+> >  
+> > -		if (old_map != map)
+> > +		if (old_map != map && !in_kcore(&md, old_map))
+> >  			map_groups__remove(kmaps, old_map);
+> >  		old_map = next;
+> >  	}
+> > 
+> 
