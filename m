@@ -2,114 +2,102 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC40FC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C4BC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8898A21738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC06821738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qRZwsjA6"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="CVrjjQ79"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbfDWSpE (ORCPT
+        id S1726448AbfDWSpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 14:45:04 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:53440 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfDWSpE (ORCPT
+        Tue, 23 Apr 2019 14:45:44 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35499 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfDWSpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 14:45:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/5D0naDooO7qJa3ZnudXQ3B4DSjp5r3xhDuJFGQeqVU=; b=qRZwsjA6QjjYF0369fUruElSa
-        0CUMvDh6DhF0YAyx2FiQMIlXnt+KAfHzVX0pZvsspf4XMLIDktZ3RjsYUHVqkqUkz4o8ef8apwPTz
-        ya9THqDX7Mdh1xeZqfZQQLHHC6gJvtl8W8PDw4XkvtS2UMafuuIn/iq2zkE3EkkulgsG42G8oGMYV
-        18iwgu/3gjMEh+iMXDvvZJAFDCnvAdGCG1RZtcWV0xcLH3Zb7qd5Gdm8y+IRywB5YWpU9RLdUtXps
-        hefYVGcaaMxS8XnbQgFmiyl1hS2J1P1N+2PXHUcjMm+p5pI5058GpKdsJgKvD5bIcrBmfZSzCBLXK
-        SN36BZUZw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJ0Pb-0008PX-LL; Tue, 23 Apr 2019 18:44:59 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 61B7A29C3F389; Tue, 23 Apr 2019 20:44:58 +0200 (CEST)
-Date:   Tue, 23 Apr 2019 20:44:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Xie XiuQi <xiexiuqi@huawei.com>
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
-        cj.chengjian@huawei.com
-Subject: Re: [PATCH] sched: fix a potential divide error
-Message-ID: <20190423184458.GW4038@hirez.programming.kicks-ass.net>
-References: <20190420083416.170446-1-xiexiuqi@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190420083416.170446-1-xiexiuqi@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 23 Apr 2019 14:45:43 -0400
+Received: by mail-io1-f67.google.com with SMTP id r18so12659446ioh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:45:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=PpIY/pcnE8PBkyei4ABYv/OQrwv3IcaKyfbDF2jVX5Y=;
+        b=CVrjjQ79twfN3qUGnu9RF9vLUZRZgnnyGEY9+HC4F/AFQ6h7/TWGxXKvY9e2McBiv1
+         1tpqkCl5PTZtO/dqZSEfXrqjW6xrVYCOr8kXHv3uYKS4JzKGlFdDnr6sGpeGCxF0WBoN
+         R4FcruV/ul0RmcXQvWtueX6jaZibLjqR1uM4w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=PpIY/pcnE8PBkyei4ABYv/OQrwv3IcaKyfbDF2jVX5Y=;
+        b=EYSx6fIN+SELXS+81Rd9DlhvEKlLuEqQAOxvmk89HaFAx16SI73ziUOe1ctHKTNZtN
+         cj5JDmbizBpoDkl/4auO78eT8Fpd8jGl1GwA4f0LHKntXAEuiNCCmZMPKxTkk6K2wwtP
+         450HpFUh86gvDXV6dS1GIIYUV7Z7DXTfuDI3DDiAVc22oDyRJCPcYQwGYupKec44+FFo
+         7Ii7ePNYosQNo2E6bINmrLY9ZmkGm48B2PiEQFyb5+G6esfOuKLWhTYFs7xMJ7sPFb0l
+         EvvZsMZUBlhgjK0cTxpGHqOVTrxN+aP/Tu1Ty5toQxBdvAC8JWhfyHyN1iEQVs5N5Alx
+         +giA==
+X-Gm-Message-State: APjAAAWa7kkwfs/+4z69VSHlroONU1j8hszpHK9q2DGYjspfHLaDyKZV
+        p8hX60ji3fE/E+kDd8s6yYIpaA==
+X-Google-Smtp-Source: APXvYqxiNo3NI2pEyiLFV4zIgDZnYuZDR3NysCSKEZjvMGjMjqkJEFoI5uh5jSmSwW22RGDJ6Av7fg==
+X-Received: by 2002:a6b:6909:: with SMTP id e9mr11910764ioc.208.1556045142479;
+        Tue, 23 Apr 2019 11:45:42 -0700 (PDT)
+Received: from swap-tester ([178.128.225.14])
+        by smtp.gmail.com with ESMTPSA id n199sm8075806itn.34.2019.04.23.11.45.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 11:45:41 -0700 (PDT)
+From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Date:   Tue, 23 Apr 2019 18:45:27 +0000
+Message-Id: <20190423184527.6230-1-vpillai@digitalocean.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190423180238.GG22260@pauld.bos.csb>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 04:34:16PM +0800, Xie XiuQi wrote:
-> We meet a divide error on 3.10.0 kernel, the error message is bellow:
+>> - Processes with different tags can still share the core
 
-That is a _realllllllyyyy_ old kernel. I would urge you to upgrade.
+> I may have missed something... Could you explain this statement?
 
-> [499992.287996] divide error: 0000 [#1] SMP
+> This, to me, is the whole point of the patch series. If it's not
+> doing this then ... what?
 
-> sched_clock_cpu may not be consistent bwtwen cpus. If a task migrate
-> to another cpu, the se.exec_start was set to that cpu's rq_clock_task
-> by update_stats_curr_start(). Which may not be monotonic.
-> 
-> update_stats_curr_start
->   <- set_next_entity
->      <- set_curr_task_fair
->         <- sched_move_task
+What I meant was, the patch needs some more work to be accurate.
+There are some race conditions where the core violation can still
+happen. In our testing, we saw around 1 to 5% of the time being
+shared with incompatible processes. One example of this happening
+is as follows(let cpu 0 and 1 be siblings):
+- cpu 0 selects a process with a cookie
+- cpu 1 selects a higher priority process without cookie
+- Selection process restarts for cpu 0 and it might select a
+  process with cookie but with lesser priority.
+- Since it is lesser priority, the logic in pick_next_task
+  doesn't compare again for the cookie(trusts pick_task) and
+  proceeds.
 
-That is not in fact a cross-cpu migration path. But I see the point.
-Also many migration paths do in fact preserve monotonicity, even when
-the clock is busted, but you're right, not all of them.
+This is one of the scenarios that we saw from traces, but there
+might be other race conditions as well. Fix seems a little
+involved and We are working on that.
 
-> So, if  now - p->last_task_numa_placement is -1, then (*period + 1) is
-> 0, and divide error was triggerred at the div operation:
->   task_numa_placement:
->     runtime = numa_get_avg_runtime(p, &period);
->     f_weight = div64_u64(runtime << 16, period + 1);  // divide error here
-> 
-> In this patch, we make sure period is not less than 0 to avoid this
-> divide error.
-> 
-> Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
-> Cc: stable@vger.kernel.org
-> ---
->  kernel/sched/fair.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 40bd1e27b1b7..f2abb258fc85 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -2007,6 +2007,10 @@ static u64 numa_get_avg_runtime(struct task_struct *p, u64 *period)
->  	if (p->last_task_numa_placement) {
->  		delta = runtime - p->last_sum_exec_runtime;
->  		*period = now - p->last_task_numa_placement;
-> +
-> +		/* Avoid backward, and prevent potential divide error */
-> +		if ((s64)*period < 0)
-> +			*period = 0;
->  	} else {
->  		delta = p->se.avg.load_sum;
->  		*period = LOAD_AVG_MAX;
-
-Yeah, I suppose that is indeed correct.
-
-I'll try and come up with a better Changelog tomorrow.
-
+Thanks
