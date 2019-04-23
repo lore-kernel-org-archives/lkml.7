@@ -2,110 +2,77 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2453BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAB6C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E264320645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C9020645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:29:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I2rrB3zZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nOrrWkaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbfDWI3h (ORCPT
+        id S1727271AbfDWI3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:29:37 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:3532 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbfDWI3e (ORCPT
+        Tue, 23 Apr 2019 04:29:45 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46164 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbfDWI3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:29:34 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cbeccf40001>; Tue, 23 Apr 2019 01:29:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Apr 2019 01:29:34 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Apr 2019 01:29:34 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Apr
- 2019 08:29:33 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Apr
- 2019 08:29:33 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 23 Apr 2019 08:29:33 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cbecce80003>; Tue, 23 Apr 2019 01:29:33 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V4 16/16] arm64: Add Tegra194 PCIe driver to defconfig
-Date:   Tue, 23 Apr 2019 13:57:30 +0530
-Message-ID: <20190423082730.370-17-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190423082730.370-1-vidyas@nvidia.com>
-References: <20190423082730.370-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 23 Apr 2019 04:29:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=z0XpA2nyONdcK57DS6WK5Os5eZ9ApHZug9VkdqItTn4=; b=nOrrWkaCdrmscQbdIuQedMp8d
+        q1NMAnZ2nwBalZJXGKIHmPinnqlEJnXpiEILp3k7/gsohoxrDseumOwcqf7f5vE7WTPxbRiBOkNCd
+        34X+mFUVL3fAKy1+R/bPbPC4v1xSD7f0txwgrHzJ2GTHRcwQZINFniCBZ9CbSWh0OZfeEhkXNGTDm
+        rgmsyuykcKwWhc4h93BerBflD7RSPRTnQww0a23/4TepNb5sjbrIfMfX7XvVWu13RNUh3HDHnDGya
+        4Hjitm//t6Ncf7SWHYQiNfHszucImdSc+Oo5783QqXXviFSo/sk2EYal5/AO5RRTuz45tfTC/qKM7
+        w2p2np7DQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hIqo6-00010Q-Sj; Tue, 23 Apr 2019 08:29:39 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7726729B47DC5; Tue, 23 Apr 2019 10:29:37 +0200 (CEST)
+Date:   Tue, 23 Apr 2019 10:29:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v2 38/79] docs: scheduler: convert docs to ReST and
+ rename to *.rst
+Message-ID: <20190423082937.GZ11158@hirez.programming.kicks-ass.net>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+ <2a3b2b06459e0134a3af4fbf3e6f62e6d42c4d26.1555938376.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556008180; bh=69fZdzygmNUj/g73l6ugYICL5QOz5Sf9kGAZWu402Eo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=I2rrB3zZpeIo4s6nrJ1O6fazCYCIHjJsAJIuGpl1DcxlIHL21zXOyf2vESy4tC01D
-         ekUIBp80P2cVbDkdC3P59DrkU+Gmgf3P0ZfzqWZT5E+W+GcJOCWmkoz9RH1leeq074
-         JqLS2jhe3BKcf/iS5DJbwZBzVQ+ls5CXsvpk4Qh71H8TxG9d+OeAQD1wA1e+7H9bmu
-         a5bvzy+8izOVweuWuvcGrnvgFmsarHqEzPd/BHZkKlBg03EJC6l+MVqpGpjBEb/uOL
-         1uQ95c5reyh3a8hQnKO9WCU7xi12g123a7vxJzQ1GMymTWZy38IYNGLI6sZqUzP+yS
-         zBZf1gYHi1EQw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a3b2b06459e0134a3af4fbf3e6f62e6d42c4d26.1555938376.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe host controller driver for DesignWare core based
-PCIe controller IP present in Tegra194.
+On Mon, Apr 22, 2019 at 10:27:27AM -0300, Mauro Carvalho Chehab wrote:
+> In order to prepare to add them to the Kernel API book,
+> convert the files to ReST format.
+> 
+> The conversion is actually:
+>   - add blank lines and identation in order to identify paragraphs;
+>   - fix tables markups;
+>   - add some lists markups;
+>   - mark literal blocks;
+>   - adjust title markups.
+> 
+> At its new index.rst, let's add a :orphan: while this is not linked to
+> the main index.rst file, in order to avoid build warnings.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-Changes since [v3]:
-* None
-
-Changes since [v2]:
-* None
-
-Changes since [v1]:
-* Changed CONFIG_PCIE_TEGRA194 from 'y' to 'm'
-
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 17daa971225e..72cf77c58e7c 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -87,6 +87,7 @@ CONFIG_PCIE_QCOM=y
- CONFIG_PCIE_ARMADA_8K=y
- CONFIG_PCIE_KIRIN=y
- CONFIG_PCIE_HISI_STB=y
-+CONFIG_PCIE_TEGRA194=m
- CONFIG_ARM64_VA_BITS_48=y
- CONFIG_SCHED_MC=y
- CONFIG_NUMA=y
--- 
-2.17.1
-
+Well, just don't expect me to ever touch these files again.
