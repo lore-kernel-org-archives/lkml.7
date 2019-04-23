@@ -2,83 +2,186 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F49C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863AAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B91320645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5719021841
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:02:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YbcBmxrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbfDWOCc (ORCPT
+        id S1728022AbfDWOCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:02:32 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2938 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727180AbfDWOCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 10:02:32 -0400
-Received: from dggemi401-hub.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 4EFF179E4F69FBEFC053;
-        Tue, 23 Apr 2019 22:02:26 +0800 (CST)
-Received: from DGGEMI422-HUB.china.huawei.com (10.1.199.151) by
- dggemi401-hub.china.huawei.com (10.3.17.134) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 23 Apr 2019 22:02:25 +0800
-Received: from DGGEMI530-MBX.china.huawei.com ([169.254.7.146]) by
- dggemi422-hub.china.huawei.com ([10.1.199.151]) with mapi id 14.03.0399.000;
- Tue, 23 Apr 2019 22:02:21 +0800
-From:   weizhenliang <weizhenliang@huawei.com>
-To:     Christian Brauner <christian@brauner.io>
-CC:     Oleg Nesterov <oleg@redhat.com>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "colona@arista.com" <colona@arista.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v3] signal: trace_signal_deliver when signal_group_exit
-Thread-Topic: [PATCH v3] signal: trace_signal_deliver when signal_group_exit
-Thread-Index: AdT53KXPKZ/rlwOkQKWG95RpVhMV9Q==
-Date:   Tue, 23 Apr 2019 14:02:21 +0000
-Message-ID: <AF4D908CC0E2A24EB308A26962C8C3BDEB16D1@DGGEMI530-MBX.china.huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.40.99.192]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 23 Apr 2019 10:02:45 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:34006 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfDWOCp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 10:02:45 -0400
+Received: by mail-it1-f193.google.com with SMTP id z17so2065568itc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 07:02:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GQ5sD8gQEIkSpJXMewaAlMH3xJOLjDgfWrtY63eJJRQ=;
+        b=YbcBmxrdwAizJ47NfdXGc32ozaUMRYMJhC2X8I2cz8E5YJ3Nsztl2hZcJfyIQMMd6G
+         PtEw55JDv8JAnGyXSXO4rapZeUn/ygZ32gp5aND/8zkysBcVg+WdQixlNXmTAjDaeTI3
+         o+R0dkXkDNER2R4/aTHkoQTPz3kqeJ+Xz4iiM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GQ5sD8gQEIkSpJXMewaAlMH3xJOLjDgfWrtY63eJJRQ=;
+        b=ScAjDJKUVkNNW0g6mudnDPfaNKhJ+MiBO5rrB3B4TotAwGyMaBJ5QSUTzsrJf8sGCC
+         D40df9zGlCbCeWdJ3RBITBHlg6XXYerPtwyiz4GoP08LFxv4t8KZThMblFkcjAMJd8kC
+         jSsIe7ZtFpHfbgRZ+pqBy7sAwXvPxP7dVrWZda11hiZP7SnxTgz0TKD0kF27fsB+jkIn
+         f9BMwSua5Q53eIMYXbJc4zQjWtpe9koi+vOrVlJR2bmeCNFmJOH8Ib+2ZVKshQlHVh+J
+         RCCOvP1aLiNfoqclWtDzMfGNJYJeiBgQB9kduZEEENqh2XzSgibI3Rhxg289/8ONBYAS
+         VAcQ==
+X-Gm-Message-State: APjAAAWTIORx87cBwk386dOcSx6X3H5t2gcVjd8c0Y3bM1/MOfJn+pAC
+        iFHG1fHgq1OWLab/ihqm5VzJO58Y/Wi5/AU9NIiPIA==
+X-Google-Smtp-Source: APXvYqySkKFpA7mmDb4NHr627kE7vGYSalK7Vi9pTqVxsnUt3RUCqcD7eKxXTJcBksIvlSiQesHNgZGei3ZjhevKu8M=
+X-Received: by 2002:a02:c4cf:: with SMTP id h15mr17663381jaj.96.1556028164133;
+ Tue, 23 Apr 2019 07:02:44 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <1556016490-6906-1-git-send-email-ben.davis@arm.com>
+ <CAKMK7uE=m4dYodGp34Twcs-HEV4rExvvguM5m1Qt9HzUD8ZYEw@mail.gmail.com> <20190423130013.GX15144@e110455-lin.cambridge.arm.com>
+In-Reply-To: <20190423130013.GX15144@e110455-lin.cambridge.arm.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 23 Apr 2019 16:02:31 +0200
+Message-ID: <CAKMK7uHwZ_XZCEyvU0LUnya-2+Z80yP9_EOoAc5UrR45tZ8fPw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] Add writeback scaling
+To:     Liviu Dudau <Liviu.Dudau@arm.com>
+Cc:     Ben Davis <Ben.Davis@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>, Brian Starkey <Brian.Starkey@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCBBcHIgMjMsIDIwMTkgYXQgMDk6NDEgUE0gQ2hyaXN0aWFuIHdyb3RlOg0KPk9uIFR1
-ZSwgQXByIDIzLCAyMDE5IGF0IDAxOjEwOjUyUE0gKzAwMDAsIHdlaXpoZW5saWFuZyB3cm90ZToN
-Cj4+IE9uIE1vbiwgQXByIDIyLCAyMDE5IGF0IDExOjI1IFBNIE9sZWcgTmVzdGVyb3YgPG9sZWdA
-cmVkaGF0LmNvbT4gd3JvdGU6DQo+PiA+T24gMDQvMjIsIFpoZW5saWFuZyBXZWkgd3JvdGU6DQo+
-PiA+Pg0KPj4gPj4gLS0tIGEva2VybmVsL3NpZ25hbC5jDQo+PiA+PiArKysgYi9rZXJuZWwvc2ln
-bmFsLmMNCj4+ID4+IEBAIC0yNDQxLDYgKzI0NDEsNyBAQCBib29sIGdldF9zaWduYWwoc3RydWN0
-IGtzaWduYWwgKmtzaWcpDQo+PiA+PiAgCWlmIChzaWduYWxfZ3JvdXBfZXhpdChzaWduYWwpKSB7
-DQo+PiA+PiAgCQlrc2lnLT5pbmZvLnNpX3NpZ25vID0gc2lnbnIgPSBTSUdLSUxMOw0KPj4gPj4g
-IAkJc2lnZGVsc2V0KCZjdXJyZW50LT5wZW5kaW5nLnNpZ25hbCwgU0lHS0lMTCk7DQo+PiA+PiAr
-CQl0cmFjZV9zaWduYWxfZGVsaXZlcihTSUdLSUxMLCBTRU5EX1NJR19OT0lORk8sIFNJR19ERkwp
-Ow0KPj4gPj4gIAkJcmVjYWxjX3NpZ3BlbmRpbmcoKTsNCj4+ID4+ICAJCWdvdG8gZmF0YWw7DQo+
-PiA+PiAgCX0NCj4+ID4NCj4+ID5SZXZpZXdlZC1ieTogT2xlZyBOZXN0ZXJvdiA8b2xlZ0ByZWRo
-YXQuY29tPg0KPj4gDQo+PiBMYXN0IHRpbWUgT2xlZyBzdWdnZXN0ZWQgdXNpbmcgU0lHX0RGTCBh
-cyB0aGUgdGhpcmQgcGFyYW1ldGVyLCBidXQgaXRzIHR5cGUgaXMgJ3ZvaWQgKCopKGludCknLCBi
-dXQgbm90IGV4cGVjdGVkICdzdHJ1Y3Qga19zaWdhY3Rpb24gKicuDQo+DQo+U2lnaCwgSSBzaG91
-bGQndmUgY2F1Z2h0IHRoYXQgaW4gdGhlIGZpcnN0IGNvbW1pdC4NCj5BbHRob3VnaCBpdCBzdWdn
-ZXN0cyB5b3UgZGlkbid0IGV2ZW4gY29tcGlsZSB5b3VyIHBhdGNoLi4uDQo+DQo+PiANCj4+IEhv
-dyBhYm91dA0KPj4gCXRyYWNlX3NpZ25hbF9kZWxpdmVyKFNJR0tJTEwsIFNFTkRfU0lHX05PSU5G
-TywgJnNpZ2hhbmQtPmFjdGlvbltzaWduciANCj4+IC0gMV0pOyA/DQo+DQo+VGhhdCBzaG91bGQg
-d29yaywgeWVzLg0KDQpTb3JyeSBhYm91dCB0aGF0LCBJIHdhcyB0b28gZm9jdXNlZCBvbiB0aGUg
-ZnVuY3Rpb25hbGl0eSBhbmQgZGlkbid0IG5vdGljZSB0aGUgY29tcGlsZSB3YXJuaW5nLg0KQW5k
-IHRoYW5rcyBmb3IgeW91ciByZXBseSwgSSB3aWxsIHBheSBtb3JlIGF0dGVudGlvbiB0byBpdCBp
-biB0aGUgZnV0dXJlLg0KDQpaaGVubGlhbmcgV2VpDQo=
+On Tue, Apr 23, 2019 at 3:00 PM Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>
+> On Tue, Apr 23, 2019 at 02:24:11PM +0200, Daniel Vetter wrote:
+> > On Tue, Apr 23, 2019 at 12:48 PM Ben Davis <Ben.Davis@arm.com> wrote:
+> > >
+> > > Add support for scaling on writeback. To do this add writeback_dest_w
+> > > and writeback_dest_h as writeback connector properties to specify the
+> > > desired output dimensions.
+> > > Then implement downscaling on writeback for Malidp-550 and Malidp-650
+> > > (upscaling on writeback is not supported on these devices).
+> > >
+> > > v2: Use 0 as default for writeback_w,h and so update range to use 1 a=
+s
+> > >     minimum.
+> >
+> > Hm I missed that, I don't think that's good, since it prevents
+> > userspace from blindly writing back the properties it's read. We've
+> > tried hard to avoid that, since we're suggesting compositor can take a
+> > snapshot of all kms properties (including the ones they don't
+> > understand) and restore that on vt switching. Hence stuff like fence
+> > fds returning -1, and accepting -1 as NULL to make this work.
+>
+> Is that they way it should work, though? I remember a few good years
+> back, before KMS, there were lots of issues with X server hanging and
+> not restoring the vt mode correctly. Should it not be that on getting
+> back control of a DRM master, an application sets it last known good
+> mode that it had, before it lost (or gave away) control?
+
+Given that we've recommended both approaches I expect there's a mix of
+both approaches out there in the real world, with people just hacking
+things up until it works. That's also what we're doing with the
+in-kernel fbdev emulation. I'd say defacto this means it's all
+ill-defined, but also that we imo should make a best effort to support
+either approach.
+
+> > tldr; I think range needs to include 0, and we need make that a
+> > special thing, maybe enforced with a
+> > drm_connector_state_compute_writeback_dst_h/w, which takes
+> > crtc_state->mode.v/hdisplay into account if the writeback_dst_h/w is
+> > 0.
+>
+> Repeating just to make sure we're on the same page: we allow 0 as valid
+> range value, but writeback_dst_h/w ultimately gets updated before the
+> commit gets passed on to the driver to use crtc_state->mode.v/hdisplay
+> so as not to trigger any scaling. Correct?
+
+That would also break stuff, since then you'd scale the next time
+v/hdisplay are different. Except if we again clear them back to 0 on
+duplicate_state, which I guess would work since writeback is one-shot.
+I was thinking more of a helper function, but your approach +
+resetting always to 0 on duplicate_state + lots of comments/kerneldoc
+should work too. And I guess would be more robust, since driver
+authors can't accidentally use the wrong state since it's fixed up.
+-Daniel
+
+>
+> Best regards,
+> Liviu
+>
+>
+> > -Daniel
+> >
+> > >
+> > > v3: Rename properties to specify they are destination width/height.
+> > >     Make sure the values from the properties are passed to
+> > >     enable_memwrite rather than the framebuffer dimensions
+> > >
+> > > Ben Davis (2):
+> > >   drm: Add writeback_dest_w,h properties
+> > >   drm/malidp: Enable writeback scaling
+> > >
+> > >  drivers/gpu/drm/arm/malidp_crtc.c | 49 +++++++++++---------
+> > >  drivers/gpu/drm/arm/malidp_crtc.h | 12 +++++
+> > >  drivers/gpu/drm/arm/malidp_drv.c  | 10 +++--
+> > >  drivers/gpu/drm/arm/malidp_hw.c   | 45 +++++++++++++------
+> > >  drivers/gpu/drm/arm/malidp_hw.h   | 19 ++++++--
+> > >  drivers/gpu/drm/arm/malidp_mw.c   | 94 +++++++++++++++++++++++++++++=
++---------
+> > >  drivers/gpu/drm/arm/malidp_regs.h |  1 +
+> > >  drivers/gpu/drm/drm_atomic_uapi.c |  8 ++++
+> > >  drivers/gpu/drm/drm_writeback.c   | 30 +++++++++++++
+> > >  include/drm/drm_connector.h       |  4 ++
+> > >  include/drm/drm_mode_config.h     | 10 +++++
+> > >  11 files changed, 220 insertions(+), 62 deletions(-)
+> > >  create mode 100644 drivers/gpu/drm/arm/malidp_crtc.h
+> > >
+> > > --
+> > > 2.7.4
+> > >
+> >
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+>
+> --
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> | I would like to |
+> | fix the world,  |
+> | but they're not |
+> | giving me the   |
+>  \ source code!  /
+>   ---------------
+>     =C2=AF\_(=E3=83=84)_/=C2=AF
+
+
+
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
