@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF44AC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9769C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D102218FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994C8218D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbfDWX2u (ORCPT
+        id S1729031AbfDWX27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 19:28:50 -0400
+        Tue, 23 Apr 2019 19:28:59 -0400
 Received: from mga09.intel.com ([134.134.136.24]:8108 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728930AbfDWX2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 19:28:45 -0400
+        id S1728899AbfDWX2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 19:28:43 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 16:28:40 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,387,1549958400"; 
-   d="scan'208";a="293981317"
+   d="scan'208";a="293981303"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga004.jf.intel.com with ESMTP; 23 Apr 2019 16:28:40 -0700
+  by orsmga004.jf.intel.com with ESMTP; 23 Apr 2019 16:28:39 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
@@ -44,9 +44,9 @@ Cc:     "Yi Liu" <yi.l.liu@intel.com>,
         Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>, Liu@vger.kernel.org,
         Yi L <yi.l.liu@linux.intel.com>
-Subject: [PATCH v2 19/19] iommu/vt-d: Add svm/sva invalidate function
-Date:   Tue, 23 Apr 2019 16:31:19 -0700
-Message-Id: <1556062279-64135-20-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 15/19] iommu/vt-d: Add bind guest PASID support
+Date:   Tue, 23 Apr 2019 16:31:15 -0700
+Message-Id: <1556062279-64135-16-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -55,205 +55,301 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When Shared Virtual Address (SVA) is enabled for a guest OS via
-vIOMMU, we need to provide invalidation support at IOMMU API and driver
-level. This patch adds Intel VT-d specific function to implement
-iommu passdown invalidate API for shared virtual address.
+When supporting guest SVA with emulated IOMMU, the guest PASID
+table is shadowed in VMM. Updates to guest vIOMMU PASID table
+will result in PASID cache flush which will be passed down to
+the host as bind guest PASID calls.
 
-The use case is for supporting caching structure invalidation
-of assigned SVM capable devices. Emulated IOMMU exposes queue
-invalidation capability and passes down all descriptors from the guest
-to the physical IOMMU.
+For the SL page tables, it will be harvested from device's
+default domain (request w/o PASID), or aux domain in case of
+mediated device.
 
-The assumption is that guest to host device ID mapping should be
-resolved prior to calling IOMMU driver. Based on the device handle,
-host IOMMU driver can replace certain fields before submit to the
-invalidation queue.
+    .-------------.  .---------------------------.
+    |   vIOMMU    |  | Guest process CR3, FL only|
+    |             |  '---------------------------'
+    .----------------/
+    | PASID Entry |--- PASID cache flush -
+    '-------------'                       |
+    |             |                       V
+    |             |                CR3 in GPA
+    '-------------'
+Guest
+------| Shadow |--------------------------|--------
+      v        v                          v
+Host
+    .-------------.  .----------------------.
+    |   pIOMMU    |  | Bind FL for GVA-GPA  |
+    |             |  '----------------------'
+    .----------------/  |
+    | PASID Entry |     V (Nested xlate)
+    '----------------\.------------------------------.
+    |             |   |SL for GPA-HPA, default domain|
+    |             |   '------------------------------'
+    '-------------'
+Where:
+ - FL = First level/stage one page tables
+ - SL = Second level/stage two page tables
 
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
 Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
 ---
- drivers/iommu/intel-iommu.c | 159 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 159 insertions(+)
+ drivers/iommu/intel-iommu.c |   4 +
+ drivers/iommu/intel-svm.c   | 174 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/intel-iommu.h |  10 ++-
+ include/linux/intel-svm.h   |   7 ++
+ 4 files changed, 193 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 89989b5..54a3d22 100644
+index 77bbe1b..89989b5 100644
 --- a/drivers/iommu/intel-iommu.c
 +++ b/drivers/iommu/intel-iommu.c
-@@ -5338,6 +5338,164 @@ static void intel_iommu_aux_detach_device(struct iommu_domain *domain,
- 	aux_domain_remove_dev(to_dmar_domain(domain), dev);
- }
+@@ -5768,6 +5768,10 @@ const struct iommu_ops intel_iommu_ops = {
+ 	.dev_enable_feat	= intel_iommu_dev_enable_feat,
+ 	.dev_disable_feat	= intel_iommu_dev_disable_feat,
+ 	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
++#ifdef CONFIG_INTEL_IOMMU_SVM
++	.sva_bind_gpasid	= intel_svm_bind_gpasid,
++	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
++#endif
+ };
  
-+/*
-+ * 2D array for converting and sanitizing IOMMU generic TLB granularity to
-+ * VT-d granularity. Invalidation is typically included in the unmap operation
-+ * as a result of DMA or VFIO unmap. However, for assigned device where guest
-+ * could own the first level page tables without being shadowed by QEMU. In
-+ * this case there is no pass down unmap to the host IOMMU as a result of unmap
-+ * in the guest. Only invalidations are trapped and passed down.
-+ * In all cases, only first level TLB invalidation (request with PASID) can be
-+ * passed down, therefore we do not include IOTLB granularity for request
-+ * without PASID (second level).
-+ *
-+ * For an example, to find the VT-d granularity encoding for IOTLB
-+ * type and page selective granularity within PASID:
-+ * X: indexed by iommu cache type
-+ * Y: indexed by enum iommu_inv_granularity
-+ * [IOMMU_INV_TYPE_TLB][IOMMU_INV_GRANU_PAGE_PASID]
-+ *
-+ * Granu_map array indicates validity of the table. 1: valid, 0: invalid
-+ *
-+ */
-+const static int inv_type_granu_map[NR_IOMMU_CACHE_TYPE][NR_IOMMU_CACHE_INVAL_GRANU] = {
-+	/* PASID based IOTLB, support PASID selective and page selective */
-+	{0, 1, 1},
-+	/* PASID based dev TLBs, only support all PASIDs or single PASID */
-+	{1, 1, 0},
-+	/* PASID cache */
-+	{1, 1, 0}
-+};
+ static void quirk_iommu_g4x_gfx(struct pci_dev *dev)
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index 8fff212..0a973c2 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -227,6 +227,180 @@ static const struct mmu_notifier_ops intel_mmuops = {
+ 
+ static DEFINE_MUTEX(pasid_mutex);
+ static LIST_HEAD(global_svm_list);
++#define for_each_svm_dev() \
++	list_for_each_entry(sdev, &svm->devs, list)	\
++	if (dev == sdev->dev)				\
 +
-+const static u64 inv_type_granu_table[NR_IOMMU_CACHE_TYPE][NR_IOMMU_CACHE_INVAL_GRANU] = {
-+	/* PASID based IOTLB */
-+	{0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
-+	/* PASID based dev TLBs */
-+	{QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},
-+	/* PASID cache */
-+	{QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},
-+};
-+
-+static inline int to_vtd_granularity(int type, int granu, u64 *vtd_granu)
++int intel_svm_bind_gpasid(struct iommu_domain *domain,
++			struct device *dev,
++			struct gpasid_bind_data *data)
 +{
-+	if (type >= NR_IOMMU_CACHE_TYPE || granu >= NR_IOMMU_CACHE_INVAL_GRANU ||
-+		!inv_type_granu_map[type][granu])
-+		return -EINVAL;
-+
-+	*vtd_granu = inv_type_granu_table[type][granu];
-+
-+	return 0;
-+}
-+
-+static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
-+{
-+	u64 nr_pages;
-+	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9 for 2MB, etc.
-+	 * IOMMU cache invalidate API passes granu_size in bytes, and number of
-+	 * granu size in contiguous memory.
-+	 */
-+
-+	nr_pages = (granu_size * nr_granules) >> VTD_PAGE_SHIFT;
-+	return order_base_2(nr_pages);
-+}
-+
-+static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
-+		struct device *dev, struct iommu_cache_invalidate_info *inv_info)
-+{
-+	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
-+	struct device_domain_info *info;
-+	struct intel_iommu *iommu;
-+	unsigned long flags;
-+	int cache_type;
-+	u8 bus, devfn;
-+	u16 did, sid;
++	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
++	struct intel_svm_dev *sdev;
++	struct intel_svm *svm = NULL;
++	struct dmar_domain *ddomain;
++	int pasid_max;
 +	int ret = 0;
-+	u64 granu;
-+	u64 size;
 +
-+	if (!inv_info || !dmar_domain ||
-+		inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
++	if (WARN_ON(!iommu) || !data)
 +		return -EINVAL;
 +
-+	if (!dev || !dev_is_pci(dev))
-+		return -ENODEV;
++	if (dev_is_pci(dev)) {
++		pasid_max = pci_max_pasids(to_pci_dev(dev));
++		if (pasid_max < 0)
++			return -EINVAL;
++	} else
++		pasid_max = 1 << 20;
 +
-+	iommu = device_to_iommu(dev, &bus, &devfn);
-+	if (!iommu)
-+		return -ENODEV;
++	if (data->pasid <= 0 || data->pasid >= pasid_max)
++		return -EINVAL;
 +
-+	spin_lock(&iommu->lock);
-+	spin_lock_irqsave(&device_domain_lock, flags);
-+	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus, devfn);
-+	if (!info) {
-+		ret = -EINVAL;
-+		goto out_unlock;
++	ddomain = to_dmar_domain(domain);
++	/* REVISIT:
++	 * Sanity check adddress width and paging mode support
++	 * width matching in two dimensions:
++	 * 1. paging mode CPU <= IOMMU
++	 * 2. address width Guest <= Host.
++	 */
++	mutex_lock(&pasid_mutex);
++	svm = ioasid_find(NULL, data->pasid, NULL);
++	if (IS_ERR(svm)) {
++		ret = PTR_ERR(svm);
++		goto out;
 +	}
-+	did = dmar_domain->iommu_did[iommu->seq_id];
-+	sid = PCI_DEVID(bus, devfn);
-+	size = to_vtd_size(inv_info->addr_info.granule_size, inv_info->addr_info.nb_granules);
-+
-+	for_each_set_bit(cache_type, (unsigned long *)&inv_info->cache, NR_IOMMU_CACHE_TYPE) {
-+
-+		ret = to_vtd_granularity(cache_type, inv_info->granularity, &granu);
-+		if (ret) {
-+			pr_err("Invalid range type %d, granu %d\n", cache_type,
-+				inv_info->granularity);
-+			break;
++	if (svm) {
++		if (list_empty(&svm->devs)) {
++			dev_err(dev, "GPASID %d has no devices bond but SVA is allocated\n",
++				data->pasid);
++			ret = -ENODEV; /*
++					* If we found svm for the PASID, there must be at
++					* least one device bond, otherwise svm should be freed.
++					*/
++			goto out;
 +		}
-+
-+		switch (BIT(cache_type)) {
-+		case IOMMU_CACHE_INV_TYPE_IOTLB:
-+			if (size && (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
-+				pr_err("Address out of range, 0x%llx, size order %llu\n",
-+					inv_info->addr_info.addr, size);
-+				ret = -ERANGE;
-+				goto out_unlock;
-+			}
-+
-+			qi_flush_piotlb(iommu, did, mm_to_dma_pfn(inv_info->addr_info.addr),
-+					inv_info->addr_info.pasid,
-+					size, granu);
-+
-+			/*
-+			 * Always flush device IOTLB if ATS is enabled since guest
-+			 * vIOMMU exposes CM = 1, no device IOTLB flush will be passed
-+			 * down. REVISIT: cannot assume Linux guest
++		for_each_svm_dev() {
++			/* In case of multiple sub-devices of the same pdev assigned, we should
++			 * allow multiple bind calls with the same PASID and pdev.
 +			 */
-+			if (info->ats_enabled) {
-+				qi_flush_dev_piotlb(iommu, sid, info->pfsid,
-+						inv_info->addr_info.pasid, info->ats_qdep,
-+						inv_info->addr_info.addr, size,
-+						granu);
-+			}
-+			break;
-+		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
-+			if (info->ats_enabled) {
-+				qi_flush_dev_piotlb(iommu, sid, info->pfsid,
-+						inv_info->addr_info.pasid, info->ats_qdep,
-+						inv_info->addr_info.addr, size,
-+						granu);
-+			} else
-+				pr_warn("Passdown device IOTLB flush w/o ATS!\n");
-+
-+			break;
-+		case IOMMU_CACHE_INV_TYPE_PASID:
-+			qi_flush_pasid_cache(iommu, did, granu, inv_info->pasid);
-+
-+			break;
-+		default:
-+			dev_err(dev, "Unsupported IOMMU invalidation type %d\n",
-+				cache_type);
-+			ret = -EINVAL;
++			sdev->users++;
++			goto out;
 +		}
-+	}
-+out_unlock:
-+	spin_unlock(&iommu->lock);
-+	spin_unlock_irqrestore(&device_domain_lock, flags);
++	} else {
++		/* We come here when PASID has never been bond to a device. */
++		svm = kzalloc(sizeof(*svm), GFP_KERNEL);
++		if (!svm) {
++			ret = -ENOMEM;
++			goto out;
++		}
++		/* REVISIT: upper layer/VFIO can track host process that bind the PASID.
++		 * ioasid_set = mm might be sufficient for vfio to check pasid VMM
++		 * ownership.
++		 */
++		svm->mm = get_task_mm(current);
++		svm->pasid = data->pasid;
++		refcount_set(&svm->refs, 0);
++		ioasid_set_data(data->pasid, svm);
++		INIT_LIST_HEAD_RCU(&svm->devs);
++		INIT_LIST_HEAD(&svm->list);
 +
++		mmput(svm->mm);
++	}
++	svm->flags |= SVM_FLAG_GUEST_MODE;
++	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
++	if (!sdev) {
++		ret = -ENOMEM;
++		goto out;
++	}
++	sdev->dev = dev;
++	sdev->users = 1;
++
++	/* Set up device context entry for PASID if not enabled already */
++	ret = intel_iommu_enable_pasid(iommu, sdev->dev);
++	if (ret) {
++		dev_err(dev, "Failed to enable PASID capability\n");
++		kfree(sdev);
++		goto out;
++	}
++
++	/*
++	 * For guest bind, we need to set up PASID table entry as follows:
++	 * - FLPM matches guest paging mode
++	 * - turn on nested mode
++	 * - SL guest address width matching
++	 */
++	ret = intel_pasid_setup_nested(iommu,
++				dev,
++				(pgd_t *)data->gcr3,
++				data->pasid,
++				data->flags,
++				ddomain,
++				data->addr_width);
++	if (ret) {
++		dev_err(dev, "Failed to set up PASID %d in nested mode, Err %d\n",
++			data->pasid, ret);
++		kfree(sdev);
++		goto out;
++	}
++
++	init_rcu_head(&sdev->rcu);
++	refcount_inc(&svm->refs);
++	list_add_rcu(&sdev->list, &svm->devs);
++ out:
++	mutex_unlock(&pasid_mutex);
 +	return ret;
 +}
 +
- static int intel_iommu_map(struct iommu_domain *domain,
- 			   unsigned long iova, phys_addr_t hpa,
- 			   size_t size, int iommu_prot)
-@@ -5769,6 +5927,7 @@ const struct iommu_ops intel_iommu_ops = {
- 	.dev_disable_feat	= intel_iommu_dev_disable_feat,
- 	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
++int intel_svm_unbind_gpasid(struct device *dev, int pasid)
++{
++	struct intel_svm_dev *sdev;
++	struct intel_iommu *iommu;
++	struct intel_svm *svm;
++	int ret = -EINVAL;
++
++	mutex_lock(&pasid_mutex);
++	iommu = intel_svm_device_to_iommu(dev);
++	if (!iommu)
++		goto out;
++
++	svm = ioasid_find(NULL, pasid, NULL);
++	if (IS_ERR(svm)) {
++		ret = PTR_ERR(svm);
++		goto out;
++	}
++
++	if (!svm)
++		goto out;
++
++	for_each_svm_dev() {
++		ret = 0;
++		sdev->users--;
++		if (!sdev->users) {
++			list_del_rcu(&sdev->list);
++			intel_pasid_tear_down_entry(iommu, dev, svm->pasid);
++			/* TODO: Drain in flight PRQ for the PASID since it
++			 * may get reused soon, we don't want to
++			 * confuse with its previous live.
++			 * intel_svm_drain_prq(dev, pasid);
++			 */
++			kfree_rcu(sdev, rcu);
++
++			if (list_empty(&svm->devs)) {
++				list_del(&svm->list);
++				kfree(svm);
++				/*
++				 * We do not free PASID here until explicit call
++				 * from the guest to free.
++				 */
++				ioasid_set_data(pasid, NULL);
++			}
++		}
++		break;
++	}
++ out:
++	mutex_unlock(&pasid_mutex);
++
++	return ret;
++}
+ 
+ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_ops *ops)
+ {
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index 48fa164..5d67d0d4 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -677,7 +677,9 @@ int intel_iommu_enable_pasid(struct intel_iommu *iommu, struct device *dev);
+ int intel_svm_init(struct intel_iommu *iommu);
+ extern int intel_svm_enable_prq(struct intel_iommu *iommu);
+ extern int intel_svm_finish_prq(struct intel_iommu *iommu);
+-
++extern int intel_svm_bind_gpasid(struct iommu_domain *domain,
++		struct device *dev, struct gpasid_bind_data *data);
++extern int intel_svm_unbind_gpasid(struct device *dev, int pasid);
+ struct svm_dev_ops;
+ 
+ struct intel_svm_dev {
+@@ -693,12 +695,16 @@ struct intel_svm_dev {
+ 
+ struct intel_svm {
+ 	struct mmu_notifier notifier;
+-	struct mm_struct *mm;
++	union {
++		struct mm_struct *mm;
++		u64 gcr3;
++	};
+ 	struct intel_iommu *iommu;
+ 	int flags;
+ 	int pasid;
+ 	struct list_head devs;
+ 	struct list_head list;
++	refcount_t refs; /* # of devs bond to the PASID */
+ };
+ 
+ extern struct intel_iommu *intel_svm_device_to_iommu(struct device *dev);
+diff --git a/include/linux/intel-svm.h b/include/linux/intel-svm.h
+index e3f7631..34b0a3b 100644
+--- a/include/linux/intel-svm.h
++++ b/include/linux/intel-svm.h
+@@ -52,6 +52,13 @@ struct svm_dev_ops {
+  * do such IOTLB flushes automatically.
+  */
+ #define SVM_FLAG_SUPERVISOR_MODE	(1<<1)
++/*
++ * The SVM_FLAG_GUEST_MODE flag is used when a guest process bind to a device.
++ * In this case the mm_struct is in the guest kernel or userspace, its life
++ * cycle is managed by VMM and VFIO layer. For IOMMU driver, this API provides
++ * means to bind/unbind guest CR3 with PASIDs allocated for a device.
++ */
++#define SVM_FLAG_GUEST_MODE	(1<<2)
+ 
  #ifdef CONFIG_INTEL_IOMMU_SVM
-+	.cache_invalidate	= intel_iommu_sva_invalidate,
- 	.sva_bind_gpasid	= intel_svm_bind_gpasid,
- 	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
- #endif
+ 
 -- 
 2.7.4
 
