@@ -2,130 +2,119 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB687C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA16C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888E120645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:34:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZW4fnM9"
+	by mail.kernel.org (Postfix) with ESMTP id 4872B20645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfDWIeI (ORCPT
+        id S1726681AbfDWIeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:34:08 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37360 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfDWIeI (ORCPT
+        Tue, 23 Apr 2019 04:34:17 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:38079 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbfDWIeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:34:08 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v14so17663854wmf.2;
-        Tue, 23 Apr 2019 01:34:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=faI8d3sk5W2GvXrBFVQ9tJaO4sXRhQyDKbVWY7XXzi8=;
-        b=fZW4fnM9xOfJXqCfH6wuFPmscJzQhPHukUFG3YPESRuUS52WqZqCMAsHU5bgobGc07
-         XETRw9f6L4K8RUqXLJ7X8Hy/1YBGMod6DFAbun2/OzzJ7Hf/13dJgid/U+cErY0KDuKC
-         zcQV117yeO370JNVUu8vjUGSGxxMXw2jLch/gATmCFIrSqEd4BDDLSLZo8vRb/ak1HQH
-         DsKTVwXeFQugH70s8WKOcqkk8CgoeS3aAYehdCrtEnEukFT5Qskhrfu+hHZVEH16m1Y6
-         jyN+4zfklwHVJ63alZc+epK3r9splNLeyq4lsYjPT/1DtVeU+ODHk+mSzkpTll9AsFJg
-         k8vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=faI8d3sk5W2GvXrBFVQ9tJaO4sXRhQyDKbVWY7XXzi8=;
-        b=kwHBZ12IP1nVk2YPS/tJUY/mODsX+tdrw3EweFffNQlYr3dvo9eBJFVy4NAYLa6RtD
-         JpW+ucsK4BYPdU/YT1wAOl6eXe6icl16nKYyrHCHuVDF6chJbp5UhWt8zsCIxE8ftmPY
-         Z7ebWXusKY1h8T4NnfHTx/tvQKssA55gXduvM8K2YjxtYBInIWJ3+Akpb1G7oKXaFbp+
-         pm/enLPpIMeMCbHbr4Ve3aiaWeuQxJsvqBOqCItDysQtACHzjQJlwEgzYf37eqkuJaGG
-         W7rU+66AoVP5vzqvRUf8kJKdT1qhGaISNblz9rF1pOd7ofonoaQVyso9TLVIotvBkaz6
-         3wnw==
-X-Gm-Message-State: APjAAAWDI6X7ke0Zm+UhFMgGBxgXp5FUNyXe3sVMbavzzQ9fJOahzs7Y
-        eH6k7jRN6+19sxOytPEpf8+Rf8Op2RU=
-X-Google-Smtp-Source: APXvYqy8xdlL0gC035rJWjYfM7x5UKqbnnZAYPUagygXRruLf6Ug8VUfATKJ7o1nucgsJI8CfC7TnQ==
-X-Received: by 2002:a1c:2d0e:: with SMTP id t14mr1324868wmt.33.1556008445993;
-        Tue, 23 Apr 2019 01:34:05 -0700 (PDT)
-Received: from arch-late (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
-        by smtp.gmail.com with ESMTPSA id z13sm7716276wrh.41.2019.04.23.01.34.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 01:34:04 -0700 (PDT)
-References: <20190423075020.173734-1-wangkefeng.wang@huawei.com> <20190423075020.173734-23-wangkefeng.wang@huawei.com>
-User-agent: mu4e 1.2.0; emacs 27.0.50
-From:   Rui Miguel Silva <rmfrfs@gmail.com>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Steve Longerbeam" <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH next 22/25] media: staging/imx7: Use dev_get_drvdata()
-In-reply-to: <20190423075020.173734-23-wangkefeng.wang@huawei.com>
-Date:   Tue, 23 Apr 2019 09:34:03 +0100
-Message-ID: <m3y3412k90.fsf@gmail.com>
+        Tue, 23 Apr 2019 04:34:16 -0400
+Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 56D14200012;
+        Tue, 23 Apr 2019 08:34:11 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Stephen Boyd <sboyd@codeaurora.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: [PATCH v5 0/6] Add CPU clock support for Armada 7K/8K
+Date:   Tue, 23 Apr 2019 10:33:48 +0200
+Message-Id: <20190423083354.17785-1-gregory.clement@bootlin.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kefeng,
-Thanks for the patch.
+Hello,
 
-On Tue 23 Apr 2019 at 08:50, Kefeng Wang wrote:
-> Using dev_get_drvdata directly.
->
-> Cc: Rui Miguel Silva <rmfrfs@gmail.com>
+This is the forth version of a series allowing to manage the cpu clock
+for Armada 7K/8K. The third version was sent more than 3 months
+without any relevant feedback since this end of decembe last year.
 
-There was already a patch sent by Wolfram that does the same thing
-[0].
+For these SoCs, the CPUs share the same clock by cluster, so actually
+the clock management is done at cluster level.
 
-Thanks anyway.
+As for the other Armada 7K/8K clocks it is possible to have multiple
+AP so here again we need to have unique name: the purpose of the second
+patch is to share a common code which will be used in 3 drivers.
 
----
-Cheers,
-	Rui
+The last 2 patch enable the driver at dt and platform level and will
+be applied through the mvebu subsystem.
 
-[0]: https://lore.kernel.org/linux-media/20190319163622.30607-1-wsa+renesas@sang-engineering.com/
+Changelog v4->v5:
 
-> Cc: Steve Longerbeam <slongerbeam@gmail.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: linux-media@vger.kernel.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->  drivers/staging/media/imx/imx7-mipi-csis.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-> index 6cae2960eea1..19455f425416 100644
-> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
-> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-> @@ -1027,8 +1027,7 @@ static int mipi_csis_probe(struct platform_device *pdev)
->  
->  static int mipi_csis_pm_suspend(struct device *dev, bool runtime)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct v4l2_subdev *mipi_sd = platform_get_drvdata(pdev);
-> +	struct v4l2_subdev *mipi_sd = dev_get_drvdata(dev);
->  	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
->  	int ret = 0;
->  
-> @@ -1052,8 +1051,7 @@ static int mipi_csis_pm_suspend(struct device *dev, bool runtime)
->  
->  static int mipi_csis_pm_resume(struct device *dev, bool runtime)
->  {
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct v4l2_subdev *mipi_sd = platform_get_drvdata(pdev);
-> +	struct v4l2_subdev *mipi_sd = dev_get_drvdata(dev);
->  	struct csi_state *state = mipi_sd_to_csis_state(mipi_sd);
->  	int ret = 0;
+ - As requested by the device tree maintainer make the reg property
+   mandatory
+
+ - Updated the device tree files accordingly with the new binding
+
+Changelog v3->v4:
+ - Rebased on v5.1-rc1
+ - Mention in the binding that a reg property can be used to make the
+   device tree maintainer happy in the hope that there will be finally
+   a review on this patch blocking the whole series.
+
+Changelog v2->v3:
+ - Add back the first patch documenting the binding
+
+Changelog v1->v2:
+ - Header cleanup
+ - Use unsigned int instead of it for cluster member of the ap_cpu_clk struct
+ - Use clk_hw instead of clk
+ - Use regmap_read_poll_timeout
+ - Use for_each_of_cpu_node
+ - Remove unnecessary WARN_ON()
+ - Remove headers from armada_ap_cp_helper.h
+ - Few other minor cleanup
+
+Gregory CLEMENT (6):
+  dt-bindings: ap806: add the cluster clock node in the syscon file
+  clk: mvebu: add helper file for Armada AP and CP clocks
+  clk: mvebu: add CPU clock driver for Armada 7K/8K
+  clk: mvebu: ap806: Fix clock name for the cluster
+  arm64: marvell: enable the  Armada 7K/8K CPU clk driver
+  arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
+
+ .../arm/marvell/ap806-system-controller.txt   |  26 ++
+ arch/arm64/Kconfig.platforms                  |   1 +
+ .../boot/dts/marvell/armada-ap806-quad.dtsi   |   4 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi |   7 +
+ drivers/clk/mvebu/Kconfig                     |   8 +
+ drivers/clk/mvebu/Makefile                    |   2 +
+ drivers/clk/mvebu/ap-cpu-clk.c                | 259 ++++++++++++++++++
+ drivers/clk/mvebu/ap806-system-controller.c   |  24 +-
+ drivers/clk/mvebu/armada_ap_cp_helper.c       |  30 ++
+ drivers/clk/mvebu/armada_ap_cp_helper.h       |  11 +
+ drivers/clk/mvebu/cp110-system-controller.c   |  32 +--
+ 11 files changed, 362 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.c
+ create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.h
+
+-- 
+2.20.1
 
