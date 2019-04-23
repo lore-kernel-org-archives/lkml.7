@@ -2,539 +2,310 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F5DC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D6DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DE4206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:12:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zCtk5HKM"
+	by mail.kernel.org (Postfix) with ESMTP id 559BA20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:12:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfDWNMA (ORCPT
+        id S1728238AbfDWNMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:12:00 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49974 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfDWNJY (ORCPT
+        Tue, 23 Apr 2019 09:12:07 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:43903 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727656AbfDWNMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:09:24 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9GgJ023134;
-        Tue, 23 Apr 2019 08:09:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556024956;
-        bh=sNutx3xSlfovpiIQTY5C5/QIsV4CUYj1+g84veSGa9A=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=zCtk5HKMxzdznOp4oylKmjNDEHJUHBzf8g2JGOYK/zWug7QHzTlC34EQJ2eARslc9
-         9Z4daDkcah7HI7d77b93UNQWUUVO9m6NQvM9g8yZXucsGbP2BcurEzX1Da3Lk53+mK
-         zia0moN4TUl+50wTWNOORkmlk2ZN+zIa5dl/TQKA=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3ND9FGW067072
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Apr 2019 08:09:16 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
- Apr 2019 08:09:15 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 23 Apr 2019 08:09:15 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9ED8085449;
-        Tue, 23 Apr 2019 08:09:15 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-CC:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, Sekhar Nori <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 01/19] net: ethernet: ti: convert to SPDX license identifiers
-Date:   Tue, 23 Apr 2019 16:08:52 +0300
-Message-ID: <1556024950-20752-2-git-send-email-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556024950-20752-1-git-send-email-grygorii.strashko@ti.com>
-References: <1556024950-20752-1-git-send-email-grygorii.strashko@ti.com>
+        Tue, 23 Apr 2019 09:12:05 -0400
+Received: from [IPv6:2001:420:44c1:2579:c4cd:9df1:43f2:db66] ([IPv6:2001:420:44c1:2579:c4cd:9df1:43f2:db66])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id IvDIhCya9ZVjxIvDMhWHfG; Tue, 23 Apr 2019 15:12:02 +0200
+Subject: Re: [PATCH 4/7] media: atmel: atmel-isc: add support for
+ DO_WHITE_BALANCE
+To:     Eugen.Hristev@microchip.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Nicolas.Ferre@microchip.com, mchehab@kernel.org,
+        ksloat@aampglobal.com
+References: <1554807715-2353-1-git-send-email-eugen.hristev@microchip.com>
+ <1554807715-2353-5-git-send-email-eugen.hristev@microchip.com>
+ <08d1bf29-326b-7a8c-51c4-088d0effc4b6@xs4all.nl>
+ <5fcb8f59-6979-c355-574b-40bb13610252@microchip.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <2c7b069e-f81c-a643-4feb-0839277752e1@xs4all.nl>
+Date:   Tue, 23 Apr 2019 15:11:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <5fcb8f59-6979-c355-574b-40bb13610252@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfHoynABowKhFz3X5qPyoV39bL8KlQd2nMmgtQKhTP5caQAI9TCyYucGEldINGcHuGY+ZywcPCJVVA0fc6OCneyN5dHT4qo7nN8MXaT5FD+QtYDorEG12
+ zntsetVaPaaaQy99YU+ch3YAYqlcG3IucjhScovRVLkKTimtaIeK6ObqwtS5DztQ1yHSTwErdJg4iGcLb7Xr+rQeWM227X814fQNSjZwEUuLk1DAlIkrcmyM
+ E2ttokuYiT22uqMJSMm3sNd+Ala7obTlKRfvjE6GzMtdeKz2M2jqkSjDLlf4NZ1pFeqM7gXiK0rWbyxEg0rrOH2TNQVXRvNcLRQqg2W/kLYQQQW1IrF4+TTm
+ y3fg1Vlwt748X8cdrSeV8nD2EVNqqj42zA0KWlYdGI2xniFjNrnEM62Tnv9F/ThSk81ALwKoL2zCNXfbKySEtUsrIMXXAuvEZuDaxSCYeJpEkNhYpIYFJtOZ
+ ByNc07mXZa4ibWAaSPpLiJv+QkdZeJZ80/9kCD94Lc1OiiPA7ae9ApK5pyY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace textual license with SPDX-License-Identifier.
+On 4/15/19 8:43 AM, Eugen.Hristev@microchip.com wrote:
+> 
+> 
+> On 10.04.2019 17:26, Hans Verkuil wrote:
+> 
+>>
+>> On 4/9/19 1:07 PM, Eugen.Hristev@microchip.com wrote:
+>>> From: Eugen Hristev <eugen.hristev@microchip.com>
+>>>
+>>> This adds support for the 'button' control DO_WHITE_BALANCE
+>>> This feature will enable the ISC to compute the white balance coefficients
+>>> in a one time shot, at the user discretion.
+>>> This can be used if a color chart/grey chart is present in front of the camera.
+>>> The ISC will adjust the coefficients and have them fixed until next balance
+>>> or until sensor mode is changed.
+>>> This is particularly useful for white balance adjustment in different
+>>> lighting scenarios, and then taking photos to similar scenery.
+>>> The old auto white balance stays in place, where the ISC will adjust every
+>>> 4 frames to the current scenery lighting, if the scenery is approximately
+>>> grey in average, otherwise grey world algorithm fails.
+>>> One time white balance adjustments needs streaming to be enabled, such that
+>>> capture is enabled and the histogram has data to work with.
+>>> Histogram without capture does not work in this hardware module.
+>>>
+>>> To disable auto white balance feature (first step)
+>>> v4l2-ctl --set-ctrl=white_balance_automatic=0
+>>>
+>>> To start the one time white balance procedure:
+>>> v4l2-ctl --set-ctrl=do_white_balance=1
+>>>
+>>> User controls now include the do_white_balance ctrl:
+>>> User Controls
+>>>
+>>>                       brightness 0x00980900 (int)    : min=-1024 max=1023 step=1 default=0 value=0 flags=slider
+>>>                         contrast 0x00980901 (int)    : min=-2048 max=2047 step=1 default=256 value=256 flags=slider
+>>>          white_balance_automatic 0x0098090c (bool)   : default=1 value=1
+>>>                 do_white_balance 0x0098090d (button) : flags=write-only, execute-on-write
+>>>                            gamma 0x00980910 (int)    : min=0 max=2 step=1 default=2 value=2 flags=slider
+>>>
+>>> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+>>> ---
+>>>   drivers/media/platform/atmel/atmel-isc.c | 74 +++++++++++++++++++++++++++++---
+>>>   1 file changed, 69 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/media/platform/atmel/atmel-isc.c b/drivers/media/platform/atmel/atmel-isc.c
+>>> index f6b8b00e..e516805 100644
+>>> --- a/drivers/media/platform/atmel/atmel-isc.c
+>>> +++ b/drivers/media/platform/atmel/atmel-isc.c
+>>> @@ -167,6 +167,9 @@ struct isc_ctrls {
+>>>   	u32 brightness;
+>>>   	u32 contrast;
+>>>   	u8 gamma_index;
+>>> +#define ISC_WB_NONE	0
+>>> +#define ISC_WB_AUTO	1
+>>> +#define ISC_WB_ONETIME	2
+>>>   	u8 awb;
+>>>   
+>>>   	/* one for each component : GR, R, GB, B */
+>>> @@ -210,6 +213,7 @@ struct isc_device {
+>>>   	struct fmt_config	try_config;
+>>>   
+>>>   	struct isc_ctrls	ctrls;
+>>> +	struct v4l2_ctrl	*do_wb_ctrl;
+>>>   	struct work_struct	awb_work;
+>>>   
+>>>   	struct mutex		lock;
+>>> @@ -809,7 +813,7 @@ static void isc_set_pipeline(struct isc_device *isc, u32 pipeline)
+>>>   
+>>>   	bay_cfg = isc->config.sd_format->cfa_baycfg;
+>>>   
+>>> -	if (!ctrls->awb)
+>>> +	if (ctrls->awb == ISC_WB_NONE)
+>>>   		isc_reset_awb_ctrls(isc);
+>>>   
+>>>   	regmap_write(regmap, ISC_WB_CFG, bay_cfg);
+>>> @@ -1928,7 +1932,7 @@ static void isc_awb_work(struct work_struct *w)
+>>>   	baysel = isc->config.sd_format->cfa_baycfg << ISC_HIS_CFG_BAYSEL_SHIFT;
+>>>   
+>>>   	/* if no more auto white balance, reset controls. */
+>>> -	if (!ctrls->awb)
+>>> +	if (ctrls->awb == ISC_WB_NONE)
+>>>   		isc_reset_awb_ctrls(isc);
+>>>   
+>>>   	pm_runtime_get_sync(isc->dev);
+>>> @@ -1937,7 +1941,7 @@ static void isc_awb_work(struct work_struct *w)
+>>>   	 * only update if we have all the required histograms and controls
+>>>   	 * if awb has been disabled, we need to reset registers as well.
+>>>   	 */
+>>> -	if (hist_id == ISC_HIS_CFG_MODE_GR || !ctrls->awb) {
+>>> +	if (hist_id == ISC_HIS_CFG_MODE_GR || ctrls->awb == ISC_WB_NONE) {
+>>>   		/*
+>>>   		 * It may happen that DMA Done IRQ will trigger while we are
+>>>   		 * updating white balance registers here.
+>>> @@ -1947,6 +1951,16 @@ static void isc_awb_work(struct work_struct *w)
+>>>   		spin_lock_irqsave(&isc->awb_lock, flags);
+>>>   		isc_update_awb_ctrls(isc);
+>>>   		spin_unlock_irqrestore(&isc->awb_lock, flags);
+>>> +
+>>> +		/*
+>>> +		 * if we are doing just the one time white balance adjustment,
+>>> +		 * we are basically done.
+>>> +		 */
+>>> +		if (ctrls->awb == ISC_WB_ONETIME) {
+>>> +			v4l2_info(&isc->v4l2_dev,
+>>> +				  "Completed one time white-balance adjustment.\n");
+>>> +			ctrls->awb = ISC_WB_NONE;
+>>> +		}
+>>>   	}
+>>>   	regmap_write(regmap, ISC_HIS_CFG, hist_id | baysel | ISC_HIS_CFG_RAR);
+>>>   	isc_update_profile(isc);
+>>> @@ -1974,10 +1988,56 @@ static int isc_s_ctrl(struct v4l2_ctrl *ctrl)
+>>>   		ctrls->gamma_index = ctrl->val;
+>>>   		break;
+>>>   	case V4L2_CID_AUTO_WHITE_BALANCE:
+>>> -		ctrls->awb = ctrl->val;
+>>> +		if (ctrl->val == 1) {
+>>> +			ctrls->awb = ISC_WB_AUTO;
+>>> +			v4l2_ctrl_activate(isc->do_wb_ctrl, false);
+>>> +		} else {
+>>> +			ctrls->awb = ISC_WB_NONE;
+>>> +			v4l2_ctrl_activate(isc->do_wb_ctrl, true);
+>>> +		}
+>>> +		/* we did not configure ISC yet */
+>>> +		if (!isc->config.sd_format)
+>>> +			break;
+>>> +
+>>> +		if (!ISC_IS_FORMAT_RAW(isc->config.sd_format->mbus_code)) {
+>>> +			v4l2_err(&isc->v4l2_dev,
+>>> +				 "White balance adjustments available only if sensor is in RAW mode.\n");
+>>
+>> This isn't an error, instead if the format isn't raw, then deactivate
+>> the control (see v4l2_ctrl_activate()). That way the control framework
+>> will handle this.
+>>
+>>> +			return 0;
+>>> +		}
+>>> +
+>>>   		if (ctrls->hist_stat != HIST_ENABLED) {
+>>>   			isc_reset_awb_ctrls(isc);
+>>>   		}
+>>> +
+>>> +		if (isc->ctrls.awb && vb2_is_streaming(&isc->vb2_vidq) &&
+>>> +		    ISC_IS_FORMAT_RAW(isc->config.sd_format->mbus_code))
+>>> +			isc_set_histogram(isc, true);
+>>> +
+>>> +		break;
+>>> +	case V4L2_CID_DO_WHITE_BALANCE:
+>>> +		/* we did not configure ISC yet */
+>>> +		if (!isc->config.sd_format)
+>>> +			break;
+>>> +
+>>> +		if (ctrls->awb == ISC_WB_AUTO) {
+>>> +			v4l2_err(&isc->v4l2_dev,
+>>> +				 "To use one time white-balance adjustment, disable auto white balance first.\n");
+>>
+>> I'd do this differently: if auto whitebalance is already on, then just do
+>> nothing for V4L2_CID_DO_WHITE_BALANCE.
+>>
+>>> +			return -EAGAIN;
+>>> +		}
+>>> +		if (!vb2_is_streaming(&isc->vb2_vidq)) {
+>>> +			v4l2_err(&isc->v4l2_dev,
+>>> +				 "One time white-balance adjustment requires streaming to be enabled.\n");
+>>
+>> This too should use v4l2_ctrl_activate(): activate the control in start_streaming,
+>> deactivate in stop_streaming (and when the control is created).
+>>
+>>> +			return -EAGAIN;
+>>> +		}
+>>> +
+>>> +		if (!ISC_IS_FORMAT_RAW(isc->config.sd_format->mbus_code)) {
+>>> +			v4l2_err(&isc->v4l2_dev,
+>>> +				 "White balance adjustments available only if sensor is in RAW mode.\n");
+>>
+>> Same note as above: use v4l2_ctrl_activate() for this.
+> 
+> Hello Hans,
+> 
+> I used v4l2_ctrl_activate with false parameter, and the v4l2-ctl -l 
+> looks like this:
+> 
+> 
+>             do_white_balance (button) : flags=inactive, write-only, 
+> execute-on-write
+> 
+> But the inactive flag looks to be only for display purposes, as issuing :
+> 
+> v4l2-ctl --set-ctrl=do_white_balance=1
+> 
+> will continue to call my ctrl callback as if the control is still active.
+> 
+> Am I missing something here ? v4l2_s_ctrl does not check for INACTIVE 
+> status.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpmac.c          | 14 +-------------
- drivers/net/ethernet/ti/cpsw-common.c    | 12 +-----------
- drivers/net/ethernet/ti/cpsw-phy-sel.c   |  9 +--------
- drivers/net/ethernet/ti/cpsw.c           |  9 +--------
- drivers/net/ethernet/ti/cpsw.h           |  9 +--------
- drivers/net/ethernet/ti/cpsw_ale.c       |  9 +--------
- drivers/net/ethernet/ti/cpsw_ale.h       |  9 +--------
- drivers/net/ethernet/ti/cpts.c           | 14 +-------------
- drivers/net/ethernet/ti/cpts.h           | 14 +-------------
- drivers/net/ethernet/ti/davinci_cpdma.c  |  9 +--------
- drivers/net/ethernet/ti/davinci_cpdma.h  |  9 +--------
- drivers/net/ethernet/ti/davinci_emac.c   | 16 +---------------
- drivers/net/ethernet/ti/davinci_mdio.c   | 17 +----------------
- drivers/net/ethernet/ti/netcp.h          | 10 +---------
- drivers/net/ethernet/ti/netcp_core.c     | 10 +---------
- drivers/net/ethernet/ti/netcp_ethss.c    | 10 +---------
- drivers/net/ethernet/ti/netcp_sgmii.c    |  9 +--------
- drivers/net/ethernet/ti/netcp_xgbepcsr.c |  9 +--------
- 18 files changed, 18 insertions(+), 180 deletions(-)
+No, you are correct. I got confused with FLAG_GRABBED.
 
-diff --git a/drivers/net/ethernet/ti/cpmac.c b/drivers/net/ethernet/ti/cpmac.c
-index e2d47b24a869..e695568041ff 100644
---- a/drivers/net/ethernet/ti/cpmac.c
-+++ b/drivers/net/ethernet/ti/cpmac.c
-@@ -1,19 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2006, 2007 Eugene Konev
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  */
- 
- #include <linux/module.h>
-diff --git a/drivers/net/ethernet/ti/cpsw-common.c b/drivers/net/ethernet/ti/cpsw-common.c
-index 38d1cc557c11..11960f921c69 100644
---- a/drivers/net/ethernet/ti/cpsw-common.c
-+++ b/drivers/net/ethernet/ti/cpsw-common.c
-@@ -1,14 +1,4 @@
--/*
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
-+// SPDX-License-Identifier: GPL-2.0
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-diff --git a/drivers/net/ethernet/ti/cpsw-phy-sel.c b/drivers/net/ethernet/ti/cpsw-phy-sel.c
-index fec275e2208d..48e0924259f5 100644
---- a/drivers/net/ethernet/ti/cpsw-phy-sel.c
-+++ b/drivers/net/ethernet/ti/cpsw-phy-sel.c
-@@ -1,17 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
- /* Texas Instruments Ethernet Switch Driver
-  *
-  * Copyright (C) 2013 Texas Instruments
-  *
-  * Module Author: Mugunthan V N <mugunthanvnm@ti.com>
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #include <linux/platform_device.h>
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index a591583d120e..1c04c16e279b 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -1,16 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Texas Instruments Ethernet Switch Driver
-  *
-  * Copyright (C) 2012 Texas Instruments
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #include <linux/kernel.h>
-diff --git a/drivers/net/ethernet/ti/cpsw.h b/drivers/net/ethernet/ti/cpsw.h
-index 907e05fc22e4..35d602f03281 100644
---- a/drivers/net/ethernet/ti/cpsw.h
-+++ b/drivers/net/ethernet/ti/cpsw.h
-@@ -1,15 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /* Texas Instruments Ethernet Switch Driver
-  *
-  * Copyright (C) 2013 Texas Instruments
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #ifndef __CPSW_H__
- #define __CPSW_H__
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 798c989d5d93..1142fcfce566 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -1,16 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Texas Instruments N-Port Ethernet Switch Address Lookup Engine
-  *
-  * Copyright (C) 2012 Texas Instruments
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/kernel.h>
- #include <linux/module.h>
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index cd07a3e96d57..4777d626fac8 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -1,16 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Texas Instruments N-Port Ethernet Switch Address Lookup Engine APIs
-  *
-  * Copyright (C) 2012 Texas Instruments
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #ifndef __TI_CPSW_ALE_H__
- #define __TI_CPSW_ALE_H__
-diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
-index 2a9ba4acd7fa..499806ce4cd5 100644
---- a/drivers/net/ethernet/ti/cpts.c
-+++ b/drivers/net/ethernet/ti/cpts.c
-@@ -1,21 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * TI Common Platform Time Sync
-  *
-  * Copyright (C) 2012 Richard Cochran <richardcochran@gmail.com>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  */
- #include <linux/err.h>
- #include <linux/if.h>
-diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
-index d2c7decd59b6..0d8dbc846acf 100644
---- a/drivers/net/ethernet/ti/cpts.h
-+++ b/drivers/net/ethernet/ti/cpts.h
-@@ -1,21 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * TI Common Platform Time Sync
-  *
-  * Copyright (C) 2012 Richard Cochran <richardcochran@gmail.com>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  */
- #ifndef _TI_CPTS_H_
- #define _TI_CPTS_H_
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 4236dcdd5634..41203714eda4 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -1,16 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Texas Instruments CPDMA Driver
-  *
-  * Copyright (C) 2010 Texas Instruments
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include <linux/kernel.h>
- #include <linux/spinlock.h>
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.h b/drivers/net/ethernet/ti/davinci_cpdma.h
-index d399af5389b8..7d38210f3267 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.h
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.h
-@@ -1,16 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Texas Instruments CPDMA Driver
-  *
-  * Copyright (C) 2010 Texas Instruments
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #ifndef __DAVINCI_CPDMA_H__
- #define __DAVINCI_CPDMA_H__
-diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
-index 57450b174fc4..e766e76b957b 100644
---- a/drivers/net/ethernet/ti/davinci_emac.c
-+++ b/drivers/net/ethernet/ti/davinci_emac.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * DaVinci Ethernet Medium Access Controller
-  *
-@@ -6,21 +7,6 @@
-  * Copyright (C) 2009 Texas Instruments.
-  *
-  * ---------------------------------------------------------------------------
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-- * ---------------------------------------------------------------------------
-  * History:
-  * 0-5 A number of folks worked on this driver in bits and pieces but the major
-  *     contribution came from Suraj Iyer and Anant Gole
-diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
-index c2740dbe9154..309dddf4a6f4 100644
---- a/drivers/net/ethernet/ti/davinci_mdio.c
-+++ b/drivers/net/ethernet/ti/davinci_mdio.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * DaVinci MDIO Module driver
-  *
-@@ -7,22 +8,6 @@
-  *
-  * Copyright (C) 2009 Texas Instruments.
-  *
-- * ---------------------------------------------------------------------------
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-- * ---------------------------------------------------------------------------
-  */
- #include <linux/module.h>
- #include <linux/kernel.h>
-diff --git a/drivers/net/ethernet/ti/netcp.h b/drivers/net/ethernet/ti/netcp.h
-index c4ffdf47bad5..43d5cd59b56b 100644
---- a/drivers/net/ethernet/ti/netcp.h
-+++ b/drivers/net/ethernet/ti/netcp.h
-@@ -1,3 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * NetCP driver local header
-  *
-@@ -8,15 +9,6 @@
-  *		Santosh Shilimkar <santosh.shilimkar@ti.com>
-  *		Wingman Kwok <w-kwok2@ti.com>
-  *		Murali Karicheri <m-karicheri2@ti.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #ifndef __NETCP_H__
- #define __NETCP_H__
-diff --git a/drivers/net/ethernet/ti/netcp_core.c b/drivers/net/ethernet/ti/netcp_core.c
-index d847f672a705..01d4ca331f8c 100644
---- a/drivers/net/ethernet/ti/netcp_core.c
-+++ b/drivers/net/ethernet/ti/netcp_core.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Keystone NetCP Core driver
-  *
-@@ -8,15 +9,6 @@
-  *		Santosh Shilimkar <santosh.shilimkar@ti.com>
-  *		Murali Karicheri <m-karicheri2@ti.com>
-  *		Wingman Kwok <w-kwok2@ti.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #include <linux/io.h>
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 0a920c5936b2..ec179700c184 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Keystone GBE and XGBE subsystem code
-  *
-@@ -7,15 +8,6 @@
-  *		Cyril Chemparathy <cyril@ti.com>
-  *		Santosh Shilimkar <santosh.shilimkar@ti.com>
-  *		Wingman Kwok <w-kwok2@ti.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #include <linux/io.h>
-diff --git a/drivers/net/ethernet/ti/netcp_sgmii.c b/drivers/net/ethernet/ti/netcp_sgmii.c
-index 5d8419f658d0..f7cf56d6351d 100644
---- a/drivers/net/ethernet/ti/netcp_sgmii.c
-+++ b/drivers/net/ethernet/ti/netcp_sgmii.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * SGMI module initialisation
-  *
-@@ -6,14 +7,6 @@
-  *		Sandeep Paulraj <s-paulraj@ti.com>
-  *		Wingman Kwok <w-kwok2@ti.com>
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
- #include "netcp.h"
-diff --git a/drivers/net/ethernet/ti/netcp_xgbepcsr.c b/drivers/net/ethernet/ti/netcp_xgbepcsr.c
-index 33571acc52b6..112778aedd8a 100644
---- a/drivers/net/ethernet/ti/netcp_xgbepcsr.c
-+++ b/drivers/net/ethernet/ti/netcp_xgbepcsr.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * XGE PCSR module initialisation
-  *
-@@ -5,14 +6,6 @@
-  * Authors:	Sandeep Nair <sandeep_n@ti.com>
-  *		WingMan Kwok <w-kwok2@ti.com>
-  *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- #include "netcp.h"
- 
--- 
-2.17.1
+In any case, the idea was right, but you do have to add code to s_ctrl
+to handle this (e.g. if the INACTIVE flag is set, then just do nothing).
+
+The INACTIVE flag is meant to communicate that the control can still be
+set, but it just doesn't do anything. qv4l2 will disable the control if
+this flag is set.
+
+Note that when you set an inactive control, the control value should
+still be updated even if it isn't used at the moment. If the configuration
+changes so that the control becomes active again, then that last set
+value should be used by the hardware.
+
+This is the reason why s_ctrl is still called.
+
+Regards,
+
+	Hans
+
+> 
+> Thanks
+> 
+>>
+>>> +			return -EAGAIN;
+>>> +		}
+>>> +		ctrls->awb = ISC_WB_ONETIME;
+>>> +		isc_set_histogram(isc, true);
+>>> +		v4l2_info(&isc->v4l2_dev, "One time white-balance started.\n");
+>>
+>> Make this v4l2_dbg.
+>>
+>>>   		break;
+>>>   	default:
+>>>   		return -EINVAL;
+>>> @@ -2000,7 +2060,7 @@ static int isc_ctrl_init(struct isc_device *isc)
+>>>   	ctrls->hist_stat = HIST_INIT;
+>>>   	isc_reset_awb_ctrls(isc);
+>>>   
+>>> -	ret = v4l2_ctrl_handler_init(hdl, 4);
+>>> +	ret = v4l2_ctrl_handler_init(hdl, 5);
+>>>   	if (ret < 0)
+>>>   		return ret;
+>>>   
+>>> @@ -2012,6 +2072,10 @@ static int isc_ctrl_init(struct isc_device *isc)
+>>>   	v4l2_ctrl_new_std(hdl, ops, V4L2_CID_GAMMA, 0, GAMMA_MAX, 1, 2);
+>>>   	v4l2_ctrl_new_std(hdl, ops, V4L2_CID_AUTO_WHITE_BALANCE, 0, 1, 1, 1);
+>>>   
+>>> +	/* do_white_balance is a button, so min,max,step,default are ignored */
+>>> +	isc->do_wb_ctrl = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_DO_WHITE_BALANCE,
+>>> +					    0, 0, 0, 0);
+>>> +
+>>>   	v4l2_ctrl_handler_setup(hdl);
+>>>   
+>>>   	return 0;
+>>>
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
 
