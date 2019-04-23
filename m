@@ -2,153 +2,177 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7D3C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B668C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395B420685
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B34217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="PSJfHQlY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nhWB+QJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfDWPOr (ORCPT
+        id S1728334AbfDWPQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:14:47 -0400
-Received: from smtp105.ord1c.emailsrvr.com ([108.166.43.105]:33573 "EHLO
-        smtp105.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727656AbfDWPOr (ORCPT
+        Tue, 23 Apr 2019 11:16:06 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:33221 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfDWPQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:14:47 -0400
-Received: from smtp22.relay.ord1c.emailsrvr.com (localhost [127.0.0.1])
-        by smtp22.relay.ord1c.emailsrvr.com (SMTP Server) with ESMTP id 97381E03B5;
-        Tue, 23 Apr 2019 11:14:45 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1556032485;
-        bh=PnYKsXXdL+qiZeSN8eOsMOuCdFeAcZDQmq+Lhgyc8yE=;
-        h=Subject:To:From:Date:From;
-        b=PSJfHQlYbQ62SkxWMUTleAuQfw2dxGWdbkpfpuEa4mnW+IfVJrFEF5saz01LDxaG6
-         ayqf0OXl3B7GtpDP4w0Bs/8n0LClS8d6wZMW32Slxq3V8bAjSIP/UlAyHCx6qGKihd
-         oGQjEA94kiD0sjXr97mLcfr0oUl9iOO1WkGzEhPc=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp22.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id DE1C8E0366;
-        Tue, 23 Apr 2019 11:14:44 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.62] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Tue, 23 Apr 2019 11:14:45 -0400
-Subject: Re: [PATCH] fuse: Add ioctl flag for compat ioctl with 64-bit time_t
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190301170831.23612-1-abbotti@mev.co.uk>
- <CAJfpegsQvUGz-YRQVrfkTWuSFe==Hg_Y=VpV0ZagKe0qGfxQ7g@mail.gmail.com>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <d2bab6ae-0c52-5a6a-78e4-72a5f298a85f@mev.co.uk>
-Date:   Tue, 23 Apr 2019 16:14:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 11:16:06 -0400
+Received: by mail-vs1-f65.google.com with SMTP id s11so8505158vsn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UdWn7HGGxLgwLS0KfoftDBazyNSUX//gUGrcgrKRNbs=;
+        b=nhWB+QJbIpc2jYUWw8PRRXSvLb6dRLkh0a6ycZSZv4VjQYfVdv09VChN+zmDaYNGRw
+         SlLm8Zeha0LuQ3aO+TTn7MTD6eW1jwPuxMtEjuoGwPMV6fd2kZ+cqs/kxh12yqJ4FBoC
+         CO5JeUX7FMOovl1+9AZfQSye6rIfgEgktfQOw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UdWn7HGGxLgwLS0KfoftDBazyNSUX//gUGrcgrKRNbs=;
+        b=faFEDJT+sOI2khjoG/GyHME68lvxH9Nuaioyj3dZeegTfL2z6hPWEBQ/hKJw+410yY
+         /beSWPerz35jYPpSmCF+yGLf9QpvJ0gm0pW6qXHHHx7fVuStmnMX06wes54c4mB6NQtn
+         i9Py/b67f0GcJNKFzF113blvd5UvAC8W/TJIgyN/ctoOql7B3gwAdoFXbrW2bIPmjMzA
+         OM7qEJv0YjVqIMrizAOx2tiaCbQoFSBkMJzlVDE5FL5ZaD+Wcs+P17PXM5iH1YaTJwjB
+         OjLZrcBk6ZrayMrxsrssHI+UHSmaG57ik3TmwLrOTZmj+aiwOjqKRInYjJjcWzK12RzR
+         Kv+w==
+X-Gm-Message-State: APjAAAXO2T2R+A4xp+wtODyYotev5LUSHx9RsucxlnoD1mmQj2d6gEmg
+        cZGixJoxf5nOAbV5ejLD59vZ+bYS2gA=
+X-Google-Smtp-Source: APXvYqxa3wW675Z903fdMi2jAxNc1wFsxxFZu+ppleOCOa9er2VewmFdxKuVeP+dEXGHLkXgi181eA==
+X-Received: by 2002:a67:f813:: with SMTP id l19mr13573742vso.46.1556032564400;
+        Tue, 23 Apr 2019 08:16:04 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id b142sm1182242vke.4.2019.04.23.08.16.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 08:16:02 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id d8so8424999vsp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:16:02 -0700 (PDT)
+X-Received: by 2002:a05:6102:417:: with SMTP id d23mr4336693vsq.48.1556032561834;
+ Tue, 23 Apr 2019 08:16:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJfpegsQvUGz-YRQVrfkTWuSFe==Hg_Y=VpV0ZagKe0qGfxQ7g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190213025707.GA16307@embeddedor>
+In-Reply-To: <20190213025707.GA16307@embeddedor>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Tue, 23 Apr 2019 08:15:47 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jKdYiMtnO3wbOwCv2fy0PmvCBSLF8ANpBzBg057zaenRg@mail.gmail.com>
+Message-ID: <CAGXu5jKdYiMtnO3wbOwCv2fy0PmvCBSLF8ANpBzBg057zaenRg@mail.gmail.com>
+Subject: Re: [PATCH] memstick: mark expected switch fall-throughs
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Alex Dubov <oakad@yahoo.com>, LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/2019 13:55, Miklos Szeredi wrote:
-> On Fri, Mar 1, 2019 at 6:08 PM Ian Abbott <abbotti@mev.co.uk> wrote:
->>
->> Currently, a CUSE server running on a 64-bit kernel can tell when an
->> ioctl request comes from a process running a 32-bit ABI, but cannot tell
->> whether the requesting process is using legacy IA32 emulation or x32
->> ABI, for example.  In particular, the server does not know the size of
->> the client process's `time_t` type.
->>
->> For 64-bit kernels, the `FUSE_IOCTL_COMPAT` and `FUSE_IOCTL_32BIT` flags
->> are currently set in the ioctl input request (`struct fuse_ioctl_in`
->> member `flags`) for a 32-bit requesting process.  This patch defines a
->> new flag `FUSE_IOCTL_COMPAT_64TIME` and sets it if the 32-bit requesting
->> process (running on a 64-bit kernel) uses a 64-bit `time_t` type.
-> 
-> Hi,
-> 
-> Thanks for the patch.
-> 
-> I think it should rather use in_x32_syscall() helper and follow that
-> naming because there's apparently at least one example in xfs of a
-> non-time_t related ioctl that varies between the x32 vs ia32.
+On Tue, Feb 12, 2019 at 6:57 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
+>
+> This patch fixes the following warnings:
+>
+> drivers/memstick/host/jmb38x_ms.c: In function =E2=80=98jmb38x_ms_write_d=
+ata=E2=80=99:
+> drivers/memstick/host/jmb38x_ms.c:261:15: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+>    host->io_pos++;
+>    ~~~~~~~~~~~~^~
+> drivers/memstick/host/jmb38x_ms.c:262:2: note: here
+>   case 2:
+>   ^~~~
+> drivers/memstick/host/jmb38x_ms.c:264:15: warning: this statement may fal=
+l through [-Wimplicit-fallthrough=3D]
+>    host->io_pos++;
+>    ~~~~~~~~~~~~^~
+> drivers/memstick/host/jmb38x_ms.c:265:2: note: here
+>   case 1:
+>   ^~~~
+> drivers/memstick/host/tifm_ms.c: In function =E2=80=98tifm_ms_write_data=
+=E2=80=99:
+> drivers/memstick/host/tifm_ms.c:168:15: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+>    host->io_pos++;
+>    ~~~~~~~~~~~~^~
+> drivers/memstick/host/tifm_ms.c:169:2: note: here
+>   case 2:
+>   ^~~~
+> drivers/memstick/host/tifm_ms.c:171:15: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+>    host->io_pos++;
+>    ~~~~~~~~~~~~^~
+> drivers/memstick/host/tifm_ms.c:172:2: note: here
+>   case 1:
+>   ^~~~
+>
+> Warning level 3 was used: -Wimplicit-fallthrough=3D3
+>
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Hi Miklos,
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-It is conceivable that COMPAT_USE_64BIT_TIME could be true for some 
-other arch/ABI (although currently it is only ever set for x86/x32). 
-Should it have separate flags for "compat 64-bit time" and "compat x32" 
-(even though that is currently redundant)?
+-Kees
 
-Kind regards,
-Ian.
-
-> 
-> Thanks,
-> Miklos
-> 
->>
->> Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
->> ---
->>   fs/fuse/file.c            | 5 ++++-
->>   include/uapi/linux/fuse.h | 2 ++
->>   2 files changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
->> index 06096b60f1df..9777e7a19889 100644
->> --- a/fs/fuse/file.c
->> +++ b/fs/fuse/file.c
->> @@ -2576,8 +2576,11 @@ long fuse_do_ioctl(struct file *file, unsigned int cmd, unsigned long arg,
->>   #if BITS_PER_LONG == 32
->>          inarg.flags |= FUSE_IOCTL_32BIT;
->>   #else
->> -       if (flags & FUSE_IOCTL_COMPAT)
->> +       if (flags & FUSE_IOCTL_COMPAT) {
->>                  inarg.flags |= FUSE_IOCTL_32BIT;
->> +               if (COMPAT_USE_64BIT_TIME)
->> +                       inarg.flags |= FUSE_IOCTL_COMPAT_64TIME;
->> +       }
->>   #endif
->>
->>          /* assume all the iovs returned by client always fits in a page */
->> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
->> index 2ac598614a8f..1f4a71486601 100644
->> --- a/include/uapi/linux/fuse.h
->> +++ b/include/uapi/linux/fuse.h
->> @@ -335,6 +335,7 @@ struct fuse_file_lock {
->>    * FUSE_IOCTL_RETRY: retry with new iovecs
->>    * FUSE_IOCTL_32BIT: 32bit ioctl
->>    * FUSE_IOCTL_DIR: is a directory
->> + * FUSE_IOCTL_COMPAT_64TIME: 32bit compat ioctl with 64bit time_t
->>    *
->>    * FUSE_IOCTL_MAX_IOV: maximum of in_iovecs + out_iovecs
->>    */
->> @@ -343,6 +344,7 @@ struct fuse_file_lock {
->>   #define FUSE_IOCTL_RETRY       (1 << 2)
->>   #define FUSE_IOCTL_32BIT       (1 << 3)
->>   #define FUSE_IOCTL_DIR         (1 << 4)
->> +#define FUSE_IOCTL_COMPAT_64TIME (1 << 5)
->>
->>   #define FUSE_IOCTL_MAX_IOV     256
->>
->> --
->> 2.20.1
->>
+> ---
+>  drivers/memstick/host/jmb38x_ms.c | 2 ++
+>  drivers/memstick/host/tifm_ms.c   | 2 ++
+>  2 files changed, 4 insertions(+)
+>
+> diff --git a/drivers/memstick/host/jmb38x_ms.c b/drivers/memstick/host/jm=
+b38x_ms.c
+> index bcdca9fbef51..49c71f55489f 100644
+> --- a/drivers/memstick/host/jmb38x_ms.c
+> +++ b/drivers/memstick/host/jmb38x_ms.c
+> @@ -259,9 +259,11 @@ static unsigned int jmb38x_ms_write_data(struct jmb3=
+8x_ms_host *host,
+>         case 3:
+>                 host->io_word[0] |=3D buf[off + 2] << 16;
+>                 host->io_pos++;
+> +               /* fall through */
+>         case 2:
+>                 host->io_word[0] |=3D buf[off + 1] << 8;
+>                 host->io_pos++;
+> +               /* fall through */
+>         case 1:
+>                 host->io_word[0] |=3D buf[off];
+>                 host->io_pos++;
+> diff --git a/drivers/memstick/host/tifm_ms.c b/drivers/memstick/host/tifm=
+_ms.c
+> index bed205849d02..1bbb2ead9556 100644
+> --- a/drivers/memstick/host/tifm_ms.c
+> +++ b/drivers/memstick/host/tifm_ms.c
+> @@ -166,9 +166,11 @@ static unsigned int tifm_ms_write_data(struct tifm_m=
+s *host,
+>         case 3:
+>                 host->io_word |=3D buf[off + 2] << 16;
+>                 host->io_pos++;
+> +               /* fall through */
+>         case 2:
+>                 host->io_word |=3D buf[off + 1] << 8;
+>                 host->io_pos++;
+> +               /* fall through */
+>         case 1:
+>                 host->io_word |=3D buf[off];
+>                 host->io_pos++;
+> --
+> 2.20.1
+>
 
 
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+--=20
+Kees Cook
