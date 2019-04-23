@@ -2,1060 +2,1912 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 508C6C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519C2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9F8214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE9F214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:21:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OD3E7c8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbfDWMTm (ORCPT
+        id S1727658AbfDWMVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:19:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31378 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfDWMTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:19:42 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 05:19:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,385,1549958400"; 
-   d="gz'50?scan'50,208,50";a="133642363"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 23 Apr 2019 05:19:38 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hIuOf-000EMg-MU; Tue, 23 Apr 2019 20:19:37 +0800
-Date:   Tue, 23 Apr 2019 20:19:33 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2019.04.16a 71/72] ERROR: "sched_setaffinity"
- [kernel/rcu/rcutorture.ko] undefined!
-Message-ID: <201904232031.O1MJPq0W%lkp@intel.com>
+        Tue, 23 Apr 2019 08:21:45 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39470 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfDWMVo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 08:21:44 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n25so18611074wmk.4;
+        Tue, 23 Apr 2019 05:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jnd4FFjgejs6f2QmoouxOY7D+sb9yrnJxftWUpilEVM=;
+        b=OD3E7c8IaGLYOZrCMCweYeFzuKG2SEYI+iKUfgyvWKhClWd94y9mj1TtwZ4zsWSYLY
+         Z6bl1znd14pbiQY5I8WCt02aDDUKu5urkO0HNN5Tq0lmybTORtv/nhfbjjaXDJ4l0oSc
+         KZ6pZxKfUlkEQQYI1cl+x41UkssAca1JkqGW+6xdfErIR+2/TQvCMEIHVDmgFJXCIHaV
+         JGJ4b1zdOyj6IE9CfkIkSAV5URPkARuIeVQR1bw1FvI5TgvsNFh++vpoMHZSH4ZQP6n6
+         d5Bqx78y3tgvHVGMwA55C1vDmh8H+IOV1h9NTv20XDDdV8qCyFKRpzmonjxko0+GvyC6
+         IJsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jnd4FFjgejs6f2QmoouxOY7D+sb9yrnJxftWUpilEVM=;
+        b=IwjJdD0u9bORlDl6S5grDqaX6veq60M6478bYBdnnlTNplZ1HxhBQql6/j6YBge6oh
+         W88jPy/0E5zTadbWITizOs6SwADjh3+vSF3bBdoMzObI2GXyXlFnuKubYznc39KgVC1t
+         KYmBkl20tsf2XADcrf7hiUmcQr4eOkerQXtkcsclT/nudWDZ9oz6Dnw1l/1Uy65P3UJo
+         d5wyi+F5dCMEwerI45OFU4RLRnCTn+8qP4YWswtLvWd6pIP+bUTr+X79tVEzN9IIXPoo
+         eS8vh3JdDqy7vwyTl7KNTQSxk1HVwz8rGRGb6aTTWnrZ23vzE++RpV5X3kmcXRSmNry+
+         /BoQ==
+X-Gm-Message-State: APjAAAVZYEdMM82z4SgxjyavGBdTiOuMC+TrosphdR0XvhJfFzCEr2fN
+        sfI4Ph01yxEtBHMyM9KaJBzjwixyd4JtlwX8PsZIONAWhDg=
+X-Google-Smtp-Source: APXvYqwGotNXpJRWNK03BKg/vA6VUkeXQ+xAyVLJTzdsYvJi20gpu8GLRvd750MUawc4voI8+xA9S4OONH3DqWgxdMg=
+X-Received: by 2002:a05:600c:21d3:: with SMTP id x19mr2130537wmj.2.1556022095414;
+ Tue, 23 Apr 2019 05:21:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="Q68bSM7Ycu6FN28Q"
-Content-Disposition: inline
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20180711094040.12506-1-ard.biesheuvel@linaro.org>
+ <20180711094040.12506-9-ard.biesheuvel@linaro.org> <CADvTj4rmxgxoJMR4ehZuhHHP3s2KCqO=Vp2igf3-ev_o=+_Duw@mail.gmail.com>
+ <CAKv+Gu-tdB=2ep3MQY2iYteeupKhPHBzi6vouQhmmwy8bRfXDA@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-tdB=2ep3MQY2iYteeupKhPHBzi6vouQhmmwy8bRfXDA@mail.gmail.com>
+From:   James Hilliard <james.hilliard1@gmail.com>
+Date:   Tue, 23 Apr 2019 14:21:23 +0200
+Message-ID: <CADvTj4q5y0A_7VLYYvs-srnPk875e0S3W_OEsnsZFU75bjwOtQ@mail.gmail.com>
+Subject: Re: [PATCH 8/8] fbdev/efifb: honour UEFI memory map attributes when
+ mapping the fb
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Jones <pjones@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 23, 2019 at 8:50 AM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+>
+> On Sat, 20 Apr 2019 at 21:03, James Hilliard <james.hilliard1@gmail.com> wrote:
+> >
+> > This patch appears to introduce a regression on my
+> > system(https://www.jetwaycomputer.com/NF9B.html).
+> > My board uses an Intel gma3650 GPU.
+> > It causes a complete failure of all video output.
+> > With it reverted I get:
+> > [ 1.169444] efifb: probing for efifb
+> > [ 1.169499] efifb: framebuffer at 0xcf800000, using 1876k, total 1875k
+> > [ 1.169511] efifb: mode is 800x600x32, linelength=3200, pages=1
+> > [ 1.169519] efifb: scrolling: redraw
+> > [ 1.169528] efifb: Truecolor: size=8:8:8:8, shift=24:16:8:0
+> > Without it reverted I get:
+> > [ 1.173368] efifb: probing for efifb
+> > [ 1.173386] efifb: abort, cannot remap video memory 0x1d5000 @ 0xcf800000
+> > [ 1.173395] Trying to free nonexistent resource
+> > <00000000cf800000-00000000cf9d4bff>
+> > [ 1.173413] efi-framebuffer: probe of efi-framebuffer.0 failed with error -5
+> >
+>
+> Could you please reboot with efi=debug passed on the kernel command
+> line and share the entire dmesg kernel log output?
+[    0.000000] Linux version 5.0.7 (buildroot@james-x399) (gcc version
+8.3.0 (Buildroot 2019.05-git-02152-gfec2e72139)) #1 SMP Tue Apr 23
+06:00:01 MDT 2019
+[    0.000000] Command line:
+root=PARTUUID=bb5b7fe8-ef29-43f7-b7ac-79020523c726 rootwait
+console=tty1 efi=debug
+[    0.000000] Disabled fast string operations
+[    0.000000] x86/fpu: x87 FPU will use FXSAVE
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009ffff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000000a0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000cf32ffff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000cf330000-0x00000000cf377fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x00000000cf378000-0x00000000cf388fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000cf389000-0x00000000cf390fff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x00000000cf391000-0x00000000cf3b5fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000cf3b6000-0x00000000cf3b6fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x00000000cf3b7000-0x00000000cf3c6fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000cf3c7000-0x00000000cf3d2fff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x00000000cf3d3000-0x00000000cf3f7fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000cf3f8000-0x00000000cf43afff] ACPI NVS
+[    0.000000] BIOS-e820: [mem 0x00000000cf43b000-0x00000000cf5bafff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000cf5bb000-0x00000000cf6e6fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000cf6e7000-0x00000000cf6effff] usable
+[    0.000000] BIOS-e820: [mem 0x00000000cf6f0000-0x00000000cfffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000e0000000-0x00000000efffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fec00000-0x00000000fec00fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fed00000-0x00000000fed00fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fed14000-0x00000000fed19fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed8ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fee00000-0x00000000fee00fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000ffe00000-0x00000000ffffffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000012fffffff] usable
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] e820: update [mem 0x021b4018-0x021c4057] usable ==> usable
+[    0.000000] e820: update [mem 0x021b4018-0x021c4057] usable ==> usable
+[    0.000000] e820: update [mem 0x021e6018-0x021f2857] usable ==> usable
+[    0.000000] e820: update [mem 0x021e6018-0x021f2857] usable ==> usable
+[    0.000000] e820: update [mem 0x021f3018-0x021ff857] usable ==> usable
+[    0.000000] e820: update [mem 0x021f3018-0x021ff857] usable ==> usable
+[    0.000000] e820: update [mem 0x020b8018-0x020c0057] usable ==> usable
+[    0.000000] e820: update [mem 0x020b8018-0x020c0057] usable ==> usable
+[    0.000000] extended physical RAM map:
+[    0.000000] reserve setup_data: [mem
+0x0000000000000000-0x000000000009ffff] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000000a0000-0x00000000000fffff] reserved
+[    0.000000] reserve setup_data: [mem
+0x0000000000100000-0x00000000020b8017] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000020b8018-0x00000000020c0057] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000020c0058-0x00000000021b4017] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000021b4018-0x00000000021c4057] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000021c4058-0x00000000021e6017] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000021e6018-0x00000000021f2857] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000021f2858-0x00000000021f3017] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000021f3018-0x00000000021ff857] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000021ff858-0x00000000cf32ffff] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000cf330000-0x00000000cf377fff] ACPI NVS
+[    0.000000] reserve setup_data: [mem
+0x00000000cf378000-0x00000000cf388fff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000cf389000-0x00000000cf390fff] ACPI data
+[    0.000000] reserve setup_data: [mem
+0x00000000cf391000-0x00000000cf3b5fff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000cf3b6000-0x00000000cf3b6fff] ACPI NVS
+[    0.000000] reserve setup_data: [mem
+0x00000000cf3b7000-0x00000000cf3c6fff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000cf3c7000-0x00000000cf3d2fff] ACPI NVS
+[    0.000000] reserve setup_data: [mem
+0x00000000cf3d3000-0x00000000cf3f7fff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000cf3f8000-0x00000000cf43afff] ACPI NVS
+[    0.000000] reserve setup_data: [mem
+0x00000000cf43b000-0x00000000cf5bafff] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000cf5bb000-0x00000000cf6e6fff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000cf6e7000-0x00000000cf6effff] usable
+[    0.000000] reserve setup_data: [mem
+0x00000000cf6f0000-0x00000000cfffffff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000e0000000-0x00000000efffffff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000fec00000-0x00000000fec00fff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000fed00000-0x00000000fed00fff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000fed14000-0x00000000fed19fff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000fed1c000-0x00000000fed8ffff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000fee00000-0x00000000fee00fff] reserved
+[    0.000000] reserve setup_data: [mem
+0x00000000ffe00000-0x00000000ffffffff] reserved
+[    0.000000] reserve setup_data: [mem
+0x0000000100000000-0x000000012fffffff] usable
+[    0.000000] efi: EFI v2.00 by American Megatrends
+[    0.000000] efi:  ACPI 2.0=0xcf389000  SMBIOS=0xf0480
+ACPI=0xcf389000  MPS=0xfcb20
+[    0.000000] efi: mem00: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000000000000-0x0000000000007fff] (0MB)
+[    0.000000] efi: mem01: [Loader Data        |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000000008000-0x000000000000cfff] (0MB)
+[    0.000000] efi: mem02: [Conventional Memory|   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000000d000-0x000000000006efff] (0MB)
+[    0.000000] efi: mem03: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000006f000-0x000000000007ffff] (0MB)
+[    0.000000] efi: mem04: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000000080000-0x000000000009ffff] (0MB)
+[    0.000000] efi: mem05: [Conventional Memory|   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000000100000-0x0000000000ffffff] (15MB)
+[    0.000000] efi: mem06: [Loader Data        |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001000000-0x00000000010fffff] (1MB)
+[    0.000000] efi: mem07: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001100000-0x00000000013d9fff] (2MB)
+[    0.000000] efi: mem08: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000013da000-0x00000000013defff] (0MB)
+[    0.000000] efi: mem09: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000013df000-0x00000000013eafff] (0MB)
+[    0.000000] efi: mem10: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000013eb000-0x00000000013ebfff] (0MB)
+[    0.000000] efi: mem11: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000013ec000-0x00000000013fcfff] (0MB)
+[    0.000000] efi: mem12: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000013fd000-0x00000000013fdfff] (0MB)
+[    0.000000] efi: mem13: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000013fe000-0x0000000001895fff] (4MB)
+[    0.000000] efi: mem14: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001896000-0x0000000001897fff] (0MB)
+[    0.000000] efi: mem15: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001898000-0x000000000189cfff] (0MB)
+[    0.000000] efi: mem16: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000189d000-0x00000000018a6fff] (0MB)
+[    0.000000] efi: mem17: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018a7000-0x00000000018a8fff] (0MB)
+[    0.000000] efi: mem18: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018a9000-0x00000000018acfff] (0MB)
+[    0.000000] efi: mem19: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018ad000-0x00000000018aefff] (0MB)
+[    0.000000] efi: mem20: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018af000-0x00000000018affff] (0MB)
+[    0.000000] efi: mem21: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018b0000-0x00000000018b1fff] (0MB)
+[    0.000000] efi: mem22: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018b2000-0x00000000018b2fff] (0MB)
+[    0.000000] efi: mem23: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018b3000-0x00000000018c4fff] (0MB)
+[    0.000000] efi: mem24: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018c5000-0x00000000018cbfff] (0MB)
+[    0.000000] efi: mem25: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018cc000-0x00000000018cefff] (0MB)
+[    0.000000] efi: mem26: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018cf000-0x00000000018d1fff] (0MB)
+[    0.000000] efi: mem27: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018d2000-0x00000000018d2fff] (0MB)
+[    0.000000] efi: mem28: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018d3000-0x00000000018d3fff] (0MB)
+[    0.000000] efi: mem29: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018d4000-0x00000000018dbfff] (0MB)
+[    0.000000] efi: mem30: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018dc000-0x00000000018dcfff] (0MB)
+[    0.000000] efi: mem31: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018dd000-0x00000000018dffff] (0MB)
+[    0.000000] efi: mem32: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018e0000-0x00000000018e0fff] (0MB)
+[    0.000000] efi: mem33: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018e1000-0x00000000018e1fff] (0MB)
+[    0.000000] efi: mem34: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018e2000-0x00000000018e7fff] (0MB)
+[    0.000000] efi: mem35: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018e8000-0x00000000018effff] (0MB)
+[    0.000000] efi: mem36: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018f0000-0x00000000018f1fff] (0MB)
+[    0.000000] efi: mem37: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018f2000-0x00000000018f7fff] (0MB)
+[    0.000000] efi: mem38: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018f8000-0x00000000018fafff] (0MB)
+[    0.000000] efi: mem39: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018fb000-0x00000000018fdfff] (0MB)
+[    0.000000] efi: mem40: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000018fe000-0x0000000001900fff] (0MB)
+[    0.000000] efi: mem41: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001901000-0x0000000001904fff] (0MB)
+[    0.000000] efi: mem42: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001905000-0x0000000001907fff] (0MB)
+[    0.000000] efi: mem43: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001908000-0x000000000190afff] (0MB)
+[    0.000000] efi: mem44: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000190b000-0x000000000190bfff] (0MB)
+[    0.000000] efi: mem45: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000190c000-0x000000000190cfff] (0MB)
+[    0.000000] efi: mem46: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000190d000-0x000000000190efff] (0MB)
+[    0.000000] efi: mem47: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000190f000-0x000000000190ffff] (0MB)
+[    0.000000] efi: mem48: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001910000-0x0000000001910fff] (0MB)
+[    0.000000] efi: mem49: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001911000-0x0000000001911fff] (0MB)
+[    0.000000] efi: mem50: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001912000-0x0000000001912fff] (0MB)
+[    0.000000] efi: mem51: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001913000-0x000000000191dfff] (0MB)
+[    0.000000] efi: mem52: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000191e000-0x0000000001920fff] (0MB)
+[    0.000000] efi: mem53: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001921000-0x0000000001927fff] (0MB)
+[    0.000000] efi: mem54: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001928000-0x0000000001928fff] (0MB)
+[    0.000000] efi: mem55: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001929000-0x000000000192cfff] (0MB)
+[    0.000000] efi: mem56: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000192d000-0x0000000001932fff] (0MB)
+[    0.000000] efi: mem57: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001933000-0x0000000001935fff] (0MB)
+[    0.000000] efi: mem58: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001936000-0x0000000001938fff] (0MB)
+[    0.000000] efi: mem59: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001939000-0x000000000193cfff] (0MB)
+[    0.000000] efi: mem60: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000193d000-0x0000000001949fff] (0MB)
+[    0.000000] efi: mem61: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000194a000-0x0000000001952fff] (0MB)
+[    0.000000] efi: mem62: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001953000-0x0000000001953fff] (0MB)
+[    0.000000] efi: mem63: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001954000-0x000000000195cfff] (0MB)
+[    0.000000] efi: mem64: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000195d000-0x0000000001968fff] (0MB)
+[    0.000000] efi: mem65: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001969000-0x000000000196bfff] (0MB)
+[    0.000000] efi: mem66: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000196c000-0x0000000001970fff] (0MB)
+[    0.000000] efi: mem67: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001971000-0x0000000001972fff] (0MB)
+[    0.000000] efi: mem68: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001973000-0x0000000001974fff] (0MB)
+[    0.000000] efi: mem69: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001975000-0x0000000001976fff] (0MB)
+[    0.000000] efi: mem70: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001977000-0x0000000001984fff] (0MB)
+[    0.000000] efi: mem71: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001985000-0x0000000001a31fff] (0MB)
+[    0.000000] efi: mem72: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a32000-0x0000000001a34fff] (0MB)
+[    0.000000] efi: mem73: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a35000-0x0000000001a35fff] (0MB)
+[    0.000000] efi: mem74: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a36000-0x0000000001a3cfff] (0MB)
+[    0.000000] efi: mem75: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a3d000-0x0000000001a40fff] (0MB)
+[    0.000000] efi: mem76: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a41000-0x0000000001a44fff] (0MB)
+[    0.000000] efi: mem77: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a45000-0x0000000001a4efff] (0MB)
+[    0.000000] efi: mem78: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a4f000-0x0000000001a56fff] (0MB)
+[    0.000000] efi: mem79: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a57000-0x0000000001f18fff] (4MB)
+[    0.000000] efi: mem80: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f19000-0x0000000001f1bfff] (0MB)
+[    0.000000] efi: mem81: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f1c000-0x0000000001f28fff] (0MB)
+[    0.000000] efi: mem82: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f29000-0x0000000001f29fff] (0MB)
+[    0.000000] efi: mem83: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f2a000-0x0000000001f2afff] (0MB)
+[    0.000000] efi: mem84: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f2b000-0x0000000001f30fff] (0MB)
+[    0.000000] efi: mem85: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f31000-0x0000000001f3bfff] (0MB)
+[    0.000000] efi: mem86: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f3c000-0x0000000001f61fff] (0MB)
+[    0.000000] efi: mem87: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f62000-0x0000000001f63fff] (0MB)
+[    0.000000] efi: mem88: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f64000-0x0000000001f65fff] (0MB)
+[    0.000000] efi: mem89: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f66000-0x0000000001f66fff] (0MB)
+[    0.000000] efi: mem90: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f67000-0x0000000001f6bfff] (0MB)
+[    0.000000] efi: mem91: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f6c000-0x0000000001f6ffff] (0MB)
+[    0.000000] efi: mem92: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f70000-0x0000000001f71fff] (0MB)
+[    0.000000] efi: mem93: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f72000-0x0000000001f73fff] (0MB)
+[    0.000000] efi: mem94: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f74000-0x0000000001f75fff] (0MB)
+[    0.000000] efi: mem95: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f76000-0x0000000001f7cfff] (0MB)
+[    0.000000] efi: mem96: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f7d000-0x0000000001f7efff] (0MB)
+[    0.000000] efi: mem97: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f7f000-0x0000000001f8afff] (0MB)
+[    0.000000] efi: mem98: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f8b000-0x0000000001f8dfff] (0MB)
+[    0.000000] efi: mem99: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f8e000-0x0000000001f8ffff] (0MB)
+[    0.000000] efi: mem100: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001f90000-0x0000000001f96fff] (0MB)
+[    0.000000] efi: mem101: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001f97000-0x0000000001fb0fff] (0MB)
+[    0.000000] efi: mem102: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001fb1000-0x0000000001fbafff] (0MB)
+[    0.000000] efi: mem103: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001fbb000-0x0000000001fd5fff] (0MB)
+[    0.000000] efi: mem104: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001fd6000-0x0000000001fd8fff] (0MB)
+[    0.000000] efi: mem105: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001fd9000-0x0000000001fdafff] (0MB)
+[    0.000000] efi: mem106: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001fdb000-0x0000000001fdcfff] (0MB)
+[    0.000000] efi: mem107: [Loader Data        |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001fdd000-0x0000000001fddfff] (0MB)
+[    0.000000] efi: mem108: [Conventional Memory|   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001fde000-0x0000000001fdefff] (0MB)
+[    0.000000] efi: mem109: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001fdf000-0x0000000001ffdfff] (0MB)
+[    0.000000] efi: mem110: [Loader Data        |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001ffe000-0x0000000001ffefff] (0MB)
+[    0.000000] efi: mem111: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001fff000-0x0000000001ffffff] (0MB)
+[    0.000000] efi: mem112: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000002000000-0x000000000200efff] (0MB)
+[    0.000000] efi: mem113: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x000000000200f000-0x00000000020a5fff] (0MB)
+[    0.000000] efi: mem114: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000020a6000-0x00000000020acfff] (0MB)
+[    0.000000] efi: mem115: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000020ad000-0x00000000020affff] (0MB)
+[    0.000000] efi: mem116: [Loader Data        |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000020b0000-0x00000000020b1fff] (0MB)
+[    0.000000] efi: mem117: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000020b2000-0x00000000020b7fff] (0MB)
+[    0.000000] efi: mem118: [Loader Data        |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000020b8000-0x00000000020c0fff] (0MB)
+[    0.000000] efi: mem119: [Conventional Memory|   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000020c1000-0x00000000020c1fff] (0MB)
+[    0.000000] efi: mem120: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000020c2000-0x00000000021b3fff] (0MB)
+[    0.000000] efi: mem121: [Loader Data        |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000021b4000-0x00000000021cafff] (0MB)
+[    0.000000] efi: mem122: [Loader Code        |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000021cb000-0x00000000021e5fff] (0MB)
+[    0.000000] efi: mem123: [Loader Data        |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000021e6000-0x00000000021fffff] (0MB)
+[    0.000000] efi: mem124: [Conventional Memory|   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000002200000-0x000000000221cfff] (0MB)
+[    0.000000] efi: mem125: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x000000000221d000-0x000000000223cfff] (0MB)
+[    0.000000] efi: mem126: [Conventional Memory|   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x000000000223d000-0x0000000002240fff] (0MB)
+[    0.000000] efi: mem127: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000002241000-0x000000000226afff] (0MB)
+[    0.000000] efi: mem128: [Conventional Memory|   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x000000000226b000-0x000000000243ffff] (1MB)
+[    0.000000] efi: mem129: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000002440000-0x0000000002614fff] (1MB)
+[    0.000000] efi: mem130: [Conventional Memory|   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000002615000-0x0000000002cbcfff] (6MB)
+[    0.000000] efi: mem131: [Loader Code        |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000002cbd000-0x0000000004cbcfff] (32MB)
+[    0.000000] efi: mem132: [Conventional Memory|   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000004cbd000-0x0000000004dfffff] (1MB)
+[    0.000000] efi: mem133: [Loader Data        |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000004e00000-0x0000000006dfffff] (32MB)
+[    0.000000] efi: mem134: [Conventional Memory|   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000006e00000-0x00000000cf32efff]
+(3205MB)
+[    0.000000] efi: mem135: [Loader Data        |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf32f000-0x00000000cf32ffff] (0MB)
+[    0.000000] efi: mem136: [ACPI Memory NVS    |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf330000-0x00000000cf377fff] (0MB)
+[    0.000000] efi: mem137: [Reserved           |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf378000-0x00000000cf388fff] (0MB)
+[    0.000000] efi: mem138: [ACPI Reclaim Memory|   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf389000-0x00000000cf390fff] (0MB)
+[    0.000000] efi: mem139: [Reserved           |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf391000-0x00000000cf393fff] (0MB)
+[    0.000000] efi: mem140: [Runtime Code       |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf394000-0x00000000cf397fff] (0MB)
+[    0.000000] efi: mem141: [Reserved           |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf398000-0x00000000cf3aafff] (0MB)
+[    0.000000] efi: mem142: [Runtime Code       |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3ab000-0x00000000cf3aefff] (0MB)
+[    0.000000] efi: mem143: [Runtime Data       |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3af000-0x00000000cf3affff] (0MB)
+[    0.000000] efi: mem144: [Runtime Code       |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3b0000-0x00000000cf3b4fff] (0MB)
+[    0.000000] efi: mem145: [Runtime Data       |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3b5000-0x00000000cf3b5fff] (0MB)
+[    0.000000] efi: mem146: [ACPI Memory NVS    |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3b6000-0x00000000cf3b6fff] (0MB)
+[    0.000000] efi: mem147: [Reserved           |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3b7000-0x00000000cf3c6fff] (0MB)
+[    0.000000] efi: mem148: [ACPI Memory NVS    |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3c7000-0x00000000cf3d2fff] (0MB)
+[    0.000000] efi: mem149: [Runtime Code       |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3d3000-0x00000000cf3d4fff] (0MB)
+[    0.000000] efi: mem150: [Runtime Data       |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3d5000-0x00000000cf3e6fff] (0MB)
+[    0.000000] efi: mem151: [Runtime Code       |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3e7000-0x00000000cf3f4fff] (0MB)
+[    0.000000] efi: mem152: [Runtime Data       |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3f5000-0x00000000cf3f7fff] (0MB)
+[    0.000000] efi: mem153: [ACPI Memory NVS    |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf3f8000-0x00000000cf43afff] (0MB)
+[    0.000000] efi: mem154: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf43b000-0x00000000cf5b0fff] (1MB)
+[    0.000000] efi: mem155: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf5b1000-0x00000000cf5b3fff] (0MB)
+[    0.000000] efi: mem156: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf5b4000-0x00000000cf5bafff] (0MB)
+[    0.000000] efi: mem157: [Runtime Data       |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf5bb000-0x00000000cf6e6fff] (1MB)
+[    0.000000] efi: mem158: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000cf6e7000-0x00000000cf6effff] (0MB)
+[    0.000000] efi: mem159: [Conventional Memory|   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000100000000-0x000000012fffffff]
+(768MB)
+[    0.000000] efi: mem160: [Reserved           |RUN|  |  |  |  |  |
+|   |  |  |  |  ] range=[0x00000000000a0000-0x00000000000fffff] (0MB)
+[    0.000000] efi: mem161: [Reserved           |RUN|  |  |  |  |  |
+|   |  |  |  |  ] range=[0x00000000cf6f0000-0x00000000cfffffff] (9MB)
+[    0.000000] efi: mem162: [Memory Mapped I/O  |RUN|  |  |  |  |  |
+|   |  |  |  |UC] range=[0x00000000e0000000-0x00000000efffffff]
+(256MB)
+[    0.000000] efi: mem163: [Memory Mapped I/O  |RUN|  |  |  |  |  |
+|   |  |  |  |UC] range=[0x00000000fec00000-0x00000000fec00fff] (0MB)
+[    0.000000] efi: mem164: [Memory Mapped I/O  |RUN|  |  |  |  |  |
+|   |  |  |  |UC] range=[0x00000000fed00000-0x00000000fed00fff] (0MB)
+[    0.000000] efi: mem165: [Memory Mapped I/O  |RUN|  |  |  |  |  |
+|   |  |  |  |UC] range=[0x00000000fed14000-0x00000000fed19fff] (0MB)
+[    0.000000] efi: mem166: [Memory Mapped I/O  |RUN|  |  |  |  |  |
+|   |  |  |  |UC] range=[0x00000000fed1c000-0x00000000fed8ffff] (0MB)
+[    0.000000] efi: mem167: [Memory Mapped I/O  |RUN|  |  |  |  |  |
+|   |  |  |  |UC] range=[0x00000000fee00000-0x00000000fee00fff] (0MB)
+[    0.000000] efi: mem168: [Memory Mapped I/O  |RUN|  |  |  |  |  |
+|   |  |  |  |UC] range=[0x00000000ffe00000-0x00000000ffffffff] (2MB)
+[    0.000000] SMBIOS 2.7 present.
+[    0.000000] DMI:  /, BIOS 4.6.4 11/19/2012
+[    0.000000] tsc: Fast TSC calibration using PIT
+[    0.000000] tsc: Detected 1862.311 MHz processor
+[    0.002142] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+[    0.002147] e820: remove [mem 0x000a0000-0x000fffff] usable
+[    0.002171] last_pfn = 0x130000 max_arch_pfn = 0x400000000
+[    0.002178] MTRR default type: uncachable
+[    0.002179] MTRR fixed ranges enabled:
+[    0.002182]   00000-9FFFF write-back
+[    0.002184]   A0000-BFFFF uncachable
+[    0.002186]   C0000-D7FFF write-protect
+[    0.002188]   D8000-E7FFF uncachable
+[    0.002190]   E8000-FFFFF write-protect
+[    0.002191] MTRR variable ranges enabled:
+[    0.002194]   0 base 000000000 mask F00000000 write-back
+[    0.002197]   1 base 100000000 mask FE0000000 write-back
+[    0.002199]   2 base 120000000 mask FF0000000 write-back
+[    0.002202]   3 base 0CF700000 mask FFFF00000 write-through
+[    0.002204]   4 base 0CF800000 mask FFF800000 uncachable
+[    0.002206]   5 base 0D0000000 mask FF0000000 uncachable
+[    0.002209]   6 base 0E0000000 mask FE0000000 uncachable
+[    0.002419] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT
+[    0.002556] last_pfn = 0xcf6f0 max_arch_pfn = 0x400000000
+[    0.008429] found SMP MP-table at [mem 0x000fce60-0x000fce6f]
+mapped at [(____ptrval____)]
+[    0.008644] check: Scanning 1 areas for low memory corruption
+[    0.008652] Base memory trampoline at [(____ptrval____)] 97000 size 24576
+[    0.008661] BRK [0x36201000, 0x36201fff] PGTABLE
+[    0.008665] BRK [0x36202000, 0x36202fff] PGTABLE
+[    0.008667] BRK [0x36203000, 0x36203fff] PGTABLE
+[    0.008784] BRK [0x36204000, 0x36204fff] PGTABLE
+[    0.008791] BRK [0x36205000, 0x36205fff] PGTABLE
+[    0.009808] BRK [0x36206000, 0x36206fff] PGTABLE
+[    0.010065] BRK [0x36207000, 0x36207fff] PGTABLE
+[    0.010412] Secure boot disabled
+[    0.010421] ACPI: Early table checksum verification disabled
+[    0.010431] ACPI: RSDP 0x00000000CF389000 000024 (v02 _     )
+[    0.010439] ACPI: XSDT 0x00000000CF389068 00004C (v01 _      _
+  01072009 AMI  00010013)
+[    0.010451] ACPI: FACP 0x00000000CF390538 0000F4 (v04 _      _
+  01072009 AMI  00010013)
+[    0.010464] ACPI: DSDT 0x00000000CF389140 0073F2 (v02 _      _
+  00000A03 INTL 20051117)
+[    0.010473] ACPI: FACS 0x00000000CF3D0F80 000040
+[    0.010479] ACPI: APIC 0x00000000CF390630 000072 (v03 _      _
+  01072009 AMI  00010013)
+[    0.010487] ACPI: MCFG 0x00000000CF3906A8 00003C (v01 _      _
+  01072009 MSFT 00000097)
+[    0.010496] ACPI: HPET 0x00000000CF3906E8 000038 (v01 _      _
+  01072009 AMI. 00000004)
+[    0.010504] ACPI: SSDT 0x00000000CF390720 000655 (v01 PmRef  CpuPm
+  00003000 INTL 20051117)
+[    0.010521] ACPI: Local APIC address 0xfee00000
+[    0.010886] No NUMA configuration found
+[    0.010890] Faking a node at [mem 0x0000000000000000-0x000000012fffffff]
+[    0.010902] NODE_DATA(0) allocated [mem 0x12fff8000-0x12fffbfff]
+[    0.010964] Zone ranges:
+[    0.010967]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.010971]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+[    0.010975]   Normal   [mem 0x0000000100000000-0x000000012fffffff]
+[    0.010978] Movable zone start for each node
+[    0.010981] Early memory node ranges
+[    0.010984]   node   0: [mem 0x0000000000001000-0x000000000009ffff]
+[    0.010987]   node   0: [mem 0x0000000000100000-0x00000000cf32ffff]
+[    0.010990]   node   0: [mem 0x00000000cf43b000-0x00000000cf5bafff]
+[    0.010993]   node   0: [mem 0x00000000cf6e7000-0x00000000cf6effff]
+[    0.010996]   node   0: [mem 0x0000000100000000-0x000000012fffffff]
+[    0.011135] Zeroed struct page in unavailable ranges: 2984 pages
+[    0.011138] Initmem setup node 0 [mem 0x0000000000001000-0x000000012fffffff]
+[    0.011144] On node 0 totalpages: 1045592
+[    0.011146]   DMA zone: 64 pages used for memmap
+[    0.011147]   DMA zone: 41 pages reserved
+[    0.011149]   DMA zone: 3999 pages, LIFO batch:0
+[    0.011431]   DMA32 zone: 13203 pages used for memmap
+[    0.011433]   DMA32 zone: 844985 pages, LIFO batch:63
+[    0.071381]   Normal zone: 3072 pages used for memmap
+[    0.071383]   Normal zone: 196608 pages, LIFO batch:63
+[    0.084915] ACPI: PM-Timer IO Port: 0x408
+[    0.084921] ACPI: Local APIC address 0xfee00000
+[    0.084933] ACPI: LAPIC_NMI (acpi_id[0xff] high edge lint[0x1])
+[    0.084949] IOAPIC[0]: apic_id 4, version 32, address 0xfec00000, GSI 0-23
+[    0.084954] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.084959] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+[    0.084963] ACPI: IRQ0 used by override.
+[    0.084965] ACPI: IRQ9 used by override.
+[    0.084969] Using ACPI (MADT) for SMP configuration information
+[    0.084973] ACPI: HPET id: 0x8086a201 base: 0xfed00000
+[    0.084985] smpboot: Allowing 4 CPUs, 0 hotplug CPUs
+[    0.085073] PM: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.085080] PM: Registered nosave memory: [mem 0x000a0000-0x000fffff]
+[    0.085087] PM: Registered nosave memory: [mem 0x020b8000-0x020b8fff]
+[    0.085094] PM: Registered nosave memory: [mem 0x020c0000-0x020c0fff]
+[    0.085101] PM: Registered nosave memory: [mem 0x021b4000-0x021b4fff]
+[    0.085109] PM: Registered nosave memory: [mem 0x021c4000-0x021c4fff]
+[    0.085116] PM: Registered nosave memory: [mem 0x021e6000-0x021e6fff]
+[    0.085123] PM: Registered nosave memory: [mem 0x021f2000-0x021f2fff]
+[    0.085126] PM: Registered nosave memory: [mem 0x021f3000-0x021f3fff]
+[    0.085133] PM: Registered nosave memory: [mem 0x021ff000-0x021fffff]
+[    0.085141] PM: Registered nosave memory: [mem 0xcf330000-0xcf377fff]
+[    0.085144] PM: Registered nosave memory: [mem 0xcf378000-0xcf388fff]
+[    0.085146] PM: Registered nosave memory: [mem 0xcf389000-0xcf390fff]
+[    0.085149] PM: Registered nosave memory: [mem 0xcf391000-0xcf3b5fff]
+[    0.085152] PM: Registered nosave memory: [mem 0xcf3b6000-0xcf3b6fff]
+[    0.085155] PM: Registered nosave memory: [mem 0xcf3b7000-0xcf3c6fff]
+[    0.085158] PM: Registered nosave memory: [mem 0xcf3c7000-0xcf3d2fff]
+[    0.085161] PM: Registered nosave memory: [mem 0xcf3d3000-0xcf3f7fff]
+[    0.085163] PM: Registered nosave memory: [mem 0xcf3f8000-0xcf43afff]
+[    0.085171] PM: Registered nosave memory: [mem 0xcf5bb000-0xcf6e6fff]
+[    0.085178] PM: Registered nosave memory: [mem 0xcf6f0000-0xcfffffff]
+[    0.085181] PM: Registered nosave memory: [mem 0xd0000000-0xdfffffff]
+[    0.085184] PM: Registered nosave memory: [mem 0xe0000000-0xefffffff]
+[    0.085187] PM: Registered nosave memory: [mem 0xf0000000-0xfebfffff]
+[    0.085190] PM: Registered nosave memory: [mem 0xfec00000-0xfec00fff]
+[    0.085193] PM: Registered nosave memory: [mem 0xfec01000-0xfecfffff]
+[    0.085196] PM: Registered nosave memory: [mem 0xfed00000-0xfed00fff]
+[    0.085198] PM: Registered nosave memory: [mem 0xfed01000-0xfed13fff]
+[    0.085201] PM: Registered nosave memory: [mem 0xfed14000-0xfed19fff]
+[    0.085204] PM: Registered nosave memory: [mem 0xfed1a000-0xfed1bfff]
+[    0.085207] PM: Registered nosave memory: [mem 0xfed1c000-0xfed8ffff]
+[    0.085210] PM: Registered nosave memory: [mem 0xfed90000-0xfedfffff]
+[    0.085212] PM: Registered nosave memory: [mem 0xfee00000-0xfee00fff]
+[    0.085215] PM: Registered nosave memory: [mem 0xfee01000-0xffdfffff]
+[    0.085218] PM: Registered nosave memory: [mem 0xffe00000-0xffffffff]
+[    0.085223] [mem 0xd0000000-0xdfffffff] available for PCI devices
+[    0.085236] clocksource: refined-jiffies: mask: 0xffffffff
+max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.520079] random: get_random_bytes called from
+start_kernel+0x8a/0x475 with crng_init=0
+[    0.520107] setup_percpu: NR_CPUS:64 nr_cpumask_bits:64
+nr_cpu_ids:4 nr_node_ids:1
+[    0.523217] percpu: Embedded 44 pages/cpu @(____ptrval____) s139288
+r8192 d32744 u524288
+[    0.523245] pcpu-alloc: s139288 r8192 d32744 u524288 alloc=1*2097152
+[    0.523248] pcpu-alloc: [0] 0 1 2 3
+[    0.523330] Built 1 zonelists, mobility grouping on.  Total pages: 1029212
+[    0.523334] Policy zone: Normal
+[    0.523339] Kernel command line:
+root=PARTUUID=bb5b7fe8-ef29-43f7-b7ac-79020523c726 rootwait
+console=tty1 efi=debug
+[    0.586910] Calgary: detecting Calgary via BIOS EBDA area
+[    0.586914] Calgary: Unable to locate Rio Grande table in EBDA - bailing!
+[    0.670424] Memory: 4000176K/4182368K available (14340K kernel
+code, 1367K rwdata, 3460K rodata, 1264K init, 1064K bss, 182192K
+reserved, 0K cma-reserved)
+[    0.670618] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.670856] rcu: Hierarchical RCU implementation.
+[    0.670861] rcu:     RCU event tracing is enabled.
+[    0.670865] rcu:     RCU restricting CPUs from NR_CPUS=64 to nr_cpu_ids=4.
+[    0.670869] rcu: RCU calculated value of scheduler-enlistment delay
+is 100 jiffies.
+[    0.670872] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+[    0.671398] NR_IRQS: 4352, nr_irqs: 456, preallocated irqs: 16
+[    0.671835] Console: colour dummy device 80x25
+[    0.673844] printk: console [tty1] enabled
+[    0.673894] ACPI: Core revision 20181213
+[    0.674226] clocksource: hpet: mask: 0xffffffff max_cycles:
+0xffffffff, max_idle_ns: 133484882848 ns
+[    0.674250] hpet clockevent registered
+[    0.674259] APIC: Switch to symmetric I/O mode setup
+[    0.674786] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=0 pin2=0
+[    0.679261] clocksource: tsc-early: mask: 0xffffffffffffffff
+max_cycles: 0x35b0313571d, max_idle_ns: 881590752934 ns
+[    0.679288] Calibrating delay loop (skipped), value calculated
+using timer frequency.. 3724.62 BogoMIPS (lpj=1862311)
+[    0.679301] pid_max: default: 32768 minimum: 301
+[    0.679782] efi: EFI runtime memory map:
+[    0.679797] efi: mem00: [Memory Mapped I/O  |RUN|  |  |  |  |  |  |
+  |  |  |  |UC] range=[0x00000000ffe00000-0x00000000ffffffff] (2MB)
+[    0.679811] efi: mem01: [Memory Mapped I/O  |RUN|  |  |  |  |  |  |
+  |  |  |  |UC] range=[0x00000000fee00000-0x00000000fee00fff] (0MB)
+[    0.679824] efi: mem02: [Memory Mapped I/O  |RUN|  |  |  |  |  |  |
+  |  |  |  |UC] range=[0x00000000fed1c000-0x00000000fed8ffff] (0MB)
+[    0.679837] efi: mem03: [Memory Mapped I/O  |RUN|  |  |  |  |  |  |
+  |  |  |  |UC] range=[0x00000000fed14000-0x00000000fed19fff] (0MB)
+[    0.679851] efi: mem04: [Memory Mapped I/O  |RUN|  |  |  |  |  |  |
+  |  |  |  |UC] range=[0x00000000fed00000-0x00000000fed00fff] (0MB)
+[    0.679864] efi: mem05: [Memory Mapped I/O  |RUN|  |  |  |  |  |  |
+  |  |  |  |UC] range=[0x00000000fec00000-0x00000000fec00fff] (0MB)
+[    0.679877] efi: mem06: [Memory Mapped I/O  |RUN|  |  |  |  |  |  |
+  |  |  |  |UC] range=[0x00000000e0000000-0x00000000efffffff] (256MB)
+[    0.679891] efi: mem07: [Reserved           |RUN|  |  |  |  |  |  |
+  |  |  |  |  ] range=[0x00000000cf6f0000-0x00000000cfffffff] (9MB)
+[    0.679904] efi: mem08: [Reserved           |RUN|  |  |  |  |  |  |
+  |  |  |  |  ] range=[0x00000000000a0000-0x00000000000fffff] (0MB)
+[    0.679918] efi: mem09: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf6e7000-0x00000000cf6effff] (0MB)
+[    0.679931] efi: mem10: [Runtime Data       |RUN|  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf5bb000-0x00000000cf6e6fff] (1MB)
+[    0.679944] efi: mem11: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf5b4000-0x00000000cf5bafff] (0MB)
+[    0.679957] efi: mem12: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf5b1000-0x00000000cf5b3fff] (0MB)
+[    0.679971] efi: mem13: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf43b000-0x00000000cf5b0fff] (1MB)
+[    0.679984] efi: mem14: [Runtime Data       |RUN|  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf3f5000-0x00000000cf3f7fff] (0MB)
+[    0.679997] efi: mem15: [Runtime Code       |RUN|  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf3e7000-0x00000000cf3f4fff] (0MB)
+[    0.680010] efi: mem16: [Runtime Data       |RUN|  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf3d5000-0x00000000cf3e6fff] (0MB)
+[    0.680024] efi: mem17: [Runtime Code       |RUN|  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf3d3000-0x00000000cf3d4fff] (0MB)
+[    0.680037] efi: mem18: [Runtime Data       |RUN|  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf3b5000-0x00000000cf3b5fff] (0MB)
+[    0.680050] efi: mem19: [Runtime Code       |RUN|  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf3b0000-0x00000000cf3b4fff] (0MB)
+[    0.680063] efi: mem20: [Runtime Data       |RUN|  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf3af000-0x00000000cf3affff] (0MB)
+[    0.680076] efi: mem21: [Runtime Code       |RUN|  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf3ab000-0x00000000cf3aefff] (0MB)
+[    0.680090] efi: mem22: [Runtime Code       |RUN|  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000cf394000-0x00000000cf397fff] (0MB)
+[    0.680103] efi: mem23: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000002440000-0x0000000002614fff] (1MB)
+[    0.680116] efi: mem24: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000002241000-0x000000000226afff] (0MB)
+[    0.680129] efi: mem25: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000221d000-0x000000000223cfff] (0MB)
+[    0.680142] efi: mem26: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000020c2000-0x00000000021b3fff] (0MB)
+[    0.680155] efi: mem27: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000020b2000-0x00000000020b7fff] (0MB)
+[    0.680168] efi: mem28: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000020ad000-0x00000000020affff] (0MB)
+[    0.680182] efi: mem29: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x00000000020a6000-0x00000000020acfff] (0MB)
+[    0.680195] efi: mem30: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000200f000-0x00000000020a5fff] (0MB)
+[    0.680208] efi: mem31: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000002000000-0x000000000200efff] (0MB)
+[    0.680221] efi: mem32: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001fff000-0x0000000001ffffff] (0MB)
+[    0.680234] efi: mem33: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001fdf000-0x0000000001ffdfff] (0MB)
+[    0.680247] efi: mem34: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001fdb000-0x0000000001fdcfff] (0MB)
+[    0.680282] efi: mem35: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001fd9000-0x0000000001fdafff] (0MB)
+[    0.680295] efi: mem36: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001fd6000-0x0000000001fd8fff] (0MB)
+[    0.680308] efi: mem37: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001fbb000-0x0000000001fd5fff] (0MB)
+[    0.680321] efi: mem38: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001fb1000-0x0000000001fbafff] (0MB)
+[    0.680334] efi: mem39: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f97000-0x0000000001fb0fff] (0MB)
+[    0.680347] efi: mem40: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f90000-0x0000000001f96fff] (0MB)
+[    0.680361] efi: mem41: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f8e000-0x0000000001f8ffff] (0MB)
+[    0.680374] efi: mem42: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f8b000-0x0000000001f8dfff] (0MB)
+[    0.680387] efi: mem43: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f7f000-0x0000000001f8afff] (0MB)
+[    0.680400] efi: mem44: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f7d000-0x0000000001f7efff] (0MB)
+[    0.680413] efi: mem45: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f76000-0x0000000001f7cfff] (0MB)
+[    0.680426] efi: mem46: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f74000-0x0000000001f75fff] (0MB)
+[    0.680439] efi: mem47: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f72000-0x0000000001f73fff] (0MB)
+[    0.680453] efi: mem48: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f70000-0x0000000001f71fff] (0MB)
+[    0.680466] efi: mem49: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f6c000-0x0000000001f6ffff] (0MB)
+[    0.680479] efi: mem50: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f67000-0x0000000001f6bfff] (0MB)
+[    0.680492] efi: mem51: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f66000-0x0000000001f66fff] (0MB)
+[    0.680505] efi: mem52: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f64000-0x0000000001f65fff] (0MB)
+[    0.680518] efi: mem53: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f62000-0x0000000001f63fff] (0MB)
+[    0.680531] efi: mem54: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f3c000-0x0000000001f61fff] (0MB)
+[    0.680544] efi: mem55: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f31000-0x0000000001f3bfff] (0MB)
+[    0.680558] efi: mem56: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f2b000-0x0000000001f30fff] (0MB)
+[    0.680571] efi: mem57: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f2a000-0x0000000001f2afff] (0MB)
+[    0.680584] efi: mem58: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f29000-0x0000000001f29fff] (0MB)
+[    0.680597] efi: mem59: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f1c000-0x0000000001f28fff] (0MB)
+[    0.680610] efi: mem60: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001f19000-0x0000000001f1bfff] (0MB)
+[    0.680623] efi: mem61: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a57000-0x0000000001f18fff] (4MB)
+[    0.680636] efi: mem62: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a4f000-0x0000000001a56fff] (0MB)
+[    0.680650] efi: mem63: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a45000-0x0000000001a4efff] (0MB)
+[    0.680663] efi: mem64: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a41000-0x0000000001a44fff] (0MB)
+[    0.680676] efi: mem65: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a3d000-0x0000000001a40fff] (0MB)
+[    0.680689] efi: mem66: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a36000-0x0000000001a3cfff] (0MB)
+[    0.680702] efi: mem67: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a35000-0x0000000001a35fff] (0MB)
+[    0.680715] efi: mem68: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001a32000-0x0000000001a34fff] (0MB)
+[    0.680728] efi: mem69: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001985000-0x0000000001a31fff] (0MB)
+[    0.680741] efi: mem70: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001977000-0x0000000001984fff] (0MB)
+[    0.680755] efi: mem71: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001975000-0x0000000001976fff] (0MB)
+[    0.680768] efi: mem72: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001973000-0x0000000001974fff] (0MB)
+[    0.680781] efi: mem73: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001971000-0x0000000001972fff] (0MB)
+[    0.680794] efi: mem74: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000196c000-0x0000000001970fff] (0MB)
+[    0.680807] efi: mem75: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001969000-0x000000000196bfff] (0MB)
+[    0.680820] efi: mem76: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000195d000-0x0000000001968fff] (0MB)
+[    0.680833] efi: mem77: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001954000-0x000000000195cfff] (0MB)
+[    0.680847] efi: mem78: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001953000-0x0000000001953fff] (0MB)
+[    0.680860] efi: mem79: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000194a000-0x0000000001952fff] (0MB)
+[    0.680873] efi: mem80: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000193d000-0x0000000001949fff] (0MB)
+[    0.680886] efi: mem81: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001939000-0x000000000193cfff] (0MB)
+[    0.680899] efi: mem82: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001936000-0x0000000001938fff] (0MB)
+[    0.680912] efi: mem83: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001933000-0x0000000001935fff] (0MB)
+[    0.680925] efi: mem84: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000192d000-0x0000000001932fff] (0MB)
+[    0.680939] efi: mem85: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001929000-0x000000000192cfff] (0MB)
+[    0.680952] efi: mem86: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001928000-0x0000000001928fff] (0MB)
+[    0.680965] efi: mem87: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001921000-0x0000000001927fff] (0MB)
+[    0.680978] efi: mem88: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000191e000-0x0000000001920fff] (0MB)
+[    0.680991] efi: mem89: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001913000-0x000000000191dfff] (0MB)
+[    0.681004] efi: mem90: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001912000-0x0000000001912fff] (0MB)
+[    0.681017] efi: mem91: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001911000-0x0000000001911fff] (0MB)
+[    0.681030] efi: mem92: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001910000-0x0000000001910fff] (0MB)
+[    0.681044] efi: mem93: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000190f000-0x000000000190ffff] (0MB)
+[    0.681057] efi: mem94: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000190d000-0x000000000190efff] (0MB)
+[    0.681070] efi: mem95: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000190c000-0x000000000190cfff] (0MB)
+[    0.681083] efi: mem96: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x000000000190b000-0x000000000190bfff] (0MB)
+[    0.681096] efi: mem97: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001908000-0x000000000190afff] (0MB)
+[    0.681109] efi: mem98: [Boot Code          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001905000-0x0000000001907fff] (0MB)
+[    0.681122] efi: mem99: [Boot Data          |   |  |  |  |  |  |  |
+  |WB|WT|WC|UC] range=[0x0000000001901000-0x0000000001904fff] (0MB)
+[    0.681136] efi: mem100: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018fe000-0x0000000001900fff] (0MB)
+[    0.681149] efi: mem101: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018fb000-0x00000000018fdfff] (0MB)
+[    0.681162] efi: mem102: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018f8000-0x00000000018fafff] (0MB)
+[    0.681175] efi: mem103: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018f2000-0x00000000018f7fff] (0MB)
+[    0.681188] efi: mem104: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018f0000-0x00000000018f1fff] (0MB)
+[    0.681202] efi: mem105: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018e8000-0x00000000018effff] (0MB)
+[    0.681215] efi: mem106: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018e2000-0x00000000018e7fff] (0MB)
+[    0.681228] efi: mem107: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018e1000-0x00000000018e1fff] (0MB)
+[    0.681241] efi: mem108: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018e0000-0x00000000018e0fff] (0MB)
+[    0.681254] efi: mem109: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018dd000-0x00000000018dffff] (0MB)
+[    0.681279] efi: mem110: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018dc000-0x00000000018dcfff] (0MB)
+[    0.681293] efi: mem111: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018d4000-0x00000000018dbfff] (0MB)
+[    0.681306] efi: mem112: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018d3000-0x00000000018d3fff] (0MB)
+[    0.681319] efi: mem113: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018d2000-0x00000000018d2fff] (0MB)
+[    0.681332] efi: mem114: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018cf000-0x00000000018d1fff] (0MB)
+[    0.681346] efi: mem115: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018cc000-0x00000000018cefff] (0MB)
+[    0.681359] efi: mem116: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018c5000-0x00000000018cbfff] (0MB)
+[    0.681372] efi: mem117: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018b3000-0x00000000018c4fff] (0MB)
+[    0.681385] efi: mem118: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018b2000-0x00000000018b2fff] (0MB)
+[    0.681398] efi: mem119: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018b0000-0x00000000018b1fff] (0MB)
+[    0.681412] efi: mem120: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018af000-0x00000000018affff] (0MB)
+[    0.681425] efi: mem121: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018ad000-0x00000000018aefff] (0MB)
+[    0.681438] efi: mem122: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018a9000-0x00000000018acfff] (0MB)
+[    0.681451] efi: mem123: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000018a7000-0x00000000018a8fff] (0MB)
+[    0.681464] efi: mem124: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x000000000189d000-0x00000000018a6fff] (0MB)
+[    0.681477] efi: mem125: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001898000-0x000000000189cfff] (0MB)
+[    0.681491] efi: mem126: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001896000-0x0000000001897fff] (0MB)
+[    0.681504] efi: mem127: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000013fe000-0x0000000001895fff] (4MB)
+[    0.681517] efi: mem128: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000013fd000-0x00000000013fdfff] (0MB)
+[    0.681530] efi: mem129: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000013ec000-0x00000000013fcfff] (0MB)
+[    0.681543] efi: mem130: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000013eb000-0x00000000013ebfff] (0MB)
+[    0.681557] efi: mem131: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000013df000-0x00000000013eafff] (0MB)
+[    0.681570] efi: mem132: [Boot Code          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x00000000013da000-0x00000000013defff] (0MB)
+[    0.681583] efi: mem133: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000001100000-0x00000000013d9fff] (2MB)
+[    0.681596] efi: mem134: [Boot Code          |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000000080000-0x000000000009ffff] (0MB)
+[    0.681609] efi: mem135: [Boot Data          |   |  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x000000000006f000-0x000000000007ffff] (0MB)
+[    0.681623] efi: mem136: [Boot Code          |RUN|  |  |  |  |  |
+|   |WB|WT|WC|UC] range=[0x0000000000000000-0x0000000000007fff] (0MB)
+[    0.699886] LSM: Security Framework initializing
+[    0.699901] SELinux:  Initializing.
+[    0.703127] Dentry cache hash table entries: 524288 (order: 10,
+4194304 bytes)
+[    0.704762] Inode-cache hash table entries: 262144 (order: 9, 2097152 bytes)
+[    0.704864] Mount-cache hash table entries: 8192 (order: 4, 65536 bytes)
+[    0.704911] Mountpoint-cache hash table entries: 8192 (order: 4, 65536 bytes)
+[    0.705361] Disabled fast string operations
+[    0.705386] mce: CPU supports 5 MCE banks
+[    0.705409] mce: CPU0: Thermal monitoring enabled (TM1)
+[    0.705418] process: using mwait in idle threads
+[    0.705429] Last level iTLB entries: 4KB 32, 2MB 0, 4MB 0
+[    0.705436] Last level dTLB entries: 4KB 64, 2MB 0, 4MB 8, 1GB 0
+[    0.705645] Freeing SMP alternatives memory: 40K
+[    0.707271] smpboot: CPU0: Intel(R) Atom(TM) CPU D2550   @ 1.86GHz
+(family: 0x6, model: 0x36, stepping: 0x1)
+[    0.707271] Performance Events: PEBS fmt0+, Atom events, 8-deep
+LBR, Intel PMU driver.
+[    0.707271] ... version:                3
+[    0.707271] ... bit width:              40
+[    0.707271] ... generic registers:      2
+[    0.707271] ... value mask:             000000ffffffffff
+[    0.707271] ... max period:             000000007fffffff
+[    0.707271] ... fixed-purpose events:   3
+[    0.707271] ... event mask:             0000000700000003
+[    0.707271] rcu: Hierarchical SRCU implementation.
+[    0.707271] smp: Bringing up secondary CPUs ...
+[    0.707388] x86: Booting SMP configuration:
+[    0.707399] .... node  #0, CPUs:      #1
+[    0.003513] Disabled fast string operations
+[    0.708271] TSC synchronization [CPU#0 -> CPU#1]:
+[    0.708271] Measured 3444 cycles TSC warp between CPUs, turning off
+TSC clock.
+[    0.708271] tsc: Marking TSC unstable due to check_tsc_sync_source failed
+[    0.708558]  #2
+[    0.003513] Disabled fast string operations
+[    0.709528]  #3
+[    0.003513] Disabled fast string operations
+[    0.709650] smp: Brought up 1 node, 4 CPUs
+[    0.709650] smpboot: Max logical packages: 1
+[    0.709650] smpboot: Total of 4 processors activated (14898.48 BogoMIPS)
+[    0.710883] devtmpfs: initialized
+[    0.711613] PM: Registering ACPI NVS region [mem
+0xcf330000-0xcf377fff] (294912 bytes)
+[    0.711613] PM: Registering ACPI NVS region [mem
+0xcf3b6000-0xcf3b6fff] (4096 bytes)
+[    0.711613] PM: Registering ACPI NVS region [mem
+0xcf3c7000-0xcf3d2fff] (49152 bytes)
+[    0.711613] PM: Registering ACPI NVS region [mem
+0xcf3f8000-0xcf43afff] (274432 bytes)
+[    0.711626] clocksource: jiffies: mask: 0xffffffff max_cycles:
+0xffffffff, max_idle_ns: 1911260446275000 ns
+[    0.711662] futex hash table entries: 1024 (order: 4, 65536 bytes)
+[    0.711744] kworker/u8:0 (31) used greatest stack depth: 14224 bytes left
+[    0.712326] RTC time: 12:16:35, date: 2019-04-23
+[    0.712553] NET: Registered protocol family 16
+[    0.712848] audit: initializing netlink subsys (disabled)
+[    0.712879] audit: type=2000 audit(1556021795.038:1):
+state=initialized audit_enabled=0 res=1
+[    0.713531] cpuidle: using governor menu
+[    0.713582] ACPI: bus type PCI registered
+[    0.714303] PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem
+0xe0000000-0xefffffff] (base 0xe0000000)
+[    0.714303] PCI: MMCONFIG at [mem 0xe0000000-0xefffffff] reserved in E820
+[    0.714303] pmd_set_huge: Cannot satisfy [mem
+0xe0000000-0xe0200000] with a huge-page mapping due to MTRR override.
+[    0.714804] PCI: Using configuration type 1 for base access
+[    0.734430] HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.734632] ACPI: Added _OSI(Module Device)
+[    0.734632] ACPI: Added _OSI(Processor Device)
+[    0.734632] ACPI: Added _OSI(3.0 _SCP Extensions)
+[    0.734632] ACPI: Added _OSI(Processor Aggregator Device)
+[    0.734632] ACPI: Added _OSI(Linux-Dell-Video)
+[    0.734632] ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
+[    0.734632] ACPI: Added _OSI(Linux-HPI-Hybrid-Graphics)
+[    0.744003] ACPI: 2 ACPI AML tables successfully acquired and loaded
+[    0.747354] ACPI: [Firmware Bug]: BIOS _OSI(Linux) query ignored
+[    0.748062] ACPI: Dynamic OEM Table Load:
+[    0.748084] ACPI: SSDT 0xFFFF9F6E2A610000 0006D5 (v01 PmRef
+Cpu0Cst  00003001 INTL 20051117)
+[    0.749314] ACPI: Dynamic OEM Table Load:
+[    0.749329] ACPI: SSDT 0xFFFF9F6E2A8A63C0 00008D (v01 PmRef  ApCst
+  00003000 INTL 20051117)
+[    0.751741] ACPI: Interpreter enabled
+[    0.751793] ACPI: (supports S0 S1 S4 S5)
+[    0.751801] ACPI: Using IOAPIC for interrupt routing
+[    0.751904] PCI: Using host bridge windows from ACPI; if necessary,
+use "pci=nocrs" and report a bug
+[    0.752658] ACPI: Enabled 12 GPEs in block 00 to 1F
+[    0.775327] ACPI: Power Resource [FN00] (off)
+[    0.777264] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    0.777289] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM
+ClockPM Segments MSI]
+[    0.777402] acpi PNP0A08:00: _OSC failed (AE_ERROR); disabling ASPM
+[    0.777800] PCI host bridge to bus 0000:00
+[    0.777816] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    0.777829] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    0.777842] pci_bus 0000:00: root bus resource [mem
+0x000a0000-0x000bffff window]
+[    0.777857] pci_bus 0000:00: root bus resource [mem
+0x000c0000-0x000dffff window]
+[    0.777871] pci_bus 0000:00: root bus resource [mem
+0x000e0000-0x000effff window]
+[    0.777881] pci_bus 0000:00: root bus resource [mem
+0x000f0000-0x000fffff window]
+[    0.777891] pci_bus 0000:00: root bus resource [mem
+0xcf800000-0xcfffffff window]
+[    0.777901] pci_bus 0000:00: root bus resource [mem
+0xd0000000-0xfebfffff window]
+[    0.777911] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    0.777932] pci 0000:00:00.0: [8086:0bf3] type 00 class 0x060000
+[    0.778281] pci 0000:00:02.0: [8086:0be2] type 00 class 0x030000
+[    0.778281] pci 0000:00:02.0: reg 0x10: [mem 0xdfa00000-0xdfafffff]
+[    0.778281] pci 0000:00:02.0: reg 0x14: [io  0xf0f0-0xf0f7]
+[    0.778509] pci 0000:00:1b.0: [8086:27d8] type 00 class 0x040300
+[    0.778541] pci 0000:00:1b.0: reg 0x10: [mem 0xdff00000-0xdff03fff 64bit]
+[    0.778641] pci 0000:00:1b.0: PME# supported from D0 D3hot D3cold
+[    0.778869] pci 0000:00:1c.0: [8086:27d0] type 01 class 0x060400
+[    0.779000] pci 0000:00:1c.0: PME# supported from D0 D3hot D3cold
+[    0.779285] pci 0000:00:1c.1: [8086:27d2] type 01 class 0x060400
+[    0.779363] pci 0000:00:1c.1: PME# supported from D0 D3hot D3cold
+[    0.779585] pci 0000:00:1c.2: [8086:27d4] type 01 class 0x060400
+[    0.779709] pci 0000:00:1c.2: PME# supported from D0 D3hot D3cold
+[    0.779939] pci 0000:00:1c.3: [8086:27d6] type 01 class 0x060400
+[    0.780065] pci 0000:00:1c.3: PME# supported from D0 D3hot D3cold
+[    0.780326] pci 0000:00:1d.0: [8086:27c8] type 00 class 0x0c0300
+[    0.780362] pci 0000:00:1d.0: reg 0x20: [io  0xf080-0xf09f]
+[    0.780595] pci 0000:00:1d.1: [8086:27c9] type 00 class 0x0c0300
+[    0.780661] pci 0000:00:1d.1: reg 0x20: [io  0xf060-0xf07f]
+[    0.780901] pci 0000:00:1d.2: [8086:27ca] type 00 class 0x0c0300
+[    0.780967] pci 0000:00:1d.2: reg 0x20: [io  0xf040-0xf05f]
+[    0.781324] pci 0000:00:1d.3: [8086:27cb] type 00 class 0x0c0300
+[    0.781324] pci 0000:00:1d.3: reg 0x20: [io  0xf020-0xf03f]
+[    0.781514] pci 0000:00:1d.7: [8086:27cc] type 00 class 0x0c0320
+[    0.781552] pci 0000:00:1d.7: reg 0x10: [mem 0xdff05000-0xdff053ff]
+[    0.781665] pci 0000:00:1d.7: PME# supported from D0 D3hot D3cold
+[    0.781876] pci 0000:00:1e.0: [8086:2448] type 01 class 0x060401
+[    0.782327] pci 0000:00:1f.0: [8086:27bc] type 00 class 0x060100
+[    0.782497] pci 0000:00:1f.2: [8086:27c0] type 00 class 0x01018f
+[    0.782528] pci 0000:00:1f.2: reg 0x10: [io  0xf0e0-0xf0e7]
+[    0.782543] pci 0000:00:1f.2: reg 0x14: [io  0xf0d0-0xf0d3]
+[    0.782554] pci 0000:00:1f.2: reg 0x18: [io  0xf0c0-0xf0c7]
+[    0.782567] pci 0000:00:1f.2: reg 0x1c: [io  0xf0b0-0xf0b3]
+[    0.782578] pci 0000:00:1f.2: reg 0x20: [io  0xf0a0-0xf0af]
+[    0.782591] pci 0000:00:1f.2: reg 0x24: [mem 0xdff04000-0xdff043ff]
+[    0.782643] pci 0000:00:1f.2: PME# supported from D3hot
+[    0.782842] pci 0000:00:1f.3: [8086:27da] type 00 class 0x0c0500
+[    0.782910] pci 0000:00:1f.3: reg 0x20: [io  0xf000-0xf01f]
+[    0.783352] pci 0000:00:1c.0: PCI bridge to [bus 01]
+[    0.783397] pci 0000:02:00.0: [10ec:8168] type 00 class 0x020000
+[    0.783443] pci 0000:02:00.0: reg 0x10: [io  0xe000-0xe0ff]
+[    0.783486] pci 0000:02:00.0: reg 0x18: [mem 0xdfe04000-0xdfe04fff 64bit]
+[    0.783509] pci 0000:02:00.0: reg 0x20: [mem 0xdfe00000-0xdfe03fff
+64bit pref]
+[    0.783648] pci 0000:02:00.0: supports D1 D2
+[    0.783652] pci 0000:02:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+[    0.783879] pci 0000:00:1c.1: PCI bridge to [bus 02]
+[    0.783895] pci 0000:00:1c.1:   bridge window [io  0xe000-0xefff]
+[    0.783903] pci 0000:00:1c.1:   bridge window [mem 0xdfe00000-0xdfefffff]
+[    0.784313] pci 0000:03:00.0: [10ec:8168] type 00 class 0x020000
+[    0.784313] pci 0000:03:00.0: reg 0x10: [io  0xd000-0xd0ff]
+[    0.784313] pci 0000:03:00.0: reg 0x18: [mem 0xdfd04000-0xdfd04fff 64bit]
+[    0.784313] pci 0000:03:00.0: reg 0x20: [mem 0xdfd00000-0xdfd03fff
+64bit pref]
+[    0.784313] pci 0000:03:00.0: supports D1 D2
+[    0.784313] pci 0000:03:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+[    0.784522] pci 0000:00:1c.2: PCI bridge to [bus 03]
+[    0.784541] pci 0000:00:1c.2:   bridge window [io  0xd000-0xdfff]
+[    0.784549] pci 0000:00:1c.2:   bridge window [mem 0xdfd00000-0xdfdfffff]
+[    0.784666] pci 0000:04:00.0: [1b21:0612] type 00 class 0x010601
+[    0.784711] pci 0000:04:00.0: reg 0x10: [io  0xc050-0xc057]
+[    0.784732] pci 0000:04:00.0: reg 0x14: [io  0xc040-0xc043]
+[    0.784751] pci 0000:04:00.0: reg 0x18: [io  0xc030-0xc037]
+[    0.784768] pci 0000:04:00.0: reg 0x1c: [io  0xc020-0xc023]
+[    0.784785] pci 0000:04:00.0: reg 0x20: [io  0xc000-0xc01f]
+[    0.784804] pci 0000:04:00.0: reg 0x24: [mem 0xdfc00000-0xdfc001ff]
+[    0.784955] pci 0000:04:00.0: 2.000 Gb/s available PCIe bandwidth,
+limited by 2.5 GT/s x1 link at 0000:00:1c.3 (capable of 4.000 Gb/s
+with 5 GT/s x1 link)
+[    0.785273] pci 0000:00:1c.3: PCI bridge to [bus 04]
+[    0.785273] pci 0000:00:1c.3:   bridge window [io  0xc000-0xcfff]
+[    0.785273] pci 0000:00:1c.3:   bridge window [mem 0xdfc00000-0xdfcfffff]
+[    0.785273] pci_bus 0000:05: extended config space not accessible
+[    0.785311] pci 0000:05:01.0: [9710:9865] type 00 class 0x070002
+[    0.785311] pci 0000:05:01.0: reg 0x10: [io  0xb030-0xb037]
+[    0.785311] pci 0000:05:01.0: reg 0x14: [mem 0xdfb05000-0xdfb05fff]
+[    0.785339] pci 0000:05:01.0: reg 0x20: [mem 0xdfb04000-0xdfb04fff]
+[    0.785410] pci 0000:05:01.0: supports D1 D2
+[    0.785413] pci 0000:05:01.0: PME# supported from D0 D1 D2 D3hot D3cold
+[    0.785538] pci 0000:05:01.1: [9710:9865] type 00 class 0x070002
+[    0.785562] pci 0000:05:01.1: reg 0x10: [io  0xb020-0xb027]
+[    0.785577] pci 0000:05:01.1: reg 0x14: [mem 0xdfb03000-0xdfb03fff]
+[    0.785608] pci 0000:05:01.1: reg 0x20: [mem 0xdfb02000-0xdfb02fff]
+[    0.785676] pci 0000:05:01.1: supports D1 D2
+[    0.785680] pci 0000:05:01.1: PME# supported from D0 D1 D2 D3hot D3cold
+[    0.785792] pci 0000:05:01.2: [ffff:9865] type 00 class 0x070103
+[    0.785817] pci 0000:05:01.2: reg 0x10: [io  0xb010-0xb017]
+[    0.785832] pci 0000:05:01.2: reg 0x14: [io  0xb000-0xb007]
+[    0.785846] pci 0000:05:01.2: reg 0x18: [mem 0xdfb01000-0xdfb01fff]
+[    0.785870] pci 0000:05:01.2: reg 0x20: [mem 0xdfb00000-0xdfb00fff]
+[    0.785938] pci 0000:05:01.2: supports D1 D2
+[    0.785942] pci 0000:05:01.2: PME# supported from D0 D1 D2 D3hot D3cold
+[    0.786274] pci 0000:00:1e.0: PCI bridge to [bus 05] (subtractive decode)
+[    0.786274] pci 0000:00:1e.0:   bridge window [io  0xb000-0xbfff]
+[    0.786274] pci 0000:00:1e.0:   bridge window [mem 0xdfb00000-0xdfbfffff]
+[    0.786274] pci 0000:00:1e.0:   bridge window [io  0x0000-0x0cf7
+window] (subtractive decode)
+[    0.786274] pci 0000:00:1e.0:   bridge window [io  0x0d00-0xffff
+window] (subtractive decode)
+[    0.786274] pci 0000:00:1e.0:   bridge window [mem
+0x000a0000-0x000bffff window] (subtractive decode)
+[    0.786274] pci 0000:00:1e.0:   bridge window [mem
+0x000c0000-0x000dffff window] (subtractive decode)
+[    0.786274] pci 0000:00:1e.0:   bridge window [mem
+0x000e0000-0x000effff window] (subtractive decode)
+[    0.786274] pci 0000:00:1e.0:   bridge window [mem
+0x000f0000-0x000fffff window] (subtractive decode)
+[    0.786274] pci 0000:00:1e.0:   bridge window [mem
+0xcf800000-0xcfffffff window] (subtractive decode)
+[    0.786274] pci 0000:00:1e.0:   bridge window [mem
+0xd0000000-0xfebfffff window] (subtractive decode)
+[    0.788504] ACPI: PCI Interrupt Link [LNKA] (IRQs 1 3 4 5 6 7 10 12
+14 15) *11
+[    0.788669] ACPI: PCI Interrupt Link [LNKB] (IRQs 1 3 4 5 6 *7 11 12 14 15)
+[    0.788829] ACPI: PCI Interrupt Link [LNKC] (IRQs 1 3 4 5 6 7 10 12
+14 15) *11
+[    0.788986] ACPI: PCI Interrupt Link [LNKD] (IRQs 1 3 4 *5 6 7 11 12 14 15)
+[    0.789140] ACPI: PCI Interrupt Link [LNKE] (IRQs 1 3 4 5 6 7 10 12
+14 15) *0, disabled.
+[    0.789306] ACPI: PCI Interrupt Link [LNKF] (IRQs 1 3 4 5 6 7 11 12
+14 15) *0, disabled.
+[    0.789463] ACPI: PCI Interrupt Link [LNKG] (IRQs 1 3 4 *5 6 7 10 12 14 15)
+[    0.789621] ACPI: PCI Interrupt Link [LNKH] (IRQs 1 3 4 5 6 *7 11 12 14 15)
+[    0.790552] pci 0000:00:02.0: vgaarb: setting as boot VGA device
+[    0.790552] pci 0000:00:02.0: vgaarb: VGA device added:
+decodes=io+mem,owns=io+mem,locks=none
+[    0.790552] pci 0000:00:02.0: vgaarb: bridge control possible
+[    0.790552] vgaarb: loaded
+[    0.790647] SCSI subsystem initialized
+[    0.791390] libata version 3.00 loaded.
+[    0.791614] ACPI: bus type USB registered
+[    0.791737] usbcore: registered new interface driver usbfs
+[    0.791799] usbcore: registered new interface driver hub
+[    0.791895] usbcore: registered new device driver usb
+[    0.791930] media: Linux media interface: v0.10
+[    0.791930] videodev: Linux video capture interface: v2.00
+[    0.791930] pps_core: LinuxPPS API ver. 1 registered
+[    0.791930] pps_core: Software ver. 5.3.6 - Copyright 2005-2007
+Rodolfo Giometti <giometti@linux.it>
+[    0.791930] PTP clock support registered
+[    0.792394] EDAC MC: Ver: 3.0.0
+[    0.792711] Registered efivars operations
+[    0.851555] Advanced Linux Sound Architecture Driver Initialized.
+[    0.851743] PCI: Using ACPI for IRQ routing
+[    0.860193] PCI: pci_cache_line_size set to 64 bytes
+[    0.860291] e820: reserve RAM buffer [mem 0x020b8018-0x03ffffff]
+[    0.860295] e820: reserve RAM buffer [mem 0x021b4018-0x03ffffff]
+[    0.860298] e820: reserve RAM buffer [mem 0x021e6018-0x03ffffff]
+[    0.860300] e820: reserve RAM buffer [mem 0x021f3018-0x03ffffff]
+[    0.860303] e820: reserve RAM buffer [mem 0xcf330000-0xcfffffff]
+[    0.860306] e820: reserve RAM buffer [mem 0xcf5bb000-0xcfffffff]
+[    0.860309] e820: reserve RAM buffer [mem 0xcf6f0000-0xcfffffff]
+[    0.860693] NetLabel: Initializing
+[    0.860703] NetLabel:  domain hash size = 128
+[    0.860708] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    0.860747] NetLabel:  unlabeled traffic allowed by default
+[    0.861278] hpet0: at MMIO 0xfed00000, IRQs 2, 8, 0
+[    0.861278] hpet0: 3 comparators, 64-bit 14.318180 MHz counter
+[    0.863324] clocksource: Switched to clocksource hpet
+[    1.109608] VFS: Disk quotas dquot_6.6.0
+[    1.109659] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    1.109792] pnp: PnP ACPI init
+[    1.110200] system 00:00: [mem 0xfed00000-0xfed003ff] has been reserved
+[    1.110231] system 00:00: Plug and Play ACPI device, IDs PNP0103
+PNP0c01 (active)
+[    1.110406] system 00:01: [io  0x0680-0x069f] has been reserved
+[    1.110417] system 00:01: [io  0xffff] has been reserved
+[    1.110426] system 00:01: [io  0xffff] has been reserved
+[    1.110434] system 00:01: [io  0xffff] has been reserved
+[    1.110443] system 00:01: [io  0x0400-0x047f] has been reserved
+[    1.110451] system 00:01: [io  0x0500-0x057f] has been reserved
+[    1.110459] system 00:01: [io  0x0600-0x061f] has been reserved
+[    1.110479] system 00:01: Plug and Play ACPI device, IDs PNP0c02 (active)
+[    1.110615] system 00:02: [io  0x06a0-0x06af] has been reserved
+[    1.110625] system 00:02: [io  0x06b0-0x06ef] has been reserved
+[    1.110649] system 00:02: Plug and Play ACPI device, IDs PNP0c02 (active)
+[    1.110727] pnp 00:03: Plug and Play ACPI device, IDs PNP0b00 (active)
+[    1.111090] system 00:04: [io  0x0a00-0x0a1f] has been reserved
+[    1.111101] system 00:04: [io  0x0a30-0x0a3f] has been reserved
+[    1.111124] system 00:04: Plug and Play ACPI device, IDs PNP0c02 (active)
+[    1.111247] pnp 00:05: Plug and Play ACPI device, IDs PNP0303
+PNP030b (active)
+[    1.111420] pnp 00:06: Plug and Play ACPI device, IDs PNP0f03
+PNP0f13 (active)
+[    1.112058] pnp 00:07: [dma 3]
+[    1.112322] pnp 00:07: Plug and Play ACPI device, IDs PNP0400 (active)
+[    1.112798] pnp 00:08: [dma 0 disabled]
+[    1.112925] pnp 00:08: Plug and Play ACPI device, IDs PNP0501 (active)
+[    1.113418] pnp 00:09: [dma 0 disabled]
+[    1.113535] pnp 00:09: Plug and Play ACPI device, IDs PNP0501 (active)
+[    1.113692] system 00:0a: Plug and Play ACPI device, IDs PNP0c02 (active)
+[    1.114224] ACPI: IRQ 10 override to edge, high
+[    1.114243] pnp 00:0b: [dma 0 disabled]
+[    1.114432] pnp 00:0b: Plug and Play ACPI device, IDs PNP0501 (active)
+[    1.114894] ACPI: IRQ 10 override to edge, high
+[    1.114907] pnp 00:0c: [dma 0 disabled]
+[    1.115066] pnp 00:0c: Plug and Play ACPI device, IDs PNP0501 (active)
+[    1.115545] ACPI: IRQ 10 override to edge, high
+[    1.115557] pnp 00:0d: [dma 0 disabled]
+[    1.115713] pnp 00:0d: Plug and Play ACPI device, IDs PNP0501 (active)
+[    1.116170] ACPI: IRQ 10 override to edge, high
+[    1.116182] pnp 00:0e: [dma 0 disabled]
+[    1.116358] pnp 00:0e: Plug and Play ACPI device, IDs PNP0501 (active)
+[    1.116515] system 00:0f: [io  0x04d0-0x04d1] has been reserved
+[    1.116544] system 00:0f: Plug and Play ACPI device, IDs PNP0c02 (active)
+[    1.116823] system 00:10: [mem 0xfed1c000-0xfed1ffff] has been reserved
+[    1.116835] system 00:10: [mem 0x00000000-0x00003fff] could not be reserved
+[    1.116845] system 00:10: [mem 0x00000000-0x00000fff] could not be reserved
+[    1.116854] system 00:10: [mem 0x00000000-0x00000fff] could not be reserved
+[    1.116863] system 00:10: [mem 0xfed45000-0xfed8ffff] has been reserved
+[    1.116886] system 00:10: Plug and Play ACPI device, IDs PNP0c02 (active)
+[    1.117385] system 00:11: [mem 0xfed14000-0xfed19fff] has been reserved
+[    1.117397] system 00:11: [mem 0xe0000000-0xefffffff] has been reserved
+[    1.117420] system 00:11: Plug and Play ACPI device, IDs PNP0c01 (active)
+[    1.117796] system 00:12: [io  0x0400-0x047f] has been reserved
+[    1.117807] system 00:12: [io  0x0500-0x053f] has been reserved
+[    1.117817] system 00:12: [mem 0xfec00000-0xfec00fff] could not be reserved
+[    1.117826] system 00:12: [mem 0xfee00000-0xfee00fff] has been reserved
+[    1.117835] system 00:12: [mem 0xfed1c000-0xfed1ffff] has been reserved
+[    1.117844] system 00:12: [mem 0xfed20000-0xfed8ffff] could not be reserved
+[    1.117853] system 00:12: [mem 0xffe00000-0xffffffff] has been reserved
+[    1.117873] system 00:12: Plug and Play ACPI device, IDs PNP0c02 (active)
+[    1.117879] pnp: PnP ACPI: found 19 devices
+[    1.129338] clocksource: acpi_pm: mask: 0xffffff max_cycles:
+0xffffff, max_idle_ns: 2085701024 ns
+[    1.129379] pci 0000:00:1c.0: bridge window [io  0x1000-0x0fff] to
+[bus 01] add_size 1000
+[    1.129385] pci 0000:00:1c.0: bridge window [mem
+0x00100000-0x000fffff 64bit pref] to [bus 01] add_size 200000
+add_align 100000
+[    1.129395] pci 0000:00:1c.0: bridge window [mem
+0x00100000-0x000fffff] to [bus 01] add_size 200000 add_align 100000
+[    1.129409] pci 0000:00:1c.1: bridge window [mem
+0x00100000-0x000fffff 64bit pref] to [bus 02] add_size 200000
+add_align 100000
+[    1.129423] pci 0000:00:1c.2: bridge window [mem
+0x00100000-0x000fffff 64bit pref] to [bus 03] add_size 200000
+add_align 100000
+[    1.129436] pci 0000:00:1c.3: bridge window [mem
+0x00100000-0x000fffff 64bit pref] to [bus 04] add_size 200000
+add_align 100000
+[    1.129470] pci 0000:00:1c.0: BAR 8: assigned [mem 0xd0000000-0xd01fffff]
+[    1.129491] pci 0000:00:1c.0: BAR 9: assigned [mem
+0xd0200000-0xd03fffff 64bit pref]
+[    1.129510] pci 0000:00:1c.1: BAR 9: assigned [mem
+0xd0400000-0xd05fffff 64bit pref]
+[    1.129529] pci 0000:00:1c.2: BAR 9: assigned [mem
+0xd0600000-0xd07fffff 64bit pref]
+[    1.129548] pci 0000:00:1c.3: BAR 9: assigned [mem
+0xd0800000-0xd09fffff 64bit pref]
+[    1.129560] pci 0000:00:1c.0: BAR 7: assigned [io  0x1000-0x1fff]
+[    1.129571] pci 0000:00:1c.0: PCI bridge to [bus 01]
+[    1.129581] pci 0000:00:1c.0:   bridge window [io  0x1000-0x1fff]
+[    1.129592] pci 0000:00:1c.0:   bridge window [mem 0xd0000000-0xd01fffff]
+[    1.129603] pci 0000:00:1c.0:   bridge window [mem
+0xd0200000-0xd03fffff 64bit pref]
+[    1.129617] pci 0000:00:1c.1: PCI bridge to [bus 02]
+[    1.129626] pci 0000:00:1c.1:   bridge window [io  0xe000-0xefff]
+[    1.129638] pci 0000:00:1c.1:   bridge window [mem 0xdfe00000-0xdfefffff]
+[    1.129648] pci 0000:00:1c.1:   bridge window [mem
+0xd0400000-0xd05fffff 64bit pref]
+[    1.129662] pci 0000:00:1c.2: PCI bridge to [bus 03]
+[    1.129671] pci 0000:00:1c.2:   bridge window [io  0xd000-0xdfff]
+[    1.129682] pci 0000:00:1c.2:   bridge window [mem 0xdfd00000-0xdfdfffff]
+[    1.129693] pci 0000:00:1c.2:   bridge window [mem
+0xd0600000-0xd07fffff 64bit pref]
+[    1.129707] pci 0000:00:1c.3: PCI bridge to [bus 04]
+[    1.129715] pci 0000:00:1c.3:   bridge window [io  0xc000-0xcfff]
+[    1.129726] pci 0000:00:1c.3:   bridge window [mem 0xdfc00000-0xdfcfffff]
+[    1.129737] pci 0000:00:1c.3:   bridge window [mem
+0xd0800000-0xd09fffff 64bit pref]
+[    1.129753] pci 0000:00:1e.0: PCI bridge to [bus 05]
+[    1.129761] pci 0000:00:1e.0:   bridge window [io  0xb000-0xbfff]
+[    1.129773] pci 0000:00:1e.0:   bridge window [mem 0xdfb00000-0xdfbfffff]
+[    1.129790] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    1.129793] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    1.129797] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    1.129800] pci_bus 0000:00: resource 7 [mem 0x000c0000-0x000dffff window]
+[    1.129804] pci_bus 0000:00: resource 8 [mem 0x000e0000-0x000effff window]
+[    1.129807] pci_bus 0000:00: resource 9 [mem 0x000f0000-0x000fffff window]
+[    1.129811] pci_bus 0000:00: resource 10 [mem 0xcf800000-0xcfffffff window]
+[    1.129814] pci_bus 0000:00: resource 11 [mem 0xd0000000-0xfebfffff window]
+[    1.129818] pci_bus 0000:01: resource 0 [io  0x1000-0x1fff]
+[    1.129821] pci_bus 0000:01: resource 1 [mem 0xd0000000-0xd01fffff]
+[    1.129825] pci_bus 0000:01: resource 2 [mem 0xd0200000-0xd03fffff
+64bit pref]
+[    1.129828] pci_bus 0000:02: resource 0 [io  0xe000-0xefff]
+[    1.129831] pci_bus 0000:02: resource 1 [mem 0xdfe00000-0xdfefffff]
+[    1.129835] pci_bus 0000:02: resource 2 [mem 0xd0400000-0xd05fffff
+64bit pref]
+[    1.129838] pci_bus 0000:03: resource 0 [io  0xd000-0xdfff]
+[    1.129842] pci_bus 0000:03: resource 1 [mem 0xdfd00000-0xdfdfffff]
+[    1.129845] pci_bus 0000:03: resource 2 [mem 0xd0600000-0xd07fffff
+64bit pref]
+[    1.129849] pci_bus 0000:04: resource 0 [io  0xc000-0xcfff]
+[    1.129852] pci_bus 0000:04: resource 1 [mem 0xdfc00000-0xdfcfffff]
+[    1.129855] pci_bus 0000:04: resource 2 [mem 0xd0800000-0xd09fffff
+64bit pref]
+[    1.129859] pci_bus 0000:05: resource 0 [io  0xb000-0xbfff]
+[    1.129862] pci_bus 0000:05: resource 1 [mem 0xdfb00000-0xdfbfffff]
+[    1.129866] pci_bus 0000:05: resource 4 [io  0x0000-0x0cf7 window]
+[    1.129869] pci_bus 0000:05: resource 5 [io  0x0d00-0xffff window]
+[    1.129873] pci_bus 0000:05: resource 6 [mem 0x000a0000-0x000bffff window]
+[    1.129876] pci_bus 0000:05: resource 7 [mem 0x000c0000-0x000dffff window]
+[    1.129880] pci_bus 0000:05: resource 8 [mem 0x000e0000-0x000effff window]
+[    1.129883] pci_bus 0000:05: resource 9 [mem 0x000f0000-0x000fffff window]
+[    1.129887] pci_bus 0000:05: resource 10 [mem 0xcf800000-0xcfffffff window]
+[    1.129890] pci_bus 0000:05: resource 11 [mem 0xd0000000-0xfebfffff window]
+[    1.130096] NET: Registered protocol family 2
+[    1.130492] tcp_listen_portaddr_hash hash table entries: 2048
+(order: 3, 32768 bytes)
+[    1.130557] TCP established hash table entries: 32768 (order: 6,
+262144 bytes)
+[    1.130786] TCP bind hash table entries: 32768 (order: 7, 524288 bytes)
+[    1.131091] TCP: Hash tables configured (established 32768 bind 32768)
+[    1.131281] UDP hash table entries: 2048 (order: 4, 65536 bytes)
+[    1.131398] UDP-Lite hash table entries: 2048 (order: 4, 65536 bytes)
+[    1.131579] NET: Registered protocol family 1
+[    1.131982] RPC: Registered named UNIX socket transport module.
+[    1.131994] RPC: Registered udp transport module.
+[    1.131999] RPC: Registered tcp transport module.
+[    1.132005] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    1.132419] pci 0000:00:02.0: Video device with shadowed ROM at
+[mem 0x000c0000-0x000dffff]
+[    1.159423] pci 0000:00:1d.7: quirk_usb_early_handoff+0x0/0x67e
+took 25405 usecs
+[    1.159486] PCI: CLS 64 bytes, default 64
+[    1.159611] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+[    1.159621] software IO TLB: mapped [mem 0xcb330000-0xcf330000] (64MB)
+[    1.161198] check: Scanning for low memory corruption every 60 seconds
+[    1.162861] Initialise system trusted keyrings
+[    1.163041] workingset: timestamp_bits=56 max_order=20 bucket_order=0
+[    1.171650] NFS: Registering the id_resolver key type
+[    1.171679] Key type id_resolver registered
+[    1.171686] Key type id_legacy registered
+[    1.171697] Installing knfsd (copyright (C) 1996 okir@monad.swb.de).
+[    1.177975] Key type asymmetric registered
+[    1.177988] Asymmetric key parser 'x509' registered
+[    1.178030] Block layer SCSI generic (bsg) driver version 0.4
+loaded (major 249)
+[    1.178046] io scheduler mq-deadline registered
+[    1.178055] io scheduler kyber registered
+[    1.179468] efifb: probing for efifb
+[    1.179491] efifb: abort, cannot remap video memory 0x1d5000 @ 0xcf800000
+[    1.179504] Trying to free nonexistent resource
+<00000000cf800000-00000000cf9d4bff>
+[    1.179527] efi-framebuffer: probe of efi-framebuffer.0 failed with error -5
+[    1.179772] input: Power Button as
+/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input0
+[    1.179848] ACPI: Power Button [PWRB]
+[    1.179984] input: Sleep Button as
+/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0E:00/input/input1
+[    1.180012] ACPI: Sleep Button [SLPB]
+[    1.180116] input: Power Button as
+/devices/LNXSYSTM:00/LNXPWRBN:00/input/input2
+[    1.180158] ACPI: Power Button [PWRF]
+[    1.181591] Monitor-Mwait will be used to enter C-1 state
+[    1.184237] thermal LNXTHERM:00: registered as thermal_zone0
+[    1.184250] ACPI: Thermal Zone [THRM] (30 C)
+[    1.184599] thermal LNXTHERM:01: registered as thermal_zone1
+[    1.184610] ACPI: Thermal Zone [TZ00] (27 C)
+[    1.185423] thermal LNXTHERM:02: registered as thermal_zone2
+[    1.185433] ACPI: Thermal Zone [TZ01] (27 C)
+[    1.185705] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    1.206526] 00:08: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200)
+is a 16550A
+[    1.227386] 00:09: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 115200)
+is a 16550A
+[    1.248234] 00:0b: ttyS2 at I/O 0x4e0 (irq = 10, base_baud =
+115200) is a 16550A
+[    1.269070] 00:0c: ttyS3 at I/O 0x4e8 (irq = 10, base_baud =
+115200) is a 16550A
+[    1.269624] serial 0000:05:01.0: enabling device (0000 -> 0003)
+[    1.269818] serial 0000:05:01.0: Couldn't register serial port
+b030, irq 17, type 0, error -28
+[    1.269884] serial 0000:05:01.1: enabling device (0000 -> 0003)
+[    1.270050] serial 0000:05:01.1: Couldn't register serial port
+b020, irq 18, type 0, error -28
+[    1.270830] Non-volatile memory driver v1.3
+[    1.271021] Linux agpgart interface v0.103
+[    1.277537] loop: module loaded
+[    1.277699] ACPI Warning: SystemIO range
+0x0000000000000428-0x000000000000042F conflicts with OpRegion
+0x0000000000000400-0x000000000000042F (\SWC1) (20181213/utaddress-213)
+[    1.277724] ACPI Warning: SystemIO range
+0x0000000000000428-0x000000000000042F conflicts with OpRegion
+0x0000000000000400-0x000000000000047F (\PMIO) (20181213/utaddress-213)
+[    1.277744] ACPI: If an ACPI driver is available for this device,
+you should use it instead of the native driver
+[    1.277755] ACPI Warning: SystemIO range
+0x0000000000000530-0x000000000000053F conflicts with OpRegion
+0x0000000000000500-0x000000000000053B (\GPIO) (20181213/utaddress-213)
+[    1.277773] ACPI: If an ACPI driver is available for this device,
+you should use it instead of the native driver
+[    1.277783] ACPI Warning: SystemIO range
+0x0000000000000500-0x000000000000052F conflicts with OpRegion
+0x0000000000000500-0x000000000000053B (\GPIO) (20181213/utaddress-213)
+[    1.277800] ACPI: If an ACPI driver is available for this device,
+you should use it instead of the native driver
+[    1.277809] lpc_ich: Resource conflict(s) found affecting gpio_ich
+[    1.278202] ahci 0000:04:00.0: version 3.0
+[    1.278541] ahci 0000:04:00.0: SSS flag set, parallel bus scan disabled
+[    1.278604] ahci 0000:04:00.0: AHCI 0001.0200 32 slots 2 ports 6
+Gbps 0x3 impl SATA mode
+[    1.278616] ahci 0000:04:00.0: flags: 64bit ncq sntf stag led clo
+pmp pio slum part ccc sxs
+[    1.279538] scsi host0: ahci
+[    1.280037] scsi host1: ahci
+[    1.280348] ata1: SATA max UDMA/133 abar m512@0xdfc00000 port
+0xdfc00100 irq 24
+[    1.280373] ata2: SATA max UDMA/133 abar m512@0xdfc00000 port
+0xdfc00180 irq 24
+[    1.280534] ata_piix 0000:00:1f.2: version 2.13
+[    1.280693] ata_piix 0000:00:1f.2: MAP [ P0 P2 P1 P3 ]
+[    1.434375] scsi host2: ata_piix
+[    1.434709] scsi host3: ata_piix
+[    1.434859] ata3: SATA max UDMA/133 cmd 0xf0e0 ctl 0xf0d0 bmdma 0xf0a0 irq 19
+[    1.434875] ata4: SATA max UDMA/133 cmd 0xf0c0 ctl 0xf0b0 bmdma 0xf0a8 irq 19
+[    1.435539] e100: Intel(R) PRO/100 Network Driver, 3.5.24-k2-NAPI
+[    1.435558] e100: Copyright(c) 1999-2006 Intel Corporation
+[    1.435626] e1000: Intel(R) PRO/1000 Network Driver - version 7.3.21-k8-NAPI
+[    1.435642] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[    1.435716] e1000e: Intel(R) PRO/1000 Network Driver - 3.2.6-k
+[    1.435727] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[    1.435804] sky2: driver version 1.30
+[    1.437050] libphy: r8169: probed
+[    1.437676] r8169 0000:02:00.0 eth0: RTL8168evl/8111evl,
+00:30:18:04:2c:09, XID 2c9, IRQ 25
+[    1.437696] r8169 0000:02:00.0 eth0: jumbo features [frames: 9200
+bytes, tx checksumming: ko]
+[    1.438729] libphy: r8169: probed
+[    1.439410] r8169 0000:03:00.0 eth1: RTL8168evl/8111evl,
+00:30:18:04:2c:08, XID 2c9, IRQ 26
+[    1.439424] r8169 0000:03:00.0 eth1: jumbo features [frames: 9200
+bytes, tx checksumming: ko]
+[    1.439817] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    1.439831] ehci-pci: EHCI PCI platform driver
+[    1.440087] ehci-pci 0000:00:1d.7: EHCI Host Controller
+[    1.440264] ehci-pci 0000:00:1d.7: new USB bus registered, assigned
+bus number 1
+[    1.440326] ehci-pci 0000:00:1d.7: debug port 1
+[    1.444251] ehci-pci 0000:00:1d.7: cache line size of 64 is not supported
+[    1.444299] ehci-pci 0000:00:1d.7: irq 23, io mem 0xdff05000
+[    1.451302] ehci-pci 0000:00:1d.7: USB 2.0 started, EHCI 1.00
+[    1.451404] usb usb1: New USB device found, idVendor=1d6b,
+idProduct=0002, bcdDevice= 5.00
+[    1.451416] usb usb1: New USB device strings: Mfr=3, Product=2,
+SerialNumber=1
+[    1.451425] usb usb1: Product: EHCI Host Controller
+[    1.451432] usb usb1: Manufacturer: Linux 5.0.7 ehci_hcd
+[    1.451439] usb usb1: SerialNumber: 0000:00:1d.7
+[    1.451770] hub 1-0:1.0: USB hub found
+[    1.451797] hub 1-0:1.0: 8 ports detected
+[    1.452463] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    1.452498] ohci-pci: OHCI PCI platform driver
+[    1.452582] uhci_hcd: USB Universal Host Controller Interface driver
+[    1.452771] uhci_hcd 0000:00:1d.0: UHCI Host Controller
+[    1.452926] uhci_hcd 0000:00:1d.0: new USB bus registered, assigned
+bus number 2
+[    1.452978] uhci_hcd 0000:00:1d.0: irq 23, io base 0x0000f080
+[    1.453105] usb usb2: New USB device found, idVendor=1d6b,
+idProduct=0001, bcdDevice= 5.00
+[    1.453117] usb usb2: New USB device strings: Mfr=3, Product=2,
+SerialNumber=1
+[    1.453126] usb usb2: Product: UHCI Host Controller
+[    1.453133] usb usb2: Manufacturer: Linux 5.0.7 uhci_hcd
+[    1.453140] usb usb2: SerialNumber: 0000:00:1d.0
+[    1.453481] hub 2-0:1.0: USB hub found
+[    1.453508] hub 2-0:1.0: 2 ports detected
+[    1.453998] uhci_hcd 0000:00:1d.1: UHCI Host Controller
+[    1.454141] uhci_hcd 0000:00:1d.1: new USB bus registered, assigned
+bus number 3
+[    1.454191] uhci_hcd 0000:00:1d.1: irq 19, io base 0x0000f060
+[    1.454345] usb usb3: New USB device found, idVendor=1d6b,
+idProduct=0001, bcdDevice= 5.00
+[    1.454357] usb usb3: New USB device strings: Mfr=3, Product=2,
+SerialNumber=1
+[    1.454366] usb usb3: Product: UHCI Host Controller
+[    1.454373] usb usb3: Manufacturer: Linux 5.0.7 uhci_hcd
+[    1.454380] usb usb3: SerialNumber: 0000:00:1d.1
+[    1.454692] hub 3-0:1.0: USB hub found
+[    1.454719] hub 3-0:1.0: 2 ports detected
+[    1.455146] uhci_hcd 0000:00:1d.2: UHCI Host Controller
+[    1.455309] uhci_hcd 0000:00:1d.2: new USB bus registered, assigned
+bus number 4
+[    1.455385] uhci_hcd 0000:00:1d.2: irq 18, io base 0x0000f040
+[    1.455512] usb usb4: New USB device found, idVendor=1d6b,
+idProduct=0001, bcdDevice= 5.00
+[    1.455524] usb usb4: New USB device strings: Mfr=3, Product=2,
+SerialNumber=1
+[    1.455533] usb usb4: Product: UHCI Host Controller
+[    1.455540] usb usb4: Manufacturer: Linux 5.0.7 uhci_hcd
+[    1.455547] usb usb4: SerialNumber: 0000:00:1d.2
+[    1.455847] hub 4-0:1.0: USB hub found
+[    1.455878] hub 4-0:1.0: 2 ports detected
+[    1.456344] uhci_hcd 0000:00:1d.3: UHCI Host Controller
+[    1.456493] uhci_hcd 0000:00:1d.3: new USB bus registered, assigned
+bus number 5
+[    1.456565] uhci_hcd 0000:00:1d.3: irq 16, io base 0x0000f020
+[    1.456695] usb usb5: New USB device found, idVendor=1d6b,
+idProduct=0001, bcdDevice= 5.00
+[    1.456707] usb usb5: New USB device strings: Mfr=3, Product=2,
+SerialNumber=1
+[    1.456715] usb usb5: Product: UHCI Host Controller
+[    1.456723] usb usb5: Manufacturer: Linux 5.0.7 uhci_hcd
+[    1.456730] usb usb5: SerialNumber: 0000:00:1d.3
+[    1.457025] hub 5-0:1.0: USB hub found
+[    1.457049] hub 5-0:1.0: 2 ports detected
+[    1.457585] usbcore: registered new interface driver usblp
+[    1.457678] usbcore: registered new interface driver usb-storage
+[    1.457767] usbcore: registered new interface driver ftdi_sio
+[    1.457806] usbserial: USB Serial support registered for FTDI USB
+Serial Device
+[    1.458044] i8042: PNP: PS/2 Controller [PNP0303:PS2K,PNP0f03:PS2M]
+at 0x60,0x64 irq 1,12
+[    1.458550] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    1.458649] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    1.459572] usbcore: registered new interface driver usbtouchscreen
+[    1.459644] rtc_cmos 00:03: RTC can wake from S4
+[    1.459923] rtc_cmos 00:03: registered as rtc0
+[    1.460006] rtc_cmos 00:03: alarms up to one month, y3k, 242 bytes
+nvram, hpet irqs
+[    1.460194] i801_smbus 0000:00:1f.3: enabling device (0000 -> 0001)
+[    1.460483] i801_smbus 0000:00:1f.3: SMBus using PCI interrupt
+[    1.463133] usbcore: registered new interface driver uvcvideo
+[    1.463150] USB Video Class driver (1.1.1)
+[    1.463713] device-mapper: ioctl: 4.39.0-ioctl (2018-04-03)
+initialised: dm-devel@redhat.com
+[    1.463811] EFI Variables Facility v0.08 2004-May-17
+[    1.526761] hidraw: raw HID events driver (C) Jiri Kosina
+[    1.527590] usbcore: registered new interface driver usbhid
+[    1.527610] usbhid: USB HID core driver
+[    1.528315] snd_hda_intel 0000:00:1b.0: enabling device (0000 -> 0002)
+[    1.529710] Initializing XFRM netlink socket
+[    1.530235] NET: Registered protocol family 10
+[    1.530884] Segment Routing with IPv6
+[    1.531125] sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+[    1.531641] NET: Registered protocol family 17
+[    1.531702] Key type dns_resolver registered
+[    1.532440] microcode: sig=0x30661, pf=0x4, revision=0x10d
+[    1.536618] hdaudio hdaudioC0D0: Unable to bind the codec
+[    1.537095] hdaudio hdaudioC0D1: Unable to bind the codec
+[    1.537114] microcode: Microcode Update Driver: v2.2.
+[    1.537661] registered taskstats version 1
+[    1.537679] Loading compiled-in X.509 certificates
+[    1.546062] ACPI: Video Device [GFX0] (multi-head: yes  rom: no  post: no)
+[    1.546554] input: Video Bus as
+/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/LNXVIDEO:00/input/input5
+[    1.546775] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    1.546787] [drm] No driver support for vblank timestamp query.
+[    1.745326] ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[    1.745989] ata1.00: ATA-9: WDC WD5000LPLX-00ZNTT0, 01.01A01, max UDMA/133
+[    1.746002] ata1.00: 976773168 sectors, multi 0: LBA48 NCQ (depth 32), AA
+[    1.746714] ata1.00: configured for UDMA/133
+[    1.747103] scsi 0:0:0:0: Direct-Access     ATA      WDC
+WD5000LPLX-0 1A01 PQ: 0 ANSI: 5
+[    1.747758] sd 0:0:0:0: Attached scsi generic sg0 type 0
+[    1.747906] sd 0:0:0:0: [sda] 976773168 512-byte logical blocks:
+(500 GB/466 GiB)
+[    1.747928] sd 0:0:0:0: [sda] 4096-byte physical blocks
+[    1.747977] sd 0:0:0:0: [sda] Write Protect is off
+[    1.747990] sd 0:0:0:0: [sda] Mode Sense: 00 3a 00 00
+[    1.748068] sd 0:0:0:0: [sda] Write cache: enabled, read cache:
+enabled, doesn't support DPO or FUA
+[    1.771300] usb 1-1: new high-speed USB device number 2 using ehci-pci
+[    1.901365] usb 1-1: New USB device found, idVendor=13fe,
+idProduct=6300, bcdDevice= 1.10
+[    1.901378] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[    1.901386] usb 1-1: Product: USB DISK 3.0
+[    1.901393] usb 1-1: Manufacturer:
+[    1.901400] usb 1-1: SerialNumber: 070A91367166D270
+[    1.901819] usb-storage 1-1:1.0: USB Mass Storage device detected
+[    1.902093] scsi host4: usb-storage 1-1:1.0
+[    1.993854] [drm] Initialized gma500 1.0.0 20140314 for
+0000:00:02.0 on minor 0
+[    1.993984]   Magic number: 15:706:279
+[    1.994033] usb usb1-port7: hash matches
+[    1.994082] event_source tracepoint: hash matches
+[    1.994117] tty tty16: hash matches
+[    1.994214] printk: console [netcon0] enabled
+[    1.994221] netconsole: network logging started
+[    1.994566] cfg80211: Loading compiled-in X.509 certificates for
+regulatory database
+[    1.996584] cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+[    1.996606] Unstable clock detected, switching default tracing
+clock to "global"
+               If you want to keep using the local clock, then add:
+                 "trace_clock=local"
+               on the kernel command line
+[    1.996715] platform regulatory.0: Direct firmware load for
+regulatory.db failed with error -2
+[    1.996735] cfg80211: failed to load regulatory.db
+[    1.996774] ALSA device list:
+[    1.996782]   No soundcards found.
+[    2.054637] ata2: SATA link down (SStatus 0 SControl 300)
+[    2.111965]  sda: sda1 sda2 sda3
+[    2.112601] kworker/u8:0 (1407) used greatest stack depth: 13920 bytes left
+[    2.113161] sd 0:0:0:0: [sda] Attached SCSI disk
+[    2.113216] md: Waiting for all devices to be available before autodetect
+[    2.113224] md: If you don't use raid, use raid=noautodetect
+[    2.113681] md: Autodetecting RAID arrays.
+[    2.113692] md: autorun ...
+[    2.113696] md: ... autorun DONE.
+[    2.113733] Waiting for root device
+PARTUUID=bb5b7fe8-ef29-43f7-b7ac-79020523c726...
+[    2.946411] scsi 4:0:0:0: Direct-Access              USB DISK 3.0
+  PMAP PQ: 0 ANSI: 6
+[    2.946926] sd 4:0:0:0: Attached scsi generic sg1 type 0
+[    2.947646] sd 4:0:0:0: [sdb] 241827840 512-byte logical blocks:
+(124 GB/115 GiB)
+[    2.948504] sd 4:0:0:0: [sdb] Write Protect is off
+[    2.948514] sd 4:0:0:0: [sdb] Mode Sense: 45 00 00 00
+[    2.949254] sd 4:0:0:0: [sdb] Write cache: disabled, read cache:
+enabled, doesn't support DPO or FUA
+[    2.951726] random: fast init done
+[    5.791390] Alternate GPT is invalid, using primary GPT.
+[    5.791423]  sdb: sdb1 sdb2
+[    5.794261] sd 4:0:0:0: [sdb] Attached SCSI removable disk
+[    5.801997] EXT4-fs (sdb2): mounted filesystem with ordered data
+mode. Opts: (null)
+[    5.802034] VFS: Mounted root (ext4 filesystem) readonly on device 8:18.
+[    5.803787] devtmpfs: mounted
+[    5.804746] Freeing unused kernel image memory: 1264K
+[    5.813308] Write protecting the kernel read-only data: 20480k
+[    5.815255] Freeing unused kernel image memory: 2008K
+[    5.815898] Freeing unused kernel image memory: 636K
+[    5.815949] Run /sbin/init as init process
+[    6.158806] modprobe (1429) used greatest stack depth: 13336 bytes left
+[    6.825441] systemd[1]: systemd 241 running in system mode. (-PAM
+-AUDIT -SELINUX -IMA -APPARMOR -SMACK +SYSVINIT +UTMP -LIBCRYPTSETUP
++GCRYPT -GNUTLS -ACL +XZ -LZ4 -SECCOMP +BLKID -ELFUTILS +KMOD -IDN2
+-IDN -PCRE2 default-hierarchy=hybrid)
+[    6.837452] systemd[1]: Detected architecture x86-64.
+[    6.841189] systemd[1]: Set hostname to <buildroot>.
+[    6.847174] random: systemd: uninitialized urandom read (16 bytes read)
+[    6.847221] systemd[1]: Initializing machine ID from random generator.
+[    6.847373] systemd[1]: Installed transient /etc/machine-id file.
+[    7.370745] systemd[1]:
+/usr/lib/systemd/system/rpc-statd.service:13: PIDFile= references path
+below legacy directory /var/run/, updating /var/run/rpc.statd.pid
+\xe2\x86\x92 /run/rpc.statd.pid; please update the unit file
+accordingly.
+[    7.478704] random: systemd: uninitialized urandom read (16 bytes read)
+[    7.484759] random: systemd: uninitialized urandom read (16 bytes read)
+[    7.485151] systemd[1]: Listening on udev Control Socket.
+[    7.485870] systemd[1]: Listening on initctl Compatibility Named Pipe.
+[    7.486878] systemd[1]: Created slice system-getty.slice.
+[    7.487520] systemd[1]: Listening on Journal Socket (/dev/log).
+[    7.522245] mount (1442) used greatest stack depth: 13272 bytes left
+[    7.522446] mount (1441) used greatest stack depth: 13200 bytes left
+[    7.599860] systemd-tmpfile (1446) used greatest stack depth: 13152
+bytes left
+[    7.688501] EXT4-fs (sdb2): re-mounted. Opts: (null)
+[    7.856094] random: crng init done
+[    7.856117] random: 7 urandom warning(s) missed due to ratelimiting
+[    7.887102] systemd-journald[1444]: Received request to flush
+runtime journal from PID 1
+[   12.496576] r8169 0000:02:00.0 enp2s0: renamed from eth0
+[   12.510771] r8169 0000:03:00.0 enp3s0: renamed from eth1
+[   98.260481] RTL8211E Gigabit Ethernet r8169-200:00: attached PHY
+driver [RTL8211E Gigabit Ethernet] (mii_bus:phy_addr=r8169-200:00,
+irq=IGNORE)
+[   98.457724] r8169 0000:02:00.0 enp2s0: Link is Down
+[   98.458179] ip (2283) used greatest stack depth: 12368 bytes left
+[   98.607572] audit: type=1325 audit(1556021892.932:2): table=filter
+family=2 entries=4
+[   98.614924] audit: type=1325 audit(1556021892.939:3): table=mangle
+family=2 entries=6
+[   98.712170] audit: type=1325 audit(1556021893.036:4): table=nat
+family=2 entries=0
+[   98.713102] audit: type=1325 audit(1556021893.037:5): table=nat
+family=2 entries=5
+[   98.782444] RTL8211E Gigabit Ethernet r8169-300:00: attached PHY
+driver [RTL8211E Gigabit Ethernet] (mii_bus:phy_addr=r8169-300:00,
+irq=IGNORE)
+[   98.963963] r8169 0000:03:00.0 enp3s0: Link is Down
+[  101.826648] r8169 0000:03:00.0 enp3s0: Link is Up - 1Gbps/Full -
+flow control rx/tx
+[  101.826675] IPv6: ADDRCONF(NETDEV_CHANGE): enp3s0: link becomes ready
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.04.16a
-head:   ca8714f549be5a186d086a223184095759eb7094
-commit: 672c5761e6763a76b414a8deaebb787696100ea1 [71/72] rcutorture: Add trivial RCU implementation
-config: ia64-allmodconfig (attached as .config)
-compiler: ia64-linux-gcc (GCC) 8.1.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout 672c5761e6763a76b414a8deaebb787696100ea1
-        # save the attached .config to linux build tree
-        GCC_VERSION=8.1.0 make.cross ARCH=ia64 
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-All errors (new ones prefixed by >>):
-
->> ERROR: "sched_setaffinity" [kernel/rcu/rcutorture.ko] undefined!
-   ERROR: "ia64_delay_loop" [drivers/spi/spi-thunderx.ko] undefined!
-   ERROR: "__sw_hweight8" [drivers/net/wireless/mediatek/mt76/mt7603/mt7603e.ko] undefined!
-   ERROR: "ia64_delay_loop" [drivers/net/phy/mdio-cavium.ko] undefined!
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
---Q68bSM7Ycu6FN28Q
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-QyorTW0C/geZdmZ7ZS0DAA==
-
---Q68bSM7Ycu6FN28Q--
+>
+>
+>
+> > On Wed, Jul 11, 2018 at 11:40 AM Ard Biesheuvel
+> > <ard.biesheuvel@linaro.org> wrote:
+> > >
+> > > If the framebuffer address provided by the Graphics Output Protocol
+> > > (GOP) is covered by the UEFI memory map, it will tell us which memory
+> > > attributes are permitted when mapping this region. In some cases,
+> > > (KVM guest on ARM), violating this will result in loss of coherency,
+> > > which means that updates sent to the framebuffer by the guest will
+> > > not be observeable by the host, and the emulated display simply does
+> > > not work.
+> > >
+> > > So if the memory map contains such a description, take the attributes
+> > > field into account, and add support for creating WT or WB mappings of
+> > > the framebuffer region.
+> > >
+> > > Cc: Peter Jones <pjones@redhat.com>
+> > > Tested-by: Laszlo Ersek <lersek@redhat.com>
+> > > Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > > Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > ---
+> > >  drivers/video/fbdev/efifb.c | 51 +++++++++++++++++++++++++++++--------
+> > >  1 file changed, 41 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+> > > index 46a4484e3da7..c6f78d27947b 100644
+> > > --- a/drivers/video/fbdev/efifb.c
+> > > +++ b/drivers/video/fbdev/efifb.c
+> > > @@ -20,7 +20,7 @@
+> > >  #include <drm/drm_connector.h>  /* For DRM_MODE_PANEL_ORIENTATION_* */
+> > >
+> > >  static bool request_mem_succeeded = false;
+> > > -static bool nowc = false;
+> > > +static u64 mem_flags = EFI_MEMORY_WC | EFI_MEMORY_UC;
+> > >
+> > >  static struct fb_var_screeninfo efifb_defined = {
+> > >         .activate               = FB_ACTIVATE_NOW,
+> > > @@ -68,8 +68,12 @@ static int efifb_setcolreg(unsigned regno, unsigned red, unsigned green,
+> > >
+> > >  static void efifb_destroy(struct fb_info *info)
+> > >  {
+> > > -       if (info->screen_base)
+> > > -               iounmap(info->screen_base);
+> > > +       if (info->screen_base) {
+> > > +               if (mem_flags & (EFI_MEMORY_UC | EFI_MEMORY_WC))
+> > > +                       iounmap(info->screen_base);
+> > > +               else
+> > > +                       memunmap(info->screen_base);
+> > > +       }
+> > >         if (request_mem_succeeded)
+> > >                 release_mem_region(info->apertures->ranges[0].base,
+> > >                                    info->apertures->ranges[0].size);
+> > > @@ -104,7 +108,7 @@ static int efifb_setup(char *options)
+> > >                         else if (!strncmp(this_opt, "width:", 6))
+> > >                                 screen_info.lfb_width = simple_strtoul(this_opt+6, NULL, 0);
+> > >                         else if (!strcmp(this_opt, "nowc"))
+> > > -                               nowc = true;
+> > > +                               mem_flags &= ~EFI_MEMORY_WC;
+> > >                 }
+> > >         }
+> > >
+> > > @@ -164,6 +168,7 @@ static int efifb_probe(struct platform_device *dev)
+> > >         unsigned int size_remap;
+> > >         unsigned int size_total;
+> > >         char *option = NULL;
+> > > +       efi_memory_desc_t md;
+> > >
+> > >         if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI || pci_dev_disabled)
+> > >                 return -ENODEV;
+> > > @@ -272,12 +277,35 @@ static int efifb_probe(struct platform_device *dev)
+> > >         info->apertures->ranges[0].base = efifb_fix.smem_start;
+> > >         info->apertures->ranges[0].size = size_remap;
+> > >
+> > > -       if (nowc)
+> > > -               info->screen_base = ioremap(efifb_fix.smem_start, efifb_fix.smem_len);
+> > > -       else
+> > > -               info->screen_base = ioremap_wc(efifb_fix.smem_start, efifb_fix.smem_len);
+> > > +       if (!efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
+> > > +               if ((efifb_fix.smem_start + efifb_fix.smem_len) >
+> > > +                   (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
+> > > +                       pr_err("efifb: video memory @ 0x%lx spans multiple EFI memory regions\n",
+> > > +                              efifb_fix.smem_start);
+> > > +                       err = -EIO;
+> > > +                       goto err_release_fb;
+> > > +               }
+> > > +               /*
+> > > +                * If the UEFI memory map covers the efifb region, we may only
+> > > +                * remap it using the attributes the memory map prescribes.
+> > > +                */
+> > > +               mem_flags |= EFI_MEMORY_WT | EFI_MEMORY_WB;
+> > > +               mem_flags &= md.attribute;
+> > > +       }
+> > > +       if (mem_flags & EFI_MEMORY_WC)
+> > > +               info->screen_base = ioremap_wc(efifb_fix.smem_start,
+> > > +                                              efifb_fix.smem_len);
+> > > +       else if (mem_flags & EFI_MEMORY_UC)
+> > > +               info->screen_base = ioremap(efifb_fix.smem_start,
+> > > +                                           efifb_fix.smem_len);
+> > > +       else if (mem_flags & EFI_MEMORY_WT)
+> > > +               info->screen_base = memremap(efifb_fix.smem_start,
+> > > +                                            efifb_fix.smem_len, MEMREMAP_WT);
+> > > +       else if (mem_flags & EFI_MEMORY_WB)
+> > > +               info->screen_base = memremap(efifb_fix.smem_start,
+> > > +                                            efifb_fix.smem_len, MEMREMAP_WB);
+> > >         if (!info->screen_base) {
+> > > -               pr_err("efifb: abort, cannot ioremap video memory 0x%x @ 0x%lx\n",
+> > > +               pr_err("efifb: abort, cannot remap video memory 0x%x @ 0x%lx\n",
+> > >                         efifb_fix.smem_len, efifb_fix.smem_start);
+> > >                 err = -EIO;
+> > >                 goto err_release_fb;
+> > > @@ -371,7 +399,10 @@ static int efifb_probe(struct platform_device *dev)
+> > >  err_groups:
+> > >         sysfs_remove_groups(&dev->dev.kobj, efifb_groups);
+> > >  err_unmap:
+> > > -       iounmap(info->screen_base);
+> > > +       if (mem_flags & (EFI_MEMORY_UC | EFI_MEMORY_WC))
+> > > +               iounmap(info->screen_base);
+> > > +       else
+> > > +               memunmap(info->screen_base);
+> > >  err_release_fb:
+> > >         framebuffer_release(info);
+> > >  err_release_mem:
+> > > --
+> > > 2.17.1
+> > >
+> > >
+> > >
+> > >
