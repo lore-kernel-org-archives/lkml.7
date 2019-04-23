@@ -2,130 +2,139 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E136BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5F7C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA67420843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50728214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556002227;
+	bh=kTol5luT1dQRBw/Ru2EenNrY50TKXdTOZfRy07dOR28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c1/j16wfXsOBGJ0ZlZGK/OjY22ubaWM6NU2+BgUQKHLrMuqnf+x3zBnj9UnSrZ2MA
+	 LpDr7mF5cst4WmkmrixUj+2aOubPAWq8aewWmmCNwVl8fZ/KbXDqSL2ufD9uf4CwdB
+	 QK9CtHbnO2BLCF67kFH7JPY6LB5aJ8YWPJt5hErQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfDWGsW convert rfc822-to-8bit (ORCPT
+        id S1726290AbfDWGu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 02:48:22 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:48145 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfDWGsV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 02:48:21 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1hIpE0-0000dO-I0; Tue, 23 Apr 2019 08:48:16 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     "Hongzhi\, Song" <hongzhi.song@windriver.com>
-Cc:     <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        <bigeasy@linutronix.de>
-Subject: Re: Bug report: A commit about serial8250 cause the output disorderly at the phase of startup
-References: <5f1398dd-d505-dd8a-0ea1-8186618d56d3@windriver.com>
-        <82793501-9ddf-11ec-3f91-73872bf3bd54@windriver.com>
-Date:   Tue, 23 Apr 2019 08:48:15 +0200
-In-Reply-To: <82793501-9ddf-11ec-3f91-73872bf3bd54@windriver.com> (Song
-        Hongzhi's message of "Mon, 22 Apr 2019 09:12:38 +0800")
-Message-ID: <871s1tusi8.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Tue, 23 Apr 2019 02:50:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58164 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725888AbfDWGuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 02:50:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8BB55AE32;
+        Tue, 23 Apr 2019 06:50:24 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 08:50:23 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+Message-ID: <20190423065023.GA25106@dhcp22.suse.cz>
+References: <1555971893-52276-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555971893-52276-1-git-send-email-yang.shi@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-22, Hongzhi, Song <hongzhi.song@windriver.com> wrote:
-> Anyone notice this issue?
+On Tue 23-04-19 06:24:53, Yang Shi wrote:
+> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
+> vma") introduced THPeligible bit for processes' smaps. But, when checking
+> the eligibility for shmem vma, __transparent_hugepage_enabled() is
+> called to override the result from shmem_huge_enabled().  It may result
+> in the anonymous vma's THP flag override shmem's.
 
-Yes, I am aware of the issue. It is actually a feature, not a bug. ;-)
-Individual LOG_CONT messages, when classified as emergency messages, are
-printed immediately to the console.  This makes them appear
-"disorderly". It is not yet clear how best to deal with LOG_CONT
-emergency messages. But I suppose we should introduce a config option to
-disable atomic consoles altogether if users preferred buffered/delayed
-printk output.
+Hmm, I was under impression that thw global sysfs is not anonymous
+memory specific and it overrides whatever sysfs comes with. Isn't
+ignoring the global setting a bug in the shmemfs allocation paths?
+Kirill what is the actual semantic here?
 
-John Ogness
+> For example, running a
+> simple test which create THP for shmem, but with anonymous THP disabled,
+> when reading the process's smaps, it may show:
+> 
+> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+> Size:               4096 kB
+> ...
+> [snip]
+> ...
+> ShmemPmdMapped:     4096 kB
+> ...
+> [snip]
+> ...
+> THPeligible:    0
+> 
+> And, /proc/meminfo does show THP allocated and PMD mapped too:
+> 
+> ShmemHugePages:     4096 kB
+> ShmemPmdMapped:     4096 kB
+> 
+> This doesn't make too much sense.  The anonymous THP flag should not
+> intervene shmem THP.  Calling shmem_huge_enabled() with checking
+> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+> dax vma check since we already checked if the vma is shmem already.
 
+Even if I am wrong about the /sys/kernel/mm/transparent_hugepage/enabled
+being the global setting for _all_ THP then this patch is not sufficient
+because it doesn't reflect VM_NOHUGEPAGE.
+> 
+> Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+>  mm/huge_memory.c | 4 ++--
+>  mm/shmem.c       | 2 ++
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 165ea46..5881e82 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -67,8 +67,8 @@ bool transparent_hugepage_enabled(struct vm_area_struct *vma)
+>  {
+>  	if (vma_is_anonymous(vma))
+>  		return __transparent_hugepage_enabled(vma);
+> -	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
+> -		return __transparent_hugepage_enabled(vma);
+> +	if (vma_is_shmem(vma))
+> +		return shmem_huge_enabled(vma);
+>  
+>  	return false;
+>  }
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 2275a0f..be15e9b 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -3873,6 +3873,8 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
+>  	loff_t i_size;
+>  	pgoff_t off;
+>  
+> +	if (test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
+> +		return false;
+>  	if (shmem_huge == SHMEM_HUGE_FORCE)
+>  		return true;
+>  	if (shmem_huge == SHMEM_HUGE_DENY)
+> -- 
+> 1.8.3.1
+> 
 
-> On 4/19/19 10:24 AM, Hongzhi, Song wrote:
->> 1. Issue description:
->>
->> Boot kernel( >= linux-rt-devel-v5.0.3 ) with qemu.
->> Then qemu will print following disorderly messages.
->>
->> At the beginning, the messages are disorderly. But then it becomes
->> normally from printing "[    0.000000] 000: Linux version..."
->>
->> --------------------------------------------------
->> [    0.019000] 000: tsc: Unable to calibrate against PIT
->> [    0.002583] 000: 6199.83 BogoMIPS (lpj=3099918)
->> [    0.521247] 000: Intel(R) Core(TM)2 Duo CPU     T7700  @ 2.40GHz
->> [    0.521247] 000:  (family: 0x6, model: 0xf
->> [    0.521247] 000: , stepping: 0xb)
->> [    0.533126] 000: unsupported p6 CPU model 15
->> [    0.533318] 000: no PMU driver, software events only.
->> [    0.765082] 000: 1 ACPI AML tables successfully acquired and loaded
->> [    0.765274] 000:
->> [    0.785903] 000: Enabled 2 GPEs in block 00 to 0F
->> [    0.786128] 000:
->> [    0.835675] 000: acpi PNP0A03:00: fail to add MMCONFIG
->> information, can't access extended PCI configuration space under
->> this bridge.
->> [    0.892056] 000:  5
->> [    0.892289] 000:  *10
->> [    0.892416] 000:  11
->> [    0.892527] 000: )
->> [    0.892661] 000:
->>
->> /* skip some repeated contents */
->>
->> [    5.052149] 000: , 512kB Cache
->> [    0.000000] 000: Linux version 5.0.3-yocto-preempt-rt+
->> (hsong@pek-lpggp1) (gcc version 8.3.0 (GCC)) #24 SMP PREEMPT Thu Apr
->> 18 03:29:58 EDT 2019
->> [    0.000000] 000: Command line: root=/dev/vda rw highres=off
->> console=ttyS0 mem=256M ip=192.168.7.4::192.168.7.3:255.255.255.0
->> vga=0 uvesafb.mode_opti0
->> [    0.000000] 000: x86/fpu: x87 FPU will use FXSAVE
->> [    0.000000] 000: BIOS-provided physical RAM map:
->> [    0.000000] 000: BIOS-e820: [mem
->> 0x0000000000000000-0x000000000009fbff]
->> [    0.000000] 000: BIOS-e820: [mem
->> 0x000000000009fc00-0x000000000009ffff]
->> [    0.000000] 000: BIOS-e820: [mem
->> 0x00000000000f0000-0x00000000000fffff]
->> [    0.000000] 000: BIOS-e820: [mem
->> 0x0000000000100000-0x000000000ffdbfff]
->>
->> --------------------------------------------------
->>
->> 2. Reproduce:
->> (1)build kernel: (Attachment is my .config)
->> make ARCH=x86_64
->> CROSS_COMPILE=[path-to-my-cross-toolchain]/x86_64-wrs-linux-
->>
->> (2)boot kernel with qemu:
->>
->> qemu-system-x86_64 \
->> -drive file=qemux86-64.rootfs.ext4,if=virtio,format=raw \
->> -nographic \
->> -kernel arch/x86/boot/bzImage \
->> -append 'root=/dev/vda rw highres=off  console=ttyS0 mem=256M ip=dhcp'
->>
->> 3. Analysis:
->> I find the following commit from >=linux-rt-devel-v5.0.3. cause the
->> issue.
->>
->> b9d460e serial: 8250: implement write_atomic
+-- 
+Michal Hocko
+SUSE Labs
