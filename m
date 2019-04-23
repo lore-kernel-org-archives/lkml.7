@@ -2,305 +2,140 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3B1C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B80C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F58521773
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:37:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gJzTtPJg"
+	by mail.kernel.org (Postfix) with ESMTP id 3D703214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfDWNhD (ORCPT
+        id S1728007AbfDWNhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:37:03 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55779 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbfDWNg5 (ORCPT
+        Tue, 23 Apr 2019 09:37:07 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33680 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727983AbfDWNhG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:36:57 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o25so79319wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 06:36:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gRRPPW+odTXhFAsU3nebrJ3pOmtPg3fz+kt7pkJ+hYg=;
-        b=gJzTtPJglsNGltcuceOwdXvOWFbCDbmX747W7KKaMS3ah7BRPXloumV42Gcz31twrI
-         vLF3guTu/Gj9LL9+JRBnnPynnexpUE3RM2MtyZ/at+BWmm/Oo1eWoYXHGw8LrpDcp8vp
-         zafctJYCwhDa37OgvOcEKGEl7pww7qYgX+P666OtM8SUn2AM8XdTyT++njYpMGakVh5N
-         2bxEiYcjA+WGB0cwnkT/t9ATkkFqfSY3fswWO6XI5Wl5/jIzyUR7MCHbcRcyzMbUm6n4
-         7zxDLrrAbSXwsdMRBi0/VHKwW90VrV0D22+bk4EevE2u7VsupA/qlfmNcX3nYQvngd8b
-         4cQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gRRPPW+odTXhFAsU3nebrJ3pOmtPg3fz+kt7pkJ+hYg=;
-        b=XnLyZ87we5G7cKpqriqsB8Dqltf7dPZmqeyHaePQ3l7OdnaToFuGjj42kWQEkuB7Tt
-         aLQLDpJJZ9fLY+eGZFfoGZUPTZeSgKA0aLpV5oJPI2en05xYXBKZ6zN9gIva8uUyUkOr
-         QAXC1KrtTvY/7U/hKuCqGolaXWalEVlywCpqiCsB/vwFLZGqduFF5pDnmBqryXOfAAZC
-         dKi1ctec7OlRCUI2/K8ViqmaCbbT5NicUz9t8MUdi8x2cKFbinzI7yYWiPI97Bj0av9c
-         pAD5L0rv2//8a+MmBuXoHf3crqTB42nTfCsL7Ya/5MN579xMDJwOhBOGQfvdIEpNVFm5
-         09rA==
-X-Gm-Message-State: APjAAAVGp97Vmj4Qmz5Doy5N1agSvRkJOsOBI/nzLQg44pfmI7O3czcx
-        osPcBv308CI7Jy9cjC+LKHXN2g==
-X-Google-Smtp-Source: APXvYqwUIV2m/OArUl29VTuMNyASRUnqvFVA1Fu4IdEoT3PxqLHfOe86tDQJBu9mpqHGoGeury9v9Q==
-X-Received: by 2002:a1c:20c1:: with SMTP id g184mr2464872wmg.137.1556026615465;
-        Tue, 23 Apr 2019 06:36:55 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z20sm13509543wmf.34.2019.04.23.06.36.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 23 Apr 2019 06:36:54 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     thierry.reding@gmail.com
-Cc:     baylibre-upstreaming@groups.io,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 3/3] arm64: dts: meson-g12a: Add PWM nodes
-Date:   Tue, 23 Apr 2019 15:36:46 +0200
-Message-Id: <20190423133646.5705-4-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190423133646.5705-1-narmstrong@baylibre.com>
-References: <20190423133646.5705-1-narmstrong@baylibre.com>
+        Tue, 23 Apr 2019 09:37:06 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NDV0fq099055
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:37:04 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s22febs05-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:37:04 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.vnet.ibm.com>;
+        Tue, 23 Apr 2019 14:37:03 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 14:36:58 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NDav3t34668690
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 13:36:57 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD4134204D;
+        Tue, 23 Apr 2019 13:36:57 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03C0142047;
+        Tue, 23 Apr 2019 13:36:57 +0000 (GMT)
+Received: from [9.145.7.116] (unknown [9.145.7.116])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 13:36:56 +0000 (GMT)
+Subject: bos
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, rguenther@suse.de,
+        mhocko@suse.com, vbabka@suse.cz, luto@amacapital.net,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, stable@vger.kernel.org
+References: <20190401141549.3F4721FE@viggo.jf.intel.com>
+ <alpine.DEB.2.21.1904191248090.3174@nanos.tec.linutronix.de>
+ <87d0lht1c0.fsf@concordia.ellerman.id.au>
+ <6718ede2-1fcb-1a8f-a116-250eef6416c7@linux.vnet.ibm.com>
+ <alpine.DEB.2.21.1904231533190.9956@nanos.tec.linutronix.de>
+From:   Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Date:   Tue, 23 Apr 2019 15:36:56 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1904231533190.9956@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042313-0008-0000-0000-000002DCBE43
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042313-0009-0000-0000-000022490F58
+Message-Id: <4791a72f-901c-59cb-0553-5c32e26423f7@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the EE and AO PWM nodes and the possible pinctrl settings.
+Le 23/04/2019 à 15:34, Thomas Gleixner a écrit :
+> On Tue, 23 Apr 2019, Laurent Dufour wrote:
+>> Le 20/04/2019 à 12:31, Michael Ellerman a écrit :
+>>> Thomas Gleixner <tglx@linutronix.de> writes:
+>>>> Aside of that the powerpc variant looks suspicious:
+>>>>
+>>>> static inline void arch_unmap(struct mm_struct *mm,
+>>>>                                 unsigned long start, unsigned long end)
+>>>> {
+>>>>    	if (start <= mm->context.vdso_base && mm->context.vdso_base < end)
+>>>>                   mm->context.vdso_base = 0;
+>>>> }
+>>>>
+>>>> Shouldn't that be:
+>>>>
+>>>>    	if (start >= mm->context.vdso_base && mm->context.vdso_base < end)
+>>>>
+>>>> Hmm?
+>>>
+>>> Yeah looks pretty suspicious. I'll follow-up with Laurent who wrote it.
+>>> Thanks for spotting it!
+>>
+>> I've to admit that I had to read that code carefully before answering.
+>>
+>> There are 2 assumptions here:
+>>   1. 'start' and 'end' are page aligned (this is guaranteed by __do_munmap().
+>>   2. the VDSO is 1 page (this is guaranteed by the union vdso_data_store on
+>> powerpc).
+>>
+>> The idea is to handle a munmap() call surrounding the VDSO area:
+>>        | VDSO |
+>>   ^start         ^end
+>>
+>> This is covered by this test, as the munmap() matching the exact boundaries of
+>> the VDSO is handled too.
+>>
+>> Am I missing something ?
+> 
+> Well if this is the intention, then you missed to add a comment explaining it :)
+> 
+> Thanks,
+> 
+> 	tglx
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 179 ++++++++++++++++++++
- 1 file changed, 179 insertions(+)
+You're right, and I was thinking the same when I read that code this 
+morning ;)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 9f72396ba710..efadd78aa747 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -202,6 +202,94 @@
- 						};
- 					};
- 
-+					pwm_a_pins: pwm-a {
-+						mux {
-+							groups = "pwm_a";
-+							function = "pwm_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_b_x7_pins: pwm-b-x7 {
-+						mux {
-+							groups = "pwm_b_x7";
-+							function = "pwm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_b_x19_pins: pwm-b-x19 {
-+						mux {
-+							groups = "pwm_b_x19";
-+							function = "pwm_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_c_c_pins: pwm-c-c {
-+						mux {
-+							groups = "pwm_c_c";
-+							function = "pwm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_c_x5_pins: pwm-c-x5 {
-+						mux {
-+							groups = "pwm_c_x5";
-+							function = "pwm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_c_x8_pins: pwm-c-x8 {
-+						mux {
-+							groups = "pwm_c_x8";
-+							function = "pwm_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_d_x3_pins: pwm-d-x3 {
-+						mux {
-+							groups = "pwm_d_x3";
-+							function = "pwm_d";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_d_x6_pins: pwm-d-x6 {
-+						mux {
-+							groups = "pwm_d_x6";
-+							function = "pwm_d";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_e_pins: pwm-e {
-+						mux {
-+							groups = "pwm_e";
-+							function = "pwm_e";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_f_x_pins: pwm-f-x {
-+						mux {
-+							groups = "pwm_f_x";
-+							function = "pwm_f";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_f_h_pins: pwm-f-h {
-+						mux {
-+							groups = "pwm_f_h";
-+							function = "pwm_f";
-+							bias-disable;
-+						};
-+					};
-+
- 					uart_a_pins: uart-a {
- 						mux {
- 							groups = "uart_a_tx",
-@@ -418,6 +506,62 @@
- 							bias-disable;
- 						};
- 					};
-+
-+					pwm_ao_a_pins: pwm-ao-a {
-+						mux {
-+							groups = "pwm_ao_a";
-+							function = "pwm_ao_a";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_b_pins: pwm-ao-b {
-+						mux {
-+							groups = "pwm_ao_b";
-+							function = "pwm_ao_b";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_c_4_pins: pwm-ao-c-4 {
-+						mux {
-+							groups = "pwm_ao_c_4";
-+							function = "pwm_ao_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_c_6_pins: pwm-ao-c-6 {
-+						mux {
-+							groups = "pwm_ao_c_6";
-+							function = "pwm_ao_c";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_d_5_pins: pwm-ao-d-5 {
-+						mux {
-+							groups = "pwm_ao_d_5";
-+							function = "pwm_ao_d";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_d_10_pins: pwm-ao-d-10 {
-+						mux {
-+							groups = "pwm_ao_d_10";
-+							function = "pwm_ao_d";
-+							bias-disable;
-+						};
-+					};
-+
-+					pwm_ao_d_e_pins: pwm-ao-d-e {
-+						mux {
-+							groups = "pwm_ao_d_e";
-+							function = "pwm_ao_d";
-+							bias-disable;
-+						};
-+					};
- 				};
- 			};
- 
-@@ -445,6 +589,13 @@
- 				status = "disabled";
- 			};
- 
-+			pwm_AO_cd: pwm@2000 {
-+				compatible = "amlogic,meson-g12a-ao-pwm-cd";
-+				reg = <0x0 0x2000 0x0 0x20>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
- 			uart_AO: serial@3000 {
- 				compatible = "amlogic,meson-gx-uart",
- 					     "amlogic,meson-ao-uart";
-@@ -465,6 +616,13 @@
- 				status = "disabled";
- 			};
- 
-+			pwm_AO_ab: pwm@7000 {
-+				compatible = "amlogic,meson-g12a-ao-pwm-ab";
-+				reg = <0x0 0x7000 0x0 0x20>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
- 			saradc: adc@9000 {
- 				compatible = "amlogic,meson-g12a-saradc",
- 					     "amlogic,meson-saradc";
-@@ -533,6 +691,27 @@
- 				#reset-cells = <1>;
- 			};
- 
-+			pwm_ef: pwm@19000 {
-+				compatible = "amlogic,meson-g12a-ee-pwm";
-+				reg = <0x0 0x19000 0x0 0x20>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_cd: pwm@1a000 {
-+				compatible = "amlogic,meson-g12a-ee-pwm";
-+				reg = <0x0 0x1a000 0x0 0x20>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
-+			pwm_ab: pwm@1b000 {
-+				compatible = "amlogic,meson-g12a-ee-pwm";
-+				reg = <0x0 0x1b000 0x0 0x20>;
-+				#pwm-cells = <3>;
-+				status = "disabled";
-+			};
-+
- 			clk_msr: clock-measure@18000 {
- 				compatible = "amlogic,meson-g12a-clk-measure";
- 				reg = <0x0 0x18000 0x0 0x10>;
--- 
-2.21.0
+I'll propose a patch to a add an explicit comment.
+
+Thanks,
+Laurent.
 
