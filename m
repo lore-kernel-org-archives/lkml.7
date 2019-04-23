@@ -2,137 +2,156 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE81C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C045C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 256DF20843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E811E20843
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:27:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="WiUDG8FU"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rpBNEm11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbfDWDZb (ORCPT
+        id S1729433AbfDWD07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:25:31 -0400
-Received: from mail-eopbgr770125.outbound.protection.outlook.com ([40.107.77.125]:24325
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726638AbfDWDZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:25:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=wDeAoU9jaKq2cbDphUqkpl9nqitvGnM9kvaJIsqb34bwmP8aTaGSr71GeTV7Gnq050/h6rfw46DSLygo9YRCh4NgXhCQJ7O9CmV8S2HXIG8C8omNAahC0zBuGNzZIhTAY8l/8/N8XEFfE5J7QdeTKiYcwb0fEfHCI0YGCbh/QIg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kwmAEsM+LukQ/8vnL4Dxt4le4zeoQi5mYJ3m3zz9ph8=;
- b=Lrkw+5Zt7Rrdgm6bPkCfriDRL3bBXYUdGKVpyca3F6Hj5njiiq3020kOTwmMs8vcjZwoybZr6ZoscsPcAgoXqRBWJc1bF8zhw7Bk9iot1up8eJBdKl/WUZ1jyjexSX38/RPgMVSPq7Kiev+lZBm1aNN4VboF/3YT2vZS/R1htks=
-ARC-Authentication-Results: i=1; test.office365.com 1;spf=none;dmarc=none
- action=none header.from=microsoft.com;dkim=none (message not signed);arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kwmAEsM+LukQ/8vnL4Dxt4le4zeoQi5mYJ3m3zz9ph8=;
- b=WiUDG8FURcR5l7YVL05ysfdlOSmndgNppAAV1uyV7WT6BAZ9QW3v8PRqLRM5p6dXAcrE95q9LRXbhQ5HKe4eWJHugyCCYrIUyomPvvJ9au8XaQAkn5svH6WnOKy7DzaNwO3CBWUPZx5FaX0x8PLSq1ENCvuGtQJRnP8CARRBhy4=
-Received: from BN8PR21MB1185.namprd21.prod.outlook.com (20.179.73.77) by
- BN8PR21MB1297.namprd21.prod.outlook.com (20.179.74.207) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.4; Tue, 23 Apr 2019 03:25:15 +0000
-Received: from BN8PR21MB1185.namprd21.prod.outlook.com
- ([fe80::3103:5356:bfee:87ad]) by BN8PR21MB1185.namprd21.prod.outlook.com
- ([fe80::3103:5356:bfee:87ad%8]) with mapi id 15.20.1856.004; Tue, 23 Apr 2019
- 03:25:15 +0000
-From:   Joseph Salisbury <Joseph.Salisbury@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] drivers: hid: Add a module description line
-Thread-Topic: [PATCH] drivers: hid: Add a module description line
-Thread-Index: AQHU+VKvIn+x34PH9kGUsz0PSRGBr6ZJDCfQgAAJGQA=
-Date:   Tue, 23 Apr 2019 03:25:15 +0000
-Message-ID: <BN8PR21MB11857F653EA51C97A48D12889C230@BN8PR21MB1185.namprd21.prod.outlook.com>
-References: <324016691a62a13ce46c9ccd35c7e492bf609fd6.1555967348.git.joseph.salisbury@microsoft.com>
- <SN6PR2101MB092558880B017881591E41E2D7230@SN6PR2101MB0925.namprd21.prod.outlook.com>
-In-Reply-To: <SN6PR2101MB092558880B017881591E41E2D7230@SN6PR2101MB0925.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-04-23T03:15:45.3845354Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9cc321c5-47f8-4018-98fc-c3567e11eb59;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Joseph.Salisbury@microsoft.com; 
-x-originating-ip: [47.14.67.184]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5b887f5a-c39c-4c8a-42a9-08d6c79b4d80
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BN8PR21MB1297;
-x-ms-traffictypediagnostic: BN8PR21MB1297:
-x-microsoft-antispam-prvs: <BN8PR21MB1297D6358F441F7BA93CB7F89C230@BN8PR21MB1297.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:962;
-x-forefront-prvs: 0016DEFF96
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(376002)(366004)(39860400002)(136003)(51914003)(13464003)(199004)(189003)(10290500003)(10090500001)(68736007)(25786009)(22452003)(86612001)(52536014)(478600001)(110136005)(72206003)(86362001)(4326008)(54906003)(316002)(2501003)(2201001)(66556008)(66476007)(66946007)(73956011)(64756008)(74316002)(66446008)(7736002)(305945005)(6246003)(9686003)(76116006)(8990500004)(53936002)(3846002)(6116002)(97736004)(229853002)(5660300002)(256004)(71190400001)(14444005)(71200400001)(186003)(76176011)(8676002)(26005)(66066001)(99286004)(2906002)(486006)(14454004)(53546011)(33656002)(81156014)(8936002)(476003)(81166006)(446003)(11346002)(7696005)(55016002)(6506007)(1511001)(102836004)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1297;H:BN8PR21MB1185.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Kgx4B5tK3QZdqo9cg+SNtXWufrJH6/qR39U3BbxBl1NZDbW7rEUiD48+1UgpK2GoSpvNWH//qqmHd2z9LX05bhenA1Y/E0bVbnFZdjRFqqXmK18fIe/Qt2GrU68PkB+7E5GwtxxUkLI8R77UxP29g5ccWkE0b/TFPduV5F6/yBMAQ6ljigxnsGMCbX5EBiwrnTXCHYQbQ7CLuXg+MpjWadfpliyUvercep44vrcwdBHb9ifc2Md/HOWGVm3PgebsU+23hhjmq95gmgm/YKCYZ+kyxf2ZaYvvZ1LQ1imzOfLSc1B0o9gl/rmkix2HRbeLZNTMp94GW5lWVJMeVp27bKhns/9ZiV1RGAaPZAH8zqiB0qKfVK9/lN4UdxRbt3/mZnP5NNiGHBLxrGnpqnY95QuVjNyj6FdjVjwRxmKsugY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 22 Apr 2019 23:26:59 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:23029 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfDWD07 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 23:26:59 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x3N3Qe1M022811;
+        Tue, 23 Apr 2019 12:26:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x3N3Qe1M022811
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1555990001;
+        bh=+sM4okn7en/aXLTxk39Iv8cVSFLO5kMp2OmxveFMPqA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rpBNEm11sedr4ZTTqn4DWKErS1jmsxU0wCFi0W4J5QIhcrg6UGyXJ0GPxeGxBm2Jk
+         N7PzxyYAsMY4p5A9/yTYYmkUiTB/C40RxrMyYLm0K/gSEp1+Sdckyco7gus660Fi4g
+         hgd9pqYd3Vm0IzUma7z1q8AyPdVLgj2QT6VDXVlH+pMpEzVZlRC+ecL0v37PFOYYVs
+         IJ8mDqVFUteeWnZ5OpEcPkL3bDFH5tIMVernuNZGtxY9FSVumMNFqIUs5StTOolLap
+         eGnxFSaCr2Z9sKcTYd4qXq1WFFQTcMV4kS7yRB9DDQWVOyaQo01I/QkYsKcqnkLrTK
+         rPxED8Ccb4PXQ==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id e2so7418299vsc.13;
+        Mon, 22 Apr 2019 20:26:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAXgK6QlEV1g+m1VhV85T/FV3SojGzrRcCmALAmx7ACPtAlecWhk
+        9yBFU+ZTZ4XSe0w8vSDRoihpQzJrHfV0Xxhu8QM=
+X-Google-Smtp-Source: APXvYqx2ley7uSFnGGyGDabU1ZUfPiuLyEbp0qC3i0OaiObNnBFjDDjfzPzXXacVJD6LAmdWjocvMILtntWiqRva/Zw=
+X-Received: by 2002:a67:ea89:: with SMTP id f9mr1367458vso.179.1555989999934;
+ Mon, 22 Apr 2019 20:26:39 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b887f5a-c39c-4c8a-42a9-08d6c79b4d80
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 03:25:15.1902
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1297
+References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAK8P3a3BG_mxYxxCx4S_+ZKAer_+5FpmkzLk0VrACZekuD=2GQ@mail.gmail.com>
+ <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com>
+ <20190323092640.Horde.2lm4u26aZox5ialxuIRcYw2@messagerie.si.c-s.fr>
+ <CAK7LNAQGifytZRQXcqma9VuvQPfL2w8NjzLRt7CxzFgvaMhyRw@mail.gmail.com> <686abdd5-863a-02ce-5ac9-f573208b8315@c-s.fr>
+In-Reply-To: <686abdd5-863a-02ce-5ac9-f573208b8315@c-s.fr>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 23 Apr 2019 12:26:03 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQyjhDaLk_9W65=s4jfPN_AAELuGSZRAs4Xup4Xj79CGQ@mail.gmail.com>
+Message-ID: <CAK7LNAQyjhDaLk_9W65=s4jfPN_AAELuGSZRAs4Xup4Xj79CGQ@mail.gmail.com>
+Subject: Re: [PATCH] compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Dave Hansen <dave@sr71.net>, Arnd Bergmann <arnd@arndb.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIGZvciB0aGUgZmVlZGJhY2suICBJJ2xsIHByb2JhYmx5IHVwZGF0ZSBlYWNoIHBhdGNo
-IHN1YmplY3Qgd2l0aCB0aGUgbW9kdWxlIG5hbWVzIGFzIHdlbGwuICBJJ2xsIHNlbmQgYSB2MiBm
-b3IgYWxsIHRocmVlLg0KDQpUaGFua3MsDQoNCkpvZQ0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQpGcm9tOiBNaWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4gDQpT
-ZW50OiBNb25kYXksIEFwcmlsIDIyLCAyMDE5IDExOjE2IFBNDQpUbzogSm9zZXBoIFNhbGlzYnVy
-eSA8Sm9zZXBoLlNhbGlzYnVyeUBtaWNyb3NvZnQuY29tPjsgS1kgU3Jpbml2YXNhbiA8a3lzQG1p
-Y3Jvc29mdC5jb20+OyBIYWl5YW5nIFpoYW5nIDxoYWl5YW5nekBtaWNyb3NvZnQuY29tPjsgU3Rl
-cGhlbiBIZW1taW5nZXIgPHN0aGVtbWluQG1pY3Jvc29mdC5jb20+OyBzYXNoYWxAa2VybmVsLm9y
-Zzsgamlrb3NAa2VybmVsLm9yZzsgYmVuamFtaW4udGlzc29pcmVzQHJlZGhhdC5jb20NCkNjOiBs
-aW51eC1oeXBlcnZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1pbnB1dEB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNClN1YmplY3Q6IFJFOiBbUEFUQ0hdIGRyaXZl
-cnM6IGhpZDogQWRkIGEgbW9kdWxlIGRlc2NyaXB0aW9uIGxpbmUNCg0KRnJvbTogSm9zZXBoIFNh
-bGlzYnVyeSA8Sm9zZXBoLlNhbGlzYnVyeUBtaWNyb3NvZnQuY29tPiBTZW50OiBNb25kYXksIEFw
-cmlsIDIyLCAyMDE5IDI6MzEgUE0NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEpvc2VwaCBTYWxpc2J1
-cnkgPGpvc2VwaC5zYWxpc2J1cnlAbWljcm9zb2Z0LmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2hp
-ZC9oaWQtaHlwZXJ2LmMgfCAyICsrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
-DQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9oaWQvaGlkLWh5cGVydi5jIGIvZHJpdmVycy9o
-aWQvaGlkLWh5cGVydi5jIGluZGV4IA0KPiA3MDQwNDllNjJkNTguLmQzMzExZDcxNGQzNSAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9oaWQvaGlkLWh5cGVydi5jDQo+ICsrKyBiL2RyaXZlcnMvaGlk
-L2hpZC1oeXBlcnYuYw0KPiBAQCAtNjE0LDUgKzYxNCw3IEBAIHN0YXRpYyB2b2lkIF9fZXhpdCBt
-b3VzZXZzY19leGl0KHZvaWQpICB9DQo+IA0KPiAgTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOw0KPiAr
-TU9EVUxFX0RFU0NSSVBUSU9OKCJNaWNyb3NvZnQgSHlwZXItViBTeW50aGV0aWMgSElEIERyaXZl
-ciIpOw0KPiArDQo+ICBtb2R1bGVfaW5pdChtb3VzZXZzY19pbml0KTsNCj4gIG1vZHVsZV9leGl0
-KG1vdXNldnNjX2V4aXQpOw0KPiAtLQ0KPiAyLjE3LjENCg0KRXZlbiB0aG91Z2ggaXQgd2lsbCBs
-aWtlbHkgYmUgcmVkdW5kYW50IHdpdGggdGhlIGNvbW1pdCB0aXRsZSwgdGhlcmUNCnByb2JhYmx5
-IG5lZWRzIHRvIGJlIGEgc2hvcnQgY29tbWl0IG1lc3NhZ2UuICAgKEFuZCBhbHNvIHdpdGggdGhl
-DQpvdGhlciB0d28gc2ltaWxhciBwYXRjaGVzLikNCg0KTWljaGFlbA0KDQo=
+Hi Christophe,
+
+On Tue, Mar 26, 2019 at 3:03 PM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
+>
+> Hi Masahiro,
+>
+> Le 25/03/2019 =C3=A0 07:44, Masahiro Yamada a =C3=A9crit :
+> > Hi Christophe,
+> >
+> >
+> > On Sat, Mar 23, 2019 at 5:27 PM LEROY Christophe
+> > <christophe.leroy@c-s.fr> wrote:
+> >>
+> >> Arnd Bergmann <arnd@arndb.de> a =C3=A9crit :
+> >>
+> >>> On Wed, Mar 20, 2019 at 10:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> >>>>
+> >>>> I've added your patch to my randconfig test setup and will let you
+> >>>> know if I see anything noticeable. I'm currently testing clang-arm32=
+,
+> >>>> clang-arm64 and gcc-x86.
+> >>>
+> >>> This is the only additional bug that has come up so far:
+> >>>
+> >>> `.exit.text' referenced in section `.alt.smp.init' of
+> >>> drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section
+> >>> `exit.text' of drivers/char/ipmi/ipmi_msghandler.o
+> >>
+> >> Wouldn't it be useful to activate -Winline gcc warning to ease finding
+> >> out problematic usage of inline keyword ?
+> >
+> >
+> > Yes, it is useful to find out
+> > which function is causing the error.
+> > Thanks for the tip.
+> >
+>
+> I did a mass build on kisskb. Almost ok, see results at
+> http://kisskb.ellerman.id.au/kisskb/head/203d912edf8dde291977c71aa6402406=
+5e197f79/
+>
+> ps3_defconfig with GCC 5 fails
+> (http://kisskb.ellerman.id.au/kisskb/buildresult/13742711/) with:
+>
+> arch/powerpc/mm/tlb-radix.c:148:2: error: asm operand 3 probably doesn't
+> match constraints [-Werror]
+> arch/powerpc/mm/tlb-radix.c:148:2: error: impossible constraint in 'asm'
+> arch/powerpc/mm/tlb-radix.c:118:2: error: asm operand 3 probably doesn't
+> match constraints [-Werror]
+> arch/powerpc/mm/tlb-radix.c:104:2: error: asm operand 3 probably doesn't
+> match constraints [-Werror]
+>
+> ps3_defconfig with GCC 4.6 fails
+> (http://kisskb.ellerman.id.au/kisskb/buildresult/13742591/) with:
+>
+> arch/powerpc/mm/tlb-radix.c:148:2: error: asm operand 3 probably doesn't
+> match constraints [-Werror]
+> arch/powerpc/mm/tlb-radix.c:118:2: error: asm operand 3 probably doesn't
+> match constraints [-Werror]
+> arch/powerpc/mm/tlb-radix.c:104:2: error: asm operand 3 probably doesn't
+> match constraints [-Werror]
+>
+> randconfig with GCC 4.6 fails
+> (http://kisskb.ellerman.id.au/kisskb/buildresult/13742698/) with:
+>
+> arch/powerpc/mm/tlb-radix.c:104:2: error: impossible constraint in 'asm'
+
+
+Thanks.
+
+I fixed these ppc errors,
+and separate out arch-fixes.
+
+Now, the latest version is v3.
+
+
+--=20
+Best Regards
+Masahiro Yamada
