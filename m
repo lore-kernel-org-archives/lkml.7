@@ -2,75 +2,63 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAAEC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C22C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA2920645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFVbYWgi"
+	by mail.kernel.org (Postfix) with ESMTP id CA47220645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbfDWQje (ORCPT
+        id S1729583AbfDWQiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:39:34 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42503 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729340AbfDWQjI (ORCPT
+        Tue, 23 Apr 2019 12:38:54 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58409 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729557AbfDWQiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:39:08 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x15so3443031pln.9;
-        Tue, 23 Apr 2019 09:39:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lKxrWq0DPWG2/ldiM614YNjWwPB+5TI6uHMpmONkiyA=;
-        b=YFVbYWginTf8h5S0SDoTIVMpULpvCv6OKgMCGQDqwtjfHm8OF/amq8OwLtdHLRayBO
-         BCBf0R5V6HXNxNjhfmUM5Z8W06HJKkSxtFC9rcQDXItwQ7sd1GLz5KFJNjvtjDhcCNIH
-         /RJgCoDHVfa38Ky54CEuElWSUFLSK24t+ehRe+DHGfbWNSN1iU/aWSdUg48jiuxGOvbj
-         PO+h0uNSBBAa78wGa8VboKo+0yvcd/nLNWy6MN9Ac9C8Rb5MdAZOsqGBZ70yJUEdDhP/
-         SXpMj7o4tL0x2dxs68n7Rjm7Q08Cs0yd7ZrASV1VvAeSQiWYwohAAtRwixx0GvD0zyRc
-         HAyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lKxrWq0DPWG2/ldiM614YNjWwPB+5TI6uHMpmONkiyA=;
-        b=VbNvtZeiJoEu/zwP2n9DdiB0xhLVMASq3iNZBkVQjxOcWdoZGsFF8Et57ZrXqHT2ap
-         h69SlRsWxfu3uw2+Ysg7NqgE6kTZTWmFuYYlUwAc3larLh5PSMQJnGlG46Jjg3CdMe3G
-         W0ZLVasUQe0UhDbwwIEw6dM345j/Hv0E89V7mBE/01hDKxamKk/fiz1zknVJ+pBgk+WI
-         NFNNsJs5Rk0YEzZFAuqDpFDdFLM7rYKsoggt79nMvuizQ0HFAdAlkDibJhMqi+gh7Ay1
-         i5EyOmG61RiKkG/HPmWGhEm+bpO/FshTlM6aF8kvS3XwoswVvX6P/b1fYbg1Zt+21gDn
-         uRMw==
-X-Gm-Message-State: APjAAAVka7yL4Pm2eUyoRGQB+px/FE2Sm6zf4tO7BgaZlPuDYrEbifGN
-        6EfNFjXm5qdCMQNhNw4zGQM=
-X-Google-Smtp-Source: APXvYqyyiuJdfDhtn9sySZr3o/D6USw7potnUz8aWY3bi/Zm3hnxy6EcWxCQcMDnbzEmguum4Hqo4Q==
-X-Received: by 2002:a17:902:e490:: with SMTP id cj16mr27318962plb.156.1556037547194;
-        Tue, 23 Apr 2019 09:39:07 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id v1sm24364801pff.81.2019.04.23.09.39.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 09:39:06 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v4 60/63] Documentation: x86: convert x86_64/5level-paging.txt to reST
-Date:   Wed, 24 Apr 2019 00:29:29 +0800
-Message-Id: <20190423162932.21428-61-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190423162932.21428-1-changbin.du@gmail.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
+        Tue, 23 Apr 2019 12:38:51 -0400
+X-Originating-IP: 93.29.109.196
+Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id AEFF9C0007;
+        Tue, 23 Apr 2019 16:38:46 +0000 (UTC)
+Message-ID: <c08bf38bc50f0ee537e225a4d02223b31dd3598f.camel@bootlin.com>
+Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
+ common place
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Daniel Stone <daniel@fooishbar.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Date:   Tue, 23 Apr 2019 18:38:46 +0200
+In-Reply-To: <CAPj87rOyX_6X-UbgPVrU-uGeeyqgTnp57UYD3QUJeiCWDfk9Kg@mail.gmail.com>
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+         <20190417154121.GJ13337@phenom.ffwll.local>
+         <20190418062229.eyog4i62eg4pr6uf@flea>
+         <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
+         <20190418090221.e57dogn4yx5nwdni@flea>
+         <CAKMK7uHN6QfYyzx4DjRT+7VLRi6N9DorQtw2GoDiNGTgie=DXA@mail.gmail.com>
+         <20190420225904.GZ4964@pendragon.ideasonboard.com>
+         <20190423072554.GW13337@phenom.ffwll.local>
+         <CAPj87rMWdjEvTJWRvdMLTZyw7pZpo5PpPr0FWcALNRe_D8cYqw@mail.gmail.com>
+         <20190423155416.GI16111@pendragon.ideasonboard.com>
+         <CAPj87rOyX_6X-UbgPVrU-uGeeyqgTnp57UYD3QUJeiCWDfk9Kg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,71 +66,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation to reStructuredText format and
-add it to Sphinx TOC tree. No essential content change.
+Hi,
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- .../{5level-paging.txt => 5level-paging.rst}     | 16 +++++++++++-----
- Documentation/x86/x86_64/index.rst               |  1 +
- 2 files changed, 12 insertions(+), 5 deletions(-)
- rename Documentation/x86/x86_64/{5level-paging.txt => 5level-paging.rst} (91%)
+Le mardi 23 avril 2019 à 17:02 +0100, Daniel Stone a écrit :
+> Hi Laurent,
+> 
+> On Tue, 23 Apr 2019 at 16:54, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> > On Tue, Apr 23, 2019 at 09:59:37AM +0100, Daniel Stone wrote:
+> > > On Tue, 23 Apr 2019 at 08:26, Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > Totally. Let's take DRM_FORMAT_XRGB8888 + I915_FORMAT_MOD_Y_TILED as
+> > > an example. [... details ...]
+> > 
+> > Looks like we have different kinds of metadata to consider. On the V4L2
+> > side metadata usually refers to the context in which a frame was
+> > captured, it doesn't tell how to interpret the contents of the pixels.
+> > In the case you just described, the metadata is part of the frame
+> > contents. I agree that this is a proper use case for storing such
+> > metadata in a plane. What I wouldn't like to see being stored in a plane
+> > is for instance gamma tables or similar data that configures the
+> > processing pipeline in the display engine (I know we have an API for
+> > gamma tables, this is just an example).
+> > 
+> > > It would be good to understand what you had in mind when you said that
+> > > using multiple planes created a mess. I haven't touched media
+> > > encode/decode units at a low level for quite a while (hooray for
+> > > gst-v4l2!), but I remember that they often used padding areas around
+> > > the buffer for scratch space - maybe motion vectors or similar? That
+> > > case is quite different to something like CCS, since the data is only
+> > > meaningful to the media engine and must be ignored (but preserved) by
+> > > everyone else. Using multiple planes in that case isn't appropriate,
+> > > since it's very specific to how that hardware unit deals with that
+> > > buffer, instead of something that every consumer needs to understand
+> > > in order to use it.
+> > 
+> > With metadata unrelated to the pixel content, using a separate plane in
+> > the same buffer resulted in an explosion of the number of combinations
+> > that we would need to support, and ultimately led to a very ill-defined
+> > API. We decided to convey metadata related to the frame capture context
+> > (e.g. what exposure time was used for the frame) and processing pipeline
+> > configuration data in different buffers than the frame itself.
+> 
+> Yeah, that makes sense. It's not really that different from what
+> happens with GPUs either: the final colour buffer the display
+> controller gets from a game is the product of a _lot_ of other work
+> which is invisible to the display controller, including things like
+> depth and stencil buffers, command buffers, etc etc. Those are closely
+> related to the frame production, but totally irrelevant for exchanging
+> the colour buffer with other subsystems.
+> 
+> I think we should look at the metadata buffers you're describing in
+> the same way. Perhaps each V4L2 buffer could have driver-private
+> auxiliary buffer storage, or perhaps it's something you need to
+> separately expose to userspace as auxiliary data which must be
+> preserved but ignored. But modifiers are really only about what you
+> need when exchanging image colour buffers between subsystems, not
+> anything else.
+> 
+> You're pretty close with gamma tables as well; for HDR and other kinds
+> of complex colour management, we need to carry a fair bit of auxiliary
+> information in order to display the image correctly. These have quite
+> different uses though: normally the colour buffer is produced by the
+> hardware and the primaries/whitepoints/etc are produced by software,
+> with the colour-management details remaining static across the life of
+> a swapchain even as you flip between multiple buffers. Given that, it
+> doesn't really make sense to try to stuff them into the same storage.
 
-diff --git a/Documentation/x86/x86_64/5level-paging.txt b/Documentation/x86/x86_64/5level-paging.rst
-similarity index 91%
-rename from Documentation/x86/x86_64/5level-paging.txt
-rename to Documentation/x86/x86_64/5level-paging.rst
-index 2432a5ef86d9..ab88a4514163 100644
---- a/Documentation/x86/x86_64/5level-paging.txt
-+++ b/Documentation/x86/x86_64/5level-paging.rst
-@@ -1,5 +1,11 @@
--== Overview ==
-+.. SPDX-License-Identifier: GPL-2.0
- 
-+==============
-+5-level paging
-+==============
-+
-+Overview
-+========
- Original x86-64 was limited by 4-level paing to 256 TiB of virtual address
- space and 64 TiB of physical address space. We are already bumping into
- this limit: some vendors offers servers with 64 TiB of memory today.
-@@ -16,16 +22,17 @@ QEMU 2.9 and later support 5-level paging.
- Virtual memory layout for 5-level paging is described in
- Documentation/x86/x86_64/mm.txt
- 
--== Enabling 5-level paging ==
- 
-+Enabling 5-level paging
-+=======================
- CONFIG_X86_5LEVEL=y enables the feature.
- 
- Kernel with CONFIG_X86_5LEVEL=y still able to boot on 4-level hardware.
- In this case additional page table level -- p4d -- will be folded at
- runtime.
- 
--== User-space and large virtual address space ==
--
-+User-space and large virtual address space
-+==========================================
- On x86, 5-level paging enables 56-bit userspace virtual address space.
- Not all user space is ready to handle wide addresses. It's known that
- at least some JIT compilers use higher bits in pointers to encode their
-@@ -58,4 +65,3 @@ One important case we need to handle here is interaction with MPX.
- MPX (without MAWA extension) cannot handle addresses above 47-bit, so we
- need to make sure that MPX cannot be enabled we already have VMA above
- the boundary and forbid creating such VMAs once MPX is enabled.
--
-diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
-index 4b65d29ef459..7b8c82151358 100644
---- a/Documentation/x86/x86_64/index.rst
-+++ b/Documentation/x86/x86_64/index.rst
-@@ -10,3 +10,4 @@ x86_64 Support
-    boot-options
-    uefi
-    mm
-+   5level-paging
--- 
-2.20.1
+I agree that we need to keep things minimal and clearly distinguish
+between what constitutes the description of the pixel buffer in terms
+of how it's laid out in memory and information about how the data
+should be interpreted.
+
+And there's indeed a fair share of things to consider there. Adding to
+the list above, I'm also thinking of the YUV colorspace information
+which must be passed along when displaying a buffer.
+
+But that's essentially not required to have a common description of
+buffers unified accross subsystems. Thinking about that, it would be
+interesting to have a common base structure for buffers used in v4l2
+and drm. Ideally, that could be shared when doing dma-buf to avoid
+having userspace describe buffers and memory each time a buffer is
+imported into another subsystem. This could also help us solve the
+ambiguity related to the YUV M-suffixed formats. Another idea could be
+having common ioctls to get a unified buffer description from userspace
+and e.g. mmap on a per-plane basis (with virtual mappings like DRM
+does).
+
+What do you think?
+
+Cheers,
+
+Paul
 
