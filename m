@@ -2,155 +2,148 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAA0C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3276C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB2E208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W9GKDDVj"
+	by mail.kernel.org (Postfix) with ESMTP id A2B7C2175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbfDWQRM (ORCPT
+        id S1728522AbfDWQRk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:17:12 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43593 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfDWQRM (ORCPT
+        Tue, 23 Apr 2019 12:17:40 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:56033 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfDWQRk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:17:12 -0400
-Received: by mail-pg1-f196.google.com with SMTP id z9so7839257pgu.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Uoo4zU9bRplcM88Gy3z7EAgvGkM989NlmEdwPQZGae8=;
-        b=W9GKDDVjS0xCeXhVdmlvraJ8iHMF2HFs55cDzBQfSwOCPCNMaIUDSPsuO1sWbTjYBI
-         fB+rcF1uQTc//aGnRJ1Sp719J0Fmm8KmACXUp76lWkPL/fu2dOkc0CWrtSsqeulCXkaS
-         0iSz6vf1Ci/2s9h91MCgVNrWKqit3HoPETw4E4DWlumY4ya5ISwpx8fm48hsJbUhIh98
-         6Qzv1gzbt6cC2uL77BTK87Z9aB2/5xmvi5NQa00pdEGAFJp1peNef7FyMqUdkICrb5yB
-         Rhd0tnEfeZhX+aKVxtA7lHsfFY3GJfm+gc5VwAB9Ca8xqBwSXIBdjoR2RPjbJ9f7pRCj
-         WKOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Uoo4zU9bRplcM88Gy3z7EAgvGkM989NlmEdwPQZGae8=;
-        b=ZBc+MjqRObqzqNttj4gHgR6L2NysMEB+g+jP2Jp4DcBxAtcHXXET3W6NevsRJC2iUY
-         N+HUyXn4ChfNfXeaKoOntL9X6wAbSAVv856OreIGuwlYsGzXnhTF0qAist1SdJajgamh
-         nkoCFg7RnBN8VWWR5b/jQk/gkMBBisidfqvdU0S+S56cTtVetVSGXxrjH8UP8n17OAc+
-         qb1g3amfYLDYpgqdO7LiuQ/7whcQM9gaozKTnMUNzoWzQsl9MvPmUlPk5O0VlJpV0NpL
-         LVPodbYJtgZ1QwTn2n8g8hvN2bxB3KypLSo8+mhmQf5DX5oUdBUpDw10n3LBWs8Ffsnn
-         EUkg==
-X-Gm-Message-State: APjAAAWPpl9ctO3RPMKZM8llvtmN+ZhJ0Uo9/Zm6oLhJ7ep/UVvEpTm3
-        CtOZthSeut4phx6Bn9KJ6ryakg==
-X-Google-Smtp-Source: APXvYqwt+NHYDXHs8rvq7qzJYUyXlRSTBxHgj1E7lSJ1DIGbF4MuoRd9x2YDkzTgS6GI+BAixC4LGQ==
-X-Received: by 2002:a63:6fc1:: with SMTP id k184mr25772523pgc.239.1556036231587;
-        Tue, 23 Apr 2019 09:17:11 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id f13sm8045094pgr.35.2019.04.23.09.17.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 09:17:10 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 10:17:08 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, mike.leach@linaro.org,
-        rjw@rjwysocki.net, robert.walker@arm.com
-Subject: Re: [PATCH v2 28/36] coresight: platform: Use fwnode handle for
- device search
-Message-ID: <20190423161708.GB21070@xps15>
-References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
- <1555344260-12375-29-git-send-email-suzuki.poulose@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555344260-12375-29-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 23 Apr 2019 12:17:40 -0400
+Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 1C36ACF2DA;
+        Tue, 23 Apr 2019 18:25:48 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH 0/2] Quirk to enable QCA9377 to discover BLE devices
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190423072236.24999-1-jprvita@endlessm.com>
+Date:   Tue, 23 Apr 2019 18:17:37 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        ytkim@qca.qualcomm.com, "David S. Miller" <davem@davemloft.net>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@endlessm.com,
+        =?utf-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <D4B5C1C6-0A7A-4666-A1D2-D7A42BD5EABA@holtmann.org>
+References: <20190423072236.24999-1-jprvita@endlessm.com>
+To:     =?utf-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:04:11PM +0100, Suzuki K Poulose wrote:
-> We match of_node while searching for a device. Make this
-> more generic in preparation for the ACPI support by using
-> fwnode_handle.
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-platform.c | 17 +++++++----------
->  1 file changed, 7 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index a408b01..318a6ff 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -36,14 +36,8 @@ static int coresight_alloc_conns(struct device *dev,
->  	return 0;
->  }
->  
-> -#ifdef CONFIG_OF
-> -static int of_dev_node_match(struct device *dev, void *data)
-> -{
-> -	return dev->of_node == data;
-> -}
-> -
->  static struct device *
-> -of_coresight_get_endpoint_device(struct device_node *endpoint)
-> +coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
->  {
->  	struct device *dev = NULL;
->  
-> @@ -52,7 +46,7 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
->  	 * platform bus.
->  	 */
->  	dev = bus_find_device(&platform_bus_type, NULL,
-> -			      endpoint, of_dev_node_match);
-> +			      fwnode, device_fwnode_match);
->  	if (dev)
->  		return dev;
->  
-> @@ -61,9 +55,10 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
->  	 * looking for the device that matches the endpoint node.
->  	 */
->  	return bus_find_device(&amba_bustype, NULL,
-> -			       endpoint, of_dev_node_match);
-> +			       fwnode, device_fwnode_match);
->  }
->  
-> +#ifdef CONFIG_OF
->  static inline bool of_coresight_legacy_ep_is_input(struct device_node *ep)
->  {
->  	return of_property_read_bool(ep, "slave-mode");
-> @@ -191,6 +186,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
->  	struct device_node *rparent = NULL;
->  	struct device_node *rep = NULL;
->  	struct device *rdev = NULL;
-> +	struct fwnode_handle *rdev_fwnode;
->  
->  	do {
->  		/* Parse the local port details */
-> @@ -209,8 +205,9 @@ static int of_coresight_parse_endpoint(struct device *dev,
->  		if (of_graph_parse_endpoint(rep, &rendpoint))
->  			break;
->  
-> +		rdev_fwnode = of_fwnode_handle(rparent);
->  		/* If the remote device is not available, defer probing */
-> -		rdev = of_coresight_get_endpoint_device(rparent);
-> +		rdev = coresight_find_device_by_fwnode(rdev_fwnode);
->  		if (!rdev) {
->  			ret = -EPROBE_DEFER;
->  			break;
+Hi Joao Paulo,
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> As reported previously on [1], it is currently not possible to discover
+> BLE devices with QCA9377 controllers. When trying to start an active
+> scanning procedure with this controller, three commands are queued,
+> LE_SET_RANDOM_ADDR, LE_SET_SCAN_PARAM and LE_SET_SCAN_ENABLE. After the
+> first command is sent to the controller, a command complete event for it
+> is received, and the second command is sent, an extra command complete
+> for the first command is received. At this point the kernel sends the
+> next command and fails to process the command complete event for the
+> LE_SET_SCAN_PARAM command, because when it arrives it does not match the
+> last command that was sent. This makes hdev->le_scan_type never be
+> updated and the kernel behaves as if a passive scanning procedure was
+> being performed, thus no device found events are sent to userspace.
+> 
+> [1] https://www.spinics.net/lists/linux-bluetooth/msg79102.html
+> 
+> I have received no replies on the previous report and on further
+> attempts to contact the QCA addresses that have submitted Bluetooth
+> firmware blobs to linux-firmware upstream. This series avoids the
+> problem described above, but I believe ideally the controller should not
+> be sending this extra command complete event.
+> 
+> I'm not 100% sure if the approach taken here is the best way to work
+> around this problem in the kernel, as I am not super familiar with the
+> HCI layer. I'll be happy to hear suggestions of better approaches.
+> 
+> Full logs from btmon can be found bellow this message, and the extra
+> command complete event can be seen at timestamp 27.420131.
 
+so can we get a fixed firmware from Qualcomm? Or at least some ROM patches for it?
+
+> Best regards,
+> 
+> João Paulo Rechi Vita (2):
+>  Bluetooth: Create new HCI_QUIRK_WAIT_FOR_MATCHING_CC
+>  Bluetooth: Set HCI_QUIRK_WAIT_FOR_MATCHING_CC for QCA9377
+> 
+> drivers/bluetooth/btusb.c        | 9 +++++++++
+> include/net/bluetooth/hci.h      | 4 ++++
+> include/net/bluetooth/hci_core.h | 1 +
+> net/bluetooth/hci_core.c         | 3 +++
+> net/bluetooth/hci_event.c        | 4 ++++
+> 5 files changed, 21 insertions(+)
+> 
 > -- 
-> 2.7.4
+> 2.20.1
 > 
+> Bluetooth monitor ver 5.50
+> = Note: Linux version 5.0.0+ (x86_64)                                  0.352340
+> = Note: Bluetooth subsystem version 2.22                               0.352343
+> = New Index: 80:C5:F2:8F:87:84 (Primary,USB,hci0)               [hci0] 0.352344
+> = Open Index: 80:C5:F2:8F:87:84                                 [hci0] 0.352345
+> = Index Info: 80:C5:F2:8F:87:84 (Qualcomm)                      [hci0] 0.352346
+> @ MGMT Open: bluetoothd (privileged) version 1.14             {0x0001} 0.352347
+> @ MGMT Open: btmon (privileged) version 1.14                  {0x0002} 0.352366
+> @ MGMT Open: btmgmt (privileged) version 1.14                {0x0003} 27.302164
+> @ MGMT Command: Start Discovery (0x0023) plen 1       {0x0003} [hci0] 27.302310
+>        Address type: 0x06
+>          LE Public
+>          LE Random
+> < HCI Command: LE Set Random Address (0x08|0x0005) plen 6   #1 [hci0] 27.302496
+>        Address: 15:60:F2:91:B2:24 (Non-Resolvable)
+>> HCI Event: Command Complete (0x0e) plen 4                 #2 [hci0] 27.419117
+>      LE Set Random Address (0x08|0x0005) ncmd 1
+>        Status: Success (0x00)
+> < HCI Command: LE Set Scan Parameters (0x08|0x000b) plen 7  #3 [hci0] 27.419244
+>        Type: Active (0x01)
+>        Interval: 11.250 msec (0x0012)
+>        Window: 11.250 msec (0x0012)
+>        Own address type: Random (0x01)
+>        Filter policy: Accept all advertisement (0x00)
+>> HCI Event: Command Complete (0x0e) plen 4                 #4 [hci0] 27.420131
+>      LE Set Random Address (0x08|0x0005) ncmd 1
+>        Status: Success (0x00)
+
+so we really need to ignore this command complete and not start ahead with the next command. Especially since we really only support one command at a time right now.
+
+> < HCI Command: LE Set Scan Enable (0x08|0x000c) plen 2      #5 [hci0] 27.420259
+>        Scanning: Enabled (0x01)
+>        Filter duplicates: Enabled (0x01)
+>> HCI Event: Command Complete (0x0e) plen 4                 #6 [hci0] 27.420969
+>      LE Set Scan Parameters (0x08|0x000b) ncmd 1
+>        Status: Success (0x00)
+
+We need for this command complete to arrive and only then continue with LE Set Scan Enable. We don’t need a quirk for it. Just add support for dealing with unexpected command complete opcodes. And print a big error if that happens.
+
+>> HCI Event: Command Complete (0x0e) plen 4                 #7 [hci0] 27.421983
+>      LE Set Scan Enable (0x08|0x000c) ncmd 1
+>        Status: Success (0x00)
+> @ MGMT Event: Command Complete (0x0001) plen 4        {0x0003} [hci0] 27.422059
+>      Start Discovery (0x0023) plen 1
+>        Status: Success (0x00)
+>        Address type: 0x06
+>          LE Public
+>          LE Random
+
+Regards
+
+Marcel
+
