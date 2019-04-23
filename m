@@ -2,119 +2,113 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26229C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DF5C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01E720811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104CC20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nj/UAzBo"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="twa/FD3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbfDWJ2N (ORCPT
+        id S1725916AbfDWJ3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 05:28:13 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46956 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfDWJ2N (ORCPT
+        Tue, 23 Apr 2019 05:29:06 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46721 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbfDWJ3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 05:28:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=f/iLXaVA4u+TazdBjYinG9bUUB+MWLz5zrXVIQCfKNM=; b=nj/UAzBo31hclTqz5KOaLs3kN
-        9+Wb0SdOYy0J9KD+QyJt7yQ9LGkIckSf3t6Viqscs1prUQ4Nt0h+LzExLOrhIw4owyz+uu7FAHuG3
-        C71Ebgg/MAqlvq9jb6UjD/kM1r8gJIbubPgfyoRFrQF2yz+qPrZJsT/XWTY7IlvtHtNy8J3fwaByD
-        EwipeXzyx6RcPe7VVCz2UCcTO/i/sdll1PXi3cBGsw3ByxE0j39YXUg26M35ZBMoWBEL2hNXhm/vB
-        E+Vg6nFM30vsFHp2cPMVfjZedrFAK5S3nGHSEHY4WDip3zj+r68oY4/UkvjhHmLcExsJDw0t9dw27
-        scs2myCjQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIrho-0001lo-VN; Tue, 23 Apr 2019 09:27:13 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E48FE29B47DCE; Tue, 23 Apr 2019 11:27:10 +0200 (CEST)
-Date:   Tue, 23 Apr 2019 11:27:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, kirill@shutemov.name,
-        ak@linux.intel.com, dave@stgolabs.net, jack@suse.cz,
-        Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH v12 21/31] mm: Introduce find_vma_rcu()
-Message-ID: <20190423092710.GI11158@hirez.programming.kicks-ass.net>
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <20190416134522.17540-22-ldufour@linux.ibm.com>
+        Tue, 23 Apr 2019 05:29:05 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v2so4886877pge.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 02:29:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w4fZiACkBLsuw5BLuZySw+S4JDknvGfC5Ei1Wz8auhg=;
+        b=twa/FD3WmOktH9MVUXb/BldyzAa94cTWq+B+S4ebxbShNY2tz68WlGR8/5ZjyL48Gh
+         is1gLQKuXAdlVwuuYBQowMOWGgnIU4cLlahPNfTri8ya/Vkqg2xYHyMvm6kCa1JKUHHL
+         DB0JMTZ3PHHGcuL1YReWXA8XA0zLfL56ZxME9SxJbU/ULv5oya+8sBH8pu35OH6ORWJe
+         pC6g0alS54g3O2Ac9cY73AnwM9VJlHJmNtPofCIbswJQsGaT989Es/9OfoLnGhbBqSlj
+         hgPxb/oKA/z6b0ax9JfOa6HYKAsuLpqd1NLUUS5jdBMs2GMG/HGXQQ4kumsm8D3hc1QN
+         SA+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=w4fZiACkBLsuw5BLuZySw+S4JDknvGfC5Ei1Wz8auhg=;
+        b=V8U1GrfMoqsz7ytmFLJonP5QKYkoe45WFiCc8hyvJ2SuGpv+OZM9pcNHO22tbSBEK6
+         gcZwdum1fu5qWpg+DuLwO9MGEU2eV1POybLifPjxlpKExABGWFHmkXSN2cq9rrt/F3Ei
+         3isSjDjkKUUrCJsNlY6O8dMogMkQY3JOiZCJfY5J2OrqolxR5FjLF3vaMbzB/Hpsumz2
+         Vafr+7NUdW8YJMLW+htSNBaDb3qSv2aiK013bLO5KqBx7w1bwkwkwWEBYnT5f4U++ZTK
+         xBPP7eK4sMclvaBsGmrTjBqJYpe80akjjggJu+hkIvgFzAnM8piC/1OWCCul+I9gl/fi
+         DIwg==
+X-Gm-Message-State: APjAAAX3N9IHYDzBpPB1IUcOWWqF+jvLg9BQ3ISFwyFCYErW6cozNANH
+        H+BSFCblTF8dCnhh0JRDFtVe7A==
+X-Google-Smtp-Source: APXvYqzyeawPu0YMyAZZFm6KX9YpYBW5MaleqW0+qkdNuOr2h7cbOgN3OqOXryQp3ByD92IOpbNilQ==
+X-Received: by 2002:a63:1d26:: with SMTP id d38mr22898103pgd.357.1556011744623;
+        Tue, 23 Apr 2019 02:29:04 -0700 (PDT)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id q10sm18905809pgh.93.2019.04.23.02.29.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 02:29:04 -0700 (PDT)
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux@endlessm.com,
+        Daniel Drake <drake@endlessm.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>
+Subject: [PATCH] i915: disable framebuffer compression on GeminiLake
+Date:   Tue, 23 Apr 2019 17:28:10 +0800
+Message-Id: <20190423092810.28359-1-jian-hong@endlessm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416134522.17540-22-ldufour@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 03:45:12PM +0200, Laurent Dufour wrote:
-> This allows to search for a VMA structure without holding the mmap_sem.
-> 
-> The search is repeated while the mm seqlock is changing and until we found
-> a valid VMA.
-> 
-> While under the RCU protection, a reference is taken on the VMA, so the
-> caller must call put_vma() once it not more need the VMA structure.
-> 
-> At the time a VMA is inserted in the MM RB tree, in vma_rb_insert(), a
-> reference is taken to the VMA by calling get_vma().
-> 
-> When removing a VMA from the MM RB tree, the VMA is not release immediately
-> but at the end of the RCU grace period through vm_rcu_put(). This ensures
-> that the VMA remains allocated until the end the RCU grace period.
-> 
-> Since the vm_file pointer, if valid, is released in put_vma(), there is no
-> guarantee that the file pointer will be valid on the returned VMA.
+From: Daniel Drake <drake@endlessm.com>
 
-What I'm missing here, and in the previous patch introducing the
-refcount (also see refcount_t), is _why_ we need the refcount thing at
-all.
+On many (all?) the Gemini Lake systems we work with, there is frequent
+momentary graphical corruption at the top of the screen, and it seems
+that disabling framebuffer compression can avoid this.
 
-My original plan was to use SRCU, which at the time was not complete
-enough so I abused/hacked preemptible RCU, but that is no longer the
-case, SRCU has all the required bits and pieces.
+The ticket was reported 6 months ago and has already affected a
+multitude of users, without any real progress being made. So, lets
+disable framebuffer compression on GeminiLake until a solution is found.
 
-Also; the initial motivation was prefaulting large VMAs and the
-contention on mmap was killing things; but similarly, the contention on
-the refcount (I did try that) killed things just the same.
+Buglink: https://bugs.freedesktop.org/show_bug.cgi?id=108085
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+---
+ drivers/gpu/drm/i915/intel_fbc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-So I'm really sad to see the refcount return; and without any apparent
-justification.
+diff --git a/drivers/gpu/drm/i915/intel_fbc.c b/drivers/gpu/drm/i915/intel_fbc.c
+index 656e684e7c9a..fc018f3f53a1 100644
+--- a/drivers/gpu/drm/i915/intel_fbc.c
++++ b/drivers/gpu/drm/i915/intel_fbc.c
+@@ -1278,6 +1278,10 @@ static int intel_sanitize_fbc_option(struct drm_i915_private *dev_priv)
+ 	if (!HAS_FBC(dev_priv))
+ 		return 0;
+ 
++	/* https://bugs.freedesktop.org/show_bug.cgi?id=108085 */
++	if (IS_GEMINILAKE(dev_priv))
++		return 0;
++
+ 	if (IS_BROADWELL(dev_priv) || INTEL_GEN(dev_priv) >= 9)
+ 		return 1;
+ 
+-- 
+2.21.0
+
