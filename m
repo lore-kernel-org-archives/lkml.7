@@ -2,338 +2,140 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427E6C10F11
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47C4C10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053192077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AA7020811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:51:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVqjjPMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbfDWAhk (ORCPT
+        id S1728195AbfDWAvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 20:37:40 -0400
-Received: from mga11.intel.com ([192.55.52.93]:13158 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729106AbfDWAh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 20:37:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 17:37:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,383,1549958400"; 
-   d="scan'208";a="225774531"
-Received: from bxing-ubuntu.jf.intel.com ([10.23.30.27])
-  by orsmga001.jf.intel.com with ESMTP; 22 Apr 2019 17:37:25 -0700
-From:   Cedric Xing <cedric.xing@intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Hansen@vger.kernel.org,
-        Dave <dave.hansen@intel.com>, Christopherson@vger.kernel.org,
-        Sean J <sean.j.christopherson@intel.com>, nhorman@redhat.com,
-        npmccallum@redhat.com, Ayoun@vger.kernel.org,
-        Serge <serge.ayoun@intel.com>, Katz-zamir@vger.kernel.org,
-        Shay <shay.katz-zamir@intel.com>, Huang@vger.kernel.org,
-        Haitao <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        Svahn@vger.kernel.org, Kai <kai.svahn@intel.com>, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, Kai <kai.huang@intel.com>,
-        rientjes@google.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Cedric Xing <cedric.xing@intel.com>
-Subject: [RFC PATCH v1 2/3] x86/vdso: Modify __vdso_sgx_enter_enclave() to allow parameter passing on untrusted stack
-Date:   Mon, 22 Apr 2019 17:37:24 -0700
-Message-Id: <ba2a51568f3adaf74994d33ea3cbee570e20c6f6.1555965327.git.cedric.xing@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1555965327.git.cedric.xing@intel.com>
-References: <cover.1555965327.git.cedric.xing@intel.com>
-In-Reply-To: <cover.1555965327.git.cedric.xing@intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com> <cover.1555965327.git.cedric.xing@intel.com>
+        Mon, 22 Apr 2019 20:51:02 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:52726 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfDWAvB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 20:51:01 -0400
+Received: by mail-it1-f195.google.com with SMTP id x132so20767624itf.2;
+        Mon, 22 Apr 2019 17:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7IzJQfMfcbJ3GY4q41cW4H36gtaA7o57eCLtAONQIoo=;
+        b=VVqjjPMdKnbgeQLMovAysdrXkhWjpHgXKdDlsTWs390ogm3LRe09lyC9yjyHG25JAN
+         lvdhNOIaf+DWcL1dbYnmXT7ppgTZCXIRcT8d+oXonbrPeAwN81r4BJsZZUuRIy2VFaZO
+         aEJ4KdK7BfcnCI78tg7XxbVPY41m/3Vtzphb9qqsa3WBDlqLB7zo2UBTbyq5bjbOLD8+
+         ZM5o2lGP7OqkqvyeLSfwzm+qm4AuAjNLtMSeggmoG9TimE5r8Paxux7qBtLheun5lwjL
+         VnTPj6KoXNqJfQ/Ru+ntHEUQNq7tuFHQgmwouTVzXPaIfJVwmSqC/9a1YSWhj1+eczH2
+         5JTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7IzJQfMfcbJ3GY4q41cW4H36gtaA7o57eCLtAONQIoo=;
+        b=bA9sUHHQoJ7vMChjCU4ak394oS92lF+5eALV1VGM443SMiHt+dD4Tx6+I7Vx5uWijF
+         nmle2E1AXcO9UNc1tyY4DGiFuPzrBbTQq4tiHGflvwGd0u/wpYF6yjMN7/r1dLE7Pr18
+         7ssrdVJ1CrWX9yShS9sGT/7MmS7vgdx5aR29kVPB39Scyi5CyfAhSco3TLAV/Y/9qwwC
+         /mV6Yl3qVAwogfJciU4JexWrhOz0+Zg+fu6U6vBLYNVxsDZPLmrv+aRLe04iMc/0oU1Y
+         OIgBQLvpDeCLIPq8btHuEcQq42y1/8IsJgbyMBL+v35uHg+pfSCsLja+BFjJ/O1sBijI
+         iDoA==
+X-Gm-Message-State: APjAAAUqBLGjYWW8Lk574rwJj/vCvO/5ApxB5UhfAS7VFcykKel66vSZ
+        +tw7qp72Z2cY1pWyK+evwuNsEA+M/eg3NLClXDM=
+X-Google-Smtp-Source: APXvYqwILmZPCiW11hqjWfuykqF8zVJTAOh6DnPPq9COeg6uUoZPwMhn4JUM+e+ynv1YVXnjs2PN6gKC/LKhCQMtAq8=
+X-Received: by 2002:a24:9a03:: with SMTP id l3mr132470ite.3.1555980660537;
+ Mon, 22 Apr 2019 17:51:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <155548879651.3454.13167784936351314661.stgit@buzz> <155548880068.3454.1621821881762819373.stgit@buzz>
+In-Reply-To: <155548880068.3454.1621821881762819373.stgit@buzz>
+From:   Joseph Yasi <joe.yasi@gmail.com>
+Date:   Mon, 22 Apr 2019 20:50:49 -0400
+Message-ID: <CADzA9o=zsmWz6wO1cmccegAj8Vuqkjm-LwRVe=kptd-1mBfy1g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] e1000e: start network tx queue only when link is up
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        e1000-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The previous __vdso_sgx_enter_enclave() requires enclaves to preserve %rsp,
-which prohibits enclaves from allocating and passing parameters for
-untrusted function calls (aka. o-calls).
-
-This patch addresses the problem above by introducing a new ABI that preserves
-%rbp instead of %rsp. Then __vdso_sgx_enter_enclave() can anchor its frame
-using %rbp so that enclaves are allowed to allocate space on the untrusted
-stack by decrementing %rsp. Please note that the stack space allocated in such
-way will be part of __vdso_sgx_enter_enclave()'s frame so will be freed after
-__vdso_sgx_enter_enclave() returns. Therefore, __vdso_sgx_enter_enclave() has
-been changed to take a callback function as an optional parameter, which if
-supplied, will be invoked upon enclave exits (both AEX (Asynchronous Enclave
-eXit) and normal exits), with the value of %rsp left
-off by the enclave as a parameter to the callback.
-
-Here's the summary of API/ABI changes in this patch. More details could be
-found in arch/x86/entry/vdso/vsgx_enter_enclave.S.
-* 'struct sgx_enclave_exception' is renamed to 'struct sgx_enclave_exinfo'
-  because it is filled upon both AEX (i.e. exceptions) and normal enclave
-  exits.
-* __vdso_sgx_enter_enclave() anchors its frame using %rbp (instead of %rsp in
-  the previous implementation).
-* __vdso_sgx_enter_enclave() takes one more parameter - a callback function to
-  be invoked upon enclave exits. This callback is optional, and if not
-  supplied, will cause __vdso_sgx_enter_enclave() to return upon enclave exits
-  (same behavior as previous implementation).
-* The callback function is given as a parameter the value of %rsp at enclave
-  exit to address data "pushed" by the enclave. A positive value returned by
-  the callback will be treated as an ENCLU leaf for re-entering the enclave,
-  while a zero or negative value will be passed through as the return
-  value of __vdso_sgx_enter_enclave() to its caller. It's also safe to
-  leave callback by longjmp() or by throwing a C++ exception.
-
-Signed-off-by: Cedric Xing <cedric.xing@intel.com>
----
- arch/x86/entry/vdso/vsgx_enter_enclave.S | 156 ++++++++++++++---------
- arch/x86/include/uapi/asm/sgx.h          |  14 +-
- 2 files changed, 100 insertions(+), 70 deletions(-)
-
-diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-index fe0bf6671d6d..210f4366374a 100644
---- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
-+++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-@@ -14,88 +14,118 @@
- .code64
- .section .text, "ax"
- 
--#ifdef SGX_KERNEL_DOC
- /**
-  * __vdso_sgx_enter_enclave() - Enter an SGX enclave
-  *
-  * @leaf:	**IN \%eax** - ENCLU leaf, must be EENTER or ERESUME
-- * @tcs:	**IN \%rbx** - TCS, must be non-NULL
-- * @ex_info:	**IN \%rcx** - Optional 'struct sgx_enclave_exception' pointer
-+ * @tcs:	**IN 0x08(\%rsp)** - TCS, must be non-NULL
-+ * @ex_info:	**IN 0x10(\%rsp)** - Optional 'struct sgx_enclave_exinfo'
-+ *				     pointer
-+ * @callback:	**IN 0x18(\%rsp)** - Optional callback function to be called on
-+ *				     enclave exit or exception
-  *
-  * Return:
-  *  **OUT \%eax** -
-- *  %0 on a clean entry/exit to/from the enclave, %-EINVAL if ENCLU leaf is
-- *  not allowed or if TCS is NULL, %-EFAULT if ENCLU or the enclave faults
-+ *  %0 on a clean entry/exit to/from the enclave, %-EINVAL if ENCLU leaf is not
-+ *  allowed, %-EFAULT if ENCLU or the enclave faults, or a non-positive value
-+ *  returned from ``callback`` (if one is supplied).
-  *
-  * **Important!**  __vdso_sgx_enter_enclave() is **NOT** compliant with the
-- * x86-64 ABI, i.e. cannot be called from standard C code.   As noted above,
-- * input parameters must be passed via ``%eax``, ``%rbx`` and ``%rcx``, with
-- * the return value passed via ``%eax``.  All registers except ``%rsp`` must
-- * be treated as volatile from the caller's perspective, including but not
-- * limited to GPRs, EFLAGS.DF, MXCSR, FCW, etc...  Conversely, the enclave
-- * being run **must** preserve the untrusted ``%rsp`` and stack.
-+ * x86-64 ABI, i.e. cannot be called from standard C code. As noted above,
-+ * input parameters must be passed via ``%eax``, ``8(%rsp)``, ``0x10(%rsp)`` and
-+ * ``0x18(%rsp)``, with the return value passed via ``%eax``. All other registers
-+ * will be passed through to the enclave as is. All registers except ``%rbp``
-+ * must be treated as volatile from the caller's perspective, including but not
-+ * limited to GPRs, EFLAGS.DF, MXCSR, FCW, etc... Conversely, the enclave being
-+ * run **must** preserve the untrusted ``%rbp``.
-+ *
-+ * ``callback`` has the following signature:
-+ * int callback(long rdi, long rsi, long rdx,
-+ *		struct sgx_enclave_exinfo *ex_info, long r8, long r9,
-+ *		void *tcs, long ursp);
-+ * ``callback`` **shall** follow x86_64 ABI. All GPRs **except** ``%rax``, ``%rbx``
-+ * and ``rcx`` are passed through to ``callback``. ``%rdi``, ``%rsi``, ``%rdx``,
-+ * ``%r8``, ``%r9``, along with the value of ``%rsp`` when the enclave exited/excepted,
-+ * can be accessed directly as input parameters, while other GPRs can be
-+ * accessed in assembly if needed.
-+ * A positive value returned from ``callback`` will be treated as an ENCLU leaf
-+ * (e.g. EENTER/ERESUME) to reenter the enclave, while 0 or a negative return
-+ * value will be passed back to the caller of __vdso_sgx_enter_enclave().
-+ * It is also **safe** to ``longjmp()`` out of ``callback``.
-  */
--__vdso_sgx_enter_enclave(u32 leaf, void *tcs,
--			 struct sgx_enclave_exception *ex_info)
--{
--	if (leaf != SGX_EENTER && leaf != SGX_ERESUME)
--		return -EINVAL;
--
--	if (!tcs)
--		return -EINVAL;
--
--	try {
--		ENCLU[leaf];
--	} catch (exception) {
--		if (e)
--			*e = exception;
--		return -EFAULT;
--	}
--
--	return 0;
--}
--#endif
- ENTRY(__vdso_sgx_enter_enclave)
--	/* EENTER <= leaf <= ERESUME */
-+	/* Prolog */
-+	.cfi_startproc
-+	push	%rbp
-+	.cfi_adjust_cfa_offset	8
-+	.cfi_rel_offset		%rbp, 0
-+	mov	%rsp, %rbp
-+	.cfi_def_cfa_register	%rbp
-+
-+1:	/* EENTER <= leaf <= ERESUME */
- 	cmp	$0x2, %eax
--	jb	bad_input
--
-+	jb	6f
- 	cmp	$0x3, %eax
--	ja	bad_input
-+	ja	6f
- 
--	/* TCS must be non-NULL */
--	test	%rbx, %rbx
--	je	bad_input
-+	/* Load TCS and AEP */
-+	mov	0x10(%rbp), %rbx
-+	lea	2f(%rip), %rcx
- 
--	/* Save @exception_info */
--	push	%rcx
--
--	/* Load AEP for ENCLU */
--	lea	1f(%rip),  %rcx
--1:	enclu
--
--	add	$0x8, %rsp
--	xor	%eax, %eax
--	ret
--
--bad_input:
--	mov     $(-EINVAL), %rax
--	ret
--
--.pushsection .fixup, "ax"
--	/* Re-load @exception_info and fill it (if it's non-NULL) */
--2:	pop	%rcx
--	test    %rcx, %rcx
--	je      3f
-+	/* Single ENCLU serving as both EENTER and AEP (ERESUME) */
-+2:	enclu
- 
-+	/* EEXIT path */
-+	xor	%ebx, %ebx
-+3:	mov	0x18(%rbp), %rcx
-+	jrcxz	4f
- 	mov	%eax, EX_LEAF(%rcx)
--	mov	%di,  EX_TRAPNR(%rcx)
--	mov	%si,  EX_ERROR_CODE(%rcx)
-+	jnc	4f
-+	mov	%di, EX_TRAPNR(%rcx)
-+	mov	%si, EX_ERROR_CODE(%rcx)
- 	mov	%rdx, EX_ADDRESS(%rcx)
--3:	mov	$(-EFAULT), %rax
-+
-+4:	/* Call *callback if supplied */
-+	mov	0x20(%rbp), %rax
-+	test	%rax, %rax
-+	cmovz	%rbx, %rax
-+	jz	7f
-+	/* Align stack and clear RFLAGS.DF per x86_64 ABI */
-+	mov	%rsp, %rbx
-+	and	$-0x10, %rsp
-+	cld
-+	/* Parameters for *callback */
-+	push	%rbx
-+	push	0x10(%rbp)
-+	/* Call via retpoline */
-+	call	40f
-+	/* Cleanup stack */
-+	mov	%rbx, %rsp
-+	jmp	1b
-+40:	/* retpoline */
-+	call	42f
-+41:	pause
-+	lfence
-+	jmp	41b
-+42:	mov	%rax, (%rsp)
-+	ret
-+
-+5:	/* Exception path */
-+	mov	$-EFAULT, %ebx
-+	stc
-+	jmp	3b
-+
-+6:	/* Unsupported ENCLU leaf */
-+	cmp	$0, %eax
-+	jle	7f
-+	mov	$-EINVAL, %eax
-+
-+7:	/* Epilog */
-+	leave
-+	.cfi_def_cfa		%rsp, 8
- 	ret
--.popsection
-+	.cfi_endproc
- 
--_ASM_VDSO_EXTABLE_HANDLE(1b, 2b)
-+_ASM_VDSO_EXTABLE_HANDLE(2b, 5b)
- 
- ENDPROC(__vdso_sgx_enter_enclave)
-diff --git a/arch/x86/include/uapi/asm/sgx.h b/arch/x86/include/uapi/asm/sgx.h
-index 9ed690a38c70..50d2b5143e5e 100644
---- a/arch/x86/include/uapi/asm/sgx.h
-+++ b/arch/x86/include/uapi/asm/sgx.h
-@@ -24,7 +24,7 @@
- 
- /**
-  * struct sgx_enclave_create - parameter structure for the
-- *                             %SGX_IOC_ENCLAVE_CREATE ioctl
-+ *			       %SGX_IOC_ENCLAVE_CREATE ioctl
-  * @src:	address for the SECS page data
-  */
- struct sgx_enclave_create  {
-@@ -33,7 +33,7 @@ struct sgx_enclave_create  {
- 
- /**
-  * struct sgx_enclave_add_page - parameter structure for the
-- *                               %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
-+ *				 %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
-  * @addr:	address within the ELRANGE
-  * @src:	address for the page data
-  * @secinfo:	address for the SECINFO data
-@@ -49,7 +49,7 @@ struct sgx_enclave_add_page {
- 
- /**
-  * struct sgx_enclave_init - parameter structure for the
-- *                           %SGX_IOC_ENCLAVE_INIT ioctl
-+ *			     %SGX_IOC_ENCLAVE_INIT ioctl
-  * @sigstruct:	address for the SIGSTRUCT data
-  */
- struct sgx_enclave_init {
-@@ -66,16 +66,16 @@ struct sgx_enclave_set_attribute {
- };
- 
- /**
-- * struct sgx_enclave_exception - structure to report exceptions encountered in
-- *				  __vdso_sgx_enter_enclave()
-+ * struct sgx_enclave_exinfo - structure to report exceptions encountered in
-+ *			       __vdso_sgx_enter_enclave()
-  *
-- * @leaf:	ENCLU leaf from \%eax at time of exception
-+ * @leaf:	ENCLU leaf from \%eax at time of exception/exit
-  * @trapnr:	exception trap number, a.k.a. fault vector
-  * @error_code:	exception error code
-  * @address:	exception address, e.g. CR2 on a #PF
-  * @reserved:	reserved for future use
-  */
--struct sgx_enclave_exception {
-+struct sgx_enclave_exinfo {
- 	__u32 leaf;
- 	__u16 trapnr;
- 	__u16 error_code;
--- 
-2.17.1
-
+On Wed, Apr 17, 2019 at 4:13 AM Konstantin Khlebnikov
+<khlebnikov@yandex-team.ru> wrote:
+>
+> Driver does not want to keep packets in tx queue when link is lost.
+> But present code only reset NIC to flush them, but does not prevent
+> queuing new packets. Moreover reset sequence itself could generate
+> new packets via netconsole and NIC falls into endless reset loop.
+>
+> This patch wakes tx queue only when NIC is ready to send packets.
+>
+> This is proper fix for problem addressed by commit 0f9e980bf5ee
+> ("e1000e: fix cyclic resets at link up with active tx").
+>
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
+Tested-by: Joseph Yasi <joe.yasi@gmail.com>
+> ---
+>  drivers/net/ethernet/intel/e1000e/netdev.c |    6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+> index ba96e52aa8d1..fe643d66aa10 100644
+> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+> @@ -4209,7 +4209,7 @@ void e1000e_up(struct e1000_adapter *adapter)
+>                 e1000_configure_msix(adapter);
+>         e1000_irq_enable(adapter);
+>
+> -       netif_start_queue(adapter->netdev);
+> +       /* tx queue started by watchdog timer when link is up */
+>
+>         e1000e_trigger_lsc(adapter);
+>  }
+> @@ -4607,6 +4607,7 @@ int e1000e_open(struct net_device *netdev)
+>         pm_runtime_get_sync(&pdev->dev);
+>
+>         netif_carrier_off(netdev);
+> +       netif_stop_queue(netdev);
+>
+>         /* allocate transmit descriptors */
+>         err = e1000e_setup_tx_resources(adapter->tx_ring);
+> @@ -4667,7 +4668,6 @@ int e1000e_open(struct net_device *netdev)
+>         e1000_irq_enable(adapter);
+>
+>         adapter->tx_hang_recheck = false;
+> -       netif_start_queue(netdev);
+>
+>         hw->mac.get_link_status = true;
+>         pm_runtime_put(&pdev->dev);
+> @@ -5289,6 +5289,7 @@ static void e1000_watchdog_task(struct work_struct *work)
+>                         if (phy->ops.cfg_on_link_up)
+>                                 phy->ops.cfg_on_link_up(hw);
+>
+> +                       netif_wake_queue(netdev);
+>                         netif_carrier_on(netdev);
+>
+>                         if (!test_bit(__E1000_DOWN, &adapter->state))
+> @@ -5302,6 +5303,7 @@ static void e1000_watchdog_task(struct work_struct *work)
+>                         /* Link status message must follow this format */
+>                         pr_info("%s NIC Link is Down\n", adapter->netdev->name);
+>                         netif_carrier_off(netdev);
+> +                       netif_stop_queue(netdev);
+>                         if (!test_bit(__E1000_DOWN, &adapter->state))
+>                                 mod_timer(&adapter->phy_info_timer,
+>                                           round_jiffies(jiffies + 2 * HZ));
+>
