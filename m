@@ -2,157 +2,138 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669ADC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA9DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3302E2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3F121738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:32:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4u5ppLE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uCOSHCt3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfDWMcT (ORCPT
+        id S1727719AbfDWMcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:32:19 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39014 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfDWMcT (ORCPT
+        Tue, 23 Apr 2019 08:32:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59158 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfDWMcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:32:19 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l7so13344080ljg.6;
-        Tue, 23 Apr 2019 05:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y21hx1+ZWcM1GMPqrCOpWwNweQmqFuIM89y/n/Gh9Ow=;
-        b=S4u5ppLECCr0x9IXYQD11GdI8OH47geK+mtaxNFDeD3+TEJwR1O+2cwsustuadremf
-         +bXUVdIvQbtS0wEj/s/xOyIMEhYABbtHZpa7OVBcH2a5r5sA4sjSo8UkYazSiXWr11yd
-         twR/NxaPJE+8k1BPM85J3NrazyKgwzSd1rsc+h4TZswD45nA+GI6LGVL67JdnK+ijgW5
-         IusRrv6BCi0XarrxyfJQj+3HeRmnPoX5TtKj/11Lg4o8Dv3YhD+qD2x1d76xvBhPSJUF
-         xmyQv8Dl8mmRS4lsdcXWHtuVFA0f3e5AaC5HL13DZUkmCTAHEn8A9rL9lm+0wjPoHuI0
-         hz5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y21hx1+ZWcM1GMPqrCOpWwNweQmqFuIM89y/n/Gh9Ow=;
-        b=aixC45ERMa+596iDFkhcNVsHv1Wim8+kQTihejDVJvUrzthUbMkkZrGarg7lOQkhnP
-         XtDtOrADI1a9oPTek1dMLb5Gg5eZQJglhl1iVuh7F6F/bP1CbtHQL2Djs9JLHZXM5vDj
-         5W5NuK+UxihyxzZgIcD530K+b2Q0VW/tkqKPLbYuJcN1t5CaZsGFujZ2BE1P++PTdreD
-         RTCUkrQDu5xhYsxrzaoioxCAzDeg1xlWqSj3dc3YOUg+pSYUISGHBE+26iiVQu6wN6Hj
-         wUo4RMM33bQJ8LdqHPjSg3hJPFvvz41vF6aQCp3BB/xrArF7g7YFVXKES1VqE2+6BV9u
-         sbqg==
-X-Gm-Message-State: APjAAAWRzKM3A0oL8P6weTB6k6J/CLkhux6FZzY59Tlv2fvHlCJlbk2z
-        JRb0sB8/lJTzODDQSL7lSj8=
-X-Google-Smtp-Source: APXvYqwT7KYuVtbEI6VGDs8eFTLw6lPj/3oCH6V/sPC5Lzt06f80AVqoaTC2lcP3rnGYgU3y9gmNLw==
-X-Received: by 2002:a2e:9915:: with SMTP id v21mr13796464lji.154.1556022736711;
-        Tue, 23 Apr 2019 05:32:16 -0700 (PDT)
-Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id l15sm3344379ljh.62.2019.04.23.05.32.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 05:32:15 -0700 (PDT)
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Junwei Zhang <Jerry.Zhang@amd.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>
-Subject: [PATCH] drm: Permit video-buffers writecombine mapping for MIPS
-Date:   Tue, 23 Apr 2019 15:31:22 +0300
-Message-Id: <20190423123122.32573-1-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 23 Apr 2019 08:32:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qwUUbxM5GxoPZKNRXRfVIZulH7d9e6S8phCX3hQBc5s=; b=uCOSHCt34uLTwdA4nVwoax+27
+        2QXc4DyJjlqVE1du+beBBLRh7Xz42GgN8+Avpgxde9qPcbkPJVDSeOrkrvqduG63PV4dpqTIWTcqN
+        Dy7XS+M+3fnG97llLYw+kNV+LutgSqBaR2p/O3h/jBNJ7jZFpzIXgBDWr/ub7upDiMG01tgstlB2w
+        6aVj+VySnBhlgBKQ0WwbL9JWKgiMiVZhyI2SjBOb+MNRNreZfwwfVv7ZP03CruoBUrNzsSiY0wrjm
+        rDBoqof+1tWN9/WHfHL3inxl5/XSH/XWMGeS/nUGqff4kqwbKnCEWELfIDPyiw009DVzbx3sTjMct
+        rQ0Q8xJaA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hIuap-0007oB-9c; Tue, 23 Apr 2019 12:32:11 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9FA0229B8FE25; Tue, 23 Apr 2019 14:32:09 +0200 (CEST)
+Date:   Tue, 23 Apr 2019 14:32:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] Documentation: atomic_t.txt: Explain ordering provided
+ by smp_mb__{before,after}_atomic()
+Message-ID: <20190423123209.GR4038@hirez.programming.kicks-ass.net>
+References: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
+ <20190419180017.GP4038@hirez.programming.kicks-ass.net>
+ <20190419182620.GF14111@linux.ibm.com>
+ <1555719429.t9n8gkf70y.astroid@bobo.none>
+ <20190420085440.GK14111@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190420085440.GK14111@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 4b050ba7a66c ("MIPS: pgtable.h: Implement the
-pgprot_writecombine function for MIPS") and commit c4687b15a848 ("MIPS: Fix
-definition of pgprot_writecombine()") write-combine vma mapping is
-available to be used by kernel subsystems for MIPS. In particular the
-uncached accelerated attribute is requested to be set by ioremap_wc()
-method and by generic PCI memory pages/ranges mapping methods. The same
-is done by the drm_io_prot()/ttm_io_prot() functions in case if
-write-combine flag is set for vma's passed for mapping. But for some
-reason the pgprot_writecombine() method calling is ifdefed to be a
-platform-specific with MIPS system being marked as lacking of one. At the
-very least it doesn't reflect the current MIPS platform implementation.
-So in order to improve the DRM subsystem performance on MIPS with UCA
-mapping enabled, we need to have pgprot_writecombine() called for buffers,
-which need store operations being combined. In case if particular MIPS
-chip doesn't support the UCA attribute, the mapping will fall back to
-noncached.
+On Sat, Apr 20, 2019 at 01:54:40AM -0700, Paul E. McKenney wrote:
+> 	And atomic_set(): set_preempt_state().	This fails
+> 	on x86, s390, and TSO friends, does it not?  Or is
+> 	this ARM-only?	Still, why not just smp_mb() before and
+> 	after?	Same issue in __kernfs_new_node(), bio_cnt_set(),
+> 	sbitmap_queue_update_wake_batch(), 
+> 
+> 	Ditto for atomic64_set() in __ceph_dir_set_complete().
+> 
+> 	Ditto for atomic_read() in rvt_qp_is_avail().  This function
+> 	has a couple of other oddly placed smp_mb__before_atomic().
 
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: James Hogan <jhogan@kernel.org>
-Signed-off-by: Vadim V. Vlasov <vadim.vlasov@t-platforms.ru>
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
----
- drivers/gpu/drm/drm_vm.c          | 5 +++--
- drivers/gpu/drm/ttm/ttm_bo_util.c | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+That are just straight up bugs. The atomic_t.txt file clearly specifies
+the barriers only apply to RmW ops and both _set() and _read() are
+specified to not be a RmW.
 
-diff --git a/drivers/gpu/drm/drm_vm.c b/drivers/gpu/drm/drm_vm.c
-index c3301046dfaa..50178dc64060 100644
---- a/drivers/gpu/drm/drm_vm.c
-+++ b/drivers/gpu/drm/drm_vm.c
-@@ -62,7 +62,8 @@ static pgprot_t drm_io_prot(struct drm_local_map *map,
- 	/* We don't want graphics memory to be mapped encrypted */
- 	tmp = pgprot_decrypted(tmp);
- 
--#if defined(__i386__) || defined(__x86_64__) || defined(__powerpc__)
-+#if defined(__i386__) || defined(__x86_64__) || defined(__powerpc__) || \
-+    defined(__mips__)
- 	if (map->type == _DRM_REGISTERS && !(map->flags & _DRM_WRITE_COMBINING))
- 		tmp = pgprot_noncached(tmp);
- 	else
-@@ -73,7 +74,7 @@ static pgprot_t drm_io_prot(struct drm_local_map *map,
- 		tmp = pgprot_writecombine(tmp);
- 	else
- 		tmp = pgprot_noncached(tmp);
--#elif defined(__sparc__) || defined(__arm__) || defined(__mips__)
-+#elif defined(__sparc__) || defined(__arm__)
- 	tmp = pgprot_noncached(tmp);
- #endif
- 	return tmp;
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
-index 895d77d799e4..9f918b992f7e 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_util.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
-@@ -539,13 +539,13 @@ pgprot_t ttm_io_prot(uint32_t caching_flags, pgprot_t tmp)
- 		tmp = pgprot_noncached(tmp);
- #endif
- #if defined(__ia64__) || defined(__arm__) || defined(__aarch64__) || \
--    defined(__powerpc__)
-+    defined(__powerpc__) || defined(__mips__)
- 	if (caching_flags & TTM_PL_FLAG_WC)
- 		tmp = pgprot_writecombine(tmp);
- 	else
- 		tmp = pgprot_noncached(tmp);
- #endif
--#if defined(__sparc__) || defined(__mips__)
-+#if defined(__sparc__)
- 	tmp = pgprot_noncached(tmp);
- #endif
- 	return tmp;
--- 
-2.21.0
+> 	And atomic_cmpxchg(): msc_buffer_alloc().  This instance
+> 	of smp_mb__before_atomic() can be removed unless I am missing
+> 	something subtle.  Ditto for kvm_vcpu_exiting_guest_mode(),
+> 	pv_kick_node(), __sbq_wake_up(), 
 
+Note that pv_kick_node() uses cmpxchg_relaxed(), which does not
+otherwise imply barriers.
+
+> 	And lock acquisition??? acm_read_bulk_callback().
+
+I think it goes with the set_bit() earlier, but what do I know.
+
+> 	In nfnl_acct_fill_info(), a smp_mb__before_atomic() after
+> 	a atomic64_xchg()???  Also before a clear_bit(), but the
+> 	clear_bit() is inside an "if".
+
+Since it is _before, I'm thinking the pairing was intended with the
+clear_bit(), and yes, then I would expect the smp_mb__before_atomic() to
+be part of that same branch.
+
+> 	There are a few cases that would see added overhead.  For example,
+> 	svc_get_next_xprt() has the following:
+> 
+> 		smp_mb__before_atomic();
+> 		clear_bit(SP_CONGESTED, &pool->sp_flags);
+> 		clear_bit(RQ_BUSY, &rqstp->rq_flags);
+> 		smp_mb__after_atomic();
+> 
+> 	And xs_sock_reset_connection_flags() has this:
+> 
+> 		smp_mb__before_atomic();
+> 		clear_bit(XPRT_CLOSE_WAIT, &xprt->state);
+> 		clear_bit(XPRT_CLOSING, &xprt->state);
+> 		xs_sock_reset_state_flags(xprt);  /* Also a clear_bit(). */
+> 		smp_mb__after_atomic();
+> 
+> 	Yeah, there are more than a few misuses, aren't there?  :-/
+> 	A coccinelle script seems in order.  In 0day test robot.
+
+If we can get it to flag the right patterns, then yes that might be
+useful regardless of the issue at hand, people seem to get this one
+wrong a lot.
+
+> 	But there are a number of helper functions whose purpose
+> 	seems to be to wrap an atomic in smp_mb__before_atomic() and
+> 	smp_mb__after_atomic(), so some of the atomic_xxx_mb() functions
+> 	might be a good idea just for improved readability.
+
+Are there really sites where _mb() makes sense? The above is just a lot
+of buggy code.
