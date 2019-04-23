@@ -2,289 +2,160 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20109C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A61C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC7B420645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:30:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YttzPeaz"
+	by mail.kernel.org (Postfix) with ESMTP id 5E6E321738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbfDWHad (ORCPT
+        id S1726439AbfDWHbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 03:30:33 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43193 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfDWHad (ORCPT
+        Tue, 23 Apr 2019 03:31:41 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40553 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbfDWHbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 03:30:33 -0400
-Received: by mail-ed1-f66.google.com with SMTP id j20so11659063edq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 00:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XfPVg/iIR3jgPPgXzWLDR09sx9mDF88SCzunfroFXx8=;
-        b=YttzPeazcS7eB1hrSey7bsgX056fEwyC+AJo39lkXrZ2sKFyH2av23EkAzL35N8XwQ
-         T0ji+Eg8hUPPY8/i2hXw5GpADrUeTSgtCNI31xIJjOcU9DfzeWN0qVEJVKaa15PDzVvQ
-         ZOTRpM9Lia7U8ezHs1UjopBW3VdJNWz63Qsmk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=XfPVg/iIR3jgPPgXzWLDR09sx9mDF88SCzunfroFXx8=;
-        b=c1zmKnSEyIx4lZHXkRvwB2gbLshDE6XNR6uWG6v15H3hQBtRXEvgEsi2cZARvNxmzS
-         q2fjgR1hwEvnCvlljdZ+zJ2XAre76CkzRrazKfHhovoWX7Ayt9NbBqYmcbtxp2LNNaC3
-         ywiLPRzP9eJkMFA/m7oA1m8iNXzqRM0IbGRYQhG7RrtnzOgvgVYdGL9OrbYWCt9dIjGV
-         rHsOTVQKwOoK+sgj7McUF3x4Y9dRf9bjkKUABg//8eXPFyxCEubByQFtPhSUZ0B5zUAi
-         54KhMJ674+x6FwGcwrq6D+iYm2sCGb8BRoq6rlsoC/r0OPlj9rHoz4KFmKWxTtVW1YPm
-         NblQ==
-X-Gm-Message-State: APjAAAUgb/S7or1mODZlHb4LWQVlsPyFrTM1OWVUFpevwm5L5uihmDfc
-        BdmJKNTqN4DTTno8o+RBdhAZnw==
-X-Google-Smtp-Source: APXvYqz1gGrJyC15MlUil5gMOAFKl9HiUuVc1sUBzrAp+wuz60Pjn4RgZzguCuyNJqPW2HI+fISmZQ==
-X-Received: by 2002:a50:a5a5:: with SMTP id a34mr15279025edc.136.1556004630442;
-        Tue, 23 Apr 2019 00:30:30 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id j92sm4429879edb.34.2019.04.23.00.30.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 00:30:28 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 09:30:26 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
- common place
-Message-ID: <20190423073026.GX13337@phenom.ffwll.local>
-Mail-Followup-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
- <20190417154121.GJ13337@phenom.ffwll.local>
- <20190418062229.eyog4i62eg4pr6uf@flea>
- <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
- <20190418090221.e57dogn4yx5nwdni@flea>
- <6578c22ddf5420d4dead69d29f451bc6a91f6c4a.camel@bootlin.com>
- <20190420224045.GY4964@pendragon.ideasonboard.com>
+        Tue, 23 Apr 2019 03:31:40 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1hIptx-0006tY-37; Tue, 23 Apr 2019 09:31:37 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1hIptl-0007Uk-Ag; Tue, 23 Apr 2019 09:31:25 +0200
+Date:   Tue, 23 Apr 2019 09:31:25 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
+Message-ID: <20190423073125.hd76umcjnfheohgb@pengutronix.de>
+References: <20190422193542.2853-1-daniel.baluta@nxp.com>
+ <20190422193542.2853-3-daniel.baluta@nxp.com>
+ <20190423051738.tmyto7nvm4w5zt4r@pengutronix.de>
+ <CAEnQRZD5506EdkO5ESwWe+=J-uEeZw9m47_XNj8DUHy4Hck78g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190420224045.GY4964@pendragon.ideasonboard.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAEnQRZD5506EdkO5ESwWe+=J-uEeZw9m47_XNj8DUHy4Hck78g@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:26:24 up 94 days, 12:08, 74 users,  load average: 0.12, 0.09,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 21, 2019 at 01:40:45AM +0300, Laurent Pinchart wrote:
-> Hi Paul,
-> 
-> On Thu, Apr 18, 2019 at 01:49:54PM +0200, Paul Kocialkowski wrote:
-> > On Thu, 2019-04-18 at 11:02 +0200, Maxime Ripard wrote:
-> > > On Thu, Apr 18, 2019 at 09:52:10AM +0200, Daniel Vetter wrote:
-> > >> And a lot of people pushed for the "fourcc is a standard", when
-> > >> really it's totally not.
-> > > 
-> > > Even if it's not a standard, having consistency would be a good thing.
-> > > 
-> > > And you said yourself that DRM fourcc is now pretty much an authority
-> > > for the fourcc, so it definitely looks like a standard to me.
-> > 
-> > I think trying to make the V4L2 and DRM fourccs converge is a lost
-> > cause, as it has already significantly diverged. Even if we coordinate
-> > an effort to introduce new formats with the same fourcc on both sides,
-> > I don't see what good that would be since the formats we have now are
-> > still plagued by the inconsistency.
-> > 
-> > I think we always need an explicit translation step from either v4l2 or
-> > drm to the internal representation and back, without ever assuming that
-> > formats might be compatible because they share the same fourcc.
-> 
-> I don't agree. APIs evolve, and while we can't switch from one set of
-> 4CCs to another in existing APIs, we could in new APIs. Boris is working
-> on new ioctls to handle formats in V4L2, and while 4CC unification could
-> be impopular from a userspace developers point of view there, I don't
-> think we have ruled it out completely. The move to the request API is
-> also an area where a common set of 4CCs could be used, as it will depart
-> from the existing V4L2 ioctls. To summarize my opinion, we're not there
-> yet, but I wouldn't rule it out completely for the future.
-> 
-> > It looks like so far, V4L2 pixel formats describe a DRM pixel format +
-> > modifier.
-> 
-> DRM modifiers are mostly about tiling and compression, and we hardly
-> support these in V4L2. What are the modifiers you think are hardcoded in
-> 4CCs in V4L2 ?
+Hi Daniel,
 
-Hm maybe it was a drm one that didn't come from v4l or anywhere else
-really, but the NV12MT one is nv12 + some tiling. I think we managed to
-uapi-bend that one into shape in at least drm.
--Daniel
-
-> > I think Boris (CCed) is working to change that by allowing to
-> > pass a DRM modifier through V4L2. With that, we'd be in a situation
-> > where some formats are described by the v4l2 pixfmt alone and some
-> > formats are also described a modifier (but I looked at it from a
-> > distance so might have misunderstod). That feels better since it avoids
-> > the combinatory explosion from describing each format + modifier
-> > individually.
-> > 
-> > What do you think?
-> > 
-> > >> v4l tends to conflate pixel format with stuff that we tend to encode
-> > >> in modifiers a lot more.
-> > > 
-> > > Boris is working on adding the modifiers concept to v4l2, so we're
-> > > converging here, and we can totally have a layer in v4l2 to convert
-> > > between old v4l2 "format+modifiers" formats, and DRM style formats.
-> > > 
-> > >> There's a bunch of reasons we can't just use v4l, and they're as
-> > >> valid as ever:
-> > >> 
-> > >> - We overlap badly in some areas, so even if fourcc codes match, we
-> > >>   can't use them and need a duplicated DRM_FOURCC code.
-> > > 
-> > > Do yo have an example of one of those areas?
-> > > 
-> > >> - v4l encodes some metadata into the fourcc that we encode elsewhere,
-> > >>   e.g. offset for planar yuv formats, or tiling mode
-> > > 
-> > > As I was saying, this changes on the v4l2 side, and converging to
-> > > what DRM is doing.
-> > > 
-> > >> - drm fourcc code doesn't actually define the drm_format_info
-> > >>   uniquely, drivers can override that (that's an explicit design
-> > >>   intent of modifiers, to allow drivers to add another plane for
-> > >>   e.g. compression information). You'd need to pull that driver
-> > >>   knowledge into your format library.
-> > > 
-> > > I'm not sure how my patches are changing anything here. This is
-> > > litterally the same code, with the functions renamed.
-> > > 
-> > > If drivers want to override that, then yeah, fine, we can let them do
-> > > that. Just like any helper this just provides a default that covers
-> > > most of the cases.
-> > > 
-> > >> Iow there's no way we can easily adopt v4l fourcc, except if we do
-> > >> something like a new addfb flag.
-> > > 
-> > > For the formats that would be described as a modifier, sure. For all
-> > > the others (that are not yet supported by DRM), then I don't really
-> > > see why not.
-> > > 
-> > >>> And given how the current state is a mess in this regard, I'm not too
-> > >>> optimistic about keeping the formats in their relevant frameworks.
-> > >>> 
-> > >>> Having a shared library, governed by both, will make this far easier,
-> > >>> since it will be easy to discover the formats that are already
-> > >>> supported by the other subsystem.
-> > >> 
-> > >> I think a compat library that (tries to, best effort) convert between
-> > >> v4l and drm fourcc would make sense. Somewhere in drivers/video, next
-> > >> to the conversion functions for videomode <-> drm_display_mode
-> > >> perhaps. That should be useful for drivers.
-> > > 
-> > > That's not really what this series is about though. That series is
-> > > about sharing the (image|pixels) formats database across everyone so
-> > > that everyone can benefit from it.
-> > > 
-> > >> Unifying the formats themselves, and all the associated metadata is
-> > >> imo a no-go, and was a pretty conscious decision when we implemented
-> > >> drm_fourcc a few years back.
-> > >> 
-> > >>> If we want to keep the current library in DRM, we have two options
-> > >>> then:
-> > >>> 
-> > >>>   - Support all the v4l2 formats in the DRM library, which is
-> > >>>     essentially what I'm doing in the last patches. However, that
-> > >>>     would require to have the v4l2 developpers also reviewing stuff
-> > >>>     there. And given how busy they are, I cannot really see how that
-> > >>>     would work.
-> > >> 
-> > >> Well, if we end up with a common library then yes we need cross
-> > >> review. There's no way around that. Doesn't matter where exactly that
-> > >> library is in the filesystem tree, and adding a special MAINTAINERS
-> > >> entry for anything related to fourcc (both drm and v4l) to make sure
-> > >> they get cross-posted is easy. No file renaming needed.
-> > > 
-> > > That would create some governing issues as well. For example, if you
-> > > ever have a patch from one fourcc addition (that might or might not be
-> > > covered by v4l2), will you wait for any v4l2 developper to review it?
-> > > 
-> > > If it's shared code, then it should be shared, and every client
-> > > framework put on an equal footing.
-> > > 
-> > >>>   - Develop the same library from within v4l2. That is really a poor
-> > >>>     solution, since the information would be greatly duplicated
-> > >>>     between the two, and in terms of maintainance, code, and binary
-> > >>>     size that would be duplicated too.
-> > >> 
-> > >> It's essentially what we decided to do for drm years back.
-> > > 
-> > > And it was probably the right solution back then, but I'm really not
-> > > convinced it's still the right thing to do today.
-> > > 
-> > >>> Having it shared allows to easily share, and discover formats from the
-> > >>> other subsystem, and to have a single, unique place where this is
-> > >>> centralized.
-> > >> 
-> > >> What I think could work as middle ground:
-> > >> - Put drm_format stuff into a separate .ko
-> > >> - Add a MAINTAINERS entry to make sure all things fourcc are cross
-> > >> posted to both drm and v4l lists. Easy on the drm side, since it's all
-> > >> separate files. Not sure it's so convenient for v4l uapi.
-> > >> - Add a conversion library that tries to best-effort map between drm
-> > >> and v4l formats. On the drm side that most likely means you need
-> > >> offsets for planes, and modifiers too (since those are implied in some
-> > >> v4l fourcc). Emphasis on "best effort" i.e. only support as much as
-> > >> the drivers that use this library need.
-> > >> - Add drm_fourcc as-needed by these drivers that want to use a unified
-> > >> format space.
-> > >> 
-> > >> Forcing this unification on everyone otoh is imo way too much.
-> > > 
-> > > v4l2 is starting to converge with DRM, and we're using the DRM API
-> > > pretty much untouched for that library, so I'm not really sure how
-> > > anyone is hurt by that unification.
+On 19-04-23 09:22, Daniel Baluta wrote:
+> Hi Marco,
 > 
-> -- 
-> Regards,
+> On Tue, Apr 23, 2019 at 8:19 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> >
+> > Hi Daniel,
+> >
+> > On 19-04-22 19:36, Daniel Baluta wrote:
+> > > i.MX8MM has one wm8524 audio codec connected with
+> > > SAI3 digital audio interface.
+> > >
+> > > This patch uses simple-card machine driver in order
+> > > to enable wm8524 codec.
+> > >
+> > > We need to set:
+> > >       * SAI3 pinctrl configuration
+> > >       * clock hierarchy
+> > >       * codec node
+> > >       * simple-card configuration
+> > >
+> > > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > > ---
+> > >  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 48 ++++++++++++++++++++
+> > >  1 file changed, 48 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> > > index 2d5d89475b76..207b13266a96 100644
+> > > --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> > > +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+> > > @@ -37,6 +37,35 @@
+> > >               gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+> > >               enable-active-high;
+> > >       };
+> > > +
+> > > +     wm8524: audio-codec {
+> > > +             #sound-dai-cells = <0>;
+> > > +             compatible = "wlf,wm8524";
+> > > +             wlf,mute-gpios = <&gpio5 21 GPIO_ACTIVE_LOW>;
+> >
+> > I would mux the gpio where I use them.
 > 
-> Laurent Pinchart
+> I'm not sure I understand this. Can you provide an example.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Just adding a princtrl-0 and pinctrl-names entry to mux the gpio here
+rather than within the sai node.
+
+> >
+> > > +     };
+> > > +
+> > > +     sound-wm8524 {
+> > > +             compatible = "simple-audio-card";
+> > > +             simple-audio-card,name = "wm8524-audio";
+> > > +             simple-audio-card,format = "i2s";
+> > > +             simple-audio-card,frame-master = <&cpudai>;
+> > > +             simple-audio-card,bitclock-master = <&cpudai>;
+> > > +             simple-audio-card,widgets =
+> > > +                     "Line", "Left Line Out Jack",
+> > > +                     "Line", "Right Line Out Jack";
+> > > +             simple-audio-card,routing =
+> > > +                     "Left Line Out Jack", "LINEVOUTL",
+> > > +                     "Right Line Out Jack", "LINEVOUTR";
+> > > +
+> > > +             cpudai: simple-audio-card,cpu {
+> > > +                     sound-dai = <&sai3>;
+> > > +             };
+> > > +
+> > > +             link_codec: simple-audio-card,codec {
+> >
+> > Can you drop that phandle?
+> 
+> I see your point here. But for symmetry and consistency with
+> imx8mm-evk I would prefer
+> to keep it like that.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/tree/arch/arm64/boot/dts/freescale/imx8mq-evk.dts?h=for-next#n59
+> 
+
+Got your point but I think that the evk dts will be used as base for
+future dts. Instead of keep them here I would send a patch to drop the
+phandle in the imx8mq-evk.dts since it isn't necessary.
+
+Regards,
+  Marco
