@@ -2,117 +2,104 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03952C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B82C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F3C218DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:44:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h2ZSmpkO"
+	by mail.kernel.org (Postfix) with ESMTP id 285C5217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbfDWPoK (ORCPT
+        id S1728445AbfDWPoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:44:10 -0400
-Received: from mail-ua1-f73.google.com ([209.85.222.73]:38958 "EHLO
-        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727761AbfDWPoK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:44:10 -0400
-Received: by mail-ua1-f73.google.com with SMTP id v5so1739260ual.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=JXAocCnPjSxHxOedcbkgNjrO0QCzgS2wvknDYgoZYBE=;
-        b=h2ZSmpkO455hJucWi8vU9qqGrVVPIxjVUbprWQF8SrXGeUWYEtdRdUMU8GtXSHDesu
-         yBKEsZSWWW2KJtcxcOQGMiSVump33fTuW6/iTofr8qsMKD3wNxUE25Gumttajj4KG6nt
-         9i8XUWuswqN5ShRuRQz6rIFE3sx7GDC60GZV9NMtx5fQMnA8vz/KtmmChP7ERyHcNzqa
-         3ihRs/qlttIu67hSLzNPEXnIblh4e6kWAIycUk70uQHAQ/3oemiOq/slmLGv+N4ENQw5
-         NocVBF4+UQPJd9FaFhrexwBmhkObiXRvEgXQ3A9zGp9ScaVICRETZkPyKx2KJD80gIHr
-         jL9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=JXAocCnPjSxHxOedcbkgNjrO0QCzgS2wvknDYgoZYBE=;
-        b=O5aRKKuGemlIt/gocPrSc1r33+nf9XzdNLdy9hkkwnK70yrvYAcrXxA8jlU4vfQOAl
-         41zxNkQNJOPq4hrFn/GJlmgY1WYQL5NWX+kBOZwzXa/zQr/7gyMU5HXUSoN5XjzGDHvT
-         1HBe3o43nw2kPixYI7Z26J7uZ5/mFB217NtXEzFnQJm9aPvhuA7pxVR8ZS4TuCe5hnzu
-         qaub/uf3VO/TgLw1qOO+uODf0cpD+n99kCkx/OlJH6TPSz+X7dewpm482pyc0SFOqzLq
-         GTChAt5qaAMBYGqw1aNDp/UhIp0M51T0zNv1Ax1zVCT5MCW8drwQygJbYVAh703ZmH3J
-         TZfA==
-X-Gm-Message-State: APjAAAVHAo1JMYy8DJEF9XYQTHQMyRI9/MWnAPxB6x3cg3gfnJo6ysBZ
-        svHg67iDnBSWv9fekhaiDZJkLDax2Mi00g==
-X-Google-Smtp-Source: APXvYqz18sYa2y+Uj6M7CjZ+maaEwP+Bpk8TEQBBch1tuP5pwW66oU1p/mRbW6J4jkzvf13B7Us7G2Wc7DAudw==
-X-Received: by 2002:a1f:8991:: with SMTP id l139mr13783395vkd.49.1556034248763;
- Tue, 23 Apr 2019 08:44:08 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 08:44:05 -0700
-Message-Id: <20190423154405.259178-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH v2] memcg: refill_stock for kmem uncharging too
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>
-Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Apr 2019 11:44:24 -0400
+Received: from foss.arm.com ([217.140.101.70]:58458 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727761AbfDWPoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 11:44:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A913080D;
+        Tue, 23 Apr 2019 08:44:23 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC0C83F5AF;
+        Tue, 23 Apr 2019 08:44:21 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 16:44:19 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Amit Daniel Kachhap <amit.kachhap@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 1/5] KVM: arm64: Add a vcpu flag to control ptrauth
+ for guest
+Message-ID: <20190423154419.GL3567@e103592.cambridge.arm.com>
+References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
+ <1555994558-26349-2-git-send-email-amit.kachhap@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555994558-26349-2-git-send-email-amit.kachhap@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 475d0487a2ad ("mm: memcontrol: use per-cpu stocks for socket
-memory uncharging") added refill_stock() for skmem uncharging path to
-optimize workloads having high network traffic. Do the same for the kmem
-uncharging as well. Though we can bypass the refill for the offlined
-memcgs but it may impact the performance of network traffic for the
-sockets used by other cgroups.
+On Tue, Apr 23, 2019 at 10:12:34AM +0530, Amit Daniel Kachhap wrote:
+> A per vcpu flag is added to check if pointer authentication is
+> enabled for the vcpu or not. This flag may be enabled according to
+> the necessary user policies and host capabilities.
+> 
+> This patch also adds a helper to check the flag.
+> 
+> Reviewed-by: Dave Martin <Dave.Martin@arm.com>
+> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Christoffer Dall <christoffer.dall@arm.com>
+> Cc: kvmarm@lists.cs.columbia.edu
+> ---
+> Changes since v9:
+> 
+> * Added ptrauth cpufeature static check in vcpu_has_ptrauth [Marc Zyngier].
+> 
+>  arch/arm64/include/asm/kvm_host.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 7a096fd..7ccac42 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -355,10 +355,15 @@ struct kvm_vcpu_arch {
+>  #define KVM_ARM64_HOST_SVE_ENABLED	(1 << 4) /* SVE enabled for EL0 */
+>  #define KVM_ARM64_GUEST_HAS_SVE		(1 << 5) /* SVE exposed to guest */
+>  #define KVM_ARM64_VCPU_SVE_FINALIZED	(1 << 6) /* SVE config completed */
+> +#define KVM_ARM64_GUEST_HAS_PTRAUTH	(1 << 7) /* PTRAUTH exposed to guest */
+>  
+>  #define vcpu_has_sve(vcpu) (system_supports_sve() && \
+>  			    ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_SVE))
+>  
+> +#define vcpu_has_ptrauth(vcpu)	((system_supports_address_auth() || \
+> +				  system_supports_generic_auth()) && \
 
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
+Come to think of it, should this be
+system_supports_address_auth() _&&_ system_supports_generic_auth()?
 
-Changelog since v1:
-- No need to bypass offline memcgs in the refill.
+It won't make a functional difference today though, since today
+kvm_vcpu_enable_ptrauth() won't set KVM_ARM64_GUEST_HAS_PTRAUTH without
+system_supports_address_auth() and system_supports_generic_auth() both
+true.
 
- mm/memcontrol.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+With || here, we won't have to change this if supporting the two auth
+types independently in the future though.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 2535e54e7989..2713b45ec3f0 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2768,17 +2768,13 @@ void __memcg_kmem_uncharge(struct page *page, int order)
- 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
- 		page_counter_uncharge(&memcg->kmem, nr_pages);
- 
--	page_counter_uncharge(&memcg->memory, nr_pages);
--	if (do_memsw_account())
--		page_counter_uncharge(&memcg->memsw, nr_pages);
--
- 	page->mem_cgroup = NULL;
- 
- 	/* slab pages do not have PageKmemcg flag set */
- 	if (PageKmemcg(page))
- 		__ClearPageKmemcg(page);
- 
--	css_put_many(&memcg->css, nr_pages);
-+	refill_stock(memcg, nr_pages);
- }
- #endif /* CONFIG_MEMCG_KMEM */
- 
--- 
-2.21.0.593.g511ec345e18-goog
+Either way, my Reviewed-by stands.
 
+Cheers
+---Dave
