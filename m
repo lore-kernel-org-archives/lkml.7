@@ -2,129 +2,120 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D539FC282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045C1C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2167208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD5C6208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:26:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="bzEZfgKp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hZ+pOpsE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfDWUYK (ORCPT
+        id S1727290AbfDWU0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:24:10 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42996 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbfDWUYK (ORCPT
+        Tue, 23 Apr 2019 16:26:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34238 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfDWU0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:24:10 -0400
-Received: by mail-ed1-f68.google.com with SMTP id u23so13540738eds.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:24:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rNechRkgVW2EOElb/tN6qOonoYKsAlTuRzUZ5rgYqoc=;
-        b=bzEZfgKpdodMc0rwRmq/8Vcam1zz6eHpHn+4cBU5QnfVLEgo4CI4SWNXOWywI0QJT5
-         DXwQsx53s32d9yjIMMci92FVtwBogkh1YHYCiSvy8n6zc2TRCSL/IUAnt8kkCuFucSFC
-         rigxSorQ13wtm906P7XNEGExDPoGztR1GTVC+J8x6npohv90GWktFQCss3pjpBaY2Ey2
-         S2ytiZdV8ukd1dBbSvAueMFGsjpwlURSFRYQout8jE/HdoHmQDLY7ppZmRyCfDi6aOXw
-         nij47hHNvTEd0/dHM512oc50LqvBs9qC+o1XniQYa2j70WYGy5glhRX4XvyNp3X9Tqgc
-         A7bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rNechRkgVW2EOElb/tN6qOonoYKsAlTuRzUZ5rgYqoc=;
-        b=fIGsAWMgeOqGjNYC1dVmZ2XYA/Q7TrAWGQoCtVwIj1juv4KgO+ILMl2nR0yYuKXZ/Q
-         8OTt4wkwWFmAFUxwATjiA+hwlYa5h1c4jyF7iCXK59w6WwwZXhwgvLUV0gS4DVsI4K+U
-         nyyQnQJzSvHP4XlZ9V45VsC3G7SNXm2Rq3YmtllUjBeCtvzcRGzVOHr1pKoEsxIR5aH3
-         vbDwInSb2NzQe+TnOyzWbVGw7Bf1O5uib19+GRTGh/nxNtVIISV8ZVNUm2YaCnNlXqIl
-         SdgsirA2NLKpG6Agnta1OWZbWcIqXa3JeWv77CvCSoAvi3wxlIaDetbsZNU8mWXXtW/9
-         rKXQ==
-X-Gm-Message-State: APjAAAXoazi3eb6TAoBRwLAdH6dLhZLBQwvv73TaTFDpAEP3z6fsqhqu
-        u4bSqjMNSiDTFe4yrZ5mUIOh+5HbVM+Ggg==
-X-Google-Smtp-Source: APXvYqxw74cEdWMIv39fOcL36Co2hG7gIZ9JWZWT6ToTHUi6vjifesVZB7mFIdRU6u8+jkGisCoIxQ==
-X-Received: by 2002:a50:8c24:: with SMTP id p33mr17745067edp.210.1556051048193;
-        Tue, 23 Apr 2019 13:24:08 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id d14sm4928682edj.57.2019.04.23.13.24.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 23 Apr 2019 13:24:07 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 22:24:06 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Kees Cook <keescook@chromium.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        David Drysdale <drysdale@google.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH RESEND v5 0/5] namei: vfs flags to restrict path
- resolution
-Message-ID: <20190423202405.wzs7lkjqgrlzwyu5@brauner.io>
-References: <20190320143717.2523-1-cyphar@cyphar.com>
- <CALCETrV-Q4qZXGeavBPQbF6-VVz7hqvjRkbhFeYmbGiQgu5Omg@mail.gmail.com>
- <20190325130429.dbrgjxnvq3w5cpb3@yavin>
- <CAGXu5jKPrarixQkWWXOBCu6kRRpQd0aaJsPJbvsAyh0Wvc620A@mail.gmail.com>
+        Tue, 23 Apr 2019 16:26:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ooa7NpjLlY0pPro4+B2vufDC8zNt2FDFGxeBdk5A+TE=; b=hZ+pOpsEUtPrQAMfJlzvEwHLS
+        GuH+k6NLAbcCmvCLDWdOKkDl7opZ4DXlln5H1Wfh4gKuYHdGnB2KKOdZpFS0cNyh3amJA+tQme0P5
+        TIKKgEibjdkbnRfzBnupdPPXiOv+9Orl9rr+pvQfk7Nc6Yo+H284uCgY4qMLnykImiTNpphfG2mxB
+        SB2c7OivdsWfgae1yN5D6whHGF1uwhLc4hG6BT34hgq/Irn0V9qShnC46Byohsl/8h/qIJUcGt8MM
+        z5e8riMs0wcShkcteBhqEw0iF+JPwOjqCVkiEHbGjzBqUiYkqHSFmPwSj3ahwK5FqvRz6V0alQhjh
+        TFtA4fkzQ==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJ204-0004xw-R9; Tue, 23 Apr 2019 20:26:45 +0000
+Date:   Tue, 23 Apr 2019 17:26:41 -0300
+From:   Mauro Carvalho Chehab <mchehab@infradead.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     David Howells <dhowells@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 56/79] docs: Documentation/*.txt: rename all ReST
+ files to *.rst
+Message-ID: <20190423172641.612012c8@coco.lan>
+In-Reply-To: <20190423105415.3a69a0cb@lwn.net>
+References: <20190423132100.GB7132@redhat.com>
+        <cover.1555938375.git.mchehab+samsung@kernel.org>
+        <cda57849a6462ccc72dcd360b30068ab6a1021c4.1555938376.git.mchehab+samsung@kernel.org>
+        <20190423083135.GA11158@hirez.programming.kicks-ass.net>
+        <20190423125519.GA7104@redhat.com>
+        <20190423130132.GT4038@hirez.programming.kicks-ass.net>
+        <20704.1556031146@warthog.procyon.org.uk>
+        <20190423105415.3a69a0cb@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jKPrarixQkWWXOBCu6kRRpQd0aaJsPJbvsAyh0Wvc620A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <mchehab@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 01:13:52PM -0700, Kees Cook wrote:
-> On Mon, Mar 25, 2019 at 6:05 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> >
-> > On 2019-03-21, Andy Lutomirski <luto@kernel.org> wrote:
-> > > On Wed, Mar 20, 2019 at 7:38 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > > > Now that the holiday break is over, it's time to re-send this patch
-> > > > series (with a few additions, due to new information we got from
-> > > > CVE-2019-5736 -- which this patchset mostly protected against but had
-> > > > some holes with regards to #!-style scripts).
-> > >
-> > > I generally like this, but, as Linus pointed out, it will be
-> > > unfortunate if application authors see this as just another
-> > > non-portable weird Linux API and don't use it.  Would it be worthwhile
-> > > to put some thought into making it an API that other OSes might be
-> > > willing to implement?  As it stands, the openat(2) flags are getting
-> > > rather crazy in this patch set.
-> 
-> I think many of the issues are specific to Linux (and Linux containers
-> especially), so I'm not sure this should get blocked because we want
-> something more portable.
-> 
-> This series provides solutions to so many different race and confusion
-> issues, I'd really like to see it land. What's the next step here? Is
-> this planned to go directly to Linus for v5.2, or is it going to live
-> in -mm for a while? I'd really like to see this moving forward.
+Em Tue, 23 Apr 2019 10:54:15 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-Yeah, it would be good to move this forward. But since this is pretty
-much core-vfs we really need Al to take a look at this.
+> On Tue, 23 Apr 2019 15:52:26 +0100
+> David Howells <dhowells@redhat.com> wrote:
+> 
+> > There've been some changes that I've particularly objected to, such as
+> > removing contents lists from files and replacing them with markup like:
+> > 
+> > 	.. contents:: :local:
+> > 
+> > This actually impedes use of the file.  It should not be necessary to build
+> > the docs to get that for ordinary use.  
+> 
+> Usability of the text files versus that of the built docs is occasionally
+> something that has to be traded off.  As a general rule, I want the text
+> files to remain useful on their own.  There is a lot of value in the
+> built docs for a lot of people, but that should not be the only, or even
+> the primary, form of access
+> 
+> Tables of contents are certainly a place where that tradeoff makes itself
+> felt.  Doing them by hand ensures that they are always present, but
+> requires that people editing the docs also maintain the TOCS - something
+> that experience has shown tends not to happen.  That's more of a pain
+> than a little bit of markup, and people don't do it.  An automatically
+> generated TOC, instead, is always correct and is linkable.
+> 
+> Few people complain about the biggest impediment to the readability of
+> text files, though: the use of kerneldoc comments.  That splits the
+> information between the text file and multiple random-seeming locations
+> among tends of thousands of source files.  Sometimes the solution here is
+> to move all of the documentation into the source, but that tends to
+> fragment it and make it harder to find; it's certainly not the right
+> place for many kinds of docs.  In general, it's hard to create a coherent
+> story that way.
+> 
+> Suggestions / patches on how to improve things for *all* users of the
+> docs are certainly welcome!
+> 
+> I am, incidentally, toying with the idea of trying to put together a
+> documentation microconf at the Linux Plumbers Conference this year.  If
+> anybody out there thinks that's a good idea and would like to
+> participate, please let me know.
 
-Christian
+If you add a microconf to LPC, I'm in. 
+
+IMO, we made big advances with documentation, but there's a lot more
+to be done. Having a microconf to discuss those things may help us
+to bring new ideas about how to keep improving it.
+
+Thanks,
+Mauro
