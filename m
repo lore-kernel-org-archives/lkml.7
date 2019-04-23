@@ -2,31 +2,31 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D59C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15A9C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F5820843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1F520674
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbfDWFyc (ORCPT
+        id S1726183AbfDWFyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 01:54:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37488 "EHLO mx1.redhat.com"
+        Tue, 23 Apr 2019 01:54:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54486 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfDWFyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 01:54:32 -0400
+        id S1725888AbfDWFyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 01:54:37 -0400
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D805D20277;
-        Tue, 23 Apr 2019 05:54:31 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 62C47307D8BE;
+        Tue, 23 Apr 2019 05:54:37 +0000 (UTC)
 Received: from hp-dl380pg8-01.lab.eng.pek2.redhat.com (hp-dl380pg8-01.lab.eng.pek2.redhat.com [10.73.8.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7040E19C7E;
-        Tue, 23 Apr 2019 05:54:22 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5F53119C7E;
+        Tue, 23 Apr 2019 05:54:32 +0000 (UTC)
 From:   Jason Wang <jasowang@redhat.com>
 To:     mst@redhat.com, jasowang@redhat.com, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
@@ -36,64 +36,50 @@ Cc:     peterx@redhat.com, aarcange@redhat.com,
         davem@davemloft.net, jglisse@redhat.com, linux-mm@kvack.org,
         linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
         christophe.de.dinechin@gmail.com, jrdr.linux@gmail.com
-Subject: [RFC PATCH V3 0/6] vhost: accelerate metadata access
-Date:   Tue, 23 Apr 2019 01:54:14 -0400
-Message-Id: <20190423055420.26408-1-jasowang@redhat.com>
+Subject: [RFC PATCH V3 1/6] vhost: generalize adding used elem
+Date:   Tue, 23 Apr 2019 01:54:15 -0400
+Message-Id: <20190423055420.26408-2-jasowang@redhat.com>
+In-Reply-To: <20190423055420.26408-1-jasowang@redhat.com>
+References: <20190423055420.26408-1-jasowang@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 23 Apr 2019 05:54:32 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 23 Apr 2019 05:54:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series tries to access virtqueue metadata through kernel virtual
-address instead of copy_user() friends since they had too much
-overheads like checks, spec barriers or even hardware feature
-toggling. This is done through setup kernel address through direct
-mapping and co-opreate VM management with MMU notifiers.
+Use one generic vhost_copy_to_user() instead of two dedicated
+accessor. This will simplify the conversion to fine grain
+accessors. About 2% improvement of PPS were seen during vitio-user
+txonly test.
 
-Test shows about 23% improvement on TX PPS. TCP_STREAM doesn't see
-obvious improvement.
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vhost/vhost.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-Thanks
-
-Changes from RFC V2:
-- switch to use direct mapping instead of vmap()
-- switch to use spinlock + RCU to synchronize MMU notifier and vhost
-  data/control path
-- set dirty pages in the invalidation callbacks
-- always use copy_to/from_users() friends for the archs that may need
-  flush_dcache_pages()
-- various minor fixes
-Changes from V4:
-- use invalidate_range() instead of invalidate_range_start()
-- track dirty pages
-Changes from V3:
-- don't try to use vmap for file backed pages
-- rebase to master
-Changes from V2:
-- fix buggy range overlapping check
-- tear down MMU notifier during vhost ioctl to make sure invalidation
-  request can read metadata userspace address and vq size without
-  holding vq mutex.
-Changes from V1:
-- instead of pinning pages, use MMU notifier to invalidate vmaps and
-  remap duing metadata prefetch
-- fix build warning on MIPS
-
-Jason Wang (6):
-  vhost: generalize adding used elem
-  vhost: fine grain userspace memory accessors
-  vhost: rename vq_iotlb_prefetch() to vq_meta_prefetch()
-  vhost: introduce helpers to get the size of metadata area
-  vhost: factor out setting vring addr and num
-  vhost: access vq metadata through kernel virtual address
-
- drivers/vhost/net.c   |   4 +-
- drivers/vhost/vhost.c | 852 ++++++++++++++++++++++++++++++++++++------
- drivers/vhost/vhost.h |  34 +-
- 3 files changed, 764 insertions(+), 126 deletions(-)
-
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 351af88231ad..6df76ac8200a 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -2255,16 +2255,7 @@ static int __vhost_add_used_n(struct vhost_virtqueue *vq,
+ 
+ 	start = vq->last_used_idx & (vq->num - 1);
+ 	used = vq->used->ring + start;
+-	if (count == 1) {
+-		if (vhost_put_user(vq, heads[0].id, &used->id)) {
+-			vq_err(vq, "Failed to write used id");
+-			return -EFAULT;
+-		}
+-		if (vhost_put_user(vq, heads[0].len, &used->len)) {
+-			vq_err(vq, "Failed to write used len");
+-			return -EFAULT;
+-		}
+-	} else if (vhost_copy_to_user(vq, used, heads, count * sizeof *used)) {
++	if (vhost_copy_to_user(vq, used, heads, count * sizeof *used)) {
+ 		vq_err(vq, "Failed to write used");
+ 		return -EFAULT;
+ 	}
 -- 
 2.18.1
 
