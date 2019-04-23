@@ -2,58 +2,94 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAF4C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1E0C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34EFF217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3A3218CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbfDWQpF (ORCPT
+        id S1729303AbfDWQqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:45:05 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:49970 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfDWQpF (ORCPT
+        Tue, 23 Apr 2019 12:46:49 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:58380 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727656AbfDWQqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:45:05 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hIyXQ-0003zN-13; Tue, 23 Apr 2019 18:44:56 +0200
-Date:   Tue, 23 Apr 2019 18:44:55 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [rcu:dev.2019.04.16a 38/72] kernel/rcu/tree.c:2408:36: sparse:
- sparse: incorrect type in initializer (different address spaces)
-Message-ID: <20190423164455.gpaqksylv7ui3gxq@linutronix.de>
-References: <201904231828.a3jAyl28%lkp@intel.com>
- <20190423124619.GH3923@linux.ibm.com>
- <20190423150814.4lhcavywthyiwipd@linutronix.de>
- <20190423163809.GQ3923@linux.ibm.com>
+        Tue, 23 Apr 2019 12:46:49 -0400
+Received: (qmail 5734 invoked by uid 2102); 23 Apr 2019 12:46:48 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 23 Apr 2019 12:46:48 -0400
+Date:   Tue, 23 Apr 2019 12:46:48 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <dvyukov@google.com>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <rafael@kernel.org>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: general protection fault in __dev_printk
+In-Reply-To: <000000000000dca2f3058734c255@google.com>
+Message-ID: <Pine.LNX.4.44L0.1904231240270.1461-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190423163809.GQ3923@linux.ibm.com>
-User-Agent: NeoMutt/20180716
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-23 09:38:09 [-0700], Paul E. McKenney wrote:
-> Ah, thank you!  Shall I fold the above patch into your existing one,
-> or are you looking to do something else here?
+On Tue, 23 Apr 2019, syzbot wrote:
 
-The problem (that has been reported) isn't introduced by the patch in
-question but existed since the very beginning. I intend to post a patch
-with proper description.
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger  
+> crash:
+> 
+> Reported-and-tested-by:  
+> syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         d34f9519 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=15909780a00000
+> 
+> Note: testing is done by a robot and is best-effort only.
 
-> 							Thanx, Paul
+Okay, here's the original patch again, with the error message #if-ed
+out.  Maybe those messages are slowing down dummy-hcd enough that the
+yurex_disconnect() routine never gets a chance to run.  Although to
+tell the truth, I don't see how that could happen.
 
-Sebastian
+Alan Stern
+
+
+#syz test: https://github.com/google/kasan.git usb-fuzzer
+
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -143,8 +143,10 @@ static void yurex_interrupt(struct urb *
+ 		/* The device is terminated, clean up */
+ 		return;
+ 	default:
++#if 0
+ 		dev_err(&dev->interface->dev,
+ 			"%s - unknown status received: %d\n", __func__, status);
++#endif
+ 		goto exit;
+ 	}
+ 
+@@ -314,6 +316,7 @@ static void yurex_disconnect(struct usb_
+ 	usb_deregister_dev(interface, &yurex_class);
+ 
+ 	/* prevent more I/O from starting */
++	usb_poison_urb(dev->urb);
+ 	mutex_lock(&dev->io_mutex);
+ 	dev->interface = NULL;
+ 	mutex_unlock(&dev->io_mutex);
+
