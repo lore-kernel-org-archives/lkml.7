@@ -2,171 +2,159 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481AEC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1D4C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFFD217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585E320693
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556026952;
+	bh=N/cl0jOWK1ZXtvb2gMjhNwyxcILAgEkiYs32F1bY2eY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KQ71CaRZY8894W3l6u5dg2kemOqky/JEdICii2T8bQm+Z2WaYkCi6ZyLydQE/Hbaz
+	 0tlgR4NUalf2g80Ff5NgD4T30Shl25ejOdVTvq3O4xB6lgH2stWbWfYkTtT6HIyCEE
+	 pZj+ZTcgFmvfqEQwB1/rbZ9zr7fCn/1vwejHH+Fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbfDWNm0 (ORCPT
+        id S1727891AbfDWNmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:42:26 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56478 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbfDWNm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:42:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73B48A78;
-        Tue, 23 Apr 2019 06:42:25 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 483363F238;
-        Tue, 23 Apr 2019 06:42:20 -0700 (PDT)
-Subject: Re: [PATCH 1/7] genirq/msi: Add a new field in msi_desc to store an
- IOMMU cookie
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Julien Grall <julien.grall@arm.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc:     logang@deltatee.com, douliyangs@gmail.com,
-        miquel.raynal@bootlin.com, jason@lakedaemon.net,
-        tglx@linutronix.de, joro@8bytes.org, bigeasy@linutronix.de,
-        linux-rt-users@vger.kernel.org
-References: <20190418172611.21561-1-julien.grall@arm.com>
- <20190418172611.21561-2-julien.grall@arm.com>
- <7e77331c-4adf-5bb4-0c23-4d01a6ac5ab4@arm.com>
- <1bcdb72f-2116-756b-b74d-a48f89870782@arm.com>
- <48d14d10-0484-a7dd-cd84-a933158906ff@arm.com>
- <468df11c-fe2a-2584-7306-185531653331@arm.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- mQINBE6Jf0UBEADLCxpix34Ch3kQKA9SNlVQroj9aHAEzzl0+V8jrvT9a9GkK+FjBOIQz4KE
- g+3p+lqgJH4NfwPm9H5I5e3wa+Scz9wAqWLTT772Rqb6hf6kx0kKd0P2jGv79qXSmwru28vJ
- t9NNsmIhEYwS5eTfCbsZZDCnR31J6qxozsDHpCGLHlYym/VbC199Uq/pN5gH+5JHZyhyZiNW
- ozUCjMqC4eNW42nYVKZQfbj/k4W9xFfudFaFEhAf/Vb1r6F05eBP1uopuzNkAN7vqS8XcgQH
- qXI357YC4ToCbmqLue4HK9+2mtf7MTdHZYGZ939OfTlOGuxFW+bhtPQzsHiW7eNe0ew0+LaL
- 3wdNzT5abPBscqXWVGsZWCAzBmrZato+Pd2bSCDPLInZV0j+rjt7MWiSxEAEowue3IcZA++7
- ifTDIscQdpeKT8hcL+9eHLgoSDH62SlubO/y8bB1hV8JjLW/jQpLnae0oz25h39ij4ijcp8N
- t5slf5DNRi1NLz5+iaaLg4gaM3ywVK2VEKdBTg+JTg3dfrb3DH7ctTQquyKun9IVY8AsxMc6
- lxl4HxrpLX7HgF10685GG5fFla7R1RUnW5svgQhz6YVU33yJjk5lIIrrxKI/wLlhn066mtu1
- DoD9TEAjwOmpa6ofV6rHeBPehUwMZEsLqlKfLsl0PpsJwov8TQARAQABtCNNYXJjIFp5bmdp
- ZXIgPG1hcmMuenluZ2llckBhcm0uY29tPokCOwQTAQIAJQIbAwYLCQgHAwIGFQgCCQoLBBYC
- AwECHgECF4AFAk6NvYYCGQEACgkQI9DQutE9ekObww/+NcUATWXOcnoPflpYG43GZ0XjQLng
- LQFjBZL+CJV5+1XMDfz4ATH37cR+8gMO1UwmWPv5tOMKLHhw6uLxGG4upPAm0qxjRA/SE3LC
- 22kBjWiSMrkQgv5FDcwdhAcj8A+gKgcXBeyXsGBXLjo5UQOGvPTQXcqNXB9A3ZZN9vS6QUYN
- TXFjnUnzCJd+PVI/4jORz9EUVw1q/+kZgmA8/GhfPH3xNetTGLyJCJcQ86acom2liLZZX4+1
- 6Hda2x3hxpoQo7pTu+XA2YC4XyUstNDYIsE4F4NVHGi88a3N8yWE+Z7cBI2HjGvpfNxZnmKX
- 6bws6RQ4LHDPhy0yzWFowJXGTqM/e79c1UeqOVxKGFF3VhJJu1nMlh+5hnW4glXOoy/WmDEM
- UMbl9KbJUfo+GgIQGMp8mwgW0vK4HrSmevlDeMcrLdfbbFbcZLNeFFBn6KqxFZaTd+LpylIH
- bOPN6fy1Dxf7UZscogYw5Pt0JscgpciuO3DAZo3eXz6ffj2NrWchnbj+SpPBiH4srfFmHY+Y
- LBemIIOmSqIsjoSRjNEZeEObkshDVG5NncJzbAQY+V3Q3yo9og/8ZiaulVWDbcpKyUpzt7pv
- cdnY3baDE8ate/cymFP5jGJK++QCeA6u6JzBp7HnKbngqWa6g8qDSjPXBPCLmmRWbc5j0lvA
- 6ilrF8m5Ag0ETol/RQEQAM/2pdLYCWmf3rtIiP8Wj5NwyjSL6/UrChXtoX9wlY8a4h3EX6E3
- 64snIJVMLbyr4bwdmPKULlny7T/R8dx/mCOWu/DztrVNQiXWOTKJnd/2iQblBT+W5W8ep/nS
- w3qUIckKwKdplQtzSKeE+PJ+GMS+DoNDDkcrVjUnsoCEr0aK3cO6g5hLGu8IBbC1CJYSpple
- VVb/sADnWF3SfUvJ/l4K8Uk4B4+X90KpA7U9MhvDTCy5mJGaTsFqDLpnqp/yqaT2P7kyMG2E
- w+eqtVIqwwweZA0S+tuqput5xdNAcsj2PugVx9tlw/LJo39nh8NrMxAhv5aQ+JJ2I8UTiHLX
- QvoC0Yc/jZX/JRB5r4x4IhK34Mv5TiH/gFfZbwxd287Y1jOaD9lhnke1SX5MXF7eCT3cgyB+
- hgSu42w+2xYl3+rzIhQqxXhaP232t/b3ilJO00ZZ19d4KICGcakeiL6ZBtD8TrtkRiewI3v0
- o8rUBWtjcDRgg3tWx/PcJvZnw1twbmRdaNvsvnlapD2Y9Js3woRLIjSAGOijwzFXSJyC2HU1
- AAuR9uo4/QkeIrQVHIxP7TJZdJ9sGEWdeGPzzPlKLHwIX2HzfbdtPejPSXm5LJ026qdtJHgz
- BAb3NygZG6BH6EC1NPDQ6O53EXorXS1tsSAgp5ZDSFEBklpRVT3E0NrDABEBAAGJAh8EGAEC
- AAkFAk6Jf0UCGwwACgkQI9DQutE9ekMLBQ//U+Mt9DtFpzMCIHFPE9nNlsCm75j22lNiw6mX
- mx3cUA3pl+uRGQr/zQC5inQNtjFUmwGkHqrAw+SmG5gsgnM4pSdYvraWaCWOZCQCx1lpaCOl
- MotrNcwMJTJLQGc4BjJyOeSH59HQDitKfKMu/yjRhzT8CXhys6R0kYMrEN0tbe1cFOJkxSbV
- 0GgRTDF4PKyLT+RncoKxQe8lGxuk5614aRpBQa0LPafkirwqkUtxsPnarkPUEfkBlnIhAR8L
- kmneYLu0AvbWjfJCUH7qfpyS/FRrQCoBq9QIEcf2v1f0AIpA27f9KCEv5MZSHXGCdNcbjKw1
- 39YxYZhmXaHFKDSZIC29YhQJeXWlfDEDq6nIhvurZy3mSh2OMQgaIoFexPCsBBOclH8QUtMk
- a3jW/qYyrV+qUq9Wf3SKPrXf7B3xB332jFCETbyZQXqmowV+2b3rJFRWn5hK5B+xwvuxKyGq
- qDOGjof2dKl2zBIxbFgOclV7wqCVkhxSJi/QaOj2zBqSNPXga5DWtX3ekRnJLa1+ijXxmdjz
- hApihi08gwvP5G9fNGKQyRETePEtEAWt0b7dOqMzYBYGRVr7uS4uT6WP7fzOwAJC4lU7ZYWZ
- yVshCa0IvTtp1085RtT3qhh9mobkcZ+7cQOY+Tx2RGXS9WeOh2jZjdoWUv6CevXNQyOUXMM=
-Organization: ARM Ltd
-Message-ID: <6e9fb7c6-ca24-8790-967e-6e01cb6f81da@arm.com>
-Date:   Tue, 23 Apr 2019 14:42:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 09:42:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46972 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726659AbfDWNm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 09:42:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6E9C4ACAC;
+        Tue, 23 Apr 2019 13:42:25 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 15:42:22 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Michel Lespinasse <walken@google.com>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, dave@stgolabs.net,
+        Jan Kara <jack@suse.cz>, aneesh.kumar@linux.ibm.com,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        mpe@ellerman.id.au, Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        sergey.senozhatsky.work@gmail.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Rientjes <rientjes@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Ganesh Mahendran <opensource.ganesh@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        vinayak menon <vinayakm.list@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, haren@linux.vnet.ibm.com,
+        Nick Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+Subject: Re: [PATCH v12 00/31] Speculative page faults
+Message-ID: <20190423134222.GL25106@dhcp22.suse.cz>
+References: <20190416134522.17540-1-ldufour@linux.ibm.com>
+ <CANN689F1h9XoHPzr_FQY2WfN5bb2TTd6M3HLqoJ-DQuHkNbA7g@mail.gmail.com>
+ <20190423104707.GK25106@dhcp22.suse.cz>
+ <20190423124148.GA19031@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <468df11c-fe2a-2584-7306-185531653331@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423124148.GA19031@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/2019 14:19, Robin Murphy wrote:
-> On 23/04/2019 12:46, Marc Zyngier wrote:
->> On 23/04/2019 11:51, Julien Grall wrote:
->>> On 4/23/19 11:23 AM, Marc Zyngier wrote:
->>>> Hi Julien,
->>>
->>> Hi Marc,
->>>
->>>> On 18/04/2019 18:26, Julien Grall wrote:
->>>>> When an MSI doorbell is located downstream of an IOMMU, it is required
->>>>> to swizzle the physical address with an appropriately-mapped IOVA for any
->>>>> device attached to one of our DMA ops domain.
->>>>>
->>>>> At the moment, the allocation of the mapping may be done when composing
->>>>> the message. However, the composing may be done in non-preemtible
->>>>> context while the allocation requires to be called from preemptible
->>>>> context.
->>>>>
->>>>> A follow-up patch will split the current logic in two functions
->>>>> requiring to keep an IOMMU cookie per MSI.
->>>>>
->>>>> This patch introduces a new field in msi_desc to store an IOMMU cookie
->>>>> when CONFIG_IOMMU_DMA is selected.
->>>>>
->>>>> Signed-off-by: Julien Grall <julien.grall@arm.com>
->>>>> ---
->>>>>    include/linux/msi.h | 3 +++
->>>>>    1 file changed, 3 insertions(+)
->>>>>
->>>>> diff --git a/include/linux/msi.h b/include/linux/msi.h
->>>>> index 7e9b81c3b50d..d7907feef1bb 100644
->>>>> --- a/include/linux/msi.h
->>>>> +++ b/include/linux/msi.h
->>>>> @@ -77,6 +77,9 @@ struct msi_desc {
->>>>>    	struct device			*dev;
->>>>>    	struct msi_msg			msg;
->>>>>    	struct irq_affinity_desc	*affinity;
->>>>> +#ifdef CONFIG_IOMMU_DMA
->>>>> +	const void			*iommu_cookie;
->>>>> +#endif
->>>>>    
->>>>>    	union {
->>>>>    		/* PCI MSI/X specific data */
->>>>>
->>>>
->>>> Given that this is the only member in this structure that is dependent
->>>> on a config option, you could also add a couple of accessors that would
->>>> do nothing when IOMMU_DMA is not selected (and use that in the DMA code).
->>>
->>> I haven't seen any use of the helpers so far because the DMA code is
->>> also protected by IOMMU_DMA.
->>>
->>> I can add the helpers in the next version if you see any use outside of
->>> the DMA code.
->>
->> There may not be any user user yet, but I'd surely like to see the
->> accessors. This isn't very different from the stub functions you add in
->> patch #2.
+On Tue 23-04-19 05:41:48, Matthew Wilcox wrote:
+> On Tue, Apr 23, 2019 at 12:47:07PM +0200, Michal Hocko wrote:
+> > On Mon 22-04-19 14:29:16, Michel Lespinasse wrote:
+> > [...]
+> > > I want to add a note about mmap_sem. In the past there has been
+> > > discussions about replacing it with an interval lock, but these never
+> > > went anywhere because, mostly, of the fact that such mechanisms were
+> > > too expensive to use in the page fault path. I think adding the spf
+> > > mechanism would invite us to revisit this issue - interval locks may
+> > > be a great way to avoid blocking between unrelated mmap_sem writers
+> > > (for example, do not delay stack creation for new threads while a
+> > > large mmap or munmap may be going on), and probably also to handle
+> > > mmap_sem readers that can't easily use the spf mechanism (for example,
+> > > gup callers which make use of the returned vmas). But again that is a
+> > > separate topic to explore which doesn't have to get resolved before
+> > > spf goes in.
+> > 
+> > Well, I believe we should _really_ re-evaluate the range locking sooner
+> > rather than later. Why? Because it looks like the most straightforward
+> > approach to the mmap_sem contention for most usecases I have heard of
+> > (mostly a mm{unm}ap, mremap standing in the way of page faults).
+> > On a plus side it also makes us think about the current mmap (ab)users
+> > which should lead to an overall code improvements and maintainability.
 > 
-> If you foresee this being useful in general, do you reckon it would be 
-> worth decoupling it under its own irqchip-layer Kconfig which can then 
-> be selected by IOMMU_DMA?
+> Dave Chinner recently did evaluate the range lock for solving a problem
+> in XFS and didn't like what he saw:
+> 
+> https://lore.kernel.org/linux-fsdevel/20190418031013.GX29573@dread.disaster.area/T/#md981b32c12a2557a2dd0f79ad41d6c8df1f6f27c
 
-I think that'd be a useful thing to do, as most architectures do not
-require this dynamic mapping of MSIs.
+Thank you, will have a look.
 
-Thanks,
+> I think scaling the lock needs to be tied to the actual data structure
+> and not have a second tree on-the-side to fake-scale the locking.  Anyway,
+> we're going to have a session on this at LSFMM, right?
 
-	M.
+I thought we had something for the mmap_sem scaling but I do not see
+this in a list of proposed topics. But we can certainly add it there.
+
+> > SPF sounds like a good idea but it is a really big and intrusive surgery
+> > to the #PF path. And more importantly without any real world usecase
+> > numbers which would justify this. That being said I am not opposed to
+> > this change I just think it is a large hammer while we haven't seen
+> > attempts to tackle problems in a simpler way.
+> 
+> I don't think the "no real world usecase numbers" is fair.  Laurent quoted:
+> 
+> > Ebizzy:
+> > -------
+> > The test is counting the number of records per second it can manage, the
+> > higher is the best. I run it like this 'ebizzy -mTt <nrcpus>'. To get
+> > consistent result I repeated the test 100 times and measure the average
+> > result. The number is the record processes per second, the higher is the best.
+> > 
+> >   		BASE		SPF		delta	
+> > 24 CPUs x86	5492.69		9383.07		70.83%
+> > 1024 CPUS P8 VM 8476.74		17144.38	102%
+> 
+> and cited 30% improvement for you-know-what product from an earlier
+> version of the patch.
+
+Well, we are talking about
+45 files changed, 1277 insertions(+), 196 deletions(-)
+
+which is a _major_ surgery in my book. Having a real life workloads numbers
+is nothing unfair to ask for IMHO.
+
+And let me remind you that I am not really opposing SPF in general. I
+would just like to see a simpler approach before we go such a large
+change. If the range locking is not really a scalable approach then all
+right but from why I've see it should help a lot of most bottle-necks I
+have seen.
 -- 
-Jazz is not dead. It just smells funny...
+Michal Hocko
+SUSE Labs
