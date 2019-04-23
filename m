@@ -2,98 +2,250 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E0FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5FFC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED51C214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D081214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfDWKjW (ORCPT
+        id S1727443AbfDWKj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:39:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33654 "EHLO mx1.redhat.com"
+        Tue, 23 Apr 2019 06:39:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:17096 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfDWKjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:39:22 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1725990AbfDWKj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 06:39:56 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 40CCE7E436;
-        Tue, 23 Apr 2019 10:39:22 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A4EB660142;
-        Tue, 23 Apr 2019 10:39:16 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x3NAdG8v030235;
-        Tue, 23 Apr 2019 06:39:16 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id x3NAdFY3030232;
-        Tue, 23 Apr 2019 06:39:15 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Tue, 23 Apr 2019 06:39:15 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Huaisheng Ye <yehs2007@zoho.com>
-cc:     snitzer@redhat.com, agk@redhat.com, prarit@redhat.com,
-        chengnt@lenovo.com, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, Huaisheng Ye <yehs1@lenovo.com>
-Subject: Re: [PATCH] dm-writecache: remove unused member page_offset in
- writeback_struct
-In-Reply-To: <20190420162017.6052-1-yehs2007@zoho.com>
-Message-ID: <alpine.LRH.2.02.1904230638030.11112@file01.intranet.prod.int.rdu2.redhat.com>
-References: <20190420162017.6052-1-yehs2007@zoho.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9C1A630ADBBD;
+        Tue, 23 Apr 2019 10:39:55 +0000 (UTC)
+Received: from redhat.com (ovpn-112-50.ams2.redhat.com [10.36.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A713226FF;
+        Tue, 23 Apr 2019 10:39:42 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 11:39:39 +0100
+From:   Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, cjia@nvidia.com,
+        kvm@vger.kernel.org, aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        kwankhede@nvidia.com, eauger@redhat.com, yi.l.liu@intel.com,
+        eskultet@redhat.com, ziye.yang@intel.com, mlevitsk@redhat.com,
+        pasic@linux.ibm.com, libvir-list@redhat.com,
+        arei.gonglei@huawei.com, felipe@nutanix.com, Ken.Xue@amd.com,
+        kevin.tian@intel.com, dgilbert@redhat.com, zhenyuw@linux.intel.com,
+        alex.williamson@redhat.com, changpeng.liu@intel.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        zhi.a.wang@intel.com, jonathan.davies@nutanix.com,
+        shaopeng.he@intel.com
+Subject: Re: [Qemu-devel] [PATCH 1/2] vfio/mdev: add version field as
+ mandatory attribute for mdev device
+Message-ID: <20190423103939.GF6022@redhat.com>
+Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+ <20190419083505.19654-1-yan.y.zhao@intel.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 23 Apr 2019 10:39:22 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190419083505.19654-1-yan.y.zhao@intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 23 Apr 2019 10:39:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Sun, 21 Apr 2019, Huaisheng Ye wrote:
-
-> From: Huaisheng Ye <yehs1@lenovo.com>
+On Fri, Apr 19, 2019 at 04:35:04AM -0400, Yan Zhao wrote:
+> device version attribute in mdev sysfs is used by user space software
+> (e.g. libvirt) to query device compatibility for live migration of VFIO
+> mdev devices. This attribute is mandatory if a mdev device supports live
+> migration.
 > 
-> The structure member page_offset in writeback_struct never has been
-> used actually. Remove it.
+> It consists of two parts: common part and vendor proprietary part.
+> common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
+>              identifies device type. e.g., for pci device, it is
+>              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> vendor proprietary part: this part is varied in length. vendor driver can
+>              specify any string to identify a device.
 > 
-> Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
+> When reading this attribute, it should show device version string of the
+> device of type <type-id>. If a device does not support live migration, it
+> should return errno.
+> When writing a string to this attribute, it returns errno for
+> incompatibility or returns written string length in compatibility case.
+> If a device does not support live migration, it always returns errno.
+> 
+> For user space software to use:
+> 1.
+> Before starting live migration, user space software first reads source side
+> mdev device's version. e.g.
+> "#cat \
+> /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type/version"
+> 00028086-193b-i915-GVTg_V5_4
+> 
+> 2.
+> Then, user space software writes the source side returned version string
+> to device version attribute in target side, and checks the return value.
+> If a negative errno is returned in the target side, then mdev devices in
+> source and target sides are not compatible;
+> If a positive number is returned and it equals to the length of written
+> string, then the two mdev devices in source and target side are compatible.
+> e.g.
+> (a) compatibility case
+> "# echo 00028086-193b-i915-GVTg_V5_4 >
+> /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+> 
+> (b) incompatibility case
+> "#echo 00028086-193b-i915-GVTg_V5_1 >
+> /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+> -bash: echo: write error: Invalid argument
 
-Acked-by: Mikulas Patocka <mpatocka@redhat.com>
+What you have written here seems to imply that each mdev type is able to
+support many different versions at the same time. Writing a version into
+this sysfs file then chooses which of the many versions to actually use.
 
+This is good as it allows for live migration across driver software upgrades.
+
+A mgmt application may well want to know what versions are supported for an
+mdev type *before* starting a migration. A mgmt app can query all the 100's
+of hosts it knows and thus figure out which are valid to use as the target
+of a migration.
+
+IOW, we want to avoid the ever hitting the incompatibility case in the
+first place, by only choosing to migrate to a host that we know is going
+to be compatible.
+
+This would need some kind of way to report the full list of supported
+versions against the mdev supported types on the host.
+
+
+> 3. if two mdev devices are compatible, user space software can start
+> live migration, and vice versa.
+> 
+> Note: if a mdev device does not support live migration, it either does
+> not provide a version attribute, or always returns errno when its version
+> attribute is read/written.
+> 
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Erik Skultety <eskultet@redhat.com>
+> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> Cc: Neo Jia <cjia@nvidia.com>
+> Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> 
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
 > ---
->  drivers/md/dm-writecache.c | 2 --
->  1 file changed, 2 deletions(-)
+>  Documentation/vfio-mediated-device.txt | 36 ++++++++++++++++++++++++++
+>  samples/vfio-mdev/mbochs.c             | 17 ++++++++++++
+>  samples/vfio-mdev/mdpy.c               | 16 ++++++++++++
+>  samples/vfio-mdev/mtty.c               | 16 ++++++++++++
+>  4 files changed, 85 insertions(+)
 > 
-> diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-> index cfbbfbc..ddf1732 100644
-> --- a/drivers/md/dm-writecache.c
-> +++ b/drivers/md/dm-writecache.c
-> @@ -190,7 +190,6 @@ struct writeback_struct {
->  	struct dm_writecache *wc;
->  	struct wc_entry **wc_list;
->  	unsigned wc_list_n;
-> -	unsigned page_offset;
->  	struct page *page;
->  	struct wc_entry *wc_list_inline[WB_LIST_INLINE];
->  	struct bio bio;
-> @@ -1481,7 +1480,6 @@ static void __writecache_writeback_pmem(struct dm_writecache *wc, struct writeba
->  		bio->bi_end_io = writecache_writeback_endio;
->  		bio_set_dev(bio, wc->dev->bdev);
->  		bio->bi_iter.bi_sector = read_original_sector(wc, e);
-> -		wb->page_offset = PAGE_SIZE;
->  		if (max_pages <= WB_LIST_INLINE ||
->  		    unlikely(!(wb->wc_list = kmalloc_array(max_pages, sizeof(struct wc_entry *),
->  							   GFP_NOIO | __GFP_NORETRY |
-> -- 
-> 1.8.3.1
-> 
-> 
+> diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
+> index c3f69bcaf96e..bc28471c0667 100644
+> --- a/Documentation/vfio-mediated-device.txt
+> +++ b/Documentation/vfio-mediated-device.txt
+> @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
+>    |     |   |--- available_instances
+>    |     |   |--- device_api
+>    |     |   |--- description
+> +  |     |   |--- version
+>    |     |   |--- [devices]
+>    |     |--- [<type-id>]
+>    |     |   |--- create
+> @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
+>    |     |   |--- available_instances
+>    |     |   |--- device_api
+>    |     |   |--- description
+> +  |     |   |--- version
+>    |     |   |--- [devices]
+>    |     |--- [<type-id>]
+>    |          |--- create
+> @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
+>    |          |--- available_instances
+>    |          |--- device_api
+>    |          |--- description
+> +  |          |--- version
+>    |          |--- [devices]
+>  
+>  * [mdev_supported_types]
+> @@ -225,6 +228,8 @@ Directories and files under the sysfs for Each Physical Device
+>    [<type-id>], device_api, and available_instances are mandatory attributes
+>    that should be provided by vendor driver.
+>  
+> +  version is a mandatory attribute if a mdev device supports live migration.
+> +
+>  * [<type-id>]
+>  
+>    The [<type-id>] name is created by adding the device driver string as a prefix
+> @@ -246,6 +251,35 @@ Directories and files under the sysfs for Each Physical Device
+>    This attribute should show the number of devices of type <type-id> that can be
+>    created.
+>  
+> +* version
+> +
+> +  This attribute is rw. It is used to check whether two devices are compatible
+> +  for live migration. If this attribute is missing, then the corresponding mdev
+> +  device is regarded as not supporting live migration.
+> +
+> +  It consists of two parts: common part and vendor proprietary part.
+> +  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
+> +               device type. e.g., for pci device, it is
+> +               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> +  vendor proprietary part: this part is varied in length. vendor driver can
+> +               specify any string to identify a device.
+> +
+> +  When reading this attribute, it should show device version string of the device
+> +  of type <type-id>. If a device does not support live migration, it should
+> +  return errno.
+> +  When writing a string to this attribute, it returns errno for incompatibility
+> +  or returns written string length in compatibility case. If a device does not
+> +  support live migration, it always returns errno.
+> +
+> +  for example.
+> +  # cat \
+> + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_2/version
+> +  00028086-193b-i915-GVTg_V5_2
+> +
+> +  #echo 00028086-193b-i915-GVTg_V5_2 > \
+> + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
+> + -bash: echo: write error: Invalid argument
+> +
+
+IIUC this path is against the physical device. IOW, the mgmt app would have
+to first write to the "version" file to choose a version, and then write to
+the "create" file to actually create an virtual device. This has the obvious
+concurrency problem if multiple devices are being created at the same time
+and distinct versions for each device are required. There would need to be
+a locking scheme defined to ensure safety.
+
+Wouldn't it be better if we can pass the desired version when we write to
+the "create" file, so that we avoid any concurrent usage problems. "version"
+could be just a read-only file with a *list* of supported versions.
+
+eg
+
+  $ cat /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
+  5.0
+  5.1
+  5.2
+
+  $ echo "83b8f4f2-509f-382f-3c1e-e6bfe0fa1001;version=5.2" >
+      /sys/devices/virtual/mtty/mtty/mdev_supported_types/mtty-2/create
+
+
+Regards,
+Daniel
+-- 
+|: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
+|: https://libvirt.org         -o-            https://fstop138.berrange.com :|
+|: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
