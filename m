@@ -2,120 +2,233 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BBEC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC345C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD517218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:11:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JoV0DWkt"
+	by mail.kernel.org (Postfix) with ESMTP id 8C347218B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556053969;
+	bh=BWxvGr0qGvlTx7fLrnaZqZMaPJT+VkSzaWxMloc4rq4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oU7mICx+h9zZ9duPHL0zKnHJycjzC13rAQp4TnGv0SMN5hXXNbBj0uc0CSov+7nUg
+	 vGWvrIIav2A+F89D9Pq5A/FdrkAgS1qUo9U2c9xlFFtPfIyMd9rAunMiF5mnYm88kC
+	 e2JJ3cdVESdhqkvmS5bKgTOiXJ7xUknfUyUU2ZUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfDWVLY (ORCPT
+        id S1727782AbfDWVMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:11:24 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:38749 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfDWVLY (ORCPT
+        Tue, 23 Apr 2019 17:12:48 -0400
+Received: from casper.infradead.org ([85.118.1.10]:38896 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfDWVMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:11:24 -0400
-Received: by mail-qk1-f201.google.com with SMTP id z19so11532622qkj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 14:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=eHYZmjesflQdPVGOTGQwO4393GXn5tkz07pTFvSiuzs=;
-        b=JoV0DWktfcvqI23dn2nF/pzJYfmDnrGO6DLOHhfm/g5OBEdGH7oA0Q5TOmf19zZAaj
-         Q60IUoBjPZL39JkzbYjAO7l6GMwxpXnq1wEG8XgusrrYQVYtiA9g6jneFurYicXl+xSC
-         qMS48VdntQhrXMpnnYMv0GMmCfrI3gj0PCPD/kxdao4CZllYceM+0GVfK4esyjY8ef3/
-         FMxMTYl+zc9LYZ/kbIADFqFRmmi83ENVLSsGuTRJvCgmd9EjwqQdy5yaaNy/aLrfnYdQ
-         zSDWWRtFJs9jB0BfTS9KpoESyRcwDiZRmJOj5rvAaboL3Tlzk5CMQompoROIODMjs28W
-         1DEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=eHYZmjesflQdPVGOTGQwO4393GXn5tkz07pTFvSiuzs=;
-        b=mFbshJBNnGpvgZCZM24DKbUM6pMO96QQXaaZRMjNye198gpuvFV4isW0iLRrdj1Vcp
-         97mTyk8l76our7fraDWpDxrqiDPFsYkm3lY0NS4qPCb1f/qPEawOVL70mpRxuZRGRkdH
-         j8IyDnwEDpg029TXnZL5Hvz9ffxhJ+xjdTJJ3ru3gUmtQTBinSA95981BwNMdffPPj3/
-         0tOGLbElo49xmv66VngMeSRQsqWEw5L0/z9QiiF4NobwGLmZVjfYsUm/chgkQE6zHgcx
-         TiWl2S8NdTYnqBa4uBTqzn4dVfsYDN8mGbYwY5BT2EeK+paF0FqWUgadb47Dc/BIzSVb
-         4afA==
-X-Gm-Message-State: APjAAAV6SDa/hAN43suTydUiweVwXAZ3mF913F6PNb9PiKQEQ/5SlEoC
-        VRrWDuF3xbJsE4ZjTEaLe0DvjnQVkW/nSMld7y8=
-X-Google-Smtp-Source: APXvYqwvUVrI5w7+HQ4Voz3Luialg00FkdVOpOuknQ3P85DcnoM1jeEyL7v3WA7N01k1YkXV8bVpSe0gA0rJoBxFp+U=
-X-Received: by 2002:a37:9902:: with SMTP id b2mr10745835qke.239.1556053883187;
- Tue, 23 Apr 2019 14:11:23 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 14:11:14 -0700
-Message-Id: <20190423211116.261111-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH] powerpc: vdso: drop unnecessary cc-ldoption
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Apr 2019 17:12:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ZD96kitRr8igE3+JY10qe34adEM/oyvkNaEMzzG8fnY=; b=EvP6rLEGAhqB1F8o9hM6vchUDQ
+        2esUtWbn6UC5Qg776ziYdGFDqOii/cQb8YQYTHfYK3+HuUVQEk+OI3wjFZDO9Dp4J8L68+yGnxZDA
+        RmlHsFk8OM5LaCohxEp5HraSe5/RFZr7V6aVUxe4hqY3le0mQEa10lyBjYXyreqfRVuiWCmIxc+s6
+        cEMoQLioj2B8QF/BGDUu+EgkiH/JH1WiL+3UZZ6Mv9zc8MjvCm6pLZpBkCmInxsEm2QwpNjK11XIH
+        twhekmimb1Ft8hE5Dp85ggyercIGvu35ODlTvosIUw8JdEoIM9sX3SvmFY1T3OAmq34PE9KWMpCcP
+        RjqnCMdg==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJ2iY-0003uJ-AY; Tue, 23 Apr 2019 21:12:42 +0000
+Date:   Tue, 23 Apr 2019 18:12:36 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 13/63] Documentation: ACPI: move acpi-lid.txt to
+ firmware-guide/acpi and convert to reST
+Message-ID: <20190423181236.18e4b6a0@coco.lan>
+In-Reply-To: <20190423162932.21428-14-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-14-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Towards the goal of removing cc-ldoption, it seems that --hash-style=
-was added to binutils 2.17.50.0.2 in 2006. The minimal required version
-of binutils for the kernel according to
-Documentation/process/changes.rst is 2.20.
+Em Wed, 24 Apr 2019 00:28:42 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
-Cc: clang-built-linux@googlegroups.com
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- arch/powerpc/kernel/vdso32/Makefile | 5 ++---
- arch/powerpc/kernel/vdso64/Makefile | 5 ++---
- 2 files changed, 4 insertions(+), 6 deletions(-)
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  .../acpi/acpi-lid.rst}                        | 48 ++++++++++++-------
+>  Documentation/firmware-guide/acpi/index.rst   |  1 +
+>  2 files changed, 33 insertions(+), 16 deletions(-)
+>  rename Documentation/{acpi/acpi-lid.txt => firmware-guide/acpi/acpi-lid.rst} (77%)
+> 
+> diff --git a/Documentation/acpi/acpi-lid.txt b/Documentation/firmware-guide/acpi/acpi-lid.rst
+> similarity index 77%
+> rename from Documentation/acpi/acpi-lid.txt
+> rename to Documentation/firmware-guide/acpi/acpi-lid.rst
+> index effe7af3a5af..1d19e15a6945 100644
+> --- a/Documentation/acpi/acpi-lid.txt
+> +++ b/Documentation/firmware-guide/acpi/acpi-lid.rst
+> @@ -1,25 +1,29 @@
+> -Special Usage Model of the ACPI Control Method Lid Device
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. include:: <isonum.txt>
+>  
+> -Copyright (C) 2016, Intel Corporation
+> -Author: Lv Zheng <lv.zheng@intel.com>
+> +=========================================================
+> +Special Usage Model of the ACPI Control Method Lid Device
+> +=========================================================
+>  
+> +:Copyright: |copy| 2016, Intel Corporation
+>  
+> -Abstract:
+> +:Author: Lv Zheng <lv.zheng@intel.com>
+>  
+> -Platforms containing lids convey lid state (open/close) to OSPMs using a
+> -control method lid device. To implement this, the AML tables issue
+> -Notify(lid_device, 0x80) to notify the OSPMs whenever the lid state has
+> -changed. The _LID control method for the lid device must be implemented to
+> -report the "current" state of the lid as either "opened" or "closed".
+> +:Abstract: Platforms containing lids convey lid state (open/close) to OSPMs
+> +  using a control method lid device. To implement this, the AML tables issue
+> +  Notify(lid_device, 0x80) to notify the OSPMs whenever the lid state has
+> +  changed. The _LID control method for the lid device must be implemented to
+> +  report the "current" state of the lid as either "opened" or "closed".
 
-diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
-index ce199f6e4256..06f54d947057 100644
---- a/arch/powerpc/kernel/vdso32/Makefile
-+++ b/arch/powerpc/kernel/vdso32/Makefile
-@@ -26,9 +26,8 @@ GCOV_PROFILE := n
- KCOV_INSTRUMENT := n
- UBSAN_SANITIZE := n
- 
--ccflags-y := -shared -fno-common -fno-builtin
--ccflags-y += -nostdlib -Wl,-soname=linux-vdso32.so.1 \
--		$(call cc-ldoption, -Wl$(comma)--hash-style=both)
-+ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
-+	-Wl,-soname=linux-vdso32.so.1 -Wl,--hash-style=both
- asflags-y := -D__VDSO32__ -s
- 
- obj-y += vdso32_wrapper.o
-diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vdso64/Makefile
-index 28e7d112aa2f..32ebb3522ea1 100644
---- a/arch/powerpc/kernel/vdso64/Makefile
-+++ b/arch/powerpc/kernel/vdso64/Makefile
-@@ -12,9 +12,8 @@ GCOV_PROFILE := n
- KCOV_INSTRUMENT := n
- UBSAN_SANITIZE := n
- 
--ccflags-y := -shared -fno-common -fno-builtin
--ccflags-y += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
--		$(call cc-ldoption, -Wl$(comma)--hash-style=both)
-+ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
-+	-Wl,-soname=linux-vdso64.so.1 -Wl,--hash-style=both
- asflags-y := -D__VDSO64__ -s
- 
- obj-y += vdso64_wrapper.o
--- 
-2.21.0.593.g511ec345e18-goog
+Same comment for the abstract.
+>  
+> -For most platforms, both the _LID method and the lid notifications are
+> -reliable. However, there are exceptions. In order to work with these
+> -exceptional buggy platforms, special restrictions and expections should be
+> -taken into account. This document describes the restrictions and the
+> -expections of the Linux ACPI lid device driver.
+> +  For most platforms, both the _LID method and the lid notifications are
+> +  reliable. However, there are exceptions. In order to work with these
+> +  exceptional buggy platforms, special restrictions and expections should be
+> +  taken into account. This document describes the restrictions and the
+> +  expections of the Linux ACPI lid device driver.
+>  
+>  
+>  1. Restrictions of the returning value of the _LID control method
+> +=================================================================
+>  
+>  The _LID control method is described to return the "current" lid state.
+>  However the word of "current" has ambiguity, some buggy AML tables return
+> @@ -31,6 +35,7 @@ with cached value, the initial returning value is likely not reliable.
+>  There are platforms always retun "closed" as initial lid state.
+>  
+>  2. Restrictions of the lid state change notifications
+> +=====================================================
+>  
+>  There are buggy AML tables never notifying when the lid device state is
+>  changed to "opened". Thus the "opened" notification is not guaranteed. But
+> @@ -40,17 +45,21 @@ trigger some system power saving operations on Windows. Since it is fully
+>  tested, it is reliable from all AML tables.
+>  
+>  3. Expections for the userspace users of the ACPI lid device driver
+> +===================================================================
+>  
+>  The ACPI button driver exports the lid state to the userspace via the
+> -following file:
+> +following file::
+> +
+>    /proc/acpi/button/lid/LID0/state
+> +
+>  This file actually calls the _LID control method described above. And given
+>  the previous explanation, it is not reliable enough on some platforms. So
+>  it is advised for the userspace program to not to solely rely on this file
+>  to determine the actual lid state.
+>  
+>  The ACPI button driver emits the following input event to the userspace:
+> -  SW_LID
+> +  * SW_LID
+> +
+>  The ACPI lid device driver is implemented to try to deliver the platform
+>  triggered events to the userspace. However, given the fact that the buggy
+>  firmware cannot make sure "opened"/"closed" events are paired, the ACPI
+> @@ -59,20 +68,25 @@ button driver uses the following 3 modes in order not to trigger issues.
+>  If the userspace hasn't been prepared to ignore the unreliable "opened"
+>  events and the unreliable initial state notification, Linux users can use
+>  the following kernel parameters to handle the possible issues:
+> +
+>  A. button.lid_init_state=method:
 
+Just for the sake of a better visual at the html output, I would place those
+button.* as:
+
+  A. ``button.lid_init_state=method``:
+
+Anyway, with or without such change:
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+>     When this option is specified, the ACPI button driver reports the
+>     initial lid state using the returning value of the _LID control method
+>     and whether the "opened"/"closed" events are paired fully relies on the
+>     firmware implementation.
+> +
+>     This option can be used to fix some platforms where the returning value
+>     of the _LID control method is reliable but the initial lid state
+>     notification is missing.
+> +
+>     This option is the default behavior during the period the userspace
+>     isn't ready to handle the buggy AML tables.
+> +
+>  B. button.lid_init_state=open:
+>     When this option is specified, the ACPI button driver always reports the
+>     initial lid state as "opened" and whether the "opened"/"closed" events
+>     are paired fully relies on the firmware implementation.
+> +
+>     This may fix some platforms where the returning value of the _LID
+>     control method is not reliable and the initial lid state notification is
+>     missing.
+> @@ -80,6 +94,7 @@ B. button.lid_init_state=open:
+>  If the userspace has been prepared to ignore the unreliable "opened" events
+>  and the unreliable initial state notification, Linux users should always
+>  use the following kernel parameter:
+> +
+>  C. button.lid_init_state=ignore:
+>     When this option is specified, the ACPI button driver never reports the
+>     initial lid state and there is a compensation mechanism implemented to
+> @@ -89,6 +104,7 @@ C. button.lid_init_state=ignore:
+>     notifications can be delivered to the userspace when the lid is actually
+>     opens given that some AML tables do not send "opened" notifications
+>     reliably.
+> +
+>     In this mode, if everything is correctly implemented by the platform
+>     firmware, the old userspace programs should still work. Otherwise, the
+>     new userspace programs are required to work with the ACPI button driver.
+> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+> index 1c89888f6ee8..bedcb0b242a2 100644
+> --- a/Documentation/firmware-guide/acpi/index.rst
+> +++ b/Documentation/firmware-guide/acpi/index.rst
+> @@ -14,3 +14,4 @@ ACPI Support
+>     DSD-properties-rules
+>     gpio-properties
+>     i2c-muxes
+> +   acpi-lid
+> \ No newline at end of file
+
+
+
+Thanks,
+Mauro
