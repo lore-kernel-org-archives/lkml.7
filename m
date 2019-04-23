@@ -2,106 +2,122 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8096C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3AEC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F8121738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 397C221738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:47:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="vhTIMwo0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f7sO7mNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfDWOoV (ORCPT
+        id S1727827AbfDWOrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:44:21 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38002 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbfDWOoV (ORCPT
+        Tue, 23 Apr 2019 10:47:51 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41278 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfDWOru (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 10:44:21 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p14so13760451ljg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 07:44:19 -0700 (PDT)
+        Tue, 23 Apr 2019 10:47:50 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 64so13025723otb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 07:47:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vVdK0v49PgDzk6jAF71uYV8DzfTA8hkwoYIT2UMQ8Cs=;
-        b=vhTIMwo0qd3NmRWJvu5iLuqCBUgO06z7jlnTfQrfKPqWwzdN+zeDmLQ5X+KEyghxDu
-         0lRkg7q08NT2BZp7jkPZ/FlydGekUv/E/gK6AXpfDfncNKmMtKyRHj3txubK7D4E6DbL
-         cBjUbTRqv7/ajt4GMtonxTqwYhnXwclUqvvyydypXwewwefAsAEo536oEfUfM5GAklY7
-         5i/mRlfjWJvGDcI+5Y1n9oQjuTPFaQtWJ2FJigtmo1VE8XfA/CRhNboQu++1sE4SoD3G
-         dsQWX/Wgvic1dBuvvsVvy8ItDzibx3ue4J/OwsQgHnYSR2Y+lcjEJ9/pbTGHLG7X59tS
-         TvbQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sLF03lZ2Iim5bhmL1FcWVbfZrAVD/hxQUV2C8iXSzWI=;
+        b=f7sO7mNBeM9Vf2897QPLnrQ6KcBehihxfMddfEy+A6VSKyzB90ZyUuX0LfOav8ss4f
+         W2YjeLSoScZ3KH8TW/9ahhl969I7R7cCLJxRK2O5MOp8/zPpEjrC38nfBepErXtPWg52
+         d8j4jEnzlmLUuvh+plf1lWkqJ9I9rvEAcr6pmpQiyJkX96QwvxDX60bGxTQNROL7TTmC
+         izKt6hgftO6qfEQkQ3BrZj/U7ptZp1TBum3tbLBs+QDcJkpTLxoFTEvTjNSz6OSdcUVG
+         nX35hpYXbbZKgYZwfeVWPOF/aNny29kSqkl+obfw5QcqpYcMwyfypIEmcIM1NAcQ3wfE
+         vOWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=vVdK0v49PgDzk6jAF71uYV8DzfTA8hkwoYIT2UMQ8Cs=;
-        b=r+lq4dfI8hDx/gDcU/BPZQ+DzkDSxT2ZvhdOrOkffwj61QGtteUm7MUaedWoTMvFPB
-         liklZMEQZJBwXaE3+CiaVSN6TJ4wbbarrpDbL2wqIyl8w96J8G3aTtGW5J11TKO/fxm8
-         VUj5ZRUY7oqbPAdqOHvMBgmdPp+c3tXuc3cuTHj7I+zDgvFf4qpcW27aLboJKjhK+1eF
-         49cWqyr2jYyTnFRpicsSfgGBrnVUZHgmwb4ZlQc84ucNxgjL7EDrgNpKbPW76OqZxfrX
-         0Lt4Ag4TAF6amOpNgQ51pqX5B0p+F7PU5RnNkAyxZPlqrFDylecNlhNiXN8ETQC2ovZ1
-         ebkw==
-X-Gm-Message-State: APjAAAUtOfyZCrJLWY9AuroKFnaJFiFRCPqFk28qRaVlwY/73k7qCQ7Y
-        3gYP04/RFaNTVqUdVCwnfh+d/A==
-X-Google-Smtp-Source: APXvYqzxVjpV3l2jJGPXQFfa9YnHZCH72mkjmFrdE89aXpSTFia65TdDAJozqJaMxwcD6LUse6X1ew==
-X-Received: by 2002:a2e:219:: with SMTP id 25mr14113073ljc.34.1556030659021;
-        Tue, 23 Apr 2019 07:44:19 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.82.73])
-        by smtp.gmail.com with ESMTPSA id 77sm3422142ljs.58.2019.04.23.07.44.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 07:44:17 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] thermal: rcar_gen3_thermal: disable interrupt in
- .remove
-To:     Jiada Wang <jiada_wang@mentor.com>, rui.zhang@intel.com,
-        edubezval@gmail.com, daniel.lezcano@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se,
-        geert+renesas@glider.be, marek.vasut+renesas@gmail.com,
-        kuninori.morimoto.gx@renesas.com, hien.dang.eb@renesas.com,
-        fabrizio.castro@bp.renesas.com, dien.pham.ry@renesas.com,
-        biju.das@bp.renesas.com, erosca@de.adit-jv.com,
-        george_davis@mentor.com, joshua_frkuska@mentor.com
-References: <20190423141414.24264-1-jiada_wang@mentor.com>
- <20190423141414.24264-3-jiada_wang@mentor.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <2d810fcf-8d31-f07e-d94a-a127127e97cd@cogentembedded.com>
-Date:   Tue, 23 Apr 2019 17:44:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190423141414.24264-3-jiada_wang@mentor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sLF03lZ2Iim5bhmL1FcWVbfZrAVD/hxQUV2C8iXSzWI=;
+        b=WzbYHEc2NB5RtvzKYld6T8jUFEfdrPSPx8cyqqI8vqY3ApDO+zIhWIiDdnYENXZRg/
+         Pboxf5f+cdyKr9zZQMGSYTDKOQf41xYZyqv89uWvZeoqjoPqtd06DzePOoIe6jOkOeLf
+         fE8ICN2EfUAjRuaIE1BhHlyzaU1if0w1TiDUaIwnwPv/zG8SrgSPCX5tdnR/KxJ95VCU
+         KvWF8qMuLXZteJWxgsgcO5PnFCJ3IBf+1qh6WnDq0m5wuklGC9VqLs30jxZuELHkbWmY
+         5g4OpDIB0x8V22e8snbQiN/NTsneI+TwavFC1wZOoI4dzvWgy3L5GfgPdk49rRzmU+IH
+         3yWw==
+X-Gm-Message-State: APjAAAUHOY90Kp4CjSREiC4wSLYssWbVbsM0zgwT6FN3XdYQWFxbKkop
+        ZvuzNojiWb8gtLY1jHg6r2I=
+X-Google-Smtp-Source: APXvYqyKljS8C05etJviUuRnGeI+FdyHNvcH+4cXg9tVrEaYChoiwMlTueSnbVrOe0mx37xYl8Zxsw==
+X-Received: by 2002:a05:6830:51:: with SMTP id d17mr15907007otp.178.1556030869423;
+        Tue, 23 Apr 2019 07:47:49 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:fd8f:ea25:f4b2:9189])
+        by smtp.gmail.com with ESMTPSA id w10sm6965565oiw.48.2019.04.23.07.47.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 07:47:47 -0700 (PDT)
+From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
+To:     eric@anholt.net, stefan.wahren@i2se.com,
+        gregkh@linuxfoundation.org, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Subject: [PATCH v3] Staging: vc04_services: Cleanup in ctrl_set_bitrate()
+Date:   Tue, 23 Apr 2019 09:47:45 -0500
+Message-Id: <20190423144745.21474-1-madhumithabiw@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/23/2019 05:14 PM, Jiada Wang wrote:
+Remove unnecessary variable from the function and make a corresponding
+change w.r.t the variable. In addition to that align the parameters in
+the parentheses to maintain Linux kernel coding style
 
-> Currently IRQ is remain enabled after .remove, later if device is probed,
+Issue suggested by Coccinelle.
 
-   IRQ remains enabled.
+Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
 
-> IRQ is requested before .thermal_init, this may cause IRQ function be
-> called before device is initialized.
-> 
-> this patch by disable interrupt in .remove, to ensure irq function
+---
+Changes in v2 -
+1) Fix my own error of removing function call from the variable.
+2) Align the function parameters with parentheses.
 
-   s/by disable/disables/.
+Changes in v3 -
+1) Since there was no real purpose of returning true value, replace it with
+return value of the function vchiq_mmal_port_parameter_set().
+---
+ drivers/staging/vc04_services/bcm2835-camera/controls.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-> only be called after device is fully initialized.
-> 
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-[...]
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/controls.c b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+index e39ab5fae724..2e0a422cdf3e 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+@@ -607,18 +607,15 @@ static int ctrl_set_bitrate(struct bm2835_mmal_dev *dev,
+ 			    struct v4l2_ctrl *ctrl,
+ 			    const struct bm2835_mmal_v4l2_ctrl *mmal_ctrl)
+ {
+-	int ret;
+ 	struct vchiq_mmal_port *encoder_out;
+ 
+ 	dev->capture.encode_bitrate = ctrl->val;
+ 
+ 	encoder_out = &dev->component[MMAL_COMPONENT_VIDEO_ENCODE]->output[0];
+ 
+-	ret = vchiq_mmal_port_parameter_set(dev->instance, encoder_out,
+-					    mmal_ctrl->mmal_id,
+-					    &ctrl->val, sizeof(ctrl->val));
+-	ret = 0;
+-	return ret;
++	return vchiq_mmal_port_parameter_set(dev->instance, encoder_out,
++					     mmal_ctrl->mmal_id, &ctrl->val,
++					     sizeof(ctrl->val));
+ }
+ 
+ static int ctrl_set_bitrate_mode(struct bm2835_mmal_dev *dev,
+-- 
+2.17.1
 
-MBR, Sergei
