@@ -2,225 +2,132 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A22C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88327C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFFF21850
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 545C721773
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:56:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tp0+ApHt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I8KW9sB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfDWTts (ORCPT
+        id S1726418AbfDWT4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 15:49:48 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35534 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfDWTtc (ORCPT
+        Tue, 23 Apr 2019 15:56:21 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54160 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfDWT4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 15:49:32 -0400
-Received: by mail-pf1-f194.google.com with SMTP id t21so8026919pfh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 12:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=URKuk0ypK06hT4XKJa7CoXAJpL44zlAI9HDKPAQ7SNY=;
-        b=Tp0+ApHtknMJIeHfnk/6Ldq3W6h8WLUFxgb5NEs+wLNTXOf8BWw/+EaAvCNZFBR6hk
-         96b6cTMZ6g1UEpdazi8hbWjTB9R5ncHUHRlv5h6n0DX28wfiXeg6bc+LmQ8IJPgzeyDQ
-         3h1Nny1w3YZ6Hj94iPco+uptzsJE54170RpFw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=URKuk0ypK06hT4XKJa7CoXAJpL44zlAI9HDKPAQ7SNY=;
-        b=URDXFMPUHOU2XNTNrBusLQf2cj7j/dluupiwJdWDDhlxjdzIba0r9uvAK1ADYsHUEC
-         vt1yWWuAxqNbUEqyMIcm5lipAvT1r67RqHbEb5rFqfMmL76GjSn8GSNt2l/20omWpe+i
-         HeiGasviQwEbBk6g08Mbi75GmRPTf7yOu5IFuiZ0Paq1O6qjqJIfM5OFBMwCBRGSE9lI
-         O6qmL7Z6VvcEkhHuoRfhq/M1lUouWVbWL6i6+nkJJMfJEf3lFrj7G/mO2jQ23UGDHjYO
-         D6cHhQucc8tFb2Pwj/h4n4aVIRIq5MmQlEAQHV1737T9g/mk44S1Kotuf+XE/LlwGMQk
-         hHqg==
-X-Gm-Message-State: APjAAAXkYZm92X6y0W6LGU28ON3j9MqbptUpBN/f5Y0oJjETbgyxK8kC
-        7VnYebKCCHBPQKJRo3UQSBQo9w==
-X-Google-Smtp-Source: APXvYqyecH5RI4lfqflcGZ7dIshMKAPZIYezjXDA/qHjDbkprN/2t8g0y0Ye3ffB660Qz4n/GeoVOw==
-X-Received: by 2002:aa7:97b0:: with SMTP id d16mr5396163pfq.233.1556048972099;
-        Tue, 23 Apr 2019 12:49:32 -0700 (PDT)
-Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id n26sm30303570pfi.165.2019.04.23.12.49.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 12:49:29 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        James Morris <jmorris@namei.org>,
-        Alexander Popov <alex.popov@linux.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emese Revfy <re.emese@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 2/3] security: Move stackleak config to Kconfig.hardening
-Date:   Tue, 23 Apr 2019 12:49:24 -0700
-Message-Id: <20190423194925.32151-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190423194925.32151-1-keescook@chromium.org>
-References: <20190423194925.32151-1-keescook@chromium.org>
+        Tue, 23 Apr 2019 15:56:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uBJlpdTHp6Z4y9fxNWwd3vt4kb8Y+n8p3Is+SZyxL1M=; b=I8KW9sB4KOwxZRtkHQ1cntwdC
+        90k82dAwZZt3KWtXa69CvKctECv1xKXqRuz4JCk4zntMv5q0iYkZ9dfEvNwlg2diyuNV+1Vtrib/f
+        um6HAr5kWPy04/WSK6GOirByatKHryStedDxe8Ze/0jXapufmq/ew96BUTiAzZUdOrRkNMh5ne+vu
+        6NHlGVODDpCn6Vu3QgZ4O1bLgb/YDwqJEi3l2y+az4MME7wG6+VTTOzBsLTtgEiKyFAiUM4k97Muf
+        MGLXPGdPJfrdJLYznNgJ28UkMmD58e/CIuen7tYpNKZJGwTDjkq1EsmHzDOd+i2Ad71eSUA8Injtn
+        JR/AzUFVw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJ1WK-0000xY-NS; Tue, 23 Apr 2019 19:56:00 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 53BAE29C30E0A; Tue, 23 Apr 2019 21:55:59 +0200 (CEST)
+Date:   Tue, 23 Apr 2019 21:55:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH] bpf: Fix preempt_enable_no_resched() abuse
+Message-ID: <20190423195559.GY4038@hirez.programming.kicks-ass.net>
+References: <20190419120207.GO4038@hirez.programming.kicks-ass.net>
+ <20190419130304.GV14281@hirez.programming.kicks-ass.net>
+ <20190419131522.GW14281@hirez.programming.kicks-ass.net>
+ <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
+ <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
+ <20190423141714.GO11158@hirez.programming.kicks-ass.net>
+ <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
+ <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
+ <20190423193435.GX4038@hirez.programming.kicks-ass.net>
+ <88ba7be0-9ec5-941e-1b3f-80fbe05fe3a0@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88ba7be0-9ec5-941e-1b3f-80fbe05fe3a0@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This moves the stackleak plugin options to Kconfig.hardening's memory
-initialization menu.
+On Tue, Apr 23, 2019 at 03:41:32PM -0400, Waiman Long wrote:
+> On 4/23/19 3:34 PM, Peter Zijlstra wrote:
+> > On Tue, Apr 23, 2019 at 03:12:16PM -0400, Waiman Long wrote:
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
+> >> You are right on that. However, there is a variant called
+> >> preempt_enable_no_resched() that doesn't have this side effect. So I am
+> >> going to use that one instead.
+> > Only if the very next line is schedule(). Otherwise you're very much not
+> > going to use that function.
+> 
+> May I know the reason why. 
+
+Because it can 'consume' a need_resched and introduces arbitrary delays
+before the schedule() eventually happens, breaking the very notion of
+PREEMPT=y (and the fundamentals RT relies on).
+
+> I saw a number of instances of
+> preempt_enable_no_resched() without right next a schedule().
+
+Look more closely.. and let me know, if true, those are bugs that need
+fixing.
+
+Argghhh.. BPF...
+
+Also, with the recent RCU rework, we can probably drop that
+rcu_read_lock()/rcu_read_unlock() from there if we're disabling
+preemption anyway.
+
 ---
- scripts/gcc-plugins/Kconfig | 51 ---------------------------------
- security/Kconfig.hardening  | 57 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+), 51 deletions(-)
+Subject: bpf: Fix preempt_enable_no_resched() abuse
 
-diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-index 352f03878a1e..80220ed26a35 100644
---- a/scripts/gcc-plugins/Kconfig
-+++ b/scripts/gcc-plugins/Kconfig
-@@ -108,57 +108,6 @@ config GCC_PLUGIN_RANDSTRUCT_PERFORMANCE
- 	  in structures.  This reduces the performance hit of RANDSTRUCT
- 	  at the cost of weakened randomization.
- 
--config GCC_PLUGIN_STACKLEAK
--	bool "Erase the kernel stack before returning from syscalls"
--	depends on GCC_PLUGINS
--	depends on HAVE_ARCH_STACKLEAK
--	help
--	  This option makes the kernel erase the kernel stack before
--	  returning from system calls. That reduces the information which
--	  kernel stack leak bugs can reveal and blocks some uninitialized
--	  stack variable attacks.
--
--	  The tradeoff is the performance impact: on a single CPU system kernel
--	  compilation sees a 1% slowdown, other systems and workloads may vary
--	  and you are advised to test this feature on your expected workload
--	  before deploying it.
--
--	  This plugin was ported from grsecurity/PaX. More information at:
--	   * https://grsecurity.net/
--	   * https://pax.grsecurity.net/
--
--config STACKLEAK_TRACK_MIN_SIZE
--	int "Minimum stack frame size of functions tracked by STACKLEAK"
--	default 100
--	range 0 4096
--	depends on GCC_PLUGIN_STACKLEAK
--	help
--	  The STACKLEAK gcc plugin instruments the kernel code for tracking
--	  the lowest border of the kernel stack (and for some other purposes).
--	  It inserts the stackleak_track_stack() call for the functions with
--	  a stack frame size greater than or equal to this parameter.
--	  If unsure, leave the default value 100.
--
--config STACKLEAK_METRICS
--	bool "Show STACKLEAK metrics in the /proc file system"
--	depends on GCC_PLUGIN_STACKLEAK
--	depends on PROC_FS
--	help
--	  If this is set, STACKLEAK metrics for every task are available in
--	  the /proc file system. In particular, /proc/<pid>/stack_depth
--	  shows the maximum kernel stack consumption for the current and
--	  previous syscalls. Although this information is not precise, it
--	  can be useful for estimating the STACKLEAK performance impact for
--	  your workloads.
--
--config STACKLEAK_RUNTIME_DISABLE
--	bool "Allow runtime disabling of kernel stack erasing"
--	depends on GCC_PLUGIN_STACKLEAK
--	help
--	  This option provides 'stack_erasing' sysctl, which can be used in
--	  runtime to control kernel stack erasing for kernels built with
--	  CONFIG_GCC_PLUGIN_STACKLEAK.
--
- config GCC_PLUGIN_ARM_SSP_PER_TASK
- 	bool
- 	depends on GCC_PLUGINS && ARM
-diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-index 19881341f1c2..a96d4a43ca65 100644
---- a/security/Kconfig.hardening
-+++ b/security/Kconfig.hardening
-@@ -88,6 +88,63 @@ config GCC_PLUGIN_STRUCTLEAK_VERBOSE
- 	  initialized. Since not all existing initializers are detected
- 	  by the plugin, this can produce false positive warnings.
- 
-+config GCC_PLUGIN_STACKLEAK
-+	bool "Poison kernel stack before returning from syscalls"
-+	depends on GCC_PLUGINS
-+	depends on HAVE_ARCH_STACKLEAK
-+	help
-+	  This option makes the kernel erase the kernel stack before
-+	  returning from system calls. This has the effect of leaving
-+	  the stack initialized to the poison value, which both reduces
-+	  the lifetime of any sensitive stack contents and reduces
-+	  potential for uninitialized stack variable exploits or information
-+	  exposures (it does not cover functions reaching the same stack
-+	  depth as prior functions during the same syscall). This blocks
-+	  most uninitialized stack variable attacks, with the performance
-+	  impact being driven by the depth of the stack usage, rather than
-+	  the function calling complexity.
-+
-+	  The performance impact on a single CPU system kernel compilation
-+	  sees a 1% slowdown, other systems and workloads may vary and you
-+	  are advised to test this feature on your expected workload before
-+	  deploying it.
-+
-+	  This plugin was ported from grsecurity/PaX. More information at:
-+	   * https://grsecurity.net/
-+	   * https://pax.grsecurity.net/
-+
-+config STACKLEAK_TRACK_MIN_SIZE
-+	int "Minimum stack frame size of functions tracked by STACKLEAK"
-+	default 100
-+	range 0 4096
-+	depends on GCC_PLUGIN_STACKLEAK
-+	help
-+	  The STACKLEAK gcc plugin instruments the kernel code for tracking
-+	  the lowest border of the kernel stack (and for some other purposes).
-+	  It inserts the stackleak_track_stack() call for the functions with
-+	  a stack frame size greater than or equal to this parameter.
-+	  If unsure, leave the default value 100.
-+
-+config STACKLEAK_METRICS
-+	bool "Show STACKLEAK metrics in the /proc file system"
-+	depends on GCC_PLUGIN_STACKLEAK
-+	depends on PROC_FS
-+	help
-+	  If this is set, STACKLEAK metrics for every task are available in
-+	  the /proc file system. In particular, /proc/<pid>/stack_depth
-+	  shows the maximum kernel stack consumption for the current and
-+	  previous syscalls. Although this information is not precise, it
-+	  can be useful for estimating the STACKLEAK performance impact for
-+	  your workloads.
-+
-+config STACKLEAK_RUNTIME_DISABLE
-+	bool "Allow runtime disabling of kernel stack erasing"
-+	depends on GCC_PLUGIN_STACKLEAK
-+	help
-+	  This option provides 'stack_erasing' sysctl, which can be used in
-+	  runtime to control kernel stack erasing for kernels built with
-+	  CONFIG_GCC_PLUGIN_STACKLEAK.
-+
- endmenu
- 
- endmenu
--- 
-2.17.1
+Unless the very next line is schedule(), or implies it, one must not use
+preempt_enable_no_resched(). It can cause a preemption to go missing and
+thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
 
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index f02367faa58d..944ccc310201 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -510,7 +510,7 @@ int bpf_prog_array_copy(struct bpf_prog_array __rcu *old_array,
+ 		}					\
+ _out:							\
+ 		rcu_read_unlock();			\
+-		preempt_enable_no_resched();		\
++		preempt_enable();			\
+ 		_ret;					\
+ 	 })
+ 
