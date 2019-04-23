@@ -2,261 +2,239 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A7AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3CEC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E8320645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB3D20645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726601AbfDWHo3 (ORCPT
+        id S1726491AbfDWHp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 03:44:29 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42880 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725888AbfDWHo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 03:44:29 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 629441F8227E5E6323C6;
-        Tue, 23 Apr 2019 15:44:26 +0800 (CST)
-Received: from [127.0.0.1] (10.67.78.74) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 23 Apr 2019
- 15:44:17 +0800
-Subject: Re: [RFC] Question about enable doorbell irq and halt_poll process
-To:     Marc Zyngier <marc.zyngier@arm.com>
-CC:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <guoheyi@huawei.com>, <kvm@vger.kernel.org>,
-        <xuwei5@huawei.com>, <tangnianyao@huawei.com>,
-        <wanghaibin.wang@huawei.com>
-References: <0fb3c9ba-8428-ea6c-2973-952624f601cc@huawei.com>
- <20190320170219.510f2e1e@why.wild-wind.fr.eu.org>
- <5df934fd-06d5-55f2-68a5-6f4985e4ac1b@huawei.com>
- <86zhpc66jl.wl-marc.zyngier@arm.com>
- <e32d81ed-d1f5-ce0b-7845-d4b680d556df@huawei.com>
- <86imvu3uje.wl-marc.zyngier@arm.com>
-From:   "Tangnianyao (ICT)" <tangnianyao@huawei.com>
-Message-ID: <6547b80a-f0c1-b74e-f37f-59c1ad96c8b3@huawei.com>
-Date:   Tue, 23 Apr 2019 15:44:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Tue, 23 Apr 2019 03:45:58 -0400
+Received: from foss.arm.com ([217.140.101.70]:50632 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725888AbfDWHp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 03:45:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00A87374;
+        Tue, 23 Apr 2019 00:45:57 -0700 (PDT)
+Received: from [10.163.1.68] (unknown [10.163.1.68])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A273F3F706;
+        Tue, 23 Apr 2019 00:45:42 -0700 (PDT)
+Subject: Re: [PATCH V2 2/2] arm64/mm: Enable memory hot remove
+To:     David Hildenbrand <david@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com, mhocko@suse.com,
+        mgorman@techsingularity.net, james.morse@arm.com,
+        robin.murphy@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        cai@lca.pw, logang@deltatee.com, ira.weiny@intel.com
+References: <1555221553-18845-1-git-send-email-anshuman.khandual@arm.com>
+ <1555221553-18845-3-git-send-email-anshuman.khandual@arm.com>
+ <20190415134841.GC13990@lakrids.cambridge.arm.com>
+ <2faba38b-ab79-2dda-1b3c-ada5054d91fa@arm.com>
+ <20190417142154.GA393@lakrids.cambridge.arm.com>
+ <bba0b71c-2d04-d589-e2bf-5de37806548f@arm.com>
+ <20190417173948.GB15589@lakrids.cambridge.arm.com>
+ <1bdae67b-fcd6-7868-8a92-c8a306c04ec6@arm.com>
+ <97413c39-a4a9-ea1b-7093-eb18f950aad7@arm.com>
+ <3f9b39d5-e2d2-8f1b-1c66-4bd977d74f4c@redhat.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <5c8e4a69-8c71-85e1-3275-c04f84bde639@arm.com>
+Date:   Tue, 23 Apr 2019 13:15:43 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <86imvu3uje.wl-marc.zyngier@arm.com>
-Content-Type: text/plain; charset="gbk"
+In-Reply-To: <3f9b39d5-e2d2-8f1b-1c66-4bd977d74f4c@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.78.74]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Marc
 
-On 2019/4/4 18:59, Marc Zyngier wrote:
-> On Thu, 04 Apr 2019 11:07:59 +0100,
-> "Tangnianyao (ICT)" <tangnianyao@huawei.com> wrote:
+
+On 04/23/2019 01:07 PM, David Hildenbrand wrote:
+> On 23.04.19 09:31, Anshuman Khandual wrote:
 >>
 >>
->>
->> On 2019/3/30 17:43, Marc Zyngier wrote:
->>
->> Hi, Marc
->>
->>> On Sat, 30 Mar 2019 08:42:58 +0000,
->>> "Tangnianyao (ICT)" <tangnianyao@huawei.com> wrote:
+>> On 04/18/2019 10:58 AM, Anshuman Khandual wrote:
+>>> On 04/17/2019 11:09 PM, Mark Rutland wrote:
+>>>> On Wed, Apr 17, 2019 at 10:15:35PM +0530, Anshuman Khandual wrote:
+>>>>> On 04/17/2019 07:51 PM, Mark Rutland wrote:
+>>>>>> On Wed, Apr 17, 2019 at 03:28:18PM +0530, Anshuman Khandual wrote:
+>>>>>>> On 04/15/2019 07:18 PM, Mark Rutland wrote:
+>>>>>>>> On Sun, Apr 14, 2019 at 11:29:13AM +0530, Anshuman Khandual wrote:
 >>>>
->>>> Hi, Marc
->>>>
->>>> On 2019/3/21 1:02, Marc Zyngier Wrote:
->>>>> On Tue, 19 Mar 2019 21:25:47 +0800
->>>>> "Tangnianyao (ICT)" <tangnianyao@huawei.com> wrote:
->>>>>
->>>>>> Hi, all
+>>>>>>>>> +	spin_unlock(&init_mm.page_table_lock);
+>>>>>>>>
+>>>>>>>> What precisely is the page_table_lock intended to protect?
+>>>>>>>
+>>>>>>> Concurrent modification to kernel page table (init_mm) while clearing entries.
 >>>>>>
->>>>>> Using gicv4, when guest is waiting for irq, it sends wfi and traps to kvm.
->>>>>> When vlpi is forwarded to PE after its_vpe_deschedule, before halt_poll in
->>>>>> kvm_vcpu_block, halt_poll may increase latency for this vlpi getting to guest.
->>>>>> In halt_poll process, it checks if there's pending irq for vcpu using pending_last.
->>>>>> However, doorbell is not enable at this moment and vlpi or doorbell can not set
->>>>>> pending_last true, to stop halt_poll. It will run until halt_poll time ends, if
->>>>>> there's no other physical irq coming in the meantime. And then vcpu is scheduled out.
->>>>>> This pending vlpi has to wait for vcpu getting schedule in next time.
+>>>>>> Concurrent modification by what code?
 >>>>>>
->>>>>> Should we enable doorbell before halt_poll process ?
+>>>>>> If something else can *modify* the portion of the table that we're
+>>>>>> manipulating, then I don't see how we can safely walk the table up to
+>>>>>> this point without holding the lock, nor how we can safely add memory.
+>>>>>>
+>>>>>> Even if this is to protect something else which *reads* the tables,
+>>>>>> other code in arm64 which modifies the kernel page tables doesn't take
+>>>>>> the lock.
+>>>>>>
+>>>>>> Usually, if you can do a lockless walk you have to verify that things
+>>>>>> didn't change once you've taken the lock, but we don't follow that
+>>>>>> pattern here.
+>>>>>>
+>>>>>> As things stand it's not clear to me whether this is necessary or
+>>>>>> sufficient.
 >>>>>
->>>>> Enabling doorbells can be quite expensive. Depending on the HW, this is
->>>>> either:
->>>>>
->>>>> - a write to memory (+DSB, potential cache maintenance), a write to the
->>>>>   INVLPI register, and a poll of the SYNC register
->>>>> - a write to memory (+DSB, potential cache maintenance), potentially
->>>>>   a string of DISCARD+SYNC+MAPI+SYNC commands, and an INV+SYNC command
->>>>>
->>>> I have tested average cost of kvm_vgic_v4_enable_doorbell in our machine.
->>>> When gic_rdists->has_direct_lpi is 1, it costs 0.35 us.
->>>> When gic_rdists->has_direct_lpi is 0, it costs 1.4 us.
+>>>>> Hence lets take more conservative approach and wrap the entire process of
+>>>>> remove_pagetable() under init_mm.page_table_lock which looks safe unless
+>>>>> in the worst case when free_pages() gets stuck for some reason in which
+>>>>> case we have bigger memory problem to deal with than a soft lock up.
+>>>>
+>>>> Sorry, but I'm not happy with _any_ solution until we understand where
+>>>> and why we need to take the init_mm ptl, and have made some effort to
+>>>> ensure that the kernel correctly does so elsewhere. It is not sufficient
+>>>> to consider this code in isolation.
 >>>
->>> This looks pretty low. Which HW is that on? How about on something
->>> like D05?
->>
->> I tested it on D06.
->> D05 doesn't not support gicv4 and I haven't tested on D05.
-> 
-> I'm afraid you're mistaken. D05 does have GICv4. I have a pretty good
-> idea it does because that's the system I used to write the SW
-> support. So please dig one out of the cupboard and test on it. I'm
-> pretty sure you're at the right place to do so.
-
-I've learned that there's some implementation problem for the PCIe controller
-of Hi1616, the processor of D05. The PCIe ACS was not implemented properly
-and D05 doesn't support VM using pcie vf.
-
-> 
->>
+>>> We will have to take the kernel page table lock to prevent assumption regarding
+>>> present or future possible kernel VA space layout. Wrapping around the entire
+>>> remove_pagetable() will be at coarse granularity but I dont see why it should
+>>> not sufficient atleast from this particular tear down operation regardless of
+>>> how this might affect other kernel pgtable walkers.
 >>>
->>>> Compared to default halt_poll_ns, 500000ns, enabling doorbells is not
->>>> large at all.
->>>
->>> Sure. But I'm not sure this is a universal figure.
+>>> IIUC your concern is regarding other parts of kernel code (arm64/generic) which
+>>> assume that kernel page table wont be changing and hence they normally walk the
+>>> table without holding pgtable lock. Hence those current pgtabe walker will be
+>>> affected after this change.
 >>>
 >>>>
->>>>> Frankly, you want to be careful with that. I'd rather enable them late
->>>>> and have a chance of not blocking because of another (virtual)
->>>>> interrupt, which saves us the doorbell business.
->>>>>
->>>>> I wonder if you wouldn't be in a better position by drastically
->>>>> reducing halt_poll_ns for vcpu that can have directly injected
->>>>> interrupts.
->>>>>
+>>>> IIUC, before this patch we never clear non-leaf entries in the kernel
+>>>> page tables, so readers don't presently need to take the ptl in order to
+>>>> safely walk down to a leaf entry.
+>>>
+>>> Got it. Will look into this.
+>>>
 >>>>
->>>> If we set halt_poll_ns to a small value, the chance of
->>>> not blocking and vcpu scheduled out becomes larger. The cost
->>>> of vcpu scheduled out is quite expensive.
->>>> In many cases, one pcpu is assigned to only
->>>> one vcpu, and halt_poll_ns is set quite large, to increase
->>>> chance of halt_poll process got terminated. This is the
->>>> reason we want to set halt_poll_ns large. And We hope vlpi
->>>> stop halt_poll process in time.
+>>>> For example, the arm64 ptdump code never takes the ptl, and as of this
+>>>> patch it will blow up if it races with a hot-remove, regardless of
+>>>> whether the hot-remove code itself holds the ptl.
 >>>
->>> Fair enough. It is certainly realistic to strictly partition the
->>> system when GICv4 is in use, so I can see some potential benefit.
+>>> Got it. Are there there more such examples where this can be problematic. I
+>>> will be happy to investigate all such places and change/add locking scheme
+>>> in there to make them work with memory hot remove.
 >>>
->>>> Though it will check whether vcpu is runnable again by
->>>> kvm_vcpu_check_block. Vlpi can prevent scheduling vcpu out.
->>>> However it's somewhat later if halt_poll_ns is larger.
 >>>>
->>>>> In any case, this is something that we should measure, not guess.
+>>>> Note that the same applies to the x86 ptdump code; we cannot assume that
+>>>> just because x86 does something that it happens to be correct.
 >>>
->>> Please post results of realistic benchmarks that we can reproduce,
->>> with and without this change. I'm willing to entertain the idea, but I
->>> need more than just a vague number.
+>>> I understand. Will look into other non-x86 platforms as well on how they are
+>>> dealing with this.
 >>>
->>> Thanks,
->>>
->>> 	M.
->>>
+>>>>
+>>>> I strongly suspect there are other cases that would fall afoul of this,
+>>>> in both arm64 and generic code.
 >>
->> I tested it with and without change (patch attached in the last).
->> halt_poll_ns is keep default, 500000ns.
->> I have merged the patch "arm64: KVM: Always set ICH_HCR_EL2.EN if GICv4 is enabled"
->> to my test kernel, to make sure ICH_HCR_EL2.EN=1 in guest.
+>> On X86
 >>
->> netperf result:
->> D06 as server, intel 8180 server as client
->> with change:
->> package 512 bytes - 5400 Mbits/s
->> package 64 bytes - 740 Mbits/s
->> without change:
->> package 512 bytes - 5000 Mbits/s
->> package 64 bytes - 710 Mbits/s
+>> - kernel_physical_mapping_init() takes the lock for pgtable page allocations as well
+>>   as all leaf level entries including large mappings.
 >>
->> Also I have tested D06 as client, intel machine as server,
->> with the change, the result remains the same.
-> 
-> So anywhere between 4% and 8% improvement. Please post results for D05
-> once you've found one.
-> 
+>> On Power
 >>
+>> - remove_pagetable() take an overall high level init_mm.page_table_lock as I had
+>>   suggested before. __map_kernel_page() calls [pud|pmd|pte]_alloc_[kernel] which
+>>   allocates page table pages are protected with init_mm.page_table_lock but then
+>>   the actual setting of the leaf entries are not (unlike x86)
 >>
->> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
->> index 55fe8e2..0f56904 100644
->> --- a/virt/kvm/kvm_main.c
->> +++ b/virt/kvm/kvm_main.c
->> @@ -2256,6 +2256,16 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
->>  	if (vcpu->halt_poll_ns) {
->>  		ktime_t stop = ktime_add_ns(ktime_get(), vcpu->halt_poll_ns);
+>> 	arch_add_memory()
+>> 		create_section_mapping()
+>> 			radix__create_section_mapping()
+>> 				create_physical_mapping()
+>> 					__map_kernel_page()
+>> On arm64.
 >>
->> +#ifdef CONFIG_ARM64
->> +		/*
->> +		 * When using gicv4, enable doorbell before halt pool wait
->> +		 * so that direct vlpi can stop halt poll.
->> +		 */
->> +		if (vcpu->arch.vgic_cpu.vgic_v3.its_vpe.its_vm) {
->> +			kvm_vgic_v4_enable_doorbell(vcpu);
->> +		}
->> +#endif
->> +
+>> Both kernel page table dump and linear mapping (__create_pgd_mapping on init_mm)
+>> will require init_mm.page_table_lock to be really safe against this new memory
+>> hot remove code. I will do the necessary changes as part of this series next time
+>> around. IIUC there is no equivalent generic feature for ARM64_PTDUMP_CORE/DEBUGFS.
+>> 	 > 
+>>> Will start looking into all such possible cases both on arm64 and generic.
+>>> Mean while more such pointers would be really helpful.
+>>
+>> Generic usage for init_mm.pagetable_lock
+>>
+>> Unless I have missed something else these are the generic init_mm kernel page table
+>> modifiers at runtime (at least which uses init_mm.page_table_lock)
+>>
+>> 	1. ioremap_page_range()		/* Mapped I/O memory area */
+>> 	2. apply_to_page_range()	/* Change existing kernel linear map */
+>> 	3. vmap_page_range()		/* Vmalloc area */
+>>
+>> A. IOREMAP
+>>
+>> ioremap_page_range()
+>> 	ioremap_p4d_range()
+>> 		p4d_alloc()
+>> 		ioremap_try_huge_p4d() -> p4d_set_huge() -> set_p4d()
+>> 		ioremap_pud_range()
+>> 			pud_alloc()
+>> 			ioremap_try_huge_pud() -> pud_set_huge() -> set_pud()
+>> 			ioremap_pmd_range()
+>> 				pmd_alloc()
+>> 				ioremap_try_huge_pmd() -> pmd_set_huge() -> set_pmd()
+>> 				ioremap_pte_range()
+>> 					pte_alloc_kernel()
+>> 						set_pte_at() -> set_pte()
+>> B. APPLY_TO_PAGE_RANGE
+>>
+>> apply_to_page_range()
+>> 	apply_to_p4d_range()
+>> 		p4d_alloc()
+>> 		apply_to_pud_range()
+>> 			pud_alloc()
+>> 			apply_to_pmd_range()
+>> 				pmd_alloc()
+>> 				apply_to_pte_range()
+>> 					pte_alloc_kernel()
+>>
+>> C. VMAP_PAGE_RANGE
+>>
+>> vmap_page_range()
+>> vmap_page_range_noflush()
+>> 	vmap_p4d_range()
+>> 		p4d_alloc()
+>> 		vmap_pud_range()
+>> 			pud_alloc()
+>> 			vmap_pmd_range()
+>> 				pmd_alloc()
+>> 				vmap_pte_range()
+>> 					pte_alloc_kernel()
+>> 					set_pte_at()
+>>
+>> In all of the above.
+>>
+>> - Page table pages [p4d|pud|pmd|pte]_alloc_[kernel] settings are protected with init_mm.page_table_lock
+>> - Should not it require init_mm.page_table_lock for all leaf level (PUD|PMD|PTE) modification as well ?
+>> - Should not this require init_mm.page_table_lock for page table walk itself ?
+>>
+>> Not taking an overall lock for all these three operations will potentially race with an ongoing memory
+>> hot remove operation which takes an overall lock as proposed. Wondering if this has this been safe till
+>> now ?
+>>
 > 
-> Irk. No. You're now leaving doorbells enabled when going back to the
-> guest, and that's pretty bad as the whole logic relies on doorbells
-> being disabled if the guest can run.
-> 
-> So please try this instead on top of mainline. And it has to be on top
-> of mainline as we've changed the way timer interrupts work in 5.1 --
-> see accb99bcd0ca ("KVM: arm/arm64: Simplify bg_timer programming").
-> 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index f25aa98a94df..0ae4ad5dcb12 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -2252,6 +2252,8 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
->  	bool waited = false;
->  	u64 block_ns;
->  
-> +	kvm_arch_vcpu_blocking(vcpu);
-> +
->  	start = cur = ktime_get();
->  	if (vcpu->halt_poll_ns) {
->  		ktime_t stop = ktime_add_ns(ktime_get(), vcpu->halt_poll_ns);
-> @@ -2272,8 +2274,6 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
->  		} while (single_task_running() && ktime_before(cur, stop));
->  	}
->  
-> -	kvm_arch_vcpu_blocking(vcpu);
-> -
->  	for (;;) {
->  		prepare_to_swait_exclusive(&vcpu->wq, &wait, TASK_INTERRUPTIBLE);
->  
-> @@ -2287,8 +2287,8 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
->  	finish_swait(&vcpu->wq, &wait);
->  	cur = ktime_get();
->  
-> -	kvm_arch_vcpu_unblocking(vcpu);
->  out:
-> +	kvm_arch_vcpu_unblocking(vcpu);
->  	block_ns = ktime_to_ns(cur) - ktime_to_ns(start);
->  
->  	if (!vcpu_valid_wakeup(vcpu))
-> 
-> Thanks,
-> 
-> 	M.
-> 
+> All memory add/remove operations are currently guarded by
+> mem_hotplug_lock as far as I know.
 
-I've tested your patch and the results showed as follow:
-
-netperf result:
-D06 as server, intel 8180 server as client
-with change:
-package 512 bytes - 5500 Mbits/s
-package 64 bytes - 760 Mbits/s
-without change:
-package 512 bytes - 5000 Mbits/s
-package 64 bytes - 710 Mbits/s
-
-Thanks,
-Tang
-
+Right but it seems like it guards against concurrent memory hot add or remove operations with
+respect to memory block, sections, sysfs etc. But does it cover with respect to other init_mm
+modifiers or accessors ?
