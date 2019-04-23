@@ -5,58 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4554C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CCDC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F587218FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6B9218FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBRqseJk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTANTI43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbfDWWtp (ORCPT
+        id S1728851AbfDWWtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:49:45 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33079 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbfDWWti (ORCPT
+        Tue, 23 Apr 2019 18:49:52 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34151 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728780AbfDWWtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:49:38 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f23so15031255ljc.0;
-        Tue, 23 Apr 2019 15:49:36 -0700 (PDT)
+        Tue, 23 Apr 2019 18:49:43 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h5so13027069lfm.1;
+        Tue, 23 Apr 2019 15:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QQUuLg/zS2tfsDPJ/SWrp4NtSrhhV6zRMowLIWOaos8=;
-        b=ZBRqseJkYxfE/CzTHrtM2oFui4WHlgpHFxVNRrXxCKi7N8X3XTPlsNGSc4ixdgXSQL
-         Ft4N3un8giuvHukO+rUIqFqg0gQrFi37NydhXvzZUYY3sYVerTDnePzuqzPJtTLFZsT9
-         /RDd7oy6OmJCrxdT41pBlHXf5a4QRlDK7UhVj+HzeR4vmCoJHiI4eIolL/He31Q98u/K
-         3TErh/CFzHNTVNGq5mKSfaj8nWGvk+J8dlJFoShbrWWdsl++e1FObF2V7gTXntamcVK4
-         IBurUD9I0DGT57g4pVBixhVip8XowygvDGao0r7jv/60dGysobUJVkxU7zxL6rbpBfk4
-         MeXg==
+        bh=W583DLuATb7569DJlQOwhhtkLZ1xhL86KTFMSp+wLl8=;
+        b=XTANTI43m3AqXZ4watOgFQeVz3GWMCysvKAZ0BfLNAThnGYXFOUOqXPbpHlZ/b5mWF
+         SxrGA7+nbNZj1x/pfWHhkJgxchG8jbokMXfnPvGcl5DWTPJ5TDsfnGehXJg2ibXkmGgX
+         iVFNCL1BhDKT0FQNIMe3a23an6wwHEWm5qqpfs641NYNrpKZ5gSrtPSpqeQWjbk0T4lL
+         DNNC596STlOWBaGvH6oOGVUAA5/xi1V0Be0f6biL51DarZiWJrqeUBhCnBQ23q+1gzS5
+         pppQo9LWICIxLxGfV7ncQ25IdC8ybOv5uDt1CTojMOsHdl1pPxpDXbRMVdZlh6qZlNbp
+         ERIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QQUuLg/zS2tfsDPJ/SWrp4NtSrhhV6zRMowLIWOaos8=;
-        b=B4hrCaNSALucr1a/FeHK7GnIIpqOvo3auje6MAk8UP3teCS13Emih96SHFwADdllj0
-         SxQMG4Xgy9ZcU6tMi7LB1QxJPz3DNdBCh+Oiq6xLwZSdoU65p4KqGyutapwf1GfFIh5y
-         NyC7KF4rbF81lo0oe0j9WTFVupCQ+YAq5pyo3WqxSoaS95GqZzpmIh0vX/Diw8loH4jj
-         2mrxNsd8TYQ69e1xkrOdmvEMbj4Dr2Qui/x/l/5AX3YdzWy2YwqE+QM00VDkBe3N2dwE
-         L5MxL2vwBEsWjM8ddpTme24gfHsdmCg+ly3/gt1cYoAY4PcAW8U9MnfSk9NkRM19c2Vb
-         Rfwg==
-X-Gm-Message-State: APjAAAV407CG9p2tG0/J/JoY3zIAWXaLFu7MUTgLTVpMoUJvJD0wREXA
-        zKvKoHUfFLZHbm706YV9mo4=
-X-Google-Smtp-Source: APXvYqyhjnkT+9LePvjgG7sTJaXhnCTfU1OegGJVSuxkNhWhUGd6uARyyWDHWvGNqBt2JV2gzkzWhw==
-X-Received: by 2002:a2e:5d94:: with SMTP id v20mr14093334lje.138.1556059775938;
-        Tue, 23 Apr 2019 15:49:35 -0700 (PDT)
+        bh=W583DLuATb7569DJlQOwhhtkLZ1xhL86KTFMSp+wLl8=;
+        b=Kykzn8KtXue4xJm7VEhEBgqk2hHVC9UXmXZVd6AdwVaiZydYM5yMjfrwzQgjoheH0v
+         zk17oTccMiUMV9fGS7uGM7VX4xNfXDaUoMGhF3a4J0Z60k6BKBNYjA+t1gRC+jnaufOM
+         HaQmFzf7Kks53JG3yKEVhbLMiKuTd+5ufXikNM5MgwbRhtq6pUJ4JLA71oTTSvJkp7eH
+         UzcdiSOqP6hebC4XKL9N4bnVzq6HrLLwqeVh40MlMN3mbQ1h6F7omhVM9zchKcgK6PNq
+         y02Tp1kxONQF8rkUHUYF0BJEzDLWU9pJYQu6gbsnSMuzNuSRm5cXvymkBk+HDhDn/loo
+         4gXQ==
+X-Gm-Message-State: APjAAAV151/GmvpiorYEKDpFLv93ilPBY9SRGVkPeckedoUixCyHpbMv
+        8MWMTcICWVUyRLC67ZokqVM=
+X-Google-Smtp-Source: APXvYqwnO9pXPqQ9DzSRJfPbh+83mSvQndOn/tiKT0UkXAkjkZULPQWfg5M6vmofbJom3WJnp5GDBA==
+X-Received: by 2002:ac2:51d9:: with SMTP id u25mr4013003lfm.91.1556059781008;
+        Tue, 23 Apr 2019 15:49:41 -0700 (PDT)
 Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id w2sm4904722lfa.63.2019.04.23.15.49.34
+        by smtp.gmail.com with ESMTPSA id w2sm4904722lfa.63.2019.04.23.15.49.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 15:49:35 -0700 (PDT)
+        Tue, 23 Apr 2019 15:49:40 -0700 (PDT)
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -74,9 +73,9 @@ To:     Ralf Baechle <ralf@linux-mips.org>,
         Juergen Gross <jgross@suse.com>
 Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 09/12] mips: Perform early low memory test
-Date:   Wed, 24 Apr 2019 01:47:45 +0300
-Message-Id: <20190423224748.3765-10-fancer.lancer@gmail.com>
+Subject: [PATCH 12/12] mips: Enable OF_RESERVED_MEM config
+Date:   Wed, 24 Apr 2019 01:47:48 +0300
+Message-Id: <20190423224748.3765-13-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190423224748.3765-1-fancer.lancer@gmail.com>
 References: <20190423224748.3765-1-fancer.lancer@gmail.com>
@@ -87,32 +86,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-memblock subsystem provides a method to optionally test the passed
-memory region in case if it was requested via special kernel boot
-argument. Lets add the function at the bottom of the arch_mem_init()
-method. Testing at this point in the boot sequence should be safe since all
-critical areas are now reserved and a minimum of allocations have been
-done.
+Since memblock-patchset was introduced the reserved-memory nodes are
+supported being declared in dt-files. So these nodes are actually parsed
+during the arch setup procedure when the early_init_fdt_scan_reserved_mem()
+method is called. But some of the features like private reserved memory
+pools aren't available at the moment, since OF_RESERVED_MEM isn't enabled
+for the MIPS platform. Lets fix it by enabling the config.
 
-Reviewed-by: Matt Redfearn <matt.redfearn@mips.com>
+But due to the arch-specific boot mem_map container utilization we need
+to manually call the fdt_init_reserved_mem() method after all the available
+and reserved memory has been moved to memblock. The function call performed
+before bootmem_init() fails due to the lack of any memblock memory regions
+to allocate from at that stage.
+
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- arch/mips/kernel/setup.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/Kconfig        | 1 +
+ arch/mips/kernel/setup.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 4a5f5b0ee9a9..0bf9e89e4023 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2988,6 +2988,7 @@ config USE_OF
+ 	bool
+ 	select OF
+ 	select OF_EARLY_FLATTREE
++	select OF_RESERVED_MEM
+ 	select IRQ_DOMAIN
+ 
+ config UHI_BOOT
 diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index ca493fdf69b0..fbd216b4e929 100644
+index fbd216b4e929..ab349d2381c3 100644
 --- a/arch/mips/kernel/setup.c
 +++ b/arch/mips/kernel/setup.c
-@@ -826,6 +826,8 @@ static void __init arch_mem_init(char **cmdline_p)
+@@ -27,6 +27,7 @@
+ #include <linux/dma-contiguous.h>
+ #include <linux/decompress/generic.h>
+ #include <linux/of_fdt.h>
++#include <linux/of_reserved_mem.h>
+ 
+ #include <asm/addrspace.h>
+ #include <asm/bootinfo.h>
+@@ -825,6 +826,8 @@ static void __init arch_mem_init(char **cmdline_p)
+ 	memblock_reserve(__pa_symbol(&__nosave_begin),
  		__pa_symbol(&__nosave_end) - __pa_symbol(&__nosave_begin));
  
- 	memblock_dump_all();
++	fdt_init_reserved_mem();
 +
-+	early_memtest(PFN_PHYS(min_low_pfn), PFN_PHYS(max_low_pfn));
- }
+ 	memblock_dump_all();
  
- static void __init resource_init(void)
+ 	early_memtest(PFN_PHYS(min_low_pfn), PFN_PHYS(max_low_pfn));
 -- 
 2.21.0
 
