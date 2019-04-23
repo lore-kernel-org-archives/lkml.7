@@ -2,134 +2,470 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1C6C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545C6C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36B92077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6822077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:26:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="I2AtCXtu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="eYiLICsM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfDWHZ2 (ORCPT
+        id S1726434AbfDWH0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 03:25:28 -0400
-Received: from ozlabs.org ([203.11.71.1]:60947 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfDWHZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 03:25:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pFN51R90z9s9G;
-        Tue, 23 Apr 2019 17:25:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556004325;
-        bh=x41/FnTqFKHN9cW4lUvmiyuS2AJUB6nNSHcih+SxlA4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=I2AtCXtuKhOEprWlto2Z9HDENHkbcZEGA1XhGMxdp4GbUYIWsDtpYHHN/vOt0RZd9
-         2/14KZ4C8g6BP41H4/wrHshnzQWQnJpdb2XdrW76ILbvqwduPyVA4pn+VRZSl+8BNw
-         Ad37cdLuPpNGgtVHPCr0s2Y1AJBqnqN1yDfmsfneuJQY6GOKiBYigUAmd/h0QkIwNI
-         xXQAE79FUdhrSXpdG/2PpFQGOUUJ9poif7LUZyPdHAPC2943h6hDRch2WMa/cfzHib
-         BoWiulFNXLW1LQmzy5fsuxqn0/oiiTRWqG8rYVR1kM6IEAnJ6+AHymkmG1aQHY9rzJ
-         KbLZMCXpQpcZQ==
-Date:   Tue, 23 Apr 2019 17:25:24 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the net-next tree
-Message-ID: <20190423172524.3bcf6bd0@canb.auug.org.au>
+        Tue, 23 Apr 2019 03:26:02 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44280 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfDWH0B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 03:26:01 -0400
+Received: by mail-ed1-f66.google.com with SMTP id i13so11640544edf.11
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 00:25:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uFizS7tHEtRyWYNVc+kCE/M3H0op9E5CFQ+fv+Vy/k8=;
+        b=eYiLICsMrkkGEifGhvnPsLqenHad1t9Tnqtvqt1FuKO7HK1wUdN5aa8EDSZpYqkCR3
+         rkQoqvmnPL9CM3iGZ7CxpV2xPNiMhNy2xBesyiQFmHkhJxObb9/hXlWFDf8ZQxotTKzN
+         jHSoSmWp7DaxFV0QumBn3tLtxl6zFXFMeZD28=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=uFizS7tHEtRyWYNVc+kCE/M3H0op9E5CFQ+fv+Vy/k8=;
+        b=KxtMAdVc35gsDUhY0cDA/8ZYdhqszsB0cXyjK37S/HNbv3v7Qz3bm6mmUdu3IbzLxd
+         W5UnNj0XOsfqRk9eGQi1xaNfryeRV1VsMqd3G4f5AgW0EK31ucLYIWCOEwoZfmqDcbve
+         YtFJ2MwfhhGgxq160gObbUkrQLIMohwuJ3YmsOftvTHzCOZV1X0oY18O3qa3DAPxVuIr
+         bv+DvcbLUryke/bNKD7q+S50GRmk5iPgUvajgJwHRPQVwMuiT17b886cLdrdIv0SaI6R
+         +QmsdVT4LDMqrjGJ8TZX3BFK2GQf1FOKTXKLY1OJVQpkmFu+RRUzhI+qMesg/G1qN/he
+         W2Lw==
+X-Gm-Message-State: APjAAAXdWOYYs8AzNO0KUmaHQYAm5QygoACpvvHQJCZkws/UF1YraycG
+        pnlw9rB4q/deG4lEKk1KH+xrVQ==
+X-Google-Smtp-Source: APXvYqwYY+gNraFxY9R/q+9a3c5xAOoZBLl67ne+lZquBcDdh5KZQdfcZfWqvXz/vSeXBlOLRSFpPA==
+X-Received: by 2002:a50:a55c:: with SMTP id z28mr15373473edb.71.1556004358271;
+        Tue, 23 Apr 2019 00:25:58 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id lw14sm2726442ejb.24.2019.04.23.00.25.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 00:25:56 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 09:25:54 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
+ common place
+Message-ID: <20190423072554.GW13337@phenom.ffwll.local>
+Mail-Followup-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+ <20190417154121.GJ13337@phenom.ffwll.local>
+ <20190418062229.eyog4i62eg4pr6uf@flea>
+ <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
+ <20190418090221.e57dogn4yx5nwdni@flea>
+ <CAKMK7uHN6QfYyzx4DjRT+7VLRi6N9DorQtw2GoDiNGTgie=DXA@mail.gmail.com>
+ <20190420225904.GZ4964@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/k9UNknx1JqUf=dlGGCpmzTt"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190420225904.GZ4964@pendragon.ideasonboard.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/k9UNknx1JqUf=dlGGCpmzTt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Apr 21, 2019 at 01:59:04AM +0300, Laurent Pinchart wrote:
+> Hi Daniel,
+> 
+> On Thu, Apr 18, 2019 at 12:07:44PM +0200, Daniel Vetter wrote:
+> > On Thu, Apr 18, 2019 at 11:02 AM Maxime Ripard wrote:
+> > > On Thu, Apr 18, 2019 at 09:52:10AM +0200, Daniel Vetter wrote:
+> > > > On Thu, Apr 18, 2019 at 8:22 AM Maxime Ripard wrote:
+> > > > > On Wed, Apr 17, 2019 at 05:41:21PM +0200, Daniel Vetter wrote:
+> > > > > > On Wed, Apr 17, 2019 at 09:54:26AM +0200, Maxime Ripard wrote:
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > DRM comes with an extensive format support to retrieve the various
+> > > > > > > parameters associated with a given format (such as the subsampling, or the
+> > > > > > > bits per pixel), as well as some helpers and utilities to ease the driver
+> > > > > > > development.
+> > > > > > >
+> > > > > > > v4l2, on the other side, doesn't provide such facilities, leaving each
+> > > > > > > driver reimplement a subset of the formats parameters for the one supported
+> > > > > > > by that particular driver. This leads to a lot of duplication and
+> > > > > > > boilerplate code in the v4l2 drivers.
+> > > > > > >
+> > > > > > > This series tries to address this by moving the DRM format API into lib and
+> > > > > > > turning it into a more generic API. In order to do this, we've needed to do
+> > > > > > > some preliminary changes on the DRM drivers, then moved the API and finally
+> > > > > > > converted a v4l2 driver to give an example of how such library could be
+> > > > > > > used.
+> > > > > > >
+> > > > > > > Let me know what you think,
+> > > > > > > Maxime
+> > > > > > >
+> > > > > > > Changes from RFC:
+> > > > > > >   - Rebased on next
+> > > > > > >   - Fixed the various formats mapping
+> > > > > > >   - Added tags
+> > > > > > >   - Did most of the formats functions as inline functions
+> > > > > > >   - Used a consistent prefix for all the utilities functions
+> > > > > > >   - Fixed the compilation breakages, and did a run of allmodconfig for arm,
+> > > > > > >     arm64 and x86_64
+> > > > > > >   - Fixed out of array bounds warnings in the image_format_info_block_*
+> > > > > > >     functions
+> > > > > > >   - Added License and copyright headers on missing files
+> > > > > > >
+> > > > > > > Maxime Ripard (20):
+> > > > > > >   drm: Remove users of drm_format_num_planes
+> > > > > > >   drm: Remove users of drm_format_(horz|vert)_chroma_subsampling
+> > > > > > >   drm/fourcc: Pass the format_info pointer to drm_format_plane_cpp
+> > > > > > >   drm/fourcc: Pass the format_info pointer to drm_format_plane_width/height
+> > > > > > >   drm: Replace instances of drm_format_info by drm_get_format_info
+> > > > > > >   lib: Add video format information library
+> > > > > > >   drm/fb: Move from drm_format_info to image_format_info
+> > > > > > >   drm/malidp: Convert to generic image format library
+> > > > > > >   drm/client: Convert to generic image format library
+> > > > > > >   drm/exynos: Convert to generic image format library
+> > > > > > >   drm/i915: Convert to generic image format library
+> > > > > > >   drm/ipuv3: Convert to generic image format library
+> > > > > > >   drm/msm: Convert to generic image format library
+> > > > > > >   drm/omap: Convert to generic image format library
+> > > > > > >   drm/rockchip: Convert to generic image format library
+> > > > > > >   drm/tegra: Convert to generic image format library
+> > > > > > >   drm/fourcc: Remove old DRM format API
+> > > > > > >   lib: image-formats: Add v4l2 formats support
+> > > > > > >   lib: image-formats: Add more functions
+> > > > > > >   media: sun6i: Convert to the image format API
+> > > > > >
+> > > > > > In the interest of making myself unpopular: Why move this out of drm?
+> > > > > >
+> > > > > > We do have a bunch of other such shared helpers already (mostly in
+> > > > > > drivers/video) for dt videomode and hdmi infoframes, and I'm not super
+> > > > > > sure that's going better than keeping it maintained in drm.
+> 
+> That's a bit of a different situation as both DRM and FBDEV address the
+> same features (display output), and FBDEV is deprecared and replaced by
+> DRM.
+> 
+> I'm not against maintaining a 4CC library in DRM (adding a third-party
+> maintainer would likely create more problems than it would solve), but
+> that doesn't mean the library has to live in drivers/gpu/, nor that it
+> needs to have the drm_ prefix. I would actually advocate to make it live
+> in a neutral directory, with a neutral prefix (kudos to anyone who can
+> propose a nice naming convention that would establish a new shared
+> ground for image/video-related Linux APIs), and maintained through the
+> DRM tree (possibly with extra entries in MAINTAINERS to ensure it
+> reaches all the related folks).
+> 
+> > > > > > Plus the uapi is already that you include drm_fourcc.h to get at these,
+> > > > > > dropping the drm prefix isn't going to help I think.
+> > > > > >
+> > > > > > Of course we'd need to make it a separate drm_formats.ko (so that v4l can
+> > > > > > use it without dragging in all of drm), and we need to add some fields for
+> > > > > > converting to v4l fourcc codes (which are different). But that should be
+> > > > > > all possible. And I don't think the drm_ prefix in v4l code is a problem,
+> > > > > > it's actually a feature: It makes it really clear that these are the drm
+> > > > > > fourcc codes, as allocated in drm_fourcc.h, plus their modifiers, and all
+> > > > > > that. That allocation authority is also already baked into various khr/ext
+> > > > > > standards, too.
+> 
+> There's one thing that V4L2 has and DRM hasn't for 4CCs: good
+> documentation. Look at
+> https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/pixfmt-packed-rgb.html
+> or
+> https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/yuv-formats.html
+> for instance. It's painful to write, painful to read, but defines the
+> 4CCs very clearly without ambiguity. I wouldn't be surprised if
+> different drivers used the same DRM 4CC for different formats due to the
+> lack of detailed documentation. Moving to a shared library for 4CCs
+> should also address the documentation side, and any new format added to
+> the kernel, whether from the V4L2 side or the DRM side, would be
+> required to provide detailed documentation. That would be a great
+> improvement for DRM 4CC handling.
+> 
+> > > > > The way I see it, there's a fundamental difference between the UAPI
+> > > > > and the kernel. I don't suggest we change anything about the UAPI: the
+> > > > > drm formats should keep their prefix, drm_fourcc.h can remain that
+> > > > > authority, it's all fine.
+> > > > >
+> > > > > Internally however, the long term goal is to share the fourcc's
+> > > > > between DRM and V4L2 for the same formats. It basically means that of
+> > > > > course v4l2 should be using the DRM fourcc when a format exists in DRM
+> > > > > and not v4l2, but also that DRM should use v4l2 fourcc when the format
+> > > > > exists in v4l2 but not DRM, and that is far more likely, given the
+> > > > > already extensive v4l2 formats support.
+> > > >
+> > > > Uh no. We did look at v4l fourcc extensively when deciding upon a drm
+> > > > format identifier space.
+> > >
+> > > No to what exactly?
+> > >
+> > > > And a lot of people pushed for the "fourcc is a standard", when
+> > > > really it's totally not.
+> > >
+> > > Even if it's not a standard, having consistency would be a good thing.
+> > >
+> > > And you said yourself that DRM fourcc is now pretty much an authority
+> > > for the fourcc, so it definitely looks like a standard to me.
+> > 
+> > drm fourcc is the authority for drm fourcc codes. Not for any of the
+> > others (and there's lots of them). Now it's used in a bunch of other
+> > places (khr standards, dri protocols in wayland/X11), but they're
+> > still only drm fourcc. There is no overall fourcc standard.
+> > 
+> > > > v4l tends to conflate pixel format with stuff that we tend to encode
+> > > > in modifiers a lot more.
+> > >
+> > > Boris is working on adding the modifiers concept to v4l2, so we're
+> > > converging here, and we can totally have a layer in v4l2 to convert
+> > > between old v4l2 "format+modifiers" formats, and DRM style formats.
+> > >
+> > > > There's a bunch of reasons we can't just use v4l, and they're as
+> > > > valid as ever:
+> > > >
+> > > > - We overlap badly in some areas, so even if fourcc codes match, we
+> > > >   can't use them and need a duplicated DRM_FOURCC code.
+> > >
+> > > Do yo have an example of one of those areas?
+> > 
+> > I think the rgb stuff was one of the big reasons to not reuse any
+> > existing fourcc standard (whether v4l, or another one from e.g. video
+> > container formats). We had initial patches to reuse the fourcc that
+> > existed, but the end result was really inconsistent, so we ditch that
+> > and rolled out a new set of entirely drm specific fourcc codes for
+> > rgba.
+> 
+> Could you give one or a couple of examples of V4L2 4CCs that are not
+> OCD-compatible ? :-)
+> 
+> > > > - v4l encodes some metadata into the fourcc that we encode elsewhere,
+> > > >   e.g. offset for planar yuv formats, or tiling mode
+> > >
+> > > As I was saying, this changes on the v4l2 side, and converging to
+> > > what DRM is doing.
+> > >
+> > > > - drm fourcc code doesn't actually define the drm_format_info
+> > > >   uniquely, drivers can override that (that's an explicit design
+> > > >   intent of modifiers, to allow drivers to add another plane for
+> > > >   e.g. compression information). You'd need to pull that driver
+> > > >   knowledge into your format library.
+> 
+> That's a mistake in my opinion. We tried that in V4L2 to store metadata
+> in a separate plane, and had to go another route eventually as it
+> created a very bad mess.
 
-Hi all,
+Just quick clarification in the middle here: This is how the hw works.
+It's not metadata that sw ever touches (in general, testcases to make sure
+we display these correctly excepted).
 
-After merging the net-next tree, today's linux-next build (sparc64
-defconfig) failed like this:
+There has been some talking to add maybe a bit more mixed metadata, for
+fast-clear colors (which isn't used by any display engine afaik yet). That
+would generally be written by the cpu (in the gl stack), but again read by
+the hw (loaded as indirect state packet most likely, or something like
+that). So again hw specific layout, because the hw needs to read it.
 
-net/core/sock.c: In function 'sock_gettstamp':
-net/core/sock.c:3007:23: error: expected '}' before ';' token
-    .tv_sec =3D ts.tv_sec;
-                       ^
-net/core/sock.c:3011:4: error: expected ')' before 'return'
-    return -EFAULT;
-    ^~~~~~
-net/core/sock.c:3013:2: error: expected expression before '}' token
-  }
-  ^
+Pure metadata only of interest for the cpu/sw stack has been shot down
+completely on the drm side too.
 
-Caused by commit
+> There's a tendency in both subsystems to look at the other as a bit of a
+> retarded relative, and that's a shame, we have lots to learn from each
+> other's mistakes. That wouldn't be too difficult if people started
+> talking to each other.
+> 
+> A semi-related comment: DRM also carries other mistakes of its own, I'm
+> thinking about DRM_FORMAT_BIG_ENDIAN in particular
 
-  c7cbdbf29f48 ("net: rework SIOCGSTAMP ioctl handling")
+Yeah that one is hilarios, but in practice big endian is dead, except for
+a very few server chips, and there I think Gerd's work mostly fixed up
+that mess.
 
-I have applied the followinf patch for today:
+> > > I'm not sure how my patches are changing anything here. This is
+> > > litterally the same code, with the functions renamed.
+> > >
+> > > If drivers want to override that, then yeah, fine, we can let them do
+> > > that. Just like any helper this just provides a default that covers
+> > > most of the cases.
+> > >
+> > > > Iow there's no way we can easily adopt v4l fourcc, except if we do
+> > > > something like a new addfb flag.
+> > >
+> > > For the formats that would be described as a modifier, sure. For all
+> > > the others (that are not yet supported by DRM), then I don't really
+> > > see why not.
+> > 
+> > See above, we tried that initially, didn't pass the ocd tests when
+> > reviewing. Maybe the situation is better outside of rbgx/a formats,
+> > and I think we do at least try to use the same fourcc codes there when
+> > there already is one. But then the details occasionally look
+> > different.
+> > 
+> > > > > And given how the current state is a mess in this regard, I'm not too
+> > > > > optimistic about keeping the formats in their relevant frameworks.
+> > > > >
+> > > > > Having a shared library, governed by both, will make this far easier,
+> > > > > since it will be easy to discover the formats that are already
+> > > > > supported by the other subsystem.
+> > > >
+> > > > I think a compat library that (tries to, best effort) convert between
+> > > > v4l and drm fourcc would make sense. Somewhere in drivers/video, next
+> > > > to the conversion functions for videomode <-> drm_display_mode
+> > > > perhaps. That should be useful for drivers.
+> > >
+> > > That's not really what this series is about though. That series is
+> > > about sharing the (image|pixels) formats database across everyone so
+> > > that everyone can benefit from it.
+> > 
+> > Yeah I know. I still think leaving the drm fourcc with the drm prefix
+> > would be good, since there's really no standard here.
+> > 
+> > > > Unifying the formats themselves, and all the associated metadata is
+> > > > imo a no-go, and was a pretty conscious decision when we implemented
+> > > > drm_fourcc a few years back.
+> > > >
+> > > > > If we want to keep the current library in DRM, we have two options
+> > > > > then:
+> > > > >
+> > > > >   - Support all the v4l2 formats in the DRM library, which is
+> > > > >     essentially what I'm doing in the last patches. However, that
+> > > > >     would require to have the v4l2 developpers also reviewing stuff
+> > > > >     there. And given how busy they are, I cannot really see how that
+> > > > >     would work.
+> > > >
+> > > > Well, if we end up with a common library then yes we need cross
+> > > > review. There's no way around that. Doesn't matter where exactly that
+> > > > library is in the filesystem tree, and adding a special MAINTAINERS
+> > > > entry for anything related to fourcc (both drm and v4l) to make sure
+> > > > they get cross-posted is easy. No file renaming needed.
+> > >
+> > > That would create some governing issues as well. For example, if you
+> > > ever have a patch from one fourcc addition (that might or might not be
+> > > covered by v4l2), will you wait for any v4l2 developper to review it?
+> > 
+> > None of this is fixed by code renaming or locations. Either way we
+> > need to figure that out.
+> > 
+> > And yes part of the reasons for not moving this out of drm is that I'm
+> > not a fan of boutique trees for small stuff. If sharing means we need
+> > to split the drm_fourcc code and library out of drm trees, I'm not
+> > sure that's a good idea. We're already super liberal with merging
+> > anything through driver trees with acks, and integrating them quickly
+> > into drm-next. This would still be workable if v4l sends regular pull
+> > requests to drm-next (every 1-2 weeks, like the other big gpu trees
+> > do). If we can only sync up once per merge window with a shared
+> > boutique tree for formats only, life is going to be painful.
+> 
+> That should be solved by the proposal above, maintaining the shared
+> library in the DRM tree. We would need to be careful there, and ideally
+> maintain that in a separate branch that could be merged in both DRM and
+> V4L2 without having to merge most of the other subsystem's pending
+> changes at the same time, but I think it's doable without any big issue.
+> 
+> > > If it's shared code, then it should be shared, and every client
+> > > framework put on an equal footing.
+> > >
+> > > > >   - Develop the same library from within v4l2. That is really a poor
+> > > > >     solution, since the information would be greatly duplicated
+> > > > >     between the two, and in terms of maintainance, code, and binary
+> > > > >     size that would be duplicated too.
+> > > >
+> > > > It's essentially what we decided to do for drm years back.
+> > >
+> > > And it was probably the right solution back then, but I'm really not
+> > > convinced it's still the right thing to do today.
+> > >
+> > > > > Having it shared allows to easily share, and discover formats from the
+> > > > > other subsystem, and to have a single, unique place where this is
+> > > > > centralized.
+> > > >
+> > > > What I think could work as middle ground:
+> > > > - Put drm_format stuff into a separate .ko
+> > > > - Add a MAINTAINERS entry to make sure all things fourcc are cross
+> > > > posted to both drm and v4l lists. Easy on the drm side, since it's all
+> > > > separate files. Not sure it's so convenient for v4l uapi.
+> > > > - Add a conversion library that tries to best-effort map between drm
+> > > > and v4l formats. On the drm side that most likely means you need
+> > > > offsets for planes, and modifiers too (since those are implied in some
+> > > > v4l fourcc). Emphasis on "best effort" i.e. only support as much as
+> > > > the drivers that use this library need.
+> > > > - Add drm_fourcc as-needed by these drivers that want to use a unified
+> > > > format space.
+> > > >
+> > > > Forcing this unification on everyone otoh is imo way too much.
+> > >
+> > > v4l2 is starting to converge with DRM, and we're using the DRM API
+> > > pretty much untouched for that library, so I'm not really sure how
+> > > anyone is hurt by that unification.
+> > 
+> > It might make sense to regularly pull v4l updates into drm-next then
+> > anyway. That would also remove the need to have the format library
+> > somewhere else.
+> 
+> Are you saying it should the live in V4L2 ? ;-)
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 23 Apr 2019 17:12:19 +1000
-Subject: [PATCH] net: fix sparc64 compilation of sock_gettstamp
+Maybe a few clarifications on how the drm shared core thing usually works,
+and why I'm a sticker here. Bottom reply since I'm not sure where to put
+it:
 
-Fixes: c7cbdbf29f48 ("net: rework SIOCGSTAMP ioctl handling")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- net/core/sock.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+- Refactorings usually go in through drm-misc (at least since a few
+  years).
 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 443b98d05f1e..925b84a872dd 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -3004,10 +3004,10 @@ int sock_gettstamp(struct socket *sock, void __user=
- *userstamp,
- 	/* beware of padding in sparc64 timeval */
- 	if (timeval && !in_compat_syscall()) {
- 		struct __kernel_old_timeval __user tv =3D {
--			.tv_sec =3D ts.tv_sec;
--			.tv_usec =3D ts.tv_nsec;
-+			.tv_sec =3D ts.tv_sec,
-+			.tv_usec =3D ts.tv_nsec,
- 		};
--		if (copy_to_user(userstamp, &tv, sizeof(tv))
-+		if (copy_to_user(userstamp, &tv, sizeof(tv)))
- 			return -EFAULT;
- 		return 0;
- 	}
---=20
-2.20.1
+- Small patches go in through the relevant driver tree (which is often
+  drm-misc, but not always), with an Ack from drm maintainers.
 
---=20
-Cheers,
-Stephen Rothwell
+- No topic branches, everyone just pushes patches where it's most
+  convenient.
 
---Sig_/k9UNknx1JqUf=dlGGCpmzTt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+We get away with this mess because everyone sends regular pull requests to
+drm, where the entire history is baked in and others can backmerge/fast
+forward/rebase. Worst case you wait one month (around the merge window,
+when drm-next is closed for features), but usually it's just 1-2 weeks.
+Plus we tend to have fairly big trees, with good chances that the next
+patch series lands in the same tree again and no work at all is needed.
 
------BEGIN PGP SIGNATURE-----
+If we start regularly sharing lots of code with v4l (which seems to be the
+long term goal here), then I think we need something equally convenient
+for all that.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+veQACgkQAVBC80lX
-0GzafQf/e3IBpnfR4vf6BXz3uaEfuMtioBsb5zL1Fa/jOu6+UCvX09AfhP9h+NR+
-0jvr17MpAJeKjdN1MEUmI/Q+BG4Cg/xdPZkaOcneOm6NIxvdOlQjfmliWLsJMy+p
-q1JNepOVRVffHLxM7klbBEBa6ePk5xm5bQT0CgyGToRq5sOu9Q9nKmD7reE80SK7
-YH4IiOxnxA9zdUq4L773rIySDLC/grEZfZVUElMhobld6xvfc8PQ4kqSLXI3An9Q
-f8l4CpGKkdZGwjmNMlW35dWZP36g/KbhTwF1GVy96ODBQ8M87+ksmagQuBLLJcKP
-+wZC/1P00NIiANkoaL4yWPWweIFGrQ==
-=WQ1p
------END PGP SIGNATURE-----
-
---Sig_/k9UNknx1JqUf=dlGGCpmzTt--
+We're not going to be able to teach some complicated topic branch scheme
+to the 50+ submaintainers/committers we have in drm - a lot much more
+basic stuff already takes lots of work to get it to stick. If the proposal
+is "to be careful" and "maintain it in a separate branch", I'm not in
+favour because I think that just wouldn't work.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
