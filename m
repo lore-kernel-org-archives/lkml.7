@@ -2,422 +2,111 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DB1C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9036AC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C3820693
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WzPhDlsl"
+	by mail.kernel.org (Postfix) with ESMTP id 5DB4D20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556035596;
+	bh=pQ1A/TDFFWD/UmdtE+s6ETqITKHgvg/WqC5V7Ct7SOI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WrbX30QB8znbCTWesagDX3oH2YgazE0fKoaUrSlDkZrFLK5ZjFneonctnH9BVVZ2s
+	 3gqtQsX3nAh8cmzaygmpOuBceYQWGs+q1MSZYvbKR32WqmJtecQMSqXoKkfhg78ogv
+	 fPv/r/MEy7FYovS6Hf53+G9IGOlxEWx2Z/heai+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbfDWQGX (ORCPT
+        id S1728641AbfDWQGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:06:23 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36317 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbfDWQGX (ORCPT
+        Tue, 23 Apr 2019 12:06:35 -0400
+Received: from mail-lj1-f171.google.com ([209.85.208.171]:33408 "EHLO
+        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728438AbfDWQGe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:06:23 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 85so7850715pgc.3;
-        Tue, 23 Apr 2019 09:06:22 -0700 (PDT)
+        Tue, 23 Apr 2019 12:06:34 -0400
+Received: by mail-lj1-f171.google.com with SMTP id f23so14070500ljc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:06:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=YmBBGLsFI/dItK9tYAglKv8q6g7rvI0MS0aWDHWM1Z4=;
-        b=WzPhDlsl1/txZHnSFVSmo++BoptuDbvmlkvBCXWFeLcpjlWN+LHt9kZUbWSFWSHVdl
-         lgIrgGZUZp8KXlCCAQpIS7xbEvqxhMNgIa4d/T5AUdk1LPgKnKvQebZlvBVTI6bBT8q6
-         CnZROJ96MmL/RwtO/2MM7YBFXruKPcalcWVkNtKNj+q9WfXXHQ+X99wIAg9X2REqB5Gg
-         c+9pfznbur2RZBcujJY/cOS7uS19GPhmZSv9GgeY21SBQ/K5ertfmiADtz5ifP7qWDXz
-         K1zgoqRIESWKiLry5kQg4isziscO+gy8TsRYWuQwhrVpJXdGLYPs1Sbfi/+FUTfewflb
-         Untw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FhckMePRJRIMKUNlCIkx3VHe63IXH0bZ3S6Gwqv5tdM=;
+        b=CZonqEvKRryr7I9kZkzaMOwuQF50UFC0DuXrN+A5A6rDj20MPF13Loj640HKBDdB/S
+         wli9FxRhQ1OX9jSEjTEapHcc+guN8oU7kWxmO0cu6zjBUv5QhZecKO1iE405PwB0TBDs
+         hqJUvZk6OvySvehOwaartA/mM+abp7YvVEyVQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=YmBBGLsFI/dItK9tYAglKv8q6g7rvI0MS0aWDHWM1Z4=;
-        b=jh1MtOGDmXuU/R24RcZm58TTgJuZJmy4zDOfr2BW4VsDzAHjo/s0FL4Snd32GvFUIZ
-         rc+PTUydXQt4m1mrSvV3O7JAAdkIQiyA9+WzWg5zmWLhE9y+70SfLKnijR6ysC6gjo0D
-         JGmSwTj5bJ34aC/3HxWPeejzCt4VOz9Uhei1GTFVaMf5eMN2Itx+jfI8G4UV4SQTmoTH
-         Uw8RjJaQYk2SpbCg7uYMCRazBYynaLD73CtSC8C5ThY1HAA4tYMCt9Z12ReTxdlH7XN0
-         zgBkGJAGYxFwU4OLV6DbkE/Mjq2fdU8EQIglReCAr+w4Jf1jgSofj0PhZiep8/u7cr3/
-         YAfA==
-X-Gm-Message-State: APjAAAVfn4Gh0iI3bs4dg0B8blBW5OYLuW6WvRbZ92WR54yRSNvIQLFc
-        T34MxNmQwYFJvVCHXaC2njI4D9Sv
-X-Google-Smtp-Source: APXvYqyUwG74s8HwKnJndmzf2GHpN3MV6+fjk+FHmjr1RhKpNuL0z/SpALCWrwcIRb3mAS2FSy5RQg==
-X-Received: by 2002:a62:4602:: with SMTP id t2mr27638199pfa.26.1556035581993;
-        Tue, 23 Apr 2019 09:06:21 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id m6sm9726800pgq.0.2019.04.23.09.06.20
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FhckMePRJRIMKUNlCIkx3VHe63IXH0bZ3S6Gwqv5tdM=;
+        b=WahginSwGbFyqLt0aJb4g0b/ccGYnZAqucbEhH1M1ZuGaYzho54wZx1NmBTzLupdXG
+         t8zm85EG2Pag5uhwXiPMxyHQcxJ2rrgt0Ji8wzpa7/zTbKrlygQ9+GA6Dxdi/STSxNP1
+         HdvyuKRfoh3s7xtD3SlfeXneKdJf7IRfaW/o6XG2FZDv5mZuZjMb/fxjHJR2XNMcOsvy
+         KspKYbSPayqXrku2LUqjn/QP/WkNKeaE0ZC3faLaiCWiq1iZJpkOQbFi4qKumR41k8aU
+         S0n1CzKBRJFf0GY2KDsq6knSiLS+4ro9p2sro3oVPg2ejoIQ7CJJj9OvJ4//yp2l+hyt
+         FIQg==
+X-Gm-Message-State: APjAAAVMfoGeScq2bt8Eb94zyOmpqb2eGO/J6GwW7+kAM3M1Uf1Ivisg
+        oWAi4ol6ztVc/UZJUaPFA20GqZzlaAg=
+X-Google-Smtp-Source: APXvYqxOh5k9sPwmnHQdSO/EbVJkxiawPQltCudpA88rU9I3w7AP1HsvbukDM3g/BwI/Va0Nwv51iA==
+X-Received: by 2002:a2e:8057:: with SMTP id p23mr3569962ljg.33.1556035592214;
+        Tue, 23 Apr 2019 09:06:32 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id s3sm3824040lfc.25.2019.04.23.09.06.30
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 09:06:21 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org
-Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, hdegoede@redhat.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v4 2/2] arm64: dts: qcom: Add Lenovo Miix 630
-Date:   Tue, 23 Apr 2019 09:06:16 -0700
-Message-Id: <20190423160616.10017-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
-References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
+        Tue, 23 Apr 2019 09:06:31 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id h21so14008318ljk.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:06:30 -0700 (PDT)
+X-Received: by 2002:a2e:9ac8:: with SMTP id p8mr12853071ljj.79.1556035590337;
+ Tue, 23 Apr 2019 09:06:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
+ <20190415051919.GA31481@infradead.org> <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+ <20190416110906.6c773aff@mschwideX1> <20190416140658.2cb73a3f@mschwideX1>
+ <CAHk-=wjKi5C+Onhp5Vs5BQxHbaBud9M3cTS-S6Tr9yDY4dS-Sw@mail.gmail.com>
+ <CAHk-=wj2SW0Zno0Yn=S9wrsmHOKV0FiFPiPS4TM=Gn8yjfYXAg@mail.gmail.com>
+ <20190417094637.51ad4c67@mschwideX1> <20190417100244.42e29736@mschwideX1>
+ <CAHk-=wj5j-zMo7hVNxiw3+5L2d1WQVm3x4fbpg=OXLzDh8FhYg@mail.gmail.com>
+ <20190418100218.0a4afd51@mschwideX1> <CAHk-=whajv8Fw2VcBqZUs0hfx1Dq4fYj3TEEx4yfR3E8+rLS1A@mail.gmail.com>
+ <20190418204144.16adf2a0@mschwideX1> <20190419153307.4f2911b5@mschwideX1>
+ <CAHk-=wj6yp7hkJ_wR38dhdDRkAHQaEx28v2FkVT9hDFXX_qfjA@mail.gmail.com> <20190423173859.42d5ba8b@mschwideX1>
+In-Reply-To: <20190423173859.42d5ba8b@mschwideX1>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 23 Apr 2019 09:06:14 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiCwe7Uk0P6zJnTPqz_BvkELBbnocS-0qdWxVgq9qebjg@mail.gmail.com>
+Message-ID: <CAHk-=wiCwe7Uk0P6zJnTPqz_BvkELBbnocS-0qdWxVgq9qebjg@mail.gmail.com>
+Subject: Re: Linux 5.1-rc5
+To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-functionality includes USB (host), microSD-card, keyboard, and trackpad.
+On Tue, Apr 23, 2019 at 8:39 AM Martin Schwidefsky
+<schwidefsky@de.ibm.com> wrote:
+>
+> Ok, I added two patches for my s390/linux:features branch
+>
+> Martin Schwidefsky (2):
+>       s390/mm: make the pxd_offset functions more robust
+>       s390/mm: convert to the generic get_user_pages_fast code
+>
+> All code changes are inside arch/s390, I plan to include these patches with
+> the next merge window. That gives us a little bit of time to run our tests.
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
- .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
- 3 files changed, 309 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+Sounds good. Thanks for looking into this all.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 21d548f02d39..c3e4307bcbd4 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-new file mode 100644
-index 000000000000..1a341d4b1597
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-+
-+/*
-+ * Common include for MSM8998 clamshell devices, ie the Lenovo Miix 630,
-+ * Asus NovaGo TP370QL, and HP Envy x2.  All three devices are basically the
-+ * same, with differences in peripherals.
-+ */
-+
-+#include "msm8998.dtsi"
-+#include "pm8998.dtsi"
-+#include "pm8005.dtsi"
-+
-+/ {
-+	chosen {
-+	};
-+
-+	thermal-zones {
-+		battery-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens0 0>;
-+
-+			trips {
-+				battery_crit: trip0 {
-+					temperature = <60000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		skin-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens1 5>;
-+
-+			trips {
-+				skin_alert: trip0 {
-+					temperature = <44000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				skip_crit: trip1 {
-+					temperature = <70000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+
-+	vph_pwr: vph-pwr-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph_pwr";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&qusb2phy {
-+	status = "okay";
-+
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-+};
-+
-+&rpm_requests {
-+	pm8998-regulators {
-+		compatible = "qcom,rpm-pm8998-regulators";
-+
-+		vdd_s1-supply = <&vph_pwr>;
-+		vdd_s2-supply = <&vph_pwr>;
-+		vdd_s3-supply = <&vph_pwr>;
-+		vdd_s4-supply = <&vph_pwr>;
-+		vdd_s5-supply = <&vph_pwr>;
-+		vdd_s6-supply = <&vph_pwr>;
-+		vdd_s7-supply = <&vph_pwr>;
-+		vdd_s8-supply = <&vph_pwr>;
-+		vdd_s9-supply = <&vph_pwr>;
-+		vdd_s10-supply = <&vph_pwr>;
-+		vdd_s11-supply = <&vph_pwr>;
-+		vdd_s12-supply = <&vph_pwr>;
-+		vdd_s13-supply = <&vph_pwr>;
-+		vdd_l1_l27-supply = <&vreg_s7a_1p025>;
-+		vdd_l2_l8_l17-supply = <&vreg_s3a_1p35>;
-+		vdd_l3_l11-supply = <&vreg_s7a_1p025>;
-+		vdd_l4_l5-supply = <&vreg_s7a_1p025>;
-+		vdd_l6-supply = <&vreg_s5a_2p04>;
-+		vdd_l7_l12_l14_l15-supply = <&vreg_s5a_2p04>;
-+		vdd_l9-supply = <&vph_pwr>;
-+		vdd_l10_l23_l25-supply = <&vph_pwr>;
-+		vdd_l13_l19_l21-supply = <&vph_pwr>;
-+		vdd_l16_l28-supply = <&vph_pwr>;
-+		vdd_l18_l22-supply = <&vph_pwr>;
-+		vdd_l20_l24-supply = <&vph_pwr>;
-+		vdd_l26-supply = <&vreg_s3a_1p35>;
-+		vdd_lvs1_lvs2-supply = <&vreg_s4a_1p8>;
-+
-+		vreg_s3a_1p35: s3 {
-+			regulator-min-microvolt = <1352000>;
-+			regulator-max-microvolt = <1352000>;
-+		};
-+		vreg_s4a_1p8: s4 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-allow-set-load;
-+		};
-+		vreg_s5a_2p04: s5 {
-+			regulator-min-microvolt = <1904000>;
-+			regulator-max-microvolt = <2040000>;
-+		};
-+		vreg_s7a_1p025: s7 {
-+			regulator-min-microvolt = <900000>;
-+			regulator-max-microvolt = <1028000>;
-+		};
-+		vreg_l1a_0p875: l1 {
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <880000>;
-+			regulator-allow-set-load;
-+		};
-+		vreg_l2a_1p2: l2 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-allow-set-load;
-+		};
-+		vreg_l3a_1p0: l3 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+		};
-+		vreg_l5a_0p8: l5 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <800000>;
-+		};
-+		vreg_l6a_1p8: l6 {
-+			regulator-min-microvolt = <1808000>;
-+			regulator-max-microvolt = <1808000>;
-+		};
-+		vreg_l7a_1p8: l7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+		vreg_l8a_1p2: l8 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+		vreg_l9a_1p8: l9 {
-+			regulator-min-microvolt = <1808000>;
-+			regulator-max-microvolt = <2960000>;
-+		};
-+		vreg_l10a_1p8: l10 {
-+			regulator-min-microvolt = <1808000>;
-+			regulator-max-microvolt = <2960000>;
-+		};
-+		vreg_l11a_1p0: l11 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+		};
-+		vreg_l12a_1p8: l12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+		vreg_l13a_2p95: l13 {
-+			regulator-min-microvolt = <1808000>;
-+			regulator-max-microvolt = <2960000>;
-+		};
-+		vreg_l14a_1p88: l14 {
-+			regulator-min-microvolt = <1880000>;
-+			regulator-max-microvolt = <1880000>;
-+		};
-+		vreg_15a_1p8: l15 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+		vreg_l16a_2p7: l16 {
-+			regulator-min-microvolt = <2704000>;
-+			regulator-max-microvolt = <2704000>;
-+		};
-+		vreg_l17a_1p3: l17 {
-+			regulator-min-microvolt = <1304000>;
-+			regulator-max-microvolt = <1304000>;
-+		};
-+		vreg_l18a_2p7: l18 {
-+			regulator-min-microvolt = <2704000>;
-+			regulator-max-microvolt = <2704000>;
-+		};
-+		vreg_l19a_3p0: l19 {
-+			regulator-min-microvolt = <3008000>;
-+			regulator-max-microvolt = <3008000>;
-+		};
-+		vreg_l20a_2p95: l20 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-allow-set-load;
-+		};
-+		vreg_l21a_2p95: l21 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-allow-set-load;
-+			regulator-system-load = <800000>;
-+		};
-+		vreg_l22a_2p85: l22 {
-+			regulator-min-microvolt = <2864000>;
-+			regulator-max-microvolt = <2864000>;
-+		};
-+		vreg_l23a_3p3: l23 {
-+			regulator-min-microvolt = <3312000>;
-+			regulator-max-microvolt = <3312000>;
-+		};
-+		vreg_l24a_3p075: l24 {
-+			regulator-min-microvolt = <3088000>;
-+			regulator-max-microvolt = <3088000>;
-+		};
-+		vreg_l25a_3p3: l25 {
-+			regulator-min-microvolt = <3104000>;
-+			regulator-max-microvolt = <3312000>;
-+		};
-+		vreg_l26a_1p2: l26 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+		vreg_l28_3p0: l28 {
-+			regulator-min-microvolt = <3008000>;
-+			regulator-max-microvolt = <3008000>;
-+		};
-+
-+		vreg_lvs1a_1p8: lvs1 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		vreg_lvs2a_1p8: lvs2 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+	};
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <81 4>;
-+
-+	touchpad: touchpad {
-+		config {
-+			pins = "gpio123";
-+			bias-pull-up;           /* pull up */
-+		};
-+	};
-+};
-+
-+&sdhc2 {
-+	status = "okay";
-+
-+	vmmc-supply = <&vreg_l21a_2p95>;
-+	vqmmc-supply = <&vreg_l13a_2p95>;
-+
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
-+	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
-+};
-+
-+&usb3 {
-+	status = "okay";
-+};
-+
-+&usb3_dwc3 {
-+	dr_mode = "host"; /* Force to host until we have Type-C hooked up */
-+};
-+
-+&usb3phy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l2a_1p2>;
-+};
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-new file mode 100644
-index 000000000000..407c6a32911c
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-+
-+/dts-v1/;
-+
-+#include "msm8998-clamshell.dtsi"
-+
-+/ {
-+	model = "Lenovo Miix 630";
-+	compatible = "lenovo,miix-630", "qcom,msm8998";
-+};
-+
-+&blsp1_i2c6 {
-+	status = "okay";
-+
-+	keyboard@3a {
-+		compatible = "hid-over-i2c";
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <0x79 IRQ_TYPE_LEVEL_LOW>;
-+		reg = <0x3a>;
-+		hid-descr-addr = <0x0001>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touchpad>;
-+	};
-+};
-+
-+&sdhc2 {
-+	cd-gpios = <&tlmm 95 GPIO_ACTIVE_HIGH>;
-+};
--- 
-2.17.1
+Now I slightly wonder about all the other random architectures that
+don't use the HAVE_GENERIC_GUP config option, but at least we'll have
+all of arm, powerpc, x86 and s390 using the generic code..
 
+                    Linus
