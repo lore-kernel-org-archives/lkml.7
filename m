@@ -2,116 +2,153 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50E6C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E61C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5FF20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:43:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqU6ARLZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3E4C1218CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfDWNna (ORCPT
+        id S1727870AbfDWNoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:43:30 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37151 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbfDWNna (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:43:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so7643355pgc.4;
-        Tue, 23 Apr 2019 06:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mA3mF+ycxeUdvUahPhxXN3FfcyNfELyy8iLDdoDE09E=;
-        b=kqU6ARLZVrNi50fCv25akrY3R3TDlpcSWaTOn+OaLTngZRAUjjZ68QTQRbzvxwMGF8
-         TKgq1xtbXDfBCdwZmJYdRH9/g8hSLVAOr3I7fPnZ8KsqB4moyNr2Ivq4z1NrX1sunvCI
-         zyeA5wAT3Qn3iTYQSTLeDVHR+Eu349E87JUMuyFb1tuLbDxb/lFn9w1A68Iz8SDOlqO6
-         /CO6E7cJcDJUWBNlNE9S9RtrxQm/O5a7Au17tjBXkSH5oPC8jP1kYT20wK+iNjYoNqq8
-         joyIrMhOOhheajV9TnyN4Umn6J7tFAPr7cwmWY7dAOB3db91zHeHXRNfuCXa0tQ682l2
-         lv8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mA3mF+ycxeUdvUahPhxXN3FfcyNfELyy8iLDdoDE09E=;
-        b=IsPGLnfpJKIhLnF870QWef9+J26R98Sw42EcRaQ1mK21DRc2AahVPU89F1XrwTx+B+
-         irnCEwiASuGaAUt/9eo2+x7moycGrgjbfmeMEfBmFPRRUoK1o/bpF6a+N+BtKc6xPUYj
-         aFEioe9F/k7um+sMFSWToWfNdsuraZpocFTDxUjiXT8g3pT86beod90KQQZhtbbVYXDQ
-         OmbtWaLO+7FlqEVcONMBFGqhSlZgR0FHLL/ZNYOLV4CdZc0QzewsZcXMokPgWuuPqGhQ
-         jqcoScvkxHdLhR4jBsR3koKbBvLvb1vuzqFiq1Gt7lMLGQOotTx0nKLwRlG8L3u3v7WT
-         HpwQ==
-X-Gm-Message-State: APjAAAX1iv3ruOOR6JFjJjmh1A9VoYhon6f3E4KkPgsIk24/LjRnvpU1
-        KEfKrLmtadgvsGvQnqXwDF0=
-X-Google-Smtp-Source: APXvYqzKHUvKnbHvWOP3vc8MmOGQBIPY0daPQG/AigqGZaj9m4wYbajx1ahELIYHJMhcHPQ4NRUdRQ==
-X-Received: by 2002:a63:c64a:: with SMTP id x10mr24469513pgg.12.1556027009384;
-        Tue, 23 Apr 2019 06:43:29 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f27sm2867144pfk.111.2019.04.23.06.43.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 06:43:28 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 06:43:26 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH next 07/25] hwmon: s3c: Use dev_get_drvdata()
-Message-ID: <20190423134326.GA19164@roeck-us.net>
-References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
- <20190423075020.173734-8-wangkefeng.wang@huawei.com>
+        Tue, 23 Apr 2019 09:44:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39860 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726659AbfDWNoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 09:44:19 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 63B323086212;
+        Tue, 23 Apr 2019 13:44:18 +0000 (UTC)
+Received: from redhat.com (ovpn-112-50.ams2.redhat.com [10.36.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2B6D45C220;
+        Tue, 23 Apr 2019 13:44:02 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 14:44:00 +0100
+From:   Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Yan Zhao <yan.y.zhao@intel.com>,
+        intel-gvt-dev@lists.freedesktop.org, cjia@nvidia.com,
+        kvm@vger.kernel.org, aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        kwankhede@nvidia.com, eauger@redhat.com, yi.l.liu@intel.com,
+        eskultet@redhat.com, ziye.yang@intel.com, mlevitsk@redhat.com,
+        pasic@linux.ibm.com, libvir-list@redhat.com,
+        arei.gonglei@huawei.com, felipe@nutanix.com, Ken.Xue@amd.com,
+        kevin.tian@intel.com, dgilbert@redhat.com, zhenyuw@linux.intel.com,
+        changpeng.liu@intel.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, zhi.a.wang@intel.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com
+Subject: Re: [Qemu-devel] [PATCH 1/2] vfio/mdev: add version field as
+ mandatory attribute for mdev device
+Message-ID: <20190423134400.GL6022@redhat.com>
+Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+ <20190419083505.19654-1-yan.y.zhao@intel.com>
+ <20190423103939.GF6022@redhat.com>
+ <20190423063540.7ec83c31@x1.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190423075020.173734-8-wangkefeng.wang@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190423063540.7ec83c31@x1.home>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 23 Apr 2019 13:44:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 03:50:02PM +0800, Kefeng Wang wrote:
-> Using dev_get_drvdata directly.
+On Tue, Apr 23, 2019 at 06:35:40AM -0600, Alex Williamson wrote:
+> On Tue, 23 Apr 2019 11:39:39 +0100
+> Daniel P. Berrangé <berrange@redhat.com> wrote:
 > 
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-hwmon@vger.kernel.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-
-Applied to hwmon-next.
-
-Thanks,
-Guenter
-
-> ---
->  drivers/hwmon/s3c-hwmon.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> > On Fri, Apr 19, 2019 at 04:35:04AM -0400, Yan Zhao wrote:
+> > > +* version
+> > > +
+> > > +  This attribute is rw. It is used to check whether two devices are compatible
+> > > +  for live migration. If this attribute is missing, then the corresponding mdev
+> > > +  device is regarded as not supporting live migration.
+> > > +
+> > > +  It consists of two parts: common part and vendor proprietary part.
+> > > +  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
+> > > +               device type. e.g., for pci device, it is
+> > > +               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> > > +  vendor proprietary part: this part is varied in length. vendor driver can
+> > > +               specify any string to identify a device.
+> > > +
+> > > +  When reading this attribute, it should show device version string of the device
+> > > +  of type <type-id>. If a device does not support live migration, it should
+> > > +  return errno.
+> > > +  When writing a string to this attribute, it returns errno for incompatibility
+> > > +  or returns written string length in compatibility case. If a device does not
+> > > +  support live migration, it always returns errno.
+> > > +
+> > > +  for example.
+> > > +  # cat \
+> > > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_2/version
+> > > +  00028086-193b-i915-GVTg_V5_2
+> > > +
+> > > +  #echo 00028086-193b-i915-GVTg_V5_2 > \
+> > > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
+> > > + -bash: echo: write error: Invalid argument
+> > > +  
+> > 
+> > IIUC this path is against the physical device. IOW, the mgmt app would have
+> > to first write to the "version" file to choose a version, and then write to
+> > the "create" file to actually create an virtual device. This has the obvious
+> > concurrency problem if multiple devices are being created at the same time
+> > and distinct versions for each device are required. There would need to be
+> > a locking scheme defined to ensure safety.
 > 
-> diff --git a/drivers/hwmon/s3c-hwmon.c b/drivers/hwmon/s3c-hwmon.c
-> index 0c4710d35d16..0d65aa5985e2 100644
-> --- a/drivers/hwmon/s3c-hwmon.c
-> +++ b/drivers/hwmon/s3c-hwmon.c
-> @@ -98,7 +98,7 @@ static int s3c_hwmon_read_ch(struct device *dev,
->  static ssize_t s3c_hwmon_show_raw(struct device *dev,
->  				  struct device_attribute *attr, char *buf)
->  {
-> -	struct s3c_hwmon *adc = platform_get_drvdata(to_platform_device(dev));
-> +	struct s3c_hwmon *adc = dev_get_drvdata(dev);
->  	struct sensor_device_attribute *sa = to_sensor_dev_attr(attr);
->  	int ret;
+> "Create a device of a given version" is not an intended feature of this
+> interface aiui.  Writing the version attribute only indicates
+> migration compatibility with a binary result.
 >  
-> @@ -164,7 +164,7 @@ static ssize_t s3c_hwmon_ch_show(struct device *dev,
->  				 char *buf)
->  {
->  	struct sensor_device_attribute *sen_attr = to_sensor_dev_attr(attr);
-> -	struct s3c_hwmon *hwmon = platform_get_drvdata(to_platform_device(dev));
-> +	struct s3c_hwmon *hwmon = dev_get_drvdata(dev);
->  	struct s3c_hwmon_pdata *pdata = dev_get_platdata(dev);
->  	struct s3c_hwmon_chcfg *cfg;
->  	int ret;
+> > Wouldn't it be better if we can pass the desired version when we write to
+> > the "create" file, so that we avoid any concurrent usage problems. "version"
+> > could be just a read-only file with a *list* of supported versions.
+> > 
+> > eg
+> > 
+> >   $ cat /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
+> >   5.0
+> >   5.1
+> >   5.2
+> > 
+> >   $ echo "83b8f4f2-509f-382f-3c1e-e6bfe0fa1001;version=5.2" >
+> >       /sys/devices/virtual/mtty/mtty/mdev_supported_types/mtty-2/create
+> 
+> This is reminiscent of the proposed aggregation support, but again,
+> this sort of feature is not intended here.  It's no expected that any
+> vendor driver would support creating device types of different
+> versions, but they may support migration from different versions.
+
+Hmm, that's a subtle distinction I wasn't seeing the patch series.
+IIUC from what you're saying, a device can be created with version
+"C", but for an incoming migration it can (potentially) accept
+serialized state matching any of versions "A", "B" or "C".
+
+That is sufficient if migration is being used as a host upgrade
+tool, to move from OS release N to N + 1.
+
+It wouldn't cover the case where you need to support backwards
+migration too. eg if you have a mixture of hosts with release
+N and N + 1 and want to make sure that VMs can always move
+betweeen any host.  That would require that you can create
+mdevs with the lowest common denominator version, not solely
+the most recent.
+
+In QEMU this is done by mgmt applications picking a versioned
+machine type for QEMU that is older than most recent.
+
+Regards,
+Daniel
+-- 
+|: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
+|: https://libvirt.org         -o-            https://fstop138.berrange.com :|
+|: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
