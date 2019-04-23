@@ -7,260 +7,150 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B94C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAA0C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189F9208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB2E208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M1A3JZzH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W9GKDDVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfDWQO2 (ORCPT
+        id S1728405AbfDWQRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:14:28 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35664 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbfDWQO2 (ORCPT
+        Tue, 23 Apr 2019 12:17:12 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43593 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfDWQRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:14:28 -0400
-Received: by mail-pg1-f194.google.com with SMTP id g8so7859987pgf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:14:27 -0700 (PDT)
+        Tue, 23 Apr 2019 12:17:12 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z9so7839257pgu.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:17:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=3sn7KqiGW30dkQKXr6QVLij/1FoqIHbldIq/02XidKw=;
-        b=M1A3JZzHiArlOJub7vpLZFmeS0SpQa4YdZCJPFDTM+xz8gAPxVdsKkTHTXht6hzoO2
-         0Mzmy4nIRehQU/f1TVn96iYucuLKDbn5qK996Fai0xu/nr6Af9DpOQ2j2ZJkFwsPTKyN
-         xTcUveaVGLDEH//tVXhgI+q2Et7tgwuw87XAMiC1mtyhLJGDiZBfNJ2o3G0kj/o7ksY0
-         DeDfxqC4Rw2uqDWoxqRI1vbxrcffaZbK9Gzn2wVemvqilYOVitpMiomSF7pah6T0GmY/
-         B38NEqzctKe2aHDJDhUS9GzQntbIWA/mPXlKj3lU4k7pFtqJpbg4WFXLFths52KdtUEa
-         6GCw==
+        bh=Uoo4zU9bRplcM88Gy3z7EAgvGkM989NlmEdwPQZGae8=;
+        b=W9GKDDVjS0xCeXhVdmlvraJ8iHMF2HFs55cDzBQfSwOCPCNMaIUDSPsuO1sWbTjYBI
+         fB+rcF1uQTc//aGnRJ1Sp719J0Fmm8KmACXUp76lWkPL/fu2dOkc0CWrtSsqeulCXkaS
+         0iSz6vf1Ci/2s9h91MCgVNrWKqit3HoPETw4E4DWlumY4ya5ISwpx8fm48hsJbUhIh98
+         6Qzv1gzbt6cC2uL77BTK87Z9aB2/5xmvi5NQa00pdEGAFJp1peNef7FyMqUdkICrb5yB
+         Rhd0tnEfeZhX+aKVxtA7lHsfFY3GJfm+gc5VwAB9Ca8xqBwSXIBdjoR2RPjbJ9f7pRCj
+         WKOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3sn7KqiGW30dkQKXr6QVLij/1FoqIHbldIq/02XidKw=;
-        b=KHL6aOVXK7pxXAdebVfzp+GZYjeGLBhRacojFhdjnE12Ezu9AvhkY5GOqq/i3HrzyD
-         Ar8bDJbUtcKodxB1/Yoi79J9LUJ00UH8g0JJF1glc7MTRG2kG5pVn1NJqMEFWTs/Jhsm
-         TbyWU2uCGDERDZYzJXaBREyXaJr01WPnHn3+u7hmuFlQxy/Vt6YLqakzWEDv9SjMUtQu
-         FZZ4h/YPIEOG21WA9qq2SzhuNX9CibJWxmJ5aWjRLYt7zt8L6C3u2FyxuYfdPIgE6+WF
-         RBEijEi5J0o49U1qiutcX8ubuWeiBH4DMintjkaDibWqFx62nJYoKO9RjwUapmD51+G6
-         1t9Q==
-X-Gm-Message-State: APjAAAWSP+SyoxqpZc7HIzCvZ+fotL8oSTcwdaW08bHBapnW6WKERweL
-        F4EmnmNGfiaVWxTGGLvtcYatfg==
-X-Google-Smtp-Source: APXvYqzeHHOioGKfVmk2VQ7/tIhElI8+8hXk8VcQbQ2tgiTIMrjk8HPTGxnrZauiAB7uiApGypWwgw==
-X-Received: by 2002:a65:6414:: with SMTP id a20mr1663736pgv.217.1556036067164;
-        Tue, 23 Apr 2019 09:14:27 -0700 (PDT)
+        bh=Uoo4zU9bRplcM88Gy3z7EAgvGkM989NlmEdwPQZGae8=;
+        b=ZBc+MjqRObqzqNttj4gHgR6L2NysMEB+g+jP2Jp4DcBxAtcHXXET3W6NevsRJC2iUY
+         N+HUyXn4ChfNfXeaKoOntL9X6wAbSAVv856OreIGuwlYsGzXnhTF0qAist1SdJajgamh
+         nkoCFg7RnBN8VWWR5b/jQk/gkMBBisidfqvdU0S+S56cTtVetVSGXxrjH8UP8n17OAc+
+         qb1g3amfYLDYpgqdO7LiuQ/7whcQM9gaozKTnMUNzoWzQsl9MvPmUlPk5O0VlJpV0NpL
+         LVPodbYJtgZ1QwTn2n8g8hvN2bxB3KypLSo8+mhmQf5DX5oUdBUpDw10n3LBWs8Ffsnn
+         EUkg==
+X-Gm-Message-State: APjAAAWPpl9ctO3RPMKZM8llvtmN+ZhJ0Uo9/Zm6oLhJ7ep/UVvEpTm3
+        CtOZthSeut4phx6Bn9KJ6ryakg==
+X-Google-Smtp-Source: APXvYqwt+NHYDXHs8rvq7qzJYUyXlRSTBxHgj1E7lSJ1DIGbF4MuoRd9x2YDkzTgS6GI+BAixC4LGQ==
+X-Received: by 2002:a63:6fc1:: with SMTP id k184mr25772523pgc.239.1556036231587;
+        Tue, 23 Apr 2019 09:17:11 -0700 (PDT)
 Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id d69sm32358413pfg.24.2019.04.23.09.14.25
+        by smtp.gmail.com with ESMTPSA id f13sm8045094pgr.35.2019.04.23.09.17.10
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 09:14:25 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 10:14:23 -0600
+        Tue, 23 Apr 2019 09:17:10 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 10:17:08 -0600
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org, mike.leach@linaro.org,
         rjw@rjwysocki.net, robert.walker@arm.com
-Subject: Re: [PATCH v2 29/36] coresight: Use fwnode handle instead of device
- names
-Message-ID: <20190423161423.GA21070@xps15>
+Subject: Re: [PATCH v2 28/36] coresight: platform: Use fwnode handle for
+ device search
+Message-ID: <20190423161708.GB21070@xps15>
 References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
- <1555344260-12375-30-git-send-email-suzuki.poulose@arm.com>
+ <1555344260-12375-29-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555344260-12375-30-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1555344260-12375-29-git-send-email-suzuki.poulose@arm.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:04:12PM +0100, Suzuki K Poulose wrote:
-> We rely on the device names to find a CoreSight device on the
-> coresight bus. The device name however is obtained from the platform,
-> which is bound to the real platform/amba device. As we are about
-> to use different naming scheme for the coresight devices, we can't
-> rely on the platform device name to find the corresponding
-> coresight device. Instead we use the platform agnostic
-> "fwnode handle" of the parent device to find the devices.
-> We also reuse the same fwnode as the parent for the Coresight
-> device we create.
+On Mon, Apr 15, 2019 at 05:04:11PM +0100, Suzuki K Poulose wrote:
+> We match of_node while searching for a device. Make this
+> more generic in preparation for the ACPI support by using
+> fwnode_handle.
 > 
 > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 > ---
->  drivers/hwtracing/coresight/coresight-platform.c | 12 +++++--
->  drivers/hwtracing/coresight/coresight-priv.h     |  4 +--
->  drivers/hwtracing/coresight/coresight.c          | 42 +++++++++++++++++++-----
->  include/linux/coresight.h                        |  4 +--
->  4 files changed, 46 insertions(+), 16 deletions(-)
+>  drivers/hwtracing/coresight/coresight-platform.c | 17 +++++++----------
+>  1 file changed, 7 insertions(+), 10 deletions(-)
 > 
 > diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 318a6ff..c9a59fb 100644
+> index a408b01..318a6ff 100644
 > --- a/drivers/hwtracing/coresight/coresight-platform.c
 > +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -214,9 +214,15 @@ static int of_coresight_parse_endpoint(struct device *dev,
->  		}
->  
->  		conn->outport = endpoint.port;
-> -		conn->child_name = devm_kstrdup(dev,
-> -						dev_name(rdev),
-> -						GFP_KERNEL);
-> +		/*
-> +		 * Hold the refcount to the target device. This could be
-> +		 * released via:
-> +		 * 1) coresight_release_platform_data() if the probe fails or
-> +		 *    this device is unregistered.
-> +		 * 2) While removing the target device via
-> +		 *    coresight_remove_match()
-> +		 */
-
-Many thanks for the documentation - not only does it help me but it also makes
-it easier for other people to contribute to the subsystem.
-
-> +		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
->  		conn->child_port = rendpoint.port;
->  		/* Connection record updated */
->  		ret = 1;
-> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> index c216421..61d7f9f 100644
-> --- a/drivers/hwtracing/coresight/coresight-priv.h
-> +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> @@ -200,8 +200,6 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
+> @@ -36,14 +36,8 @@ static int coresight_alloc_conns(struct device *dev,
 >  	return 0;
 >  }
 >  
-> -static inline void
-> -coresight_release_platform_data(struct coresight_platform_data *pdata)
-> -{}
-> +void coresight_release_platform_data(struct coresight_platform_data *pdata);
-
-Now that we have fixed of_get_coresight_platform_data() I think patch 26 should
-be rolled into this one.  That way everything related to
-coresight_release_platform_data() is done in the same patch and the function
-doesn't have to be modified twice. 
-
->  
->  #endif
-> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-> index 82fb411..5169ce1 100644
-> --- a/drivers/hwtracing/coresight/coresight.c
-> +++ b/drivers/hwtracing/coresight/coresight.c
-> @@ -976,6 +976,7 @@ static void coresight_device_release(struct device *dev)
+> -#ifdef CONFIG_OF
+> -static int of_dev_node_match(struct device *dev, void *data)
+> -{
+> -	return dev->of_node == data;
+> -}
+> -
+>  static struct device *
+> -of_coresight_get_endpoint_device(struct device_node *endpoint)
+> +coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
 >  {
->  	struct coresight_device *csdev = to_coresight_device(dev);
+>  	struct device *dev = NULL;
 >  
-> +	fwnode_handle_put(csdev->dev.fwnode);
->  	kfree(csdev->refcnt);
->  	kfree(csdev);
+> @@ -52,7 +46,7 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
+>  	 * platform bus.
+>  	 */
+>  	dev = bus_find_device(&platform_bus_type, NULL,
+> -			      endpoint, of_dev_node_match);
+> +			      fwnode, device_fwnode_match);
+>  	if (dev)
+>  		return dev;
+>  
+> @@ -61,9 +55,10 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
+>  	 * looking for the device that matches the endpoint node.
+>  	 */
+>  	return bus_find_device(&amba_bustype, NULL,
+> -			       endpoint, of_dev_node_match);
+> +			       fwnode, device_fwnode_match);
 >  }
-> @@ -1007,13 +1008,11 @@ static int coresight_orphan_match(struct device *dev, void *data)
->  		/* We have found at least one orphan connection */
->  		if (conn->child_dev == NULL) {
->  			/* Does it match this newly added device? */
-> -			if (conn->child_name &&
-> -			    !strcmp(dev_name(&csdev->dev), conn->child_name)) {
-> +			if (conn->child_fwnode ==  csdev->dev.fwnode)
->  				conn->child_dev = csdev;
-> -			} else {
-> +			else
->  				/* This component still has an orphan */
->  				still_orphan = true;
-> -			}
->  		}
->  	}
 >  
-> @@ -1045,9 +1044,9 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
->  		struct coresight_connection *conn = &csdev->pdata->conns[i];
->  		struct device *dev = NULL;
+> +#ifdef CONFIG_OF
+>  static inline bool of_coresight_legacy_ep_is_input(struct device_node *ep)
+>  {
+>  	return of_property_read_bool(ep, "slave-mode");
+> @@ -191,6 +186,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
+>  	struct device_node *rparent = NULL;
+>  	struct device_node *rep = NULL;
+>  	struct device *rdev = NULL;
+> +	struct fwnode_handle *rdev_fwnode;
 >  
-> -		if (conn->child_name)
-> -			dev = bus_find_device_by_name(&coresight_bustype, NULL,
-> -						      conn->child_name);
-> +		dev = bus_find_device(&coresight_bustype, NULL,
-> +				      (void *)conn->child_fwnode,
-> +				      device_fwnode_match);
->  		if (dev) {
->  			conn->child_dev = to_coresight_device(dev);
->  			/* and put reference from 'bus_find_device()' */
-> @@ -1082,9 +1081,15 @@ static int coresight_remove_match(struct device *dev, void *data)
->  		if (conn->child_dev == NULL)
->  			continue;
->  
-> -		if (!strcmp(dev_name(&csdev->dev), conn->child_name)) {
-> +		if (csdev->dev.fwnode == conn->child_fwnode) {
->  			iterator->orphan = true;
->  			conn->child_dev = NULL;
-> +			/*
-> +			 * Drop the reference to the handle for the remote
-> +			 * device acquired in parsing the connections from
-> +			 * platform data.
-> +			 */
-> +			fwnode_handle_put(conn->child_fwnode);
->  			/* No need to continue */
+>  	do {
+>  		/* Parse the local port details */
+> @@ -209,8 +205,9 @@ static int of_coresight_parse_endpoint(struct device *dev,
+>  		if (of_graph_parse_endpoint(rep, &rendpoint))
 >  			break;
->  		}
-> @@ -1164,6 +1169,22 @@ static int __init coresight_init(void)
->  }
->  postcore_initcall(coresight_init);
 >  
-> +/*
-> + * coresight_release_platform_data: Release references to the devices connected
-> + * to the output port of this device.
-> + */
-> +void coresight_release_platform_data(struct coresight_platform_data *pdata)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < pdata->nr_outport; i++) {
-> +		if (pdata->conns[i].child_fwnode) {
-> +			fwnode_handle_put(pdata->conns[i].child_fwnode);
-> +			pdata->conns[i].child_fwnode = 0;
+> +		rdev_fwnode = of_fwnode_handle(rparent);
+>  		/* If the remote device is not available, defer probing */
+> -		rdev = of_coresight_get_endpoint_device(rparent);
+> +		rdev = coresight_find_device_by_fwnode(rdev_fwnode);
+>  		if (!rdev) {
+>  			ret = -EPROBE_DEFER;
+>  			break;
 
-                        pdata->conns[i].child_fwnode = NULL;
-> +		
-> +	}
-> +}
-> +
->  struct coresight_device *coresight_register(struct coresight_desc *desc)
->  {
->  	int ret;
-> @@ -1208,6 +1229,11 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
->  	csdev->dev.parent = desc->dev;
->  	csdev->dev.release = coresight_device_release;
->  	csdev->dev.bus = &coresight_bustype;
-> +	/*
-> +	 * Hold the reference to our parent device. This will be
-> +	 * dropped only in coresight_device_release().
-> +	 */
-> +	csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
->  	dev_set_name(&csdev->dev, "%s", desc->name);
->  
->  	ret = device_register(&csdev->dev);
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index 8c10def..188e759 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -126,15 +126,15 @@ struct coresight_desc {
->  /**
->   * struct coresight_connection - representation of a single connection
->   * @outport:	a connection's output port number.
-> - * @chid_name:	remote component's name.
->   * @child_port:	remote component's port number @output is connected to.
-> + * @chid_fwnode: remote component's fwnode handle.
->   * @child_dev:	a @coresight_device representation of the component
->  		connected to @outport.
->   */
->  struct coresight_connection {
->  	int outport;
-> -	const char *child_name;
->  	int child_port;
-> +	struct fwnode_handle *child_fwnode;
->  	struct coresight_device *child_dev;
->  };
->  
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
 > -- 
 > 2.7.4
 > 
