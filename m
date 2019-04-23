@@ -2,104 +2,100 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB40C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 714F4C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40CB2148D
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3320721738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:05:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G/cna8pa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbfDWWC2 (ORCPT
+        id S1728233AbfDWWFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:02:28 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:44651 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726953AbfDWWC2 (ORCPT
+        Tue, 23 Apr 2019 18:05:40 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:42199 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfDWWFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:02:28 -0400
-Received: from dread.disaster.area (pa49-180-172-16.pa.nsw.optusnet.com.au [49.180.172.16])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 613CD105EA0B;
-        Wed, 24 Apr 2019 08:02:18 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hJ3UX-0002gQ-2Q; Wed, 24 Apr 2019 08:02:17 +1000
-Date:   Wed, 24 Apr 2019 08:02:17 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
-        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
-        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
-        darrick.wong@oracle.com, lcapitulino@redhat.com, kwolf@redhat.com,
-        imammedo@redhat.com, jmoyer@redhat.com, nilal@redhat.com,
-        riel@surriel.com, stefanha@redhat.com, aarcange@redhat.com,
-        david@redhat.com, cohuck@redhat.com, xiaoguangrong.eric@gmail.com,
-        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl
-Subject: Re: [PATCH v6 6/6] xfs: disable map_sync for async flush
-Message-ID: <20190423220217.GA29573@dread.disaster.area>
-References: <20190423080612.15361-1-pagupta@redhat.com>
- <20190423080612.15361-7-pagupta@redhat.com>
+        Tue, 23 Apr 2019 18:05:39 -0400
+Received: by mail-vs1-f68.google.com with SMTP id f15so9210653vsk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Elez7iCG1GYh8Uw47EOEivzLdi0hlZmyMv1EE1RvfA=;
+        b=G/cna8pakquU+rziPipI1afH+o7ef1kqk/0WiSmr8IwaciwTA8hCKiE/dNM0LSPiWP
+         CasdiVciJz9ais7EHjy8h+fGsMFKpAeqH98t436ZHSf0jteX0xQecLlgkRAQudve10Jv
+         ikRNmUG931DxwSwEWzqJRKfZ0tnAaDTXXMrtE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Elez7iCG1GYh8Uw47EOEivzLdi0hlZmyMv1EE1RvfA=;
+        b=N7mCEqGnvXByFEXgZXQHXOBUgmqNcSXRvOAv3qRd/7uqHFV/xf9B/VuFg+mJ1eNWt7
+         Wk/L67wAYHZU7ZXUvKyGBoI/tcTojWp/f2dFuj5SUYzQ5B16BHIr5RANRoiSHg8b/3cM
+         +mIQWE+zmRRc6wbzqRBxXZh/LmQDLuRxxIrYnb1vsSpNaCXKX41bAE0agzBYHQprETtT
+         vbiMclnVrRxDaBAI4Gz111zylPpfbztZUId32v0s+NU0j/NcxmTqLblfe2tO2QwzaSBQ
+         jPRlZSvawJ9uniUqxK0JOjEq15B87ElxS3pncJTuFx6alAsbQzR2ow7rBomK9/S1aZoy
+         xkcg==
+X-Gm-Message-State: APjAAAX8xcZ946P248j+9+JSAbqyL3kChFtX4jSUxroVPU/CRSbFs8R4
+        9vTTf8gKQJhUyGX1uM0XWiFHyR5Gyc4=
+X-Google-Smtp-Source: APXvYqxMH1Zqc/aT9gacqynpJBOQRhlNr8f2nqM/4oaS2vAjUbW//zpykXicb94Wuh4IgSqXYjot+w==
+X-Received: by 2002:a05:6102:25a:: with SMTP id a26mr15033472vsq.187.1556057138544;
+        Tue, 23 Apr 2019 15:05:38 -0700 (PDT)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
+        by smtp.gmail.com with ESMTPSA id j8sm5020189vke.1.2019.04.23.15.05.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 15:05:37 -0700 (PDT)
+Received: by mail-vk1-f175.google.com with SMTP id x194so3582770vke.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:05:37 -0700 (PDT)
+X-Received: by 2002:a1f:3c83:: with SMTP id j125mr14762825vka.92.1556057137033;
+ Tue, 23 Apr 2019 15:05:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423080612.15361-7-pagupta@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=UJetJGXy c=1 sm=1 tr=0 cx=a_idp_d
-        a=P9M234EABmfYNCwpuVjnFw==:117 a=P9M234EABmfYNCwpuVjnFw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=oexKYjalfGEA:10
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=zOUUIwEDNWhzvqsACr4A:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20190413224438.10802-1-okaya@kernel.org> <CAGXu5jLRnq1WeDtMSwE_qnve_O9+GiZd4m=N=_1rBidwRwmeJg@mail.gmail.com>
+ <ff84544e-33f8-e6aa-48b3-2f786ff15dfc@kernel.org>
+In-Reply-To: <ff84544e-33f8-e6aa-48b3-2f786ff15dfc@kernel.org>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Tue, 23 Apr 2019 15:05:24 -0700
+X-Gmail-Original-Message-ID: <CAGXu5j+EqMOJKO-u9jiDuk3+FfukCzUz9BX+WyLW5x70ZKU=rw@mail.gmail.com>
+Message-ID: <CAGXu5j+EqMOJKO-u9jiDuk3+FfukCzUz9BX+WyLW5x70ZKU=rw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/5] init: Do not select DEBUG_KERNEL by default
+To:     Sinan Kaya <Okaya@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 01:36:12PM +0530, Pankaj Gupta wrote:
-> Dont support 'MAP_SYNC' with non-DAX files and DAX files
-> with asynchronous dax_device. Virtio pmem provides
-> asynchronous host page cache flush mechanism. We don't
-> support 'MAP_SYNC' with virtio pmem and xfs.
-> 
-> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> ---
->  fs/xfs/xfs_file.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 1f2e2845eb76..0e59be018511 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -1196,11 +1196,13 @@ xfs_file_mmap(
->  	struct file	*filp,
->  	struct vm_area_struct *vma)
->  {
-> -	/*
-> -	 * We don't support synchronous mappings for non-DAX files. At least
-> -	 * until someone comes with a sensible use case.
-> +	struct dax_device *dax_dev = xfs_find_daxdev_for_inode
-> +						(file_inode(filp));
-> +
-> +	/* We don't support synchronous mappings for non-DAX files and
-> +	 * for DAX files if underneath dax_device is not synchronous.
->  	 */
+On Tue, Apr 23, 2019 at 3:02 PM Sinan Kaya <Okaya@kernel.org> wrote:
+>
+> On 4/14/2019 11:55 PM, Kees Cook wrote:
+> > Thanks! This looks good to me. For the series:
+> >
+> > Reviewed-by: Kees Cook<keescook@chromium.org>
+> >
+> > Andrew, can you take these from lkml, or should the series get resent
+> > directly to you? I think you might be the best to carry this?
+>
+> Where do we stand on this?
+>
+> Anything for me to do, here?
 
-	/*
-	 * This is the correct multi-line comment format. Please
-	 * update the patch to maintain the existing comment format.
-	 */
+I think we're done. I'm just waiting to hear back from Andrew.
 
-Cheers,
+Andrew, do you want me to resend this directly to you, or can you
+fetch them from lkml?
 
-Dave.
+Thanks!
+
 -- 
-Dave Chinner
-david@fromorbit.com
+Kees Cook
