@@ -2,110 +2,84 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E02DC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D497C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5F321773
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556051273;
-	bh=SeD+nzS6ay4LxdEVWQDczghu8ed+oUMgDFabvO6Gqvw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CXy0krFCK+vieiG0XezXA+T6aI9l5MLkD9DPM0C0iQKc7nUWxP9C7wihn5x4ZVm8P
-	 JKtGWtiEggWDcOx4f3A/0NLzjDy+aHHBf6qNxvxoAUT4OaYL3c2qm2Uty8Fml5p302
-	 rzE9dMm0Y4/6hH0z8wwm9it+1KQbeXytbiHhtgss=
+	by mail.kernel.org (Postfix) with ESMTP id 00C4221773
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfDWU1w (ORCPT
+        id S1727312AbfDWU2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:27:52 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34316 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfDWU1v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:27:51 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h5so12765752lfm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:27:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tgn11LGFeELKyUgvqpY2du2plaeY7T4q1kaUk3Z+uew=;
-        b=XV+JotLC70gIzBW9D2y8SjKqs6enqpD9qJNN1YzBbjOFrMeC8SmLZ+EJkmnPEPYdPH
-         n6+BqR+ENhaP34iI5skB4mYQ2uwC934+SWHf80RqZ1hPzV+RyOcI+fUtcO+le9qUjK8x
-         IB7Z945H7DIbZPMWCP8OMhLV93lOOsmmWmZsc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tgn11LGFeELKyUgvqpY2du2plaeY7T4q1kaUk3Z+uew=;
-        b=sXux7SNzM8JKK3SshE4knrRzxk+aE/HoYh/ql2tcra9pkUlKE42lf+c00d/AMiq4mf
-         RAVx8Kp6gOvmB5/tmXO67O9xUWQHsv94ZlcmQmafs/Q8mGvx1iwGHWQm0zbflE0UNqqR
-         uW1g26VG0vVlKrw7lqKkVCeBexxmdhHFKjegReWYGICGM0AXOzv1JeVyx3OZzhnDdzEm
-         SBntLFZxJAq1TfLX6llnXdSfzpuAWJqEoJC0toqH5Uo0fjsfYKiBrArufgiN7a43+EqC
-         HxdBxz4Eq9vc+TvliGXBKmP9e2VdimW7G3ll9hNSJTlqyI7E1bVyHgr+ItFZu5S0EybC
-         /ElA==
-X-Gm-Message-State: APjAAAXhxi0KUIt6UX059yVGaAsaCp3ND362iNtrpQXu36iK8s+uKiQd
-        TZpFbfoP06tgtbm/+90PibNzQE7KvaU=
-X-Google-Smtp-Source: APXvYqzfsdSlMEyfCetj+Eq92cwDmqXyPKGd7+2KapX7crU/zLicDVKpWG2xQvsa9Oa7EST/VTpBOQ==
-X-Received: by 2002:a19:ed04:: with SMTP id y4mr14880401lfy.165.1556051268828;
-        Tue, 23 Apr 2019 13:27:48 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id r3sm3658721ljr.7.2019.04.23.13.27.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 13:27:46 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id k2so452648lje.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:27:46 -0700 (PDT)
-X-Received: by 2002:a2e:3c12:: with SMTP id j18mr14948521lja.193.1556051265814;
- Tue, 23 Apr 2019 13:27:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190419120207.GO4038@hirez.programming.kicks-ass.net>
- <20190419130304.GV14281@hirez.programming.kicks-ass.net> <20190419131522.GW14281@hirez.programming.kicks-ass.net>
- <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com> <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
- <20190423141714.GO11158@hirez.programming.kicks-ass.net> <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
- <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com> <20190423193435.GX4038@hirez.programming.kicks-ass.net>
- <88ba7be0-9ec5-941e-1b3f-80fbe05fe3a0@redhat.com> <20190423195559.GY4038@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190423195559.GY4038@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 23 Apr 2019 13:27:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgopkA+NiFCDOBcc24usK8hwL9CnQGzmv_4j8zJLGTrqA@mail.gmail.com>
-Message-ID: <CAHk-=wgopkA+NiFCDOBcc24usK8hwL9CnQGzmv_4j8zJLGTrqA@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Fix preempt_enable_no_resched() abuse
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Apr 2019 16:28:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57990 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726088AbfDWU2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 16:28:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4096EAC94;
+        Tue, 23 Apr 2019 20:28:29 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 22:28:29 +0200
+Message-ID: <s5h1s1spitu.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jiri Slaby <jslaby@suse.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION 5.0.x] Windows XP broken on KVM
+In-Reply-To: <s5hr29zpwkx.wl-tiwai@suse.de>
+References: <s5hy347pxtf.wl-tiwai@suse.de>
+        <20190418075328.GA19532@kroah.com>
+        <s5hr29zpwkx.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 12:56 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Unless the very next line is schedule(), or implies it, one must not use
-> preempt_enable_no_resched(). It can cause a preemption to go missing and
-> thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
+On Thu, 18 Apr 2019 10:05:34 +0200,
+Takashi Iwai wrote:
+> 
+> On Thu, 18 Apr 2019 09:53:28 +0200,
+> Greg Kroah-Hartman wrote:
+> > 
+> > On Thu, Apr 18, 2019 at 09:38:52AM +0200, Takashi Iwai wrote:
+> > > Hi,
+> > > 
+> > > we've got a regression report on the recent 5.0.x kernel, starting
+> > > from 5.0.6, where Windows XP can't boot on KVM any longer.
+> > > 
+> > > The culprit seems to be the patch
+> > >    KVM: x86: update %rip after emulating IO
+> > > with the upstream commit 45def77ebf79e2e8942b89ed79294d97ce914fa0.
+> > > Reverting this alone fixed the problem.
+> > > 
+> > > The report is found at openSUSE bugzilla:
+> > >   https://bugzilla.suse.com/show_bug.cgi?id=1132694
+> > > 
+> > > Is there already a followup fix?  If not, we need to revert it from
+> > > stable, at least.
+> > 
+> > Is this also a problem in 5.1-rc5?
+> 
+> Only 5.0.x has been tested, so far.
+> I'll ask the reporter to try 5.1-rc if Paolo can't reproduce the
+> problem in his side.
 
-That language may be a bit strong, or m,aybe the "implies it" might at
-least be extended on.
+The reporter confirmed that the problem is present with the latest
+5.1-rc kernel, too.
 
-It doesn't need to be "schedule()" per se, it can be any of the things
-that check if we _need_ to be scheduled.
+FWIW, it's a Ryzen system.  Check the bugzilla URL above for details.
 
-IOW, various variations of "if (need_resched())" exiting a loop, and
-then outside the loop there's a cond_resched() or similar.
 
-                    Linus
+thanks,
+
+Takashi
