@@ -2,98 +2,112 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F98EC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85371C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4C920674
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:58:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="etco+EDy"
+	by mail.kernel.org (Postfix) with ESMTP id 5148020674
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbfDWO6M (ORCPT
+        id S1728380AbfDWO64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:58:12 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:36455 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728343AbfDWO6L (ORCPT
+        Tue, 23 Apr 2019 10:58:56 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40421 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727839AbfDWO6z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 10:58:11 -0400
-Received: by mail-it1-f193.google.com with SMTP id y10so635436itc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 07:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ag7zBPESARv7AdniPMqyXmsA87Ho5Yldxwq0K1TAMSo=;
-        b=etco+EDy8heu0T+W2qeA00+rqzgwFMn+V8AWyfzZK8wAaMXcbsjKenA9IT3v80AyGn
-         X1xqeWdIyhBSwo8BY7MBq3DLieTuKdEZdfO2lN2pOQdRoUbP98eoPmvPHns6WEypHZDg
-         RWUWsQbe9mcyfiRK2POxV+Z27kmGrO0YQdxO8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ag7zBPESARv7AdniPMqyXmsA87Ho5Yldxwq0K1TAMSo=;
-        b=GdbGdzpw3EBhFiTOteYumXKcTtxaxRTFaWc8dzJTfWbQloiVMXPjb0x0XHLLn0rdYr
-         MNryfM6ocJG7TvBU6FcrUPOTZMF1OSmGsmU9d8WWfER4yQoyJ/AcrC4T0aLQ5EHX5DpA
-         mqTDP8XC0plQuILnBM7+se2ksPZVjzIAhNqavH6PRrUJQEDpdA9gtCJh9c4uJL8Eyg/a
-         um9Y/nltsF5EB3fMAuwkaY2x1XysfvVVKwJNKe7p9LwKJFsc6usS22Y70CILfJK4wrIC
-         uwOLtFnFLhq8AXO1C+Y7wO/R3j1OtfEme4ajyQJkpeNv9x1q/X08l6+Qy6mXzQLICl5F
-         19wA==
-X-Gm-Message-State: APjAAAXLlCvir/N6O/Ahy9B+dX7p98I7lcOcWn599cEQnMTYMUkEuqmY
-        h/Uhym+IxaBRCUmb1MAcHPJnDip6uU7oNDGnjqdX8A==
-X-Google-Smtp-Source: APXvYqwQ57zYiDRU0wIYedbbpGpXu6cwSBYRvjbUmAO64PYYXMHdTUUYGu/a9zxqtoAEoxVN/jBMM8mh4b6AWcfWvzU=
-X-Received: by 2002:a24:650d:: with SMTP id u13mr2565690itb.1.1556031489515;
- Tue, 23 Apr 2019 07:58:09 -0700 (PDT)
+        Tue, 23 Apr 2019 10:58:55 -0400
+Received: from [177.198.83.244] (helo=calabresa)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <cascardo@canonical.com>)
+        id 1hIwsn-0007ep-5j; Tue, 23 Apr 2019 14:58:53 +0000
+Date:   Tue, 23 Apr 2019 11:58:48 -0300
+From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "acme@kernel.org" <acme@kernel.org>, acme@redhat.com,
+        tglx@linutronix.de
+Subject: PING: Re: [PATCH] perf annotate: Fix build on 32 bit for BPF
+ annotation
+Message-ID: <20190423145847.GC5376@calabresa>
+References: <20190403194452.10845-1-cascardo@canonical.com>
+ <ABAEFCEA-E8C6-4246-B109-6D6A12AAB75B@fb.com>
 MIME-Version: 1.0
-References: <cover.1553677194.git.kirr@nexedi.com> <d916d401a80e9834c95970d86ca71c0154e988a6.1553677194.git.kirr@nexedi.com>
-In-Reply-To: <d916d401a80e9834c95970d86ca71c0154e988a6.1553677194.git.kirr@nexedi.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 23 Apr 2019 16:57:58 +0200
-Message-ID: <CAJfpegt9DRmwKksR0QSA7NzQP_=a=yJybdL9mOP1cw5goGkdgw@mail.gmail.com>
-Subject: Re: [RESEND1, PATCH 1/2] fuse: convert printk -> pr_*
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Maxim Patlasov <mpatlasov@parallels.com>,
-        Anatol Pomozov <anatol.pomozov@gmail.com>,
-        Pavel Emelyanov <xemul@openvz.org>,
-        Andrew Gallagher <andrewjcg@fb.com>,
-        "Anand V . Avati" <avati@redhat.com>,
-        Alexey Kuznetsov <kuznet@virtuozzo.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Constantine Shulyupin <const@makelinux.com>,
-        Chad Austin <chadaustin@fb.com>,
-        Dan Schatzberg <dschatzberg@fb.com>,
-        linux-fsdevel@vger.kernel.org,
-        fuse-devel <fuse-devel@lists.sourceforge.net>,
-        linux-kernel@vger.kernel.org, Han-Wen Nienhuys <hanwen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ABAEFCEA-E8C6-4246-B109-6D6A12AAB75B@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 10:15 AM Kirill Smelkov <kirr@nexedi.com> wrote:
->
-> Functions, like pr_err, are a more modern variant of printing compared to
-> printk. They could be used to denoise sources by using needed level in
-> the print function name, and by automatically inserting per-driver /
-> function / ... print prefix as defined by pr_fmt macro. pr_* are also
-> said to be used in Documentation/process/coding-style.rst and more
-> recent code - for example overlayfs - uses them instead of printk.
->
-> Convert CUSE and FUSE to use the new pr_* functions.
->
-> CUSE output stays completely unchanged, while FUSE output is amended a
-> bit for "trying to steal weird page" warning - the second line now comes
-> also with "fuse:" prefix. I hope it is ok.
+On Wed, Apr 03, 2019 at 09:34:02PM +0000, Song Liu wrote:
+> 
+> 
+> > On Apr 3, 2019, at 12:44 PM, Thadeu Lima de Souza Cascardo <cascardo@canonical.com> wrote:
+> > 
+> > Commit 6987561c9e86 ("perf annotate: Enable annotation of BPF programs") adds
+> > support for BPF programs annotations but the new code does not build on 32-bit.
+> > 
+> > Fixes: 6987561c9e86 ("perf annotate: Enable annotation of BPF programs")
+> > Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+> 
+> Acked-by: Song Liu <songliubraving@fb.com>
+> 
+> Thanks for the fix!
+> Song
+> 
 
-Yep.  Applied, thanks.
+Thanks for the ack.
 
-Miklos
+Pinging for getting this applied, as this is a build failure on i386.
+
+Thanks.
+Cascardo.
+
+> > ---
+> > tools/perf/util/annotate.c | 8 ++++----
+> > 1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> > index c8b01176c9e1..09762985c713 100644
+> > --- a/tools/perf/util/annotate.c
+> > +++ b/tools/perf/util/annotate.c
+> > @@ -1714,8 +1714,8 @@ static int symbol__disassemble_bpf(struct symbol *sym,
+> > 	if (dso->binary_type != DSO_BINARY_TYPE__BPF_PROG_INFO)
+> > 		return -1;
+> > 
+> > -	pr_debug("%s: handling sym %s addr %lx len %lx\n", __func__,
+> > -		 sym->name, sym->start, sym->end - sym->start);
+> > +	pr_debug("%s: handling sym %s addr %" PRIx64 " len %" PRIx64 "\n", __func__,
+> > +		  sym->name, sym->start, sym->end - sym->start);
+> > 
+> > 	memset(tpath, 0, sizeof(tpath));
+> > 	perf_exe(tpath, sizeof(tpath));
+> > @@ -1740,7 +1740,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
+> > 	info_linear = info_node->info_linear;
+> > 	sub_id = dso->bpf_prog.sub_id;
+> > 
+> > -	info.buffer = (void *)(info_linear->info.jited_prog_insns);
+> > +	info.buffer = (void *)(uintptr_t)(info_linear->info.jited_prog_insns);
+> > 	info.buffer_length = info_linear->info.jited_prog_len;
+> > 
+> > 	if (info_linear->info.nr_line_info)
+> > @@ -1776,7 +1776,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
+> > 		const char *srcline;
+> > 		u64 addr;
+> > 
+> > -		addr = pc + ((u64 *)(info_linear->info.jited_ksyms))[sub_id];
+> > +		addr = pc + ((u64 *)(uintptr_t)(info_linear->info.jited_ksyms))[sub_id];
+> > 		count = disassemble(pc, &info);
+> > 
+> > 		if (prog_linfo)
+> > -- 
+> > 2.20.1
+> > 
+> 
