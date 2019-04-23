@@ -3,217 +3,993 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB60C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C06C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE3320811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BF520811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfDWLyV (ORCPT
+        id S1727653AbfDWLzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 07:54:21 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:42639 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfDWLyU (ORCPT
+        Tue, 23 Apr 2019 07:55:05 -0400
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.1]:32923 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726033AbfDWLzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 07:54:20 -0400
-Received: by mail-ua1-f67.google.com with SMTP id h4so4641733uaj.9;
-        Tue, 23 Apr 2019 04:54:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q323ppK0vM6XyH9rEbKLGc9XXrnw3iqwnCBWa4fN7yY=;
-        b=GTRxTis60UnAWUUl6KOLS1kyQyj492nNflqRnMJORrmSZZw3vadZaQ+u3E1HO4CAGZ
-         oZIDhrs0k5/G1d8vS9493/8tCleWGAOR24Vmv2mIzELnQQ1amIZW+9esIXiB7MVtM3HZ
-         Me/kSGFRnDCYNQLiykTEonPyvIYFDz7Mh7ZTeNy/35VL3QVaHwn3a16zSwlOK/6qcGTl
-         v6MJDnadb0sGzb4fGjkGJAMa+Wg3OkRIZJGgCjsTjONladCW3Ob6KLzkkj+XcuIQrhm+
-         hkN3ejfEpUs/aCttCQGIXCFlTWVR+UuLzmP2vezDW8jzbAAQHkdivZDIVYBOKpVRVHIH
-         sIew==
-X-Gm-Message-State: APjAAAUn76EfuAEFFEnBjx2W3e54Af0NlkcwQIaWwRReMRUz5n8eqGsK
-        dBwDE+8i9b7KoB9QSnULSle8LI7Sgp7vmdw04BsGIE2Y
-X-Google-Smtp-Source: APXvYqyqJQCZASXWGLhuQWsdF/fUTf9U33OIWm+JWDI45gism2K047iFbbZWhc+OerHNYMRluYuRlrhhSNMkZq3OPbc=
-X-Received: by 2002:ab0:791:: with SMTP id c17mr2226723uaf.96.1556020458998;
- Tue, 23 Apr 2019 04:54:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <5cbe596c.1c69fb81.e252.b9d0@mx.google.com> <155598159898.15276.8408514960097680895@swboyd.mtv.corp.google.com>
-In-Reply-To: <155598159898.15276.8408514960097680895@swboyd.mtv.corp.google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 23 Apr 2019 13:54:06 +0200
-Message-ID: <CAMuHMdXHuQtxuMsGi0OGLcn7NSO5+ZDzDSfaFj+j=P+RLusZHw@mail.gmail.com>
-Subject: Re: clk/clk-next boot bisection: v5.1-rc1-142-ga55b079c961b on panda
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     "kernelci.org bot" <bot@kernelci.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Mark Brown <broonie@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        guillaume.tucker@collabora.com,
-        Kevin Hilman <khilman@baylibre.com>, matthew.hart@linaro.org,
-        mgalka@collabora.com, Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Apr 2019 07:55:05 -0400
+Received: from [67.219.246.102] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-b.us-east-1.aws.symcld.net id 96/33-23849-F0DFEBC5; Tue, 23 Apr 2019 11:54:55 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRWlGSWpSXmKPExsWS8eIhly7/330
+  xBrfXcVvsusxhMWPvA2aL+UfOsVr8Pv+X2WLT42usFs2rzzFbXN41h81i6fWLTBanWl6wWLTu
+  PcJusffARhYHbo+r7bvYPdbMW8PosWBTqcfFj8eYPTat6mTz2Lyk3uP8jIWMHp83yQVwRLFm5
+  iXlVySwZjS9TShY1MRY8XBrfQPjpswuRi4OIYEOJomOS4tYIJz5jBKd63+zdzFycrAJqEmcnH
+  2PFSQhIvCRUeL/yTtsIA6zwCRGiYYvV5hBqoQFbCU+XzzPBmKzCKhKNPz4yghi8wo4SzQfWA1
+  mSwjISdw818k8gZFzASPDKkbTpKLM9IyS3MTMHF1DAwNdQ0MjXSNdM0O9xCrdJL3SYt3UxOIS
+  XSC3vFivuDI3OSdFLy+1ZBMjMNxSCphsdzDuWJp+iFGSg0lJlLcsa2+MEF9SfkplRmJxRnxRa
+  U5q8SFGGQ4OJQnevt/7YoQEi1LTUyvSMnOAgQ+TluDgURLh3fUHKM1bXJCYW5yZDpE6xagoJc
+  57DSQhAJLIKM2Da4NF2yVGWSlhXkYGBgYhnoLUotzMElT5V4ziHIxKwrynQabwZOaVwE1/BbS
+  YCWjxFJ3VIItLEhFSUg2M8hYvTx1jfNB9a1JLTdEX40kul6Q9GMo3eOZxe6mu/jNNsnxi6kLz
+  TuZ3tUvj3opHT9j4cLLKhhoTr72XcrlPF5f+LVIXi2QJW6EpYfn8jsgCzawlj3hmTzj5f30lO
+  3OyZ0NL/RYL9SsV1spbW22Pzp2oZJA+acPbkPUdlZ6fjnDM8nl43SBOiaU4I9FQi7moOBEAjP
+  BVvLECAAA=
+X-Env-Sender: pengms1@lenovo.com
+X-Msg-Ref: server-6.tower-386.messagelabs.com!1556020495!6650813!1
+X-Originating-IP: [104.232.225.10]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 1950 invoked from network); 23 Apr 2019 11:54:55 -0000
+Received: from unknown (HELO aesmtp.lenovo.com) (104.232.225.10)
+  by server-6.tower-386.messagelabs.com with DHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 23 Apr 2019 11:54:55 -0000
+Received: from smtpinternal.lenovo.com (unknown [10.96.80.15])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 97BD843680CF0F0AECF0;
+        Tue, 23 Apr 2019 07:50:32 -0400 (EDT)
+Received: from localhost.localdomain (unknown [10.245.100.154])
+        by Forcepoint Email with ESMTP id D2ABF4E5C157DCE96F5F;
+        Tue, 23 Apr 2019 19:54:49 +0800 (CST)
+From:   Andrew Peng <pengms1@lenovo.com>
+To:     venture@google.com, benjaminfair@google.com,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        andrew@aj.id.au, mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     pengms1@lenovo.com, liuyj19@lenovo.com, dukh@lenovo.com,
+        liuyh21@lenovo.com, hsung1@lenovo.com, joel@jms.id.au,
+        openbmc@lists.ozlabs.org
+Subject: [PATCH v2] ARM: dts: aspeed: Adding Lenovo Hr630 BMC
+Date:   Tue, 23 Apr 2019 19:54:44 +0800
+Message-Id: <1556020484-440225-1-git-send-email-pengms1@lenovo.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Initial introduction of Lenovo Hr630 family equipped with
+Aspeed 2500 BMC SoC. Hr630 is a x86 server development kit
+with a ASPEED ast2500 BMC manufactured by Lenovo.
+Specifically, This adds the Hr630 platform device tree file
+used by the Hr630 BMC machines.
 
-On Tue, Apr 23, 2019 at 5:56 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> Quoting kernelci.org bot (2019-04-22 17:16:44)
-> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> > * This automated bisection report was sent to you on the basis  *
-> > * that you may be involved with the breaking commit it has      *
-> > * found.  No manual investigation has been done to verify it,   *
-> > * and the root cause of the problem may be somewhere else.      *
-> > * Hope this helps!                                              *
-> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> >
-> > clk/clk-next boot bisection: v5.1-rc1-142-ga55b079c961b on panda
-> >
-> > Summary:
-> >   Start:      a55b079c961b Merge branch 'clk-hisi' into clk-next
-> >   Details:    https://kernelci.org/boot/id/5cbe3cdb59b514fd22fe6025
-> >   Plain log:  https://storage.kernelci.org//clk/clk-next/v5.1-rc1-142-ga55b079c961b/arm/omap2plus_defconfig/gcc-7/lab-baylibre/boot-omap4-panda.txt
-> >   HTML log:   https://storage.kernelci.org//clk/clk-next/v5.1-rc1-142-ga55b079c961b/arm/omap2plus_defconfig/gcc-7/lab-baylibre/boot-omap4-panda.html
-> >   Result:     ecbf3f1795fd clk: fixed-factor: Let clk framework find parent
-> >
-> > Checks:
-> >   revert:     PASS
-> >   verify:     PASS
-> >
-> > Parameters:
-> >   Tree:       clk
-> >   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
-> >   Branch:     clk-next
-> >   Target:     panda
-> >   CPU arch:   arm
-> >   Lab:        lab-baylibre
-> >   Compiler:   gcc-7
-> >   Config:     omap2plus_defconfig
-> >   Test suite: boot
-> >
-> > Breaking commit found:
->
-> Awesome! I LOVE IT!!!
->
-> >
-> > diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-> > index 241b3f8c61a9..5b09f2cdb7de 100644
-> > --- a/drivers/clk/clk-fixed-factor.c
-> > +++ b/drivers/clk/clk-fixed-factor.c
-> > @@ -64,12 +64,14 @@ const struct clk_ops clk_fixed_factor_ops = {
-> >  };
-> >  EXPORT_SYMBOL_GPL(clk_fixed_factor_ops);
-> >
-> > -struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
-> > -               const char *name, const char *parent_name, unsigned long flags,
-> > -               unsigned int mult, unsigned int div)
-> > +static struct clk_hw *
-> > +__clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
-> > +               const char *name, const char *parent_name, int index,
-> > +               unsigned long flags, unsigned int mult, unsigned int div)
-> >  {
-> >         struct clk_fixed_factor *fix;
-> >         struct clk_init_data init;
-> > +       struct clk_parent_data pdata = { .index = index };
-> >         struct clk_hw *hw;
-> >         int ret;
-> >
-> > @@ -85,11 +87,17 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
-> >         init.name = name;
-> >         init.ops = &clk_fixed_factor_ops;
-> >         init.flags = flags | CLK_IS_BASIC;
-> > -       init.parent_names = &parent_name;
-> > +       if (parent_name)
-> > +               init.parent_names = &parent_name;
-> > +       else
-> > +               init.parent_data = &pdata;
->
-> Ick. I realized that 'init.parent_names' here can be full of junk! Let's
-> initialize it properly. Maybe that makes this all better?
->
-> ----8<----
-> diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-> index 5b09f2cdb7de..2d988a7585d5 100644
-> --- a/drivers/clk/clk-fixed-factor.c
-> +++ b/drivers/clk/clk-fixed-factor.c
-> @@ -70,7 +70,7 @@ __clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
->                 unsigned long flags, unsigned int mult, unsigned int div)
->  {
->         struct clk_fixed_factor *fix;
-> -       struct clk_init_data init;
-> +       struct clk_init_data init = { };
->         struct clk_parent_data pdata = { .index = index };
->         struct clk_hw *hw;
->         int ret;
+This also adds an entry of Hr630 device tree file in Makefile
 
-Thank you, this fixes the issue on r8a73a4/ape6evm, r8a7740/armadillo,
-and sh73a0/kzm9g for me.
+Signed-off-by: Andrew Peng <pengms1@lenovo.com>
+Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
+Signed-off-by: Lisa Liu <liuyj19@lenovo.com>
+---
+ arch/arm/boot/dts/Makefile                    |   3 +-
+ arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts | 886 ++++++++++++++++++++++++++
+ 2 files changed, 888 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
 
-Fixes: ecbf3f1795fda561 ("clk: fixed-factor: Let clk framework find parent")
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-For reference, the crash log on r8a73a4/ape6evm with earlycon enabled is:
-
-Unable to handle kernel paging request at virtual address 9d3cbbd0
-pgd = (ptrval)
-[9d3cbbd0] *pgd=00000000
-Internal error: Oops: 5 [#1] SMP ARM
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted
-5.1.0-rc6-ape6evm-05231-g1e7e3c938ac19d0f #92
-Hardware name: Generic R8A73A4 (Flattened Device Tree)
-PC is at strlen+0x4/0x24
-LR is at kstrdup+0x18/0x4c
-pc : [<c04f4d04>]    lr : [<c01269c4>]    psr: a00000d3
-sp : c06cde80  ip : ef01e2c0  fp : c06cdee0
-r10: c06d9408  r9 : 00000001  r8 : ef01e280
-r7 : ef01e280  r6 : c02bc64c  r5 : 00000cc0  r4 : 9d3cbbd0
-r3 : 9d3cbbd0  r2 : c0506000  r1 : 00000cc0  r0 : 9d3cbbd0
-Flags: NzCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
-Control: 10c5387d  Table: 4000406a  DAC: 00000051
-Process swapper/0 (pid: 0, stack limit = 0x(ptrval))
-Stack: (0xc06cde80 to 0xc06ce000)
-de80: ef021300 00000000 ef01e380 ef01e280 ef01e280 c02bc64c 600000d3 00000000
-dea0: c0730db4 c014e1c4 ef000c00 ef01e380 c06d9408 ef01e380 00000000 ef7f2d54
-dec0: ef7f2f58 ef01e680 00000001 c02bccdc ef01e380 c02bde58 00000001 00000000
-dee0: 00000000 00000000 00000000 00000000 ef7f2f58 c0535838 c06d9408 c06cdee0
-df00: c0730db4 60000001 00000020 9d3cbbd0 00000000 ef7f2d54 00000000 c06d9408
-df20: c06d9408 00000001 ef01e688 c02bdff8 00000000 00000000 00000001 00000002
-df40: ef7f2f58 00000002 00000001 9d3cbbd0 00000000 c06cdf6c ef01eb40 c0693db0
-df60: 00000000 ef7f2d54 00000000 ef01e508 ef01e748 9d3cbbd0 00000007 00000000
-df80: ef7e6f00 ffffffff c074ab40 c06d9400 c074ab40 00000001 c06b28e4 c0674488
-dfa0: 00000000 c0671e78 ffffffff ffffffff 00000000 c067186c 00000000 c06d9408
-dfc0: 00000000 c06b28e4 9d39bad0 00000000 00000000 c0671330 00000051 10c0387d
-dfe0: 00000f44 40f00000 412fc0f3 10c5387d 00000000 00000000 00000000 00000000
-[<c04f4d04>] (strlen) from [<c01269c4>] (kstrdup+0x18/0x4c)
-[<c01269c4>] (kstrdup) from [<c02bc64c>] (__clk_register+0x150/0x6c0)
-[<c02bc64c>] (__clk_register) from [<c02bccdc>] (of_clk_hw_register+0x14/0x20)
-[<c02bccdc>] (of_clk_hw_register) from [<c02bde58>]
-(__clk_hw_register_fixed_factor+0xfc/0x114)
-[<c02bde58>] (__clk_hw_register_fixed_factor) from [<c02bdff8>]
-(_of_fixed_factor_clk_setup+0xec/0x15c)
-[<c02bdff8>] (_of_fixed_factor_clk_setup) from [<c0693db0>]
-(of_clk_init+0x1b4/0x258)
-[<c0693db0>] (of_clk_init) from [<c0674488>] (time_init+0x20/0x2c)
-[<c0674488>] (time_init) from [<c0671e78>] (start_kernel+0x318/0x474)
-[<c0671e78>] (start_kernel) from [<00000000>] (  (null))
-Code: e12fff1e e1a0300c eafffff3 e1a03000 (e5d32000)
----[ end trace 8ec24e97351727c3 ]---
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f4f5aea..375e53b 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1261,4 +1261,5 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-opp-witherspoon.dtb \
+ 	aspeed-bmc-opp-zaius.dtb \
+ 	aspeed-bmc-portwell-neptune.dtb \
+-	aspeed-bmc-quanta-q71l.dtb
++	aspeed-bmc-quanta-q71l.dtb \
++	aspeed-bmc-lenovo-hr630.dtb
+diff --git a/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+new file mode 100644
+index 0000000..3322f83
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+@@ -0,0 +1,886 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Device Tree file for Lenovo Hr630 platform
++ *
++ * Copyright (C) 2019-present Lenovo
++ */
++
++/dts-v1/;
++
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "HR630 BMC";
++	compatible = "lenovo,hr630-bmc", "aspeed,ast2500";
++
++	aliases {
++		i2c_rbp = &i2c_rbp;
++		i2c_fbp1 = &i2c_fbp1;
++		i2c_fbp2 = &i2c_fbp2;
++		i2c_fbp3 = &i2c_fbp3;
++	};
++
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=tty0 console=ttyS4,115200 earlyprintk";
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		flash_memory: region@98000000 {
++			no-map;
++			reg = <0x98000000 0x00100000>; /* 1M */
++		};
++
++		gfx_memory: framebuffer {
++			size = <0x01000000>;
++			alignment = <0x01000000>;
++			compatible = "shared-dma-pool";
++			reusable;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		heartbeat {
++			gpios = <&gpio ASPEED_GPIO(J, 1) GPIO_ACTIVE_LOW>;
++		};
++
++		fault {
++			gpios = <&gpio ASPEED_GPIO(J, 0) GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
++		<&adc 4>, <&adc 5>, <&adc 6>, <&adc 7>,
++		<&adc 8>, <&adc 9>, <&adc 10>,
++		<&adc 12>, <&adc 13>, <&adc 14>;
++	};
++
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "bmc";
++		spi-max-frequency = <50000000>;
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&lpc_ctrl {
++	status = "okay";
++	memory-region = <&flash_memory>;
++	flash = <&spi1>;
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&uart5 {
++	status = "okay";
++};
++
++&vuart {
++	status = "okay";
++};
++
++&ibt {
++	status = "okay";
++};
++
++&mac0 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	use-ncsi;
++};
++
++&mac1 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
++};
++
++&adc {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	/* temp1 inlet */
++	tmp75@4e {
++		compatible = "national,lm75";
++		reg = <0x4e>;
++	};
++};
++
++&i2c1 {
++	status = "okay";
++	/* temp2 outlet */
++	tmp75@4d {
++		compatible = "national,lm75";
++		reg = <0x4d>;
++	};
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++};
++
++&i2c4 {
++	status = "okay";
++};
++
++&i2c5 {
++	status = "okay";
++};
++
++&i2c6 {
++	status = "okay";
++	/*	Slot 0,
++	 *	Slot 1,
++	 *	Slot 2,
++	 *	Slot 3
++	 */
++
++	i2c-switch@70 {
++		compatible = "nxp,pca9545";
++		reg = <0x70>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;	/* may use mux@70 next. */
++
++		i2c_rbp: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		i2c_fbp1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		i2c_fbp2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		i2c_fbp3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++};
++
++&i2c7 {
++	status = "okay";
++
++	/*	Slot 0,
++	 *	Slot 1,
++	 *	Slot 2,
++	 *	Slot 3
++	 */
++	i2c-switch@76 {
++		compatible = "nxp,pca9546";
++		reg = <0x76>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;  /* may use mux@76 next. */
++
++		i2c_riser2: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++
++		i2c_pcie4: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++
++		i2c_riser1: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++
++		i2c_ocp: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++};
++
++&i2c8 {
++	status = "okay";
++
++	eeprom@57 {
++		compatible = "atmel,24c256";
++		reg = <0x57>;
++		pagesize = <16>;
++	};
++};
++
++&i2c9 {
++	status = "okay";
++};
++
++&i2c10 {
++	status = "okay";
++};
++
++&i2c11 {
++	status = "okay";
++};
++
++&i2c12 {
++	status = "okay";
++};
++
++/*
++ * Enable port A as device (via the virtual hub) and port B as
++ * host by default on the eval board. This can be easily changed
++ * by replacing the override below with &ehci0 { ... } to enable
++ * host on both ports.
++ */
++&vhub {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&uhci {
++	status = "okay";
++};
++
++&gfx {
++	status = "okay";
++	memory-region = <&gfx_memory>;
++};
++
++&pwm_tacho {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default
++	&pinctrl_pwm1_default
++	&pinctrl_pwm2_default
++	&pinctrl_pwm3_default
++	&pinctrl_pwm4_default
++	&pinctrl_pwm5_default
++	&pinctrl_pwm6_default>;
++
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	};
++
++	fan@1 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
++	};
++
++	fan@2 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
++	};
++
++	fan@3 {
++		reg = <0x01>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x03>;
++	};
++
++	fan@4 {
++		reg = <0x02>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x04>;
++	};
++
++	fan@5 {
++		reg = <0x02>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x05>;
++	};
++
++	fan@6 {
++		reg = <0x03>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x06>;
++	};
++
++	fan@7 {
++		reg = <0x03>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x07>;
++	};
++
++	fan@8 {
++		reg = <0x04>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x08>;
++	};
++
++	fan@9 {
++		reg = <0x04>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x09>;
++	};
++
++	fan@10 {
++		reg = <0x05>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
++	};
++
++	fan@11 {
++		reg = <0x05>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
++	};
++
++	fan@12 {
++		reg = <0x06>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0c>;
++	};
++
++	fan@13 {
++		reg = <0x06>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x0d>;
++	};
++};
++
++&gpio {
++
++	pin_gpio_a0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(A, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "MAC1_INT_N";
++	};
++
++	pin_gpio_a1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(A, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "MEZZ_C_PRESENT_N";
++	};
++
++	pin_gpio_a2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(A, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU1_PRST";
++	};
++
++	pin_gpio_a3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU2_PRST";
++	};
++
++	pin_gpio_b5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(B, 5) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "IRQ_BMC_PCH_SMI_LPC_N";
++	};
++
++	pin_gpio_f0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 0) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "IRQ_BMC_PCH_NMI_R";
++	};
++
++	pin_gpio_f1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_CPU1_DISABLE_COD_N";
++	};
++
++	pin_gpio_f2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "SMB_LAN_ALERT_N_MEZZ";
++	};
++
++	pin_gpio_f3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_BUS0_RST_OUT_N";
++	};
++
++	pin_gpio_f4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 4) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "FM_SKT0_FAULT_LED";
++	};
++
++	pin_gpio_f5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 5) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "FM_SKT1_FAULT_LED";
++	};
++
++	pin_gpio_f6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "IRQ_BMC_CPLD_NMI";
++	};
++
++	pin_gpio_f7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(F, 7) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU2_ALERT_N";
++	};
++
++	pin_gpio_g0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_CPU_ERR2_LVT3_N";
++	};
++
++	pin_gpio_g1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_CPU_MSMI_CATERR_LVT3_N";
++	};
++
++	pin_gpio_g2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_PCH_BMC_THERMTRIP_N";
++	};
++
++	pin_gpio_g3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BMC_I2C_BUS7_INT_N";
++	};
++
++	pin_gpio_g4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 4) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "FAN_PWR_CTL_N";
++	};
++
++	pin_gpio_g5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 5) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "NFC_FD_N";
++	};
++
++	pin_gpio_g6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "IRQ_NMI_EVENT_N";
++	};
++
++	pin_gpio_g7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(G, 7) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "RST_BMC_PCIE_I2CMUX_N";
++	};
++
++	pin_gpio_h0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU1_EPOW_N_R";
++	};
++
++	pin_gpio_h1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU2_EPOW_N_R";
++	};
++
++	pin_gpio_h2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "PSU1_FFS_N_R";
++	};
++
++	pin_gpio_h3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "PSU2_FFS_N_R";
++	};
++
++	pin_gpio_h4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 4) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU1_THROTTLE_N_R";
++	};
++
++	pin_gpio_h5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 5) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU2_THROTTLE_N_R";
++	};
++
++	pin_gpio_h6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU1_SMB_RESET_N";
++	};
++
++	pin_gpio_h7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU2_SMB_RESET_N";
++	};
++
++	pin_gpio_i1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(I, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FP_PWR_BTN_N";
++	};
++
++	pin_gpio_i2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(I, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BIOS_RCVR_N";
++	};
++
++	pin_gpio_i3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(I, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "BMC_INTRUDED_COVER";
++	};
++
++	pin_gpio_j2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(J, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "BMC_BIOS_UPDATE_N";
++	};
++
++	pin_gpio_j3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(J, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "RST_BMC_HDD_I2CMUX_N";
++	};
++
++	pin_gpio_q4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Q, 4) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "MEZZ_A_PRESENT_N";
++	};
++
++	pin_gpio_q5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Q, 5) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "VGA_FRONT_PRES_N";
++	};
++
++	pin_gpio_q6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Q, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "I2C_RISER1_INT_N";
++	};
++
++	pin_gpio_q7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "NCSI_CABLE_DET_N";
++	};
++
++	pin_gpio_r0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(R, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FP_RST_BTN_N";
++	};
++
++	pin_gpio_r2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(R, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "HDDSIG1_DETECT_N";
++	};
++
++	pin_gpio_r3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(R, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "HDDSIG2_DETECT_N";
++	};
++
++	pin_gpio_r4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(R, 4) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "HDDSIG3_DETECT_N";
++	};
++
++	pin_gpio_r5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(R, 5) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "VIDEO_CABLE_DETECT_N";
++	};
++
++	pin_gpio_s0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BMC_PS_RAPIDON_WAKE_R_N";
++	};
++
++	pin_gpio_s1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "HOST_TPM_PP_BUF";
++	};
++
++	pin_gpio_s2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "BMC_VGA_SW";
++	};
++
++	pin_gpio_s3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "IRQ_SML0_ALERT_MUX_N";
++	};
++
++	pin_gpio_s4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 4) GPIO_ACTIVE_HIGH>;
++		output;
++		line-name = "VBAT_EN_N";
++	};
++
++	pin_gpio_s5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 5) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BMC_HW_STRAP_4";
++	};
++
++	pin_gpio_s6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 6) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "PU_BMC_GPIOS6";
++	};
++
++	pin_gpio_s7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "I2C_BUS7_RESET_N";
++	};
++
++	pin_gpio_y0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Y, 0) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "BMC_NCSI_MUX_CTL_S0";
++	};
++
++	pin_gpio_y1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Y, 1) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "BMC_NCSI_MUX_CTL_S1";
++	};
++
++	pin_gpio_y2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Y, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "UID_ALERT_N";
++	};
++
++	pin_gpio_z0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 0) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_RISER2_INT_N";
++	};
++
++	pin_gpio_z2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_RISER2_RESET_N";
++	};
++
++	pin_gpio_z3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 3) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "FM_BMC_PCH_SCI_LPC_N";
++	};
++
++	pin_gpio_z4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 4) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BMC_HW_STRAP_17";
++	};
++
++	pin_gpio_z6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "BMC_HW_STRAP_20";
++	};
++
++	pin_gpio_z7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(Z, 7) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "BMC_POST_CMPLT_N";
++	};
++
++	pin_gpio_aa0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "HOST_BMC_USB_SEL";
++	};
++
++	pin_gpio_aa1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "PSU1_ALERT_N";
++	};
++
++	pin_gpio_aa2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_PVCCIN_CPU0_PWR_IN_ALERT_N";
++	};
++
++	pin_gpio_aa3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_PVCCIN_CPU1_PWR_IN_ALERT_N";
++	};
++
++	pin_gpio_aa4 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "USB_CABLE_DETECT_N";
++	};
++
++	pin_gpio_aa5 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 5) GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "I2C_BUS1_RST_OUT_N";
++	};
++
++	pin_gpio_aa6 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 6) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "IRQ_SMI_ACTIVE_N";
++	};
++
++	pin_gpio_aa7 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AA, 7) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_BIOS_POST_CMPLT_N";
++	};
++
++	pin_gpio_ab0 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AB, 0) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FM_TPM_MOD_PRES_N";
++	};
++
++	pin_gpio_ab1 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AB, 1) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "FORCE_NMI_SW_FPGA_N";
++	};
++
++	pin_gpio_ab2 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AB, 2) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "1U_2U_PCBA_SEL_R";
++	};
++
++	pin_gpio_ab3 {
++		gpio-hog;
++		gpios = <ASPEED_GPIO(AB, 3) GPIO_ACTIVE_HIGH>;
++		input;
++		line-name = "INTRUDED_PRES_N";
++	};
++};
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.7.4
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
