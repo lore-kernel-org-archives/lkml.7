@@ -2,120 +2,128 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDC9C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F506C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05697218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:27:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JHvP3Qc4"
+	by mail.kernel.org (Postfix) with ESMTP id 76B4E218D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfDWW1B (ORCPT
+        id S1728509AbfDWW1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:27:01 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:43762 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfDWW06 (ORCPT
+        Tue, 23 Apr 2019 18:27:38 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:57931 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfDWW1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:26:58 -0400
-Received: by mail-vs1-f66.google.com with SMTP id t23so9248910vso.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:26:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5wd3juuCyGv6I7aWGEczXK2I2MkaE+Yk5Y+BNpedQc0=;
-        b=JHvP3Qc4kkkwAoF/0QYHWGplc3qsgSmh5NdB5v8VmADIDIKfxm29Zl03JyD4XVG9cK
-         yzYYTUn+efgCCTi0FS+KzNAIgDktxEMhu5YO/Tot5RTlhcmQOOsrOxBqmB7so3nbTEBw
-         AtVJmduRKOPMSxBxaCpYNVHVhvuORHcV1NhOQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5wd3juuCyGv6I7aWGEczXK2I2MkaE+Yk5Y+BNpedQc0=;
-        b=c2vv5OpVt7arVwotEd0XQodtnV8NEuxnmovvMtXYBnNOHYlKglWy7Cl0HBKYXO7E8j
-         gB7hewBpa3rmjmsJVaTu2oEPFi9+emsXUGg+q6y+c3FaeaiJOYCLhqMN24z8cRWFu/y9
-         5an1Yuz7pMaVpMWAia3gw+lK8wDwJpSO4T/O9pEdXvrwEl8GfiJPoqBteEJw06dcMPej
-         KyeJonBbHyfkq6IxWIHC5XR5BTZm/90Scm8mxrboQAN7CdNds01cSKb+ZrsDEuMuitPb
-         IALw+gPY69v/HqnbfHD5Y0KR3cCYtp8Ry4akxxqi33ffdFKgZsj1ia8Pn0st9psolnxw
-         bjUg==
-X-Gm-Message-State: APjAAAWd2WospFOyg8bmiTA2d5Vuh/V4cZPhTo1HM4g6e6Cvcb6wVZ/Z
-        fQ8axhX6HonqEgCHoyuafkCDFmdOUOY=
-X-Google-Smtp-Source: APXvYqw+k7uKJtyQC+6PR5gOXERmKhGKziuLKsp2BEg9NPXlNd2K4iFKMrKwd7Vn8bzlXmKF0PnCnA==
-X-Received: by 2002:a67:ea8b:: with SMTP id f11mr4441619vso.64.1556058417008;
-        Tue, 23 Apr 2019 15:26:57 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id 2sm19181004vke.27.2019.04.23.15.26.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 15:26:56 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id e2so9236481vsc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:26:56 -0700 (PDT)
-X-Received: by 2002:a67:f849:: with SMTP id b9mr14894109vsp.188.1556057966875;
- Tue, 23 Apr 2019 15:19:26 -0700 (PDT)
+        Tue, 23 Apr 2019 18:27:38 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 2FB073C00C1;
+        Wed, 24 Apr 2019 00:27:35 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qs-FQSUThAAS; Wed, 24 Apr 2019 00:27:27 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 0FD2F3C0034;
+        Wed, 24 Apr 2019 00:27:27 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr
+ 2019 00:27:26 +0200
+Date:   Wed, 24 Apr 2019 00:27:22 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Jiada Wang <jiada_wang@mentor.com>
+CC:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
+        <daniel.lezcano@linaro.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <horms+renesas@verge.net.au>,
+        <niklas.soderlund+renesas@ragnatech.se>, <geert+renesas@glider.be>,
+        <sergei.shtylyov@cogentembedded.com>,
+        <marek.vasut+renesas@gmail.com>,
+        <kuninori.morimoto.gx@renesas.com>, <hien.dang.eb@renesas.com>,
+        <fabrizio.castro@bp.renesas.com>, <dien.pham.ry@renesas.com>,
+        <biju.das@bp.renesas.com>, <george_davis@mentor.com>,
+        <joshua_frkuska@mentor.com>, Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <rosca.eugeniu@gmail.com>
+Subject: Re: [PATCH v3 0/2] thermal: rcar_gen3_thermal: fix IRQ issues
+Message-ID: <20190423222622.GA30401@vmlxhi-102.adit-jv.com>
 MIME-Version: 1.0
-References: <20190319030722.12441-1-peterx@redhat.com> <20190319030722.12441-2-peterx@redhat.com>
- <20190319110236.b6169d6b469a587a852c7e09@linux-foundation.org>
-In-Reply-To: <20190319110236.b6169d6b469a587a852c7e09@linux-foundation.org>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 23 Apr 2019 15:19:15 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jJbgmq1QS-+FO7Oe9KLrAmT+ivUjSochmHBgbvHkuj+VQ@mail.gmail.com>
-Message-ID: <CAGXu5jJbgmq1QS-+FO7Oe9KLrAmT+ivUjSochmHBgbvHkuj+VQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] userfaultfd/sysctl: add vm.unprivileged_userfaultfd
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Peter Xu <peterx@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Maxime Coquelin <maxime.coquelin@redhat.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Linux API <linux-api@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190423141414.24264-1-jiada_wang@mentor.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 19, 2019 at 11:02 AM Andrew Morton
-<akpm@linux-foundation.org> wrote:
->
-> On Tue, 19 Mar 2019 11:07:22 +0800 Peter Xu <peterx@redhat.com> wrote:
->
-> > Add a global sysctl knob "vm.unprivileged_userfaultfd" to control
-> > whether userfaultfd is allowed by unprivileged users.  When this is
-> > set to zero, only privileged users (root user, or users with the
-> > CAP_SYS_PTRACE capability) will be able to use the userfaultfd
-> > syscalls.
->
-> Please send along a full description of why you believe Linux needs
-> this feature, for me to add to the changelog.  What is the benefit to
-> our users?  How will it be used?
->
-> etcetera.  As it was presented I'm seeing no justification for adding
-> the patch!
+Hi Jiada,
 
-Was there a v3 of this patch? I'd still really like to have this knob added. :)
+On Tue, Apr 23, 2019 at 11:14:12PM +0900, Jiada Wang wrote:
+> There are issues with interrupt handling in rcar_gen3_thermal driver.
+> 
+> Currently IRQ is remain enabled after .remove, later if device is probed,
+> IRQ is requested before .thermal_init, this may cause IRQ function be
+> triggered but not able to clear IRQ status, thus cause system to hang.
+> 
+> Since the irq line isn't shared between different devices,
+> so the proper interrupt type flag should be IRQF_ONESHOT.
+> 
+> This patch-set fix these interrupt handling retated issues.
+> 
+> ---
+> v3: fix to use correct code base
+>     remove unused "flag" variable in rcar_gen3_thermal_irq
+[..]
 
-Thanks!
+Based on below:
+ - basic functional testing [1]
+ - 40 min of loading and unloading the driver in a loop doesn't
+   trigger the original problem (soft lockup)
+
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+
+[1] Basic functional testing on H3-ES2.0-ULCB-KF-M06:
+rcar-gen3:~# T0=/sys/devices/virtual/thermal/thermal_zone0/temp
+rcar-gen3:~# T1=/sys/devices/virtual/thermal/thermal_zone1/temp
+rcar-gen3:~# T2=/sys/devices/virtual/thermal/thermal_zone2/temp
+rcar-gen3:~# stress-ng --cpu 16 --timeout 60s &
+[1] 2300
+rcar-gen3:~# stress-ng: info: [2300] dispatching hogs: 16 cpu
+rcar-gen3:~# for i in $(seq 1 24); do \
+                 cat $T0 $T1 $T2 | tr '\n' ' '; echo; sleep 5; \
+             done
+31500 37500 34500 
+32000 37500 34500 
+32500 38000 35000 
+33500 39500 36500 
+34000 39500 36500 
+35000 40500 37500 
+35500 41000 38000 
+36000 42000 38500 
+36500 42000 39000 
+37500 43000 40000 
+stress-ng: info: [2300] successful run completed in 60.55s
+[1]+  Done                    stress-ng --cpu 16 --timeout 60s
+37500 42500 39000 
+37500 41500 39000 
+37000 41000 38000 
+36500 40500 38000 
+36000 40000 37000 
+35500 39500 36500 
+35500 40000 36000 
+35000 39500 35500 
+35000 39500 36000 
+34500 38000 35500 
+34500 39000 35500 
+34000 38500 35000 
+34000 37500 35500 
+33500 38000 35500 
 
 -- 
-Kees Cook
+Best regards,
+Eugeniu.
