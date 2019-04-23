@@ -2,135 +2,154 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4E1C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6BCC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077072175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EDB206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:51:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="H/DWDGIF"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D6jgEDFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfDWMvD (ORCPT
+        id S1727774AbfDWMvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:51:03 -0400
-Received: from mail.intenta.de ([178.249.25.132]:32912 "EHLO mail.intenta.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfDWMvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:51:02 -0400
-X-Greylist: delayed 319 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Apr 2019 08:51:01 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
-        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=dmGN8x9EEcfKPEOD8dWs64ViH0Y1wnNH0XCNWju842c=;
-        b=H/DWDGIFbxgYzNB8uPjtE00wvSIZ4WUF8DgHHfAWTfEBBb3btOAonlu3bqq7TH5qiM8clJOJwmPfDVazzqyxjOZmEwiA1yU3w8A4wzICCOXJVTFgl9aA3kj0A6edYabTSsdjhbhUWcUj+mlHZbSNxbBuG4POthHRt2Rz7UApApSr0V6k6JZMeeXToMfKLOC39/jVbAl52ijbTLYZA6sW/0BXwMmG41s8+ovemwU5g7TQ+OeP/D0XF68wLGSZx63PbEn3q9kjR9ZpzbkZuj7ZCqiipjYuWHf6ClQ8JHYeJW3q7DWVp8sutXefOx/i7RL46KDxd+rnkGv8cMTFx9gQyQ==;
-X-CTCH-RefID: str=0001.0A0C020B.5CBF08E8.0043,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Date:   Tue, 23 Apr 2019 14:45:27 +0200
-From:   Helmut Grohne <helmut.grohne@intenta.de>
-To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-CC:     <bbrezillon@kernel.org>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <michals@xilinx.com>, <nagasureshkumarrelli@gmail.com>
-Subject: Re: [LINUX PATCH v14] mtd: rawnand: pl353: Add basic driver for arm
- pl353 smc nand interface
-Message-ID: <20190423124525.axaprwy4qofbqfhj@laureti-dev>
-References: <1555326613-26739-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
+        Tue, 23 Apr 2019 08:51:07 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:51434 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfDWMvG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 08:51:06 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B025E5F;
+        Tue, 23 Apr 2019 14:51:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1556023863;
+        bh=fMsj4MfaMmrN9B+gwEZ2g5G6brfCXed+7WelLvVEGTs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D6jgEDFXNhY18UGvcM3sIIROklSGbKNbWccu7hx7qaz8HgahL1sRSsjYWzAbhXino
+         +QV8jL0d1TNl8ENkokxBS66CI68p6iCcRryP81vVz0J0de2rePjdTqHmfCnJGJydKG
+         9CcEH6YVMFVxfBZR4JkP19KKTrDAfimpKw9pYLb8=
+Date:   Tue, 23 Apr 2019 15:50:54 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Jonas Karlman <jonas@kwiboo.se>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Archit Taneja <architt@codeaurora.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/bridge: dw-hdmi: fix SCDC configuration for
+ ddc-i2c-bus
+Message-ID: <20190423125054.GB4816@pendragon.ideasonboard.com>
+References: <VE1PR03MB59031814B5BCAB2152923BDAAC210@VE1PR03MB5903.eurprd03.prod.outlook.com>
+ <2275367.P1g2IIHPGP@phil>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1555326613-26739-1-git-send-email-naga.sureshkumar.relli@xilinx.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
- (10.10.16.48)
+In-Reply-To: <2275367.P1g2IIHPGP@phil>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-WARNING: This driver might brick the hardware. See below.
+On Tue, Apr 23, 2019 at 12:26:02PM +0200, Heiko Stuebner wrote:
+> Am Sonntag, 21. April 2019, 10:25:50 CEST schrieb Jonas Karlman:
+> > When ddc-i2c-bus property is used, a NULL pointer dereference is reported:
+> > 
+> > [   31.041669] Unable to handle kernel NULL pointer dereference at virtual address 00000008
+> > [   31.041671] pgd = 4d3c16f6
+> > [   31.041673] [00000008] *pgd=00000000
+> > [   31.041678] Internal error: Oops: 5 [#1] SMP ARM
+> > 
+> > [   31.041711] Hardware name: Rockchip (Device Tree)
+> > [   31.041718] PC is at i2c_transfer+0x8/0xe4
+> > [   31.041721] LR is at drm_scdc_read+0x54/0x84
+> > [   31.041723] pc : [<c073273c>]    lr : [<c05926c4>]    psr: 280f0013
+> > [   31.041725] sp : edffdad0  ip : 5ccb5511  fp : 00000058
+> > [   31.041727] r10: 00000780  r9 : edf91608  r8 : c11b0f48
+> > [   31.041728] r7 : 00000438  r6 : 00000000  r5 : 00000000  r4 : 00000000
+> > [   31.041730] r3 : edffdae7  r2 : 00000002  r1 : edffdaec  r0 : 00000000
+> > 
+> > [   31.041908] [<c073273c>] (i2c_transfer) from [<c05926c4>] (drm_scdc_read+0x54/0x84)
+> > [   31.041913] [<c05926c4>] (drm_scdc_read) from [<c0592858>] (drm_scdc_set_scrambling+0x30/0xbc)
+> > [   31.041919] [<c0592858>] (drm_scdc_set_scrambling) from [<c05cc0f4>] (dw_hdmi_update_power+0x1440/0x1610)
+> > [   31.041926] [<c05cc0f4>] (dw_hdmi_update_power) from [<c05cc574>] (dw_hdmi_bridge_enable+0x2c/0x70)
+> > [   31.041932] [<c05cc574>] (dw_hdmi_bridge_enable) from [<c05aed48>] (drm_bridge_enable+0x24/0x34)
+> > [   31.041938] [<c05aed48>] (drm_bridge_enable) from [<c0591060>] (drm_atomic_helper_commit_modeset_enables+0x114/0x220)
+> > [   31.041943] [<c0591060>] (drm_atomic_helper_commit_modeset_enables) from [<c05c3fe0>] (rockchip_atomic_helper_commit_tail_rpm+0x28/0x64)
+> > 
+> > hdmi->i2c may not be set when ddc-i2c-bus property is used in device tree.
+> > Fix this by using hdmi->ddc as the i2c adapter when calling drm_scdc_*().
+> > Also report that SCDC is not supported when there is no DDC bus.
+> > 
+> > Fixes: 264fce6cc2c1 ("drm/bridge: dw-hdmi: Add SCDC and TMDS Scrambling support")
+> > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> 
+> I've looked that up and yeah, hdmi->ddc seems the right thing to use
+> as it points either to the external i2c or the internal one, so
+> 
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-Hi Naga,
+That matches my own analysis,
 
-On Mon, Apr 15, 2019 at 04:40:13PM +0530, Naga Sureshkumar Relli wrote:
-> Changes in v14:
->  - Removed legacy hooks as per Miquel comments
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Thank you for the update.
+> > ---
+> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > index 7a47c65d8ecb..fd1c319a4ee0 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > @@ -1046,6 +1046,10 @@ static bool dw_hdmi_support_scdc(struct dw_hdmi *hdmi)
+> >  	if (hdmi->version < 0x200a)
+> >  		return false;
+> >  
+> > +	/* Disable if no DDC bus */
+> > +	if (!hdmi->ddc)
+> > +		return false;
+> > +
+> >  	/* Disable if SCDC is not supported, or if an HF-VSDB block is absent */
+> >  	if (!display->hdmi.scdc.supported ||
+> >  	    !display->hdmi.scdc.scrambling.supported)
+> > @@ -1683,13 +1687,13 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
+> >  			 * Source Devices compliant shall set the
+> >  			 * Source Version = 1.
+> >  			 */
+> > -			drm_scdc_readb(&hdmi->i2c->adap, SCDC_SINK_VERSION,
+> > +			drm_scdc_readb(hdmi->ddc, SCDC_SINK_VERSION,
+> >  				       &bytes);
+> > -			drm_scdc_writeb(&hdmi->i2c->adap, SCDC_SOURCE_VERSION,
+> > +			drm_scdc_writeb(hdmi->ddc, SCDC_SOURCE_VERSION,
+> >  				min_t(u8, bytes, SCDC_MIN_SOURCE_VERSION));
+> >  
+> >  			/* Enabled Scrambling in the Sink */
+> > -			drm_scdc_set_scrambling(&hdmi->i2c->adap, 1);
+> > +			drm_scdc_set_scrambling(hdmi->ddc, 1);
+> >  
+> >  			/*
+> >  			 * To activate the scrambler feature, you must ensure
+> > @@ -1705,7 +1709,7 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
+> >  			hdmi_writeb(hdmi, 0, HDMI_FC_SCRAMBLER_CTRL);
+> >  			hdmi_writeb(hdmi, (u8)~HDMI_MC_SWRSTZ_TMDSSWRST_REQ,
+> >  				    HDMI_MC_SWRSTZ);
+> > -			drm_scdc_set_scrambling(&hdmi->i2c->adap, 0);
+> > +			drm_scdc_set_scrambling(hdmi->ddc, 0);
+> >  		}
+> >  	}
+> >  
 
-> +static inline int pl353_wait_for_dev_ready(struct nand_chip *chip)
-> +{
-> +	unsigned long timeout = jiffies + PL353_NAND_DEV_BUSY_TIMEOUT;
-> +
-> +	do {
-> +		if (pl353_smc_get_nand_int_status_raw()) {
-> +			pl353_smc_clr_nand_int();
-> +			break;
+-- 
+Regards,
 
-A closing brace is missing here. This causes a compilation failure.
-
-> +
-> +		cpu_relax();
-
-You previously used cond_resched (via nand_wait_ready) here. Why did you
-change it to cpu_relax()?
-
-> +	} while (!time_after_eq(jiffies, timeout));
-> +
-> +	if (time_after_eq(jiffies, timeout)) {
-> +		pr_err("%s timed out\n", __func__);
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
-
-
-> +static int pl353_nand_read_page_hwecc(struct nand_chip *chip,
-> +				      u8 *buf, int oob_required, int page)
-> +{
-> +	int i, stat, eccsize = chip->ecc.size;
-> +	int eccbytes = chip->ecc.bytes;
-> +	int eccsteps = chip->ecc.steps;
-> +	u8 *p = buf;
-> +	u8 *ecc_calc = chip->ecc.calc_buf;
-> +	u8 *ecc = chip->ecc.code_buf;
-> +	unsigned int max_bitflips = 0;
-> +	u8 *oob_ptr;
-> +	u32 ret;
-> +	unsigned long data_phase_addr;
-> +	unsigned long nand_offset = (unsigned long __force)xnfc->regs;
-
-The variable xnfc is undeclared here. Consider swapping the line with
-the next one.
-
-> +	struct pl353_nand_controller *xnfc = to_pl353_nand(chip);
-> +	struct mtd_info *mtd = nand_to_mtd(chip);
-
-After loading the driver, the device does not work. The dmesg output is:
-
-nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xda
-nand: Micron MT29F2G08ABAEAWP
-nand: 256 MiB, SLC, erase size: 128 KiB, page size: 2048, OOB size: 64
-Bad block table not found for chip 0
-Bad block table not found for chip 0
-Scanning device for bad blocks
-nand_bbt: error while writing BBT block -524
-nand_bbt: error while writing BBT block -524
-nand_bbt: error while writing BBT block -524
-nand_bbt: error while writing BBT block -524
-No space left to write bad block table
-nand_bbt: error while writing bad block table -28
-pl353-nand e1000000.flash: could not scan the nand chip
-pl353-nand: probe of e1000000.flash failed with error -28
-
-After trying the driver, the flash chip was bricked. Neither the old
-driver nor the uboot-xlnx driver nor the Xilinx fsbl are able to talk to
-the chip afterwards. This behaviour persists even after a full power
-cycle. I'll try reinitializing the flash chip next. I've only seen this
-behaviour once, so there is a slight chance that the cause is something
-else.
-
-Helmut
+Laurent Pinchart
