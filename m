@@ -2,79 +2,61 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	TVD_PH_BODY_ACCOUNTS_PRE autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1561C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37573C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736CE20685
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A74214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sf+ltzFK"
+	dkim=pass (2048-bit key) header.d=comcastmailservice.net header.i=@comcastmailservice.net header.b="XHRbRo+J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbfDWR7a (ORCPT
+        id S1728526AbfDWSCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 13:59:30 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:52960 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfDWR7a (ORCPT
+        Tue, 23 Apr 2019 14:02:18 -0400
+Received: from resqmta-po-07v.sys.comcast.net ([96.114.154.166]:38048 "EHLO
+        resqmta-po-07v.sys.comcast.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727656AbfDWSCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:59:30 -0400
-Received: by mail-it1-f193.google.com with SMTP id x132so1686790itf.2;
-        Tue, 23 Apr 2019 10:59:29 -0700 (PDT)
+        Tue, 23 Apr 2019 14:02:17 -0400
+Received: from resomta-po-14v.sys.comcast.net ([96.114.154.238])
+        by resqmta-po-07v.sys.comcast.net with ESMTP
+        id Iu18hQvFRe39RIzcOhmohk; Tue, 23 Apr 2019 17:54:08 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gQfSvY288NvX5Y1XwWDqYoDWYQc1hyp+10tUEc7SHn8=;
-        b=Sf+ltzFKPRmsGLVlqfmp10ivBVhDNycl1H4gfMc53WqLP/fgmiAV6WRJmyPBaYBFFQ
-         5tfJhgEnQ5+tUrIYokenTj5bFH4SGmAx/WpXA2+rlquEE3xgID/ZToZWSiYfvexJRUrZ
-         sdB0ML8Ke93LzjGmT8uHWdZVxHdYQ9QqkC78kohsgwH6Wm/mcc9BcvGdcK87X3BlDrYz
-         7W8hsHt6cUPQfhIOEtgp+AbXW3NTKwoDYy5zRFoYmtzeGEebRsmn8MysMUYiHDbNH/Q3
-         OZk9gkUKA6QLkYFCGZO9SFHgxCJGDt/O1vo/lnCMyvjDgVP8RHiYX3wxoAqsD73iWtLJ
-         gP5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gQfSvY288NvX5Y1XwWDqYoDWYQc1hyp+10tUEc7SHn8=;
-        b=gXS9KDdIr4EeQ4nHKSpvJ8kwWZnOKA0ntDugF90Q8aBli6ihDGmZLAH924lgcFtvWh
-         sqCuL1WqozPD8o1A4xwX5oVTEgiE5WIO7QGWCv5KaPApPatRvqD5R+pC8uHSz4AJNwus
-         wk95Xl7F4Os2PfbuMB1jCO2D6IFjE3rw4noe+fO0D8cuLAGItknPehqP73KIfHWjhsgX
-         LUkundtf6PGxVb1Brka9k1WUfhKaF53DjCdB5k+EwjP1S8S7RTtAll8oysMyXgVtlvNY
-         gMhLZYT+4IZQ9tJgq13W2QkxTgmMDOhJqGCv7SrFSPULFulAAZ/kEPm0oEISszOiF5EM
-         wNIg==
-X-Gm-Message-State: APjAAAXEynQvbMD9LrJE7SgJxE3Cij4KCdp5Jgo3lGUWW0q/EG+ZJ7gd
-        f/OX1kY2pHZV7pENInYcUfqdfXEUE88=
-X-Google-Smtp-Source: APXvYqz14/dOj17RXKWR3kLpXR/jkR8ILqigTNpOw1PPnJFbHypFLf63qysZ59TE4avYogBMn9GFRQ==
-X-Received: by 2002:a24:7350:: with SMTP id y77mr2693321itb.52.1556042368981;
-        Tue, 23 Apr 2019 10:59:28 -0700 (PDT)
-Received: from nukespec.gtech ([2601:2c1:8501:182d::6fe])
-        by smtp.gmail.com with ESMTPSA id k11sm7398516itk.25.2019.04.23.10.59.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 10:59:28 -0700 (PDT)
-Subject: Re: [PATCH] PCI/LINK: Account for BW notification in vector
- calculation
-To:     Alex Williamson <alex.williamson@redhat.com>, bhelgaas@google.com,
-        helgaas@kernel.org, linux-pci@vger.kernel.org
-Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        okaya@kernel.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org
-References: <155597243666.19387.1205950870601742062.stgit@gimli.home>
-From:   Alex G <mr.nuke.me@gmail.com>
-Message-ID: <abe311e9-85e6-27a6-e6ad-d7e8e103578f@gmail.com>
-Date:   Tue, 23 Apr 2019 12:59:26 -0500
+        d=comcastmailservice.net; s=20180828_2048; t=1556042048;
+        bh=wLoOD2BS5wmOFNP8lws2IgHCrkaVnLD9UtDgXiFITwQ=;
+        h=Received:Received:Reply-To:Subject:To:From:Message-ID:Date:
+         MIME-Version:Content-Type;
+        b=XHRbRo+JzyrkhQ2/jVraA1yC5NQoEDqpgwwBDzoFZnWVnCi4acHAZoB7zk0QyDKjb
+         kAgT9kUnY8iRSxZRFNfUi0p9u/divsevZ/6zA+wiQex8xVyZDOadQFE1V6lP1iuaI4
+         vCF5VlZglNyqE82S9qZTrnNGONYkpsbk24YkdyAI093tryiX+L3OXv6fCRT4ZFw+Xz
+         k9qSl0Su2KCAhgWoyBE8P3wNTB2at3nBY5Bd0ylnhAE7Hj3M0pWp1V07ShjzVhgQEQ
+         LUG+cL+LSYPq0JS/A78FC7REu9RxiqCkFoL635c8VuOr00KQRAVi/1u1vM/eiMWFfg
+         ochWI8XPfD9YA==
+Received: from [IPv6:2001:558:6040:22:2171:426f:b27e:296d] ([IPv6:2001:558:6040:22:2171:426f:b27e:296d])
+        by resomta-po-14v.sys.comcast.net with ESMTPSA
+        id IzcNhmECDwpUAIzcOhcaMO; Tue, 23 Apr 2019 17:54:08 +0000
+X-Xfinity-VMeta: sc=-100;st=legit
+Reply-To: james@nurealm.net
+Subject: Re: [PATCH 2/2] HID: input: fix assignment of .value
+To:     Sasha Levin <sashal@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20190423154615.18257-2-benjamin.tissoires@redhat.com>
+ <20190423172117.CC66520835@mail.kernel.org>
+From:   James Feeney <james@nurealm.net>
+Message-ID: <37009110-5a11-7ed4-3315-e87b98cc45b7@nurealm.net>
+Date:   Tue, 23 Apr 2019 11:54:07 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <155597243666.19387.1205950870601742062.stgit@gimli.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190423172117.CC66520835@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,22 +64,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/22/19 5:43 PM, Alex Williamson wrote:
-> On systems that don't support any PCIe services other than bandwidth
-> notification, pcie_message_numbers() can return zero vectors, causing
-> the vector reallocation in pcie_port_enable_irq_vec() to retry with
-> zero, which fails, resulting in fallback to INTx (which might be
-> broken) for the bandwidth notification service.  This can resolve
-> spurious interrupt faults due to this service on some systems.
+On 4/23/19 11:21 AM, Sasha Levin wrote:
+> Hi,
 > 
-> Fixes: e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth notification")
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a "Fixes:" tag,
+> fixing commit: 2dc702c991e3 HID: input: use the Resolution Multiplier for high-resolution scrolling.
+> 
+> The bot has tested the following trees: v5.0.9.
+> 
+> v5.0.9: Failed to apply! Possible dependencies:
+>     724f54bc0063 ("HID: input: make sure the wheel high resolution multiplier is set")
+> 
+> 
+> How should we proceed with this patch?
+> 
+> --
+> Thanks,
+> Sasha
+> 
 
-+1
-Tested on some Dell servers. Everything works as expected. I don't have 
-a system with a device that only supports bandwidth notification.
+This patch will only apply *after* the application of the first patch, since they "overlap".
 
-Alex
+Yes, that is probably not the best circumstance.  I think Benjamin wanted to keep the issue in patch 2/2 distinct.
+
+Was the first patch applied before attempting application of the second patch?
+
+James
