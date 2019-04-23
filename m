@@ -2,127 +2,153 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90F6C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59196C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EFC021773
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DCD20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="KwGN3zP/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uSZwv/BB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfDWLQK (ORCPT
+        id S1727539AbfDWLQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 07:16:10 -0400
-Received: from mail-eopbgr150044.outbound.protection.outlook.com ([40.107.15.44]:37859
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726150AbfDWLQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 07:16:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7AFjQc3G3PXGaQwfYlRjnNCuT/lDeAD2bIvlbwWdCMs=;
- b=KwGN3zP/MWFhtct8NO7vlN5Blc9aTGdGAvOFV+ZNpldPC+8kNVpOpwkvml6UoeHHqPxNHQHAYuErOasa26x9qptN0yE4BdkDll58w6Cw3p/q4byyqUDuMYVnYAA8Qp86XzfnpI18bcU7DqEMWKjINQ9UGiFHTXcJmhvUxJzGsRw=
-Received: from VI1PR08MB4223.eurprd08.prod.outlook.com (20.178.13.96) by
- VI1PR08MB3565.eurprd08.prod.outlook.com (20.177.61.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Tue, 23 Apr 2019 11:16:03 +0000
-Received: from VI1PR08MB4223.eurprd08.prod.outlook.com
- ([fe80::11b9:f687:dc3e:68cc]) by VI1PR08MB4223.eurprd08.prod.outlook.com
- ([fe80::11b9:f687:dc3e:68cc%3]) with mapi id 15.20.1813.017; Tue, 23 Apr 2019
- 11:16:03 +0000
-From:   Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-CC:     nd <nd@arm.com>, Joseph Myers <joseph@codesourcery.com>,
-        Will Deacon <Will.Deacon@arm.com>, carlos <carlos@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and
- thread creation (v8)
-Thread-Topic: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and
- thread creation (v8)
-Thread-Index: AQHU9HpbUigwBDiNHkaVVFlkWH4PtKZAhB6AgAAE+oCAAD0+gIABIvSAgAAl0IBuJwpORvyO4hCAgAAA5YCAABgtgP//+lMAgAdmBgA=
-Date:   Tue, 23 Apr 2019 11:16:03 +0000
-Message-ID: <a1bd2595-b7ae-b06b-9c71-802901ed8587@arm.com>
-References: <20190416173216.9028-1-mathieu.desnoyers@efficios.com>
- <1770787324.668.1555530989646.JavaMail.zimbra@efficios.com>
- <1066731871.915.1555593471194.JavaMail.zimbra@efficios.com>
- <6cbfea7b-9d83-74a5-9cd2-af56a5d68818@arm.com>
- <1055153722.1072.1555602067220.JavaMail.zimbra@efficios.com>
- <79996d13-2ba2-ed7d-b202-e7d38f1fd870@arm.com>
- <604915684.1299.1555607449814.JavaMail.zimbra@efficios.com>
- <846db7ef-f75e-53b8-3c4c-461ec730a17e@arm.com>
- <1531569198.1389.1555611422188.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1531569198.1389.1555611422188.JavaMail.zimbra@efficios.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-x-originating-ip: [217.140.106.51]
-x-clientproxiedby: LO2P265CA0414.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a0::18) To VI1PR08MB4223.eurprd08.prod.outlook.com
- (2603:10a6:803:b5::32)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Szabolcs.Nagy@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bc586be2-6cf6-4bdb-f3ef-08d6c7dd129d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3565;
-x-ms-traffictypediagnostic: VI1PR08MB3565:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <VI1PR08MB356587599FB9D36788259ADEED230@VI1PR08MB3565.eurprd08.prod.outlook.com>
-x-forefront-prvs: 0016DEFF96
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(346002)(376002)(39860400002)(396003)(189003)(199004)(65956001)(3846002)(386003)(6506007)(305945005)(65806001)(7736002)(66066001)(6512007)(26005)(6486002)(53546011)(93886005)(102836004)(25786009)(6246003)(53936002)(36756003)(7416002)(6916009)(8676002)(81156014)(81166006)(8936002)(186003)(229853002)(2906002)(256004)(11346002)(446003)(2616005)(6116002)(31686004)(486006)(44832011)(476003)(58126008)(5660300002)(86362001)(64756008)(54906003)(31696002)(68736007)(316002)(66446008)(64126003)(71200400001)(14454004)(4744005)(4326008)(66946007)(65826007)(478600001)(71190400001)(6436002)(97736004)(72206003)(99286004)(66476007)(66556008)(73956011)(76176011)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3565;H:VI1PR08MB4223.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Cm0JvAqPdnLFzNTcTvbW5aTNjMdi5xYC7M+Irnmy+uGDA6juwh6d7ZF+9RmGItMQZk3rJALKjOfZiU12EP0expaPuaoekZYgx1Q/YuIfNTBkIY5Bj+UQKq7/7q7wMRTjOhKU4vsqnBpwVHod3IbdCY6AMuMYjuDCKeuiZ9MvrNfrSyl88VybWQI3wfbxvm1TJeqqYZe1xmZwHqrDu9CMLaVwPNBrJuaNHzT54Fqp32D3ag5g6eoHmULRidcb12u7TCIt/olVHNs34tErvUgUE2zfyic08ch3+b1ExsJnjjZyvVLwqm2Yrt1xEIpYJsXKBGprW5mFzIDQB9xBlpcB6e6ilwSwJwykFU5O1d9TA2kpwlVuPE6UrAXtNsR28dQRomiGFehaO5IltLfYnOKlaZYdOPcHWUi4zXfEclznBMs=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <683B99399D7B2B4FAF62C9C4A80FA203@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 23 Apr 2019 07:16:32 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:40943 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfDWLQb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 07:16:31 -0400
+Received: by mail-it1-f194.google.com with SMTP id k64so23060481itb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 04:16:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mDddDEFyx868qYQMU+NLd8y62RLBKhnM110YJ+t7rgE=;
+        b=uSZwv/BBFoYksCDLwSYQpDDmO61r1XBzWNz1XEhBNxWVSTqBLMsr1K6PQVhXdfA7Sh
+         csOv1UJ4LZBs1VmQ15/3U+T7e2dI/asioCNOmIpLp+iHltsX1OXtLAamQ8i96GhXoB2I
+         oe8S7nCX16mwgcOyKLQ9TqYpXZraDfPzacZAHbdUd64/yX1WnfD+Dp/D7rdZVfPwWQrY
+         /4AoJWdr7PQa9d8PI/4vOQOi3vP7Kt08Fwd3AoU76O5gHH/JrQ5sszIxINnitgtOKqzI
+         8yQEpO8kmoIdNSlWPL9MbSnkIjp7zq6flscJyEHl7VikaD8df/uVY1EKEhUmlltPf6cY
+         B8+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mDddDEFyx868qYQMU+NLd8y62RLBKhnM110YJ+t7rgE=;
+        b=Pf8A2m60KtbEuqsrqHWqaeFiZCvxf2Aq2to4WtZv1EUV9GpQ9OJV1DXayqo+XZ8F07
+         /N+RVCqbO3WAg25sMlH9SzAB/gHvKGGW4cwPYDprzXZvMnrtShrphx/eDW6ylVrLPq+d
+         eU8KiU49stpZQ4Gv4/ZneEi1gkE1hYpcd5zGuiX72r0Od1WjwyswzuiF3DwtGDefo8tm
+         CesMcNHdDyyIIPMvkae3VQomjtnZC8yI0F1VYYCHSfazbWfPs5eNkEn55UQ9RA4S3S/j
+         FGPXc8cjTrguIXEnwsp9cqauRGyFcjY5ejuSka8CcnBNHZl6tlJlx521hsf+v8mUl5eZ
+         SxRg==
+X-Gm-Message-State: APjAAAUb7AlpnbvKmS61CjU4xySoFw22BiyAj4LOI1nZuSHlO+qdQA5J
+        5ghgg1ARfHAA8sWJ3mCQBQN3j5KEPoO9NophxlBY/Q==
+X-Google-Smtp-Source: APXvYqyZLJQ2lAZMUR1Kvlscipudkp0AUkQIT2gBYuIMUAkZki5oyQezsgAw87+7hLYAcprER+aozpjBP72Ib2VXLhA=
+X-Received: by 2002:a24:1312:: with SMTP id 18mr1366425itz.121.1556018190857;
+ Tue, 23 Apr 2019 04:16:30 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc586be2-6cf6-4bdb-f3ef-08d6c7dd129d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 11:16:03.7478
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3565
+References: <20190422071036.32671-1-vivek.gautam@codeaurora.org> <149dee19-e2eb-0b27-3df0-c99a05e8bea1@arm.com>
+In-Reply-To: <149dee19-e2eb-0b27-3df0-c99a05e8bea1@arm.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 23 Apr 2019 13:16:18 +0200
+Message-ID: <CAKv+Gu-W4x-8Aha6vV6xjfmkt1X+Yhb_hjxXTsqdUyCpb4XHHA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] iommu/arm-smmu: Log CBFRSYNRA register on context fault
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Vivek Gautam <vivek.gautam@codeaurora.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTgvMDQvMjAxOSAxOToxNywgTWF0aGlldSBEZXNub3llcnMgd3JvdGU6DQo+IC0tLS0tIE9u
-IEFwciAxOCwgMjAxOSwgYXQgMTozNyBQTSwgU3phYm9sY3MgTmFneSBTemFib2xjcy5OYWd5QGFy
-bS5jb20gd3JvdGU6DQo+PiB5b3UgaGF2ZSB0byBhZGQgYSBkb2N1bWVudGF0aW9uIGNvbW1lbnQg
-c29tZXdoZXJlDQo+PiBleHBsYWluaW5nIGlmIFJTRVFfU0lHIGlzIHRoZSB2YWx1ZSB0aGF0J3Mg
-cGFzc2VkIHRvDQo+PiB0aGUga2VybmVsIGFuZCB0aGVuIGFhcmNoNjQgYXNtIGNvZGUgaGFzIHRv
-IHVzZQ0KPj4NCj4+IC5pbnN0IGVuZGlhbmZpeHVwKFJTRVFfU0lHKSAvLyBvcg0KPj4gLndvcmQg
-UlNFUV9TSUcNCj4gDQo+IFVzaW5nICIud29yZCIgd29uJ3QgYWxsb3cgb2JqZHVtcCB0byBzaG93
-IHRoZSBpbnN0cnVjdGlvbiBpdA0KPiBtYXBzIHRvLiBJdCB3aWxsIGNvbnNpZGVyIGl0IGFzIGRh
-dGEuIFNvIC5pbnN0IGlzIHByZWZlcnJlZCBoZXJlLg0KDQppcyB0aGVyZSBzb21lIHNwZWNpZmlj
-IHJlYXNvbiB5b3UgcHJlZmVyIC5pbnN0Pw0KDQpkaXNhc3NlbWJsaW5nIGEgY2FuYXJ5IHZhbHVl
-IGFzIGRhdGEgKHRoYXQgaXMNCm5ldmVyIGV4ZWN1dGVkLCBidXQgbG9hZGVkIGFuZCBjb21wYXJl
-ZCBieSB0aGUNCmtlcm5lbCBhcyBkYXRhKSBzb3VuZHMgbW9yZSBzZW1hbnRpY2FsbHkgY29ycmVj
-dA0KdG8gbWUgdGhhbiBzaG93aW5nIGl0IGFzIGFuIGluc3RydWN0aW9uLg0KDQppIGd1ZXNzIGhh
-dmluZyBpdCBhcyBhbiBpbnN0cnVjdGlvbiBjYW4gYXZvaWQNCmlzc3VlcyBpZiBzb21lIHRvb2xz
-IGRpc2xpa2UgLndvcmQgaW4gLnRleHQsDQpidXQgb3RoZXJ3aXNlIC53b3JkIHNlZW1zIGJldHRl
-ci4NCg==
+On Tue, 23 Apr 2019 at 13:13, Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 22/04/2019 08:10, Vivek Gautam wrote:
+> > Bits[15:0] in CBFRSYNRA register contain information about
+> > StreamID of the incoming transaction that generated the
+> > fault. Dump CBFRSYNRA register to get this info.
+> > This is specially useful in a distributed SMMU architecture
+> > where multiple masters are connected to the SMMU.
+> > SID information helps to quickly identify the faulting
+> > master device.
+> >
+> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >
+> > Changes since v1:
+> >   - Addressed review comments, given by Bjorn, for nits.
+> >
+> >   drivers/iommu/arm-smmu-regs.h | 2 ++
+> >   drivers/iommu/arm-smmu.c      | 7 +++++--
+> >   2 files changed, 7 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/iommu/arm-smmu-regs.h b/drivers/iommu/arm-smmu-regs.h
+> > index a1226e4ab5f8..e9132a926761 100644
+> > --- a/drivers/iommu/arm-smmu-regs.h
+> > +++ b/drivers/iommu/arm-smmu-regs.h
+> > @@ -147,6 +147,8 @@ enum arm_smmu_s2cr_privcfg {
+> >   #define CBAR_IRPTNDX_SHIFT          24
+> >   #define CBAR_IRPTNDX_MASK           0xff
+> >
+> > +#define ARM_SMMU_GR1_CBFRSYNRA(n)    (0x400 + ((n) << 2))
+> > +
+> >   #define ARM_SMMU_GR1_CBA2R(n)               (0x800 + ((n) << 2))
+> >   #define CBA2R_RW64_32BIT            (0 << 0)
+> >   #define CBA2R_RW64_64BIT            (1 << 0)
+> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > index 045d93884164..e000473f8205 100644
+> > --- a/drivers/iommu/arm-smmu.c
+> > +++ b/drivers/iommu/arm-smmu.c
+> > @@ -575,7 +575,9 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
+> >       struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> >       struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> >       struct arm_smmu_device *smmu = smmu_domain->smmu;
+> > +     void __iomem *gr1_base = ARM_SMMU_GR1(smmu);
+> >       void __iomem *cb_base;
+> > +     u32 cbfrsynra;
+>
+> Nit: I would simply add to the existing "u32 fsr, fsynr;" declaration,
+> but that's the sort of thing that could hopefully be fixed up when
+> applying (or otherwise I might bulldoze it anyway in my eventual rework
+> of register accesses throughout the driver). Regardless,
+>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>
+> >       cb_base = ARM_SMMU_CB(smmu, cfg->cbndx);
+> >       fsr = readl_relaxed(cb_base + ARM_SMMU_CB_FSR);
+> > @@ -585,10 +587,11 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
+> >
+> >       fsynr = readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
+> >       iova = readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
+> > +     cbfrsynra = readl_relaxed(gr1_base + ARM_SMMU_GR1_CBFRSYNRA(cfg->cbndx));
+> >
+> >       dev_err_ratelimited(smmu->dev,
+> > -     "Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cb=%d\n",
+> > -                         fsr, iova, fsynr, cfg->cbndx);
+> > +     "Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
+> > +                         fsr, iova, fsynr, cbfrsynra, cfg->cbndx);
+> >
+> >       writel(fsr, cb_base + ARM_SMMU_CB_FSR);
+> >       return IRQ_HANDLED;
+> >
+>
+
+This is something I've had to hack up locally in the past, so
+
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
