@@ -2,97 +2,139 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37511C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C167C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0853820651
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:27:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkGGTuuf"
+	by mail.kernel.org (Postfix) with ESMTP id 105B220811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:34:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbfDWS10 (ORCPT
+        id S1726252AbfDWSe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 14:27:26 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34026 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfDWS1Z (ORCPT
+        Tue, 23 Apr 2019 14:34:26 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:51841 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726039AbfDWSe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 14:27:25 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h5so12510460lfm.1;
-        Tue, 23 Apr 2019 11:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=x/c8qjyOxIkm/JSbCzhEYnxraeTXJj8WF7bif1+1NC4=;
-        b=GkGGTuufW9+oEh7TzGP5N9AevJqiaMBz6Fk2uxUnSzYD7V71BvA+UqdfTjFjLzW6aa
-         V+BGejFAkmoxr7R9RnNzpQ9MsLxY6c7LGjiCKI453tMpIOLgfF+GjfLQiGXw1Kt5Rx7m
-         CS5SsZi00k95J04eoGk6k6jI6tqTAwO4uWoWaVsFvf1MNYst9NEgN+nqX/wzZTEdD1uj
-         56hVzAMpoDyoZCS+s7lvYevZERE2v0DOXAbUsNA9Y8DNY/JwOJuxy1ayC1bkoArrMSDl
-         X0NgtzLKj2WLPyGoco+DwUx/YBLgN6zD9yXUiMmNb1Vg8K0+8lC/Fz/v5FJ8ySHP/8HH
-         ivdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x/c8qjyOxIkm/JSbCzhEYnxraeTXJj8WF7bif1+1NC4=;
-        b=edfGCmF3UcSTXVvsWlA/wAvmiN4KDilrJkeYrnnsCr+FDih+RbfMuH7O5B5Gk17TaM
-         AawdwwkmPryc3akHW7f0xxXFGelothKDvn7nmt6ZDNBLykoah8NKXwPBslewpY3kcJDO
-         QK1CgKu5CgCyN0RpyrZ/6ohoBMvh/cuKMXvOBAFbpOtVGHJ0zTYg0kJu7+mzGjHLCXfC
-         FMPcw4WIO4ABH4+XGeZcsHXMIs/lQGCrEFGTXPMj+oHdHsbOj7kIxHcIpUGWXURQJuPx
-         bJlFUWWKw1s7ncU6QQa/AikmmLBg6OkbAvzMceXvlcYHLgut4ePn2lTNJdRLd5vEA9VA
-         BBeg==
-X-Gm-Message-State: APjAAAXiFMA8zoFCqfLMTdP1TAEqaMMR2h3DU4A6q6AnqUdM7hi9/kHF
-        2aBm3FtuS+D+BlDnWRPTmEGBzygO
-X-Google-Smtp-Source: APXvYqyHGjCiqzZJJQNDs9A89LbNyu0Ku/bcO4kcp+1kV06HYC70fWK0LqVpMKXlD3z5gZIfT7j4Iw==
-X-Received: by 2002:ac2:5487:: with SMTP id t7mr15740770lfk.41.1556044041716;
-        Tue, 23 Apr 2019 11:27:21 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id s64sm3592945lje.49.2019.04.23.11.27.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 11:27:20 -0700 (PDT)
-Subject: Re: [PATCH v2 6/7] mfd: max77620: Support device-tree properly
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mallikarjun Kasoju <mkasoju@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Tue, 23 Apr 2019 14:34:26 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TQ42IuD_1556044456;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TQ42IuD_1556044456)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 24 Apr 2019 02:34:22 +0800
+Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-References: <20190422191350.27527-1-digetx@gmail.com>
- <20190422191350.27527-7-digetx@gmail.com>
-Message-ID: <5813f448-590c-0f6a-ec22-d2b5fa36cf03@gmail.com>
-Date:   Tue, 23 Apr 2019 21:27:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190423175252.GP25106@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <6004f688-99d8-3f8c-a106-66ee52c1f0ee@linux.alibaba.com>
+Date:   Tue, 23 Apr 2019 11:34:13 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190422191350.27527-7-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190423175252.GP25106@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-22.04.2019 22:13, Dmitry Osipenko пишет:
-> For some unknown reason the driver for Max77620 doesn't wire up the
-> device-tree support properly and nothing in kernel creates I2C device
-> for the driver (and never did), moreover device-tree files for NVIDIA
-> Tegra210/186/194 boards already have nodes for Max77620. Hence add the
-> missing of_match_table to make driver actually usable.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
 
-I found out that I2C core actually parses the compatible value of the device-tree node for the driver-device matching and hence it's enough to have the id_table solely. I'll drop this patch in v3.
+
+On 4/23/19 10:52 AM, Michal Hocko wrote:
+> On Wed 24-04-19 00:43:01, Yang Shi wrote:
+>> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
+>> vma") introduced THPeligible bit for processes' smaps. But, when checking
+>> the eligibility for shmem vma, __transparent_hugepage_enabled() is
+>> called to override the result from shmem_huge_enabled().  It may result
+>> in the anonymous vma's THP flag override shmem's.  For example, running a
+>> simple test which create THP for shmem, but with anonymous THP disabled,
+>> when reading the process's smaps, it may show:
+>>
+>> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+>> Size:               4096 kB
+>> ...
+>> [snip]
+>> ...
+>> ShmemPmdMapped:     4096 kB
+>> ...
+>> [snip]
+>> ...
+>> THPeligible:    0
+>>
+>> And, /proc/meminfo does show THP allocated and PMD mapped too:
+>>
+>> ShmemHugePages:     4096 kB
+>> ShmemPmdMapped:     4096 kB
+>>
+>> This doesn't make too much sense.  The anonymous THP flag should not
+>> intervene shmem THP.  Calling shmem_huge_enabled() with checking
+>> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+>> dax vma check since we already checked if the vma is shmem already.
+> Kirill, can we get a confirmation that this is really intended behavior
+> rather than an omission please? Is this documented? What is a global
+> knob to simply disable THP system wise?
+>
+> I have to say that the THP tuning API is one giant mess :/
+>
+> Btw. this patch also seem to fix khugepaged behavior because it previously
+> ignored both VM_NOHUGEPAGE and MMF_DISABLE_THP.
+
+Aha, I didn't notice this. It looks we need separate the patch to fix 
+that khugepaged problem for both 5.1-rc and LTS.
+
+>
+>> Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: David Rientjes <rientjes@google.com>
+>> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>> v2: Check VM_NOHUGEPAGE per Michal Hocko
+>>
+>>   mm/huge_memory.c | 4 ++--
+>>   mm/shmem.c       | 3 +++
+>>   2 files changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 165ea46..5881e82 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -67,8 +67,8 @@ bool transparent_hugepage_enabled(struct vm_area_struct *vma)
+>>   {
+>>   	if (vma_is_anonymous(vma))
+>>   		return __transparent_hugepage_enabled(vma);
+>> -	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
+>> -		return __transparent_hugepage_enabled(vma);
+>> +	if (vma_is_shmem(vma))
+>> +		return shmem_huge_enabled(vma);
+>>   
+>>   	return false;
+>>   }
+>> diff --git a/mm/shmem.c b/mm/shmem.c
+>> index 2275a0f..6f09a31 100644
+>> --- a/mm/shmem.c
+>> +++ b/mm/shmem.c
+>> @@ -3873,6 +3873,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
+>>   	loff_t i_size;
+>>   	pgoff_t off;
+>>   
+>> +	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
+>> +	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
+>> +		return false;
+>>   	if (shmem_huge == SHMEM_HUGE_FORCE)
+>>   		return true;
+>>   	if (shmem_huge == SHMEM_HUGE_DENY)
+>> -- 
+>> 1.8.3.1
+>>
+
