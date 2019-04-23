@@ -2,106 +2,102 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CCCC282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555F0C10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC128206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24AFF20859
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731016AbfDWAdt (ORCPT
+        id S1731024AbfDWAh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 20:33:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57162 "EHLO mx1.redhat.com"
+        Mon, 22 Apr 2019 20:37:26 -0400
+Received: from mga11.intel.com ([192.55.52.93]:13158 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729321AbfDWAdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 20:33:49 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1796B58E33;
-        Tue, 23 Apr 2019 00:33:49 +0000 (UTC)
-Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 17D89608A4;
-        Tue, 23 Apr 2019 00:33:48 +0000 (UTC)
-Date:   Mon, 22 Apr 2019 18:33:47 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Alex G <mr.nuke.me@gmail.com>
-Cc:     bhelgaas@google.com, helgaas@kernel.org, linux-pci@vger.kernel.org,
-        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        okaya@kernel.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/LINK: Account for BW notification in vector
- calculation
-Message-ID: <20190422183347.51ba522c@x1.home>
-In-Reply-To: <d1126250-14e0-192c-f219-f143f62c9cdd@gmail.com>
-References: <155597243666.19387.1205950870601742062.stgit@gimli.home>
-        <d1126250-14e0-192c-f219-f143f62c9cdd@gmail.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 23 Apr 2019 00:33:49 +0000 (UTC)
+        id S1729106AbfDWAh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 20:37:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 17:37:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,383,1549958400"; 
+   d="scan'208";a="225774513"
+Received: from bxing-ubuntu.jf.intel.com ([10.23.30.27])
+  by orsmga001.jf.intel.com with ESMTP; 22 Apr 2019 17:37:25 -0700
+From:   Cedric Xing <cedric.xing@intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     akpm@linux-foundation.org, Hansen@vger.kernel.org,
+        Dave <dave.hansen@intel.com>, Christopherson@vger.kernel.org,
+        Sean J <sean.j.christopherson@intel.com>, nhorman@redhat.com,
+        npmccallum@redhat.com, Ayoun@vger.kernel.org,
+        Serge <serge.ayoun@intel.com>, Katz-zamir@vger.kernel.org,
+        Shay <shay.katz-zamir@intel.com>, Huang@vger.kernel.org,
+        Haitao <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        Svahn@vger.kernel.org, Kai <kai.svahn@intel.com>, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, Kai <kai.huang@intel.com>,
+        rientjes@google.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Cedric Xing <cedric.xing@intel.com>
+Subject: [RFC PATCH v1 0/3] An alternative __vdso_sgx_enter_enclave() to allow enclave/host parameter passing using untrusted stack
+Date:   Mon, 22 Apr 2019 17:37:22 -0700
+Message-Id: <cover.1555965327.git.cedric.xing@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Apr 2019 19:05:57 -0500
-Alex G <mr.nuke.me@gmail.com> wrote:
+The current proposed __vdso_sgx_enter_enclave() requires enclaves to preserve
+%rsp, which prohibits enclaves from allocating space on the untrusted stack.
+However, there are existing enclaves (e.g. those built with current Intel SGX
+SDK libraries) relying on the untrusted stack for passing parameters to
+untrusted functions (aka. o-calls), which requires allocating space on the
+untrusted stack by enclaves. And given its simplicity and convenience, it could
+be desired by future SGX applications as well.
 
-> On 4/22/19 5:43 PM, Alex Williamson wrote:
-> > [  329.725607] vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth,
-> > limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5
-> > GT/s x16 link)
-> > [  708.151488] vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth,
-> > limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5
-> > GT/s x16 link)
-> > [  718.262959] vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth,
-> > limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5
-> > GT/s x16 link)
-> > [ 1138.124932] vfio-pci 0000:07:00.0: 32.000 Gb/s available PCIe bandwidth,
-> > limited by 2.5 GT/s x16 link at 0000:00:02.0 (capable of 64.000 Gb/s with 5
-> > GT/s x16 link)
-> > 
-> > What is the value of this nagging?  
-> 
-> Good! The bandwidth notification service is working as intended. If this 
-> bothers you, you can unbind the device from the bandwidth notification 
-> driver:
-> 
-> echo 0000:07:00.0:pcie010 |
-> sudo tee /sys/bus/pci_express/drivers/pcie_bw_notification/unbind
+This patchset introduces a new ABI for __vdso_sgx_enter_enclave() to anchor its
+stack frame on %rbp (instead of %rsp), so as to allow enclaves to "push" onto
+the untrusted stack by decrementing the untrusted %rsp. Additionally, this new
+__vdso_sgx_enter_enclave() will take one more parameter - a callback function,
+to be invoked upon all enclave exits (both AEX and normal exits). The
+callback function will be given the value of %rsp left off by the enclave,
+so that data "pushed" by the enclave (if any) could be addressed/accessed.
+Please note that the callback function is optional, and if not supplied
+(i.e. null), __vdso_sgx_enter_enclave() will just return (i.e. behave the
+same as the current implementation) after the enclave exits (or AEX
+due to exceptions).
 
-That's a bad solution for users, this is meaningless tracking of a
-device whose driver is actively managing the link bandwidth for power
-purposes.  There is nothing wrong happening here that needs to fill
-logs.  I thought maybe if I enabled notification of autonomous
-bandwidth changes that it might categorize these as something we could
-ignore, but it doesn't.  How can we identify only cases where this is
-an erroneous/noteworthy situation?  Thanks,
+The SGX selftest is augmented to test out the new callback interface, and to
+serve as a simple example to showcase how to use the callback interface in
+practice.
 
-Alex
+Reference:
+* This patchset is based upon SGX1 patch v20
+  (https://lkml.org/lkml/2019/4/17/344) by Jarkko Sakkinen
 
-> > diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> > index 7d04f9d087a6..1b330129089f 100644
-> > --- a/drivers/pci/pcie/portdrv_core.c
-> > +++ b/drivers/pci/pcie/portdrv_core.c
-> > @@ -55,7 +55,8 @@ static int pcie_message_numbers(struct pci_dev *dev, int mask,
-> >   	 * 7.8.2, 7.10.10, 7.31.2.
-> >   	 */
-> >   
-> > -	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP)) {
-> > +	if (mask & (PCIE_PORT_SERVICE_PME | PCIE_PORT_SERVICE_HP |
-> > +		    PCIE_PORT_SERVICE_BWNOTIF)) {
-> >   		pcie_capability_read_word(dev, PCI_EXP_FLAGS, &reg16);
-> >   		*pme = (reg16 & PCI_EXP_FLAGS_IRQ) >> 9;
-> >   		nvec = *pme + 1;  
-> 
-> Good catch!
+Cedric Xing (3):
+  selftests/x86: Fixed Makefile for SGX selftest
+  x86/vdso: Modify __vdso_sgx_enter_enclave() to allow parameter passing
+    on untrusted stack
+  selftests/x86: Augment SGX selftest to test new
+    __vdso_sgx_enter_enclave() and its callback interface
+
+ arch/x86/entry/vdso/vsgx_enter_enclave.S   | 156 ++++++++++++---------
+ arch/x86/include/uapi/asm/sgx.h            |  14 +-
+ tools/testing/selftests/x86/Makefile       |  12 +-
+ tools/testing/selftests/x86/sgx/Makefile   |  45 +++---
+ tools/testing/selftests/x86/sgx/main.c     | 123 +++++++++++++---
+ tools/testing/selftests/x86/sgx/sgx_call.S |  40 +++++-
+ 6 files changed, 264 insertions(+), 126 deletions(-)
+
+-- 
+2.17.1
 
