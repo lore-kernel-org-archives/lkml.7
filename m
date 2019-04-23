@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAE2C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF973C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA31F21738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8812521738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbfDWR0f (ORCPT
+        id S1729604AbfDWR0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 13:26:35 -0400
-Received: from mail2.sp2max.com.br ([138.185.4.9]:39750 "EHLO
+        Tue, 23 Apr 2019 13:26:38 -0400
+Received: from mail2.sp2max.com.br ([138.185.4.9]:39736 "EHLO
         mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729560AbfDWR0b (ORCPT
+        with ESMTP id S1729561AbfDWR0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:26:31 -0400
+        Tue, 23 Apr 2019 13:26:33 -0400
 Received: from pgsop.sopnet.com.ar (unknown [179.40.38.12])
         (Authenticated sender: pablo@fliagreco.com.ar)
-        by mail2.sp2max.com.br (Postfix) with ESMTPA id C5E917B3074;
-        Tue, 23 Apr 2019 14:26:18 -0300 (-03)
+        by mail2.sp2max.com.br (Postfix) with ESMTPA id CF7BD7B3083;
+        Tue, 23 Apr 2019 14:26:17 -0300 (-03)
 From:   Pablo Greco <pgreco@centosproject.org>
 To:     linux-sunxi@googlegroups.com
 Cc:     Pablo Greco <pgreco@centosproject.org>,
@@ -32,14 +32,14 @@ Cc:     Pablo Greco <pgreco@centosproject.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/7] ARM: dts: sun8i: v40: bananapi-m2-berry: Enable AHCI
-Date:   Tue, 23 Apr 2019 14:26:02 -0300
-Message-Id: <1556040365-10913-6-git-send-email-pgreco@centosproject.org>
+Subject: [PATCH v5 4/7] ARM: dts: sun8i: v40: bananapi-m2-berry: Enable HDMI output
+Date:   Tue, 23 Apr 2019 14:26:01 -0300
+Message-Id: <1556040365-10913-5-git-send-email-pgreco@centosproject.org>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1556040365-10913-1-git-send-email-pgreco@centosproject.org>
 References: <1556040365-10913-1-git-send-email-pgreco@centosproject.org>
 X-SP2Max-MailScanner-Information: Please contact the ISP for more information
-X-SP2Max-MailScanner-ID: C5E917B3074.A1771
+X-SP2Max-MailScanner-ID: CF7BD7B3083.A396B
 X-SP2Max-MailScanner: Sem Virus encontrado
 X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
         escore=-2.9, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
@@ -50,51 +50,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just like the Bananapi M2 Ultra, enable the ahci controller and
-the two regulators needed to activate it.
+This patch adds the hdmi nodes to the Bananapi M2 Berry, the same way it
+was done to the Bananapi M2 Ultra
 
-Reviewed-by: Jagan Teki <jagan@amarulasolutions.com>
 Signed-off-by: Pablo Greco <pgreco@centosproject.org>
 ---
- arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 29 +++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-index e5ea901..f7ad1cf 100644
+index 561319b..e5ea901 100644
 --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
 +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
-@@ -99,6 +99,12 @@
+@@ -58,6 +58,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -88,6 +99,10 @@
  	};
  };
  
-+&ahci {
-+	ahci-supply = <&reg_dldo4>;
-+	phy-supply = <&reg_eldo3>;
++&de {
 +	status = "okay";
 +};
 +
- &de {
+ &ehci1 {
+ 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
  	status = "okay";
+@@ -109,6 +124,16 @@
+ 	};
  };
-@@ -234,6 +240,18 @@
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+@@ -209,6 +234,10 @@
  	regulator-name = "vcc-wifi";
  };
  
-+&reg_dldo4 {
-+	regulator-min-microvolt = <2500000>;
-+	regulator-max-microvolt = <2500000>;
-+	regulator-name = "vdd2v5-sata";
++&tcon_tv0 {
++	status = "okay";
 +};
 +
-+&reg_eldo3 {
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1200000>;
-+	regulator-name = "vdd1v2-sata";
-+};
-+
- &tcon_tv0 {
- 	status = "okay";
- };
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pb_pins>;
 -- 
 1.8.3.1
 
