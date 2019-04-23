@@ -2,136 +2,140 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0E4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FFBFC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7634206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:59:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NB6QoECL"
+	by mail.kernel.org (Postfix) with ESMTP id 7592A206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfDWM7c (ORCPT
+        id S1727780AbfDWNAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:59:32 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48826 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbfDWM7c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:59:32 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3NCxF3F020838;
-        Tue, 23 Apr 2019 07:59:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556024356;
-        bh=m1GaqatvcHWGft1cimldRpq3+Wj+GxtgYLjUb+o/um0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NB6QoECLRNos4h+LyPekREh6avE1ehKMm/Iau7Gx5y+d0OuXGjKRz7mBB6JkzjmQy
-         k8tLTvpSWNTtjO+glgiiHorq0phRTveHqNmkTizTLeRQmg08eUNLtDk+tnHz2A5OzF
-         HmlyZDDBSgT7N40U81M1oE0syn6ehVLSQ4NuPT/0=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3NCxFKO032853
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Apr 2019 07:59:15 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
- Apr 2019 07:59:14 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 23 Apr 2019 07:59:13 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3NCxBkt070170;
-        Tue, 23 Apr 2019 07:59:12 -0500
-Subject: Re: [PATCH v3 0/4] drm/panel: Support for OSD101T2045-53TS and
- OSD101T2587-53TS
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
-        <tomi.valkeinen@ti.com>, <sam@ravnborg.org>
-References: <20190226075523.28997-1-peter.ujfalusi@ti.com>
- <20190423115506.GE23448@ulmo>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <c25a9364-f69f-17b4-34d6-ec29e68118d3@ti.com>
-Date:   Tue, 23 Apr 2019 16:00:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 09:00:16 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55720 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727180AbfDWNAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 09:00:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7D8BA78;
+        Tue, 23 Apr 2019 06:00:15 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7139A3F557;
+        Tue, 23 Apr 2019 06:00:15 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id ACA0668240D; Tue, 23 Apr 2019 14:00:13 +0100 (BST)
+Date:   Tue, 23 Apr 2019 14:00:13 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Ben Davis <Ben.Davis@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>, Brian Starkey <Brian.Starkey@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/2] Add writeback scaling
+Message-ID: <20190423130013.GX15144@e110455-lin.cambridge.arm.com>
+References: <1556016490-6906-1-git-send-email-ben.davis@arm.com>
+ <CAKMK7uE=m4dYodGp34Twcs-HEV4rExvvguM5m1Qt9HzUD8ZYEw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190423115506.GE23448@ulmo>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAKMK7uE=m4dYodGp34Twcs-HEV4rExvvguM5m1Qt9HzUD8ZYEw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
-
-On 23/04/2019 14.55, Thierry Reding wrote:
-> On Tue, Feb 26, 2019 at 09:55:19AM +0200, Peter Ujfalusi wrote:
->> Hi,
->>
->> Changes since v2:
->> - Added Reviewed-by from Rob to the binding patches
->> - Added help text to Kconfig (osd101t2587-53ts)
->> - Print the error values in dev_err/warn
->> - Added Reviewed-by from Sam to the osd101t2587-53ts patch
->>
->> Changes since v1 (only panel-osd-osd101t2587-53ts changed):
->> - Removed unused members from struct osd101t2587_panel
->> - Use backlight_enable/backlight_disable
->> - Use devm_of_find_backlight()
->> - osd101t2587_of_match table standardized 
->> - osd101t2587_panel_unprepare() added to shutdown and remove callbacks to turn
->>   power off
->> - Fix probe in case mipi_dsi_attach() would fail
->>
->> Add support for OSD101T2045-53TS and OSD101T2587-53TS from One Stop Displays.
->>
->> The two panel is similar with one big difference: OSD101T2587-53TS requires the
->> MIPI_DSI_TURN_ON_PERIPHERAL message, thus can not be handled by panel-simple.
->>
->> Regards,
->> Peter
->> ---
->> Peter Ujfalusi (4):
->>   dt-bindings: display: Add bindings for OSD101T2045-53TS
->>   drm/panel: simple: Add support for OSD101T2045-53TS
->>   dt-bindings: display: Add bindings for OSD101T2587-53TS panel
->>   drm/panel: Add OSD101T2587-53TS driver
->>
->>  .../display/panel/osd,osd101t2045-53ts.txt    |  11 +
->>  .../display/panel/osd,osd101t2587-53ts.txt    |  14 +
->>  drivers/gpu/drm/panel/Kconfig                 |   9 +
->>  drivers/gpu/drm/panel/Makefile                |   1 +
->>  .../drm/panel/panel-osd-osd101t2587-53ts.c    | 254 ++++++++++++++++++
->>  drivers/gpu/drm/panel/panel-simple.c          |  34 +++
->>  6 files changed, 323 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/display/panel/osd,osd101t2045-53ts.txt
->>  create mode 100644 Documentation/devicetree/bindings/display/panel/osd,osd101t2587-53ts.txt
->>  create mode 100644 drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.c
+On Tue, Apr 23, 2019 at 02:24:11PM +0200, Daniel Vetter wrote:
+> On Tue, Apr 23, 2019 at 12:48 PM Ben Davis <Ben.Davis@arm.com> wrote:
+> >
+> > Add support for scaling on writeback. To do this add writeback_dest_w
+> > and writeback_dest_h as writeback connector properties to specify the
+> > desired output dimensions.
+> > Then implement downscaling on writeback for Malidp-550 and Malidp-650
+> > (upscaling on writeback is not supported on these devices).
+> >
+> > v2: Use 0 as default for writeback_w,h and so update range to use 1 as
+> >     minimum.
 > 
-> Applied all four patches. Note that I had to change the osd vendor
-> string to osddisplays, which is the one that is documented in
-> vendor-prefixes.txt.
+> Hm I missed that, I don't think that's good, since it prevents
+> userspace from blindly writing back the properties it's read. We've
+> tried hard to avoid that, since we're suggesting compositor can take a
+> snapshot of all kms properties (including the ones they don't
+> understand) and restore that on vt switching. Hence stuff like fence
+> fds returning -1, and accepting -1 as NULL to make this work.
 
-I recall checking the vendor-prefixes.txt and not finding OSD in there.
-Odd, as it is indeed there.
+Is that they way it should work, though? I remember a few good years
+back, before KMS, there were lots of issues with X server hanging and
+not restoring the vt mode correctly. Should it not be that on getting
+back control of a DRM master, an application sets it last known good
+mode that it had, before it lost (or gave away) control?
 
-> I'm assuming that this is the same vendor, based on the model names. If
-> this is a different vendor, do let me know.
+> 
+> tldr; I think range needs to include 0, and we need make that a
+> special thing, maybe enforced with a
+> drm_connector_state_compute_writeback_dst_h/w, which takes
+> crtc_state->mode.v/hdisplay into account if the writeback_dst_h/w is
+> 0.
 
-Yes it is the same one.
+Repeating just to make sure we're on the same page: we allow 0 as valid
+range value, but writeback_dst_h/w ultimately gets updated before the
+commit gets passed on to the driver to use crtc_state->mode.v/hdisplay
+so as not to trigger any scaling. Correct?
 
-Thank you and sorry for missing it,
-- P�ter
+Best regards,
+Liviu
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+> -Daniel
+> 
+> >
+> > v3: Rename properties to specify they are destination width/height.
+> >     Make sure the values from the properties are passed to
+> >     enable_memwrite rather than the framebuffer dimensions
+> >
+> > Ben Davis (2):
+> >   drm: Add writeback_dest_w,h properties
+> >   drm/malidp: Enable writeback scaling
+> >
+> >  drivers/gpu/drm/arm/malidp_crtc.c | 49 +++++++++++---------
+> >  drivers/gpu/drm/arm/malidp_crtc.h | 12 +++++
+> >  drivers/gpu/drm/arm/malidp_drv.c  | 10 +++--
+> >  drivers/gpu/drm/arm/malidp_hw.c   | 45 +++++++++++++------
+> >  drivers/gpu/drm/arm/malidp_hw.h   | 19 ++++++--
+> >  drivers/gpu/drm/arm/malidp_mw.c   | 94 ++++++++++++++++++++++++++++++---------
+> >  drivers/gpu/drm/arm/malidp_regs.h |  1 +
+> >  drivers/gpu/drm/drm_atomic_uapi.c |  8 ++++
+> >  drivers/gpu/drm/drm_writeback.c   | 30 +++++++++++++
+> >  include/drm/drm_connector.h       |  4 ++
+> >  include/drm/drm_mode_config.h     | 10 +++++
+> >  11 files changed, 220 insertions(+), 62 deletions(-)
+> >  create mode 100644 drivers/gpu/drm/arm/malidp_crtc.h
+> >
+> > --
+> > 2.7.4
+> >
+> 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
