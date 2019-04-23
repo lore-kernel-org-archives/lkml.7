@@ -2,289 +2,159 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C648C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B43C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44970206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB52B206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:09:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HlUjPFfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfDWNIs (ORCPT
+        id S1727822AbfDWNJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:08:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44942 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727180AbfDWNIq (ORCPT
+        Tue, 23 Apr 2019 09:09:24 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58083 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfDWNJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:08:46 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NCtDQk038495
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:08:45 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s22fpaevf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:08:45 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 23 Apr 2019 14:08:42 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 23 Apr 2019 14:08:39 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3ND8c2843974890
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Apr 2019 13:08:38 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 15E66A4060;
-        Tue, 23 Apr 2019 13:08:38 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40A4FA4054;
-        Tue, 23 Apr 2019 13:08:37 +0000 (GMT)
-Received: from [9.145.50.246] (unknown [9.145.50.246])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Apr 2019 13:08:37 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v2 7/8] s390: vfio-ap: handle bind and unbind of AP queue
- device
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1555796980-27920-1-git-send-email-akrowiak@linux.ibm.com>
- <1555796980-27920-8-git-send-email-akrowiak@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 23 Apr 2019 15:08:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 09:09:23 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9EMr066362;
+        Tue, 23 Apr 2019 08:09:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556024954;
+        bh=FVag6HaJaRPss95VUGkhA6b1mit9KZpIF7hIS0002pQ=;
+        h=From:To:CC:Subject:Date;
+        b=HlUjPFfraRS+BVHJ6IMDmMzSnMv7TvcHCtpTibYbuCc4REB7zvG2KwOONuJkWLdQU
+         BlWNWHDumMtOvsEASRfRC3WqDlfdC7MDFXDOKqOwmS7MHcna4CD37IVG/F5ZEzFAy+
+         FztWf/Fkz6KynBIJDB/gKtmPdpwlXfbEf+ApYFyg=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3ND9EmQ096444
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Apr 2019 08:09:14 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
+ Apr 2019 08:09:13 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 23 Apr 2019 08:09:13 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9DLo018610;
+        Tue, 23 Apr 2019 08:09:13 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+CC:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next 00/19] net: ethernet: ti: clean up and optimizations
+Date:   Tue, 23 Apr 2019 16:08:51 +0300
+Message-ID: <1556024950-20752-1-git-send-email-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <1555796980-27920-8-git-send-email-akrowiak@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19042313-0016-0000-0000-00000271BD01
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042313-0017-0000-0000-000032CE28DE
-Message-Id: <926b43f9-13ed-602d-c7f0-1e0dd9fe32a1@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904230090
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/04/2019 23:49, Tony Krowiak wrote:
-> There is an implied guarantee that when an AP queue device is bound to a
-> device driver, that driver will have exclusive control over the device.
-> When an AP queue device is unbound from the vfio_ap driver while the
-> queue is in use by a guest and subsquently bound to a zcrypt driver, the
-> guarantee that the zcrypt driver has exclusive control of the queue
-> device will be violated. Likewise, when an AP queue device is bound to
-> the vfio_ap device driver and its APQN is assigned to an mdev device in
-> use by a guest, the expectation is that the guest will have access to
-> the queue.
-> 
-> The purpose of this patch is to ensure three things:
-> 
-> 1. When an AP queue device in use by a guest is unbound, the guest shall
->     no longer access the queue. Due to the limitations of the
->     architecture, access to a single queue can not be denied to a guest,
->     so access to the AP card to which the queue is connected will be
->     denied to the guest.
-> 
-> 2. When an AP queue device with an APQN assigned to an mdev device is
->     bound to the vfio_ap driver while the mdev device is in use by a guest,
->     the guest shall be granted access to the queue.
-> 
-> 3. When a guest is started, each APQN assigned to the guest's mdev device
->     must be owned by the vfio_ap driver.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->   drivers/s390/crypto/vfio_ap_drv.c     | 16 ++++++-
->   drivers/s390/crypto/vfio_ap_ops.c     | 82 ++++++++++++++++++++++++++++++++++-
->   drivers/s390/crypto/vfio_ap_private.h |  2 +
->   3 files changed, 97 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-> index e9824c35c34f..0f5dafddf5b1 100644
-> --- a/drivers/s390/crypto/vfio_ap_drv.c
-> +++ b/drivers/s390/crypto/vfio_ap_drv.c
-> @@ -42,12 +42,26 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
->   
->   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
->   {
-> +	struct ap_queue *apq = to_ap_queue(&apdev->device);
-> +	unsigned long apid = AP_QID_CARD(apq->qid);
-> +	unsigned long apqi = AP_QID_QUEUE(apq->qid);
-> +
-> +	mutex_lock(&matrix_dev->lock);
-> +	vfio_ap_mdev_probe_queue(apid, apqi);
-> +	mutex_unlock(&matrix_dev->lock);
-> +
->   	return 0;
->   }
->   
->   static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
->   {
-> -	/* Nothing to do yet */
-> +	struct ap_queue *apq = to_ap_queue(&apdev->device);
-> +	unsigned long apid = AP_QID_CARD(apq->qid);
-> +	unsigned long apqi = AP_QID_QUEUE(apq->qid);
-> +
-> +	mutex_lock(&matrix_dev->lock);
-> +	vfio_ap_mdev_remove_queue(apid, apqi);
-> +	mutex_unlock(&matrix_dev->lock);
->   }
->   
->   static void vfio_ap_matrix_dev_release(struct device *dev)
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 31ce30ee784d..3f9506516545 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -763,8 +763,8 @@ static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
->   			msleep(20);
->   			break;
->   		default:
-> -			pr_warn("%s: tapq err %02x: 0x%04x may not be empty\n",
-> -				__func__, status.response_code, q->apqn);
-> +			pr_warn("%s: tapq err %02x: %02lx%04lx may not be empty\n",
-> +				__func__, status.response_code, apid, apqi);
->   			return;
->   		}
->   	} while (--retry);
-> @@ -823,6 +823,14 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
->   
->   static int vfio_ap_mdev_create_shadow_crycb(struct ap_matrix_mdev *matrix_mdev)
->   {
-> +	/*
-> +	 * If an AP resource is not owned by the vfio_ap driver - e.g., it was
-> +	 * unbound from the driver while still assigned to the mdev device
-> +	 */
-> +	if (ap_apqn_in_matrix_owned_by_def_drv(matrix_mdev->matrix.apm,
-> +					       matrix_mdev->matrix.aqm))
-> +		return -EADDRNOTAVAIL;
-> +
->   	matrix_mdev->shadow_crycb = kzalloc(sizeof(*matrix_mdev->shadow_crycb),
->   					    GFP_KERNEL);
->   	if (!matrix_mdev->shadow_crycb)
-> @@ -847,6 +855,18 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
->   	if (!try_module_get(THIS_MODULE))
->   		return -ENODEV;
->   
-> +	ret = ap_apqn_in_matrix_owned_by_def_drv(matrix_mdev->matrix.apm,
-> +						 matrix_mdev->matrix.aqm);
-> +
-> +	/*
-> +	 * If any APQN is owned by a default driver, it can not be used by the
-> +	 * guest. This can happen if a queue is unbound from the vfio_ap
-> +	 * driver but not unassigned from the mdev device.
-> +	 */
-> +	ret = (ret == 1) ? -EADDRNOTAVAIL : ret;
-> +	if (ret)
-> +		return ret;
-> +
->   	matrix_mdev->group_notifier.notifier_call = vfio_ap_mdev_group_notifier;
->   	events = VFIO_GROUP_NOTIFY_SET_KVM;
->   
-> @@ -938,3 +958,61 @@ void vfio_ap_mdev_unregister(void)
->   {
->   	mdev_unregister_device(&matrix_dev->device);
->   }
-> +
-> +static struct ap_matrix_mdev *vfio_ap_mdev_find_matrix_mdev(unsigned long apid,
-> +							    unsigned long apqi)
-> +{
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +
-> +	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
-> +		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
-> +		    test_bit_inv(apqi, matrix_mdev->matrix.aqm))
-> +			return matrix_mdev;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +void vfio_ap_mdev_remove_queue(unsigned long apid, unsigned long apqi)
-> +{
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +
-> +	matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
-> +
-> +	/*
-> +	 * If the queue is assigned to the mdev device and the mdev device
-> +	 * is in use by a guest
-> +	 */
-> +	if (matrix_mdev && matrix_mdev->kvm) {
-> +		/*
-> +		 * Unplug the adapter from the guest but don't unassign it
-> +		 * from the mdev device
-> +		 */
-> +		clear_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
-> +		vfio_ap_mdev_update_crycb(matrix_mdev);
-> +	}
-> +
-> +	vfio_ap_mdev_reset_queue(apid, apqi);
-> +}
-> +
-> +void vfio_ap_mdev_probe_queue(unsigned long apid, unsigned long apqi)
-> +{
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +
-> +	matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
-> +
-> +	/*
-> +	 * If the queue is assigned to the mdev device and the mdev device
-> +	 * is in use by a guest
-> +	 */
-> +	if (matrix_mdev && matrix_mdev->kvm) {
-> +		/* Plug the adapter into the guest */
-> +		set_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
-> +
-> +		/* Make sure the queue is also plugged in to the guest */
-> +		if (!test_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm))
-> +			set_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm);
+Hi All,
 
-Why are you testing the domain before setting it and not the adapter?
+This is a preparation series for introducing new switchbase TI CPSW driver which
+was originally introduced [1][2] by Ilias Apalodimas <ilias.apalodimas@linaro.org> 
+and also discussed in private mails and at Netdev x13 confernce.
 
-Eventually you do not need to test at all or if, then both.
+Following discussions and suggestions (mostly by Andrew and Ivan) we going
+to introduce the new driver which is operating in dual-emac mode
+by default, thus working as 2 individual network interfaces.
+When both interfaces joined the bridge - CPSW driver will enter a switch
+mode and discard dual_mac configuration. The CPSW will be switched back
+to dual_mac mode if any port leaves the bridge. All configuration is going to be
+implemented via switchdev API.
 
-NIT
+Hence overall change is already very big I'm sending prerequisite patches which
+are mostly minor fixes/clean ups and code refactoring to separate common parts
+to be reused by both drivers.
+Probably the most serious change from functional point of view is Patch 11.
 
+These patches were NFS boot tetested on TI AM335x/AM437x/AM5xx boards.
 
-> +
-> +		vfio_ap_mdev_update_crycb(matrix_mdev);
-> +	}
-> +}
-> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-> index e8457aa61976..00eaae3b853f 100644
-> --- a/drivers/s390/crypto/vfio_ap_private.h
-> +++ b/drivers/s390/crypto/vfio_ap_private.h
-> @@ -87,5 +87,7 @@ struct ap_matrix_mdev {
->   
->   extern int vfio_ap_mdev_register(void);
->   extern void vfio_ap_mdev_unregister(void);
-> +void vfio_ap_mdev_remove_queue(unsigned long apid, unsigned long apqi);
-> +void vfio_ap_mdev_probe_queue(unsigned long apid, unsigned long apqi);
->   
->   #endif /* _VFIO_AP_PRIVATE_H_ */
-> 
+These patches can be found at:
+ git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
+ branch: lkml-5.1-cpsw-clean-up
 
+Functional new cpsw_switch driver (still fighting with few issues) can be found:
+ git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
+ branch: lkml-5.1-switch-tbd
+
+[1] https://patchwork.ozlabs.org/cover/929367/
+[2] https://patches.linaro.org/cover/136709/
+
+Grygorii Strashko (19):
+  net: ethernet: ti: convert to SPDX license identifiers
+  net: ethernet: ti: cpsw: drop TI_DAVINCI_CPDMA config option
+  net: ethernet: ti: cpsw: drop CONFIG_TI_CPSW_ALE config option
+  net: ethernet: ti: cpsw: update cpsw_split_res() to accept cpsw_common
+  net: ethernet: ti: cpsw: use local var dev in probe
+  net: ethernet: ti: cpsw: drop pinctrl_pm_select_default_state call
+  net: ethernet: ti: cpsw: use devm_alloc_etherdev_mqs()
+  net: ethernet: ti: cpsw: drop cpsw_tx_packet_submit()
+  net: ethernet: ti: ale: fix mcast super setting
+  net: ethernet: ti: ale: use define for host port in cpsw_ale_set_allmulti()
+  net: ethernet: ti: cpsw: fix allmulti cfg in dual_mac mode
+  net: ethernet: ti: ale: do not auto delete mcast super entries
+  net: ethernet: ti: davinci_mdio: use devm_ioremap()
+  net: ethernet: ti: cpsw: refactor probe to group common hw initialization
+  net: ethernet: ti: cpsw: move cpsw definitions in priv header
+  net: ethernet: ti: cpsw: move common hw init code in separate func
+  net: ethernet: ti: cpsw: introduce mac sl module api
+  net: ethernet: ti: cpsw: switch to use mac sl api
+  net: ethernet: ti: cpsw: move ethtool func in separate file
+
+ drivers/net/ethernet/ti/Kconfig          |   19 -
+ drivers/net/ethernet/ti/Makefile         |    9 +-
+ drivers/net/ethernet/ti/cpmac.c          |   14 +-
+ drivers/net/ethernet/ti/cpsw-common.c    |   12 +-
+ drivers/net/ethernet/ti/cpsw-phy-sel.c   |    9 +-
+ drivers/net/ethernet/ti/cpsw.c           | 1544 +++-------------------
+ drivers/net/ethernet/ti/cpsw.h           |    9 +-
+ drivers/net/ethernet/ti/cpsw_ale.c       |   44 +-
+ drivers/net/ethernet/ti/cpsw_ale.h       |   11 +-
+ drivers/net/ethernet/ti/cpsw_ethtool.c   |  719 ++++++++++
+ drivers/net/ethernet/ti/cpsw_priv.c      |  131 ++
+ drivers/net/ethernet/ti/cpsw_priv.h      |  441 ++++++
+ drivers/net/ethernet/ti/cpsw_sl.c        |  327 +++++
+ drivers/net/ethernet/ti/cpsw_sl.h        |   73 +
+ drivers/net/ethernet/ti/cpts.c           |   14 +-
+ drivers/net/ethernet/ti/cpts.h           |   14 +-
+ drivers/net/ethernet/ti/davinci_cpdma.c  |   35 +-
+ drivers/net/ethernet/ti/davinci_cpdma.h  |    9 +-
+ drivers/net/ethernet/ti/davinci_emac.c   |   16 +-
+ drivers/net/ethernet/ti/davinci_mdio.c   |   19 +-
+ drivers/net/ethernet/ti/netcp.h          |   10 +-
+ drivers/net/ethernet/ti/netcp_core.c     |   10 +-
+ drivers/net/ethernet/ti/netcp_ethss.c    |   10 +-
+ drivers/net/ethernet/ti/netcp_sgmii.c    |    9 +-
+ drivers/net/ethernet/ti/netcp_xgbepcsr.c |    9 +-
+ 25 files changed, 1878 insertions(+), 1639 deletions(-)
+ create mode 100644 drivers/net/ethernet/ti/cpsw_ethtool.c
+ create mode 100644 drivers/net/ethernet/ti/cpsw_priv.c
+ create mode 100644 drivers/net/ethernet/ti/cpsw_priv.h
+ create mode 100644 drivers/net/ethernet/ti/cpsw_sl.c
+ create mode 100644 drivers/net/ethernet/ti/cpsw_sl.h
 
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+2.17.1
 
