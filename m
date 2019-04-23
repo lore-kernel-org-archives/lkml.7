@@ -2,165 +2,192 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 995C5C10F11
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A50C10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6EE20685
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fwqHDo1W"
+	by mail.kernel.org (Postfix) with ESMTP id E8A0620874
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555978439;
+	bh=jUT3W1rtS7YmOCZ3sQoFiOEjp5WEQRPO6ykT66B45h4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V/CrraB2JJhtaATom6R+EKCc5nJdOeM46zx3A3AtjZP8rDSohkBgguo7jfYeK0QT9
+	 pRs//b0fHGYbh6oFPecB8IYSxxHFxodc7r8tM5nWBzTmoGm6PNFO6MgtMbUnBmOCIv
+	 jNJVNGnCUPIk4uwOeHox1OEtRKiiFxf325Hke7A4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730886AbfDWAMo (ORCPT
+        id S1730895AbfDWAN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 20:12:44 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42818 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729479AbfDWAMn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 20:12:43 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x13so1433078ljd.9
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 17:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UUmqCcfPZLaQU2X8LOPqoTWw6XtkN6uP70+krzqW0TE=;
-        b=fwqHDo1WqONM6UbJ6zB5Xc0dfmDyeRii2GPY+aFKz2Gh+XG9yq3SfFSrB84aNDSjuk
-         lu/TE5uNc2QzRahhEgOr4TnvvdDYv4ZM/nPYBeyOB0DMllP3875/DGAOn4dSVryyBNmg
-         V+Jbh445PrI0DDN7Vv0zfR0aRmInr4KgYfu+M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UUmqCcfPZLaQU2X8LOPqoTWw6XtkN6uP70+krzqW0TE=;
-        b=sv/mUtuAapHJMr+8S6zTQNX5kdXGluOdK4+ohS6w/TMJxJoVC59C6JFEFCtlTAe6zD
-         3T70MynA45cWl7baIFIDhz2RivjDz9TXxYXWeUQhQaAk7jv0IAVDr87HaZKgUBY0QHn0
-         oelKB1Bd4w2lKvctGUfbxdSdQVcij21Y2wO1JPtXx0EKWfK3dcLHsHaxIuqWST4ifhK5
-         bt5aRGdUZfWS1vYsjG13BSIJ5PWDgnXdRo2owoHYIPl6Wus3BrQhJ6oMdbXQhi/EqE6j
-         TbcivgMIJj9nAqa+TjRMf7mg6F+6fJHjBDpeH4p+iY1+GD7ZTudlCzN6TnhiMJAWCtHu
-         zUDQ==
-X-Gm-Message-State: APjAAAWVIUHJjYDxPlD7aB0dAjtq4BX/P7MJDIcQG21x8A9h/vaTnzRS
-        Q5yq4GJZdfXZ5a/Y7XDuG0rfYwVL9q0=
-X-Google-Smtp-Source: APXvYqycW5idVOgcIXRcnz5YOR26M+LmkuypblxEVYpifL9g2ioCm5jNeqTdAChJHdsLwr5xfBHSJQ==
-X-Received: by 2002:a2e:4a1a:: with SMTP id x26mr10511102lja.49.1555978360578;
-        Mon, 22 Apr 2019 17:12:40 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id n4sm3282165lfe.15.2019.04.22.17.12.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 17:12:39 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id f18so11771676lja.10
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 17:12:38 -0700 (PDT)
-X-Received: by 2002:a2e:9811:: with SMTP id a17mr12157196ljj.96.1555978357844;
- Mon, 22 Apr 2019 17:12:37 -0700 (PDT)
+        Mon, 22 Apr 2019 20:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729885AbfDWAN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 20:13:57 -0400
+Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D98320685;
+        Tue, 23 Apr 2019 00:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555978436;
+        bh=jUT3W1rtS7YmOCZ3sQoFiOEjp5WEQRPO6ykT66B45h4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tpWNj/qZiwyRp2k9/QCMjtYT3QaIA5cCeNOt3XnKN9Fa8+MR70P/2FYCfT9BadWWk
+         +iJnspEvEIHRL5E7JxnuBJkCOOjJu1E831ncQhZt93njCMkc2pIzQ0Ei5hDJkWU4dy
+         YJ29LMBu5n7TLDJASKdz9kg3QTSYbXOJO/Hh0JXE=
+Date:   Tue, 23 Apr 2019 08:13:48 +0800
+From:   Guo Ren <guoren@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     ren_guo@c-sky.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        tech-privileged@lists.riscv.org,
+        Andrew Waterman <andrew@sifive.com>,
+        Anup Patel <anup.patel@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greentime Hu <green.hu@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Scott Wood <swood@redhat.com>,
+        Vincent Chen <vincentc@andestech.com>,
+        Xiang Xiaoyan <xiaoyan_xiang@c-sky.com>
+Subject: Re: [PATCH] riscv: Support non-coherency memory model
+Message-ID: <20190423001348.GA31639@guoren-Inspiron-7460>
+References: <1555947870-23014-1-git-send-email-guoren@kernel.org>
+ <20190422161814.GA30694@lst.de>
 MIME-Version: 1.0
-References: <20190410114227.25846-1-kraxel@redhat.com> <20190410114227.25846-4-kraxel@redhat.com>
- <CAAfnVBm5XZx8P7k5np823-uRr-kqf0ey9Y3GtoE2Geo4dCdQ=g@mail.gmail.com>
- <20190411050322.mfxo5mrwwzajlz3h@sirius.home.kraxel.org> <CAAfnVB=v+daY0Q+mtdK2Q=F7iS_Ra7jGYfic3twfnUVo=tz3Yg@mail.gmail.com>
- <20190412054924.dvh6bfxfrbgvezxr@sirius.home.kraxel.org> <CAPaKu7QsDp=kRsMzMf0YcvafsXBsr_m4bstuZiWAcmYiV_AxnQ@mail.gmail.com>
- <20190417095750.lre3xrg4dlgskfjg@sirius.home.kraxel.org>
-In-Reply-To: <20190417095750.lre3xrg4dlgskfjg@sirius.home.kraxel.org>
-From:   Gurchetan Singh <gurchetansingh@chromium.org>
-Date:   Mon, 22 Apr 2019 17:12:26 -0700
-X-Gmail-Original-Message-ID: <CAAfnVBkmpQ5VcUtbiqsZQSv7bmejjOHj3MkG2Cjah9Q4DOTv-Q@mail.gmail.com>
-Message-ID: <CAAfnVBkmpQ5VcUtbiqsZQSv7bmejjOHj3MkG2Cjah9Q4DOTv-Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3] virtio-gpu api: VIRTIO_GPU_F_RESSOURCE_V2
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Chia-I Wu <olvaffe@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Jason Wang <jasowang@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO CORE, NET AND BLOCK DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        David Airlie <airlied@redhat.com>, virtio@lists.oasis-open.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190422161814.GA30694@lst.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 2:57 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> On Fri, Apr 12, 2019 at 04:34:20PM -0700, Chia-I Wu wrote:
-> > Hi,
-> >
-> > I am still new to virgl, and missed the last round of discussion about
-> > resource_create_v2.
-> >
-> > From the discussion below, semantically resource_create_v2 creates a host
-> > resource object _without_ any storage; memory_create creates a host memory
-> > object which provides the storage.  Is that correct?
->
-> Right now all resource_create_* variants create a resource object with
-> host storage.  memory_create creates guest storage, and
-> resource_attach_memory binds things together.  Then you have to transfer
-> the data.
->
-> Hmm, maybe we need a flag indicating that host storage is not needed,
-> for resources where we want establish some kind of shared mapping later
-> on.
->
-> > Do we expect these new commands to be supported by OpenGL, which does not
-> > separate resources and memories?
->
-> Well, for opengl you need a 1:1 relationship between memory region and
-> resource.
->
-> > > Yes, even though it is not clear yet how we are going to handle
-> > > host-allocated buffers in the vhost-user case ...
-> >
-> > This might be another dumb question, but is this only an issue for
-> > vhost-user(-gpu) case?  What mechanisms are used to map host dma-buf into
-> > the guest address space?
->
-> qemu can change the address space, that includes mmap()ing stuff there.
-> An external vhost-user process can't do this, it can only read the
-> address space layout, and read/write from/to guest memory.
->
-> > But one needs to create the resource first to know which memory types can
-> > be attached to it.  I think the metadata needs to be returned with
-> > resource_create_v2.
->
-> There is a resource_info reply for that.
+Thx Christoph,
 
-The memory type should probably be in resource_create_v2, not in the
-reply.  The metadata will be different based on the memory heap it's
-allocated from.
+On Mon, Apr 22, 2019 at 06:18:14PM +0200, Christoph Hellwig wrote:
+> On Mon, Apr 22, 2019 at 11:44:30PM +0800, guoren@kernel.org wrote:
+> >  - Add _PAGE_COHERENCY bit in current page table entry attributes. The bit
+> >    designates a coherence for this page mapping. Software set the bit to
+> >    tell the hardware that the region of the page's memory area must be
+> >    coherent with IOs devices in SOC system by PMA settings.
+> >    If IOs and CPU are already coherent in SOC system, CPU just ignore
+> >    this bit.
+> > 
+> >    PTE format:
+> >    | XLEN-1  10 | 9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0
+> >          PFN      C  RSW  D   A   G   U   X   W   R   V
+> >                   ^
+> >    BIT(9): Coherence attribute bit
+> >           0: hardware needn't keep the page coherenct and software will
+> >              maintain the coherence with cache clear/invalid operations.
+> >           1: hardware must keep the page coherenct and software needn't
+> >              maintain the coherence.
+> >    BIT(8): Reserved for software and now it's _PAGE_SPECIAL in linux
+> > 
+> >    Add a new hardware bit in PTE also need to modify Privileged
+> >    Architecture Supervisor-Level ISA:
+> >    https://github.com/riscv/riscv-isa-manual/pull/374
+> > 
+> >  - Add SBI_FENCE_DMA 9 in riscv-sbi.
+> >    sbi_fence_dma(start, size, dir) could synchronize CPU cache data with
+> >    DMA device in non-coherency memory model. The third param's definition
+> >    is the same with linux's in include/linux/dma-direction.h:
+> 
+> Please don't make this an SBI call.  We need a proper instruction
+> for cache flushing and invalidation.  We'll also need that for pmem
+> support for example.  I heard at least one other vendor already
+> had an instruction, and we really need to get this into the privileged
+> spec ASAP (yesterday in fact).
+> 
+> If you have your own instructions already we can probably binary
+> patch those in using the Linux alternatives mechanism once we have
+> a standardized way in the privileged spec.
+> 
+> We should probably start a working group for this ASAP unless we can
+> get another working group to help taking care of it.
+Good news, I prefer to use instructions directly instead of SBI_CALL.
 
-Also, not all heaps need to be exposed to the guest kernel.  For
-example, device local memory in Vulkan could be un-mappable.  In fact,
-for resources that are not host visible we might be better off
-sidestepping the kernel altogether and tracking allocation in guest
-userspace.
+Our instruction is "dcache.c/iva %0" (one cache line) and the parameter is
+virtual address in S-state. When get into M-state by SBI_CALL, we could
+let dcache.c/iva use physical addres directly and it needn't kmap page
+for RV32 with highmem (Of cause highmem is not ready in RV32 now).
 
-Here is an example of memory types the guest kernel may be interested
-in (based on i965):
+> 
+> > +#define pgprot_noncached pgprot_noncached
+> > +static inline pgprot_t pgprot_noncached(pgprot_t _prot)
+> > +{
+> > +	unsigned long prot = pgprot_val(_prot);
+> > +
+> > +	prot |= _PAGE_COHERENCY;
+> > +
+> > +	return __pgprot(prot);
+> 
+> Nitpick: this can be shortened to
+> 
+> 	return __pgprot(pgprot_val(prot) | _PAGE_COHERENCY));
+Good.
 
-Type 0 --> DEVICE_LOCAL_BIT | HOST_VISIBLE_BIT | HOST_COHERENT_BIT |
-HOST_CACHED_BIT | RENDERER_ALLOCATED (Vulkan)
-Type 1 --> HOST_VISIBLE_BIT | HOST_COHERENT_BIT | EXTERNAL_ALLOCATED
-(gbm write combine)
-Type 2 --> HOST_VISIBLE_BIT | HOST_COHERENT_BIT | GUEST_ALLOCATED
-(guest allocated memory, which I assume is also write combine)
-Type 3 --> HOST_VISIBLE_BIT | HOST_CACHED | EXTERNAL_ALLOCATED (gbm
-cached memory)
+> 
+> Also is this really a coherent flag, or an 'uncached' flag like in
+> many other architectures?
+There are a lot of features about coherency attributes, eg: cacheable,
+bufferable, strong order ..., and coherency is a more abstract name to
+contain all of these. In our hardware, coherence = uncached +
+unbufferable + (stong order).
 
+But I'm not very care about the name is, uncached is also ok. My key
+point is the bits of page attributes is very precious and this patch
+will use the last unused attribute bit in PTE.
 
+Another point is we could get more attribute bits by modify the riscv
+spec:
+ - Remove Global bit, I think it's duplicate with the User bit in linux.
+ - Change _PAGE_PFN_SHIFT from 10 to 12, because the huge pfn in RV32 is
+   very useless and current RV32 linux doesn't even implement highmem.
 
->
-> > That should be good enough.  But by returning alignments, we can minimize
-> > the gaps when attaching multiple resources, especially when the resources
-> > are only used by GPU.
->
-> We can add alignments to the resource_info reply.
->
-> cheers,
->   Gerd
->
+And then we could get another three page attribute bits in PTE.
+
+> 
+> > +++ b/arch/riscv/mm/dma-mapping.c
+> 
+> This should probably be called dma-noncoherent.c
+> 
+> It should also have a user visible config option so that we don't
+> have to build it for fully coherent systems.
+Ok, dma-noncoherent.c is more clear.
+
+> 
+> > +void arch_dma_prep_coherent(struct page *page, size_t size)
+> > +{
+> > +	memset(page_address(page), 0, size);
+> 
+> No need for this memset, the caller takes care of it.
+Ok
+
+> 
+> > diff --git a/arch/riscv/mm/ioremap.c b/arch/riscv/mm/ioremap.c
+> > index bd2f2db..f6aaf1e 100644
+> > --- a/arch/riscv/mm/ioremap.c
+> > +++ b/arch/riscv/mm/ioremap.c
+> > @@ -73,7 +73,7 @@ static void __iomem *__ioremap_caller(phys_addr_t addr, size_t size,
+> >   */
+> >  void __iomem *ioremap(phys_addr_t offset, unsigned long size)
+> >  {
+> > -	return __ioremap_caller(offset, size, PAGE_KERNEL,
+> > +	return __ioremap_caller(offset, size, PAGE_KERNEL_COHERENCY,
+> >  		__builtin_return_address(0));
+> >  }
+> >  EXPORT_SYMBOL(ioremap);
+> 
+> I think ioremap is a different story, and should be a separate patch.
+Ok
+
+Best Regards
+ Guo Ren
