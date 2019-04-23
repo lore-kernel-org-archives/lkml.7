@@ -2,125 +2,282 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED64C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03DEC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9700821738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACE12077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfDWLfP (ORCPT
+        id S1727418AbfDWLjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 07:35:15 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54964 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfDWLfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 07:35:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B672DA78;
-        Tue, 23 Apr 2019 04:35:13 -0700 (PDT)
-Received: from [10.163.1.68] (unknown [10.163.1.68])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6DC143F557;
-        Tue, 23 Apr 2019 04:35:00 -0700 (PDT)
-Subject: Re: [PATCH v12 00/31] Speculative page faults
-To:     Laurent Dufour <ldufour@linux.ibm.com>, akpm@linux-foundation.org,
-        mhocko@kernel.org, peterz@infradead.org, kirill@shutemov.name,
-        ak@linux.intel.com, dave@stgolabs.net, jack@suse.cz,
-        Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ecd1eb8c-d685-8c2e-1e1a-b167c8965075@arm.com>
-Date:   Tue, 23 Apr 2019 17:05:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 23 Apr 2019 07:39:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57570 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbfDWLjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 07:39:24 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 87AFE88309;
+        Tue, 23 Apr 2019 11:39:23 +0000 (UTC)
+Received: from gondolin (dhcp-192-187.str.redhat.com [10.33.192.187])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A74C5646A8;
+        Tue, 23 Apr 2019 11:39:13 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 13:39:11 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
+        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
+        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
+        changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, alex.williamson@redhat.com,
+        eskultet@redhat.com, dgilbert@redhat.com, kevin.tian@intel.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
+        kwankhede@nvidia.com
+Subject: Re: [PATCH 2/2] drm/i915/gvt: export mdev device version to sysfs
+ for Intel vGPU
+Message-ID: <20190423133911.5ee7bf38.cohuck@redhat.com>
+In-Reply-To: <20190419083559.19725-1-yan.y.zhao@intel.com>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+        <20190419083559.19725-1-yan.y.zhao@intel.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20190416134522.17540-1-ldufour@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 23 Apr 2019 11:39:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/16/2019 07:14 PM, Laurent Dufour wrote:
-> In pseudo code, this could be seen as:
->     speculative_page_fault()
->     {
-> 	    vma = find_vma_rcu()
-> 	    check vma sequence count
-> 	    check vma's support
-> 	    disable interrupt
-> 		  check pgd,p4d,...,pte
-> 		  save pmd and pte in vmf
-> 		  save vma sequence counter in vmf
-> 	    enable interrupt
-> 	    check vma sequence count
-> 	    handle_pte_fault(vma)
-> 		    ..
-> 		    page = alloc_page()
-> 		    pte_map_lock()
-> 			    disable interrupt
-> 				    abort if sequence counter has changed
-> 				    abort if pmd or pte has changed
-> 				    pte map and lock
-> 			    enable interrupt
-> 		    if abort
-> 		       free page
-> 		       abort
+On Fri, 19 Apr 2019 04:35:59 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-Would not it be better if the 'page' allocated here can be passed on to handle_pte_fault()
-below so that in the fallback path it does not have to enter the buddy again ? Of course
-it will require changes to handle_pte_fault() to accommodate a pre-allocated non-NULL
-struct page to operate on or free back into the buddy if fallback path fails for some
-other reason. This will probably make SPF path less overhead for cases where it has to
-fallback on handle_pte_fault() after pte_map_lock() in speculative_page_fault().
+> This feature implements the version attribute for Intel's vGPU mdev
+> devices.
+> 
+> version attribute is rw. It is queried by userspace software like libvirt
+> to check whether two vGPUs are compatible for live migration.
+> 
+> It consists of two parts: common part and vendor proprietary part.
+> common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
+>              identifies device type. e.g., for pci device, it is
+>              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> vendor proprietary part: this part is varied in length. vendor driver can
+>              specify any string to identify a device.
+> 
+> For Intel vGPU of gen8 and gen9, the vendor proprietary part currently
+> consists of 2 fields: "device id" + "mdev type".
+> 
+> Reading from a vGPU's version attribute, a string is returned in below
+> format: 00028086-<device id>-<mdev type>. e.g.
+> 00028086-193b-i915-GVTg_V5_2.
+> 
+> Writing a string to a vGPU's version attribute will trigger GVT to check
+> whether a vGPU identified by the written string is compatible with
+> current vGPU owning this version attribute. errno is returned if the two
+> vGPUs are incompatible. The length of written string is returned in
+> compatible case.
+> 
+> For other platforms, and for GVT not supporting vGPU live migration
+> feature, errnos are returned when read/write of mdev devices' version
+> attributes.
+> 
+> For old GVT versions where no version attributes exposed in sysfs, it is
+> regarded as not supporting vGPU live migration.
+> 
+> For future platforms, besides the current 2 fields in vendor proprietary
+> part, more fields may be added to identify Intel vGPU well for live
+> migration purpose.
+> 
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Erik Skultety <eskultet@redhat.com>
+> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> c: Neo Jia <cjia@nvidia.com>
+> Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> 
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>  drivers/gpu/drm/i915/gvt/Makefile         |  2 +-
+>  drivers/gpu/drm/i915/gvt/device_version.c | 94 +++++++++++++++++++++++
+>  drivers/gpu/drm/i915/gvt/gvt.c            | 55 +++++++++++++
+>  drivers/gpu/drm/i915/gvt/gvt.h            |  6 ++
+>  4 files changed, 156 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/gpu/drm/i915/gvt/device_version.c
+> 
 
-> 		    ...
-> 	    put_vma(vma)
->     }
->     
->     arch_fault_handler()
->     {
-> 	    if (speculative_page_fault(&vma))
-> 	       goto done
->     again:
-> 	    lock(mmap_sem)
-> 	    vma = find_vma();
-> 	    handle_pte_fault(vma);
-> 	    if retry
-> 	       unlock(mmap_sem)
-> 	       goto again;
->     done:
-> 	    handle fault error
->     }
+(...)
 
-- Anshuman
+> +static bool is_compatible(const char *self, const char *remote)
+> +{
+> +	if (strlen(remote) != strlen(self))
+> +		return false;
+> +
+> +	return (strncmp(self, remote, strlen(self))) ? false : true;
+> +}
+> +
+> +ssize_t intel_gvt_get_vfio_device_version_len(struct drm_i915_private *dev_priv)
+> +{
+> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> +		return -ENODEV;
+> +
+> +	return PAGE_SIZE;
+> +}
+> +
+> +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *dev_priv,
+> +		char *buf, const char *mdev_type)
+> +{
+> +	int cnt = 0, ret = 0;
+> +	const char *str = NULL;
+> +
+> +	/* currently only gen8 & gen9 are supported */
+> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> +		return -ENODEV;
+> +
+> +	/* first 32 bit common part specifying vendor id and it's a pci
+> +	 * device
+> +	 */
+> +	cnt = snprintf(buf, GVT_DEVICE_VERSION_COMMON_LEN + 1,
+> +			"%08x", GVT_VFIO_DEVICE_VENDOR_ID);
+> +	buf += cnt;
+> +	ret += cnt;
+> +
+> +	/* vendor proprietary part: device id + mdev type */
+> +	/* device id */
+> +	cnt = snprintf(buf, GVT_DEVICE_VERSION_DEVICE_ID_LEN + 2,
+> +			"-%04x", INTEL_DEVID(dev_priv));
+> +	buf += cnt;
+> +	ret += cnt;
+> +
+> +	/* mdev type */
+> +	str = mdev_type;
+> +	cnt = snprintf(buf, strlen(str) + 3, "-%s\n", mdev_type);
+> +	buf += cnt;
+> +	ret += cnt;
+> +
+> +	return ret;
+> +}
+
+Looking at this handling, it seems much easier to me to simply use a
+numeric value instead of a string: You don't have to build it via
+sprintf, there are generic functions for parsing a string input into a
+simple number, and you have more options for compatibility (e.g.
+"version must be between m and n" instead of an exact match).
+
+If you still need to encode the device id here, you should be able to
+easily do something like (device_id << 16) | migration_version -- do
+you think that could work?
+
+> +
+> +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev_priv,
+> +		const char *self, const char *remote)
+> +{
+> +
+> +	/* currently only gen8 & gen9 are supported */
+> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
+> +		return -ENODEV;
+> +
+> +	if (!is_compatible(self, remote))
+> +		return -EINVAL;
+
+I think the meaning of the error codes should really be standardized
+across vendor drivers, if we need a value for "this device does not
+support migration at all". (Your choices look reasonable for that.)
+
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gvt.c
+> index 43f4242062dd..e720465b93d8 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.c
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.c
+> @@ -105,14 +105,69 @@ static ssize_t description_show(struct kobject *kobj, struct device *dev,
+>  		       type->weight);
+>  }
+>  
+> +static ssize_t version_show(struct kobject *kobj, struct device *dev,
+> +		char *buf)
+> +{
+> +#ifdef GVT_MIGRATION_VERSION
+> +	struct drm_i915_private *i915 = kdev_to_i915(dev);
+> +	const char *mdev_type = kobject_name(kobj);
+> +
+> +	return intel_gvt_get_vfio_device_version(i915, buf, mdev_type);
+> +#else
+> +	/* do not support live migration */
+> +	return -EINVAL;
+
+...but this looks inconsistent. I would expect -ENODEV here, same as
+for non-gen{8,9}.
+
+Or simply do not create the attribute at all in that case?
+
+> +#endif
+> +}
+> +
+> +static ssize_t version_store(struct kobject *kobj, struct device *dev,
+> +		const char *buf, size_t count)
+> +{
+> +#ifdef GVT_MIGRATION_VERSION
+> +	char *remote = NULL, *self = NULL;
+> +	int len, ret = 0;
+> +	struct drm_i915_private *i915 = kdev_to_i915(dev);
+> +	const char *mdev_type = kobject_name(kobj);
+> +
+> +	len = intel_gvt_get_vfio_device_version_len(i915);
+> +	if (len < 0)
+> +		return len;
+> +
+> +	self = kmalloc(len, GFP_KERNEL);
+> +	if (!self)
+> +		return -ENOMEM;
+> +
+> +	ret = intel_gvt_get_vfio_device_version(i915, self, mdev_type);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	remote = kstrndup(buf, count, GFP_KERNEL);
+> +	if (!remote) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	ret = intel_gvt_check_vfio_device_version(i915, self, remote);
+> +
+> +out:
+> +	kfree(self);
+> +	kfree(remote);
+> +	return (ret < 0 ? ret : count);
+> +#else
+> +	/* do not support live migration */
+> +	return -EINVAL;
+> +#endif
+> +}
+> +
+>  static MDEV_TYPE_ATTR_RO(available_instances);
+>  static MDEV_TYPE_ATTR_RO(device_api);
+>  static MDEV_TYPE_ATTR_RO(description);
+> +static MDEV_TYPE_ATTR_RW(version);
+>  
+>  static struct attribute *gvt_type_attrs[] = {
+>  	&mdev_type_attr_available_instances.attr,
+>  	&mdev_type_attr_device_api.attr,
+>  	&mdev_type_attr_description.attr,
+> +	&mdev_type_attr_version.attr,
+>  	NULL,
+>  };
+>  
+(...)
