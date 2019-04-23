@@ -2,160 +2,163 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2E6C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B405C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3D8214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B772077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:32:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IK5VFbcO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z1C887hd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfDWNah (ORCPT
+        id S1727804AbfDWNc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:30:37 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:60489 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726421AbfDWNah (ORCPT
+        Tue, 23 Apr 2019 09:32:26 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52008 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbfDWNc0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:30:37 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NDRI1Z030720;
-        Tue, 23 Apr 2019 15:29:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=ziBi1b9KCM/HRjGNBDnks5nEaa5asmpnQ6wixB7M/r4=;
- b=IK5VFbcOwQBzyG2y3Npjaw/kVVClqXWOKkt8l/Wa1RuElSIysQDlf2sabpiJi2lElMJm
- OYCAZtmA4iMDPJORvzwZ3A+XvhxvyViT4AuMRkGvh3XnmKNyLmm8BQEu7v64M26vFeIs
- BTiHkkx1PRRgqlek0RVX2v8mBjpx3A+Hj+73jap4Zt9jFIWEYPAKx6susKDEWg0mcnkY
- pGfRFiAKpzhs52XHs6IlRBKE44LDNstYCfHt8HzObAEeGFPTNsHI36nZ8bLqZDftmhrV
- wnMMradGSAnXFHp0D2JynXepgirpjdSPWAnK6Cnk9R6W7jLsWRbx8sK9SHI0hmvTxk6D 9A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2rys6rqpcs-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 23 Apr 2019 15:29:41 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A7A0A38;
-        Tue, 23 Apr 2019 13:29:38 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 621F526CC;
-        Tue, 23 Apr 2019 13:29:38 +0000 (GMT)
-Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 23 Apr
- 2019 15:29:38 +0200
-Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
- SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
- 15.00.1347.000; Tue, 23 Apr 2019 15:29:37 +0200
-From:   Olivier MOYSAN <olivier.moysan@st.com>
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC:     "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: stm32: simplify dai driver initialisation
-Thread-Topic: [PATCH] ASoC: stm32: simplify dai driver initialisation
-Thread-Index: AQHU65G62eNTx3G20k6GNDjWIJYtyqZJuIaA
-Date:   Tue, 23 Apr 2019 13:29:37 +0000
-Message-ID: <9cb0aea8-81d3-3122-da55-2ee0c90809e8@st.com>
-References: <1554456387-3088-1-git-send-email-arnaud.pouliquen@st.com>
-In-Reply-To: <1554456387-3088-1-git-send-email-arnaud.pouliquen@st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.49]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7BA1FD71D75DC14A8BA5064AFB8FBA14@st.com>
-Content-Transfer-Encoding: base64
+        Tue, 23 Apr 2019 09:32:26 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3NDSqYM057033;
+        Tue, 23 Apr 2019 13:32:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=7Wf+C0Nbm/1G51YtRS2b0flZ/2+oUpk3ibKr7L4bz8E=;
+ b=z1C887hdkmW6LHkHQe/NdBfLnNCxAD0cIUocSH+R8j8POFpNzruWnxrpk+nYZx3yZA2K
+ gCMJEh6Uxg2R3NLCVNW+vObHopoGaSEjJqoKyDxBNCU8jnVYlxGL+qXR7AxZ6DVu8SXJ
+ ucHAYT+Nm17ny9N+dE8N3iUo6nKzelDRhSGJfzA1T98HXO2FSoFjzDQeIKqLbiIEZ6ry
+ gJX+VfuUpPMDFco5SJClmQECgLglAw9/ejuXD40npI0gs7a617Io14lDEKa33J6U/Xv5
+ Akyl/aLo8Q5Y0apNVPWtfIFhCJm5KOu+5k+28cv46Ru8LMrREDOqvTocxVU3eqAgIZ/x gA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2rytusv77c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 13:32:17 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3NDUQPo030067;
+        Tue, 23 Apr 2019 13:32:17 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2s0fv301gg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 13:32:17 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3NDVPsS009008;
+        Tue, 23 Apr 2019 13:31:25 GMT
+Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 23 Apr 2019 06:31:25 -0700
+Subject: Re: [PATCH v2 1/2] xen/pvh: set xen_domain_type to HVM in
+ xen_pvh_init
+To:     Roger Pau Monne <roger.pau@citrix.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org
+References: <20190423130416.68935-1-roger.pau@citrix.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <c2e1612e-d6c2-ba46-b49e-4e0fe95a1d7e@oracle.com>
+Date:   Tue, 23 Apr 2019 09:37:51 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
- signatures=0
+In-Reply-To: <20190423130416.68935-1-roger.pau@citrix.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9235 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904230092
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9235 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904230092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQXJuYXVkLA0KDQpPbiA0LzUvMTkgMTE6MjYgQU0sIEFybmF1ZCBQb3VsaXF1ZW4gd3Jv
-dGU6DQo+IFN1cHByZXNzIHRoZSB1c2VsZXNzIGR5bmFtaWMgYWxsb2NhdGlvbiBvZiB0aGUgZGFp
-IGRyaXZlciBzdHJ1Y3R1cmUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBcm5hdWQgUG91bGlxdWVu
-IDxhcm5hdWQucG91bGlxdWVuQHN0LmNvbT4NCj4gLS0tDQo+ICAgc291bmQvc29jL3N0bS9zdG0z
-Ml9zYWlfc3ViLmMgfCA0MyArKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMzQgZGVsZXRpb25zKC0p
-DQo+IA0KPiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL3N0bS9zdG0zMl9zYWlfc3ViLmMgYi9zb3Vu
-ZC9zb2Mvc3RtL3N0bTMyX3NhaV9zdWIuYw0KPiBpbmRleCAzZGQ1NGJjLi5lM2IwMjFjIDEwMDY0
-NA0KPiAtLS0gYS9zb3VuZC9zb2Mvc3RtL3N0bTMyX3NhaV9zdWIuYw0KPiArKysgYi9zb3VuZC9z
-b2Mvc3RtL3N0bTMyX3NhaV9zdWIuYw0KPiBAQCAtMTA5LDcgKzEwOSw3IEBAIHN0cnVjdCBzdG0z
-Ml9zYWlfc3ViX2RhdGEgew0KPiAgIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7DQo+ICAgCWNvbnN0
-IHN0cnVjdCByZWdtYXBfY29uZmlnICpyZWdtYXBfY29uZmlnOw0KPiAgIAlzdHJ1Y3Qgc25kX2Rt
-YWVuZ2luZV9kYWlfZG1hX2RhdGEgZG1hX3BhcmFtczsNCj4gLQlzdHJ1Y3Qgc25kX3NvY19kYWlf
-ZHJpdmVyICpjcHVfZGFpX2RydjsNCj4gKwlzdHJ1Y3Qgc25kX3NvY19kYWlfZHJpdmVyIGNwdV9k
-YWlfZHJ2Ow0KPiAgIAlzdHJ1Y3Qgc25kX3NvY19kYWkgKmNwdV9kYWk7DQo+ICAgCXN0cnVjdCBz
-bmRfcGNtX3N1YnN0cmVhbSAqc3Vic3RyZWFtOw0KPiAgIAlzdHJ1Y3Qgc3RtMzJfc2FpX2RhdGEg
-KnBkYXRhOw0KPiBAQCAtMTIwNCw4ICsxMjA0LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRf
-cGNtX2hhcmR3YXJlIHN0bTMyX3NhaV9wY21faHcgPSB7DQo+ICAgCS5wZXJpb2RzX21heCA9IDgs
-DQo+ICAgfTsNCj4gICANCj4gLXN0YXRpYyBzdHJ1Y3Qgc25kX3NvY19kYWlfZHJpdmVyIHN0bTMy
-X3NhaV9wbGF5YmFja19kYWlbXSA9IHsNCj4gLXsNCj4gK3N0YXRpYyBzdHJ1Y3Qgc25kX3NvY19k
-YWlfZHJpdmVyIHN0bTMyX3NhaV9wbGF5YmFja19kYWkgPSB7DQo+ICAgCQkucHJvYmUgPSBzdG0z
-Ml9zYWlfZGFpX3Byb2JlLA0KPiAgIAkJLnBjbV9uZXcgPSBzdG0zMl9zYWlfcGNtX25ldywNCj4g
-ICAJCS5pZCA9IDEsIC8qIGF2b2lkIGNhbGwgdG8gZm10X3NpbmdsZV9uYW1lKCkgKi8NCj4gQEAg
-LTEyMjIsMTEgKzEyMjEsOSBAQCBzdGF0aWMgc3RydWN0IHNuZF9zb2NfZGFpX2RyaXZlciBzdG0z
-Ml9zYWlfcGxheWJhY2tfZGFpW10gPSB7DQo+ICAgCQkJCVNORFJWX1BDTV9GTVRCSVRfUzMyX0xF
-LA0KPiAgIAkJfSwNCj4gICAJCS5vcHMgPSAmc3RtMzJfc2FpX3BjbV9kYWlfb3BzLA0KPiAtCX0N
-Cj4gICB9Ow0KPiAgIA0KPiAtc3RhdGljIHN0cnVjdCBzbmRfc29jX2RhaV9kcml2ZXIgc3RtMzJf
-c2FpX2NhcHR1cmVfZGFpW10gPSB7DQo+IC17DQo+ICtzdGF0aWMgc3RydWN0IHNuZF9zb2NfZGFp
-X2RyaXZlciBzdG0zMl9zYWlfY2FwdHVyZV9kYWkgPSB7DQo+ICAgCQkucHJvYmUgPSBzdG0zMl9z
-YWlfZGFpX3Byb2JlLA0KPiAgIAkJLmlkID0gMSwgLyogYXZvaWQgY2FsbCB0byBmbXRfc2luZ2xl
-X25hbWUoKSAqLw0KPiAgIAkJLmNhcHR1cmUgPSB7DQo+IEBAIC0xMjQyLDcgKzEyMzksNiBAQCBz
-dGF0aWMgc3RydWN0IHNuZF9zb2NfZGFpX2RyaXZlciBzdG0zMl9zYWlfY2FwdHVyZV9kYWlbXSA9
-IHsNCj4gICAJCQkJU05EUlZfUENNX0ZNVEJJVF9TMzJfTEUsDQo+ICAgCQl9LA0KPiAgIAkJLm9w
-cyA9ICZzdG0zMl9zYWlfcGNtX2RhaV9vcHMsDQo+IC0JfQ0KPiAgIH07DQo+ICAgDQo+ICAgc3Rh
-dGljIGNvbnN0IHN0cnVjdCBzbmRfZG1hZW5naW5lX3BjbV9jb25maWcgc3RtMzJfc2FpX3BjbV9j
-b25maWcgPSB7DQo+IEBAIC0xNDExLDI5ICsxNDA3LDYgQEAgc3RhdGljIGludCBzdG0zMl9zYWlf
-c3ViX3BhcnNlX29mKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQo+ICAgCXJldHVybiAw
-Ow0KPiAgIH0NCj4gICANCj4gLXN0YXRpYyBpbnQgc3RtMzJfc2FpX3N1Yl9kYWlzX2luaXQoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gLQkJCQkgICBzdHJ1Y3Qgc3RtMzJfc2FpX3N1
-Yl9kYXRhICpzYWkpDQo+IC17DQo+IC0Jc2FpLT5jcHVfZGFpX2RydiA9IGRldm1fa3phbGxvYygm
-cGRldi0+ZGV2LA0KPiAtCQkJCQlzaXplb2Yoc3RydWN0IHNuZF9zb2NfZGFpX2RyaXZlciksDQo+
-IC0JCQkJCUdGUF9LRVJORUwpOw0KPiAtCWlmICghc2FpLT5jcHVfZGFpX2RydikNCj4gLQkJcmV0
-dXJuIC1FTk9NRU07DQo+IC0NCj4gLQlpZiAoU1RNX1NBSV9JU19QTEFZQkFDSyhzYWkpKSB7DQo+
-IC0JCW1lbWNweShzYWktPmNwdV9kYWlfZHJ2LCAmc3RtMzJfc2FpX3BsYXliYWNrX2RhaSwNCj4g
-LQkJICAgICAgIHNpemVvZihzdG0zMl9zYWlfcGxheWJhY2tfZGFpKSk7DQo+IC0JCXNhaS0+Y3B1
-X2RhaV9kcnYtPnBsYXliYWNrLnN0cmVhbV9uYW1lID0gc2FpLT5jcHVfZGFpX2Rydi0+bmFtZTsN
-Cj4gLQl9IGVsc2Ugew0KPiAtCQltZW1jcHkoc2FpLT5jcHVfZGFpX2RydiwgJnN0bTMyX3NhaV9j
-YXB0dXJlX2RhaSwNCj4gLQkJICAgICAgIHNpemVvZihzdG0zMl9zYWlfY2FwdHVyZV9kYWkpKTsN
-Cj4gLQkJc2FpLT5jcHVfZGFpX2Rydi0+Y2FwdHVyZS5zdHJlYW1fbmFtZSA9IHNhaS0+Y3B1X2Rh
-aV9kcnYtPm5hbWU7DQo+IC0JfQ0KPiAtCXNhaS0+Y3B1X2RhaV9kcnYtPm5hbWUgPSBkZXZfbmFt
-ZSgmcGRldi0+ZGV2KTsNCj4gLQ0KPiAtCXJldHVybiAwOw0KPiAtfQ0KPiAtDQo+ICAgc3RhdGlj
-IGludCBzdG0zMl9zYWlfc3ViX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+
-ICAgew0KPiAgIAlzdHJ1Y3Qgc3RtMzJfc2FpX3N1Yl9kYXRhICpzYWk7DQo+IEBAIC0xNDY1LDkg
-KzE0MzgsMTEgQEAgc3RhdGljIGludCBzdG0zMl9zYWlfc3ViX3Byb2JlKHN0cnVjdCBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYpDQo+ICAgCWlmIChyZXQpDQo+ICAgCQlyZXR1cm4gcmV0Ow0KPiAgIA0K
-PiAtCXJldCA9IHN0bTMyX3NhaV9zdWJfZGFpc19pbml0KHBkZXYsIHNhaSk7DQo+IC0JaWYgKHJl
-dCkNCj4gLQkJcmV0dXJuIHJldDsNCj4gKwlpZiAoU1RNX1NBSV9JU19QTEFZQkFDSyhzYWkpKQ0K
-PiArCQlzYWktPmNwdV9kYWlfZHJ2ID0gc3RtMzJfc2FpX3BsYXliYWNrX2RhaTsNCj4gKwllbHNl
-DQo+ICsJCXNhaS0+Y3B1X2RhaV9kcnYgPSBzdG0zMl9zYWlfY2FwdHVyZV9kYWk7DQo+ICsJc2Fp
-LT5jcHVfZGFpX2Rydi5uYW1lID0gZGV2X25hbWUoJnBkZXYtPmRldik7DQo+ICAgDQo+ICAgCXJl
-dCA9IGRldm1fcmVxdWVzdF9pcnEoJnBkZXYtPmRldiwgc2FpLT5wZGF0YS0+aXJxLCBzdG0zMl9z
-YWlfaXNyLA0KPiAgIAkJCSAgICAgICBJUlFGX1NIQVJFRCwgZGV2X25hbWUoJnBkZXYtPmRldiks
-IHNhaSk7DQo+IEBAIC0xNDc3LDcgKzE0NTIsNyBAQCBzdGF0aWMgaW50IHN0bTMyX3NhaV9zdWJf
-cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gICAJfQ0KPiAgIA0KPiAgIAly
-ZXQgPSBkZXZtX3NuZF9zb2NfcmVnaXN0ZXJfY29tcG9uZW50KCZwZGV2LT5kZXYsICZzdG0zMl9j
-b21wb25lbnQsDQo+IC0JCQkJCSAgICAgIHNhaS0+Y3B1X2RhaV9kcnYsIDEpOw0KPiArCQkJCQkg
-ICAgICAmc2FpLT5jcHVfZGFpX2RydiwgMSk7DQo+ICAgCWlmIChyZXQpDQo+ICAgCQlyZXR1cm4g
-cmV0Ow0KPiAgIA0KPiANCg0KSnVzdCBvbmUgY29tbWVudC4gc2FpIGlzIG1pc3NpbmcgaW4gY29t
-bWl0IG1lc3NhZ2UuDQoNClJldmlld2VkLWJ5OiBPbGl2aWVyIE1veXNhbiA8b2xpdmllci5tb3lz
-YW5Ac3QuY29tPg0KDQpCUnMNCm9saXZpZXINCg==
+On 4/23/19 9:04 AM, Roger Pau Monne wrote:
+> Or else xen_domain() returns false despite xen_pvh being set.
+
+Is this new xen_domain() invocation somewhere in EFI initialization that
+you add in the second patch?
+
+Asking because I am trying to figure out whether this needs to go to
+stable tree.
+
+-boris
+
+>
+> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+> ---
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: xen-devel@lists.xenproject.org
+> ---
+>  arch/x86/xen/enlighten_pvh.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
+> index 35b7599d2d0b..bbffa409e0e8 100644
+> --- a/arch/x86/xen/enlighten_pvh.c
+> +++ b/arch/x86/xen/enlighten_pvh.c
+> @@ -27,6 +27,7 @@ void __init xen_pvh_init(void)
+>  	u64 pfn;
+>  
+>  	xen_pvh = 1;
+> +	xen_domain_type = XEN_HVM_DOMAIN;
+>  	xen_start_flags = pvh_start_info.flags;
+>  
+>  	msr = cpuid_ebx(xen_cpuid_base() + 2);
+
