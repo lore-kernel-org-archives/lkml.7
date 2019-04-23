@@ -2,85 +2,93 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2411C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737C1C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C164C20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CEB0206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfDWKzQ (ORCPT
+        id S1727601AbfDWKzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:55:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52968 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726443AbfDWKzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:55:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DF68FAE64;
-        Tue, 23 Apr 2019 10:55:01 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
-        sstabellini@kernel.org, Juergen Gross <jgross@suse.com>
-Subject: [PATCH 3/3] xen/swiotlb: remember having called xen_create_contiguous_region()
-Date:   Tue, 23 Apr 2019 12:54:57 +0200
-Message-Id: <20190423105457.17502-4-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20190423105457.17502-1-jgross@suse.com>
-References: <20190423105457.17502-1-jgross@suse.com>
+        Tue, 23 Apr 2019 06:55:39 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:54268 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfDWKzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 06:55:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05D7A374;
+        Tue, 23 Apr 2019 03:55:39 -0700 (PDT)
+Received: from [10.37.8.239] (unknown [10.37.8.239])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5470A3F557;
+        Tue, 23 Apr 2019 03:55:36 -0700 (PDT)
+Subject: Re: [PATCH 2/7] iommu/dma-iommu: Split iommu_dma_map_msi_msg in two
+ parts
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        logang@deltatee.com, douliyangs@gmail.com,
+        miquel.raynal@bootlin.com, marc.zyngier@arm.com,
+        jason@lakedaemon.net, tglx@linutronix.de, joro@8bytes.org,
+        robin.murphy@arm.com, bigeasy@linutronix.de,
+        linux-rt-users@vger.kernel.org
+References: <20190418172611.21561-1-julien.grall@arm.com>
+ <20190418172611.21561-3-julien.grall@arm.com>
+ <20190423070823.GA12114@infradead.org>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <7af177e1-dfd9-2a91-3fd9-dfe53a6a9014@arm.com>
+Date:   Tue, 23 Apr 2019 11:55:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190423070823.GA12114@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of always calling xen_destroy_contiguous_region() in case the
-memory is DMA-able for the used device, do so only in case it has been
-made DMA-able via xen_create_contiguous_region() before.
+Hi,
 
-This will avoid a lot of xen_destroy_contiguous_region() calls for
-64-bit capable devices.
+On 4/23/19 8:08 AM, Christoph Hellwig wrote:
+> On Thu, Apr 18, 2019 at 06:26:06PM +0100, Julien Grall wrote:
+>> +int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
+>>   {
+>> +	struct device *dev = msi_desc_to_dev(desc);
+>>   	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+>>   	struct iommu_dma_cookie *cookie;
+>>   	unsigned long flags;
+>>   
+>> +	if (!domain || !domain->iova_cookie) {
+>> +		desc->iommu_cookie = NULL;
+>> +		return 0;
+>> +	}
+>>   
+>>   	cookie = domain->iova_cookie;
+>>   
+>> @@ -908,10 +908,33 @@ void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)
+>>   	 * of an MSI from within an IPI handler.
+>>   	 */
+>>   	spin_lock_irqsave(&cookie->msi_lock, flags);
+>> +	desc->iommu_cookie = iommu_dma_get_msi_page(dev, msi_addr, domain);
+>>   	spin_unlock_irqrestore(&cookie->msi_lock, flags);
+>>   
+>> +	return (desc->iommu_cookie) ? 0 : -ENOMEM;
+> 
+> No need for the braces.  Also I personally find a:
+> 
+> 	if (!desc->iommu_cookie)
+> 		return -ENOMEM;
+> 	return 0;
+> 
+> much more readable, but that might just be personal preference.
 
-As the memory in question is owned by swiotlb-xen the PG_owner_priv_1
-flag of the first allocated page can be used for remembering.
+I am happy either way. I will use your suggestion in the next version.
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- drivers/xen/swiotlb-xen.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Cheers,
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index 43b6e65ae256..a72f181d8e20 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -321,6 +321,7 @@ xen_swiotlb_alloc_coherent(struct device *hwdev, size_t size,
- 			xen_free_coherent_pages(hwdev, size, ret, (dma_addr_t)phys, attrs);
- 			return NULL;
- 		}
-+		SetPageOwnerPriv1(virt_to_page(ret));
- 	}
- 	memset(ret, 0, size);
- 	return ret;
-@@ -344,9 +345,11 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
- 	/* Convert the size to actually allocated. */
- 	size = 1UL << (order + XEN_PAGE_SHIFT);
- 
--	if ((dev_addr + size - 1 <= dma_mask) &&
--	    !WARN_ON(range_straddles_page_boundary(phys, size)))
--		xen_destroy_contiguous_region(phys, order);
-+	if (PageOwnerPriv1(virt_to_page(vaddr))) {
-+		if (!WARN_ON(range_straddles_page_boundary(phys, size)))
-+			xen_destroy_contiguous_region(phys, order);
-+		ClearPageOwnerPriv1(virt_to_page(vaddr));
-+	}
- 
- 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
- }
 -- 
-2.16.4
-
+Julien Grall
