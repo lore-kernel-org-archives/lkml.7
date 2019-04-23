@@ -2,172 +2,99 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E1EC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEA0C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D0A206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15DE621738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loaLlLyi"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="OrOly8o8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbfDWNwM (ORCPT
+        id S1727936AbfDWNzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:52:12 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45907 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727690AbfDWNwJ (ORCPT
+        Tue, 23 Apr 2019 09:55:09 -0400
+Received: from mail-pg1-f176.google.com ([209.85.215.176]:43216 "EHLO
+        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfDWNzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:52:09 -0400
-Received: by mail-pg1-f196.google.com with SMTP id y3so7637829pgk.12;
-        Tue, 23 Apr 2019 06:52:09 -0700 (PDT)
+        Tue, 23 Apr 2019 09:55:09 -0400
+Received: by mail-pg1-f176.google.com with SMTP id z9so7644372pgu.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 06:55:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gbbEBOKapPJio4LlPk/W8tDU6nFQsIipcob0IALlUJ4=;
-        b=loaLlLyihUZva1yPtx+l6dEw4rDWSKC5hNGhAAWRqpSsiBA9zknCmGU9oS6X+N+8BB
-         joZ2bDV44+e5McIX+w5JpW6KLZC5yErEOmEWbuM11heOxt63iw/+hoqq8Uh4zDdSMGV1
-         uXXWYi0gd+BYm3xnDPbU6A8HKRbKrPcGXymghbtKVpOMldxT5EnhjZmJmiz+LBFPXBiu
-         j7u6wB0fBwhEM00+LDH3xTL2Hm18gUOv5DiKiNdFGWgUBWn5U5n8NGMVHs87ojBOIHUl
-         SKjdAoSlocFymB1iek9ydmabYObcz2m7DK1U+sJfugJmr0zruIFpmGDGCeN1ZeifDtLf
-         jMBA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=luZOP+M2Br1z6JjqvbCNY8qb9/6fC4RpgjiwRzb9+fM=;
+        b=OrOly8o89edT05ye0GoFYglLRnhBVI2iEJom83aUVZS3azbqR0BfYsNQg4K3yNldrW
+         +g9wz3kH6GRB7RS2YOWrcjSEk7Gkz5xGOpOn3S5JlJ9yqedh5+FDEaOx6yFF2FOL93Px
+         FIRoMpMW0yTRsShbBKv395hY1iGxcyovrjcYARVsJPMJ9qXkWeWpwfUDYZFgbmAb3LPU
+         ZsZAuh6gYD/3ZCG1WQAZXGjhLrxl2Xa5WBWpw3u+6v4/6RZ11a5a5rXP3UX2r1W4Hdf5
+         SHtN7SU1zX6LMJbFBE787Gn7MHSfRNeowo4R7N358R1cdG2asO7DgvsbxhL43Eheda5h
+         PS+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=gbbEBOKapPJio4LlPk/W8tDU6nFQsIipcob0IALlUJ4=;
-        b=d7gg1LUqKguSoV9D/wS3+oI/CaZxTzElw/V/dJZcYm1XEtnCP72Pz+K09XpFeUW0xL
-         55wTkc4vnQZnuaGfvETIo1CPFlF1j8s0LdoDUgUysdDVOoljJuU3LcFx/Yg1nRCH/CDu
-         W6ewnmuZW5D91Faj4mqYkflymQqkS+66Sumgp6SRvYHUPhTf44e9NNo9CUrpna/MIhPg
-         CDMGcjlprcQ+MFMiklJaaZhoDuqmdfbJMUVWIcDfamGSnHpREbFtaxE09g+cvGLxdu+d
-         0my+yD/9B73ZKSnmhAL4GjjQDpBQVw59+MJF9cv5cuMQIpVbnOV4ksL6M7iUNPgivvcf
-         1P3w==
-X-Gm-Message-State: APjAAAWnWatr4uuJloNbdwJv7TQAgAiv6QK1r4gP7Zf4553M7IvJZ4Lo
-        Z/ofwEf0UvzxNzDjZfcbJZ10qCTA
-X-Google-Smtp-Source: APXvYqym7xex5UEhU9S9xgwKUp6RZgjiMk836emlCNewpZBMq0DSYkdnjKLq5qiUsJUgqqGsxIUdqA==
-X-Received: by 2002:a63:330e:: with SMTP id z14mr24604367pgz.4.1556027528824;
-        Tue, 23 Apr 2019 06:52:08 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j6sm4494380pgs.28.2019.04.23.06.52.07
+        bh=luZOP+M2Br1z6JjqvbCNY8qb9/6fC4RpgjiwRzb9+fM=;
+        b=Ofi2AxrWTczP3a2jP/lUQ7mvl1arMmRvzsKc40E4xwUQAtS5ys+drNBsbr3pbcTScY
+         8wp3Df2N8r39UWWz8lX+6A0UXa9InWH0PHKrvP5toYI4o9Kjxx4d8L/jWpHNjmFAJpBq
+         aDwBE+hYvCkW901/Ao7BSf1EfiTqNsBm3xcTCAzAx6y05iuJe2pAxOBdzZSu038w2HKH
+         qBmqlTGhMZqgbtp1mASXE66C+MyL4d3gVXuFsXW1hY4yArJCzMuGpwA08q1Jwh3ODZKv
+         rSUAcGEgPFgNtTLmZoYhGcXgbcmKX77iToKs2VXksJ+ZhuDBU5f70JbP7Loy/4L01xaD
+         hykg==
+X-Gm-Message-State: APjAAAVFBbArJjnIkIy8Ap2wcfrV3+NdOyATOA3J32XLZvb2roLnC9Uw
+        4J2le3guT2FRBqTmSoN5yHw7fQ==
+X-Google-Smtp-Source: APXvYqyPSeybmMUZTM8bgnWD06hCQaiW8B7Q9aMgFMFTf9FftneTu4UxQjo9GJ4QdLhH6QuMuxEgvg==
+X-Received: by 2002:a65:60c7:: with SMTP id r7mr19209315pgv.191.1556027708285;
+        Tue, 23 Apr 2019 06:55:08 -0700 (PDT)
+Received: from [192.168.1.121] (66.29.188.166.static.utbb.net. [66.29.188.166])
+        by smtp.gmail.com with ESMTPSA id v15sm21933247pff.105.2019.04.23.06.55.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 06:52:08 -0700 (PDT)
-Subject: Re: Fwd: [PATCH 1/2] hwmon: (lm75) Add support for TMP75B
-To:     Iker Perez del Palomar <iker.perez@codethink.co.uk>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jdelvare@suse.com
-References: <2904a750-c6e9-719b-7523-0f45e0bc82cc@codethink.co.uk>
- <2effcb0e-03c6-0f7e-b154-62cbc9ad415a@codethink.co.uk>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <655fa0d3-1b76-96c7-4c04-9f258a3305bc@roeck-us.net>
-Date:   Tue, 23 Apr 2019 06:52:06 -0700
+        Tue, 23 Apr 2019 06:55:07 -0700 (PDT)
+Subject: Re: next-20190408..0418: Suspend/resume problems on Thinkpad X60
+To:     Pavel Machek <pavel@ucw.cz>,
+        kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
+        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org, hdegoede@redhat.com,
+        linux-ide@vger.kernel.org
+References: <20190408173928.GB13260@amd> <20190412102812.GA24977@amd>
+ <20190423102239.GA15531@amd>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
+Date:   Tue, 23 Apr 2019 07:55:05 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <2effcb0e-03c6-0f7e-b154-62cbc9ad415a@codethink.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190423102239.GA15531@amd>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/19 3:11 AM, Iker Perez del Palomar wrote:
-> The TMP75B has a different control register, supports 12-bit
-> resolution and the default conversion rate is 37 Hz.
+On 4/23/19 4:22 AM, Pavel Machek wrote:
+> Hi!
 > 
-> Signed-off-by: Iker Perez del Palomar Sustatxa <iker.perez@codethink.co.uk>
+>>> It boots ok (unlike mainline -- I'm debugging that), and I can suspend
+>>> and resume... but then cursor in X is moving and I can talk to
+>>> applications cached in memory, but any access to disk hangs.
+>>
+>> Mainline problem was identified.
+>>
+>> But resume is still broken. I took advantage of fact that I can still
+>> do cached commands, and got complete dmesg. I'm attaching it.
+> 
+> Still broken in 0418. Ideas would be welcome at this point.
 
-This patch is corrupted. It replaces tabs with spaces, and there are line wraps.
+Bisect it?
 
-> ---
->   Documentation/hwmon/lm75 |  5 +++--
->   drivers/hwmon/lm75.c     | 13 +++++++++++++
->   2 files changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/hwmon/lm75 b/Documentation/hwmon/lm75
-> index 010583608f12..baf052935761 100644
-> --- a/Documentation/hwmon/lm75
-> +++ b/Documentation/hwmon/lm75
-> @@ -47,8 +47,8 @@ Supported chips:
->       Addresses scanned: none
->       Datasheet: Publicly available at the ST website
->              https://www.st.com/resource/en/datasheet/stlm75.pdf
-> -  * Texas Instruments TMP100, TMP101, TMP105, TMP112, TMP75, TMP75C, TMP175, TMP275
-> -    Prefixes: 'tmp100', 'tmp101', 'tmp105', 'tmp112', 'tmp175', 'tmp75', 'tmp75c', 'tmp275'
-> +  * Texas Instruments TMP100, TMP101, TMP105, TMP112, TMP75, TMP75B, TMP75C, TMP175, TMP275
-> +    Prefixes: 'tmp100', 'tmp101', 'tmp105', 'tmp112', 'tmp175', 'tmp75', 'tmp75b', 'tmp75c', 'tmp275'
->       Addresses scanned: none
->       Datasheet: Publicly available at the Texas Instruments website
->                  http://www.ti.com/product/tmp100
-> @@ -56,6 +56,7 @@ Supported chips:
->                  http://www.ti.com/product/tmp105
->                  http://www.ti.com/product/tmp112
->                  http://www.ti.com/product/tmp75
-> +               http://www.ti.com/product/tmp75b
->                  http://www.ti.com/product/tmp75c
->                  http://www.ti.com/product/tmp175
->                  http://www.ti.com/product/tmp275
-> diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-> index 62acb9f16ec5..1b5c32cbdc62 100644
-> --- a/drivers/hwmon/lm75.c
-> +++ b/drivers/hwmon/lm75.c
-> @@ -32,6 +32,7 @@
->   #include "lm75.h"
-> 
-> 
-> +
-
-I don't mind if you'd remove one of the two empty lines above, but add yet another one ?
-Please don't.
-
->   /*
->    * This driver handles the LM75 and compatible digital temperature sensors.
->    */
-> @@ -59,6 +60,7 @@ enum lm75_type {        /* keep sorted in alphabetical order */
->       tmp175,
->       tmp275,
->       tmp75,
-> +    tmp75b,
->       tmp75c,
->   };
-> 
-> @@ -378,6 +380,12 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
->           data->resolution = 12;
->           data->sample_time = MSEC_PER_SEC / 2;
->           break;
-> +    case tmp75b:
-> +        clr_mask |= 1 << 15;        /* not one-shot mode */
-> +        data->resolution = 12;
-> +        data->sample_time = MSEC_PER_SEC / 32;
-> +        break;
-> +
->       case tmp75c:
->           clr_mask |= 1 << 5;        /* not one-shot mode */
->           data->resolution = 12;
-> @@ -438,6 +446,7 @@ static const struct i2c_device_id lm75_ids[] = {
->       { "tmp175", tmp175, },
->       { "tmp275", tmp275, },
->       { "tmp75", tmp75, },
-> +    { "tmp75b", tmp75b,},
->       { "tmp75c", tmp75c, },
->       { /* LIST END */ }
->   };
-> @@ -537,6 +546,10 @@ static const struct of_device_id lm75_of_match[] = {
->           .data = (void *)tmp75
->       },
->       {
-> +        .compatible = "ti,tmp75b",
-> +        .data = (void *)tmp75b
-> +    },
-> +    {
->           .compatible = "ti,tmp75c",
->           .data = (void *)tmp75c
->       },
-> 
+-- 
+Jens Axboe
 
