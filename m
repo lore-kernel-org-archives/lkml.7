@@ -2,94 +2,96 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5758AC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D25C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24903218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:55:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="X3PBU1Tr"
+	by mail.kernel.org (Postfix) with ESMTP id A3ACA2148D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556056940;
+	bh=FhArrED8BN1Xyq63DfhfXXDjR4FiTX8CluznIcw05EE=;
+	h=From:Subject:To:Cc:References:Date:In-Reply-To:List-ID:From;
+	b=b+E376Va1uexI5sSO6+HBUN3R/lUnagZDgGw8x9zEnC2iTewr2JFk+X8VhYE9qtiz
+	 7CAY5w3xvl3SinD20uaZQJbPzaGhd4GgdymWAlYCWmoxNXfLfhGqvOij2M0EEJNxEW
+	 jYIzTN11efbMGq85aK3sWS6Q4uF62W9fGCbWswpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfDWVzk (ORCPT
+        id S1728206AbfDWWCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:55:40 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34031 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfDWVzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:55:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pch83QMgz9sB8;
-        Wed, 24 Apr 2019 07:55:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556056536;
-        bh=UHlId9AYgte0/xzGUJHrcoLv+VMXojzigZ5cIwp5fTg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=X3PBU1Trhv7dGhJi7TAB73bjcUx2z9d4eaNFqkfh5W9E9Odyx6S26mVgX7afAmU//
-         oH4ic/aIOL+a9HuS8NOLcybefzmJGXuUtlgcRpo1GVCuf98KLCnsL3g93LPuDwFUya
-         bRMLmGkiSPvpkuxIRYtxTOXLLno2fa6U1inPnrlGwzNwpJHu1RQzsrsNWVwxql4Yn0
-         qR3p8qaPAKu8myswJ7yiOqFmvpdc4rc8uDrVhksZg2TtZtfNeaiBpBqX3079Z3t/XA
-         gY6bDPYS8EMQ7vL7uDGnPl1bvPVvkTTbv/fx9/VHQi+NlJ8zuKDVlpS4t1r9xzOZzr
-         wkLksFOhd6w+w==
-Date:   Wed, 24 Apr 2019 07:55:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>
-Subject: linux-next: Fixes tag needs some work in the i2c tree
-Message-ID: <20190424075535.7cdd5a73@canb.auug.org.au>
+        Tue, 23 Apr 2019 18:02:19 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:35513 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfDWWCS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 18:02:18 -0400
+Received: by mail-yw1-f65.google.com with SMTP id d132so6211810ywa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:02:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=X7O0KvCE0YFyN+hnadzgbU45Yw3YJoAenM1XoLAT0HI=;
+        b=Ore60regilhYPTumjPGcdSQ8h67wfziKlp4dDvZfGi4qqLVt29S2XE+ZbkGX2/hRqs
+         to885yPhuhPdgXId181NYPtECGUlQ9j3BWD/1cv/hE37+hZavXBl5LQxi87CZsgIg+sa
+         abASnrJEjkqutuAilDjkKpB0QkOlMTMU7zpwVzDvpcGexQYtF92WJS0OsKfJvn1Vp68E
+         DHAYsO5a2x+mz/wxkI73IbPOcdteRuZchV4TAh3LmJ6L4cg3dkglhzFo2qLfC2Kfq3xG
+         AbQ5OCdt3cu3yzJ4i5GAhQa8ep/ctCto7Gxkt+mWuwIkTlmVDp+72QPuqsow1vFazoW6
+         2V1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X7O0KvCE0YFyN+hnadzgbU45Yw3YJoAenM1XoLAT0HI=;
+        b=eMnq068yFWGP3GJyJ6jpTOULepZXek1B1jIiDWRK4w8jMZMDDUkE7AqgjCwVbnkJIg
+         db28WbRseW8n9Jv3Ponhqu9WRCcRAZk2VtUZBQIyRNMEtPdLtBaYgAK9CZ60/2aG2lrC
+         M+UNaZGJ+7jFZqLVNsQtyg44BPzea5X4xpkWWYphvAca2LHRXVymjHSRnYzo9T37cQ44
+         LuYSrdiifl9EaickeLx+9ORmUaUVebbyy0adlNss0ye2LBy9V08K8er+N8uhfZzqn+ws
+         rRAOar5VZ8mTve8OZ+8sJGf8XrYybuf5PMBL8huZi3qj03o9JUpJfENyfw+DEAfeutoW
+         Vt1A==
+X-Gm-Message-State: APjAAAXPTEoLjv2DeVH08dia5bEQnvBt+1DfJWp/0+g78m1Z7weSsLST
+        lTxTwRBW+//hNPHWVwDFMv8=
+X-Google-Smtp-Source: APXvYqwx1GQk4tPF6gM9vfCKKu9XV3JvzM5WhcLVw8jYUQQM528SH15udcU2B+a7vI+UORaJyY6DZQ==
+X-Received: by 2002:a81:1693:: with SMTP id 141mr23785247yww.448.1556056937702;
+        Tue, 23 Apr 2019 15:02:17 -0700 (PDT)
+Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net. [75.58.59.55])
+        by smtp.gmail.com with ESMTPSA id j83sm5618655ywj.93.2019.04.23.15.02.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 15:02:17 -0700 (PDT)
+From:   Sinan Kaya <Okaya@kernel.org>
+X-Google-Original-From: Sinan Kaya <okaya@kernel.org>
+Subject: Re: [PATCH v5 0/5] init: Do not select DEBUG_KERNEL by default
+To:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>
+References: <20190413224438.10802-1-okaya@kernel.org>
+ <CAGXu5jLRnq1WeDtMSwE_qnve_O9+GiZd4m=N=_1rBidwRwmeJg@mail.gmail.com>
+Message-ID: <ff84544e-33f8-e6aa-48b3-2f786ff15dfc@kernel.org>
+Date:   Tue, 23 Apr 2019 18:02:16 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/7k+5vEFyz4c==QABG=3K+uE"; protocol="application/pgp-signature"
+In-Reply-To: <CAGXu5jLRnq1WeDtMSwE_qnve_O9+GiZd4m=N=_1rBidwRwmeJg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7k+5vEFyz4c==QABG=3K+uE
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 4/14/2019 11:55 PM, Kees Cook wrote:
+> Thanks! This looks good to me. For the series:
+> 
+> Reviewed-by: Kees Cook<keescook@chromium.org>
+> 
+> Andrew, can you take these from lkml, or should the series get resent
+> directly to you? I think you might be the best to carry this?
 
-Hi all,
+Where do we stand on this?
 
-In commit
-
-  31cac068e9f3 ("i2c: imx: correct the method of getting private data in no=
-tifier_call")
-
-Fixes tag
-
-  Fixes: 90ad2cbe88c2("i2c: imx: use clk notifier for rate changes")
-
-has these problem(s):
-
-  - missing space between the SHA1 and the subject
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/7k+5vEFyz4c==QABG=3K+uE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/idcACgkQAVBC80lX
-0GyAFwf/a4UAfA9ceSsFVpiu8IsqEgMntY9tGRtdlE3+MsSebIk+P4hopSnFXnI7
-UwXG8I8slQC8Sgm3stXK1IxlYR5DhtFd+J/XlIEYj13EPgkGr08W+GFzbrJayXeO
-gL8pkkeQODMmMzvh1GMp9NPsq0IFykVYvCdKyc/dMpp9AOao9JU1Hw4MXYrWdDfD
-lHrQxGqOoGXgQmzU1In7JXOLIwqBaFmYkft8SmJI8iSgPSN3b/bLNkH4qwNGxWZp
-uhtsmLNeHwItdDC9Sja3Y1rKvwn0q67BZbOMsZEIH/UeMEUUojSs335IEpqWPLK/
-YGZs5XHFnnzHCmYM2FfzVsDOftqaMQ==
-=zXMJ
------END PGP SIGNATURE-----
-
---Sig_/7k+5vEFyz4c==QABG=3K+uE--
+Anything for me to do, here?
