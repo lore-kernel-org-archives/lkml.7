@@ -2,94 +2,289 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F70C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C648C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3537206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44970206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfDWNHi (ORCPT
+        id S1727802AbfDWNIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:07:38 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:55613 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfDWNHi (ORCPT
+        Tue, 23 Apr 2019 09:08:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44942 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727180AbfDWNIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:07:38 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id A03EC3C00C1;
-        Tue, 23 Apr 2019 15:07:35 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id YNJcIX4shQh3; Tue, 23 Apr 2019 15:07:28 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 452AD3C0034;
-        Tue, 23 Apr 2019 15:07:28 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 23 Apr
- 2019 15:07:27 +0200
-Date:   Tue, 23 Apr 2019 15:07:24 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Jiada Wang <jiada_wang@mentor.com>
-CC:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
-        <daniel.lezcano@linaro.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <joshua_frkuska@mentor.com>,
-        <horms+renesas@verge.net.au>,
-        <niklas.soderlund+renesas@ragnatech.se>, <geert+renesas@glider.be>,
-        <sergei.shtylyov@cogentembedded.com>,
-        <marek.vasut+renesas@gmail.com>,
-        <kuninori.morimoto.gx@renesas.com>, <hien.dang.eb@renesas.com>,
-        <fabrizio.castro@bp.renesas.com>, <dien.pham.ry@renesas.com>,
-        <biju.das@bp.renesas.com>, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <rosca.eugeniu@gmail.com>
-Subject: Re: [PATCH v2 1/2] thermal: rcar_gen3_thermal: fix interrupt type
-Message-ID: <20190423130724.GA10913@vmlxhi-102.adit-jv.com>
+        Tue, 23 Apr 2019 09:08:46 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NCtDQk038495
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:08:45 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s22fpaevf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:08:45 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 23 Apr 2019 14:08:42 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 14:08:39 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3ND8c2843974890
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 13:08:38 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15E66A4060;
+        Tue, 23 Apr 2019 13:08:38 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 40A4FA4054;
+        Tue, 23 Apr 2019 13:08:37 +0000 (GMT)
+Received: from [9.145.50.246] (unknown [9.145.50.246])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 13:08:37 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 7/8] s390: vfio-ap: handle bind and unbind of AP queue
+ device
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1555796980-27920-1-git-send-email-akrowiak@linux.ibm.com>
+ <1555796980-27920-8-git-send-email-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Tue, 23 Apr 2019 15:08:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190423061218.29705-2-jiada_wang@mentor.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
+In-Reply-To: <1555796980-27920-8-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042313-0016-0000-0000-00000271BD01
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042313-0017-0000-0000-000032CE28DE
+Message-Id: <926b43f9-13ed-602d-c7f0-1e0dd9fe32a1@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiada,
-
-On Tue, Apr 23, 2019 at 03:12:17PM +0900, Jiada Wang wrote:
-> Currently IRQF_SHARED type interrupt line is allocated, but it
-> is not appropriate, as the interrupt line isn't shared between
-> different devices, instead IRQF_ONESHOT is the proper type.
+On 20/04/2019 23:49, Tony Krowiak wrote:
+> There is an implied guarantee that when an AP queue device is bound to a
+> device driver, that driver will have exclusive control over the device.
+> When an AP queue device is unbound from the vfio_ap driver while the
+> queue is in use by a guest and subsquently bound to a zcrypt driver, the
+> guarantee that the zcrypt driver has exclusive control of the queue
+> device will be violated. Likewise, when an AP queue device is bound to
+> the vfio_ap device driver and its APQN is assigned to an mdev device in
+> use by a guest, the expectation is that the guest will have access to
+> the queue.
 > 
-> By changing interrupt type to IRQF_ONESHOT, now irq handler is
-> no longer needed, as clear of interrupt status can be done in
-> threaded interrupt context.
+> The purpose of this patch is to ensure three things:
 > 
-> Because IRQF_ONESHOT type interrupt line is kept disabled until
-> the threaded handler has been run, so there is no need to protect
-> read/write of REG_GEN3_IRQSTR with lock.
+> 1. When an AP queue device in use by a guest is unbound, the guest shall
+>     no longer access the queue. Due to the limitations of the
+>     architecture, access to a single queue can not be denied to a guest,
+>     so access to the AP card to which the queue is connected will be
+>     denied to the guest.
 > 
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> 2. When an AP queue device with an APQN assigned to an mdev device is
+>     bound to the vfio_ap driver while the mdev device is in use by a guest,
+>     the guest shall be granted access to the queue.
+> 
+> 3. When a guest is started, each APQN assigned to the guest's mdev device
+>     must be owned by the vfio_ap driver.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 > ---
->  drivers/thermal/rcar_gen3_thermal.c | 40 ++++++++---------------------
->  1 file changed, 10 insertions(+), 30 deletions(-)
->
+>   drivers/s390/crypto/vfio_ap_drv.c     | 16 ++++++-
+>   drivers/s390/crypto/vfio_ap_ops.c     | 82 ++++++++++++++++++++++++++++++++++-
+>   drivers/s390/crypto/vfio_ap_private.h |  2 +
+>   3 files changed, 97 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index e9824c35c34f..0f5dafddf5b1 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -42,12 +42,26 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
+>   
+>   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+>   {
+> +	struct ap_queue *apq = to_ap_queue(&apdev->device);
+> +	unsigned long apid = AP_QID_CARD(apq->qid);
+> +	unsigned long apqi = AP_QID_QUEUE(apq->qid);
+> +
+> +	mutex_lock(&matrix_dev->lock);
+> +	vfio_ap_mdev_probe_queue(apid, apqi);
+> +	mutex_unlock(&matrix_dev->lock);
+> +
+>   	return 0;
+>   }
+>   
+>   static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+>   {
+> -	/* Nothing to do yet */
+> +	struct ap_queue *apq = to_ap_queue(&apdev->device);
+> +	unsigned long apid = AP_QID_CARD(apq->qid);
+> +	unsigned long apqi = AP_QID_QUEUE(apq->qid);
+> +
+> +	mutex_lock(&matrix_dev->lock);
+> +	vfio_ap_mdev_remove_queue(apid, apqi);
+> +	mutex_unlock(&matrix_dev->lock);
+>   }
+>   
+>   static void vfio_ap_matrix_dev_release(struct device *dev)
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 31ce30ee784d..3f9506516545 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -763,8 +763,8 @@ static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
+>   			msleep(20);
+>   			break;
+>   		default:
+> -			pr_warn("%s: tapq err %02x: 0x%04x may not be empty\n",
+> -				__func__, status.response_code, q->apqn);
+> +			pr_warn("%s: tapq err %02x: %02lx%04lx may not be empty\n",
+> +				__func__, status.response_code, apid, apqi);
+>   			return;
+>   		}
+>   	} while (--retry);
+> @@ -823,6 +823,14 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>   
+>   static int vfio_ap_mdev_create_shadow_crycb(struct ap_matrix_mdev *matrix_mdev)
+>   {
+> +	/*
+> +	 * If an AP resource is not owned by the vfio_ap driver - e.g., it was
+> +	 * unbound from the driver while still assigned to the mdev device
+> +	 */
+> +	if (ap_apqn_in_matrix_owned_by_def_drv(matrix_mdev->matrix.apm,
+> +					       matrix_mdev->matrix.aqm))
+> +		return -EADDRNOTAVAIL;
+> +
+>   	matrix_mdev->shadow_crycb = kzalloc(sizeof(*matrix_mdev->shadow_crycb),
+>   					    GFP_KERNEL);
+>   	if (!matrix_mdev->shadow_crycb)
+> @@ -847,6 +855,18 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+>   	if (!try_module_get(THIS_MODULE))
+>   		return -ENODEV;
+>   
+> +	ret = ap_apqn_in_matrix_owned_by_def_drv(matrix_mdev->matrix.apm,
+> +						 matrix_mdev->matrix.aqm);
+> +
+> +	/*
+> +	 * If any APQN is owned by a default driver, it can not be used by the
+> +	 * guest. This can happen if a queue is unbound from the vfio_ap
+> +	 * driver but not unassigned from the mdev device.
+> +	 */
+> +	ret = (ret == 1) ? -EADDRNOTAVAIL : ret;
+> +	if (ret)
+> +		return ret;
+> +
+>   	matrix_mdev->group_notifier.notifier_call = vfio_ap_mdev_group_notifier;
+>   	events = VFIO_GROUP_NOTIFY_SET_KVM;
+>   
+> @@ -938,3 +958,61 @@ void vfio_ap_mdev_unregister(void)
+>   {
+>   	mdev_unregister_device(&matrix_dev->device);
+>   }
+> +
+> +static struct ap_matrix_mdev *vfio_ap_mdev_find_matrix_mdev(unsigned long apid,
+> +							    unsigned long apqi)
+> +{
+> +	struct ap_matrix_mdev *matrix_mdev;
+> +
+> +	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
+> +		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
+> +		    test_bit_inv(apqi, matrix_mdev->matrix.aqm))
+> +			return matrix_mdev;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +void vfio_ap_mdev_remove_queue(unsigned long apid, unsigned long apqi)
+> +{
+> +	struct ap_matrix_mdev *matrix_mdev;
+> +
+> +	matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
+> +
+> +	/*
+> +	 * If the queue is assigned to the mdev device and the mdev device
+> +	 * is in use by a guest
+> +	 */
+> +	if (matrix_mdev && matrix_mdev->kvm) {
+> +		/*
+> +		 * Unplug the adapter from the guest but don't unassign it
+> +		 * from the mdev device
+> +		 */
+> +		clear_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+> +		vfio_ap_mdev_update_crycb(matrix_mdev);
+> +	}
+> +
+> +	vfio_ap_mdev_reset_queue(apid, apqi);
+> +}
+> +
+> +void vfio_ap_mdev_probe_queue(unsigned long apid, unsigned long apqi)
+> +{
+> +	struct ap_matrix_mdev *matrix_mdev;
+> +
+> +	matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
+> +
+> +	/*
+> +	 * If the queue is assigned to the mdev device and the mdev device
+> +	 * is in use by a guest
+> +	 */
+> +	if (matrix_mdev && matrix_mdev->kvm) {
+> +		/* Plug the adapter into the guest */
+> +		set_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+> +
+> +		/* Make sure the queue is also plugged in to the guest */
+> +		if (!test_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm))
+> +			set_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm);
 
-[..]
+Why are you testing the domain before setting it and not the adapter?
 
-I might be doing something wrong, but I couldn't apply this patch on top
-of v5.1-rc6-4-g7142eaa58b49. All below commands failed (git v2.21.0):
- - git am this.patch
- - git apply this.patch
- - patch -p1 < this.patch
+Eventually you do not need to test at all or if, then both.
+
+NIT
+
+
+> +
+> +		vfio_ap_mdev_update_crycb(matrix_mdev);
+> +	}
+> +}
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+> index e8457aa61976..00eaae3b853f 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -87,5 +87,7 @@ struct ap_matrix_mdev {
+>   
+>   extern int vfio_ap_mdev_register(void);
+>   extern void vfio_ap_mdev_unregister(void);
+> +void vfio_ap_mdev_remove_queue(unsigned long apid, unsigned long apqi);
+> +void vfio_ap_mdev_probe_queue(unsigned long apid, unsigned long apqi);
+>   
+>   #endif /* _VFIO_AP_PRIVATE_H_ */
+> 
+
 
 -- 
-Best regards,
-Eugeniu.
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
