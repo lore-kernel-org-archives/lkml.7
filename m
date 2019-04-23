@@ -2,159 +2,161 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ABBC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2ABC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E2F20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 479FE20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:08:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="EyvQcSNn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbfDWQHK (ORCPT
+        id S1728521AbfDWQIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:07:10 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:45043 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728485AbfDWQHI (ORCPT
+        Tue, 23 Apr 2019 12:08:17 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38378 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfDWQIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:07:08 -0400
-Received: by mail-io1-f69.google.com with SMTP id w9so2509163ior.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:07:07 -0700 (PDT)
+        Tue, 23 Apr 2019 12:08:16 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d13so16714268qth.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qj9kbZXTr7zKXSHE2IT9VClpI1Uyp0gtKR/7siF1Glk=;
+        b=EyvQcSNnml041xkaDLLIO5BeLznQlgg4BzXua5XmF+zKQuIdaxoK4xv8Ab6lOm8hVT
+         uxxkZZYgYVb2HH/CpDeBq/daRO6WmuPv4h3bfUAGo1c0IlPttssyADTEPaGFoLDb7ISs
+         yJ7ZJ9WH7uxzclDSm2Ks0LY2gK/HYkXN3ya49aUtH4z+V4aJ5f6x7/4gxUg9cBFeOBdQ
+         SBY0sblmRYZzehOakw5F2fLqXIdUCKjjb2D3T4a2tRUk4fRYMjB4PYMKewhXRbkOAs5w
+         QkJD55d1ALn2HSjkTQ5HIqNyPYYjrMO6+2iPZxGwgk2VJWQePi+bb4bXMHfsEvp3IRGV
+         F1uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=KR12zUlTr2Xk8ujyEDH7Kxe9ncILjqmJGGth/fcaif0=;
-        b=qLegX/DuOKBw3B3AuIIqgEI5hPczU4ephwJljPhyccrfE0rgAWbwq+unUgLGz0enJT
-         wU2BHQmKVGpoFYNDX8sBkNZ5ipK1NFlo8orTiNWhmEBK4IkdJZNS1KIRkpBQ89sYHqOF
-         Jjsy/SQt+3JWX8X1Upjdhp7BDIn02NJquHkfnBtsF8WhnY+KCiylD4QvUzj/l1WmNkml
-         5fnCY3CuEAwfXNDAMorPKhm4uQ26zXv9N9+g4wUcs7R4Qhjqxh+nD8N5/Bdc0BbSe/7z
-         jlVnx9N5iG86NhCUSIcFK3eMFNc9rczVvRlUxYD0ry3lHCA0L4RpkGtjaHABqLcXTBKN
-         o35g==
-X-Gm-Message-State: APjAAAUv7ADpKptsEZOBtEJNzgCiHp9BAgtXEam8Hbf57kvZZtxBlXFo
-        dUjUaGNL7UO2rsg2WnVU6Ox8WRUGG3iyEizv59S/ljTZgFby
-X-Google-Smtp-Source: APXvYqw9j5+1bwsznzH8RS8CqKnjT9aQdm32X3EL0vAuLtAzkxqjyO8IEMNXgeLZijlRaRzqASe5aHpETCj5UYq83V6QeiGrSvjw
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qj9kbZXTr7zKXSHE2IT9VClpI1Uyp0gtKR/7siF1Glk=;
+        b=cooeftDgVwSVrLjBkxQgacocr6FXKcpEEGVPmvIrCwNsNnIJue2mhNHcjAbeh0QlWp
+         xavZ7ylhcZ/QUDlJcR5UFjZ9iT/4rf/ffEHtrhqnbOu4a5U4UpY0NHgzL6Z8QomjaZg+
+         AO7KK0lgJ+63fsBg1sDzMRXM/PBdkV/ovO03KiFx0J4MQhPhfIpJxauLUBmr5zMEELUr
+         kjAfRym+gSx9cmqMyoaGrZLfa71kp3Y4cZVbUeX+i3L382Tm4r9elb9GhXJqSxyNVMsB
+         PsxTL2rkRcdQux+ywR8HAe0yWHkHp0c4OlaCurJskYn90l8QiGY+wDiXIbaLqhymqsl9
+         Q1ZA==
+X-Gm-Message-State: APjAAAWsDptRPuWr3aHr18QEWHdbEP0arf0F0LSSILKVc9QXg0NhAV5V
+        s6ry89/HN8dUb8PIB87A+STtgaY2kMrlXahONe+AiA==
+X-Google-Smtp-Source: APXvYqzLdCVPIVDntZf49wW20ABsFtDhDuMTwyIRRq8MruJKVGpP4y3iTg1QpqsEeXOwH9LkwwD8jqyUGsFwDFCtPSE=
+X-Received: by 2002:ac8:33b8:: with SMTP id c53mr21096700qtb.11.1556035695704;
+ Tue, 23 Apr 2019 09:08:15 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9715:: with SMTP id h21mr18162278iol.266.1556035626787;
- Tue, 23 Apr 2019 09:07:06 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 09:07:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000caeb1c058734c654@google.com>
-Subject: general protection fault in fib6_purge_rt (2)
-From:   syzbot <syzbot+d53d5d9b6793dc70eb9d@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <1551289652-7377-1-git-send-email-mw@semihalf.com>
+ <20190228093627.vtfglsl2djenohlm@shell.armlinux.org.uk> <CAPv3WKdj+EKr2VR+NcBHQrS9xoxHoMzZOri65G61CH6xLL8jFw@mail.gmail.com>
+In-Reply-To: <CAPv3WKdj+EKr2VR+NcBHQrS9xoxHoMzZOri65G61CH6xLL8jFw@mail.gmail.com>
+From:   Marcin Wojtas <mw@semihalf.com>
+Date:   Tue, 23 Apr 2019 18:08:00 +0200
+Message-ID: <CAPv3WKcDgY_LY_u8mY47ZZqT2iVL9fp5n3Le0UVWsyO4QDYP-A@mail.gmail.com>
+Subject: Re: [net: PATCH] net: mvpp2: disable link IRQ waiting for IDLE frames
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        netdev <netdev@vger.kernel.org>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Grzegorz Jaszczyk <jaz@semihalf.com>,
+        =?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>,
+        nadavh@marvell.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Tomasz Nowicki <tn@semihalf.com>,
+        Stefan Chulski <stefanc@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi David, Rusell,
 
-syzbot found the following crash on:
+czw., 28 lut 2019 o 14:58 Marcin Wojtas <mw@semihalf.com> napisa=C5=82(a):
+>
+> Hi Russell,
+>
+> czw., 28 lut 2019 o 10:36 Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> napisa=C5=82(a):
+> >
+> > On Wed, Feb 27, 2019 at 06:47:32PM +0100, Marcin Wojtas wrote:
+> > > Current version of the driver was configuring XLG MAC
+> > > in a way to wait 3 IDLE frames before allowing for the
+> > > link-up interrupt to be triggered. This resulted in an
+> > > issue, preventing to detect the link change during RX
+> > > traffic on the interface. Fix that.
+> >
+> > What about noise sensitivity?  Does this now mean that on boards such a=
+s
+> > Macchiatobin Single Shot or Clearfog GT9k where the serdes is connected
+> > directly to a SFP cage, that noise on the serdes lines triggers a link
+> > indication?
+> >
+>
+> Afaik waiting for idle frames is not required by any standard. In fact
+> this feature of the XLG MAC caused a risk that after dropping the link
+> during data transfer it would never go up again until remote peer
+> stops it.
+>
+> I tested it on 3 different boards with SerDes directly connected to
+> the SFP cage and I'm also not aware of any reporte about
+> noise-triggered false link interrupts in XLG MAC (proprietary Marvell
+> mvpp2x driver did not use waiting 3 idle frames feature). I'd rather
+> assume the MAC is not vulnerable to it, and only properly established
+> link can trigger an event.
+>
 
-HEAD commit:    c543cb4a ipv4: ensure rcu_read_lock() in ipv4_link_failure()
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=17fd659f200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4fb64439e07a1ec0
-dashboard link: https://syzkaller.appspot.com/bug?extid=d53d5d9b6793dc70eb9d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+This patch seems to get forgotten - any objections to merge it?
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Best regards,
+Marcin
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d53d5d9b6793dc70eb9d@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 30586 Comm: syz-executor.3 Not tainted 5.1.0-rc4+ #166
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:fib6_drop_pcpu_from net/ipv6/ip6_fib.c:924 [inline]
-RIP: 0010:fib6_purge_rt+0x4b3/0x670 net/ipv6/ip6_fib.c:960
-Code: 0f b6 35 8f df 43 03 31 ff 44 89 f6 e8 a6 f7 59 fb 45 84 f6 0f 84 b3  
-00 00 00 e8 58 f6 59 fb 49 8d 7f 70 48 89 f8 48 c1 e8 03 <80> 3c 18 00 0f  
-85 64 01 00 00 48 89 f8 4d 8b 77 70 48 c1 e8 03 80
-RSP: 0018:ffff8880549fefa8 EFLAGS: 00010203
-RAX: 0000000000000020 RBX: dffffc0000000000 RCX: ffffc9000c42e000
-RDX: 0000000000040000 RSI: ffffffff861698a8 RDI: 0000000000000104
-RBP: ffff8880549ff000 R08: ffff88808e5a0140 R09: ffffed1011ad04be
-R10: ffffed1011ad04bd R11: ffff88808d6825ef R12: 0000000000000001
-R13: ffff88808d6825c0 R14: 0000000000000001 R15: 0000000000000094
-FS:  00007f90dbdce700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020651000 CR3: 00000000905bd000 CR4: 00000000001406e0
-Call Trace:
-  fib6_del_route net/ipv6/ip6_fib.c:1813 [inline]
-  fib6_del+0xac2/0x10a0 net/ipv6/ip6_fib.c:1844
-  fib6_clean_node+0x3a8/0x590 net/ipv6/ip6_fib.c:2006
-  fib6_walk_continue+0x495/0x900 net/ipv6/ip6_fib.c:1928
-  fib6_walk+0x9d/0x100 net/ipv6/ip6_fib.c:1976
-  fib6_clean_tree+0xe0/0x120 net/ipv6/ip6_fib.c:2055
-  __fib6_clean_all+0x118/0x2a0 net/ipv6/ip6_fib.c:2071
-  fib6_clean_all+0x2b/0x40 net/ipv6/ip6_fib.c:2082
-  rt6_sync_down_dev+0x134/0x150 net/ipv6/route.c:4053
-  rt6_disable_ip+0x27/0x5f0 net/ipv6/route.c:4058
-  addrconf_ifdown+0xa2/0x1220 net/ipv6/addrconf.c:3705
-  addrconf_notify+0x19a/0x2260 net/ipv6/addrconf.c:3630
-  notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
-  __raw_notifier_call_chain kernel/notifier.c:394 [inline]
-  raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
-  call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1753
-  call_netdevice_notifiers_extack net/core/dev.c:1765 [inline]
-  call_netdevice_notifiers net/core/dev.c:1779 [inline]
-  __dev_notify_flags+0x1e9/0x2c0 net/core/dev.c:7623
-  dev_change_flags+0x10d/0x170 net/core/dev.c:7659
-  devinet_ioctl+0xde6/0x1cf0 net/ipv4/devinet.c:1104
-  inet_ioctl+0x2d4/0x410 net/ipv4/af_inet.c:954
-  sock_do_ioctl+0xde/0x300 net/socket.c:1037
-  sock_ioctl+0x32b/0x610 net/socket.c:1168
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd6e/0x1390 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458c29
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f90dbdcdc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458c29
-RDX: 0000000020000040 RSI: 0000000000008914 RDI: 0000000000000003
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f90dbdce6d4
-R13: 00000000004c44a2 R14: 00000000004d7d48 R15: 00000000ffffffff
-Modules linked in:
----[ end trace ee9d5c7f957c3ef2 ]---
-RIP: 0010:fib6_drop_pcpu_from net/ipv6/ip6_fib.c:924 [inline]
-RIP: 0010:fib6_purge_rt+0x4b3/0x670 net/ipv6/ip6_fib.c:960
-Code: 0f b6 35 8f df 43 03 31 ff 44 89 f6 e8 a6 f7 59 fb 45 84 f6 0f 84 b3  
-00 00 00 e8 58 f6 59 fb 49 8d 7f 70 48 89 f8 48 c1 e8 03 <80> 3c 18 00 0f  
-85 64 01 00 00 48 89 f8 4d 8b 77 70 48 c1 e8 03 80
-RSP: 0018:ffff8880549fefa8 EFLAGS: 00010203
-RAX: 0000000000000020 RBX: dffffc0000000000 RCX: ffffc9000c42e000
-RDX: 0000000000040000 RSI: ffffffff861698a8 RDI: 0000000000000104
-RBP: ffff8880549ff000 R08: ffff88808e5a0140 R09: ffffed1011ad04be
-R10: ffffed1011ad04bd R11: ffff88808d6825ef R12: 0000000000000001
-R13: ffff88808d6825c0 R14: 0000000000000001 R15: 0000000000000094
-FS:  00007f90dbdce700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020651000 CR3: 00000000905bd000 CR4: 00000000001406e0
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> Best regards,
+> Marcin
+>
+> > >
+> > > Fixes: 4bb043262878 ("net: mvpp2: phylink support")
+> > > Signed-off-by: Marcin Wojtas <mw@semihalf.com>
+> > > ---
+> > >  drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/driver=
+s/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> > > index 16066c2..f1378f9 100644
+> > > --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> > > +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+> > > @@ -4532,8 +4532,7 @@ static void mvpp2_xlg_config(struct mvpp2_port =
+*port, unsigned int mode,
+> > >               ctrl0 |=3D MVPP22_XLG_CTRL0_RX_FLOW_CTRL_EN;
+> > >
+> > >       ctrl4 &=3D ~MVPP22_XLG_CTRL4_MACMODSELECT_GMAC;
+> > > -     ctrl4 |=3D MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC |
+> > > -              MVPP22_XLG_CTRL4_EN_IDLE_CHECK;
+> > > +     ctrl4 |=3D MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC;
+> > >
+> > >       writel(ctrl0, port->base + MVPP22_XLG_CTRL0_REG);
+> > >       writel(ctrl4, port->base + MVPP22_XLG_CTRL4_REG);
+> > > --
+> > > 2.7.4
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > >
+> >
+> > --
+> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> > FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622k=
+bps up
+> > According to speedtest.net: 11.9Mbps down 500kbps up
