@@ -2,164 +2,140 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F1BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C3BC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A2F21738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA05C2175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfDWKZy (ORCPT
+        id S1727387AbfDWK0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:25:54 -0400
-Received: from mail2.tencent.com ([163.177.67.195]:45813 "EHLO
-        mail2.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfDWKZy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:25:54 -0400
-Received: from EXHUB-SZMail01.tencent.com (unknown [10.14.6.21])
-        by mail2.tencent.com (Postfix) with ESMTP id A3BEE17B9B;
-        Tue, 23 Apr 2019 18:25:48 +0800 (CST)
-Received: from localhost.localdomain (10.35.10.40) by
- EXHUB-SZMail01.tencent.com (10.14.6.21) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 23 Apr 2019 18:25:48 +0800
-From:   Jiang Biao <benbjiang@tencent.com>
-To:     <mst@redhat.com>, <jasowang@redhat.com>
-CC:     <virtualization@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>, <benbjiang@tencent.com>
-Subject: [PATCH] virtio/virtio_ring: do some comment fixes
-Date:   Tue, 23 Apr 2019 18:25:12 +0800
-Message-ID: <20190423102512.72265-1-benbjiang@tencent.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Tue, 23 Apr 2019 06:26:14 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:60428 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfDWK0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 06:26:14 -0400
+Received: from p57b772a1.dip0.t-ipconnect.de ([87.183.114.161] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hIsck-0001oz-Sc; Tue, 23 Apr 2019 12:26:02 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Archit Taneja <architt@codeaurora.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/bridge: dw-hdmi: fix SCDC configuration for ddc-i2c-bus
+Date:   Tue, 23 Apr 2019 12:26:02 +0200
+Message-ID: <2275367.P1g2IIHPGP@phil>
+In-Reply-To: <VE1PR03MB59031814B5BCAB2152923BDAAC210@VE1PR03MB5903.eurprd03.prod.outlook.com>
+References: <VE1PR03MB59031814B5BCAB2152923BDAAC210@VE1PR03MB5903.eurprd03.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.35.10.40]
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are lots of mismatches between comments and codes, this
-patch do these comment fixes.
+Am Sonntag, 21. April 2019, 10:25:50 CEST schrieb Jonas Karlman:
+> When ddc-i2c-bus property is used, a NULL pointer dereference is reported:
+> 
+> [   31.041669] Unable to handle kernel NULL pointer dereference at virtual address 00000008
+> [   31.041671] pgd = 4d3c16f6
+> [   31.041673] [00000008] *pgd=00000000
+> [   31.041678] Internal error: Oops: 5 [#1] SMP ARM
+> 
+> [   31.041711] Hardware name: Rockchip (Device Tree)
+> [   31.041718] PC is at i2c_transfer+0x8/0xe4
+> [   31.041721] LR is at drm_scdc_read+0x54/0x84
+> [   31.041723] pc : [<c073273c>]    lr : [<c05926c4>]    psr: 280f0013
+> [   31.041725] sp : edffdad0  ip : 5ccb5511  fp : 00000058
+> [   31.041727] r10: 00000780  r9 : edf91608  r8 : c11b0f48
+> [   31.041728] r7 : 00000438  r6 : 00000000  r5 : 00000000  r4 : 00000000
+> [   31.041730] r3 : edffdae7  r2 : 00000002  r1 : edffdaec  r0 : 00000000
+> 
+> [   31.041908] [<c073273c>] (i2c_transfer) from [<c05926c4>] (drm_scdc_read+0x54/0x84)
+> [   31.041913] [<c05926c4>] (drm_scdc_read) from [<c0592858>] (drm_scdc_set_scrambling+0x30/0xbc)
+> [   31.041919] [<c0592858>] (drm_scdc_set_scrambling) from [<c05cc0f4>] (dw_hdmi_update_power+0x1440/0x1610)
+> [   31.041926] [<c05cc0f4>] (dw_hdmi_update_power) from [<c05cc574>] (dw_hdmi_bridge_enable+0x2c/0x70)
+> [   31.041932] [<c05cc574>] (dw_hdmi_bridge_enable) from [<c05aed48>] (drm_bridge_enable+0x24/0x34)
+> [   31.041938] [<c05aed48>] (drm_bridge_enable) from [<c0591060>] (drm_atomic_helper_commit_modeset_enables+0x114/0x220)
+> [   31.041943] [<c0591060>] (drm_atomic_helper_commit_modeset_enables) from [<c05c3fe0>] (rockchip_atomic_helper_commit_tail_rpm+0x28/0x64)
+> 
+> hdmi->i2c may not be set when ddc-i2c-bus property is used in device tree.
+> Fix this by using hdmi->ddc as the i2c adapter when calling drm_scdc_*().
+> Also report that SCDC is not supported when there is no DDC bus.
+> 
+> Fixes: 264fce6cc2c1 ("drm/bridge: dw-hdmi: Add SCDC and TMDS Scrambling support")
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 
-Signed-off-by: Jiang Biao <benbjiang@tencent.com>
----
- drivers/virtio/virtio_ring.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+I've looked that up and yeah, hdmi->ddc seems the right thing to use
+as it points either to the external i2c or the internal one, so
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index 5df92c308286..3794c7666a99 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -1718,10 +1718,10 @@ static inline int virtqueue_add(struct virtqueue *_vq,
- 
- /**
-  * virtqueue_add_sgs - expose buffers to other end
-- * @vq: the struct virtqueue we're talking about.
-+ * @_vq: the struct virtqueue we're talking about.
-  * @sgs: array of terminated scatterlists.
-- * @out_num: the number of scatterlists readable by other side
-- * @in_num: the number of scatterlists which are writable (after readable ones)
-+ * @out_sgs: the number of scatterlists readable by other side
-+ * @in_sgs: the number of scatterlists which are writable (after readable ones)
-  * @data: the token identifying the buffer.
-  * @gfp: how to do memory allocations (if necessary).
-  *
-@@ -1821,7 +1821,7 @@ EXPORT_SYMBOL_GPL(virtqueue_add_inbuf_ctx);
- 
- /**
-  * virtqueue_kick_prepare - first half of split virtqueue_kick call.
-- * @vq: the struct virtqueue
-+ * @_vq: the struct virtqueue
-  *
-  * Instead of virtqueue_kick(), you can do:
-  *	if (virtqueue_kick_prepare(vq))
-@@ -1841,7 +1841,7 @@ EXPORT_SYMBOL_GPL(virtqueue_kick_prepare);
- 
- /**
-  * virtqueue_notify - second half of split virtqueue_kick call.
-- * @vq: the struct virtqueue
-+ * @_vq: the struct virtqueue
-  *
-  * This does not need to be serialized.
-  *
-@@ -1885,8 +1885,9 @@ EXPORT_SYMBOL_GPL(virtqueue_kick);
- 
- /**
-  * virtqueue_get_buf - get the next used buffer
-- * @vq: the struct virtqueue we're talking about.
-+ * @_vq: the struct virtqueue we're talking about.
-  * @len: the length written into the buffer
-+ * @ctx: extra context for the token
-  *
-  * If the device wrote data into the buffer, @len will be set to the
-  * amount written.  This means you don't need to clear the buffer
-@@ -1916,7 +1917,7 @@ void *virtqueue_get_buf(struct virtqueue *_vq, unsigned int *len)
- EXPORT_SYMBOL_GPL(virtqueue_get_buf);
- /**
-  * virtqueue_disable_cb - disable callbacks
-- * @vq: the struct virtqueue we're talking about.
-+ * @_vq: the struct virtqueue we're talking about.
-  *
-  * Note that this is not necessarily synchronous, hence unreliable and only
-  * useful as an optimization.
-@@ -1936,7 +1937,7 @@ EXPORT_SYMBOL_GPL(virtqueue_disable_cb);
- 
- /**
-  * virtqueue_enable_cb_prepare - restart callbacks after disable_cb
-- * @vq: the struct virtqueue we're talking about.
-+ * @_vq: the struct virtqueue we're talking about.
-  *
-  * This re-enables callbacks; it returns current queue state
-  * in an opaque unsigned value. This value should be later tested by
-@@ -1957,7 +1958,7 @@ EXPORT_SYMBOL_GPL(virtqueue_enable_cb_prepare);
- 
- /**
-  * virtqueue_poll - query pending used buffers
-- * @vq: the struct virtqueue we're talking about.
-+ * @_vq: the struct virtqueue we're talking about.
-  * @last_used_idx: virtqueue state (from call to virtqueue_enable_cb_prepare).
-  *
-  * Returns "true" if there are pending used buffers in the queue.
-@@ -1976,7 +1977,7 @@ EXPORT_SYMBOL_GPL(virtqueue_poll);
- 
- /**
-  * virtqueue_enable_cb - restart callbacks after disable_cb.
-- * @vq: the struct virtqueue we're talking about.
-+ * @_vq: the struct virtqueue we're talking about.
-  *
-  * This re-enables callbacks; it returns "false" if there are pending
-  * buffers in the queue, to detect a possible race between the driver
-@@ -1995,7 +1996,7 @@ EXPORT_SYMBOL_GPL(virtqueue_enable_cb);
- 
- /**
-  * virtqueue_enable_cb_delayed - restart callbacks after disable_cb.
-- * @vq: the struct virtqueue we're talking about.
-+ * @_vq: the struct virtqueue we're talking about.
-  *
-  * This re-enables callbacks but hints to the other side to delay
-  * interrupts until most of the available buffers have been processed;
-@@ -2017,7 +2018,7 @@ EXPORT_SYMBOL_GPL(virtqueue_enable_cb_delayed);
- 
- /**
-  * virtqueue_detach_unused_buf - detach first unused buffer
-- * @vq: the struct virtqueue we're talking about.
-+ * @_vq: the struct virtqueue we're talking about.
-  *
-  * Returns NULL or the "data" token handed to virtqueue_add_*().
-  * This is not valid on an active queue; it is useful only for device
-@@ -2249,7 +2250,7 @@ EXPORT_SYMBOL_GPL(vring_transport_features);
- 
- /**
-  * virtqueue_get_vring_size - return the size of the virtqueue's vring
-- * @vq: the struct virtqueue containing the vring of interest.
-+ * @_vq: the struct virtqueue containing the vring of interest.
-  *
-  * Returns the size of the vring.  This is mainly used for boasting to
-  * userspace.  Unlike other operations, this need not be serialized.
--- 
-2.17.2 (Apple Git-113)
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index 7a47c65d8ecb..fd1c319a4ee0 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -1046,6 +1046,10 @@ static bool dw_hdmi_support_scdc(struct dw_hdmi *hdmi)
+>  	if (hdmi->version < 0x200a)
+>  		return false;
+>  
+> +	/* Disable if no DDC bus */
+> +	if (!hdmi->ddc)
+> +		return false;
+> +
+>  	/* Disable if SCDC is not supported, or if an HF-VSDB block is absent */
+>  	if (!display->hdmi.scdc.supported ||
+>  	    !display->hdmi.scdc.scrambling.supported)
+> @@ -1683,13 +1687,13 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
+>  			 * Source Devices compliant shall set the
+>  			 * Source Version = 1.
+>  			 */
+> -			drm_scdc_readb(&hdmi->i2c->adap, SCDC_SINK_VERSION,
+> +			drm_scdc_readb(hdmi->ddc, SCDC_SINK_VERSION,
+>  				       &bytes);
+> -			drm_scdc_writeb(&hdmi->i2c->adap, SCDC_SOURCE_VERSION,
+> +			drm_scdc_writeb(hdmi->ddc, SCDC_SOURCE_VERSION,
+>  				min_t(u8, bytes, SCDC_MIN_SOURCE_VERSION));
+>  
+>  			/* Enabled Scrambling in the Sink */
+> -			drm_scdc_set_scrambling(&hdmi->i2c->adap, 1);
+> +			drm_scdc_set_scrambling(hdmi->ddc, 1);
+>  
+>  			/*
+>  			 * To activate the scrambler feature, you must ensure
+> @@ -1705,7 +1709,7 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
+>  			hdmi_writeb(hdmi, 0, HDMI_FC_SCRAMBLER_CTRL);
+>  			hdmi_writeb(hdmi, (u8)~HDMI_MC_SWRSTZ_TMDSSWRST_REQ,
+>  				    HDMI_MC_SWRSTZ);
+> -			drm_scdc_set_scrambling(&hdmi->i2c->adap, 0);
+> +			drm_scdc_set_scrambling(hdmi->ddc, 0);
+>  		}
+>  	}
+>  
+> -- 
+> 2.17.1
+> 
+> 
+
+
+
 
