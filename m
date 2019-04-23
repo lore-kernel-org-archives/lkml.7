@@ -2,126 +2,117 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FDFC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D861C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89075218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:15:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="bQjBs2w8"
+	by mail.kernel.org (Postfix) with ESMTP id E8BE4218D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfDWXPH (ORCPT
+        id S1728567AbfDWXSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 19:15:07 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35983 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfDWXPH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 19:15:07 -0400
-Received: by mail-qk1-f194.google.com with SMTP id m137so6043201qke.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=mzS8NJXvXhvwkIeuXh0JKOU1NhCCN8QIQnCColypfAo=;
-        b=bQjBs2w8b+7lG1hnKi7/rJAfsmtxi5qNS0kAEx3RTh8TTH/IcHN3qQlE5SL5klCktD
-         IndIHMYr0hV1TwIusyEwzeoDn8TL7qlcCot6iUzbDv4OVqJdtq9BMrHxZ1dBHaMGmktd
-         hZDdVwBwFsCD9btMP1FCvwViNtNK6VxLIsm4RBQNhua3Pfj6NQafb5se9yA7sSSFm/p0
-         5tuuVosClhPbEGjraDqaIx6SGpvCvNZJQ0ZwXgd5eoY0jsGDo2kUWxuYSGYM6YCsw+88
-         5Pjf8Oo5dagqdcehClrCY6V5waAg04D19VOdNz/kfD06WO5jUx09yoO1pL2eFC49U50/
-         Q5/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=mzS8NJXvXhvwkIeuXh0JKOU1NhCCN8QIQnCColypfAo=;
-        b=L4KsR/l4lxuLIzSbF4hbsOKPt9fjN2Ozjs0SWPjHg9+M+bl9JezaoTUpxCvNb2xkb+
-         ViYOdY2zZrOeJSjzVbDEbb0zJox6cmNDlFMSENM2EwjAouI5QPbtaNz8BdKshIlnIjLa
-         AP7aS+GpEs52t1V4rHZFWyyRVS+Wd+tSLMPSisqYxojHrauA/Kti46oJ8xookXi95LAp
-         SBq1brSupAovNygUFOW6UnRku8PWkwIofC+b5iP3D++X9AbkZrZkUHWwM8Z8bmvHOoSZ
-         bkr73zUjHgneuxZgq21vUwaf99nUrvINDepNmBbN+qvjENZlZk/s5VocHNGNxblLEDU2
-         qpWw==
-X-Gm-Message-State: APjAAAUgmlWCiBZ1i1G1GJuVE9dXbzgGTz2tFei+4+02fbxEVU8BfQKg
-        w8FBJgOoeq9wB3OMdikO5Ewxsw==
-X-Google-Smtp-Source: APXvYqwd8K7MCxleHfm654auOFJmB3DXSFRb77QgcFWAYdwoYOpjsU42LX4a5HfCpY8UAdVjv7Vgfg==
-X-Received: by 2002:a37:7383:: with SMTP id o125mr22353307qkc.56.1556061306558;
-        Tue, 23 Apr 2019 16:15:06 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id q5sm6961125qtb.44.2019.04.23.16.15.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 16:15:06 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 16:15:02 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Tao Ren <taoren@fb.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH net 1/2] net: add eth_addr_inc in etherdevice.h
-Message-ID: <20190423161502.5d3e9c36@cakuba.netronome.com>
-In-Reply-To: <20190423224138.1295-1-taoren@fb.com>
-References: <20190423224138.1295-1-taoren@fb.com>
-Organization: Netronome Systems, Ltd.
+        Tue, 23 Apr 2019 19:18:08 -0400
+Received: from namei.org ([65.99.196.166]:35470 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbfDWXSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 19:18:07 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x3NNI430029385;
+        Tue, 23 Apr 2019 23:18:04 GMT
+Date:   Wed, 24 Apr 2019 09:18:04 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Kees Cook <keescook@chromium.org>
+cc:     Tycho Andersen <tycho@tycho.ws>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] seccomp: disallow NEW_LISTENER and TSYNC flags
+In-Reply-To: <CAGXu5jKaK-mTq=Qez7E_fYysz916_xEN7Houj-y8gdmNGkMMVw@mail.gmail.com>
+Message-ID: <alpine.LRH.2.21.1904240917350.29297@namei.org>
+References: <20190306201413.14153-1-tycho@tycho.ws> <20190306201413.14153-2-tycho@tycho.ws> <CAGXu5jKaK-mTq=Qez7E_fYysz916_xEN7Houj-y8gdmNGkMMVw@mail.gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019 22:41:56 +0000, Tao Ren wrote:
-> Add eth_addr_inc function in etherdevice.h to increment MAC address. One
-> of the use cases is in ncsi stack, where the host's MAC address needs to
-> be incremented to get BMC's MAC address.
+On Tue, 23 Apr 2019, Kees Cook wrote:
+
+> Thanks! Sorry I missed this. James, can you take this for Linus's
+> fixes for v5.1? (Or should I send a pull request to you?)
 > 
-> Signed-off-by: Tao Ren <taoren@fb.com>
+> Acked-by: Kees Cook <keescook@chromium.org>
 
-Please squash this patch with the next one, IMHO they form a single
-logical change together.
+These are standalone for v5.1 fixes currently so you can send them 
+directly to Linus.
 
->  include/linux/etherdevice.h | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
 > 
-> diff --git a/include/linux/etherdevice.h b/include/linux/etherdevice.h
-> index e2f3b21cd72a..d48e3a724c54 100644
-> --- a/include/linux/etherdevice.h
-> +++ b/include/linux/etherdevice.h
-> @@ -448,6 +448,19 @@ static inline void eth_addr_dec(u8 *addr)
->  	u64_to_ether_addr(u, addr);
->  }
->  
-> +/**
-> + * eth_addr_inc - Increment the given MAC address
-> + *
-> + * @addr: Pointer to a six-byte array containing Ethernet address to increment
+> Let's also add:
+> 
+> Reported-by: syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com
+> 
+> > ---
+> >  kernel/seccomp.c | 17 +++++++++++++++--
+> >  1 file changed, 15 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > index d0d355ded2f4..79bada51091b 100644
+> > --- a/kernel/seccomp.c
+> > +++ b/kernel/seccomp.c
+> > @@ -500,7 +500,10 @@ seccomp_prepare_user_filter(const char __user *user_filter)
+> >   *
+> >   * Caller must be holding current->sighand->siglock lock.
+> >   *
+> > - * Returns 0 on success, -ve on error.
+> > + * Returns 0 on success, -ve on error, or
+> > + *   - in TSYNC mode: the pid of a thread which was either not in the correct
+> > + *     seccomp mode or did not have an ancestral seccomp filter
+> > + *   - in NEW_LISTENER mode: the fd of the new listener
+> >   */
+> >  static long seccomp_attach_filter(unsigned int flags,
+> >                                   struct seccomp_filter *filter)
+> > @@ -1256,6 +1259,16 @@ static long seccomp_set_mode_filter(unsigned int flags,
+> >         if (flags & ~SECCOMP_FILTER_FLAG_MASK)
+> >                 return -EINVAL;
+> >
+> > +       /*
+> > +        * In the successful case, NEW_LISTENER returns the new listener fd.
+> > +        * But in the failure case, TSYNC returns the thread that died. If you
+> > +        * combine these two flags, there's no way to tell whether something
+> > +        * succeded or failed. So, let's disallow this combination.
+> 
+> also a tiny typo: succeeded
+> 
+> > +        */
+> > +       if ((flags & SECCOMP_FILTER_FLAG_TSYNC) &&
+> > +           (flags && SECCOMP_FILTER_FLAG_NEW_LISTENER))
+> > +               return -EINVAL;
+> > +
+> >         /* Prepare the new filter before holding any locks. */
+> >         prepared = seccomp_prepare_user_filter(filter);
+> >         if (IS_ERR(prepared))
+> > @@ -1302,7 +1315,7 @@ static long seccomp_set_mode_filter(unsigned int flags,
+> >                 mutex_unlock(&current->signal->cred_guard_mutex);
+> >  out_put_fd:
+> >         if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
+> > -               if (ret < 0) {
+> > +               if (ret) {
+> >                         listener_f->private_data = NULL;
+> >                         fput(listener_f);
+> >                         put_unused_fd(listener);
+> > --
+> > 2.19.1
+> >
+> 
+> -Kees
+> 
+> 
 
-Please see:  Documentation/doc-guide/kernel-doc.rst
-
-Here we need:
- - "()" after function name;
- - no extra line between function name and argument description.
-
-> + */
-> +static inline void eth_addr_inc(u8 *addr)
-> +{
-> +	u64 u = ether_addr_to_u64(addr);
-> +
-> +	u++;
-> +	u64_to_ether_addr(u, addr);
-> +}
-> +
->  /**
->   * is_etherdev_addr - Tell if given Ethernet address belongs to the device.
->   * @dev: Pointer to a device structure
+-- 
+James Morris
+<jmorris@namei.org>
 
