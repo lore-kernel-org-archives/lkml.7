@@ -2,108 +2,91 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715DBC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E246C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482CD206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F30206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:52:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uHUxSxzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfDWKvy (ORCPT
+        id S1727483AbfDWKwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:51:54 -0400
-Received: from foss.arm.com ([217.140.101.70]:54156 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbfDWKvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:51:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDBF6374;
-        Tue, 23 Apr 2019 03:51:53 -0700 (PDT)
-Received: from [10.37.8.239] (unknown [10.37.8.239])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 064243F557;
-        Tue, 23 Apr 2019 03:51:50 -0700 (PDT)
-Subject: Re: [PATCH 1/7] genirq/msi: Add a new field in msi_desc to store an
- IOMMU cookie
-To:     Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     logang@deltatee.com, douliyangs@gmail.com,
-        miquel.raynal@bootlin.com, jason@lakedaemon.net,
-        tglx@linutronix.de, joro@8bytes.org, robin.murphy@arm.com,
-        bigeasy@linutronix.de, linux-rt-users@vger.kernel.org
-References: <20190418172611.21561-1-julien.grall@arm.com>
- <20190418172611.21561-2-julien.grall@arm.com>
- <7e77331c-4adf-5bb4-0c23-4d01a6ac5ab4@arm.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <1bcdb72f-2116-756b-b74d-a48f89870782@arm.com>
-Date:   Tue, 23 Apr 2019 11:51:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 06:52:19 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35137 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfDWKwS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 06:52:18 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t4so13062437ljc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 03:52:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jjHJWj5FeXe18WchV2bn8F7Pb/3Z1VsLWjcSEKmeIAU=;
+        b=uHUxSxzuPKxxVAA87jIdgcZeG2i8ehbZ5AKsl7ok4ibVNub+BR7/bfbP6XrHYLG57T
+         +A7T9Dr3dk5ZAzaCGoXAYQxdXyMXYuzQLD3ZpF2yOi8VvbH5i3H14nFBlc9Gm/CVkVCQ
+         GFjSCbIU8WkGFKyWURIa4HpSI52+nTmpV3DX9M3ycnsQqJ72jL5Bh0e850P0TobJTb3r
+         3RxPG5h65NnLGeMDUM3Q1HINi2OTlTzjSKIWlazhkyWF5k7q0EjrmosSf+tKg2ZHSymR
+         Q1CUzOrwOD9FCUbbBj/MiooXltXWCgYw/r6BBHTEIVh69jERNersfFGN8ifxnJhKeIxT
+         b5Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jjHJWj5FeXe18WchV2bn8F7Pb/3Z1VsLWjcSEKmeIAU=;
+        b=bizF/5pGlib7tIAsVSUcRFSEWmQnBn27vNkSAugRa0X2g3BCHRdtkl+Cb+EbDH2kK7
+         Uahtv2ivnHzq0aVXLsphtjAR+tBpLqeep4q5w154OOdt5wsIaBkaCCnqX7agXoovhpxP
+         seWfwhQUwC1S4S2Or3IqK57pr+BDIvjNKeyirdrsnFuM3DyxKWXEVePYQ2EExQdg7jxl
+         EyeInfu6fR5JM3RqRIOqR5kOmqHOhAeci5Qvm0hrClwD/JYrqhSB9L4Q9EFDN/UmeZgh
+         KCaVIpFDe1X3S54rr41lYsoDcLi61jPs5YPWJBkkpM0sRENVPOnD7fiPlKWBrwrg+Ce8
+         NcNw==
+X-Gm-Message-State: APjAAAXiYA4YfaiVqSNoxUAIvtbXB/AeR4+x32b5Lah9Agp0qVaOiBe+
+        zhc2/0xkFVmzkVJdk4O6GU1W94x8cp/Yv21FYJ35ww==
+X-Google-Smtp-Source: APXvYqwMt5uT1pB7M8THZUlaySgjL6nMPPyMuWushg7nGzWH2zl+JqyBRVsNZIanc80nK4eKsAUkFlYxgigeOTc4Qww=
+X-Received: by 2002:a2e:834d:: with SMTP id l13mr13669579ljh.97.1556016737041;
+ Tue, 23 Apr 2019 03:52:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7e77331c-4adf-5bb4-0c23-4d01a6ac5ab4@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1555382110.git.mchehab+samsung@kernel.org> <0f2d522a80f96391d3f7b51389d08b4afaedb618.1555382110.git.mchehab+samsung@kernel.org>
+In-Reply-To: <0f2d522a80f96391d3f7b51389d08b4afaedb618.1555382110.git.mchehab+samsung@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 23 Apr 2019 12:52:04 +0200
+Message-ID: <CACRpkdYQeEoyE9sAAo2KZjurx9sH4w+bzM-_-_h6U4w7PeX7eg@mail.gmail.com>
+Subject: Re: [PATCH 15/57] docs: gpio: convert it to ReST
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/19 11:23 AM, Marc Zyngier wrote:
-> Hi Julien,
+On Tue, Apr 16, 2019 at 4:56 AM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
 
-Hi Marc,
+> The API described at sysfs.txt is deprecated.
+>
+> Still, as it is still part of the Kernel (and will likely be
+> there for some time, as we don't simply remove APIs). So,
+> it makes sense to keep it there.
+>
+> The conversion of this file is trivial.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-> On 18/04/2019 18:26, Julien Grall wrote:
->> When an MSI doorbell is located downstream of an IOMMU, it is required
->> to swizzle the physical address with an appropriately-mapped IOVA for any
->> device attached to one of our DMA ops domain.
->>
->> At the moment, the allocation of the mapping may be done when composing
->> the message. However, the composing may be done in non-preemtible
->> context while the allocation requires to be called from preemptible
->> context.
->>
->> A follow-up patch will split the current logic in two functions
->> requiring to keep an IOMMU cookie per MSI.
->>
->> This patch introduces a new field in msi_desc to store an IOMMU cookie
->> when CONFIG_IOMMU_DMA is selected.
->>
->> Signed-off-by: Julien Grall <julien.grall@arm.com>
->> ---
->>   include/linux/msi.h | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/include/linux/msi.h b/include/linux/msi.h
->> index 7e9b81c3b50d..d7907feef1bb 100644
->> --- a/include/linux/msi.h
->> +++ b/include/linux/msi.h
->> @@ -77,6 +77,9 @@ struct msi_desc {
->>   	struct device			*dev;
->>   	struct msi_msg			msg;
->>   	struct irq_affinity_desc	*affinity;
->> +#ifdef CONFIG_IOMMU_DMA
->> +	const void			*iommu_cookie;
->> +#endif
->>   
->>   	union {
->>   		/* PCI MSI/X specific data */
->>
-> 
-> Given that this is the only member in this structure that is dependent
-> on a config option, you could also add a couple of accessors that would
-> do nothing when IOMMU_DMA is not selected (and use that in the DMA code).
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-I haven't seen any use of the helpers so far because the DMA code is 
-also protected by IOMMU_DMA.
+Mauro will you merge this or do you want me to merge it?
 
-I can add the helpers in the next version if you see any use outside of 
-the DMA code.
-
-Cheers,
-
--- 
-Julien Grall
+Yours,
+Linus Walleij
