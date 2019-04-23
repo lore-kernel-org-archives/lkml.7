@@ -2,310 +2,250 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D6DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7133AC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559BA20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34F7920674
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:12:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JGeVY0lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbfDWNMH (ORCPT
+        id S1728248AbfDWNMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:12:07 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:43903 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727656AbfDWNMF (ORCPT
+        Tue, 23 Apr 2019 09:12:15 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58082 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfDWNJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:12:05 -0400
-Received: from [IPv6:2001:420:44c1:2579:c4cd:9df1:43f2:db66] ([IPv6:2001:420:44c1:2579:c4cd:9df1:43f2:db66])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id IvDIhCya9ZVjxIvDMhWHfG; Tue, 23 Apr 2019 15:12:02 +0200
-Subject: Re: [PATCH 4/7] media: atmel: atmel-isc: add support for
- DO_WHITE_BALANCE
-To:     Eugen.Hristev@microchip.com, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Nicolas.Ferre@microchip.com, mchehab@kernel.org,
-        ksloat@aampglobal.com
-References: <1554807715-2353-1-git-send-email-eugen.hristev@microchip.com>
- <1554807715-2353-5-git-send-email-eugen.hristev@microchip.com>
- <08d1bf29-326b-7a8c-51c4-088d0effc4b6@xs4all.nl>
- <5fcb8f59-6979-c355-574b-40bb13610252@microchip.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <2c7b069e-f81c-a643-4feb-0839277752e1@xs4all.nl>
-Date:   Tue, 23 Apr 2019 15:11:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 23 Apr 2019 09:09:24 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9JaZ066389;
+        Tue, 23 Apr 2019 08:09:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556024959;
+        bh=p2OrZYil6ydqqM9omhdDiPcEKL+sZ2MtUeiljSgYsk8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=JGeVY0lzj8DW5pR2rLrygq1038Kg/wi+nxl/WHMw6rfGcn39TBIe/r0JlDvZr2uER
+         eTt0fMK0hLT3ZvNkEgu7eu3SmRYFF0JmPLXh3FCTdrsDbsQCq3uO0n3VWoZVLoyYK9
+         AFlJf1UPD3ACJs7yocvAtMRg/6Z8oWt7woPc7Qbg=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3ND9JCo125861
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 23 Apr 2019 08:09:19 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
+ Apr 2019 08:09:18 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 23 Apr 2019 08:09:18 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9HmN107107;
+        Tue, 23 Apr 2019 08:09:18 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+CC:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, Sekhar Nori <nsekhar@ti.com>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next 03/19] net: ethernet: ti: cpsw: drop CONFIG_TI_CPSW_ALE config option
+Date:   Tue, 23 Apr 2019 16:08:54 +0300
+Message-ID: <1556024950-20752-4-git-send-email-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556024950-20752-1-git-send-email-grygorii.strashko@ti.com>
+References: <1556024950-20752-1-git-send-email-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <5fcb8f59-6979-c355-574b-40bb13610252@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfHoynABowKhFz3X5qPyoV39bL8KlQd2nMmgtQKhTP5caQAI9TCyYucGEldINGcHuGY+ZywcPCJVVA0fc6OCneyN5dHT4qo7nN8MXaT5FD+QtYDorEG12
- zntsetVaPaaaQy99YU+ch3YAYqlcG3IucjhScovRVLkKTimtaIeK6ObqwtS5DztQ1yHSTwErdJg4iGcLb7Xr+rQeWM227X814fQNSjZwEUuLk1DAlIkrcmyM
- E2ttokuYiT22uqMJSMm3sNd+Ala7obTlKRfvjE6GzMtdeKz2M2jqkSjDLlf4NZ1pFeqM7gXiK0rWbyxEg0rrOH2TNQVXRvNcLRQqg2W/kLYQQQW1IrF4+TTm
- y3fg1Vlwt748X8cdrSeV8nD2EVNqqj42zA0KWlYdGI2xniFjNrnEM62Tnv9F/ThSk81ALwKoL2zCNXfbKySEtUsrIMXXAuvEZuDaxSCYeJpEkNhYpIYFJtOZ
- ByNc07mXZa4ibWAaSPpLiJv+QkdZeJZ80/9kCD94Lc1OiiPA7ae9ApK5pyY=
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/19 8:43 AM, Eugen.Hristev@microchip.com wrote:
-> 
-> 
-> On 10.04.2019 17:26, Hans Verkuil wrote:
-> 
->>
->> On 4/9/19 1:07 PM, Eugen.Hristev@microchip.com wrote:
->>> From: Eugen Hristev <eugen.hristev@microchip.com>
->>>
->>> This adds support for the 'button' control DO_WHITE_BALANCE
->>> This feature will enable the ISC to compute the white balance coefficients
->>> in a one time shot, at the user discretion.
->>> This can be used if a color chart/grey chart is present in front of the camera.
->>> The ISC will adjust the coefficients and have them fixed until next balance
->>> or until sensor mode is changed.
->>> This is particularly useful for white balance adjustment in different
->>> lighting scenarios, and then taking photos to similar scenery.
->>> The old auto white balance stays in place, where the ISC will adjust every
->>> 4 frames to the current scenery lighting, if the scenery is approximately
->>> grey in average, otherwise grey world algorithm fails.
->>> One time white balance adjustments needs streaming to be enabled, such that
->>> capture is enabled and the histogram has data to work with.
->>> Histogram without capture does not work in this hardware module.
->>>
->>> To disable auto white balance feature (first step)
->>> v4l2-ctl --set-ctrl=white_balance_automatic=0
->>>
->>> To start the one time white balance procedure:
->>> v4l2-ctl --set-ctrl=do_white_balance=1
->>>
->>> User controls now include the do_white_balance ctrl:
->>> User Controls
->>>
->>>                       brightness 0x00980900 (int)    : min=-1024 max=1023 step=1 default=0 value=0 flags=slider
->>>                         contrast 0x00980901 (int)    : min=-2048 max=2047 step=1 default=256 value=256 flags=slider
->>>          white_balance_automatic 0x0098090c (bool)   : default=1 value=1
->>>                 do_white_balance 0x0098090d (button) : flags=write-only, execute-on-write
->>>                            gamma 0x00980910 (int)    : min=0 max=2 step=1 default=2 value=2 flags=slider
->>>
->>> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
->>> ---
->>>   drivers/media/platform/atmel/atmel-isc.c | 74 +++++++++++++++++++++++++++++---
->>>   1 file changed, 69 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/media/platform/atmel/atmel-isc.c b/drivers/media/platform/atmel/atmel-isc.c
->>> index f6b8b00e..e516805 100644
->>> --- a/drivers/media/platform/atmel/atmel-isc.c
->>> +++ b/drivers/media/platform/atmel/atmel-isc.c
->>> @@ -167,6 +167,9 @@ struct isc_ctrls {
->>>   	u32 brightness;
->>>   	u32 contrast;
->>>   	u8 gamma_index;
->>> +#define ISC_WB_NONE	0
->>> +#define ISC_WB_AUTO	1
->>> +#define ISC_WB_ONETIME	2
->>>   	u8 awb;
->>>   
->>>   	/* one for each component : GR, R, GB, B */
->>> @@ -210,6 +213,7 @@ struct isc_device {
->>>   	struct fmt_config	try_config;
->>>   
->>>   	struct isc_ctrls	ctrls;
->>> +	struct v4l2_ctrl	*do_wb_ctrl;
->>>   	struct work_struct	awb_work;
->>>   
->>>   	struct mutex		lock;
->>> @@ -809,7 +813,7 @@ static void isc_set_pipeline(struct isc_device *isc, u32 pipeline)
->>>   
->>>   	bay_cfg = isc->config.sd_format->cfa_baycfg;
->>>   
->>> -	if (!ctrls->awb)
->>> +	if (ctrls->awb == ISC_WB_NONE)
->>>   		isc_reset_awb_ctrls(isc);
->>>   
->>>   	regmap_write(regmap, ISC_WB_CFG, bay_cfg);
->>> @@ -1928,7 +1932,7 @@ static void isc_awb_work(struct work_struct *w)
->>>   	baysel = isc->config.sd_format->cfa_baycfg << ISC_HIS_CFG_BAYSEL_SHIFT;
->>>   
->>>   	/* if no more auto white balance, reset controls. */
->>> -	if (!ctrls->awb)
->>> +	if (ctrls->awb == ISC_WB_NONE)
->>>   		isc_reset_awb_ctrls(isc);
->>>   
->>>   	pm_runtime_get_sync(isc->dev);
->>> @@ -1937,7 +1941,7 @@ static void isc_awb_work(struct work_struct *w)
->>>   	 * only update if we have all the required histograms and controls
->>>   	 * if awb has been disabled, we need to reset registers as well.
->>>   	 */
->>> -	if (hist_id == ISC_HIS_CFG_MODE_GR || !ctrls->awb) {
->>> +	if (hist_id == ISC_HIS_CFG_MODE_GR || ctrls->awb == ISC_WB_NONE) {
->>>   		/*
->>>   		 * It may happen that DMA Done IRQ will trigger while we are
->>>   		 * updating white balance registers here.
->>> @@ -1947,6 +1951,16 @@ static void isc_awb_work(struct work_struct *w)
->>>   		spin_lock_irqsave(&isc->awb_lock, flags);
->>>   		isc_update_awb_ctrls(isc);
->>>   		spin_unlock_irqrestore(&isc->awb_lock, flags);
->>> +
->>> +		/*
->>> +		 * if we are doing just the one time white balance adjustment,
->>> +		 * we are basically done.
->>> +		 */
->>> +		if (ctrls->awb == ISC_WB_ONETIME) {
->>> +			v4l2_info(&isc->v4l2_dev,
->>> +				  "Completed one time white-balance adjustment.\n");
->>> +			ctrls->awb = ISC_WB_NONE;
->>> +		}
->>>   	}
->>>   	regmap_write(regmap, ISC_HIS_CFG, hist_id | baysel | ISC_HIS_CFG_RAR);
->>>   	isc_update_profile(isc);
->>> @@ -1974,10 +1988,56 @@ static int isc_s_ctrl(struct v4l2_ctrl *ctrl)
->>>   		ctrls->gamma_index = ctrl->val;
->>>   		break;
->>>   	case V4L2_CID_AUTO_WHITE_BALANCE:
->>> -		ctrls->awb = ctrl->val;
->>> +		if (ctrl->val == 1) {
->>> +			ctrls->awb = ISC_WB_AUTO;
->>> +			v4l2_ctrl_activate(isc->do_wb_ctrl, false);
->>> +		} else {
->>> +			ctrls->awb = ISC_WB_NONE;
->>> +			v4l2_ctrl_activate(isc->do_wb_ctrl, true);
->>> +		}
->>> +		/* we did not configure ISC yet */
->>> +		if (!isc->config.sd_format)
->>> +			break;
->>> +
->>> +		if (!ISC_IS_FORMAT_RAW(isc->config.sd_format->mbus_code)) {
->>> +			v4l2_err(&isc->v4l2_dev,
->>> +				 "White balance adjustments available only if sensor is in RAW mode.\n");
->>
->> This isn't an error, instead if the format isn't raw, then deactivate
->> the control (see v4l2_ctrl_activate()). That way the control framework
->> will handle this.
->>
->>> +			return 0;
->>> +		}
->>> +
->>>   		if (ctrls->hist_stat != HIST_ENABLED) {
->>>   			isc_reset_awb_ctrls(isc);
->>>   		}
->>> +
->>> +		if (isc->ctrls.awb && vb2_is_streaming(&isc->vb2_vidq) &&
->>> +		    ISC_IS_FORMAT_RAW(isc->config.sd_format->mbus_code))
->>> +			isc_set_histogram(isc, true);
->>> +
->>> +		break;
->>> +	case V4L2_CID_DO_WHITE_BALANCE:
->>> +		/* we did not configure ISC yet */
->>> +		if (!isc->config.sd_format)
->>> +			break;
->>> +
->>> +		if (ctrls->awb == ISC_WB_AUTO) {
->>> +			v4l2_err(&isc->v4l2_dev,
->>> +				 "To use one time white-balance adjustment, disable auto white balance first.\n");
->>
->> I'd do this differently: if auto whitebalance is already on, then just do
->> nothing for V4L2_CID_DO_WHITE_BALANCE.
->>
->>> +			return -EAGAIN;
->>> +		}
->>> +		if (!vb2_is_streaming(&isc->vb2_vidq)) {
->>> +			v4l2_err(&isc->v4l2_dev,
->>> +				 "One time white-balance adjustment requires streaming to be enabled.\n");
->>
->> This too should use v4l2_ctrl_activate(): activate the control in start_streaming,
->> deactivate in stop_streaming (and when the control is created).
->>
->>> +			return -EAGAIN;
->>> +		}
->>> +
->>> +		if (!ISC_IS_FORMAT_RAW(isc->config.sd_format->mbus_code)) {
->>> +			v4l2_err(&isc->v4l2_dev,
->>> +				 "White balance adjustments available only if sensor is in RAW mode.\n");
->>
->> Same note as above: use v4l2_ctrl_activate() for this.
-> 
-> Hello Hans,
-> 
-> I used v4l2_ctrl_activate with false parameter, and the v4l2-ctl -l 
-> looks like this:
-> 
-> 
->             do_white_balance (button) : flags=inactive, write-only, 
-> execute-on-write
-> 
-> But the inactive flag looks to be only for display purposes, as issuing :
-> 
-> v4l2-ctl --set-ctrl=do_white_balance=1
-> 
-> will continue to call my ctrl callback as if the control is still active.
-> 
-> Am I missing something here ? v4l2_s_ctrl does not check for INACTIVE 
-> status.
+All TI drivers CPSW/NETCP can't work without ALE, hence simplify
+build of those drivers by always linking cpsw_ale and drop
+CONFIG_TI_CPSW_ALE config option.
 
-No, you are correct. I got confused with FLAG_GRABBED.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/Kconfig    |  7 -------
+ drivers/net/ethernet/ti/Makefile   |  5 ++---
+ drivers/net/ethernet/ti/cpsw_ale.c | 14 --------------
+ 3 files changed, 2 insertions(+), 24 deletions(-)
 
-In any case, the idea was right, but you do have to add code to s_ctrl
-to handle this (e.g. if the INACTIVE flag is set, then just do nothing).
-
-The INACTIVE flag is meant to communicate that the control can still be
-set, but it just doesn't do anything. qv4l2 will disable the control if
-this flag is set.
-
-Note that when you set an inactive control, the control value should
-still be updated even if it isn't used at the moment. If the configuration
-changes so that the control becomes active again, then that last set
-value should be used by the hardware.
-
-This is the reason why s_ctrl is still called.
-
-Regards,
-
-	Hans
-
-> 
-> Thanks
-> 
->>
->>> +			return -EAGAIN;
->>> +		}
->>> +		ctrls->awb = ISC_WB_ONETIME;
->>> +		isc_set_histogram(isc, true);
->>> +		v4l2_info(&isc->v4l2_dev, "One time white-balance started.\n");
->>
->> Make this v4l2_dbg.
->>
->>>   		break;
->>>   	default:
->>>   		return -EINVAL;
->>> @@ -2000,7 +2060,7 @@ static int isc_ctrl_init(struct isc_device *isc)
->>>   	ctrls->hist_stat = HIST_INIT;
->>>   	isc_reset_awb_ctrls(isc);
->>>   
->>> -	ret = v4l2_ctrl_handler_init(hdl, 4);
->>> +	ret = v4l2_ctrl_handler_init(hdl, 5);
->>>   	if (ret < 0)
->>>   		return ret;
->>>   
->>> @@ -2012,6 +2072,10 @@ static int isc_ctrl_init(struct isc_device *isc)
->>>   	v4l2_ctrl_new_std(hdl, ops, V4L2_CID_GAMMA, 0, GAMMA_MAX, 1, 2);
->>>   	v4l2_ctrl_new_std(hdl, ops, V4L2_CID_AUTO_WHITE_BALANCE, 0, 1, 1, 1);
->>>   
->>> +	/* do_white_balance is a button, so min,max,step,default are ignored */
->>> +	isc->do_wb_ctrl = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_DO_WHITE_BALANCE,
->>> +					    0, 0, 0, 0);
->>> +
->>>   	v4l2_ctrl_handler_setup(hdl);
->>>   
->>>   	return 0;
->>>
->>
->> Regards,
->>
->> 	Hans
->>
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 46f253aadcdd..afbdc9744230 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -44,16 +44,10 @@ config TI_CPSW_PHY_SEL
+ 	  This driver supports configuring of the phy mode connected to
+ 	  the CPSW. DEPRECATED: use PHY_TI_GMII_SEL.
+ 
+-config TI_CPSW_ALE
+-	tristate "TI CPSW ALE Support"
+-	---help---
+-	  This driver supports TI's CPSW ALE module.
+-
+ config TI_CPSW
+ 	tristate "TI CPSW Switch Support"
+ 	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
+ 	select TI_DAVINCI_MDIO
+-	select TI_CPSW_ALE
+ 	select MFD_SYSCON
+ 	select REGMAP
+ 	---help---
+@@ -82,7 +76,6 @@ config TI_CPTS_MOD
+ 
+ config TI_KEYSTONE_NETCP
+ 	tristate "TI Keystone NETCP Core Support"
+-	select TI_CPSW_ALE
+ 	select TI_DAVINCI_MDIO
+ 	depends on OF
+ 	depends on KEYSTONE_NAVIGATOR_DMA && KEYSTONE_NAVIGATOR_QMSS
+diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+index a763e1b27304..2f159a71f88e 100644
+--- a/drivers/net/ethernet/ti/Makefile
++++ b/drivers/net/ethernet/ti/Makefile
+@@ -12,12 +12,11 @@ obj-$(CONFIG_TI_DAVINCI_EMAC) += ti_davinci_emac.o
+ ti_davinci_emac-y := davinci_emac.o davinci_cpdma.o
+ obj-$(CONFIG_TI_DAVINCI_MDIO) += davinci_mdio.o
+ obj-$(CONFIG_TI_CPSW_PHY_SEL) += cpsw-phy-sel.o
+-obj-$(CONFIG_TI_CPSW_ALE) += cpsw_ale.o
+ obj-$(CONFIG_TI_CPTS_MOD) += cpts.o
+ obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
+-ti_cpsw-y := cpsw.o davinci_cpdma.o
++ti_cpsw-y := cpsw.o davinci_cpdma.o cpsw_ale.o
+ 
+ obj-$(CONFIG_TI_KEYSTONE_NETCP) += keystone_netcp.o
+-keystone_netcp-y := netcp_core.o
++keystone_netcp-y := netcp_core.o cpsw_ale.o
+ obj-$(CONFIG_TI_KEYSTONE_NETCP_ETHSS) += keystone_netcp_ethss.o
+ keystone_netcp_ethss-y := netcp_ethss.o netcp_sgmii.o netcp_xgbepcsr.o
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+index 1142fcfce566..3ef5257c9bc7 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -289,7 +289,6 @@ int cpsw_ale_flush_multicast(struct cpsw_ale *ale, int port_mask, int vid)
+ 	}
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_flush_multicast);
+ 
+ static inline void cpsw_ale_set_vlan_entry_type(u32 *ale_entry,
+ 						int flags, u16 vid)
+@@ -327,7 +326,6 @@ int cpsw_ale_add_ucast(struct cpsw_ale *ale, const u8 *addr, int port,
+ 	cpsw_ale_write(ale, idx, ale_entry);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_add_ucast);
+ 
+ int cpsw_ale_del_ucast(struct cpsw_ale *ale, const u8 *addr, int port,
+ 		       int flags, u16 vid)
+@@ -343,7 +341,6 @@ int cpsw_ale_del_ucast(struct cpsw_ale *ale, const u8 *addr, int port,
+ 	cpsw_ale_write(ale, idx, ale_entry);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_del_ucast);
+ 
+ int cpsw_ale_add_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
+ 		       int flags, u16 vid, int mcast_state)
+@@ -377,7 +374,6 @@ int cpsw_ale_add_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
+ 	cpsw_ale_write(ale, idx, ale_entry);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_add_mcast);
+ 
+ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
+ 		       int flags, u16 vid)
+@@ -400,7 +396,6 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
+ 	cpsw_ale_write(ale, idx, ale_entry);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_del_mcast);
+ 
+ /* ALE NetCP NU switch specific vlan functions */
+ static void cpsw_ale_set_vlan_mcast(struct cpsw_ale *ale, u32 *ale_entry,
+@@ -451,7 +446,6 @@ int cpsw_ale_add_vlan(struct cpsw_ale *ale, u16 vid, int port, int untag,
+ 	cpsw_ale_write(ale, idx, ale_entry);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_add_vlan);
+ 
+ int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port_mask)
+ {
+@@ -473,7 +467,6 @@ int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port_mask)
+ 	cpsw_ale_write(ale, idx, ale_entry);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_del_vlan);
+ 
+ void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti)
+ {
+@@ -506,7 +499,6 @@ void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti)
+ 		cpsw_ale_write(ale, idx, ale_entry);
+ 	}
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_set_allmulti);
+ 
+ struct ale_control_info {
+ 	const char	*name;
+@@ -732,7 +724,6 @@ int cpsw_ale_control_set(struct cpsw_ale *ale, int port, int control,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_control_set);
+ 
+ int cpsw_ale_control_get(struct cpsw_ale *ale, int port, int control)
+ {
+@@ -756,7 +747,6 @@ int cpsw_ale_control_get(struct cpsw_ale *ale, int port, int control)
+ 	tmp = readl_relaxed(ale->params.ale_regs + offset) >> shift;
+ 	return tmp & BITMASK(info->bits);
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_control_get);
+ 
+ static void cpsw_ale_timer(struct timer_list *t)
+ {
+@@ -781,14 +771,12 @@ void cpsw_ale_start(struct cpsw_ale *ale)
+ 		add_timer(&ale->timer);
+ 	}
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_start);
+ 
+ void cpsw_ale_stop(struct cpsw_ale *ale)
+ {
+ 	del_timer_sync(&ale->timer);
+ 	cpsw_ale_control_set(ale, 0, ALE_ENABLE, 0);
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_stop);
+ 
+ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
+ {
+@@ -872,7 +860,6 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
+ 
+ 	return ale;
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_create);
+ 
+ void cpsw_ale_dump(struct cpsw_ale *ale, u32 *data)
+ {
+@@ -883,7 +870,6 @@ void cpsw_ale_dump(struct cpsw_ale *ale, u32 *data)
+ 		data += ALE_ENTRY_WORDS;
+ 	}
+ }
+-EXPORT_SYMBOL_GPL(cpsw_ale_dump);
+ 
+ MODULE_LICENSE("GPL v2");
+ MODULE_DESCRIPTION("TI CPSW ALE driver");
+-- 
+2.17.1
 
