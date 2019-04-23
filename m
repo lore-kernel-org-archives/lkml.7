@@ -2,158 +2,377 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79683C10F11
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E36C10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C84D20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555981603;
-	bh=4XIl9c68z55v60nFntFl8ggNOHnaIkdvgGfAWOYpQLA=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=y/UR1WV4RegCb6RoQ6YxzR7S29oFkuo1OqBZS5fFPpjbcOjYl6wKK/y0gLoabQd44
-	 EfLmeVlN2KLbzKALuusRMI0j7g3Dd4Z2+lYMm647RFYhPySRfsHUeePBSwIyknUvyR
-	 uAh1rbKGYlalZwyEvgyMdTrrW8yzbiqQm9a1AfkU=
+	by mail.kernel.org (Postfix) with ESMTP id 96168206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:07:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbfDWBGl (ORCPT
+        id S1729025AbfDWBHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 21:06:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57764 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 21:07:31 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61294 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbfDWBGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 21:06:41 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE80820811;
-        Tue, 23 Apr 2019 01:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555981599;
-        bh=4XIl9c68z55v60nFntFl8ggNOHnaIkdvgGfAWOYpQLA=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=B1VSvggqsZOFAlatTEPnGrp5nbjBVq/qQo1SddRFxp+U8HgHcUmAoMstxQyRfkOXA
-         RPNDH69H1XbBLTxJj0HlIuSpLXz4P+d8GeSsk2Lo5C6vFuUPXiJvc1Xy/0XgWNsvDc
-         ZPl8GX/PvFfFKwy/FWDi8BLBNU9E6th1vxSsPPt8=
-Content-Type: text/plain; charset="utf-8"
+        id S1728615AbfDWBHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 21:07:30 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 18:07:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,383,1549958400"; 
+   d="scan'208";a="225780691"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
+  by orsmga001.jf.intel.com with ESMTP; 22 Apr 2019 18:07:24 -0700
+Date:   Mon, 22 Apr 2019 21:01:52 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH 1/2] vfio/mdev: add version field as mandatory attribute
+ for mdev device
+Message-ID: <20190423010152.GC32217@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+ <20190419083505.19654-1-yan.y.zhao@intel.com>
+ <20190422083950.25eb9e7c@x1.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5cbe596c.1c69fb81.e252.b9d0@mx.google.com>
-References: <5cbe596c.1c69fb81.e252.b9d0@mx.google.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: clk/clk-next boot bisection: v5.1-rc1-142-ga55b079c961b on panda
-To:     "kernelci.org bot" <bot@kernelci.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>, broonie@kernel.org,
-        enric.balletbo@collabora.com, guillaume.tucker@collabora.com,
-        khilman@baylibre.com, matthew.hart@linaro.org,
-        mgalka@collabora.com, tomeu.vizoso@collabora.com
-Message-ID: <155598159898.15276.8408514960097680895@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Mon, 22 Apr 2019 18:06:38 -0700
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190422083950.25eb9e7c@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting kernelci.org bot (2019-04-22 17:16:44)
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
->=20
-> clk/clk-next boot bisection: v5.1-rc1-142-ga55b079c961b on panda
->=20
-> Summary:
->   Start:      a55b079c961b Merge branch 'clk-hisi' into clk-next
->   Details:    https://kernelci.org/boot/id/5cbe3cdb59b514fd22fe6025
->   Plain log:  https://storage.kernelci.org//clk/clk-next/v5.1-rc1-142-ga5=
-5b079c961b/arm/omap2plus_defconfig/gcc-7/lab-baylibre/boot-omap4-panda.txt
->   HTML log:   https://storage.kernelci.org//clk/clk-next/v5.1-rc1-142-ga5=
-5b079c961b/arm/omap2plus_defconfig/gcc-7/lab-baylibre/boot-omap4-panda.html
->   Result:     ecbf3f1795fd clk: fixed-factor: Let clk framework find pare=
-nt
->=20
-> Checks:
->   revert:     PASS
->   verify:     PASS
->=20
-> Parameters:
->   Tree:       clk
->   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.g=
-it
->   Branch:     clk-next
->   Target:     panda
->   CPU arch:   arm
->   Lab:        lab-baylibre
->   Compiler:   gcc-7
->   Config:     omap2plus_defconfig
->   Test suite: boot
->=20
-> Breaking commit found:
+On Mon, Apr 22, 2019 at 10:39:50PM +0800, Alex Williamson wrote:
+> On Fri, 19 Apr 2019 04:35:04 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > device version attribute in mdev sysfs is used by user space software
+> > (e.g. libvirt) to query device compatibility for live migration of VFIO
+> > mdev devices. This attribute is mandatory if a mdev device supports live
+> > migration.
+> 
+> The Subject: doesn't quite match what's being proposed here.
+>  
+> > It consists of two parts: common part and vendor proprietary part.
+> > common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
+> >              identifies device type. e.g., for pci device, it is
+> >              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> 
+> What purpose does this serve?  If it's intended as some sort of
+> namespace feature, shouldn't we first assume that we can only support
+> migration to devices of the same type?  Therefore each type would
+> already have its own namespace.  Also that would make the trailing bit
+> of the version string listed below in the example redundant.  A vendor
+> is still welcome to include this in their version string if they wish,
+> but I think the string should be entirely vendor defined.
+>
+hi Alex,
+This common part is a kind of namespace.
+Because if version string is entirely defined by vendors, I'm worried about
+if there is a case that one vendor's version string happens to deceive and
+interfere with another vendor's version checking?
+e.g.
+vendor A has a version string like: vendor id + device id + mdev type
+vendor B has a version string like: device id + vendor id + mdev type
+but vendor A's vendor id is 0x8086, device id is 0x1217
+vendor B's vendor id is 0x1217, device id is 0x8086.
 
-Awesome! I LOVE IT!!!
+In this corner case, the two vendors may regard the two device is
+migratable but actually they are not.
 
->=20
-> diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-facto=
-r.c
-> index 241b3f8c61a9..5b09f2cdb7de 100644
-> --- a/drivers/clk/clk-fixed-factor.c
-> +++ b/drivers/clk/clk-fixed-factor.c
-> @@ -64,12 +64,14 @@ const struct clk_ops clk_fixed_factor_ops =3D {
->  };
->  EXPORT_SYMBOL_GPL(clk_fixed_factor_ops);
-> =20
-> -struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
-> -               const char *name, const char *parent_name, unsigned long =
-flags,
-> -               unsigned int mult, unsigned int div)
-> +static struct clk_hw *
-> +__clk_hw_register_fixed_factor(struct device *dev, struct device_node *n=
-p,
-> +               const char *name, const char *parent_name, int index,
-> +               unsigned long flags, unsigned int mult, unsigned int div)
->  {
->         struct clk_fixed_factor *fix;
->         struct clk_init_data init;
-> +       struct clk_parent_data pdata =3D { .index =3D index };
->         struct clk_hw *hw;
->         int ret;
-> =20
-> @@ -85,11 +87,17 @@ struct clk_hw *clk_hw_register_fixed_factor(struct de=
-vice *dev,
->         init.name =3D name;
->         init.ops =3D &clk_fixed_factor_ops;
->         init.flags =3D flags | CLK_IS_BASIC;
-> -       init.parent_names =3D &parent_name;
-> +       if (parent_name)
-> +               init.parent_names =3D &parent_name;
-> +       else
-> +               init.parent_data =3D &pdata;
+That's the reason for this common part that serve as a kind of namespace
+that all vendors will comply with to avoid overlap.
 
-Ick. I realized that 'init.parent_names' here can be full of junk! Let's
-initialize it properly. Maybe that makes this all better?
+> > vendor proprietary part: this part is varied in length. vendor driver can
+> >              specify any string to identify a device.
+> > 
+> > When reading this attribute, it should show device version string of the
+> > device of type <type-id>. If a device does not support live migration, it
+> > should return errno.
+> > When writing a string to this attribute, it returns errno for
+> > incompatibility or returns written string length in compatibility case.
+> > If a device does not support live migration, it always returns errno.
+> > 
+> > For user space software to use:
+> > 1.
+> > Before starting live migration, user space software first reads source side
+> > mdev device's version. e.g.
+> > "#cat \
+> > /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type/version"
+> > 00028086-193b-i915-GVTg_V5_4
+> > 
+> > 2.
+> > Then, user space software writes the source side returned version string
+> > to device version attribute in target side, and checks the return value.
+> > If a negative errno is returned in the target side, then mdev devices in
+> > source and target sides are not compatible;
+> > If a positive number is returned and it equals to the length of written
+> > string, then the two mdev devices in source and target side are compatible.
+> > e.g.
+> > (a) compatibility case
+> > "# echo 00028086-193b-i915-GVTg_V5_4 >
+> > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+> > 
+> > (b) incompatibility case
+> > "#echo 00028086-193b-i915-GVTg_V5_1 >
+> > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+> > -bash: echo: write error: Invalid argument
+> > 
+> > 3. if two mdev devices are compatible, user space software can start
+> > live migration, and vice versa.
+> > 
+> > Note: if a mdev device does not support live migration, it either does
+> > not provide a version attribute, or always returns errno when its version
+> > attribute is read/written.
+> 
+> I think it would be cleaner to do the former, not supply the
+> attribute.  This seems to do the latter in the sample drivers.  Thanks,
+Ok. you are right!
+what about just keep one sample driver to show how to do the latter,
+and let the others do the former?
 
-----8<----
-diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index 5b09f2cdb7de..2d988a7585d5 100644
---- a/drivers/clk/clk-fixed-factor.c
-+++ b/drivers/clk/clk-fixed-factor.c
-@@ -70,7 +70,7 @@ __clk_hw_register_fixed_factor(struct device *dev, struct=
- device_node *np,
- 		unsigned long flags, unsigned int mult, unsigned int div)
- {
- 	struct clk_fixed_factor *fix;
--	struct clk_init_data init;
-+	struct clk_init_data init =3D { };
- 	struct clk_parent_data pdata =3D { .index =3D index };
- 	struct clk_hw *hw;
- 	int ret;
+Thanks!
+Yan
+
+
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Erik Skultety <eskultet@redhat.com>
+> > Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> > Cc: Cornelia Huck <cohuck@redhat.com>
+> > Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> > Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> > Cc: Neo Jia <cjia@nvidia.com>
+> > Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> > 
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  Documentation/vfio-mediated-device.txt | 36 ++++++++++++++++++++++++++
+> >  samples/vfio-mdev/mbochs.c             | 17 ++++++++++++
+> >  samples/vfio-mdev/mdpy.c               | 16 ++++++++++++
+> >  samples/vfio-mdev/mtty.c               | 16 ++++++++++++
+> >  4 files changed, 85 insertions(+)
+> > 
+> > diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
+> > index c3f69bcaf96e..bc28471c0667 100644
+> > --- a/Documentation/vfio-mediated-device.txt
+> > +++ b/Documentation/vfio-mediated-device.txt
+> > @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
+> >    |     |   |--- available_instances
+> >    |     |   |--- device_api
+> >    |     |   |--- description
+> > +  |     |   |--- version
+> >    |     |   |--- [devices]
+> >    |     |--- [<type-id>]
+> >    |     |   |--- create
+> > @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
+> >    |     |   |--- available_instances
+> >    |     |   |--- device_api
+> >    |     |   |--- description
+> > +  |     |   |--- version
+> >    |     |   |--- [devices]
+> >    |     |--- [<type-id>]
+> >    |          |--- create
+> > @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
+> >    |          |--- available_instances
+> >    |          |--- device_api
+> >    |          |--- description
+> > +  |          |--- version
+> >    |          |--- [devices]
+> >  
+> >  * [mdev_supported_types]
+> > @@ -225,6 +228,8 @@ Directories and files under the sysfs for Each Physical Device
+> >    [<type-id>], device_api, and available_instances are mandatory attributes
+> >    that should be provided by vendor driver.
+> >  
+> > +  version is a mandatory attribute if a mdev device supports live migration.
+> > +
+> >  * [<type-id>]
+> >  
+> >    The [<type-id>] name is created by adding the device driver string as a prefix
+> > @@ -246,6 +251,35 @@ Directories and files under the sysfs for Each Physical Device
+> >    This attribute should show the number of devices of type <type-id> that can be
+> >    created.
+> >  
+> > +* version
+> > +
+> > +  This attribute is rw. It is used to check whether two devices are compatible
+> > +  for live migration. If this attribute is missing, then the corresponding mdev
+> > +  device is regarded as not supporting live migration.
+> > +
+> > +  It consists of two parts: common part and vendor proprietary part.
+> > +  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
+> > +               device type. e.g., for pci device, it is
+> > +               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> > +  vendor proprietary part: this part is varied in length. vendor driver can
+> > +               specify any string to identify a device.
+> > +
+> > +  When reading this attribute, it should show device version string of the device
+> > +  of type <type-id>. If a device does not support live migration, it should
+> > +  return errno.
+> > +  When writing a string to this attribute, it returns errno for incompatibility
+> > +  or returns written string length in compatibility case. If a device does not
+> > +  support live migration, it always returns errno.
+> > +
+> > +  for example.
+> > +  # cat \
+> > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_2/version
+> > +  00028086-193b-i915-GVTg_V5_2
+> > +
+> > +  #echo 00028086-193b-i915-GVTg_V5_2 > \
+> > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
+> > + -bash: echo: write error: Invalid argument
+> > +
+> >  * [device]
+> >  
+> >    This directory contains links to the devices of type <type-id> that have been
+> > @@ -327,12 +361,14 @@ card.
+> >          |   |   |-- available_instances
+> >          |   |   |-- create
+> >          |   |   |-- device_api
+> > +        |   |   |-- version
+> >          |   |   |-- devices
+> >          |   |   `-- name
+> >          |   `-- mtty-2
+> >          |       |-- available_instances
+> >          |       |-- create
+> >          |       |-- device_api
+> > +        |       |-- version
+> >          |       |-- devices
+> >          |       `-- name
+> >          |-- mtty_dev
+> > diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
+> > index b038aa9f5a70..2f5ba96b91a2 100644
+> > --- a/samples/vfio-mdev/mbochs.c
+> > +++ b/samples/vfio-mdev/mbochs.c
+> > @@ -1391,11 +1391,28 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+> >  }
+> >  MDEV_TYPE_ATTR_RO(device_api);
+> >  
+> > +static ssize_t version_show(struct kobject *kobj, struct device *dev,
+> > +		char *buf)
+> > +{
+> > +	/* do not support live migration */
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static ssize_t version_store(struct kobject *kobj, struct device *dev,
+> > +		const char *buf, size_t count)
+> > +{
+> > +	/* do not support live migration */
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static MDEV_TYPE_ATTR_RW(version);
+> > +
+> >  static struct attribute *mdev_types_attrs[] = {
+> >  	&mdev_type_attr_name.attr,
+> >  	&mdev_type_attr_description.attr,
+> >  	&mdev_type_attr_device_api.attr,
+> >  	&mdev_type_attr_available_instances.attr,
+> > +	&mdev_type_attr_version.attr,
+> >  	NULL,
+> >  };
+> >  
+> > diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
+> > index cc86bf6566e4..ff15fdfc7d46 100644
+> > --- a/samples/vfio-mdev/mdpy.c
+> > +++ b/samples/vfio-mdev/mdpy.c
+> > @@ -695,11 +695,27 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+> >  }
+> >  MDEV_TYPE_ATTR_RO(device_api);
+> >  
+> > +static ssize_t version_show(struct kobject *kobj, struct device *dev,
+> > +		char *buf)
+> > +{
+> > +	/* do not support live migration */
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static ssize_t version_store(struct kobject *kobj, struct device *dev,
+> > +		const char *buf, size_t count)
+> > +{
+> > +	/* do not support live migration */
+> > +	return -EINVAL;
+> > +}
+> > +static MDEV_TYPE_ATTR_RW(version);
+> > +
+> >  static struct attribute *mdev_types_attrs[] = {
+> >  	&mdev_type_attr_name.attr,
+> >  	&mdev_type_attr_description.attr,
+> >  	&mdev_type_attr_device_api.attr,
+> >  	&mdev_type_attr_available_instances.attr,
+> > +	&mdev_type_attr_version.attr,
+> >  	NULL,
+> >  };
+> >  
+> > diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
+> > index 1c77c370c92f..4ae3aad3474d 100644
+> > --- a/samples/vfio-mdev/mtty.c
+> > +++ b/samples/vfio-mdev/mtty.c
+> > @@ -1390,10 +1390,26 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+> >  
+> >  MDEV_TYPE_ATTR_RO(device_api);
+> >  
+> > +static ssize_t version_show(struct kobject *kobj, struct device *dev,
+> > +		char *buf)
+> > +{
+> > +	/* do not support live migration */
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static ssize_t version_store(struct kobject *kobj, struct device *dev,
+> > +		const char *buf, size_t count)
+> > +{
+> > +	/* do not support live migration */
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static MDEV_TYPE_ATTR_RW(version);
+> >  static struct attribute *mdev_types_attrs[] = {
+> >  	&mdev_type_attr_name.attr,
+> >  	&mdev_type_attr_device_api.attr,
+> >  	&mdev_type_attr_available_instances.attr,
+> > +	&mdev_type_attr_version.attr,
+> >  	NULL,
+> >  };
+> >  
+> 
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
