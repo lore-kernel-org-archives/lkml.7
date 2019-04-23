@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A312DC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAAEC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 711F120645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA2920645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyMyEVWD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFVbYWgi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfDWQjY (ORCPT
+        id S1729673AbfDWQje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:39:24 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43267 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729258AbfDWQjW (ORCPT
+        Tue, 23 Apr 2019 12:39:34 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42503 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729340AbfDWQjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:39:22 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z9so7869061pgu.10;
-        Tue, 23 Apr 2019 09:39:22 -0700 (PDT)
+        Tue, 23 Apr 2019 12:39:08 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x15so3443031pln.9;
+        Tue, 23 Apr 2019 09:39:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6w+/ukhBs5A+/Cpc4cy3lRbWsMEd9es6i7ZvKVBddzs=;
-        b=dyMyEVWDLZJEfWEezbupnV/PWKS/cnXhuL4Ok400eGTQf28IPq7U9hBqT6GPyhUH80
-         xDkmV3xv83ujk8WxZWoltaWP3SYsH/9s+aQGQ+o0mT64b33NneoSTzbUdCjA0oVoiAze
-         eO0RCeeEyMHUAe1vHZ8wZgRLqdmnGICiW/GaTDXgF0/LK16RQfHfxdOwXq67v4q/qhcA
-         6UfRD/SJD/2pvUTATCa4HyeBKxNpO7eQPNt2y9Nu9R24VfM86aOK69kWgYrqk1LIYd7j
-         4c++D5x73S5bs6WuPzV21ONTCFYQxFjDcEWKcKoKGYVOB+mGdYBMFF6M2smIfrGZWb+b
-         S7hA==
+        bh=lKxrWq0DPWG2/ldiM614YNjWwPB+5TI6uHMpmONkiyA=;
+        b=YFVbYWginTf8h5S0SDoTIVMpULpvCv6OKgMCGQDqwtjfHm8OF/amq8OwLtdHLRayBO
+         BCBf0R5V6HXNxNjhfmUM5Z8W06HJKkSxtFC9rcQDXItwQ7sd1GLz5KFJNjvtjDhcCNIH
+         /RJgCoDHVfa38Ky54CEuElWSUFLSK24t+ehRe+DHGfbWNSN1iU/aWSdUg48jiuxGOvbj
+         PO+h0uNSBBAa78wGa8VboKo+0yvcd/nLNWy6MN9Ac9C8Rb5MdAZOsqGBZ70yJUEdDhP/
+         SXpMj7o4tL0x2dxs68n7Rjm7Q08Cs0yd7ZrASV1VvAeSQiWYwohAAtRwixx0GvD0zyRc
+         HAyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6w+/ukhBs5A+/Cpc4cy3lRbWsMEd9es6i7ZvKVBddzs=;
-        b=VyWIILRoInwAH4O5DtS6RW+0TZ0YPITgxkUujI+VKyLLk8LFVIE+5TBC3F3pZB/BHj
-         8DGZmfoJA6CupJcpcEvpV0ckpkwmosdhJbozTqG0NP6VqRGaQkYnDvDo1kEjCjr14hYi
-         5OoeJ9fKkT+nqXZPs3L8/z0p/iNlwsF6ZqO03NhmbSt2ImhC0izG5maJcWtQb3+sg5kN
-         MZjsN6e/ewvRkOcfuLb4rU6QIrPkesjLuJlwRcttN+qCDcgon9z3oduTrT8pDR9lVeQT
-         Pc2rkFf3Fmr+3nfmMdEFCTLLj4KOuMWcepRFdtm1y7hGObuz8jarNIaLdDB8PkZa2PIF
-         7zXg==
-X-Gm-Message-State: APjAAAW0CwWnvH6Ocm5IS7C3ttmTB09gFc1iy+RwzTVCGBFmevsPzqrO
-        kDmaKSYOdk22ZUxOFHSFxxg=
-X-Google-Smtp-Source: APXvYqx276i5IPfOnVxMQNuxIDAAkHLbEiVeWvrYnY1fHoBHgUWH60klV/bze67U67znXMVhhTJctg==
-X-Received: by 2002:a63:5059:: with SMTP id q25mr18784756pgl.314.1556037561717;
-        Tue, 23 Apr 2019 09:39:21 -0700 (PDT)
+        bh=lKxrWq0DPWG2/ldiM614YNjWwPB+5TI6uHMpmONkiyA=;
+        b=VbNvtZeiJoEu/zwP2n9DdiB0xhLVMASq3iNZBkVQjxOcWdoZGsFF8Et57ZrXqHT2ap
+         h69SlRsWxfu3uw2+Ysg7NqgE6kTZTWmFuYYlUwAc3larLh5PSMQJnGlG46Jjg3CdMe3G
+         W0ZLVasUQe0UhDbwwIEw6dM345j/Hv0E89V7mBE/01hDKxamKk/fiz1zknVJ+pBgk+WI
+         NFNNsJs5Rk0YEzZFAuqDpFDdFLM7rYKsoggt79nMvuizQ0HFAdAlkDibJhMqi+gh7Ay1
+         i5EyOmG61RiKkG/HPmWGhEm+bpO/FshTlM6aF8kvS3XwoswVvX6P/b1fYbg1Zt+21gDn
+         uRMw==
+X-Gm-Message-State: APjAAAVka7yL4Pm2eUyoRGQB+px/FE2Sm6zf4tO7BgaZlPuDYrEbifGN
+        6EfNFjXm5qdCMQNhNw4zGQM=
+X-Google-Smtp-Source: APXvYqyyiuJdfDhtn9sySZr3o/D6USw7potnUz8aWY3bi/Zm3hnxy6EcWxCQcMDnbzEmguum4Hqo4Q==
+X-Received: by 2002:a17:902:e490:: with SMTP id cj16mr27318962plb.156.1556037547194;
+        Tue, 23 Apr 2019 09:39:07 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id v1sm24364801pff.81.2019.04.23.09.39.17
+        by smtp.gmail.com with ESMTPSA id v1sm24364801pff.81.2019.04.23.09.39.01
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 09:39:20 -0700 (PDT)
+        Tue, 23 Apr 2019 09:39:06 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     Jonathan Corbet <corbet@lwn.net>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
@@ -65,9 +65,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
         linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
         linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v4 63/63] Documentation: x86: convert x86_64/machinecheck to reST
-Date:   Wed, 24 Apr 2019 00:29:32 +0800
-Message-Id: <20190423162932.21428-64-changbin.du@gmail.com>
+Subject: [PATCH v4 60/63] Documentation: x86: convert x86_64/5level-paging.txt to reST
+Date:   Wed, 24 Apr 2019 00:29:29 +0800
+Message-Id: <20190423162932.21428-61-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190423162932.21428-1-changbin.du@gmail.com>
 References: <20190423162932.21428-1-changbin.du@gmail.com>
@@ -83,54 +83,66 @@ add it to Sphinx TOC tree. No essential content change.
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- Documentation/x86/x86_64/index.rst                    |  1 +
- .../x86/x86_64/{machinecheck => machinecheck.rst}     | 11 ++++++-----
- 2 files changed, 7 insertions(+), 5 deletions(-)
- rename Documentation/x86/x86_64/{machinecheck => machinecheck.rst} (92%)
+ .../{5level-paging.txt => 5level-paging.rst}     | 16 +++++++++++-----
+ Documentation/x86/x86_64/index.rst               |  1 +
+ 2 files changed, 12 insertions(+), 5 deletions(-)
+ rename Documentation/x86/x86_64/{5level-paging.txt => 5level-paging.rst} (91%)
 
-diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
-index c04b6eab3c76..d6eaaa5a35fc 100644
---- a/Documentation/x86/x86_64/index.rst
-+++ b/Documentation/x86/x86_64/index.rst
-@@ -13,3 +13,4 @@ x86_64 Support
-    5level-paging
-    fake-numa-for-cpusets
-    cpu-hotplug-spec
-+   machinecheck
-diff --git a/Documentation/x86/x86_64/machinecheck b/Documentation/x86/x86_64/machinecheck.rst
-similarity index 92%
-rename from Documentation/x86/x86_64/machinecheck
-rename to Documentation/x86/x86_64/machinecheck.rst
-index d0648a74fceb..8e9d2d529a8d 100644
---- a/Documentation/x86/x86_64/machinecheck
-+++ b/Documentation/x86/x86_64/machinecheck.rst
-@@ -1,5 +1,8 @@
+diff --git a/Documentation/x86/x86_64/5level-paging.txt b/Documentation/x86/x86_64/5level-paging.rst
+similarity index 91%
+rename from Documentation/x86/x86_64/5level-paging.txt
+rename to Documentation/x86/x86_64/5level-paging.rst
+index 2432a5ef86d9..ab88a4514163 100644
+--- a/Documentation/x86/x86_64/5level-paging.txt
++++ b/Documentation/x86/x86_64/5level-paging.rst
+@@ -1,5 +1,11 @@
+-== Overview ==
 +.. SPDX-License-Identifier: GPL-2.0
  
--Configurable sysfs parameters for the x86-64 machine check code.
-+===============================================================
-+Configurable sysfs parameters for the x86-64 machine check code
-+===============================================================
++==============
++5-level paging
++==============
++
++Overview
++========
+ Original x86-64 was limited by 4-level paing to 256 TiB of virtual address
+ space and 64 TiB of physical address space. We are already bumping into
+ this limit: some vendors offers servers with 64 TiB of memory today.
+@@ -16,16 +22,17 @@ QEMU 2.9 and later support 5-level paging.
+ Virtual memory layout for 5-level paging is described in
+ Documentation/x86/x86_64/mm.txt
  
- Machine checks report internal hardware error conditions detected
- by the CPU. Uncorrected errors typically cause a machine check
-@@ -16,14 +19,12 @@ log then mcelog should run to collect and decode machine check entries
- from /dev/mcelog. Normally mcelog should be run regularly from a cronjob.
+-== Enabling 5-level paging ==
  
- Each CPU has a directory in /sys/devices/system/machinecheck/machinecheckN
--(N = CPU number)
-+(N = CPU number).
++Enabling 5-level paging
++=======================
+ CONFIG_X86_5LEVEL=y enables the feature.
  
- The directory contains some configurable entries:
+ Kernel with CONFIG_X86_5LEVEL=y still able to boot on 4-level hardware.
+ In this case additional page table level -- p4d -- will be folded at
+ runtime.
  
--Entries:
+-== User-space and large virtual address space ==
 -
- bankNctl
--(N bank number)
-+	(N bank number)
- 	64bit Hex bitmask enabling/disabling specific subevents for bank N
- 	When a bit in the bitmask is zero then the respective
- 	subevent will not be reported.
++User-space and large virtual address space
++==========================================
+ On x86, 5-level paging enables 56-bit userspace virtual address space.
+ Not all user space is ready to handle wide addresses. It's known that
+ at least some JIT compilers use higher bits in pointers to encode their
+@@ -58,4 +65,3 @@ One important case we need to handle here is interaction with MPX.
+ MPX (without MAWA extension) cannot handle addresses above 47-bit, so we
+ need to make sure that MPX cannot be enabled we already have VMA above
+ the boundary and forbid creating such VMAs once MPX is enabled.
+-
+diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
+index 4b65d29ef459..7b8c82151358 100644
+--- a/Documentation/x86/x86_64/index.rst
++++ b/Documentation/x86/x86_64/index.rst
+@@ -10,3 +10,4 @@ x86_64 Support
+    boot-options
+    uefi
+    mm
++   5level-paging
 -- 
 2.20.1
 
