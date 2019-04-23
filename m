@@ -2,172 +2,324 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A720C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36539C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F039B206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6ED2206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:58:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G9UWWQ2W"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Na3GguJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfDWM4x (ORCPT
+        id S1727721AbfDWM6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:56:53 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36476 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfDWM4w (ORCPT
+        Tue, 23 Apr 2019 08:58:40 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:39947 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfDWM6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:56:52 -0400
-Received: by mail-qk1-f194.google.com with SMTP id m137so4777840qke.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 05:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dEze09IdSHBGGlH96R+KwNIu2LaROjVW7jKqngW7jgA=;
-        b=G9UWWQ2WoAseR9WV0y8T5h6iRyZcXmWAiF3BPd9bmTcKSY6bfbwpW9DwstED4UA+xU
-         TCnjAWt8Fy74r6o28OEdrm3swN6R9Gpz3voEiZA4Deoo+FxrE3SjL8gq7VbkNrMzzRn/
-         Vz7RKOc8ePC6EuSRPbkyRalT2fqju2/TfbWeM1KVvtZ+IRlTbqo9kdHY+4zpBzMxLocm
-         QXKL1Mqj9kGjtoHIOTRHRTNiQTqr5lpVR0D2dN3x2+KnI5eQ3wv1YjJ97PqL1ea/6XZB
-         Iw2vduUfWLne7dy7LwYRI6RGkrKT97m46+/lr2Ycoqo0+pRayNvrH+na6qcwX0o2viVL
-         q5Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dEze09IdSHBGGlH96R+KwNIu2LaROjVW7jKqngW7jgA=;
-        b=bOlwgmxGkpq1lzKM94owISAYROyPqy+aYPftEquHYAHm8pbTNCx8KThIG+1rNebS8s
-         w5OAkynfXXTpupqdWusNGTYo5JthJp7vxP14xSrmGbY6njIaJ4rj1UIQeodTd4IyoerZ
-         AgcXP+J6Tl2lJcOovPkTZ0x/WQ6vSVfWnpPNWv9l8hRES0R0ILbORZaGRSqBNaNkn9+X
-         jODwF8JrkXlDgGBeKcBq8VZYjjtXeiLPJh06/+ZEbixAsX1gTjpidnu0Q4M+mXKUN9AW
-         vl/pa9/MVSUztqOwEEx0ApButHDVJYhjU6O1KBSfC7VWXM3ygWVjb/YIZkW6uXLjVysB
-         +6FA==
-X-Gm-Message-State: APjAAAUULMh0XyZuzZZrO+cWF5SjghEK0oJJElxEdZF8d346X4HCltBl
-        vienrwexFhB3H2M9WhroEz4LP1jXV/oNPqfw+E5jrQ==
-X-Google-Smtp-Source: APXvYqwn+wWks9tto2Z41zGXeWqZuRRzCi7D/T8ro52aUdmjCC3FwGne9MA5gGI/UAZaNC+PTyN+SHPHaqRVKfRK8Jc=
-X-Received: by 2002:a37:b444:: with SMTP id d65mr18843156qkf.125.1556024211546;
- Tue, 23 Apr 2019 05:56:51 -0700 (PDT)
+        Tue, 23 Apr 2019 08:58:40 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190423125838euoutp012e7b2472f58ad257d97667c812819b03~YG9_Yv64g1084010840euoutp01s
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 12:58:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190423125838euoutp012e7b2472f58ad257d97667c812819b03~YG9_Yv64g1084010840euoutp01s
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1556024318;
+        bh=wMQBTQ2XFkKC+eLnJjtRbq97hOKFaqbvyGPReHle408=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=Na3GguJk5n03zu45qdpFkUfgt43ny2mpWieZ7auzDPgA5xHTlrnzgNE/knyaPOTN9
+         /G9gF8Z1KDAjXfVy+6GvXR88yqU9qhMlkyvoe06PTgekKE6i9s79qmUA5+u1jpYn9q
+         cKea5tH5eaEIf/nBLkgty+KEu6UvsFKxnUf2Hivg=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190423125837eucas1p1fc32d9ae0c1e8c15962d0dbe7b01a266~YG99oc0Kc0635306353eucas1p1o;
+        Tue, 23 Apr 2019 12:58:37 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 35.5D.04325.DFB0FBC5; Tue, 23
+        Apr 2019 13:58:37 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190423125836eucas1p19aed2bbe54f4c20b926ef454c067df81~YG98q4lns1593115931eucas1p1_;
+        Tue, 23 Apr 2019 12:58:36 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190423125836eusmtrp21acfe61ff7dbce1f67c12c5e1b45ee21~YG98bKIDn1172811728eusmtrp2E;
+        Tue, 23 Apr 2019 12:58:36 +0000 (GMT)
+X-AuditID: cbfec7f5-b75ff700000010e5-9c-5cbf0bfd16f2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 77.B6.04140.CFB0FBC5; Tue, 23
+        Apr 2019 13:58:36 +0100 (BST)
+Received: from [106.120.50.25] (unknown [106.120.50.25]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190423125835eusmtip1919aefcc11fb0fc352b8342f5309ce20~YG970NYZT2481224812eusmtip1q;
+        Tue, 23 Apr 2019 12:58:35 +0000 (GMT)
+Subject: Re: [PATCH 1/4] ARM: dts: exynos: Move pmu and timer nodes out of
+ soc
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <d236bbff-4f99-d492-7591-5f5ca05f4949@samsung.com>
+Date:   Tue, 23 Apr 2019 14:58:31 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <cover.1553853990.git.amit.kucheria@linaro.org>
- <5583cae1-8fea-724a-24a4-59b38a205ac3@free.fr> <CAP245DUNo02QUkGDPFfzow9535GKO9x6ZusETRjEgTmnHL4D2g@mail.gmail.com>
- <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr>
-In-Reply-To: <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 23 Apr 2019 18:26:40 +0530
-Message-ID: <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/13] qcom: dts: thermal cleanups
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190415180510.6044-1-krzk@kernel.org>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMKsWRmVeSWpSXmKPExsWy7djPc7p/uffHGHzdL2Rxa905VouNM9az
+        Wlz/8pzVYv4RILf/8Wtmi/PnN7BbbHp8jdXi8q45bBYzzu9jslh6/SKTReveI+wWh9+0szrw
+        eKyZt4bRY9OqTjaPzUvqPfq2rGL0+LxJLoA1issmJTUnsyy1SN8ugStj2aYHrAXTjSo+vfvO
+        2MD4SbWLkZNDQsBEYu3p2SxdjFwcQgIrGCX+z7vGBuF8YZTY1XiOCcL5zChxZPtGNpiWp0cv
+        QyWWM0r0dbYzgSSEBN4ySrQ+TAWxhQUCJJ58n8MKUiQicIZZYs//F2DdbAKGEl1vu8BsXgE7
+        ie+zvrCC2CwCqhJz53wFOoSDQ1QgRmLRZ6gSQYmTM5+wgNicQIsXb13ACGIzC8hLbH87hxnC
+        Fpe49WQ+2EESAqfYJSY/ns0EcamLxKO30xkhbGGJV8e3sEPYMhL/d8I0NDNKPDy3lh3C6WGU
+        uNw0A6rDWuLw8YusIBcxC2hKrN+lDxF2lDg4s40ZJCwhwCdx460gxBF8EpO2TYcK80p0tAlB
+        VKtJzDq+Dm7twQuXmCFsD4kl77+xTGBUnIXkzVlIXpuF5LVZCDcsYGRZxSieWlqcm55abJyX
+        Wq5XnJhbXJqXrpecn7uJEZi0Tv87/nUH474/SYcYBTgYlXh4PW7ujRFiTSwrrsw9xCjBwawk
+        wvsrbU+MEG9KYmVValF+fFFpTmrxIUZpDhYlcd5qhgfRQgLpiSWp2ampBalFMFkmDk6pBkbp
+        X4myv4Tt2nZ/WiMat6Yo03+Ge7e7RqvcOb3mEN8FDz1m7Otsy7+3bav6ku3bZxy5zvA/I/Gr
+        mNG8ttgqJhHfF/fmnNslEbAuIYTfrrXRrnq6vHJ4+y7RSws6/j49e+PzeT0OZvZ9TsElO8r5
+        Nf4KXphUIRiV+MXH1mV6ul3v5HxNJkVGMyWW4oxEQy3mouJEADpBGIlWAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsVy+t/xu7p/uPfHGDT95LO4te4cq8XGGetZ
+        La5/ec5qMf8IkNv/+DWzxfnzG9gtNj2+xmpxedccNosZ5/cxWSy9fpHJonXvEXaLw2/aWR14
+        PNbMW8PosWlVJ5vH5iX1Hn1bVjF6fN4kF8AapWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKp
+        Z2hsHmtlZKqkb2eTkpqTWZZapG+XoJexbNMD1oLpRhWf3n1nbGD8pNrFyMkhIWAi8fToZaYu
+        Ri4OIYGljBLP901lgUjISJyc1sAKYQtL/LnWxQZR9JpR4trpZ0wgCWEBP4lr/c+ZQRIiAmeY
+        Jd78mMICUdXOKLGx7SU7SBWbgKFE11uQdk4OXgE7ie+zvoCNZRFQlZg75yvYOlGBGIkTU7ew
+        Q9QISpyc+QQszgl03+KtCxhBbGYBM4l5mx8yQ9jyEtvfzoGyxSVuPZnPNIFRcBaS9llIWmYh
+        aZmFpGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwIjcduznlh2MXe+CDzEKcDAq8fB6
+        3NwbI8SaWFZcmXuIUYKDWUmE91fanhgh3pTEyqrUovz4otKc1OJDjKZAz01klhJNzgcmi7yS
+        eENTQ3MLS0NzY3NjMwslcd7zBpVRQgLpiSWp2ampBalFMH1MHJxSDYy8SZPm6sj+F7vhocRq
+        EyMsv9BGu7rkWLBzya3/szRmz4vO/DRB0srasm5G1ozzcX2vfZM1v6e6lm9jflS/sZj5Zr2A
+        Qftxv9DDq1dcUFV/Lqnrf1Tig+JeA0Wjr7pCirbPLFbxG++78vn6i6sLLv/X9n3SWnYy7du7
+        FzuM5y08mcSxWeLD42tKLMUZiYZazEXFiQCul4QC3gIAAA==
+X-CMS-MailID: 20190423125836eucas1p19aed2bbe54f4c20b926ef454c067df81
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190415180530epcas3p4ad1a7ac12f7d7ac3175735995b21d48e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190415180530epcas3p4ad1a7ac12f7d7ac3175735995b21d48e
+References: <CGME20190415180530epcas3p4ad1a7ac12f7d7ac3175735995b21d48e@epcas3p4.samsung.com>
+        <20190415180510.6044-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 3:01 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
->
-> On 02/04/2019 20:46, Amit Kucheria wrote:
->
-> > On Tue, Apr 2, 2019 at 8:58 PM Marc Gonzalez wrote:
-> >>
-> >> On 29/03/2019 11:12, Amit Kucheria wrote:
-> >>
-> >>> Changes since v1:
-> >>> - Devices that are not associated with cooling-maps use the 'hot' type
-> >>> - Remove critical trip from such devices too and restrict that type of CPUs
-> >>> - For 8916, add the sensor on the modem
-> >>>
-> >>> Description:
-> >>> - Expose all temperature sensors on msm8916, msm996, msm8998, sdm845
-> >>> - split up the register address map for msm8998
-> >>> - standardize names of the various thermal-zones across boards to make it
-> >>>   easy for test scripts to parse
-> >>
-> >> This is what I see on msm8998 with your patch series applied on top of
-> >> yesterday's next:
-> >>
-> >> # dmesg | grep of_parse_thermal_zones
-> >> of_parse_thermal_zones: build cpu0-thermal zone 0
-> >> of_parse_thermal_zones: build cpu1-thermal zone 0
-> >> of_parse_thermal_zones: build cpu2-thermal zone 0
-> >> of_parse_thermal_zones: build cpu3-thermal zone 0
-> >> of_parse_thermal_zones: build cpu4-thermal zone 0
-> >> of_parse_thermal_zones: build cpu5-thermal zone 0
-> >> of_parse_thermal_zones: build cpu6-thermal zone 0
-> >> of_parse_thermal_zones: build cpu7-thermal zone 0
-> >> of_parse_thermal_zones: build gpu-thermal-bottom zone 0
-> >> of_parse_thermal_zones: build gpu-thermal-top zone 0
-> >> of_parse_thermal_zones: build cluster0-mhm-thermal zone -22
-> >> of_parse_thermal_zones: build cluster1-mhm-thermal zone -22
-> >> of_parse_thermal_zones: build cluster1-l2-thermal zone 0
-> >> of_parse_thermal_zones: build modem-thermal zone 0
-> >> of_parse_thermal_zones: build mem-thermal zone 0
-> >> of_parse_thermal_zones: build wlan-thermal zone 0
-> >> of_parse_thermal_zones: build q6-dsp-thermal zone 0
-> >> of_parse_thermal_zones: build camera-thermal zone 0
-> >> of_parse_thermal_zones: build multimedia-thermal zone 0
-> >> of_parse_thermal_zones: build pm8998 zone 0
-> >> of_parse_thermal_zones: build battery-thermal zone 0
-> >> of_parse_thermal_zones: build skin-thermal zone 0
-> >>
-> >> NB: -EINVAL for cluster0-mhm-thermal and cluster1-mhm-thermal
-> >>
-> >>
-> >> # cat /sys/devices/virtual/thermal/thermal_zone*/temp
-> >> 35800
-> >> 35200
-> >> 34500
-> >> 34800
-> >> 34500
-> >> 34100
-> >> 34100
-> >> 33500
-> >> 33800
-> >> cat: /sys/devices/virtual/thermal/thermal_zone17/temp: Invalid argument
-> >> 36100
-> >> cat: /sys/devices/virtual/thermal/thermal_zone19/temp: Invalid argument
-> >> 35500
-> >> 36100
-> >> 35800
-> >> 35200
-> >> 35500
-> >> 36100
-> >> cat: /sys/devices/virtual/thermal/thermal_zone8/temp: Invalid argument
-> >> cat: /sys/devices/virtual/thermal/thermal_zone9/temp: Invalid argument
-> >>
-> >>
-> >> Are the failures expected?
-> >> (cluster*-mhm-thermal and thermal_zone*/temp)
-> >
-> > No they are not. Unfortunately, I didn't have HW to test, so
-> > appreciate the help with testing. I'll check the 8, 9, 17 and 19 again
-> > before resubmitting.
->
-> Looks like Andy merged this series?
 
-Argh! my bad, I completely forgot about the need to fix this up. I
-need to get me one of these boards.
-
-> https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=for-next
+On 2019-04-15 20:05, Krzysztof Kozlowski wrote:
+> The ARM PMU and ARM architected timer nodes are part of ARM CPU design
+> therefore they should not be inside the soc node.  This also fixes DTC
+> W=1 warnings like:
 >
-> I was expecting a respin, or a discussion of the failures.
+>      arch/arm/boot/dts/exynos3250.dtsi:106.21-135.5:
+>          Warning (simple_bus_reg): /soc/fixed-rate-clocks: missing or empty reg/ranges property
+>      arch/arm/boot/dts/exynos3250.dtsi:676.7-680.5:
+>          Warning (simple_bus_reg): /soc/pmu: missing or empty reg/ranges property
 >
-> Slightly confused. What next?
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+> ---
+>   arch/arm/boot/dts/exynos3250.dtsi | 12 +++++-----
+>   arch/arm/boot/dts/exynos4.dtsi    | 12 +++++-----
+>   arch/arm/boot/dts/exynos5250.dtsi | 40 +++++++++++++++----------------
+>   arch/arm/boot/dts/exynos54xx.dtsi | 38 ++++++++++++++---------------
+>   4 files changed, 51 insertions(+), 51 deletions(-)
 >
+> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+> index 5892a9f7622f..af54b306204b 100644
+> --- a/arch/arm/boot/dts/exynos3250.dtsi
+> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+> @@ -97,6 +97,12 @@
+>   		};
+>   	};
+>   
+> +	pmu {
+> +		compatible = "arm,cortex-a7-pmu";
+> +		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+> +
+>   	soc: soc {
+>   		compatible = "simple-bus";
+>   		#address-cells = <1>;
+> @@ -673,12 +679,6 @@
+>   			status = "disabled";
+>   		};
+>   
+> -		pmu {
+> -			compatible = "arm,cortex-a7-pmu";
+> -			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> -				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> -		};
+> -
+>   		ppmu_dmc0: ppmu_dmc0@106a0000 {
+>   			compatible = "samsung,exynos-ppmu";
+>   			reg = <0x106a0000 0x2000>;
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index 6085e92ac2d7..1c21627e3c3c 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -51,6 +51,12 @@
+>   		serial3 = &serial_3;
+>   	};
+>   
+> +	pmu: pmu {
+> +		compatible = "arm,cortex-a9-pmu";
+> +		interrupt-parent = <&combiner>;
+> +		interrupts = <2 2>, <3 2>;
+> +	};
+> +
+>   	soc: soc {
+>   		compatible = "simple-bus";
+>   		#address-cells = <1>;
+> @@ -169,12 +175,6 @@
+>   			reg = <0x10440000 0x1000>;
+>   		};
+>   
+> -		pmu: pmu {
+> -			compatible = "arm,cortex-a9-pmu";
+> -			interrupt-parent = <&combiner>;
+> -			interrupts = <2 2>, <3 2>;
+> -		};
+> -
+>   		sys_reg: syscon@10010000 {
+>   			compatible = "samsung,exynos4-sysreg", "syscon";
+>   			reg = <0x10010000 0x400>;
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index 80986b97dfe5..96ace6a5e2f9 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -157,6 +157,26 @@
+>   		};
+>   	};
+>   
+> +	pmu {
+> +		compatible = "arm,cortex-a15-pmu";
+> +		interrupt-parent = <&combiner>;
+> +		interrupts = <1 2>, <22 4>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv7-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> +		/*
+> +		 * Unfortunately we need this since some versions
+> +		 * of U-Boot on Exynos don't set the CNTFRQ register,
+> +		 * so we need the value from DT.
+> +		 */
+> +		clock-frequency = <24000000>;
+> +	};
+> +
+>   	soc: soc {
+>   		sysram@2020000 {
+>   			compatible = "mmio-sram";
+> @@ -227,20 +247,6 @@
+>   			power-domains = <&pd_mau>;
+>   		};
+>   
+> -		timer {
+> -			compatible = "arm,armv7-timer";
+> -			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> -				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> -				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> -				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> -			/*
+> -			 * Unfortunately we need this since some versions
+> -			 * of U-Boot on Exynos don't set the CNTFRQ register,
+> -			 * so we need the value from DT.
+> -			 */
+> -			clock-frequency = <24000000>;
+> -		};
+> -
+>   		mct@101c0000 {
+>   			compatible = "samsung,exynos4210-mct";
+>   			reg = <0x101C0000 0x800>;
+> @@ -265,12 +271,6 @@
+>   			};
+>   		};
+>   
+> -		pmu {
+> -			compatible = "arm,cortex-a15-pmu";
+> -			interrupt-parent = <&combiner>;
+> -			interrupts = <1 2>, <22 4>;
+> -		};
+> -
+>   		pinctrl_0: pinctrl@11400000 {
+>   			compatible = "samsung,exynos5250-pinctrl";
+>   			reg = <0x11400000 0x1000>;
+> diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+> index de26e5ee0d2d..ae866bcc30c4 100644
+> --- a/arch/arm/boot/dts/exynos54xx.dtsi
+> +++ b/arch/arm/boot/dts/exynos54xx.dtsi
+> @@ -25,27 +25,27 @@
+>   		usbdrdphy1 = &usbdrd_phy1;
+>   	};
+>   
+> -	soc: soc {
+> -		arm_a7_pmu: arm-a7-pmu {
+> -			compatible = "arm,cortex-a7-pmu";
+> -			interrupt-parent = <&gic>;
+> -			interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> -				     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> -				     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
+> -				     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
+> -			status = "disabled";
+> -		};
+> +	arm_a7_pmu: arm-a7-pmu {
+> +		compatible = "arm,cortex-a7-pmu";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
+> +		status = "disabled";
+> +	};
+>   
+> -		arm_a15_pmu: arm-a15-pmu {
+> -			compatible = "arm,cortex-a15-pmu";
+> -			interrupt-parent = <&combiner>;
+> -			interrupts = <1 2>,
+> -				     <7 0>,
+> -				     <16 6>,
+> -				     <19 2>;
+> -			status = "disabled";
+> -		};
+> +	arm_a15_pmu: arm-a15-pmu {
+> +		compatible = "arm,cortex-a15-pmu";
+> +		interrupt-parent = <&combiner>;
+> +		interrupts = <1 2>,
+> +			     <7 0>,
+> +			     <16 6>,
+> +			     <19 2>;
+> +		status = "disabled";
+> +	};
+>   
+> +	soc: soc {
+>   		sysram@2020000 {
+>   			compatible = "mmio-sram";
+>   			reg = <0x02020000 0x54000>;
 
-We can either revert that one patch for the msm8998, but I think it
-might be better if I send a fixup patch that could fixup those 4 zones
-instead.
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-Does that work for you?
-
-Regards,
-Amit
