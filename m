@@ -8,68 +8,66 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C4FC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3098FC282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B11218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F38218D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uWQmXxqT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWqkMKGB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbfDWVmL (ORCPT
+        id S1728349AbfDWVme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:42:11 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37828 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfDWVmL (ORCPT
+        Tue, 23 Apr 2019 17:42:34 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42688 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfDWVmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:42:11 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v13so2307377ljk.4;
-        Tue, 23 Apr 2019 14:42:09 -0700 (PDT)
+        Tue, 23 Apr 2019 17:42:33 -0400
+Received: by mail-lf1-f67.google.com with SMTP id w23so12886547lfc.9;
+        Tue, 23 Apr 2019 14:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=txB+of63SNu46wpVXF+9lUHfUB1Dh2QUimcwaZfAJys=;
-        b=uWQmXxqTfrdKvfTL5mYC0M+f1vG1vLoHE1rqPmLHLMxKtestQFEuwztfGqWgWETxZ1
-         08AWXNdViaZ0GNdi/789AHSSY/Ov9eG27guBxlbH7HeMAFAS2SWBpAIN0uLCjFV3t1gS
-         HO6N6/tf5ybvbQymEa6fomTWARAPeXjen3n2LzndNSZDCGKRM0Rw8WcQZrHK4DOpn25s
-         3HkSII1YTL1rwmghHrGthlebTbFVzb6/XbyZUqVbgNd5iDooraAELph4sr6j/T854/ze
-         NMTZptC+Gme6lErfWG4odYvBuM3AkDQ69+ofMm2lbk05GJqmZ6vRibb1z7nVNYQJmyPc
-         knew==
+        bh=xQeefpKrsCdhR8Xs6F2Qda/pkJ6VuhFW4m9YDLw8Nyc=;
+        b=kWqkMKGBjlPPZ6fmSXOi+1oWjAJ7kHz6lyaBM/7BY8iwqhhbH2xJHvOJ3dWldB4F34
+         EDtDUFFxqHSREoHWq+85X7QbEJ9wZzVffx12CDOxYHXRiPAj/9uqN7zuoMFaUIHMyrer
+         iulMsJIuroHmcJ+F41c8UEzsx8YtSfudGA24n1vFrsJCtcp59fVFuv06xZo6SihAndlp
+         352ny8youL0VnXlmTO/ieklQQ2WcK1GwcrIpB48bVt5ke5u7DwseW/9Ich428Ma7GkCR
+         C+CmDMbexL2/bAZHFM5C1WKhVHs3TqpLG2kBnbIOkDxIWrIqdWQOZZ5iX5SPn2IpG1GV
+         H4Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=txB+of63SNu46wpVXF+9lUHfUB1Dh2QUimcwaZfAJys=;
-        b=gwzFMgZGmksFWhS8UryZutS2SKzcBloS14fpQ6rSRyilYZ0wlwPeiLSGj3QAt8Biso
-         w/30SVLX82XkvvFdd+niu7axZF9j8mM++cKC/atuvtiyaa0y1JfZTk/7itBTaqAp5TqZ
-         5TULyQkVF48vbV/TW0AoHyUK9T4awB7OuBkzX+T5PDtbEttpMhte/xlRu5YLfePxXniI
-         TD4fm48EEZ0v9Ym025PCcsuLkFgg5R9LeBBM2gPr9CJogjvMyLoFbUOX2w6iCI9LBPEb
-         6fAir5KaVC0Bgar91WqWbjsI//2KX1oCvL1OIZvJSHp5xKLDXodbVaZPIdrI9lNwh87k
-         3CcQ==
-X-Gm-Message-State: APjAAAVsjqXKwJbkLeMIRBoGWDObKyyldRWB5YgKtlguWXZfy3nsU6fD
-        fbLFmx5Rodd6qu1bALWUt6U=
-X-Google-Smtp-Source: APXvYqxyEZwVSpME3EeyESHC7YVQ/r3xJLJLboB3IXxqj+ga2RhtFCYBR70oydXPV1ymtvHxCXhhnQ==
-X-Received: by 2002:a05:651c:c3:: with SMTP id 3mr15253081ljr.8.1556055729106;
-        Tue, 23 Apr 2019 14:42:09 -0700 (PDT)
+        bh=xQeefpKrsCdhR8Xs6F2Qda/pkJ6VuhFW4m9YDLw8Nyc=;
+        b=atpOR0RKroBOupx1gdVcAxnJpT/bzD3UV00vDlLaJmMv9i/Sh4uA3Ne7Xdig5MAkLT
+         Q8aqVvxHcwiMno6Hk0nK/OCDiznNEC+9LdLFMtj2JDBrzk4jOMtUSMdHmBVKYlLbsF74
+         gcmYNZDmRgz4Dg4ze8ckEvYkO7BlhyCdRoEtMxN9FdUnDqqyTiq96LrpDfyN/a5bVf+k
+         MABe7ffO9+XFtjlut/ZmnO/zmoE5Z3+rnmqglVWfsU/G++rvWPWUEAEpzxhjLT0X/gRE
+         /UxGijEDkoXdzeSKCBsnUJQqvklLDzAirLIXOgXOMWuF1kQ+I0YZwVfTy+PwGdvJGVg0
+         NwRQ==
+X-Gm-Message-State: APjAAAV0R5PSCQ4MByYRqPDIXvXVY4n8SijpfiVVzd4VhGQiCb/vHR4f
+        VgFlQI4XU9ozaldJsf07WXq38viOlR8=
+X-Google-Smtp-Source: APXvYqyHiauFodvIV3QlEIo4g6vXqaufbckuIo7GyepMO7F7S+cW8jHrqWaQhRgNtJi6zXxL+oav7g==
+X-Received: by 2002:ac2:54a9:: with SMTP id w9mr15065821lfk.125.1556055751453;
+        Tue, 23 Apr 2019 14:42:31 -0700 (PDT)
 Received: from localhost.localdomain (80-167-223-88-cable.dk.customer.tdc.net. [80.167.223.88])
-        by smtp.gmail.com with ESMTPSA id z206sm3991128lfa.53.2019.04.23.14.42.07
+        by smtp.gmail.com with ESMTPSA id j9sm792244lji.35.2019.04.23.14.42.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 23 Apr 2019 14:42:08 -0700 (PDT)
+        Tue, 23 Apr 2019 14:42:31 -0700 (PDT)
 From:   Daniel Gomez <dagmcr@gmail.com>
-To:     Stefan Popa <stefan.popa@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
+To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org (open list:ANALOG DEVICES INC AD5758 DRIVER),
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
         linux-kernel@vger.kernel.org (open list)
 Cc:     dagmcr@gmail.com, javier@dowhile0.org,
-        linux-iio@vger.kernel.org (open list:ANALOG DEVICES INC AD5758 DRIVER),
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] iio: dac: ad5758: declare missing of table
-Date:   Tue, 23 Apr 2019 23:41:58 +0200
-Message-Id: <1556055718-14782-1-git-send-email-dagmcr@gmail.com>
+Subject: [PATCH v2] iio: temperature: maxim_thermocouple: declare missing of table
+Date:   Tue, 23 Apr 2019 23:42:18 +0200
+Message-Id: <1556055738-14838-1-git-send-email-dagmcr@gmail.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,51 +78,56 @@ Add missing <of_device_id> table for SPI driver relying on SPI
 device match since compatible is in a DT binding or in a DTS.
 
 Before this patch:
-modinfo drivers/iio/dac/ad5758.ko | grep alias
-alias:          spi:ad5758
+modinfo drivers/iio/temperature/maxim_thermocouple.ko | grep alias
+alias:          spi:max31855
+alias:          spi:max6675
 
 After this patch:
-modinfo drivers/iio/dac/ad5758.ko | grep alias
-alias:          spi:ad5758
-alias:          of:N*T*Cadi,ad5758C*
-alias:          of:N*T*Cadi,ad5758
+modinfo drivers/iio/temperature/maxim_thermocouple.ko | grep alias
+alias:          spi:max31855
+alias:          spi:max6675
+alias:          of:N*T*Cmaxim,max31855C*
+alias:          of:N*T*Cmaxim,max31855
+alias:          of:N*T*Cmaxim,max6675C*
+alias:          of:N*T*Cmaxim,max6675
 
 Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
 Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
 ---
- drivers/iio/dac/ad5758.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/iio/temperature/maxim_thermocouple.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/iio/dac/ad5758.c b/drivers/iio/dac/ad5758.c
-index 2bdf1b0..e8eaa48 100644
---- a/drivers/iio/dac/ad5758.c
-+++ b/drivers/iio/dac/ad5758.c
-@@ -11,6 +11,8 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/property.h>
+diff --git a/drivers/iio/temperature/maxim_thermocouple.c b/drivers/iio/temperature/maxim_thermocouple.c
+index c31b963..c613a64 100644
+--- a/drivers/iio/temperature/maxim_thermocouple.c
++++ b/drivers/iio/temperature/maxim_thermocouple.c
+@@ -10,6 +10,8 @@
+ #include <linux/init.h>
+ #include <linux/mutex.h>
+ #include <linux/err.h>
 +#include <linux/of.h>
 +#include <linux/of_device.h>
  #include <linux/spi/spi.h>
- #include <linux/gpio/consumer.h>
- 
-@@ -904,9 +906,16 @@ static const struct spi_device_id ad5758_id[] = {
+ #include <linux/iio/iio.h>
+ #include <linux/iio/trigger.h>
+@@ -262,9 +264,17 @@ static const struct spi_device_id maxim_thermocouple_id[] = {
  };
- MODULE_DEVICE_TABLE(spi, ad5758_id);
+ MODULE_DEVICE_TABLE(spi, maxim_thermocouple_id);
  
-+static const struct of_device_id ad5758_of_match[] = {
-+        { .compatible = "adi,ad5758" },
++static const struct of_device_id maxim_thermocouple_of_match[] = {
++        { .compatible = "maxim,max6675" },
++        { .compatible = "maxim,max31855" },
 +        { },
 +};
-+MODULE_DEVICE_TABLE(of, ad5758_of_match);
++MODULE_DEVICE_TABLE(of, maxim_thermocouple_of_match);
 +
- static struct spi_driver ad5758_driver = {
+ static struct spi_driver maxim_thermocouple_driver = {
  	.driver = {
- 		.name = KBUILD_MODNAME,
-+		.of_match_table = ad5758_of_match,
+ 		.name	= MAXIM_THERMOCOUPLE_DRV_NAME,
++		.of_match_table = maxim_thermocouple_of_match,
  	},
- 	.probe = ad5758_probe,
- 	.id_table = ad5758_id,
+ 	.probe		= maxim_thermocouple_probe,
+ 	.remove		= maxim_thermocouple_remove,
 -- 
 2.7.4
 
