@@ -2,123 +2,80 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 288B3C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B77C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80BE20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tJO8UXWM"
+	by mail.kernel.org (Postfix) with ESMTP id 4338F20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbfDWGMR (ORCPT
+        id S1726266AbfDWGMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 02:12:17 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60738 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfDWGMR (ORCPT
+        Tue, 23 Apr 2019 02:12:40 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:41112 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfDWGMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 02:12:17 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3N6C2MH058379;
-        Tue, 23 Apr 2019 01:12:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555999922;
-        bh=k+UOFmEsUNmbjD6gX1BZX7XCEjixRWsf6RdCKrtCo7g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tJO8UXWMLzAElZsTMzDdycHqfDeYSYUvmlJTDoSt0AeEPR54qMz7MePSOzjKbkVp9
-         K6kyrZq637TxE1ZruiIbEzTQPju9m0aWCNyymjEBq5lDKfofOOTkmYm/WLP/i963Pt
-         N6tfr42+BHHArYwhplerXPdYz6fbhOWTepTIzHoI=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3N6C2hX078028
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Apr 2019 01:12:02 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
- Apr 2019 01:12:02 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 23 Apr 2019 01:12:02 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3N6BvcS077231;
-        Tue, 23 Apr 2019 01:11:58 -0500
-Subject: Re: [PATCH v3 0/5] MTD: Add Initial Hyperbus support
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-mtd@lists.infradead.org>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        <devicetree@vger.kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        <linux-arm-kernel@lists.infradead.org>, <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20190423060638.18197-1-vigneshr@ti.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <7e5515f8-340c-bd63-2897-90e0d42cf264@ti.com>
-Date:   Tue, 23 Apr 2019 11:42:56 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 02:12:39 -0400
+Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hIofK-0001t1-K9 from Jiada_Wang@mentor.com ; Mon, 22 Apr 2019 23:12:26 -0700
+Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
+ (TLS) id 15.0.1320.4; Mon, 22 Apr 2019 23:12:22 -0700
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
+        <daniel.lezcano@linaro.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <joshua_frkuska@mentor.com>,
+        <jiada_wang@mentor.com>, <horms+renesas@verge.net.au>,
+        <niklas.soderlund+renesas@ragnatech.se>, <geert+renesas@glider.be>,
+        <sergei.shtylyov@cogentembedded.com>,
+        <marek.vasut+renesas@gmail.com>,
+        <kuninori.morimoto.gx@renesas.com>, <hien.dang.eb@renesas.com>,
+        <fabrizio.castro@bp.renesas.com>, <dien.pham.ry@renesas.com>,
+        <biju.das@bp.renesas.com>
+Subject: [PATCH v2 0/2] thermal: rcar_gen3_thermal: fix IRQ issues
+Date:   Tue, 23 Apr 2019 15:12:16 +0900
+Message-ID: <20190423061218.29705-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-In-Reply-To: <20190423060638.18197-1-vigneshr@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are issues with interrupt handling in rcar_gen3_thermal driver.
 
+Currently IRQ is remain enabled after .remove, later if device is probed,
+IRQ is requested before .thermal_init, this may cause IRQ function be
+triggered but not able to clear IRQ status, thus cause system to hang.
 
-On 23/04/19 11:36 AM, Vignesh Raghavendra wrote:
-> 
-> 
-> Vignesh Raghavendra (5):
->   mtd: cfi_cmdset_0002: Add support for polling status register
->   dt-bindings: mtd: Add binding documentation for HyperFlash
->   mtd: Add support for HyperBus memory devices
->   dt-bindings: mtd: Add bindings for TI's AM654 HyperBus memory
->     controller
->   mtd: hyperbus: Add driver for TI's HyperBus memory controller
+Since the irq line isn't shared between different devices,
+so the proper interrupt type flag should be IRQF_ONESHOT.
 
-Please ignore this series. Ended up sending from stale patch output
-directory. Sorry for the noise.
+This patch-set fix these interrupt handling retated issues. 
 
-> 
->  .../bindings/mtd/cypress,hyperflash.txt       |   6 +
->  .../devicetree/bindings/mtd/ti,am654-hbmc.txt |  31 +++
->  MAINTAINERS                                   |   8 +
->  drivers/mtd/Kconfig                           |   2 +
->  drivers/mtd/Makefile                          |   1 +
->  drivers/mtd/chips/cfi_cmdset_0002.c           |  90 ++++++++
->  drivers/mtd/hyperbus/Kconfig                  |  23 +++
->  drivers/mtd/hyperbus/Makefile                 |   4 +
->  drivers/mtd/hyperbus/hbmc-am654.c             | 115 +++++++++++
->  drivers/mtd/hyperbus/hyperbus-core.c          | 192 ++++++++++++++++++
->  include/linux/mtd/cfi.h                       |   5 +
->  include/linux/mtd/hyperbus.h                  |  91 +++++++++
->  12 files changed, 568 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
->  create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
->  create mode 100644 drivers/mtd/hyperbus/Kconfig
->  create mode 100644 drivers/mtd/hyperbus/Makefile
->  create mode 100644 drivers/mtd/hyperbus/hbmc-am654.c
->  create mode 100644 drivers/mtd/hyperbus/hyperbus-core.c
->  create mode 100644 include/linux/mtd/hyperbus.h
-> 
+---
+v2: use irq type IRQF_ONESHOT instead of IRQF_SHARED
+    disable interrupt in .remove
+
+v1: initial version
+
+Jiada Wang (2):
+  thermal: rcar_gen3_thermal: fix interrupt type
+  thermal: rcar_gen3_thermal: disable interrupt in .remove
+
+ drivers/thermal/rcar_gen3_thermal.c | 43 +++++++++--------------------
+ 1 file changed, 13 insertions(+), 30 deletions(-)
 
 -- 
-Regards
-Vignesh
+2.19.2
+
