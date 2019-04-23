@@ -2,342 +2,195 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF77AC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AE9C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E991218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B86C218C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfDWT3K (ORCPT
+        id S1726536AbfDWTb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 15:29:10 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41032 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfDWT3J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 15:29:09 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t30so12617064lfd.8;
-        Tue, 23 Apr 2019 12:29:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=0PO4perfuGkWZFSlkEGauc7B+Njppe1QnUZgSAmNlXg=;
-        b=SgSglkrs9+dpGU6gJ0iMYNk3i5xi/7VmUyFbLROdfCNZkSx2lPJ4cIfedTulKzZX5r
-         txvXRsgc6np3eu55ONOK4TUfwkTHaafEJHGGcj8qPg/sERT3xh3WAQZxj8GmVGcu+0ZX
-         kukrjDCjxl+k6s08mQLBWUp6GsHwGDuSUpfpJb/iVqt9vbVqgH3yBPk3qLW65lvy1rrH
-         KTXu9q2Cg8n2OKN88ZOzL7XVptp3SdTaFSdtqgM0NDoDUyS+8vnkZ5gxxLPFlpZ9S9Gu
-         DVAX82OKEEhKnCKA+aMp7CRxldhP9jxqswH2XwsMD1KuOQoc7lBD+4mDQaYU1NgZdAq6
-         8zzg==
-X-Gm-Message-State: APjAAAVBVDv51xHz4SbaikpcpF1TasCnKWtEJs5z90aBNsepHi6AhD8c
-        eoXcd+7C5GdLryOBbuPHfkgzMg7eL0rnjy/4ZAltmwdeVe4=
-X-Google-Smtp-Source: APXvYqwBfnXjCJy9k7TU/D0BFpptP0TLFe1wcVa4kteNdMuzp94wO5ice3u1yDjA6YrMBc3y1OtDnGfMFq0c1fGRNQo=
-X-Received: by 2002:ac2:51da:: with SMTP id u26mr14761169lfm.32.1556047746271;
- Tue, 23 Apr 2019 12:29:06 -0700 (PDT)
+        Tue, 23 Apr 2019 15:31:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:3570 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbfDWTb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 15:31:57 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 12:31:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,386,1549958400"; 
+   d="scan'208";a="164177286"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga002.fm.intel.com with ESMTP; 23 Apr 2019 12:26:54 -0700
+Date:   Tue, 23 Apr 2019 12:26:54 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Cedric Xing <cedric.xing@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        Hansen@linux.intel.com, Dave <dave.hansen@intel.com>,
+        Christopherson@linux.intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, Ayoun@linux.intel.com,
+        Serge <serge.ayoun@intel.com>, Katz-zamir@linux.intel.com,
+        Shay <shay.katz-zamir@intel.com>, Huang@linux.intel.com,
+        Haitao <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        Svahn@linux.intel.com, Kai <kai.svahn@intel.com>, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, Kai <kai.huang@intel.com>,
+        rientjes@google.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [RFC PATCH v1 2/3] x86/vdso: Modify __vdso_sgx_enter_enclave()
+ to allow parameter passing on untrusted stack
+Message-ID: <20190423192654.GA12691@linux.intel.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <cover.1555965327.git.cedric.xing@intel.com>
+ <ba2a51568f3adaf74994d33ea3cbee570e20c6f6.1555965327.git.cedric.xing@intel.com>
 MIME-Version: 1.0
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 23 Apr 2019 21:28:48 +0200
-Message-ID: <CAK8P3a3bT=HO=YQ7PY7wOEsJTzf0jS4PkqNHSqYX4JjwmbhY+g@mail.gmail.com>
-Subject: [GIT PULL] arch: add pidfd and io_uring syscalls everywhere
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba2a51568f3adaf74994d33ea3cbee570e20c6f6.1555965327.git.cedric.xing@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+On Mon, Apr 22, 2019 at 05:37:24PM -0700, Cedric Xing wrote:
+> The previous __vdso_sgx_enter_enclave() requires enclaves to preserve %rsp,
+> which prohibits enclaves from allocating and passing parameters for
+> untrusted function calls (aka. o-calls).
+>
+> This patch addresses the problem above by introducing a new ABI that preserves
+> %rbp instead of %rsp. Then __vdso_sgx_enter_enclave() can anchor its frame
+> using %rbp so that enclaves are allowed to allocate space on the untrusted
+> stack by decrementing %rsp. Please note that the stack space allocated in such
+> way will be part of __vdso_sgx_enter_enclave()'s frame so will be freed after
+> __vdso_sgx_enter_enclave() returns. Therefore, __vdso_sgx_enter_enclave() has
+> been changed to take a callback function as an optional parameter, which if
+> supplied, will be invoked upon enclave exits (both AEX (Asynchronous Enclave
+> eXit) and normal exits), with the value of %rsp left
+> off by the enclave as a parameter to the callback.
+>
+> Here's the summary of API/ABI changes in this patch. More details could be
+> found in arch/x86/entry/vdso/vsgx_enter_enclave.S.
+> * 'struct sgx_enclave_exception' is renamed to 'struct sgx_enclave_exinfo'
+>   because it is filled upon both AEX (i.e. exceptions) and normal enclave
+>   exits.
+> * __vdso_sgx_enter_enclave() anchors its frame using %rbp (instead of %rsp in
+>   the previous implementation).
+> * __vdso_sgx_enter_enclave() takes one more parameter - a callback function to
+>   be invoked upon enclave exits. This callback is optional, and if not
+>   supplied, will cause __vdso_sgx_enter_enclave() to return upon enclave exits
+>   (same behavior as previous implementation).
+> * The callback function is given as a parameter the value of %rsp at enclave
+>   exit to address data "pushed" by the enclave. A positive value returned by
+>   the callback will be treated as an ENCLU leaf for re-entering the enclave,
+>   while a zero or negative value will be passed through as the return
+>   value of __vdso_sgx_enter_enclave() to its caller. It's also safe to
+>   leave callback by longjmp() or by throwing a C++ exception.
+>
+> Signed-off-by: Cedric Xing <cedric.xing@intel.com>
+> ---
+>  arch/x86/entry/vdso/vsgx_enter_enclave.S | 156 ++++++++++++++---------
+>  arch/x86/include/uapi/asm/sgx.h          |  14 +-
+>  2 files changed, 100 insertions(+), 70 deletions(-)
+>
+> diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> index fe0bf6671d6d..210f4366374a 100644
+> --- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> @@ -14,88 +14,118 @@
+>  .code64
+>  .section .text, "ax"
+>
+> -#ifdef SGX_KERNEL_DOC
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+This #ifdef and the pseudo-C code below has a functional purpose.  From
+the original commit:
 
-are available in the Git repository at:
+  Note, the C-like pseudocode describing the assembly routine is wrapped
+  in a non-existent macro instead of in a comment to trick kernel-doc into
+  auto-parsing the documentation and function prototype.  This is a double
+  win as the pseudocode is intended to aid kernel developers, not userland
+  enclave developers.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
-syscalls-5.1
+We don't need full pseudocode, but a C-like prototype is necessary to get
+the kernel-doc comment parsed correctly.
 
-for you to fetch changes up to 39036cd2727395c3369b1051005da74059a85317:
+I'll try to look at the actual code later today.
 
-  arch: add pidfd and io_uring syscalls everywhere (2019-04-15 16:31:17 +0200)
-
-----------------------------------------------------------------
-arch: add pidfd and io_uring syscalls everywhere
-
-This comes a bit late, but should be in 5.1 anyway: we want the newly
-added system calls to be synchronized across all architectures in
-the release.
-
-I hope that in the future, any newly added system calls can be added
-to all architectures at the same time, and tested there while they
-are in linux-next, avoiding dependencies between the architecture
-maintainer trees and the tree that contains the new system call.
-
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      arch: add pidfd and io_uring syscalls everywhere
-
- arch/alpha/kernel/syscalls/syscall.tbl      | 4 ++++
- arch/arm/tools/syscall.tbl                  | 4 ++++
- arch/arm64/include/asm/unistd.h             | 2 +-
- arch/arm64/include/asm/unistd32.h           | 8 ++++++++
- arch/ia64/kernel/syscalls/syscall.tbl       | 4 ++++
- arch/m68k/kernel/syscalls/syscall.tbl       | 4 ++++
- arch/microblaze/kernel/syscalls/syscall.tbl | 4 ++++
- arch/mips/kernel/syscalls/syscall_n32.tbl   | 4 ++++
- arch/mips/kernel/syscalls/syscall_n64.tbl   | 4 ++++
- arch/mips/kernel/syscalls/syscall_o32.tbl   | 4 ++++
- arch/parisc/kernel/syscalls/syscall.tbl     | 4 ++++
- arch/powerpc/kernel/syscalls/syscall.tbl    | 4 ++++
- arch/s390/kernel/syscalls/syscall.tbl       | 4 ++++
- arch/sh/kernel/syscalls/syscall.tbl         | 4 ++++
- arch/sparc/kernel/syscalls/syscall.tbl      | 4 ++++
- arch/xtensa/kernel/syscalls/syscall.tbl     | 4 ++++
- 16 files changed, 65 insertions(+), 1 deletion(-)
-
-commit 39036cd2727395c3369b1051005da74059a85317
-Author: Arnd Bergmann <arnd@arndb.de>
-Date:   Thu Feb 28 13:59:19 2019 +0100
-
-    arch: add pidfd and io_uring syscalls everywhere
-
-    Add the io_uring and pidfd_send_signal system calls to all architectures.
-
-    These system calls are designed to handle both native and compat tasks,
-    so all entries are the same across architectures, only arm-compat and
-    the generic tale still use an old format.
-
-    Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-    Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com> (s390)
-    Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl
-b/arch/alpha/kernel/syscalls/syscall.tbl
-index 63ed39cbd3bd..165f268beafc 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -463,3 +463,7 @@
- 532 common getppid sys_getppid
- # all other architectures have common numbers for new syscall, alpha
- # is the exception.
-+534 common pidfd_send_signal sys_pidfd_send_signal
-+535 common io_uring_setup sys_io_uring_setup
-+536 common io_uring_enter sys_io_uring_enter
-+537 common io_uring_register sys_io_uring_register
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 9016f4081bb9..0393917eaa57 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -437,3 +437,7 @@
- 421 common rt_sigtimedwait_time64 sys_rt_sigtimedwait
- 422 common futex_time64 sys_futex
- 423 common sched_rr_get_interval_time64 sys_sched_rr_get_interval
-+424 common pidfd_send_signal sys_pidfd_send_signal
-+425 common io_uring_setup sys_io_uring_setup
-+426 common io_uring_enter sys_io_uring_enter
-+427 common io_uring_register sys_io_uring_register
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index d1dd93436e1e..f2a83ff6b73c 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -44,7 +44,7 @@
- #define __ARM_NR_compat_set_tls (__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END (__ARM_NR_COMPAT_BASE + 0x800)
-
--#define __NR_compat_syscalls 424
-+#define __NR_compat_syscalls 428
- #endif
-
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h
-b/arch/arm64/include/asm/unistd32.h
-index 5590f2623690..23f1a44acada 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -866,6 +866,14 @@ __SYSCALL(__NR_rt_sigtimedwait_time64,
-compat_sys_rt_sigtimedwait_time64)
- __SYSCALL(__NR_futex_time64, sys_futex)
- #define __NR_sched_rr_get_interval_time64 423
- __SYSCALL(__NR_sched_rr_get_interval_time64, sys_sched_rr_get_interval)
-+#define __NR_pidfd_send_signal 424
-+__SYSCALL(__NR_pidfd_send_signal, sys_pidfd_send_signal)
-+#define __NR_io_uring_setup 425
-+__SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
-+#define __NR_io_uring_enter 426
-+__SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
-+#define __NR_io_uring_register 427
-+__SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl
-b/arch/ia64/kernel/syscalls/syscall.tbl
-index ab9cda5f6136..56e3d0b685e1 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -344,3 +344,7 @@
- 332 common pkey_free sys_pkey_free
- 333 common rseq sys_rseq
- # 334 through 423 are reserved to sync up with other architectures
-+424 common pidfd_send_signal sys_pidfd_send_signal
-+425 common io_uring_setup sys_io_uring_setup
-+426 common io_uring_enter sys_io_uring_enter
-+427 common io_uring_register sys_io_uring_register
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl
-b/arch/m68k/kernel/syscalls/syscall.tbl
-index 125c14178979..df4ec3ec71d1 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -423,3 +423,7 @@
- 421 common rt_sigtimedwait_time64 sys_rt_sigtimedwait
- 422 common futex_time64 sys_futex
- 423 common sched_rr_get_interval_time64 sys_sched_rr_get_interval
-+424 common pidfd_send_signal sys_pidfd_send_signal
-+425 common io_uring_setup sys_io_uring_setup
-+426 common io_uring_enter sys_io_uring_enter
-+427 common io_uring_register sys_io_uring_register
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl
-b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 8ee3a8c18498..4964947732af 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -429,3 +429,7 @@
- 421 common rt_sigtimedwait_time64 sys_rt_sigtimedwait
- 422 common futex_time64 sys_futex
- 423 common sched_rr_get_interval_time64 sys_sched_rr_get_interval
-+424 common pidfd_send_signal sys_pidfd_send_signal
-+425 common io_uring_setup sys_io_uring_setup
-+426 common io_uring_enter sys_io_uring_enter
-+427 common io_uring_register sys_io_uring_register
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl
-b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 15f4117900ee..9392dfe33f97 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -362,3 +362,7 @@
- 421 n32 rt_sigtimedwait_time64 compat_sys_rt_sigtimedwait_time64
- 422 n32 futex_time64 sys_futex
- 423 n32 sched_rr_get_interval_time64 sys_sched_rr_get_interval
-+424 n32 pidfd_send_signal sys_pidfd_send_signal
-+425 n32 io_uring_setup sys_io_uring_setup
-+426 n32 io_uring_enter sys_io_uring_enter
-+427 n32 io_uring_register sys_io_uring_register
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl
-b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index c85502e67b44..cd0c8aa21fba 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -338,3 +338,7 @@
- 327 n64 rseq sys_rseq
- 328 n64 io_pgetevents sys_io_pgetevents
- # 329 through 423 are reserved to sync up with other architectures
-+424 n64 pidfd_send_signal sys_pidfd_send_signal
-+425 n64 io_uring_setup sys_io_uring_setup
-+426 n64 io_uring_enter sys_io_uring_enter
-+427 n64 io_uring_register sys_io_uring_register
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl
-b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 2e063d0f837e..e849e8ffe4a2 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -411,3 +411,7 @@
- 421 o32 rt_sigtimedwait_time64 sys_rt_sigtimedwait
-compat_sys_rt_sigtimedwait_time64
- 422 o32 futex_time64 sys_futex sys_futex
- 423 o32 sched_rr_get_interval_time64 sys_sched_rr_get_interval
-sys_sched_rr_get_interval
-+424 o32 pidfd_send_signal sys_pidfd_send_signal
-+425 o32 io_uring_setup sys_io_uring_setup
-+426 o32 io_uring_enter sys_io_uring_enter
-+427 o32 io_uring_register sys_io_uring_register
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl
-b/arch/parisc/kernel/syscalls/syscall.tbl
-index b26766c6647d..fe8ca623add8 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -420,3 +420,7 @@
- 421 32 rt_sigtimedwait_time64 sys_rt_sigtimedwait
-compat_sys_rt_sigtimedwait_time64
- 422 32 futex_time64 sys_futex sys_futex
- 423 32 sched_rr_get_interval_time64 sys_sched_rr_get_interval
-sys_sched_rr_get_interval
-+424 common pidfd_send_signal sys_pidfd_send_signal
-+425 common io_uring_setup sys_io_uring_setup
-+426 common io_uring_enter sys_io_uring_enter
-+427 common io_uring_register sys_io_uring_register
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl
-b/arch/powerpc/kernel/syscalls/syscall.tbl
-index b18abb0c3dae..00f5a63c8d9a 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -505,3 +505,7 @@
- 421 32 rt_sigtimedwait_time64 sys_rt_sigtimedwait
-compat_sys_rt_sigtimedwait_time64
- 422 32 futex_time64 sys_futex sys_futex
- 423 32 sched_rr_get_interval_time64 sys_sched_rr_get_interval
-sys_sched_rr_get_interval
-+424 common pidfd_send_signal sys_pidfd_send_signal
-+425 common io_uring_setup sys_io_uring_setup
-+426 common io_uring_enter sys_io_uring_enter
-+427 common io_uring_register sys_io_uring_register
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl
-b/arch/s390/kernel/syscalls/syscall.tbl
-index 02579f95f391..061418f787c3 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -426,3 +426,7 @@
- 421 32 rt_sigtimedwait_time64 - compat_sys_rt_sigtimedwait_time64
- 422 32 futex_time64 - sys_futex
- 423 32 sched_rr_get_interval_time64 - sys_sched_rr_get_interval
-+424  common pidfd_send_signal sys_pidfd_send_signal sys_pidfd_send_signal
-+425  common io_uring_setup sys_io_uring_setup              sys_io_uring_setup
-+426  common io_uring_enter sys_io_uring_enter              sys_io_uring_enter
-+427  common io_uring_register sys_io_uring_register
-sys_io_uring_register
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl
-b/arch/sh/kernel/syscalls/syscall.tbl
-index bfda678576e4..480b057556ee 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -426,3 +426,7 @@
- 421 common rt_sigtimedwait_time64 sys_rt_sigtimedwait
- 422 common futex_time64 sys_futex
- 423 common sched_rr_get_interval_time64 sys_sched_rr_get_interval
-+424 common pidfd_send_signal sys_pidfd_send_signal
-+425 common io_uring_setup sys_io_uring_setup
-+426 common io_uring_enter sys_io_uring_enter
-+427 common io_uring_register sys_io_uring_register
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl
-b/arch/sparc/kernel/syscalls/syscall.tbl
-index b9a5a04b2d2c..a1dd24307b00 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -469,3 +469,7 @@
- 421 32 rt_sigtimedwait_time64 sys_rt_sigtimedwait
-compat_sys_rt_sigtimedwait_time64
- 422 32 futex_time64 sys_futex sys_futex
- 423 32 sched_rr_get_interval_time64 sys_sched_rr_get_interval
-sys_sched_rr_get_interval
-+424 common pidfd_send_signal sys_pidfd_send_signal
-+425 common io_uring_setup sys_io_uring_setup
-+426 common io_uring_enter sys_io_uring_enter
-+427 common io_uring_register sys_io_uring_register
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl
-b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 6af49929de85..30084eaf8422 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -394,3 +394,7 @@
- 421 common rt_sigtimedwait_time64 sys_rt_sigtimedwait
- 422 common futex_time64 sys_futex
- 423 common sched_rr_get_interval_time64 sys_sched_rr_get_interval
-+424 common pidfd_send_signal sys_pidfd_send_signal
-+425 common io_uring_setup sys_io_uring_setup
-+426 common io_uring_enter sys_io_uring_enter
-+427 common io_uring_register sys_io_uring_register
+>  /**
+>   * __vdso_sgx_enter_enclave() - Enter an SGX enclave
+>   *
+>   * @leaf:	**IN \%eax** - ENCLU leaf, must be EENTER or ERESUME
+> - * @tcs:	**IN \%rbx** - TCS, must be non-NULL
+> - * @ex_info:	**IN \%rcx** - Optional 'struct sgx_enclave_exception' pointer
+> + * @tcs:	**IN 0x08(\%rsp)** - TCS, must be non-NULL
+> + * @ex_info:	**IN 0x10(\%rsp)** - Optional 'struct sgx_enclave_exinfo'
+> + *				     pointer
+> + * @callback:	**IN 0x18(\%rsp)** - Optional callback function to be called on
+> + *				     enclave exit or exception
+>   *
+>   * Return:
+>   *  **OUT \%eax** -
+> - *  %0 on a clean entry/exit to/from the enclave, %-EINVAL if ENCLU leaf is
+> - *  not allowed or if TCS is NULL, %-EFAULT if ENCLU or the enclave faults
+> + *  %0 on a clean entry/exit to/from the enclave, %-EINVAL if ENCLU leaf is not
+> + *  allowed, %-EFAULT if ENCLU or the enclave faults, or a non-positive value
+> + *  returned from ``callback`` (if one is supplied).
+>   *
+>   * **Important!**  __vdso_sgx_enter_enclave() is **NOT** compliant with the
+> - * x86-64 ABI, i.e. cannot be called from standard C code.   As noted above,
+> - * input parameters must be passed via ``%eax``, ``%rbx`` and ``%rcx``, with
+> - * the return value passed via ``%eax``.  All registers except ``%rsp`` must
+> - * be treated as volatile from the caller's perspective, including but not
+> - * limited to GPRs, EFLAGS.DF, MXCSR, FCW, etc...  Conversely, the enclave
+> - * being run **must** preserve the untrusted ``%rsp`` and stack.
+> + * x86-64 ABI, i.e. cannot be called from standard C code. As noted above,
+> + * input parameters must be passed via ``%eax``, ``8(%rsp)``, ``0x10(%rsp)`` and
+> + * ``0x18(%rsp)``, with the return value passed via ``%eax``. All other registers
+> + * will be passed through to the enclave as is. All registers except ``%rbp``
+> + * must be treated as volatile from the caller's perspective, including but not
+> + * limited to GPRs, EFLAGS.DF, MXCSR, FCW, etc... Conversely, the enclave being
+> + * run **must** preserve the untrusted ``%rbp``.
+> + *
+> + * ``callback`` has the following signature:
+> + * int callback(long rdi, long rsi, long rdx,
+> + *		struct sgx_enclave_exinfo *ex_info, long r8, long r9,
+> + *		void *tcs, long ursp);
+> + * ``callback`` **shall** follow x86_64 ABI. All GPRs **except** ``%rax``, ``%rbx``
+> + * and ``rcx`` are passed through to ``callback``. ``%rdi``, ``%rsi``, ``%rdx``,
+> + * ``%r8``, ``%r9``, along with the value of ``%rsp`` when the enclave exited/excepted,
+> + * can be accessed directly as input parameters, while other GPRs can be
+> + * accessed in assembly if needed.
+> + * A positive value returned from ``callback`` will be treated as an ENCLU leaf
+> + * (e.g. EENTER/ERESUME) to reenter the enclave, while 0 or a negative return
+> + * value will be passed back to the caller of __vdso_sgx_enter_enclave().
+> + * It is also **safe** to ``longjmp()`` out of ``callback``.
+>   */
+> -__vdso_sgx_enter_enclave(u32 leaf, void *tcs,
+> -			 struct sgx_enclave_exception *ex_info)
+> -{
+> -	if (leaf != SGX_EENTER && leaf != SGX_ERESUME)
+> -		return -EINVAL;
+> -
+> -	if (!tcs)
+> -		return -EINVAL;
+> -
+> -	try {
+> -		ENCLU[leaf];
+> -	} catch (exception) {
+> -		if (e)
+> -			*e = exception;
+> -		return -EFAULT;
+> -	}
+> -
+> -	return 0;
+> -}
+> -#endif
