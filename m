@@ -2,273 +2,156 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA66AC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D1FC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7630218B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63A5218B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbfDWPfQ (ORCPT
+        id S1728183AbfDWPgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:35:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48354 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfDWPfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:35:16 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9601D308623F;
-        Tue, 23 Apr 2019 15:35:11 +0000 (UTC)
-Received: from redhat.com (ovpn-121-195.rdu2.redhat.com [10.10.121.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C252B261CB;
-        Tue, 23 Apr 2019 15:34:58 +0000 (UTC)
-Date:   Tue, 23 Apr 2019 11:34:56 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>, Shaohua Li <shli@fb.com>,
+        Tue, 23 Apr 2019 11:36:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37282 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726421AbfDWPgu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 11:36:50 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NFZ7bB178080
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:36:48 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s25da07ag-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:36:48 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Tue, 23 Apr 2019 16:36:46 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 16:36:35 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NFaY6g51773584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 15:36:34 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 310C142041;
+        Tue, 23 Apr 2019 15:36:34 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96ED342042;
+        Tue, 23 Apr 2019 15:36:31 +0000 (GMT)
+Received: from [9.145.7.116] (unknown [9.145.7.116])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 15:36:31 +0000 (GMT)
+Subject: Re: [PATCH v12 04/31] arm64/mm: define
+ ARCH_SUPPORTS_SPECULATIVE_PAGE_FAULT
+To:     Jerome Glisse <jglisse@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
+        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
+        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
+        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
+        mpe@ellerman.id.au, paulus@samba.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        sergey.senozhatsky.work@gmail.com,
         Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 14/28] userfaultfd: wp: handle COW properly for uffd-wp
-Message-ID: <20190423153456.GA3288@redhat.com>
-References: <20190320020642.4000-1-peterx@redhat.com>
- <20190320020642.4000-15-peterx@redhat.com>
- <20190418202558.GK3288@redhat.com>
- <20190419062650.GF13323@xz-x1>
- <20190419150253.GA3311@redhat.com>
- <20190422122010.GA25896@xz-x1>
- <20190422145402.GB3450@redhat.com>
- <20190423030030.GA21301@xz-x1>
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Rientjes <rientjes@google.com>,
+        Ganesh Mahendran <opensource.ganesh@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        vinayak menon <vinayakm.list@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
+        Michel Lespinasse <walken@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        haren@linux.vnet.ibm.com, npiggin@gmail.com,
+        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+References: <20190416134522.17540-1-ldufour@linux.ibm.com>
+ <20190416134522.17540-5-ldufour@linux.ibm.com>
+ <20190416142710.GA54515@lakrids.cambridge.arm.com>
+ <4ef9ff4b-2230-0644-2254-c1de22d41e6c@linux.ibm.com>
+ <20190416144156.GB54708@lakrids.cambridge.arm.com>
+ <20190418215113.GD11645@redhat.com>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Date:   Tue, 23 Apr 2019 17:36:31 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20190418215113.GD11645@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190423030030.GA21301@xz-x1>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 23 Apr 2019 15:35:15 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19042315-4275-0000-0000-0000032AEC6A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042315-4276-0000-0000-0000383A3230
+Message-Id: <73a3650d-7e9f-bc9e-6ea1-2cef36411b0c@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 11:00:30AM +0800, Peter Xu wrote:
-> On Mon, Apr 22, 2019 at 10:54:02AM -0400, Jerome Glisse wrote:
-> > On Mon, Apr 22, 2019 at 08:20:10PM +0800, Peter Xu wrote:
-> > > On Fri, Apr 19, 2019 at 11:02:53AM -0400, Jerome Glisse wrote:
-> > > 
-> > > [...]
-> > > 
-> > > > > > > +			if (uffd_wp_resolve) {
-> > > > > > > +				/* If the fault is resolved already, skip */
-> > > > > > > +				if (!pte_uffd_wp(*pte))
-> > > > > > > +					continue;
-> > > > > > > +				page = vm_normal_page(vma, addr, oldpte);
-> > > > > > > +				if (!page || page_mapcount(page) > 1) {
-> > > > > > > +					struct vm_fault vmf = {
-> > > > > > > +						.vma = vma,
-> > > > > > > +						.address = addr & PAGE_MASK,
-> > > > > > > +						.page = page,
-> > > > > > > +						.orig_pte = oldpte,
-> > > > > > > +						.pmd = pmd,
-> > > > > > > +						/* pte and ptl not needed */
-> > > > > > > +					};
-> > > > > > > +					vm_fault_t ret;
-> > > > > > > +
-> > > > > > > +					if (page)
-> > > > > > > +						get_page(page);
-> > > > > > > +					arch_leave_lazy_mmu_mode();
-> > > > > > > +					pte_unmap_unlock(pte, ptl);
-> > > > > > > +					ret = wp_page_copy(&vmf);
-> > > > > > > +					/* PTE is changed, or OOM */
-> > > > > > > +					if (ret == 0)
-> > > > > > > +						/* It's done by others */
-> > > > > > > +						continue;
-> > > > > > 
-> > > > > > This is wrong if ret == 0 you still need to remap the pte before
-> > > > > > continuing as otherwise you will go to next pte without the page
-> > > > > > table lock for the directory. So 0 case must be handled after
-> > > > > > arch_enter_lazy_mmu_mode() below.
-> > > > > > 
-> > > > > > Sorry i should have catch that in previous review.
-> > > > > 
-> > > > > My fault to not have noticed it since the very beginning... thanks for
-> > > > > spotting that.
-> > > > > 
-> > > > > I'm squashing below changes into the patch:
-> > > > 
-> > > > 
-> > > > Well thinking of this some more i think you should use do_wp_page() and
-> > > > not wp_page_copy() it would avoid bunch of code above and also you are
-> > > > not properly handling KSM page or page in the swap cache. Instead of
-> > > > duplicating same code that is in do_wp_page() it would be better to call
-> > > > it here.
-> > > 
-> > > Yeah it makes sense to me.  Then here's my plan:
-> > > 
-> > > - I'll need to drop previous patch "export wp_page_copy" since then
-> > >   it'll be not needed
-> > > 
-> > > - I'll introduce another patch to split current do_wp_page() and
-> > >   introduce function "wp_page_copy_cont" (better suggestion on the
-> > >   naming would be welcomed) which contains most of the wp handling
-> > >   that'll be needed for change_pte_range() in this patch and isolate
-> > >   the uffd handling:
-> > > 
-> > > static vm_fault_t do_wp_page(struct vm_fault *vmf)
-> > > 	__releases(vmf->ptl)
-> > > {
-> > > 	struct vm_area_struct *vma = vmf->vma;
-> > > 
-> > > 	if (userfaultfd_pte_wp(vma, *vmf->pte)) {
-> > > 		pte_unmap_unlock(vmf->pte, vmf->ptl);
-> > > 		return handle_userfault(vmf, VM_UFFD_WP);
-> > > 	}
-> > > 
-> > > 	return do_wp_page_cont(vmf);
-> > > }
-> > > 
-> > > Then I can probably use do_wp_page_cont() in this patch.
-> > 
-> > Instead i would keep the do_wp_page name and do:
-> >     static vm_fault_t do_userfaultfd_wp_page(struct vm_fault *vmf) {
-> >         ... // what you have above
-> >         return do_wp_page(vmf);
-> >     }
-> > 
-> > Naming wise i think it would be better to keep do_wp_page() as
-> > is.
+Le 18/04/2019 à 23:51, Jerome Glisse a écrit :
+> On Tue, Apr 16, 2019 at 03:41:56PM +0100, Mark Rutland wrote:
+>> On Tue, Apr 16, 2019 at 04:31:27PM +0200, Laurent Dufour wrote:
+>>> Le 16/04/2019 à 16:27, Mark Rutland a écrit :
+>>>> On Tue, Apr 16, 2019 at 03:44:55PM +0200, Laurent Dufour wrote:
+>>>>> From: Mahendran Ganesh <opensource.ganesh@gmail.com>
+>>>>>
+>>>>> Set ARCH_SUPPORTS_SPECULATIVE_PAGE_FAULT for arm64. This
+>>>>> enables Speculative Page Fault handler.
+>>>>>
+>>>>> Signed-off-by: Ganesh Mahendran <opensource.ganesh@gmail.com>
+>>>>
+>>>> This is missing your S-o-B.
+>>>
+>>> You're right, I missed that...
+>>>
+>>>> The first patch noted that the ARCH_SUPPORTS_* option was there because
+>>>> the arch code had to make an explicit call to try to handle the fault
+>>>> speculatively, but that isn't addeed until patch 30.
+>>>>
+>>>> Why is this separate from that code?
+>>>
+>>> Andrew was recommended this a long time ago for bisection purpose. This
+>>> allows to build the code with CONFIG_SPECULATIVE_PAGE_FAULT before the code
+>>> that trigger the spf handler is added to the per architecture's code.
+>>
+>> Ok. I think it would be worth noting that in the commit message, to
+>> avoid anyone else asking the same question. :)
 > 
-> In case I misunderstood... what I've proposed will be simply:
+> Should have read this thread before looking at x86 and ppc :)
 > 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 64bd8075f054..ab98a1eb4702 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2497,6 +2497,14 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
->                 return handle_userfault(vmf, VM_UFFD_WP);
->         }
+> In any case the patch is:
 > 
-> +       return do_wp_page_cont(vmf);
-> +}
-> +
-> +vm_fault_t do_wp_page_cont(struct vm_fault *vmf)
-> +       __releases(vmf->ptl)
-> +{
-> +       struct vm_area_struct *vma = vmf->vma;
-> +
->         vmf->page = vm_normal_page(vma, vmf->address, vmf->orig_pte);
->         if (!vmf->page) {
->                 /*
-> 
-> And the other proposal is:
-> 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 64bd8075f054..a73792127553 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2469,6 +2469,8 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf)
->         return VM_FAULT_WRITE;
->  }
-> 
-> +static vm_fault_t do_wp_page(struct vm_fault *vmf);
-> +
->  /*
->   * This routine handles present pages, when users try to write
->   * to a shared page. It is done by copying the page to a new address
-> @@ -2487,7 +2489,7 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf)
->   * but allow concurrent faults), with pte both mapped and locked.
->   * We return with mmap_sem still held, but pte unmapped and unlocked.
->   */
-> -static vm_fault_t do_wp_page(struct vm_fault *vmf)
-> +static vm_fault_t do_userfaultfd_wp_page(struct vm_fault *vmf)
->         __releases(vmf->ptl)
->  {
->         struct vm_area_struct *vma = vmf->vma;
-> @@ -2497,6 +2499,14 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
->                 return handle_userfault(vmf, VM_UFFD_WP);
->         }
-> 
-> +       return do_wp_page(vmf);
-> +}
-> +
-> +static vm_fault_t do_wp_page(struct vm_fault *vmf)
-> +       __releases(vmf->ptl)
-> +{
-> +       struct vm_area_struct *vma = vmf->vma;
-> +
->         vmf->page = vm_normal_page(vma, vmf->address, vmf->orig_pte);
->         if (!vmf->page) {
->                 /*
-> @@ -2869,7 +2879,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->         }
-> 
->         if (vmf->flags & FAULT_FLAG_WRITE) {
-> -               ret |= do_wp_page(vmf);
-> +               ret |= do_userfaultfd_wp_page(vmf);
->                 if (ret & VM_FAULT_ERROR)
->                         ret &= VM_FAULT_ERROR;
->                 goto out;
-> @@ -3831,7 +3841,7 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
->                 goto unlock;
->         if (vmf->flags & FAULT_FLAG_WRITE) {
->                 if (!pte_write(entry))
-> -                       return do_wp_page(vmf);
-> +                       return do_userfaultfd_wp_page(vmf);
->                 entry = pte_mkdirty(entry);
->         }
->         entry = pte_mkyoung(entry);
-> 
-> I would prefer the 1st approach since it not only contains fewer lines
-> of changes because it does not touch callers, and also the naming in
-> the 2nd approach can be a bit confusing (calling
-> do_userfaultfd_wp_page in handle_pte_fault may let people think of an
-> userfault-only path but actually it covers the general path).  But if
-> you really like the 2nd one I can use that too.
+> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
 
-Maybe move the userfaultfd code to a small helper, call it first in
-call site of do_wp_page() and do_wp_page() if it does not fire ie:
+Thanks Mark and Jérôme for reviewing this.
 
-bool do_userfaultfd_wp(struct vm_fault *vmf, int ret)
-{
-    if (handleuserfault) return true;
-    return false;
-}
+Regarding the change in the commit message, I'm wondering if this would 
+be better to place it in the Series's letter head.
 
-then
-     if (vmf->flags & FAULT_FLAG_WRITE) {
-            if (do_userfaultfd_wp(vmf, tmp)) {
-                ret |= tmp;
-            } else
-                ret |= do_wp_page(vmf);
-            if (ret & VM_FAULT_ERROR)
-                ret &= VM_FAULT_ERROR;
-            goto out;
+But I'm fine to put it in each architecture's commit.
 
-and:
-    if (vmf->flags & FAULT_FLAG_WRITE) {
-        if (!pte_write(entry)) {
-            if (do_userfaultfd_wp(vmf, ret))
-                return ret;
-            else
-                return do_wp_page(vmf);
-        }
 
-Cheers,
-J�r�me
