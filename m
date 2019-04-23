@@ -2,113 +2,140 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9D2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CD6C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2B7217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1B9214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:18:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="yjGQzUpt"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xb72Mi0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfDWORw (ORCPT
+        id S1727953AbfDWOSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:17:52 -0400
-Received: from mail-eopbgr750088.outbound.protection.outlook.com ([40.107.75.88]:11927
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726655AbfDWORv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 10:17:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ox6z4DkW9br0FKwyEj/CDh+N1MPJYWJ0C5FpQkqKoeg=;
- b=yjGQzUpt/U0vGjzzwj12H2vxSzPxfcKrjjhSmgmrL5FRZ1K4MQq/nFJeDASps5MfAkS4y7K/zhGD8nx/SG6XqiJJungjmtfOqbl3X5jIWirBJmnhTvGzLSVEcKdxEYUgJAkPUde5vkxJIfmY7yTkRKgYLc3cYFjGaNRniVCGnSc=
-Received: from MWHPR12MB1453.namprd12.prod.outlook.com (10.172.55.22) by
- MWHPR12MB1374.namprd12.prod.outlook.com (10.169.206.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.16; Tue, 23 Apr 2019 14:17:47 +0000
-Received: from MWHPR12MB1453.namprd12.prod.outlook.com
- ([fe80::4c32:d1c8:5d7b:61f4]) by MWHPR12MB1453.namprd12.prod.outlook.com
- ([fe80::4c32:d1c8:5d7b:61f4%10]) with mapi id 15.20.1813.017; Tue, 23 Apr
- 2019 14:17:47 +0000
-From:   "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>
-To:     =?utf-8?B?Sm9uYXRoYW4gTmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
-        Eric Anholt <eric@anholt.net>, Pixel Ding <Pixel.Ding@amd.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/sched: Fix description of drm_sched_stop
-Thread-Topic: [PATCH] drm/sched: Fix description of drm_sched_stop
-Thread-Index: AQHU93fK909SI2G9Tk6zZZyM5U1AlKZJz7KA
-Date:   Tue, 23 Apr 2019 14:17:47 +0000
-Message-ID: <8c7c1779-2617-58be-83c5-5145b0edd7fa@amd.com>
-References: <20190420125053.32150-1-j.neuschaefer@gmx.net>
-In-Reply-To: <20190420125053.32150-1-j.neuschaefer@gmx.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTXPR0101CA0003.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00::16) To MWHPR12MB1453.namprd12.prod.outlook.com
- (2603:10b6:301:e::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Andrey.Grodzovsky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.55.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fe1339bb-662d-417f-34de-08d6c7f675b8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MWHPR12MB1374;
-x-ms-traffictypediagnostic: MWHPR12MB1374:
-x-microsoft-antispam-prvs: <MWHPR12MB13749BE24AA7EF87E9440CE3EA230@MWHPR12MB1374.namprd12.prod.outlook.com>
-x-forefront-prvs: 0016DEFF96
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(346002)(376002)(39860400002)(189003)(199004)(4326008)(66066001)(305945005)(52116002)(256004)(36756003)(25786009)(54906003)(6486002)(81166006)(8676002)(68736007)(81156014)(99286004)(6246003)(86362001)(31696002)(5660300002)(66556008)(6436002)(6506007)(73956011)(110136005)(66476007)(64756008)(386003)(66446008)(7736002)(76176011)(2501003)(66946007)(26005)(31686004)(53936002)(186003)(3846002)(102836004)(478600001)(8936002)(316002)(2616005)(6116002)(14454004)(6512007)(2906002)(72206003)(71190400001)(71200400001)(229853002)(11346002)(446003)(476003)(97736004)(486006)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1374;H:MWHPR12MB1453.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8nScMYoPN942T/cfV49HPMeA8txfZxf3u7hnpR726ebjfqmgxDQx0OSFmxZJvC7oIiDTwY5EyAx02hn29mVoZiy1qh0brACWsvORj5g6l2EQ2MEXynSpMhpJgoOJKEmQLVTcflhUY5uldnaNfNS6uzXvc9iqQgiCkqPEXGd25VeiYdTXj4sUrmh+0pIDmNcqDuWJX42q0WyM8HRdOG911pM7D/gQ9cBXcM52H3yFxkfWUHhu18LEbOiyXf6t3toDayuXeB5Xk+Scacb9sRyJgaXWQWMBgsk5imIhn+MybqyFMH36hHwtA/fAUa01C+qEz+ju/oeRMCdDvHW3EIvVxoHzqfrfnnySckeA15i4cHto/lTpcPCd0DW+RHpMm8rf492GYWMtuLRkNQtXf4+fnwfHdo+NDbfgbcV+RDSJleo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F3F7E6E0327796438E569D17ECD58F7D@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 23 Apr 2019 10:18:52 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50132 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfDWOSw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 10:18:52 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3NEDjaY100312;
+        Tue, 23 Apr 2019 14:18:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=vrfAQ41t67iwFGjNezT2clR4ufo2fkJsUoIM+xMFIjk=;
+ b=Xb72Mi0g7OP0wzTX/gNGq2Pn6VeK/x2HqrTY1DxOy0xwyKKD/6/uRWDvM65zKWPDfWgE
+ HYJAKgZ1ymN1RD0UuUmnF1TmAYfnZTOooitJwD5sUCn7oNRQeTNf7Aazo2KVg6nLlNbN
+ RhGpuW7NsJLXG7G/RUY6U+qj+N+xu+3zIMPcgrYjK07CWOJVIFm9WL69SAhKIdmJM+3J
+ QeSDhZmUERkdOpD79BKzzMWMSvxEKMf1IHQBp9dL0ANBEfGTVc18+PPS/2Nyj7g+h9gF
+ o4nOjZzYDKiacSj8deLnH/fhXt5vJWyhGiABz68j+76ZwL5aFmJRN+vN+lwq5fEcqfu+ RA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2rytusvhn0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 14:18:43 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3NEIh7p094727;
+        Tue, 23 Apr 2019 14:18:43 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2s0dwe9ju8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 14:18:43 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3NEIcX7004255;
+        Tue, 23 Apr 2019 14:18:38 GMT
+Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 23 Apr 2019 07:18:38 -0700
+Subject: Re: [PATCH 2/3] xen/swiotlb: simplify range_straddles_page_boundary()
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc:     konrad.wilk@oracle.com, sstabellini@kernel.org
+References: <20190423105457.17502-1-jgross@suse.com>
+ <20190423105457.17502-3-jgross@suse.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <799ae281-6a06-6a34-3bef-96b9fef8d1c2@oracle.com>
+Date:   Tue, 23 Apr 2019 10:25:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe1339bb-662d-417f-34de-08d6c7f675b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 14:17:47.5326
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1374
+In-Reply-To: <20190423105457.17502-3-jgross@suse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9235 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904230097
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9235 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904230097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IEFuZHJleSBHcm9kem92c2t5IDxhbmRyZXkuZ3JvZHpvdnNreUBhbWQuY29t
-Pg0KDQpBbmRyZXkNCg0KT24gNC8yMC8xOSA4OjUwIEFNLCBKb25hdGhhbiBOZXVzY2jDpGZlciB3
-cm90ZToNCj4gU2luY2UgY29tbWl0IDIyMmI1ZjA0NDE1OSAoImRybS9zY2hlZDogUmVmYWN0b3Ig
-cmluZyBtaXJyb3IgbGlzdA0KPiBoYW5kbGluZy4iKSwgZHJtX3NjaGVkX2h3X2pvYl9yZXNldCBp
-cyBubyBsb25nZXIgdGhlcmUsIHNvIGxldCdzIGFkanVzdA0KPiB0aGUgZG9jIGNvbW1lbnQgYWNj
-b3JkaW5nbHkuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIE5ldXNjaMOkZmVyIDxqLm5l
-dXNjaGFlZmVyQGdteC5uZXQ+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIv
-c2NoZWRfbWFpbi5jIHwgMyArLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
-IDIgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc2NoZWR1
-bGVyL3NjaGVkX21haW4uYyBiL2RyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2NoZWRfbWFpbi5j
-DQo+IGluZGV4IDE5ZmM2MDFjOWVlYi4uYTFiZWMyNzc5ZTc2IDEwMDY0NA0KPiAtLS0gYS9kcml2
-ZXJzL2dwdS9kcm0vc2NoZWR1bGVyL3NjaGVkX21haW4uYw0KPiArKysgYi9kcml2ZXJzL2dwdS9k
-cm0vc2NoZWR1bGVyL3NjaGVkX21haW4uYw0KPiBAQCAtMzY2LDEwICszNjYsOSBAQCB2b2lkIGRy
-bV9zY2hlZF9pbmNyZWFzZV9rYXJtYShzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAqYmFkKQ0KPiAgIEVY
-UE9SVF9TWU1CT0woZHJtX3NjaGVkX2luY3JlYXNlX2thcm1hKTsNCj4NCj4gICAvKioNCj4gLSAq
-IGRybV9zY2hlZF9od19qb2JfcmVzZXQgLSBzdG9wIHRoZSBzY2hlZHVsZXIgaWYgaXQgY29udGFp
-bnMgdGhlIGJhZCBqb2INCj4gKyAqIGRybV9zY2hlZF9zdG9wIC0gc3RvcCB0aGUgc2NoZWR1bGVy
-DQo+ICAgICoNCj4gICAgKiBAc2NoZWQ6IHNjaGVkdWxlciBpbnN0YW5jZQ0KPiAtICogQGJhZDog
-YmFkIHNjaGVkdWxlciBqb2INCj4gICAgKg0KPiAgICAqLw0KPiAgIHZvaWQgZHJtX3NjaGVkX3N0
-b3Aoc3RydWN0IGRybV9ncHVfc2NoZWR1bGVyICpzY2hlZCkNCj4gLS0NCj4gMi4yMC4xDQo+DQo=
+On 4/23/19 6:54 AM, Juergen Gross wrote:
+> range_straddles_page_boundary() is open coding several macros from
+> include/xen/page.h. Use those instead. Additionally there is no need
+> to have check_pages_physically_contiguous() as a separate function as
+> it is used only once, so merge it into range_straddles_page_boundary().
+>
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+
+
