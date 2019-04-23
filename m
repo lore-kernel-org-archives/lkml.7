@@ -2,148 +2,303 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C72C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAABC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1186214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:36:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+XOdqWW"
+	by mail.kernel.org (Postfix) with ESMTP id 332C6214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbfDWNgK (ORCPT
+        id S1727865AbfDWNge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:36:10 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34567 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfDWNgJ (ORCPT
+        Tue, 23 Apr 2019 09:36:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35608 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726655AbfDWNgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:36:09 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v10so11292007oib.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 06:36:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rnJqCqpjZuGWNAaHeRBe5a/70WgmeQJC/iIWiElLinA=;
-        b=J+XOdqWWf3QnLVr6LObWfdULuHZgU7u6mQqvi+Jpm2KyIYlyuYlB35ZSR+mDdtRDLp
-         25UvUjui4JGRHrEloyh5MtbWdhsgiHMQYDyOYlQ1XcsVzjo22AmxpwNN5TWLX7hQKdSb
-         yhC5htt4GTBEG1i0HvIZcqQETJ0vLbz7R29QlMmOkBDn9XPicuaipaWRLtLIzFSBQdYc
-         8SwPcnbCWoLYT9ZCeRNT4QwUSv1c63gaQyQaT278cQRo2x4sFkDyjc1PeywU5RCnQxkn
-         yageI3cewIELy+4NZRIURtH3grNcpFKdx0fJGGe0XkT2wMctFzp6kcf5+xXIX5dilom2
-         t6kQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rnJqCqpjZuGWNAaHeRBe5a/70WgmeQJC/iIWiElLinA=;
-        b=AZA/j1slZyMIcxa7V+Lniv0J8ni96G7CpdZhVVf2wLMhKHWFXVlseQpRKhVj+tvIxp
-         MpyZs/O9HKlvlRIATw9MDfQoIOOBQ+AGtoiu8UcXYPQIDez3hnB9ALQ7PrEyLr+qVIMa
-         DJQe6Xc6Z+CX/dFfhpCNNITld6iNNgiqHS6+FRfMmlfHVfz+3pdsy5pHKjfsQKNBsBtG
-         y2sENyc9M75IqLtsIkFy+Oh2lLcfWkyG1XGIYca3p/zVO8Cz1tnM8soJ01ARr+ocHsxv
-         5lBrEo0Wx6acmBzogZoOk2MZEoqU/1wZnl0/kXvBNnQCpDH8reiCr2IWtuCL9aV189Sd
-         x47g==
-X-Gm-Message-State: APjAAAWUX3DRLTp01FGtfC9ZWZy+kwMwOWXXduNIfxsCf5LlSGeREWsT
-        8ogF7b4Kv8qSjHTp6nRR3Xs=
-X-Google-Smtp-Source: APXvYqwvbJAUE0FJXmEZdy2TYItB1O9aG1pA7k5wYJZG22ygbfCjMX/yx0Qy9YQ+vv21xLAErdYbcg==
-X-Received: by 2002:aca:d88b:: with SMTP id p133mr1855306oig.56.1556026568946;
-        Tue, 23 Apr 2019 06:36:08 -0700 (PDT)
-Received: from madhuleo ([2605:6000:1023:606d:fd8f:ea25:f4b2:9189])
-        by smtp.gmail.com with ESMTPSA id i136sm269431oib.42.2019.04.23.06.36.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 06:36:08 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 08:36:05 -0500
-From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     eric@anholt.net, stefan.wahren@i2se.com, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Staging: vc04_services: Cleanup in ctrl_set_bitrate()
-Message-ID: <20190423133603.GA6310@madhuleo>
-References: <20190420165644.11892-1-madhumithabiw@gmail.com>
- <20190420195103.GA18489@kroah.com>
+        Tue, 23 Apr 2019 09:36:33 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NDTci7077337
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:36:32 -0400
+Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s22ecuxne-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:36:31 -0400
+Received: from localhost
+        by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Tue, 23 Apr 2019 14:36:31 +0100
+Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
+        by e36.co.us.ibm.com (192.168.1.136) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 14:36:28 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NDaOZ717891352
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 13:36:24 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 789C8C6057;
+        Tue, 23 Apr 2019 13:36:24 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4EB72C605B;
+        Tue, 23 Apr 2019 13:36:23 +0000 (GMT)
+Received: from [9.60.75.251] (unknown [9.60.75.251])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 13:36:23 +0000 (GMT)
+Subject: Re: [PATCH v2 7/8] s390: vfio-ap: handle bind and unbind of AP queue
+ device
+To:     pmorel@linux.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1555796980-27920-1-git-send-email-akrowiak@linux.ibm.com>
+ <1555796980-27920-8-git-send-email-akrowiak@linux.ibm.com>
+ <926b43f9-13ed-602d-c7f0-1e0dd9fe32a1@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Tue, 23 Apr 2019 09:36:22 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190420195103.GA18489@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <926b43f9-13ed-602d-c7f0-1e0dd9fe32a1@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042313-0020-0000-0000-00000EDB0421
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010981; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01193237; UDB=6.00625505; IPR=6.00974057;
+ MB=3.00026557; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-23 13:36:30
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042313-0021-0000-0000-000065891818
+Message-Id: <50922b06-c169-3af4-d4ae-638ce02a21d9@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/20  :51, Greg KH wrote:
-> On Sat, Apr 20, 2019 at 11:56:44AM -0500, Madhumitha Prabakaran wrote:
-> > Remove unnecessary variable and replace return type.
-> > In addition to that align the function parameters with parentheses to
-> > maintain Linux coding style.
-> > 
-> > Issue suggested by Coccinelle.
-> > 
-> > Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
-> > 
-> > ---
-> > Changes in v2
-> > 
-> > 1) Fix my own error of removing function call from the variable.
-> > 2) Align the function parameters with parentheses.
-> > 
-> > ---
-> > ---
-> >  .../staging/vc04_services/bcm2835-camera/controls.c    | 10 ++++------
-> >  1 file changed, 4 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/staging/vc04_services/bcm2835-camera/controls.c b/drivers/staging/vc04_services/bcm2835-camera/controls.c
-> > index e39ab5fae724..71eb349c3138 100644
-> > --- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
-> > +++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
-> > @@ -607,18 +607,16 @@ static int ctrl_set_bitrate(struct bm2835_mmal_dev *dev,
-> >  			    struct v4l2_ctrl *ctrl,
-> >  			    const struct bm2835_mmal_v4l2_ctrl *mmal_ctrl)
-> >  {
-> > -	int ret;
-> >  	struct vchiq_mmal_port *encoder_out;
-> >  
-> >  	dev->capture.encode_bitrate = ctrl->val;
-> >  
-> >  	encoder_out = &dev->component[MMAL_COMPONENT_VIDEO_ENCODE]->output[0];
-> >  
-> > -	ret = vchiq_mmal_port_parameter_set(dev->instance, encoder_out,
-> > -					    mmal_ctrl->mmal_id,
-> > -					    &ctrl->val, sizeof(ctrl->val));
-> > -	ret = 0;
-> > -	return ret;
-> > +	vchiq_mmal_port_parameter_set(dev->instance, encoder_out,
-> > +				      mmal_ctrl->mmal_id, &ctrl->val,
-> > +				      sizeof(ctrl->val));
-> > +	return 0;
-> >  }
+On 4/23/19 9:08 AM, Pierre Morel wrote:
+> On 20/04/2019 23:49, Tony Krowiak wrote:
+>> There is an implied guarantee that when an AP queue device is bound to a
+>> device driver, that driver will have exclusive control over the device.
+>> When an AP queue device is unbound from the vfio_ap driver while the
+>> queue is in use by a guest and subsquently bound to a zcrypt driver, the
+>> guarantee that the zcrypt driver has exclusive control of the queue
+>> device will be violated. Likewise, when an AP queue device is bound to
+>> the vfio_ap device driver and its APQN is assigned to an mdev device in
+>> use by a guest, the expectation is that the guest will have access to
+>> the queue.
+>>
+>> The purpose of this patch is to ensure three things:
+>>
+>> 1. When an AP queue device in use by a guest is unbound, the guest shall
+>>     no longer access the queue. Due to the limitations of the
+>>     architecture, access to a single queue can not be denied to a guest,
+>>     so access to the AP card to which the queue is connected will be
+>>     denied to the guest.
+>>
+>> 2. When an AP queue device with an APQN assigned to an mdev device is
+>>     bound to the vfio_ap driver while the mdev device is in use by a 
+>> guest,
+>>     the guest shall be granted access to the queue.
+>>
+>> 3. When a guest is started, each APQN assigned to the guest's mdev device
+>>     must be owned by the vfio_ap driver.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_drv.c     | 16 ++++++-
+>>   drivers/s390/crypto/vfio_ap_ops.c     | 82 
+>> ++++++++++++++++++++++++++++++++++-
+>>   drivers/s390/crypto/vfio_ap_private.h |  2 +
+>>   3 files changed, 97 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_drv.c 
+>> b/drivers/s390/crypto/vfio_ap_drv.c
+>> index e9824c35c34f..0f5dafddf5b1 100644
+>> --- a/drivers/s390/crypto/vfio_ap_drv.c
+>> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+>> @@ -42,12 +42,26 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
+>>   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+>>   {
+>> +    struct ap_queue *apq = to_ap_queue(&apdev->device);
+>> +    unsigned long apid = AP_QID_CARD(apq->qid);
+>> +    unsigned long apqi = AP_QID_QUEUE(apq->qid);
+>> +
+>> +    mutex_lock(&matrix_dev->lock);
+>> +    vfio_ap_mdev_probe_queue(apid, apqi);
+>> +    mutex_unlock(&matrix_dev->lock);
+>> +
+>>       return 0;
+>>   }
+>>   static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+>>   {
+>> -    /* Nothing to do yet */
+>> +    struct ap_queue *apq = to_ap_queue(&apdev->device);
+>> +    unsigned long apid = AP_QID_CARD(apq->qid);
+>> +    unsigned long apqi = AP_QID_QUEUE(apq->qid);
+>> +
+>> +    mutex_lock(&matrix_dev->lock);
+>> +    vfio_ap_mdev_remove_queue(apid, apqi);
+>> +    mutex_unlock(&matrix_dev->lock);
+>>   }
+>>   static void vfio_ap_matrix_dev_release(struct device *dev)
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
+>> b/drivers/s390/crypto/vfio_ap_ops.c
+>> index 31ce30ee784d..3f9506516545 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -763,8 +763,8 @@ static void vfio_ap_mdev_wait_for_qempty(unsigned 
+>> long apid, unsigned long apqi)
+>>               msleep(20);
+>>               break;
+>>           default:
+>> -            pr_warn("%s: tapq err %02x: 0x%04x may not be empty\n",
+>> -                __func__, status.response_code, q->apqn);
+>> +            pr_warn("%s: tapq err %02x: %02lx%04lx may not be empty\n",
+>> +                __func__, status.response_code, apid, apqi);
+>>               return;
+>>           }
+>>       } while (--retry);
+>> @@ -823,6 +823,14 @@ static int vfio_ap_mdev_reset_queues(struct 
+>> mdev_device *mdev)
+>>   static int vfio_ap_mdev_create_shadow_crycb(struct ap_matrix_mdev 
+>> *matrix_mdev)
+>>   {
+>> +    /*
+>> +     * If an AP resource is not owned by the vfio_ap driver - e.g., 
+>> it was
+>> +     * unbound from the driver while still assigned to the mdev device
+>> +     */
+>> +    if (ap_apqn_in_matrix_owned_by_def_drv(matrix_mdev->matrix.apm,
+>> +                           matrix_mdev->matrix.aqm))
+>> +        return -EADDRNOTAVAIL;
+>> +
+>>       matrix_mdev->shadow_crycb = 
+>> kzalloc(sizeof(*matrix_mdev->shadow_crycb),
+>>                           GFP_KERNEL);
+>>       if (!matrix_mdev->shadow_crycb)
+>> @@ -847,6 +855,18 @@ static int vfio_ap_mdev_open(struct mdev_device 
+>> *mdev)
+>>       if (!try_module_get(THIS_MODULE))
+>>           return -ENODEV;
+>> +    ret = ap_apqn_in_matrix_owned_by_def_drv(matrix_mdev->matrix.apm,
+>> +                         matrix_mdev->matrix.aqm);
+>> +
+>> +    /*
+>> +     * If any APQN is owned by a default driver, it can not be used 
+>> by the
+>> +     * guest. This can happen if a queue is unbound from the vfio_ap
+>> +     * driver but not unassigned from the mdev device.
+>> +     */
+>> +    ret = (ret == 1) ? -EADDRNOTAVAIL : ret;
+>> +    if (ret)
+>> +        return ret;
+>> +
+>>       matrix_mdev->group_notifier.notifier_call = 
+>> vfio_ap_mdev_group_notifier;
+>>       events = VFIO_GROUP_NOTIFY_SET_KVM;
+>> @@ -938,3 +958,61 @@ void vfio_ap_mdev_unregister(void)
+>>   {
+>>       mdev_unregister_device(&matrix_dev->device);
+>>   }
+>> +
+>> +static struct ap_matrix_mdev *vfio_ap_mdev_find_matrix_mdev(unsigned 
+>> long apid,
+>> +                                unsigned long apqi)
+>> +{
+>> +    struct ap_matrix_mdev *matrix_mdev;
+>> +
+>> +    list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
+>> +        if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
+>> +            test_bit_inv(apqi, matrix_mdev->matrix.aqm))
+>> +            return matrix_mdev;
+>> +    }
+>> +
+>> +    return NULL;
+>> +}
+>> +
+>> +void vfio_ap_mdev_remove_queue(unsigned long apid, unsigned long apqi)
+>> +{
+>> +    struct ap_matrix_mdev *matrix_mdev;
+>> +
+>> +    matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
+>> +
+>> +    /*
+>> +     * If the queue is assigned to the mdev device and the mdev device
+>> +     * is in use by a guest
+>> +     */
+>> +    if (matrix_mdev && matrix_mdev->kvm) {
+>> +        /*
+>> +         * Unplug the adapter from the guest but don't unassign it
+>> +         * from the mdev device
+>> +         */
+>> +        clear_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+>> +        vfio_ap_mdev_update_crycb(matrix_mdev);
+>> +    }
+>> +
+>> +    vfio_ap_mdev_reset_queue(apid, apqi);
+>> +}
+>> +
+>> +void vfio_ap_mdev_probe_queue(unsigned long apid, unsigned long apqi)
+>> +{
+>> +    struct ap_matrix_mdev *matrix_mdev;
+>> +
+>> +    matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
+>> +
+>> +    /*
+>> +     * If the queue is assigned to the mdev device and the mdev device
+>> +     * is in use by a guest
+>> +     */
+>> +    if (matrix_mdev && matrix_mdev->kvm) {
+>> +        /* Plug the adapter into the guest */
+>> +        set_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+>> +
+>> +        /* Make sure the queue is also plugged in to the guest */
+>> +        if (!test_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm))
+>> +            set_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm);
 > 
-> Why does this function even return anything at all if it can not fail?
+> Why are you testing the domain before setting it and not the adapter?
+> 
+> Eventually you do not need to test at all or if, then both.
 
-I looked at the function vchiq_mmal_port_parameter_set, which calls
-another function for setting the port parameters, which inturns sends an
-synchronous message. If it is able to send the message successfully, it
-returns 0. It can also fail and can return any other value. Also the
-function ctrl_set_bitrate is not evaluated anywhere for true or false,
-so it is safe to return the value we get from
-vchiq_mmal_port_parameter_set instead of returning 0 always.
-
+My thinking was that when a queue is removed, we clear only the APID
+from the APM, but do not clear the APQI from the AQM. I think you are
+correct in saying we do not need to test either mask since we are
+plugging the queue in regardless.
 
 > 
-> Why not return the value that vchiq_mmal_port_parameter_set() returned?
+> NIT
+> 
+> 
+>> +
+>> +        vfio_ap_mdev_update_crycb(matrix_mdev);
+>> +    }
+>> +}
+>> diff --git a/drivers/s390/crypto/vfio_ap_private.h 
+>> b/drivers/s390/crypto/vfio_ap_private.h
+>> index e8457aa61976..00eaae3b853f 100644
+>> --- a/drivers/s390/crypto/vfio_ap_private.h
+>> +++ b/drivers/s390/crypto/vfio_ap_private.h
+>> @@ -87,5 +87,7 @@ struct ap_matrix_mdev {
+>>   extern int vfio_ap_mdev_register(void);
+>>   extern void vfio_ap_mdev_unregister(void);
+>> +void vfio_ap_mdev_remove_queue(unsigned long apid, unsigned long apqi);
+>> +void vfio_ap_mdev_probe_queue(unsigned long apid, unsigned long apqi);
+>>   #endif /* _VFIO_AP_PRIVATE_H_ */
+>>
+> 
 > 
 
-I will change the code to return the value from
-vchiq_mmal_port_parameter_set directly.
-
-> thanks,
-> 
-> greg k-h
