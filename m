@@ -2,95 +2,88 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4315AC282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A14C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0844D2177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21342175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:03:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pmeerw.net header.i=@pmeerw.net header.b="BGl6Kr2g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LcsCwriv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfDWLBu (ORCPT
+        id S1727494AbfDWLDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 07:01:50 -0400
-Received: from ns.pmeerw.net ([84.19.176.117]:40532 "EHLO ns.pmeerw.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbfDWLBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 07:01:49 -0400
-Received: by ns.pmeerw.net (Postfix, from userid 1000)
-        id 52223E0382; Tue, 23 Apr 2019 13:01:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pmeerw.net; s=mail;
-        t=1556017308; bh=5I67NfCana8LVSTxmxJTjG3v3OY5qk16SkmFAj3FjLY=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=BGl6Kr2gFJOkOQ6xDJPBtyBnK6VvY5TgIlM/eIsNzfs9LCNH24amHYwJk6q1rcmu6
-         uJZCKmOBN7GjlBAxAEx5h68d6nTQ4vSE9LQG+Fg9yg3iUdEx8CRoXgoNqm5sRRHUqg
-         R1XIYvgvWpF8nEtRKPE/V8eyhxaWbAoXhsf6Kx0c=
-Received: from localhost (localhost [127.0.0.1])
-        by ns.pmeerw.net (Postfix) with ESMTP id 385BAE036D;
-        Tue, 23 Apr 2019 13:01:48 +0200 (CEST)
-Date:   Tue, 23 Apr 2019 13:01:48 +0200 (CEST)
-From:   Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-To:     Alexandre Mergnat <amergnat@baylibre.com>
-cc:     robh+dt@kernel.org, mark.rutland@arm.com, jic23@kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        baylibre-upstreaming@groups.io
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: ot: Add docs pat9125
-In-Reply-To: <1556016046-31231-3-git-send-email-amergnat@baylibre.com>
-Message-ID: <alpine.DEB.2.21.1904231301180.24175@vps.pmeerw.net>
-References: <1556016046-31231-1-git-send-email-amergnat@baylibre.com> <1556016046-31231-3-git-send-email-amergnat@baylibre.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 23 Apr 2019 07:03:00 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35782 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727225AbfDWLDA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 07:03:00 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j20so11400373lfh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 04:02:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9PiubGy9ByNwpv5piHSkClHKbawRSqgXU3ydjWaya2A=;
+        b=LcsCwriv3Ef+96CmDtMlpTKKzPOXR8LmPfjgQXoK9+SsGI53RNKLCD1YZE6eGDBLP0
+         ZBmgzbejDmSmfDS6K9lgUCN0uW1lBj4PZOFzCtFKtanJAWxduqkzOYFBxe/R6mY3epP4
+         ZJbtDE8phlY8OQqnMD1kALpBX9yBod+SH1UIAnHV+G4JI5uYF+M9gpa1qWk1URU/Z/2m
+         sVxNsAYVBogn8e518O9tXYOIPHWi9PIOzYikhHaBP9uYYVUSKKkPuLwHCHeOxjX6tIQG
+         waAAWh4FSwx3I4rT/ejmSSCl3N0WwgsZqSxp1NGndLMAB004zuL4QKee6hY5tdJWZjoL
+         COHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9PiubGy9ByNwpv5piHSkClHKbawRSqgXU3ydjWaya2A=;
+        b=QU85g9/+E9/BBo6psmExqRxOeZT5wh2ny2KLRcWQwqeoM1es4Jn0fHoEoLVf/CmLTR
+         Zlg3QdF6UEoi9cMd14PsH5L1tc5h3QD+ZoOU72M3s86gQD8nRGdGqVYIA765DxjqLOaB
+         lMGcO9drwXw1xhyf1LPDgnBfaTPlequ/7EcPJ79PBV6fE8ABApXMEBoCLi3qyDK0rj75
+         bXrypRnqW0xt5ngizggW7B9KUiVOGX7Y9yh2N2MiaeYyO+7xkjw5XgU7ZZYmc/jXKiIm
+         vKyPnO+tbLV8jL8C2bLrikSye0uvyJXvSNEMb5lqzbMuR9b8dT48+iT4vFdBOWCiOqdN
+         EHBg==
+X-Gm-Message-State: APjAAAWcxszhCcWFki3OnQUrpWND52XClC9ghXOe0TODxumoaAJ6hoOv
+        gcw6PquYaDdlrC0YydNqqRsN43XOVl4Yp4tlK1470A==
+X-Google-Smtp-Source: APXvYqzrsmnmuTXfbUzN6uxez15e8e+cVlU7dys8boY10K+kzdpk7nTe0A/scVnynwnfMaTQCGLhuc8YbyslwSo6l0s=
+X-Received: by 2002:a19:f001:: with SMTP id p1mr14394729lfc.27.1556017378165;
+ Tue, 23 Apr 2019 04:02:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190416145612.30364-1-yuehaibing@huawei.com>
+In-Reply-To: <20190416145612.30364-1-yuehaibing@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 23 Apr 2019 13:02:39 +0200
+Message-ID: <CACRpkdbTTaYV4+VuVPSH=dbH_6mMqYHbenSqAOvYS_kwJpeL3Q@mail.gmail.com>
+Subject: Re: [PATCH -next] gpio: pxa: Make two symbols static
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 16, 2019 at 4:56 PM Yue Haibing <yuehaibing@huawei.com> wrote:
 
-> Add documentation for the optical tracker PAT9125 and
-> "ot" directory for Optical Tracker chip.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-> ---
->  .../devicetree/bindings/iio/ot/pat9125.txt     | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/ot/pat9125.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/ot/pat9125.txt b/Documentation/devicetree/bindings/iio/ot/pat9125.txt
-> new file mode 100644
-> index 000000000000..2ffacaafba8e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/ot/pat9125.txt
-> @@ -0,0 +1,18 @@
-> +PixArt Imaging PAT9125 Optical Tracking Miniature Chip device driver
-> +
-> +Required properties:
-> +	- compatible: must be "pixart,pat9125"
-> +	- reg: i2c address where to find the device
-> +	- interrupts : the sole interrupt generated by the device
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> Fix sparse warnings:
+>
+> drivers/gpio/gpio-pxa.c:580:29: warning:
+>  symbol 'pxa_irq_domain_ops' was not declared. Should it be static?
+> drivers/gpio/gpio-pxa.c:819:20: warning:
+>  symbol 'pxa_gpio_syscore_ops' was not declared. Should it be static?
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-maybe delete space before :
+Patch applied.
 
-> +
-> +	Refer to interrupt-controller/interrupts.txt for generic
-> +	interrupt client node bindings.
-> +
-> +Example:
-> +
-> +pat9125@75 {
-> +	compatible = "pixart,pat9125";
-> +	reg = <0x75>;
-> +	interrupt-parent = <&gpio3>;
-> +	interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
-> +};
-> 
-
--- 
-
-Peter Meerwald-Stadler
-Mobile: +43 664 24 44 418
+Yours,
+Linus Walleij
