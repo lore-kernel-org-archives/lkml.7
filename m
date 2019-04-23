@@ -2,173 +2,97 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D7BC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6448C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0256021738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81FAD21738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:25:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="pBNkqVv6"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oXxo2CNE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbfDWXZU (ORCPT
+        id S1728809AbfDWXZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 19:25:20 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:62950 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfDWXZU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 19:25:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1556061920; x=1587597920;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=l9kLduGgH2CEH7OEe9isFOfe6yfXUj5pwtaHUqeYFhE=;
-  b=pBNkqVv6teBGJQR1oeAWOa9KTDymuZDGA/xfQVxgaaIxJ4Bux32DKXEh
-   1l7EPjljry3RnYKtDyhlHXWvgxP0nR8TwWWu8N5+E4NxdURoVLT4YCMGy
-   ufcpiVQq2UGfELdsFDSvqZAwPyvzZj6A1wQ603Hj3+/1lkciPg8N6Jcg9
-   tQPoq8+2F2TdqoowO24zzOdexBbq1yolQMrwjsKl5vxqPKAuxyT1fA/4j
-   l6OMgKioN0JcOvKQ9KdtrS9lGabmAzQ4NjoNZnPaeZceCSnBkssTxwV77
-   LTUtEKjDyxfIVoudtZUhd0GG5MiI1nlaZ+1fLQGNSW+mZY7Qh1jo/Tqw9
-   g==;
-X-IronPort-AV: E=Sophos;i="5.60,387,1549900800"; 
-   d="scan'208";a="107864434"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 24 Apr 2019 07:25:20 +0800
-IronPort-SDR: M298p7UfDHodE1qxxvvMyBaHtNpn6g6qCau/cjuo/fxij4M0U5/4rPD8Sln4WtqIdzYm3DiUIE
- 6W/iNJS1CvQrlwo6hVXbLGnbqmx7Qfv40z8d7ELJAdqrY59x6rD7pcrOt1IxvL2BHVBbQBEPtK
- yihVNgzE2HX0u4CgleyCqc5zZiWLf5LdqTuayrAo1q9MBPspvH2MZ5pPkv4Fbs5bLZ7uZ9NYsN
- VeJsreAGsMm741B6mM9L0gSObgdqYphr9d+XJTnIja9E7UlT4SBHPP3cSubtycK6AsqCfAXtfD
- X+RS6obl9QmoHkAlXA+LvUEX
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP; 23 Apr 2019 16:01:51 -0700
-IronPort-SDR: Cz9usMlryfriG6lYXvNXQznDlYS1KUnhv6vwtE/cTtzKjynqmNIrmECRkprpZZ5KB8uV/Eyd8b
- 2aauPy8BMAX0+k/0KosAhzqvvr2fJk84/zpaJoEq5Jlw4OrsD1JNZt8wu9YpMUXWrO6OAvFk2v
- MDchRTAUMBxaoRGoovjo+UyRmse8FCtgmN01TUqYYYG9N0WkkexVUbjaCuv46Og46T+Elr+Sap
- Ndm6k4dl7EvD8AHZdqZM863QTvbQ5lFHY/KAD3OjaYtC5WhwON8klgnTM5e17TxRzbTBxPqINz
- 06o=
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip02.wdc.com with ESMTP; 23 Apr 2019 16:25:20 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Zong Li <zong@andestech.com>
-Subject: [PATCH] RISC-V: Add an Image header that boot loader can parse.
-Date:   Tue, 23 Apr 2019 16:25:06 -0700
-Message-Id: <20190423232506.857-1-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 23 Apr 2019 19:25:35 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39283 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfDWXZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 19:25:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pfgw2rlNz9s55;
+        Wed, 24 Apr 2019 09:25:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556061932;
+        bh=/Me6Qh0fsYmS3NA+hGpSqFd/3x8whwiMfkiRQbeC7kU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=oXxo2CNETAk1pMPhWoFQGRO1HwR1uvmE+y7czc73PnBl2+b1m7pC+gMUGCCuXm4cu
+         5ny88Ty7Akti/5g8YjGkLNDbBe6VNdMnhYCGxS6c7Xims/p9PydPOM7w3NRSGnQwCe
+         w2Y3Xv4ymi8+tGQedUhyaJQLVX+ZHCiTE05ourq6z05wSX6j3Qw0MG2CljW7zxOJE7
+         qxunNNeKv2C4fCYV2h1RSblXR2oo2YW+eLY9wiCg0frW6fmgvfqCxA9IonY8ORzNS8
+         cDQcVGRyNAJYKzCV5DIdznnb7jP1xMeTQKK0umsIiwr48CpMNOSprslumBWIfgp6cA
+         Eb3LnyQypacQg==
+Date:   Wed, 24 Apr 2019 09:25:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andy Gross <andy.gross@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: linux-next: build failure after merge of the qcom tree
+Message-ID: <20190424092531.3988850d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/MdrnBC5ykLaNcA9m6R7BzHc"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, last stage boot loaders such as U-Boot can accept only
-uImage which is an unnecessary additional step in automating boot flows.
+--Sig_/MdrnBC5ykLaNcA9m6R7BzHc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Add a simple image header that boot loaders can parse and directly
-load kernel flat Image. The existing booting methods will continue to
-work as it is.
+Hi all,
 
-Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
+After merging the qcom tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/include/asm/image.h | 32 ++++++++++++++++++++++++++++++++
- arch/riscv/kernel/head.S       | 28 ++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
- create mode 100644 arch/riscv/include/asm/image.h
+arch/arm/boot/dts/qcom-apq8064.dtsi:1297.29-1309.5: ERROR (phandle_referenc=
+es): /soc/dsi-phy@4700200: Reference to non-existent node or label "xo_boar=
+d"
 
-diff --git a/arch/riscv/include/asm/image.h b/arch/riscv/include/asm/image.h
-new file mode 100644
-index 000000000000..76a7e0d4068a
---- /dev/null
-+++ b/arch/riscv/include/asm/image.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __ASM_IMAGE_H
-+#define __ASM_IMAGE_H
-+
-+#define RISCV_IMAGE_MAGIC	"RISCV"
-+
-+#ifndef __ASSEMBLY__
-+/*
-+ * struct riscv_image_header - riscv kernel image header
-+ *
-+ * @code0:		Executable code
-+ * @code1:		Executable code
-+ * @text_offset:	Image load offset
-+ * @image_size:		Effective Image size
-+ * @reserved:		reserved
-+ * @magic:		Magic number
-+ * @reserved:		reserved
-+ */
-+
-+struct riscv_image_header {
-+	u32 code0;
-+	u32 code1;
-+	u64 text_offset;
-+	u64 image_size;
-+	u64 res1;
-+	u64 magic;
-+	u32 res2;
-+	u32 res3;
-+};
-+#endif /* __ASSEMBLY__ */
-+#endif /* __ASM_IMAGE_H */
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index fe884cd69abd..154647395601 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -19,9 +19,37 @@
- #include <asm/thread_info.h>
- #include <asm/page.h>
- #include <asm/csr.h>
-+#include <asm/image.h>
- 
- __INIT
- ENTRY(_start)
-+	/*
-+	 * Image header expected by Linux boot-loaders. The image header data
-+	 * structure is described in asm/image.h.
-+	 * Do not modify it without modifying the structure and all bootloaders
-+	 * that expects this header format!!
-+	 */
-+	/* jump to start kernel */
-+	j _start_kernel
-+	/* reserved */
-+	.word 0
-+	.balign 8
-+#if __riscv_xlen == 64
-+	/* Image load offset(2MB) from start of RAM */
-+	.dword 0x200000
-+#else
-+	/* Image load offset(4MB) from start of RAM */
-+	.dword 0x400000
-+#endif
-+	/* Effective size of kernel image */
-+	.dword _end - _start
-+	.dword 0
-+	.asciz RISCV_IMAGE_MAGIC
-+	.word 0
-+	.word 0
-+
-+.global _start_kernel
-+_start_kernel:
- 	/* Mask all interrupts */
- 	csrw sie, zero
- 
--- 
-2.21.0
+Caused by commit
 
+  3560af5a56b5 ("ARM: dts: qcom-apq8064: Set 'xo_board' as ref clock of the=
+ DSI PHY")
+
+I have used the version of the qcom tree from next-20190423 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/MdrnBC5ykLaNcA9m6R7BzHc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/nusACgkQAVBC80lX
+0GyOhggAjtHMOWN14OpkY33HFFHGlnXt2JzrszGAisrqemEBqnhfJ0AhY9Ez0Elc
+De8ThAyuJORxb1mcRatYHDspGKFs9jc2/jot9F1E4rqnyqlAR+hAJNiRPqQMkJuL
+3KkKfEy74BNMImuF6YGet3be1nZGMekezpxAu33U/kBGsGqmaMLcTo+/zxfuPfVn
+YN2PjeAuyWB02Ur2JQ3P/hz7eTGaBh6/xMLQtBlLo5soZeQt40uezQh/zKq66qRa
+U78VjHAubuATRvZzuPQ3IyCjXKNatzNNx8+xGDwIWCEjymX7TVlsr1K+fLDqob4a
+oPiKsGXVhnhtcgPBbGgK9OW+ptQ0qQ==
+=qdUn
+-----END PGP SIGNATURE-----
+
+--Sig_/MdrnBC5ykLaNcA9m6R7BzHc--
