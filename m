@@ -2,111 +2,442 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9CBC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D87C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8691E20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232132175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JzQhZaX9"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="c/0SZq7H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbfDWJFu (ORCPT
+        id S1727380AbfDWJFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 05:05:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51600 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfDWJFK (ORCPT
+        Tue, 23 Apr 2019 05:05:55 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34376 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbfDWJFJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 05:05:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6VqXzTqzV4erjPSVPtVl2zQZ4ymXP6yRhCiCP3xmNmw=; b=JzQhZaX9wCR1O+q7wBnsYM6n0U
-        V+FN/qJvVRDX/PdLVZhm0qsNatmpcnHcFuJ0sI9VMTSmVZiTDfFnQ/IalvfBTnz7WzD3W0/B3tTsS
-        QpXw6XhiPzEw+nCaurIJhIoBvm2yg4Yptl8hMg0tWToYZQOOKLZ7EkwMnq7ZVqIo8wt3XxN4Ajh4f
-        NjWysATDqv1dQ6ZV6VfP7HRwy4cr3txcBpY2O08fb3MncEICV/9yvPwSa6BYci7Zil6Uaw/tvBexY
-        obgQhKwzPrTCW5m6f6dB4BvPaGA//4enbwbat3m+hpZZbnEFFQWVuUFyqoVwSLZpBD/HUvi6EIy/R
-        B8+U44fw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIrMR-0006tp-7X; Tue, 23 Apr 2019 09:05:07 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 90E0329B47DCD; Tue, 23 Apr 2019 11:05:05 +0200 (CEST)
-Date:   Tue, 23 Apr 2019 11:05:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH 5/5] numa: numa balancer
-Message-ID: <20190423090505.GG11158@hirez.programming.kicks-ass.net>
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <85bcd381-ef27-ddda-6069-1f1d80cf296a@linux.alibaba.com>
+        Tue, 23 Apr 2019 05:05:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r186so1746151wmf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 02:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=c+yNMXrKGArccNxEhCx+sv6O6Vbyp9b/RFo1dlT6v5g=;
+        b=c/0SZq7HLw0p2eiH/XcN1zmDH9bNqYE3OUeB/OEbjbzhYy0TN8uGLJzpc65IflTG2b
+         eU8VB6Fc/ooNURoro9HntbEbrMWkp17s6VezJlHCg9s6eJRsq1hDu1HVa92sBWLFVSHS
+         tvQjoV6s+dXbGsyu61eD6DMt+a1NpCHJSVsQFwXbhkp5gRQAVwNPkSryFQNZrqTGiyEZ
+         LJdKiwGcyACvVfHMfA4c98LZJX+0stR5HJWzU6yueLMn/85w4M0nTrMP1uQED+TYENw7
+         KWDw3CI88FzZpNpumfp1cKD5PhW5yVmXVOKb4J1cHU9LGYHAKtMuo1KqbX/nQLOhv8+h
+         u42A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=c+yNMXrKGArccNxEhCx+sv6O6Vbyp9b/RFo1dlT6v5g=;
+        b=PKPyEErO1gP1p1RtqKHYKMhmrcpRWmy2lACe6QC4UGbkGwCjGWzyOyWj6Eu9wQfHBV
+         DTYU/Z00EvxQ9DNIgy8c64OJd6Lp51YYASg98js/HofunLkjwFSVXE225i/i22fFfQ6U
+         emfdm34zXWM11r96pYWecGispRXODyrsJhxB94l68aKk43ZXuEPVx+6uBFIFmRXNSzBZ
+         Hd+8C2rSz7KXHo58E7IDPdaRgdASBs6521IVR33/lmyaABlR7wtdl6kZljTv8bRlQ2uj
+         Xi7WXWtcTqo2fd9uwNCTRPHru1YkVhaUaaIPSE7/LM4I+2rFyu3GgMiXVvhCJ80x3kiz
+         btaw==
+X-Gm-Message-State: APjAAAXJEi4l0rWzVE7DajqEBbLNWy4WG7O5chG1pJ73KkAdJLfwHphu
+        druYmCBqgHCkRsX/OF3/lW6nbw==
+X-Google-Smtp-Source: APXvYqxni0d0IpQ3C5LhoFMP8KugPrYvIiZzOObzryADbUA9JOAFOnDN7N8+/FUoEE6blY9Zai5/VA==
+X-Received: by 2002:a1c:9617:: with SMTP id y23mr1553386wmd.31.1556010307716;
+        Tue, 23 Apr 2019 02:05:07 -0700 (PDT)
+Received: from localhost.localdomain (aputeaux-684-1-25-101.w90-86.abo.wanadoo.fr. [90.86.250.101])
+        by smtp.gmail.com with ESMTPSA id v190sm15360434wme.18.2019.04.23.02.05.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 02:05:07 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v10 06/11] mfd: max77650: new core mfd driver
+Date:   Tue, 23 Apr 2019 11:04:46 +0200
+Message-Id: <20190423090451.23711-7-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190423090451.23711-1-brgl@bgdev.pl>
+References: <20190423090451.23711-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <85bcd381-ef27-ddda-6069-1f1d80cf296a@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 10:21:17AM +0800, 王贇 wrote:
-> numa balancer is a module which will try to automatically adjust numa
-> balancing stuff to gain numa bonus as much as possible.
-> 
-> For each memory cgroup, we process the work in two steps:
-> 
-> On stage 1 we check cgroup's exectime and memory topology to see
-> if there could be a candidate for settled down, if we got one then
-> move onto stage 2.
-> 
-> On stage 2 we try to settle down as much as possible by prefer the
-> candidate node, if the node no longer suitable or locality keep
-> downturn, we reset things and new round begin.
-> 
-> Decision made with find_candidate_nid(), should_prefer() and keep_prefer(),
-> which try to pick a candidate node, see if allowed to prefer it and if
-> keep doing the prefer.
-> 
-> Tested on the box with 96 cpus with sysbench-mysql-oltp_read_write
-> testing, 4 mysqld instances created and attached to 4 cgroups, 4
-> sysbench instances then created and attached to corresponding cgroup
-> to test the mysql with oltp_read_write script, average eps show:
-> 
-> 				origin		balancer
-> 4 instances each 12 threads	5241.08		5375.59		+2.50%
-> 4 instances each 24 threads	7497.29		7820.73		+4.13%
-> 4 instances each 36 threads	8985.44		9317.04		+3.55%
-> 4 instances each 48 threads	9716.50		9982.60		+2.66%
-> 
-> Other benchmark liks dbench, pgbench, perf bench numa also tested, and
-> with different parameters and number of instances/threads, most of
-> the cases show bonus, some show acceptable regression, and some got no
-> changes.
-> 
-> TODO:
->   * improve the logical to address the regression cases
->   * Find a way, maybe, to handle the page cache left on remote
->   * find more scenery which could gain benefit
-> 
-> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-> ---
->  drivers/Makefile             |   1 +
->  drivers/numa/Makefile        |   1 +
->  drivers/numa/numa_balancer.c | 715 +++++++++++++++++++++++++++++++++++++++++++
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-So I really think this is the wrong direction. Why introduce yet another
-balancer thingy and not extend the existing numa balancer with the
-additional information you got from the previous patches?
+Add the core mfd driver for max77650 PMIC. We define five sub-devices
+for which the drivers will be added in subsequent patches.
 
-Also, this really should not be a module and not in drivers/
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/mfd/Kconfig          |  14 +++
+ drivers/mfd/Makefile         |   1 +
+ drivers/mfd/max77650.c       | 232 +++++++++++++++++++++++++++++++++++
+ include/linux/mfd/max77650.h |  59 +++++++++
+ 4 files changed, 306 insertions(+)
+ create mode 100644 drivers/mfd/max77650.c
+ create mode 100644 include/linux/mfd/max77650.h
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 26ad6468d13a..0f394f08db6f 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -733,6 +733,20 @@ config MFD_MAX77620
+ 	  provides common support for accessing the device; additional drivers
+ 	  must be enabled in order to use the functionality of the device.
+ 
++config MFD_MAX77650
++	tristate "Maxim MAX77650/77651 PMIC Support"
++	depends on I2C
++	depends on OF || COMPILE_TEST
++	select MFD_CORE
++	select REGMAP_I2C
++	help
++	  Say Y here to add support for Maxim Semiconductor MAX77650 and
++	  MAX77651 Power Management ICs. This is the core multifunction
++	  driver for interacting with the device. The module name is
++	  'max77650'. Additional drivers can be enabled in order to use
++	  the following functionalities of the device: GPIO, regulator,
++	  charger, LED, onkey.
++
+ config MFD_MAX77686
+ 	tristate "Maxim Semiconductor MAX77686/802 PMIC Support"
+ 	depends on I2C
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index b4569ed7f3f3..5727d099c16f 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -155,6 +155,7 @@ obj-$(CONFIG_MFD_DA9150)	+= da9150-core.o
+ 
+ obj-$(CONFIG_MFD_MAX14577)	+= max14577.o
+ obj-$(CONFIG_MFD_MAX77620)	+= max77620.o
++obj-$(CONFIG_MFD_MAX77650)	+= max77650.o
+ obj-$(CONFIG_MFD_MAX77686)	+= max77686.o
+ obj-$(CONFIG_MFD_MAX77693)	+= max77693.o
+ obj-$(CONFIG_MFD_MAX77843)	+= max77843.o
+diff --git a/drivers/mfd/max77650.c b/drivers/mfd/max77650.c
+new file mode 100644
+index 000000000000..60e07aca6ae5
+--- /dev/null
++++ b/drivers/mfd/max77650.c
+@@ -0,0 +1,232 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (C) 2018 BayLibre SAS
++// Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
++//
++// Core MFD driver for MAXIM 77650/77651 charger/power-supply.
++// Programming manual: https://pdfserv.maximintegrated.com/en/an/AN6428.pdf
++
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/mfd/core.h>
++#include <linux/mfd/max77650.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
++
++#define MAX77650_INT_GPI_F_MSK		BIT(0)
++#define MAX77650_INT_GPI_R_MSK		BIT(1)
++#define MAX77650_INT_GPI_MSK \
++			(MAX77650_INT_GPI_F_MSK | MAX77650_INT_GPI_R_MSK)
++#define MAX77650_INT_nEN_F_MSK		BIT(2)
++#define MAX77650_INT_nEN_R_MSK		BIT(3)
++#define MAX77650_INT_TJAL1_R_MSK	BIT(4)
++#define MAX77650_INT_TJAL2_R_MSK	BIT(5)
++#define MAX77650_INT_DOD_R_MSK		BIT(6)
++
++#define MAX77650_INT_THM_MSK		BIT(0)
++#define MAX77650_INT_CHG_MSK		BIT(1)
++#define MAX77650_INT_CHGIN_MSK		BIT(2)
++#define MAX77650_INT_TJ_REG_MSK		BIT(3)
++#define MAX77650_INT_CHGIN_CTRL_MSK	BIT(4)
++#define MAX77650_INT_SYS_CTRL_MSK	BIT(5)
++#define MAX77650_INT_SYS_CNFG_MSK	BIT(6)
++
++#define MAX77650_INT_GLBL_OFFSET	0
++#define MAX77650_INT_CHG_OFFSET		1
++
++#define MAX77650_SBIA_LPM_MASK		BIT(5)
++#define MAX77650_SBIA_LPM_DISABLED	0x00
++
++enum {
++	MAX77650_INT_GPI,
++	MAX77650_INT_nEN_F,
++	MAX77650_INT_nEN_R,
++	MAX77650_INT_TJAL1_R,
++	MAX77650_INT_TJAL2_R,
++	MAX77650_INT_DOD_R,
++	MAX77650_INT_THM,
++	MAX77650_INT_CHG,
++	MAX77650_INT_CHGIN,
++	MAX77650_INT_TJ_REG,
++	MAX77650_INT_CHGIN_CTRL,
++	MAX77650_INT_SYS_CTRL,
++	MAX77650_INT_SYS_CNFG,
++};
++
++static const struct resource max77650_charger_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MAX77650_INT_CHG, "CHG"),
++	DEFINE_RES_IRQ_NAMED(MAX77650_INT_CHGIN, "CHGIN"),
++};
++
++static const struct resource max77650_gpio_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MAX77650_INT_GPI, "GPI"),
++};
++
++static const struct resource max77650_onkey_resources[] = {
++	DEFINE_RES_IRQ_NAMED(MAX77650_INT_nEN_F, "nEN_F"),
++	DEFINE_RES_IRQ_NAMED(MAX77650_INT_nEN_R, "nEN_R"),
++};
++
++static const struct mfd_cell max77650_cells[] = {
++	{
++		.name		= "max77650-regulator",
++		.of_compatible	= "maxim,max77650-regulator",
++	}, {
++		.name		= "max77650-charger",
++		.of_compatible	= "maxim,max77650-charger",
++		.resources	= max77650_charger_resources,
++		.num_resources	= ARRAY_SIZE(max77650_charger_resources),
++	}, {
++		.name		= "max77650-gpio",
++		.of_compatible	= "maxim,max77650-gpio",
++		.resources	= max77650_gpio_resources,
++		.num_resources	= ARRAY_SIZE(max77650_gpio_resources),
++	}, {
++		.name		= "max77650-led",
++		.of_compatible	= "maxim,max77650-led",
++	}, {
++		.name		= "max77650-onkey",
++		.of_compatible	= "maxim,max77650-onkey",
++		.resources	= max77650_onkey_resources,
++		.num_resources	= ARRAY_SIZE(max77650_onkey_resources),
++	},
++};
++
++static const struct regmap_irq max77650_irqs[] = {
++	[MAX77650_INT_GPI] = {
++		.reg_offset = MAX77650_INT_GLBL_OFFSET,
++		.mask = MAX77650_INT_GPI_MSK,
++		.type = {
++			.type_falling_val = MAX77650_INT_GPI_F_MSK,
++			.type_rising_val = MAX77650_INT_GPI_R_MSK,
++			.types_supported = IRQ_TYPE_EDGE_BOTH,
++		},
++	},
++	REGMAP_IRQ_REG(MAX77650_INT_nEN_F,
++		       MAX77650_INT_GLBL_OFFSET, MAX77650_INT_nEN_F_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_nEN_R,
++		       MAX77650_INT_GLBL_OFFSET, MAX77650_INT_nEN_R_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_TJAL1_R,
++		       MAX77650_INT_GLBL_OFFSET, MAX77650_INT_TJAL1_R_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_TJAL2_R,
++		       MAX77650_INT_GLBL_OFFSET, MAX77650_INT_TJAL2_R_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_DOD_R,
++		       MAX77650_INT_GLBL_OFFSET, MAX77650_INT_DOD_R_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_THM,
++		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_THM_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_CHG,
++		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_CHG_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_CHGIN,
++		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_CHGIN_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_TJ_REG,
++		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_TJ_REG_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_CHGIN_CTRL,
++		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_CHGIN_CTRL_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_SYS_CTRL,
++		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_SYS_CTRL_MSK),
++	REGMAP_IRQ_REG(MAX77650_INT_SYS_CNFG,
++		       MAX77650_INT_CHG_OFFSET, MAX77650_INT_SYS_CNFG_MSK),
++};
++
++static const struct regmap_irq_chip max77650_irq_chip = {
++	.name			= "max77650-irq",
++	.irqs			= max77650_irqs,
++	.num_irqs		= ARRAY_SIZE(max77650_irqs),
++	.num_regs		= 2,
++	.status_base		= MAX77650_REG_INT_GLBL,
++	.mask_base		= MAX77650_REG_INTM_GLBL,
++	.type_in_mask		= true,
++	.type_invert		= true,
++	.init_ack_masked	= true,
++	.clear_on_unmask	= true,
++};
++
++static const struct regmap_config max77650_regmap_config = {
++	.name		= "max77650",
++	.reg_bits	= 8,
++	.val_bits	= 8,
++};
++
++static int max77650_i2c_probe(struct i2c_client *i2c)
++{
++	struct regmap_irq_chip_data *irq_data;
++	struct device *dev = &i2c->dev;
++	struct irq_domain *domain;
++	struct regmap *map;
++	unsigned int val;
++	int rv, id;
++
++	map = devm_regmap_init_i2c(i2c, &max77650_regmap_config);
++	if (IS_ERR(map)) {
++		dev_err(dev, "Unable to initialise I2C Regmap\n");
++		return PTR_ERR(map);
++	}
++
++	rv = regmap_read(map, MAX77650_REG_CID, &val);
++	if (rv) {
++		dev_err(dev, "Unable to read Chip ID\n");
++		return rv;
++	}
++
++	id = MAX77650_CID_BITS(val);
++	switch (id) {
++	case MAX77650_CID_77650A:
++	case MAX77650_CID_77650C:
++	case MAX77650_CID_77651A:
++	case MAX77650_CID_77651B:
++		break;
++	default:
++		dev_err(dev, "Chip not supported - ID: 0x%02x\n", id);
++		return -ENODEV;
++	}
++
++	/*
++	 * This IC has a low-power mode which reduces the quiescent current
++	 * consumption to ~5.6uA but is only suitable for systems consuming
++	 * less than ~2mA. Since this is not likely the case even on
++	 * linux-based wearables - keep the chip in normal power mode.
++	 */
++	rv = regmap_update_bits(map,
++				MAX77650_REG_CNFG_GLBL,
++				MAX77650_SBIA_LPM_MASK,
++				MAX77650_SBIA_LPM_DISABLED);
++	if (rv) {
++		dev_err(dev, "Unable to change the power mode\n");
++		return rv;
++	}
++
++	rv = devm_regmap_add_irq_chip(dev, map, i2c->irq,
++				      IRQF_ONESHOT | IRQF_SHARED, 0,
++				      &max77650_irq_chip, &irq_data);
++	if (rv) {
++		dev_err(dev, "Unable to add Regmap IRQ chip\n");
++		return rv;
++	}
++
++	domain = regmap_irq_get_domain(irq_data);
++
++	return devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
++				    max77650_cells, ARRAY_SIZE(max77650_cells),
++				    NULL, 0, domain);
++}
++
++static const struct of_device_id max77650_of_match[] = {
++	{ .compatible = "maxim,max77650" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, max77650_of_match);
++
++static struct i2c_driver max77650_i2c_driver = {
++	.driver = {
++		.name = "max77650",
++		.of_match_table = of_match_ptr(max77650_of_match),
++	},
++	.probe_new = max77650_i2c_probe,
++};
++module_i2c_driver(max77650_i2c_driver);
++
++MODULE_DESCRIPTION("MAXIM 77650/77651 multi-function core driver");
++MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/mfd/max77650.h b/include/linux/mfd/max77650.h
+new file mode 100644
+index 000000000000..c809e211a8cd
+--- /dev/null
++++ b/include/linux/mfd/max77650.h
+@@ -0,0 +1,59 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2018 BayLibre SAS
++ * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
++ *
++ * Common definitions for MAXIM 77650/77651 charger/power-supply.
++ */
++
++#ifndef MAX77650_H
++#define MAX77650_H
++
++#include <linux/bits.h>
++
++#define MAX77650_REG_INT_GLBL		0x00
++#define MAX77650_REG_INT_CHG		0x01
++#define MAX77650_REG_STAT_CHG_A		0x02
++#define MAX77650_REG_STAT_CHG_B		0x03
++#define MAX77650_REG_ERCFLAG		0x04
++#define MAX77650_REG_STAT_GLBL		0x05
++#define MAX77650_REG_INTM_GLBL		0x06
++#define MAX77650_REG_INTM_CHG		0x07
++#define MAX77650_REG_CNFG_GLBL		0x10
++#define MAX77650_REG_CID		0x11
++#define MAX77650_REG_CNFG_GPIO		0x12
++#define MAX77650_REG_CNFG_CHG_A		0x18
++#define MAX77650_REG_CNFG_CHG_B		0x19
++#define MAX77650_REG_CNFG_CHG_C		0x1a
++#define MAX77650_REG_CNFG_CHG_D		0x1b
++#define MAX77650_REG_CNFG_CHG_E		0x1c
++#define MAX77650_REG_CNFG_CHG_F		0x1d
++#define MAX77650_REG_CNFG_CHG_G		0x1e
++#define MAX77650_REG_CNFG_CHG_H		0x1f
++#define MAX77650_REG_CNFG_CHG_I		0x20
++#define MAX77650_REG_CNFG_SBB_TOP	0x28
++#define MAX77650_REG_CNFG_SBB0_A	0x29
++#define MAX77650_REG_CNFG_SBB0_B	0x2a
++#define MAX77650_REG_CNFG_SBB1_A	0x2b
++#define MAX77650_REG_CNFG_SBB1_B	0x2c
++#define MAX77650_REG_CNFG_SBB2_A	0x2d
++#define MAX77650_REG_CNFG_SBB2_B	0x2e
++#define MAX77650_REG_CNFG_LDO_A		0x38
++#define MAX77650_REG_CNFG_LDO_B		0x39
++#define MAX77650_REG_CNFG_LED0_A	0x40
++#define MAX77650_REG_CNFG_LED1_A	0x41
++#define MAX77650_REG_CNFG_LED2_A	0x42
++#define MAX77650_REG_CNFG_LED0_B	0x43
++#define MAX77650_REG_CNFG_LED1_B	0x44
++#define MAX77650_REG_CNFG_LED2_B	0x45
++#define MAX77650_REG_CNFG_LED_TOP	0x46
++
++#define MAX77650_CID_MASK		GENMASK(3, 0)
++#define MAX77650_CID_BITS(_reg)		(_reg & MAX77650_CID_MASK)
++
++#define MAX77650_CID_77650A		0x03
++#define MAX77650_CID_77650C		0x0a
++#define MAX77650_CID_77651A		0x06
++#define MAX77650_CID_77651B		0x08
++
++#endif /* MAX77650_H */
+-- 
+2.21.0
+
