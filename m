@@ -2,91 +2,104 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355FAC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84599C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02318218C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553332054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbfDWPde (ORCPT
+        id S1728418AbfDWPeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:33:34 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36247 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfDWPde (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:33:34 -0400
-Received: by mail-qt1-f194.google.com with SMTP id c35so1832734qtk.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:33:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4BuzlWQrxLZpTYCGJcSfL6Vp4hYT19NXirRLq9fqWJo=;
-        b=UGYY0oo4nUwT8KT3gThE7cGONBg2faAjavEPglxyVT76UGTMbRZ0QH6Z9ykFQjZJev
-         eNbRE2Wi6zQ/GJI6Jzx6J/7ux7c5Gt/USJkGVxefHQGdeSAZE5D+GWkeLuz/kz2fqr1N
-         ezskUe0vkHaqsXyVnCk+lcA6RIYwcfmMlu9KwRuP128hK+NRcn23Oa3SeZJUfU+pApJD
-         UoaJ+rglkMt3StGvuqfFV/eeWwSgQxoAwjN1xbqar3Vw6Y9hnLAohZ3yMU0BS2vudLec
-         Z5fp5TVbtz10xJBt9PO5wGGyR6yocu4tvMCbUwekHiSyI5FyIyk+ivGRJSPQerdNJrC7
-         GSQw==
-X-Gm-Message-State: APjAAAVJjRYF9anc5g0ManF/d5K8Zq5m1hUsuin/QxaUpAhOi9fUXhv2
-        n5yIZZ4LnekopZ4IMYnLoOzZHvVVbbs+hxk6Q9ZRUi82
-X-Google-Smtp-Source: APXvYqxMNOy3fwZLIdb2ZFoJ2ESm8z9WDh1g9vv9A3uS0dgJ2E3XlXf/epyqTzjBZNRdHYY7aXsSjknpUhUcf7vHkGM=
-X-Received: by 2002:ac8:2692:: with SMTP id 18mr21038724qto.343.1556033613451;
- Tue, 23 Apr 2019 08:33:33 -0700 (PDT)
+        Tue, 23 Apr 2019 11:34:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47836 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727656AbfDWPeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 11:34:13 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 759C03086239;
+        Tue, 23 Apr 2019 15:34:13 +0000 (UTC)
+Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 72EA71001E80;
+        Tue, 23 Apr 2019 15:34:11 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 09:34:08 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Alex G <mr.nuke.me@gmail.com>
+Cc:     bhelgaas@google.com, helgaas@kernel.org, linux-pci@vger.kernel.org,
+        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/LINK: Account for BW notification in vector
+ calculation
+Message-ID: <20190423093408.16b07efc@x1.home>
+In-Reply-To: <84300da7-9bbd-4f32-c7fa-23724db60b88@gmail.com>
+References: <155597243666.19387.1205950870601742062.stgit@gimli.home>
+        <d1126250-14e0-192c-f219-f143f62c9cdd@gmail.com>
+        <20190422183347.51ba522c@x1.home>
+        <84300da7-9bbd-4f32-c7fa-23724db60b88@gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20190422173838.182736-1-venture@google.com> <CAK8P3a0k_8+R9FeyZsL6Egvi1Z-G0VrvR0TWXzGHryqxTr6thg@mail.gmail.com>
- <CAO=notxuYsBzWBnNran5jH0RujSBeti6-HsjasCRP6Sq0MwGNA@mail.gmail.com>
-In-Reply-To: <CAO=notxuYsBzWBnNran5jH0RujSBeti6-HsjasCRP6Sq0MwGNA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 23 Apr 2019 17:33:15 +0200
-Message-ID: <CAK8P3a24h=0JLZnZWOmzRqM70uhw3QZ_HcYDXST7F6TgSuW6YA@mail.gmail.com>
-Subject: Re: [PATCH] soc: add aspeed folder and misc drivers
-To:     Patrick Venture <venture@google.com>
-Cc:     gregkh <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 23 Apr 2019 15:34:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 4:24 PM Patrick Venture <venture@google.com> wrote:
->
-> On Tue, Apr 23, 2019 at 1:08 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Mon, Apr 22, 2019 at 7:38 PM Patrick Venture <venture@google.com> wrote:
-> > >
-> > > Create a SoC folder for the ASPEED parts and place the misc drivers
-> > > currently present into this folder.  These drivers are not generic part
-> > > drivers, but rather only apply to the ASPEED SoCs.
-> > >
-> > > Signed-off-by: Patrick Venture <venture@google.com>
-> >
-> > Looks ok, but please resend to arm@kernel.org or soc@kernel.org
-> > so we can track the submission and make sure it gets applied if
-> > you want this to go through the arm-soc tree.
->
-> Thanks, I didn't see those come up in the get_maintainers output.
->
-> I had a longer question related to this patch progression -- if I am
-> moving the aspeed gpio driver to the soc folder, the soc tree may have
-> the soc/aspeed folder in their next, but the gpio tree wouldn't
-> necessarily.  I know the branches sync up when things are merged at
-> the top, but I wasn't sure if there was another mechanism for this?
+On Tue, 23 Apr 2019 09:33:53 -0500
+Alex G <mr.nuke.me@gmail.com> wrote:
 
-We can generally deal with merge conflicts like this, or you can ask
-the respective maintainers about it and let us figure something out.
+> On 4/22/19 7:33 PM, Alex Williamson wrote:
+> > On Mon, 22 Apr 2019 19:05:57 -0500
+> > Alex G <mr.nuke.me@gmail.com> wrote:  
+> >> echo 0000:07:00.0:pcie010 |
+> >> sudo tee /sys/bus/pci_express/drivers/pcie_bw_notification/unbind  
+> > 
+> > That's a bad solution for users, this is meaningless tracking of a
+> > device whose driver is actively managing the link bandwidth for power
+> > purposes.   
+> 
+> 0.5W savings on a 100+W GPU? I agree it's meaningless.
 
-In this particular case, why would you move the gpio driver into
-the soc folder? If there is a proper subsystem for a driver, it should
-not be in drivers/misc or drivers/soc.
+Evidence?  Regardless, I don't have control of the driver that's making
+these changes, but the claim seems unfounded and irrelevant.
+ 
+> > There is nothing wrong happening here that needs to fill
+> > logs.  I thought maybe if I enabled notification of autonomous
+> > bandwidth changes that it might categorize these as something we could
+> > ignore, but it doesn't.
+> > How can we identify only cases where this is
+> > an erroneous/noteworthy situation?  Thanks,  
+> 
+> You don't. Ethernet doesn't. USB doesn't. This logging behavior is 
+> consistent with every other subsystem that deals with multi-speed links. 
+> I realize some people are very resistant to change (and use very ancient 
+> kernels). I do not, however, agree that this is a sufficient argument to 
+> dis-unify behavior.
 
-       Arnd
+Sorry, I don't see how any of this is relevant either.  Clearly I'm
+using a recent kernel or I wouldn't be seeing this new bandwidth
+notification driver.  I'm assigning a device to a VM whose driver is
+power managing the device via link speed changes.  The result is that
+we now see irrelevant spam in the host dmesg for every inconsequential
+link downgrade directed by the device.  I can see why we might want to
+be notified of degraded links due to signal issues, but what I'm
+reporting is that there are also entirely normal and benign reasons
+that a link might be reduced, we can't seem to tell the difference
+between a fault and this normal dynamic scaling, and the assumption of
+a fault is spamming dmesg.  So, I don't think what we have here is well
+cooked.  Do drivers have a mechanism to opt-out of this error
+reporting?  Can drivers register an anticipated link change to avoid
+the spam?  What instructions can we *reasonably* give to users as to
+when these messages mean something, when they don't, any how they can
+be turned off?  Thanks,
+
+Alex
