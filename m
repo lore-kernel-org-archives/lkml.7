@@ -2,133 +2,108 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07023C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5355AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C3D218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E3120811
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbfDXMaN (ORCPT
+        id S1730147AbfDXMa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:30:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44092 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730114AbfDXMaM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:30:12 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OCTdP6125006
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:30:11 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s2mwy10kt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:30:11 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Wed, 24 Apr 2019 13:30:09 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 24 Apr 2019 13:30:05 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3OCU4Vl50397410
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 12:30:04 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA8F1AE051;
-        Wed, 24 Apr 2019 12:30:03 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B439AE058;
-        Wed, 24 Apr 2019 12:30:03 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 24 Apr 2019 12:30:03 +0000 (GMT)
-Date:   Wed, 24 Apr 2019 14:30:02 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v2 31/79] docs: s390: convert docs to ReST and rename to
- *.rst
-References: <cover.1555938375.git.mchehab+samsung@kernel.org>
- <fb86b676b3b426732f1f11378868a9bd3b580b46.1555938376.git.mchehab+samsung@kernel.org>
- <20190424134109.2891a7cc.cohuck@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424134109.2891a7cc.cohuck@redhat.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19042412-0012-0000-0000-000003130BC3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042412-0013-0000-0000-0000214B6108
-Message-Id: <20190424123001.GB3990@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904240100
+        Wed, 24 Apr 2019 08:30:57 -0400
+Received: from mga09.intel.com ([134.134.136.24]:50551 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729498AbfDXMa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 08:30:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 05:30:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,389,1549958400"; 
+   d="scan'208";a="167475632"
+Received: from yiliu-dev.bj.intel.com ([10.238.156.125])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Apr 2019 05:30:53 -0700
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, kwankhede@nvidia.com
+Cc:     kevin.tian@intel.com, baolu.lu@linux.intel.com, yi.l.liu@intel.com,
+        yi.y.sun@intel.com, joro@8bytes.org, jean-philippe.brucker@arm.com,
+        peterx@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, yamada.masahiro@socionext.com,
+        iommu@lists.linux-foundation.org
+Subject: [RFC v3 0/3] vfio_pci: wrap pci device as a mediated device
+Date:   Tue, 23 Apr 2019 20:14:37 +0800
+Message-Id: <1556021680-2911-1-git-send-email-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 01:41:09PM +0200, Cornelia Huck wrote:
-> > diff --git a/Documentation/s390/Debugging390.txt b/Documentation/s390/debugging390.rst
-> > similarity index 53%
-> > rename from Documentation/s390/Debugging390.txt
-> > rename to Documentation/s390/debugging390.rst
-> > index c35804c238ad..d49305fd5e1a 100644
-> > --- a/Documentation/s390/Debugging390.txt
-> > +++ b/Documentation/s390/debugging390.rst
-> 
-> I'll skip this one...
-> 
-> (Question for the s390 arch maintainers: I remember that there was some
-> interesting stuff in there, but I'm not sure how much of it is still
-> accurate/useful... is it worth spending time on trying to update this?)
-> 
-> > diff --git a/Documentation/s390/text_files.rst b/Documentation/s390/text_files.rst
-> > new file mode 100644
-> > index 000000000000..c94d05d4fa17
-> > --- /dev/null
-> > +++ b/Documentation/s390/text_files.rst
-> > @@ -0,0 +1,11 @@
-> > +ibm 3270 changelog
-> > +------------------
-> > +
-> > +.. include:: 3270.ChangeLog
-> > +    :literal:
-> > +
-> > +ibm 3270 config3270.sh
-> > +----------------------
-> > +
-> > +.. literalinclude:: config3270.sh
-> > +    :language: shell
-> 
-> 
-> Another question for the s390 arch maintainers: How valuable is this still?
+This patchset aims to add a vfio-pci-like meta driver as a demo
+user of the vfio changes introduced in "vfio/mdev: IOMMU aware
+mediated device" patchset from Baolu Lu.
 
-...to be honest I consider 80% within Documentation/s390 to be
-completely outdated, partially wrong, or irrelevant in the meantime;
-the vfio stuff seems to be pretty much up-to-date, and I like the
-parts that move comments to code.
+Previous RFC v1 has given two proposals and the discussion could
+be found in following link. Per the comments, this patchset adds
+a separate driver named vfio-mdev-pci. It is a sample driver, but
+loactes in drivers/vfio/pci due to code sharing consideration.
+The corresponding Kconfig definition is in samples/Kconfig.
 
-Cleaning this up can be done at a later time. I don't want to make
-Mauro spend more time than necessary on this.
+https://lkml.org/lkml/2019/3/4/529
+
+Besides the test purpose, per Alex's comments, it could also be a
+good base driver for experimenting with device specific mdev migration.
+
+Specific interface tested in this proposal:
+
+*) int mdev_set_iommu_device(struct device *dev,
+				struct device *iommu_device)
+   introduced in the patch as below:
+   "[PATCH v5 6/8] vfio/mdev: Add iommu related member in mdev_device"
+
+
+Links:
+*) Link of "vfio/mdev: IOMMU aware mediated device"
+	https://lwn.net/Articles/780522/
+
+Please feel free give your comments.
+
+Thanks,
+Yi Liu
+
+Change log:
+  v2->v3:
+  - use vfio-mdev-pci instead of vfio-pci-mdev
+  - place the new driver under drivers/vfio/pci while define
+    Kconfig in samples/Kconfig to clarify it is a sample driver
+
+  v1->v2:
+  - instead of adding kernel option to existing vfio-pci
+    module in v1, v2 follows Alex's suggestion to add a
+    separate vfio-pci-mdev module.
+  - new patchset subject: "vfio/pci: wrap pci device as a mediated device"
+
+Liu, Yi L (3):
+  vfio_pci: split vfio_pci.c into two source files
+  vfio/pci: protect cap/ecap_perm bits alloc/free with atomic op
+  smaples: add vfio-mdev-pci driver
+
+ drivers/vfio/pci/Makefile           |    7 +-
+ drivers/vfio/pci/common.c           | 1511 +++++++++++++++++++++++++++++++++++
+ drivers/vfio/pci/vfio_mdev_pci.c    |  386 +++++++++
+ drivers/vfio/pci/vfio_pci.c         | 1476 +---------------------------------
+ drivers/vfio/pci/vfio_pci_config.c  |    9 +
+ drivers/vfio/pci/vfio_pci_private.h |   27 +
+ samples/Kconfig                     |   11 +
+ 7 files changed, 1962 insertions(+), 1465 deletions(-)
+ create mode 100644 drivers/vfio/pci/common.c
+ create mode 100644 drivers/vfio/pci/vfio_mdev_pci.c
+
+-- 
+2.7.4
 
