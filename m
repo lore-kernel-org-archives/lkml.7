@@ -2,52 +2,52 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B43C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1139BC282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB52B206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2947206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:09:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HlUjPFfr"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fSZJG3up"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfDWNJY (ORCPT
+        id S1727843AbfDWNJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:09:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58083 "EHLO
+        Tue, 23 Apr 2019 09:09:25 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58086 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfDWNJX (ORCPT
+        with ESMTP id S1727458AbfDWNJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:09:23 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9EMr066362;
-        Tue, 23 Apr 2019 08:09:14 -0500
+        Tue, 23 Apr 2019 09:09:24 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9H64066380;
+        Tue, 23 Apr 2019 08:09:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556024954;
-        bh=FVag6HaJaRPss95VUGkhA6b1mit9KZpIF7hIS0002pQ=;
-        h=From:To:CC:Subject:Date;
-        b=HlUjPFfraRS+BVHJ6IMDmMzSnMv7TvcHCtpTibYbuCc4REB7zvG2KwOONuJkWLdQU
-         BlWNWHDumMtOvsEASRfRC3WqDlfdC7MDFXDOKqOwmS7MHcna4CD37IVG/F5ZEzFAy+
-         FztWf/Fkz6KynBIJDB/gKtmPdpwlXfbEf+ApYFyg=
+        s=ti-com-17Q1; t=1556024957;
+        bh=RZpK4r4tMtcaK9B3fLOobijRLwasK0ESgE2/q0ZKUUY=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=fSZJG3upM7Ig5EFen+uTCbZE9ZC8CuZUVVseJibrA30FSrOFqpU900KNhZ6hO7wbD
+         +vaNNJOgVWCbO2lZRYJLyoaidSPzPfgQkD4VodlwLZMDVE709cV4wPnAtf9IrHSAWk
+         KJ55pZbA1VXWip1KMg5srv3Z63U8gFzianF5jx0g=
 Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3ND9EmQ096444
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3ND9Hrw067110
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Apr 2019 08:09:14 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+        Tue, 23 Apr 2019 08:09:17 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
  (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
- Apr 2019 08:09:13 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 08:09:17 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 23 Apr 2019 08:09:13 -0500
+ Frontend Transport; Tue, 23 Apr 2019 08:09:17 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9DLo018610;
-        Tue, 23 Apr 2019 08:09:13 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3ND9GhT125938;
+        Tue, 23 Apr 2019 08:09:16 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     <netdev@vger.kernel.org>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
@@ -58,10 +58,12 @@ CC:     Florian Fainelli <f.fainelli@gmail.com>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         Murali Karicheri <m-karicheri2@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 00/19] net: ethernet: ti: clean up and optimizations
-Date:   Tue, 23 Apr 2019 16:08:51 +0300
-Message-ID: <1556024950-20752-1-git-send-email-grygorii.strashko@ti.com>
+Subject: [PATCH net-next 02/19] net: ethernet: ti: cpsw: drop TI_DAVINCI_CPDMA config option
+Date:   Tue, 23 Apr 2019 16:08:53 +0300
+Message-ID: <1556024950-20752-3-git-send-email-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1556024950-20752-1-git-send-email-grygorii.strashko@ti.com>
+References: <1556024950-20752-1-git-send-email-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -70,91 +72,278 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Both drivers CPSW and EMAC can't work without CPDMA, hence simplify build
+of those drivers by always linking davinci_cpdma and drop TI_DAVINCI_CPDMA
+config option.
+Note. the davinci_emac driver module was changed to "ti_davinci_emac" to
+make build work.
 
-This is a preparation series for introducing new switchbase TI CPSW driver which
-was originally introduced [1][2] by Ilias Apalodimas <ilias.apalodimas@linaro.org> 
-and also discussed in private mails and at Netdev x13 confernce.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/Kconfig         | 12 ------------
+ drivers/net/ethernet/ti/Makefile        |  6 +++---
+ drivers/net/ethernet/ti/davinci_cpdma.c | 26 -------------------------
+ 3 files changed, 3 insertions(+), 41 deletions(-)
 
-Following discussions and suggestions (mostly by Andrew and Ivan) we going
-to introduce the new driver which is operating in dual-emac mode
-by default, thus working as 2 individual network interfaces.
-When both interfaces joined the bridge - CPSW driver will enter a switch
-mode and discard dual_mac configuration. The CPSW will be switched back
-to dual_mac mode if any port leaves the bridge. All configuration is going to be
-implemented via switchdev API.
-
-Hence overall change is already very big I'm sending prerequisite patches which
-are mostly minor fixes/clean ups and code refactoring to separate common parts
-to be reused by both drivers.
-Probably the most serious change from functional point of view is Patch 11.
-
-These patches were NFS boot tetested on TI AM335x/AM437x/AM5xx boards.
-
-These patches can be found at:
- git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
- branch: lkml-5.1-cpsw-clean-up
-
-Functional new cpsw_switch driver (still fighting with few issues) can be found:
- git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
- branch: lkml-5.1-switch-tbd
-
-[1] https://patchwork.ozlabs.org/cover/929367/
-[2] https://patches.linaro.org/cover/136709/
-
-Grygorii Strashko (19):
-  net: ethernet: ti: convert to SPDX license identifiers
-  net: ethernet: ti: cpsw: drop TI_DAVINCI_CPDMA config option
-  net: ethernet: ti: cpsw: drop CONFIG_TI_CPSW_ALE config option
-  net: ethernet: ti: cpsw: update cpsw_split_res() to accept cpsw_common
-  net: ethernet: ti: cpsw: use local var dev in probe
-  net: ethernet: ti: cpsw: drop pinctrl_pm_select_default_state call
-  net: ethernet: ti: cpsw: use devm_alloc_etherdev_mqs()
-  net: ethernet: ti: cpsw: drop cpsw_tx_packet_submit()
-  net: ethernet: ti: ale: fix mcast super setting
-  net: ethernet: ti: ale: use define for host port in cpsw_ale_set_allmulti()
-  net: ethernet: ti: cpsw: fix allmulti cfg in dual_mac mode
-  net: ethernet: ti: ale: do not auto delete mcast super entries
-  net: ethernet: ti: davinci_mdio: use devm_ioremap()
-  net: ethernet: ti: cpsw: refactor probe to group common hw initialization
-  net: ethernet: ti: cpsw: move cpsw definitions in priv header
-  net: ethernet: ti: cpsw: move common hw init code in separate func
-  net: ethernet: ti: cpsw: introduce mac sl module api
-  net: ethernet: ti: cpsw: switch to use mac sl api
-  net: ethernet: ti: cpsw: move ethtool func in separate file
-
- drivers/net/ethernet/ti/Kconfig          |   19 -
- drivers/net/ethernet/ti/Makefile         |    9 +-
- drivers/net/ethernet/ti/cpmac.c          |   14 +-
- drivers/net/ethernet/ti/cpsw-common.c    |   12 +-
- drivers/net/ethernet/ti/cpsw-phy-sel.c   |    9 +-
- drivers/net/ethernet/ti/cpsw.c           | 1544 +++-------------------
- drivers/net/ethernet/ti/cpsw.h           |    9 +-
- drivers/net/ethernet/ti/cpsw_ale.c       |   44 +-
- drivers/net/ethernet/ti/cpsw_ale.h       |   11 +-
- drivers/net/ethernet/ti/cpsw_ethtool.c   |  719 ++++++++++
- drivers/net/ethernet/ti/cpsw_priv.c      |  131 ++
- drivers/net/ethernet/ti/cpsw_priv.h      |  441 ++++++
- drivers/net/ethernet/ti/cpsw_sl.c        |  327 +++++
- drivers/net/ethernet/ti/cpsw_sl.h        |   73 +
- drivers/net/ethernet/ti/cpts.c           |   14 +-
- drivers/net/ethernet/ti/cpts.h           |   14 +-
- drivers/net/ethernet/ti/davinci_cpdma.c  |   35 +-
- drivers/net/ethernet/ti/davinci_cpdma.h  |    9 +-
- drivers/net/ethernet/ti/davinci_emac.c   |   16 +-
- drivers/net/ethernet/ti/davinci_mdio.c   |   19 +-
- drivers/net/ethernet/ti/netcp.h          |   10 +-
- drivers/net/ethernet/ti/netcp_core.c     |   10 +-
- drivers/net/ethernet/ti/netcp_ethss.c    |   10 +-
- drivers/net/ethernet/ti/netcp_sgmii.c    |    9 +-
- drivers/net/ethernet/ti/netcp_xgbepcsr.c |    9 +-
- 25 files changed, 1878 insertions(+), 1639 deletions(-)
- create mode 100644 drivers/net/ethernet/ti/cpsw_ethtool.c
- create mode 100644 drivers/net/ethernet/ti/cpsw_priv.c
- create mode 100644 drivers/net/ethernet/ti/cpsw_priv.h
- create mode 100644 drivers/net/ethernet/ti/cpsw_sl.c
- create mode 100644 drivers/net/ethernet/ti/cpsw_sl.h
-
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 8b21b40a9fe5..46f253aadcdd 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -20,7 +20,6 @@ config TI_DAVINCI_EMAC
+ 	tristate "TI DaVinci EMAC Support"
+ 	depends on ARM && ( ARCH_DAVINCI || ARCH_OMAP3 ) || COMPILE_TEST
+ 	select TI_DAVINCI_MDIO
+-	select TI_DAVINCI_CPDMA
+ 	select PHYLIB
+ 	---help---
+ 	  This driver supports TI's DaVinci Ethernet .
+@@ -38,16 +37,6 @@ config TI_DAVINCI_MDIO
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called davinci_mdio.  This is recommended.
+ 
+-config TI_DAVINCI_CPDMA
+-	tristate "TI DaVinci CPDMA Support"
+-	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
+-	select GENERIC_ALLOCATOR
+-	---help---
+-	  This driver supports TI's DaVinci CPDMA dma engine.
+-
+-	  To compile this driver as a module, choose M here: the module
+-	  will be called davinci_cpdma.  This is recommended.
+-
+ config TI_CPSW_PHY_SEL
+ 	bool "TI CPSW Phy mode Selection (DEPRECATED)"
+ 	default n
+@@ -63,7 +52,6 @@ config TI_CPSW_ALE
+ config TI_CPSW
+ 	tristate "TI CPSW Switch Support"
+ 	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
+-	select TI_DAVINCI_CPDMA
+ 	select TI_DAVINCI_MDIO
+ 	select TI_CPSW_ALE
+ 	select MFD_SYSCON
+diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+index 0be551de821c..a763e1b27304 100644
+--- a/drivers/net/ethernet/ti/Makefile
++++ b/drivers/net/ethernet/ti/Makefile
+@@ -8,14 +8,14 @@ obj-$(CONFIG_TI_DAVINCI_EMAC) += cpsw-common.o
+ 
+ obj-$(CONFIG_TLAN) += tlan.o
+ obj-$(CONFIG_CPMAC) += cpmac.o
+-obj-$(CONFIG_TI_DAVINCI_EMAC) += davinci_emac.o
++obj-$(CONFIG_TI_DAVINCI_EMAC) += ti_davinci_emac.o
++ti_davinci_emac-y := davinci_emac.o davinci_cpdma.o
+ obj-$(CONFIG_TI_DAVINCI_MDIO) += davinci_mdio.o
+-obj-$(CONFIG_TI_DAVINCI_CPDMA) += davinci_cpdma.o
+ obj-$(CONFIG_TI_CPSW_PHY_SEL) += cpsw-phy-sel.o
+ obj-$(CONFIG_TI_CPSW_ALE) += cpsw_ale.o
+ obj-$(CONFIG_TI_CPTS_MOD) += cpts.o
+ obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
+-ti_cpsw-y := cpsw.o
++ti_cpsw-y := cpsw.o davinci_cpdma.o
+ 
+ obj-$(CONFIG_TI_KEYSTONE_NETCP) += keystone_netcp.o
+ keystone_netcp-y := netcp_core.o
+diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
+index 41203714eda4..d43c32968ee9 100644
+--- a/drivers/net/ethernet/ti/davinci_cpdma.c
++++ b/drivers/net/ethernet/ti/davinci_cpdma.c
+@@ -520,7 +520,6 @@ struct cpdma_ctlr *cpdma_ctlr_create(struct cpdma_params *params)
+ 		ctlr->num_chan = CPDMA_MAX_CHANNELS;
+ 	return ctlr;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_create);
+ 
+ int cpdma_ctlr_start(struct cpdma_ctlr *ctlr)
+ {
+@@ -581,7 +580,6 @@ int cpdma_ctlr_start(struct cpdma_ctlr *ctlr)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_start);
+ 
+ int cpdma_ctlr_stop(struct cpdma_ctlr *ctlr)
+ {
+@@ -614,7 +612,6 @@ int cpdma_ctlr_stop(struct cpdma_ctlr *ctlr)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_stop);
+ 
+ int cpdma_ctlr_destroy(struct cpdma_ctlr *ctlr)
+ {
+@@ -632,7 +629,6 @@ int cpdma_ctlr_destroy(struct cpdma_ctlr *ctlr)
+ 	cpdma_desc_pool_destroy(ctlr);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_destroy);
+ 
+ int cpdma_ctlr_int_ctrl(struct cpdma_ctlr *ctlr, bool enable)
+ {
+@@ -653,25 +649,21 @@ int cpdma_ctlr_int_ctrl(struct cpdma_ctlr *ctlr, bool enable)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_int_ctrl);
+ 
+ void cpdma_ctlr_eoi(struct cpdma_ctlr *ctlr, u32 value)
+ {
+ 	dma_reg_write(ctlr, CPDMA_MACEOIVECTOR, value);
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctlr_eoi);
+ 
+ u32 cpdma_ctrl_rxchs_state(struct cpdma_ctlr *ctlr)
+ {
+ 	return dma_reg_read(ctlr, CPDMA_RXINTSTATMASKED);
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctrl_rxchs_state);
+ 
+ u32 cpdma_ctrl_txchs_state(struct cpdma_ctlr *ctlr)
+ {
+ 	return dma_reg_read(ctlr, CPDMA_TXINTSTATMASKED);
+ }
+-EXPORT_SYMBOL_GPL(cpdma_ctrl_txchs_state);
+ 
+ static void cpdma_chan_set_descs(struct cpdma_ctlr *ctlr,
+ 				 int rx, int desc_num,
+@@ -767,7 +759,6 @@ int cpdma_chan_split_pool(struct cpdma_ctlr *ctlr)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_split_pool);
+ 
+ 
+ /* cpdma_chan_set_weight - set weight of a channel in percentage.
+@@ -800,7 +791,6 @@ int cpdma_chan_set_weight(struct cpdma_chan *ch, int weight)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_set_weight);
+ 
+ /* cpdma_chan_get_min_rate - get minimum allowed rate for channel
+  * Should be called before cpdma_chan_set_rate.
+@@ -815,7 +805,6 @@ u32 cpdma_chan_get_min_rate(struct cpdma_ctlr *ctlr)
+ 
+ 	return DIV_ROUND_UP(divident, divisor);
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_get_min_rate);
+ 
+ /* cpdma_chan_set_rate - limits bandwidth for transmit channel.
+  * The bandwidth * limited channels have to be in order beginning from lowest.
+@@ -860,7 +849,6 @@ int cpdma_chan_set_rate(struct cpdma_chan *ch, u32 rate)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_set_rate);
+ 
+ u32 cpdma_chan_get_rate(struct cpdma_chan *ch)
+ {
+@@ -873,7 +861,6 @@ u32 cpdma_chan_get_rate(struct cpdma_chan *ch)
+ 
+ 	return rate;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_get_rate);
+ 
+ struct cpdma_chan *cpdma_chan_create(struct cpdma_ctlr *ctlr, int chan_num,
+ 				     cpdma_handler_fn handler, int rx_type)
+@@ -933,7 +920,6 @@ struct cpdma_chan *cpdma_chan_create(struct cpdma_ctlr *ctlr, int chan_num,
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return chan;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_create);
+ 
+ int cpdma_chan_get_rx_buf_num(struct cpdma_chan *chan)
+ {
+@@ -946,7 +932,6 @@ int cpdma_chan_get_rx_buf_num(struct cpdma_chan *chan)
+ 
+ 	return desc_num;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_get_rx_buf_num);
+ 
+ int cpdma_chan_destroy(struct cpdma_chan *chan)
+ {
+@@ -968,7 +953,6 @@ int cpdma_chan_destroy(struct cpdma_chan *chan)
+ 	spin_unlock_irqrestore(&ctlr->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_destroy);
+ 
+ int cpdma_chan_get_stats(struct cpdma_chan *chan,
+ 			 struct cpdma_chan_stats *stats)
+@@ -981,7 +965,6 @@ int cpdma_chan_get_stats(struct cpdma_chan *chan,
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_get_stats);
+ 
+ static void __cpdma_chan_submit(struct cpdma_chan *chan,
+ 				struct cpdma_desc __iomem *desc)
+@@ -1088,7 +1071,6 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_submit);
+ 
+ bool cpdma_check_free_tx_desc(struct cpdma_chan *chan)
+ {
+@@ -1103,7 +1085,6 @@ bool cpdma_check_free_tx_desc(struct cpdma_chan *chan)
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 	return free_tx_desc;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_check_free_tx_desc);
+ 
+ static void __cpdma_chan_free(struct cpdma_chan *chan,
+ 			      struct cpdma_desc __iomem *desc,
+@@ -1197,7 +1178,6 @@ int cpdma_chan_process(struct cpdma_chan *chan, int quota)
+ 	}
+ 	return used;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_process);
+ 
+ int cpdma_chan_start(struct cpdma_chan *chan)
+ {
+@@ -1217,7 +1197,6 @@ int cpdma_chan_start(struct cpdma_chan *chan)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_start);
+ 
+ int cpdma_chan_stop(struct cpdma_chan *chan)
+ {
+@@ -1280,7 +1259,6 @@ int cpdma_chan_stop(struct cpdma_chan *chan)
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_chan_stop);
+ 
+ int cpdma_chan_int_ctrl(struct cpdma_chan *chan, bool enable)
+ {
+@@ -1322,25 +1300,21 @@ int cpdma_control_set(struct cpdma_ctlr *ctlr, int control, int value)
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_control_set);
+ 
+ int cpdma_get_num_rx_descs(struct cpdma_ctlr *ctlr)
+ {
+ 	return ctlr->num_rx_desc;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_get_num_rx_descs);
+ 
+ int cpdma_get_num_tx_descs(struct cpdma_ctlr *ctlr)
+ {
+ 	return ctlr->num_tx_desc;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_get_num_tx_descs);
+ 
+ void cpdma_set_num_rx_descs(struct cpdma_ctlr *ctlr, int num_rx_desc)
+ {
+ 	ctlr->num_rx_desc = num_rx_desc;
+ 	ctlr->num_tx_desc = ctlr->pool->num_desc - ctlr->num_rx_desc;
+ }
+-EXPORT_SYMBOL_GPL(cpdma_set_num_rx_descs);
+ 
+ MODULE_LICENSE("GPL");
 -- 
 2.17.1
 
