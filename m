@@ -2,92 +2,117 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC51C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E49C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3F4218C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556037606;
-	bh=+K32CEJySJHRZYnsViCh90blV19hUxk8RW9cAv6Ulo0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Zkjsu2PVQECWiQMbf5XnMRhgslgKHhD0lBLdF+Uljru5RL/shKPxHuk4moGzbHrGe
-	 4q5L42srhBhkVHJ0di5QWjRoI0NR9d5yuq+Oxtq4Lr7sg+rldx4KylY1BnSCn9qDT4
-	 OCO2On+WSnVsBQ7PhhaHwN9KisB6r2TpayPoqWfM=
+	by mail.kernel.org (Postfix) with ESMTP id C4AD420645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:40:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="MqJn7QdS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbfDWQkF (ORCPT
+        id S1729425AbfDWQiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:40:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39832 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728796AbfDWQj7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:39:59 -0400
-Received: by mail-oi1-f193.google.com with SMTP id n187so11823680oih.6;
-        Tue, 23 Apr 2019 09:39:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+K32CEJySJHRZYnsViCh90blV19hUxk8RW9cAv6Ulo0=;
-        b=PpESjBfBkvPeeeAAgmKZJgOWZQrwFZQgIa9sRMcTyb8Ni5fw6dW2eFCLlOZO771Av5
-         mPNx3v39nB1CO9vocxCHhCmJpe+My7lT1gKn4+hdrakbCzTjh/Kybcu1DgMfx80rjeu2
-         YRuXXXGgUsdSj/OiNC6Y5Ub6KsXrY/LSkv1W2tN4VbdCktTi4S7lfqU2/f/WsNqBOlUR
-         2PNvl2zGxonWkKYzCJfAiEW5nAQHZaL2WtZw57a2vB1nS4exPDjPEAl9+DrgCp0QpKNO
-         y79oHuXiazC30yrVEvnwJbS9jfk0I9s0IVN1y8Q6Q2H9REXd2yjpRvX030QjbpaZWyWq
-         unVA==
-X-Gm-Message-State: APjAAAXGkntkadhqyxsfWint7c4gKYaDuK861cKENVj9M6Ht9OFA2v0/
-        ceWkGradgJ73r16b96LbNBWdvKCbqgLjAUTvqcw=
-X-Google-Smtp-Source: APXvYqyjp5DtSCtDUG+rmnZI31mrPN2qE3z63KQ1nAPWx58ynDjdfFmvDo+BMIXoWwqZdvHAAtJAYKpmM6dQRHFO+xE=
-X-Received: by 2002:aca:ab06:: with SMTP id u6mr2199750oie.68.1556037598459;
- Tue, 23 Apr 2019 09:39:58 -0700 (PDT)
+        Tue, 23 Apr 2019 12:38:12 -0400
+Received: from mail-eopbgr690122.outbound.protection.outlook.com ([40.107.69.122]:7761
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728728AbfDWQiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 12:38:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=Wvic7e8yYgB7yadfeMYNGaMJ/uChh/7WBZa04BVNBt9xalblXBWJOX7v9LOiusczis6f7vtpEWlYLouaBylVbaj2zdfeAFp62aXJxGknqZpb1XuBAc1DdxMk115P1eGPsrs//UvECb9MUMkgJ3kreybb47DMoGMqSXDoRNW6uHs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zCdHEaCXEDA2BRH5zNlaLADG0296Lh9oCXjEJXh8DrQ=;
+ b=DBshGHtUlqLqfueno6SK5Fi3yIBcts1nmDUyjLEP5/YurVuuYJUklNSUl/dst25FytWgQU23UA03dWcoSSKV+zIRJTLiLz3vfHUlOvLXv16MVixlr1RA7DUHT2pH8PhuFagbMn0atmMCvYqrbPIaeYnNr/Lp/8H8cM/5IdLycXs=
+ARC-Authentication-Results: i=1; test.office365.com 1;spf=none;dmarc=none
+ action=none header.from=microsoft.com;dkim=none (message not signed);arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zCdHEaCXEDA2BRH5zNlaLADG0296Lh9oCXjEJXh8DrQ=;
+ b=MqJn7QdSCN7F990H1tKngVG0mm9TH6oIedawl+mvJP4dUSvHqSjda1lp7rtS5Y+QlPpBfIiGfLyRw5uBIYAIiR+j1CuHFH59g2fKX3lE5p3GcbROvQ0s2LDVz0ezKHBptxIbchS4sjFKRAd7DP73QjmTwYANbSdU8PikIsoTvhw=
+Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
+ DM5PR2101MB1031.namprd21.prod.outlook.com (52.132.128.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.4; Tue, 23 Apr 2019 16:38:06 +0000
+Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
+ ([fe80::2ca9:7d06:f5b1:7a6f]) by DM5PR2101MB0918.namprd21.prod.outlook.com
+ ([fe80::2ca9:7d06:f5b1:7a6f%5]) with mapi id 15.20.1856.004; Tue, 23 Apr 2019
+ 16:38:06 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Joseph Salisbury <Joseph.Salisbury@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH][v2] drivers: hid: Add a module description line to the
+ hid_hyperv driver
+Thread-Topic: [PATCH][v2] drivers: hid: Add a module description line to the
+ hid_hyperv driver
+Thread-Index: AQHU+fLt7DAJsU1n9kWwUlZfOZ1uYQ==
+Date:   Tue, 23 Apr 2019 16:38:05 +0000
+Message-ID: <DM5PR2101MB09183A22984131883E033DA7D7230@DM5PR2101MB0918.namprd21.prod.outlook.com>
+References: <324016691a62a13ce46c9ccd35c7e492bf609fd6.1555967348.git.joseph.salisbury@microsoft.com>
+In-Reply-To: <324016691a62a13ce46c9ccd35c7e492bf609fd6.1555967348.git.joseph.salisbury@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-04-23T16:38:04.5423360Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9514dc48-02c0-4ae0-b9f1-b6ac2568b8a7;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:fc77:f44:39ef:1b45]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6a3c1659-ffe2-42c3-47e6-08d6c80a0fe0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR2101MB1031;
+x-ms-traffictypediagnostic: DM5PR2101MB1031:
+x-microsoft-antispam-prvs: <DM5PR2101MB10311A9D3B21BC974524F605D7230@DM5PR2101MB1031.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1284;
+x-forefront-prvs: 0016DEFF96
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(39860400002)(136003)(376002)(199004)(189003)(66946007)(476003)(99286004)(9686003)(305945005)(229853002)(46003)(10090500001)(68736007)(64756008)(66476007)(7736002)(486006)(66556008)(66446008)(2906002)(73956011)(2501003)(558084003)(14454004)(53936002)(256004)(55016002)(102836004)(76116006)(186003)(76176011)(7696005)(97736004)(6436002)(86612001)(4326008)(6116002)(71200400001)(71190400001)(81156014)(8676002)(81166006)(52536014)(110136005)(86362001)(8936002)(8990500004)(316002)(478600001)(54906003)(6506007)(22452003)(11346002)(446003)(6246003)(33656002)(10290500003)(2201001)(25786009)(1511001)(74316002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB1031;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZZsu79NmJrmQW7Bvx4sbkUc2WTtvOe6nsjDwDGK/9vr2TtBMqtKHtsYv/bx0OlvewI/qt1xVO6uW6thBfdTptaMb91iGtNpoYTElfl8KGOw24wG1VpU81fh2SAL8c5yndo2CY7q5DGK4mqWLhy2CS7sj2VfyASkPMRnPn34rArwU+mHdlrXj8Wq1+yCJ8MIkH135cGlvZ6QrwiUyMD1Kkx4hbzp2qZL86cbQtt0br74WsNx/qMg+xbSM1q2/5rd4OGbshbvECUdJqe6nyHzbAjsNEoENubGUJ3v/OkVyz9YvvOSN22Fq9pfkXA9UVJnCdvYxFpLgGFxnuD2meOtNXVnKKSTzXpIEowlObOwScdUuS5g7lzuAVq+QmcUzKUJnlcN8kDV9CAgYjrTKvlcQyL0Dwwsqd3rb6+yL1gWV/c0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190423162932.21428-1-changbin.du@gmail.com>
-In-Reply-To: <20190423162932.21428-1-changbin.du@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 23 Apr 2019 18:39:47 +0200
-Message-ID: <CAJZ5v0jPyaGQcDfpW5b7A-_3bvkfL78MxFmPtjwCGZ4-=KwUwg@mail.gmail.com>
-Subject: Re: [PATCH v4 00/63] Include linux ACPI/PCI/X86 docs into Sphinx TOC tree
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a3c1659-ffe2-42c3-47e6-08d6c80a0fe0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 16:38:06.0049
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 6:30 PM Changbin Du <changbin.du@gmail.com> wrote:
->
-> Hi Corbet and All,
-> The kernel now uses Sphinx to generate intelligent and beautiful documentation
-> from reStructuredText files. I converted all of the Linux ACPI/PCI/X86 docs to
-> reST format in this serias.
->
-> In this version I combined ACPI and PCI docs, and added new x86 docs conversion.
-
-I'm not sure if combining all three into one big patch series has been
-a good idea, honestly.
-
-It would have been easier to review and handle otherwise.
-
-For one, I'd like to handle the ACPI part of it myself if Jon doesn't mind that.
-
-Thanks,
-Rafael
+RnJvbTogSm9zZXBoIFNhbGlzYnVyeSA8am9zZXBoLnNhbGlzYnVyeUBtaWNyb3NvZnQuY29tPiBT
+ZW50OiBNb25kYXksIEFwcmlsIDIyLCAyMDE5IDg6NDcgUE0NCj4gDQo+IFRoaXMgcGF0Y2ggb25s
+eSBhZGRzIGEgTU9EVUxFX0RFU0NSSVBUSU9OIHN0YXRlbWVudCB0byB0aGUgZHJpdmVyLg0KPiBU
+aGlzIGNoYW5nZSBpcyBvbmx5IGNvc21ldGljLCBzbyB0aGVyZSBzaG91bGQgYmUgbm8gcnVudGlt
+ZSBpbXBhY3QuDQo+IA0KPiANCj4gU2lnbmVkLW9mZi1ieTogSm9zZXBoIFNhbGlzYnVyeSA8am9z
+ZXBoLnNhbGlzYnVyeUBtaWNyb3NvZnQuY29tPg0KPiAtLS0NCg0KUmV2aWV3ZWQtYnk6IE1pY2hh
+ZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQuY29tPg0K
