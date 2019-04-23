@@ -2,156 +2,106 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C045C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBDCC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E811E20843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:27:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rpBNEm11"
+	by mail.kernel.org (Postfix) with ESMTP id 5087320811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbfDWD07 (ORCPT
+        id S1729940AbfDWD2d convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:26:59 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:23029 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfDWD07 (ORCPT
+        Mon, 22 Apr 2019 23:28:33 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46417 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729097AbfDWD2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:26:59 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x3N3Qe1M022811;
-        Tue, 23 Apr 2019 12:26:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x3N3Qe1M022811
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555990001;
-        bh=+sM4okn7en/aXLTxk39Iv8cVSFLO5kMp2OmxveFMPqA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rpBNEm11sedr4ZTTqn4DWKErS1jmsxU0wCFi0W4J5QIhcrg6UGyXJ0GPxeGxBm2Jk
-         N7PzxyYAsMY4p5A9/yTYYmkUiTB/C40RxrMyYLm0K/gSEp1+Sdckyco7gus660Fi4g
-         hgd9pqYd3Vm0IzUma7z1q8AyPdVLgj2QT6VDXVlH+pMpEzVZlRC+ecL0v37PFOYYVs
-         IJ8mDqVFUteeWnZ5OpEcPkL3bDFH5tIMVernuNZGtxY9FSVumMNFqIUs5StTOolLap
-         eGnxFSaCr2Z9sKcTYd4qXq1WFFQTcMV4kS7yRB9DDQWVOyaQo01I/QkYsKcqnkLrTK
-         rPxED8Ccb4PXQ==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id e2so7418299vsc.13;
-        Mon, 22 Apr 2019 20:26:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAXgK6QlEV1g+m1VhV85T/FV3SojGzrRcCmALAmx7ACPtAlecWhk
-        9yBFU+ZTZ4XSe0w8vSDRoihpQzJrHfV0Xxhu8QM=
-X-Google-Smtp-Source: APXvYqx2ley7uSFnGGyGDabU1ZUfPiuLyEbp0qC3i0OaiObNnBFjDDjfzPzXXacVJD6LAmdWjocvMILtntWiqRva/Zw=
-X-Received: by 2002:a67:ea89:: with SMTP id f9mr1367458vso.179.1555989999934;
- Mon, 22 Apr 2019 20:26:39 -0700 (PDT)
+        Mon, 22 Apr 2019 23:28:33 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 9so6689629pfj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 20:28:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=D7x2hfvF8OYrm3/iMsirn8coi5z0CjuR9MVDpzeUWlI=;
+        b=R57nsfJhJSNRlLYF8fQkgqHEPP3rLO+rUn9BVpTc6UGXWZAiSolFZAiIUazzT8uKNr
+         la6xY+I/hu9gFHgGkxg874/XzyH4Uy4C0blPckkoq5VhS7062N8s2PuyMmXHohbYis4X
+         Ft3fp3GQNIyqaee9OPwFOePYYlF5jHCM4EvD6+CNzZndyPxXJggeIWP+aDet0kbKlWOW
+         12/uu006qVBRW8LNR6N2LcXaNIh3sLr2zBUSu6Dw/goscyfpwJjM5tdXtm7UF1+xvNfR
+         zgNqzrOdr00N7ci2d3vAmyLT0z9aB9tnm+cBMV+jBDr7UQOnTN5pqrkwzzc2dRMmzQ0J
+         f7Jw==
+X-Gm-Message-State: APjAAAWav9rcpnsmmVHEbD5P0LkjhClK7Z8JcTly+WbaDdZyxMa9Ey85
+        dkWn5MGMf84vAGNkObmTVawrgQ==
+X-Google-Smtp-Source: APXvYqw1Taxi3WQUrRSLsfDPZRfBizy9nvkDShxpS9wsCyYolZwSA786fkHUQWvDQM9lmc010I3rqg==
+X-Received: by 2002:a62:e418:: with SMTP id r24mr24731573pfh.52.1555990112093;
+        Mon, 22 Apr 2019 20:28:32 -0700 (PDT)
+Received: from ?IPv6:2001:240:240e:4025:456d:3cd:582e:ae26? ([2001:240:240e:4025:456d:3cd:582e:ae26])
+        by smtp.gmail.com with ESMTPSA id y3sm17410608pge.7.2019.04.22.20.28.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 20:28:31 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 12:28:16 +0900
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190419010714.GH7751@bombadil.infradead.org>
+References: <20190417131531.9525-1-mcroce@redhat.com> <20190418154045.2ad0bd50e73a6e71c0fac768@linux-foundation.org> <1109DAD2-E25B-47A3-8381-E02260FE51B9@redhat.com> <20190419010714.GH7751@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <1553062828-27798-1-git-send-email-yamada.masahiro@socionext.com>
- <CAK8P3a3BG_mxYxxCx4S_+ZKAer_+5FpmkzLk0VrACZekuD=2GQ@mail.gmail.com>
- <CAK8P3a0GEYTbw5XCwzVeZe_-pGF=7e=1kXhH3U+fidnMZeP0CA@mail.gmail.com>
- <20190323092640.Horde.2lm4u26aZox5ialxuIRcYw2@messagerie.si.c-s.fr>
- <CAK7LNAQGifytZRQXcqma9VuvQPfL2w8NjzLRt7CxzFgvaMhyRw@mail.gmail.com> <686abdd5-863a-02ce-5ac9-f573208b8315@c-s.fr>
-In-Reply-To: <686abdd5-863a-02ce-5ac9-f573208b8315@c-s.fr>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 23 Apr 2019 12:26:03 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQyjhDaLk_9W65=s4jfPN_AAELuGSZRAs4Xup4Xj79CGQ@mail.gmail.com>
-Message-ID: <CAK7LNAQyjhDaLk_9W65=s4jfPN_AAELuGSZRAs4Xup4Xj79CGQ@mail.gmail.com>
-Subject: Re: [PATCH] compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Dave Hansen <dave@sr71.net>, Arnd Bergmann <arnd@arndb.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH v3] proc/sysctl: add shared variables for range check
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+From:   Matteo Croce <mcroce@redhat.com>
+Message-ID: <5C263FB9-DC10-4D51-B6E4-776ED03C0E9E@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
+On April 19, 2019 10:07:14 AM GMT+09:00, Matthew Wilcox <willy@infradead.org> wrote:
+> On Fri, Apr 19, 2019 at 09:17:17AM +0900, Matteo Croce wrote:
+> > > extern const int sysctl_zero;
+> > > /* comment goes here */
+> > > #define SYSCTL_ZERO ((void *)&sysctl_zero)
+> > > 
+> > > and then use SYSCTL_ZERO everywhere.  That centralizes the
+> ugliness
+> > > and
+> > > makes it easier to switch over if/when extra1&2 are constified.
+> > > 
+> > > But it's all a bit sad and lame :( 
+> > 
+> > No, we didn't decide yet. I need to check for all extra1,2
+> assignment. Not an impossible task, anyway.
+> > 
+> > I agree that the casts are ugly. Your suggested macro moves the
+> ugliness in a single point, which is good. Or maybe we can do a single
+> macro like:
+> > 
+> > #define SYSCTL_VAL(x) ((void *)&sysctl_##x)
+> > 
+> > to avoid defining one for every value. And when we decide that
+> everything can be const, we just update the macro.
+> 
+> If we're going to do that, we can save two EXPORTs and do:
+> 
+> const int sysctl_vals[] = { 0, 1, -1 };
+> EXPORT_SYMBOL(sysctl_vals);
+> 
+> #define SYSCTL_ZERO	((void *)&sysctl_vals[0])
 
-On Tue, Mar 26, 2019 at 3:03 PM Christophe Leroy
-<christophe.leroy@c-s.fr> wrote:
->
-> Hi Masahiro,
->
-> Le 25/03/2019 =C3=A0 07:44, Masahiro Yamada a =C3=A9crit :
-> > Hi Christophe,
-> >
-> >
-> > On Sat, Mar 23, 2019 at 5:27 PM LEROY Christophe
-> > <christophe.leroy@c-s.fr> wrote:
-> >>
-> >> Arnd Bergmann <arnd@arndb.de> a =C3=A9crit :
-> >>
-> >>> On Wed, Mar 20, 2019 at 10:41 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> >>>>
-> >>>> I've added your patch to my randconfig test setup and will let you
-> >>>> know if I see anything noticeable. I'm currently testing clang-arm32=
-,
-> >>>> clang-arm64 and gcc-x86.
-> >>>
-> >>> This is the only additional bug that has come up so far:
-> >>>
-> >>> `.exit.text' referenced in section `.alt.smp.init' of
-> >>> drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section
-> >>> `exit.text' of drivers/char/ipmi/ipmi_msghandler.o
-> >>
-> >> Wouldn't it be useful to activate -Winline gcc warning to ease finding
-> >> out problematic usage of inline keyword ?
-> >
-> >
-> > Yes, it is useful to find out
-> > which function is causing the error.
-> > Thanks for the tip.
-> >
->
-> I did a mass build on kisskb. Almost ok, see results at
-> http://kisskb.ellerman.id.au/kisskb/head/203d912edf8dde291977c71aa6402406=
-5e197f79/
->
-> ps3_defconfig with GCC 5 fails
-> (http://kisskb.ellerman.id.au/kisskb/buildresult/13742711/) with:
->
-> arch/powerpc/mm/tlb-radix.c:148:2: error: asm operand 3 probably doesn't
-> match constraints [-Werror]
-> arch/powerpc/mm/tlb-radix.c:148:2: error: impossible constraint in 'asm'
-> arch/powerpc/mm/tlb-radix.c:118:2: error: asm operand 3 probably doesn't
-> match constraints [-Werror]
-> arch/powerpc/mm/tlb-radix.c:104:2: error: asm operand 3 probably doesn't
-> match constraints [-Werror]
->
-> ps3_defconfig with GCC 4.6 fails
-> (http://kisskb.ellerman.id.au/kisskb/buildresult/13742591/) with:
->
-> arch/powerpc/mm/tlb-radix.c:148:2: error: asm operand 3 probably doesn't
-> match constraints [-Werror]
-> arch/powerpc/mm/tlb-radix.c:118:2: error: asm operand 3 probably doesn't
-> match constraints [-Werror]
-> arch/powerpc/mm/tlb-radix.c:104:2: error: asm operand 3 probably doesn't
-> match constraints [-Werror]
->
-> randconfig with GCC 4.6 fails
-> (http://kisskb.ellerman.id.au/kisskb/buildresult/13742698/) with:
->
-> arch/powerpc/mm/tlb-radix.c:104:2: error: impossible constraint in 'asm'
+Hi Matthew,
 
+I like this approach, regardless of the const or not const extra1.
 
-Thanks.
+I'll be AFK for a few days, then I will investigate if extra1,2 can be made const and then prepare a v4 with the single export.
 
-I fixed these ppc errors,
-and separate out arch-fixes.
-
-Now, the latest version is v3.
-
-
---=20
-Best Regards
-Masahiro Yamada
+Thanks,
+-- 
+Matteo Croce
+per aspera ad upstream
