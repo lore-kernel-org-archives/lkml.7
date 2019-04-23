@@ -2,118 +2,143 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E172C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BB6C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3CA208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:21:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u3qa2eNF"
+	by mail.kernel.org (Postfix) with ESMTP id 8847A217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:23:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556043781;
+	bh=gtk6cJW3O1/O6x/j2ecHHClStItcbmry26/pT4Fy8VM=;
+	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
+	b=SediWqs4h+z5bAYVe8UDdy840BRXZTig8StE/6b1ma53aZ3ZyIj0f6GddpgZwTFfx
+	 bfpzCdv+A2k6zg8JHGKk0HKezY5AxvT9WarQrl0CVq0ebarW76lvcg3Vlt9/zg9nSv
+	 lbhZJSRw4zGb2OSQR/jPQsjH05IQlfwQj3xDMLH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbfDWSVl (ORCPT
+        id S1726309AbfDWSXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 14:21:41 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37814 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfDWSVk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 14:21:40 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so8016280pgc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:21:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x5RQU4EyaShn7ES1Et2UEJDFFRacmhuQJUjXc17xW2Q=;
-        b=u3qa2eNFA2/UJ2E5nOWKiPqrPzB2E++XYIVXcvXUm03gq52TwZFgH5z2qdj+71s7d+
-         DTVTtRzrh50UDlWLwFhUu/Aaw+5FMoBWv1Z6yMM94lyWkUta9oeOameAGucLvLa9MqVq
-         lUW/ssGT/bbHbwGUA4lBq51W4eOBneQXXknJsLGbXEQkEcr36clkyyS20Cd9FAUz0kLk
-         Jop8AF1JwOZOGZV3T0wpbMhEyyzxVYfylNhtsrdSYsiDKkto1Lh74N/ESR4xoCUc+Ft+
-         dMH8gaoBoxKRdXLEUqalEAYvJ1Z2BAHYJf52MfeqWRQsH32qVBU1K2zcl46Jn8ReYDMj
-         dbKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x5RQU4EyaShn7ES1Et2UEJDFFRacmhuQJUjXc17xW2Q=;
-        b=hTr0BS0nISceUY9SjCQe2W8FCHZgAPl/GNvTk+1Cf6GUNRrpDA8P67F4aA/BZ8p8rx
-         V3ylL3+CZiEQzqiVJ5oDL/UE0DxU/A9Au/wdk12cc1OVA01f66kNDfxsQlGHugV7iAS+
-         SbGYK+HmpmBJX9SEky81BCc4VpSFyEkhI3pz99dMjsmz0Ut45u7CdaydfKCXOj85QPIc
-         ThHeXE1Ybu41bqNyLCsFM1FCSVz397V5MWh3rU2uPoRPZnB7StYuA3KmcKqAqWtFFtBN
-         aa2LNjFu1sm+mwcEZxiZi801/TFzbTZK5wVXhIsOkAUwx0picGF4cRvqVVhL/h59TEOP
-         40+Q==
-X-Gm-Message-State: APjAAAU7AePl3sKnDhTcR1WbdeBAyH7kTWksjtkx7AeOQV5dV1vZ7C3v
-        c7goFOY5kCE7ySQnO0tlK7ipypXZtDkQLuk70GQ40w==
-X-Google-Smtp-Source: APXvYqyEcsui/GMruRfUAJp8QeZcmer2yUhPRi8jrSvAkDjfYYcbUbVMOTJ7fxeoS9Vl8rQetND6kF92ISYylvYpjew=
-X-Received: by 2002:aa7:8096:: with SMTP id v22mr28352978pff.94.1556043699691;
- Tue, 23 Apr 2019 11:21:39 -0700 (PDT)
+        Tue, 23 Apr 2019 14:23:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbfDWSXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 14:23:00 -0400
+Received: from localhost (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEADE208E4;
+        Tue, 23 Apr 2019 18:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556043778;
+        bh=gtk6cJW3O1/O6x/j2ecHHClStItcbmry26/pT4Fy8VM=;
+        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
+        b=Gwc7dvzQe+22GYK5oBif2bBXMexIh1mCuP3sGydjDx/4jP71gRxhqb6iap9cfF0cJ
+         d9NyHz8tJwLrT8U4iLs6oxfhTfv0PH5q7x1WzymBGDMcMa+6QqVZBw2NTYu1mgpHQX
+         6TMvPhbJzKw/wGycx/hl0HRbQ5F55rprPbMfAHLM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190415083605.2560074-1-arnd@arndb.de> <20190415083605.2560074-4-arnd@arndb.de>
- <CAKwvOd=761wDZ-g-E7kqOFCftH=CONpzc52WU0-ZQztZ3U=x4w@mail.gmail.com> <CAK8P3a2_Rkz3y662mxKTva_rrzHpOQ9fQ+pedenWCZCehxgxPw@mail.gmail.com>
-In-Reply-To: <CAK8P3a2_Rkz3y662mxKTva_rrzHpOQ9fQ+pedenWCZCehxgxPw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 23 Apr 2019 11:21:28 -0700
-Message-ID: <CAKwvOdmrOdzb3N3oNZL1kKYYSKzrVR+Opc7af9cYDL9cd2QpOg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] s390: fix clang -Wpointer-sign warnigns in boot code
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Collin Walling <walling@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190423180922.GA3463@roeck-us.net>
+References: <20190412183150.102131-1-sboyd@kernel.org> <20190412183150.102131-10-sboyd@kernel.org> <20190423180922.GA3463@roeck-us.net>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Chen-Yu Tsai <wens@csie.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 9/9] clk: fixed-factor: Let clk framework find parent
+To:     Guenter Roeck <linux@roeck-us.net>
+Message-ID: <155604377791.15276.4869998549466063176@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Tue, 23 Apr 2019 11:22:57 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 1:06 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Apr 22, 2019 at 7:52 PM 'Nick Desaulniers' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
->
-> > > @@ -20,7 +20,7 @@ extern __u8 _ebc_tolower[256]; /* EBCDIC -> lowercase */
-> > >  extern __u8 _ebc_toupper[256]; /* EBCDIC -> uppercase */
-> > >
-> > >  static inline void
-> > > -codepage_convert(const __u8 *codepage, volatile __u8 * addr, unsigned long nr)
-> > > +codepage_convert(const __u8 *codepage, volatile char* addr, unsigned long nr)
-> > >  {
-> > >         if (nr-- <= 0)
-> > >                 return;
-> >
-> > There are many call sites of ASCEBC which is defined in terms of this
-> > function. Do they all use `char*`?  grep shows an explicit cast to
-> > `unsigned char*` in drivers/s390/char/tape_std.c for example.
->
-> Generally speaking, the kernel is full of Wpointer-sign warnings, that's why
-> this warning is disabled in the top-level Makefile by default. My patch fixes
-> the ones in the s390 boot code that is not built with those default flags, but
-> I made no attempt to fix the rest of the kernel.
+Quoting Guenter Roeck (2019-04-23 11:09:22)
+> Hi,
+>=20
+> On Fri, Apr 12, 2019 at 11:31:50AM -0700, Stephen Boyd wrote:
+> > Convert this driver to a more modern way of specifying parents now that
+> > we have a way to specify clk parents by DT index. This lets us nicely
+> > avoid a problem where a parent clk name isn't know because the parent
+> > clk hasn't been registered yet.
+> >=20
+> > Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> > Cc: Jerome Brunet <jbrunet@baylibre.com>
+> > Cc: Russell King <linux@armlinux.org.uk>
+> > Cc: Michael Turquette <mturquette@baylibre.com>
+> > Cc: Jeffrey Hugo <jhugo@codeaurora.org>
+> > Cc: Chen-Yu Tsai <wens@csie.org>
+> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+>=20
+> This patch causes a substantial number of crashes of qemu boot tests in -=
+next.
+>=20
+> Failed tests:=20
+>         arm:versatilepb:versatile_defconfig:aeabi:pci:scsi:mem128:versati=
+le-pb:rootfs=20
+>         arm:versatilepb:versatile_defconfig:aeabi:pci:mem128:versatile-pb=
+:initrd=20
+>         arm:versatileab:versatile_defconfig:mem128:versatile-ab:initrd=20
+>         arm:beagle:multi_v7_defconfig:sd:mem256:omap3-beagle:rootfs=20
+>         arm:beaglexm:multi_v7_defconfig:sd:mem512:omap3-beagle-xm:rootfs =
 
-Right, sorry, I forgot about that.  This patch looks good to me.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+>         arm:overo:multi_v7_defconfig:sd:mem256:omap3-overo-tobi:rootfs=20
+>         arm:realview-pb-a8:realview_defconfig:realview_pb:mem512:arm-real=
+view-pba8:initrd=20
+>         arm:realview-pbx-a9:realview_defconfig:realview_pb:arm-realview-p=
+bx-a9:initrd=20
+>         arm:realview-eb:realview_defconfig:realview_eb:mem512:arm-realvie=
+w-eb:initrd=20
+>         arm:realview-eb-mpcore:realview_defconfig:realview_eb:mem512:arm-=
+realview-eb-11mp-ctrevb:initrd=20
+>         arm:integratorcp:integrator_defconfig:mem128:integratorcp:initrd =
 
->
-> Fun fact: on most architectures, 'char' is signed, but on s390 and 32-bit
-> arm it is unsigned. The compiler treats 'char', 'unsigned char' and
-> 'signed char'
-> as three distinct types here for that reason.
+>         arm:mps2-an385:mps2_defconfig:mps2-an385:initrd
+>=20
+> Most of the time the crash happens too early to generate a log,
+> but here is one:
+>=20
+> [    0.000000] [<2100bd59>] (unwind_backtrace) from [<2100b11f>] (show_st=
+ack+0xb/0xc)
+> [    0.000000] [<2100b11f>] (show_stack) from [<211b2d27>] (Ldiv0_64+0x9/=
+0x1a)
+> [    0.000000] [<211b2d27>] (Ldiv0_64) from [<21038e87>] (clocks_calc_max=
+_nsecs+0x1d/0x62)
+> [    0.000000] [<21038e87>] (clocks_calc_max_nsecs) from [<21038fb1>] (__=
+clocksource_update_freq_scale+0xe5/0x11c)
+> [    0.000000] [<21038fb1>] (__clocksource_update_freq_scale) from [<2103=
+8ff1>] (__clocksource_register_scale+0x9/0x40)
+> [    0.000000] [<21038ff1>] (__clocksource_register_scale) from [<212a871=
+3>] (mps2_timer_init+0xaf/0x29c)
+> [    0.000000] [<212a8713>] (mps2_timer_init) from [<212a85b1>] (timer_pr=
+obe+0x49/0x80)
+> [    0.000000] [<212a85b1>] (timer_probe) from [<2129d639>] (start_kernel=
++0x1c5/0x2f4)
+> [    0.000000] [<2129d639>] (start_kernel) from [<00000000>] (  (null))
+> [    0.000000] clocksource: mps2-clksrc: mask: 0xffffffff max_cycles: 0x0=
+, max_idle_ns: 0 ns
+> [    0.000000] Division by zero in kernel.
+>=20
+> Reverting the crash fixes the problem. Bisect log attached.
+>=20
 
-I think I recall reading about that in:
-https://www.amazon.com/ARM-System-Developers-Guide-Architecture/dp/1558608745
-(I'll try to dig it up and post what the explanation was).
+Thanks for the report. This was bisected yesterday by kernelci.org (see
+https://lkml.kernel.org/r/5cbe596c.1c69fb81.e252.b9d0@mx.google.com for
+more details). Can you try the latest version of clk-next and see if it
+fixes the early crashes? The one-liner patch I attached in that thread
+should be all you need.
 
--- 
-Thanks,
-~Nick Desaulniers
+It would be even better for kernelci to find the offending patch like
+you've done here and reply to the patch on the mailing list.
+
+Finally, can you share your qemu recipe? I can pull it into my testing
+and integration workflow so that this doesn't happen again.
+
