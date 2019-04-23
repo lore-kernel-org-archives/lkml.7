@@ -2,109 +2,95 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55765C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8107C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E1120693
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F0C20645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btDg1fDv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RJ4R54eN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfDWN0b (ORCPT
+        id S1727862AbfDWN0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:26:31 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40842 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfDWN0b (ORCPT
+        Tue, 23 Apr 2019 09:26:36 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49290 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfDWN0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:26:31 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h4so20201364wre.7;
-        Tue, 23 Apr 2019 06:26:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t55UaS6rBsn5sbPESWXHBguQkipvC+R5S8CcCgaOjCo=;
-        b=btDg1fDvgKkMWBKgKuGFctqqiOV7pGBJz8YdRCinLDMxyg+iJEiY/vopFSPGvA/8hY
-         gjMSDy7Y3oY8+Z14kotAiZT7X1xzOdgBo6eBCU6A7JpOlQOd0ZMdLFuP286aWwChjA9A
-         dvNmZ40ed6Emw7eBKLbL0l+aUi1EeMxDjzuYjMF/4e9OQj0rIK4vo2WeNUBynqmoPBTy
-         iWt3TKK6lkS4/fMHQdjjzq56T3gAAvq/1nH6A57YiQBzD/YxkA9utrYx8RYw8SWdoWo1
-         /Jht9wN7oqI64PqPCeWz5+g8K7ftBUO/e90LZnr/3xgc/rUCdpaxZsK0SIoEYVnaRoLh
-         +pWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t55UaS6rBsn5sbPESWXHBguQkipvC+R5S8CcCgaOjCo=;
-        b=FbgrhS6Guew43KLhhjSJt9VEsvwA7HXfgBvLNTnGqzkFAxwIYKu0Tp7o1DBYTfY7kW
-         kY5aEqDe6Yze6+sTVnMxjZVWWquOfiY5vZ8BR56funZmgqIML9LocRH04w05dwrPwtj3
-         NhWb0ygce+kFDTkSQnGwsNN2UYV07gt/ezRSiYSjEYWy2W4BCPY+1fK3u7s1bZzuQAnx
-         AJCaGUsdrT/4aTslP7mrYNzemaDXv3nBYzIdQ69gZYjmUO/jBcSDtRI8tOWiHN093Kkz
-         +8dDrtLGhzlqQ4dMgGXWkQu/KaGI1bcluLe8HyKa5l4RxG474UVsFxcYW7rlUgAOSWdb
-         ESug==
-X-Gm-Message-State: APjAAAUVv9vCtwddR+WK2OZJws5WAbBoKMjqiNOt9o/4Oj0/FRW49rHB
-        WyMWnuj/jJdpMkphm6CbI3Q4bwpmw2E=
-X-Google-Smtp-Source: APXvYqyKzucly6AoottuXKIRLaNgcCw/xKyGvBFTT1L0zpoCb/ZCD50ZlX2/+VSmEnMeOAHP/JfGkA==
-X-Received: by 2002:adf:ed82:: with SMTP id c2mr16425134wro.176.1556025988984;
-        Tue, 23 Apr 2019 06:26:28 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id z20sm13478823wmf.34.2019.04.23.06.26.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 06:26:27 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 14:26:26 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     mst@redhat.com, jasowang@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vhost: remove unneeded linux/miscdevice.h include
-Message-ID: <20190423132626.GJ32465@stefanha-x1.localdomain>
-References: <20170918165854.23408-1-clabbe.montjoie@gmail.com>
+        Tue, 23 Apr 2019 09:26:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BdM6CArgxEm22HVbHd3GaZ5CV6hbS9CSRE8mWJGcDtc=; b=RJ4R54eN+qh1iuz/f39xpMin1
+        BFHUaJ/xdY+5M84Z9GZ8bVrNb+OeGnqiX8Z/G/HZBBgFDmtgC09JwD+6S6HhM0YRZUIIV8rhej1bD
+        VD862VKwmY66Bxvt3yArtQYKrnFODhEmAqvovixM96iKBn/FaJfKqgV/bgf57FUpW+G7j7n0zO+LK
+        RYUL+XmZtiRhSwUMtmfDU6y3WwNWqu1Aig6opZYRLbm8I25R2/0V8F18dlmjQ4QzqWEOuEMimXiF6
+        ZyqeQM+jdYl73H5dToPNZeSJZRPBnTMKs835ucgxNGlf8xAULWUthmTuGlBnp1C+6pMgWXdsnakMp
+        dlamRMA7w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hIvRG-0004mU-D1; Tue, 23 Apr 2019 13:26:22 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9468229C2338C; Tue, 23 Apr 2019 15:26:20 +0200 (CEST)
+Date:   Tue, 23 Apr 2019 15:26:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] Documentation: atomic_t.txt: Explain ordering provided
+ by smp_mb__{before,after}_atomic()
+Message-ID: <20190423132620.GU4038@hirez.programming.kicks-ass.net>
+References: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
+ <20190419180017.GP4038@hirez.programming.kicks-ass.net>
+ <20190419182620.GF14111@linux.ibm.com>
+ <1555719429.t9n8gkf70y.astroid@bobo.none>
+ <20190420085440.GK14111@linux.ibm.com>
+ <20190423121715.GQ4038@hirez.programming.kicks-ass.net>
+ <20190423132116.GJ3923@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5me2qT3T17SWzdxI"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20170918165854.23408-1-clabbe.montjoie@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190423132116.GJ3923@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 23, 2019 at 06:21:16AM -0700, Paul E. McKenney wrote:
+> On Tue, Apr 23, 2019 at 02:17:15PM +0200, Peter Zijlstra wrote:
+> > On Sat, Apr 20, 2019 at 01:54:40AM -0700, Paul E. McKenney wrote:
+> > > 3.	Make non-value-returning atomics provide full ordering.
+> > > 	This would of course need some benchmarking, but would be a
+> > > 	simple change to make and would eliminate a large class of
+> > > 	potential bugs.  My guess is that the loss in performance
+> > > 	would be non-negligible, but who knows?
+> > 
+> > Well, only for the architectures that have
+> > smp_mb__{before,after}_atomic() as barrier(), which are: ia64, mips,
+> > s390, sparc, x86 and xtense.
+> 
+> The weakly ordered architectures would need to add the equivalent of
+> smp_mb() before and after, right?  This might result in a more noticeable
+> loss of performance.
 
---5me2qT3T17SWzdxI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The weak archs already have: smp_mb__{before,after}_atomic() :=
+smp_mb().
 
-On Mon, Sep 18, 2017 at 06:58:54PM +0200, Corentin Labbe wrote:
-> drivers/vhost/vhost.c does not use any miscdevice, so this patch
-> remove this unnecessary inclusion.
->=20
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> ---
->  drivers/vhost/vhost.c | 1 -
->  1 file changed, 1 deletion(-)
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---5me2qT3T17SWzdxI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEcBAEBAgAGBQJcvxKCAAoJEJykq7OBq3PIxakIAKxmFI7MYIQXPO2NrlHONe5T
-IoEK92iePJj7qb0xCK7O2yLLhnvzTgWJxpHCENRsAEFqY1ZGEbR+vnlkbKa+0ZCY
-zcZdH6Ndl2KPut8yfQqhY/LGXFCDNT2ZZY851nWoPUpJ6e95LhcO4Grk5VKUS1Cc
-v85zFOHJcWpHrmOVVg5DeYLZokXDGLYLHrR34kr3GwRM279muvjQovl67N73gO+P
-sGtS88e4g5ax7W3WrFo4vqd4Jam284pYqH/gGm1SWiMIdQNmp40tZF9HLYfG5pnc
-s4Rxf02nFEcsoC+F1FrPTHPYxtGoh61TzyCkYOk884j4E0q+Txrs8VpuOfwljkU=
-=nDd1
------END PGP SIGNATURE-----
-
---5me2qT3T17SWzdxI--
