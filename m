@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FA4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294D1C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C7B20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB29F20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:51:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="DgLSh5p/"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="n6YMDDai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbfDWDvw (ORCPT
+        id S1730734AbfDWDvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:51:52 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:38896 "EHLO
+        Mon, 22 Apr 2019 23:51:54 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:38995 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730524AbfDWDvq (ORCPT
+        with ESMTP id S1730606AbfDWDvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:51:46 -0400
+        Mon, 22 Apr 2019 23:51:50 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x3N3o2cH023044;
-        Tue, 23 Apr 2019 12:50:16 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x3N3o2cH023044
+        by conuserg-07.nifty.com with ESMTP id x3N3o2cD023044;
+        Tue, 23 Apr 2019 12:50:11 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x3N3o2cD023044
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555991416;
-        bh=dlukBYO6sgrMJOkaTgBisXwB5sU3qv4thlZ8O2ehfGY=;
+        s=dec2015msa; t=1555991412;
+        bh=ck3m1Bnhk+gBZ69Ip9jiWsEf5IWvpXJTs7wxMIQoCXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DgLSh5p//r6WFmO5jHCtDDcni9rgvcY+M0jXqaVcDpmetnoTv3LH2i7BbTaWnPEQA
-         ekvT9GhnH/wJhjlIDDCG4ogK8OrxDRfpKrXxorea+hWs44MMGkmufq8vRI1VDI2xtf
-         E/Egf9Qrn/X2ji428KFPPca6RL3Odgm+aeiI1TlOh5n2jGHjU9CzdRcVlpwYNM1u8B
-         D3Rdxm3EAtjpH5wFt6I+bTxO/6dZmwf0tIr0TQbamP2Q7SfjkbqmrBg4bNiJZ+U2QP
-         5+M50jLU0nfTpzi0185F/CXJtegbNcH2kUGjKtAAsw1ufXr+9imCgE16mm7HqCVTgg
-         13SiP6iuu4Trw==
+        b=n6YMDDaiO+Y+ehsJY3BwtkUdg1YDcyPA3Dzmuu8XOwJ1WrZig5ClP17Sypb2aBakK
+         pdb05/Mxt6GVPh61aaBT0xJP66Mu0V7s+lzlxmzMKtCZpnT8wEPrNDYE+HzwcwOsrt
+         M+K4hgRSZ2BsDVMyqA2McjsJjJooi4+aOx81MKG7ecEsFD8/riXxDnXctaXPrCzSeY
+         2Awph1mCyl2BuT2YcctjtjX9fGNx3slwDHVqkisVXH/eIqwqW4g1+6Ign1Zg0xzjsQ
+         nEbhKOdhvwUnu9BexA/KqiOdzGngWI9/3T9raieSibcixW3rUYkf2NW/Jkw05P6Tx3
+         svNkTBvfuxmgA==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -51,12 +51,15 @@ Cc:     linux-s390@vger.kernel.org,
         Christophe Leroy <christophe.leroy@c-s.fr>,
         Mathieu Malaterre <malat@debian.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [RESEND PATCH v3 09/11] powerpc/mm/radix: mark __radix__flush_tlb_range_psize() as __always_inline
-Date:   Tue, 23 Apr 2019 12:49:57 +0900
-Message-Id: <20190423034959.13525-10-yamada.masahiro@socionext.com>
+Subject: [RESEND PATCH v3 05/11] mtd: rawnand: vf610_nfc: add initializer to avoid -Wmaybe-uninitialized
+Date:   Tue, 23 Apr 2019 12:49:53 +0900
+Message-Id: <20190423034959.13525-6-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190423034959.13525-1-yamada.masahiro@socionext.com>
 References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,13 +68,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
 place. We need to eliminate potential issues beforehand.
 
-If it is enabled for powerpc, the following error is reported:
+Kbuild test robot has never reported -Wmaybe-uninitialized warning
+for this probably because vf610_nfc_run() is inlined by the x86
+compiler's inlining heuristic.
 
-arch/powerpc/mm/tlb-radix.c: In function '__radix__flush_tlb_range_psize':
-arch/powerpc/mm/tlb-radix.c:104:2: error: asm operand 3 probably doesn't match constraints [-Werror]
-  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
-  ^~~
-arch/powerpc/mm/tlb-radix.c:104:2: error: impossible constraint in 'asm'
+If CONFIG_OPTIMIZE_INLINING is enabled for a different architecture
+and vf610_nfc_run() is not inlined, the following warning is reported:
+
+drivers/mtd/nand/raw/vf610_nfc.c: In function ‘vf610_nfc_cmd’:
+drivers/mtd/nand/raw/vf610_nfc.c:455:3: warning: ‘offset’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+   vf610_nfc_rd_from_sram(instr->ctx.data.buf.in + offset,
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            nfc->regs + NFC_MAIN_AREA(0) + offset,
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            trfr_sz, !nfc->data_access);
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
@@ -80,22 +91,22 @@ Changes in v3: None
 Changes in v2:
   - split into a separate patch
 
- arch/powerpc/mm/tlb-radix.c | 2 +-
+ drivers/mtd/nand/raw/vf610_nfc.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
-index 6a23b9ebd2a1..a2b2848f0ae3 100644
---- a/arch/powerpc/mm/tlb-radix.c
-+++ b/arch/powerpc/mm/tlb-radix.c
-@@ -928,7 +928,7 @@ void radix__tlb_flush(struct mmu_gather *tlb)
- 	tlb->need_flush_all = 0;
- }
- 
--static inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
-+static __always_inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
- 				unsigned long start, unsigned long end,
- 				int psize, bool also_pwc)
+diff --git a/drivers/mtd/nand/raw/vf610_nfc.c b/drivers/mtd/nand/raw/vf610_nfc.c
+index a662ca1970e5..19792d725ec2 100644
+--- a/drivers/mtd/nand/raw/vf610_nfc.c
++++ b/drivers/mtd/nand/raw/vf610_nfc.c
+@@ -364,7 +364,7 @@ static int vf610_nfc_cmd(struct nand_chip *chip,
  {
+ 	const struct nand_op_instr *instr;
+ 	struct vf610_nfc *nfc = chip_to_nfc(chip);
+-	int op_id = -1, trfr_sz = 0, offset;
++	int op_id = -1, trfr_sz = 0, offset = 0;
+ 	u32 col = 0, row = 0, cmd1 = 0, cmd2 = 0, code = 0;
+ 	bool force8bit = false;
+ 
 -- 
 2.17.1
 
