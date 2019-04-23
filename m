@@ -2,255 +2,128 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C797C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C00C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDE420652
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A829208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfDWUNP (ORCPT
+        id S1726999AbfDWUQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:13:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:7594 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfDWUNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:13:14 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E31533092670;
-        Tue, 23 Apr 2019 20:13:12 +0000 (UTC)
-Received: from treble (ovpn-123-99.rdu2.redhat.com [10.10.123.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DF4B060C62;
-        Tue, 23 Apr 2019 20:13:11 +0000 (UTC)
-Date:   Tue, 23 Apr 2019 15:13:06 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Raphael Gault <raphael.gault@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
-        julien.thierry@arm.com
-Subject: Re: [RFC 1/6] objtool: Refactor code to make it more suitable for
- multiple architecture support
-Message-ID: <20190423201306.wyb57hz7xrvqbn75@treble>
-References: <20190409135243.12424-1-raphael.gault@arm.com>
- <20190409135243.12424-2-raphael.gault@arm.com>
+        Tue, 23 Apr 2019 16:16:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36154 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725945AbfDWUQ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 16:16:57 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NK90Vk126088
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:16:56 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s25hvu0f8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:16:44 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 23 Apr 2019 21:16:43 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 21:16:38 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NKGbaE32702606
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 20:16:37 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C54DDB2067;
+        Tue, 23 Apr 2019 20:16:37 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A32EB2065;
+        Tue, 23 Apr 2019 20:16:37 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.80.223.68])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 20:16:37 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 2B6A316C2A4D; Tue, 23 Apr 2019 13:16:37 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 13:16:37 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] Documentation: atomic_t.txt: Explain ordering provided
+ by smp_mb__{before,after}_atomic()
+Reply-To: paulmck@linux.ibm.com
+References: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
+ <20190419180017.GP4038@hirez.programming.kicks-ass.net>
+ <20190419182620.GF14111@linux.ibm.com>
+ <1555719429.t9n8gkf70y.astroid@bobo.none>
+ <20190420085440.GK14111@linux.ibm.com>
+ <20190423121715.GQ4038@hirez.programming.kicks-ass.net>
+ <20190423132116.GJ3923@linux.ibm.com>
+ <20190423132620.GU4038@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190409135243.12424-2-raphael.gault@arm.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 23 Apr 2019 20:13:13 +0000 (UTC)
+In-Reply-To: <20190423132620.GU4038@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19042320-0052-0000-0000-000003AFFA16
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010982; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01193370; UDB=6.00625585; IPR=6.00974190;
+ MB=3.00026562; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-23 20:16:42
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042320-0053-0000-0000-0000609B028F
+Message-Id: <20190423201637.GW3923@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=787 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 09, 2019 at 02:52:38PM +0100, Raphael Gault wrote:
-> The jump destination and relocation offset used previously are only reliable
-> on x86_64 architecture. We abstract these computations by calling arch-dependant
-
-"dependent"
-
-> implementation.
+On Tue, Apr 23, 2019 at 03:26:20PM +0200, Peter Zijlstra wrote:
+> On Tue, Apr 23, 2019 at 06:21:16AM -0700, Paul E. McKenney wrote:
+> > On Tue, Apr 23, 2019 at 02:17:15PM +0200, Peter Zijlstra wrote:
+> > > On Sat, Apr 20, 2019 at 01:54:40AM -0700, Paul E. McKenney wrote:
+> > > > 3.	Make non-value-returning atomics provide full ordering.
+> > > > 	This would of course need some benchmarking, but would be a
+> > > > 	simple change to make and would eliminate a large class of
+> > > > 	potential bugs.  My guess is that the loss in performance
+> > > > 	would be non-negligible, but who knows?
+> > > 
+> > > Well, only for the architectures that have
+> > > smp_mb__{before,after}_atomic() as barrier(), which are: ia64, mips,
+> > > s390, sparc, x86 and xtense.
+> > 
+> > The weakly ordered architectures would need to add the equivalent of
+> > smp_mb() before and after, right?  This might result in a more noticeable
+> > loss of performance.
 > 
-> The control flow information and register macro definitions were based on
-> the x86_64 architecture but should be abstract so that each architecture
-> can define the correct values for the registers, especially the registers
-> related to the stack frame (Frame Pointer, Stack Pointer and possibly
-> Return Address).
-> 
-> The ORC unwinder is only supported on x86 at the moment and should thus be
-> in the x86 architecture code. In order not to break the whole structure in
-> case another architecture decides to support the ORC unwinder via objtool
-> we choose to let the implementation be done in the architecture dependant
-> code.
+> The weak archs already have: smp_mb__{before,after}_atomic() :=
+> smp_mb().
 
-It's good practice to put each logical change into a separate patch.
-That will also make the patches easier to review.
+Agreed, but I thought that one of the ideas going forward was to get
+rid of smp_mb__{before,after}_atomic().
 
-For example, each of the above three paragraphs should be a separate
-commit.
+							Thanx, Paul
 
-Also it's a good idea to run the patches through checkpatch.pl (though
-its warnings should be taken with a grain of salt).
-
-> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-> ---
->  tools/objtool/Build                           |   1 -
->  tools/objtool/arch.h                          |   9 ++
->  tools/objtool/arch/x86/Build                  |   1 +
->  tools/objtool/arch/x86/decode.c               | 106 ++++++++++++++++
->  tools/objtool/arch/x86/include/arch_special.h |  35 ++++++
->  tools/objtool/{ => arch/x86/include}/cfi.h    |   0
->  tools/objtool/{ => arch/x86}/orc_gen.c        |  10 +-
->  tools/objtool/check.c                         | 114 ++----------------
->  tools/objtool/check.h                         |   1 +
->  tools/objtool/orc.h                           |   4 +-
->  tools/objtool/special.c                       |  18 +--
->  11 files changed, 173 insertions(+), 126 deletions(-)
->  create mode 100644 tools/objtool/arch/x86/include/arch_special.h
->  rename tools/objtool/{ => arch/x86/include}/cfi.h (100%)
->  rename tools/objtool/{ => arch/x86}/orc_gen.c (96%)
-> 
-> diff --git a/tools/objtool/Build b/tools/objtool/Build
-> index 749becdf5b90..ec925d49565a 100644
-> --- a/tools/objtool/Build
-> +++ b/tools/objtool/Build
-> @@ -2,7 +2,6 @@ objtool-y += arch/$(SRCARCH)/
->  objtool-y += builtin-check.o
->  objtool-y += builtin-orc.o
->  objtool-y += check.o
-> -objtool-y += orc_gen.o
-
-I'm not sure whether moving ORC out to the arch-specific code is the
-best option.  I expect a lot of the ORC code to be generic.  But this
-might be ok for now, until we get another ORC implementation.
-
-Another possibility would be to make weak versions of the orc functions
-somewhere (check.c?) and only compile the generic orc_gen.c on arches
-which support it.  Then we could abstract out the arch-specific ORC bits
-later.
-
->  objtool-y += orc_dump.o
-
-orc_dump.o doesn't need to be built on arm64.  The "orc dump" option
-should fail accordingly.
-
->  objtool-y += elf.o
->  objtool-y += special.o
-> diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-> index b0d7dc3d71b5..0eff166ca613 100644
-> --- a/tools/objtool/arch.h
-> +++ b/tools/objtool/arch.h
-> @@ -22,6 +22,7 @@
->  #include <linux/list.h>
->  #include "elf.h"
->  #include "cfi.h"
-> +#include "orc.h"
->  
->  #define INSN_JUMP_CONDITIONAL	1
->  #define INSN_JUMP_UNCONDITIONAL	2
-> @@ -70,6 +71,8 @@ struct stack_op {
->  	struct op_src src;
->  };
->  
-> +struct instruction;
-> +
->  void arch_initial_func_cfi_state(struct cfi_state *state);
->  
->  int arch_decode_instruction(struct elf *elf, struct section *sec,
-> @@ -79,4 +82,10 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
->  
->  bool arch_callee_saved_reg(unsigned char reg);
->  
-> +int arch_orc_read_unwind_hints(struct objtool_file *file);
-> +
-> +unsigned long arch_compute_jump_destination(struct instruction *insn);
-> +
-> +unsigned long arch_compute_rela_sym_offset(int addend);
-
-arch_dest_rela_addend_offset() might be a more descriptive name.  Also
-it might be simpler to just make it an arch-specific macro which is 0 on
-arm64 and 4 on x86.
-
-"compute" is implied, it can probably be removed from the names to make
-them a little more concise.
-
-> +
->  #endif /* _ARCH_H */
-> diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
-> index b998412c017d..74015be53ef0 100644
-> --- a/tools/objtool/arch/x86/Build
-> +++ b/tools/objtool/arch/x86/Build
-> @@ -1,4 +1,5 @@
->  objtool-y += decode.o
-> +objtool-y += orc_gen.o
->  
->  inat_tables_script = arch/x86/tools/gen-insn-attr-x86.awk
->  inat_tables_maps = arch/x86/lib/x86-opcode-map.txt
-> diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-> index 540a209b78ab..1af7b4996307 100644
-> --- a/tools/objtool/arch/x86/decode.c
-> +++ b/tools/objtool/arch/x86/decode.c
-> @@ -23,6 +23,8 @@
->  #include "lib/inat.c"
->  #include "lib/insn.c"
->  
-> +
-> +#include "../../check.h"
->  #include "../../elf.h"
->  #include "../../arch.h"
->  #include "../../warn.h"
-> @@ -78,6 +80,105 @@ bool arch_callee_saved_reg(unsigned char reg)
->  	}
->  }
->  
-> +unsigned long arch_compute_rela_sym_offset(int addend)
-> +{
-> +	return addend + 4;
-> +}
-> +
-> +int arch_orc_read_unwind_hints(struct objtool_file *file)
-
-I think this function would be better suited for orc_gen.c (which could
-be renamed to just orc.c).
-
-> diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
-> new file mode 100644
-> index 000000000000..bd91b1096359
-> --- /dev/null
-> +++ b/tools/objtool/arch/x86/include/arch_special.h
-> @@ -0,0 +1,35 @@
-> +/*
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-
-This needs the standard header macro guards, e.g.
-
-#ifndef _X86_ARCH_SPECIAL_H
-#define _X86_ARCH_SPECIAL_H
-
-> +
-> +#define EX_ENTRY_SIZE		12
-> +#define EX_ORIG_OFFSET		0
-> +#define EX_NEW_OFFSET		4
-> +
-> +#define JUMP_ENTRY_SIZE		16
-> +#define JUMP_ORIG_OFFSET	0
-> +#define JUMP_NEW_OFFSET		4
-> +
-> +#define ALT_ENTRY_SIZE		13
-> +#define ALT_ORIG_OFFSET		0
-> +#define ALT_NEW_OFFSET		4
-> +#define ALT_FEATURE_OFFSET	8
-> +#define ALT_ORIG_LEN_OFFSET	10
-> +#define ALT_NEW_LEN_OFFSET	11
-> +
-> +#define IGNORE_SHF_EXEC_FLAG	0
-> +
-> +#define JUMP_DYNAMIC_IS_SWITCH_TABLE	0
-
-These flags should be added with the commit which actually uses them.
-
-Also "arch_special.h" is specific to special section parsing, so I'm
-thinking these two macros don't really belong here.  Or maybe the header
-file could be renamed to something more generic.
-
--- 
-Josh
