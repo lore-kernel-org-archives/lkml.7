@@ -2,108 +2,84 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49304C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30290C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C7320843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:20:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="t49uPvWp"
+	by mail.kernel.org (Postfix) with ESMTP id ED1E5206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfDWJUv (ORCPT
+        id S1726648AbfDWJZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 05:20:51 -0400
-Received: from mail-eopbgr00083.outbound.protection.outlook.com ([40.107.0.83]:7847
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725955AbfDWJUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 05:20:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HI+QvS2mxCgQ+V9TP0dMlJkYVt5bZ0kUMQ9d36VXYDg=;
- b=t49uPvWp5PSD+AWQU7vbAZAhjJUO9IpNL6MKg/+IvEK4iDKjMd2thIHGuMb6m/YltfrL7jXGWW7NGAmgQthVRyJNuUM1TuVcipTeIQjVvcBUGh6XO3EFDg9IRf9nvSISca7lhJreH289Z9bshJZGwds0G+KVwNPr6QZCkDmeX90=
-Received: from AM0PR04MB6434.eurprd04.prod.outlook.com (20.179.252.215) by
- AM0PR04MB5235.eurprd04.prod.outlook.com (20.177.41.222) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.17; Tue, 23 Apr 2019 09:20:47 +0000
-Received: from AM0PR04MB6434.eurprd04.prod.outlook.com
- ([fe80::a1d7:51b5:9893:dcee]) by AM0PR04MB6434.eurprd04.prod.outlook.com
- ([fe80::a1d7:51b5:9893:dcee%2]) with mapi id 15.20.1813.017; Tue, 23 Apr 2019
- 09:20:47 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] scripts/gdb: Add hlist utilities
-Thread-Topic: [PATCH 1/3] scripts/gdb: Add hlist utilities
-Thread-Index: AQHU+OUlC64SkSXBmEOwbSCd/Y19Cw==
-Date:   Tue, 23 Apr 2019 09:20:47 +0000
-Message-ID: <AM0PR04MB64346AE2641AACD732C2EF9EEE230@AM0PR04MB6434.eurprd04.prod.outlook.com>
-References: <cover.1555921081.git.leonard.crestez@nxp.com>
- <aede2c05c333fd599252a74e67904ff7847b0dcf.1555921081.git.leonard.crestez@nxp.com>
- <155596568158.15276.10057207756258850078@swboyd.mtv.corp.google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [192.88.166.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 866f0e80-3d19-44cc-017d-08d6c7ccf877
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB5235;
-x-ms-traffictypediagnostic: AM0PR04MB5235:
-x-microsoft-antispam-prvs: <AM0PR04MB52352B6F65D475FA74D5A21AEE230@AM0PR04MB5235.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0016DEFF96
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(376002)(39860400002)(346002)(199004)(189003)(9686003)(4326008)(4744005)(53936002)(2906002)(55016002)(76176011)(6246003)(25786009)(81156014)(5660300002)(8676002)(478600001)(8936002)(81166006)(229853002)(66476007)(66556008)(76116006)(64756008)(66446008)(68736007)(6436002)(52536014)(91956017)(66946007)(73956011)(71200400001)(71190400001)(14454004)(26005)(316002)(97736004)(99286004)(3846002)(74316002)(6116002)(44832011)(446003)(7736002)(486006)(305945005)(256004)(66066001)(102836004)(186003)(6506007)(110136005)(86362001)(33656002)(476003)(54906003)(7696005)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5235;H:AM0PR04MB6434.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iPzBM1JkNnuVjWIDqiCCpz96N2JQn1g0PXXKPyvKMoj/wT7JcHtd2jEhysI8R2uGKjpIYDc29PGuFcNfah4ef7I8U6folQHw6L9l5ISmk5B7i6RizxWcyk9/IVO97iTGPvzjJdjJvdD68K4DjbVTcrmDfpzPyqQUHh2ykmIUkj+Dtz5xYgTLcgISq8NF2rv5zZwtUq53diZjXi0bw3ijcQ84V2f27PMdd6583Fnt7xS88FZ4t2drH03MN/9IdQfeBaz71tMHNaDh/NEd0rZKf9ECrUGM3SsX2HwoqnWNmdmZENPqGpdqt7YRkjbCauPlIyF9dkYUijcLEhxbMlzVDH023ntKFKYv3IiOoYkXtavsCqb+7I0U12zO/TWbaJDOVnUGENydj0iVgYFhjQpaA8+PJ7tj8cRao9ARHluURs0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Apr 2019 05:25:05 -0400
+Received: from foss.arm.com ([217.140.101.70]:52370 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbfDWJZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 05:25:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E9CE374;
+        Tue, 23 Apr 2019 02:25:04 -0700 (PDT)
+Received: from [10.37.12.155] (unknown [10.37.12.155])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47D883F557;
+        Tue, 23 Apr 2019 02:25:03 -0700 (PDT)
+Subject: Re: [PATCH AUTOSEL 5.0 29/98] KVM: arm/arm64: Enforce PTE mappings at
+ stage2 when needed
+To:     sashal@kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     yuzenghui@huawei.com, christoffer.dall@arm.com,
+        marc.zyngier@arm.com, kvmarm@lists.cs.columbia.edu
+References: <20190422194205.10404-1-sashal@kernel.org>
+ <20190422194205.10404-29-sashal@kernel.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <e166bc0d-5184-6dda-15ef-2f24d2e42203@arm.com>
+Date:   Tue, 23 Apr 2019 10:27:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 866f0e80-3d19-44cc-017d-08d6c7ccf877
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 09:20:47.3847
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5235
+In-Reply-To: <20190422194205.10404-29-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/22/2019 11:41 PM, Stephen Boyd wrote:=0A=
-> Quoting Leonard Crestez (2019-04-22 01:26:56)=0A=
->> This allows easily examining kernel hlists in python.=0A=
->>=0A=
->> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
-> =0A=
->> +def hlist_for_each_entry(head, gdbtype, member):=0A=
->> +    for node in hlist_for_each(head):=0A=
->> +        if node.type !=3D hlist_node.get_type().pointer():=0A=
->> +            raise TypeError("Type {} found. Expected struct hlist_head =
-*."=0A=
-> =0A=
-> Maybe drop the full-stop? It looks weird to see struct list_head *.=0A=
-=0A=
-Makes sense, it was copy/pasted from list_for_each_entry. Since this =0A=
-iterates over items from hlist_for_each the check is only useful as an=0A=
-assertion anyway so I'll just drop it.=0A=
-=0A=
-The hlist_for_each/list_for_each raise gdb.GdbError on type mismatch; as =
-=0A=
-far as I understand the difference is that GdbError won't print a python =
-=0A=
-backtrace. However these are internal helpers so TypeError makes more sense=
-.=0A=
+Hi Sasha,
+
+On 04/22/2019 08:40 PM, Sasha Levin wrote:
+> From: Suzuki K Poulose <suzuki.poulose@arm.com>
+> 
+> [ Upstream commit a80868f398554842b14d07060012c06efb57c456 ]
+> 
+> commit 6794ad5443a2118 ("KVM: arm/arm64: Fix unintended stage 2 PMD mappings")
+> made the checks to skip huge mappings, stricter. However it introduced
+> a bug where we still use huge mappings, ignoring the flag to
+> use PTE mappings, by not reseting the vma_pagesize to PAGE_SIZE.
+> 
+> Also, the checks do not cover the PUD huge pages, that was
+> under review during the same period. This patch fixes both
+> the issues.
+> 
+> Fixes : 6794ad5443a2118 ("KVM: arm/arm64: Fix unintended stage 2 PMD mappings")
+> Reported-by: Zenghui Yu <yuzenghui@huawei.com>
+> Cc: Zenghui Yu <yuzenghui@huawei.com>
+> Cc: Christoffer Dall <christoffer.dall@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+
+Please be aware that we need a follow up fix for this patch to fix the
+problem for THP backed memory.
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2019-April/645324.html
+
+
+It should appear upstream soon.
+
+
+Cheers
+Suzuki
