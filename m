@@ -2,90 +2,108 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F206C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715DBC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 103AE2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482CD206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:51:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfDWKuv (ORCPT
+        id S1727451AbfDWKvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:50:51 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:46930 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDWKuu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:50:50 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id B8A5025AE8B;
-        Tue, 23 Apr 2019 20:50:48 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id AD3469403E4; Tue, 23 Apr 2019 12:50:46 +0200 (CEST)
-Date:   Tue, 23 Apr 2019 12:50:46 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Nguyen An Hoan <na-hoan@jinso.co.jp>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        ramesh.shanmugasundaram@bp.renesas.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kuninori.morimoto.gx@renesas.com, magnus.damm@gmail.com,
-        yoshihiro.shimoda.uh@renesas.com, h-inayoshi@jinso.co.jp,
-        cv-dong@jinso.co.jp
-Subject: Re: [PATCH 1/2] media: dt-bindings: media: Add r8a77965 DRIF bindings
-Message-ID: <20190423105046.cshmwghdufaqp4pj@verge.net.au>
-References: <1556014199-12698-1-git-send-email-na-hoan@jinso.co.jp>
+        Tue, 23 Apr 2019 06:51:54 -0400
+Received: from foss.arm.com ([217.140.101.70]:54156 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbfDWKvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 06:51:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDBF6374;
+        Tue, 23 Apr 2019 03:51:53 -0700 (PDT)
+Received: from [10.37.8.239] (unknown [10.37.8.239])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 064243F557;
+        Tue, 23 Apr 2019 03:51:50 -0700 (PDT)
+Subject: Re: [PATCH 1/7] genirq/msi: Add a new field in msi_desc to store an
+ IOMMU cookie
+To:     Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     logang@deltatee.com, douliyangs@gmail.com,
+        miquel.raynal@bootlin.com, jason@lakedaemon.net,
+        tglx@linutronix.de, joro@8bytes.org, robin.murphy@arm.com,
+        bigeasy@linutronix.de, linux-rt-users@vger.kernel.org
+References: <20190418172611.21561-1-julien.grall@arm.com>
+ <20190418172611.21561-2-julien.grall@arm.com>
+ <7e77331c-4adf-5bb4-0c23-4d01a6ac5ab4@arm.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <1bcdb72f-2116-756b-b74d-a48f89870782@arm.com>
+Date:   Tue, 23 Apr 2019 11:51:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556014199-12698-1-git-send-email-na-hoan@jinso.co.jp>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <7e77331c-4adf-5bb4-0c23-4d01a6ac5ab4@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 07:09:58PM +0900, Nguyen An Hoan wrote:
-> From: Hoan Nguyen An <na-hoan@jinso.co.jp>
-> 
-> Add r8a77965 DRIF bindings.
-> 
-> Signed-off-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
+On 4/23/19 11:23 AM, Marc Zyngier wrote:
+> Hi Julien,
 
-According to the User's Manual Hardware, v1.50 Nov 20 2019,
-the DRIF IP block M3-N (r8a77965) has a BITCTR register which
-is not present on the H3 (r8a7795) or M3-W (r8a77995).
+Hi Marc,
 
-Does the DRIF IP block present on the M3-N (r8a77965) function
-without support for this register in the driver?
-
-If not then I think that:
-1) This patch should be updated to note that renesas,rcar-gen3-drif
-   can only be used with H3 (r8a7795) and M3-W (r8a77995).
-2) A driver patch is required
-3) The DT patch, 2/2 of this series, should be updated to
-   i) Not use renesas,rcar-gen3-drif
-   ii) Extend the register aperture from 0x64 to 0x84.
-
-> ---
->  Documentation/devicetree/bindings/media/renesas,drif.txt | 1 +
->  1 file changed, 1 insertion(+)
+> On 18/04/2019 18:26, Julien Grall wrote:
+>> When an MSI doorbell is located downstream of an IOMMU, it is required
+>> to swizzle the physical address with an appropriately-mapped IOVA for any
+>> device attached to one of our DMA ops domain.
+>>
+>> At the moment, the allocation of the mapping may be done when composing
+>> the message. However, the composing may be done in non-preemtible
+>> context while the allocation requires to be called from preemptible
+>> context.
+>>
+>> A follow-up patch will split the current logic in two functions
+>> requiring to keep an IOMMU cookie per MSI.
+>>
+>> This patch introduces a new field in msi_desc to store an IOMMU cookie
+>> when CONFIG_IOMMU_DMA is selected.
+>>
+>> Signed-off-by: Julien Grall <julien.grall@arm.com>
+>> ---
+>>   include/linux/msi.h | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/include/linux/msi.h b/include/linux/msi.h
+>> index 7e9b81c3b50d..d7907feef1bb 100644
+>> --- a/include/linux/msi.h
+>> +++ b/include/linux/msi.h
+>> @@ -77,6 +77,9 @@ struct msi_desc {
+>>   	struct device			*dev;
+>>   	struct msi_msg			msg;
+>>   	struct irq_affinity_desc	*affinity;
+>> +#ifdef CONFIG_IOMMU_DMA
+>> +	const void			*iommu_cookie;
+>> +#endif
+>>   
+>>   	union {
+>>   		/* PCI MSI/X specific data */
+>>
 > 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt b/Documentation/devicetree/bindings/media/renesas,drif.txt
-> index 0d8974a..16cdee3 100644
-> --- a/Documentation/devicetree/bindings/media/renesas,drif.txt
-> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
-> @@ -41,6 +41,7 @@ Required properties of an internal channel:
->  -------------------------------------------
->  - compatible:	"renesas,r8a7795-drif" if DRIF controller is a part of R8A7795 SoC.
->  		"renesas,r8a7796-drif" if DRIF controller is a part of R8A7796 SoC.
-> +		"renesas,r8a77965-drif" if DRIF controller is a part of R8A77965 SoC.
->  		"renesas,rcar-gen3-drif" for a generic R-Car Gen3 compatible device.
->  
->  		When compatible with the generic version, nodes must list the
-> -- 
-> 2.7.4
-> 
+> Given that this is the only member in this structure that is dependent
+> on a config option, you could also add a couple of accessors that would
+> do nothing when IOMMU_DMA is not selected (and use that in the DMA code).
+
+I haven't seen any use of the helpers so far because the DMA code is 
+also protected by IOMMU_DMA.
+
+I can add the helpers in the next version if you see any use outside of 
+the DMA code.
+
+Cheers,
+
+-- 
+Julien Grall
