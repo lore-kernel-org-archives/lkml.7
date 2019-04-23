@@ -2,94 +2,125 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E61C10F11
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC9AC10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC27A206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6853D20843
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:15:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="YjSoeKBW"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EZKXQIH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731298AbfDWDGt (ORCPT
+        id S1731333AbfDWDPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:06:49 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44878 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728527AbfDWDGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:06:49 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s10so3720397qtc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 20:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iCDEEjaXFN2ttbzzYVmz/c+842djhuXLkuUAp4+5DKk=;
-        b=YjSoeKBWJEPWfxHSo+UsMp7qTB0PdsBkOtCvHq4zFY0IrPa5vOPy8ywxS7QSjyShWc
-         Ol1vf1qT4sbjel1DHXiEabJQOgcVwR9CkrWr7tCuc8q2HB9voTU/odLAZuCoLd9ou5bO
-         3X3b+QPB9Y71pejtNWb6E7QBm5oDbXfnKxy1A8094TMuBg/bzdeHpIIcMvQYkxEfO5Z7
-         OPgdZqx7hPVB7sPbMZnQCi8J70GjcpiLIK2mP5WVeOHC6PYwfCjztPOgV+Ui3idkSwP+
-         lpG7KbVIFVOFEr1inbqFRgw/wnlVe44B7yVRAuofuPXOclQIWX8xCgfN7nK0wlpRvMSV
-         kEZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iCDEEjaXFN2ttbzzYVmz/c+842djhuXLkuUAp4+5DKk=;
-        b=ISvZUDAt/v3A2mazBUmV+uh0jhYf1FopAvfS2OCO+UgfGeF6k/FU0r/aZWKRjy0gxu
-         5M2hxtmXnJSj08WdBeX3S0mAZDVk89qHektwoIccJhFBXlM24IZG32voC3QTEkD1m+z7
-         FdNElmiBKZuv8TfISUfAJopeOSy25L7u2ObFinxPLo7EfR1nDAlRChp920+v8wWOl2UT
-         cBwWbwC2O+56IVT9111foXQBq8vRZh5lCBHQw5x2NE5F5dHjge/0yxUv9VpbjCh7kn1s
-         AQZWihBw2eMJQYuF+0CdZlEZbsUqu4IcTYQ6vBrtM3dUno2BTbIRLHOCpkDPHvwHrQnL
-         DAsQ==
-X-Gm-Message-State: APjAAAXQgbxCchSMDL/heMBtcdyInxGaQrMBR7IlMNzuTCUP/ipwG0zk
-        dJI2v83UuYNhlo1pOvoDi5uEDTbE9FD8b65YO8figg==
-X-Google-Smtp-Source: APXvYqw3QN4fdcahkmWRd3eiPHDnyQvQxSomciYSxglXJVyK9h8vW7PZoSrjc0BNIged1MRYSKTA4U34in9osD7WdOc=
-X-Received: by 2002:a0c:9945:: with SMTP id i5mr18382547qvd.159.1555988807902;
- Mon, 22 Apr 2019 20:06:47 -0700 (PDT)
+        Mon, 22 Apr 2019 23:15:49 -0400
+Received: from mail-eopbgr760117.outbound.protection.outlook.com ([40.107.76.117]:54983
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728527AbfDWDPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 23:15:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=cEi1N447JGNr/PmGgyWvU31ftY0aNUrpqQB3674U3nOxWGkd3i1SZRz9EjO/WYMZ6oL1bolyKPYwLVdQ7IuIHYlt2+hLkWWZOdOSpako/TpJ70zli0Gs6C3HcCloYXprNMVEd0tZd6rEz6i+xYWn2vkaIZr5Wac+43cmWzT8ao4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7NoUk6tx5deML4M0PyqyMgE1n/wRIhDoSjl0bPcD/jY=;
+ b=CJd3v4cyR0B/+Bv+8FTuBgIQtgpfI0DIykFv53cfxCM3j/2OK6IN1DvrSw7Ea4Id7nNdShwgX9BHwPCy+AY0KnyMWo+Ttiz0A/AeIS5ZQ4O11p0ImoTjF4H+ZvhIh8OHaH7cM5/L94QY0JVYb1WrxUGTMNZ4QgLd3cm0jzWRnjQ=
+ARC-Authentication-Results: i=1; test.office365.com 1;spf=none;dmarc=none
+ action=none header.from=microsoft.com;dkim=none (message not signed);arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7NoUk6tx5deML4M0PyqyMgE1n/wRIhDoSjl0bPcD/jY=;
+ b=EZKXQIH3JbIq7oASBxQ0MjrhDa0OM2zr4m8XSWoPVPcm5aIylhJFlJyhRahlmjWuIEPwfD6DKEc/4pByH7Bsd5FlCSTf8B0WaRJv15lBGTptArMkFMgHo3KjKaE7WBNHUjlOpqqvWxNDuTKBgyHZxFmkQb88gM2/ouWP1/A9r4c=
+Received: from SN6PR2101MB0925.namprd21.prod.outlook.com (52.132.117.14) by
+ SN6PR2101MB0989.namprd21.prod.outlook.com (52.132.114.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.2; Tue, 23 Apr 2019 03:15:47 +0000
+Received: from SN6PR2101MB0925.namprd21.prod.outlook.com
+ ([fe80::f1ad:f334:bd40:92e1]) by SN6PR2101MB0925.namprd21.prod.outlook.com
+ ([fe80::f1ad:f334:bd40:92e1%9]) with mapi id 15.20.1835.000; Tue, 23 Apr 2019
+ 03:15:47 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Joseph Salisbury <Joseph.Salisbury@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "jikos@kernel.org" <jikos@kernel.org>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] drivers: hid: Add a module description line
+Thread-Topic: [PATCH] drivers: hid: Add a module description line
+Thread-Index: AQHU+VKvIn+x34PH9kGUsz0PSRGBr6ZJDCfQ
+Date:   Tue, 23 Apr 2019 03:15:46 +0000
+Message-ID: <SN6PR2101MB092558880B017881591E41E2D7230@SN6PR2101MB0925.namprd21.prod.outlook.com>
+References: <324016691a62a13ce46c9ccd35c7e492bf609fd6.1555967348.git.joseph.salisbury@microsoft.com>
+In-Reply-To: <324016691a62a13ce46c9ccd35c7e492bf609fd6.1555967348.git.joseph.salisbury@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-04-23T03:15:45.3845354Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9cc321c5-47f8-4018-98fc-c3567e11eb59;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 12dc9c68-f3a8-4964-7330-08d6c799fac0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB0989;
+x-ms-traffictypediagnostic: SN6PR2101MB0989:
+x-microsoft-antispam-prvs: <SN6PR2101MB09892A4A44FCD1DB466C90EAD7230@SN6PR2101MB0989.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:193;
+x-forefront-prvs: 0016DEFF96
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(346002)(396003)(376002)(366004)(199004)(189003)(2501003)(81156014)(8676002)(229853002)(4744005)(5660300002)(33656002)(10090500001)(8936002)(22452003)(55016002)(76116006)(6436002)(2906002)(81166006)(4326008)(25786009)(64756008)(97736004)(66946007)(73956011)(66476007)(66556008)(66446008)(8990500004)(305945005)(86362001)(66066001)(6506007)(26005)(9686003)(186003)(14454004)(71200400001)(74316002)(316002)(476003)(68736007)(6246003)(53936002)(446003)(52536014)(11346002)(256004)(86612001)(99286004)(54906003)(110136005)(76176011)(3846002)(6116002)(7696005)(102836004)(1511001)(2201001)(486006)(10290500003)(478600001)(71190400001)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB0989;H:SN6PR2101MB0925.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ITBGukWKKlunVEHRc37yOFgwYd27McOg1PgwcWqSB+2bP43RicfBaeq/LwjUPM5fOcI0V+JwK9I/0FcdzXDiQIb2fV21dyIp7K0gkremPUT72j7Na9hGBT3546675u1pDGhYI68z4W9w04xBmaivnaIxSAX0LdoXVM7b6AGuZJ+3NC4uyzcDEd9dleT3FNyOls/lRVMVYRk4r0XXMD5X7DC6MaFDA7nEV9R84sz/1YgdNNbAXB+QHYKs4JGimdlBECiC0NAt3MJXHJVDCY+9/XaAXABB6nXguFqaSrNQy8xgYzJpgNs9Ws96WqNtryJmdORk/sz1sjRDUiWAMIcFMVTUdfV/skbLtTdPrNqMXdMgPoq2Wi00ZFwtGvINAgA+CURhMHGg6OjsyWhXZcLOOjCm9+GQkiHJjm5uZ2kFFUQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190422101526.28415-1-drake@endlessm.com> <20190422101526.28415-2-drake@endlessm.com>
- <20190422120451.GA9499@gmail.com>
-In-Reply-To: <20190422120451.GA9499@gmail.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Tue, 23 Apr 2019 11:06:36 +0800
-Message-ID: <CAD8Lp44ZaifPf+809BzbLg=9ijsRsE=7JMVpXkqRenY9radpZA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] x86/tsc: set LAPIC timer frequency to crystal clock frequency
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, x86@kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12dc9c68-f3a8-4964-7330-08d6c799fac0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 03:15:46.8545
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB0989
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 8:04 PM Ingo Molnar <mingo@kernel.org> wrote:
-> Minor style nit: the parentheses are unnecessary, integer expressions
-> like this are evaluated left to right and multiplication and division has
-> the same precedence.
-
-Fair point, although the same could be said for cpu_khz_from_msr().
-
-> But it might also make sense to actually store crystal_mhz instead of
-> crystal_khz, because both CPUID 15H and 16H provides MHz values.
->
-> That way the above expression would simplify to:
->
->         lapic_timer_frequency = crystal_mhz / HZ;
-
-Wouldn't it be
-        lapic_timer_frequency = crystal_mhz * 1000000 / HZ;
-?
-
-Thanks
-Daniel
+RnJvbTogSm9zZXBoIFNhbGlzYnVyeSA8Sm9zZXBoLlNhbGlzYnVyeUBtaWNyb3NvZnQuY29tPiBT
+ZW50OiBNb25kYXksIEFwcmlsIDIyLCAyMDE5IDI6MzEgUE0NCj4gDQo+IFNpZ25lZC1vZmYtYnk6
+IEpvc2VwaCBTYWxpc2J1cnkgPGpvc2VwaC5zYWxpc2J1cnlAbWljcm9zb2Z0LmNvbT4NCj4gLS0t
+DQo+ICBkcml2ZXJzL2hpZC9oaWQtaHlwZXJ2LmMgfCAyICsrDQo+ICAxIGZpbGUgY2hhbmdlZCwg
+MiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9oaWQvaGlkLWh5cGVy
+di5jIGIvZHJpdmVycy9oaWQvaGlkLWh5cGVydi5jDQo+IGluZGV4IDcwNDA0OWU2MmQ1OC4uZDMz
+MTFkNzE0ZDM1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2hpZC9oaWQtaHlwZXJ2LmMNCj4gKysr
+IGIvZHJpdmVycy9oaWQvaGlkLWh5cGVydi5jDQo+IEBAIC02MTQsNSArNjE0LDcgQEAgc3RhdGlj
+IHZvaWQgX19leGl0IG1vdXNldnNjX2V4aXQodm9pZCkNCj4gIH0NCj4gDQo+ICBNT0RVTEVfTElD
+RU5TRSgiR1BMIik7DQo+ICtNT0RVTEVfREVTQ1JJUFRJT04oIk1pY3Jvc29mdCBIeXBlci1WIFN5
+bnRoZXRpYyBISUQgRHJpdmVyIik7DQo+ICsNCj4gIG1vZHVsZV9pbml0KG1vdXNldnNjX2luaXQp
+Ow0KPiAgbW9kdWxlX2V4aXQobW91c2V2c2NfZXhpdCk7DQo+IC0tDQo+IDIuMTcuMQ0KDQpFdmVu
+IHRob3VnaCBpdCB3aWxsIGxpa2VseSBiZSByZWR1bmRhbnQgd2l0aCB0aGUgY29tbWl0IHRpdGxl
+LCB0aGVyZQ0KcHJvYmFibHkgbmVlZHMgdG8gYmUgYSBzaG9ydCBjb21taXQgbWVzc2FnZS4gICAo
+QW5kIGFsc28gd2l0aCB0aGUNCm90aGVyIHR3byBzaW1pbGFyIHBhdGNoZXMuKQ0KDQpNaWNoYWVs
+DQoNCg==
