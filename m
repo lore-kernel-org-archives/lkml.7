@@ -2,364 +2,285 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5FBC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F41C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B7620675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F0A2177B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:19:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="aipArNB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbfDWNTM (ORCPT
+        id S1727927AbfDWNTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:19:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48450 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726801AbfDWNTM (ORCPT
+        Tue, 23 Apr 2019 09:19:43 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:26361 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727751AbfDWNTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:19:12 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NDBf7Q067451
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:19:10 -0400
-Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s211j6ush-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:19:10 -0400
-Received: from localhost
-        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Tue, 23 Apr 2019 14:19:09 +0100
-Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
-        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 23 Apr 2019 14:19:06 +0100
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NDJ2AV23789614
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Apr 2019 13:19:02 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5ECD7C6055;
-        Tue, 23 Apr 2019 13:19:02 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49A32C6057;
-        Tue, 23 Apr 2019 13:19:01 +0000 (GMT)
-Received: from [9.60.75.251] (unknown [9.60.75.251])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Apr 2019 13:19:01 +0000 (GMT)
-Subject: Re: [PATCH v2 3/8] s390: vfio-ap: allow assignment of unavailable AP
- resources to mdev device
-To:     pmorel@linux.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1555796980-27920-1-git-send-email-akrowiak@linux.ibm.com>
- <1555796980-27920-4-git-send-email-akrowiak@linux.ibm.com>
- <2c76d792-00aa-a334-2243-b0f8b91295b2@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Tue, 23 Apr 2019 09:19:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <2c76d792-00aa-a334-2243-b0f8b91295b2@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 23 Apr 2019 09:19:42 -0400
+X-IronPort-AV: E=Sophos;i="5.60,385,1549954800"; 
+   d="scan'208";a="27959335"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 23 Apr 2019 06:19:41 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.105) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Tue, 23 Apr 2019 06:19:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F6qWHCxLk19i08fJN0J/2h9lYJr0W1UeRc5pu39TcyY=;
+ b=aipArNB1Z66lS8hE87YX89DNv15HwnmetYzaJbbnkqai3w6oS+QBSEkogqLgT7X0NBo+lWucZmuYHoQHX2ioc4ksIygwV0eEsBKO2ymV2HAT4WxOBRF+RjXQKaNRbL3X7b/tMYcIQnUqehI2GPGcNcHFCPVY19ULwyuPqEP+FgE=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB1497.namprd11.prod.outlook.com (10.172.38.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.14; Tue, 23 Apr 2019 13:19:38 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::e0e3:1d51:9e3e:6dc]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::e0e3:1d51:9e3e:6dc%3]) with mapi id 15.20.1835.010; Tue, 23 Apr 2019
+ 13:19:38 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <Nicolas.Ferre@microchip.com>, <mchehab@kernel.org>,
+        <ksloat@aampglobal.com>
+Subject: Re: [PATCH 4/7] media: atmel: atmel-isc: add support for
+ DO_WHITE_BALANCE
+Thread-Topic: [PATCH 4/7] media: atmel: atmel-isc: add support for
+ DO_WHITE_BALANCE
+Thread-Index: AQHU7sRrNLP5XTfBXUK9XK97Esze7qY1dWCAgAdZAACADQBXAIAAAOaA
+Date:   Tue, 23 Apr 2019 13:19:38 +0000
+Message-ID: <a891b3ea-6ab4-30c2-04ff-152d59530509@microchip.com>
+References: <1554807715-2353-1-git-send-email-eugen.hristev@microchip.com>
+ <1554807715-2353-5-git-send-email-eugen.hristev@microchip.com>
+ <08d1bf29-326b-7a8c-51c4-088d0effc4b6@xs4all.nl>
+ <5fcb8f59-6979-c355-574b-40bb13610252@microchip.com>
+ <2c7b069e-f81c-a643-4feb-0839277752e1@xs4all.nl>
+In-Reply-To: <2c7b069e-f81c-a643-4feb-0839277752e1@xs4all.nl>
+Accept-Language: ro-RO, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19042313-0036-0000-0000-00000AAC0026
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010980; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01193231; UDB=6.00625501; IPR=6.00974051;
- MB=3.00026557; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-23 13:19:08
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042313-0037-0000-0000-00004B7F2C82
-Message-Id: <22607063-1194-8fa6-2941-6acecddc3761@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904230091
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VE1PR08CA0029.eurprd08.prod.outlook.com
+ (2603:10a6:803:104::42) To DM5PR11MB1242.namprd11.prod.outlook.com
+ (2603:10b6:3:14::8)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Eugen.Hristev@microchip.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tagtoolbar-keys: D20190423161509096
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a3d9252a-0100-4369-d935-08d6c7ee5644
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR11MB1497;
+x-ms-traffictypediagnostic: DM5PR11MB1497:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM5PR11MB14977FFA0A3F280B07867FCBE8230@DM5PR11MB1497.namprd11.prod.outlook.com>
+x-forefront-prvs: 0016DEFF96
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(366004)(376002)(39860400002)(51914003)(199004)(189003)(53546011)(53936002)(14454004)(305945005)(102836004)(6436002)(8676002)(478600001)(68736007)(36756003)(7736002)(81166006)(97736004)(966005)(6246003)(6306002)(6512007)(72206003)(186003)(81156014)(26005)(6486002)(386003)(31686004)(4326008)(93886005)(6506007)(31696002)(14444005)(256004)(71200400001)(2501003)(5660300002)(476003)(86362001)(11346002)(73956011)(52116002)(71190400001)(66476007)(8936002)(446003)(66556008)(229853002)(2906002)(2616005)(486006)(66066001)(76176011)(25786009)(99286004)(110136005)(54906003)(66446008)(3846002)(316002)(6116002)(64756008)(2201001)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1497;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: lFlT5dLPiucbPxlDMsoByFnTM9gt3YKMswr4iQVDjNAjggKvg2cnZDHUDdFawMx5jI0C2oZ6N1VExOQdXIA15Jrk3G36mRnr2GjFoGct4obsLE21DcXIbfXaduJMnonx3iCCP2/9cCt2wJn7BvRjS4Bp9vOJPgOtOMCZORsfcWRiCxeiw7VUs2fm9rMYROqJfeHtNqM820dHzIonjy2H9qzXahCfE0aWvf0+pyVfMH/lkiV8xuTNgu98ZvDTiatVKd/OaFg7PgLwECnEDeB6SFA2b9wWj69b666xg44C9RIAhTJbGoJ0t/oDh91PuLe2UCTAvNDGChoqybC5jgu8wPBxZdLqCFhVYk6eVChA2UrInAe7mBOG+prrJrDItu/PhgHDUO6bOhNNApLjx5OTIaTcKeWjm+YMBLvjwjiqVBE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FD2A4777000413489F8A7EC777477D40@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3d9252a-0100-4369-d935-08d6c7ee5644
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 13:19:38.6002
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1497
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/19 8:46 AM, Pierre Morel wrote:
-> On 20/04/2019 23:49, Tony Krowiak wrote:
->> The AP architecture does not preclude assignment of AP resources that are
->> not yet in the AP configuration (i.e., not available or not online).
->> Let's go ahead and implement this facet of the AP architecture for linux
->> guests.
->>
->> Access to AP resources is controlled by bit masks in a guest's SIE
->> state description (i.e., the control block containing the state of a
->> guest). When an AP instruction is executed on the guest, the firmware
->> combines the masks from the guest's SIE state description with the masks
->> from the host by doing a logical bitwise AND of the masks to create what
->> are defined as effective masks. The effective masks determine which AP
->> resources can be accessed by the guest.
->>
->> Effective masking allows the assignment of AP resources to a guest even
->> if the underlying device is not in the AP configuration. If the device
->> subsequently becomes configured, the guest will automatically have access
->> to the associated AP resources (e.g., AP queues).
->>
->> The current implementation does not allow assignment of AP resources to
->> an mdev device if the AP queues identified by the assignment are not
->> bound to the vfio_ap device driver. This patch allows assignment of AP
->> resources to the mdev device even if the AP queues are not bound to the
->> vfio_ap device driver, as long as the AP queues are not reserved by the
->> AP BUS for use by the zcrypt device drivers. If the queues are 
->> subsequently
->> bound to the vfio_ap device driver while a running guest is using the 
->> mdev
->> device, the guest will automatically gain access to the queues. Effective
->> masking prevents access to queues until such time as they become 
->> available.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_ops.c | 160 
->> +++++---------------------------------
->>   1 file changed, 18 insertions(+), 142 deletions(-)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
->> b/drivers/s390/crypto/vfio_ap_ops.c
->> index eae4ee24460a..221491a9ba95 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -113,122 +113,6 @@ static struct attribute_group 
->> *vfio_ap_mdev_type_groups[] = {
->>       NULL,
->>   };
->> -struct vfio_ap_queue_reserved {
->> -    unsigned long *apid;
->> -    unsigned long *apqi;
->> -    bool reserved;
->> -};
->> -
->> -/**
->> - * vfio_ap_has_queue
->> - *
->> - * @dev: an AP queue device
->> - * @data: a struct vfio_ap_queue_reserved reference
->> - *
->> - * Flags whether the AP queue device (@dev) has a queue ID containing 
->> the APQN,
->> - * apid or apqi specified in @data:
->> - *
->> - * - If @data contains both an apid and apqi value, then @data will 
->> be flagged
->> - *   as reserved if the APID and APQI fields for the AP queue device 
->> matches
->> - *
->> - * - If @data contains only an apid value, @data will be flagged as
->> - *   reserved if the APID field in the AP queue device matches
->> - *
->> - * - If @data contains only an apqi value, @data will be flagged as
->> - *   reserved if the APQI field in the AP queue device matches
->> - *
->> - * Returns 0 to indicate the input to function succeeded. Returns 
->> -EINVAL if
->> - * @data does not contain either an apid or apqi.
->> - */
->> -static int vfio_ap_has_queue(struct device *dev, void *data)
->> -{
->> -    struct vfio_ap_queue_reserved *qres = data;
->> -    struct ap_queue *ap_queue = to_ap_queue(dev);
->> -    ap_qid_t qid;
->> -    unsigned long id;
->> -
->> -    if (qres->apid && qres->apqi) {
->> -        qid = AP_MKQID(*qres->apid, *qres->apqi);
->> -        if (qid == ap_queue->qid)
->> -            qres->reserved = true;
->> -    } else if (qres->apid && !qres->apqi) {
->> -        id = AP_QID_CARD(ap_queue->qid);
->> -        if (id == *qres->apid)
->> -            qres->reserved = true;
->> -    } else if (!qres->apid && qres->apqi) {
->> -        id = AP_QID_QUEUE(ap_queue->qid);
->> -        if (id == *qres->apqi)
->> -            qres->reserved = true;
->> -    } else {
->> -        return -EINVAL;
->> -    }
->> -
->> -    return 0;
->> -}
->> -
->> -/**
->> - * vfio_ap_verify_queue_reserved
->> - *
->> - * @matrix_dev: a mediated matrix device
->> - * @apid: an AP adapter ID
->> - * @apqi: an AP queue index
->> - *
->> - * Verifies that the AP queue with @apid/@apqi is reserved by the 
->> VFIO AP device
->> - * driver according to the following rules:
->> - *
->> - * - If both @apid and @apqi are not NULL, then there must be an AP 
->> queue
->> - *   device bound to the vfio_ap driver with the APQN identified by 
->> @apid and
->> - *   @apqi
->> - *
->> - * - If only @apid is not NULL, then there must be an AP queue device 
->> bound
->> - *   to the vfio_ap driver with an APQN containing @apid
->> - *
->> - * - If only @apqi is not NULL, then there must be an AP queue device 
->> bound
->> - *   to the vfio_ap driver with an APQN containing @apqi
->> - *
->> - * Returns 0 if the AP queue is reserved; otherwise, returns 
->> -EADDRNOTAVAIL.
->> - */
->> -static int vfio_ap_verify_queue_reserved(unsigned long *apid,
->> -                     unsigned long *apqi)
->> -{
->> -    int ret;
->> -    struct vfio_ap_queue_reserved qres;
->> -
->> -    qres.apid = apid;
->> -    qres.apqi = apqi;
->> -    qres.reserved = false;
->> -
->> -    ret = driver_for_each_device(&matrix_dev->vfio_ap_drv->driver, NULL,
->> -                     &qres, vfio_ap_has_queue);
->> -    if (ret)
->> -        return ret;
->> -
->> -    if (qres.reserved)
->> -        return 0;
->> -
->> -    return -EADDRNOTAVAIL;
->> -}
->> -
->> -static int
->> -vfio_ap_mdev_verify_queues_reserved_for_apid(struct ap_matrix_mdev 
->> *matrix_mdev,
->> -                         unsigned long apid)
-> 
-> You suppress this function but it is still in use in 
-> assign_adapter_store...
-
-Right you are. I must have been removed in a subsequent patch, because
-this code was compiled and tested. It should have been removed here
-though.
-
-> 
-> 
->> -{
->> -    int ret;
->> -    unsigned long apqi;
->> -    unsigned long nbits = matrix_mdev->matrix.aqm_max + 1;
->> -
->> -    if (find_first_bit_inv(matrix_mdev->matrix.aqm, nbits) >= nbits)
->> -        return vfio_ap_verify_queue_reserved(&apid, NULL);
->> -
->> -    for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm, nbits) {
->> -        ret = vfio_ap_verify_queue_reserved(&apid, &apqi);
->> -        if (ret)
->> -            return ret;
->> -    }
->> -
->> -    return 0;
->> -}
->> -
->>   /**
->>    * vfio_ap_mdev_verify_no_sharing
->>    *
->> @@ -359,9 +243,17 @@ static ssize_t assign_adapter_store(struct device 
->> *dev,
->>       set_bit_inv(apid, matrix_mdev->matrix.apm);
->> +    ret = ap_apqn_in_matrix_owned_by_def_drv(matrix_mdev->matrix.apm,
->> +                         matrix_mdev->matrix.aqm);
->> +
->> +    /* If any APQN is owned by a default driver */
->> +    ret = (ret == 1) ? -EADDRNOTAVAIL : ret;
->> +    if (ret)
->> +        goto error;
->> +
->>       ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev);
->>       if (ret)
->> -        goto share_err;
->> +        goto error;
->>       if (matrix_mdev->shadow_crycb)
->>           set_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
->> @@ -369,7 +261,7 @@ static ssize_t assign_adapter_store(struct device 
->> *dev,
->>       ret = count;
->>       goto done;
->> -share_err:
->> +error:
->>       clear_bit_inv(apid, matrix_mdev->matrix.apm);
->>   done:
->>       mutex_unlock(&matrix_dev->lock);
->> @@ -426,26 +318,6 @@ static ssize_t unassign_adapter_store(struct 
->> device *dev,
->>   }
->>   static DEVICE_ATTR_WO(unassign_adapter);
->> -static int
->> -vfio_ap_mdev_verify_queues_reserved_for_apqi(struct ap_matrix_mdev 
->> *matrix_mdev,
->> -                         unsigned long apqi)
->> -{
->> -    int ret;
->> -    unsigned long apid;
->> -    unsigned long nbits = matrix_mdev->matrix.apm_max + 1;
->> -
->> -    if (find_first_bit_inv(matrix_mdev->matrix.apm, nbits) >= nbits)
->> -        return vfio_ap_verify_queue_reserved(NULL, &apqi);
->> -
->> -    for_each_set_bit_inv(apid, matrix_mdev->matrix.apm, nbits) {
->> -        ret = vfio_ap_verify_queue_reserved(&apid, &apqi);
->> -        if (ret)
->> -            return ret;
->> -    }
->> -
->> -    return 0;
->> -}
->> -
->>   /**
->>    * assign_domain_store
->>    *
->> @@ -500,12 +372,16 @@ static ssize_t assign_domain_store(struct device 
->> *dev,
->>       mutex_lock(&matrix_dev->lock);
->> -    ret = vfio_ap_mdev_verify_queues_reserved_for_apqi(matrix_mdev, 
->> apqi);
->> -    if (ret)
->> -        goto done;
->> -
->>       set_bit_inv(apqi, matrix_mdev->matrix.aqm);
->> +    ret = ap_apqn_in_matrix_owned_by_def_drv(matrix_mdev->matrix.apm,
->> +                         matrix_mdev->matrix.aqm);
->> +
->> +    /* If any APQN is owned by a default driver */
->> +    ret = (ret == 1) ? -EADDRNOTAVAIL : ret;
->> +    if (ret)
->> +        goto error;
-> 
-> forget to add the error label ?
-
-Apparently I did. I'm not sure what happened here since I compiled
-and tested the code. I must have messed something up when formatting
-the patches.
-
-> 
->> +
->>       ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev);
->>       if (ret)
->>           goto share_err;
->>
-> 
-> 
-
+DQoNCk9uIDIzLjA0LjIwMTkgMTY6MTEsIEhhbnMgVmVya3VpbCB3cm90ZToNCj4gT24gNC8xNS8x
+OSA4OjQzIEFNLCBFdWdlbi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+Pg0KPj4NCj4+
+IE9uIDEwLjA0LjIwMTkgMTc6MjYsIEhhbnMgVmVya3VpbCB3cm90ZToNCj4+DQo+Pj4NCj4+PiBP
+biA0LzkvMTkgMTowNyBQTSwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdyb3RlOg0KPj4+
+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+Pj4+
+DQo+Pj4+IFRoaXMgYWRkcyBzdXBwb3J0IGZvciB0aGUgJ2J1dHRvbicgY29udHJvbCBET19XSElU
+RV9CQUxBTkNFDQo+Pj4+IFRoaXMgZmVhdHVyZSB3aWxsIGVuYWJsZSB0aGUgSVNDIHRvIGNvbXB1
+dGUgdGhlIHdoaXRlIGJhbGFuY2UgY29lZmZpY2llbnRzDQo+Pj4+IGluIGEgb25lIHRpbWUgc2hv
+dCwgYXQgdGhlIHVzZXIgZGlzY3JldGlvbi4NCj4+Pj4gVGhpcyBjYW4gYmUgdXNlZCBpZiBhIGNv
+bG9yIGNoYXJ0L2dyZXkgY2hhcnQgaXMgcHJlc2VudCBpbiBmcm9udCBvZiB0aGUgY2FtZXJhLg0K
+Pj4+PiBUaGUgSVNDIHdpbGwgYWRqdXN0IHRoZSBjb2VmZmljaWVudHMgYW5kIGhhdmUgdGhlbSBm
+aXhlZCB1bnRpbCBuZXh0IGJhbGFuY2UNCj4+Pj4gb3IgdW50aWwgc2Vuc29yIG1vZGUgaXMgY2hh
+bmdlZC4NCj4+Pj4gVGhpcyBpcyBwYXJ0aWN1bGFybHkgdXNlZnVsIGZvciB3aGl0ZSBiYWxhbmNl
+IGFkanVzdG1lbnQgaW4gZGlmZmVyZW50DQo+Pj4+IGxpZ2h0aW5nIHNjZW5hcmlvcywgYW5kIHRo
+ZW4gdGFraW5nIHBob3RvcyB0byBzaW1pbGFyIHNjZW5lcnkuDQo+Pj4+IFRoZSBvbGQgYXV0byB3
+aGl0ZSBiYWxhbmNlIHN0YXlzIGluIHBsYWNlLCB3aGVyZSB0aGUgSVNDIHdpbGwgYWRqdXN0IGV2
+ZXJ5DQo+Pj4+IDQgZnJhbWVzIHRvIHRoZSBjdXJyZW50IHNjZW5lcnkgbGlnaHRpbmcsIGlmIHRo
+ZSBzY2VuZXJ5IGlzIGFwcHJveGltYXRlbHkNCj4+Pj4gZ3JleSBpbiBhdmVyYWdlLCBvdGhlcndp
+c2UgZ3JleSB3b3JsZCBhbGdvcml0aG0gZmFpbHMuDQo+Pj4+IE9uZSB0aW1lIHdoaXRlIGJhbGFu
+Y2UgYWRqdXN0bWVudHMgbmVlZHMgc3RyZWFtaW5nIHRvIGJlIGVuYWJsZWQsIHN1Y2ggdGhhdA0K
+Pj4+PiBjYXB0dXJlIGlzIGVuYWJsZWQgYW5kIHRoZSBoaXN0b2dyYW0gaGFzIGRhdGEgdG8gd29y
+ayB3aXRoLg0KPj4+PiBIaXN0b2dyYW0gd2l0aG91dCBjYXB0dXJlIGRvZXMgbm90IHdvcmsgaW4g
+dGhpcyBoYXJkd2FyZSBtb2R1bGUuDQo+Pj4+DQo+Pj4+IFRvIGRpc2FibGUgYXV0byB3aGl0ZSBi
+YWxhbmNlIGZlYXR1cmUgKGZpcnN0IHN0ZXApDQo+Pj4+IHY0bDItY3RsIC0tc2V0LWN0cmw9d2hp
+dGVfYmFsYW5jZV9hdXRvbWF0aWM9MA0KPj4+Pg0KPj4+PiBUbyBzdGFydCB0aGUgb25lIHRpbWUg
+d2hpdGUgYmFsYW5jZSBwcm9jZWR1cmU6DQo+Pj4+IHY0bDItY3RsIC0tc2V0LWN0cmw9ZG9fd2hp
+dGVfYmFsYW5jZT0xDQo+Pj4+DQo+Pj4+IFVzZXIgY29udHJvbHMgbm93IGluY2x1ZGUgdGhlIGRv
+X3doaXRlX2JhbGFuY2UgY3RybDoNCj4+Pj4gVXNlciBDb250cm9scw0KPj4+Pg0KPj4+PiAgICAg
+ICAgICAgICAgICAgICAgICAgIGJyaWdodG5lc3MgMHgwMDk4MDkwMCAoaW50KSAgICA6IG1pbj0t
+MTAyNCBtYXg9MTAyMyBzdGVwPTEgZGVmYXVsdD0wIHZhbHVlPTAgZmxhZ3M9c2xpZGVyDQo+Pj4+
+ICAgICAgICAgICAgICAgICAgICAgICAgICBjb250cmFzdCAweDAwOTgwOTAxIChpbnQpICAgIDog
+bWluPS0yMDQ4IG1heD0yMDQ3IHN0ZXA9MSBkZWZhdWx0PTI1NiB2YWx1ZT0yNTYgZmxhZ3M9c2xp
+ZGVyDQo+Pj4+ICAgICAgICAgICB3aGl0ZV9iYWxhbmNlX2F1dG9tYXRpYyAweDAwOTgwOTBjIChi
+b29sKSAgIDogZGVmYXVsdD0xIHZhbHVlPTENCj4+Pj4gICAgICAgICAgICAgICAgICBkb193aGl0
+ZV9iYWxhbmNlIDB4MDA5ODA5MGQgKGJ1dHRvbikgOiBmbGFncz13cml0ZS1vbmx5LCBleGVjdXRl
+LW9uLXdyaXRlDQo+Pj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBnYW1tYSAweDAwOTgw
+OTEwIChpbnQpICAgIDogbWluPTAgbWF4PTIgc3RlcD0xIGRlZmF1bHQ9MiB2YWx1ZT0yIGZsYWdz
+PXNsaWRlcg0KPj4+Pg0KPj4+PiBTaWduZWQtb2ZmLWJ5OiBFdWdlbiBIcmlzdGV2IDxldWdlbi5o
+cmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+Pj4+IC0tLQ0KPj4+PiAgICBkcml2ZXJzL21lZGlhL3Bs
+YXRmb3JtL2F0bWVsL2F0bWVsLWlzYy5jIHwgNzQgKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KystLS0NCj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDY5IGluc2VydGlvbnMoKyksIDUgZGVsZXRp
+b25zKC0pDQo+Pj4+DQo+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL2F0
+bWVsL2F0bWVsLWlzYy5jIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9hdG1lbC9hdG1lbC1pc2Mu
+Yw0KPj4+PiBpbmRleCBmNmI4YjAwZS4uZTUxNjgwNSAxMDA2NDQNCj4+Pj4gLS0tIGEvZHJpdmVy
+cy9tZWRpYS9wbGF0Zm9ybS9hdG1lbC9hdG1lbC1pc2MuYw0KPj4+PiArKysgYi9kcml2ZXJzL21l
+ZGlhL3BsYXRmb3JtL2F0bWVsL2F0bWVsLWlzYy5jDQo+Pj4+IEBAIC0xNjcsNiArMTY3LDkgQEAg
+c3RydWN0IGlzY19jdHJscyB7DQo+Pj4+ICAgIAl1MzIgYnJpZ2h0bmVzczsNCj4+Pj4gICAgCXUz
+MiBjb250cmFzdDsNCj4+Pj4gICAgCXU4IGdhbW1hX2luZGV4Ow0KPj4+PiArI2RlZmluZSBJU0Nf
+V0JfTk9ORQkwDQo+Pj4+ICsjZGVmaW5lIElTQ19XQl9BVVRPCTENCj4+Pj4gKyNkZWZpbmUgSVND
+X1dCX09ORVRJTUUJMg0KPj4+PiAgICAJdTggYXdiOw0KPj4+PiAgICANCj4+Pj4gICAgCS8qIG9u
+ZSBmb3IgZWFjaCBjb21wb25lbnQgOiBHUiwgUiwgR0IsIEIgKi8NCj4+Pj4gQEAgLTIxMCw2ICsy
+MTMsNyBAQCBzdHJ1Y3QgaXNjX2RldmljZSB7DQo+Pj4+ICAgIAlzdHJ1Y3QgZm10X2NvbmZpZwl0
+cnlfY29uZmlnOw0KPj4+PiAgICANCj4+Pj4gICAgCXN0cnVjdCBpc2NfY3RybHMJY3RybHM7DQo+
+Pj4+ICsJc3RydWN0IHY0bDJfY3RybAkqZG9fd2JfY3RybDsNCj4+Pj4gICAgCXN0cnVjdCB3b3Jr
+X3N0cnVjdAlhd2Jfd29yazsNCj4+Pj4gICAgDQo+Pj4+ICAgIAlzdHJ1Y3QgbXV0ZXgJCWxvY2s7
+DQo+Pj4+IEBAIC04MDksNyArODEzLDcgQEAgc3RhdGljIHZvaWQgaXNjX3NldF9waXBlbGluZShz
+dHJ1Y3QgaXNjX2RldmljZSAqaXNjLCB1MzIgcGlwZWxpbmUpDQo+Pj4+ICAgIA0KPj4+PiAgICAJ
+YmF5X2NmZyA9IGlzYy0+Y29uZmlnLnNkX2Zvcm1hdC0+Y2ZhX2JheWNmZzsNCj4+Pj4gICAgDQo+
+Pj4+IC0JaWYgKCFjdHJscy0+YXdiKQ0KPj4+PiArCWlmIChjdHJscy0+YXdiID09IElTQ19XQl9O
+T05FKQ0KPj4+PiAgICAJCWlzY19yZXNldF9hd2JfY3RybHMoaXNjKTsNCj4+Pj4gICAgDQo+Pj4+
+ICAgIAlyZWdtYXBfd3JpdGUocmVnbWFwLCBJU0NfV0JfQ0ZHLCBiYXlfY2ZnKTsNCj4+Pj4gQEAg
+LTE5MjgsNyArMTkzMiw3IEBAIHN0YXRpYyB2b2lkIGlzY19hd2Jfd29yayhzdHJ1Y3Qgd29ya19z
+dHJ1Y3QgKncpDQo+Pj4+ICAgIAliYXlzZWwgPSBpc2MtPmNvbmZpZy5zZF9mb3JtYXQtPmNmYV9i
+YXljZmcgPDwgSVNDX0hJU19DRkdfQkFZU0VMX1NISUZUOw0KPj4+PiAgICANCj4+Pj4gICAgCS8q
+IGlmIG5vIG1vcmUgYXV0byB3aGl0ZSBiYWxhbmNlLCByZXNldCBjb250cm9scy4gKi8NCj4+Pj4g
+LQlpZiAoIWN0cmxzLT5hd2IpDQo+Pj4+ICsJaWYgKGN0cmxzLT5hd2IgPT0gSVNDX1dCX05PTkUp
+DQo+Pj4+ICAgIAkJaXNjX3Jlc2V0X2F3Yl9jdHJscyhpc2MpOw0KPj4+PiAgICANCj4+Pj4gICAg
+CXBtX3J1bnRpbWVfZ2V0X3N5bmMoaXNjLT5kZXYpOw0KPj4+PiBAQCAtMTkzNyw3ICsxOTQxLDcg
+QEAgc3RhdGljIHZvaWQgaXNjX2F3Yl93b3JrKHN0cnVjdCB3b3JrX3N0cnVjdCAqdykNCj4+Pj4g
+ICAgCSAqIG9ubHkgdXBkYXRlIGlmIHdlIGhhdmUgYWxsIHRoZSByZXF1aXJlZCBoaXN0b2dyYW1z
+IGFuZCBjb250cm9scw0KPj4+PiAgICAJICogaWYgYXdiIGhhcyBiZWVuIGRpc2FibGVkLCB3ZSBu
+ZWVkIHRvIHJlc2V0IHJlZ2lzdGVycyBhcyB3ZWxsLg0KPj4+PiAgICAJICovDQo+Pj4+IC0JaWYg
+KGhpc3RfaWQgPT0gSVNDX0hJU19DRkdfTU9ERV9HUiB8fCAhY3RybHMtPmF3Yikgew0KPj4+PiAr
+CWlmIChoaXN0X2lkID09IElTQ19ISVNfQ0ZHX01PREVfR1IgfHwgY3RybHMtPmF3YiA9PSBJU0Nf
+V0JfTk9ORSkgew0KPj4+PiAgICAJCS8qDQo+Pj4+ICAgIAkJICogSXQgbWF5IGhhcHBlbiB0aGF0
+IERNQSBEb25lIElSUSB3aWxsIHRyaWdnZXIgd2hpbGUgd2UgYXJlDQo+Pj4+ICAgIAkJICogdXBk
+YXRpbmcgd2hpdGUgYmFsYW5jZSByZWdpc3RlcnMgaGVyZS4NCj4+Pj4gQEAgLTE5NDcsNiArMTk1
+MSwxNiBAQCBzdGF0aWMgdm9pZCBpc2NfYXdiX3dvcmsoc3RydWN0IHdvcmtfc3RydWN0ICp3KQ0K
+Pj4+PiAgICAJCXNwaW5fbG9ja19pcnFzYXZlKCZpc2MtPmF3Yl9sb2NrLCBmbGFncyk7DQo+Pj4+
+ICAgIAkJaXNjX3VwZGF0ZV9hd2JfY3RybHMoaXNjKTsNCj4+Pj4gICAgCQlzcGluX3VubG9ja19p
+cnFyZXN0b3JlKCZpc2MtPmF3Yl9sb2NrLCBmbGFncyk7DQo+Pj4+ICsNCj4+Pj4gKwkJLyoNCj4+
+Pj4gKwkJICogaWYgd2UgYXJlIGRvaW5nIGp1c3QgdGhlIG9uZSB0aW1lIHdoaXRlIGJhbGFuY2Ug
+YWRqdXN0bWVudCwNCj4+Pj4gKwkJICogd2UgYXJlIGJhc2ljYWxseSBkb25lLg0KPj4+PiArCQkg
+Ki8NCj4+Pj4gKwkJaWYgKGN0cmxzLT5hd2IgPT0gSVNDX1dCX09ORVRJTUUpIHsNCj4+Pj4gKwkJ
+CXY0bDJfaW5mbygmaXNjLT52NGwyX2RldiwNCj4+Pj4gKwkJCQkgICJDb21wbGV0ZWQgb25lIHRp
+bWUgd2hpdGUtYmFsYW5jZSBhZGp1c3RtZW50LlxuIik7DQo+Pj4+ICsJCQljdHJscy0+YXdiID0g
+SVNDX1dCX05PTkU7DQo+Pj4+ICsJCX0NCj4+Pj4gICAgCX0NCj4+Pj4gICAgCXJlZ21hcF93cml0
+ZShyZWdtYXAsIElTQ19ISVNfQ0ZHLCBoaXN0X2lkIHwgYmF5c2VsIHwgSVNDX0hJU19DRkdfUkFS
+KTsNCj4+Pj4gICAgCWlzY191cGRhdGVfcHJvZmlsZShpc2MpOw0KPj4+PiBAQCAtMTk3NCwxMCAr
+MTk4OCw1NiBAQCBzdGF0aWMgaW50IGlzY19zX2N0cmwoc3RydWN0IHY0bDJfY3RybCAqY3RybCkN
+Cj4+Pj4gICAgCQljdHJscy0+Z2FtbWFfaW5kZXggPSBjdHJsLT52YWw7DQo+Pj4+ICAgIAkJYnJl
+YWs7DQo+Pj4+ICAgIAljYXNlIFY0TDJfQ0lEX0FVVE9fV0hJVEVfQkFMQU5DRToNCj4+Pj4gLQkJ
+Y3RybHMtPmF3YiA9IGN0cmwtPnZhbDsNCj4+Pj4gKwkJaWYgKGN0cmwtPnZhbCA9PSAxKSB7DQo+
+Pj4+ICsJCQljdHJscy0+YXdiID0gSVNDX1dCX0FVVE87DQo+Pj4+ICsJCQl2NGwyX2N0cmxfYWN0
+aXZhdGUoaXNjLT5kb193Yl9jdHJsLCBmYWxzZSk7DQo+Pj4+ICsJCX0gZWxzZSB7DQo+Pj4+ICsJ
+CQljdHJscy0+YXdiID0gSVNDX1dCX05PTkU7DQo+Pj4+ICsJCQl2NGwyX2N0cmxfYWN0aXZhdGUo
+aXNjLT5kb193Yl9jdHJsLCB0cnVlKTsNCj4+Pj4gKwkJfQ0KPj4+PiArCQkvKiB3ZSBkaWQgbm90
+IGNvbmZpZ3VyZSBJU0MgeWV0ICovDQo+Pj4+ICsJCWlmICghaXNjLT5jb25maWcuc2RfZm9ybWF0
+KQ0KPj4+PiArCQkJYnJlYWs7DQo+Pj4+ICsNCj4+Pj4gKwkJaWYgKCFJU0NfSVNfRk9STUFUX1JB
+Vyhpc2MtPmNvbmZpZy5zZF9mb3JtYXQtPm1idXNfY29kZSkpIHsNCj4+Pj4gKwkJCXY0bDJfZXJy
+KCZpc2MtPnY0bDJfZGV2LA0KPj4+PiArCQkJCSAiV2hpdGUgYmFsYW5jZSBhZGp1c3RtZW50cyBh
+dmFpbGFibGUgb25seSBpZiBzZW5zb3IgaXMgaW4gUkFXIG1vZGUuXG4iKTsNCj4+Pg0KPj4+IFRo
+aXMgaXNuJ3QgYW4gZXJyb3IsIGluc3RlYWQgaWYgdGhlIGZvcm1hdCBpc24ndCByYXcsIHRoZW4g
+ZGVhY3RpdmF0ZQ0KPj4+IHRoZSBjb250cm9sIChzZWUgdjRsMl9jdHJsX2FjdGl2YXRlKCkpLiBU
+aGF0IHdheSB0aGUgY29udHJvbCBmcmFtZXdvcmsNCj4+PiB3aWxsIGhhbmRsZSB0aGlzLg0KPj4+
+DQo+Pj4+ICsJCQlyZXR1cm4gMDsNCj4+Pj4gKwkJfQ0KPj4+PiArDQo+Pj4+ICAgIAkJaWYgKGN0
+cmxzLT5oaXN0X3N0YXQgIT0gSElTVF9FTkFCTEVEKSB7DQo+Pj4+ICAgIAkJCWlzY19yZXNldF9h
+d2JfY3RybHMoaXNjKTsNCj4+Pj4gICAgCQl9DQo+Pj4+ICsNCj4+Pj4gKwkJaWYgKGlzYy0+Y3Ry
+bHMuYXdiICYmIHZiMl9pc19zdHJlYW1pbmcoJmlzYy0+dmIyX3ZpZHEpICYmDQo+Pj4+ICsJCSAg
+ICBJU0NfSVNfRk9STUFUX1JBVyhpc2MtPmNvbmZpZy5zZF9mb3JtYXQtPm1idXNfY29kZSkpDQo+
+Pj4+ICsJCQlpc2Nfc2V0X2hpc3RvZ3JhbShpc2MsIHRydWUpOw0KPj4+PiArDQo+Pj4+ICsJCWJy
+ZWFrOw0KPj4+PiArCWNhc2UgVjRMMl9DSURfRE9fV0hJVEVfQkFMQU5DRToNCj4+Pj4gKwkJLyog
+d2UgZGlkIG5vdCBjb25maWd1cmUgSVNDIHlldCAqLw0KPj4+PiArCQlpZiAoIWlzYy0+Y29uZmln
+LnNkX2Zvcm1hdCkNCj4+Pj4gKwkJCWJyZWFrOw0KPj4+PiArDQo+Pj4+ICsJCWlmIChjdHJscy0+
+YXdiID09IElTQ19XQl9BVVRPKSB7DQo+Pj4+ICsJCQl2NGwyX2VycigmaXNjLT52NGwyX2RldiwN
+Cj4+Pj4gKwkJCQkgIlRvIHVzZSBvbmUgdGltZSB3aGl0ZS1iYWxhbmNlIGFkanVzdG1lbnQsIGRp
+c2FibGUgYXV0byB3aGl0ZSBiYWxhbmNlIGZpcnN0LlxuIik7DQo+Pj4NCj4+PiBJJ2QgZG8gdGhp
+cyBkaWZmZXJlbnRseTogaWYgYXV0byB3aGl0ZWJhbGFuY2UgaXMgYWxyZWFkeSBvbiwgdGhlbiBq
+dXN0IGRvDQo+Pj4gbm90aGluZyBmb3IgVjRMMl9DSURfRE9fV0hJVEVfQkFMQU5DRS4NCj4+Pg0K
+Pj4+PiArCQkJcmV0dXJuIC1FQUdBSU47DQo+Pj4+ICsJCX0NCj4+Pj4gKwkJaWYgKCF2YjJfaXNf
+c3RyZWFtaW5nKCZpc2MtPnZiMl92aWRxKSkgew0KPj4+PiArCQkJdjRsMl9lcnIoJmlzYy0+djRs
+Ml9kZXYsDQo+Pj4+ICsJCQkJICJPbmUgdGltZSB3aGl0ZS1iYWxhbmNlIGFkanVzdG1lbnQgcmVx
+dWlyZXMgc3RyZWFtaW5nIHRvIGJlIGVuYWJsZWQuXG4iKTsNCj4+Pg0KPj4+IFRoaXMgdG9vIHNo
+b3VsZCB1c2UgdjRsMl9jdHJsX2FjdGl2YXRlKCk6IGFjdGl2YXRlIHRoZSBjb250cm9sIGluIHN0
+YXJ0X3N0cmVhbWluZywNCj4+PiBkZWFjdGl2YXRlIGluIHN0b3Bfc3RyZWFtaW5nIChhbmQgd2hl
+biB0aGUgY29udHJvbCBpcyBjcmVhdGVkKS4NCj4+Pg0KPj4+PiArCQkJcmV0dXJuIC1FQUdBSU47
+DQo+Pj4+ICsJCX0NCj4+Pj4gKw0KPj4+PiArCQlpZiAoIUlTQ19JU19GT1JNQVRfUkFXKGlzYy0+
+Y29uZmlnLnNkX2Zvcm1hdC0+bWJ1c19jb2RlKSkgew0KPj4+PiArCQkJdjRsMl9lcnIoJmlzYy0+
+djRsMl9kZXYsDQo+Pj4+ICsJCQkJICJXaGl0ZSBiYWxhbmNlIGFkanVzdG1lbnRzIGF2YWlsYWJs
+ZSBvbmx5IGlmIHNlbnNvciBpcyBpbiBSQVcgbW9kZS5cbiIpOw0KPj4+DQo+Pj4gU2FtZSBub3Rl
+IGFzIGFib3ZlOiB1c2UgdjRsMl9jdHJsX2FjdGl2YXRlKCkgZm9yIHRoaXMuDQo+Pg0KPj4gSGVs
+bG8gSGFucywNCj4+DQo+PiBJIHVzZWQgdjRsMl9jdHJsX2FjdGl2YXRlIHdpdGggZmFsc2UgcGFy
+YW1ldGVyLCBhbmQgdGhlIHY0bDItY3RsIC1sDQo+PiBsb29rcyBsaWtlIHRoaXM6DQo+Pg0KPj4N
+Cj4+ICAgICAgICAgICAgICBkb193aGl0ZV9iYWxhbmNlIChidXR0b24pIDogZmxhZ3M9aW5hY3Rp
+dmUsIHdyaXRlLW9ubHksDQo+PiBleGVjdXRlLW9uLXdyaXRlDQo+Pg0KPj4gQnV0IHRoZSBpbmFj
+dGl2ZSBmbGFnIGxvb2tzIHRvIGJlIG9ubHkgZm9yIGRpc3BsYXkgcHVycG9zZXMsIGFzIGlzc3Vp
+bmcgOg0KPj4NCj4+IHY0bDItY3RsIC0tc2V0LWN0cmw9ZG9fd2hpdGVfYmFsYW5jZT0xDQo+Pg0K
+Pj4gd2lsbCBjb250aW51ZSB0byBjYWxsIG15IGN0cmwgY2FsbGJhY2sgYXMgaWYgdGhlIGNvbnRy
+b2wgaXMgc3RpbGwgYWN0aXZlLg0KPj4NCj4+IEFtIEkgbWlzc2luZyBzb21ldGhpbmcgaGVyZSA/
+IHY0bDJfc19jdHJsIGRvZXMgbm90IGNoZWNrIGZvciBJTkFDVElWRQ0KPj4gc3RhdHVzLg0KPiAN
+Cj4gTm8sIHlvdSBhcmUgY29ycmVjdC4gSSBnb3QgY29uZnVzZWQgd2l0aCBGTEFHX0dSQUJCRUQu
+DQo+IA0KPiBJbiBhbnkgY2FzZSwgdGhlIGlkZWEgd2FzIHJpZ2h0LCBidXQgeW91IGRvIGhhdmUg
+dG8gYWRkIGNvZGUgdG8gc19jdHJsDQo+IHRvIGhhbmRsZSB0aGlzIChlLmcuIGlmIHRoZSBJTkFD
+VElWRSBmbGFnIGlzIHNldCwgdGhlbiBqdXN0IGRvIG5vdGhpbmcpLg0KPiANCj4gVGhlIElOQUNU
+SVZFIGZsYWcgaXMgbWVhbnQgdG8gY29tbXVuaWNhdGUgdGhhdCB0aGUgY29udHJvbCBjYW4gc3Rp
+bGwgYmUNCj4gc2V0LCBidXQgaXQganVzdCBkb2Vzbid0IGRvIGFueXRoaW5nLiBxdjRsMiB3aWxs
+IGRpc2FibGUgdGhlIGNvbnRyb2wgaWYNCj4gdGhpcyBmbGFnIGlzIHNldC4NCj4gDQo+IE5vdGUg
+dGhhdCB3aGVuIHlvdSBzZXQgYW4gaW5hY3RpdmUgY29udHJvbCwgdGhlIGNvbnRyb2wgdmFsdWUg
+c2hvdWxkDQo+IHN0aWxsIGJlIHVwZGF0ZWQgZXZlbiBpZiBpdCBpc24ndCB1c2VkIGF0IHRoZSBt
+b21lbnQuIElmIHRoZSBjb25maWd1cmF0aW9uDQo+IGNoYW5nZXMgc28gdGhhdCB0aGUgY29udHJv
+bCBiZWNvbWVzIGFjdGl2ZSBhZ2FpbiwgdGhlbiB0aGF0IGxhc3Qgc2V0DQo+IHZhbHVlIHNob3Vs
+ZCBiZSB1c2VkIGJ5IHRoZSBoYXJkd2FyZS4NCj4gDQo+IFRoaXMgaXMgdGhlIHJlYXNvbiB3aHkg
+c19jdHJsIGlzIHN0aWxsIGNhbGxlZC4NCg0KSGVsbG8gSGFucywNCg0KVGhhbmtzIGZvciB0aGUg
+ZXhwbGFuYXRpb24uIEkgbm90aWNlZCB3aGF0IHlvdSBzYXksIGFuZCBzYXcgb3RoZXIgDQpkcml2
+ZXJzIGp1c3QgZXhpdCB0aGUgc19jdHJsIGlmIHRoZSBmbGFnIGlzIElOQUNUSVZFLg0KVGh1cywg
+bXkgbGF0ZXN0IHBhdGNoIHJldmlzaW9uIGRvZXMgZXhhY3RseSB0aGF0IA0KaHR0cHM6Ly9wYXRj
+aHdvcmsubGludXh0di5vcmcvcGF0Y2gvNTU2ODIvDQoNClJlZ2FyZGluZyBteSBzcGVjaWZpYyBj
+b250cm9sIChET19XSElURV9CQUxBTkNFKSwgaXQncyBhIGJ1dHRvbiwgc28gaXQgDQpzaG91bGQg
+cmVhbGx5IGRvIG5vdGhpbmcgaWYgY29udHJvbCBpcyBpbmFjdGl2ZSAobm8gc3RhdGUgdG8gc2F2
+ZSkuDQoNClRoYW5rcywNCkV1Z2VuDQoNCg0KPiANCj4gUmVnYXJkcywNCj4gDQo+IAlIYW5zDQo+
+IA0KPj4NCj4+IFRoYW5rcw0KPj4NCj4+Pg0KPj4+PiArCQkJcmV0dXJuIC1FQUdBSU47DQo+Pj4+
+ICsJCX0NCj4+Pj4gKwkJY3RybHMtPmF3YiA9IElTQ19XQl9PTkVUSU1FOw0KPj4+PiArCQlpc2Nf
+c2V0X2hpc3RvZ3JhbShpc2MsIHRydWUpOw0KPj4+PiArCQl2NGwyX2luZm8oJmlzYy0+djRsMl9k
+ZXYsICJPbmUgdGltZSB3aGl0ZS1iYWxhbmNlIHN0YXJ0ZWQuXG4iKTsNCj4+Pg0KPj4+IE1ha2Ug
+dGhpcyB2NGwyX2RiZy4NCj4+Pg0KPj4+PiAgICAJCWJyZWFrOw0KPj4+PiAgICAJZGVmYXVsdDoN
+Cj4+Pj4gICAgCQlyZXR1cm4gLUVJTlZBTDsNCj4+Pj4gQEAgLTIwMDAsNyArMjA2MCw3IEBAIHN0
+YXRpYyBpbnQgaXNjX2N0cmxfaW5pdChzdHJ1Y3QgaXNjX2RldmljZSAqaXNjKQ0KPj4+PiAgICAJ
+Y3RybHMtPmhpc3Rfc3RhdCA9IEhJU1RfSU5JVDsNCj4+Pj4gICAgCWlzY19yZXNldF9hd2JfY3Ry
+bHMoaXNjKTsNCj4+Pj4gICAgDQo+Pj4+IC0JcmV0ID0gdjRsMl9jdHJsX2hhbmRsZXJfaW5pdCho
+ZGwsIDQpOw0KPj4+PiArCXJldCA9IHY0bDJfY3RybF9oYW5kbGVyX2luaXQoaGRsLCA1KTsNCj4+
+Pj4gICAgCWlmIChyZXQgPCAwKQ0KPj4+PiAgICAJCXJldHVybiByZXQ7DQo+Pj4+ICAgIA0KPj4+
+PiBAQCAtMjAxMiw2ICsyMDcyLDEwIEBAIHN0YXRpYyBpbnQgaXNjX2N0cmxfaW5pdChzdHJ1Y3Qg
+aXNjX2RldmljZSAqaXNjKQ0KPj4+PiAgICAJdjRsMl9jdHJsX25ld19zdGQoaGRsLCBvcHMsIFY0
+TDJfQ0lEX0dBTU1BLCAwLCBHQU1NQV9NQVgsIDEsIDIpOw0KPj4+PiAgICAJdjRsMl9jdHJsX25l
+d19zdGQoaGRsLCBvcHMsIFY0TDJfQ0lEX0FVVE9fV0hJVEVfQkFMQU5DRSwgMCwgMSwgMSwgMSk7
+DQo+Pj4+ICAgIA0KPj4+PiArCS8qIGRvX3doaXRlX2JhbGFuY2UgaXMgYSBidXR0b24sIHNvIG1p
+bixtYXgsc3RlcCxkZWZhdWx0IGFyZSBpZ25vcmVkICovDQo+Pj4+ICsJaXNjLT5kb193Yl9jdHJs
+ID0gdjRsMl9jdHJsX25ld19zdGQoaGRsLCBvcHMsIFY0TDJfQ0lEX0RPX1dISVRFX0JBTEFOQ0Us
+DQo+Pj4+ICsJCQkJCSAgICAwLCAwLCAwLCAwKTsNCj4+Pj4gKw0KPj4+PiAgICAJdjRsMl9jdHJs
+X2hhbmRsZXJfc2V0dXAoaGRsKTsNCj4+Pj4gICAgDQo+Pj4+ICAgIAlyZXR1cm4gMDsNCj4+Pj4N
+Cj4+Pg0KPj4+IFJlZ2FyZHMsDQo+Pj4NCj4+PiAJSGFucw0KPj4+DQo+IA0KPiANCg==
