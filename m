@@ -2,92 +2,183 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E911BC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDADC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69A920652
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B3921738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:42:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UIoYEyIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfDWTlf (ORCPT
+        id S1726852AbfDWTmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 15:41:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50952 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfDWTlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 15:41:35 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B16CC3087942;
-        Tue, 23 Apr 2019 19:41:34 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-123-167.rdu2.redhat.com [10.10.123.167])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 709155C1B5;
-        Tue, 23 Apr 2019 19:41:33 +0000 (UTC)
-Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
- negative
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <4cbd3c18-c9c0-56eb-4e01-ee355a69057a@redhat.com>
- <20190419102647.GP7905@worktop.programming.kicks-ass.net>
- <20190419120207.GO4038@hirez.programming.kicks-ass.net>
- <20190419130304.GV14281@hirez.programming.kicks-ass.net>
- <20190419131522.GW14281@hirez.programming.kicks-ass.net>
- <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
- <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
- <20190423141714.GO11158@hirez.programming.kicks-ass.net>
- <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
- <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
- <20190423193435.GX4038@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <88ba7be0-9ec5-941e-1b3f-80fbe05fe3a0@redhat.com>
-Date:   Tue, 23 Apr 2019 15:41:32 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 15:42:05 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:34389 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfDWTmF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 15:42:05 -0400
+Received: by mail-vs1-f65.google.com with SMTP id n17so695729vsr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 12:42:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nfae1L7qQtGmcEC0kaUhc8lAK/W6bAcsEpn3yxXkxig=;
+        b=UIoYEyIFIWQgCLjOzYoQ6qTU+folQszrYetmsA9uX1etgnIt/SniEXJwDIr+waZZBy
+         u7oyknqBHgkluOmDWiVGxLC/JLF862NLsCuWt/cC2ebLFszfLNOoxcd1OgHzFLE3Yp3O
+         4HTySG1EgUuCUJ9tbK0cmMBdiR2/bEN9lpvCQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nfae1L7qQtGmcEC0kaUhc8lAK/W6bAcsEpn3yxXkxig=;
+        b=gwnsFbM843CZ05/VHA5ya2Exk50SARxD1RopapDXAPJ1qinhGM24Y62TUR6r5t78xC
+         96pMKxNukRhA1JaEGWvzJ7u7H4iwrOvGeDGtqyCaz+LoBKLsz0/fh7VPZj8Tai1IX5VI
+         GHiK9yIP5joAn5BiRFBqqlvSCVVqnL58ZNWoZuzzTv1RZL7Akdau4S0NkAmBkAl4Hgj7
+         9G4IPaEZUKLhb9/KOT6QFwKrA0KFB5xcoOPqtI27/e+S+5t03yAfQGq1cDmRnKmIVA/S
+         fvAwGtUGA4zBVtcVwEPTnqT0mxraoF4nqdp/YwoLIGIqz9EdxZWFtHmrfWOzqAo2wbSU
+         cb2Q==
+X-Gm-Message-State: APjAAAX3SbIGRYTiMrrYaIFsrglqlnmsg0tABHxHPA8OKSG9/4Jn/GAp
+        103AkKtdb5zc+utpB4zt6pgibakQq2w=
+X-Google-Smtp-Source: APXvYqzuA5T1oHsfFLUOccoFuIa9lUP6pTDlokjk5Dl/lTiYmtvI74Q3co7fYcnrpw4BinH8MDiPDA==
+X-Received: by 2002:a67:ea53:: with SMTP id r19mr14684987vso.12.1556048523856;
+        Tue, 23 Apr 2019 12:42:03 -0700 (PDT)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id 2sm18645652vke.27.2019.04.23.12.42.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 12:42:03 -0700 (PDT)
+Received: by mail-vs1-f45.google.com with SMTP id d8so8943328vsp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 12:42:03 -0700 (PDT)
+X-Received: by 2002:a67:f849:: with SMTP id b9mr14431245vsp.188.1556048215473;
+ Tue, 23 Apr 2019 12:36:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190423193435.GX4038@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 23 Apr 2019 19:41:34 +0000 (UTC)
+References: <20190411180117.27704-1-keescook@chromium.org> <20190411180117.27704-2-keescook@chromium.org>
+ <CAK7LNATvNJprA94Qypfub2rpbEEJkAeV3yqVyuk2aNEraDKZ6w@mail.gmail.com>
+In-Reply-To: <CAK7LNATvNJprA94Qypfub2rpbEEJkAeV3yqVyuk2aNEraDKZ6w@mail.gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Tue, 23 Apr 2019 12:36:43 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jLNwFfG-x-_Q6nTdU21t5B9z7dCgBekRiJ+MnUE14J12A@mail.gmail.com>
+Message-ID: <CAGXu5jLNwFfG-x-_Q6nTdU21t5B9z7dCgBekRiJ+MnUE14J12A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] security: Create "kernel hardening" config area
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        James Morris <jmorris@namei.org>,
+        Alexander Popov <alex.popov@linux.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sandeep Patil <sspatil@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emese Revfy <re.emese@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/19 3:34 PM, Peter Zijlstra wrote:
-> On Tue, Apr 23, 2019 at 03:12:16PM -0400, Waiman Long wrote:
->> On 4/23/19 12:27 PM, Linus Torvalds wrote:
->>> On Tue, Apr 23, 2019 at 7:17 AM Peter Zijlstra <peterz@infradead.org> wrote:
->>>> I'm not aware of an architecture where disabling interrupts is faster
->>>> than disabling preemption.
->>> I don't thin kit ever is, but I'd worry a bit about the
->>> preempt_enable() just because it also checks if need_resched() is true
->>> when re-enabling preemption.
->>>
->>> So doing preempt_enable() as part of rwsem_read_trylock() might cause
->>> us to schedule in *exactly* the wrong place,
->> You are right on that. However, there is a variant called
->> preempt_enable_no_resched() that doesn't have this side effect. So I am
->> going to use that one instead.
-> Only if the very next line is schedule(). Otherwise you're very much not
-> going to use that function.
+On Thu, Apr 11, 2019 at 6:39 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Fri, Apr 12, 2019 at 3:01 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Right now kernel hardening options are scattered around various Kconfig
+> > files. This can be a central place to collect these kinds of options
+> > going forward. This is initially populated with the memory initialization
+> > options from the gcc-plugins.
+> >
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  scripts/gcc-plugins/Kconfig | 74 +++--------------------------
+> >  security/Kconfig            |  2 +
+> >  security/Kconfig.hardening  | 93 +++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 102 insertions(+), 67 deletions(-)
+> >  create mode 100644 security/Kconfig.hardening
+> >
+> > diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+> > index 74271dba4f94..84d471dea2b7 100644
+> > --- a/scripts/gcc-plugins/Kconfig
+> > +++ b/scripts/gcc-plugins/Kconfig
+> > @@ -13,10 +13,11 @@ config HAVE_GCC_PLUGINS
+> >           An arch should select this symbol if it supports building with
+> >           GCC plugins.
+> >
+> > -menuconfig GCC_PLUGINS
+> > -       bool "GCC plugins"
+> > +config GCC_PLUGINS
+> > +       bool
+> >         depends on HAVE_GCC_PLUGINS
+> >         depends on PLUGIN_HOSTCC != ""
+> > +       default y
+> >         help
+> >           GCC plugins are loadable modules that provide extra features to the
+> >           compiler. They are useful for runtime instrumentation and static analysis.
+> > @@ -25,6 +26,8 @@ menuconfig GCC_PLUGINS
+> >
+> >  if GCC_PLUGINS
+> >
+> > +menu "GCC plugins"
+> > +
+>
+>
+>
+> Just a tip to save "if" ... "endif" block.
+>
+>
+> If you like, you can write like follows:
+>
+>
+> menu "GCC plugins"
+>           depends on GCC_PLUGINS
+>
+>   <menu body>
+>
+> endmenu
 
-May I know the reason why. I saw a number of instances of
-preempt_enable_no_resched() without right next a schedule().
+Ah yes, thanks! Adjusted.
 
-Cheers,
-Longman
+> > +menu "Memory initialization"
+> > +
+> > +choice
+> > +       prompt "Initialize kernel stack variables at function entry"
+> > +       depends on GCC_PLUGINS
+>
+> On second thought,
+> this 'depends on' is unnecessary
+> because INIT_STACK_NONE should be always visible.
 
+Oh yes, excellent point. Adjusted.
+
+> Another behavior change is
+> GCC_PLUGIN_STRUCTLEAK was previously enabled by all{yes,mod}config,
+> and in the compile-test coverage.
+
+I could set the defaults based on CONFIG_COMPILE_TEST, though? I.e.:
+
+        prompt "Initialize kernel stack variables at function entry"
+        default GCC_PLUGIN_STRUCTLEAK_BYREF_ALL if COMPILE_TEST && GCC_PLUGINS
+        default INIT_STACK_ALL if COMPILE_TEST && CC_HAS_AUTO_VAR_INIT
+        default INIT_STACK_NONE
+
+>
+> It will be disabled for all{yes,mod}config with this patch.
+>
+> This is up to you. Just FYI.
+
+Thanks for looking this over!
+
+-- 
+Kees Cook
