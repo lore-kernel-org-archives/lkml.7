@@ -2,154 +2,107 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F344C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AFDC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22C63214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0179C206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:25:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqUxwX/L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igxoj6e4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfDWGXB (ORCPT
+        id S1726026AbfDWGZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 02:23:01 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43957 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfDWGXA (ORCPT
+        Tue, 23 Apr 2019 02:25:21 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44392 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfDWGZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 02:23:00 -0400
-Received: by mail-ed1-f67.google.com with SMTP id j20so11507219edq.10;
-        Mon, 22 Apr 2019 23:22:59 -0700 (PDT)
+        Tue, 23 Apr 2019 02:25:20 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z16so2437112pgv.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 23:25:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v+ee48vbZLISdDZkyHG6SCZLYTIDZDGi2Hax1YAuvFY=;
-        b=WqUxwX/LxHCayNtu983rUMlo2qPvrw+Vo4ZgqW+eoMuI3gyfT10IS6KL6O9JnQUNoM
-         sYFNDi9zjpb5jGg7ECL1IMab25Dw7Y45H4tlH/gH5vGWorpt/VRtye67eS/zwlTgfUxn
-         HK8oOxCXHsNqzDwUs/xg2dWUI9jzZSgVgtIsd2gu2iVx0rdiy/amJxR6jiN2sgNvASyP
-         Rgx1eQcJ5pUXjZeSvxHUqTUFGg6agfi5SRuSTM7oiP6uyikDrspsrz2RxR+w6HaFrT11
-         HqOeb/5HciSXUctapc9+RAQ9zPp7SoH13lMiVtS7jxPc04CJIoWxXLeNlUy6jQRJA1p6
-         5xQA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RaaGcTzhI0SDxCVukGPZqJTxviymuimG+0pW1Zook1E=;
+        b=igxoj6e4d71VSplvzcgfh/aXS5Wto6zRfIlI4XOE5i8Bnx/GEe9uRgV03C3nI74NJN
+         gFdXkhYgHOjTCoGgA3oU8xYt1T7p8+ZsOcrTQFMY7o4odCLvaV/9mj81539a9DjXOuIG
+         bGGc9WTC/dxH/BorS7ZcGgpGpEVuKBxxIBR41yms2fHLREMT+2dKVl89Lfnzms2TUosr
+         UtEFeeWyV1+CPNa2hOdRzuLrwo8zZbXydw5UErHsL0FfPpgmWcJkUuOsL8es3gEaR3eB
+         a+v0rQnBFLfVg/WLW9qOpzWRQffTtSuNPI1WofXymJiZfoqSpF2hGDg2s/9wjqEU7z1e
+         vDlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v+ee48vbZLISdDZkyHG6SCZLYTIDZDGi2Hax1YAuvFY=;
-        b=GkpO1UfnygzprsqPT9yI7iFSTEEfWEbVYhBOqbmP8pXBdoNyVn7gpRprT0DIkzIZRQ
-         K+LdfwkYkOSG9+FYJtKqbNxL8tUcVfHz5+k+ljCQKt+LtmrFvPhnzfVNnXnihx2eNWh8
-         TGUvglaEUXMpRMuYpVfnBwrGOv6b+rqkO7nxF9KZI2Swe8EMhNWtgjItdSMtv41Cb2Up
-         FxQlugsd//8AXT7fu7JfqEwH9MEk55lwxOmFKrZfWO1vX2rkvHkyB8wVfPAdv0zc0SET
-         P/gLOFxvXuTaxYTajlZ4xuKgLu3LHsALFijMCfHHh33oTLMO6PafIY3NOF9vRJ5aYC9J
-         i/SA==
-X-Gm-Message-State: APjAAAVW9eNGvYdhQXqUMyKCqsTur4uXHIbRJbn+FsXkQEaLsvjE/b9F
-        EcKljYrkMnHlVOVjab2XmQZ337Rko2LYm7g+HwA=
-X-Google-Smtp-Source: APXvYqw7c9bRvYFqj32p6ELv1N3THBgesEVV8JigpRtrvU0rP8NnhKBWtXM2KMV6z2qnuTi+M2JI9nxgeONs7kDXvMg=
-X-Received: by 2002:a17:906:2481:: with SMTP id e1mr11889258ejb.22.1556000579082;
- Mon, 22 Apr 2019 23:22:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RaaGcTzhI0SDxCVukGPZqJTxviymuimG+0pW1Zook1E=;
+        b=D+DDQUt2P7cXILWuKUTrkVqByKHvhV4C3tAC3OskYb9kjzT0D4maDlpKLXLqx99m3Q
+         nRvRm1HFSN6L4sLoxn+Qlv6q9nJvjjzXoH6WK74k59S5KwRR8EtjVo1dZ+idFW70VVuI
+         Vv/KVNKXGBhCVJ+uLE/eA7VgHqVHOCSsogmMv2/+5ulyoT1HdDg5pk+EhQ+h6aXBL6eh
+         ih6yQpjdMYO/+oorqbyG6IVWJXTzlEG9LOM8HtHpQ2tgXoywpdqKpWUS4VpjM6mdkuzd
+         wyIlob49+4fvKH9FIIqDUgD1LI97qfDF3FyYhB7f7oAsF5kmBubx0lGnuWkvYfm66JsP
+         rPiA==
+X-Gm-Message-State: APjAAAV6WaTs2U6X/fnexTZMxxfc043p5e1LlSl3csJ25NhNEFQnInSx
+        oOoz467HVOPqhLHv42WDkpRtuw4A
+X-Google-Smtp-Source: APXvYqwzarnB9xzUvmDFbCaK6QbmtaL/b+1tiKSulvpSp5SthU6MKKBTjfMfITjKnKNT9Qx4hfZs6w==
+X-Received: by 2002:aa7:9a99:: with SMTP id w25mr2567796pfi.240.1556000719974;
+        Mon, 22 Apr 2019 23:25:19 -0700 (PDT)
+Received: from localhost.localdomain ([175.223.38.143])
+        by smtp.gmail.com with ESMTPSA id p3sm19490287pfn.167.2019.04.22.23.25.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Apr 2019 23:25:19 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: [RFC][PATCH 0/2] Access console drivers list under console_sem
+Date:   Tue, 23 Apr 2019 15:25:09 +0900
+Message-Id: <20190423062511.1118-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190422193542.2853-1-daniel.baluta@nxp.com> <20190422193542.2853-3-daniel.baluta@nxp.com>
- <20190423051738.tmyto7nvm4w5zt4r@pengutronix.de>
-In-Reply-To: <20190423051738.tmyto7nvm4w5zt4r@pengutronix.de>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Tue, 23 Apr 2019 09:22:48 +0300
-Message-ID: <CAEnQRZD5506EdkO5ESwWe+=J-uEeZw9m47_XNj8DUHy4Hck78g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marco,
+Petr, Steven,
 
-On Tue, Apr 23, 2019 at 8:19 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
->
-> Hi Daniel,
->
-> On 19-04-22 19:36, Daniel Baluta wrote:
-> > i.MX8MM has one wm8524 audio codec connected with
-> > SAI3 digital audio interface.
-> >
-> > This patch uses simple-card machine driver in order
-> > to enable wm8524 codec.
-> >
-> > We need to set:
-> >       * SAI3 pinctrl configuration
-> >       * clock hierarchy
-> >       * codec node
-> >       * simple-card configuration
-> >
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 48 ++++++++++++++++++++
-> >  1 file changed, 48 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> > index 2d5d89475b76..207b13266a96 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> > @@ -37,6 +37,35 @@
-> >               gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-> >               enable-active-high;
-> >       };
-> > +
-> > +     wm8524: audio-codec {
-> > +             #sound-dai-cells = <0>;
-> > +             compatible = "wlf,wm8524";
-> > +             wlf,mute-gpios = <&gpio5 21 GPIO_ACTIVE_LOW>;
->
-> I would mux the gpio where I use them.
+	RFC
 
-I'm not sure I understand this. Can you provide an example.
->
-> > +     };
-> > +
-> > +     sound-wm8524 {
-> > +             compatible = "simple-audio-card";
-> > +             simple-audio-card,name = "wm8524-audio";
-> > +             simple-audio-card,format = "i2s";
-> > +             simple-audio-card,frame-master = <&cpudai>;
-> > +             simple-audio-card,bitclock-master = <&cpudai>;
-> > +             simple-audio-card,widgets =
-> > +                     "Line", "Left Line Out Jack",
-> > +                     "Line", "Right Line Out Jack";
-> > +             simple-audio-card,routing =
-> > +                     "Left Line Out Jack", "LINEVOUTL",
-> > +                     "Right Line Out Jack", "LINEVOUTR";
-> > +
-> > +             cpudai: simple-audio-card,cpu {
-> > +                     sound-dai = <&sai3>;
-> > +             };
-> > +
-> > +             link_codec: simple-audio-card,codec {
->
-> Can you drop that phandle?
+	Normally, we grab console_sem lock before we iterate consoles
+list, which is necessary if we want to be race free. The only exception
+to this rule is console_flush_on_panic(). However, it seems that we are
+not fully race free - register_console() iterates console drivers list
+in unsafe manner in several places. E.g. the following scenarion:
 
-I see your point here. But for symmetry and consistency with
-imx8mm-evk I would prefer
-to keep it like that.
+	CPU0					CPU1
+	register_console()			unregister_console()
+						 console_lock()
+	  for_each_console()			  // modify console_drivers
+	    con->foo				    kfree(con)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/tree/arch/arm64/boot/dts/freescale/imx8mq-evk.dts?h=for-next#n59
+So I have two quick-n-dirty patches, which remove unsafe console list
+access.
+
+What do you think?
+
+Sergey Senozhatsky (2):
+  printk: lock console_sem before we unregister boot consoles
+  printk: take console_sem when accessing console drivers list
+
+ kernel/printk/printk.c | 117 ++++++++++++++++++++++++-----------------
+ 1 file changed, 69 insertions(+), 48 deletions(-)
+
+-- 
+2.21.0
+
