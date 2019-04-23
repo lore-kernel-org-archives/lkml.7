@@ -2,82 +2,117 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415F1C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03952C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDB82175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F3C218DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:44:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h2ZSmpkO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbfDWPns (ORCPT
+        id S1728424AbfDWPoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:43:48 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:55466 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfDWPns (ORCPT
+        Tue, 23 Apr 2019 11:44:10 -0400
+Received: from mail-ua1-f73.google.com ([209.85.222.73]:38958 "EHLO
+        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727761AbfDWPoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:43:48 -0400
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 76CFD72CC58;
-        Tue, 23 Apr 2019 18:43:45 +0300 (MSK)
-Received: from altlinux.org (sole.flsd.net [185.75.180.6])
-        by imap.altlinux.org (Postfix) with ESMTPSA id 30DD04A4A29;
-        Tue, 23 Apr 2019 18:43:45 +0300 (MSK)
-Date:   Tue, 23 Apr 2019 18:43:44 +0300
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Miller <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: linux-next: Tree for Apr 23 (crypto/ecrdsa)
-Message-ID: <20190423154343.xvubeub3ejhikfcn@altlinux.org>
-Mail-Followup-To: Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Miller <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-References: <20190423202832.49cdf5bc@canb.auug.org.au>
- <ea752c71-b41f-47f5-290b-3a31bb0e96df@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <ea752c71-b41f-47f5-290b-3a31bb0e96df@infradead.org>
-User-Agent: NeoMutt/20171215-106-ac61c7
+        Tue, 23 Apr 2019 11:44:10 -0400
+Received: by mail-ua1-f73.google.com with SMTP id v5so1739260ual.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:44:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=JXAocCnPjSxHxOedcbkgNjrO0QCzgS2wvknDYgoZYBE=;
+        b=h2ZSmpkO455hJucWi8vU9qqGrVVPIxjVUbprWQF8SrXGeUWYEtdRdUMU8GtXSHDesu
+         yBKEsZSWWW2KJtcxcOQGMiSVump33fTuW6/iTofr8qsMKD3wNxUE25Gumttajj4KG6nt
+         9i8XUWuswqN5ShRuRQz6rIFE3sx7GDC60GZV9NMtx5fQMnA8vz/KtmmChP7ERyHcNzqa
+         3ihRs/qlttIu67hSLzNPEXnIblh4e6kWAIycUk70uQHAQ/3oemiOq/slmLGv+N4ENQw5
+         NocVBF4+UQPJd9FaFhrexwBmhkObiXRvEgXQ3A9zGp9ScaVICRETZkPyKx2KJD80gIHr
+         jL9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=JXAocCnPjSxHxOedcbkgNjrO0QCzgS2wvknDYgoZYBE=;
+        b=O5aRKKuGemlIt/gocPrSc1r33+nf9XzdNLdy9hkkwnK70yrvYAcrXxA8jlU4vfQOAl
+         41zxNkQNJOPq4hrFn/GJlmgY1WYQL5NWX+kBOZwzXa/zQr/7gyMU5HXUSoN5XjzGDHvT
+         1HBe3o43nw2kPixYI7Z26J7uZ5/mFB217NtXEzFnQJm9aPvhuA7pxVR8ZS4TuCe5hnzu
+         qaub/uf3VO/TgLw1qOO+uODf0cpD+n99kCkx/OlJH6TPSz+X7dewpm482pyc0SFOqzLq
+         GTChAt5qaAMBYGqw1aNDp/UhIp0M51T0zNv1Ax1zVCT5MCW8drwQygJbYVAh703ZmH3J
+         TZfA==
+X-Gm-Message-State: APjAAAVHAo1JMYy8DJEF9XYQTHQMyRI9/MWnAPxB6x3cg3gfnJo6ysBZ
+        svHg67iDnBSWv9fekhaiDZJkLDax2Mi00g==
+X-Google-Smtp-Source: APXvYqz18sYa2y+Uj6M7CjZ+maaEwP+Bpk8TEQBBch1tuP5pwW66oU1p/mRbW6J4jkzvf13B7Us7G2Wc7DAudw==
+X-Received: by 2002:a1f:8991:: with SMTP id l139mr13783395vkd.49.1556034248763;
+ Tue, 23 Apr 2019 08:44:08 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 08:44:05 -0700
+Message-Id: <20190423154405.259178-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+Subject: [PATCH v2] memcg: refill_stock for kmem uncharging too
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>
+Cc:     linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Randy,
+The commit 475d0487a2ad ("mm: memcontrol: use per-cpu stocks for socket
+memory uncharging") added refill_stock() for skmem uncharging path to
+optimize workloads having high network traffic. Do the same for the kmem
+uncharging as well. Though we can bypass the refill for the offlined
+memcgs but it may impact the performance of network traffic for the
+sockets used by other cgroups.
 
-On Tue, Apr 23, 2019 at 08:22:40AM -0700, Randy Dunlap wrote:
-> On 4/23/19 3:28 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > News: there will be no linux-next release on Thursday April 25.
-> > 
-> > Changes since 20190418:
-> > 
-> 
-> on i386 or x86_64:
-> 
-> ERROR: "asn1_ber_decoder" [crypto/ecrdsa_generic.ko] undefined!
-> ERROR: "look_up_OID" [crypto/ecrdsa_generic.ko] undefined!
-> 
-> 
-> Do you need a failing config file?
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
 
-I will send a patch soon. Thanks!
+Changelog since v1:
+- No need to bypass offline memcgs in the refill.
 
-> 
-> thanks.
-> -- 
-> ~Randy
+ mm/memcontrol.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 2535e54e7989..2713b45ec3f0 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2768,17 +2768,13 @@ void __memcg_kmem_uncharge(struct page *page, int order)
+ 	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
+ 		page_counter_uncharge(&memcg->kmem, nr_pages);
+ 
+-	page_counter_uncharge(&memcg->memory, nr_pages);
+-	if (do_memsw_account())
+-		page_counter_uncharge(&memcg->memsw, nr_pages);
+-
+ 	page->mem_cgroup = NULL;
+ 
+ 	/* slab pages do not have PageKmemcg flag set */
+ 	if (PageKmemcg(page))
+ 		__ClearPageKmemcg(page);
+ 
+-	css_put_many(&memcg->css, nr_pages);
++	refill_stock(memcg, nr_pages);
+ }
+ #endif /* CONFIG_MEMCG_KMEM */
+ 
+-- 
+2.21.0.593.g511ec345e18-goog
+
