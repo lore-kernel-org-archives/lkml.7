@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46122C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBB6C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E75A5217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A31F20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:23:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gV33Qf2t"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="dvn9x6ox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731483AbfDWDW7 (ORCPT
+        id S1731498AbfDWDXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:22:59 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:57960 "EHLO
+        Mon, 22 Apr 2019 23:23:01 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:57970 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731417AbfDWDWy (ORCPT
+        with ESMTP id S1731419AbfDWDWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:22:54 -0400
+        Mon, 22 Apr 2019 23:22:55 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id x3N3L8LF031384;
-        Tue, 23 Apr 2019 12:21:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x3N3L8LF031384
+        by conuserg-09.nifty.com with ESMTP id x3N3L8LK031384;
+        Tue, 23 Apr 2019 12:21:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x3N3L8LK031384
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555989673;
-        bh=ck3m1Bnhk+gBZ69Ip9jiWsEf5IWvpXJTs7wxMIQoCXU=;
+        s=dec2015msa; t=1555989679;
+        bh=O+ymeBuOvG0uQG78yokX58qG5GQYyDm6Ks5zKkCXYg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gV33Qf2twLt0S6KodHjawBrkc1EsU13fh2qP1ShaK+o/SW6rZPyaYhhtUGjSAMOAL
-         R6pXzzLQz8ZPC8irBjiP9xHCy62EbVDEQXUwURuCleI0FJA77siCTw7Cz4XKgG1UfL
-         HVZpVKmESAPZc46mK1RRH+1phNlLhepGkqPxUGjE20kRpWeZm0GYs2r7kDaFXdO6qR
-         cCIMvz79juH6wsQD+t5Jx+BzNhp4jE7MKMO0MND1/4edyYQRn+I+KQBoZTCFmf4xjF
-         qjQonQHFppXfOIXGtZ0OqQBPESG1vJw9Dz8ZTGLbmLDpEupQ6kYWoETwrSNw/80XCk
-         Xjd7IfyPdLgtA==
+        b=dvn9x6ox5fKI53z4C6POxz1XdusTJbpCXwpiePE9LkrLtyiVEIl8HbNcb4g1F9TNB
+         aLbM74ElzoqAyKnhrfnhn9JGJaQm1caHcFa4qctMPGnbOLqDTSgwRJD+DMSdkE3oiq
+         aR2pnUT6YCEfjxTc6TYECEcOwIzEka03xMTxtqwFA3hlWUWiPuWqFoF8n+/OFUbHrE
+         mzanNOf1EV4wOrj/BXXqBW3Z3HA7y/GIxH/mT9mVx5M0ECaljXrIelcr+WwVJWjZKF
+         l8G7HidXSJAw+7R306/qLGO/OZ8WJEVwXAlkIW6xpK57x+Swra3rVWvL5WVo56xmgn
+         TxHQ+4IdfDqVQ==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -51,15 +51,12 @@ Cc:     linux-s390@vger.kernel.org,
         Christophe Leroy <christophe.leroy@c-s.fr>,
         Mathieu Malaterre <malat@debian.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH v3 04/10] mtd: rawnand: vf610_nfc: add initializer to avoid -Wmaybe-uninitialized
-Date:   Tue, 23 Apr 2019 12:21:00 +0900
-Message-Id: <20190423032106.11960-5-yamada.masahiro@socionext.com>
+Subject: [PATCH v3 09/10] powerpc/mm/radix: mark as __tlbie_pid() and friends as__always_inline
+Date:   Tue, 23 Apr 2019 12:21:05 +0900
+Message-Id: <20190423032106.11960-10-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190423032106.11960-1-yamada.masahiro@socionext.com>
 References: <20190423032106.11960-1-yamada.masahiro@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,44 +65,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
 place. We need to eliminate potential issues beforehand.
 
-Kbuild test robot has never reported -Wmaybe-uninitialized warning
-for this probably because vf610_nfc_run() is inlined by the x86
-compiler's inlining heuristic.
+If it is enabled for powerpc, the following errors are reported:
 
-If CONFIG_OPTIMIZE_INLINING is enabled for a different architecture
-and vf610_nfc_run() is not inlined, the following warning is reported:
-
-drivers/mtd/nand/raw/vf610_nfc.c: In function ‘vf610_nfc_cmd’:
-drivers/mtd/nand/raw/vf610_nfc.c:455:3: warning: ‘offset’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-   vf610_nfc_rd_from_sram(instr->ctx.data.buf.in + offset,
-   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            nfc->regs + NFC_MAIN_AREA(0) + offset,
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            trfr_sz, !nfc->data_access);
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/powerpc/mm/tlb-radix.c: In function '__tlbie_lpid':
+arch/powerpc/mm/tlb-radix.c:148:2: warning: asm operand 3 probably doesn't match constraints
+  asm volatile(PPC_TLBIE_5(%0, %4, %3, %2, %1)
+  ^~~
+arch/powerpc/mm/tlb-radix.c:148:2: error: impossible constraint in 'asm'
+arch/powerpc/mm/tlb-radix.c: In function '__tlbie_pid':
+arch/powerpc/mm/tlb-radix.c:118:2: warning: asm operand 3 probably doesn't match constraints
+  asm volatile(PPC_TLBIE_5(%0, %4, %3, %2, %1)
+  ^~~
+arch/powerpc/mm/tlb-radix.c: In function '__tlbiel_pid':
+arch/powerpc/mm/tlb-radix.c:104:2: warning: asm operand 3 probably doesn't match constraints
+  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
+  ^~~
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
 Changes in v3: None
 Changes in v2:
-  - split into a separate patch
+  - new patch
 
- drivers/mtd/nand/raw/vf610_nfc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/tlb-radix.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/vf610_nfc.c b/drivers/mtd/nand/raw/vf610_nfc.c
-index a662ca1970e5..19792d725ec2 100644
---- a/drivers/mtd/nand/raw/vf610_nfc.c
-+++ b/drivers/mtd/nand/raw/vf610_nfc.c
-@@ -364,7 +364,7 @@ static int vf610_nfc_cmd(struct nand_chip *chip,
+diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
+index a2b2848f0ae3..14ff414d1545 100644
+--- a/arch/powerpc/mm/tlb-radix.c
++++ b/arch/powerpc/mm/tlb-radix.c
+@@ -90,8 +90,8 @@ void radix__tlbiel_all(unsigned int action)
+ 	asm volatile(PPC_INVALIDATE_ERAT "; isync" : : :"memory");
+ }
+ 
+-static inline void __tlbiel_pid(unsigned long pid, int set,
+-				unsigned long ric)
++static __always_inline void __tlbiel_pid(unsigned long pid, int set,
++					 unsigned long ric)
  {
- 	const struct nand_op_instr *instr;
- 	struct vf610_nfc *nfc = chip_to_nfc(chip);
--	int op_id = -1, trfr_sz = 0, offset;
-+	int op_id = -1, trfr_sz = 0, offset = 0;
- 	u32 col = 0, row = 0, cmd1 = 0, cmd2 = 0, code = 0;
- 	bool force8bit = false;
+ 	unsigned long rb,rs,prs,r;
+ 
+@@ -106,7 +106,7 @@ static inline void __tlbiel_pid(unsigned long pid, int set,
+ 	trace_tlbie(0, 1, rb, rs, ric, prs, r);
+ }
+ 
+-static inline void __tlbie_pid(unsigned long pid, unsigned long ric)
++static __always_inline void __tlbie_pid(unsigned long pid, unsigned long ric)
+ {
+ 	unsigned long rb,rs,prs,r;
+ 
+@@ -136,7 +136,7 @@ static inline void __tlbiel_lpid(unsigned long lpid, int set,
+ 	trace_tlbie(lpid, 1, rb, rs, ric, prs, r);
+ }
+ 
+-static inline void __tlbie_lpid(unsigned long lpid, unsigned long ric)
++static __always_inline void __tlbie_lpid(unsigned long lpid, unsigned long ric)
+ {
+ 	unsigned long rb,rs,prs,r;
+ 
+@@ -239,7 +239,7 @@ static inline void fixup_tlbie_lpid(unsigned long lpid)
+ /*
+  * We use 128 set in radix mode and 256 set in hpt mode.
+  */
+-static inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
++static __always_inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
+ {
+ 	int set;
  
 -- 
 2.17.1
