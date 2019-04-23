@@ -2,70 +2,97 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54F4C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7EFC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1265214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555996213;
-	bh=69ba/LcdkGrzPUsyKo78VQP0+UkYmFORyGWlVeZinxc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a4xdVgfNLEwWcS7BpLwELR3PzR3B9xUbc95VaHAajt/nK+K2w2IczMZAxLt7Mwq3j
-	 j64vcOAz66tHnMKCy3sCT03qWaesSwBcT2ah8j7aJzSB51H8gebSpPWIItiviG4t7S
-	 JIYE4KxshRgBXvzJi2NZrTQjCzaMOMcmfECW+q2c=
+	by mail.kernel.org (Postfix) with ESMTP id 045EC2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:13:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P/cVa6bY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbfDWFKM (ORCPT
+        id S1726058AbfDWFNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 01:10:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59194 "EHLO mail.kernel.org"
+        Tue, 23 Apr 2019 01:13:52 -0400
+Received: from ozlabs.org ([203.11.71.1]:36233 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfDWFKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 01:10:11 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725882AbfDWFNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 01:13:52 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78D9E20811;
-        Tue, 23 Apr 2019 05:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555996211;
-        bh=69ba/LcdkGrzPUsyKo78VQP0+UkYmFORyGWlVeZinxc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nW+wFJRM27F8h3lQQMrkZxTcrAi99D4KSeOvOuruSs5/yd1BFadM9ZwyuH84d7dDb
-         inz21vNS6RGC72CnJZKsUVwo/ygvILgKGnqItQ59HWW3TXQnkSdQdP5HTXsa4+1vi7
-         Bj0u2ttAZWEhctUfP/VsWc107Kb9GTKiUZYInBjk=
-Date:   Tue, 23 Apr 2019 10:40:05 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc:     dmaengine@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dmaengine: at_xdmac: remove BUG_ON macro in
- tasklet
-Message-ID: <20190423051005.GD28103@vkoul-mobl>
-References: <20190403102359.27698-1-nicolas.ferre@microchip.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pBSF08wzz9s9G;
+        Tue, 23 Apr 2019 15:13:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555996429;
+        bh=0p7810v6jjnN67jkL/a5uQ9WFqa9DPuQ6mA1k2oTlbo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=P/cVa6bYPJHAJ61EGijGxJqb/1diwEsg06JQN33FGVp0RKWprFwNIlDrGGTP9qctV
+         NuKGJzjnZcZabTfWDyNN3Q7wSB5d58YYvSi9FasxNl/Yd3SVPGT8l6m921pfwy/wEk
+         1v0XuDlJRc5zDrfklUMJTuUcS8SpV4f5DNL8cknilnpjv/LT983ASml+nGG2hFkOTA
+         5Khlgfvd21K0eEPBRZEGrI4AxVu9r61Rei6lIkhD3lY4w2z78SRJCOvAbnQ88FesfG
+         phSx7XCoL8Z7D2f9M7sr0PuAiILxQpEPSXfA78dWZQoJTUfAmV4MzixHv7CNX0vkBC
+         uEdQ7Jm2g7GxA==
+Date:   Tue, 23 Apr 2019 15:13:47 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matt Sickler <Matt.Sickler@daktronics.com>
+Subject: linux-next: build warning after merge of the staging tree
+Message-ID: <20190423151347.4ec9f51e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403102359.27698-1-nicolas.ferre@microchip.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/+/jYVB/VZPM.LzNzc7/cZbJ"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-04-19, 12:23, Nicolas Ferre wrote:
-> Even if this case shouldn't happen when controller is properly programmed,
-> it's still better to avoid dumping a kernel Oops for this.
-> As the sequence may happen only for debugging purposes, log the error and
-> just finish the tasklet call.
+--Sig_/+/jYVB/VZPM.LzNzc7/cZbJ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied all, thanks
--- 
-~Vinod
+Hi Greg,
+
+After merging the staging tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
+
+drivers/staging/kpc2000/kpc_spi/spi_driver.c:97:5: note: offset of packed b=
+it-field 'wl' has changed in GCC 4.4
+     } bitfield;
+     ^
+drivers/staging/kpc2000/kpc_spi/spi_driver.c:97:5: note: offset of packed b=
+it-field 'cs' has changed in GCC 4.4
+drivers/staging/kpc2000/kpc_spi/spi_driver.c:97:5: note: offset of packed b=
+it-field 'wcnt' has changed in GCC 4.4
+
+Introduced by commit
+
+  7dc7967fc39a ("staging: kpc2000: add initial set of Daktronics drivers")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+/jYVB/VZPM.LzNzc7/cZbJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+nwsACgkQAVBC80lX
+0Gy20Af/X0CaM9Vv/zCUD/M7WO9/cY8wk6XGk53ydByELFmv6+tf95Wd/US3AXJ8
+hYukqJEI159o6omGF3TqpfuuyY/yEHSLNOFzgqJ5AvF+LH+StkzOMDG2TGLN3RVq
+5LWSRSG6IVyge6jBlL4zJlIL59Zof0tQW5mf10mXMwul5DnWGlfdMi/EyZhsehHb
+ed6oHNJLBbcM//I1MRM/Aw2/UV8nF5OcnUu5D3yDqc7hiYVGMCw+MXfVXezzNaIw
+fHEhsMfuk61T9Vi/rS3cCNsvjlowdaoX6KsbzwhLOLqSoonRDxuWi3aEWNny1b7z
+WjcdEOS7BNpy/xPrzx3+hYWbfheQBw==
+=71M1
+-----END PGP SIGNATURE-----
+
+--Sig_/+/jYVB/VZPM.LzNzc7/cZbJ--
