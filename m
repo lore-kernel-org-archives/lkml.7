@@ -1,96 +1,112 @@
 Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4ADC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D502C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF7020811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8A721738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556022577;
-	bh=cDptc8aEDTmaUT1n9OKte/YRRWplKxN5Ix+1/koIl6g=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DCQyrxceu9LwLjRDWwXobBmyI3HfJtoF/rGI2I46XaAEULsXByzqovaTqinwN7QuN
-	 CPPyrOwFR+h9JocNmKn+B25Hbg1OHCpsHw0RiqLoUd9E77kbgi2PtMy3bjeUYc6wSk
-	 OtBLYKxeZTkp0eXxvrqilf2GDxmaBw2xYiYJDnqk=
+	s=default; t=1556022663;
+	bh=u7lnxaA3VGgOHosfe3qn7k9Mtx+2ly87vbM5KCVMkKQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RaikM8rK7RmC6YX73oCuGE3gtGyspWRlBhfp7NYmS31iIoemG5XHJFQzaoHAwPlt8
+	 39bNuC+eUGyYBxkdxZTw6I+r85L+Wg3AIXgFj30DXPO+R+9I1ZVzqzKrmxQ5pNCaVB
+	 IYArQiJ3D3fsecLhjkPbk9swEUAZP0H68wen8JA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfDWM3g (ORCPT
+        id S1727694AbfDWMbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:29:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfDWM3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:29:36 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58FE320811;
-        Tue, 23 Apr 2019 12:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556022575;
-        bh=cDptc8aEDTmaUT1n9OKte/YRRWplKxN5Ix+1/koIl6g=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=kyO4kDjJPnLwHRuuPVQIV00Y1DuHQS9VFEWKIQbL++xmvMa4Fx19GTdQFHvjzgtg7
-         gVO+Tepv/vwXiGFb9RtmIsQzdlrq5aJhM+cWzcy8avUgUKBMC28MEPBbUSbuIQNi5d
-         lNtIIhr2OYjvNeT4ag5t2sB2b80YaaITFXb7bFA0=
-Date:   Tue, 23 Apr 2019 14:29:32 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: intel-ish-hid: Add Comet Lake PCI device ID
-In-Reply-To: <20190420020031.58410-1-srinivas.pandruvada@linux.intel.com>
-Message-ID: <nycvar.YFH.7.76.1904231429190.9803@cbobk.fhfr.pm>
-References: <20190420020031.58410-1-srinivas.pandruvada@linux.intel.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 23 Apr 2019 08:31:02 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36579 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726204AbfDWMbC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 08:31:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b1so8652127wru.3;
+        Tue, 23 Apr 2019 05:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+9wxr5R3pk2oel1OfIQlHTOTnUvOX8cEZ1l94U4oBF8=;
+        b=mizTPRShAF1dM0yfIHmgRTVxwNuSoOi0eKbP73V2j33rQDacaUAhCJuGXkvLMgTbhr
+         RtU+YjH6ln1gfb+c7IA98DBdvSekblLz9zQzCvc1X0yZvcbolEn2kzHmMr3Trbd9X6Op
+         pIAzfuBqkj6eWWdBNM/KJ+6zTJrjpSnpdSMoNTVl52bggJtjpgMzCgvlry6OYQfOvqbZ
+         U0tIJIGzgplGfdFs2rwUekxic6kaFUOGcmsGindeMnkmLk1v5p1sVbEdq496JeqBwoNP
+         2GcEs2hJWFEtbNImdzQIjV7LE77X2sFwnxSQ4MDEYz7L/ipzVCjFKp0NbpoO+PeumJ67
+         zCkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+9wxr5R3pk2oel1OfIQlHTOTnUvOX8cEZ1l94U4oBF8=;
+        b=lvJEdEfoN08wzR/bD/GdGYlhe3QK37eukn5iyiYrSk9qAc5siRitJAHzW353JuW+6l
+         Kk8CLBCe4hD6QgyhZtdfU9wwQJSRuCsPtKwuQBcTNSN3Lcd/F1GN1jikz+m5NFgrCrWS
+         E1zGSuD9f4vHJrR8hACK64p2LAYmqZLSjiKR/ZTH7rqrch/yKp6do8bi/c9OGXXE1eec
+         pwlPLV5RdfyxtKhhNrOJpbGoE2lPU5XDsOBPvTGdLYum9RkFs6PRsX7JGhlj91eQEBhB
+         853zLfudnKRQuEfOB4mxkurzHLqpIpjkkLozVM95aYr5bqRbw1Q1kbOV6eeJwUYf1toB
+         O4tg==
+X-Gm-Message-State: APjAAAWoIcwfUG45pYS89fNrdt3ZEFqxs5sq/RuofJvkEAVYJHrlK1DZ
+        5mtoTF6y+GWaEs+nwYYLyoY=
+X-Google-Smtp-Source: APXvYqznVXo22PgJ4A60yTTxCmKJ8qyXu+UGtlFM23tosnZ73o8aQYHrMIjQiYyi5NfqXepCIz4knA==
+X-Received: by 2002:adf:dc4b:: with SMTP id m11mr17589058wrj.66.1556022660471;
+        Tue, 23 Apr 2019 05:31:00 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id v22sm2981298wml.32.2019.04.23.05.30.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 05:30:59 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 14:30:57 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v2 38/79] docs: scheduler: convert docs to ReST and
+ rename to *.rst
+Message-ID: <20190423123057.GA91497@gmail.com>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+ <2a3b2b06459e0134a3af4fbf3e6f62e6d42c4d26.1555938376.git.mchehab+samsung@kernel.org>
+ <20190423082937.GZ11158@hirez.programming.kicks-ass.net>
+ <20190423103202.GA13655@gmail.com>
+ <20190423111937.GM11158@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423111937.GM11158@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Apr 2019, Srinivas Pandruvada wrote:
 
-> Added Comet Lake PCI device ID to the supported device list.
+* Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Tue, Apr 23, 2019 at 12:32:02PM +0200, Ingo Molnar wrote:
 > 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
->  drivers/hid/intel-ish-hid/ipc/hw-ish.h  | 1 +
->  drivers/hid/intel-ish-hid/ipc/pci-ish.c | 1 +
->  2 files changed, 2 insertions(+)
+> > The .rst files still read like text files, right?
 > 
-> diff --git a/drivers/hid/intel-ish-hid/ipc/hw-ish.h b/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-> index 08a8327dfd22..523c0cbd44a4 100644
-> --- a/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-> +++ b/drivers/hid/intel-ish-hid/ipc/hw-ish.h
-> @@ -31,6 +31,7 @@
->  #define CNL_H_DEVICE_ID		0xA37C
->  #define ICL_MOBILE_DEVICE_ID	0x34FC
->  #define SPT_H_DEVICE_ID		0xA135
-> +#define CML_LP_DEVICE_ID	0x02FC
->  
->  #define	REVISION_ID_CHT_A0	0x6
->  #define	REVISION_ID_CHT_Ax_SI	0x0
-> diff --git a/drivers/hid/intel-ish-hid/ipc/pci-ish.c b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> index a6e1ee744f4d..ac0a179daf23 100644
-> --- a/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> +++ b/drivers/hid/intel-ish-hid/ipc/pci-ish.c
-> @@ -40,6 +40,7 @@ static const struct pci_device_id ish_pci_tbl[] = {
->  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, CNL_H_DEVICE_ID)},
->  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, ICL_MOBILE_DEVICE_ID)},
->  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, SPT_H_DEVICE_ID)},
-> +	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, CML_LP_DEVICE_ID)},
->  	{0, }
+> Like a harder to read text file for no gains.
 
-Applied, thanks.
+I just looked through a couple of RST files in Documentation/, and they 
+look like perfectly readable text files to me.
 
--- 
-Jiri Kosina
-SUSE Labs
+Some of the formatting details are arguably 'special' and can be broken 
+via "text edits" without being aware of the RST markup relevance - but I 
+don't think it's a problem for RST-unaware developers to break that 
+markup, the Documentation/ folks have been rather generous and flexible 
+in fixing those up, in addition to fixing all the typos as well.
 
+So I'd be cautiously in favor of the RST conversion, assuming I don't get 
+yelled at if I break the markup. ;-)
+
+Thanks,
+
+	Ingo
