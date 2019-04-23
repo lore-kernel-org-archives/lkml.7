@@ -3,215 +3,149 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C28C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D96C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06DE20843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724A920674
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:00:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MQZuPDeY"
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="yp0mZZex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfDWI5p (ORCPT
+        id S1726855AbfDWJAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:57:45 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54649 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbfDWI5p (ORCPT
+        Tue, 23 Apr 2019 05:00:02 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44788 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfDWJAB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:57:45 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c1so17599285wml.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 01:57:43 -0700 (PDT)
+        Tue, 23 Apr 2019 05:00:01 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h16so210323ljg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 01:59:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=X0zGNkou9jeRJIHLsoJRkphqDVwPOwPY0FOFDz22Ek4=;
-        b=MQZuPDeY8IwDiVaMxvHIYGIGfwRLTHrvY1E5y6xnkFyAGOzNNHRZ/Ek7awGLIrsYqX
-         AHCxIvFHqTbeAYL5ZY4QQWt2JCBx/kXQ1yLbIAGGADdYUla3KKwwpHbhuhOWlG7Ny/ck
-         VgS1uiivdrYot8f6Es59vai5pxVCL8Zegy5gXpA4IwsKZhWyVDqS9sqI05R2DBDjvehH
-         cOR655BJyiWh3wWa7TbARwIhdEr1tJRLt7ecUk+V17VM3vEjg9tY/r+D1ywUMm+B82oR
-         aCl23GMSX52QLWapaBckQSXPdsWfpfToWjl/UaCW7bOPlfRc8x+JMPehW+AOp9YlgZZf
-         dxIA==
+        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=CvaomlbaXxtymqxQxD6W+RuKqP8z/iCKy231aTStM20=;
+        b=yp0mZZexkGrefH8+REJLrImRVaBKobtKjI66dAbPm9codU5dvr9ycLh+2PjGePKAAY
+         2akW89FogqEa497Wax5Fe1yLvijWjQZz088xyEqdwtC2SNoASN7ud9+mfQrt7+rSHvxu
+         tKcFXh+HbQZamfdwvjGv+RiNY7Du4eONPl/bdapBbvd4/P2jFaFEQfVYvblHb26KfXIp
+         XF04bWFGpd3yOIEozNb5M3jwShfd7EhR5P19nFzSwCZbDY3y0aeLtEwsS0r5sXMSjd/f
+         Oplb7Lg3t/rgZhuQwKXh2YGaIrQBqeEt2EB9YKHiSttV8faNwvy5/Ay4qOyvcVPGiDch
+         jpHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=X0zGNkou9jeRJIHLsoJRkphqDVwPOwPY0FOFDz22Ek4=;
-        b=c0j1tYkfzOQuY5hSWZp57L0nJju2ktJNTLPhM+KaDtmeJIrdrDpZPeomJ2c4LUQ9tL
-         tapT8isri+cuQWvi6PCWBqGpe9B3YAxl3HU+4VOb/h5ZVBfbFnEN/e1v8ByfO6OnS0GN
-         4tReZealfsJb7eAn0C25A7t2nHMSzDUo6I+z6UC8jpjh/96QqeuFotDWVCGT0ey7Mbuh
-         8bqvmRCnznJUR/L7P97flPcCibmfFquDAmIxpoB2oq4UlKI9tmaAdcUyooRscyB401mu
-         2LYdyAK3WDY+1Tlim5Nnw/2xw/ub9Rv8hXnret32iaD+w9zuKaHOh/42kiYBKNbW874a
-         jO8Q==
-X-Gm-Message-State: APjAAAWosJ5MLHhZrG7n3vK89SDjJ2s/sHkYFrW5hEKDaH4Q8SaD597k
-        kNNcZ1e+V1uU99UnBUjSlw0F2A==
-X-Google-Smtp-Source: APXvYqz18jsPtX8PIWRxpZh7jjRoNi/h00c6jFJF1UG8dviYK0YldXSOluGEe+N16KebghJbj/Tn9w==
-X-Received: by 2002:a1c:f504:: with SMTP id t4mr1366507wmh.121.1556009862613;
-        Tue, 23 Apr 2019 01:57:42 -0700 (PDT)
-Received: from [10.1.3.153] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id x5sm12347287wmi.37.2019.04.23.01.57.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 01:57:41 -0700 (PDT)
-Subject: Re: [PATCH 3/3] iio: Add PAT9125 optical tracker sensor
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, baylibre-upstreaming@groups.io,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org
-References: <1554456870-8104-1-git-send-email-amergnat@baylibre.com>
- <1554456870-8104-4-git-send-email-amergnat@baylibre.com>
- <20190407112024.6297cbfa@archlinux>
- <f8ffca5b-09a8-cad7-4561-bf1263388228@baylibre.com>
- <20190422094236.537e3a01@archlinux>
-From:   Alexandre <amergnat@baylibre.com>
-Message-ID: <327a56e4-66d8-859c-7f35-458b533ac72f@baylibre.com>
-Date:   Tue, 23 Apr 2019 10:57:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=CvaomlbaXxtymqxQxD6W+RuKqP8z/iCKy231aTStM20=;
+        b=AuUJtxberd7eg2uQrNIPWYw60vvyzauualQFcwciKRCInYOQUxhOGj4ChADueRgdY3
+         702dbrExMrhDAWNrKWYbSdDY6V0DDckiQwksbBBKn1IUcymMiMzOd9kAwRxDt35WmTvd
+         v4vZ2Vw/lgT/Kar5lGM4oayLNj6Qu6qRNcapfoJDEvbpkQ+W76ABTzGd7zK5CZKWvGOp
+         VuFAA8/2pWxWzBH5UMlAGiHqX9X7GZBLUoiLpczpwmBK9dKjGhpdKaDCBDW92j6Flcth
+         xdjw7FuF/LWm1J6xPGog1c6ssArUE8BjbhI/k2pPy8kQHgP3LfhAe+8xQzy2YXyIJLVM
+         EPcQ==
+X-Gm-Message-State: APjAAAVeqi1HwnQG6WRb4782WP049G5jpCx19w0Vqtnj0W0KAf4qm1MC
+        h9eNJ1l+LEpePbEkhvBc3gwaXggwtOklFinSqcKbdA==
+X-Google-Smtp-Source: APXvYqy9cU6GL/iq4/0pK6YvHXQbyi2BmRCdxgFf2pNhk3mst69GcT16J8QBOXIi3EvNOlWrX5v6rXN0keJV1s+MPOc=
+X-Received: by 2002:a2e:390c:: with SMTP id g12mr13958184lja.174.1556009998594;
+ Tue, 23 Apr 2019 01:59:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190422094236.537e3a01@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+ <20190417154121.GJ13337@phenom.ffwll.local> <20190418062229.eyog4i62eg4pr6uf@flea>
+ <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
+ <20190418090221.e57dogn4yx5nwdni@flea> <CAKMK7uHN6QfYyzx4DjRT+7VLRi6N9DorQtw2GoDiNGTgie=DXA@mail.gmail.com>
+ <20190420225904.GZ4964@pendragon.ideasonboard.com> <20190423072554.GW13337@phenom.ffwll.local>
+In-Reply-To: <20190423072554.GW13337@phenom.ffwll.local>
+From:   Daniel Stone <daniel@fooishbar.org>
+Date:   Tue, 23 Apr 2019 09:59:37 +0100
+Message-ID: <CAPj87rMWdjEvTJWRvdMLTZyw7pZpo5PpPr0FWcALNRe_D8cYqw@mail.gmail.com>
+Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
+ common place
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+Hi,
 
-On 4/22/19 10:42, Jonathan Cameron wrote:
-> On Tue, 16 Apr 2019 14:49:19 +0200
-> Alexandre <amergnat@baylibre.com> wrote:
+On Tue, 23 Apr 2019 at 08:26, Daniel Vetter <daniel@ffwll.ch> wrote:
+> On Sun, Apr 21, 2019 at 01:59:04AM +0300, Laurent Pinchart wrote:
+> > > > > - drm fourcc code doesn't actually define the drm_format_info
+> > > > >   uniquely, drivers can override that (that's an explicit design
+> > > > >   intent of modifiers, to allow drivers to add another plane for
+> > > > >   e.g. compression information). You'd need to pull that driver
+> > > > >   knowledge into your format library.
+> >
+> > That's a mistake in my opinion. We tried that in V4L2 to store metadata
+> > in a separate plane, and had to go another route eventually as it
+> > created a very bad mess.
 >
->> Hello Jonathan,
->>
->> On 4/7/19 12:20, Jonathan Cameron wrote:
->>> Hi Alexandre,
->>>
->>> So I have no problem with this as an IIO driver, but for devices that
->>> are somewhat 'on the edge' I always like to get a clear answer to the
->>> question: Why not input?
->>>
->>> I would also argue that, to actually be 'useful' we would typically need
->>> some representation of the 'mechanicals' that are providing the motion
->>> being measured.  Looking at the datasheet this includes, rotating shafts
->>> (side or end on), disk edges and flat surface tracking (mouse like).
->>>
->>> That's easy enough to do with the iio in kernel consumer interface. These
->>> are similar to when we handle analog electronic front ends.
->>>
->>> I you can, please describe what it is being used for in your application
->>> as that may give us somewhere to start!
->>>
->>> + CC Dmitry and linux-input.
->> I developed this driver to detect the board movement which can't be
->> detected by accelerometer (very slow motion). I admit this use case can
->> be handled by an input, and I'm agree with you, PAT9125 driver could be
->> an input. But, like you said, this chip is able to track different kind
->> of motion, and additionally have an interrupt GPIO, so using it like
->> input limit the driver potential. This chip is designed to work in
->> industrial measurement or embedded systems, and the IIO API match with
->> these environments, so it's the best way to exploit the entire potential
->> of this chip.
->>
->> As I understand (from
->> https://www.kernel.org/doc/html/v4.12/input/event-codes.html#mice ),
->> mouse driver must report values when the device move. This feature
->> souldn't be mandatory for an optical tracker driver, specially for cases
->> where user prefers to use buffer or poll only when he need data.
->>
->>> If 1 or 2, I would suggest that you provide absolute position to
->>> Linux.  So add the value to a software counter and provide that.
->>> 32 bits should be plenty of resolution for that.
->> I can't provide absolute position, only relative. Do you mean using
->> input driver to do that ? If not, how is built the position data?
-> Sorry, I should have been clearer on this.
-> I mean absolute relative to the start point.  So on startup you assume
-> absolute position is 0 and go from there.  What I can't work out is
-> if the device does internal tracking, or whether each time you read
-> it effectively resets it's internal counters to 0 so the next measurement
-> is relative to the previous one.
-Each time you read that reset internal counters to 0.
->>> Silly question for you.  What happens if you set the delta values to 0?
->>> Do we get an interrupt which is effectively data ready?
->>> If we do, you might want to think about a scheme where that is an option.
->>> As things currently stand we have a confusing interface where changing this
->>> threshold effects the buffered data output.   That should only be the
->>> case if this interface is for a trigger, not an event.
->> I'm not sure to understand your question. Is it possible to read delta_x
->> and delta_y = 0 in special/corner case because internal value continue
->> to be updated after toggled motion_detect pin (used for IRQ) until
->> values registers are read and then motion_detect pin is released:
->>
->>    * Chip move (i.e. +2 on X axis and 0 on Y axis)
->>    * Motion_detect IRQ trigger and internal reg value is updated (i.e.
->>      delta_x = 2 and delta_y = 0.
->>    * GPIO IRQ handled but read_value isn't executed yet (timing reason)
->>    * Chip move back to it origin point (i.e. -2 on X axis and 0 on Y axis)
->>    * Motion_detect IRQ still low because it hasn't been reset by read
->>      value and internal reg value is updated (i.e. delta_x = 0 and
->>      delta_y = 0)
->>    * Read_value is executed, we get delta values = 0.
-> Again, I was unclear.  Is it possible to set the device to interrupt
-> every time it evaluates whether motion has occured? Not only when it
-> concludes that there has been some motion.  That would allow the interrupt
-> to be used as a signal that the device has taken a measurement (data
-> ready signal in other sensors).
+> Just quick clarification in the middle here: This is how the hw works.
+> It's not metadata that sw ever touches (in general, testcases to make sure
+> we display these correctly excepted).
 >
-I don't know, the datasheet don't describe the role of each bit in 
-registers and I don't found documentation which provide that. I had to 
-do research on example code to retrieve some bits, but got nothing on 
-motion detection pin configuration.
-
->>> If it is actually not possible to report the two channels separately
->>> then don't report them at all except via the buffered interface and
->>> set the available scan masks so that both are on.
->> I found a way to keep the consistency between delta x and delta y
->> (without losing data). The first part is to reset a value only when user
->> read it (also when it's buffered). The second part is to add the new
->> value to the old value. With these two mechanism, X and Y will always be
->> consistent:
->>
->>    * as possible during a move.
->>    * perfectly when move is finished.
-> Ah. This adding old value to a new value point is what I was getting
-> at (I think) with 'absolute' position above.
+> There has been some talking to add maybe a bit more mixed metadata, for
+> fast-clear colors (which isn't used by any display engine afaik yet). That
+> would generally be written by the cpu (in the gl stack), but again read by
+> the hw (loaded as indirect state packet most likely, or something like
+> that). So again hw specific layout, because the hw needs to read it.
 >
-> In industrial control for example you have absolute position by using
-> limit switches to set your baseline.  Measurement devices are then
-> capable of either reporting relative position, which is the movement
-> since the last reading was taken, or 'absolute' position which is
-> referenced to some known point.  It was this form of absolute position
-> that I was suggesting you use.  If you use such a system without a
-> limit switch it is normally called unreference motion.  You can do
-> it but then the 0 is where ever your device was at power on.
-> For some systems it doesn't actually matter (conveyor belts for
-> instance where the positions you care about are between things
-> on the belt, not the position of the belt itself).
+> Pure metadata only of interest for the cpu/sw stack has been shot down
+> completely on the drm side too.
 
-Ok, I decided to return delta between last read/buffering to stay closer 
-to the hardware mechanism and still coherent with "IIO_CHAN_INFO_RAW". 
-If user want absolute position, he can make an addition of all received 
-value in user space, and that allow him to reset/replace the initial 
-position when he want it.
+Totally. Let's take DRM_FORMAT_XRGB8888 + I915_FORMAT_MOD_Y_TILED as
+an example. Here, there is one colour plane which is laid out in a
+documented tiled format, containing normal XRGB8888 pixels once you do
+the maths to get the correct pixel location. So that's fine.
 
-> Thanks,
->
-> Jonathan
->
->>
->> Regards,
->>
->> Alexandre
->>
+I915_FORMAT_MOD_Y_TILED_CCS has a base colour plane as above, but adds
+an auxiliary plane which has a few bits describing the state of every
+(differently-sized) tile. Before reading the tile from the colour
+plane, you look at the corresponding location in the auxiliary plane:
+if you read 0x55 from the auxiliary plane, then the entire cacheline
+is the value of the first pixel, i.e. a solid fill. Hardware takes
+advantage of this to only write out the first pixel: if you try to
+read the colour plane as Y_TILED then for solid-filled regions, only
+the first pixel of every tile will show correctly, and the rest will
+be garbage.
 
-Thanks for your comments,
+The auxiliary plane has its own layout and placement requirements, so
+we need to carry around an offset and a stride for the auxiliary data.
+We already have this for multiple planes; stuffing it into the base
+plane would require us to reinvent the same for auxiliary data within
+a single plane.
 
-Alexandre
+I understand at least one of the Tegra colour-compression layouts (for
+Tegra 1xx?) is similar to this.
 
+It would be good to understand what you had in mind when you said that
+using multiple planes created a mess. I haven't touched media
+encode/decode units at a low level for quite a while (hooray for
+gst-v4l2!), but I remember that they often used padding areas around
+the buffer for scratch space - maybe motion vectors or similar? That
+case is quite different to something like CCS, since the data is only
+meaningful to the media engine and must be ignored (but preserved) by
+everyone else. Using multiple planes in that case isn't appropriate,
+since it's very specific to how that hardware unit deals with that
+buffer, instead of something that every consumer needs to understand
+in order to use it.
+
+Cheers,
+Daniel
