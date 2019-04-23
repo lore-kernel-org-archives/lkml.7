@@ -2,87 +2,131 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B62C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609EEC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742422175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFAB214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:35:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dGXluoZ8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uEweKZJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfDWKev (ORCPT
+        id S1727406AbfDWKfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:34:51 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39632 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfDWKeu (ORCPT
+        Tue, 23 Apr 2019 06:35:32 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:32892 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfDWKfb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:34:50 -0400
-Received: by mail-lf1-f67.google.com with SMTP id d12so11338123lfk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 03:34:49 -0700 (PDT)
+        Tue, 23 Apr 2019 06:35:31 -0400
+Received: by mail-vk1-f193.google.com with SMTP id x194so3084525vke.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 03:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Qm/layQEeNMZON1puf4iHr3x7Hf24MoU7f4K04cY4mo=;
-        b=dGXluoZ8Y0po0bHsIoAYNRLARfjayexlOIYdVe64eoSQDZzm91h1ctzH7DtMMw3aIW
-         9dzUT1tiLq6V32i+D+9lUhH8G1wSnU4cUmK8ni7ylo2Q2RWbXeoqM4IncAVzwYBk/IcN
-         B82V5eTWyvV4DIpXaakXk+/FB/PBZJMr9mvbk+BFF1umHlo8f5nUMJ5NPQPrf80C5MEn
-         wZ2ZQ16L3dyUVXR1vMI0t9u0eSe0XBaBATGgpBwtE66Pa1Aj1ikYiiWB3DR+wrqEmJ+2
-         gfMTOTiSBwwEQ5MRtKCKQKuDYmZFYC7I0SgZ9gNp7Kf8k4QyPJQD3FOJs8ZPNttypOyX
-         /4Hg==
+        bh=PNF64pi2itufQBxUFTFNhv50HBLeH2Ap0sntQKQ3f1w=;
+        b=uEweKZJedxr52kdEb1EQ+qAytoCpKzkkNkio0S7iFPL/icJ6TDLRgGrBogdBFI2qtB
+         vSw62oslP4U3Gv2T/qDElp5vG8nQVqY1/LIq024azcBasS7lgSzg4noU9tYr1U6Q8JdA
+         jIR5z+DwXgxMBGfqLd1iY8biaP3w7hgr6PxZ9COMzCvmrjYat3LuodUXezDC5pjjckpK
+         uN0a6UVjuYMaynBkf4/0BGWKTORawoBBxAlYjCA9rDi4Qx0qnESmSc1gNbhN+0tlqrBx
+         CzOBhA741UsRmgmtMQkhjrOB6QMaeVAo31PHbgRJRhfQ4hTnoj1Zh013HItXWYtl4ieU
+         /qgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Qm/layQEeNMZON1puf4iHr3x7Hf24MoU7f4K04cY4mo=;
-        b=OHgTXPlo1SPTxILCj38uu+gLQpEyYNcsMW9FmtZHnpFLsSMBWj8mJyRpmbVXzLV5rt
-         3+FttPOA1SUueo8tYXNR2ZBq/H4WvW77wLXEXt5teYciR+JCKlByHUNo7hRqxSEpSkw+
-         Jji5HnbiwtSCkogS0w7F96zPayI7H44dOItjM5H3unKOvzx8DNw5Y+Jw51Tj9o8y2vNJ
-         zn6B38EVPqR+9CK5j4eLWtcZoBEBq4X6RIBEtZUzXekN0P0JKFcr3gQaF+jCit+BFwCc
-         rB/WI/TJ+NClMuuMfZSAud2cxiljHa9QX9V9X1eiMr3hWHFPfgJBfScxJZ1AHuNCNcNj
-         z7qw==
-X-Gm-Message-State: APjAAAU0daMngCIOAdJRPsmRR4NbSj+09H94yFJXFYOMa4iB/G453WLV
-        tTXQZk41RC/px3UdbYchdqqCZ5WbHMwqKDFibqi//Q==
-X-Google-Smtp-Source: APXvYqwnVGfA3zPp34Tb8mKsWHVGRaFVPi+OtbgUJo6G58rl/IpcUblV9KavxSBU35cxkDldSKHTcHQ2Hu/SRw8G0Ew=
-X-Received: by 2002:ac2:4647:: with SMTP id s7mr13098149lfo.168.1556015688504;
- Tue, 23 Apr 2019 03:34:48 -0700 (PDT)
+        bh=PNF64pi2itufQBxUFTFNhv50HBLeH2Ap0sntQKQ3f1w=;
+        b=AOLcRxWhiKHq0IzDnTULZui1u1kInOx3EY/f9dx3tQ71H2ouMv+eoBJawqo5ZvUOvZ
+         DrUe1FEfRzb99R0nfVL+81PiCtbwMsFvdoWuNZ9iJcfo3Ekguv5/u6vvltmEHrAyAsLn
+         ZVm/7pZiuYAfs4I1n88EbNRTe6y9KxnLnHpklRKf9/V77N+JTleQBopMTjzwEjvKMh+r
+         4gCQ6sZxCJXgx96qsM8uEAIzA4VhqsEfnkO4zg0QVNr2cXWXslvLKQbmiVwHTfIpg6lj
+         SpIc47nLWrpK+Ov/uwbraY7NmjpOv6CswqD83RwnkxGKNCVMmOl4Q+IpuEfru3c7uGF7
+         dJcQ==
+X-Gm-Message-State: APjAAAWO8/mkxWSCK1adrZHcHdecXAgwwF7bKK6NxPDKZxxdz6n47+JN
+        TJnXhtkbydWdv3UHeHrFOQxcGjl+x4TBavqnxX2s0g==
+X-Google-Smtp-Source: APXvYqxocFfPrpeMB2Mb45qdeREdLOsXBAf8xnhH/PvtHXtLKorwklxLUHAD4xqkX5XKcUujgtlWXTGk8pZFNOTURgo=
+X-Received: by 2002:a1f:bc8d:: with SMTP id m135mr13237606vkf.68.1556015730374;
+ Tue, 23 Apr 2019 03:35:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <1555048943-39589-1-git-send-email-wen.yang99@zte.com.cn> <1555048943-39589-2-git-send-email-wen.yang99@zte.com.cn>
-In-Reply-To: <1555048943-39589-2-git-send-email-wen.yang99@zte.com.cn>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 23 Apr 2019 12:34:37 +0200
-Message-ID: <CACRpkdaC8rK8CA9QPmmWwEu8UGrfAgxUw73TVUBsj69YKsj0xA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] pinctrl: pistachio: fix leaked of_node references
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        wang.yi59@zte.com.cn,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20190402161256.11044-1-daniel.lezcano@linaro.org>
+ <20190402161256.11044-5-daniel.lezcano@linaro.org> <CAHLCerNvp9Bb0TwCcO91ecrbzKGe7epCHFk=fx4RGJgHDE_BRA@mail.gmail.com>
+ <9afb2911-512a-9048-9ed8-6aa9dd29a848@linaro.org>
+In-Reply-To: <9afb2911-512a-9048-9ed8-6aa9dd29a848@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 23 Apr 2019 16:05:18 +0530
+Message-ID: <CAHLCerMMQRY-zjjKbaLA=OXQPo-oS76yNYYhTOBmG05jSS8RtA@mail.gmail.com>
+Subject: Re: [PATCH 5/7] thermal/drivers/core: Remove depends on THERMAL in Kconfig
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 8:01 AM Wen Yang <wen.yang99@zte.com.cn> wrote:
-
-> The call to of_get_child_by_name returns a node pointer with refcount
-> incremented thus it must be explicitly decremented after the last
-> usage.
+On Wed, Apr 3, 2019 at 9:03 AM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
 >
-> Detected by coccinelle with the following warnings:
-> ./drivers/pinctrl/pinctrl-pistachio.c:1422:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1360, but without a corresponding object release within this function.
+> Hi Amit,
 >
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+> On 02/04/2019 20:51, Amit Kucheria wrote:
+> > On Tue, Apr 2, 2019 at 11:14 PM Daniel Lezcano
+> > <daniel.lezcano@linaro.org> wrote:
+> >>
+> >> The dependency on the THERMAL option to be set is already there implicitly
+> >> by the "if THERMAL" conditionnal option. The sub Kconfigs do not have to
+> >> check against the THERMAL option as they are called from a Kconfig block
+> >> which is enabled by the conditionnal option.
+> >>
+> >> Remove the useless "depends on THERMAL" in the Kconfigs.
+> >>
+> >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >> ---
+> >>  drivers/thermal/Kconfig       | 2 --
+> >>  drivers/thermal/intel/Kconfig | 1 -
+> >>  drivers/thermal/qcom/Kconfig  | 1 -
+> >>  3 files changed, 4 deletions(-)
+> >>
+> >> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> >> index ccf5b9408d7a..d8aa7fac8c56 100644
+> >> --- a/drivers/thermal/Kconfig
+> >> +++ b/drivers/thermal/Kconfig
+> >> @@ -24,7 +24,6 @@ config THERMAL_STATISTICS
+> >>
+> >>  config THERMAL_EMERGENCY_POWEROFF_DELAY_MS
+> >>         int "Emergency poweroff delay in milli-seconds"
+> >> -       depends on THERMAL
+> >>         default 0
+> >>         help
+> >>           Thermal subsystem will issue a graceful shutdown when
+> >> @@ -152,7 +151,6 @@ config CPU_THERMAL
+> >>         bool "generic cpu cooling support"
+> >>         depends on CPU_FREQ
+> >>         depends on THERMAL_OF
+> >> -       depends on THERMAL=y
+> >
+> > This will break the intention of afa1f2ab43d48d0e1. At the moment, we
+> > need THERMAL=y if we want cpu_cooling.
+>
+> The patch 1/7 changes the thermal option from tristate to bool, so the
+> thermal is compiled-in always. The dependency is no longer needed in
+> this case. Did I miss something?
 
-Patch applied.
+Sorry, the threading of this series was a bit strange and there was no
+cover letter. I wasn't cc'ed on the other patches, so missed the
+earlier changes. This series looks good.
 
-Yours,
-Linus Walleij
+FWIW,
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
