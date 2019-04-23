@@ -2,108 +2,134 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DD5C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E67C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6A621850
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:38:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BapQQmQV"
+	by mail.kernel.org (Postfix) with ESMTP id 4852D20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:38:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfDWSia (ORCPT
+        id S1726618AbfDWSib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 23 Apr 2019 14:38:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60136 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfDWSia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Apr 2019 14:38:30 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40259 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfDWSia (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 14:38:30 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b3so7947582plr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:38:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=eoTaxoTrFSwlznVOf9fo0DxdOq0TFTUP4kfKP9GY+WU=;
-        b=BapQQmQVXCj8La3MRmOCBHvmXV36OBw+ou6J2qJflXIiT2ueEUdhZW5OCMq1KSS+IN
-         Fmrcebv7g1CEMaxnLWT5arsXnJU3C7BibDSe8f7cARNGpQQKQSEvH0F4Yj9G39/rCaG6
-         nzpjq/A4wneyHAzEEIZKyyDnSGiCSFejXtdzM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=eoTaxoTrFSwlznVOf9fo0DxdOq0TFTUP4kfKP9GY+WU=;
-        b=jGEdozEQKWNLroJnR1iYvxTWdL0wzqqD0wWaSZpb5240ZPg4Qi5+3ZjGXTmxAe+niP
-         fl0m41VHETIkpGE0veM+P7ttPS2u2xM8crm4BaE58qpsjmVC0Zox/mMnmrpFnMJYA4Wo
-         H88PYADY5eQDtsHYvoobWie9dSY8clC+qg38RkwFBO1M/g+DdFC0K8pluhDvcPgmTnYL
-         J125HpkV33wHnFj6n/9bwcCtYVKoNLjK8A3WRl6i+0II+q50sMmTm8FpTzWNeWrvQtzx
-         S+Ye7VQ4GoTNU1UML7QF/6oqIcp2NrL5c816JlfHUOOkgZGFXHsNHktJBZqB8l9GywXk
-         aI3w==
-X-Gm-Message-State: APjAAAVcOXTQ03zRmND6wVjjhuw3cG8J9+8EUNku97X3AdFXGC+8P7Ym
-        +oalgoLdsQLGwesYBrZgWVwqVQ==
-X-Google-Smtp-Source: APXvYqzkYToNTgG/DoKQ0xM3nBpX7alPsyCeJSYdbw7G3Hn5c3Ht3ucA5+kXJ2gmmKuJrREzwYIslg==
-X-Received: by 2002:a17:902:e793:: with SMTP id cp19mr21732783plb.65.1556044709746;
-        Tue, 23 Apr 2019 11:38:29 -0700 (PDT)
-Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id d15sm21850710pfo.34.2019.04.23.11.38.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 11:38:28 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 11:38:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [PATCH] x86/build: Move _etext to actual end of .text
-Message-ID: <20190423183827.GA4012@beast>
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 29A4C319937A;
+        Tue, 23 Apr 2019 18:38:30 +0000 (UTC)
+Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C6B816BE5;
+        Tue, 23 Apr 2019 18:38:29 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 12:38:28 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Alex G <mr.nuke.me@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/LINK: Account for BW notification in vector
+ calculation
+Message-ID: <20190423123828.691bb37c@x1.home>
+In-Reply-To: <9802ef46-40d2-b83c-a0c6-8bd6ac25feaa@gmail.com>
+References: <155597243666.19387.1205950870601742062.stgit@gimli.home>
+        <d1126250-14e0-192c-f219-f143f62c9cdd@gmail.com>
+        <20190422183347.51ba522c@x1.home>
+        <84300da7-9bbd-4f32-c7fa-23724db60b88@gmail.com>
+        <20190423171050.GA37199@google.com>
+        <9802ef46-40d2-b83c-a0c6-8bd6ac25feaa@gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 23 Apr 2019 18:38:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building x86 with Clang LTO and CFI, CFI jump regions are
-automatically added to the end of the .text section late in linking. As a
-result, the _etext position was being labelled before the appended jump
-regions, causing confusion about where the boundaries of the executable
-region actually are in the running kernel, and broke at least the fault
-injection code. This moves the _etext mark to outside (and immediately
-after) the .text area, as it already the case on other architectures
-(e.g. arm64, arm).
+On Tue, 23 Apr 2019 12:53:07 -0500
+Alex G <mr.nuke.me@gmail.com> wrote:
 
-Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/kernel/vmlinux.lds.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> On 4/23/19 12:10 PM, Bjorn Helgaas wrote:
+> > On Tue, Apr 23, 2019 at 09:33:53AM -0500, Alex G wrote:  
+> >> On 4/22/19 7:33 PM, Alex Williamson wrote:  
+> >>> There is nothing wrong happening here that needs to fill logs.  I
+> >>> thought maybe if I enabled notification of autonomous bandwidth
+> >>> changes that it might categorize these as something we could
+> >>> ignore, but it doesn't.  How can we identify only cases where this
+> >>> is an erroneous/noteworthy situation?  Thanks,  
+> >>
+> >> You don't. Ethernet doesn't. USB doesn't. This logging behavior is
+> >> consistent with every other subsystem that deals with multi-speed links.  
+> > 
+> > Can you point me to the logging in these other subsystems so I can
+> > learn more about how they deal with this?  
+> 
+> I don't have any in-depth articles about the logging in these systems, 
+> but I can extract some logs from my machines.
+> 
+> Ethernet:
+> 
+> [Sun Apr 21 11:14:06 2019] e1000e: eno1 NIC Link is Down
+> [Sun Apr 21 11:14:17 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
+> Duplex, Flow Control: Rx/Tx
+> [Sun Apr 21 11:14:23 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
+> Duplex, Flow Control: Rx/Tx
+> [Sun Apr 21 23:33:31 2019] e1000e: eno1 NIC Link is Down
+> [Sun Apr 21 23:33:43 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
+> Duplex, Flow Control: Rx/Tx
+> [Sun Apr 21 23:33:48 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
+> Duplex, Flow Control: Rx/Tx
+> 
+> I used to have one of these "green" ethernet switches that went down to 
+> 100mbps automatically. You can imagine how "clogged" the logs were with 
+> link up messages. Thank goodness that switch was killed in a thunderstorm.
+> 
+> USB will log every device insertion and removal, very verbosely (see 
+> appendix A).
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index bad8c51fee6e..de94da2366e7 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -141,11 +141,11 @@ SECTIONS
- 		*(.text.__x86.indirect_thunk)
- 		__indirect_thunk_end = .;
- #endif
--
--		/* End of text section */
--		_etext = .;
- 	} :text = 0x9090
- 
-+	/* End of text section */
-+	_etext = .;
-+
- 	NOTES :text :note
- 
- 	EXCEPTION_TABLE(16) :text = 0x9090
--- 
-2.17.1
+I have a hard time putting USB insertion and removal into the same
+class, the equivalent is PCI hotplug which is logged separately.  Do
+we ever log beyond USB device discovery if a device is running at a
+lower speed than is possible?  The most directly related is the green
+ethernet switch, which you admit was a nuisance due to exactly this
+sort of logging.  It was probably confusing to see this logging, perhaps
+you wondered if the cable was bad or the switch was defective.
 
+> > I agree that emitting log messages for normal and expected events will
+> > lead to user confusion and we need to do something.
+> > 
+> > e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
+> > notification") was merged in v5.1-rc1, so we still have (a little)
+> > time to figure this out before v5.1.  
+> 
+> I always viewed the system log as a system log, instead of a database of 
+> system errors. I may have extremist views, but going back to Alex's 
+> example, I prefer to see that the power saving mechanism is doing 
+> something to save power on my laptop (I'll just ignore it on a desktop).
 
--- 
-Kees Cook
+There's a disconnect from above where similar behavior on ethernet
+behavior "clogged" the log files, but here we just want to ignore it.
+Excessive logging can also be considered a denial of service vector
+when the device generating that excessive logging is attached to a
+userspace driver.
+
+> If you think increasing code complexity because people don't want things 
+> logged into the system log, then I'm certain we can work out some sane 
+> solution. It's the same problem we see with GCC, where people want 
+> warning messages here, but don't want the same messages there.
+
+v5.1 is approaching quickly, can we downgrade these to pci_dbg() while
+we work on maybe some sort of driver participation in this logging?
+Thanks,
+
+Alex
