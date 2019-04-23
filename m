@@ -2,112 +2,114 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7EAC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E600C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5598E217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bSMaAQUw"
+	by mail.kernel.org (Postfix) with ESMTP id 4A809217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556057498;
+	bh=6uaIDqhlQe789sFXRkyJVF8NsVndwaJW3RinM5iteNE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hOaUsVxq9S7l1vFBqco8Kt8XcX/LG+E5VOt4D3NUsOmz0NnmHt3GmoMI9yCV6+NCY
+	 4ApAlX8NSHWG0Bq6NBECEGPCHGbNOCW9sAAm1uC2PH0T9BhzAWqibPXJmXQP3ntMlk
+	 b+/3AYDDxHYJMHOtBRD1TkANf6ACm6pKUGi5ibUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbfDWWLR (ORCPT
+        id S1728456AbfDWWLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:11:17 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:37480 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfDWWLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:11:17 -0400
-Received: by mail-ua1-f66.google.com with SMTP id l17so5350317uar.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:11:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jlRBsB6IGIWbgBpSBxzuqPEKc4JDD6ALsTbUturvgj4=;
-        b=bSMaAQUwBpg31mfIB0yKhMYIBwQkWPqWs+4gBjimft5C9/y2YFzl4JI18ch7ozKvxm
-         7cp/BgXeIWdwFxtqvUKYNX2/4w2AduwA3DGikKXmUxluNt/PQBK6i/grb47SjHF3ctCF
-         V4u4fWZ9c53ZdkZT+lY/y+cWuX5yWjmlZ5QAI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jlRBsB6IGIWbgBpSBxzuqPEKc4JDD6ALsTbUturvgj4=;
-        b=LSCN02ZTKz2PZlR7mRVBMbkiMozCAoYdggaFX/n1bQfEsm2Ee2l8a07wYzJkn0bta9
-         eEENvWAU6JFlT9nbrEET+umZtUn3eHSa0wtwDVgsji2jxBMrN1WUl4x5HNep1UnvacbJ
-         KnfqfHaJ7BvAT7PG2axagsF8mdcuIAucOmoHgUbifi+DL55zVEN+NF0CNNIzQRWsLT+m
-         v6jB+HNujslDOoDaCuT19iJTq2/YNz1QUWi9ecjFyEn3nMG35WbqtwCDjm3FjPrEk5Ja
-         N401Xz+wYCmrlYGxUd33p5tiCcr1cF1apJjbHPv1dkL6l/EqQMg5+CckJR2+tQOWH9AU
-         C0Gw==
-X-Gm-Message-State: APjAAAWfWMZ0J+7k3EsdCC9pjoBWaRIqniZrfn5H4bocWJo10k3r04b4
-        45Xzd3Yu6ZMOqjO2PUOeKQ233NmfBdk=
-X-Google-Smtp-Source: APXvYqy2LDTEUak/IKQLe00OABqTRi//6i6KVJPeQLbUgJ9cKEb/+MFrwHXR8A2//3rwY0K90SlhCA==
-X-Received: by 2002:a9f:2c09:: with SMTP id r9mr12917658uaj.56.1556057476195;
-        Tue, 23 Apr 2019 15:11:16 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id y18sm3080099vsm.10.2019.04.23.15.11.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 15:11:15 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id f22so9240656vso.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:11:15 -0700 (PDT)
-X-Received: by 2002:a67:7c8a:: with SMTP id x132mr14921317vsc.172.1556057474640;
- Tue, 23 Apr 2019 15:11:14 -0700 (PDT)
+        Tue, 23 Apr 2019 18:11:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726325AbfDWWLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 18:11:36 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB5FD21738;
+        Tue, 23 Apr 2019 22:11:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556057496;
+        bh=6uaIDqhlQe789sFXRkyJVF8NsVndwaJW3RinM5iteNE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tQl6VeFTzcdo2gVP1ZdPp8m7WgIVsiolfKFmY1PC9/qgjcPMGQDCkj5xbv6PT593t
+         R2k7ne6t2oXNpbphqANwgxGyxRELMdIspps1SSjnO5QB78pTVLwJLTN0SgcZgLtD0Q
+         kmJOkzl2ZhgIUvUzGEaMPEu7vKQx/2Cw3CY8B7GE=
+Date:   Tue, 23 Apr 2019 17:11:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
+        alex.williamson@redhat.com
+Subject: Re: [PATCH v1 1/5] PCI/IOV: Add support to verify PF/VF spec
+ compliance
+Message-ID: <20190423221134.GI14616@google.com>
+References: <cover.1551909341.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <317aaed09820db65c21452663bed33468f874d3a.1551909341.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190419135918.GC173520@google.com>
+ <20190419173728.GE46517@otc-nc-03>
+ <22ad30c0-fc7e-b5ac-a224-c1a247c33359@linux.intel.com>
 MIME-Version: 1.0
-References: <20190306201413.14153-1-tycho@tycho.ws>
-In-Reply-To: <20190306201413.14153-1-tycho@tycho.ws>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 23 Apr 2019 15:11:03 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jJDhQ_3jS9-VSUwruFDpb4GwqUs=iz7uNGMkPbLnNWKUw@mail.gmail.com>
-Message-ID: <CAGXu5jJDhQ_3jS9-VSUwruFDpb4GwqUs=iz7uNGMkPbLnNWKUw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] seccomp: fix up grammar in comment
-To:     Tycho Andersen <tycho@tycho.ws>, James Morris <jmorris@namei.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22ad30c0-fc7e-b5ac-a224-c1a247c33359@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 12:14 PM Tycho Andersen <tycho@tycho.ws> wrote:
->
-> This sentence is kind of a train wreck anyway, but at least dropping the
-> extra pronoun helps somewhat.
->
-> Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+On Fri, Apr 19, 2019 at 11:41:31AM -0700, sathyanarayanan kuppuswamy wrote:
+> On 4/19/19 10:37 AM, Raj, Ashok wrote:
+> > On Fri, Apr 19, 2019 at 08:59:18AM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Mar 06, 2019 at 02:11:14PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > 
+> > > > PF/VF implementation must comply with PCIe specification as
+> > > > defined in r4.0, sec 9.3.4, 9.3.5, 9.3.6 and 9.3.7. And if
+> > > > it does not comply, return error and skip PF/VF device
+> > > > creation.
+> > > As far as I can tell, this patch basically looks for excuses not to
+> > > enable SR-IOV.  Does this actually solve a problem?  Are there
+> > > non-compliant devices out there that blow up if we enable SR-IOV?
+> > We ran into one case with a future product for INTx value on VF's. We do have
+> > a quirk for it upstream now. We thought it might be good to just run through
+> > some of the basic requirements and see if any device violates it, that would allow
+> > us to catch them early.
+> > 
+> > We are looking into other things like PASID and End-2-End prefix capability for instance.
+> > There is another subtle thing like number of eetlp_prefix_supported. Which i don't
+> > pci core checks today, and we might need to do that to be compliant or find devices
+> > that break that contract.
+> > 
+> > Real intend is to be find such breaks early, it also helps the product guys :-)
+> > 
+> > With upcoming vIOMMU effort, we need to ensure that capabilities are exported properly
+> > depending on if its a SRIOV-PF/VF or a Scalable device.
+> > 
+> > Cheers,
+> > Ashok
+> 
+> I agree with Ashok's comments. It helps us find SRIOV related features
+> enable/disable issues easily.
+> 
+> Also, there is some of level of spec compliance checks in enabling
+> PASID/PRI/ATS already in our existing code.
+> 
+> I am just grouping them together in one place and expanded it for other IOV
+> related features.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+My $0.02:
 
-James, this can go in for v5.2 -- no rush.
+  - If there's a problem that actually prevents Linux from using a feature,
+    check for the problem close to the point where we use the feature.
 
--Kees
+  - If you want to check for spec compliance, most of that can be done more
+    easily in user-space by examining lspci output.
 
-> ---
->  kernel/seccomp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> index e815781ed751..d0d355ded2f4 100644
-> --- a/kernel/seccomp.c
-> +++ b/kernel/seccomp.c
-> @@ -329,7 +329,7 @@ static int is_ancestor(struct seccomp_filter *parent,
->   * Expects sighand and cred_guard_mutex locks to be held.
->   *
->   * Returns 0 on success, -ve on error, or the pid of a thread which was
-> - * either not in the correct seccomp mode or it did not have an ancestral
-> + * either not in the correct seccomp mode or did not have an ancestral
->   * seccomp filter.
->   */
->  static inline pid_t seccomp_can_sync_threads(void)
-> --
-> 2.19.1
->
-
-
--- 
-Kees Cook
+Bjorn
