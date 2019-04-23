@@ -2,172 +2,310 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B81BC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B95C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E295D218DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37D4206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:08:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XwvnvmUb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c45I7llL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbfDWXAj (ORCPT
+        id S1728493AbfDWXI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 19:00:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42382 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728517AbfDWXAj (ORCPT
+        Tue, 23 Apr 2019 19:08:27 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43338 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfDWXI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 19:00:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id x15so3883474pln.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:00:38 -0700 (PDT)
+        Tue, 23 Apr 2019 19:08:27 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k17so22294056wrx.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:08:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ra8Ms5CUfBwXQRLy73kzr5XO2DuaX+tzW+qegRE+LGM=;
-        b=XwvnvmUbLauRVIj4hvNXed/2GB6dgP6nTAJ4mI/51T2G61NvDJlzvPajYR08sH0oA+
-         NeMe9ChkLDPHVDr9ieDzVm6sGk8nMPgxApd/QoGwCgjr8vIj3lbstDd0j+taCdwK1Xa4
-         ky4untPiEV8NDidCJlxOIXfW9owEj5lAR48CA=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=S+jF/L2bbtq/6fO11UF09dE0wRVcaCI68CrkuWT6qPE=;
+        b=c45I7llL09uragjf9jGJ3c5nnG+cW9pAA/aHT4Dbu6O3EGrY0LPRDo5ew7j5keyZ1K
+         8uR2E/FvS6iRkTz4stZWe0+wJWrxmL9a4AB0XI29wn1PfJ7QoA8gLrzy14vQrlyn1Umk
+         blPfdoE2NnW77UdLr/dTpzTENmZW2tgBo1vWFx6MPwUFtaaf/1HDCr1dVGWI8N3q7Cuv
+         tTqCwAj5mbShhUeuMRn7nebDOaZuOCslU/bGMlRY+miHfhpujHJpY/fAH7LPCBv19gKR
+         uB9r7Ff32oyE0OSK/SQ12JdXNU828VjicyRLnkSqyhejCR+97qvQhwil1Vo2+lWoUIyW
+         E8VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ra8Ms5CUfBwXQRLy73kzr5XO2DuaX+tzW+qegRE+LGM=;
-        b=mgFaq5aF8j1aDsKnwBgwYwYydr8EOgOlvIbEHiWWkiedNWVx+GHtCq80ge1lCSGEZR
-         0hj2IBMHSyHrWPQgNbq0QXWXUszDU68GjEaUWfldjeSVIn9h5rK3297kUBGXy2oXRgC2
-         Ww2jgIb4CfREkI3+98PkvzBcJts/4dpFLT076DIe0J7ntuePnH2OB3gdiCHA343VaQ9s
-         QykXDe8Mc83uNpIKpGHPCBwYYg93xhFBxiEbXDwcHnS8ENwbBjBYCF2P4n9/6OtmPdmH
-         d250vtU3gTQ7+VOGJo25amtmRHoyYOIKBZt7YnzPbJ3HgcOavKeIkDETQkrnhGplOyDQ
-         cCxg==
-X-Gm-Message-State: APjAAAVxgMKByM0PKFKzhCwdtW+nF+ClVKNM8uJwRF06F/m7sOHLR6cv
-        hWSXLBvaDNKv6fq7QzZ3CEEfDg==
-X-Google-Smtp-Source: APXvYqxCEK2LTIUfGGL05MZVufslqWsTB7Kv3HMeLX6IGw8zPEdUXkD39e7d0eqVk1oWDX1zvd5nEQ==
-X-Received: by 2002:a17:902:263:: with SMTP id 90mr29254648plc.257.1556060438495;
-        Tue, 23 Apr 2019 16:00:38 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id f66sm854467pfa.5.2019.04.23.16.00.37
+        bh=S+jF/L2bbtq/6fO11UF09dE0wRVcaCI68CrkuWT6qPE=;
+        b=OjiXdgyMmjNFSlSTCs0Yv8kFcwYz0eQ2lfaFxdH6f3qi4ktaA9p4Qqe2pw5iq6vzWn
+         kX++zc/Be3iWfLnRj3l21wXX8ozJmk63SbBaGbpe0SziNFwXciydAN8TmlDlSgWBx1EW
+         BVE3Hu72kLUjxAq6f1/FfuqG14MQu46mbGdj47NyUZXRnz3tZipXTkMXqXkdBndjapEU
+         cMe/XwsRot4N9mDbEgeD29/lcBFoYpFFJyeamvAOiTVGbqBXrpvQKxj5PpkFqBL/045N
+         vGvtLkYPJUSNquEq2jNnj1C8tXS6Yvg58WDTr7d5a/JXfcqNshCt74KnRvLF+9CUhdzW
+         rO1A==
+X-Gm-Message-State: APjAAAVqRnaqADsMIfyhhNVeZfsiQjy2j/px0tlzjaEl5qW3jO7FPCLa
+        Id0uAhjcWREvhIef2LQrX2DwMA==
+X-Google-Smtp-Source: APXvYqwRCdHK00g4EfLjao7DPzMUQwjrwx9lTvXu4HcWJLNUl+ktRJD6EsLs4P6B15KrkqcdHnH0gQ==
+X-Received: by 2002:adf:d081:: with SMTP id y1mr9171169wrh.283.1556060904613;
+        Tue, 23 Apr 2019 16:08:24 -0700 (PDT)
+Received: from [192.168.0.44] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id t24sm14885499wmi.10.2019.04.23.16.08.23
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 16:00:37 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     mark.rutland@arm.com, Salva.Climent@arm.com,
-        marc.w.gonzalez@free.fr, linux-rockchip@lists.infradead.org,
-        sonnyrao@chromium.org, will.deacon@arm.com, bbatacha@arm.com,
-        mka@chromium.org, robin.murphy@arm.com, heiko@sntech.de,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH v2] ARM: errata: Workaround errata A12 857271 / A17 857272
-Date:   Tue, 23 Apr 2019 15:59:59 -0700
-Message-Id: <20190423225959.43742-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+        Tue, 23 Apr 2019 16:08:23 -0700 (PDT)
+Subject: Re: [PATCH] thermal/drivers/of: Add a get_temp_id callback function
+To:     Eduardo Valentin <edubezval@gmail.com>
+Cc:     rui.zhang@intel.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, andrew.smirnov@gmail.com
+References: <20190416172203.4679-1-daniel.lezcano@linaro.org>
+ <20190423154430.GA16014@localhost.localdomain>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <bc10d520-4d15-74d6-0dc2-fd63df8d9a21@linaro.org>
+Date:   Wed, 24 Apr 2019 01:08:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190423154430.GA16014@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for working around errata A12 857271 / A17 857272.
-These errata were causing hangs on rk3288-based Chromebooks and it was
-confirmed that this workaround fixed the problems.  In the Chrome OS
-3.14 kernel this was treated as two errata: ERRATA_FOOBAR [1] and
-ERRATA_CR711784 [2].  Apparently the two errata got lumped together at
-some point in time.
+On 23/04/2019 17:44, Eduardo Valentin wrote:
+> Hello,
+> 
+> On Tue, Apr 16, 2019 at 07:22:03PM +0200, Daniel Lezcano wrote:
+>> Currently when we register a sensor, we specify the sensor id and a data
+>> pointer to be passed when the get_temp function is called. However the
+>> sensor_id is not passed to the get_temp callback forcing the driver to
+>> do extra allocation and adding back pointer to find out from the sensor
+>> information the driver data and then back to the sensor id.
+>>
+>> Add a new callback get_temp_id() which will be called if set. It will
+>> call the get_temp_id() with the sensor id.
+>>
+>> That will be more consistent with the registering function.
+> 
+> I still do not understand why we need to have a get_id callback.
+> The use cases I have seen so far, which I have been intentionally rejecting, are
+> mainly solvable by creating other compatible entries. And really, if you
+> have, say a bandgap, chip that supports multiple sensors, but on
+> SoC version A it has 5 sensors, and on SoC version B it has only 4,
+> or on SoC version C, it has 5 but they are either logially located
+> in different places (gpu vs iva regions), these are all cases in which
+> you want a different compatible!
+> 
+> Do you mind sharing why you need a get sensor id callback?
 
-Let's actually get the workaround landed.
+It is not a get sensor id callback, it is a get_temp callback which pass
+the sensor id.
 
-[1] https://crrev.com/c/342753
-[2] https://crbug.com/711784
+See in the different drivers, it is a common pattern there is a
+structure for the driver, then a structure for the sensor. When the
+get_temp is called, the callback needs info from the sensor structure
+and from the driver structure, so a back pointer to the driver structure
+is added in the sensor structure.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Sonny Rao <sonnyrao@chromium.org>
----
+Example:
 
-Changes in v2:
-- Squashed bits 10 and 11 into one errata.
+struct hisi_thermal_sensor {
+        struct hisi_thermal_data *data;   <-- back pointer
+        struct thermal_zone_device *tzd;
+        const char *irq_name;
+        uint32_t id; 		<-- note this field
+        uint32_t thres_temp;
+};
 
- arch/arm/Kconfig      | 18 ++++++++++++++++++
- arch/arm/mm/proc-v7.S | 10 ++++++++++
- 2 files changed, 28 insertions(+)
+struct hisi_thermal_data {
+        const struct hisi_thermal_ops *ops;
+        struct hisi_thermal_sensor *sensor;
+        struct platform_device *pdev;
+        struct clk *clk;
+        void __iomem *regs;
+        int nr_sensors;
+};
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index b509cd338219..59fdcd51d7ee 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1172,6 +1172,14 @@ config ARM_ERRATA_825619
- 	  DMB NSHST or DMB ISHST instruction followed by a mix of Cacheable
- 	  and Device/Strongly-Ordered loads and stores might cause deadlock
- 
-+config ARM_ERRATA_857271
-+	bool "ARM errata: A12: CPU might deadlock under some very rare internal conditions"
-+	depends on CPU_V7
-+	help
-+	  This option enables the workaround for the 857271 Cortex-A12
-+	  (all revs) erratum. Under very rare timing conditions, the CPU might
-+	  hang. The workaround is expected to have a < 1% performance impact.
-+
- config ARM_ERRATA_852421
- 	bool "ARM errata: A17: DMB ST might fail to create order between stores"
- 	depends on CPU_V7
-@@ -1193,6 +1201,16 @@ config ARM_ERRATA_852423
- 	  config option from the A12 erratum due to the way errata are checked
- 	  for and handled.
- 
-+config ARM_ERRATA_857272
-+	bool "ARM errata: A17: CPU might deadlock under some very rare internal conditions"
-+	depends on CPU_V7
-+	help
-+	  This option enables the workaround for the 857272 Cortex-A17 erratum.
-+	  This erratum is not known to be fixed in any A17 revision.
-+	  This is identical to Cortex-A12 erratum 857271.  It is a separate
-+	  config option from the A12 erratum due to the way errata are checked
-+	  for and handled.
-+
- endmenu
- 
- source "arch/arm/common/Kconfig"
-diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
-index 339eb17c9808..2966086d8a45 100644
---- a/arch/arm/mm/proc-v7.S
-+++ b/arch/arm/mm/proc-v7.S
-@@ -391,6 +391,11 @@ __ca12_errata:
- 	mrc	p15, 0, r10, c15, c0, 1		@ read diagnostic register
- 	orr	r10, r10, #1 << 24		@ set bit #24
- 	mcr	p15, 0, r10, c15, c0, 1		@ write diagnostic register
-+#endif
-+#ifdef CONFIG_ARM_ERRATA_857271
-+	mrc	p15, 0, r10, c15, c0, 1		@ read diagnostic register
-+	orr	r10, r10, #3 << 10		@ set bits #10 and #11
-+	mcr	p15, 0, r10, c15, c0, 1		@ write diagnostic register
- #endif
- 	b	__errata_finish
- 
-@@ -406,6 +411,11 @@ __ca17_errata:
- 	mrcle	p15, 0, r10, c15, c0, 1		@ read diagnostic register
- 	orrle	r10, r10, #1 << 12		@ set bit #12
- 	mcrle	p15, 0, r10, c15, c0, 1		@ write diagnostic register
-+#endif
-+#ifdef CONFIG_ARM_ERRATA_857272
-+	mrc	p15, 0, r10, c15, c0, 1		@ read diagnostic register
-+	orr	r10, r10, #3 << 10		@ set bits #10 and #11
-+	mcr	p15, 0, r10, c15, c0, 1		@ write diagnostic register
- #endif
- 	b	__errata_finish
- 
+
+In the get_temp callback:
+
+static int hisi_thermal_get_temp(void *__data, int *temp)
+{
+        struct hisi_thermal_sensor *sensor = __data;
+        struct hisi_thermal_data *data = sensor->data;
+
+        *temp = data->ops->get_temp(sensor);
+
+        dev_dbg(&data->pdev->dev, "tzd=%p, id=%d, temp=%d, thres=%d\n",
+                sensor->tzd, sensor->id, *temp, sensor->thres_temp);
+
+        return 0;
+}
+
+
+Another example:
+
+struct qoriq_sensor {
+        struct thermal_zone_device      *tzd;
+        struct qoriq_tmu_data           *qdata; <-- back pointer
+        int                             id;  	<-- note this field
+};
+
+struct qoriq_tmu_data {
+        struct qoriq_tmu_regs __iomem *regs;
+        bool little_endian;
+        struct qoriq_sensor     *sensor[SITES_MAX];
+};
+
+static int tmu_get_temp(void *p, int *temp)
+{
+        struct qoriq_sensor *qsensor = p;
+        struct qoriq_tmu_data *qdata = qsensor->qdata;
+        u32 val;
+
+        val = tmu_read(qdata, &qdata->regs->site[qsensor->id].tritsr);
+        *temp = (val & 0xff) * 1000;
+
+        return 0;
+}
+
+Another example:
+
+
+struct rockchip_thermal_sensor {
+        struct rockchip_thermal_data *thermal;	<-- back pointer
+        struct thermal_zone_device *tzd;
+        int id;					<-- note this field
+};
+
+struct rockchip_thermal_data {
+        const struct rockchip_tsadc_chip *chip;
+        struct platform_device *pdev;
+        struct reset_control *reset;
+
+        struct rockchip_thermal_sensor sensors[SOC_MAX_SENSORS];
+
+	[ ... ]
+};
+
+
+static int rockchip_thermal_get_temp(void *_sensor, int *out_temp)
+{
+        struct rockchip_thermal_sensor *sensor = _sensor;
+        struct rockchip_thermal_data *thermal = sensor->thermal;
+        const struct rockchip_tsadc_chip *tsadc = sensor->thermal->chip;
+        int retval;
+
+        retval = tsadc->get_temp(&tsadc->table,
+                                 sensor->id, thermal->regs, out_temp);
+        dev_dbg(&thermal->pdev->dev, "sensor %d - temp: %d, retval: %d\n",
+                sensor->id, *out_temp, retval);
+
+        return retval;
+}
+
+This patch adds an alternate get_temp_id() along with the get_temp()
+ops. If the ops field for get_temp_id is filled, it will be invoked and
+will pass the sensor id used when registering. It results the driver
+structure can be passed and the sensor id gives the index in the sensor
+ table in this structure. The back pointer is no longer needed, the id
+field neither and I suspect, by domino effect, more structures will
+disappear or will be simplified (eg. the above rockchip sensor structure
+disappear and the thermal_data structure will contain an array of
+thermal zone devices).
+
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Tested-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>> ---
+>>  drivers/thermal/of-thermal.c | 19 +++++++++++++------
+>>  include/linux/thermal.h      |  1 +
+>>  2 files changed, 14 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+>> index 2df059cc07e2..787d1cbe13f3 100644
+>> --- a/drivers/thermal/of-thermal.c
+>> +++ b/drivers/thermal/of-thermal.c
+>> @@ -78,6 +78,8 @@ struct __thermal_zone {
+>>  
+>>  	/* sensor interface */
+>>  	void *sensor_data;
+>> +	int sensor_id;
+>> +
+>>  	const struct thermal_zone_of_device_ops *ops;
+>>  };
+>>  
+>> @@ -88,10 +90,14 @@ static int of_thermal_get_temp(struct thermal_zone_device *tz,
+>>  {
+>>  	struct __thermal_zone *data = tz->devdata;
+>>  
+>> -	if (!data->ops->get_temp)
+>> -		return -EINVAL;
+>> +	if (data->ops->get_temp)
+>> +		return data->ops->get_temp(data->sensor_data, temp);
+>>  
+>> -	return data->ops->get_temp(data->sensor_data, temp);
+>> +	if (data->ops->get_temp_id)
+>> +		return data->ops->get_temp_id(data->sensor_id,
+>> +					      data->sensor_data, temp);
+>> +
+>> +	return -EINVAL;
+>>  }
+>>  
+>>  static int of_thermal_set_trips(struct thermal_zone_device *tz,
+>> @@ -407,8 +413,8 @@ static struct thermal_zone_device_ops of_thermal_ops = {
+>>  /***   sensor API   ***/
+>>  
+>>  static struct thermal_zone_device *
+>> -thermal_zone_of_add_sensor(struct device_node *zone,
+>> -			   struct device_node *sensor, void *data,
+>> +thermal_zone_of_add_sensor(struct device_node *zone, struct device_node *sensor,
+>> +			   int sensor_id, void *data,
+>>  			   const struct thermal_zone_of_device_ops *ops)
+>>  {
+>>  	struct thermal_zone_device *tzd;
+>> @@ -426,6 +432,7 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+>>  	mutex_lock(&tzd->lock);
+>>  	tz->ops = ops;
+>>  	tz->sensor_data = data;
+>> +	tz->sensor_id = sensor_id;
+>>  
+>>  	tzd->ops->get_temp = of_thermal_get_temp;
+>>  	tzd->ops->get_trend = of_thermal_get_trend;
+>> @@ -516,7 +523,7 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+>>  		}
+>>  
+>>  		if (sensor_specs.np == sensor_np && id == sensor_id) {
+>> -			tzd = thermal_zone_of_add_sensor(child, sensor_np,
+>> +			tzd = thermal_zone_of_add_sensor(child, sensor_np, sensor_id,
+>>  							 data, ops);
+>>  			if (!IS_ERR(tzd))
+>>  				tzd->ops->set_mode(tzd, THERMAL_DEVICE_ENABLED);
+>> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+>> index 5f4705f46c2f..2762d7e6dd86 100644
+>> --- a/include/linux/thermal.h
+>> +++ b/include/linux/thermal.h
+>> @@ -351,6 +351,7 @@ struct thermal_genl_event {
+>>   *		   hardware.
+>>   */
+>>  struct thermal_zone_of_device_ops {
+>> +	int (*get_temp_id)(int, void *, int *);
+>>  	int (*get_temp)(void *, int *);
+>>  	int (*get_trend)(void *, int, enum thermal_trend *);
+>>  	int (*set_trips)(void *, int, int);
+>> -- 
+>> 2.17.1
+>>
+
+
 -- 
-2.21.0.593.g511ec345e18-goog
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
