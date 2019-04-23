@@ -2,136 +2,126 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0136FC282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8FAC282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C037821901
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:38:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556055533;
-	bh=zlxJ1tukSLQQU5TfXIRgzzp22Xini9DlTE0pPHr7nSE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ot3kjD2Xxj9mC9cEPKRAc34nPrXpOurw3HbGse0t583dkkagE4GNS8dZCo8n1ZrIM
-	 agG887tuPw9srf8bS9RKS14DEvipFT+Iltuj6JPlse1wGsWG5vTS7UExbZZzjin6WR
-	 XXgzyceC/UOHmVhVqctUSqfA+2iEpPMcrnbf7XLw=
+	by mail.kernel.org (Postfix) with ESMTP id A5D18218D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:41:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pxC3zisH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbfDWVix (ORCPT
+        id S1728107AbfDWVl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:38:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726665AbfDWViw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:38:52 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AB9F218D3;
-        Tue, 23 Apr 2019 21:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556055531;
-        bh=zlxJ1tukSLQQU5TfXIRgzzp22Xini9DlTE0pPHr7nSE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f7q1MNzV+F/cuT/gL7XlsHK++mDIH4Knj0eDf7+G0ojEsChC3ukNtk7QOkrO/EB4k
-         TKgrDnoMHEqLL7VwyvhSYtBdsJAZfBGFQS9pGH5HyVv0JHOnDIYq1BtgCddjfJecg/
-         z/NZicr8Z0eoc1COkubZzxws3g5uFcV0zlBx7wrI=
-Date:   Tue, 23 Apr 2019 16:38:50 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Cc:     austin_bolen@dell.com, alex_gagniuc@dellteam.com,
-        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
-        okaya@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 4/4] PCI/ACPI: Advertise HPX type 3 support via _OSC
-Message-ID: <20190423213850.GG14616@google.com>
-References: <20190307213834.5914-1-mr.nuke.me@gmail.com>
- <20190315192947.13807-1-mr.nuke.me@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190315192947.13807-1-mr.nuke.me@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 23 Apr 2019 17:41:26 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42539 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfDWVl0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 17:41:26 -0400
+Received: by mail-lj1-f196.google.com with SMTP id i186so947983lji.9;
+        Tue, 23 Apr 2019 14:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dciPz5i6iUOQEqd4ga8rNmP9MhHw7ebjWpQwl/EYfys=;
+        b=pxC3zisHehdHyB7pttEznE1NWYSq+qP2woYKXnOOItXCV9U1oZ8yLoMgBRROZ8x5ki
+         on9V7lRSaen2Ht7dQ0nVOhkUQtpKQy6wz2Rpkwfe8oqjeRlnBBXbx+t2P6fBk6hflBiY
+         ObNXmyM7Cjv4vxGtgeDJnQsQj+9Sqh39AK4YlO6rFxPCorYou2ZyDi5GpHE39u67hiFy
+         nW8mp23QmGwU1oklZ97u0878TrrCIEjYP3s/WQkDRANkHidIFHDujCociAzXIeunMVGV
+         hWPKCDmROQWNisDb8QvoCdDsl5+fnlyBaau1CgqHJegYYkOv+PVmJWmXVzEYIygIPV9m
+         qalg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dciPz5i6iUOQEqd4ga8rNmP9MhHw7ebjWpQwl/EYfys=;
+        b=XZCKn3ObZQ3JoNFg7JH6cyYwszYZ38s/ckUx/EFcSezr4OySUUnQfG+CxYZGEPUjRe
+         VBJZqTqo5Elpl0w6jKfiJI2V3e5gqf1L64THC+Huf+hhwvDrvzi41SV5Mq7u4mexeva+
+         Z6WWjWOwgbfaOfnRdbRSPST1CikO0tIVTaYWhxG4O7F/PGwvD8R9mXKlBcWNnUz143Zw
+         wCP9yEppQV2OLLdSXydfd06l00bQhdYIeuKy62WzHaQi5O5jTele+pQ2QHaZfBTnFqXd
+         MK/UOZF/sg6/RnZAs5/0XqCieS5x0xNSuNnzo0qr9NZHS2CHHzTphU7PnhUBicFQZ4d/
+         zSJA==
+X-Gm-Message-State: APjAAAX1TxMEQuWi85CzrW6jUjlrd32vRRe/iVwbHx7Wy6f6lmOznthu
+        FP9ZoyYI4FXSVymXWzv9axo=
+X-Google-Smtp-Source: APXvYqxf4wWlY+g4Um3q4mKER31sS2ZwDo1AgjkcwMMwhKEMZHZbmMH0mEuGlffsZrwYL5/0LGpm4g==
+X-Received: by 2002:a2e:7a03:: with SMTP id v3mr4259620ljc.142.1556055683873;
+        Tue, 23 Apr 2019 14:41:23 -0700 (PDT)
+Received: from localhost.localdomain (80-167-223-88-cable.dk.customer.tdc.net. [80.167.223.88])
+        by smtp.gmail.com with ESMTPSA id p11sm985798lfh.27.2019.04.23.14.41.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 23 Apr 2019 14:41:23 -0700 (PDT)
+From:   Daniel Gomez <dagmcr@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Cc:     dagmcr@gmail.com, javier@dowhile0.org,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] iio: accel: kxsd9: declare missing of table
+Date:   Tue, 23 Apr 2019 23:40:59 +0200
+Message-Id: <1556055659-14658-1-git-send-email-dagmcr@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 15, 2019 at 02:29:40PM -0500, Alexandru Gagniuc wrote:
-> _OSC now has a way to inform firmware that OS has the capability to
-> interpret HPX type 3 tables. Since ACPI 6.3 deprecated _OSC specifics,
-> these are now part of the PCI Firmware Specification.
-> 
-> The following is the document describing the changes:
-> ECN:	_HPX and PCIe Completion Timeout related _OSC Enhancements
-> Date:	September 12, 2018
-> Affected Document: PCI Firmware Specification, Rev. 3.2
-> 
-> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Add missing <of_device_id> table for SPI driver relying on SPI
+device match since compatible is in a DT binding or in a DTS.
 
-Applied to pci/hotplug for v5.2, thanks!
+Before this patch:
+modinfo drivers/iio/accel/kxsd9-spi.ko  | grep alias
+alias:          spi:kxsd9
 
-> ---
-> 
-> This patch is designed to go on top of the following series
-> "PCI: ACPI: Implement support for _HPX Type 3 tables"
-> 	https://lkml.org/lkml/2019/3/7/790
-> 
-> Although the patch can technically be applied independently, it
-> doesn't make sense without the rest of the series.
-> 
-> The HPX3 capability bit, to my understanding, is designed to be
-> informational. i.e. Setting or not setting it would not affect whether
-> firmware would export HPX3 tables. It may have implications in FFS
-> systems, where FW might need to make sure things like the completion
-> timeout value is set correctly throughout the tree.
-> 
-> My understanding is that firmware will prefer to set these with HPX3,
-> in lieu of firing up SMM on hotplug and other events. Firmware can use
-> the HPX3 support bit to know how to proceed.
-> 
->  drivers/acpi/pci_root.c | 2 ++
->  include/linux/acpi.h    | 3 ++-
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index 707aafc7c2aa..0bee23893297 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -145,6 +145,7 @@ static struct pci_osc_bit_struct pci_osc_support_bit[] = {
->  	{ OSC_PCI_CLOCK_PM_SUPPORT, "ClockPM" },
->  	{ OSC_PCI_SEGMENT_GROUPS_SUPPORT, "Segments" },
->  	{ OSC_PCI_MSI_SUPPORT, "MSI" },
-> +	{ OSC_PCI_HPX_TYPE_3_SUPPORT, "HPX-type3" },
->  };
->  
->  static struct pci_osc_bit_struct pci_osc_control_bit[] = {
-> @@ -446,6 +447,7 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm,
->  	 * PCI domains, so we indicate this in _OSC support capabilities.
->  	 */
->  	support = OSC_PCI_SEGMENT_GROUPS_SUPPORT;
-> +	support |= OSC_PCI_HPX_TYPE_3_SUPPORT;
->  	if (pci_ext_cfg_avail())
->  		support |= OSC_PCI_EXT_CONFIG_SUPPORT;
->  	if (pcie_aspm_support_enabled())
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 87715f20b69a..028c138b9082 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -508,7 +508,8 @@ extern bool osc_pc_lpi_support_confirmed;
->  #define OSC_PCI_CLOCK_PM_SUPPORT		0x00000004
->  #define OSC_PCI_SEGMENT_GROUPS_SUPPORT		0x00000008
->  #define OSC_PCI_MSI_SUPPORT			0x00000010
-> -#define OSC_PCI_SUPPORT_MASKS			0x0000001f
-> +#define OSC_PCI_HPX_TYPE_3_SUPPORT		0x00000100
-> +#define OSC_PCI_SUPPORT_MASKS			0x0000011f
->  
->  /* PCI Host Bridge _OSC: Capabilities DWORD 3: Control Field */
->  #define OSC_PCI_EXPRESS_NATIVE_HP_CONTROL	0x00000001
-> -- 
-> 2.19.2
-> 
+After this patch:
+modinfo drivers/iio/accel/kxsd9-spi.ko  | grep alias
+alias:          spi:kxsd9
+alias:          of:N*T*Ckionix,kxsd9C*
+alias:          of:N*T*Ckionix,kxsd9
+
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+---
+ drivers/iio/accel/kxsd9-spi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/iio/accel/kxsd9-spi.c b/drivers/iio/accel/kxsd9-spi.c
+index b7d0078..3027917 100644
+--- a/drivers/iio/accel/kxsd9-spi.c
++++ b/drivers/iio/accel/kxsd9-spi.c
+@@ -1,5 +1,7 @@
+ #include <linux/device.h>
+ #include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/spi/spi.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -40,10 +42,17 @@ static const struct spi_device_id kxsd9_spi_id[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, kxsd9_spi_id);
+ 
++static const struct of_device_id kxsd9_of_match[] = {
++        { .compatible = "kionix,kxsd9" },
++        { },
++};
++MODULE_DEVICE_TABLE(of, kxsd9_of_match);
++
+ static struct spi_driver kxsd9_spi_driver = {
+ 	.driver = {
+ 		.name = "kxsd9",
+ 		.pm = &kxsd9_dev_pm_ops,
++		.of_match_table = kxsd9_of_match,
+ 	},
+ 	.probe = kxsd9_spi_probe,
+ 	.remove = kxsd9_spi_remove,
+-- 
+2.7.4
+
