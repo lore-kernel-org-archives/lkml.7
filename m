@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AD9C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F03FC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E1E20645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D498820645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfDWN5f (ORCPT
+        id S1728115AbfDWN5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:57:35 -0400
-Received: from foss.arm.com ([217.140.101.70]:56932 "EHLO foss.arm.com"
+        Tue, 23 Apr 2019 09:57:38 -0400
+Received: from foss.arm.com ([217.140.101.70]:56946 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbfDWN5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:57:32 -0400
+        id S1728075AbfDWN5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 09:57:35 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81654A78;
-        Tue, 23 Apr 2019 06:57:31 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1CECAEBD;
+        Tue, 23 Apr 2019 06:57:34 -0700 (PDT)
 Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 584043F238;
-        Tue, 23 Apr 2019 06:57:29 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2B1F3F238;
+        Tue, 23 Apr 2019 06:57:31 -0700 (PDT)
 From:   Julien Grall <julien.grall@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
@@ -32,9 +32,9 @@ Cc:     catalin.marinas@arm.com, will.deacon@arm.com,
         james.morse@arm.com, julien.thierry@arm.com,
         suzuki.poulose@arm.com, Dave.Martin@arm.com,
         ard.biesheuvel@linaro.org, Julien Grall <julien.grall@arm.com>
-Subject: [PATCH v3 2/3] arch/arm64: fpsimd: Introduce fpsimd_save_and_flush_cpu_state() and use it
-Date:   Tue, 23 Apr 2019 14:57:18 +0100
-Message-Id: <20190423135719.11306-3-julien.grall@arm.com>
+Subject: [PATCH v3 3/3] arm64/fpsimd: Don't disable softirq when touching FPSIMD/SVE state
+Date:   Tue, 23 Apr 2019 14:57:19 +0100
+Message-Id: <20190423135719.11306-4-julien.grall@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190423135719.11306-1-julien.grall@arm.com>
 References: <20190423135719.11306-1-julien.grall@arm.com>
@@ -43,126 +43,433 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only external user of fpsimd_save() and fpsimd_flush_cpu_state() is
-the KVM FPSIMD code.
+When the kernel is compiled with CONFIG_KERNEL_MODE_NEON, some part of
+the kernel may be able to use FPSIMD/SVE. This is for instance the case
+for crypto code.
 
-A following patch will introduce a mechanism to acquire owernship of the
-FPSIMD/SVE context for performing context management operations. Rather
-than having to export the new helpers to get/put the context, we can just
-introduce a new function to combine fpsimd_save() and
-fpsimd_flush_cpu_state().
+Any use of FPSIMD/SVE in the kernel are clearly marked by using the
+function kernel_neon_{begin, end}. Furthermore, this can only be used
+when may_use_simd() returns true.
 
-This has also the advantage to remove any external call of fpsimd_save()
-and fpsimd_flush_cpu_state(), so they can be turned static.
+The current implementation of may_use_simd() allows softirq to use
+FPSIMD/SVE unless it is currently in use (i.e kernel_neon_busy is true).
+When in use, softirqs usually fall back to a software method.
 
-Lastly, the new function can also be used in the PM notifier.
+At the moment, as a softirq may use FPSIMD/SVE, softirqs are disabled
+when touching the FPSIMD/SVE context. This has the drawback to disable
+all softirqs even if they are not using FPSIMD/SVE.
+
+Since a softirq is supposed to check may_use_simd() anyway before
+attempting to use FPSIMD/SVE, there is limited reason to keep softirq
+disabled when touching the FPSIMD/SVE context. Instead, we can simply
+disable preemption and mark the FPSIMD/SVE context as in use by setting
+CPU's kernel_neon_busy flag.
+
+Two new helpers {get, put}_cpu_fpsimd_context is introduced to mark the
+area using FPSIMD/SVE context and uses them in replacement of
+local_bh_{disable, enable}. The functions kernel_neon_{begin, end} are
+also re-implemented to use the new helpers.
+
+For use in fpsimd_thread_switch(), which is a critical path where
+preemption is already disabled, doule-underscored versions of the
+helpers are provided to avoid disabling preemption again.
+
+The change has been benchmarked on Linux 5.1-rc4 with defconfig.
+
+On Juno2:
+    * hackbench 100 process 1000 (10 times)
+    * .7% quicker
+
+On ThunderX 2:
+    * hackbench 1000 process 1000 (20 times)
+    * 3.4% quicker
 
 Signed-off-by: Julien Grall <julien.grall@arm.com>
 
 ---
-    kernel_neon_begin() does not use fpsimd_save_and_flush_cpu_state()
-    because the next patch will modify the function to also grab the
-    FPSIMD/SVE context.
-
     Changes in v3:
-        - Rework the commit message
-        - Move the prototype of fpsimd_save_and_flush_cpu_state()
-        further down in the header
-        - Remove comment in kvm_arch_vcpu_put_fp()
+        - Fix typoes in the commit message
+        - Rework a bit the commit message
+        - Use imperative mood
+        - Rename kernel_neon_busy to fpsimd_context_busy
+        - Remove debug code
+        - Update comments
+        - Don't require preemption when calling fpsimd_save_and_flush_cpu_state()
 
     Changes in v2:
-        - Patch added
+        - Remove spurious call to kernel_neon_enable in kernel_neon_begin.
+        - Rename kernel_neon_{enable, disable} to {get, put}_cpu_fpsimd_context
+        - Introduce a double-underscore version of the helpers for case
+        where preemption is already disabled
+        - Introduce have_cpu_fpsimd_context() and use it in WARN_ON(...)
+        - Surround more places in the code with the new helpers
+        - Rework the comments
+        - Update the commit message with the benchmark result
 ---
- arch/arm64/include/asm/fpsimd.h |  5 ++---
- arch/arm64/kernel/fpsimd.c      | 17 +++++++++++++----
- arch/arm64/kvm/fpsimd.c         |  4 +---
- 3 files changed, 16 insertions(+), 10 deletions(-)
+ arch/arm64/include/asm/simd.h |  10 ++--
+ arch/arm64/kernel/fpsimd.c    | 126 ++++++++++++++++++++++++++++--------------
+ 2 files changed, 88 insertions(+), 48 deletions(-)
 
-diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
-index b73d12fcc7f9..c311d36ecffe 100644
---- a/arch/arm64/include/asm/fpsimd.h
-+++ b/arch/arm64/include/asm/fpsimd.h
-@@ -48,8 +48,6 @@ struct task_struct;
- extern void fpsimd_save_state(struct user_fpsimd_state *state);
- extern void fpsimd_load_state(struct user_fpsimd_state *state);
+diff --git a/arch/arm64/include/asm/simd.h b/arch/arm64/include/asm/simd.h
+index 6495cc51246f..a6307e43b8c2 100644
+--- a/arch/arm64/include/asm/simd.h
++++ b/arch/arm64/include/asm/simd.h
+@@ -15,9 +15,9 @@
+ #include <linux/preempt.h>
+ #include <linux/types.h>
  
--extern void fpsimd_save(void);
--
- extern void fpsimd_thread_switch(struct task_struct *next);
- extern void fpsimd_flush_thread(void);
+-#ifdef CONFIG_KERNEL_MODE_NEON
++DECLARE_PER_CPU(bool, fpsimd_context_busy);
  
-@@ -63,7 +61,8 @@ extern void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *state,
- 				     void *sve_state, unsigned int sve_vl);
+-DECLARE_PER_CPU(bool, kernel_neon_busy);
++#ifdef CONFIG_KERNEL_MODE_NEON
  
- extern void fpsimd_flush_task_state(struct task_struct *target);
--extern void fpsimd_flush_cpu_state(void);
-+
-+extern void fpsimd_save_and_flush_cpu_state(void);
+ /*
+  * may_use_simd - whether it is allowable at this time to issue SIMD
+@@ -29,15 +29,15 @@ DECLARE_PER_CPU(bool, kernel_neon_busy);
+ static __must_check inline bool may_use_simd(void)
+ {
+ 	/*
+-	 * kernel_neon_busy is only set while preemption is disabled,
++	 * fpsimd_context_busy is only set while preemption is disabled,
+ 	 * and is clear whenever preemption is enabled. Since
+-	 * this_cpu_read() is atomic w.r.t. preemption, kernel_neon_busy
++	 * this_cpu_read() is atomic w.r.t. preemption, fpsimd_context_busy
+ 	 * cannot change under our feet -- if it's set we cannot be
+ 	 * migrated, and if it's clear we cannot be migrated to a CPU
+ 	 * where it is set.
+ 	 */
+ 	return !in_irq() && !irqs_disabled() && !in_nmi() &&
+-		!this_cpu_read(kernel_neon_busy);
++		!this_cpu_read(fpsimd_context_busy);
+ }
  
- /* Maximum VL that SVE VL-agnostic software can transparently support */
- #define SVE_VL_ARCH_MAX 0x100
+ #else /* ! CONFIG_KERNEL_MODE_NEON */
 diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index 56afa40263d9..5313aa257be6 100644
+index 5313aa257be6..6168d06bbd20 100644
 --- a/arch/arm64/kernel/fpsimd.c
 +++ b/arch/arm64/kernel/fpsimd.c
-@@ -246,7 +246,7 @@ static void task_fpsimd_load(void)
+@@ -92,7 +92,8 @@
+  * To prevent this from racing with the manipulation of the task's FPSIMD state
+  * from task context and thereby corrupting the state, it is necessary to
+  * protect any manipulation of a task's fpsimd_state or TIF_FOREIGN_FPSTATE
+- * flag with local_bh_disable() unless softirqs are already masked.
++ * flag with {, __}get_cpu_fpsimd_context(). This will still allow softirqs to
++ * run but prevent them to use FPSIMD.
   *
-  * Softirqs (and preemption) must be disabled.
+  * For a certain task, the sequence may look something like this:
+  * - the task gets scheduled in; if both the task's fpsimd_cpu field
+@@ -155,6 +156,56 @@ extern void __percpu *efi_sve_state;
+ 
+ #endif /* ! CONFIG_ARM64_SVE */
+ 
++DEFINE_PER_CPU(bool, fpsimd_context_busy);
++EXPORT_PER_CPU_SYMBOL(fpsimd_context_busy);
++
++static void __get_cpu_fpsimd_context(void)
++{
++	bool busy = __this_cpu_xchg(fpsimd_context_busy, true);
++
++	WARN_ON(busy);
++}
++
++/*
++ * Claim ownership of the CPU FPSIMD context for use by the calling context.
++ *
++ * The caller may freely modify FPSIMD context until *put_cpu_fpsimd_context()
++ * is called.
++ *
++ * The double-underscore version must only be called if you know the task
++ * can't be preempted.
++ */
++static void get_cpu_fpsimd_context(void)
++{
++	preempt_disable();
++	__get_cpu_fpsimd_context();
++}
++
++static void __put_cpu_fpsimd_context(void)
++{
++	bool busy = __this_cpu_xchg(fpsimd_context_busy, false);
++
++	WARN_ON(!busy); /* No matching get_cpu_fpsimd_context()? */
++}
++
++/*
++ * Release the CPU FPSIMD context.
++ *
++ * Must be called from a context in which get_cpu_fpsimd_context() was
++ * previously called, with no call to put_cpu_fpsimd_context() in the
++ * meantime.
++ */
++static void put_cpu_fpsimd_context(void)
++{
++	__put_cpu_fpsimd_context();
++	preempt_enable();
++}
++
++static bool have_cpu_fpsimd_context(void)
++{
++	return !preemptible() && __this_cpu_read(fpsimd_context_busy);
++}
++
+ /*
+  * Call __sve_free() directly only if you know task can't be scheduled
+  * or preempted.
+@@ -225,12 +276,10 @@ static void sve_free(struct task_struct *task)
+  * This function should be called only when the FPSIMD/SVE state in
+  * thread_struct is known to be up to date, when preparing to enter
+  * userspace.
+- *
+- * Softirqs (and preemption) must be disabled.
   */
--void fpsimd_save(void)
-+static void fpsimd_save(void)
+ static void task_fpsimd_load(void)
  {
- 	struct fpsimd_last_state_struct const *last =
+-	WARN_ON(!in_softirq() && !irqs_disabled());
++	WARN_ON(!have_cpu_fpsimd_context());
+ 
+ 	if (system_supports_sve() && test_thread_flag(TIF_SVE))
+ 		sve_load_state(sve_pffr(&current->thread),
+@@ -243,8 +292,6 @@ static void task_fpsimd_load(void)
+ /*
+  * Ensure FPSIMD/SVE storage in memory for the loaded context is up to
+  * date with respect to the CPU registers.
+- *
+- * Softirqs (and preemption) must be disabled.
+  */
+ static void fpsimd_save(void)
+ {
+@@ -252,7 +299,7 @@ static void fpsimd_save(void)
  		this_cpu_ptr(&fpsimd_last_state);
-@@ -1122,12 +1122,22 @@ void fpsimd_flush_task_state(struct task_struct *t)
-  * Invalidate any task's FPSIMD state that is present on this cpu.
-  * This function must be called with softirqs disabled.
+ 	/* set by fpsimd_bind_task_to_cpu() or fpsimd_bind_state_to_cpu() */
+ 
+-	WARN_ON(!in_softirq() && !irqs_disabled());
++	WARN_ON(!have_cpu_fpsimd_context());
+ 
+ 	if (!test_thread_flag(TIF_FOREIGN_FPSTATE)) {
+ 		if (system_supports_sve() && test_thread_flag(TIF_SVE)) {
+@@ -357,7 +404,8 @@ static int __init sve_sysctl_init(void) { return 0; }
+  * task->thread.sve_state.
+  *
+  * Task can be a non-runnable task, or current.  In the latter case,
+- * softirqs (and preemption) must be disabled.
++ * the caller must have ownership of the cpu FPSIMD context before calling
++ * this function.
+  * task->thread.sve_state must point to at least sve_state_size(task)
+  * bytes of allocated kernel memory.
+  * task->thread.uw.fpsimd_state must be up to date before calling this
+@@ -384,7 +432,8 @@ static void fpsimd_to_sve(struct task_struct *task)
+  * task->thread.uw.fpsimd_state.
+  *
+  * Task can be a non-runnable task, or current.  In the latter case,
+- * softirqs (and preemption) must be disabled.
++ * the caller must have ownership of the cpu FPSIMD context before calling
++ * this function.
+  * task->thread.sve_state must point to at least sve_state_size(task)
+  * bytes of allocated kernel memory.
+  * task->thread.sve_state must be up to date before calling this function.
+@@ -544,7 +593,7 @@ int sve_set_vector_length(struct task_struct *task,
+ 	 * non-SVE thread.
+ 	 */
+ 	if (task == current) {
+-		local_bh_disable();
++		get_cpu_fpsimd_context();
+ 
+ 		fpsimd_save();
+ 	}
+@@ -554,7 +603,7 @@ int sve_set_vector_length(struct task_struct *task,
+ 		sve_to_fpsimd(task);
+ 
+ 	if (task == current)
+-		local_bh_enable();
++		put_cpu_fpsimd_context();
+ 
+ 	/*
+ 	 * Force reallocation of task SVE state to the correct size
+@@ -867,7 +916,7 @@ asmlinkage void do_sve_acc(unsigned int esr, struct pt_regs *regs)
+ 
+ 	sve_alloc(current);
+ 
+-	local_bh_disable();
++	get_cpu_fpsimd_context();
+ 
+ 	fpsimd_save();
+ 
+@@ -878,7 +927,7 @@ asmlinkage void do_sve_acc(unsigned int esr, struct pt_regs *regs)
+ 	if (test_and_set_thread_flag(TIF_SVE))
+ 		WARN_ON(1); /* SVE access shouldn't have trapped */
+ 
+-	local_bh_enable();
++	put_cpu_fpsimd_context();
+ }
+ 
+ /*
+@@ -922,6 +971,8 @@ void fpsimd_thread_switch(struct task_struct *next)
+ 	if (!system_supports_fpsimd())
+ 		return;
+ 
++	__get_cpu_fpsimd_context();
++
+ 	/* Save unsaved fpsimd state, if any: */
+ 	fpsimd_save();
+ 
+@@ -936,6 +987,8 @@ void fpsimd_thread_switch(struct task_struct *next)
+ 
+ 	update_tsk_thread_flag(next, TIF_FOREIGN_FPSTATE,
+ 			       wrong_task || wrong_cpu);
++
++	__put_cpu_fpsimd_context();
+ }
+ 
+ void fpsimd_flush_thread(void)
+@@ -945,7 +998,7 @@ void fpsimd_flush_thread(void)
+ 	if (!system_supports_fpsimd())
+ 		return;
+ 
+-	local_bh_disable();
++	get_cpu_fpsimd_context();
+ 
+ 	fpsimd_flush_task_state(current);
+ 	memset(&current->thread.uw.fpsimd_state, 0,
+@@ -986,7 +1039,7 @@ void fpsimd_flush_thread(void)
+ 			current->thread.sve_vl_onexec = 0;
+ 	}
+ 
+-	local_bh_enable();
++	put_cpu_fpsimd_context();
+ }
+ 
+ /*
+@@ -998,9 +1051,9 @@ void fpsimd_preserve_current_state(void)
+ 	if (!system_supports_fpsimd())
+ 		return;
+ 
+-	local_bh_disable();
++	get_cpu_fpsimd_context();
+ 	fpsimd_save();
+-	local_bh_enable();
++	put_cpu_fpsimd_context();
+ }
+ 
+ /*
+@@ -1017,7 +1070,8 @@ void fpsimd_signal_preserve_current_state(void)
+ 
+ /*
+  * Associate current's FPSIMD context with this cpu
+- * Preemption must be disabled when calling this function.
++ * The caller must have ownership of the cpu FPSIMD context before calling
++ * this function.
   */
--void fpsimd_flush_cpu_state(void)
-+static void fpsimd_flush_cpu_state(void)
+ void fpsimd_bind_task_to_cpu(void)
  {
- 	__this_cpu_write(fpsimd_last_state.st, NULL);
+@@ -1063,14 +1117,14 @@ void fpsimd_restore_current_state(void)
+ 	if (!system_supports_fpsimd())
+ 		return;
+ 
+-	local_bh_disable();
++	get_cpu_fpsimd_context();
+ 
+ 	if (test_and_clear_thread_flag(TIF_FOREIGN_FPSTATE)) {
+ 		task_fpsimd_load();
+ 		fpsimd_bind_task_to_cpu();
+ 	}
+ 
+-	local_bh_enable();
++	put_cpu_fpsimd_context();
+ }
+ 
+ /*
+@@ -1083,7 +1137,7 @@ void fpsimd_update_current_state(struct user_fpsimd_state const *state)
+ 	if (!system_supports_fpsimd())
+ 		return;
+ 
+-	local_bh_disable();
++	get_cpu_fpsimd_context();
+ 
+ 	current->thread.uw.fpsimd_state = *state;
+ 	if (system_supports_sve() && test_thread_flag(TIF_SVE))
+@@ -1094,7 +1148,7 @@ void fpsimd_update_current_state(struct user_fpsimd_state const *state)
+ 
+ 	clear_thread_flag(TIF_FOREIGN_FPSTATE);
+ 
+-	local_bh_enable();
++	put_cpu_fpsimd_context();
+ }
+ 
+ /*
+@@ -1120,7 +1174,8 @@ void fpsimd_flush_task_state(struct task_struct *t)
+ 
+ /*
+  * Invalidate any task's FPSIMD state that is present on this cpu.
+- * This function must be called with softirqs disabled.
++ * The FPSIMD context should be acquired with get_cpu_fpsimd_context()
++ * before calling this function.
+  */
+ static void fpsimd_flush_cpu_state(void)
+ {
+@@ -1128,21 +1183,17 @@ static void fpsimd_flush_cpu_state(void)
  	set_thread_flag(TIF_FOREIGN_FPSTATE);
  }
  
-+/*
-+ * Save the FPSIMD state to memory and invalidate cpu view.
-+ * This function must be called with softirqs (and preemption) disabled.
-+ */
-+void fpsimd_save_and_flush_cpu_state(void)
-+{
-+	fpsimd_save();
-+	fpsimd_flush_cpu_state();
-+}
-+
+-/*
+- * Save the FPSIMD state to memory and invalidate cpu view.
+- * This function must be called with softirqs (and preemption) disabled.
+- */
++/* Save the FPSIMD state to memory and invalidate cpu view. */
+ void fpsimd_save_and_flush_cpu_state(void)
+ {
++	get_cpu_fpsimd_context();
+ 	fpsimd_save();
+ 	fpsimd_flush_cpu_state();
++	put_cpu_fpsimd_context();
+ }
+ 
  #ifdef CONFIG_KERNEL_MODE_NEON
  
- DEFINE_PER_CPU(bool, kernel_neon_busy);
-@@ -1284,8 +1294,7 @@ static int fpsimd_cpu_pm_notifier(struct notifier_block *self,
+-DEFINE_PER_CPU(bool, kernel_neon_busy);
+-EXPORT_PER_CPU_SYMBOL(kernel_neon_busy);
+-
+ /*
+  * Kernel-side NEON support functions
+  */
+@@ -1167,19 +1218,13 @@ void kernel_neon_begin(void)
+ 
+ 	BUG_ON(!may_use_simd());
+ 
+-	local_bh_disable();
+-
+-	__this_cpu_write(kernel_neon_busy, true);
++	get_cpu_fpsimd_context();
+ 
+ 	/* Save unsaved fpsimd state, if any: */
+ 	fpsimd_save();
+ 
+ 	/* Invalidate any task state remaining in the fpsimd regs: */
+ 	fpsimd_flush_cpu_state();
+-
+-	preempt_disable();
+-
+-	local_bh_enable();
+ }
+ EXPORT_SYMBOL(kernel_neon_begin);
+ 
+@@ -1194,15 +1239,10 @@ EXPORT_SYMBOL(kernel_neon_begin);
+  */
+ void kernel_neon_end(void)
  {
- 	switch (cmd) {
- 	case CPU_PM_ENTER:
--		fpsimd_save();
--		fpsimd_flush_cpu_state();
-+		fpsimd_save_and_flush_cpu_state();
- 		break;
- 	case CPU_PM_EXIT:
- 		break;
-diff --git a/arch/arm64/kvm/fpsimd.c b/arch/arm64/kvm/fpsimd.c
-index 6e3c9c8b2df9..525010504f9d 100644
---- a/arch/arm64/kvm/fpsimd.c
-+++ b/arch/arm64/kvm/fpsimd.c
-@@ -112,9 +112,7 @@ void kvm_arch_vcpu_put_fp(struct kvm_vcpu *vcpu)
- 	if (vcpu->arch.flags & KVM_ARM64_FP_ENABLED) {
- 		u64 *guest_zcr = &vcpu->arch.ctxt.sys_regs[ZCR_EL1];
+-	bool busy;
+-
+ 	if (!system_supports_fpsimd())
+ 		return;
  
--		/* Clean guest FP state to memory and invalidate cpu view */
--		fpsimd_save();
--		fpsimd_flush_cpu_state();
-+		fpsimd_save_and_flush_cpu_state();
+-	busy = __this_cpu_xchg(kernel_neon_busy, false);
+-	WARN_ON(!busy);	/* No matching kernel_neon_begin()? */
+-
+-	preempt_enable();
++	put_cpu_fpsimd_context();
+ }
+ EXPORT_SYMBOL(kernel_neon_end);
  
- 		if (guest_has_sve)
- 			*guest_zcr = read_sysreg_s(SYS_ZCR_EL12);
 -- 
 2.11.0
 
