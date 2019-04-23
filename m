@@ -2,117 +2,140 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE248C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AADC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B80A206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:47:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="kQlukL66"
+	by mail.kernel.org (Postfix) with ESMTP id 05E85206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfDWDra (ORCPT
+        id S1730144AbfDWDsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:47:30 -0400
-Received: from mail-eopbgr720107.outbound.protection.outlook.com ([40.107.72.107]:53312
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726260AbfDWDr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:47:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=ZHrmh5jGt1bchGuR/rZvTSxYapXzVw1J5PIKB8M4QNHd6qHC7NX5Kw6RiT8PEtELffFjYXFf7JAUwKqycmf2Hsmj2NTPiT/LINsZ3qFzkOizXLvmEGd5WEDbQK5V8ku+72TmdAobhHXel8Nn2UMMYEvoJ1nlb8UY1AVWMnUhEyE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J9KCBqhn3Ew+/XHQjS2f4JblwgHBQM43dgYm4BQTv3c=;
- b=cYzf7TElezkxIfApRgymCS7+DP9ZmMbymKwfwIgES+JHl1hG1zIE7f1O1AS79WZFCgl831zSRdrxFdZ+G+hxTVuf5Q3ZeZxG1BN1eyT1Fz2e4em7SstiwY48eN7AUVlN6j+rtXJMFjF47JORwW7podFPCXMuOUq7sBeY47LLQew=
-ARC-Authentication-Results: i=1; test.office365.com 1;spf=none;dmarc=none
- action=none header.from=microsoft.com;dkim=none (message not signed);arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J9KCBqhn3Ew+/XHQjS2f4JblwgHBQM43dgYm4BQTv3c=;
- b=kQlukL66yP4qO+RzUOuqTAswSa1cSYL1kLDz+DzpwCCbnyasTSIoZKNnlQWCl8xIcXTMb1qPDCqt01NVMAWXsx8bW3a97lqP5FiTlSJX02l3q6U4KFOVdWaWaYByLK1qwQsT9lvoY2pAOlve5OTXA3nWRK4rlJkHqpNZgWs7bS0=
-Received: from MN2PR21MB1184.namprd21.prod.outlook.com (20.179.20.15) by
- MN2PR21MB1215.namprd21.prod.outlook.com (20.179.20.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.2; Tue, 23 Apr 2019 03:47:27 +0000
-Received: from MN2PR21MB1184.namprd21.prod.outlook.com
- ([fe80::31a4:c0ef:11a8:e6b]) by MN2PR21MB1184.namprd21.prod.outlook.com
- ([fe80::31a4:c0ef:11a8:e6b%8]) with mapi id 15.20.1856.000; Tue, 23 Apr 2019
- 03:47:27 +0000
-From:   Joseph Salisbury <Joseph.Salisbury@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH][v2] drivers: hv: Add a module description line to the
- hv_vmbus driver
-Thread-Topic: [PATCH][v2] drivers: hv: Add a module description line to the
- hv_vmbus driver
-Thread-Index: AQHU+YdEVkGXJ1d6KkytK7w1wdNOdg==
-Date:   Tue, 23 Apr 2019 03:47:27 +0000
-Message-ID:
- <04eaef0e2b365317935ff756c7365ee13a6f18f8.1555967337.git.joseph.salisbury@microsoft.com>
-Reply-To: Joseph Salisbury <Joseph.Salisbury@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR12CA0013.namprd12.prod.outlook.com
- (2603:10b6:208:a8::26) To MN2PR21MB1184.namprd21.prod.outlook.com
- (2603:10b6:208:38::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmljts@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [137.117.110.208]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 483cc4d5-c8b4-44ad-75b7-08d6c79e673a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:MN2PR21MB1215;
-x-ms-traffictypediagnostic: MN2PR21MB1215:
-x-microsoft-antispam-prvs: <MN2PR21MB121549AD6851CD18E817DB51AA230@MN2PR21MB1215.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1284;
-x-forefront-prvs: 0016DEFF96
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(396003)(366004)(376002)(136003)(189003)(199004)(97736004)(71200400001)(81166006)(476003)(486006)(68736007)(102836004)(71190400001)(2616005)(3450700001)(256004)(53936002)(110136005)(54906003)(5660300002)(6506007)(386003)(81156014)(118296001)(8676002)(6512007)(478600001)(8936002)(7846003)(6392003)(6436002)(305945005)(36756003)(10290500003)(4744005)(2906002)(26005)(6486002)(99286004)(186003)(50226002)(14454004)(1511001)(73956011)(7736002)(43066004)(66446008)(86612001)(2501003)(4326008)(25786009)(316002)(66946007)(6116002)(66556008)(66066001)(52116002)(66476007)(10090500001)(64756008)(22452003)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1215;H:MN2PR21MB1184.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WMZrfK/hjFTSH6XXAiaVC+yS4dmInNTxYzf/d5vFp8W3SEqmhOKrPTDPEK+2y59VhrkJ2us2cLydKQBTs6FF89ty47Pb6So8iA0edQOF3nmWhzNZ6c+AUAdGYCZtADW8AJVGwDZCrFYKr7xXH4Zqcj3Y5cs66QCGaYcMVBLAtH3H9CvU2e4VBfNBIURyjulimu3Y2bDrzGBF5w1Vi2BZqSMpMmkH+aQkybDo3V3tHFKLjLxEO79QnFVMKZiWK8I+Z3I9010mHUgQYGMMNqK2JMh/neKzXEB+3sEJDr6GPUMtzIFQdBbZU6/259xxAYb5taWOCPdWFAGYsrFMhm9/w26y0Z4T3AEhxVYT13gdCDByNp1UXPaCfI1nPI7FRprU2qUgKFtLPPbLqrPgscxaE4BZHlqtT28qztocQ0UC5NA=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+        Mon, 22 Apr 2019 23:48:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42986 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbfDWDsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 23:48:06 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6AD753091761;
+        Tue, 23 Apr 2019 03:48:06 +0000 (UTC)
+Received: from xz-x1 (ovpn-12-175.pek2.redhat.com [10.72.12.175])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F5EF19C78;
+        Tue, 23 Apr 2019 03:48:04 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 11:48:02 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: fix KVM_CLEAR_DIRTY_LOG for memory slots of
+ unaligned size
+Message-ID: <20190423034802.GC21301@xz-x1>
+References: <1555508561-19864-1-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 483cc4d5-c8b4-44ad-75b7-08d6c79e673a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 03:47:27.3066
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1215
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1555508561-19864-1-git-send-email-pbonzini@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 23 Apr 2019 03:48:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20190423034727.TJMecNFK3eKxzq8EON1bIpoIH3xg3FrSd1jV5WljH0M@z>
 
-VGhpcyBwYXRjaCBvbmx5IGFkZHMgYSBNT0RVTEVfREVTQ1JJUFRJT04gc3RhdGVtZW50IHRvIHRo
-ZSBkcml2ZXIuDQpUaGlzIGNoYW5nZSBpcyBvbmx5IGNvc21ldGljLCBzbyB0aGVyZSBzaG91bGQg
-YmUgbm8gcnVudGltZSBpbXBhY3QuDQoNClNpZ25lZC1vZmYtYnk6IEpvc2VwaCBTYWxpc2J1cnkg
-PGpvc2VwaC5zYWxpc2J1cnlAbWljcm9zb2Z0LmNvbT4NCi0tLQ0KIGRyaXZlcnMvaHYvdm1idXNf
-ZHJ2LmMgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCg0KZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvaHYvdm1idXNfZHJ2LmMgYi9kcml2ZXJzL2h2L3ZtYnVzX2Rydi5jDQppbmRl
-eCBhYTI1ZjNiY2JkZWEuLjFjYjk0MDhiMGQ0MCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvaHYvdm1i
-dXNfZHJ2LmMNCisrKyBiL2RyaXZlcnMvaHYvdm1idXNfZHJ2LmMNCkBAIC0yMTc0LDYgKzIxNzQs
-NyBAQCBzdGF0aWMgdm9pZCBfX2V4aXQgdm1idXNfZXhpdCh2b2lkKQ0KIA0KIA0KIE1PRFVMRV9M
-SUNFTlNFKCJHUEwiKTsNCitNT0RVTEVfREVTQ1JJUFRJT04oIk1pY3Jvc29mdCBIeXBlci1WIFZN
-QnVzIERyaXZlciIpOw0KIA0KIHN1YnN5c19pbml0Y2FsbChodl9hY3BpX2luaXQpOw0KIG1vZHVs
-ZV9leGl0KHZtYnVzX2V4aXQpOw0KLS0gDQoyLjE3LjENCg0K
+On Wed, Apr 17, 2019 at 03:42:41PM +0200, Paolo Bonzini wrote:
+> If a memory slot's size is not a multiple of 64 pages (256K), then
+> the KVM_CLEAR_DIRTY_LOG API is unusable: clearing the final 64 pages
+> either requires the requested page range to go beyond memslot->npages,
+> or requires log->num_pages to be unaligned, and kvm_clear_dirty_log_protect
+> requires log->num_pages to be both in range and aligned.
+> 
+> To allow this case, allow log->num_pages not to be a multiple of 64 if
+> it ends exactly on the last page of the slot.
+> 
+> Reported-by: Peter Xu <peterx@redhat.com>
+> Fixes: 98938aa8edd6 ("KVM: validate userspace input in kvm_clear_dirty_log_protect()", 2019-01-02)
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  Documentation/virtual/kvm/api.txt            | 5 +++--
+>  tools/testing/selftests/kvm/dirty_log_test.c | 4 ++--
+>  virt/kvm/kvm_main.c                          | 7 ++++---
+>  3 files changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+> index b62ad0d94234..de97369ad30d 100644
+> --- a/Documentation/virtual/kvm/api.txt
+> +++ b/Documentation/virtual/kvm/api.txt
+> @@ -3829,8 +3829,9 @@ The ioctl clears the dirty status of pages in a memory slot, according to
+>  the bitmap that is passed in struct kvm_clear_dirty_log's dirty_bitmap
+>  field.  Bit 0 of the bitmap corresponds to page "first_page" in the
+>  memory slot, and num_pages is the size in bits of the input bitmap.
+> -Both first_page and num_pages must be a multiple of 64.  For each bit
+> -that is set in the input bitmap, the corresponding page is marked "clean"
+> +first_page must be a multiple of 64; num_pages must also be a multiple of
+> +64 unless first_page + num_pages is the size of the memory slot.  For each
+> +bit that is set in the input bitmap, the corresponding page is marked "clean"
+>  in KVM's dirty bitmap, and dirty tracking is re-enabled for that page
+>  (for example via write-protection, or by clearing the dirty bit in
+>  a page table entry).
+> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+> index 4715cfba20dc..052fb5856df4 100644
+> --- a/tools/testing/selftests/kvm/dirty_log_test.c
+> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
+> @@ -289,7 +289,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+>  	max_gfn = (1ul << (guest_pa_bits - guest_page_shift)) - 1;
+>  	guest_page_size = (1ul << guest_page_shift);
+>  	/* 1G of guest page sized pages */
+> -	guest_num_pages = (1ul << (30 - guest_page_shift));
+> +	guest_num_pages = (1ul << (30 - guest_page_shift)) + 3;
+
+Some comment mentioning the reason to shift a random number?
+
+>  	host_page_size = getpagesize();
+>  	host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
+>  			 !!((guest_num_pages * guest_page_size) % host_page_size);
+> @@ -359,7 +359,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+>  		kvm_vm_get_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap);
+>  #ifdef USE_CLEAR_DIRTY_LOG
+>  		kvm_vm_clear_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap, 0,
+> -				       DIV_ROUND_UP(host_num_pages, 64) * 64);
+> +				       host_num_pages);
+>  #endif
+>  		vm_dirty_log_verify(bmap);
+>  		iteration++;
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index f4da53321161..ace23d8a309f 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -1269,7 +1269,7 @@ int kvm_clear_dirty_log_protect(struct kvm *kvm,
+>  	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
+>  		return -EINVAL;
+>  
+> -	if ((log->first_page & 63) || (log->num_pages & 63))
+> +	if (log->first_page & 63)
+>  		return -EINVAL;
+>  
+>  	slots = __kvm_memslots(kvm, as_id);
+> @@ -1282,8 +1282,9 @@ int kvm_clear_dirty_log_protect(struct kvm *kvm,
+>  	n = kvm_dirty_bitmap_bytes(memslot);
+>  
+>  	if (log->first_page > memslot->npages ||
+> -	    log->num_pages > memslot->npages - log->first_page)
+> -			return -EINVAL;
+> +	    log->num_pages > memslot->npages - log->first_page ||
+> +	    (log->num_pages < memslot->npages - log->first_page && (log->num_pages & 63)))
+> +	    return -EINVAL;
+
+There seems to be some indentation issue and overlong line, besides
+that the patch content looks good to me.
+
+Reviewed-by: Peter Xu <peterx@redhat.com>
+
+Thanks,
+
+-- 
+Peter Xu
