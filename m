@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C450C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1E7C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 443F220449
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02BD520449
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfDWX3w (ORCPT
+        id S1729348AbfDWX36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 19:29:52 -0400
-Received: from mga09.intel.com ([134.134.136.24]:8111 "EHLO mga09.intel.com"
+        Tue, 23 Apr 2019 19:29:58 -0400
+Received: from mga09.intel.com ([134.134.136.24]:8106 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728834AbfDWX2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728810AbfDWX2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Apr 2019 19:28:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,7 +25,7 @@ Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 16:28:38 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,387,1549958400"; 
-   d="scan'208";a="293981279"
+   d="scan'208";a="293981268"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga004.jf.intel.com with ESMTP; 23 Apr 2019 16:28:38 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -41,11 +41,10 @@ Cc:     "Yi Liu" <yi.l.liu@intel.com>,
         Raj Ashok <ashok.raj@intel.com>,
         "Christoph Hellwig" <hch@infradead.org>,
         "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v2 09/19] iommu/vt-d: Enlightened PASID allocation
-Date:   Tue, 23 Apr 2019 16:31:09 -0700
-Message-Id: <1556062279-64135-10-git-send-email-jacob.jun.pan@linux.intel.com>
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 06/19] drivers core: Add I/O ASID allocator
+Date:   Tue, 23 Apr 2019 16:31:06 -0700
+Message-Id: <1556062279-64135-7-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -54,159 +53,224 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 
-If Intel IOMMU runs in caching mode, a.k.a. virtual IOMMU, the
-IOMMU driver should rely on the emulation software to allocate
-and free PASID IDs. The Intel vt-d spec revision 3.0 defines a
-register set to support this. This includes a capability register,
-a virtual command register and a virtual response register. Refer
-to section 10.4.42, 10.4.43, 10.4.44 for more information.
+Some devices might support multiple DMA address spaces, in particular
+those that have the PCI PASID feature. PASID (Process Address Space ID)
+allows to share process address spaces with devices (SVA), partition a
+device into VM-assignable entities (VFIO mdev) or simply provide
+multiple DMA address space to kernel drivers. Add a global PASID
+allocator usable by different drivers at the same time. Name it I/O ASID
+to avoid confusion with ASIDs allocated by arch code, which are usually
+a separate ID space.
 
-This patch adds the enlightened PASID allocation/free interfaces
-via the virtual command register.
+The IOASID space is global. Each device can have its own PASID space,
+but by convention the IOMMU ended up having a global PASID space, so
+that with SVA, each mm_struct is associated to a single PASID.
 
-Cc: Ashok Raj <ashok.raj@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+The allocator doesn't really belong in drivers/iommu because some
+drivers would like to allocate PASIDs for devices that aren't managed by
+an IOMMU, using the same ID space as IOMMU. It doesn't really belong in
+drivers/pci either since platform device also support PASID. Add the
+allocator in drivers/base.
+
+Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
 ---
- drivers/iommu/intel-pasid.c | 70 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/iommu/intel-pasid.h | 13 ++++++++-
- include/linux/intel-iommu.h |  2 ++
- 3 files changed, 84 insertions(+), 1 deletion(-)
+ drivers/base/Kconfig   |   6 +++
+ drivers/base/Makefile  |   1 +
+ drivers/base/ioasid.c  | 106 +++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/ioasid.h |  40 +++++++++++++++++++
+ 4 files changed, 153 insertions(+)
+ create mode 100644 drivers/base/ioasid.c
+ create mode 100644 include/linux/ioasid.h
 
-diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-index 03b12d2..5b1d3be 100644
---- a/drivers/iommu/intel-pasid.c
-+++ b/drivers/iommu/intel-pasid.c
-@@ -63,6 +63,76 @@ void *intel_pasid_lookup_id(int pasid)
- 	return p;
- }
+diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+index 059700e..47c1348 100644
+--- a/drivers/base/Kconfig
++++ b/drivers/base/Kconfig
+@@ -182,6 +182,12 @@ config DMA_SHARED_BUFFER
+ 	  APIs extension; the file's descriptor can then be passed on to other
+ 	  driver.
  
-+int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid)
++config IOASID
++	bool
++	help
++	  Enable the I/O Address Space ID allocator. A single ID space shared
++	  between different users.
++
+ config DMA_FENCE_TRACE
+ 	bool "Enable verbose DMA_FENCE_TRACE messages"
+ 	depends on DMA_SHARED_BUFFER
+diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+index 1574520..aafa2ac 100644
+--- a/drivers/base/Makefile
++++ b/drivers/base/Makefile
+@@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL) += pinctrl.o
+ obj-$(CONFIG_DEV_COREDUMP) += devcoredump.o
+ obj-$(CONFIG_GENERIC_MSI_IRQ_DOMAIN) += platform-msi.o
+ obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY) += arch_topology.o
++obj-$(CONFIG_IOASID) += ioasid.o
+ 
+ obj-y			+= test/
+ 
+diff --git a/drivers/base/ioasid.c b/drivers/base/ioasid.c
+new file mode 100644
+index 0000000..cf122b2
+--- /dev/null
++++ b/drivers/base/ioasid.c
+@@ -0,0 +1,106 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * I/O Address Space ID allocator. There is one global IOASID space, split into
++ * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
++ * free IOASIDs with ioasid_alloc and ioasid_free.
++ */
++#include <linux/idr.h>
++#include <linux/ioasid.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++
++struct ioasid_data {
++	ioasid_t id;
++	struct ioasid_set *set;
++	void *private;
++	struct rcu_head rcu;
++};
++
++static DEFINE_IDR(ioasid_idr);
++
++/**
++ * ioasid_alloc - Allocate an IOASID
++ * @set: the IOASID set
++ * @min: the minimum ID (inclusive)
++ * @max: the maximum ID (exclusive)
++ * @private: data private to the caller
++ *
++ * Allocate an ID between @min and @max (or %0 and %INT_MAX). Return the
++ * allocated ID on success, or INVALID_IOASID on failure. The @private pointer
++ * is stored internally and can be retrieved with ioasid_find().
++ */
++ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
++		      void *private)
 +{
-+	u64 res;
-+	u64 cap;
-+	u8 err_code;
-+	unsigned long flags;
-+	int ret = 0;
++	int id = -1;
++	struct ioasid_data *data;
 +
-+	if (!ecap_vcs(iommu->ecap)) {
-+		pr_warn("IOMMU: %s: Hardware doesn't support virtual command\n",
-+			iommu->name);
-+		return -ENODEV;
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return INVALID_IOASID;
++
++	data->set = set;
++	data->private = private;
++
++	idr_preload(GFP_KERNEL);
++	idr_lock(&ioasid_idr);
++	data->id = id = idr_alloc(&ioasid_idr, data, min, max, GFP_ATOMIC);
++	idr_unlock(&ioasid_idr);
++	idr_preload_end();
++
++	if (id < 0) {
++		kfree(data);
++		return INVALID_IOASID;
 +	}
++	return id;
++}
++EXPORT_SYMBOL_GPL(ioasid_alloc);
 +
-+	cap = dmar_readq(iommu->reg + DMAR_VCCAP_REG);
-+	if (!(cap & DMA_VCS_PAS)) {
-+		pr_warn("IOMMU: %s: Emulation software doesn't support PASID allocation\n",
-+			iommu->name);
-+		return -ENODEV;
++/**
++ * ioasid_free - Free an IOASID
++ * @ioasid: the ID to remove
++ */
++void ioasid_free(ioasid_t ioasid)
++{
++	struct ioasid_data *ioasid_data;
++
++	idr_lock(&ioasid_idr);
++	ioasid_data = idr_remove(&ioasid_idr, ioasid);
++	idr_unlock(&ioasid_idr);
++
++	if (ioasid_data)
++		kfree_rcu(ioasid_data, rcu);
++}
++EXPORT_SYMBOL_GPL(ioasid_free);
++
++/**
++ * ioasid_find - Find IOASID data
++ * @set: the IOASID set
++ * @ioasid: the IOASID to find
++ * @getter: function to call on the found object
++ *
++ * The optional getter function allows to take a reference to the found object
++ * under the rcu lock. The function can also check if the object is still valid:
++ * if @getter returns false, then the object is invalid and NULL is returned.
++ *
++ * If the IOASID has been allocated for this set, return the private pointer
++ * passed to ioasid_alloc. Otherwise return NULL.
++ */
++void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++		  bool (*getter)(void *))
++{
++	void *priv = NULL;
++	struct ioasid_data *ioasid_data;
++
++	rcu_read_lock();
++	ioasid_data = idr_find(&ioasid_idr, ioasid);
++	if (ioasid_data && ioasid_data->set == set) {
++		priv = ioasid_data->private;
++		if (getter && !getter(priv))
++			priv = NULL;
 +	}
++	rcu_read_unlock();
 +
-+	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-+	dmar_writeq(iommu->reg + DMAR_VCMD_REG, VCMD_CMD_ALLOC);
-+	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-+		      !(res & VCMD_VRSP_IP), res);
-+	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
++	return priv;
++}
++EXPORT_SYMBOL_GPL(ioasid_find);
+diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+new file mode 100644
+index 0000000..6f3655a
+--- /dev/null
++++ b/include/linux/ioasid.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_IOASID_H
++#define __LINUX_IOASID_H
 +
-+	err_code = VCMD_VRSP_EC(res);
-+	switch (err_code) {
-+	case VCMD_VRSP_EC_SUCCESS:
-+		*pasid = VCMD_VRSP_RESULE(res);
-+		break;
-+	case VCMD_VRSP_EC_UNAVAIL:
-+		pr_info("IOMMU: %s: No PASID available\n", iommu->name);
-+		ret = -ENOMEM;
-+		break;
-+	default:
-+		ret = -ENODEV;
-+		pr_warn("IOMMU: %s: Unkonwn error code %d\n",
-+			iommu->name, err_code);
-+	}
++#define INVALID_IOASID ((ioasid_t)-1)
++typedef unsigned int ioasid_t;
++typedef int (*ioasid_iter_t)(ioasid_t ioasid, void *private, void *data);
 +
-+	return ret;
++struct ioasid_set {
++	int dummy;
++};
++
++#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
++
++#ifdef CONFIG_IOASID
++ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
++		      void *private);
++void ioasid_free(ioasid_t ioasid);
++
++void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++		  bool (*getter)(void *));
++
++#else /* !CONFIG_IOASID */
++static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
++				    ioasid_t max, void *private)
++{
++	return INVALID_IOASID;
 +}
 +
-+void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid)
++static inline void ioasid_free(ioasid_t ioasid)
 +{
-+	u64 res;
-+	u8 err_code;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-+	dmar_writeq(iommu->reg + DMAR_VCMD_REG, (pasid << 8) | VCMD_CMD_FREE);
-+	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-+		      !(res & VCMD_VRSP_IP), res);
-+	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-+
-+	err_code = VCMD_VRSP_EC(res);
-+	switch (err_code) {
-+	case VCMD_VRSP_EC_SUCCESS:
-+		break;
-+	case VCMD_VRSP_EC_INVAL:
-+		pr_info("IOMMU: %s: Invalid PASID\n", iommu->name);
-+		break;
-+	default:
-+		pr_warn("IOMMU: %s: Unkonwn error code %d\n",
-+			iommu->name, err_code);
-+	}
 +}
 +
- /*
-  * Per device pasid table management:
-  */
-diff --git a/drivers/iommu/intel-pasid.h b/drivers/iommu/intel-pasid.h
-index 23537b3..0999dfe 100644
---- a/drivers/iommu/intel-pasid.h
-+++ b/drivers/iommu/intel-pasid.h
-@@ -19,6 +19,16 @@
- #define PASID_PDE_SHIFT			6
- #define MAX_NR_PASID_BITS		20
- 
-+/* Virtual command interface for enlightened pasid management. */
-+#define VCMD_CMD_ALLOC			0x1
-+#define VCMD_CMD_FREE			0x2
-+#define VCMD_VRSP_IP			0x1
-+#define VCMD_VRSP_EC(e)			(((e) >> 1) & 0x3)
-+#define VCMD_VRSP_EC_SUCCESS		0
-+#define VCMD_VRSP_EC_UNAVAIL		1
-+#define VCMD_VRSP_EC_INVAL		1
-+#define VCMD_VRSP_RESULE(e)		(((e) >> 8) & 0xfffff)
-+
- /*
-  * Domain ID reserved for pasid entries programmed for first-level
-  * only and pass-through transfer modes.
-@@ -69,5 +79,6 @@ int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
- 				   struct device *dev, int pasid);
- void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
- 				 struct device *dev, int pasid);
--
-+int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid);
-+void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid);
- #endif /* __INTEL_PASID_H */
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 6925a18..bff907b 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -173,6 +173,7 @@
- #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
- #define ecap_flts(e)		(((e) >> 47) & 0x1)
- #define ecap_slts(e)		(((e) >> 46) & 0x1)
-+#define ecap_vcs(e)		(((e) >> 44) & 0x1)
- #define ecap_smts(e)		(((e) >> 43) & 0x1)
- #define ecap_dit(e)		((e >> 41) & 0x1)
- #define ecap_pasid(e)		((e >> 40) & 0x1)
-@@ -289,6 +290,7 @@
- 
- /* PRS_REG */
- #define DMA_PRS_PPR	((u32)1)
-+#define DMA_VCS_PAS	((u64)1)
- 
- #define IOMMU_WAIT_OP(iommu, offset, op, cond, sts)			\
- do {									\
++static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
++				bool (*getter)(void *))
++{
++	return NULL;
++}
++#endif /* CONFIG_IOASID */
++#endif /* __LINUX_IOASID_H */
 -- 
 2.7.4
 
