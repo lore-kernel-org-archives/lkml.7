@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18370C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3908EC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2CF2177B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F416220811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="1P23h9vh"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JRgS6Tvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730566AbfDWDvp (ORCPT
+        id S1730809AbfDWDwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:51:45 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:38719 "EHLO
+        Mon, 22 Apr 2019 23:52:24 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:38300 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730463AbfDWDvj (ORCPT
+        with ESMTP id S1730176AbfDWDv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:51:39 -0400
+        Mon, 22 Apr 2019 23:51:26 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x3N3o2cE023044;
-        Tue, 23 Apr 2019 12:50:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x3N3o2cE023044
+        by conuserg-07.nifty.com with ESMTP id x3N3o2cC023044;
+        Tue, 23 Apr 2019 12:50:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x3N3o2cC023044
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555991413;
-        bh=h+EwU9qqdYxQmwoBR4Te9yGMUTWayFtr2mQvRUGDY+4=;
+        s=dec2015msa; t=1555991409;
+        bh=WxeGjpwIMtUh4NapkUcSoliRiI5DD/Rdf3zwHkix9l0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1P23h9vht+/GBqnRwv/UkIJ1suM0Gl11zAvmk/8SvuVwFNSEjjcz5wleVPujRFppK
-         Nx/EYAsyelP9HyPthWeDWEqGmry1y5MqVAH4kuSg33aYusbvligBz2HN/GC99w5vtM
-         5Yg0icURIigmLM1gADO7WXFZwt4Hq3fD5BBu/LSkX8+UB6/Luat0ziOGN7ZMWhGLS9
-         fo58H0dKM6524EBjfnfQOTOMJ1r1Ka3EpWa+TiKZiQ94Q1gXooQjZTOQDDB6tvyUPV
-         0xBOTQRtogiBnMr/KZOj2ZHdEdJmH3fC/VnCXHcN5E/hwV0LkVqNuoBAt1sE3Wfa2v
-         Nsv6CrzlYC6bA==
+        b=JRgS6TvykK2VfzGREOAHkRyhk2HU8HY8tH8Qv2cO2WA0R9pxRuSnRL2l2nwF2rSl2
+         uFBXOndu6Yxp30Ok+h6kuTyz1lG3PihD63BocSfvTU5n31Jo+S9vy3jMsA6nTJtEZs
+         vm6Y9xJflB9iaVlWxhtuLPtePohZQGxBk6DAICJ/P8KdMoexqYceDJBLIBPcwtsL5p
+         R/jAaPfkqPKMSUUT42VfBdxfmrbSbnp+alKzF5A7WCi2a92an7hfPqXb6HgnjbDNNN
+         QjXdLJUq/2K/5VL0Ur5Ot1MGSdmgWZkTb+J72txXZMzvax7raUOfVsy5FUhwCuulkR
+         uyV+27X02YYgg==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -50,9 +50,9 @@ Cc:     linux-s390@vger.kernel.org,
         Christophe Leroy <christophe.leroy@c-s.fr>,
         Mathieu Malaterre <malat@debian.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [RESEND PATCH v3 06/11] MIPS: mark __fls() and __ffs() as __always_inline
-Date:   Tue, 23 Apr 2019 12:49:54 +0900
-Message-Id: <20190423034959.13525-7-yamada.masahiro@socionext.com>
+Subject: [RESEND PATCH v3 04/11] s390/cpacf: mark scpacf_query() as __always_inline
+Date:   Tue, 23 Apr 2019 12:49:52 +0900
+Message-Id: <20190423034959.13525-5-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190423034959.13525-1-yamada.masahiro@socionext.com>
 References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
@@ -64,50 +64,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
 place. We need to eliminate potential issues beforehand.
 
-If it is enabled for mips, the following errors are reported:
+If it is enabled for s390, the following error is reported:
 
-arch/mips/mm/sc-mips.o: In function `mips_sc_prefetch_enable.part.2':
-sc-mips.c:(.text+0x98): undefined reference to `mips_gcr_base'
-sc-mips.c:(.text+0x9c): undefined reference to `mips_gcr_base'
-sc-mips.c:(.text+0xbc): undefined reference to `mips_gcr_base'
-sc-mips.c:(.text+0xc8): undefined reference to `mips_gcr_base'
-sc-mips.c:(.text+0xdc): undefined reference to `mips_gcr_base'
-arch/mips/mm/sc-mips.o:sc-mips.c:(.text.unlikely+0x44): more undefined references to `mips_gcr_base'
+In file included from arch/s390/crypto/des_s390.c:19:
+./arch/s390/include/asm/cpacf.h: In function 'cpacf_query':
+./arch/s390/include/asm/cpacf.h:170:2: warning: asm operand 3 probably doesn't match constraints
+  asm volatile(
+  ^~~
+./arch/s390/include/asm/cpacf.h:170:2: error: impossible constraint in 'asm'
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
-Changes in v3:
-  - forcibly inline __ffs() too
-
+Changes in v3: None
 Changes in v2:
-  - new patch
+  - split into a separate patch
 
- arch/mips/include/asm/bitops.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/include/asm/cpacf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.h
-index 830c93a010c3..9a466dde9b96 100644
---- a/arch/mips/include/asm/bitops.h
-+++ b/arch/mips/include/asm/bitops.h
-@@ -482,7 +482,7 @@ static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *
-  * Return the bit position (0..63) of the most significant 1 bit in a word
-  * Returns -1 if no 1 bit exists
-  */
--static inline unsigned long __fls(unsigned long word)
-+static __always_inline unsigned long __fls(unsigned long word)
- {
- 	int num;
- 
-@@ -548,7 +548,7 @@ static inline unsigned long __fls(unsigned long word)
-  * Returns 0..SZLONG-1
-  * Undefined if no bit exists, so code should check against 0 first.
-  */
--static inline unsigned long __ffs(unsigned long word)
-+static __always_inline unsigned long __ffs(unsigned long word)
- {
- 	return __fls(word & -word);
+diff --git a/arch/s390/include/asm/cpacf.h b/arch/s390/include/asm/cpacf.h
+index 3cc52e37b4b2..f316de40e51b 100644
+--- a/arch/s390/include/asm/cpacf.h
++++ b/arch/s390/include/asm/cpacf.h
+@@ -202,7 +202,7 @@ static inline int __cpacf_check_opcode(unsigned int opcode)
+ 	}
  }
+ 
+-static inline int cpacf_query(unsigned int opcode, cpacf_mask_t *mask)
++static __always_inline int cpacf_query(unsigned int opcode, cpacf_mask_t *mask)
+ {
+ 	if (__cpacf_check_opcode(opcode)) {
+ 		__cpacf_query(opcode, mask);
 -- 
 2.17.1
 
