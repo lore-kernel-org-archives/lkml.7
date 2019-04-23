@@ -2,134 +2,98 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F50C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF75C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6419B20651
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:09:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="mvLY+Ww0"
+	by mail.kernel.org (Postfix) with ESMTP id CEE6920811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbfDWQJ1 (ORCPT
+        id S1728462AbfDWQM0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:09:27 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35894 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727737AbfDWQJ0 (ORCPT
+        Tue, 23 Apr 2019 12:12:26 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:52189 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfDWQMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:09:26 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l23so3458781lja.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:09:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=B987w6H/8sLrkjb92qYyMAxvrC7y1yIfwD5xAOGqELY=;
-        b=mvLY+Ww0TF2UkCnhyiF3YEOBg2yn3r0wRvDrJ/gS91LsuCviMTm9pFFwGJdG2Tt6So
-         Eq7cwxuAhkYjBev0KDzoT0H7w0T+LXcxtJpmhtAKUYblhQ3QxyS5viTPL42IhJOyiIx4
-         AJctrPEGV8JmtmoPb4DC0LvOXbkhR0A7WIn9VhhY61hFhrUHZqO6MTdbzAMpELm3B/CW
-         d8qgw19+oOmEZyIGa6/W36Tvd6GMuevH0Qryuf/c+t+EGtuDJ0hpVlKKf+8G8NkH7s5p
-         /Rp6rGxFlEiDjhL0BI/3A9sttoGT28HVHiWGTRiUneKQ1Ar86g/cWUW9OzAIc0ugFIwl
-         Rjrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=B987w6H/8sLrkjb92qYyMAxvrC7y1yIfwD5xAOGqELY=;
-        b=LtHfWT61BKD/iQkBy3JxMZcRyXP4IeETZA2sQicvkYPAvQv7pqnmtTdShG3BuQL453
-         c/x4VmzcvWU84suJgv08TlHjyWRNzQgxVw/VNn4mGBgBLAxXaKXIjXrSlg5V5FRN4759
-         p/FlGI6jTT9Op9wql21UXyBQc3HtSMV9ar5cW4WO0B8upoP/1ZWVlDDlbmpAtRujmSFY
-         /xARgQ4k9+bcHimQvXyeMfEwYkoLNTnyGwiGE402EB+REd32bHE8QAdyLV/2WPcl4QdC
-         OXZD6BMYKbULFPc9PYTFP14iOSJ8mw+03ea/avJrXTuqT0OhcFfIIALuSqWGBxRIyY29
-         mytg==
-X-Gm-Message-State: APjAAAWRO50r0UAwB4hctMj+r4wSfePMgey8l3vPkYgbN1HS/c8um7sX
-        ufZQEFOwtd55s/dRA0OE2MOV6g==
-X-Google-Smtp-Source: APXvYqx+P/bxote7QB0GizHRyFZECju3SA5IlB9D4y57NhwLsHlujQh9IG37ByidE/DTvMqe79C7ew==
-X-Received: by 2002:a2e:9597:: with SMTP id w23mr14252872ljh.111.1556035764793;
-        Tue, 23 Apr 2019 09:09:24 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.82.73])
-        by smtp.gmail.com with ESMTPSA id c5sm4538958ljd.18.2019.04.23.09.09.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 09:09:23 -0700 (PDT)
-Subject: Re: [PATCH v11 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
- driver
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
-        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
-        marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        zhengxunli@mxic.com.tw
-References: <1555903925-15292-1-git-send-email-masonccyang@mxic.com.tw>
- <1555903925-15292-3-git-send-email-masonccyang@mxic.com.tw>
- <d2a7a471-2847-b774-42b1-9feb8f4c69f3@cogentembedded.com>
- <OFF96C004A.0EFDDD69-ON482583E5.0032EE18-482583E5.00337F42@mxic.com.tw>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <060316c8-7675-cfaf-bfef-c3e6458bfa82@cogentembedded.com>
-Date:   Tue, 23 Apr 2019 19:09:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Tue, 23 Apr 2019 12:12:25 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 9A3F24000C;
+        Tue, 23 Apr 2019 16:12:22 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 18:12:21 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Pablo =?utf-8?Q?Sebasti=C3=A1n?= Greco <pgreco@centosproject.org>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 5/7] ARM: dts: sun8i: v40: bananapi-m2-berry: Add
+ Bluetooth device node
+Message-ID: <20190423161221.27rvt3zvlobbmptn@flea>
+References: <1555600282-9405-1-git-send-email-pgreco@centosproject.org>
+ <1555600282-9405-6-git-send-email-pgreco@centosproject.org>
+ <20190418155613.shiv7geoqyzfy4kf@flea>
+ <bc5d7e91-74c5-103a-db72-6cb1f3ef53b9@centosproject.org>
 MIME-Version: 1.0
-In-Reply-To: <OFF96C004A.0EFDDD69-ON482583E5.0032EE18-482583E5.00337F42@mxic.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <bc5d7e91-74c5-103a-db72-6cb1f3ef53b9@centosproject.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/23/2019 12:22 PM, masonccyang@mxic.com.tw wrote:
+On Thu, Apr 18, 2019 at 01:14:35PM -0300, Pablo Sebastián Greco wrote:
+>
+> El 18/4/19 a las 12:56, Maxime Ripard escribió:
+> > On Thu, Apr 18, 2019 at 12:11:20PM -0300, Pablo Greco wrote:
+> > > Since the bananapi-m2-ultra and the bananapi-m2-berry have the same
+> > > WiFi/Bluetooth, add the required nodes to the bananapi-m2-berry.
+> > >
+> > > Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+> > > ---
+> > >   arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 26 +++++++++++++++++++++++
+> > >   1 file changed, 26 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > index 78f4a1a..3d0bb7e 100644
+> > > --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > @@ -96,6 +96,8 @@
+> > >   	wifi_pwrseq: wifi_pwrseq {
+> > >   		compatible = "mmc-pwrseq-simple";
+> > >   		reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
+> > > +		clocks = <&ccu CLK_OUTA>;
+> > > +		clock-names = "ext_clock";
+> > >   	};
+> > >   };
+> > >
+> > > @@ -171,6 +173,11 @@
+> > >   	status = "okay";
+> > >   };
+> > >
+> > > +&pio {
+> > > +	pinctrl-names = "default";
+> > > +	pinctrl-0 = <&clk_out_a_pin>;
+> > > +};
+> > > +
+> > I'm not sure you answered my question about why that is needed?
+> Because it is the same case as https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts?id=1e5f1db4ccd8348a21da55bff82f4263000879ef
+> I can repeat that info in this commit log
 
->> > Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
->> >
->> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
->> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->> [...]
->>
->>   Do dote that I'm opposed to the driver separation as it's presented in
->> this patches, and I have a large patch reworking both MFD and SPI drivers
->> in the works.
->>
-> 
-> Do you mean add your name in both MFD & dt-binding ?
+Yes, please.
 
-   Of course not!
+Maxime
 
-> i.e.,
-> [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF MFD bindings
-> 
-> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> 
-> 
-> [PATCH v12 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
-> 
-> Add a driver for Renesas R-Car Gen3 RPC-IF MFD.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> 
-> Is it ok ?
-
-   I'm not OK with the most of the driver code ending up in the SPI driver,
-I think most of the code should be kept in the MFD driver and just be called
-by SPI/HF drivers.
-
-> best regards,
-> Mason
-
-MBR, Sergei
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
