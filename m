@@ -2,112 +2,387 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE3DC282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE31C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B4F217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C92F8217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:18:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kA8UUDwA"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="B53WkAHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbfDWQSo (ORCPT
+        id S1728718AbfDWQSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:18:44 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45602 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728618AbfDWQSm (ORCPT
+        Tue, 23 Apr 2019 12:18:53 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:51752 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728681AbfDWQSv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:18:42 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y3so7838874pgk.12;
-        Tue, 23 Apr 2019 09:18:42 -0700 (PDT)
+        Tue, 23 Apr 2019 12:18:51 -0400
+Received: by mail-it1-f196.google.com with SMTP id s3so1150084itk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:18:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=GSv/lNk+cqbIXgSZ96lvblwQ8cpdLHfK+N8P3Q4pHOQ=;
-        b=kA8UUDwAkrFY1VmNWIKvOo0XihlU5W9LhPC4hdsnB0kv5YI+W2cwCRR7SdiKpBc0B6
-         h3UlUKAKnhgO33C+dC4j6q94CPQ2dqJ/SzYxQlxWj7jW+klThfeXvX3dlM0ZmXDEHeBY
-         e1GV4Bisy3AIEWs+PrBhmziN7kYSobkjj0fVLlcOwyE0LITeiiafBbbiRryO6moLzBwQ
-         NgnMxDnuU+2CMEOWCRsOoxP8mH/JtO2zSK6LpjVPDkqULZwwixYjw+jHAHRLgoksGoCB
-         NjvjHBtw5gPLTJ7n/hQgf0W1mK1RtgnLODEVMWnB4ctyFxeVJB1UsizF0mYFFtnGe0JS
-         zybA==
+        d=digitalocean.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=RRPprdHBeVV/4+2VLyUELzA44hhF2F4q9ugJ+BrPTCk=;
+        b=B53WkAHsZGpYMiWdtVp+UPcGMiqnsXJK8MEuGNJ6j7TGXAaYEY5FYn5tpp0UDqY9VQ
+         KEruhMOpRKV0NwOwFKa3iIbNjBCESZv+21dh+9+IpjMa8lAEunvt43/2/G4EMXKDDYAY
+         nPhR2zyEj8fZ7gf8Jfb4TqURwGuM4aL7DSs00=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=GSv/lNk+cqbIXgSZ96lvblwQ8cpdLHfK+N8P3Q4pHOQ=;
-        b=mPh0mJogVBGOB99EVPqVfT7pIM+rJG0OruR+1R3Wgwe5XY/GyXPLQofpZiOYHxaewx
-         Z4zAIvgzf8fWabN3FbmEw+Z8LGVZTMTIg5Tqvbqkl+pUrhgoEbBBhxcaiIstCjPYz9Tv
-         8wCtexlumiJQqJbVmwcUFGR45V8XHNOoQt7EV3uyOSqLyZeUu022wYGr5flDhALIAdHx
-         gpmhXBRqB5+epdqFDpYKcHINaHX6Pkpev8mT7AtNsf3GUWDoKzXbVF9Pf09EgXKWrnQl
-         48SI8Kdxatztx8THK739kmT125KW9ubKluMiboj351VE10WnUrgPLi/rsZSWXKM7leU2
-         y78A==
-X-Gm-Message-State: APjAAAWSz6NMD6+UbRd7dhJLVU6CRewXBN9FMUWxG2JhU0fCSy+2zJS7
-        pFMTz49fUgKBdocKwmqaIBu6BU8k
-X-Google-Smtp-Source: APXvYqwS1b59sQ6vMIoP37NlPnTs0mCmC2KgP8FmHZOjuGZ8TEN3oD/+yhUqBJ4MD9f58x506gH4Sg==
-X-Received: by 2002:a63:fc0b:: with SMTP id j11mr25063113pgi.74.1556036321698;
-        Tue, 23 Apr 2019 09:18:41 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.32])
-        by smtp.gmail.com with ESMTPSA id n26sm29867525pfi.165.2019.04.23.09.18.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 09:18:41 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 21:48:31 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     akpm@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     linux-kernel@vger.kernel.org, reiserfs-devel@vger.kernel.org,
-        linux.bhar@gmail.com
-Subject: [PATCH] reiserfs: Add comment to explain endianness issue in
- xattr_hash
-Message-ID: <20190423161831.GA15387@bharath12345-Inspiron-5559>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=RRPprdHBeVV/4+2VLyUELzA44hhF2F4q9ugJ+BrPTCk=;
+        b=jg6gfBUfXcQh5acQixtLMVbNR51PaVUztqp898jnU7ElLO9nQWMM49exVaEktXwfDe
+         +Ofrk8p3Jeaa+/12tYO/zWkao9zrGJkgV3DD5u1snBOLt2X2EX5Roxq291HpbKNOOIQB
+         y1zpdCriGmvI1Khvp9mla5W+pVubOGvvlWVmRAJjRgK01HYj9jozPPBZqgePXX1ohkWQ
+         4loXoyEiV/bF8wJWEOJzhiiEWbVwrlb2osVcs/6dzvpIY+WTEtPZfLNu2chTP7pI+5MW
+         LraFOSbkAQSHiTDaRYYY0n7hm8mWSlXIUgzrLGrd4O0ktTE0R3AgAJyPn8veYtixViKN
+         LaaQ==
+X-Gm-Message-State: APjAAAWmtsKi4s2RdZTlXY8oqcer8bbJbcA+BQuEtCzWQfV9YnSntN4O
+        Xcu0MZGh2Ce/b3Xu0l1OyEynzA==
+X-Google-Smtp-Source: APXvYqyvQIdj/NG3X4wVD8KVexssvMGSCUKJcSva7fjAwDCx41Ics06H9yrDZPAx1Nds/OLuLnm30w==
+X-Received: by 2002:a24:b302:: with SMTP id e2mr3019298itf.159.1556036329913;
+        Tue, 23 Apr 2019 09:18:49 -0700 (PDT)
+Received: from swap-tester ([178.128.225.14])
+        by smtp.gmail.com with ESMTPSA id n4sm5401687ioh.52.2019.04.23.09.18.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 09:18:49 -0700 (PDT)
+From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
+To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Subject: [RFC PATCH v2 09/17] sched: Introduce sched_class::pick_task()
+Date:   Tue, 23 Apr 2019 16:18:14 +0000
+Message-Id: <e2f1d30b0b3bb62c01824f422badf159147982d7.1556025155.git.vpillai@digitalocean.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1556025155.git.vpillai@digitalocean.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+In-Reply-To: <cover.1556025155.git.vpillai@digitalocean.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-csum_partial() gives different results for little-endian and big-endian
-hosts. This causes images created on little-endian hosts and mounted on
-big endian hosts to see csum mismatches. This causes an endianness bug.
-Sparse gives a warning as csum_partial returns a restricted integer type
-__wsum_t and xattr_hash expects __u32. This warning acts as a reminder
-for this bug and should not be suppressed.
+From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-This comment aims to convey these endianness issues.
+Because sched_class::pick_next_task() also implies
+sched_class::set_next_task() (and possibly put_prev_task() and
+newidle_balance) it is not state invariant. This makes it unsuitable
+for remote task selection.
 
-Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
 ---
- fs/reiserfs/xattr.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/fs/reiserfs/xattr.c b/fs/reiserfs/xattr.c
-index 32d8986..0ea6654 100644
---- a/fs/reiserfs/xattr.c
-+++ b/fs/reiserfs/xattr.c
-@@ -450,6 +450,16 @@ static struct page *reiserfs_get_page(struct inode *dir, size_t n)
- 
- static inline __u32 xattr_hash(const char *msg, int len)
- {
-+	/*
-+	 * csum_partial() gives different results for little-endian and
-+	 * big endian hosts. Images created on little-endian hosts and
-+	 * mounted on big-endian hosts(and vice versa) will see csum mismatches
-+	 * when trying to fetch xattrs. Treating the hash as __wsum_t would
-+	 * lower the frequency of mismatch. This is an endianness bug in reiserfs.
-+	 * The return statement would result in a sparse warning. Do not fix the sparse
-+	 * warning so as to not hide the reminder of the bug.
-+	 */
-+
- 	return csum_partial(msg, len, 0);
+Changes in v2
+-------------
+- Fixes a NULL pointer dereference crash
+  - Subhra Mazumdar
+  - Tim Chen
+
+---
+ kernel/sched/deadline.c  | 21 ++++++++++++++++-----
+ kernel/sched/fair.c      | 39 ++++++++++++++++++++++++++++++++++++---
+ kernel/sched/idle.c      | 10 +++++++++-
+ kernel/sched/rt.c        | 21 ++++++++++++++++-----
+ kernel/sched/sched.h     |  2 ++
+ kernel/sched/stop_task.c | 21 ++++++++++++++++-----
+ 6 files changed, 95 insertions(+), 19 deletions(-)
+
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 249310e68592..010234908cc0 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1723,15 +1723,12 @@ static struct sched_dl_entity *pick_next_dl_entity(struct rq *rq,
+ 	return rb_entry(left, struct sched_dl_entity, rb_node);
  }
  
+-static struct task_struct *
+-pick_next_task_dl(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++static struct task_struct *pick_task_dl(struct rq *rq)
+ {
+ 	struct sched_dl_entity *dl_se;
+ 	struct task_struct *p;
+ 	struct dl_rq *dl_rq;
+ 
+-	WARN_ON_ONCE(prev || rf);
+-
+ 	dl_rq = &rq->dl;
+ 
+ 	if (unlikely(!dl_rq->dl_nr_running))
+@@ -1742,7 +1739,19 @@ pick_next_task_dl(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 
+ 	p = dl_task_of(dl_se);
+ 
+-	set_next_task_dl(rq, p);
++	return p;
++}
++
++static struct task_struct *
++pick_next_task_dl(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++{
++	struct task_struct *p;
++
++	WARN_ON_ONCE(prev || rf);
++
++	p = pick_task_dl(rq);
++	if (p)
++		set_next_task_dl(rq, p);
+ 
+ 	return p;
+ }
+@@ -2389,6 +2398,8 @@ const struct sched_class dl_sched_class = {
+ 	.set_next_task		= set_next_task_dl,
+ 
+ #ifdef CONFIG_SMP
++	.pick_task		= pick_task_dl,
++
+ 	.select_task_rq		= select_task_rq_dl,
+ 	.migrate_task_rq	= migrate_task_rq_dl,
+ 	.set_cpus_allowed       = set_cpus_allowed_dl,
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c055bad249a9..45d86b862750 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4132,7 +4132,7 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
+ 	 * Avoid running the skip buddy, if running something else can
+ 	 * be done without getting too unfair.
+ 	 */
+-	if (cfs_rq->skip == se) {
++	if (cfs_rq->skip && cfs_rq->skip == se) {
+ 		struct sched_entity *second;
+ 
+ 		if (se == curr) {
+@@ -4150,13 +4150,13 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
+ 	/*
+ 	 * Prefer last buddy, try to return the CPU to a preempted task.
+ 	 */
+-	if (cfs_rq->last && wakeup_preempt_entity(cfs_rq->last, left) < 1)
++	if (left && cfs_rq->last && wakeup_preempt_entity(cfs_rq->last, left) < 1)
+ 		se = cfs_rq->last;
+ 
+ 	/*
+ 	 * Someone really wants this to run. If it's not unfair, run it.
+ 	 */
+-	if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1)
++	if (left && cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1)
+ 		se = cfs_rq->next;
+ 
+ 	clear_buddies(cfs_rq, se);
+@@ -6937,6 +6937,37 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
+ 		set_last_buddy(se);
+ }
+ 
++static struct task_struct *
++pick_task_fair(struct rq *rq)
++{
++	struct cfs_rq *cfs_rq = &rq->cfs;
++	struct sched_entity *se;
++
++	if (!cfs_rq->nr_running)
++		return NULL;
++
++	do {
++		struct sched_entity *curr = cfs_rq->curr;
++
++		se = pick_next_entity(cfs_rq, NULL);
++
++		if (!(se || curr))
++			return NULL;
++
++		if (curr) {
++			if (se && curr->on_rq)
++				update_curr(cfs_rq);
++
++			if (!se || entity_before(curr, se))
++				se = curr;
++		}
++
++		cfs_rq = group_cfs_rq(se);
++	} while (cfs_rq);
++
++	return task_of(se);
++}
++
+ static struct task_struct *
+ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ {
+@@ -10648,6 +10679,8 @@ const struct sched_class fair_sched_class = {
+ 	.set_next_task          = set_next_task_fair,
+ 
+ #ifdef CONFIG_SMP
++	.pick_task		= pick_task_fair,
++
+ 	.select_task_rq		= select_task_rq_fair,
+ 	.migrate_task_rq	= migrate_task_rq_fair,
+ 
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 7ece8e820b5d..e7f38da60373 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -373,6 +373,12 @@ static void check_preempt_curr_idle(struct rq *rq, struct task_struct *p, int fl
+ 	resched_curr(rq);
+ }
+ 
++static struct task_struct *
++pick_task_idle(struct rq *rq)
++{
++	return rq->idle;
++}
++
+ static void put_prev_task_idle(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ {
+ }
+@@ -386,11 +392,12 @@ static void set_next_task_idle(struct rq *rq, struct task_struct *next)
+ static struct task_struct *
+ pick_next_task_idle(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ {
+-	struct task_struct *next = rq->idle;
++	struct task_struct *next;
+ 
+ 	if (prev)
+ 		put_prev_task(rq, prev);
+ 
++	next = pick_task_idle(rq);
+ 	set_next_task_idle(rq, next);
+ 
+ 	return next;
+@@ -458,6 +465,7 @@ const struct sched_class idle_sched_class = {
+ 	.set_next_task          = set_next_task_idle,
+ 
+ #ifdef CONFIG_SMP
++	.pick_task		= pick_task_idle,
+ 	.select_task_rq		= select_task_rq_idle,
+ 	.set_cpus_allowed	= set_cpus_allowed_common,
+ #endif
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 79f2e60516ef..81557224548c 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1548,20 +1548,29 @@ static struct task_struct *_pick_next_task_rt(struct rq *rq)
+ 	return rt_task_of(rt_se);
+ }
+ 
+-static struct task_struct *
+-pick_next_task_rt(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++static struct task_struct *pick_task_rt(struct rq *rq)
+ {
+ 	struct task_struct *p;
+ 	struct rt_rq *rt_rq = &rq->rt;
+ 
+-	WARN_ON_ONCE(prev || rf);
+-
+ 	if (!rt_rq->rt_queued)
+ 		return NULL;
+ 
+ 	p = _pick_next_task_rt(rq);
+ 
+-	set_next_task_rt(rq, p);
++	return p;
++}
++
++static struct task_struct *
++pick_next_task_rt(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++{
++	struct task_struct *p;
++
++	WARN_ON_ONCE(prev || rf);
++
++	p = pick_task_rt(rq);
++	if (p)
++		set_next_task_rt(rq, p);
+ 
+ 	return p;
+ }
+@@ -2364,6 +2373,8 @@ const struct sched_class rt_sched_class = {
+ 	.set_next_task          = set_next_task_rt,
+ 
+ #ifdef CONFIG_SMP
++	.pick_task		= pick_task_rt,
++
+ 	.select_task_rq		= select_task_rq_rt,
+ 
+ 	.set_cpus_allowed       = set_cpus_allowed_common,
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 460dd04e76af..a024dd80eeb3 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1682,6 +1682,8 @@ struct sched_class {
+ 	void (*set_next_task)(struct rq *rq, struct task_struct *p);
+ 
+ #ifdef CONFIG_SMP
++	struct task_struct * (*pick_task)(struct rq *rq);
++
+ 	int  (*select_task_rq)(struct task_struct *p, int task_cpu, int sd_flag, int flags);
+ 	void (*migrate_task_rq)(struct task_struct *p, int new_cpu);
+ 
+diff --git a/kernel/sched/stop_task.c b/kernel/sched/stop_task.c
+index 7e1cee4e65b2..fb6c436cba6c 100644
+--- a/kernel/sched/stop_task.c
++++ b/kernel/sched/stop_task.c
+@@ -29,20 +29,30 @@ static void set_next_task_stop(struct rq *rq, struct task_struct *stop)
+ }
+ 
+ static struct task_struct *
+-pick_next_task_stop(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++pick_task_stop(struct rq *rq)
+ {
+ 	struct task_struct *stop = rq->stop;
+ 
+-	WARN_ON_ONCE(prev || rf);
+-
+ 	if (!stop || !task_on_rq_queued(stop))
+ 		return NULL;
+ 
+-	set_next_task_stop(rq, stop);
+-
+ 	return stop;
+ }
+ 
++static struct task_struct *
++pick_next_task_stop(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
++{
++	struct task_struct *p;
++
++	WARN_ON_ONCE(prev || rf);
++
++	p = pick_task_stop(rq);
++	if (p)
++		set_next_task_stop(rq, p);
++
++	return p;
++}
++
+ static void
+ enqueue_task_stop(struct rq *rq, struct task_struct *p, int flags)
+ {
+@@ -129,6 +139,7 @@ const struct sched_class stop_sched_class = {
+ 	.set_next_task          = set_next_task_stop,
+ 
+ #ifdef CONFIG_SMP
++	.pick_task		= pick_task_stop,
+ 	.select_task_rq		= select_task_rq_stop,
+ 	.set_cpus_allowed	= set_cpus_allowed_common,
+ #endif
 -- 
-2.7.4
+2.17.1
 
