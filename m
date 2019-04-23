@@ -2,217 +2,113 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C388C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0761C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392BA214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9990C206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbfDWNEh (ORCPT
+        id S1727722AbfDWNHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:04:37 -0400
-Received: from smtp03.citrix.com ([162.221.156.55]:7573 "EHLO
-        SMTP03.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfDWNEg (ORCPT
+        Tue, 23 Apr 2019 09:07:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39968 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726033AbfDWNHC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:04:36 -0400
-X-IronPort-AV: E=Sophos;i="5.60,385,1549929600"; 
-   d="scan'208";a="84185214"
-From:   Roger Pau Monne <roger.pau@citrix.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Roger Pau Monne <roger.pau@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
-        <xen-devel@lists.xenproject.org>,
-        <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v2 2/2] xen/pvh: correctly setup the PV EFI interface for dom0
-Date:   Tue, 23 Apr 2019 15:04:16 +0200
-Message-ID: <20190423130416.68935-2-roger.pau@citrix.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
-In-Reply-To: <20190423130416.68935-1-roger.pau@citrix.com>
-References: <20190423130416.68935-1-roger.pau@citrix.com>
+        Tue, 23 Apr 2019 09:07:02 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NCrkC1025753
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:07:01 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s2154xbsw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:07:00 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 23 Apr 2019 14:06:59 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 14:06:57 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3ND6uB136241558
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 13:06:56 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BC51DB2066;
+        Tue, 23 Apr 2019 13:06:56 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9409AB2064;
+        Tue, 23 Apr 2019 13:06:56 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.207.109])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 13:06:56 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9461616C2664; Tue, 23 Apr 2019 05:58:58 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 05:58:58 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2019.04.16a 71/72] ERROR: "sched_setaffinity"
+ [kernel/rcu/rcutorture.ko] undefined!
+Reply-To: paulmck@linux.ibm.com
+References: <201904232031.O1MJPq0W%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201904232031.O1MJPq0W%lkp@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19042313-0068-0000-0000-000003B8D2C4
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010981; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01193226; UDB=6.00625499; IPR=6.00974047;
+ MB=3.00026557; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-23 13:06:59
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042313-0069-0000-0000-0000484312B1
+Message-Id: <20190423125858.GI3923@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This involves initializing the boot params EFI related fields and the
-efi global variable.
+On Tue, Apr 23, 2019 at 08:19:33PM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.04.16a
+> head:   ca8714f549be5a186d086a223184095759eb7094
+> commit: 672c5761e6763a76b414a8deaebb787696100ea1 [71/72] rcutorture: Add trivial RCU implementation
+> config: ia64-allmodconfig (attached as .config)
+> compiler: ia64-linux-gcc (GCC) 8.1.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 672c5761e6763a76b414a8deaebb787696100ea1
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=8.1.0 make.cross ARCH=ia64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> ERROR: "sched_setaffinity" [kernel/rcu/rcutorture.ko] undefined!
+>    ERROR: "ia64_delay_loop" [drivers/spi/spi-thunderx.ko] undefined!
+>    ERROR: "__sw_hweight8" [drivers/net/wireless/mediatek/mt76/mt7603/mt7603e.ko] undefined!
+>    ERROR: "ia64_delay_loop" [drivers/net/phy/mdio-cavium.ko] undefined!
 
-Without this fix a PVH dom0 doesn't detect when booted from EFI, and
-thus doesn't support accessing any of the EFI related data.
+Good catch -- fixing this with the usual trampoline function.
 
-Reported-by: PGNet Dev <pgnet.dev@gmail.com>
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
----
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
-Cc: xen-devel@lists.xenproject.org
-Cc: platform-driver-x86@vger.kernel.org
----
-Changes since v1:
- - Call xen_efi_init from xen_pvh_init, this avoids having to move the
-   prototype of xen_efi_init to a different header.
----
- arch/x86/platform/pvh/enlighten.c |  8 ++++----
- arch/x86/xen/efi.c                | 12 ++++++------
- arch/x86/xen/enlighten_pv.c       |  2 +-
- arch/x86/xen/enlighten_pvh.c      |  6 +++++-
- arch/x86/xen/xen-ops.h            |  4 ++--
- 5 files changed, 18 insertions(+), 14 deletions(-)
-
-diff --git a/arch/x86/platform/pvh/enlighten.c b/arch/x86/platform/pvh/enlighten.c
-index 62f5c7045944..1861a2ba0f2b 100644
---- a/arch/x86/platform/pvh/enlighten.c
-+++ b/arch/x86/platform/pvh/enlighten.c
-@@ -44,8 +44,6 @@ void __init __weak mem_map_via_hcall(struct boot_params *ptr __maybe_unused)
- 
- static void __init init_pvh_bootparams(bool xen_guest)
- {
--	memset(&pvh_bootparams, 0, sizeof(pvh_bootparams));
--
- 	if ((pvh_start_info.version > 0) && (pvh_start_info.memmap_entries)) {
- 		struct hvm_memmap_table_entry *ep;
- 		int i;
-@@ -103,7 +101,7 @@ static void __init init_pvh_bootparams(bool xen_guest)
-  * If we are trying to boot a Xen PVH guest, it is expected that the kernel
-  * will have been configured to provide the required override for this routine.
-  */
--void __init __weak xen_pvh_init(void)
-+void __init __weak xen_pvh_init(struct boot_params *boot_params)
- {
- 	xen_raw_printk("Error: Missing xen PVH initialization\n");
- 	BUG();
-@@ -112,7 +110,7 @@ void __init __weak xen_pvh_init(void)
- static void hypervisor_specific_init(bool xen_guest)
- {
- 	if (xen_guest)
--		xen_pvh_init();
-+		xen_pvh_init(&pvh_bootparams);
- }
- 
- /*
-@@ -131,6 +129,8 @@ void __init xen_prepare_pvh(void)
- 		BUG();
- 	}
- 
-+	memset(&pvh_bootparams, 0, sizeof(pvh_bootparams));
-+
- 	hypervisor_specific_init(xen_guest);
- 
- 	init_pvh_bootparams(xen_guest);
-diff --git a/arch/x86/xen/efi.c b/arch/x86/xen/efi.c
-index 1fbb629a9d78..0d3365cb64de 100644
---- a/arch/x86/xen/efi.c
-+++ b/arch/x86/xen/efi.c
-@@ -158,7 +158,7 @@ static enum efi_secureboot_mode xen_efi_get_secureboot(void)
- 	return efi_secureboot_mode_unknown;
- }
- 
--void __init xen_efi_init(void)
-+void __init xen_efi_init(struct boot_params *boot_params)
- {
- 	efi_system_table_t *efi_systab_xen;
- 
-@@ -167,12 +167,12 @@ void __init xen_efi_init(void)
- 	if (efi_systab_xen == NULL)
- 		return;
- 
--	strncpy((char *)&boot_params.efi_info.efi_loader_signature, "Xen",
--			sizeof(boot_params.efi_info.efi_loader_signature));
--	boot_params.efi_info.efi_systab = (__u32)__pa(efi_systab_xen);
--	boot_params.efi_info.efi_systab_hi = (__u32)(__pa(efi_systab_xen) >> 32);
-+	strncpy((char *)&boot_params->efi_info.efi_loader_signature, "Xen",
-+			sizeof(boot_params->efi_info.efi_loader_signature));
-+	boot_params->efi_info.efi_systab = (__u32)__pa(efi_systab_xen);
-+	boot_params->efi_info.efi_systab_hi = (__u32)(__pa(efi_systab_xen) >> 32);
- 
--	boot_params.secure_boot = xen_efi_get_secureboot();
-+	boot_params->secure_boot = xen_efi_get_secureboot();
- 
- 	set_bit(EFI_BOOT, &efi.flags);
- 	set_bit(EFI_PARAVIRT, &efi.flags);
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index c54a493e139a..4722ba2966ac 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -1403,7 +1403,7 @@ asmlinkage __visible void __init xen_start_kernel(void)
- 	/* We need this for printk timestamps */
- 	xen_setup_runstate_info(0);
- 
--	xen_efi_init();
-+	xen_efi_init(&boot_params);
- 
- 	/* Start the world */
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
-index bbffa409e0e8..80a79db72fcf 100644
---- a/arch/x86/xen/enlighten_pvh.c
-+++ b/arch/x86/xen/enlighten_pvh.c
-@@ -13,6 +13,8 @@
- 
- #include <xen/interface/memory.h>
- 
-+#include "xen-ops.h"
-+
- /*
-  * PVH variables.
-  *
-@@ -21,7 +23,7 @@
-  */
- bool xen_pvh __attribute__((section(".data"))) = 0;
- 
--void __init xen_pvh_init(void)
-+void __init xen_pvh_init(struct boot_params *boot_params)
- {
- 	u32 msr;
- 	u64 pfn;
-@@ -33,6 +35,8 @@ void __init xen_pvh_init(void)
- 	msr = cpuid_ebx(xen_cpuid_base() + 2);
- 	pfn = __pa(hypercall_page);
- 	wrmsr_safe(msr, (u32)pfn, (u32)(pfn >> 32));
-+
-+	xen_efi_init(boot_params);
- }
- 
- void __init mem_map_via_hcall(struct boot_params *boot_params_p)
-diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
-index 0e60bd918695..2f111f47ba98 100644
---- a/arch/x86/xen/xen-ops.h
-+++ b/arch/x86/xen/xen-ops.h
-@@ -122,9 +122,9 @@ static inline void __init xen_init_vga(const struct dom0_vga_console_info *info,
- void __init xen_init_apic(void);
- 
- #ifdef CONFIG_XEN_EFI
--extern void xen_efi_init(void);
-+extern void xen_efi_init(struct boot_params *boot_params);
- #else
--static inline void __init xen_efi_init(void)
-+static inline void __init xen_efi_init(struct boot_params *boot_params)
- {
- }
- #endif
--- 
-2.17.2 (Apple Git-113)
+							Thanx, Paul
 
