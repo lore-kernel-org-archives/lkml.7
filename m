@@ -2,152 +2,309 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070FCC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6120CC282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B3921738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C6D218FC
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AhdCKmBV"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lmYZkXiA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfDWWM1 (ORCPT
+        id S1728387AbfDWWQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:12:27 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43272 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfDWWM0 (ORCPT
+        Tue, 23 Apr 2019 18:16:53 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36468 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728288AbfDWWQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:12:26 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3NM4iVc124778;
-        Tue, 23 Apr 2019 22:10:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=l0VzuwK7fWj7U7YTxx4jiGO26nwCCDX522qiPNeC+/Y=;
- b=AhdCKmBVc8BIdraythvZytA3kVTqYzt3V1UvkKa8Xfe7HC6YDSnfPPTDrmy/WFLKpdLi
- ybqnDXcxozLtDQZSJb/CyE/DswT9j6XDoINpoqLbd6fOf2weWsI9t9Vt+ibJCOhqPJzw
- zGO2+HapNtynOsBUnzXoIU6Pc/S2ZpFJ3nH0vY8pOzQxRYNAIzglWCXbOjBv1lu+6J+7
- ySjy/HIHmQFoQfRXMyTRrFIvGvIeczjvrUJP4emcLz7EwfM87kUd7rVf3KgiZCVQFjSy
- FjbRSFpgfPWnPRLuDOYrsPj2Y3KqDGi6HU6LDXE9hYrQP/SLd8jpFIC+4tXpBOwTFwR3 Qw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2ryv2q6uyp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Apr 2019 22:10:24 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3NM8hPQ066650;
-        Tue, 23 Apr 2019 22:10:24 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2s0dwegm54-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Apr 2019 22:10:24 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3NMAFaf014717;
-        Tue, 23 Apr 2019 22:10:15 GMT
-Received: from localhost (/10.145.179.89)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Apr 2019 15:10:15 -0700
-Date:   Tue, 23 Apr 2019 15:10:11 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        mst@redhat.com, jasowang@redhat.com, willy@infradead.org,
-        rjw@rjwysocki.net, hch@infradead.org, lenb@kernel.org,
-        jack@suse.cz, tytso@mit.edu, adilger.kernel@dilger.ca,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
-        cohuck@redhat.com, xiaoguangrong.eric@gmail.com,
-        pbonzini@redhat.com, yuval.shaia@oracle.com, kilobyte@angband.pl
-Subject: Re: [PATCH v6 6/6] xfs: disable map_sync for async flush
-Message-ID: <20190423221011.GD178290@magnolia>
-References: <20190423080612.15361-1-pagupta@redhat.com>
- <20190423080612.15361-7-pagupta@redhat.com>
- <20190423220217.GA29573@dread.disaster.area>
+        Tue, 23 Apr 2019 18:16:53 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NM9gG0002693
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:16:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=MtkthRXb9xr3Z6+sHE+ddzmShZROkNDy015XAdhrxgc=;
+ b=lmYZkXiARc+GMISjiGAr6LDhoLFvNr4MU96SCAqjRj3y2G9lSSUe2X+6OHuS6ro69Jlg
+ YiIWjRbLD+cUv0QKwgO1yC0ZvNeMUi23hEWlCv4h5B9/aRkn8ULTBmk8FSTVZwUmHmHG
+ dlMRoglP+3++t1x0A/Eoo3ereq0i5UHobIM= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2s25j31y0r-12
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:16:52 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
+ mail.thefacebook.com (2620:10d:c021:18::175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Tue, 23 Apr 2019 15:16:50 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id C2E9C1142D2E2; Tue, 23 Apr 2019 14:31:36 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-team@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        <cgroups@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2 2/6] mm: generalize postponed non-root kmem_cache deactivation
+Date:   Tue, 23 Apr 2019 14:31:29 -0700
+Message-ID: <20190423213133.3551969-3-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190423213133.3551969-1-guro@fb.com>
+References: <20190423213133.3551969-1-guro@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423220217.GA29573@dread.disaster.area>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9236 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904230157
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9236 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904230157
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_08:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 08:02:17AM +1000, Dave Chinner wrote:
-> On Tue, Apr 23, 2019 at 01:36:12PM +0530, Pankaj Gupta wrote:
-> > Dont support 'MAP_SYNC' with non-DAX files and DAX files
-> > with asynchronous dax_device. Virtio pmem provides
-> > asynchronous host page cache flush mechanism. We don't
-> > support 'MAP_SYNC' with virtio pmem and xfs.
-> > 
-> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > ---
-> >  fs/xfs/xfs_file.c | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> > index 1f2e2845eb76..0e59be018511 100644
-> > --- a/fs/xfs/xfs_file.c
-> > +++ b/fs/xfs/xfs_file.c
-> > @@ -1196,11 +1196,13 @@ xfs_file_mmap(
-> >  	struct file	*filp,
-> >  	struct vm_area_struct *vma)
-> >  {
-> > -	/*
-> > -	 * We don't support synchronous mappings for non-DAX files. At least
-> > -	 * until someone comes with a sensible use case.
-> > +	struct dax_device *dax_dev = xfs_find_daxdev_for_inode
-> > +						(file_inode(filp));
+Currently SLUB uses a work scheduled after an RCU grace period
+to deactivate a non-root kmem_cache. This mechanism can be reused
+for kmem_caches reparenting, but requires some generalization.
 
-    tab separation here ^^^                   ^^^^ and cut
-                                                       down the indent
-                                             while you're at
-						    it, please:
+Let's decouple all infrastructure (rcu callback, work callback)
+from the SLUB-specific code, so it can be used with SLAB as well.
 
-	struct dax_device	*dax_dev;
+Also, let's rename some functions to make the code look simpler.
+All SLAB/SLUB-specific functions start with "__". Remove "deact_"
+prefix from the corresponding struct fields.
 
-	dax_dev = xfs_find_daxdev_for_inode(file_inode(filp));
-	if (!dax_is_frobbed(dax))
-		return -EMEWANTCOOKIE;
+Here is the graph of a new calling scheme:
+kmemcg_cache_deactivate()
+  __kmemcg_cache_deactivate()                  SLAB/SLUB-specific
+  kmemcg_schedule_work_after_rcu()             rcu
+    kmemcg_after_rcu_workfn()                  work
+      kmemcg_cache_deactivate_after_rcu()
+        __kmemcg_cache_deactivate_after_rcu()  SLAB/SLUB-specific
 
---D
+instead of:
+__kmemcg_cache_deactivate()                    SLAB/SLUB-specific
+  slab_deactivate_memcg_cache_rcu_sched()      SLUB-only
+    kmemcg_deactivate_rcufn                    SLUB-only, rcu
+      kmemcg_deactivate_workfn                 SLUB-only, work
+        kmemcg_cache_deact_after_rcu()         SLUB-only
 
-> > +
-> > +	/* We don't support synchronous mappings for non-DAX files and
-> > +	 * for DAX files if underneath dax_device is not synchronous.
-> >  	 */
-> 
-> 	/*
-> 	 * This is the correct multi-line comment format. Please
-> 	 * update the patch to maintain the existing comment format.
-> 	 */
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ include/linux/slab.h |  6 ++---
+ mm/slab.c            |  4 +++
+ mm/slab.h            |  3 ++-
+ mm/slab_common.c     | 62 ++++++++++++++++++++------------------------
+ mm/slub.c            |  8 +-----
+ 5 files changed, 38 insertions(+), 45 deletions(-)
+
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 9449b19c5f10..47923c173f30 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -642,10 +642,10 @@ struct memcg_cache_params {
+ 			struct list_head children_node;
+ 			struct list_head kmem_caches_node;
+ 
+-			void (*deact_fn)(struct kmem_cache *);
++			void (*work_fn)(struct kmem_cache *);
+ 			union {
+-				struct rcu_head deact_rcu_head;
+-				struct work_struct deact_work;
++				struct rcu_head rcu_head;
++				struct work_struct work;
+ 			};
+ 		};
+ 	};
+diff --git a/mm/slab.c b/mm/slab.c
+index 57a332f524cf..14466a73d057 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -2317,6 +2317,10 @@ void __kmemcg_cache_deactivate(struct kmem_cache *cachep)
+ {
+ 	__kmem_cache_shrink(cachep);
+ }
++
++void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s)
++{
++}
+ #endif
+ 
+ int __kmem_cache_shutdown(struct kmem_cache *cachep)
+diff --git a/mm/slab.h b/mm/slab.h
+index 6a562ca72bca..4a261c97c138 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -172,6 +172,7 @@ int __kmem_cache_shutdown(struct kmem_cache *);
+ void __kmem_cache_release(struct kmem_cache *);
+ int __kmem_cache_shrink(struct kmem_cache *);
+ void __kmemcg_cache_deactivate(struct kmem_cache *s);
++void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s);
+ void slab_kmem_cache_release(struct kmem_cache *);
+ 
+ struct seq_file;
+@@ -291,7 +292,7 @@ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
+ extern void slab_init_memcg_params(struct kmem_cache *);
+ extern void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *memcg);
+ extern void slab_deactivate_memcg_cache_rcu_sched(struct kmem_cache *s,
+-				void (*deact_fn)(struct kmem_cache *));
++				void (*work_fn)(struct kmem_cache *));
+ 
+ #else /* CONFIG_MEMCG_KMEM */
+ 
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 6e00bdf8618d..4e5b4292a763 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -691,17 +691,18 @@ void memcg_create_kmem_cache(struct mem_cgroup *memcg,
+ 	put_online_cpus();
+ }
+ 
+-static void kmemcg_deactivate_workfn(struct work_struct *work)
++static void kmemcg_after_rcu_workfn(struct work_struct *work)
+ {
+ 	struct kmem_cache *s = container_of(work, struct kmem_cache,
+-					    memcg_params.deact_work);
++					    memcg_params.work);
+ 
+ 	get_online_cpus();
+ 	get_online_mems();
+ 
+ 	mutex_lock(&slab_mutex);
+ 
+-	s->memcg_params.deact_fn(s);
++	s->memcg_params.work_fn(s);
++	s->memcg_params.work_fn = NULL;
+ 
+ 	mutex_unlock(&slab_mutex);
+ 
+@@ -712,37 +713,28 @@ static void kmemcg_deactivate_workfn(struct work_struct *work)
+ 	css_put(&s->memcg_params.memcg->css);
+ }
+ 
+-static void kmemcg_deactivate_rcufn(struct rcu_head *head)
++/*
++ * We need to grab blocking locks.  Bounce to ->work.  The
++ * work item shares the space with the RCU head and can't be
++ * initialized eariler.
++*/
++static void kmemcg_schedule_work_after_rcu(struct rcu_head *head)
+ {
+ 	struct kmem_cache *s = container_of(head, struct kmem_cache,
+-					    memcg_params.deact_rcu_head);
++					    memcg_params.rcu_head);
+ 
+-	/*
+-	 * We need to grab blocking locks.  Bounce to ->deact_work.  The
+-	 * work item shares the space with the RCU head and can't be
+-	 * initialized eariler.
+-	 */
+-	INIT_WORK(&s->memcg_params.deact_work, kmemcg_deactivate_workfn);
+-	queue_work(memcg_kmem_cache_wq, &s->memcg_params.deact_work);
++	INIT_WORK(&s->memcg_params.work, kmemcg_after_rcu_workfn);
++	queue_work(memcg_kmem_cache_wq, &s->memcg_params.work);
+ }
+ 
+-/**
+- * slab_deactivate_memcg_cache_rcu_sched - schedule deactivation after a
+- *					   sched RCU grace period
+- * @s: target kmem_cache
+- * @deact_fn: deactivation function to call
+- *
+- * Schedule @deact_fn to be invoked with online cpus, mems and slab_mutex
+- * held after a sched RCU grace period.  The slab is guaranteed to stay
+- * alive until @deact_fn is finished.  This is to be used from
+- * __kmemcg_cache_deactivate().
+- */
+-void slab_deactivate_memcg_cache_rcu_sched(struct kmem_cache *s,
+-					   void (*deact_fn)(struct kmem_cache *))
++static void kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s)
+ {
+-	if (WARN_ON_ONCE(is_root_cache(s)) ||
+-	    WARN_ON_ONCE(s->memcg_params.deact_fn))
+-		return;
++	__kmemcg_cache_deactivate_after_rcu(s);
++}
++
++static void kmemcg_cache_deactivate(struct kmem_cache *s)
++{
++	__kmemcg_cache_deactivate(s);
+ 
+ 	if (s->memcg_params.root_cache->memcg_params.dying)
+ 		return;
+@@ -750,8 +742,9 @@ void slab_deactivate_memcg_cache_rcu_sched(struct kmem_cache *s,
+ 	/* pin memcg so that @s doesn't get destroyed in the middle */
+ 	css_get(&s->memcg_params.memcg->css);
+ 
+-	s->memcg_params.deact_fn = deact_fn;
+-	call_rcu(&s->memcg_params.deact_rcu_head, kmemcg_deactivate_rcufn);
++	WARN_ON_ONCE(s->memcg_params.work_fn);
++	s->memcg_params.work_fn = kmemcg_cache_deactivate_after_rcu;
++	call_rcu(&s->memcg_params.rcu_head, kmemcg_schedule_work_after_rcu);
+ }
+ 
+ void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg)
+@@ -773,7 +766,7 @@ void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg)
+ 		if (!c)
+ 			continue;
+ 
+-		__kmemcg_cache_deactivate(c);
++		kmemcg_cache_deactivate(c);
+ 		arr->entries[idx] = NULL;
+ 	}
+ 	mutex_unlock(&slab_mutex);
+@@ -866,11 +859,12 @@ static void flush_memcg_workqueue(struct kmem_cache *s)
+ 	mutex_unlock(&slab_mutex);
+ 
+ 	/*
+-	 * SLUB deactivates the kmem_caches through call_rcu. Make
++	 * SLAB and SLUB deactivate the kmem_caches through call_rcu. Make
+ 	 * sure all registered rcu callbacks have been invoked.
+ 	 */
+-	if (IS_ENABLED(CONFIG_SLUB))
+-		rcu_barrier();
++#ifndef CONFIG_SLOB
++	rcu_barrier();
++#endif
+ 
+ 	/*
+ 	 * SLAB and SLUB create memcg kmem_caches through workqueue and SLUB
+diff --git a/mm/slub.c b/mm/slub.c
+index 2b9244529d76..195f61785c7d 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -4033,7 +4033,7 @@ int __kmem_cache_shrink(struct kmem_cache *s)
+ }
+ 
+ #ifdef CONFIG_MEMCG
+-static void kmemcg_cache_deact_after_rcu(struct kmem_cache *s)
++void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s)
+ {
+ 	/*
+ 	 * Called with all the locks held after a sched RCU grace period.
+@@ -4059,12 +4059,6 @@ void __kmemcg_cache_deactivate(struct kmem_cache *s)
+ 	 */
+ 	slub_set_cpu_partial(s, 0);
+ 	s->min_partial = 0;
+-
+-	/*
+-	 * s->cpu_partial is checked locklessly (see put_cpu_partial), so
+-	 * we have to make sure the change is visible before shrinking.
+-	 */
+-	slab_deactivate_memcg_cache_rcu_sched(s, kmemcg_cache_deact_after_rcu);
+ }
+ #endif	/* CONFIG_MEMCG */
+ 
+-- 
+2.20.1
+
