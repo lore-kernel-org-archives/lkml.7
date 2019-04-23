@@ -2,219 +2,129 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E37C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA6AC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7452921738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:28:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nh7Ub0ZZ"
+	by mail.kernel.org (Postfix) with ESMTP id A678521738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfDWP21 (ORCPT
+        id S1728372AbfDWP2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:28:27 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45110 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfDWP20 (ORCPT
+        Tue, 23 Apr 2019 11:28:52 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:58256 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727305AbfDWP2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:28:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id e24so7650533pfi.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:28:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=swtXqd1CZ66H9d0M2Jk6YTTcRShibPML2KMeziFVStg=;
-        b=Nh7Ub0ZZxsVr7G6NJgh9yPwmSJhDVbpJKEJU1P1AbaLTsZOjAMy4gEuVpFY3uyKo5C
-         9YSxINIOhlqU2RmWjCAMFzWtGS941B9wAT8fWVdlClXPH4UxphpqeslCw+vZRmiFjTGa
-         EA7QHc8iXyMqS0Y183YfxAol8nhL4eYB2xQ4edvSrUKY0ltcMsuWgA1dvL2qnAhNgNKH
-         37jI5/TpB1x7H4xp6P2RXqAMnUZH+5dh0dKt0GZkylMa6rko/MS1R2qetdfxy+jyTA54
-         u4EZk4LNP1FOrN8K/IX1DiEwpdIV+rihgKHtPI774Rc+7vGyWesRefZ/B0cF0FPaz0Nj
-         E/KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=swtXqd1CZ66H9d0M2Jk6YTTcRShibPML2KMeziFVStg=;
-        b=LX7yJXmedzcunUL/65ywuRihFJRvwBIlhokt5+VksMQ2GclV8EN2sr7/bjhg7B+OR+
-         bpXwujW4R5ph7Zn4uuAW3H+l8qMCKL3qSxhnggO3gZIlCGPamZVEpk+xhA9Px+9FwdXa
-         u5JTqa2ktrAAcdSLQs490I6/ZwEuZrdK0kopE0PvolTSm7TtMvtlC9m8OP+qXiXd/F2k
-         jtPsRaaodMRNd8xWHb+2oFY3qKLGTFLbGY6RESMDadnwTL09k5dM/YGrxLB1A1Oyty32
-         GwVrccLAkOvgxitxVZdpusOdWfei5Ly1qarDcAfsyzN3joncUCFysCbVu2egRAxmkPyM
-         0v2g==
-X-Gm-Message-State: APjAAAUTkSp9roKaMNEoPRqsDacb+sIwUmW1Gx3JOYdI2wcTCwXJNDtQ
-        BBqsa5fI6CIA6V/2tSfNniovcgkPZpPI8O4Msv4SFA==
-X-Google-Smtp-Source: APXvYqyazN7ord652sPNl8xtrPDGAtDGNQxhHlVc3XKDsIM7asn9zWnZCgrPq8riFFM/ndn95cVar3hOatVZc7URSRM=
-X-Received: by 2002:a63:5059:: with SMTP id q25mr18423170pgl.314.1556033305462;
- Tue, 23 Apr 2019 08:28:25 -0700 (PDT)
+        Tue, 23 Apr 2019 11:28:52 -0400
+Received: (qmail 5111 invoked by uid 2102); 23 Apr 2019 11:28:50 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 23 Apr 2019 11:28:50 -0400
+Date:   Tue, 23 Apr 2019 11:28:50 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     syzbot <syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>, <rafael@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: general protection fault in __dev_printk
+In-Reply-To: <CAAeHK+zUiv+CSip7OwrQ6FKxwE_+Wh0LTmGW86ipQ5QkaAOT8w@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1904231126500.1461-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-References: <20190423142629.120717-1-venture@google.com> <CAO=notzjzpt0WHfJEWXMGgkoJU8UiLnqZnrGrPs-dRH5GNdJyQ@mail.gmail.com>
-In-Reply-To: <CAO=notzjzpt0WHfJEWXMGgkoJU8UiLnqZnrGrPs-dRH5GNdJyQ@mail.gmail.com>
-From:   Patrick Venture <venture@google.com>
-Date:   Tue, 23 Apr 2019 08:28:14 -0700
-Message-ID: <CAO=notz9QVoqKLrhJ3kx9FHja5+Mh68f36O36+1ewLG+SanmOA@mail.gmail.com>
-Subject: Re: [PATCH v2] soc: add aspeed folder and misc drivers
-To:     Patrick Venture <venture@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>,
-        soc@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 8:22 AM Patrick Venture <venture@google.com> wrote:
->
-> On Tue, Apr 23, 2019 at 7:26 AM Patrick Venture <venture@google.com> wrote:
-> >
-> > Create a SoC folder for the ASPEED parts and place the misc drivers
-> > currently present into this folder.  These drivers are not generic part
-> > drivers, but rather only apply to the ASPEED SoCs.
-> >
-> > Signed-off-by: Patrick Venture <venture@google.com>
->
-> Accidentally lost the Acked-by when re-sending this patchset as I
-> didn't see it on v1 before re-sending v2 to the larger audience.
+On Tue, 23 Apr 2019, Andrey Konovalov wrote:
 
-Since there was a change between v1 and v2, Arnd, I'd appreciate you
-Ack this version of the patchset since it changes when the soc/aspeed
-Makefile is followed.
+> > This original bug report included a "USB disconnect" line, as shown
+> > above.  The newer results, for runs with my patches added, do not.  At
+> > least, if such a line was present, it didn't show up in the console
+> > output files -- the most recent one contains nothing but repeats of
+> > that "yurex_interrupt - unknown status received: -71" line, although
+> > for devices on multiple buses.
+> >
+> > Is there any way to get more information about what's happening, such
+> > as a complete kernel log?
+> 
+> It should be possible to provide the full log for the result of the
+> "syz test" command. I'll talk to Dmitry about this when he's back from
+> vacation next week.
+> 
+> > And perhaps to run the test with just a
+> > single dummy-hcd bus instead of 6?
+> 
+> Hm, it might be possible to implement overriding of syz-execprog flags
+> and provide them via "syz test". It's not implemented right now
+> though.
+> 
+> Running the reproducer manually is the most flexible way to make
+> changes to the way it's ran or to make changes to the environment. In
+> this case I haven't managed to reproduce the hang manually though :(
+> 
+> I see two ways to deal with this right now:
+> 
+> 1. Submit your fix (it fixes the original issue for me) and wait until
+> it gets into the usb-fuzzer tree. Then maybe syzbot will report the
+> hang and provide a better reproducer.
+> 
+> 2. Change the testing patch to also suppress those "yurex_interrupt -
+> unknown status received: -71" messages and rerun the "syz test"
+> command. Hopefully then syzbot will provide the full kernel log.
 
->
-> > ---
-> > v2:
-> >  Added configuration option for ASPEED to soc/Makefile
-> > ---
-> >  drivers/misc/Kconfig                          | 16 ----------------
-> >  drivers/misc/Makefile                         |  2 --
-> >  drivers/soc/Kconfig                           |  1 +
-> >  drivers/soc/Makefile                          |  1 +
-> >  drivers/soc/aspeed/Kconfig                    | 19 +++++++++++++++++++
-> >  drivers/soc/aspeed/Makefile                   |  2 ++
-> >  .../{misc => soc/aspeed}/aspeed-lpc-ctrl.c    |  0
-> >  .../{misc => soc/aspeed}/aspeed-lpc-snoop.c   |  0
-> >  8 files changed, 23 insertions(+), 18 deletions(-)
-> >  create mode 100644 drivers/soc/aspeed/Kconfig
-> >  create mode 100644 drivers/soc/aspeed/Makefile
-> >  rename drivers/{misc => soc/aspeed}/aspeed-lpc-ctrl.c (100%)
-> >  rename drivers/{misc => soc/aspeed}/aspeed-lpc-snoop.c (100%)
-> >
-> > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> > index 42ab8ec92a04..b80cb6af0cb4 100644
-> > --- a/drivers/misc/Kconfig
-> > +++ b/drivers/misc/Kconfig
-> > @@ -496,22 +496,6 @@ config VEXPRESS_SYSCFG
-> >           bus. System Configuration interface is one of the possible means
-> >           of generating transactions on this bus.
-> >
-> > -config ASPEED_LPC_CTRL
-> > -       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-> > -       tristate "Aspeed ast2400/2500 HOST LPC to BMC bridge control"
-> > -       ---help---
-> > -         Control Aspeed ast2400/2500 HOST LPC to BMC mappings through
-> > -         ioctl()s, the driver also provides a read/write interface to a BMC ram
-> > -         region where the host LPC read/write region can be buffered.
-> > -
-> > -config ASPEED_LPC_SNOOP
-> > -       tristate "Aspeed ast2500 HOST LPC snoop support"
-> > -       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-> > -       help
-> > -         Provides a driver to control the LPC snoop interface which
-> > -         allows the BMC to listen on and save the data written by
-> > -         the host to an arbitrary LPC I/O port.
-> > -
-> >  config PCI_ENDPOINT_TEST
-> >         depends on PCI
-> >         select CRC32
-> > diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> > index d5b7d3404dc7..b9affcdaa3d6 100644
-> > --- a/drivers/misc/Makefile
-> > +++ b/drivers/misc/Makefile
-> > @@ -54,8 +54,6 @@ obj-$(CONFIG_GENWQE)          += genwqe/
-> >  obj-$(CONFIG_ECHO)             += echo/
-> >  obj-$(CONFIG_VEXPRESS_SYSCFG)  += vexpress-syscfg.o
-> >  obj-$(CONFIG_CXL_BASE)         += cxl/
-> > -obj-$(CONFIG_ASPEED_LPC_CTRL)  += aspeed-lpc-ctrl.o
-> > -obj-$(CONFIG_ASPEED_LPC_SNOOP) += aspeed-lpc-snoop.o
-> >  obj-$(CONFIG_PCI_ENDPOINT_TEST)        += pci_endpoint_test.o
-> >  obj-$(CONFIG_OCXL)             += ocxl/
-> >  obj-y                          += cardreader/
-> > diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-> > index c07b4a85253f..b750a88547c7 100644
-> > --- a/drivers/soc/Kconfig
-> > +++ b/drivers/soc/Kconfig
-> > @@ -2,6 +2,7 @@ menu "SOC (System On Chip) specific Drivers"
-> >
-> >  source "drivers/soc/actions/Kconfig"
-> >  source "drivers/soc/amlogic/Kconfig"
-> > +source "drivers/soc/aspeed/Kconfig"
-> >  source "drivers/soc/atmel/Kconfig"
-> >  source "drivers/soc/bcm/Kconfig"
-> >  source "drivers/soc/fsl/Kconfig"
-> > diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> > index 90b686e586c6..814128fe479f 100644
-> > --- a/drivers/soc/Makefile
-> > +++ b/drivers/soc/Makefile
-> > @@ -4,6 +4,7 @@
-> >  #
-> >
-> >  obj-$(CONFIG_ARCH_ACTIONS)     += actions/
-> > +obj-$(CONFIG_ARCH_ASPEED)      += aspeed/
-> >  obj-$(CONFIG_ARCH_AT91)                += atmel/
-> >  obj-y                          += bcm/
-> >  obj-$(CONFIG_ARCH_DOVE)                += dove/
-> > diff --git a/drivers/soc/aspeed/Kconfig b/drivers/soc/aspeed/Kconfig
-> > new file mode 100644
-> > index 000000000000..457282cd1da5
-> > --- /dev/null
-> > +++ b/drivers/soc/aspeed/Kconfig
-> > @@ -0,0 +1,19 @@
-> > +menu "Aspeed SoC drivers"
-> > +
-> > +config ASPEED_LPC_CTRL
-> > +       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-> > +       tristate "Aspeed ast2400/2500 HOST LPC to BMC bridge control"
-> > +       ---help---
-> > +         Control Aspeed ast2400/2500 HOST LPC to BMC mappings through
-> > +         ioctl()s, the driver also provides a read/write interface to a BMC ram
-> > +         region where the host LPC read/write region can be buffered.
-> > +
-> > +config ASPEED_LPC_SNOOP
-> > +       tristate "Aspeed ast2500 HOST LPC snoop support"
-> > +       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-> > +       help
-> > +         Provides a driver to control the LPC snoop interface which
-> > +         allows the BMC to listen on and save the data written by
-> > +         the host to an arbitrary LPC I/O port.
-> > +
-> > +
-> > diff --git a/drivers/soc/aspeed/Makefile b/drivers/soc/aspeed/Makefile
-> > new file mode 100644
-> > index 000000000000..cfaa9adc67b5
-> > --- /dev/null
-> > +++ b/drivers/soc/aspeed/Makefile
-> > @@ -0,0 +1,2 @@
-> > +obj-$(CONFIG_ASPEED_LPC_CTRL)  += aspeed-lpc-ctrl.o
-> > +obj-$(CONFIG_ASPEED_LPC_SNOOP) += aspeed-lpc-snoop.o
-> > diff --git a/drivers/misc/aspeed-lpc-ctrl.c b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-> > similarity index 100%
-> > rename from drivers/misc/aspeed-lpc-ctrl.c
-> > rename to drivers/soc/aspeed/aspeed-lpc-ctrl.c
-> > diff --git a/drivers/misc/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> > similarity index 100%
-> > rename from drivers/misc/aspeed-lpc-snoop.c
-> > rename to drivers/soc/aspeed/aspeed-lpc-snoop.c
-> > --
-> > 2.21.0.593.g511ec345e18-goog
-> >
+That's a great suggestion!  Here's the next attempt.
+
+Alan Stern
+
+
+#syz test: https://github.com/google/kasan.git usb-fuzzer
+
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -143,8 +143,10 @@ static void yurex_interrupt(struct urb *
+ 		/* The device is terminated, clean up */
+ 		return;
+ 	default:
++#if 0
+ 		dev_err(&dev->interface->dev,
+ 			"%s - unknown status received: %d\n", __func__, status);
++#endif
+ 		goto exit;
+ 	}
+ 
+@@ -178,6 +180,10 @@ static void yurex_interrupt(struct urb *
+ 	}
+ 
+ exit:
++	if (!usb_get_intfdata(dev->interface)) {
++		dev_info(&dev->interface->dev, "%s unbound\n", __func__);
++		return;
++	}
+ 	retval = usb_submit_urb(dev->urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->interface->dev, "%s - usb_submit_urb failed: %d\n",
+@@ -309,11 +315,15 @@ static void yurex_disconnect(struct usb_
+ 
+ 	dev = usb_get_intfdata(interface);
+ 	usb_set_intfdata(interface, NULL);
++	dev_info(&interface->dev, "%s\n", __func__);
+ 
+ 	/* give back our minor */
+ 	usb_deregister_dev(interface, &yurex_class);
+ 
+ 	/* prevent more I/O from starting */
++	dev_info(&interface->dev, "Before poison\n");
++	usb_poison_urb(dev->urb);
++	dev_info(&interface->dev, "After poison\n");
+ 	mutex_lock(&dev->io_mutex);
+ 	dev->interface = NULL;
+ 	mutex_unlock(&dev->io_mutex);
+
