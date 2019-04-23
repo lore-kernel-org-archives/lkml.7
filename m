@@ -2,137 +2,147 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6735AC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7E9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4140A20685
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF9B20685
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:28:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PqnS01Ri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbfDWN1j (ORCPT
+        id S1727900AbfDWN2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:27:39 -0400
-Received: from paleale.coelho.fi ([176.9.41.70]:59086 "EHLO
-        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727467AbfDWN1i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:27:38 -0400
-Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=redipa)
-        by farmhouse.coelho.fi with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <luca@coelho.fi>)
-        id 1hIvSP-0000Oa-SC; Tue, 23 Apr 2019 16:27:34 +0300
-Message-ID: <6621404e5ce6c24ff617314c4427bcb821052ae1.camel@coelho.fi>
-Subject: Re: [PATCH] iwlwifi: don't panic in error path on non-msix systems
-From:   Luca Coelho <luca@coelho.fi>
-To:     Kirtika Ruchandani <kirtika@google.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     kvalo@codeaurora.org, Johannes Berg <johannes@sipsolutions.net>,
-        "Grumbach, Emmanuel" <emmanuel.grumbach@intel.com>,
-        linuxwifi@intel.com, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>
-Date:   Tue, 23 Apr 2019 16:27:32 +0300
-In-Reply-To: <CAOXD1ic49hhkPb6ABPgBEim_iyxvDP82Hfn0yvz7vyFR4Rp53Q@mail.gmail.com>
-References: <748205b02961167b0926d4afe8d9ad9cb37bf6ef.camel@coelho.fi>
-         <20190417073516.24250-1-luca@coelho.fi>
-         <20190422180723.GA20259@dhcp22.suse.cz>
-         <CAOXD1idHq35qKy4PSjvqt4fEvVjgT6cpfxJD7s6gs07m43qepA@mail.gmail.com>
-         <CAOXD1ic49hhkPb6ABPgBEim_iyxvDP82Hfn0yvz7vyFR4Rp53Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1 
+        Tue, 23 Apr 2019 09:28:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:61972 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727754AbfDWN2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 09:28:09 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44pPQZ3fBBz9v083;
+        Tue, 23 Apr 2019 15:28:06 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=PqnS01Ri; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id W8mHEisNH4V8; Tue, 23 Apr 2019 15:28:06 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44pPQZ2Scnz9v07b;
+        Tue, 23 Apr 2019 15:28:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1556026086; bh=Ez5mm6PUM5Ypfk0XAkoOaZApQ4Vwg8mS5qSiVgOCC1c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PqnS01RiGIWVynuSYd8Xp6pjQtSMPC46ftQ3a3WkAAOsNNKSdE8VbRoMqIekLZOhx
+         IEfIMi7knhwrdAjupdYpE1Kfm182fNgHzRsDnQBoYWt3hf57U7atXaDWWZMdzxboVn
+         oKB+GLwCREiqDQx3GekM1Jb/Hs9fY4GXQLY0Fcyo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B58048B8DD;
+        Tue, 23 Apr 2019 15:28:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id VjckJo6gfVqE; Tue, 23 Apr 2019 15:28:07 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 328778B8C4;
+        Tue, 23 Apr 2019 15:28:07 +0200 (CEST)
+Subject: Re: [PATCH 21/22] watchdog: mpc8xxx_wdt: Convert to use device
+ managed functions and other improvements
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1554913683-25454-1-git-send-email-linux@roeck-us.net>
+ <1554913683-25454-22-git-send-email-linux@roeck-us.net>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <3631a90f-7c77-d2c2-ef68-01f9daf40ae6@c-s.fr>
+Date:   Tue, 23 Apr 2019 15:28:06 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1554913683-25454-22-git-send-email-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-04-22 at 19:34 -0700, Kirtika Ruchandani wrote:
-> On Mon, Apr 22, 2019 at 4:56 PM Kirtika Ruchandani <
-> kirtika@google.com> wrote:
-> > On Mon, Apr 22, 2019 at 11:07 AM Michal Hocko <mhocko@kernel.org>
-> > wrote:
-> > > On Wed 17-04-19 10:35:16, Luca Coelho wrote:
-> > > > From: Shahar S Matityahu <shahar.s.matityahu@intel.com>
-> > > > 
-> > > > The driver uses msix causes-register to handle both msix and
-> > > > non msix
-> > > > interrupts when performing sync nmi.  On devices that do not
-> > > > support
-> > > > msix this register is unmapped and accessing it causes a kernel
-> > > > panic.
-> > > > 
-> > > > Solve this by differentiating the two cases and accessing the
-> > > > proper
-> > > > causes-register in each case.
-> > 
-> > Are you sure reading CSR_INT from trans.c without explicitly
-> > getting irq_lock.c
-> > like rx.c does, is thread-safe? I don't claim to understand this
-> > fully, but this
-> > smells wrong from past experience with this driver. I'll see if I
-> > can cook up
-> > a test case with a race condition here.
+
+
+Le 10/04/2019 à 18:28, Guenter Roeck a écrit :
+> Use device managed functions to simplify error handling, reduce
+> source code size, improve readability, and reduce the likelyhood of bugs.
+> Other improvements as listed below.
 > 
-> Sorry for the typos. I meant "writing (not reading) to CSR_INT in
-> iwl_trans_pcie_sync_nmi
-> without explicitly getting trans_pcie->irq_lock like
-> iwl_pcie_irq_handler does".
-> I spent some time playing around this, and while I don't have a
-> black-and-white
-> test-case to show this patch has side-effects (at the very least), I
-> have some notes:
+> The conversion was done automatically with coccinelle using the
+> following semantic patches. The semantic patches and the scripts
+> used to generate this commit log are available at
+> https://github.com/groeck/coccinelle-patches
 > 
-> 1. Repeatedly sending fw_nmi is a good test-case for the problem this
-> patch
-> is trying to solve. i.e.  I had
-> $ cd /sys/kernel/debug/iwlwifi/${PCI_ID}/iwlmvm/
-> $ while true; do echo 1 > fw_nmi ; done  # this is likely too harsh
-> and needs a sleep in b/w
+> - Drop assignments to otherwise unused variables
+> - Drop empty remove function
+>    This also drops the inaccurate message on remove; the driver won't be
+>    removed if the hardware watchdog is running, no matter if the watchdog
+>    device is open or not.
+> - Use local variable 'struct device *dev' consistently
+> - Use devm_watchdog_register_driver() to register watchdog device
 > 
-> With the current ToT driver in wireless-drivers-next, this ramoops-es
-> super quickly after hitting
-> the problematic MSI-X read.
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
+> ---
+>   drivers/watchdog/mpc8xxx_wdt.c | 17 +++--------------
+>   1 file changed, 3 insertions(+), 14 deletions(-)
 > 
-> 2. With this patch applied, I hit an ADVANCED_SYSASSERT 0x0 and it
-> took ~800ms
-> and dozens of kernel warnings before the driver "recovered".
-> I've sent the full dmesg to Luca off-list.
-> It didn't get any better with adding spin_lock(&trans_pcie->irq_lock)
-> / spin_unlock(&trans_pcie->irq_lock)
-> around the problematic CSR_INT write in iwl_trans_sync_nmi.
+> diff --git a/drivers/watchdog/mpc8xxx_wdt.c b/drivers/watchdog/mpc8xxx_wdt.c
+> index 3b5b446b690c..9b6d6a5a27ad 100644
+> --- a/drivers/watchdog/mpc8xxx_wdt.c
+> +++ b/drivers/watchdog/mpc8xxx_wdt.c
+> @@ -204,9 +204,10 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
+>   	if (ddata->wdd.timeout < ddata->wdd.min_timeout)
+>   		ddata->wdd.timeout = ddata->wdd.min_timeout;
+>   
+> -	ret = watchdog_register_device(&ddata->wdd);
+> +	ret = devm_watchdog_register_device(dev, &ddata->wdd);
+>   	if (ret) {
+> -		dev_err(dev, "cannot register watchdog device (err=%d)\n", ret);
+> +		dev_err(dev, "cannot register watchdog device (err=%d)\n",
+> +			ret);
+>   		return ret;
+>   	}
+>   
+> @@ -218,17 +219,6 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
+>   	return 0;
+>   }
+>   
+> -static int mpc8xxx_wdt_remove(struct platform_device *ofdev)
+> -{
+> -	struct mpc8xxx_wdt_ddata *ddata = platform_get_drvdata(ofdev);
+> -
+> -	dev_crit(&ofdev->dev, "Watchdog removed, expect the %s soon!\n",
+> -		 reset ? "reset" : "machine check exception");
+> -	watchdog_unregister_device(&ddata->wdd);
+> -
+> -	return 0;
+> -}
+> -
+>   static const struct of_device_id mpc8xxx_wdt_match[] = {
+>   	{
+>   		.compatible = "mpc83xx_wdt",
+> @@ -259,7 +249,6 @@ MODULE_DEVICE_TABLE(of, mpc8xxx_wdt_match);
+>   
+>   static struct platform_driver mpc8xxx_wdt_driver = {
+>   	.probe		= mpc8xxx_wdt_probe,
+> -	.remove		= mpc8xxx_wdt_remove,
+>   	.driver = {
+>   		.name = "mpc8xxx_wdt",
+>   		.of_match_table = mpc8xxx_wdt_match,
 > 
-> So I still don't have any concrete reasoning or proof, except a dmesg
-> after a test that doesn't look right.
-> Apologies if this discussion is moot - FWIW, the thing that caused a
-> code smell in the first place
-> was that historically, nothing in trans.c had mucked with writing to
-> CSR_INT, except when enabling interrupts again
-> with a 0xFFFFFFFF at _initialization time_ (and we've seen race
-> conditions there in the past).
-> You can check this with `git grep -p -w CSR_INT trans.c`.
-
-
-Hi Kirtika,
-
-I think the SYSASSERT issue you found is unrelated.  Can we track that
-separately? Again, it seems that we're doing something wrong during
-recovery, which causes the many warnings and long time to recover...
-
-Regarding the spinlock, I'm not sure.  It seems that we don't need it,
-because we're just writing to the register.  Maybe some of the other
-blocks that are spinlocked must have a guarantee that no one will
-change the register in the middle of it.  But before we add the
-spinlocks, we should check if that really is the case.
-
-We'll check the dmesg you sent us, but I think it's better to create a
-new issue in the tracker for it.
-
---
-Cheers,
-Luca.
-
