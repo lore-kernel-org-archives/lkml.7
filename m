@@ -2,93 +2,151 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0962C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1ACC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8EA1218DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FF421738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NXFw6Oe7"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="nC43+fai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfDWXun (ORCPT
+        id S1728778AbfDWX5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 19:50:43 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39604 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfDWXun (ORCPT
+        Tue, 23 Apr 2019 19:57:40 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46348 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbfDWX5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 19:50:43 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i17so8285104pfo.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:50:42 -0700 (PDT)
+        Tue, 23 Apr 2019 19:57:39 -0400
+Received: by mail-pg1-f194.google.com with SMTP id v2so5978423pge.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:57:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6X9k61YHes/wtaMB15cVsCGzU6OmfVoywYkiyvdTfxA=;
-        b=NXFw6Oe7bumR+PeGr0zt39jUWZH4g1zElXkhKPGoO/875NWbu3/ABH6ey+m6fD82Mp
-         +uCyCDuDoMT9eI6fSbTftv9JeBBoe2lqNz3ZUpk9IH+ELj2SlM9QLwN4ZVEBXgmwdM63
-         gBLJzMRl/OZ8Rovkjn76c3TmifGPRqTCq21XM=
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=VkhkJzaUTJucDFJB4blA7Ip3YzN/Wig4l799HSQpMjA=;
+        b=nC43+faiEiLWdsHjzm1N6VK4KXtojrzbDDbnRGt4eroC4+Y5cvIarBcNfDIr4qeqM1
+         AIlieglWT/Zp5ZK5z0HaN75BYOOPvIkfHMlx1csp6qQzNjoKx+oKXDExBgnGF0F0bH7o
+         18PjxFTfyN/hkCYP90S5zq8yc1RFP1xEHsayb6Ee4sbV4NODRQmPUmlbBz6uFYRU5ncE
+         XrtPqAdlfxYqsgWO11f19hveuEWVEPl72WDLk+GzF5CZaCTqZh8MnCdmdw+rU6SR6lr2
+         TR2C71Dsoln2DRoHNNxBCj1HhDzDQHOdR/WQaGPkRbHYQa2Sh9fsIS2w6LppNKOdGDpG
+         BSpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6X9k61YHes/wtaMB15cVsCGzU6OmfVoywYkiyvdTfxA=;
-        b=fe8b5yNll61cygPulqObeKaqaDdtx3Gl4GKxsm2KCPHQWK011VW10di8YjcblDXoaF
-         dDfpKzoauwb5J6kzYNm0Jxgh6JULn4gMgDaOvLoUbcKwdkYFMUpdvCsP8BrV8svoGeo0
-         qXfloEki1VImFuxpbA3kkS/4OjXEdW2mPrhy08XexuC6ThO5BDrOfOSRE6rI0chOZZ1I
-         n7h1UChUwoQcBW66+9tIOY2dyiofY5XR5cAPYAQa/Hw1XDIYyJmHnfYHK+Thfg4aX3QJ
-         9DEEJ4cjI6vDgeDx48NHVlOqUxaIcZwDDKS65gX8AgvMddX8Ve40qVWAnJuJUNXvk6yE
-         tx4Q==
-X-Gm-Message-State: APjAAAVbhVY+CUh6CzaNRCDAGSfjvJv5hK1+3Fko2GPs8dpH2TU/lsfZ
-        InJssMcWiDkbogU45Q0scTdknA==
-X-Google-Smtp-Source: APXvYqwCH7lRaekaEK7ax8qzBQrrFwefJGFGsMoFbCF8U1CkTnUCeo+DkPt8kHDLH5RszBomE+3dSQ==
-X-Received: by 2002:a63:6fcf:: with SMTP id k198mr27066330pgc.158.1556063442475;
-        Tue, 23 Apr 2019 16:50:42 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id u20sm24748455pfh.112.2019.04.23.16.50.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 16:50:41 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 16:50:41 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=VkhkJzaUTJucDFJB4blA7Ip3YzN/Wig4l799HSQpMjA=;
+        b=la0rzQEF0vZg8QwACqCXjLVLDPDFLPeTu+jFMUFXVpA9DINdcPRLpe9yhrB2aHLVfw
+         cD9twLaAMUWaMUFjbas7ejgqU43si9vxnQ6vyXbbCFKdAX5swIaKQo7fGQRRIG1mZY6O
+         QARFgAv35J3wA/fpqiUxKMf9PxXUnDM63z3PNlW0Dlo6YfugsYh+HepnuxnbamcdaFy+
+         ePsWDIE70Mp7YrNQ/l2g1+IZWJq+1wy9H0ukgGyx285hKJ6rPkzeTwp1CB/VgqA/p4gj
+         eKAAFumP3PFGk5vwR3skb5JNaLFuXCHTstSBn/uIBgxsNtX9yMJLeNMSXZBGMxD/XktJ
+         j1RQ==
+X-Gm-Message-State: APjAAAUIn53YsDJWUZ8otfxRY0tRVCFRte8cyoWf1ruXgwmfeyb3X+7x
+        G+jDoSShHATI11MwCTSYOGg32w==
+X-Google-Smtp-Source: APXvYqyr//zmsRSf6pWlt/PZUHMNiUInLEV4QH7aC+VRj4xm+CjoiNPHaX1b7e3zR3ddhn2fxr502w==
+X-Received: by 2002:a63:1e4f:: with SMTP id p15mr17410496pgm.289.1556063858579;
+        Tue, 23 Apr 2019 16:57:38 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b02a:3fc2:653f:d30:32fb:18de? ([2600:1010:b02a:3fc2:653f:d30:32fb:18de])
+        by smtp.gmail.com with ESMTPSA id m11sm36068085pgd.12.2019.04.23.16.57.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 16:57:37 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: Does vdso_install attempt to re-compile objects under root privilege?
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <CAHk-=wiV2gLQkp6JFQYewL1uzgWnwEK9fKWP3AfZbcu2Lv_GrQ@mail.gmail.com>
+Date:   Tue, 23 Apr 2019 16:57:36 -0700
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: Re: linux-next: build failure after merge of the qcom tree
-Message-ID: <20190423235041.GF112750@google.com>
-References: <20190424092531.3988850d@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190424092531.3988850d@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        linux-arch <linux-arch@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A160B301-5F50-4E0C-B995-A626886A91E7@amacapital.net>
+References: <CAK7LNAQwHRJL=3yD_7P2mMSVnwZbayww+dHC22+v4oTpMZv58w@mail.gmail.com> <CALCETrVSM0vrMVr2y0ECAQ=tNGvBs=im2Kxongq-jvdzUBevbg@mail.gmail.com> <CAHk-=wiV2gLQkp6JFQYewL1uzgWnwEK9fKWP3AfZbcu2Lv_GrQ@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 09:25:31AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the qcom tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
-> 
-> arch/arm/boot/dts/qcom-apq8064.dtsi:1297.29-1309.5: ERROR (phandle_references): /soc/dsi-phy@4700200: Reference to non-existent node or label "xo_board"
-> 
-> Caused by commit
-> 
->   3560af5a56b5 ("ARM: dts: qcom-apq8064: Set 'xo_board' as ref clock of the DSI PHY")
-> 
-> I have used the version of the qcom tree from next-20190423 for today.
 
-I thought I built-tested this, but probably only did arm64 builds :(
 
-I'm working on a fix.
+> On Apr 23, 2019, at 4:38 PM, Linus Torvalds <torvalds@linux-foundation.org=
+> wrote:
+>=20
+>> On Tue, Apr 23, 2019 at 11:47 AM Andy Lutomirski <luto@kernel.org> wrote:=
 
-Matthias
+>>=20
+>> Hmm.  I suppose an alternative would be for vdso_install to fail if
+>> the vdso isn't built?
+>=20
+> I absolutely abhor even the concept of building the kernel as root,
+> and I think it should be actively disallowed. Our build system is
+> good, but it's good as in "clever and complex" rather than necessarily
+> good as in "very secure".
+>=20
+> So anybody who builds the kernel as root is doing something seriously
+> wrong, in my opinion.
+>=20
+> That's partly exactly _because_ we have a lot of magical and very
+> powerful build rules, and complicated implicit things going on.
+>=20
+> For example, our dependencies aren't even about just the files in the
+> kernel repository itself, we have clever things like "if the compiler
+> has been updated and features or version changes, we'll automatically
+> rebuild, because it's part of our clever build system checks".
+>=20
+> But that is also part of the reason why I absolutely do *not* want any
+> root-building to happen, because our build setup is simply way too
+> clever.
+>=20
+> If root builds stuff, you'll end up with root-owned generated
+> subdirectories or various config files etc, and even if you don't have
+> security issues, it can complicate the build later as a regular user.
+>=20
+> I've had the build occasionally fail in odd ways, because some
+> root-owned file was now no longer removable (usually it's the
+> auto-generated header files in the directory, and the root-generated
+> and owned directory is now not writable by the developer any more).
+> And every time it happens, I shudder.
+>=20
+> So all of that simply boils down to "root should not be running those
+> complex rules for our config and dependency magic".
+>=20
+> At the same time, "make install" obviously needs to be done as root.
+>=20
+> All of which is why I opine that "make install" should never build
+> anything at all, it should purely be used as a "install previously
+> built files".
+>=20
+> So yes, I'd much prefer just failing over trying to build as root (or
+> even trying to figure out dependencies as root).
+>=20
+>> What's the ideal outcome here?
+>=20
+> I'd basically like the rule for "make install" to be that it never
+> ever generates a single file in the build tree, so that there are
+> never any root-owned (or root-overwritten) files there.
+>=20
+> So "make install" should even avoid all dependency checking, for the
+> simple reason that if you happen to do a system update between "make"
+> and "make install", our smart dependencies should never say "oh, the
+> compiler version has changed, so now I'll rebuild everything as root
+> just because 'make install'".
+>=20
+> So I think the ideal outcome is just "fail if you can't find the files
+> to install".
+>=20
+>=20
+
+To clarify, this is =E2=80=9Cfail if you can=E2=80=99t find the files to ins=
+tall, but don=E2=80=99t even try to check whether those files are up to date=
+=E2=80=9D, right?=
