@@ -2,244 +2,94 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0288CC10F11
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E61C10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC8A320811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC27A206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:06:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="YjSoeKBW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731278AbfDWDAq (ORCPT
+        id S1731298AbfDWDGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:00:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57818 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728527AbfDWDAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:00:46 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B3009307D840;
-        Tue, 23 Apr 2019 03:00:44 +0000 (UTC)
-Received: from xz-x1 (ovpn-12-175.pek2.redhat.com [10.72.12.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 23A585C1B5;
-        Tue, 23 Apr 2019 03:00:33 +0000 (UTC)
-Date:   Tue, 23 Apr 2019 11:00:30 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>, Shaohua Li <shli@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 14/28] userfaultfd: wp: handle COW properly for uffd-wp
-Message-ID: <20190423030030.GA21301@xz-x1>
-References: <20190320020642.4000-1-peterx@redhat.com>
- <20190320020642.4000-15-peterx@redhat.com>
- <20190418202558.GK3288@redhat.com>
- <20190419062650.GF13323@xz-x1>
- <20190419150253.GA3311@redhat.com>
- <20190422122010.GA25896@xz-x1>
- <20190422145402.GB3450@redhat.com>
+        Mon, 22 Apr 2019 23:06:49 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44878 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728527AbfDWDGt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 23:06:49 -0400
+Received: by mail-qt1-f195.google.com with SMTP id s10so3720397qtc.11
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 20:06:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iCDEEjaXFN2ttbzzYVmz/c+842djhuXLkuUAp4+5DKk=;
+        b=YjSoeKBWJEPWfxHSo+UsMp7qTB0PdsBkOtCvHq4zFY0IrPa5vOPy8ywxS7QSjyShWc
+         Ol1vf1qT4sbjel1DHXiEabJQOgcVwR9CkrWr7tCuc8q2HB9voTU/odLAZuCoLd9ou5bO
+         3X3b+QPB9Y71pejtNWb6E7QBm5oDbXfnKxy1A8094TMuBg/bzdeHpIIcMvQYkxEfO5Z7
+         OPgdZqx7hPVB7sPbMZnQCi8J70GjcpiLIK2mP5WVeOHC6PYwfCjztPOgV+Ui3idkSwP+
+         lpG7KbVIFVOFEr1inbqFRgw/wnlVe44B7yVRAuofuPXOclQIWX8xCgfN7nK0wlpRvMSV
+         kEZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iCDEEjaXFN2ttbzzYVmz/c+842djhuXLkuUAp4+5DKk=;
+        b=ISvZUDAt/v3A2mazBUmV+uh0jhYf1FopAvfS2OCO+UgfGeF6k/FU0r/aZWKRjy0gxu
+         5M2hxtmXnJSj08WdBeX3S0mAZDVk89qHektwoIccJhFBXlM24IZG32voC3QTEkD1m+z7
+         FdNElmiBKZuv8TfISUfAJopeOSy25L7u2ObFinxPLo7EfR1nDAlRChp920+v8wWOl2UT
+         cBwWbwC2O+56IVT9111foXQBq8vRZh5lCBHQw5x2NE5F5dHjge/0yxUv9VpbjCh7kn1s
+         AQZWihBw2eMJQYuF+0CdZlEZbsUqu4IcTYQ6vBrtM3dUno2BTbIRLHOCpkDPHvwHrQnL
+         DAsQ==
+X-Gm-Message-State: APjAAAXQgbxCchSMDL/heMBtcdyInxGaQrMBR7IlMNzuTCUP/ipwG0zk
+        dJI2v83UuYNhlo1pOvoDi5uEDTbE9FD8b65YO8figg==
+X-Google-Smtp-Source: APXvYqw3QN4fdcahkmWRd3eiPHDnyQvQxSomciYSxglXJVyK9h8vW7PZoSrjc0BNIged1MRYSKTA4U34in9osD7WdOc=
+X-Received: by 2002:a0c:9945:: with SMTP id i5mr18382547qvd.159.1555988807902;
+ Mon, 22 Apr 2019 20:06:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190422145402.GB3450@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 23 Apr 2019 03:00:45 +0000 (UTC)
+References: <20190422101526.28415-1-drake@endlessm.com> <20190422101526.28415-2-drake@endlessm.com>
+ <20190422120451.GA9499@gmail.com>
+In-Reply-To: <20190422120451.GA9499@gmail.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Tue, 23 Apr 2019 11:06:36 +0800
+Message-ID: <CAD8Lp44ZaifPf+809BzbLg=9ijsRsE=7JMVpXkqRenY9radpZA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/tsc: set LAPIC timer frequency to crystal clock frequency
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, x86@kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 10:54:02AM -0400, Jerome Glisse wrote:
-> On Mon, Apr 22, 2019 at 08:20:10PM +0800, Peter Xu wrote:
-> > On Fri, Apr 19, 2019 at 11:02:53AM -0400, Jerome Glisse wrote:
-> > 
-> > [...]
-> > 
-> > > > > > +			if (uffd_wp_resolve) {
-> > > > > > +				/* If the fault is resolved already, skip */
-> > > > > > +				if (!pte_uffd_wp(*pte))
-> > > > > > +					continue;
-> > > > > > +				page = vm_normal_page(vma, addr, oldpte);
-> > > > > > +				if (!page || page_mapcount(page) > 1) {
-> > > > > > +					struct vm_fault vmf = {
-> > > > > > +						.vma = vma,
-> > > > > > +						.address = addr & PAGE_MASK,
-> > > > > > +						.page = page,
-> > > > > > +						.orig_pte = oldpte,
-> > > > > > +						.pmd = pmd,
-> > > > > > +						/* pte and ptl not needed */
-> > > > > > +					};
-> > > > > > +					vm_fault_t ret;
-> > > > > > +
-> > > > > > +					if (page)
-> > > > > > +						get_page(page);
-> > > > > > +					arch_leave_lazy_mmu_mode();
-> > > > > > +					pte_unmap_unlock(pte, ptl);
-> > > > > > +					ret = wp_page_copy(&vmf);
-> > > > > > +					/* PTE is changed, or OOM */
-> > > > > > +					if (ret == 0)
-> > > > > > +						/* It's done by others */
-> > > > > > +						continue;
-> > > > > 
-> > > > > This is wrong if ret == 0 you still need to remap the pte before
-> > > > > continuing as otherwise you will go to next pte without the page
-> > > > > table lock for the directory. So 0 case must be handled after
-> > > > > arch_enter_lazy_mmu_mode() below.
-> > > > > 
-> > > > > Sorry i should have catch that in previous review.
-> > > > 
-> > > > My fault to not have noticed it since the very beginning... thanks for
-> > > > spotting that.
-> > > > 
-> > > > I'm squashing below changes into the patch:
-> > > 
-> > > 
-> > > Well thinking of this some more i think you should use do_wp_page() and
-> > > not wp_page_copy() it would avoid bunch of code above and also you are
-> > > not properly handling KSM page or page in the swap cache. Instead of
-> > > duplicating same code that is in do_wp_page() it would be better to call
-> > > it here.
-> > 
-> > Yeah it makes sense to me.  Then here's my plan:
-> > 
-> > - I'll need to drop previous patch "export wp_page_copy" since then
-> >   it'll be not needed
-> > 
-> > - I'll introduce another patch to split current do_wp_page() and
-> >   introduce function "wp_page_copy_cont" (better suggestion on the
-> >   naming would be welcomed) which contains most of the wp handling
-> >   that'll be needed for change_pte_range() in this patch and isolate
-> >   the uffd handling:
-> > 
-> > static vm_fault_t do_wp_page(struct vm_fault *vmf)
-> > 	__releases(vmf->ptl)
-> > {
-> > 	struct vm_area_struct *vma = vmf->vma;
-> > 
-> > 	if (userfaultfd_pte_wp(vma, *vmf->pte)) {
-> > 		pte_unmap_unlock(vmf->pte, vmf->ptl);
-> > 		return handle_userfault(vmf, VM_UFFD_WP);
-> > 	}
-> > 
-> > 	return do_wp_page_cont(vmf);
-> > }
-> > 
-> > Then I can probably use do_wp_page_cont() in this patch.
-> 
-> Instead i would keep the do_wp_page name and do:
->     static vm_fault_t do_userfaultfd_wp_page(struct vm_fault *vmf) {
->         ... // what you have above
->         return do_wp_page(vmf);
->     }
-> 
-> Naming wise i think it would be better to keep do_wp_page() as
-> is.
+On Mon, Apr 22, 2019 at 8:04 PM Ingo Molnar <mingo@kernel.org> wrote:
+> Minor style nit: the parentheses are unnecessary, integer expressions
+> like this are evaluated left to right and multiplication and division has
+> the same precedence.
 
-In case I misunderstood... what I've proposed will be simply:
+Fair point, although the same could be said for cpu_khz_from_msr().
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 64bd8075f054..ab98a1eb4702 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2497,6 +2497,14 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
-                return handle_userfault(vmf, VM_UFFD_WP);
-        }
+> But it might also make sense to actually store crystal_mhz instead of
+> crystal_khz, because both CPUID 15H and 16H provides MHz values.
+>
+> That way the above expression would simplify to:
+>
+>         lapic_timer_frequency = crystal_mhz / HZ;
 
-+       return do_wp_page_cont(vmf);
-+}
-+
-+vm_fault_t do_wp_page_cont(struct vm_fault *vmf)
-+       __releases(vmf->ptl)
-+{
-+       struct vm_area_struct *vma = vmf->vma;
-+
-        vmf->page = vm_normal_page(vma, vmf->address, vmf->orig_pte);
-        if (!vmf->page) {
-                /*
+Wouldn't it be
+        lapic_timer_frequency = crystal_mhz * 1000000 / HZ;
+?
 
-And the other proposal is:
-
-diff --git a/mm/memory.c b/mm/memory.c
-index 64bd8075f054..a73792127553 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2469,6 +2469,8 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf)
-        return VM_FAULT_WRITE;
- }
-
-+static vm_fault_t do_wp_page(struct vm_fault *vmf);
-+
- /*
-  * This routine handles present pages, when users try to write
-  * to a shared page. It is done by copying the page to a new address
-@@ -2487,7 +2489,7 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf)
-  * but allow concurrent faults), with pte both mapped and locked.
-  * We return with mmap_sem still held, but pte unmapped and unlocked.
-  */
--static vm_fault_t do_wp_page(struct vm_fault *vmf)
-+static vm_fault_t do_userfaultfd_wp_page(struct vm_fault *vmf)
-        __releases(vmf->ptl)
- {
-        struct vm_area_struct *vma = vmf->vma;
-@@ -2497,6 +2499,14 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
-                return handle_userfault(vmf, VM_UFFD_WP);
-        }
-
-+       return do_wp_page(vmf);
-+}
-+
-+static vm_fault_t do_wp_page(struct vm_fault *vmf)
-+       __releases(vmf->ptl)
-+{
-+       struct vm_area_struct *vma = vmf->vma;
-+
-        vmf->page = vm_normal_page(vma, vmf->address, vmf->orig_pte);
-        if (!vmf->page) {
-                /*
-@@ -2869,7 +2879,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
-        }
-
-        if (vmf->flags & FAULT_FLAG_WRITE) {
--               ret |= do_wp_page(vmf);
-+               ret |= do_userfaultfd_wp_page(vmf);
-                if (ret & VM_FAULT_ERROR)
-                        ret &= VM_FAULT_ERROR;
-                goto out;
-@@ -3831,7 +3841,7 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
-                goto unlock;
-        if (vmf->flags & FAULT_FLAG_WRITE) {
-                if (!pte_write(entry))
--                       return do_wp_page(vmf);
-+                       return do_userfaultfd_wp_page(vmf);
-                entry = pte_mkdirty(entry);
-        }
-        entry = pte_mkyoung(entry);
-
-I would prefer the 1st approach since it not only contains fewer lines
-of changes because it does not touch callers, and also the naming in
-the 2nd approach can be a bit confusing (calling
-do_userfaultfd_wp_page in handle_pte_fault may let people think of an
-userfault-only path but actually it covers the general path).  But if
-you really like the 2nd one I can use that too.
-
-Thanks,
-
--- 
-Peter Xu
+Thanks
+Daniel
