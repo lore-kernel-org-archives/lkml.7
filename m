@@ -2,114 +2,91 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178EAC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5DAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D988920685
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:42:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rucpjxGi"
+	by mail.kernel.org (Postfix) with ESMTP id 309F820685
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfDWImS (ORCPT
+        id S1726761AbfDWImb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:42:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:47044 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbfDWImS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:42:18 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v2so4825608pge.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 01:42:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4XIzHt8EOSLAhq67k8eQ4xsJegTmaUjP/QnOwJlp2xY=;
-        b=rucpjxGiHBOYAQ6E4i+ozIXWTb3dnS/rh8sEk64vlAmy5+uyATq3iw+HToTFE7MlV3
-         LjKtzZnOJrwn/2/wCu2UciWLZdHmafqD3nHtiEaHiQ1n06jRti9FgR8nkD4tmNoYfLm4
-         C5GvD5+i/euT5W6vDcGs4AphJU9AAP423qB9Hq4nkiYTS7UFIfsFrRi1/Q4dmtvhKhVR
-         JFmgcidpI4O5omOYMruZa6cAtmmFy4WExOAoCC2EncdH/kQ9Y0FkIa0H9sVCewUf50lk
-         R5P5BAwD8vnQDuXQlArKIWMv9NzgPkksfN9VU4Q8GQsGABmQr/+tTIlW56brTWiZoo+w
-         6FdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4XIzHt8EOSLAhq67k8eQ4xsJegTmaUjP/QnOwJlp2xY=;
-        b=KDXr6Y0RtRNPt9IgXvTHxSh3tfPqbHqaqXrTHXrwkPOt1dHiv0fAdpLSV0g09k0HOA
-         o3ox6froBuSc58Eo90ylTL61OTk+xtpDEowHLQLEiNZBhl41F9RFRllC5h6MzFuekWCE
-         7HlhDw1KMoTF9JjFhG5Kmqu2wsULWkBA6Fsizmk6BiA3HdYGCfDnSNi49ywB+tPTiw+y
-         3fExGMGHjnix6KtEGSvCp4Oq0oVp+Vl9EcJhCCGWtfOmx5I3ODMVWfUQsmIiIXJNUVOj
-         N3ZFOZHEzGjtLyqdpcyowEdyHU6kdAjT7HjS3fXDF0vsRW0+//+HOttMagMyeJbk8jzS
-         TY2g==
-X-Gm-Message-State: APjAAAXWQOAYDVqS+4zb7/IeDiWjYsWSPIBZGMPyD300NN9cDrKkLdAl
-        pZLa5z5YDceTg1aHnmbXoVP1Rg==
-X-Google-Smtp-Source: APXvYqxNXMaWYhX/5MxjBqGGPv6Pno1uJmqd+FGYByG+Sb8A7HXLi2aBb1NXKxwH8AIWc0k2McM0Jg==
-X-Received: by 2002:a63:6e01:: with SMTP id j1mr23611134pgc.442.1556008937770;
-        Tue, 23 Apr 2019 01:42:17 -0700 (PDT)
-Received: from localhost ([122.166.139.136])
-        by smtp.gmail.com with ESMTPSA id 66sm23649339pfr.44.2019.04.23.01.42.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 01:42:16 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 14:12:15 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        x86 Maintainers <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86: tsc: Rework time_cpufreq_notifier()
-Message-ID: <20190423084215.hygce3d66wyncqig@vireshk-i7>
-References: <38900622.ao2n2t5aPS@kreacher>
+        Tue, 23 Apr 2019 04:42:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49580 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725946AbfDWIma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 04:42:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2AE73ACAC;
+        Tue, 23 Apr 2019 08:42:29 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 10:42:28 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] livepatch: Convert error about unsupported reliable
+ stacktrace into a warning
+In-Reply-To: <20190418135858.n3lzq2oxkj52m6bi@treble>
+Message-ID: <alpine.LSU.2.21.1904231041500.19172@pobox.suse.cz>
+References: <20190418112936.13295-1-pmladek@suse.com> <20190418135858.n3lzq2oxkj52m6bi@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38900622.ao2n2t5aPS@kreacher>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-04-19, 16:11, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> There are problems with running time_cpufreq_notifier() on SMP
-> systems.
-> 
-> First off, the rdtsc() called from there runs on the CPU executing
-> that code and not necessarily on the CPU whose sched_clock() rate is
-> updated which is questionable at best.
-> 
-> Second, in the cases when the frequencies of all CPUs in an SMP
-> system are always in sync, it is not sufficient to update just
-> one of them or the set associated with a given cpufreq policy on
-> frequency changes - all CPUs in the system should be updated and
-> that would require more than a simple transition notifier.
-> 
-> Note, however, that the underlying issue (the TSC rate depending on
-> the CPU frequency) has not been present in hardware shipping for the
-> last few years and in quite a few relevant cases (acpi-cpufreq in
-> particular) running time_cpufreq_notifier() will cause the TSC to
-> be marked as unstable anyway.
-> 
-> For this reason, make time_cpufreq_notifier() simply mark the TSC
-> as unstable and give up when run on SMP and only try to carry out
-> any adjustments otherwise.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  arch/x86/kernel/tsc.c |   29 ++++++++++++++---------------
->  1 file changed, 14 insertions(+), 15 deletions(-)
+On Thu, 18 Apr 2019, Josh Poimboeuf wrote:
 
-Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
+> On Thu, Apr 18, 2019 at 01:29:36PM +0200, Petr Mladek wrote:
+> > The commit d0807da78e11d46f ("livepatch: Remove immediate feature") caused
+> > that any livepatch was refused when reliable stacktraces were not supported
+> > on the given architecture.
+> > 
+> > The limitation is too strong. User space processes are safely migrated
+> > even when entering or leaving the kernel. Kthreads transition would
+> > need to get forced. But it is safe when:
+> > 
+> >    + The livepatch does not change the semantic of the code.
+> >    + Callbacks do not depend on a safely finished transition.
+> > 
+> > Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Signed-off-by: Petr Mladek <pmladek@suse.com>
+> > ---
+> >  kernel/livepatch/core.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> > index eb0ee10a1981..14f33ab6c583 100644
+> > --- a/kernel/livepatch/core.c
+> > +++ b/kernel/livepatch/core.c
+> > @@ -1003,11 +1003,10 @@ int klp_enable_patch(struct klp_patch *patch)
+> >  		return -ENODEV;
+> >  
+> >  	if (!klp_have_reliable_stack()) {
+> > -		pr_err("This architecture doesn't have support for the livepatch consistency model.\n");
+> > -		return -EOPNOTSUPP;
+> > +		pr_warn("This architecture doesn't have support for the livepatch consistency model.\n");
+> > +		pr_warn("The livepatch transition may never complete.\n");
+> >  	}
+> >  
+> > -
+> >  	mutex_lock(&klp_mutex);
+> >  
+> >  	ret = klp_init_patch_early(patch);
+> 
+> Thanks Petr.  I would also suggest that we remove the WARN_ONCE() from
+> the weak version of save_stack_trace_tsk_reliable(), since we expect it
+> to be used in this case.
 
--- 
-viresh
+Moreover, we have WARN_ON_ONCE(ret == -ENOSYS) in klp_check_stack() where 
+save_stack_trace_tsk_reliable() is called.
+
+Miroslav
