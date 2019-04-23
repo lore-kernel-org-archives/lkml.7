@@ -2,66 +2,132 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F82C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AE3C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357B020643
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E3120643
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:35:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGKEzzrj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbfDWQfX (ORCPT
+        id S1729187AbfDWQf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:35:23 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:53860 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfDWQfV (ORCPT
+        Tue, 23 Apr 2019 12:35:26 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46217 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729116AbfDWQfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:35:21 -0400
-Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 7DBF4CF2DA;
-        Tue, 23 Apr 2019 18:43:29 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [RFC v1] Bluetooth: hci_core: Don't stop BT if the BD address
- missing in dts
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190418132123.12816-1-bgodavar@codeaurora.org>
-Date:   Tue, 23 Apr 2019 18:35:18 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <371A1719-7CDD-4940-9D6F-0F3339FA50E6@holtmann.org>
-References: <20190418132123.12816-1-bgodavar@codeaurora.org>
-To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Tue, 23 Apr 2019 12:35:24 -0400
+Received: by mail-pl1-f193.google.com with SMTP id o7so5544782pll.13;
+        Tue, 23 Apr 2019 09:35:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ic7Mz9ZN66lX6qBzL4R/C06u702++iEG8zGQWvLykvo=;
+        b=pGKEzzrj8OrzEBxn5nOXdnc5T2C6n2D/v+oO6JGzhQKyWqhAN3MzW+BkdIakK7jaeT
+         jeBzkyAfHSIVHrUg93WK1IRsOTLY38UX+P9zG/0idBhOPjDQW8pWhZeLbmH7mXoY6+3t
+         YqaSqk+foyb6lCSU9gKFasVpPBSmdQu4hQW6aOn29tb+qy6/ZNXnNYTs3cNN6cvPmst0
+         V8MMaAlZkNlgaFBh68Nhp1LMMZyRIncBFyu3rj3Wnxe9b9/nyvJeW+x0qs+1q7RDNJpv
+         k2yM6JK6D9u9WXTAqy8Fl+k6r9qh30o5aeX20c+fMrhqmuyp7ytn0oaybTL/TrpzSSKG
+         FU2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ic7Mz9ZN66lX6qBzL4R/C06u702++iEG8zGQWvLykvo=;
+        b=EMJMxW6C7CN7ZUvCNzUHAMfUJPvyuvnyXOkEEMWt171WxJs0nJK/Sy1zhyNnIFo2jc
+         dZLxdsd3riodcW+BaP96EojHeZ7sPt/6kJ+jp7D8ohUmORPwq4o5zhg2Pkb1UXUMlLsL
+         3Y11oDwhCcBK+qLuRx+evJlTMyNU4yGd4RBqCGaFroT2u8k13EtSg2RWK6Xjo022K3nl
+         aXxz2MqMTX6S3T23FX/jS6awBm7xvMHftv8aKFx4ckrnzHmKmwSD5NwkGphbjkCakldl
+         vTe9bRRS3rKdHkWwj10/CJQT9rW2y5TXVyIZrydozSPe4oL5CF3wpZJ5asxleZmaOfWf
+         mBOA==
+X-Gm-Message-State: APjAAAURr5GBu2swwTibDrEFD8bdU5AREOmKUugflfoXOyJ/RrJ37n//
+        qcPyuABokWoPguGNjCU+ls8=
+X-Google-Smtp-Source: APXvYqyLEwwLyCN3ZpGrjGmn4YGJeRqIGRw6sIoisL487VVT0eEVJORTD5KLeCS430OsaIfJnNvY/w==
+X-Received: by 2002:a17:902:8349:: with SMTP id z9mr9532556pln.144.1556037323164;
+        Tue, 23 Apr 2019 09:35:23 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id v1sm24364801pff.81.2019.04.23.09.35.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 09:35:22 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v4 30/63] Documentation: PCI: convert acpi-info.txt to reST
+Date:   Wed, 24 Apr 2019 00:28:59 +0800
+Message-Id: <20190423162932.21428-31-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190423162932.21428-1-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Balakrishna,
+This converts the plain text documentation to reStructuredText format and
+add it to Sphinx TOC tree. No essential content change.
 
-> When flag HCI_QUIRK_USE_BDADDR_PROPERTY is set, we will read the
-> bluetooth address from dts. If the bluetooth address node is missing
-> from the dts we will enable it controller UNCONFIGURED state.
-> This patch enables the normal flow even if the BD address is missing
-> from the dts tree.
-> 
-> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> ---
-> net/bluetooth/hci_core.c | 2 --
-> 1 file changed, 2 deletions(-)
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ Documentation/PCI/{acpi-info.txt => acpi-info.rst} | 11 ++++++++---
+ Documentation/PCI/index.rst                        |  1 +
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+ rename Documentation/PCI/{acpi-info.txt => acpi-info.rst} (97%)
 
-can I get an ACK for this one?
-
-Regards
-
-Marcel
+diff --git a/Documentation/PCI/acpi-info.txt b/Documentation/PCI/acpi-info.rst
+similarity index 97%
+rename from Documentation/PCI/acpi-info.txt
+rename to Documentation/PCI/acpi-info.rst
+index 3ffa3b03970e..f7dabb7ca255 100644
+--- a/Documentation/PCI/acpi-info.txt
++++ b/Documentation/PCI/acpi-info.rst
+@@ -1,4 +1,8 @@
+-		ACPI considerations for PCI host bridges
++.. SPDX-License-Identifier: GPL-2.0
++
++========================================
++ACPI considerations for PCI host bridges
++========================================
+ 
+ The general rule is that the ACPI namespace should describe everything the
+ OS might use unless there's another way for the OS to find it [1, 2].
+@@ -135,8 +139,9 @@ address always corresponds to bus 0, even if the bus range below the bridge
+ 
+     Extended Address Space Descriptor (.4)
+     General Flags: Bit [0] Consumer/Producer:
+-	1–This device consumes this resource
+-	0–This device produces and consumes this resource
++
++        * 1 – This device consumes this resource
++        * 0 – This device produces and consumes this resource
+ 
+ [5] ACPI 6.2, sec 19.6.43:
+     ResourceUsage specifies whether the Memory range is consumed by
+diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+index 1b25bcc1edca..c877a369481d 100644
+--- a/Documentation/PCI/index.rst
++++ b/Documentation/PCI/index.rst
+@@ -12,3 +12,4 @@ Linux PCI Bus Subsystem
+    PCIEBUS-HOWTO
+    pci-iov-howto
+    MSI-HOWTO
++   acpi-info
+-- 
+2.20.1
 
