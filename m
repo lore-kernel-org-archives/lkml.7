@@ -2,123 +2,115 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C4EC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B557C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3D8218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:40:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hRilNm7a"
+	by mail.kernel.org (Postfix) with ESMTP id 407B3218CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbfDWPki (ORCPT
+        id S1728408AbfDWPlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:40:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37703 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727737AbfDWPkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:40:37 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e6so7805140pgc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JQGb1p56JzSO7bsl1HRkDuz2rCXp3bub9Rkq4RYh9zY=;
-        b=hRilNm7aEtfn1aLSBwKJZWWsYs0hMfE78j2khsgdSnVw10MydE+abWFWJ+Xi617Mie
-         m/K8Ah73TPb+RE2L6LU1ydkdvM4ViFkadDvbVCQKyu0MoVJUM+dtD9Hjcniz4xjQrbLH
-         TBoKUapBIIvb6mUawZN4eOwowHJT3o7A0u7nghUOpTxXqnO75BvWDNJSkQiDVIqlh6pw
-         f4hF/2n4s48B1rXRxnAKCCHOKc6SmKo8qwDAGeuer1YFiC/JWu3hXGRmS2MH1YeJ7Vm4
-         xiPVstqmdlSOCyf+LaJB2aaa2VOxC6zh7Z1Gh3HNPDiE9dwLYReyScrVlzvQvAldf16/
-         eyVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JQGb1p56JzSO7bsl1HRkDuz2rCXp3bub9Rkq4RYh9zY=;
-        b=PlICnBlRTqUz86UCX4vPtDSkYqr1PG9jGQmXneQfsEH8bT5qSf4XIQ2LvUQif6kFy8
-         KD2ftOOl9n99fntUtlqxYeqit3PL+q71ACIbfsLjN/Hp7ZrZQozKbBd0oOVECDoEMsSo
-         4dithx7GbHoOAw2m2kqCULRDx2KnYr601MOSjUiGadIdWMt4ogl8eQgeKwNlNWgcilbC
-         Nx9nFObcT6cUuyD4Q8/3zH/HAuTGOshLlhdXKejL2x+/KyqEhpe5dG3WS77VhVXRIOLm
-         Hxz39ZkWZ96KkSHKyxjA+pKFg6Dx1e2ds0uBQ0z/OIQqRwKSkiFEIewsz4Vt68eakFEZ
-         OTxg==
-X-Gm-Message-State: APjAAAWyZ5kJ28hFWjQxa20YYXqM5Xvd72OfHnHaYl2p592WVRwDXrM2
-        bzx5MKQ6j+ugnzKrbuXhFvAaSeMyxPF/48I66+QBow==
-X-Google-Smtp-Source: APXvYqz4OHY3in8q29G464jBbYmMvo7lc8P9rHlRWDUgVJOtPpl1f9jbfmNwMvPHNKzwkQhY0a1Kv51sw0c48x5NdAM=
-X-Received: by 2002:aa7:8c9a:: with SMTP id p26mr28120772pfd.251.1556034036646;
- Tue, 23 Apr 2019 08:40:36 -0700 (PDT)
+        Tue, 23 Apr 2019 11:41:22 -0400
+Received: from mga01.intel.com ([192.55.52.88]:5083 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727703AbfDWPlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 11:41:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 08:41:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,386,1549958400"; 
+   d="scan'208";a="145168963"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga007.fm.intel.com with SMTP; 23 Apr 2019 08:41:18 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 23 Apr 2019 18:41:17 +0300
+Date:   Tue, 23 Apr 2019 18:41:17 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-bluetooth@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Kay Sievers <kay.sievers@vrfy.org>,
+        Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+        systemd-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 BlueZ] hid2hci: Fix udev rules for linux-4.14+
+Message-ID: <20190423154117.GV1747@intel.com>
+References: <20180620164240.6535-1-ville.syrjala@linux.intel.com>
+ <20181204204117.14964-1-ville.syrjala@linux.intel.com>
+ <20181205070621.GE16346@kroah.com>
+ <20181205154032.GT9144@intel.com>
+ <20181205192036.GB434@kroah.com>
+ <20181205194051.GU9144@intel.com>
+ <20181205194916.GA20809@kroah.com>
 MIME-Version: 1.0
-References: <20190422173838.182736-1-venture@google.com> <CAK8P3a0k_8+R9FeyZsL6Egvi1Z-G0VrvR0TWXzGHryqxTr6thg@mail.gmail.com>
- <CAO=notxuYsBzWBnNran5jH0RujSBeti6-HsjasCRP6Sq0MwGNA@mail.gmail.com> <CAK8P3a24h=0JLZnZWOmzRqM70uhw3QZ_HcYDXST7F6TgSuW6YA@mail.gmail.com>
-In-Reply-To: <CAK8P3a24h=0JLZnZWOmzRqM70uhw3QZ_HcYDXST7F6TgSuW6YA@mail.gmail.com>
-From:   Patrick Venture <venture@google.com>
-Date:   Tue, 23 Apr 2019 08:40:25 -0700
-Message-ID: <CAO=noty2QN6H_x3RMjqOrY9b0xLLz=MBk6Fb6yCdW9+J0a-bSA@mail.gmail.com>
-Subject: Re: [PATCH] soc: add aspeed folder and misc drivers
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     gregkh <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20181205194916.GA20809@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 8:33 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Apr 23, 2019 at 4:24 PM Patrick Venture <venture@google.com> wrote:
-> >
-> > On Tue, Apr 23, 2019 at 1:08 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > On Mon, Apr 22, 2019 at 7:38 PM Patrick Venture <venture@google.com> wrote:
-> > > >
-> > > > Create a SoC folder for the ASPEED parts and place the misc drivers
-> > > > currently present into this folder.  These drivers are not generic part
-> > > > drivers, but rather only apply to the ASPEED SoCs.
-> > > >
-> > > > Signed-off-by: Patrick Venture <venture@google.com>
-> > >
-> > > Looks ok, but please resend to arm@kernel.org or soc@kernel.org
-> > > so we can track the submission and make sure it gets applied if
-> > > you want this to go through the arm-soc tree.
-> >
-> > Thanks, I didn't see those come up in the get_maintainers output.
-> >
-> > I had a longer question related to this patch progression -- if I am
-> > moving the aspeed gpio driver to the soc folder, the soc tree may have
-> > the soc/aspeed folder in their next, but the gpio tree wouldn't
-> > necessarily.  I know the branches sync up when things are merged at
-> > the top, but I wasn't sure if there was another mechanism for this?
->
-> We can generally deal with merge conflicts like this, or you can ask
-> the respective maintainers about it and let us figure something out.
+On Wed, Dec 05, 2018 at 08:49:16PM +0100, Greg Kroah-Hartman wrote:
+> On Wed, Dec 05, 2018 at 09:40:51PM +0200, Ville Syrjälä wrote:
+> > On Wed, Dec 05, 2018 at 08:20:36PM +0100, Greg Kroah-Hartman wrote:
+> > > On Wed, Dec 05, 2018 at 05:40:32PM +0200, Ville Syrjälä wrote:
+> > > > On Wed, Dec 05, 2018 at 08:06:21AM +0100, Greg Kroah-Hartman wrote:
+> > > > > On Tue, Dec 04, 2018 at 10:41:17PM +0200, Ville Syrjala wrote:
+> > > > > > From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> > > > > > 
+> > > > > > Since commit 1455cf8dbfd0 ("driver core: emit uevents when
+> > > > > > device is bound to a driver") the kernel started emitting
+> > > > > > "bind" and "unbind" uevents which confuse the hid2hci
+> > > > > > udev rules.
+> > > > > > 
+> > > > > > The symptoms on an affected machine (Dell E5400 in my case)
+> > > > > > include bluetooth devices not appearing and udev hogging
+> > > > > > the cpu as it's busy processing a constant stream of these
+> > > > > > "bind"+"unbind" uevents.
+> > > > > 
+> > > > > What is causing a "stream" of bind and unbind events?  This only happens
+> > > > > when a device is attached to a driver or removed from a driver, which is
+> > > > > caused by something else happening.
+> > > > 
+> > > > Not sure if it's just due to this thing causing devices to
+> > > > appear/disappear during bind/unbind events or what.
+> > > 
+> > > Someone has to be telling the kernel to bind/unbind from a driver to
+> > > a device, it doesn't do it on its own.  Look at your other rules/scripts
+> > > for that.
+> > > 
+> > > Also note that the kernel has been doing this for over a year now (since
+> > > 4.l4), what just happened in 4.19 to cause this to be an issue?
+> > 
+> > It became an issue for me after I got a machine that suffers from
+> > this. The regression has been present ever since commit 1455cf8dbfd0
+> > ("driver core: emit uevents when device is bound to a driver").
+> > 
+> > You need a Dell E5400 or something similar to see it since those
+> > have these magic bluetooth devices or whatever.
+> 
+> What does the kernel log say is going on?  Is the device "bouncing" from
+> being added/removed from the system all the time?
 
-Thanks for explaining that.
+I totally forgot about this until another bluez update happened
+and the CPU hog came back.
 
->
-> In this particular case, why would you move the gpio driver into
-> the soc folder? If there is a proper subsystem for a driver, it should
-> not be in drivers/misc or drivers/soc.
+I had another look at this and I suppose the problem is caused by
+USBFS_IOCTL_DISCONNECT being called for every bind/unbind event.
+So I think this patch is still the right way to go.
 
-Ok, that makes sense. I was trying to get a sense of what belonged in
-soc versus the subsystem folders.  My thinking from the limited
-reading was the purpose of a SoC folder was to contain the drivers
-that were only associated with a system-on-a-chip and not a part you
-could buy and place on any board.  A tmp421 sensor is just a generic
-part, versus the pwm controller, which is only for the specific SoCs.
+I did find a few more bugs in hid2hci but those don't actually make
+any real difference here. I'll send separate patches for those anyway.
 
-That said, there are quite a few misc drivers associated with the
-Aspeed parts -- and there are two under review now, so there's a
-strong motivation to move those at least into the soc/aspeed folder.
-Thanks for these clarifying remarks.
-
->
->        Arnd
+-- 
+Ville Syrjälä
+Intel
