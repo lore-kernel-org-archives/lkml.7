@@ -2,137 +2,138 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB0DC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425F9C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE7620685
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1274420685
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:05:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nytGHXiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbfDWSDd (ORCPT
+        id S1727020AbfDWSFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 14:03:33 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45194 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727745AbfDWSDc (ORCPT
+        Tue, 23 Apr 2019 14:05:35 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:40808 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726566AbfDWSFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 14:03:32 -0400
-Received: from mail-ot1-f70.google.com ([209.85.210.70])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <dann.frazier@canonical.com>)
-        id 1hIzlT-0006to-Ac
-        for linux-kernel@vger.kernel.org; Tue, 23 Apr 2019 18:03:31 +0000
-Received: by mail-ot1-f70.google.com with SMTP id q23so9456199otk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:03:31 -0700 (PDT)
+        Tue, 23 Apr 2019 14:05:35 -0400
+Received: by mail-yb1-f193.google.com with SMTP id q17so5555966ybg.7;
+        Tue, 23 Apr 2019 11:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CscWNWRRKoHtjzZS+e6JYs58o9d6cw3EQoavwBOmRxs=;
+        b=nytGHXiLrRCAP+ZBwOwG0LEsYPlcp2fqqZI6zZ2jl0Rzr+XrIwFu74IVNopetoFv74
+         hyKFwZtagfg6KRpi2eAu2t3e0vTyO0ZmHiQ4i8OkSZpPQ7WDkqrzZDRlw4uHcujTI0el
+         uyzhUytPVbIdNHE+Bbyl8b4ay16luiZhar8DSg42LuR2YyDIOhfhCookcaKO0fTLw7+j
+         JeqRsbDH79S4IU4ucXPFVwJudoJ9SkPnIDvn78RmHPLeqL7un3k4fys0J6q2sFq6wy64
+         Esz5p6Mrwx3WQzFR1EQlFHb+48if+Ycd9a05QXApfN/9opIyXhZVFd95Duncv/I/756M
+         t0lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aTmuaA1oe/FK4WqytYnAJNG23063bz707sGkM242IOI=;
-        b=TZpenyfzPJnfW5OlHvf147VO+VQNoBhjU1kVv3Kpt4vbwj95dQe75DujjAO0q2EtBF
-         FOCmylxRpVNbBpAFP1gOSOgkRM/uCgW/AQApuy4rYgObeziO+0xKPGqLnEwUevDZKDnZ
-         91kw82DYbaLkSljqNmkHteYFMV7LWwrBBHrfHLKSVBIT6Y584yVkCsX9QyKWxob27xhv
-         79vJT3cQGS9OYJcDGRcFgHWCJKl3VQHtHnAfCUQz1koXMU69H4UpdmAgZkTxD9y6u76d
-         1doNhY2VF8g4zc8fmF2ouHHzX4RRMu129Giunst0CB0IasGZ8Kq4VXJBz6zKrrfsT8zY
-         30eQ==
-X-Gm-Message-State: APjAAAWjdmjGs/ggWn6jcXiIQvq0o0zW9WtElwFWA8NDWdW+a4uoMLjQ
-        DYlYuy/aZe/RwRfSMHaHXueWJtdgJr3dqfmsZDkAmezweXw4MZlqoVdLtdGuOvVOwYBrTn3bL6T
-        +VeNRgI6UAyz7nKn+meRJs70pVy6T5OTh3VvwgsUjgH64YLeeOtK2I35j2A==
-X-Received: by 2002:aca:b8c4:: with SMTP id i187mr2650234oif.6.1556042610175;
-        Tue, 23 Apr 2019 11:03:30 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyqk2/l7JyXvO6ceXkR96yfNa3T5kykmk++vyD5p4Ln9X7qkpMbrGMGLIb7GXGO4dzStBBZLOXm4IuPqg6PgVw=
-X-Received: by 2002:aca:b8c4:: with SMTP id i187mr2650207oif.6.1556042609663;
- Tue, 23 Apr 2019 11:03:29 -0700 (PDT)
+        bh=CscWNWRRKoHtjzZS+e6JYs58o9d6cw3EQoavwBOmRxs=;
+        b=sDUzFrinZTlrZVv7U9aIpDyW6S1pdzPyBFowkQ9BCEvcZ/HyXGkT1iS0jyMobwDI/3
+         9EYqTdCAOqqs9JtSlNj6ctpUgISCgDMMz0rxgj/Ya+M443yA4t6nZAfhl9kKL8ZcbpPZ
+         ImGNAPQcI/PMS6AnBhgMrqbtuAFjfvRIh7bUCHA6utXhNJ6UxFcvvkLZQU9D71j0hF2I
+         EJholXhH3WfNRr69asMU/ytDazQh7Xy16o7L2IBK0CRR8hCaejfdQwuErfAEdy3LUN+Q
+         FIFGx2HDzX/EbDoAhR58BbIDRPILs/rS4nzLhSHd5JQWV62C2hAWHNykiagu7WiqEoOo
+         Sfsw==
+X-Gm-Message-State: APjAAAUmT7W96o9UkVJIcr5lMqEVlQlqIbiPtW3E6e6DPcQxgnKBQpML
+        3rx4PiH1OT4AJnz0OsWm4zzYQy3n2WVDsdSXgvk=
+X-Google-Smtp-Source: APXvYqzYh2mJf4+HuTtO2MqmzHcy/0ShBqJ0Jn7uZuGjsXja2N72Dt48qxGWADjsPy5y2fdNOELODhb8akMr1i+6tec=
+X-Received: by 2002:a25:952:: with SMTP id u18mr23356636ybm.397.1556042734141;
+ Tue, 23 Apr 2019 11:05:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190417204817.GA28897@xps13.dannf> <fa287dc4-59e9-0500-70ee-e96c2920d5a9@arm.com>
-In-Reply-To: <fa287dc4-59e9-0500-70ee-e96c2920d5a9@arm.com>
-From:   dann frazier <dann.frazier@canonical.com>
-Date:   Tue, 23 Apr 2019 12:03:18 -0600
-Message-ID: <CALdTtnsHxwTjzw1asO886jYWB4LOY=UT_UGeco=f1SZzVNo7fw@mail.gmail.com>
-Subject: Re: [RFC] arm64: swiotlb: cma_alloc error spew
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>
+References: <00000000000091becf0586d104c6@google.com> <000000000000d97b380586d1205f@google.com>
+ <CAOQ4uxgbAQEok9AqnnVwqBrF=q0UBP6yQuvdG-WDVpHNk8Xi7A@mail.gmail.com> <20190423162755.GF9910@quack2.suse.cz>
+In-Reply-To: <20190423162755.GF9910@quack2.suse.cz>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 23 Apr 2019 21:05:22 +0300
+Message-ID: <CAOQ4uxj83NA0QYP_kqgyRWxicUuQHoPK+vcTLEN-+rL+Vwa2HQ@mail.gmail.com>
+Subject: Re: general protection fault in fanotify_handle_event
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzbot <syzbot+15927486a4f1bfcbaf91@syzkaller.appspotmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 5:32 AM Robin Murphy <robin.murphy@arm.com> wrote:
+On Tue, Apr 23, 2019 at 7:27 PM Jan Kara <jack@suse.cz> wrote:
 >
-> On 17/04/2019 21:48, dann frazier wrote:
-> > hey,
-> >    I'm seeing an issue on a couple of arm64 systems[*] where they spew
-> > ~10K "cma: cma_alloc: alloc failed" messages at boot. The errors are
-> > non-fatal, and bumping up cma to a large enough size (~128M) gets rid
-> > of them - but that seems suboptimal. Bisection shows that this started
-> > after commit fafadcd16595 ("swiotlb: don't dip into swiotlb pool for
-> > coherent allocations"). It looks like __dma_direct_alloc_pages()
-> > is opportunistically using CMA memory but falls back to non-CMA if CMA
-> > disabled or unavailable. I've demonstrated that this fallback is
-> > indeed returning a valid pointer. So perhaps the issue is really just
-> > the warning emission.
+> On Fri 19-04-19 12:33:02, Amir Goldstein wrote:
+> > On Thu, Apr 18, 2019 at 8:14 PM syzbot
+> > <syzbot+15927486a4f1bfcbaf91@syzkaller.appspotmail.com> wrote:
+> > >
+> > > syzbot has bisected this bug to:
+> > >
+> > > commit 77115225acc67d9ac4b15f04dd138006b9cd1ef2
+> > > Author: Amir Goldstein <amir73il@gmail.com>
+> > > Date:   Thu Jan 10 17:04:37 2019 +0000
+> > >
+> > >      fanotify: cache fsid in fsnotify_mark_connector
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1627632d200000
+> > > start commit:   3f018f4a Add linux-next specific files for 20190418
+> > > git tree:       linux-next
+> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1527632d200000
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1127632d200000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=faa7bdc352fc157e
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=15927486a4f1bfcbaf91
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=155543d3200000
+> > >
+> > > Reported-by: syzbot+15927486a4f1bfcbaf91@syzkaller.appspotmail.com
+> > > Fixes: 77115225acc6 ("fanotify: cache fsid in fsnotify_mark_connector")
+> > >
 >
-> The CMA area being full isn't necessarily an ignorable non-problem,
-> since it means you won't be able to allocate the kind of large buffers
-> for which CMA was intended. The question is, is it actually filling up
-> with allocations that deserve to be there, or is this the same as I've
-> seen on a log from a ThunderX2 system where it's getting exhausted by
-> thousands upon thousands of trivial single page allocations? If it's the
-> latter (CONFIG_CMA_DEBUG should help shed some light if necessary),
 
-Appears so. Here's a histogram of count/size w/ a cma= large enough to
-avoid failures:
+[...]
 
-$ dmesg | grep "cma: cma_alloc(cma" | sed -r 's/.*count
-([0-9]+)\,.*/\1/' | sort -n | uniq -c
-   2062 1
-     32 2
-    266 8
-      2 24
-      4 32
-    256 33
-      7 64
-      2 128
-      2 1024
+>
+> I'd prefer if we could make only fully initialized marks visible on
+> connector's list. Just to make things simple in the fast path of handling
+> events. So I'd just set mark->connector before adding mark to connector's
+> list and having smp_wmb() there to force ordering in
+> fsnotify_add_mark_list(). And we should use READ_ONCE() as a counter-part
+> to this in fanotify_get_fsid(). It is somewhat unfortunate that there are
+> three different ways how fsnotify_add_mark_list() can add mark to a list so
+> we may need to either repeat this in three different places or just use
+> some macro magic like:
+>
+> #define fanotify_attach_obj_list(where, mark, conn, head) \
+>         do { \
+>                 mark->connector = conn; \
+>                 smp_wmb(); \
+>                 hlist_add_##where##_rcu(&mark->obj_list, head); \
+>         } while (0)
+>
+> And I would not really worry about fsnotify_put_mark() - if it ever sees
+> mark->connector set, mark really is on the connector's list and
+> fsnotify_put_mark() does the right thing (i.e. locks connector->lock if
+> needed).
+>
 
-  -dann
+Sounds good to me.
 
-> then
-> that does lean towards spending a bit more effort on this idea:
->
-> https://lore.kernel.org/lkml/20190327080821.GB20336@lst.de/
->
-> Robin.
->
-> > The following naive patch solves the problem for me - just silence the
-> > cma errors, since it looks like a soft error. But is there a better
-> > approach?
-> >
-> > [*] APM X-Gene & HiSilicon Hi1620 w/ SMMU disabled
-> >
-> > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> > index 6310ad01f915b..0324aa606c173 100644
-> > --- a/kernel/dma/direct.c
-> > +++ b/kernel/dma/direct.c
-> > @@ -112,7 +112,7 @@ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
-> >          /* CMA can be used only in the context which permits sleeping */
-> >          if (gfpflags_allow_blocking(gfp)) {
-> >                  page = dma_alloc_from_contiguous(dev, count, page_order,
-> > -                                                gfp & __GFP_NOWARN);
-> > +                                                true);
-> >                  if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
-> >                          dma_release_from_contiguous(dev, page, count);
-> >                          page = NULL;
-> >
-> >
-> >
-> >
+I was worried about fsnotify_put_mark() NOT seeing mark->connector set
+even though it is on the list (add mark; get lockless ref; remove
+mark; put lockless ref).
+Its subtle, not sure if possible.
+
+I am assuming you will be sending the above patch to syzbot for testing.
+If you want me do help with anything please let me know.
+
+Thanks,
+Amir.
