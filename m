@@ -2,124 +2,146 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CA4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763F2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD484206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:45:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qJn9kQES"
+	by mail.kernel.org (Postfix) with ESMTP id 4F5C3206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfDWMpF (ORCPT
+        id S1727724AbfDWMqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:45:05 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40139 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbfDWMpF (ORCPT
+        Tue, 23 Apr 2019 08:46:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42884 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726204AbfDWMqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:45:05 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b3so7483494plr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 05:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=drP+3jXgBFG4XDNGP4blkFr7mTMqlSYTTt2HSdhDEPg=;
-        b=qJn9kQES2XCFX4FUrxy3jQm2W9Y0FNjYQBCq7a6EGeb/Hx/VQK3MBTpYlnV8eeUKNN
-         r7b0XhkXFd9D/gZVVxjHHdrkW6V0PURsHbFw8lZuG2O6G+RhUjfXLJZW/PjEwt3UQZ4w
-         A5Cbc8RjaD65sgstQ8UR+ZHW28iK/3bz+7aoOV3VszQCxTQnbOjs6+FUvmlZtlDXc++q
-         OhXF3w+84oUGwYbgwGH9+0uyCS9OHdt+iNom2Bd1Gsbhwnpnh/IM9SxYPOkrwgGJL1Ho
-         ahhd2ewaqe/GfkSxkPb7kPFWYPV71xGcUHAXhxkn+LLo4UpSlDoQYTmcCAAuAuJuaEul
-         HEqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=drP+3jXgBFG4XDNGP4blkFr7mTMqlSYTTt2HSdhDEPg=;
-        b=uYwmurH4OA2e0g+E2zosWlLWwXu+SSb5AF+FuBn8ZSqarg8boWnVY/eAVGf5vYb06n
-         TmJutTrQJO3KLwOyj8jgP3Rs7RtzqRK62MvBW/K6f0L9nwYuFY6ar7A8Te9193hWY+PU
-         PDVQMnXgf6qkGyNVt0yoiRux6pL8JuwVvDrFme3tYS2uqDnbUVC3/Y9mt9sBymS81/3E
-         zXkDnkkD8OqfK0mJvGkpmess2qKbIe7O4VbkevdJ5CkaNf5VNa3nXMlnCgvBaoUIAEyq
-         G06OFLMFVFCOFwcM6E8Ffh+pJcMudQL730+V/Lj6Bjw5KhQsckV/eyp6J+y6WwLELvSB
-         JYQw==
-X-Gm-Message-State: APjAAAVxAN3+MV9MVLMBUiHHZ8OxIb9xR2obhk3621E9CGjhVEybRYja
-        ewyz6ZyKKr1hvlCY8Es/A+XqnbRdAYmmbfAC0tJTxg==
-X-Google-Smtp-Source: APXvYqx9oxELimY+nvTrKzm48cKNo0fU0EpzqXPj+2RFN3QgJC+DOA3m4ff4sLeo7pzx3SJj88q57khNfIcQFwECWts=
-X-Received: by 2002:a17:902:2b89:: with SMTP id l9mr24732595plb.329.1556023503064;
- Tue, 23 Apr 2019 05:45:03 -0700 (PDT)
+        Tue, 23 Apr 2019 08:46:25 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NCewwO111606
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:46:24 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s211j5cty-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:46:23 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 23 Apr 2019 13:46:22 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 13:46:20 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NCkJIr24444988
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 12:46:20 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE19BB2067;
+        Tue, 23 Apr 2019 12:46:19 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B42E0B2065;
+        Tue, 23 Apr 2019 12:46:19 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.207.109])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 12:46:19 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 4E27F16C101C; Tue, 23 Apr 2019 05:46:19 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 05:46:19 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        kbuild-all@01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2019.04.16a 38/72] kernel/rcu/tree.c:2408:36: sparse:
+ sparse: incorrect type in initializer (different address spaces)
+Reply-To: paulmck@linux.ibm.com
+References: <201904231828.a3jAyl28%lkp@intel.com>
 MIME-Version: 1.0
-References: <CAAeHK+zCwXpAb02vaPuanStYCp_x8g92HDEvm_LTN_F+Y_wOfQ@mail.gmail.com>
- <Pine.LNX.4.44L0.1904191429230.1406-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1904191429230.1406-100000@iolanthe.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 23 Apr 2019 14:44:51 +0200
-Message-ID: <CAAeHK+w0PCvTsQpqfH-4Q07Dj1TpJtD9VgesgiA+X8+HR=K+QQ@mail.gmail.com>
-Subject: Re: UDC hardware for fuzzing [was: Re: INFO: task hung in usb_kill_urb]
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        USB list <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201904231828.a3jAyl28%lkp@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19042312-0072-0000-0000-0000041D7E25
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010980; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01193220; UDB=6.00625495; IPR=6.00974040;
+ MB=3.00026557; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-23 12:46:22
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042312-0073-0000-0000-00004BED9BC3
+Message-Id: <20190423124619.GH3923@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 19, 2019 at 8:36 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Wed, 17 Apr 2019, Andrey Konovalov wrote:
->
-> > On Tue, Apr 16, 2019 at 8:25 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > >
-> > > On Tue, 16 Apr 2019, syzbot wrote:
-> > >
-> > > > Hello,
-> > > >
-> > > > syzbot has tested the proposed patch but the reproducer still triggered
-> > > > crash:
-> > > > INFO: task hung in usb_kill_urb
-> > >
-> > > Okay, I think I found the problem.  dummy-hcd doesn't check for
-> > > unsupported speeds until it is too late.  Andrey, what values does your
-> > > usb-fuzzer gadget driver set for its max_speed field?
-> >
-> > It's passed from userspace without any validation :( I'll fix this!
-> > Thanks for looking into it!
-> >
-> > I wonder why other people saw this hang as well, they didn't use the
-> > dummy hcd module for sure. I guess there are might be other reasons.
->
-> Unquestionably it would be for other reasons.  usb_kill_urb() is a
-> host-side routine, not used by gadget drivers.  If it fails, the reason
-> lies in host controller driver.  And if people aren't using dummy-hcd
-> then they must be using a different host controller driver.
->
-> Is there any chance you could get hold of a USB device controller for
-> more fuzzing tests?  With it, you could test other parts of the USB
-> stack: the UDC driver for whatever hardware you get, and the host
-> controller driver for whatever you plug the UDC into.
->
-> I don't know what types of UDC are readily available for the type of
-> computer syzkaller uses.  Perhaps Felipe or other people on the mailing
-> list will have some suggestions.
+On Tue, Apr 23, 2019 at 06:33:33PM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.04.16a
+> head:   ca8714f549be5a186d086a223184095759eb7094
+> commit: 9a1a31194644dfc6b8f19755ea44ecf84f37cf40 [38/72] rcu: Enable elimination of Tree-RCU softirq processing
+> reproduce:
+>         # apt-get install sparse
+>         git checkout 9a1a31194644dfc6b8f19755ea44ecf84f37cf40
+>         make ARCH=x86_64 allmodconfig
+>         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> 
+> 
+> sparse warnings: (new ones prefixed by >>)
+> 
+> >> kernel/rcu/tree.c:2408:36: sparse: sparse: incorrect type in initializer (different address spaces) @@    expected struct task_struct [noderef] <asn:3> **store @@    got struct task_struct [noderef] <asn:3> **store @@
 
-You mean using a hardware UDC and plugging it into a USB host via a
-physical USB cable? Yeah, I've tried that. I've used the UDC that's
-available on Raspberry Pi Zero which uses the dwc2 driver for running
-the reproducers syzkaller generates while having it connected to a
-Linux host. It works! =) I also have a USB3380 based UDC that uses the
-net2280 gadget driver. It kind of works, I was able to emulate a
-SuperSpeed device with it, but the driver crashes all the time.
+Line 2408 of kernel/rcu/tree.c for commit 9a1a31194644 ("rcu: Enable
+elimination of Tree-RCU softirq processing") is this:
 
-I haven't tried actual fuzzing of a physical host yet, that is
-something on my TODO list. I was more interested in fuzzing non-Linux
-hosts this way, but I can try it with Linux as well. The problem here
-is that it's difficult to automate this.
+	.store			= &rcu_data.rcu_cpu_kthread_task,
+
+So I am having some difficulty understanding this sparse diagnostic.
+
+Help?
+
+							Thanx, Paul
+
+> >> kernel/rcu/tree.c:2408:36: sparse:    expected struct task_struct [noderef] <asn:3> **store
+> >> kernel/rcu/tree.c:2408:36: sparse:    got struct task_struct *[noderef] <asn:3> *
+>    kernel/rcu/tree.c:3234:13: sparse: sparse: incorrect type in argument 1 (different modifiers) @@    expected int ( *threadfn )( ... ) @@    got int ( [noreint ( *threadfn )( ... ) @@
+>    kernel/rcu/tree.c:3234:13: sparse:    expected int ( *threadfn )( ... )
+>    kernel/rcu/tree.c:3234:13: sparse:    got int ( [noreturn] * )( ... )
+>    kernel/rcu/tree.c:1110:13: sparse: sparse: context imbalance in 'rcu_start_this_gp' - different lock contexts for basic block
+>    kernel/rcu/tree.c:1502:9: sparse: sparse: context imbalance in 'rcu_gp_init' - different lock contexts for basic block
+>    kernel/rcu/tree.c:2190:9: sparse: sparse: context imbalance in 'force_qs_rnp' - different lock contexts for basic block
+>    kernel/rcu/tree.c:2243:25: sparse: sparse: context imbalance in 'rcu_force_quiescent_state' - unexpected unlock
+>    kernel/rcu/tree_stall.h:640:9: sparse: sparse: context imbalance in 'rcu_check_gp_start_stall' - different lock contexts for basic block
+>    kernel/rcu/tree_exp.h:193:9: sparse: sparse: context imbalance in '__rcu_report_exp_rnp' - different lock contexts for basic block
+> 
+> vim +2408 kernel/rcu/tree.c
+> 
+>   2406	
+>   2407	static struct smp_hotplug_thread rcu_cpu_thread_spec = {
+> > 2408		.store			= &rcu_data.rcu_cpu_kthread_task,
+>   2409		.thread_should_run	= rcu_cpu_kthread_should_run,
+>   2410		.thread_fn		= rcu_cpu_kthread,
+>   2411		.thread_comm		= "rcuc/%u",
+>   2412		.setup			= rcu_cpu_kthread_setup,
+>   2413		.park			= rcu_cpu_kthread_park,
+>   2414	};
+>   2415	
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+
