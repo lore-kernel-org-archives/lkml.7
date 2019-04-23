@@ -2,153 +2,92 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F74C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D45C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3AE21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5E2206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:46:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BjU5eBMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfDWKpS (ORCPT
+        id S1727460AbfDWKqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:45:18 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53836 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726402AbfDWKpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:45:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D279B374;
-        Tue, 23 Apr 2019 03:45:17 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 312263F557;
-        Tue, 23 Apr 2019 03:45:16 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] perf/arm-ccn: Clean up CPU hotplug handling
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>, will.deacon@arm.com
-Cc:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        bigeasy@linutronix.de, peterz@infradead.org,
-        clabbe.montjoie@gmail.com, Meng.Li@windriver.com
-References: <cover.1555427430.git.robin.murphy@arm.com>
- <918d9bb287b1086d62415030139204aab44c2221.1555427430.git.robin.murphy@arm.com>
- <aa07acc9-dd1a-8953-279e-b98cdc035665@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <81d35736-27b6-f489-fac4-55a5669673dc@arm.com>
-Date:   Tue, 23 Apr 2019 11:45:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 06:46:20 -0400
+Received: from mail-eopbgr00060.outbound.protection.outlook.com ([40.107.0.60]:18775
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726204AbfDWKqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 06:46:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fReABTocCEitXDlQCELWMYvr1FXGn296Mte1CWtmniY=;
+ b=BjU5eBMVP/n0S6+Ayh0mkWXGoz4oLMU3+Yc/1/PQ+G9nT6ZLtXlqiukn9Dz2MveNv/nty9eXNzujx0008bmpYJCLPBrkVcpLOEzqVC9GIkeDQ8XdWWho0WH2+kfM1v3816m0k1EhdkGssr5/cvVo8I/OSAxQ7bpcfvS4gZRge3A=
+Received: from AM6PR04MB5016.eurprd04.prod.outlook.com (20.177.34.88) by
+ AM6PR04MB4901.eurprd04.prod.outlook.com (20.177.33.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.14; Tue, 23 Apr 2019 10:46:17 +0000
+Received: from AM6PR04MB5016.eurprd04.prod.outlook.com
+ ([fe80::b953:a9de:d0bf:7159]) by AM6PR04MB5016.eurprd04.prod.outlook.com
+ ([fe80::b953:a9de:d0bf:7159%5]) with mapi id 15.20.1813.017; Tue, 23 Apr 2019
+ 10:46:17 +0000
+From:   Clark Wang <xiaoning.wang@nxp.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] spi: lpspi: SS function related changes
+Thread-Topic: [PATCH 0/3] spi: lpspi: SS function related changes
+Thread-Index: AQHU+cHHvMHbCMl4Jk+hyIjKMw2iwQ==
+Date:   Tue, 23 Apr 2019 10:46:16 +0000
+Message-ID: <20190423104649.24483-1-xiaoning.wang@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: KU1PR03CA0048.apcprd03.prod.outlook.com
+ (2603:1096:802:19::36) To AM6PR04MB5016.eurprd04.prod.outlook.com
+ (2603:10a6:20b:9::24)
+x-mailer: git-send-email 2.17.1
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaoning.wang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c76e2e31-a21f-48de-2a81-08d6c7d8e871
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB4901;
+x-ms-traffictypediagnostic: AM6PR04MB4901:
+x-microsoft-antispam-prvs: <AM6PR04MB49013111F12E29501B4822F2F3230@AM6PR04MB4901.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0016DEFF96
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(376002)(366004)(396003)(199004)(189003)(26005)(186003)(66066001)(102836004)(6506007)(386003)(2616005)(486006)(316002)(476003)(52116002)(256004)(2351001)(2906002)(66946007)(73956011)(86362001)(6116002)(3846002)(99286004)(36756003)(66446008)(66556008)(66476007)(64756008)(54906003)(5660300002)(71200400001)(50226002)(478600001)(71190400001)(305945005)(8676002)(2501003)(6512007)(8936002)(6436002)(68736007)(1730700003)(81156014)(25786009)(4744005)(81166006)(6916009)(4326008)(14454004)(5640700003)(1076003)(53936002)(6486002)(97736004)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4901;H:AM6PR04MB5016.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VeZ2AfLpaP8aq+cynfB8T+mDHA2hdIMXwbhilt1q8+sEXEm5KamoJTqFUmkqcupaAJaTcSe6YyCt4A8Fd6+xy9Ps5WMFFjwQ7nZetwDGI1pzge8DOCeu0kLV0iKgECtaMUAwo++Ufxq5mjGl2HWp9joRERhQBz5KYP3E3ebR6QpVzkjQUHppBFgPZd5sdzPITEdvjMP0v6HJVfAX8orW2Ct93X5XTd10wM72KOHct54pEC0yytnsw3Xo5AFyaoVfgkPcv89fEhN0z/eIL02WYLYuPGC98lWNUkCBd7mj9JE3X+UmI9KKy5ZLaKKvCu08Q0ZetYb8uoU88VPjhlfoJdQg3nH5tg6neP6sgVsqLy3+E56O32tZPXTXfPtckNWHvMZ/GC0FYtKrryk2YH/kgvFPr+bkZIFsWCG2lUZFJN8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <aa07acc9-dd1a-8953-279e-b98cdc035665@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c76e2e31-a21f-48de-2a81-08d6c7d8e871
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 10:46:17.3597
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4901
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/04/2019 17:29, Suzuki K Poulose wrote:
-> On 04/16/2019 04:24 PM, Robin Murphy wrote:
->> Like arm-cci, arm-ccn has the same issue of disabling preemption around
->> operations which can take mutexes. Again, remove the definite bug by
->> simply not trying to fight the theoretical races. And since we are
->> touching the hotplug handling code, take the opportunity to streamline
->> it, as there's really no need to store a full-sized cpumask to keep
->> track of a single CPU ID.
->>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->> ---
->>   drivers/perf/arm-ccn.c | 25 +++++++++++++------------
->>   1 file changed, 13 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
->> index 2ae76026e947..0bb52d9bdcf7 100644
->> --- a/drivers/perf/arm-ccn.c
->> +++ b/drivers/perf/arm-ccn.c
->> @@ -167,7 +167,7 @@ struct arm_ccn_dt {
->>       struct hrtimer hrtimer;
->> -    cpumask_t cpu;
->> +    unsigned int cpu;
->>       struct hlist_node node;
->>       struct pmu pmu;
->> @@ -559,7 +559,7 @@ static ssize_t arm_ccn_pmu_cpumask_show(struct 
->> device *dev,
->>   {
->>       struct arm_ccn *ccn = pmu_to_arm_ccn(dev_get_drvdata(dev));
->> -    return cpumap_print_to_pagebuf(true, buf, &ccn->dt.cpu);
->> +    return cpumap_print_to_pagebuf(true, buf, cpumask_of(ccn->dt.cpu));
->>   }
->>   static struct device_attribute arm_ccn_pmu_cpumask_attr =
->> @@ -759,7 +759,7 @@ static int arm_ccn_pmu_event_init(struct 
->> perf_event *event)
->>        * mitigate this, we enforce CPU assignment to one, selected
->>        * processor (the one described in the "cpumask" attribute).
->>        */
->> -    event->cpu = cpumask_first(&ccn->dt.cpu);
->> +    event->cpu = ccn->dt.cpu;
->>       node_xp = CCN_CONFIG_NODE(event->attr.config);
->>       type = CCN_CONFIG_TYPE(event->attr.config);
->> @@ -1215,15 +1215,15 @@ static int arm_ccn_pmu_offline_cpu(unsigned 
->> int cpu, struct hlist_node *node)
->>       struct arm_ccn *ccn = container_of(dt, struct arm_ccn, dt);
->>       unsigned int target;
->> -    if (!cpumask_test_and_clear_cpu(cpu, &dt->cpu))
->> +    if (cpu != dt->cpu)
->>           return 0;
->>       target = cpumask_any_but(cpu_online_mask, cpu);
->>       if (target >= nr_cpu_ids)
->>           return 0;
->>       perf_pmu_migrate_context(&dt->pmu, cpu, target);
->> -    cpumask_set_cpu(target, &dt->cpu);
->> +    dt->cpu = target;
->>       if (ccn->irq)
->> -        WARN_ON(irq_set_affinity_hint(ccn->irq, &dt->cpu) != 0);
->> +        WARN_ON(irq_set_affinity_hint(ccn->irq, cpumask_of(dt->cpu)));
->>       return 0;
->>   }
->> @@ -1299,29 +1299,30 @@ static int arm_ccn_pmu_init(struct arm_ccn *ccn)
->>       }
->>       /* Pick one CPU which we will use to collect data from CCN... */
->> -    cpumask_set_cpu(get_cpu(), &ccn->dt.cpu);
->> +    ccn->dt.cpu = raw_smp_processor_id();
->>       /* Also make sure that the overflow interrupt is handled by this 
->> CPU */
->>       if (ccn->irq) {
->> -        err = irq_set_affinity_hint(ccn->irq, &ccn->dt.cpu);
->> +        err = irq_set_affinity_hint(ccn->irq, cpumask_of(ccn->dt.cpu));
->>           if (err) {
->>               dev_err(ccn->dev, "Failed to set interrupt affinity!\n");
->>               goto error_set_affinity;
->>           }
->>       }
->> +    cpuhp_state_add_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
->> +                     &ccn->dt.node);
->> +
->>       err = perf_pmu_register(&ccn->dt.pmu, name, -1);
->>       if (err)
->>           goto error_pmu_register;
->> -    cpuhp_state_add_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
->> -                     &ccn->dt.node);
->> -    put_cpu();
->>       return 0;
->>   error_pmu_register:
->> +    cpuhp_state_remove_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
->> +                        &ccn->dt.node);
->>   error_set_affinity:
->> -    put_cpu();
-> 
-> Super minor nit: We don't need the error_set_affinity label anymore, as
-> we don't do anything here. Otherwise:
-
-Right, there were already somewhat-redundant labels to begin with, but 
-since they remain consistently named for the failure conditions which 
-lead to them (as opposed to the cleanup action that they take) I figured 
-I would leave them be for this change.
-
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
-Thanks!
-
-Robin.
+SGkgTWFyaywNCg0KVGhlc2UgdGhyZWUgcGF0Y2hlcyBkbyBzb21lIGNvZGUgY2xlYW4gdXAgd29y
+a3MgYW5kIGZpeCBhIHByb2JsZW0NCndoZW4gdXNlIG11bHRpIFNTIGluIFBJTyBtb2RlLg0KDQpD
+bGFyayBXYW5nICgzKToNCiAgc3BpOiBscHNwaTogYWRkIE5VTEwgY2hlY2sgd2hlbiBwcm9iZSBk
+ZXZpY2UNCiAgc3BpOiBscHNwaTogYWRkIG11bHRpIFNTIHN1cHBvcnQgaW4gUElPIG1vZGUNCiAg
+c3BpOiBscHNwaTogcmVtb3ZlIGZzbF9scHNwaS0+Y2hpcHNlbGVjdA0KDQogZHJpdmVycy9zcGkv
+c3BpLWZzbC1scHNwaS5jIHwgMzEgKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLQ0KIDEg
+ZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCA5IGRlbGV0aW9ucygtKQ0KDQotLSANCjIu
+MTcuMQ0KDQo=
