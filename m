@@ -2,567 +2,149 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42541C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34EBC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0648E21738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9273D21738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbfDWKYk (ORCPT
+        id S1727381AbfDWKYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:24:40 -0400
-Received: from foss.arm.com ([217.140.101.70]:53476 "EHLO foss.arm.com"
+        Tue, 23 Apr 2019 06:24:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37732 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfDWKYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:24:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A637E374;
-        Tue, 23 Apr 2019 03:24:38 -0700 (PDT)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A64E43F557;
-        Tue, 23 Apr 2019 03:24:34 -0700 (PDT)
-Subject: Re: [PATCH v10 2/5] KVM: arm/arm64: context-switch ptrauth registers
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>
-References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
- <1555994558-26349-3-git-send-email-amit.kachhap@arm.com>
- <8636m9awmu.wl-marc.zyngier@arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <c961a9d1-8cc8-6e40-de1d-527f7feb0f41@arm.com>
-Date:   Tue, 23 Apr 2019 15:54:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1726150AbfDWKYk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 06:24:40 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 87D4D307CDD6;
+        Tue, 23 Apr 2019 10:24:39 +0000 (UTC)
+Received: from redhat.com (ovpn-112-50.ams2.redhat.com [10.36.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id ADD1817CC4;
+        Tue, 23 Apr 2019 10:24:22 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 11:24:19 +0100
+From:   Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [Qemu-devel] [PATCH 1/2] vfio/mdev: add version field as
+ mandatory attribute for mdev device
+Message-ID: <20190423102419.GE6022@redhat.com>
+Reply-To: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+ <20190419083505.19654-1-yan.y.zhao@intel.com>
+ <20190422083950.25eb9e7c@x1.home>
+ <20190423010152.GC32217@joy-OptiPlex-7040>
+ <20190422192100.4d577e4b@x1.home>
+ <20190423054157.GA26190@joy-OptiPlex-7040>
 MIME-Version: 1.0
-In-Reply-To: <8636m9awmu.wl-marc.zyngier@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190423054157.GA26190@joy-OptiPlex-7040>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 23 Apr 2019 10:24:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Tue, Apr 23, 2019 at 01:41:57AM -0400, Yan Zhao wrote:
+> On Tue, Apr 23, 2019 at 09:21:00AM +0800, Alex Williamson wrote:
+> > On Mon, 22 Apr 2019 21:01:52 -0400
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > 
+> > > On Mon, Apr 22, 2019 at 10:39:50PM +0800, Alex Williamson wrote:
+> > > > On Fri, 19 Apr 2019 04:35:04 -0400
+> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > >   
+> > > > > device version attribute in mdev sysfs is used by user space software
+> > > > > (e.g. libvirt) to query device compatibility for live migration of VFIO
+> > > > > mdev devices. This attribute is mandatory if a mdev device supports live
+> > > > > migration.  
+> > > > 
+> > > > The Subject: doesn't quite match what's being proposed here.
+> > > >    
+> > > > > It consists of two parts: common part and vendor proprietary part.
+> > > > > common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
+> > > > >              identifies device type. e.g., for pci device, it is
+> > > > >              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).  
+> > > > 
+> > > > What purpose does this serve?  If it's intended as some sort of
+> > > > namespace feature, shouldn't we first assume that we can only support
+> > > > migration to devices of the same type?  Therefore each type would
+> > > > already have its own namespace.  Also that would make the trailing bit
+> > > > of the version string listed below in the example redundant.  A vendor
+> > > > is still welcome to include this in their version string if they wish,
+> > > > but I think the string should be entirely vendor defined.
+> > > >  
+> > > hi Alex,
+> > > This common part is a kind of namespace.
+> > > Because if version string is entirely defined by vendors, I'm worried about
+> > > if there is a case that one vendor's version string happens to deceive and
+> > > interfere with another vendor's version checking?
+> > > e.g.
+> > > vendor A has a version string like: vendor id + device id + mdev type
+> > > vendor B has a version string like: device id + vendor id + mdev type
+> > > but vendor A's vendor id is 0x8086, device id is 0x1217
+> > > vendor B's vendor id is 0x1217, device id is 0x8086.
+> > > 
+> > > In this corner case, the two vendors may regard the two device is
+> > > migratable but actually they are not.
+> > > 
+> > > That's the reason for this common part that serve as a kind of namespace
+> > > that all vendors will comply with to avoid overlap.
+> > 
+> > If we assume that migration can only occur between matching mdev types,
+> > this is redundant, each type already has their own namespace.
+> >
+> hi Alex,
+> do you mean user space software like libvirt needs to first check whether
+> mdev type is matching and then check whether version is matching?
 
-On 4/23/19 3:09 PM, Marc Zyngier wrote:
-> On Tue, 23 Apr 2019 05:42:35 +0100,
-> Amit Daniel Kachhap <amit.kachhap@arm.com> wrote:
->>
->> From: Mark Rutland <mark.rutland@arm.com>
->>
->> When pointer authentication is supported, a guest may wish to use it.
->> This patch adds the necessary KVM infrastructure for this to work, with
->> a semi-lazy context switch of the pointer auth state.
->>
->> Pointer authentication feature is only enabled when VHE is built
->> in the kernel and present in the CPU implementation so only VHE code
->> paths are modified.
->>
->> When we schedule a vcpu, we disable guest usage of pointer
->> authentication instructions and accesses to the keys. While these are
->> disabled, we avoid context-switching the keys. When we trap the guest
->> trying to use pointer authentication functionality, we change to eagerly
->> context-switching the keys, and enable the feature. The next time the
->> vcpu is scheduled out/in, we start again. However the host key save is
->> optimized and implemented inside ptrauth instruction/register access
->> trap.
->>
->> Pointer authentication consists of address authentication and generic
->> authentication, and CPUs in a system might have varied support for
->> either. Where support for either feature is not uniform, it is hidden
->> from guests via ID register emulation, as a result of the cpufeature
->> framework in the host.
->>
->> Unfortunately, address authentication and generic authentication cannot
->> be trapped separately, as the architecture provides a single EL2 trap
->> covering both. If we wish to expose one without the other, we cannot
->> prevent a (badly-written) guest from intermittently using a feature
->> which is not uniformly supported (when scheduled on a physical CPU which
->> supports the relevant feature). Hence, this patch expects both type of
->> authentication to be present in a cpu.
->>
->> This switch of key is done from guest enter/exit assembly as preparation
->> for the upcoming in-kernel pointer authentication support. Hence, these
->> key switching routines are not implemented in C code as they may cause
->> pointer authentication key signing error in some situations.
->>
->> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
->> [Only VHE, key switch in full assembly, vcpu_has_ptrauth checks
->> , save host key in ptrauth exception trap]
->> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> Reviewed-by: Julien Thierry <julien.thierry@arm.com>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Cc: Christoffer Dall <christoffer.dall@arm.com>
->> Cc: kvmarm@lists.cs.columbia.edu
->> ---
->> Changes since v9:
->>
->> * Removed hardcoding of enum values[Mark Zyngier].
->> * Changed kvm_ptrauth_asm.h to kvm_ptrauth.h[Mark Zyngier].
->> * Removed macro __ptrauth_save_state and applied inline [Marc Zyngier].
->> * Moved kvm_arm_vcpu_ptrauth_setup_lazy, kvm_arm_vcpu_ptrauth_enable and
->>    kvm_arm_vcpu_ptrauth_disable from *.c to kvm_emulate.h file [Marc Zyngier].
->> * Added/Modified comments at few places [Marc Zyngier].
->>
->>   arch/arm/include/asm/kvm_emulate.h   |   2 +
->>   arch/arm64/Kconfig                   |   5 +-
->>   arch/arm64/include/asm/kvm_emulate.h |  16 ++++++
->>   arch/arm64/include/asm/kvm_host.h    |  14 +++++
->>   arch/arm64/include/asm/kvm_ptrauth.h | 108 +++++++++++++++++++++++++++++++++++
->>   arch/arm64/kernel/asm-offsets.c      |   6 ++
->>   arch/arm64/kvm/handle_exit.c         |  36 +++++++++---
->>   arch/arm64/kvm/hyp/entry.S           |  15 +++++
->>   arch/arm64/kvm/sys_regs.c            |  43 +++++++++++++-
->>   virt/kvm/arm/arm.c                   |   2 +
->>   10 files changed, 234 insertions(+), 13 deletions(-)
->>   create mode 100644 arch/arm64/include/asm/kvm_ptrauth.h
->>
->> diff --git a/arch/arm/include/asm/kvm_emulate.h b/arch/arm/include/asm/kvm_emulate.h
->> index 8927cae..efb0e2c 100644
->> --- a/arch/arm/include/asm/kvm_emulate.h
->> +++ b/arch/arm/include/asm/kvm_emulate.h
->> @@ -343,4 +343,6 @@ static inline unsigned long vcpu_data_host_to_guest(struct kvm_vcpu *vcpu,
->>   	}
->>   }
->>   
->> +static inline void vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu) {}
->> +
->>   #endif /* __ARM_KVM_EMULATE_H__ */
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index 7e34b9e..3cfe2eb 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -1301,8 +1301,9 @@ config ARM64_PTR_AUTH
->>   	  context-switched along with the process.
->>   
->>   	  The feature is detected at runtime. If the feature is not present in
->> -	  hardware it will not be advertised to userspace nor will it be
->> -	  enabled.
->> +	  hardware it will not be advertised to userspace/KVM guest nor will it
->> +	  be enabled. However, KVM guest also require VHE mode and hence
->> +	  CONFIG_ARM64_VHE=y option to use this feature.
-> 
-> SVE seems to have the exact same requirements, and has
-> 
-> 	depends on !KVM || ARM64_VHE
-> 
-> Why don't we have that for PTR_AUTH too?
-This point came up earlier also and it was suggested by  Dave[1] to 
-leave userspace ptrauth for non-vhe mode as that would bring regression now.
-[1]:https://lkml.org/lkml/2019/3/27/583
-> 
->>   
->>   endmenu
->>   
->> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
->> index d384279..613427f 100644
->> --- a/arch/arm64/include/asm/kvm_emulate.h
->> +++ b/arch/arm64/include/asm/kvm_emulate.h
->> @@ -98,6 +98,22 @@ static inline void vcpu_set_wfe_traps(struct kvm_vcpu *vcpu)
->>   	vcpu->arch.hcr_el2 |= HCR_TWE;
->>   }
->>   
->> +static inline void vcpu_ptrauth_enable(struct kvm_vcpu *vcpu)
->> +{
->> +	vcpu->arch.hcr_el2 |= (HCR_API | HCR_APK);
->> +}
->> +
->> +static inline void vcpu_ptrauth_disable(struct kvm_vcpu *vcpu)
->> +{
->> +	vcpu->arch.hcr_el2 &= ~(HCR_API | HCR_APK);
->> +}
->> +
->> +static inline void vcpu_ptrauth_setup_lazy(struct kvm_vcpu *vcpu)
->> +{
->> +	if (vcpu_has_ptrauth(vcpu))
->> +		vcpu_ptrauth_disable(vcpu);
->> +}
->> +
->>   static inline unsigned long vcpu_get_vsesr(struct kvm_vcpu *vcpu)
->>   {
->>   	return vcpu->arch.vsesr_el2;
->> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
->> index 7ccac42..7eebea7 100644
->> --- a/arch/arm64/include/asm/kvm_host.h
->> +++ b/arch/arm64/include/asm/kvm_host.h
->> @@ -161,6 +161,18 @@ enum vcpu_sysreg {
->>   	PMSWINC_EL0,	/* Software Increment Register */
->>   	PMUSERENR_EL0,	/* User Enable Register */
->>   
->> +	/* Pointer Authentication Registers in a strict increasing order. */
->> +	APIAKEYLO_EL1,
->> +	APIAKEYHI_EL1,
->> +	APIBKEYLO_EL1,
->> +	APIBKEYHI_EL1,
->> +	APDAKEYLO_EL1,
->> +	APDAKEYHI_EL1,
->> +	APDBKEYLO_EL1,
->> +	APDBKEYHI_EL1,
->> +	APGAKEYLO_EL1,
->> +	APGAKEYHI_EL1,
->> +
->>   	/* 32bit specific registers. Keep them at the end of the range */
->>   	DACR32_EL2,	/* Domain Access Control Register */
->>   	IFSR32_EL2,	/* Instruction Fault Status Register */
->> @@ -530,6 +542,8 @@ static inline bool kvm_arch_requires_vhe(void)
->>   	return false;
->>   }
->>   
->> +void kvm_arm_vcpu_ptrauth_trap(struct kvm_vcpu *vcpu);
->> +
->>   static inline void kvm_arch_hardware_unsetup(void) {}
->>   static inline void kvm_arch_sync_events(struct kvm *kvm) {}
->>   static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
->> diff --git a/arch/arm64/include/asm/kvm_ptrauth.h b/arch/arm64/include/asm/kvm_ptrauth.h
->> new file mode 100644
->> index 0000000..f337237
->> --- /dev/null
->> +++ b/arch/arm64/include/asm/kvm_ptrauth.h
->> @@ -0,0 +1,108 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/* arch/arm64/include/asm/kvm_ptrauth.h: Guest/host ptrauth save/restore
->> + * Copyright 2019 Arm Limited
->> + * Authors: Mark Rutland <mark.rutland@arm.com>
->> + *         Amit Daniel Kachhap <amit.kachhap@arm.com>
->> + */
->> +
->> +#ifndef __ASM_KVM_PTRAUTH_H
->> +#define __ASM_KVM_PTRAUTH_H
->> +
->> +#ifdef __ASSEMBLY__
->> +
->> +#include <asm/sysreg.h>
->> +
->> +#ifdef	CONFIG_ARM64_PTR_AUTH
->> +
->> +#define PTRAUTH_REG_OFFSET(x)	(x - CPU_APIAKEYLO_EL1)
->> +
->> +/*
->> + * CPU_AP*_EL1 values exceed immediate offset range (512) for stp instruction
->> + * so below macros takes CPU_APIAKEYLO_EL1 as base and calculates the offset of
->> + * the keys from this base to avoid an extra add instruction. These macros
->> + * assumes the keys offsets are aligned in a specific increasing order.
->> + */
->> +.macro	ptrauth_save_state base, reg1, reg2
->> +	mrs_s	\reg1, SYS_APIAKEYLO_EL1
->> +	mrs_s	\reg2, SYS_APIAKEYHI_EL1
->> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
->> +	mrs_s	\reg1, SYS_APIBKEYLO_EL1
->> +	mrs_s	\reg2, SYS_APIBKEYHI_EL1
->> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
->> +	mrs_s	\reg1, SYS_APDAKEYLO_EL1
->> +	mrs_s	\reg2, SYS_APDAKEYHI_EL1
->> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
->> +	mrs_s	\reg1, SYS_APDBKEYLO_EL1
->> +	mrs_s	\reg2, SYS_APDBKEYHI_EL1
->> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
->> +	mrs_s	\reg1, SYS_APGAKEYLO_EL1
->> +	mrs_s	\reg2, SYS_APGAKEYHI_EL1
->> +	stp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
->> +.endm
->> +
->> +.macro	ptrauth_restore_state base, reg1, reg2
->> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIAKEYLO_EL1)]
->> +	msr_s	SYS_APIAKEYLO_EL1, \reg1
->> +	msr_s	SYS_APIAKEYHI_EL1, \reg2
->> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APIBKEYLO_EL1)]
->> +	msr_s	SYS_APIBKEYLO_EL1, \reg1
->> +	msr_s	SYS_APIBKEYHI_EL1, \reg2
->> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDAKEYLO_EL1)]
->> +	msr_s	SYS_APDAKEYLO_EL1, \reg1
->> +	msr_s	SYS_APDAKEYHI_EL1, \reg2
->> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APDBKEYLO_EL1)]
->> +	msr_s	SYS_APDBKEYLO_EL1, \reg1
->> +	msr_s	SYS_APDBKEYHI_EL1, \reg2
->> +	ldp	\reg1, \reg2, [\base, #PTRAUTH_REG_OFFSET(CPU_APGAKEYLO_EL1)]
->> +	msr_s	SYS_APGAKEYLO_EL1, \reg1
->> +	msr_s	SYS_APGAKEYHI_EL1, \reg2
->> +.endm
->> +
->> +/* Both ptrauth_switch_to_guest and ptrauth_switch_to_host macros will check for
-> 
-> Comment style.
-> 
->> + * the presence of one of the cpufeature flag ARM64_HAS_ADDRESS_AUTH_ARCH or
->> + * ARM64_HAS_ADDRESS_AUTH_IMP_DEF and then proceed ahead with the save/restore
->> + * of Pointer Authentication key registers.
->> + */
->> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
->> +alternative_if ARM64_HAS_ADDRESS_AUTH_ARCH
->> +	b	1000f
->> +alternative_else_nop_endif
->> +alternative_if_not ARM64_HAS_ADDRESS_AUTH_IMP_DEF
->> +	b	1001f
->> +alternative_else_nop_endif
->> +1000:
->> +	ldr	\reg1, [\g_ctxt, #(VCPU_HCR_EL2 - VCPU_CONTEXT)]
->> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
->> +	cbz	\reg1, 1001f
->> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
->> +	ptrauth_restore_state	\reg1, \reg2, \reg3
->> +1001:
->> +.endm
->> +
->> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
->> +alternative_if ARM64_HAS_ADDRESS_AUTH_ARCH
->> +	b	2000f
->> +alternative_else_nop_endif
->> +alternative_if_not ARM64_HAS_ADDRESS_AUTH_IMP_DEF
->> +	b	2001f
->> +alternative_else_nop_endif
->> +2000:
->> +	ldr	\reg1, [\g_ctxt, #(VCPU_HCR_EL2 - VCPU_CONTEXT)]
->> +	and	\reg1, \reg1, #(HCR_API | HCR_APK)
->> +	cbz	\reg1, 2001f
->> +	add	\reg1, \g_ctxt, #CPU_APIAKEYLO_EL1
->> +	ptrauth_save_state	\reg1, \reg2, \reg3
->> +	add	\reg1, \h_ctxt, #CPU_APIAKEYLO_EL1
->> +	ptrauth_restore_state	\reg1, \reg2, \reg3
->> +	isb
->> +2001:
->> +.endm
->> +
->> +#else /* !CONFIG_ARM64_PTR_AUTH */
->> +.macro ptrauth_switch_to_guest g_ctxt, reg1, reg2, reg3
->> +.endm
->> +.macro ptrauth_switch_to_host g_ctxt, h_ctxt, reg1, reg2, reg3
->> +.endm
->> +#endif /* CONFIG_ARM64_PTR_AUTH */
->> +#endif /* __ASSEMBLY__ */
->> +#endif /* __ASM_KVM_PTRAUTH_H */
->> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
->> index 7f40dcb..8178330 100644
->> --- a/arch/arm64/kernel/asm-offsets.c
->> +++ b/arch/arm64/kernel/asm-offsets.c
->> @@ -125,7 +125,13 @@ int main(void)
->>     DEFINE(VCPU_CONTEXT,		offsetof(struct kvm_vcpu, arch.ctxt));
->>     DEFINE(VCPU_FAULT_DISR,	offsetof(struct kvm_vcpu, arch.fault.disr_el1));
->>     DEFINE(VCPU_WORKAROUND_FLAGS,	offsetof(struct kvm_vcpu, arch.workaround_flags));
->> +  DEFINE(VCPU_HCR_EL2,		offsetof(struct kvm_vcpu, arch.hcr_el2));
->>     DEFINE(CPU_GP_REGS,		offsetof(struct kvm_cpu_context, gp_regs));
->> +  DEFINE(CPU_APIAKEYLO_EL1,	offsetof(struct kvm_cpu_context, sys_regs[APIAKEYLO_EL1]));
->> +  DEFINE(CPU_APIBKEYLO_EL1,	offsetof(struct kvm_cpu_context, sys_regs[APIBKEYLO_EL1]));
->> +  DEFINE(CPU_APDAKEYLO_EL1,	offsetof(struct kvm_cpu_context, sys_regs[APDAKEYLO_EL1]));
->> +  DEFINE(CPU_APDBKEYLO_EL1,	offsetof(struct kvm_cpu_context, sys_regs[APDBKEYLO_EL1]));
->> +  DEFINE(CPU_APGAKEYLO_EL1,	offsetof(struct kvm_cpu_context, sys_regs[APGAKEYLO_EL1]));
->>     DEFINE(CPU_USER_PT_REGS,	offsetof(struct kvm_regs, regs));
->>     DEFINE(HOST_CONTEXT_VCPU,	offsetof(struct kvm_cpu_context, __hyp_running_vcpu));
->>   #endif
->> diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
->> index 0b79834..516aead 100644
->> --- a/arch/arm64/kvm/handle_exit.c
->> +++ b/arch/arm64/kvm/handle_exit.c
->> @@ -173,20 +173,40 @@ static int handle_sve(struct kvm_vcpu *vcpu, struct kvm_run *run)
->>   	return 1;
->>   }
->>   
->> +#define __ptrauth_save_key(regs, key)						\
->> +({										\
->> +	regs[key ## KEYLO_EL1] = read_sysreg_s(SYS_ ## key ## KEYLO_EL1);	\
->> +	regs[key ## KEYHI_EL1] = read_sysreg_s(SYS_ ## key ## KEYHI_EL1);	\
->> +})
->> +
->> +/*
->> + * Handle the guest trying to use a ptrauth instruction, or trying to access a
->> + * ptrauth register.
->> + */
->> +void kvm_arm_vcpu_ptrauth_trap(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_cpu_context *ctxt;
->> +
->> +	if (vcpu_has_ptrauth(vcpu)) {
->> +		vcpu_ptrauth_enable(vcpu);
->> +		ctxt = vcpu->arch.host_cpu_context;
->> +		__ptrauth_save_key(ctxt->sys_regs, APIA);
->> +		__ptrauth_save_key(ctxt->sys_regs, APIB);
->> +		__ptrauth_save_key(ctxt->sys_regs, APDA);
->> +		__ptrauth_save_key(ctxt->sys_regs, APDB);
->> +		__ptrauth_save_key(ctxt->sys_regs, APGA);
->> +	} else {
->> +		kvm_inject_undefined(vcpu);
->> +	}
->> +}
->> +
->>   /*
->>    * Guest usage of a ptrauth instruction (which the guest EL1 did not turn into
->>    * a NOP).
->>    */
->>   static int kvm_handle_ptrauth(struct kvm_vcpu *vcpu, struct kvm_run *run)
->>   {
->> -	/*
->> -	 * We don't currently support ptrauth in a guest, and we mask the ID
->> -	 * registers to prevent well-behaved guests from trying to make use of
->> -	 * it.
->> -	 *
->> -	 * Inject an UNDEF, as if the feature really isn't present.
->> -	 */
->> -	kvm_inject_undefined(vcpu);
->> +	kvm_arm_vcpu_ptrauth_trap(vcpu);
->>   	return 1;
->>   }
->>   
->> diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
->> index 675fdc1..93ba3d7 100644
->> --- a/arch/arm64/kvm/hyp/entry.S
->> +++ b/arch/arm64/kvm/hyp/entry.S
->> @@ -24,6 +24,7 @@
->>   #include <asm/kvm_arm.h>
->>   #include <asm/kvm_asm.h>
->>   #include <asm/kvm_mmu.h>
->> +#include <asm/kvm_ptrauth.h>
->>   
->>   #define CPU_GP_REG_OFFSET(x)	(CPU_GP_REGS + x)
->>   #define CPU_XREG_OFFSET(x)	CPU_GP_REG_OFFSET(CPU_USER_PT_REGS + 8*x)
->> @@ -64,6 +65,13 @@ ENTRY(__guest_enter)
->>   
->>   	add	x18, x0, #VCPU_CONTEXT
->>   
->> +	// Macro ptrauth_switch_to_guest format:
->> +	// 	ptrauth_switch_to_guest(guest cxt, tmp1, tmp2, tmp3)
->> +	// The below macro to restore guest keys is not implemented in C code
->> +	// as it may cause Pointer Authentication key signing mismatch errors
->> +	// when this feature is enabled for kernel code.
->> +	ptrauth_switch_to_guest x18, x0, x1, x2
->> +
->>   	// Restore guest regs x0-x17
->>   	ldp	x0, x1,   [x18, #CPU_XREG_OFFSET(0)]
->>   	ldp	x2, x3,   [x18, #CPU_XREG_OFFSET(2)]
->> @@ -118,6 +126,13 @@ ENTRY(__guest_exit)
->>   
->>   	get_host_ctxt	x2, x3
->>   
->> +	// Macro ptrauth_switch_to_guest format:
->> +	// 	ptrauth_switch_to_host(guest cxt, host cxt, tmp1, tmp2, tmp3)
->> +	// The below macro to save/restore keys is not implemented in C code
->> +	// as it may cause Pointer Authentication key signing mismatch errors
->> +	// when this feature is enabled for kernel code.
->> +	ptrauth_switch_to_host x1, x2, x3, x4, x5
->> +
->>   	// Now restore the host regs
->>   	restore_callee_saved_regs x2
->>   
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
->> index 7046c76..7f06c2e 100644
->> --- a/arch/arm64/kvm/sys_regs.c
->> +++ b/arch/arm64/kvm/sys_regs.c
->> @@ -1007,6 +1007,35 @@ static bool access_pmuserenr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
->>   	{ SYS_DESC(SYS_PMEVTYPERn_EL0(n)),					\
->>   	  access_pmu_evtyper, reset_unknown, (PMEVTYPER0_EL0 + n), }
->>   
->> +static bool trap_ptrauth(struct kvm_vcpu *vcpu,
->> +			 struct sys_reg_params *p,
->> +			 const struct sys_reg_desc *rd)
->> +{
->> +	kvm_arm_vcpu_ptrauth_trap(vcpu);
->> +
->> +	/*
->> +	 * Return is false for both cases and PC remains same,
->> +	 * a) Re-execute the same key register access instruction after enabling
->> +	 *    ptrauth.
->> +	 * b) UNDEF is injected as ptrauth is not supported/enabled.
->> +	 */
-> 
-> This comment is pretty confusing. You say that PC remains the same,
-> but that's obviously not true for (b). I've fixed it locally as such:
-> 
-> 	/*
-> 	 * Return false for both cases as we never skip the trapped
-> 	 * instruction:
-> 	 *
-> 	 * - Either we re-execute the same key register access instruction
-> 	 *   after enabling ptrauth.
-> 	 * - Or an UNDEF is injected as ptrauth is not supported/enabled.
-> 	 */
-> 
-ok.
-> 
->> +	return false;
->> +}
->> +
->> +static unsigned int ptrauth_visibility(const struct kvm_vcpu *vcpu,
->> +			const struct sys_reg_desc *rd)
->> +{
->> +	return vcpu_has_ptrauth(vcpu) ? 0 : REG_HIDDEN_USER | REG_HIDDEN_GUEST;
->> +}
->> +
->> +#define __PTRAUTH_KEY(k)						\
->> +	{ SYS_DESC(SYS_## k), trap_ptrauth, reset_unknown, k,		\
->> +	.visibility = ptrauth_visibility}
->> +
->> +#define PTRAUTH_KEY(k)							\
->> +	__PTRAUTH_KEY(k ## KEYLO_EL1),					\
->> +	__PTRAUTH_KEY(k ## KEYHI_EL1)
->> +
->>   static bool access_arch_timer(struct kvm_vcpu *vcpu,
->>   			      struct sys_reg_params *p,
->>   			      const struct sys_reg_desc *r)
->> @@ -1058,9 +1087,11 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
->>   					 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
->>   					 (0xfUL << ID_AA64ISAR1_GPA_SHIFT) |
->>   					 (0xfUL << ID_AA64ISAR1_GPI_SHIFT);
->> -		if (val & ptrauth_mask)
->> -			kvm_debug("ptrauth unsupported for guests, suppressing\n");
->> -		val &= ~ptrauth_mask;
->> +		if (!vcpu_has_ptrauth(vcpu)) {
->> +			if (val & ptrauth_mask)
->> +				kvm_debug("ptrauth unsupported for guests, suppressing\n");
->> +			val &= ~ptrauth_mask;
->> +		}
->>   	}
->>   
->>   	return val;
->> @@ -1460,6 +1491,12 @@ static const struct sys_reg_desc sys_reg_descs[] = {
->>   	{ SYS_DESC(SYS_TTBR1_EL1), access_vm_reg, reset_unknown, TTBR1_EL1 },
->>   	{ SYS_DESC(SYS_TCR_EL1), access_vm_reg, reset_val, TCR_EL1, 0 },
->>   
->> +	PTRAUTH_KEY(APIA),
->> +	PTRAUTH_KEY(APIB),
->> +	PTRAUTH_KEY(APDA),
->> +	PTRAUTH_KEY(APDB),
->> +	PTRAUTH_KEY(APGA),
->> +
->>   	{ SYS_DESC(SYS_AFSR0_EL1), access_vm_reg, reset_unknown, AFSR0_EL1 },
->>   	{ SYS_DESC(SYS_AFSR1_EL1), access_vm_reg, reset_unknown, AFSR1_EL1 },
->>   	{ SYS_DESC(SYS_ESR_EL1), access_vm_reg, reset_unknown, ESR_EL1 },
->> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
->> index 7039c99c..156c09d 100644
->> --- a/virt/kvm/arm/arm.c
->> +++ b/virt/kvm/arm/arm.c
->> @@ -385,6 +385,8 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->>   		vcpu_clear_wfe_traps(vcpu);
->>   	else
->>   		vcpu_set_wfe_traps(vcpu);
->> +
->> +	vcpu_ptrauth_setup_lazy(vcpu);
->>   }
->>   
->>   void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->> -- 
->> 2.7.4
->>
-> 
-> I've tentatively applied these fixes on top of your series, no need to
-> resend anything for now.
+I would expect that libvirt (or other mgmt apps) will always first
+check that the vendor id, device id, mdev type all match. So for the
+version string it should suffice to be a "normal" numeric value.
 
-Thanks,
-Amit D.
-> 
-> Thanks,
-> 
-> 	M.
-> 
+Essentially version string just needs to be there to distinguish
+revisions of the same mdev type over time.
+
+
+Regards,
+Daniel
+-- 
+|: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
+|: https://libvirt.org         -o-            https://fstop138.berrange.com :|
+|: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
