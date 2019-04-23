@@ -2,159 +2,81 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087FCC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8817EC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF97B206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53837214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbfDWNKk (ORCPT
+        id S1728156AbfDWNK6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:10:40 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:52196 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbfDWNKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:10:37 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 01AB6205F9;
-        Tue, 23 Apr 2019 15:10:36 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id DDBC1205F8;
-        Tue, 23 Apr 2019 15:10:35 +0200 (CEST)
-Subject: Re: [PATCH v2 00/13] qcom: dts: thermal cleanups
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-References: <cover.1553853990.git.amit.kucheria@linaro.org>
- <5583cae1-8fea-724a-24a4-59b38a205ac3@free.fr>
- <CAP245DUNo02QUkGDPFfzow9535GKO9x6ZusETRjEgTmnHL4D2g@mail.gmail.com>
- <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr>
- <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <903fa0a6-5c40-97b4-1c01-fd84f3e51c62@free.fr>
-Date:   Tue, 23 Apr 2019 15:10:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 09:10:58 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2992 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727725AbfDWNK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 09:10:57 -0400
+Received: from dggemi405-hub.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id B63AF5F89F4749E473A9;
+        Tue, 23 Apr 2019 21:10:54 +0800 (CST)
+Received: from DGGEMI530-MBX.china.huawei.com ([169.254.7.146]) by
+ dggemi405-hub.china.huawei.com ([10.3.17.143]) with mapi id 14.03.0415.000;
+ Tue, 23 Apr 2019 21:10:53 +0800
+From:   weizhenliang <weizhenliang@huawei.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+CC:     "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "colona@arista.com" <colona@arista.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "christian@brauner.io" <christian@brauner.io>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v3] signal: trace_signal_deliver when signal_group_exit
+Thread-Topic: [PATCH v3] signal: trace_signal_deliver when signal_group_exit
+Thread-Index: AdT51YDlnU0d+FcxSneaCWEN6wQNxA==
+Date:   Tue, 23 Apr 2019 13:10:52 +0000
+Message-ID: <AF4D908CC0E2A24EB308A26962C8C3BDEB16AE@DGGEMI530-MBX.china.huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.40.99.192]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Apr 23 15:10:36 2019 +0200 (CEST)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/2019 14:56, Amit Kucheria wrote:
-
-> On Tue, Apr 23, 2019 at 3:01 PM Marc Gonzalez wrote:
+On Mon, Apr 22, 2019 at 11:25 PM Oleg Nesterov <oleg@redhat.com> wrote:
+>On 04/22, Zhenliang Wei wrote:
+>>
+>> --- a/kernel/signal.c
+>> +++ b/kernel/signal.c
+>> @@ -2441,6 +2441,7 @@ bool get_signal(struct ksignal *ksig)
+>>  	if (signal_group_exit(signal)) {
+>>  		ksig->info.si_signo = signr = SIGKILL;
+>>  		sigdelset(&current->pending.signal, SIGKILL);
+>> +		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO, SIG_DFL);
+>>  		recalc_sigpending();
+>>  		goto fatal;
+>>  	}
 >
->> On 02/04/2019 20:46, Amit Kucheria wrote:
->>
->>> On Tue, Apr 2, 2019 at 8:58 PM Marc Gonzalez wrote:
->>>
->>>> On 29/03/2019 11:12, Amit Kucheria wrote:
->>>>
->>>>> Changes since v1:
->>>>> - Devices that are not associated with cooling-maps use the 'hot' type
->>>>> - Remove critical trip from such devices too and restrict that type of CPUs
->>>>> - For 8916, add the sensor on the modem
->>>>>
->>>>> Description:
->>>>> - Expose all temperature sensors on msm8916, msm996, msm8998, sdm845
->>>>> - split up the register address map for msm8998
->>>>> - standardize names of the various thermal-zones across boards to make it
->>>>>   easy for test scripts to parse
->>>>
->>>> This is what I see on msm8998 with your patch series applied on top of
->>>> yesterday's next:
->>>>
->>>> # dmesg | grep of_parse_thermal_zones
->>>> of_parse_thermal_zones: build cpu0-thermal zone 0
->>>> of_parse_thermal_zones: build cpu1-thermal zone 0
->>>> of_parse_thermal_zones: build cpu2-thermal zone 0
->>>> of_parse_thermal_zones: build cpu3-thermal zone 0
->>>> of_parse_thermal_zones: build cpu4-thermal zone 0
->>>> of_parse_thermal_zones: build cpu5-thermal zone 0
->>>> of_parse_thermal_zones: build cpu6-thermal zone 0
->>>> of_parse_thermal_zones: build cpu7-thermal zone 0
->>>> of_parse_thermal_zones: build gpu-thermal-bottom zone 0
->>>> of_parse_thermal_zones: build gpu-thermal-top zone 0
->>>> of_parse_thermal_zones: build cluster0-mhm-thermal zone -22
->>>> of_parse_thermal_zones: build cluster1-mhm-thermal zone -22
->>>> of_parse_thermal_zones: build cluster1-l2-thermal zone 0
->>>> of_parse_thermal_zones: build modem-thermal zone 0
->>>> of_parse_thermal_zones: build mem-thermal zone 0
->>>> of_parse_thermal_zones: build wlan-thermal zone 0
->>>> of_parse_thermal_zones: build q6-dsp-thermal zone 0
->>>> of_parse_thermal_zones: build camera-thermal zone 0
->>>> of_parse_thermal_zones: build multimedia-thermal zone 0
->>>> of_parse_thermal_zones: build pm8998 zone 0
->>>> of_parse_thermal_zones: build battery-thermal zone 0
->>>> of_parse_thermal_zones: build skin-thermal zone 0
->>>>
->>>> NB: -EINVAL for cluster0-mhm-thermal and cluster1-mhm-thermal
->>>>
->>>>
->>>> # cat /sys/devices/virtual/thermal/thermal_zone*/temp
->>>> 35800
->>>> 35200
->>>> 34500
->>>> 34800
->>>> 34500
->>>> 34100
->>>> 34100
->>>> 33500
->>>> 33800
->>>> cat: /sys/devices/virtual/thermal/thermal_zone17/temp: Invalid argument
->>>> 36100
->>>> cat: /sys/devices/virtual/thermal/thermal_zone19/temp: Invalid argument
->>>> 35500
->>>> 36100
->>>> 35800
->>>> 35200
->>>> 35500
->>>> 36100
->>>> cat: /sys/devices/virtual/thermal/thermal_zone8/temp: Invalid argument
->>>> cat: /sys/devices/virtual/thermal/thermal_zone9/temp: Invalid argument
->>>>
->>>>
->>>> Are the failures expected?
->>>> (cluster*-mhm-thermal and thermal_zone*/temp)
->>>
->>> No they are not. Unfortunately, I didn't have HW to test, so
->>> appreciate the help with testing. I'll check the 8, 9, 17 and 19 again
->>> before resubmitting.
->>
->> Looks like Andy merged this series?
-> 
-> Argh! my bad, I completely forgot about the need to fix this up. I
-> need to get me one of these boards.
-> 
->> https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=for-next
->>
->> I was expecting a respin, or a discussion of the failures.
->>
->> Slightly confused. What next?
-> 
-> We can either revert that one patch for the msm8998, but I think it
-> might be better if I send a fixup patch that could fixup those 4 zones
-> instead.
-> 
-> Does that work for you?
+>Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-Sure. I can give you a Tested-by once everything works on the MEDIABOX I have.
+Last time Oleg suggested using SIG_DFL as the third parameter, but its type is 'void (*)(int)', but not expected 'struct k_sigaction *'.
 
-You mention the 4 thermal_zone*/temp failures.
+How about
+	trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO, &sighand->action[signr - 1]);
+?
 
-What about the cluster0-mhm-thermal and cluster1-mhm-thermal failures?
+Although we know that action[SIGKILL] must be SIG_DFL, in order to adapt to the parameter type, I suggest to use the original variable value.
 
-Regards.
+Zhenliang Wei.
