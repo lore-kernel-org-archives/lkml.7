@@ -2,188 +2,95 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1A1C10F11
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE8CC10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58E2620811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:17:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aDuHijj5"
+	by mail.kernel.org (Postfix) with ESMTP id 7250F20811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:18:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730947AbfDWARt (ORCPT
+        id S1730952AbfDWASU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 20:17:49 -0400
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:32924 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729818AbfDWARs (ORCPT
+        Mon, 22 Apr 2019 20:18:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58214 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729676AbfDWAST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 20:17:48 -0400
-Received: by mail-ot1-f46.google.com with SMTP id j10so11252107otq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 17:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=juMVrKHWe6BA8aLmU2ilY/nSc2lXa6zcTAF7dsxRPQs=;
-        b=aDuHijj5KgRVDUQ2ySlFDqHU1xFop6sW1O3BLtOeH7vbKiL/FUVBBlSb+8MiLIU+Tg
-         zcploVM30tpjdIKKd3+W6zqAHaUUHjGIPazPnZ59w2L1KaCIc5sBkzAr7s/rfGzE0Ucs
-         jmSmMUU8vOLz6mt62DMapWoAZE+zVSZ2+sgwAqsCn/CjC+g4xk3KXUsviNzgLzzwnoTb
-         r5HefrvhdkozYSTK/JIvJMRSOyorZldunfSecAZzanT0nDQ/niGkk+S78UzMmss1Gn1G
-         TUs9/byPaBzOMopq+ph0yvQXA9iKBMq40ueVCvCD+dTjygnzE8xFeSKLduY3nCS7RzEs
-         O60Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=juMVrKHWe6BA8aLmU2ilY/nSc2lXa6zcTAF7dsxRPQs=;
-        b=Q22WCR1E8weO0cvtgvgYj96oOGlP3GDktloPBkxcfUjyIceCvfejUiVoIIq3EYrb9t
-         Q6apqIaU6p/mHKb1tDMzhba+mMJSb5LiTTVeDL6D5RACzbSHftG+AIYMPk9MnvsFQ0tI
-         gtb2dNGCOHMQa6+YZrQXsfxEhnWF3fgsLPO2H7d2zMf2OLuQNNj7eu82dL1dEMuy/sIW
-         PI9/ZJ2P+Y005HoG62FWIuhfNG9p4gKRJ8yARUumYzjgPOCZ7Z0L4lmVlM6Z4e4bdmnX
-         c+xSTr3LfApaqUaJ9Hx39b8bGzMpsrYSDrKFChEbGaO2Q2mbO8cHacCK+7FsU3P7ZBs+
-         nGxQ==
-X-Gm-Message-State: APjAAAWzKx5YAcJzC64rcat9bxcioJQnxNsObgzC9K3IXCbD8m3nEEXk
-        zh5dP9Fc3zEHV+BTzqFg2W4bwA==
-X-Google-Smtp-Source: APXvYqwJDH0ahqtxz6b+vjzzuEsFRL9/rFt0U0fWQhjhqUG0gxjx1O1PQjfEQLmmpraiD6wIb4E9aw==
-X-Received: by 2002:a05:6830:1559:: with SMTP id l25mr13480418otp.355.1555978666763;
-        Mon, 22 Apr 2019 17:17:46 -0700 (PDT)
-Received: from localhost (175.sub-174-209-26.myvzw.com. [174.209.26.175])
-        by smtp.gmail.com with ESMTPSA id h23sm7189658oic.10.2019.04.22.17.17.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 22 Apr 2019 17:17:45 -0700 (PDT)
-Date:   Mon, 22 Apr 2019 17:17:43 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-cc:     khilman@baylibre.com
-Subject: Testing the recent RISC-V DT patchsets
-Message-ID: <alpine.DEB.2.21.9999.1904221705170.18377@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 22 Apr 2019 20:18:19 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3N03UJj028414
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 20:18:18 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s1qhb15ve-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 20:18:18 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 23 Apr 2019 01:18:16 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 01:18:13 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3N0ICqB36831360
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 00:18:12 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E78E4C04A;
+        Tue, 23 Apr 2019 00:18:12 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C86514C040;
+        Tue, 23 Apr 2019 00:18:11 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.109.124])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 00:18:11 +0000 (GMT)
+Subject: Re: [PATCH] kexec_buffer measure
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     prakhar srivastava <prsriva02@gmail.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Date:   Mon, 22 Apr 2019 20:18:01 -0400
+In-Reply-To: <CAEFn8qKkXgxUKtribbtFwvG9NykGQo10jQ5Du_i9wJz-wKreOA@mail.gmail.com>
+References: <CAEFn8qKkXgxUKtribbtFwvG9NykGQo10jQ5Du_i9wJz-wKreOA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042300-0008-0000-0000-000002DC7162
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042300-0009-0000-0000-00002248BE1A
+Message-Id: <1555978681.4914.305.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-22_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=970 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904220180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[Cc'ing LSM mailing list]
 
-I've heard from two separate people who have had trouble getting started 
-with BBL & open-source FSBL test flows with arbitrary DT files on the 
-Freedom Unleashed board.  The following instructions should help get 
-people started.
+On Fri, 2019-04-19 at 17:30 -0700, prakhar srivastava wrote:
 
-The core issue, aside from general unfamiliarity, is that multiple parts 
-of the pre-kernel software stack try to parse and/or modify the kernel DT.
-We wish to avoid this as much as possible.
+> 2) Adding a LSM hook
+> We are doing both the command line and kernel version measurement in IMA.
+> Can you please elaborate on how this can be used outside of the scenario?
+> That will help me come back with a better design and code. I am
+> neutral about this.
 
-Testing with U-boot and OpenSBI is currently left as an exercise for the 
-reader, for a similar reason and because those ports are still quite new.
+As I said previously, initially you might want to only measure the
+kexec boot command line, but will you ever want to verify or audit log
+the boot command line hash?  Perhaps LSMs would be interested in the
+boot command line.  Should this be an LSM hook?
 
-The following instructions are provided with no warranty whatsoever, and 
-assume knowledge of the shell and Linux.  If implemented carelessly, may 
-trash your filesystems or do other horrible things.
-
-
-- Paul
-
-
-These instructions assume that bare metal and Linux RV64 cross-toolchains 
-are installed.  If not, consider using crosstool-ng with the 
-"riscv64-unknown-elf" and "riscv64-unknown-linux-gnu" experimental sample 
-configurations.  You will need both.
-
-1. Put the location of the temporary build tree into the BASE
-   environment variable, and set up some initial directories:
-   export BASE=~/riscv-test; mkdir -p ${BASE}/work
-
-2. Partition a microSD card with (at least) two GPT partitions.
-   Here is a sample sfdisk dump:
-
-label: gpt
-label-id: 074689DB-0440-411C-91DB-440DFE5BA0B6
-device: /dev/sda
-unit: sectors
-first-lba: 34
-last-lba: 62333918
-
-/dev/sda1 : start=        2048, size=        2048, type=5B193300-FC78-40CD-8002-E86C45580B47, uuid=DEAD9378-45FF-44FB-B2E3-F3FEA45ADC9E, name="fsbl"
-/dev/sda2 : start=        4096, size=       65536, type=2E54B353-1271-4842-806F-E436D6AF6985, uuid=1B48DE68-8004-444D-BA47-AAA8DBEBFA60, name="bbl"
-/dev/sda3 : start=       69632, size=    62264287, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, uuid=D672F1FC-3E45-4CC1-835A-E6384A26C395, name="rootfs"
-
-
-3. Download the open-source FSBL:
-   cd ${BASE}
-   git clone https://github.com/sifive/freedom-u540-c000-bootloader
-
-4. Build the open-source FSBL:
-   cd freedom-u540-c000-bootloader
-   CROSSCOMPILE=/opt/rv64gc-mmu-elf/bin/riscv64-unknown-elf- make
-
-5. Write the open-source FSBL to the first partition of the SD card with
-   something like:
-   sudo dd if=fsbl.bin of=/dev/SD-CARD-DEVICE1 conv=nocreat
-
-6. Copy an initramfs sysroot into ${BASE}/work/buildroot_initramfs_sysroot.
-   A reasonable one to start with is the sysroot built by
-   freedom-u-sdk, in work/buildroot_initramfs_sysroot.
-
-7. Set the CROSS_COMPILE environment variable to point to your
-   cross-compiler, in the Linux kernel form:
-   export CROSS_COMPILE=/opt/rv64gc-mmu-linux-8.2.0/bin/riscv64-unknown-linux-gnu-
-
-8. Put something like this into a script and run it:
-
-if [ ! -d ${BASE} ]; then
-    echo Base build directory must be set in the BASE environment variable
-fi
-if [ ! -x ${CROSS_COMPILE}gcc ]; then
-    echo Path to cross-compiler must be set in the CROSS_COMPILE 
-environment variable
-fi
-
-export ARCH=riscv
-export OBJCOPY=${CROSS_COMPILE}objcopy
-export CC=${CROSS_COMPILE}gcc
-
-CORES=$(getconf _NPROCESSORS_ONLN)
-
-#
-#
-
-cd ${BASE}
-git clone -b dev/paulw/reduce-dt-load-v1 
-https://github.com/sifive/riscv-pk
-git clone -b dev/paulw/dts-v5.1-rc6-experimental 
-https://github.com/sifive/riscv-linux
-
-cd riscv-linux
-make -j${CORES} defconfig dtbs vmlinux
-
-${CROSS_COMPILE}strip -o ${BASE}/work/vmlinux-stripped 
-${BASE}/riscv-linux/vmlinux
-
-rm -rf ${BASE}/work/riscv-pk
-mkdir -p ${BASE}/work/riscv-pk
-cd ${BASE}/work/riscv-pk
-ln -sf 
-${BASE}/riscv-linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dtb 
-${BASE}/riscv-pk/linux.dtb
-${BASE}/riscv-pk/configure \
-	--host=riscv64-unknown-linux-gnu \
-	--enable-print-device-tree --with-payload=../vmlinux-stripped
-CFLAGS="-mabi=lp64d -march=rv64imafdc" make
-
-$OBJCOPY -S -O binary --change-addresses -0x80000000 bbl ../bbl.bin
-
-
-9.  Write ${BASE}/work/bbl.bin to the second partition of your microSD 
-    card with something like:
-    sudo dd if=${BASE}/work/bbl.bin of=/dev/SD-CARD-DEVICE2 bs=64k conv=nocreat
-
-10. Boot the microSD card on your Unleashed board.
-
+Mimi
 
