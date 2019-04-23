@@ -2,119 +2,146 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC6CC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B882C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BF2218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556053736;
-	bh=bpyhZQzIS9gnxZ/DB7mVWTg0gt5r9peVpzytTsQPOEw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fJcKWVZ7RrdQwWXJEY044e/nb0bmHwdNtd1CuF6yDy9mQbX3zyKr4qdmH9G1pKdb4
-	 8brEi4rqd8G4gQbKERsF2exVcTKmfZ3Mz7pg4ODu+l4QNG7AUStxoJbNS9NaoB4bdh
-	 Rbdb/Oz6/q3nWfN2w7SKRRMigtMrxOJ3TP6BhA2w=
+	by mail.kernel.org (Postfix) with ESMTP id E63B3218D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfDWVIz (ORCPT
+        id S1727718AbfDWVJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:08:55 -0400
-Received: from casper.infradead.org ([85.118.1.10]:38522 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfDWVIy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:08:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vdJiYFNKoKyfpKh/sHwLi3OzHq3/SpHY3SiZoXQLSOo=; b=G6a4jleNomlkvu7eTiW0NpqxiO
-        /ZBQDd1qzueVFNl1v/y5qc3zaNQ5vXizByhEQ6+sCOgk72t47SG/fLY9Ib9Lr1Wb98rzVR5YTr4Cy
-        R+skOlk62aIQx2b8XLYg2CeyupDYpZEWXed/v0XfHS3Id5+jQ1u2bKqWeQUaw1In6VRIkQucDThx1
-        X7SDQYApTQ+eLciLf3PyQdPPD/RaOsP4KMcvBCjLigmGI0p2zNJMciAlKvIfhvh5IJMVtEuEZjpgj
-        TkUTto5qgswEezqaIPG+Sox6o6td747KLECfJ64HPWFEVB0rlzdqwZaSYbzK4E/zEj8aiTDZUWXGU
-        m3+KaGNg==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJ2ep-0003j0-BE; Tue, 23 Apr 2019 21:08:51 +0000
-Date:   Tue, 23 Apr 2019 18:08:45 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 11/63] Documentation: ACPI: move dsdt-override.txt to
- admin-guide/acpi and convert to reST
-Message-ID: <20190423180845.603542d5@coco.lan>
-In-Reply-To: <20190423162932.21428-12-changbin.du@gmail.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
-        <20190423162932.21428-12-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 23 Apr 2019 17:09:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35460 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbfDWVJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 17:09:52 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A2B2D81245;
+        Tue, 23 Apr 2019 21:09:51 +0000 (UTC)
+Received: from treble (ovpn-123-99.rdu2.redhat.com [10.10.123.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 850CF1001DD2;
+        Tue, 23 Apr 2019 21:09:49 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 16:09:47 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
+        julien.thierry@arm.com
+Subject: Re: [PATCH 0/6] objtool: Add support for Arm64
+Message-ID: <20190423210947.b2qomzj3qb4pzfr5@treble>
+References: <20190409135243.12424-1-raphael.gault@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190409135243.12424-1-raphael.gault@arm.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 23 Apr 2019 21:09:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 24 Apr 2019 00:28:40 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
-
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
+On Tue, Apr 09, 2019 at 02:52:37PM +0100, Raphael Gault wrote:
+> Hi,
 > 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-> ---
->  .../acpi/dsdt-override.rst}                               | 8 +++++++-
->  Documentation/admin-guide/acpi/index.rst                  | 1 +
->  2 files changed, 8 insertions(+), 1 deletion(-)
->  rename Documentation/{acpi/dsdt-override.txt => admin-guide/acpi/dsdt-override.rst} (56%)
+> As of now, objtool only supports the x86_64 architecture but the
+> groundwork has already been done in order to add support for other
+> architecture without too much effort.
 > 
-> diff --git a/Documentation/acpi/dsdt-override.txt b/Documentation/admin-guide/acpi/dsdt-override.rst
-> similarity index 56%
-> rename from Documentation/acpi/dsdt-override.txt
-> rename to Documentation/admin-guide/acpi/dsdt-override.rst
-> index 784841caa6e6..50bd7f194bf4 100644
-> --- a/Documentation/acpi/dsdt-override.txt
-> +++ b/Documentation/admin-guide/acpi/dsdt-override.rst
-> @@ -1,6 +1,12 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +===============
-> +Overriding DSDT
-> +===============
-> +
->  Linux supports a method of overriding the BIOS DSDT:
->  
-> -CONFIG_ACPI_CUSTOM_DSDT builds the image into the kernel.
-> +CONFIG_ACPI_CUSTOM_DSDT - builds the image into the kernel.
->  
->  When to use this method is described in detail on the
->  Linux/ACPI home page:
-> diff --git a/Documentation/admin-guide/acpi/index.rst b/Documentation/admin-guide/acpi/index.rst
-> index 09e4e81e4fb7..d68e9914c5ff 100644
-> --- a/Documentation/admin-guide/acpi/index.rst
-> +++ b/Documentation/admin-guide/acpi/index.rst
-> @@ -9,3 +9,4 @@ the Linux ACPI support.
->     :maxdepth: 1
->  
->     initrd_table_override
-> +   dsdt-override
+> This series of patches adds support for the arm64 architecture
+> based on the Armv8.5 Architecture Reference Manual.
+> 
+> * Patch 1 adapts the existing code to be able to add support for other
+>   architecture.
+> * Patch 2 provide implementation of the required function for the arm64
+>   architecture.
+> * Patch 3 adapts the checking of the stack state for the arm64
+>   architecture.
+> * Patch 4 & 5 fix some warning objtool raised in some particular
+>   functions of ~/arch/arm64/kernel/sleep.S. Patch 4 add a macro to
+>   signal that some function should be ignored by objtool. 
+> * Patch 6 enables stack validation for arm64.
+> 
+> Theses patches should provide support for the main cases and behaviour.
+> However a few corner cases are not yet handled by objtool:
+> 
+> * In the `~/arch/arm64/crypto/` directory, I noticed that some plain
+>   data are sometimes stored in the `.text` section causing objtool to mistake
+>   this for instructions and trying (and failing) to interprete them.  If someone
+>   could explain to me why we store data directly in the .text section I would
+>   appreciate it.
 
+I haven't looked, but it should probably be moved to .rodata.  We had
+cases like that for x86.
 
+> * In the support for arm32 architecture such as in `~/arch/arm64/kernel/kuser32.S`
+>   some A32 instructions are used but such instructions are not understood by
+>   objtool causing a warning.
+> 
+> I also have a few unclear points I would like to bring to your
+> attention:
+> 
+> * For x86_64, when looking for a symbol relocation with explicit
+>   addend, objtool systematically adds a +4 offset to the addend.
+>   I don't understand why even if I have a feeling it is related
+>   to the type of relacation.
 
-Thanks,
-Mauro
+This is because of how relative call/jump addresses are implemented on
+x86.  It calculates the call/jump destination by adding the encoded offset
+to the *ending* address of the instruction, rather than to the address
+of the encoded offset itself.
+
+For example:
+
+  119ca0:       e8 00 00 00 00          callq  119ca5 <__ia32_sys_sched_rr_get_interval+0x5>
+                        119ca1: R_X86_64_PC32   __fentry__-0x4
+
+This instruction is a call to the __fentry__ function.  The rela addend
+is the address of the destination function (__fentry__) minus 4.  After
+applying the relocation, it resolves to:
+
+ffffffff81002010:       e8 eb f7 9f 00          callq  ffffffff81a01800 <__fentry__>
+
+The destination address is "0x9ff7eb", which is indeed __fentry__ - 4.
+
+x86 expects it to be that way, because the x86 CPU adds the offset to
+the *end* of the instruction: ffffffff81002015 (last digit is 5, not 0).
+
+0xffffffff81002015 + 0x9ff7eb = 0xfffffff81a01800, which is indeed the
+address of __fentry__.
+
+And there's always a 4-byte gap between the relocation target and the
+end of the instruction, so the rela addend always has the -4.  So when
+reading the relocation we have to add the 4 bytes back to get the actual
+destination address.
+
+> * I currently don't have a clear understanding about how switch-tables
+>   are generated on arm64 and how to retrieve them (based on relocations).
+
+This is indeed a bit tricky on x86.
+
+> Please provide me with any feedback and comments as well on the content
+> than the style of these patches.
+
+Overall it looks like a great start.  I added some per-patch comments.
+
+Has the cross-compile path been tested?  Specifically, compiling for a
+arm64 target on an x86 host?  In other words, objtool would be an x86
+binary which reads arm64 objects.  I imagine that will be a semi-common
+use case.  Objtool already supports cross-compiling for an x86-64 target
+on an x86-32 host (and also a powerpc host IIRC), so it should be
+do-able in theory, and it might "just work".
+
+For the next version, please base it on the -tip tree, as that's where
+all the latest objtool changes are.  Peter refactored some code which
+has some minor conflicts with yours.
+
+-- 
+Josh
