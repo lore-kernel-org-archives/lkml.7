@@ -2,119 +2,78 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E568AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4171DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1D71206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:16:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4RA+nAK"
+	by mail.kernel.org (Postfix) with ESMTP id 0BC3E214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbfDWGQk (ORCPT
+        id S1726154AbfDWGVP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 02:16:40 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42192 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfDWGQk (ORCPT
+        Tue, 23 Apr 2019 02:21:15 -0400
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162]:41186 "EHLO
+        tyo162.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfDWGVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 02:16:40 -0400
-Received: by mail-ed1-f68.google.com with SMTP id u23so11180026eds.9;
-        Mon, 22 Apr 2019 23:16:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vXl6q5zeQKSYBdKSjEhpsF15Oe7Ve1qPnsXuP1rWgWE=;
-        b=D4RA+nAKwVy9Xgxk3ChMxDQNmZ2ZnD35mgksgQhD1TngjCI8C1U+1cNE1/p4xYTrmW
-         QDx2Q+meUafIV3VLnGYFOPlUek8wWtr/+cxUZtuR/kP4BU7IKXRpZ49gmmL/OOARik36
-         PPQ66hwLVxfjzALwnuBiwxNhKPmYpEGP29ZzXWhEsTdNkmoszi1rPTdTkkMhuXPl9rnT
-         fbpLn2KGXAV+MqaN/yXjuzjqzzKjNUPqPkaytP8jczgnIKhydxzz+mVqsVJ+Zs76cWoY
-         rTVnTKkKBxu/6LdJlNAAq5pol805/4ixvmnyqKYP0nSdxtAAk4fKGA7Hwt/HvwC8zze0
-         oFyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vXl6q5zeQKSYBdKSjEhpsF15Oe7Ve1qPnsXuP1rWgWE=;
-        b=g2smmxeJMIFrHNFgBAegnwjoIdq6aQcU0pkfJsfsXsCmQ1ft8TlQdA6taXF4P5pwVY
-         85RdgtkvA9hgW+1WS2XcqHHqy4alnw+AD3/8tM7WWolbY4VwJ55U2wF7L76hAy42XxD6
-         eWix+NqwWfLtnI35JNpQxhlRodbSTTsY1VT7GV070D70SD40K2tyK9ms68MfLkE0RVYV
-         cuAIcAo8wN8UBvJabswmL53DzczggLZxaDVmjTr8GMvHT+fYUyXctdZ/YcV+KKIfWR6x
-         GaCBqSii6jYZdI+tnfBsC4ATT0tC6vDFDf1xiGga8psCwwIeU+Gkl/erHsqaEPrrGulx
-         yKqw==
-X-Gm-Message-State: APjAAAX6VPfdijDgCW1bx2BHaZroSZLkyc2bLyyFa/zTGLjhdM8PL6FX
-        rgqRsLEtyg41W8cbnqOHmRIvZVICmcFpluxiEYM=
-X-Google-Smtp-Source: APXvYqzhnkk3vJ9OKsBmAKsaeiC2UufvH45N2K4DyrrMJf+iLoqI4qETR620rA5hgShr1bcgjb7l/bg1iRL/RJNzd60=
-X-Received: by 2002:a50:a3c2:: with SMTP id t2mr14767339edb.46.1556000198022;
- Mon, 22 Apr 2019 23:16:38 -0700 (PDT)
+        Tue, 23 Apr 2019 02:21:15 -0400
+Received: from mailgate02.nec.co.jp ([114.179.233.122])
+        by tyo162.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x3N6KdCK014629
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 23 Apr 2019 15:20:39 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3N6KdqH016893;
+        Tue, 23 Apr 2019 15:20:39 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x3N6ESia028768;
+        Tue, 23 Apr 2019 15:20:39 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.139] [10.38.151.139]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-4548273; Tue, 23 Apr 2019 15:20:10 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC11GP.gisp.nec.co.jp ([10.38.151.139]) with mapi id 14.03.0319.002; Tue,
+ 23 Apr 2019 15:20:10 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Kairui Song <kasong@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Chao Fan" <fanc.fnst@cn.fujitsu.com>, Baoquan He <bhe@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: [PATCH] x86/kexec: always ensure EFI systab region is mapped
+Thread-Topic: [PATCH] x86/kexec: always ensure EFI systab region is mapped
+Thread-Index: AQHU+O3agAmzlxHZg0mE9lemKT/NC6ZIsHeA
+Date:   Tue, 23 Apr 2019 06:20:09 +0000
+Message-ID: <965f770a-b103-72fb-eaef-cb337ebe8290@ce.jp.nec.com>
+References: <20190422092804.15534-1-kasong@redhat.com>
+In-Reply-To: <20190422092804.15534-1-kasong@redhat.com>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <92F1F186A0F7274C960CCFCB661342A2@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190422193542.2853-1-daniel.baluta@nxp.com> <20190422193542.2853-2-daniel.baluta@nxp.com>
- <20190423052022.orwkfjy6ftqmjq5p@pengutronix.de>
-In-Reply-To: <20190423052022.orwkfjy6ftqmjq5p@pengutronix.de>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Tue, 23 Apr 2019 09:16:26 +0300
-Message-ID: <CAEnQRZA=Ko+hebpCpFAvBMiAtFr8o1m+oktpOpDJh2pkmiEk6A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] arm64: dts: imx8mm: Add SAI nodes
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Anson Huang <anson.huang@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 8:21 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
->
-> Hi Daniel,
->
-> On 19-04-22 19:35, Daniel Baluta wrote:
-> > i.MX8MM has 5 SAI instances with the following base
-> > addresses according to RM.
-> >
-> > SAI1 base address: 3001_0000h
-> > SAI2 base address: 3002_0000h
-> > SAI3 base address: 3003_0000h
-> > SAI5 base address: 3005_0000h
-> > SAI6 base address: 3006_0000h
-> >
-> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 71 +++++++++++++++++++++++
-> >  1 file changed, 71 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > index de3498c2dd44..4d080dc47216 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> > @@ -171,6 +171,77 @@
-> >                       #size-cells = <1>;
-> >                       ranges;
-> >
-> > +                     sai1: sai@30010000 {
-> > +                             compatible = "fsl,imx8mm-sai",
-> > +                                             "fsl,imx8mq-sai";
->
-> Just a nitpick but I would not break this line here. This applies to the
-> other sai nodes too.
+On 4/22/19 6:28 PM, Kairui Song wrote:
+> The reason is the systab region is not mapped by the identity mapping
+> provided by kexec. Currently kexec only create identity mapping for
+> mem regions, wihch won't cover the systab. So second kernel will be
+> accessing a not mapped memory region and cause fault.
+> But as kexec tend to pad the map region up to PUD size, the
+> systab could be included in the map by accident, so it worked on
+> some machines, but that will be broken easily and unstable.
 
-Yes, I thought about this and I think I will fix it as you say also I get past
-the 80 chars limit.
+Is the mapping of ACPI tables just by luck, too?
+
+-- 
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
