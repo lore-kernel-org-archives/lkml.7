@@ -2,132 +2,111 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1048FC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D32C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D393F21850
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7102321850
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:20:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BOI/MwZt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfDWUUD (ORCPT
+        id S1727231AbfDWUUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:20:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40904 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726088AbfDWUUD (ORCPT
+        Tue, 23 Apr 2019 16:20:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34102 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfDWUUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:20:03 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NK8xPs016161
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:20:01 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s28whsyqh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 16:20:01 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 23 Apr 2019 21:20:00 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 23 Apr 2019 21:19:56 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NKJt7836044940
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Apr 2019 20:19:55 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8332B2066;
-        Tue, 23 Apr 2019 20:19:55 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A13DEB2064;
-        Tue, 23 Apr 2019 20:19:55 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.80.223.68])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Apr 2019 20:19:55 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 3FE9B16C2A4D; Tue, 23 Apr 2019 13:19:55 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 13:19:55 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] Documentation: atomic_t.txt: Explain ordering provided
- by smp_mb__{before,after}_atomic()
-Reply-To: paulmck@linux.ibm.com
-References: <Pine.LNX.4.44L0.1904191312200.1406-100000@iolanthe.rowland.org>
- <20190419180017.GP4038@hirez.programming.kicks-ass.net>
- <20190419182620.GF14111@linux.ibm.com>
- <1555719429.t9n8gkf70y.astroid@bobo.none>
- <20190420085440.GK14111@linux.ibm.com>
- <20190423123209.GR4038@hirez.programming.kicks-ass.net>
- <20190423133010.GK3923@linux.ibm.com>
- <20190423134003.GV4038@hirez.programming.kicks-ass.net>
+        Tue, 23 Apr 2019 16:20:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Al/P6FnnMt+FG9pNNKh5XSfhEIGYqFQcARjIduUFosA=; b=BOI/MwZtlezbzRQJAHb8SRihK
+        D6afJdvdg9LkpOJH6MUrPFz+8UdJmc7BEJii9s8onW7mCU0h6vjaHKK4SRivfEclxI0EOgl4oR/x6
+        ZJ+SNZp5AHnKXHyEXMibANVFh6e1uDkZBVQxHR7CtM/WAUCcoflQlVLARq1bq+MmIJmt2uSQHOykj
+        yGkO4oFQ5FnriidqKS6ZGduXYv8sBIsiw/7Mx3K2lJF2G9ptBRhKruG9kQnJG3Tr2UrW42koS6Ttj
+        1Jp5tawps2hKByg+T717zqcQu5TJnsfNyWTaE58nlR1yC/kb9ciDcu/eU4zwjQ86Rdy53J7J5/cxz
+        l71twcX2g==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJ1u3-0003bw-Gv; Tue, 23 Apr 2019 20:20:31 +0000
+Subject: Re: [PATCH] crypto: ecrdsa - select ASN1 and OID_REGISTRY for EC-RDSA
+To:     Vitaly Chikunov <vt@altlinux.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20190423162954.7859-1-vt@altlinux.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3b74a3e8-d915-8ff3-186f-c5a774d00bc3@infradead.org>
+Date:   Tue, 23 Apr 2019 13:20:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423134003.GV4038@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19042320-0072-0000-0000-0000041DA8EE
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010982; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01193371; UDB=6.00625585; IPR=6.00974191;
- MB=3.00026562; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-23 20:19:59
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042320-0073-0000-0000-00004BEEAA24
-Message-Id: <20190423201955.GX3923@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=673 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904230142
+In-Reply-To: <20190423162954.7859-1-vt@altlinux.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 03:40:03PM +0200, Peter Zijlstra wrote:
-> On Tue, Apr 23, 2019 at 06:30:10AM -0700, Paul E. McKenney wrote:
-> > There are a great many that look like this:
-> > 
-> > 	smp_mb__before_atomic();
-> > 	clear_bit(NFSD4_CLIENT_UPCALL_LOCK, &clp->cl_flags);
-> > 	smp_mb__after_atomic();
+On 4/23/19 9:29 AM, Vitaly Chikunov wrote:
+> Fix undefined symbol issue in ecrdsa_generic module when ASN1
+> or OID_REGISTRY aren't enabled in the config by selecting these
+> options for CRYPTO_ECRDSA.
 > 
-> Ooh, marvel at the comment describing the ordering there. Oh wait :-(
-> So much for checkpatch.pl I suppose.
-
-Especially if the code was in the kernel before checkpatch.pl started
-asking for comments.  Which might or might not be the case with this
-code.  No idea either way.
-
-> I think the first is a release order for the 'LOCK' bit and the second
-> is because of wake_up_bit() being a shitty interface.
+> ERROR: "asn1_ber_decoder" [crypto/ecrdsa_generic.ko] undefined!
+> ERROR: "look_up_OID" [crypto/ecrdsa_generic.ko] undefined!
 > 
-> So maybe that should've been:
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
+My tools would prefer to see the diff at one tree level higher:
+
+
+> ---
+>  crypto/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> 	clear_bit_unlock(NFSD4_CLIENT_UPCALL_LOCK, &clp->cl_flags);
-> 	smp_mb__after_atomic();
-> 	wake_up_bit(&clp->cl_flags, NFSD4_CLIENT_UPCALL_LOCK);
+> diff --git crypto/Kconfig crypto/Kconfig
+
+  diff --git a/crypto/Kconfig b/crypto/Kconfig
+
+for any spelling of a and b.
+
+
+> index 4446833f6eca..3d056e7da65f 100644
+> --- crypto/Kconfig
+> +++ crypto/Kconfig
+
+  --- a/crypto/Kconfig
+  +++ b/crypto/Kconfig
+
+> @@ -264,6 +264,8 @@ config CRYPTO_ECRDSA
+>  	select CRYPTO_ECC
+>  	select CRYPTO_AKCIPHER
+>  	select CRYPTO_STREEBOG
+> +	select OID_REGISTRY
+> +	select ASN1
+>  	help
+>  	  Elliptic Curve Russian Digital Signature Algorithm (GOST R 34.10-2012,
+>  	  RFC 7091, ISO/IEC 14888-3:2018) is one of the Russian cryptographic
 > 
-> instead?
 
-Quite possibly, but my brain is too fried to be sure.
 
-							Thanx, Paul
-
+-- 
+~Randy
