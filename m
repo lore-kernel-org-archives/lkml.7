@@ -2,120 +2,99 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DF9C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4136C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCFD217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:06:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="ap+rHjm7"
+	by mail.kernel.org (Postfix) with ESMTP id 63E26206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbfDWPGY (ORCPT
+        id S1728311AbfDWPIY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:06:24 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:34990 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727673AbfDWPGY (ORCPT
+        Tue, 23 Apr 2019 11:08:24 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49455 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727761AbfDWPIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:06:24 -0400
-X-Greylist: delayed 1940 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Apr 2019 11:06:23 EDT
-Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
-        by mx0a-00190b01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NEQxEO008326;
-        Tue, 23 Apr 2019 15:33:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=jan2016.eng;
- bh=arkhTlxL/xq6hHs8zOa3vPqV/+YR/QoM8F0pg/cukSE=;
- b=ap+rHjm7bB9xDNr+gszLXDj9SMelEbJNQJ3GdyMufwrnX/llvzNLjBzeRV5QV5gKyzs5
- XgMJ5u0s24EhjV5jblwgZlXMrJk03wvb03IiK+/SBKVmXwFzrMa4zguRdtF0KMFraOyz
- 0hDRUeZp0nhMDLUL67twDp+liulr5I2PaBykIhA0n2D/Jpt7WVG+y2+MbFVmljwXPWco
- LxUcquqqTbroNFw7F/2Gkj95eFgMcMEQIDjX3zQ/S4cWAGolureQf7GEG+KEFLagZL7P
- QG1WkdpLU1m/YPv5IFYCNIl0ox7mPK2cx2xrV+1utEmVGtv8Uhth+00dwb87dujcJYBw 4A== 
-Received: from prod-mail-ppoint3 (prod-mail-ppoint3.akamai.com [96.6.114.86] (may be forged))
-        by mx0a-00190b01.pphosted.com with ESMTP id 2s22fk8h2p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Apr 2019 15:33:56 +0100
-Received: from pps.filterd (prod-mail-ppoint3.akamai.com [127.0.0.1])
-        by prod-mail-ppoint3.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x3NEWDJd015195;
-        Tue, 23 Apr 2019 10:33:55 -0400
-Received: from email.msg.corp.akamai.com ([172.27.25.32])
-        by prod-mail-ppoint3.akamai.com with ESMTP id 2ryxrurcfe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 23 Apr 2019 10:33:55 -0400
-Received: from USTX2EX-DAG1MB2.msg.corp.akamai.com (172.27.27.102) by
- ustx2ex-dag1mb3.msg.corp.akamai.com (172.27.27.103) with Microsoft SMTP
- Server (TLS) id 15.0.1473.3; Tue, 23 Apr 2019 09:33:54 -0500
-Received: from USTX2EX-DAG1MB2.msg.corp.akamai.com ([172.27.6.132]) by
- ustx2ex-dag1mb2.msg.corp.akamai.com ([172.27.6.132]) with mapi id
- 15.00.1473.003; Tue, 23 Apr 2019 09:33:54 -0500
-From:   "Banerjee, Debabrata" <dbanerje@akamai.com>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        Dmitry Monakhov <dmonakhov@openvz.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ext4: bad mount opts in no journal mode
-Thread-Topic: [PATCH] ext4: bad mount opts in no journal mode
-Thread-Index: AQHU8LB42sqXQo7D8EG2I+INPmkeGKZJ8oiA
-Date:   Tue, 23 Apr 2019 14:33:53 +0000
-Message-ID: <2C6C280A-9716-4F96-A999-CDFBD0153F61@akamai.com>
-References: <20190411214917.1899-1-dbanerje@akamai.com>
-In-Reply-To: <20190411214917.1899-1-dbanerje@akamai.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/10.18.0.190414
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.19.40.193]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <95061BCC4913BC42A12E73C7F7B66B95@akamai.com>
-Content-Transfer-Encoding: base64
+        Tue, 23 Apr 2019 11:08:24 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hIx1q-0001Te-Pk; Tue, 23 Apr 2019 17:08:14 +0200
+Date:   Tue, 23 Apr 2019 17:08:14 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2019.04.16a 38/72] kernel/rcu/tree.c:2408:36: sparse:
+ sparse: incorrect type in initializer (different address spaces)
+Message-ID: <20190423150814.4lhcavywthyiwipd@linutronix.de>
+References: <201904231828.a3jAyl28%lkp@intel.com>
+ <20190423124619.GH3923@linux.ibm.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904230098
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904230098
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190423124619.GH3923@linux.ibm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cGluZz8NCg0K77u/T24gNC8xMS8xOSwgNTo0OSBQTSwgIkRlYmFicmF0YSBCYW5lcmplZSIgPGRi
-YW5lcmplQGFrYW1haS5jb20+IHdyb3RlOg0KDQogICAgRml4ZXM6DQogICAgY29tbWl0IDFlMzgx
-ZjYwZGFkOSAoImV4dDQ6IGRvIG5vdCBhbGxvdyBqb3VybmFsX29wdHMgZm9yIGZzIHcvbyBqb3Vy
-bmFsIikNCiAgICANCiAgICBJbnN0ZWFkIG9mIHJlbW92aW5nIEVYVDRfTU9VTlRfSk9VUk5BTF9D
-SEVDS1NVTSBmcm9tIHNfZGVmX21vdW50X29wdCBhcw0KICAgIEkgYXNzdW1lIHdhcyBpbnRlbmRl
-ZCwgYWxsIG90aGVyIG9wdGlvbnMgd2VyZSBibG93biBhd2F5IGxlYWRpbmcgdG8NCiAgICBfZXh0
-NF9zaG93X29wdGlvbnMoKSBvdXRwdXQgYmVpbmcgaW5jb3JyZWN0LiBJIGRvbid0IHNlZSB3aHkg
-dGhpcyBvcg0KICAgIG90aGVyIGpvdXJuYWwgcmVsYXRlZCBmbGFncyBzaG91bGQgYmUgcmVtb3Zl
-ZCBmcm9tIHNfZGVmX21vdW50X29wdA0KICAgIHJlZ2FyZGxlc3MsIGl0IGlzIG9ubHkgdXNlZCBm
-b3IgY29tcGFyaXNvbiB0byBkaXNwbGF5IG9wdHMsIGFuZCB3ZQ0KICAgIGFscmVhZHkgbWFkZSBz
-dXJlIHRoZXkgY291bGRuJ3QgYmUgc2V0Lg0KICAgIA0KICAgIFNpZ25lZC1vZmYtYnk6IERlYmFi
-cmF0YSBCYW5lcmplZSA8ZGJhbmVyamVAYWthbWFpLmNvbT4NCiAgICAtLS0NCiAgICAgZnMvZXh0
-NC9zdXBlci5jIHwgMSAtDQogICAgIDEgZmlsZSBjaGFuZ2VkLCAxIGRlbGV0aW9uKC0pDQogICAg
-DQogICAgZGlmZiAtLWdpdCBhL2ZzL2V4dDQvc3VwZXIuYyBiL2ZzL2V4dDQvc3VwZXIuYw0KICAg
-IGluZGV4IDZlZDRlYjgxZTY3NC4uNjNlZWYyOTY2NmUwIDEwMDY0NA0KICAgIC0tLSBhL2ZzL2V4
-dDQvc3VwZXIuYw0KICAgICsrKyBiL2ZzL2V4dDQvc3VwZXIuYw0KICAgIEBAIC00MjM4LDcgKzQy
-MzgsNiBAQCBzdGF0aWMgaW50IGV4dDRfZmlsbF9zdXBlcihzdHJ1Y3Qgc3VwZXJfYmxvY2sgKnNi
-LCB2b2lkICpkYXRhLCBpbnQgc2lsZW50KQ0KICAgICAJCQkJICJkYXRhPSwgZnMgbW91bnRlZCB3
-L28gam91cm5hbCIpOw0KICAgICAJCQlnb3RvIGZhaWxlZF9tb3VudF93cTsNCiAgICAgCQl9DQog
-ICAgLQkJc2JpLT5zX2RlZl9tb3VudF9vcHQgJj0gRVhUNF9NT1VOVF9KT1VSTkFMX0NIRUNLU1VN
-Ow0KICAgICAJCWNsZWFyX29wdChzYiwgSk9VUk5BTF9DSEVDS1NVTSk7DQogICAgIAkJY2xlYXJf
-b3B0KHNiLCBEQVRBX0ZMQUdTKTsNCiAgICAgCQlzYmktPnNfam91cm5hbCA9IE5VTEw7DQogICAg
-LS0gDQogICAgMi4yMS4wDQogICAgDQogICAgDQoNCg==
+On 2019-04-23 05:46:19 [-0700], Paul E. McKenney wrote:
+> On Tue, Apr 23, 2019 at 06:33:33PM +0800, kbuild test robot wrote:
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2019.04.16a
+> > head:   ca8714f549be5a186d086a223184095759eb7094
+> > commit: 9a1a31194644dfc6b8f19755ea44ecf84f37cf40 [38/72] rcu: Enable elimination of Tree-RCU softirq processing
+> > reproduce:
+> >         # apt-get install sparse
+> >         git checkout 9a1a31194644dfc6b8f19755ea44ecf84f37cf40
+> >         make ARCH=x86_64 allmodconfig
+> >         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> > 
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > 
+> > 
+> > 
+> > sparse warnings: (new ones prefixed by >>)
+> > 
+> > >> kernel/rcu/tree.c:2408:36: sparse: sparse: incorrect type in initializer (different address spaces) @@    expected struct task_struct [noderef] <asn:3> **store @@    got struct task_struct [noderef] <asn:3> **store @@
+> 
+> Line 2408 of kernel/rcu/tree.c for commit 9a1a31194644 ("rcu: Enable
+> elimination of Tree-RCU softirq processing") is this:
+> 
+> 	.store			= &rcu_data.rcu_cpu_kthread_task,
+> 
+> So I am having some difficulty understanding this sparse diagnostic.
+> 
+> Help?
+
+this helps
+
+diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
+index d0884b5250010..c2678e29807c1 100644
+--- a/include/linux/smpboot.h
++++ b/include/linux/smpboot.h
+@@ -29,7 +29,7 @@ struct smpboot_thread_data;
+  * @thread_comm:	The base name of the thread
+  */
+ struct smp_hotplug_thread {
+-	struct task_struct __percpu	**store;
++	struct task_struct		*__percpu *store;
+ 	struct list_head		list;
+ 	int				(*thread_should_run)(unsigned int cpu);
+ 	void				(*thread_fn)(unsigned int cpu);
+
+
+I just need to find the correct words for it.
+And yes, it is not RCU related…
+
+> 							Thanx, Paul
+
+Sebastian
