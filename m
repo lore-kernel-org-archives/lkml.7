@@ -6,32 +6,31 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276DBC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B55DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F3520811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BD62175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfDWKzD (ORCPT
+        id S1727591AbfDWKzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:55:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52946 "EHLO mx1.suse.de"
+        Tue, 23 Apr 2019 06:55:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52980 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726204AbfDWKzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:55:02 -0400
+        id S1727558AbfDWKzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 06:55:03 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 89A67AE4F;
-        Tue, 23 Apr 2019 10:55:01 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id B2A83AE8D;
+        Tue, 23 Apr 2019 10:55:02 +0000 (UTC)
 From:   Juergen Gross <jgross@suse.com>
 To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
         iommu@lists.linux-foundation.org
 Cc:     konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
-        sstabellini@kernel.org, Juergen Gross <jgross@suse.com>,
-        stable@vger.kernel.org
-Subject: [PATCH 1/3] xen/swiotlb: fix condition for calling xen_destroy_contiguous_region()
-Date:   Tue, 23 Apr 2019 12:54:55 +0200
-Message-Id: <20190423105457.17502-2-jgross@suse.com>
+        sstabellini@kernel.org, Juergen Gross <jgross@suse.com>
+Subject: [PATCH 2/3] xen/swiotlb: simplify range_straddles_page_boundary()
+Date:   Tue, 23 Apr 2019 12:54:56 +0200
+Message-Id: <20190423105457.17502-3-jgross@suse.com>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20190423105457.17502-1-jgross@suse.com>
 References: <20190423105457.17502-1-jgross@suse.com>
@@ -40,37 +39,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The condition in xen_swiotlb_free_coherent() for deciding whether to
-call xen_destroy_contiguous_region() is wrong: in case the region to
-be freed is not contiguous calling xen_destroy_contiguous_region() is
-the wrong thing to do: it would result in inconsistent mappings of
-multiple PFNs to the same MFN. This will lead to various strange
-crashes or data corruption.
+range_straddles_page_boundary() is open coding several macros from
+include/xen/page.h. Use those instead. Additionally there is no need
+to have check_pages_physically_contiguous() as a separate function as
+it is used only once, so merge it into range_straddles_page_boundary().
 
-Instead of calling xen_destroy_contiguous_region() in that case a
-warning should be issued as that situation should never occur.
-
-Cc: stable@vger.kernel.org
 Signed-off-by: Juergen Gross <jgross@suse.com>
 ---
- drivers/xen/swiotlb-xen.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/xen/swiotlb-xen.c | 28 ++++++----------------------
+ 1 file changed, 6 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index 877baf2a94f4..42a3924e6d91 100644
+index 42a3924e6d91..43b6e65ae256 100644
 --- a/drivers/xen/swiotlb-xen.c
 +++ b/drivers/xen/swiotlb-xen.c
-@@ -360,8 +360,8 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
- 	/* Convert the size to actually allocated. */
- 	size = 1UL << (order + XEN_PAGE_SHIFT);
+@@ -92,34 +92,18 @@ static inline dma_addr_t xen_virt_to_bus(void *address)
+ 	return xen_phys_to_bus(virt_to_phys(address));
+ }
  
--	if (((dev_addr + size - 1 <= dma_mask)) ||
--	    range_straddles_page_boundary(phys, size))
-+	if ((dev_addr + size - 1 <= dma_mask) &&
-+	    !WARN_ON(range_straddles_page_boundary(phys, size)))
- 		xen_destroy_contiguous_region(phys, order);
+-static int check_pages_physically_contiguous(unsigned long xen_pfn,
+-					     unsigned int offset,
+-					     size_t length)
++static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
+ {
+-	unsigned long next_bfn;
+-	int i;
+-	int nr_pages;
++	unsigned long next_bfn, xen_pfn = XEN_PFN_DOWN(p);
++	unsigned int i, nr_pages = XEN_PFN_UP(xen_offset_in_page(p) + size);
  
- 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
+ 	next_bfn = pfn_to_bfn(xen_pfn);
+-	nr_pages = (offset + length + XEN_PAGE_SIZE-1) >> XEN_PAGE_SHIFT;
+ 
+-	for (i = 1; i < nr_pages; i++) {
++	for (i = 1; i < nr_pages; i++)
+ 		if (pfn_to_bfn(++xen_pfn) != ++next_bfn)
+-			return 0;
+-	}
+-	return 1;
+-}
++			return 1;
+ 
+-static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
+-{
+-	unsigned long xen_pfn = XEN_PFN_DOWN(p);
+-	unsigned int offset = p & ~XEN_PAGE_MASK;
+-
+-	if (offset + size <= XEN_PAGE_SIZE)
+-		return 0;
+-	if (check_pages_physically_contiguous(xen_pfn, offset, size))
+-		return 0;
+-	return 1;
++	return 0;
+ }
+ 
+ static int is_xen_swiotlb_buffer(dma_addr_t dma_addr)
 -- 
 2.16.4
 
