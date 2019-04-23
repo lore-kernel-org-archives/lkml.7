@@ -2,233 +2,120 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC345C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D98DC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C347218B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:12:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556053969;
-	bh=BWxvGr0qGvlTx7fLrnaZqZMaPJT+VkSzaWxMloc4rq4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oU7mICx+h9zZ9duPHL0zKnHJycjzC13rAQp4TnGv0SMN5hXXNbBj0uc0CSov+7nUg
-	 vGWvrIIav2A+F89D9Pq5A/FdrkAgS1qUo9U2c9xlFFtPfIyMd9rAunMiF5mnYm88kC
-	 e2JJ3cdVESdhqkvmS5bKgTOiXJ7xUknfUyUU2ZUk=
+	by mail.kernel.org (Postfix) with ESMTP id CF6F7218B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:13:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qmZvYj6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfDWVMs (ORCPT
+        id S1727829AbfDWVNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:12:48 -0400
-Received: from casper.infradead.org ([85.118.1.10]:38896 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfDWVMr (ORCPT
+        Tue, 23 Apr 2019 17:13:37 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:39351 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbfDWVNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:12:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZD96kitRr8igE3+JY10qe34adEM/oyvkNaEMzzG8fnY=; b=EvP6rLEGAhqB1F8o9hM6vchUDQ
-        2esUtWbn6UC5Qg776ziYdGFDqOii/cQb8YQYTHfYK3+HuUVQEk+OI3wjFZDO9Dp4J8L68+yGnxZDA
-        RmlHsFk8OM5LaCohxEp5HraSe5/RFZr7V6aVUxe4hqY3le0mQEa10lyBjYXyreqfRVuiWCmIxc+s6
-        cEMoQLioj2B8QF/BGDUu+EgkiH/JH1WiL+3UZZ6Mv9zc8MjvCm6pLZpBkCmInxsEm2QwpNjK11XIH
-        twhekmimb1Ft8hE5Dp85ggyercIGvu35ODlTvosIUw8JdEoIM9sX3SvmFY1T3OAmq34PE9KWMpCcP
-        RjqnCMdg==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJ2iY-0003uJ-AY; Tue, 23 Apr 2019 21:12:42 +0000
-Date:   Tue, 23 Apr 2019 18:12:36 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 13/63] Documentation: ACPI: move acpi-lid.txt to
- firmware-guide/acpi and convert to reST
-Message-ID: <20190423181236.18e4b6a0@coco.lan>
-In-Reply-To: <20190423162932.21428-14-changbin.du@gmail.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
-        <20190423162932.21428-14-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 23 Apr 2019 17:13:37 -0400
+Received: by mail-qt1-f202.google.com with SMTP id q28so1954611qtj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 14:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=bZHDbK/yobdrFPeL2PgeVHLRSaUhrYBQOSZn6iUwvTc=;
+        b=qmZvYj6Nysn00Bh5NGtig1mPn1MbVI94aImSuXSzZT/xC5CFCOhyYLNlvuKGHcb2/P
+         xXS95WKixbGhNh+QWqEWmIXeBK/oRgHPxyvtANerGfeiKCiFGiWU2yoWIqP4u77SyQC+
+         RapzuvAOPSppkNLFJNsKId0XkriwvoDYHYdAR2uu80wARk9gV5U0bhytfvdfiHmGpLeh
+         UtYhSQ9UdDgowoVppEH+5wKICBfUChAoozXkix5pYg9v9N0vWaUoXxu5IpOC+XDEDqT9
+         vI+dakC9enOeyuHi0Tp53/VbrIdOS03v+t0xmVWAyji6Ha9bUjCmTpesyiuiZ9J5jDQ9
+         DCDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=bZHDbK/yobdrFPeL2PgeVHLRSaUhrYBQOSZn6iUwvTc=;
+        b=HiWi0snynmm/6KQXv0dxGKy0CbInMU8QZGEKJLnxyqthw9N3uKyHl56rf+d9p7ups3
+         xWM0snZgkKY8RBn3ZeSY4ArcAVydIXyZ1ZNnC/hhiujb0DAoVoTQb86cdq23ILTM+KU3
+         u5eYMeSVmDuInpiTW2EDTCX8kvxnwUWmcJBn+UblGHebndGqHuCoMlXXAwPZheG5QR5Z
+         jA6F0UDiTDXpE/00gNddNuF7g3SvdDyRZTl/0HsP2hjymZkkRKHBAaarm31un9bhQ6Fv
+         uOlVeRho5NUMrKrPTs1INfzu038bK86TjW/QKPitGYlXGCHB1NwrqVOElUorZb48gvGe
+         nw8w==
+X-Gm-Message-State: APjAAAWj3LnyDkPqCn0rRzxWgOecRRQLWSu4RQKUpPNVC5LFCBSLCnoO
+        XMTLxE0Oa2LAvpq+XrsI0HPb+uyr5BA=
+X-Google-Smtp-Source: APXvYqzRDe5K3B29b0tQOgxz9p2HqITP+PMWi9qlWqF+2DE1V558vAOD2DwKQ6iYA9d7OPyAcEUshCgfyIU=
+X-Received: by 2002:a0c:ae04:: with SMTP id y4mr22674010qvc.49.1556054016351;
+ Tue, 23 Apr 2019 14:13:36 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 14:13:29 -0700
+In-Reply-To: <CACGdZYLCi+Or=afmBK8hbP3Ay8x8Oaqnp0Yr+jf1PoQiMc7_DQ@mail.gmail.com>
+Message-Id: <20190423211329.149642-1-khazhy@google.com>
+Mime-Version: 1.0
+References: <CACGdZYLCi+Or=afmBK8hbP3Ay8x8Oaqnp0Yr+jf1PoQiMc7_DQ@mail.gmail.com>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+Subject: [PATCH v2] ext4: cond_resched in work-heavy group loops
+From:   Khazhismel Kumykov <khazhy@google.com>
+To:     tytso@mit.edu, adilger.kernel@dilger.ca
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jack@suse.cz, Khazhismel Kumykov <khazhy@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 24 Apr 2019 00:28:42 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+These functions may take a long time looping over many groups, which
+may cause issues for non-preempt kernels.
+ext4_mb_init_backend()
+ext4_setup_system_zone()
+ext4_mb_release()
 
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  .../acpi/acpi-lid.rst}                        | 48 ++++++++++++-------
->  Documentation/firmware-guide/acpi/index.rst   |  1 +
->  2 files changed, 33 insertions(+), 16 deletions(-)
->  rename Documentation/{acpi/acpi-lid.txt => firmware-guide/acpi/acpi-lid.rst} (77%)
-> 
-> diff --git a/Documentation/acpi/acpi-lid.txt b/Documentation/firmware-guide/acpi/acpi-lid.rst
-> similarity index 77%
-> rename from Documentation/acpi/acpi-lid.txt
-> rename to Documentation/firmware-guide/acpi/acpi-lid.rst
-> index effe7af3a5af..1d19e15a6945 100644
-> --- a/Documentation/acpi/acpi-lid.txt
-> +++ b/Documentation/firmware-guide/acpi/acpi-lid.rst
-> @@ -1,25 +1,29 @@
-> -Special Usage Model of the ACPI Control Method Lid Device
-> +.. SPDX-License-Identifier: GPL-2.0
-> +.. include:: <isonum.txt>
->  
-> -Copyright (C) 2016, Intel Corporation
-> -Author: Lv Zheng <lv.zheng@intel.com>
-> +=========================================================
-> +Special Usage Model of the ACPI Control Method Lid Device
-> +=========================================================
->  
-> +:Copyright: |copy| 2016, Intel Corporation
->  
-> -Abstract:
-> +:Author: Lv Zheng <lv.zheng@intel.com>
->  
-> -Platforms containing lids convey lid state (open/close) to OSPMs using a
-> -control method lid device. To implement this, the AML tables issue
-> -Notify(lid_device, 0x80) to notify the OSPMs whenever the lid state has
-> -changed. The _LID control method for the lid device must be implemented to
-> -report the "current" state of the lid as either "opened" or "closed".
-> +:Abstract: Platforms containing lids convey lid state (open/close) to OSPMs
-> +  using a control method lid device. To implement this, the AML tables issue
-> +  Notify(lid_device, 0x80) to notify the OSPMs whenever the lid state has
-> +  changed. The _LID control method for the lid device must be implemented to
-> +  report the "current" state of the lid as either "opened" or "closed".
+Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+---
+v2: 
+ - a few other places that in testing showed to be slow
 
-Same comment for the abstract.
->  
-> -For most platforms, both the _LID method and the lid notifications are
-> -reliable. However, there are exceptions. In order to work with these
-> -exceptional buggy platforms, special restrictions and expections should be
-> -taken into account. This document describes the restrictions and the
-> -expections of the Linux ACPI lid device driver.
-> +  For most platforms, both the _LID method and the lid notifications are
-> +  reliable. However, there are exceptions. In order to work with these
-> +  exceptional buggy platforms, special restrictions and expections should be
-> +  taken into account. This document describes the restrictions and the
-> +  expections of the Linux ACPI lid device driver.
->  
->  
->  1. Restrictions of the returning value of the _LID control method
-> +=================================================================
->  
->  The _LID control method is described to return the "current" lid state.
->  However the word of "current" has ambiguity, some buggy AML tables return
-> @@ -31,6 +35,7 @@ with cached value, the initial returning value is likely not reliable.
->  There are platforms always retun "closed" as initial lid state.
->  
->  2. Restrictions of the lid state change notifications
-> +=====================================================
->  
->  There are buggy AML tables never notifying when the lid device state is
->  changed to "opened". Thus the "opened" notification is not guaranteed. But
-> @@ -40,17 +45,21 @@ trigger some system power saving operations on Windows. Since it is fully
->  tested, it is reliable from all AML tables.
->  
->  3. Expections for the userspace users of the ACPI lid device driver
-> +===================================================================
->  
->  The ACPI button driver exports the lid state to the userspace via the
-> -following file:
-> +following file::
-> +
->    /proc/acpi/button/lid/LID0/state
-> +
->  This file actually calls the _LID control method described above. And given
->  the previous explanation, it is not reliable enough on some platforms. So
->  it is advised for the userspace program to not to solely rely on this file
->  to determine the actual lid state.
->  
->  The ACPI button driver emits the following input event to the userspace:
-> -  SW_LID
-> +  * SW_LID
-> +
->  The ACPI lid device driver is implemented to try to deliver the platform
->  triggered events to the userspace. However, given the fact that the buggy
->  firmware cannot make sure "opened"/"closed" events are paired, the ACPI
-> @@ -59,20 +68,25 @@ button driver uses the following 3 modes in order not to trigger issues.
->  If the userspace hasn't been prepared to ignore the unreliable "opened"
->  events and the unreliable initial state notification, Linux users can use
->  the following kernel parameters to handle the possible issues:
-> +
->  A. button.lid_init_state=method:
+ fs/ext4/block_validity.c | 1 +
+ fs/ext4/mballoc.c        | 2 ++
+ 2 files changed, 3 insertions(+)
 
-Just for the sake of a better visual at the html output, I would place those
-button.* as:
+diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+index 913061c0de1b..16134469ea3c 100644
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -155,6 +155,7 @@ int ext4_setup_system_zone(struct super_block *sb)
+ 		return 0;
+ 
+ 	for (i=0; i < ngroups; i++) {
++		cond_resched();
+ 		if (ext4_bg_has_super(sb, i) &&
+ 		    ((i < 5) || ((i % flex_size) == 0)))
+ 			add_system_zone(sbi, ext4_group_first_block_no(sb, i),
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index 8ef5f12bbee2..99ba720dbb7a 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -2490,6 +2490,7 @@ static int ext4_mb_init_backend(struct super_block *sb)
+ 	sbi->s_buddy_cache->i_ino = EXT4_BAD_INO;
+ 	EXT4_I(sbi->s_buddy_cache)->i_disksize = 0;
+ 	for (i = 0; i < ngroups; i++) {
++		cond_resched();
+ 		desc = ext4_get_group_desc(sb, i, NULL);
+ 		if (desc == NULL) {
+ 			ext4_msg(sb, KERN_ERR, "can't read descriptor %u", i);
+@@ -2705,6 +2706,7 @@ int ext4_mb_release(struct super_block *sb)
+ 
+ 	if (sbi->s_group_info) {
+ 		for (i = 0; i < ngroups; i++) {
++			cond_resched();
+ 			grinfo = ext4_get_group_info(sb, i);
+ #ifdef DOUBLE_CHECK
+ 			kfree(grinfo->bb_bitmap);
+-- 
+2.21.0.593.g511ec345e18-goog
 
-  A. ``button.lid_init_state=method``:
-
-Anyway, with or without such change:
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
->     When this option is specified, the ACPI button driver reports the
->     initial lid state using the returning value of the _LID control method
->     and whether the "opened"/"closed" events are paired fully relies on the
->     firmware implementation.
-> +
->     This option can be used to fix some platforms where the returning value
->     of the _LID control method is reliable but the initial lid state
->     notification is missing.
-> +
->     This option is the default behavior during the period the userspace
->     isn't ready to handle the buggy AML tables.
-> +
->  B. button.lid_init_state=open:
->     When this option is specified, the ACPI button driver always reports the
->     initial lid state as "opened" and whether the "opened"/"closed" events
->     are paired fully relies on the firmware implementation.
-> +
->     This may fix some platforms where the returning value of the _LID
->     control method is not reliable and the initial lid state notification is
->     missing.
-> @@ -80,6 +94,7 @@ B. button.lid_init_state=open:
->  If the userspace has been prepared to ignore the unreliable "opened" events
->  and the unreliable initial state notification, Linux users should always
->  use the following kernel parameter:
-> +
->  C. button.lid_init_state=ignore:
->     When this option is specified, the ACPI button driver never reports the
->     initial lid state and there is a compensation mechanism implemented to
-> @@ -89,6 +104,7 @@ C. button.lid_init_state=ignore:
->     notifications can be delivered to the userspace when the lid is actually
->     opens given that some AML tables do not send "opened" notifications
->     reliably.
-> +
->     In this mode, if everything is correctly implemented by the platform
->     firmware, the old userspace programs should still work. Otherwise, the
->     new userspace programs are required to work with the ACPI button driver.
-> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-> index 1c89888f6ee8..bedcb0b242a2 100644
-> --- a/Documentation/firmware-guide/acpi/index.rst
-> +++ b/Documentation/firmware-guide/acpi/index.rst
-> @@ -14,3 +14,4 @@ ACPI Support
->     DSD-properties-rules
->     gpio-properties
->     i2c-muxes
-> +   acpi-lid
-> \ No newline at end of file
-
-
-
-Thanks,
-Mauro
