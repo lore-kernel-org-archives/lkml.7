@@ -3,29 +3,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4378C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B01EC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B012320449
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29DA20449
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbfDWX2l (ORCPT
+        id S1729362AbfDWXaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 19:28:41 -0400
-Received: from mga09.intel.com ([134.134.136.24]:8106 "EHLO mga09.intel.com"
+        Tue, 23 Apr 2019 19:30:07 -0400
+Received: from mga09.intel.com ([134.134.136.24]:8111 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbfDWX2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 19:28:40 -0400
+        id S1728814AbfDWX2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 19:28:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 16:28:38 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,387,1549958400"; 
-   d="scan'208";a="293981252"
+   d="scan'208";a="293981272"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga004.jf.intel.com with ESMTP; 23 Apr 2019 16:28:38 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -42,11 +42,10 @@ Cc:     "Yi Liu" <yi.l.liu@intel.com>,
         "Christoph Hellwig" <hch@infradead.org>,
         "Lu Baolu" <baolu.lu@linux.intel.com>,
         Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>, Liu@vger.kernel.org,
-        Yi L <yi.l.liu@linux.intel.com>
-Subject: [PATCH v2 02/19] iommu: introduce device fault data
-Date:   Tue, 23 Apr 2019 16:31:02 -0700
-Message-Id: <1556062279-64135-3-git-send-email-jacob.jun.pan@linux.intel.com>
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 07/19] ioasid: Convert ioasid_idr to XArray
+Date:   Tue, 23 Apr 2019 16:31:07 -0700
+Message-Id: <1556062279-64135-8-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -55,247 +54,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device faults detected by IOMMU can be reported outside the IOMMU
-subsystem for further processing. This patch introduces
-a generic device fault data structure.
+IDR is to be replaced by XArray, keep up with the changes.
+XArray has internal locking for normal APIs used here, also removed
+radix tree related preload.
 
-The fault can be either an unrecoverable fault or a page request,
-also referred to as a recoverable fault.
-
-We only care about non internal faults that are likely to be reported
-to an external subsystem.
-
+Suggested-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-
 ---
-v4 -> v5:
-- simplified struct iommu_fault_event comment
-- Moved IOMMU_FAULT_PERM outside of the struct
-- Removed IOMMU_FAULT_PERM_INST
-- s/IOMMU_FAULT_PAGE_REQUEST_PASID_PRESENT/
-  IOMMU_FAULT_PAGE_REQUEST_PASID_VALID
+ drivers/base/ioasid.c | 29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
 
-v3 -> v4:
-- use a union containing aither an unrecoverable fault or a page
-  request message. Move the device private data in the page request
-  structure. Reshuffle the fields and use flags.
-- move fault perm attributes to the uapi
-- remove a bunch of iommu_fault_reason enum values that were related
-  to internal errors
----
- include/linux/iommu.h      |  44 +++++++++++++++++
- include/uapi/linux/iommu.h | 115 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 159 insertions(+)
- create mode 100644 include/uapi/linux/iommu.h
-
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 480921d..810bde2 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -25,6 +25,7 @@
- #include <linux/errno.h>
- #include <linux/err.h>
- #include <linux/of.h>
-+#include <uapi/linux/iommu.h>
- 
- #define IOMMU_READ	(1 << 0)
- #define IOMMU_WRITE	(1 << 1)
-@@ -49,6 +50,7 @@ struct device;
- struct iommu_domain;
- struct notifier_block;
- struct iommu_sva;
-+struct iommu_fault_event;
- 
- /* iommu fault flags */
- #define IOMMU_FAULT_READ	0x0
-@@ -58,6 +60,7 @@ typedef int (*iommu_fault_handler_t)(struct iommu_domain *,
- 			struct device *, unsigned long, int, void *);
- typedef int (*iommu_mm_exit_handler_t)(struct device *dev, struct iommu_sva *,
- 				       void *);
-+typedef int (*iommu_dev_fault_handler_t)(struct iommu_fault_event *, void *);
- 
- struct iommu_domain_geometry {
- 	dma_addr_t aperture_start; /* First address that can be mapped    */
-@@ -301,6 +304,46 @@ struct iommu_device {
- 	struct device *dev;
+diff --git a/drivers/base/ioasid.c b/drivers/base/ioasid.c
+index cf122b2..c4012aa 100644
+--- a/drivers/base/ioasid.c
++++ b/drivers/base/ioasid.c
+@@ -4,7 +4,7 @@
+  * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
+  * free IOASIDs with ioasid_alloc and ioasid_free.
+  */
+-#include <linux/idr.h>
++#include <linux/xarray.h>
+ #include <linux/ioasid.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+@@ -16,13 +16,12 @@ struct ioasid_data {
+ 	struct rcu_head rcu;
  };
  
-+/**
-+ * struct iommu_fault_event - Generic fault event
-+ *
-+ * Can represent recoverable faults such as a page requests or
-+ * unrecoverable faults such as DMA or IRQ remapping faults.
-+ *
-+ * @fault: fault descriptor
-+ * @iommu_private: used by the IOMMU driver for storing fault-specific
-+ *                 data. Users should not modify this field before
-+ *                 sending the fault response.
-+ */
-+struct iommu_fault_event {
-+	struct iommu_fault fault;
-+	u64 iommu_private;
-+};
-+
-+/**
-+ * struct iommu_fault_param - per-device IOMMU fault data
-+ * @dev_fault_handler: Callback function to handle IOMMU faults at device level
-+ * @data: handler private data
-+ *
-+ */
-+struct iommu_fault_param {
-+	iommu_dev_fault_handler_t handler;
-+	void *data;
-+};
-+
-+/**
-+ * struct iommu_param - collection of per-device IOMMU data
-+ *
-+ * @fault_param: IOMMU detected device fault reporting data
-+ *
-+ * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
-+ *	struct iommu_group	*iommu_group;
-+ *	struct iommu_fwspec	*iommu_fwspec;
-+ */
-+struct iommu_param {
-+	struct iommu_fault_param *fault_param;
-+};
-+
- int  iommu_device_register(struct iommu_device *iommu);
- void iommu_device_unregister(struct iommu_device *iommu);
- int  iommu_device_sysfs_add(struct iommu_device *iommu,
-@@ -500,6 +543,7 @@ struct iommu_ops {};
- struct iommu_group {};
- struct iommu_fwspec {};
- struct iommu_device {};
-+struct iommu_fault_param {};
+-static DEFINE_IDR(ioasid_idr);
+-
++static DEFINE_XARRAY_ALLOC(ioasid_xa);
+ /**
+  * ioasid_alloc - Allocate an IOASID
+  * @set: the IOASID set
+  * @min: the minimum ID (inclusive)
+- * @max: the maximum ID (exclusive)
++ * @max: the maximum ID (inclusive)
+  * @private: data private to the caller
+  *
+  * Allocate an ID between @min and @max (or %0 and %INT_MAX). Return the
+@@ -41,13 +40,13 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
  
- static inline bool iommu_present(struct bus_type *bus)
+ 	data->set = set;
+ 	data->private = private;
++	if (xa_alloc(&ioasid_xa, &id, data, XA_LIMIT(min, max), GFP_KERNEL)) {
++		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
++		goto exit_free;
++	}
+ 
+-	idr_preload(GFP_KERNEL);
+-	idr_lock(&ioasid_idr);
+-	data->id = id = idr_alloc(&ioasid_idr, data, min, max, GFP_ATOMIC);
+-	idr_unlock(&ioasid_idr);
+-	idr_preload_end();
+-
++	data->id = id;
++exit_free:
+ 	if (id < 0) {
+ 		kfree(data);
+ 		return INVALID_IOASID;
+@@ -64,12 +63,8 @@ void ioasid_free(ioasid_t ioasid)
  {
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-new file mode 100644
-index 0000000..edcc0dd
---- /dev/null
-+++ b/include/uapi/linux/iommu.h
-@@ -0,0 +1,115 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * IOMMU user API definitions
-+ */
-+
-+#ifndef _UAPI_IOMMU_H
-+#define _UAPI_IOMMU_H
-+
-+#include <linux/types.h>
-+
-+#define IOMMU_FAULT_PERM_WRITE	(1 << 0) /* write */
-+#define IOMMU_FAULT_PERM_EXEC	(1 << 1) /* exec */
-+#define IOMMU_FAULT_PERM_PRIV	(1 << 2) /* privileged */
-+
-+/*  Generic fault types, can be expanded IRQ remapping fault */
-+enum iommu_fault_type {
-+	IOMMU_FAULT_DMA_UNRECOV = 1,	/* unrecoverable fault */
-+	IOMMU_FAULT_PAGE_REQ,		/* page request fault */
-+};
-+
-+enum iommu_fault_reason {
-+	IOMMU_FAULT_REASON_UNKNOWN = 0,
-+
-+	/* Could not access the PASID table (fetch caused external abort) */
-+	IOMMU_FAULT_REASON_PASID_FETCH,
-+
-+	/* pasid entry is invalid or has configuration errors */
-+	IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
-+
-+	/*
-+	 * PASID is out of range (e.g. exceeds the maximum PASID
-+	 * supported by the IOMMU) or disabled.
-+	 */
-+	IOMMU_FAULT_REASON_PASID_INVALID,
-+
-+	/*
-+	 * An external abort occurred fetching (or updating) a translation
-+	 * table descriptor
-+	 */
-+	IOMMU_FAULT_REASON_WALK_EABT,
-+
-+	/*
-+	 * Could not access the page table entry (Bad address),
-+	 * actual translation fault
-+	 */
-+	IOMMU_FAULT_REASON_PTE_FETCH,
-+
-+	/* Protection flag check failed */
-+	IOMMU_FAULT_REASON_PERMISSION,
-+
-+	/* access flag check failed */
-+	IOMMU_FAULT_REASON_ACCESS,
-+
-+	/* Output address of a translation stage caused Address Size fault */
-+	IOMMU_FAULT_REASON_OOR_ADDRESS,
-+};
-+
-+/**
-+ * Unrecoverable fault data
-+ * @reason: reason of the fault
-+ * @addr: offending page address
-+ * @fetch_addr: address that caused a fetch abort, if any
-+ * @pasid: contains process address space ID, used in shared virtual memory
-+ * @perm: Requested permission access using by the incoming transaction
-+ * (IOMMU_FAULT_PERM_* values)
-+ */
-+struct iommu_fault_unrecoverable {
-+	__u32	reason; /* enum iommu_fault_reason */
-+#define IOMMU_FAULT_UNRECOV_PASID_VALID		(1 << 0)
-+#define IOMMU_FAULT_UNRECOV_PERM_VALID		(1 << 1)
-+#define IOMMU_FAULT_UNRECOV_ADDR_VALID		(1 << 2)
-+#define IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID	(1 << 3)
-+	__u32	flags;
-+	__u32	pasid;
-+	__u32	perm;
-+	__u64	addr;
-+	__u64	fetch_addr;
-+};
-+
-+/*
-+ * Page Request data (aka. recoverable fault data)
-+ * @flags : encodes whether the pasid is valid and whether this
-+ * is the last page in group
-+ * @pasid: pasid
-+ * @grpid: page request group index
-+ * @perm: requested page permissions (IOMMU_FAULT_PERM_* values)
-+ * @addr: page address
-+ */
-+struct iommu_fault_page_request {
-+#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
-+#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
-+#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
-+	__u32   flags;
-+	__u32	pasid;
-+	__u32	grpid;
-+	__u32	perm;
-+	__u64	addr;
-+	__u64	private_data[2];
-+};
-+
-+/**
-+ * struct iommu_fault - Generic fault data
-+ *
-+ * @type contains fault type
-+ */
-+
-+struct iommu_fault {
-+	__u32	type;   /* enum iommu_fault_type */
-+	__u32	reserved;
-+	union {
-+		struct iommu_fault_unrecoverable event;
-+		struct iommu_fault_page_request prm;
-+	};
-+};
-+#endif /* _UAPI_IOMMU_H */
+ 	struct ioasid_data *ioasid_data;
+ 
+-	idr_lock(&ioasid_idr);
+-	ioasid_data = idr_remove(&ioasid_idr, ioasid);
+-	idr_unlock(&ioasid_idr);
+-
+-	if (ioasid_data)
+-		kfree_rcu(ioasid_data, rcu);
++	ioasid_data = xa_erase(&ioasid_xa, ioasid);
++	kfree_rcu(ioasid_data, rcu);
+ }
+ EXPORT_SYMBOL_GPL(ioasid_free);
+ 
+@@ -93,7 +88,7 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+ 	struct ioasid_data *ioasid_data;
+ 
+ 	rcu_read_lock();
+-	ioasid_data = idr_find(&ioasid_idr, ioasid);
++	ioasid_data = xa_load(&ioasid_xa, ioasid);
+ 	if (ioasid_data && ioasid_data->set == set) {
+ 		priv = ioasid_data->private;
+ 		if (getter && !getter(priv))
 -- 
 2.7.4
 
