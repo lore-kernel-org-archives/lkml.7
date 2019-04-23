@@ -2,93 +2,119 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7570C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170A4C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB08218D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:55:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b1hQObae"
+	by mail.kernel.org (Postfix) with ESMTP id D9E7121902
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbfDWWzZ (ORCPT
+        id S1728490AbfDWW5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:55:25 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:46226 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfDWWzY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:55:24 -0400
-Received: by mail-ua1-f67.google.com with SMTP id v7so5355611uak.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oy9gRu5tzjedctRvDXLHCBGVczTjecsuLTfKQl6LfHg=;
-        b=b1hQObaeVDMw80MAbV8W+/fKz8LqfoMCIv+khTmuW7BsJTFcibVxlClrjhFa4uAemE
-         Fvdqa8doL9d4D13CUdiXeqac5kyBSVGApDnP9k+VGcjKU1C8rlDzxXoLaCky+CbE7wBO
-         3aD7zJ8Ec4juxCAffZ6LrbEQEaLhLfu5E5RMo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oy9gRu5tzjedctRvDXLHCBGVczTjecsuLTfKQl6LfHg=;
-        b=kAd20pmZtxsx/tSWcIuCF/s2efRDV5BMsQ+xN5FS2N6eIew5qQ0q7xcDgowEdBoXjQ
-         MNDtq0dUaPaGTpLzo0R/LMMoo0c3jESeklabQiEVk1xkQl/kh4H+qBIMFHW9gNtPHJIs
-         IK6bGxK/A97q2pZlF6MLgQc57BGI/R1NOdTjwaoCGRd9GDejbo1K6tsXi+fMD2Gp3XS/
-         EPip6Pepl8pKp+hAat4gjYpqVAKQhCMfG+nR70xlEdtG848GsYbwStJs5HVlBuvB4/Gy
-         Ae6OHyMtVfv9KcGbGvFYVZVn6RtUWbCeGkm2DhRmibLktQ8jVfSZCj2WJ3LSFSRjSE8b
-         u9GQ==
-X-Gm-Message-State: APjAAAVNV2NRhQ4adB6rfKFdN/qzItsEZgz43U2TOcByKwrnQbYBXOGD
-        XIRZIvFSybv3zL6VMAxNGQkoHLdVbN0=
-X-Google-Smtp-Source: APXvYqwSvr2mFSWa5lny9vYlbPkGSLQRyXGA1WGFz5BrT7BjDwpkP4FQ8zBdMXJtjebF9OgPLRi3RQ==
-X-Received: by 2002:ab0:73d3:: with SMTP id m19mr13764124uaq.46.1556060122804;
-        Tue, 23 Apr 2019 15:55:22 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id l9sm2916908uae.1.2019.04.23.15.55.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 15:55:21 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id l22so5371795uao.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:55:20 -0700 (PDT)
-X-Received: by 2002:a9f:2d88:: with SMTP id v8mr3856042uaj.2.1556060120319;
- Tue, 23 Apr 2019 15:55:20 -0700 (PDT)
+        Tue, 23 Apr 2019 18:57:44 -0400
+Received: from mga01.intel.com ([192.55.52.88]:32897 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726325AbfDWW5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 18:57:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 15:57:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,387,1549958400"; 
+   d="scan'208";a="164442021"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.145])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Apr 2019 15:57:43 -0700
+Date:   Tue, 23 Apr 2019 15:57:43 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     sathyanarayanan kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
+        alex.williamson@redhat.com, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v1 1/5] PCI/IOV: Add support to verify PF/VF spec
+ compliance
+Message-ID: <20190423225743.GA19171@otc-nc-03>
+References: <cover.1551909341.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <317aaed09820db65c21452663bed33468f874d3a.1551909341.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20190419135918.GC173520@google.com>
+ <20190419173728.GE46517@otc-nc-03>
+ <22ad30c0-fc7e-b5ac-a224-c1a247c33359@linux.intel.com>
+ <20190423221134.GI14616@google.com>
 MIME-Version: 1.0
-References: <20190415143821.GA46880@beast>
-In-Reply-To: <20190415143821.GA46880@beast>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 23 Apr 2019 15:55:07 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jJmJLc41XDyaO3vSt=fPXLpph3m3TEtxAtdBiFMKqSrcA@mail.gmail.com>
-Message-ID: <CAGXu5jJmJLc41XDyaO3vSt=fPXLpph3m3TEtxAtdBiFMKqSrcA@mail.gmail.com>
-Subject: Re: [PATCH v3] arm64: sysreg: make mrs_s and msr_s macros work with
- Clang and LTO
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Alex Matveev <alxmtvv@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Yury Norov <ynorov@caviumnetworks.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423221134.GI14616@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 7:38 AM Kees Cook <keescook@chromium.org> wrote:
-> +#define __msr_s(r, v)                                          \
-> +       DEFINE_MSR_S                                            \
-> +"      msr_s " __stringify(r) ", %x0\n"                        \
-> +       UNDEFINE_MSR_S : : "rZ" (v)
+On Tue, Apr 23, 2019 at 05:11:34PM -0500, Bjorn Helgaas wrote:
+> On Fri, Apr 19, 2019 at 11:41:31AM -0700, sathyanarayanan kuppuswamy wrote:
+> > On 4/19/19 10:37 AM, Raj, Ashok wrote:
+> > > On Fri, Apr 19, 2019 at 08:59:18AM -0500, Bjorn Helgaas wrote:
+> > > > On Wed, Mar 06, 2019 at 02:11:14PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > > 
+> > > > > PF/VF implementation must comply with PCIe specification as
+> > > > > defined in r4.0, sec 9.3.4, 9.3.5, 9.3.6 and 9.3.7. And if
+> > > > > it does not comply, return error and skip PF/VF device
+> > > > > creation.
+> > > > As far as I can tell, this patch basically looks for excuses not to
+> > > > enable SR-IOV.  Does this actually solve a problem?  Are there
+> > > > non-compliant devices out there that blow up if we enable SR-IOV?
+> > > We ran into one case with a future product for INTx value on VF's. We do have
+> > > a quirk for it upstream now. We thought it might be good to just run through
+> > > some of the basic requirements and see if any device violates it, that would allow
+> > > us to catch them early.
+> > > 
+> > > We are looking into other things like PASID and End-2-End prefix capability for instance.
+> > > There is another subtle thing like number of eetlp_prefix_supported. Which i don't
+> > > pci core checks today, and we might need to do that to be compliant or find devices
+> > > that break that contract.
+> > > 
+> > > Real intend is to be find such breaks early, it also helps the product guys :-)
+> > > 
+> > > With upcoming vIOMMU effort, we need to ensure that capabilities are exported properly
+> > > depending on if its a SRIOV-PF/VF or a Scalable device.
+> > > 
+> > > Cheers,
+> > > Ashok
+> > 
+> > I agree with Ashok's comments. It helps us find SRIOV related features
+> > enable/disable issues easily.
+> > 
+> > Also, there is some of level of spec compliance checks in enabling
+> > PASID/PRI/ATS already in our existing code.
+> > 
+> > I am just grouping them together in one place and expanded it for other IOV
+> > related features.
+> 
+> My $0.02:
+> 
+>   - If there's a problem that actually prevents Linux from using a feature,
+>     check for the problem close to the point where we use the feature.
+> 
+>   - If you want to check for spec compliance, most of that can be done more
+>     easily in user-space by examining lspci output.
 
-BTW ... is "%x0" a typo here? Shouldn't this just be "%0"?
+Certainly we could turn this into a user space tool, but its hard to enforce to find
+problems early. Being part of the kernel there is no free pass for not being spec
+compliant and you find problems early during bringup.
 
--- 
-Kees Cook
+I'll think about it more and see if we could move these to places before use
+as you suggest rather than a big fat catchall as it currently is.
+
+Cheers,
+Ashok
+
+
+> 
+> Bjorn
