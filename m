@@ -3,138 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250FAC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02CCC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F108A20843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7FD321738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:48:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfDWJrs (ORCPT
+        id S1727256AbfDWJsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 05:47:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:32898 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfDWJrs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 05:47:48 -0400
-Received: from mail-pf1-f198.google.com ([209.85.210.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hIs1h-0005lY-EE
-        for linux-kernel@vger.kernel.org; Tue, 23 Apr 2019 09:47:45 +0000
-Received: by mail-pf1-f198.google.com with SMTP id h69so9385266pfd.21
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 02:47:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=SCBlIj4alBx+1+PivA2+QaEriN369MJ8nIcJXMZ73AM=;
-        b=LVh4z5Nb9atmwm8yPAdZGzCtNIiDQa7k0zc+8R9opj9dFQJh28JPg+4I3qWz2Ns8AQ
-         86F2+ePnDi7Q6BefEuXeDwgPrQGBc1CsU5Layo0b8qGqKRc5Gc5biskQRb8Rxug1/vme
-         hTY6W8LuP/hui8eCf0ZMPXhB41nt15tKmnhimIm06vMPGWr+Cnwd1tWKC1v5cksQdGn8
-         KlUUO9tqRr0IJePlzIwDSev5rLiOZCxd3FEx7LzZ9LrmRkibK891nJyNKZoZENGPjj43
-         E2ZZjVMU4ogxvLSEMdstzqivGgkbJzJRzkQvG39SnbrInTIhH7KJlIxr6a053P7oWaL0
-         gUGw==
-X-Gm-Message-State: APjAAAU65bH0nu8X1YbRMz771hzFDqpBS7tmeQhg6qbjZCvTBXg+mQLF
-        QBz/P+9RDBruonQFnw3TVGY+cN0s0+qRaRw1bJ5Ruj2EkNvj9F3v7fpmHLL+i1oyV3b6J4mu+Ut
-        k5YDSszjhhMa6//36l/7115ViaPJNqjJ+66jlmB2+mQ==
-X-Received: by 2002:a17:902:f084:: with SMTP id go4mr25737947plb.235.1556012863995;
-        Tue, 23 Apr 2019 02:47:43 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwpvUihZG8o/oKWFXwf3rXRUZvSld3gFV5jMU7rDv2Ms+Jwo4Jl45y6IhXNb3dvUOL/8HhhSw==
-X-Received: by 2002:a17:902:f084:: with SMTP id go4mr25737905plb.235.1556012863224;
-        Tue, 23 Apr 2019 02:47:43 -0700 (PDT)
-Received: from 2001-b011-380f-14b9-d015-82d6-2039-7ce9.dynamic-ip6.hinet.net (2001-b011-380f-14b9-d015-82d6-2039-7ce9.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:d015:82d6:2039:7ce9])
-        by smtp.gmail.com with ESMTPSA id n11sm673780pgm.50.2019.04.23.02.47.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 02:47:42 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] pinctrl: intel: Clear interrupt status in unmask callback
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <Ld8ZLG1--3-1@tutanota.com>
-Date:   Tue, 23 Apr 2019 17:47:35 +0800
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hdegoede <hdegoede@redhat.com>,
-        Linux Gpio <linux-gpio@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <3BE5F007-CD9C-486A-90EE-326AAB807D5B@canonical.com>
-References: <20190422044539.16085-1-kai.heng.feng@canonical.com>
- <Ld5HCy5--3-1@tutanota.com>
- <EA207DE8-E89A-427B-B910-A36170A76031@canonical.com>
- <Ld8QGex--3-1@tutanota.com> <20190423090816.GN2654@lahna.fi.intel.com>
- <Ld8ZLG1--3-1@tutanota.com>
-To:     hotwater438@tutanota.com
-X-Mailer: Apple Mail (2.3445.104.8)
+        Tue, 23 Apr 2019 05:48:53 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52806 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfDWJsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 05:48:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B4C6374;
+        Tue, 23 Apr 2019 02:48:52 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E60913F557;
+        Tue, 23 Apr 2019 02:48:50 -0700 (PDT)
+From:   Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 12/21] dma-iommu: factor atomic pool allocations into
+ helpers
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190327080448.5500-1-hch@lst.de>
+ <20190327080448.5500-13-hch@lst.de>
+ <b3f80a11-1504-e8f9-4438-92bcd5f3df7f@arm.com> <20190410061157.GA5278@lst.de>
+ <20190417063358.GA24139@lst.de>
+ <83615173-a8b4-e0eb-bac3-1a58d61ea4ef@arm.com>
+ <20190418163512.GA25347@lst.de>
+ <433dec64-ef15-b31d-ace4-4c72b81d2942@arm.com>
+ <20190419090759.GA22885@lst.de>
+Message-ID: <290377cd-8cd3-aa7a-0057-36df3d7cd728@arm.com>
+Date:   Tue, 23 Apr 2019 10:48:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190419090759.GA22885@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 17:40, <hotwater438@tutanota.com> <hotwater438@tutanota.com> wrote:
+On 2019-04-19 10:07 am, Christoph Hellwig wrote:
+> On Thu, Apr 18, 2019 at 05:41:00PM +0100, Robin Murphy wrote:
+>>>   From a very high level POV this looks ok, but sometimes a bit to
+>>> convoluted to me.  The major issue why I went with the version I posted
+>>> is that I can cleanly ifdef out the remap code in just a few sections.
+>>> In this version it is spread out a lot more, and the use of IS_ENABLED
+>>> means that we'd need a lot more stubs for functionality that won't
+>>> ever be called but needs to be compilable.
+>>
+>> What functionality do you have planned in that regard? I did do a quick
+>> build test of my arm64 config with DMA_DIRECT_REMAP hacked out, and
+>> dma-iommu.o appeared to link OK (although other bits of arm64 and
+>> dma-direct didn't, as expected). I will try x86 with IOMMU_DMA to make
+>> sure, though.
+> 
+> Yeah, this seems to actually work, there just is a huge chunk of
+> remapping that is hopefully discarded by the compiler even without the
+> ifdefs.
 
-> Hi. Thank's for a hint!
-> So catting this file gives me next content:
-> s2idle [deep]
+Right, the major point of this approach is that you don't need stubs; 
+indeed, stubs themselves fall into the category of "#ifdefed code I'd 
+prefer to avoid". The preprocessing essentially resolves to:
 
-Which kernel version do you use?
+	if (0)
+		function_that_doesnt_exist();
 
-The default switches to s2idle based on FADT flag and _DSM on relative new  
-kernels.
+so compilation treats it as an external reference, but since constant 
+folding ends up eliding the call, that symbol isn't referenced in the 
+final object, so linking never has to resolve it. All it needs is a 
+declaration to avoid a compiler warning, but that's the same declaration 
+that's needed anyway for when the function does exist. Similarly, static 
+functions like iommu_dma_alloc_remap() still get compiled - so we don't 
+lose coverage - but then get discarded at the link stage (via 
+gc-sections) since they end up unreferenced. It's really pretty neat.
 
-Most systems preload with Windows 8.1 should default to use s2idle.
-
->
-> So I suppose I have s2idle with deep-mode available?
->
-> I've tried to select deep by creating mem_sleep_default file, but I can't  
-> (Permission error).
->
-> Could you explain how do I switch suspend mode in Linux, if you know?
-
-# echo s2idle > /sys/power/mem_sleep
-
-> And to be honest, I don't think that's a correct fix of touchpad problem.
-
-If the system defaults to use S2I, then it’s better to stick with it.
-
-Lots of ODM/OEM don’t really test S3.
-
->
-> Can we somehow cut off the power by hands or send a signal to a system to  
-> shut off a touchpad? Or there are no approaches like that?
-
-I don’t think it’s possible.
-
-Kai-Heng
-
->
-> Regards,
-> Vladislav.
->
->
-> Apr 23, 2019, 12:08 PM by mika.westerberg@linux.intel.com:
-> On Tue, Apr 23, 2019 at 11:00:48AM +0200, hotwater438@tutanota.com wrote:
-> Hi.
->
-> Honestly, I can't find any information about my acpi suspend type.
-> There are no options in my BIOS to change it, and I can't determine
-> which exactly I have. But I suppose I have a S3 because I have suspend
-> issue.
->
-> Can I somehow determine it in Linux? I did a research but found nothing
-> on the internet.
->
-> You can read the default mode from /sys/power/mem_sleep. "s2idle" means,
-> well suspend-to-idle and "deep" means S3.
-
-
+Robin.
