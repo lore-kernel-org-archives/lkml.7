@@ -2,153 +2,137 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0D3C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB0DC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A105220685
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE7620685
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbfDWSCo (ORCPT
+        id S1728737AbfDWSDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 14:02:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50926 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727737AbfDWSCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 14:02:44 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C26E2811A9;
-        Tue, 23 Apr 2019 18:02:43 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9BC8C5C1B5;
-        Tue, 23 Apr 2019 18:02:40 +0000 (UTC)
-Date:   Tue, 23 Apr 2019 14:02:38 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-Message-ID: <20190423180238.GG22260@pauld.bos.csb>
-References: <cover.1556025155.git.vpillai@digitalocean.com>
+        Tue, 23 Apr 2019 14:03:33 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45194 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727745AbfDWSDc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 14:03:32 -0400
+Received: from mail-ot1-f70.google.com ([209.85.210.70])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <dann.frazier@canonical.com>)
+        id 1hIzlT-0006to-Ac
+        for linux-kernel@vger.kernel.org; Tue, 23 Apr 2019 18:03:31 +0000
+Received: by mail-ot1-f70.google.com with SMTP id q23so9456199otk.10
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:03:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aTmuaA1oe/FK4WqytYnAJNG23063bz707sGkM242IOI=;
+        b=TZpenyfzPJnfW5OlHvf147VO+VQNoBhjU1kVv3Kpt4vbwj95dQe75DujjAO0q2EtBF
+         FOCmylxRpVNbBpAFP1gOSOgkRM/uCgW/AQApuy4rYgObeziO+0xKPGqLnEwUevDZKDnZ
+         91kw82DYbaLkSljqNmkHteYFMV7LWwrBBHrfHLKSVBIT6Y584yVkCsX9QyKWxob27xhv
+         79vJT3cQGS9OYJcDGRcFgHWCJKl3VQHtHnAfCUQz1koXMU69H4UpdmAgZkTxD9y6u76d
+         1doNhY2VF8g4zc8fmF2ouHHzX4RRMu129Giunst0CB0IasGZ8Kq4VXJBz6zKrrfsT8zY
+         30eQ==
+X-Gm-Message-State: APjAAAWjdmjGs/ggWn6jcXiIQvq0o0zW9WtElwFWA8NDWdW+a4uoMLjQ
+        DYlYuy/aZe/RwRfSMHaHXueWJtdgJr3dqfmsZDkAmezweXw4MZlqoVdLtdGuOvVOwYBrTn3bL6T
+        +VeNRgI6UAyz7nKn+meRJs70pVy6T5OTh3VvwgsUjgH64YLeeOtK2I35j2A==
+X-Received: by 2002:aca:b8c4:: with SMTP id i187mr2650234oif.6.1556042610175;
+        Tue, 23 Apr 2019 11:03:30 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyqk2/l7JyXvO6ceXkR96yfNa3T5kykmk++vyD5p4Ln9X7qkpMbrGMGLIb7GXGO4dzStBBZLOXm4IuPqg6PgVw=
+X-Received: by 2002:aca:b8c4:: with SMTP id i187mr2650207oif.6.1556042609663;
+ Tue, 23 Apr 2019 11:03:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1556025155.git.vpillai@digitalocean.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 23 Apr 2019 18:02:44 +0000 (UTC)
+References: <20190417204817.GA28897@xps13.dannf> <fa287dc4-59e9-0500-70ee-e96c2920d5a9@arm.com>
+In-Reply-To: <fa287dc4-59e9-0500-70ee-e96c2920d5a9@arm.com>
+From:   dann frazier <dann.frazier@canonical.com>
+Date:   Tue, 23 Apr 2019 12:03:18 -0600
+Message-ID: <CALdTtnsHxwTjzw1asO886jYWB4LOY=UT_UGeco=f1SZzVNo7fw@mail.gmail.com>
+Subject: Re: [RFC] arm64: swiotlb: cma_alloc error spew
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 23, 2019 at 5:32 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 17/04/2019 21:48, dann frazier wrote:
+> > hey,
+> >    I'm seeing an issue on a couple of arm64 systems[*] where they spew
+> > ~10K "cma: cma_alloc: alloc failed" messages at boot. The errors are
+> > non-fatal, and bumping up cma to a large enough size (~128M) gets rid
+> > of them - but that seems suboptimal. Bisection shows that this started
+> > after commit fafadcd16595 ("swiotlb: don't dip into swiotlb pool for
+> > coherent allocations"). It looks like __dma_direct_alloc_pages()
+> > is opportunistically using CMA memory but falls back to non-CMA if CMA
+> > disabled or unavailable. I've demonstrated that this fallback is
+> > indeed returning a valid pointer. So perhaps the issue is really just
+> > the warning emission.
+>
+> The CMA area being full isn't necessarily an ignorable non-problem,
+> since it means you won't be able to allocate the kind of large buffers
+> for which CMA was intended. The question is, is it actually filling up
+> with allocations that deserve to be there, or is this the same as I've
+> seen on a log from a ThunderX2 system where it's getting exhausted by
+> thousands upon thousands of trivial single page allocations? If it's the
+> latter (CONFIG_CMA_DEBUG should help shed some light if necessary),
 
-On Tue, Apr 23, 2019 at 04:18:05PM +0000 Vineeth Remanan Pillai wrote:
-> Second iteration of the core-scheduling feature.
+Appears so. Here's a histogram of count/size w/ a cma= large enough to
+avoid failures:
 
-Thanks for spinning V2 of this.
+$ dmesg | grep "cma: cma_alloc(cma" | sed -r 's/.*count
+([0-9]+)\,.*/\1/' | sort -n | uniq -c
+   2062 1
+     32 2
+    266 8
+      2 24
+      4 32
+    256 33
+      7 64
+      2 128
+      2 1024
 
-> 
-> This version fixes apparent bugs and performance issues in v1. This
-> doesn't fully address the issue of core sharing between processes
-> with different tags. Core sharing still happens 1% to 5% of the time
-> based on the nature of workload and timing of the runnable processes.
-> 
-> Changes in v2
-> -------------
-> - rebased on mainline commit: 6d906f99817951e2257d577656899da02bb33105
-> - Fixes for couple of NULL pointer dereference crashes
->   - Subhra Mazumdar
->   - Tim Chen
-> - Improves priority comparison logic for process in different cpus
->   - Peter Zijlstra
->   - Aaron Lu
-> - Fixes a hard lockup in rq locking
->   - Vineeth Pillai
->   - Julien Desfossez
-> - Fixes a performance issue seen on IO heavy workloads
->   - Vineeth Pillai
->   - Julien Desfossez
-> - Fix for 32bit build
->   - Aubrey Li
-> 
-> Issues
-> ------
-> - Processes with different tags can still share the core
+  -dann
 
-I may have missed something... Could you explain this statement?
-
-This, to me, is the whole point of the patch series. If it's not
-doing this then ... what?
-
-
-
-Thanks,
-Phil
-
-
-
-> - A crash when disabling cpus with core-scheduling on
->    - https://paste.debian.net/plainh/fa6bcfa8
-> 
-> ---
-> 
-> Peter Zijlstra (16):
->   stop_machine: Fix stop_cpus_in_progress ordering
->   sched: Fix kerneldoc comment for ia64_set_curr_task
->   sched: Wrap rq::lock access
->   sched/{rt,deadline}: Fix set_next_task vs pick_next_task
->   sched: Add task_struct pointer to sched_class::set_curr_task
->   sched/fair: Export newidle_balance()
->   sched: Allow put_prev_task() to drop rq->lock
->   sched: Rework pick_next_task() slow-path
->   sched: Introduce sched_class::pick_task()
->   sched: Core-wide rq->lock
->   sched: Basic tracking of matching tasks
->   sched: A quick and dirty cgroup tagging interface
->   sched: Add core wide task selection and scheduling.
->   sched/fair: Add a few assertions
->   sched: Trivial forced-newidle balancer
->   sched: Debug bits...
-> 
-> Vineeth Remanan Pillai (1):
->   sched: Wake up sibling if it has something to run
-> 
->  include/linux/sched.h    |   9 +-
->  kernel/Kconfig.preempt   |   7 +-
->  kernel/sched/core.c      | 800 +++++++++++++++++++++++++++++++++++++--
->  kernel/sched/cpuacct.c   |  12 +-
->  kernel/sched/deadline.c  |  99 +++--
->  kernel/sched/debug.c     |   4 +-
->  kernel/sched/fair.c      | 137 +++++--
->  kernel/sched/idle.c      |  42 +-
->  kernel/sched/pelt.h      |   2 +-
->  kernel/sched/rt.c        |  96 +++--
->  kernel/sched/sched.h     | 185 ++++++---
->  kernel/sched/stop_task.c |  35 +-
->  kernel/sched/topology.c  |   4 +-
->  kernel/stop_machine.c    |   2 +
->  14 files changed, 1145 insertions(+), 289 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
-
--- 
+> then
+> that does lean towards spending a bit more effort on this idea:
+>
+> https://lore.kernel.org/lkml/20190327080821.GB20336@lst.de/
+>
+> Robin.
+>
+> > The following naive patch solves the problem for me - just silence the
+> > cma errors, since it looks like a soft error. But is there a better
+> > approach?
+> >
+> > [*] APM X-Gene & HiSilicon Hi1620 w/ SMMU disabled
+> >
+> > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> > index 6310ad01f915b..0324aa606c173 100644
+> > --- a/kernel/dma/direct.c
+> > +++ b/kernel/dma/direct.c
+> > @@ -112,7 +112,7 @@ struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
+> >          /* CMA can be used only in the context which permits sleeping */
+> >          if (gfpflags_allow_blocking(gfp)) {
+> >                  page = dma_alloc_from_contiguous(dev, count, page_order,
+> > -                                                gfp & __GFP_NOWARN);
+> > +                                                true);
+> >                  if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
+> >                          dma_release_from_contiguous(dev, page, count);
+> >                          page = NULL;
+> >
+> >
+> >
+> >
