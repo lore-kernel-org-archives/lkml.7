@@ -2,389 +2,89 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AEAC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37864C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F9E206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26D2214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:36:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556041007;
+	bh=0ywx4lbgLqdcOUJmTJLQ1S0sd6blYojEzZMGaehyCq4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HRTEDQpAT9h07id8WGv2bXwhFwy2uN8Ddxqd/q7JMfG7A17kmV31B0W8NDqLcEoTB
+	 9/U3BOngDbbDZ9t2Vr3ocVVz8BT8JeFRiL2OcI8CDSKy0mc/46YAhev6jparfhMfu0
+	 sAkY4a1ag6CAHSX3ZoEjzwAILe77VXxqQuWU25+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbfDWRgA (ORCPT
+        id S1729563AbfDWRgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 13:36:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41628 "EHLO mx1.redhat.com"
+        Tue, 23 Apr 2019 13:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbfDWRf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:35:59 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728526AbfDWRgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 13:36:45 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 67DC43087924;
-        Tue, 23 Apr 2019 17:35:58 +0000 (UTC)
-Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CED05C1B5;
-        Tue, 23 Apr 2019 17:35:55 +0000 (UTC)
-Date:   Tue, 23 Apr 2019 11:35:54 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joe Perches <joe@perches.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/1] vfio: Use dev_printk() when possible
-Message-ID: <20190423113554.45db79a7@x1.home>
-In-Reply-To: <20190330144135.17351-2-helgaas@kernel.org>
-References: <20190330144135.17351-1-helgaas@kernel.org>
-        <20190330144135.17351-2-helgaas@kernel.org>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 02F66206BA;
+        Tue, 23 Apr 2019 17:36:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556041005;
+        bh=0ywx4lbgLqdcOUJmTJLQ1S0sd6blYojEzZMGaehyCq4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RFKifikufVAAEiYElOfFEZNBmaOX2AaURO7CJBO43uVnIm7SiUToincr0CoU5SipS
+         eq2M2g/oAiDcLtIuc216jiwUzJebwpsyrWM9ejkKSSdRE8ZRTqbu9nljumpqsQwuQ6
+         IfP1DjparUtNRl4DWKZkRDEo/m77cCe09UE43KGY=
+Date:   Tue, 23 Apr 2019 12:36:44 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH v4 00/63] Include linux ACPI/PCI/X86 docs into Sphinx TOC
+ tree
+Message-ID: <20190423173644.GA14616@google.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+ <CAJZ5v0jPyaGQcDfpW5b7A-_3bvkfL78MxFmPtjwCGZ4-=KwUwg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 23 Apr 2019 17:35:58 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jPyaGQcDfpW5b7A-_3bvkfL78MxFmPtjwCGZ4-=KwUwg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 30 Mar 2019 09:41:35 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Apr 23, 2019 at 06:39:47PM +0200, Rafael J. Wysocki wrote:
+> On Tue, Apr 23, 2019 at 6:30 PM Changbin Du <changbin.du@gmail.com> wrote:
+> > Hi Corbet and All,
+> > The kernel now uses Sphinx to generate intelligent and beautiful
+> > documentation from reStructuredText files. I converted all of the Linux
+> > ACPI/PCI/X86 docs to reST format in this serias.
+> >
+> > In this version I combined ACPI and PCI docs, and added new x86 docs
+> > conversion.
 > 
-> Use dev_printk() when possible to make messages consistent with other
-> device-related messages.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c                   | 26 +++++++----------
->  drivers/vfio/pci/vfio_pci_config.c            | 28 ++++++++----------
->  .../platform/reset/vfio_platform_amdxgbe.c    |  5 ++--
->  drivers/vfio/platform/vfio_platform_common.c  | 12 ++++----
->  drivers/vfio/vfio.c                           | 29 +++++++++----------
->  include/linux/pci.h                           |  3 ++
->  6 files changed, 49 insertions(+), 54 deletions(-)
+> I'm not sure if combining all three into one big patch series has been
+> a good idea, honestly.
 
-Applied to vfio next branch for v5.2.  Thanks!
+Yeah, if you post this again, I would find it easier to deal with if
+linux-pci only got the PCI-related things.  63 patches is a little too
+much for one series.
 
-Alex
-
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index a25659b5a5d1..b0fb4ea3253a 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -12,6 +12,7 @@
->   */
->  
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +#define dev_fmt pr_fmt
->  
->  #include <linux/device.h>
->  #include <linux/eventfd.h>
-> @@ -287,12 +288,11 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
->  	pci_save_state(pdev);
->  	vdev->pci_saved_state = pci_store_saved_state(pdev);
->  	if (!vdev->pci_saved_state)
-> -		pr_debug("%s: Couldn't store %s saved state\n",
-> -			 __func__, dev_name(&pdev->dev));
-> +		pci_dbg(pdev, "%s: Couldn't store saved state\n", __func__);
->  
->  	if (likely(!nointxmask)) {
->  		if (vfio_pci_nointx(pdev)) {
-> -			dev_info(&pdev->dev, "Masking broken INTx support\n");
-> +			pci_info(pdev, "Masking broken INTx support\n");
->  			vdev->nointx = true;
->  			pci_intx(pdev, 0);
->  		} else
-> @@ -336,8 +336,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
->  	    IS_ENABLED(CONFIG_VFIO_PCI_IGD)) {
->  		ret = vfio_pci_igd_init(vdev);
->  		if (ret) {
-> -			dev_warn(&vdev->pdev->dev,
-> -				 "Failed to setup Intel IGD regions\n");
-> +			pci_warn(pdev, "Failed to setup Intel IGD regions\n");
->  			goto disable_exit;
->  		}
->  	}
-> @@ -346,8 +345,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
->  	    IS_ENABLED(CONFIG_VFIO_PCI_NVLINK2)) {
->  		ret = vfio_pci_nvdia_v100_nvlink2_init(vdev);
->  		if (ret && ret != -ENODEV) {
-> -			dev_warn(&vdev->pdev->dev,
-> -				 "Failed to setup NVIDIA NV2 RAM region\n");
-> +			pci_warn(pdev, "Failed to setup NVIDIA NV2 RAM region\n");
->  			goto disable_exit;
->  		}
->  	}
-> @@ -356,8 +354,7 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
->  	    IS_ENABLED(CONFIG_VFIO_PCI_NVLINK2)) {
->  		ret = vfio_pci_ibm_npu2_init(vdev);
->  		if (ret && ret != -ENODEV) {
-> -			dev_warn(&vdev->pdev->dev,
-> -					"Failed to setup NVIDIA NV2 ATSD region\n");
-> +			pci_warn(pdev, "Failed to setup NVIDIA NV2 ATSD region\n");
->  			goto disable_exit;
->  		}
->  	}
-> @@ -429,8 +426,7 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
->  	 * is just busy work.
->  	 */
->  	if (pci_load_and_free_saved_state(pdev, &vdev->pci_saved_state)) {
-> -		pr_info("%s: Couldn't reload %s saved state\n",
-> -			__func__, dev_name(&pdev->dev));
-> +		pci_info(pdev, "%s: Couldn't reload saved state\n", __func__);
->  
->  		if (!vdev->reset_works)
->  			goto out;
-> @@ -1255,17 +1251,17 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
->  static void vfio_pci_request(void *device_data, unsigned int count)
->  {
->  	struct vfio_pci_device *vdev = device_data;
-> +	struct pci_dev *pdev = vdev->pdev;
->  
->  	mutex_lock(&vdev->igate);
->  
->  	if (vdev->req_trigger) {
->  		if (!(count % 10))
-> -			dev_notice_ratelimited(&vdev->pdev->dev,
-> -				"Relaying device request to user (#%u)\n",
-> -				count);
-> +			pci_notice_ratelimited(pdev,
-> +				"Relaying device request to user (#%u)\n", count);
->  		eventfd_signal(vdev->req_trigger, 1);
->  	} else if (count == 0) {
-> -		dev_warn(&vdev->pdev->dev,
-> +		pci_warn(pdev,
->  			"No device request channel registered, blocked until released by user\n");
->  	}
->  
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index e82b51114687..d639ec508a84 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -412,8 +412,7 @@ static void vfio_bar_restore(struct vfio_pci_device *vdev)
->  	if (pdev->is_virtfn)
->  		return;
->  
-> -	pr_info("%s: %s reset recovery - restoring bars\n",
-> -		__func__, dev_name(&pdev->dev));
-> +	pci_info(pdev, "%s: reset recovery - restoring BARs\n", __func__);
->  
->  	for (i = PCI_BASE_ADDRESS_0; i <= PCI_BASE_ADDRESS_5; i += 4, rbar++)
->  		pci_user_write_config_dword(pdev, i, *rbar);
-> @@ -1298,8 +1297,8 @@ static int vfio_cap_len(struct vfio_pci_device *vdev, u8 cap, u8 pos)
->  		else
->  			return PCI_SATA_SIZEOF_SHORT;
->  	default:
-> -		pr_warn("%s: %s unknown length for pci cap 0x%x@0x%x\n",
-> -			dev_name(&pdev->dev), __func__, cap, pos);
-> +		pci_warn(pdev, "%s: unknown length for PCI cap %#x@%#x\n",
-> +			 __func__, cap, pos);
->  	}
->  
->  	return 0;
-> @@ -1372,8 +1371,8 @@ static int vfio_ext_cap_len(struct vfio_pci_device *vdev, u16 ecap, u16 epos)
->  		}
->  		return PCI_TPH_BASE_SIZEOF;
->  	default:
-> -		pr_warn("%s: %s unknown length for pci ecap 0x%x@0x%x\n",
-> -			dev_name(&pdev->dev), __func__, ecap, epos);
-> +		pci_warn(pdev, "%s: unknown length for PCI ecap %#x@%#x\n",
-> +			 __func__, ecap, epos);
->  	}
->  
->  	return 0;
-> @@ -1474,8 +1473,7 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
->  		}
->  
->  		if (!len) {
-> -			pr_info("%s: %s hiding cap 0x%x\n",
-> -				__func__, dev_name(&pdev->dev), cap);
-> +			pci_info(pdev, "%s: hiding cap %#x@%#x\n", __func__, cap, pos);
->  			*prev = next;
->  			pos = next;
->  			continue;
-> @@ -1486,9 +1484,8 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
->  			if (likely(map[pos + i] == PCI_CAP_ID_INVALID))
->  				continue;
->  
-> -			pr_warn("%s: %s pci config conflict @0x%x, was cap 0x%x now cap 0x%x\n",
-> -				__func__, dev_name(&pdev->dev),
-> -				pos + i, map[pos + i], cap);
-> +			pci_warn(pdev, "%s: PCI config conflict @%#x, was cap %#x now cap %#x\n",
-> +				 __func__, pos + i, map[pos + i], cap);
->  		}
->  
->  		BUILD_BUG_ON(PCI_CAP_ID_MAX >= PCI_CAP_ID_INVALID_VIRT);
-> @@ -1549,8 +1546,8 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
->  		}
->  
->  		if (!len) {
-> -			pr_info("%s: %s hiding ecap 0x%x@0x%x\n",
-> -				__func__, dev_name(&pdev->dev), ecap, epos);
-> +			pci_info(pdev, "%s: hiding ecap %#x@%#x\n",
-> +				 __func__, ecap, epos);
->  
->  			/* If not the first in the chain, we can skip over it */
->  			if (prev) {
-> @@ -1572,9 +1569,8 @@ static int vfio_ecap_init(struct vfio_pci_device *vdev)
->  			if (likely(map[epos + i] == PCI_CAP_ID_INVALID))
->  				continue;
->  
-> -			pr_warn("%s: %s pci config conflict @0x%x, was ecap 0x%x now ecap 0x%x\n",
-> -				__func__, dev_name(&pdev->dev),
-> -				epos + i, map[epos + i], ecap);
-> +			pci_warn(pdev, "%s: PCI config conflict @%#x, was ecap %#x now ecap %#x\n",
-> +				 __func__, epos + i, map[epos + i], ecap);
->  		}
->  
->  		/*
-> diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> index 3ddb2704221d..fe95964bc3be 100644
-> --- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> +++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> @@ -89,7 +89,8 @@ static int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
->  	} while ((pcs_value & MDIO_CTRL1_RESET) && --count);
->  
->  	if (pcs_value & MDIO_CTRL1_RESET)
-> -		pr_warn("%s XGBE PHY reset timeout\n", __func__);
-> +		dev_warn(vdev->device, "%s: XGBE PHY reset timeout\n",
-> +			 __func__);
->  
->  	/* disable auto-negotiation */
->  	value = xmdio_read(xpcs_regs->ioaddr, MDIO_MMD_AN, MDIO_CTRL1);
-> @@ -114,7 +115,7 @@ static int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
->  		usleep_range(500, 600);
->  
->  	if (!count)
-> -		pr_warn("%s MAC SW reset failed\n", __func__);
-> +		dev_warn(vdev->device, "%s: MAC SW reset failed\n", __func__);
->  
->  	return 0;
->  }
-> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
-> index c0cd824be2b7..d369d9ae166b 100644
-> --- a/drivers/vfio/platform/vfio_platform_common.c
-> +++ b/drivers/vfio/platform/vfio_platform_common.c
-> @@ -12,6 +12,8 @@
->   * GNU General Public License for more details.
->   */
->  
-> +#define dev_fmt(fmt)	"VFIO: " fmt
-> +
->  #include <linux/device.h>
->  #include <linux/acpi.h>
->  #include <linux/iommu.h>
-> @@ -63,7 +65,7 @@ static int vfio_platform_acpi_probe(struct vfio_platform_device *vdev,
->  
->  	adev = ACPI_COMPANION(dev);
->  	if (!adev) {
-> -		pr_err("VFIO: ACPI companion device not found for %s\n",
-> +		dev_err(dev, "ACPI companion device not found for %s\n",
->  			vdev->name);
->  		return -ENODEV;
->  	}
-> @@ -638,7 +640,7 @@ static int vfio_platform_of_probe(struct vfio_platform_device *vdev,
->  	ret = device_property_read_string(dev, "compatible",
->  					  &vdev->compat);
->  	if (ret)
-> -		pr_err("VFIO: Cannot retrieve compat for %s\n", vdev->name);
-> +		dev_err(dev, "Cannot retrieve compat for %s\n", vdev->name);
->  
->  	return ret;
->  }
-> @@ -680,14 +682,14 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
->  
->  	ret = vfio_platform_get_reset(vdev);
->  	if (ret && vdev->reset_required) {
-> -		pr_err("VFIO: No reset function found for device %s\n",
-> -		       vdev->name);
-> +		dev_err(dev, "No reset function found for device %s\n",
-> +		        vdev->name);
->  		return ret;
->  	}
->  
->  	group = vfio_iommu_group_get(dev);
->  	if (!group) {
-> -		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
-> +		dev_err(dev, "No IOMMU group for device %s\n", vdev->name);
->  		ret = -EINVAL;
->  		goto put_reset;
->  	}
-> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> index a3030cdf3c18..7fb68968097a 100644
-> --- a/drivers/vfio/vfio.c
-> +++ b/drivers/vfio/vfio.c
-> @@ -704,8 +704,8 @@ static int vfio_group_nb_add_dev(struct vfio_group *group, struct device *dev)
->  		return 0;
->  
->  	/* TODO Prevent device auto probing */
-> -	WARN(1, "Device %s added to live group %d!\n", dev_name(dev),
-> -	     iommu_group_id(group->iommu_group));
-> +	dev_WARN(dev, "Device added to live group %d!\n",
-> +		 iommu_group_id(group->iommu_group));
->  
->  	return 0;
->  }
-> @@ -748,25 +748,22 @@ static int vfio_iommu_group_notifier(struct notifier_block *nb,
->  		 */
->  		break;
->  	case IOMMU_GROUP_NOTIFY_BIND_DRIVER:
-> -		pr_debug("%s: Device %s, group %d binding to driver\n",
-> -			 __func__, dev_name(dev),
-> -			 iommu_group_id(group->iommu_group));
-> +		dev_dbg(dev, "%s: group %d binding to driver\n", __func__,
-> +			iommu_group_id(group->iommu_group));
->  		break;
->  	case IOMMU_GROUP_NOTIFY_BOUND_DRIVER:
-> -		pr_debug("%s: Device %s, group %d bound to driver %s\n",
-> -			 __func__, dev_name(dev),
-> -			 iommu_group_id(group->iommu_group), dev->driver->name);
-> +		dev_dbg(dev, "%s: group %d bound to driver %s\n", __func__,
-> +			iommu_group_id(group->iommu_group), dev->driver->name);
->  		BUG_ON(vfio_group_nb_verify(group, dev));
->  		break;
->  	case IOMMU_GROUP_NOTIFY_UNBIND_DRIVER:
-> -		pr_debug("%s: Device %s, group %d unbinding from driver %s\n",
-> -			 __func__, dev_name(dev),
-> -			 iommu_group_id(group->iommu_group), dev->driver->name);
-> +		dev_dbg(dev, "%s: group %d unbinding from driver %s\n",
-> +			__func__, iommu_group_id(group->iommu_group),
-> +			dev->driver->name);
->  		break;
->  	case IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER:
-> -		pr_debug("%s: Device %s, group %d unbound from driver\n",
-> -			 __func__, dev_name(dev),
-> -			 iommu_group_id(group->iommu_group));
-> +		dev_dbg(dev, "%s: group %d unbound from driver\n", __func__,
-> +			iommu_group_id(group->iommu_group));
->  		/*
->  		 * XXX An unbound device in a live group is ok, but we'd
->  		 * really like to avoid the above BUG_ON by preventing other
-> @@ -830,8 +827,8 @@ int vfio_add_group_dev(struct device *dev,
->  
->  	device = vfio_group_get_device(group, dev);
->  	if (device) {
-> -		WARN(1, "Device %s already exists on group %d\n",
-> -		     dev_name(dev), iommu_group_id(iommu_group));
-> +		dev_WARN(dev, "Device already exists on group %d\n",
-> +			 iommu_group_id(iommu_group));
->  		vfio_device_put(device);
->  		vfio_group_put(group);
->  		return -EBUSY;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 77448215ef5b..27854731afc4 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2363,4 +2363,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
->  #define pci_info(pdev, fmt, arg...)	dev_info(&(pdev)->dev, fmt, ##arg)
->  #define pci_dbg(pdev, fmt, arg...)	dev_dbg(&(pdev)->dev, fmt, ##arg)
->  
-> +#define pci_notice_ratelimited(pdev, fmt, arg...) \
-> +	dev_notice_ratelimited(&(pdev)->dev, fmt, ##arg)
-> +
->  #endif /* LINUX_PCI_H */
-
+Bjorn
