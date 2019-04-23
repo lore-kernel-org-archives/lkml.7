@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F99C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFDCC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB15B20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD1720811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 03:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qQonU7ZJ"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="t4SgPc4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbfDWDvb (ORCPT
+        id S1730474AbfDWDvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 23:51:31 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:38312 "EHLO
+        Mon, 22 Apr 2019 23:51:38 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:38290 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730182AbfDWDv1 (ORCPT
+        with ESMTP id S1730175AbfDWDv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 23:51:27 -0400
+        Mon, 22 Apr 2019 23:51:26 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x3N3o2cA023044;
-        Tue, 23 Apr 2019 12:50:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x3N3o2cA023044
+        by conuserg-07.nifty.com with ESMTP id x3N3o2c9023044;
+        Tue, 23 Apr 2019 12:50:03 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x3N3o2c9023044
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1555991405;
-        bh=bSpCfUAcyt+UjPMgYyZQmseLNPkdMgHIhxbhwQzsBmI=;
+        s=dec2015msa; t=1555991404;
+        bh=SmiVSvw93zT7NvPci9qgt4Vy7TfTUMkww9tsRFb3tZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQonU7ZJ8JQuK/yYFMxbIUEgpGk8t0atMGb/Xg6wfixcHjJS4ZUo9nyW+pQqWbV8T
-         OxvALrGC8d/ErgshgANG1OAY+TcpQpCqnaavYGTgwqrgaUitAzgyE/9JOFwv4BsBdG
-         wbeykQA6/Q04egSC+2R80XMzpSETZsYTxdB0oHI0xSH/b0z6nhabFnafw6cY5n9tKs
-         0f2/DWceDLDknEENgje4LV91UluDtdJv9N5kvqx6b3GklMOHRjgjlpHvwKHOkoiQvj
-         F7yiwswgn7WygwK4jBgoIws8Okj6DQ9vW0zIHi+Rcqbu1FlYnNlSg+X3RQo8mdEc/b
-         gz8IOWt3SAfsQ==
+        b=t4SgPc4w5I7DdstRLSozscsSmaeNRAtph21jYtwDtmFtamYizi6vDPeUC6Z0iKtXS
+         ioMNCexdryOpYpIu8ADFPEW5fWQXCgek+DwDlnwgZqq1UUROzUm/LvFAXy+RyM7MXV
+         tFrYRfR4akVsfljiE/skpPYRp0LfRpj/LDfpLiVzDQFYTg8JtWiqTuMTArkTexZcny
+         2LxkbPw8KNGxjz745TtsSqDM2gDhWWxwHLL2ZqpSPmEgOwnXEWyu8fMV46KvN+AaYI
+         e1Y+LvNNpRlrTTL09XiEnvjziJs5EnfEatyNvENDoHyeEfbhxAo5Hfn9cl6Nxrn0Ng
+         B5nPB6M1B9nlw==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -51,9 +51,9 @@ Cc:     linux-s390@vger.kernel.org,
         Christophe Leroy <christophe.leroy@c-s.fr>,
         Mathieu Malaterre <malat@debian.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [RESEND PATCH v3 02/11] arm64: mark (__)cpus_have_const_cap as __always_inline
-Date:   Tue, 23 Apr 2019 12:49:50 +0900
-Message-Id: <20190423034959.13525-3-yamada.masahiro@socionext.com>
+Subject: [RESEND PATCH v3 01/11] ARM: prevent tracing IPI_CPU_BACKTRACE
+Date:   Tue, 23 Apr 2019 12:49:49 +0900
+Message-Id: <20190423034959.13525-2-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190423034959.13525-1-yamada.masahiro@socionext.com>
 References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
@@ -62,59 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
-place. We need to eliminate potential issues beforehand.
+From: Arnd Bergmann <arnd@arndb.de>
 
-If it is enabled for arm64, the following errors are reported:
+When function tracing for IPIs is enabled, we get a warning for an
+overflow of the ipi_types array with the IPI_CPU_BACKTRACE type
+as triggered by raise_nmi():
 
-In file included from ././include/linux/compiler_types.h:68,
-                 from <command-line>:
-./arch/arm64/include/asm/jump_label.h: In function 'cpus_have_const_cap':
-./include/linux/compiler-gcc.h:120:38: warning: asm operand 0 probably doesn't match constraints
- #define asm_volatile_goto(x...) do { asm goto(x); asm (""); } while (0)
-                                      ^~~
-./arch/arm64/include/asm/jump_label.h:32:2: note: in expansion of macro 'asm_volatile_goto'
-  asm_volatile_goto(
-  ^~~~~~~~~~~~~~~~~
-./include/linux/compiler-gcc.h:120:38: error: impossible constraint in 'asm'
- #define asm_volatile_goto(x...) do { asm goto(x); asm (""); } while (0)
-                                      ^~~
-./arch/arm64/include/asm/jump_label.h:32:2: note: in expansion of macro 'asm_volatile_goto'
-  asm_volatile_goto(
-  ^~~~~~~~~~~~~~~~~
+arch/arm/kernel/smp.c: In function 'raise_nmi':
+arch/arm/kernel/smp.c:489:2: error: array subscript is above array bounds [-Werror=array-bounds]
+  trace_ipi_raise(target, ipi_types[ipinr]);
 
+This is a correct warning as we actually overflow the array here.
+
+This patch raise_nmi() to call __smp_cross_call() instead of
+smp_cross_call(), to avoid calling into ftrace. For clarification,
+I'm also adding a two new code comments describing how this one
+is special.
+
+The warning appears to have shown up after patch e7273ff49acf
+("ARM: 8488/1: Make IPI_CPU_BACKTRACE a "non-secure" SGI"), which
+changed the number assignment from '15' to '8', but as far as I can
+tell has existed since the IPI tracepoints were first introduced.
+If we decide to backport this patch to stable kernels, we probably
+need to backport e7273ff49acf as well.
+
+Fixes: e7273ff49acf ("ARM: 8488/1: Make IPI_CPU_BACKTRACE a "non-secure" SGI")
+Fixes: 365ec7b17327 ("ARM: add IPI tracepoints") # v3.17
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[yamada.masahiro@socionext.com: rebase on v5.1-rc1]
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
+This is a long-standing issue, and
+Arnd posted this patch two years ago:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-February/409393.html
+
+It is no longer applied, so I rebased it on top of the latest kernel.
+
 
 Changes in v3: None
-Changes in v2:
-  - split into a separate patch
+Changes in v2: None
 
- arch/arm64/include/asm/cpufeature.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/include/asm/hardirq.h | 1 +
+ arch/arm/kernel/smp.c          | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-index e505e1fbd2b9..77d1aa57323e 100644
---- a/arch/arm64/include/asm/cpufeature.h
-+++ b/arch/arm64/include/asm/cpufeature.h
-@@ -406,7 +406,7 @@ static inline bool cpu_have_feature(unsigned int num)
+diff --git a/arch/arm/include/asm/hardirq.h b/arch/arm/include/asm/hardirq.h
+index cba23eaa6072..7a88f160b1fb 100644
+--- a/arch/arm/include/asm/hardirq.h
++++ b/arch/arm/include/asm/hardirq.h
+@@ -6,6 +6,7 @@
+ #include <linux/threads.h>
+ #include <asm/irq.h>
+ 
++/* number of IPIS _not_ including IPI_CPU_BACKTRACE */
+ #define NR_IPI	7
+ 
+ typedef struct {
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index facd4240ca02..c93fe0f256de 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -70,6 +70,10 @@ enum ipi_msg_type {
+ 	IPI_CPU_STOP,
+ 	IPI_IRQ_WORK,
+ 	IPI_COMPLETION,
++	/*
++	 * CPU_BACKTRACE is special and not included in NR_IPI
++	 * or tracable with trace_ipi_*
++	 */
+ 	IPI_CPU_BACKTRACE,
+ 	/*
+ 	 * SGI8-15 can be reserved by secure firmware, and thus may
+@@ -797,7 +801,7 @@ core_initcall(register_cpufreq_notifier);
+ 
+ static void raise_nmi(cpumask_t *mask)
+ {
+-	smp_cross_call(mask, IPI_CPU_BACKTRACE);
++	__smp_cross_call(mask, IPI_CPU_BACKTRACE);
  }
  
- /* System capability check for constant caps */
--static inline bool __cpus_have_const_cap(int num)
-+static __always_inline bool __cpus_have_const_cap(int num)
- {
- 	if (num >= ARM64_NCAPS)
- 		return false;
-@@ -420,7 +420,7 @@ static inline bool cpus_have_cap(unsigned int num)
- 	return test_bit(num, cpu_hwcaps);
- }
- 
--static inline bool cpus_have_const_cap(int num)
-+static __always_inline bool cpus_have_const_cap(int num)
- {
- 	if (static_branch_likely(&arm64_const_caps_ready))
- 		return __cpus_have_const_cap(num);
+ void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
 -- 
 2.17.1
 
