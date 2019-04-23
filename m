@@ -2,97 +2,64 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7EFC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC66C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 045EC2064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:13:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P/cVa6bY"
+	by mail.kernel.org (Postfix) with ESMTP id 8A5242064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 05:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbfDWFNw (ORCPT
+        id S1726125AbfDWFPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 01:13:52 -0400
-Received: from ozlabs.org ([203.11.71.1]:36233 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfDWFNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 01:13:52 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pBSF08wzz9s9G;
-        Tue, 23 Apr 2019 15:13:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555996429;
-        bh=0p7810v6jjnN67jkL/a5uQ9WFqa9DPuQ6mA1k2oTlbo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=P/cVa6bYPJHAJ61EGijGxJqb/1diwEsg06JQN33FGVp0RKWprFwNIlDrGGTP9qctV
-         NuKGJzjnZcZabTfWDyNN3Q7wSB5d58YYvSi9FasxNl/Yd3SVPGT8l6m921pfwy/wEk
-         1v0XuDlJRc5zDrfklUMJTuUcS8SpV4f5DNL8cknilnpjv/LT983ASml+nGG2hFkOTA
-         5Khlgfvd21K0eEPBRZEGrI4AxVu9r61Rei6lIkhD3lY4w2z78SRJCOvAbnQ88FesfG
-         phSx7XCoL8Z7D2f9M7sr0PuAiILxQpEPSXfA78dWZQoJTUfAmV4MzixHv7CNX0vkBC
-         uEdQ7Jm2g7GxA==
-Date:   Tue, 23 Apr 2019 15:13:47 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matt Sickler <Matt.Sickler@daktronics.com>
-Subject: linux-next: build warning after merge of the staging tree
-Message-ID: <20190423151347.4ec9f51e@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/+/jYVB/VZPM.LzNzc7/cZbJ"; protocol="application/pgp-signature"
+        Tue, 23 Apr 2019 01:15:37 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:59600 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfDWFPh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 01:15:37 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 22BB7108BD789;
+        Mon, 22 Apr 2019 22:15:36 -0700 (PDT)
+Date:   Mon, 22 Apr 2019 22:15:35 -0700 (PDT)
+Message-Id: <20190422.221535.1229436130411690227.davem@davemloft.net>
+To:     crag0715@gmail.com
+Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hayeswang@realtek.com,
+        mario_limonciello@dell.com, crag.wang@dell.com, sjg@chromium.org,
+        grundler@chromium.org, seanpaul@chromium.org, david.chen7@dell.com,
+        kai.heng.feng@canonical.com, gustavo@embeddedor.com,
+        charles.hyde@dell.corp-partner.google.com, bigeasy@linutronix.de,
+        zhongjiang@huawei.com
+Subject: Re: [PATCH v2 1/1] r8152: sync sa_family with the media type of
+ network device
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190422050344.24513-1-crag0715@gmail.com>
+References: <20190422050344.24513-1-crag0715@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 22 Apr 2019 22:15:36 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+/jYVB/VZPM.LzNzc7/cZbJ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: crag0715@gmail.com
+Date: Mon, 22 Apr 2019 13:03:43 +0800
 
-Hi Greg,
+> From: "Crag.Wang" <crag.wang@dell.com>
+> 
+> Without this patch the socket address family sporadically gets wrong
+> value ends up the dev_set_mac_address() fails to set the desired MAC
+> address.
+> 
+> Signed-off-by: Crag.Wang <crag.wang@dell.com>
 
-After merging the staging tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
-
-drivers/staging/kpc2000/kpc_spi/spi_driver.c:97:5: note: offset of packed b=
-it-field 'wl' has changed in GCC 4.4
-     } bitfield;
-     ^
-drivers/staging/kpc2000/kpc_spi/spi_driver.c:97:5: note: offset of packed b=
-it-field 'cs' has changed in GCC 4.4
-drivers/staging/kpc2000/kpc_spi/spi_driver.c:97:5: note: offset of packed b=
-it-field 'wcnt' has changed in GCC 4.4
-
-Introduced by commit
-
-  7dc7967fc39a ("staging: kpc2000: add initial set of Daktronics drivers")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+/jYVB/VZPM.LzNzc7/cZbJ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+nwsACgkQAVBC80lX
-0Gy20Af/X0CaM9Vv/zCUD/M7WO9/cY8wk6XGk53ydByELFmv6+tf95Wd/US3AXJ8
-hYukqJEI159o6omGF3TqpfuuyY/yEHSLNOFzgqJ5AvF+LH+StkzOMDG2TGLN3RVq
-5LWSRSG6IVyge6jBlL4zJlIL59Zof0tQW5mf10mXMwul5DnWGlfdMi/EyZhsehHb
-ed6oHNJLBbcM//I1MRM/Aw2/UV8nF5OcnUu5D3yDqc7hiYVGMCw+MXfVXezzNaIw
-fHEhsMfuk61T9Vi/rS3cCNsvjlowdaoX6KsbzwhLOLqSoonRDxuWi3aEWNny1b7z
-WjcdEOS7BNpy/xPrzx3+hYWbfheQBw==
-=71M1
------END PGP SIGNATURE-----
-
---Sig_/+/jYVB/VZPM.LzNzc7/cZbJ--
+Applied to net-next with Fixes: tag added.
