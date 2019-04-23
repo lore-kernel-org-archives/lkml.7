@@ -2,119 +2,95 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DF3C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E295C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CA020835
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556040246;
-	bh=iYPrKA+CLfE+81yGX8HKug1p2zjXsokfBC4B5o7cWfc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sBdpNY2SP35G3bC6h6ODDtJsnhgnWYbnfJX8aPZyY3i+tRiSRKWqeMOJG1TrReA8q
-	 SgXddCUoPX7jkomcYUHGJnBGpY8Jd7d7GD3tAVlJPm9kmyhvsLRqPtpb9VA71hdwor
-	 ph9gaR6jWVQn0WW2Lds84sS6zQrB0f2zstmjEJG4=
+	by mail.kernel.org (Postfix) with ESMTP id 6705820835
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbfDWRYF (ORCPT
+        id S1729441AbfDWR0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 13:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728447AbfDWRYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:24:02 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E30C521850
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 17:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556040241;
-        bh=iYPrKA+CLfE+81yGX8HKug1p2zjXsokfBC4B5o7cWfc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XXy3hiAAkeIWF29U1MFFQT+Kf4podYbKv3dMvIzY5Tn4Rc0LkcSl3npDijWPdNkrA
-         x0splrtWA44skJGul3zEoJT7Nu/OBFWC6o8q2h2iKEfHpvnEu3BNedVoNqyQySFE+2
-         RfGOFajxsstuT3bSmQJ6g2DtIjvgu9ek+2hoKj9Q=
-Received: by mail-wm1-f42.google.com with SMTP id o25so1059095wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 10:24:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAU1oIGcUgx9S4pbYlod7TvQmMvkgg0xkyPZGGUe8QcnfYVDjz3s
-        lrgyqSfvv1nkokh4LyH/UOT79nz9uY6lnqhzXaKNVA==
-X-Google-Smtp-Source: APXvYqwGdQ9MUfdYBNY6hjUK/BccVGSK5ThFMU5wsMOaU6iBhCW5Mb4JaXwnZIEfhA6w9kGN5hNCCNKBSEyjvu3D2Sc=
-X-Received: by 2002:a1c:e188:: with SMTP id y130mr3031759wmg.83.1556040239484;
- Tue, 23 Apr 2019 10:23:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190423065706.15430-1-namit@vmware.com> <CALCETrUohp2rMr9EcoAYm2M=Ktu4Bg2sPfUWMy5JqM-GXsDOBQ@mail.gmail.com>
- <44A66873-0834-4794-81A5-3B2131314AA4@vmware.com>
-In-Reply-To: <44A66873-0834-4794-81A5-3B2131314AA4@vmware.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 23 Apr 2019 10:23:47 -0700
-X-Gmail-Original-Message-ID: <CALCETrXLjL4vMwQP1tweWvk_+dBvZFdE85ckt8TZSVw2XyW_yQ@mail.gmail.com>
-Message-ID: <CALCETrXLjL4vMwQP1tweWvk_+dBvZFdE85ckt8TZSVw2XyW_yQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/mm/tlb: Remove flush_tlb_info from the stack
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 23 Apr 2019 13:26:13 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:39730 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729222AbfDWR0M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 13:26:12 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E9878133E8184;
+        Tue, 23 Apr 2019 10:26:11 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 10:26:08 -0700 (PDT)
+Message-Id: <20190423.102608.343500084156113302.davem@davemloft.net>
+To:     mw@semihalf.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, antoine.tenart@bootlin.com,
+        jaz@semihalf.com, gregory.clement@bootlin.com, nadavh@marvell.com,
+        thomas.petazzoni@bootlin.com, linux@armlinux.org.uk,
+        tn@semihalf.com, stefanc@marvell.com
+Subject: Re: [net: PATCH] net: mvpp2: disable link IRQ waiting for IDLE
+ frames
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <CAPv3WKcDgY_LY_u8mY47ZZqT2iVL9fp5n3Le0UVWsyO4QDYP-A@mail.gmail.com>
+References: <20190228093627.vtfglsl2djenohlm@shell.armlinux.org.uk>
+        <CAPv3WKdj+EKr2VR+NcBHQrS9xoxHoMzZOri65G61CH6xLL8jFw@mail.gmail.com>
+        <CAPv3WKcDgY_LY_u8mY47ZZqT2iVL9fp5n3Le0UVWsyO4QDYP-A@mail.gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=euc-kr
+Content-Transfer-Encoding: 8bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Apr 2019 10:26:12 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 9:56 AM Nadav Amit <namit@vmware.com> wrote:
->
-> > On Apr 23, 2019, at 9:50 AM, Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > On Tue, Apr 23, 2019 at 12:12 AM Nadav Amit <namit@vmware.com> wrote:
->https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=3Dx8=
-6/fixes >> Remove flush_tlb_info variables from the stack. This allows to a=
-lign
-> >> flush_tlb_info to cache-line and avoid potentially unnecessary cache
-> >> line movements. It also allows to have a fixed virtual-to-physical
-> >> translation of the variables, which reduces TLB misses.
-> >>
-> >> Use per-CPU struct for flush_tlb_mm_range() and
-> >> flush_tlb_kernel_range(). Add debug assertions to ensure there are
-> >> no nested TLB flushes that might overwrite the per-CPU data. For
-> >> arch_tlbbatch_flush(), use a const struct.
-> >>
-> >> Results when running a microbenchmarks that performs 10^6 MADV_DONTEED
-> >> operations and touching a page, in which 3 additional threads run a
-> >> busy-wait loop (5 runs):
-> >
-> > Can you add a memset(,,,. 0, sizeof(struct flush_tlb_info)) everywhere
-> > you grab it?  Or, even better, perhaps do something like:
-> >
-> > static inline struct flush_tlb_info *get_flush_tlb_info(void)
-> > {
-> >  /* check reentrancy, make sure that we use smp_processor_id() or
-> > otherwise assert that we're bound to a single CPU. */
-> >  struct flush_tlb_info *ptr =3D this_cpu_ptr(...);
-> >  memset(ptr, 0, sizeof(*ptr));
-> >  return ptr;
-> > }
-> >
-> > static inline void put_flush_tlb_info(void)
-> > {
-> > /* finish checking reentrancy. */
-> > }
->
-> I=E2=80=99ll check if the compiler is smart enough to avoid redundant ass=
-ignments,
-> and if it is not, I=E2=80=99ll just give all the struct arguments to
-> get_flush_tlb_info() instead of memset() if you don=E2=80=99t mind.
+From: Marcin Wojtas <mw@semihalf.com>
+Date: Tue, 23 Apr 2019 18:08:00 +0200
 
-Sounds good.
+> Hi David, Rusell,
+> 
+> czw., 28 lut 2019 o 14:58 Marcin Wojtas <mw@semihalf.com> napisa©©(a):
+>>
+>> Hi Russell,
+>>
+>> czw., 28 lut 2019 o 10:36 Russell King - ARM Linux admin
+>> <linux@armlinux.org.uk> napisa©©(a):
+>> >
+>> > On Wed, Feb 27, 2019 at 06:47:32PM +0100, Marcin Wojtas wrote:
+>> > > Current version of the driver was configuring XLG MAC
+>> > > in a way to wait 3 IDLE frames before allowing for the
+>> > > link-up interrupt to be triggered. This resulted in an
+>> > > issue, preventing to detect the link change during RX
+>> > > traffic on the interface. Fix that.
+>> >
+>> > What about noise sensitivity?  Does this now mean that on boards such as
+>> > Macchiatobin Single Shot or Clearfog GT9k where the serdes is connected
+>> > directly to a SFP cage, that noise on the serdes lines triggers a link
+>> > indication?
+>> >
+>>
+>> Afaik waiting for idle frames is not required by any standard. In fact
+>> this feature of the XLG MAC caused a risk that after dropping the link
+>> during data transfer it would never go up again until remote peer
+>> stops it.
+>>
+>> I tested it on 3 different boards with SerDes directly connected to
+>> the SFP cage and I'm also not aware of any reporte about
+>> noise-triggered false link interrupts in XLG MAC (proprietary Marvell
+>> mvpp2x driver did not use waiting 3 idle frames feature). I'd rather
+>> assume the MAC is not vulnerable to it, and only properly established
+>> link can trigger an event.
+>>
+> 
+> This patch seems to get forgotten - any objections to merge it?
 
->
-> I also want to give a try for parallelizing the remote and local
-> invocations, which really annoys me every time I look at the code.
+If there is agreement, please repost it.
 
-Yes please!
+Thank you.
