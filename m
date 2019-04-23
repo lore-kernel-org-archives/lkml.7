@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CCDC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6450BC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6B9218FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC09218EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTANTI43"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfuEeI/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbfDWWtw (ORCPT
+        id S1728871AbfDWWt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:49:52 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34151 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728780AbfDWWtn (ORCPT
+        Tue, 23 Apr 2019 18:49:58 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46699 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbfDWWtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:49:43 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h5so13027069lfm.1;
-        Tue, 23 Apr 2019 15:49:41 -0700 (PDT)
+        Tue, 23 Apr 2019 18:49:42 -0400
+Received: by mail-lf1-f66.google.com with SMTP id k18so12985435lfj.13;
+        Tue, 23 Apr 2019 15:49:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=W583DLuATb7569DJlQOwhhtkLZ1xhL86KTFMSp+wLl8=;
-        b=XTANTI43m3AqXZ4watOgFQeVz3GWMCysvKAZ0BfLNAThnGYXFOUOqXPbpHlZ/b5mWF
-         SxrGA7+nbNZj1x/pfWHhkJgxchG8jbokMXfnPvGcl5DWTPJ5TDsfnGehXJg2ibXkmGgX
-         iVFNCL1BhDKT0FQNIMe3a23an6wwHEWm5qqpfs641NYNrpKZ5gSrtPSpqeQWjbk0T4lL
-         DNNC596STlOWBaGvH6oOGVUAA5/xi1V0Be0f6biL51DarZiWJrqeUBhCnBQ23q+1gzS5
-         pppQo9LWICIxLxGfV7ncQ25IdC8ybOv5uDt1CTojMOsHdl1pPxpDXbRMVdZlh6qZlNbp
-         ERIA==
+        bh=VJ3xwWJXog1KPx7zXkBt+0FT1onV4wm00T3cYGUdK8o=;
+        b=dfuEeI/xqrZujHXykgX4UeKXjmUGMkHpprck0gZu6b9Bl+E4QQtmhiG0xc2Hno05dN
+         8NwdxoNghrzZa9uBXrKYxfALB8W0i2pkIt9A6r8VGoZIp4MJw/gte2dfoBfDvQaE9YoX
+         5qKAZfvywTQAZJ1LFEqWlqlbkL7uAqlkt/3kzxq16ZwCtG2CH8rNUjnacYPTjQHY4Q4T
+         5MBHpcQ6QrTZXh1oLEDtsPMmOGPJaHaSRO4wKCk389PNku/iR15uRauOVW2a/qWln0/y
+         ScMdJNPbgjTei27drIJdmMnqPBQgtP3o4YsBPActjbdsufmqVipYWtTnNySptsptVU2V
+         rvBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=W583DLuATb7569DJlQOwhhtkLZ1xhL86KTFMSp+wLl8=;
-        b=Kykzn8KtXue4xJm7VEhEBgqk2hHVC9UXmXZVd6AdwVaiZydYM5yMjfrwzQgjoheH0v
-         zk17oTccMiUMV9fGS7uGM7VX4xNfXDaUoMGhF3a4J0Z60k6BKBNYjA+t1gRC+jnaufOM
-         HaQmFzf7Kks53JG3yKEVhbLMiKuTd+5ufXikNM5MgwbRhtq6pUJ4JLA71oTTSvJkp7eH
-         UzcdiSOqP6hebC4XKL9N4bnVzq6HrLLwqeVh40MlMN3mbQ1h6F7omhVM9zchKcgK6PNq
-         y02Tp1kxONQF8rkUHUYF0BJEzDLWU9pJYQu6gbsnSMuzNuSRm5cXvymkBk+HDhDn/loo
-         4gXQ==
-X-Gm-Message-State: APjAAAV151/GmvpiorYEKDpFLv93ilPBY9SRGVkPeckedoUixCyHpbMv
-        8MWMTcICWVUyRLC67ZokqVM=
-X-Google-Smtp-Source: APXvYqwnO9pXPqQ9DzSRJfPbh+83mSvQndOn/tiKT0UkXAkjkZULPQWfg5M6vmofbJom3WJnp5GDBA==
-X-Received: by 2002:ac2:51d9:: with SMTP id u25mr4013003lfm.91.1556059781008;
-        Tue, 23 Apr 2019 15:49:41 -0700 (PDT)
+        bh=VJ3xwWJXog1KPx7zXkBt+0FT1onV4wm00T3cYGUdK8o=;
+        b=bAGyEwtIF9JKMFfYJxnIqf/kbgITNZycpdv3ZWK2dDIkPK4u+d+sMvY6xyaTtQTBIf
+         33qCDv6PcskbPqRnxVIbKCob4WX6t/YOMhobcsLqmCdHLe124a5bh4ASFb2U/Of3uiTb
+         pUoBplqTda/Jge84aJ0+YS5wcshNESiqp4dhlI8667HUr+EURMeOJbF/6sgelsmL4uEV
+         IHqK8QDXnPZQZGgYN1IFZNtnmuSPYMw3Hd1IoRaJL7D0P2IU8Alcdm0jOknXJGaahJx8
+         fqUSCB/VwGx27Z8OYWs4aTAz/vcCskdPhyGApR8SuD9GrVWy8LfLzypjoRtsH13AxcV7
+         6ouA==
+X-Gm-Message-State: APjAAAWcYMTmqnJ9BDf+c7Z1hhaC/jK7xNoi/F9C0Hjnzo3sSMfQLUxD
+        G4CLol9d6E/Xov9PP1MdkdM=
+X-Google-Smtp-Source: APXvYqyST+f6mO8FvKsw8ef7ytV8eNa4Hb8jVjd1N5jWDJW1Qzvmq1+c+eepJUlQYzYSmUbWjijskQ==
+X-Received: by 2002:a19:c216:: with SMTP id l22mr14887697lfc.112.1556059779541;
+        Tue, 23 Apr 2019 15:49:39 -0700 (PDT)
 Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id w2sm4904722lfa.63.2019.04.23.15.49.39
+        by smtp.gmail.com with ESMTPSA id w2sm4904722lfa.63.2019.04.23.15.49.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 15:49:40 -0700 (PDT)
+        Tue, 23 Apr 2019 15:49:38 -0700 (PDT)
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -73,9 +73,9 @@ To:     Ralf Baechle <ralf@linux-mips.org>,
         Juergen Gross <jgross@suse.com>
 Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 12/12] mips: Enable OF_RESERVED_MEM config
-Date:   Wed, 24 Apr 2019 01:47:48 +0300
-Message-Id: <20190423224748.3765-13-fancer.lancer@gmail.com>
+Subject: [PATCH 11/12] mips: Make sure dt memory regions are valid
+Date:   Wed, 24 Apr 2019 01:47:47 +0300
+Message-Id: <20190423224748.3765-12-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190423224748.3765-1-fancer.lancer@gmail.com>
 References: <20190423224748.3765-1-fancer.lancer@gmail.com>
@@ -86,58 +86,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since memblock-patchset was introduced the reserved-memory nodes are
-supported being declared in dt-files. So these nodes are actually parsed
-during the arch setup procedure when the early_init_fdt_scan_reserved_mem()
-method is called. But some of the features like private reserved memory
-pools aren't available at the moment, since OF_RESERVED_MEM isn't enabled
-for the MIPS platform. Lets fix it by enabling the config.
-
-But due to the arch-specific boot mem_map container utilization we need
-to manually call the fdt_init_reserved_mem() method after all the available
-and reserved memory has been moved to memblock. The function call performed
-before bootmem_init() fails due to the lack of any memblock memory regions
-to allocate from at that stage.
+There are situations when memory regions coming from dts may be
+too big for the platform physical address space. It especially
+concerns XPA-capable systems. Bootleader may determine more than 4GB
+memory available and pass it to the kernel over dts memory node, while
+kernel is built without XPA support. In this case the region
+may either simply be truncated by add_memory_region() method
+or by u64->phys_addr_t type casting. But in worst case the method
+can even drop the memory region if it exceedes PHYS_ADDR_MAX size.
+So lets make sure the retrieved from dts memory regions are valid,
+and if some of them isn't just manually truncate it with a warning
+printed out.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- arch/mips/Kconfig        | 1 +
- arch/mips/kernel/setup.c | 3 +++
- 2 files changed, 4 insertions(+)
+ arch/mips/kernel/prom.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 4a5f5b0ee9a9..0bf9e89e4023 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2988,6 +2988,7 @@ config USE_OF
- 	bool
- 	select OF
- 	select OF_EARLY_FLATTREE
-+	select OF_RESERVED_MEM
- 	select IRQ_DOMAIN
- 
- config UHI_BOOT
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index fbd216b4e929..ab349d2381c3 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -27,6 +27,7 @@
- #include <linux/dma-contiguous.h>
- #include <linux/decompress/generic.h>
- #include <linux/of_fdt.h>
-+#include <linux/of_reserved_mem.h>
- 
- #include <asm/addrspace.h>
- #include <asm/bootinfo.h>
-@@ -825,6 +826,8 @@ static void __init arch_mem_init(char **cmdline_p)
- 	memblock_reserve(__pa_symbol(&__nosave_begin),
- 		__pa_symbol(&__nosave_end) - __pa_symbol(&__nosave_begin));
- 
-+	fdt_init_reserved_mem();
+diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
+index 437a174e3ef9..28bf01961bb2 100644
+--- a/arch/mips/kernel/prom.c
++++ b/arch/mips/kernel/prom.c
+@@ -41,7 +41,19 @@ char *mips_get_machine_name(void)
+ #ifdef CONFIG_USE_OF
+ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ {
+-	return add_memory_region(base, size, BOOT_MEM_RAM);
++	if (base >= PHYS_ADDR_MAX) {
++		pr_warn("Trying to add an invalid memory region, skipped\n");
++		return;
++	}
 +
- 	memblock_dump_all();
++	/* Truncate the passed memory region instead of type casting */
++	if (base + size - 1 >= PHYS_ADDR_MAX || base + size < base) {
++		pr_warn("Truncate memory region %llx @ %llx to size %llx\n",
++			size, base, PHYS_ADDR_MAX - base);
++		size = PHYS_ADDR_MAX - base;
++	}
++
++	add_memory_region(base, size, BOOT_MEM_RAM);
+ }
  
- 	early_memtest(PFN_PHYS(min_low_pfn), PFN_PHYS(max_low_pfn));
+ int __init early_init_dt_reserve_memory_arch(phys_addr_t base,
 -- 
 2.21.0
 
