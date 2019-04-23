@@ -2,109 +2,83 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A1AC10F11
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14231C10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0642077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:32:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CbAmHiqH"
+	by mail.kernel.org (Postfix) with ESMTP id D99D620811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfDWBcc (ORCPT
+        id S1729476AbfDWBsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 21:32:32 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:51693 "EHLO ozlabs.org"
+        Mon, 22 Apr 2019 21:48:04 -0400
+Received: from mga03.intel.com ([134.134.136.65]:41111 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727840AbfDWBcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 21:32:32 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44p5Xr5gJTz9s55;
-        Tue, 23 Apr 2019 11:32:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555983149;
-        bh=oopaeLIG+A8au8HD3JzLsgrKpzmK8fWtBQ4fQim6fEc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CbAmHiqH2HuFWu4V9QR2gBIDEz+ndJWZJdm8Vn0Y+g/0RxyMQ6curdJg2z/Y0X7hU
-         ghP+OSYzccYg2ypSo4AHvDM14limnb2PV9tHvJvETz8rDCUZtAqYF+hPT8qxKX2IyJ
-         tiuHCqvMOFimrfuScYGFeX4aysnZ5z5pSkXhiIRpQU5S1rgBOERGI1jFHX/aesRFxb
-         dZCDDwPtr95R/GzIltEC2XW076aM5QerKrUufqje68DWabmgJwU6VKDnHBGNTX/urO
-         /OY4BBrnss3D1FCXWMLb15m++NinzX1KPftr72Dl0LGstfVY+TlJwlaB75bYTEMpUY
-         //in5gICE0T6w==
-Date:   Tue, 23 Apr 2019 11:32:27 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: linux-next: build warning after merge of the net-next tree
-Message-ID: <20190423113227.3dd68989@canb.auug.org.au>
+        id S1727588AbfDWBsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 21:48:04 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 18:48:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,384,1549958400"; 
+   d="scan'208";a="144988139"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Apr 2019 18:48:02 -0700
+Date:   Mon, 22 Apr 2019 18:48:02 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Cedric Xing <cedric.xing@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave <dave.hansen@intel.com>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge <serge.ayoun@intel.com>,
+        Shay <shay.katz-zamir@intel.com>,
+        Haitao <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kai <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai <kai.huang@intel.com>, David Rientjes <rientjes@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [RFC PATCH v1 3/3] selftests/x86: Augment SGX selftest to test
+ new __vdso_sgx_enter_enclave() and its callback interface
+Message-ID: <20190423014802.GA6749@linux.intel.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <cover.1555965327.git.cedric.xing@intel.com>
+ <f82e81c9cae31634684964d3fc4e9637e7565c69.1555965327.git.cedric.xing@intel.com>
+ <CALCETrWpMxoX00SfnCgYdNbT5JmnzHNJ+73NmUjebBEjk7DuJA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/kWc9vZT6BWDaAW2K4bbmfho"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWpMxoX00SfnCgYdNbT5JmnzHNJ+73NmUjebBEjk7DuJA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kWc9vZT6BWDaAW2K4bbmfho
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 22, 2019 at 06:29:06PM -0700, Andy Lutomirski wrote:
+> On Mon, Apr 22, 2019 at 5:37 PM Cedric Xing <cedric.xing@intel.com> wrote:
+> >
+> > Given the changes to __vdso_sgx_enter_enclave(), the selftest is augmented to
+> > test the newly added callback interface. This addtional test marks the whole
+> > enclave range as PROT_READ, and calls mprotect() upon #PFs to add necessary PTE
+> > permissions per PFEC (#PF Error Code) until the enclave finishes.
+> 
+> Nifty.
+> 
+> What's not tested here is running this code with EFLAGS.TF set and
+> making sure that it unwinds correctly.  Also, Jarkko, unless I missed
+> something, the vDSO extable code likely has a bug.  If you run the
+> instruction right before ENCLU with EFLAGS.TF set, then do_debug()
+> will eat the SIGTRAP and skip to the exception handler.  Similarly, if
+> you put an instruction breakpoint on ENCLU, it'll get skipped.  Or is
+> the code actually correct and am I just remembering wrong?
 
-Hi all,
-
-After merging the net-next tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
-
-net/socket.c: In function 'sock_ioctl':
-net/socket.c:1173:10: warning: this statement may fall through [-Wimplicit-=
-fallthrough=3D]
-    err =3D sock->ops->gettstamp(sock, argp,
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          cmd =3D=3D SIOCGSTAMP_OLD,
-          ~~~~~~~~~~~~~~~~~~~~~~
-          !IS_ENABLED(CONFIG_64BIT));
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~
-net/socket.c:1176:3: note: here
-   case SIOCGSTAMP_NEW:
-   ^~~~
-
-Introduced by commit
-
-  0768e17073dc ("net: socket: implement 64-bit timestamps")
-
-I get this warning because I am building with -Wimplicit-fallthrough
-in attempt to catch new additions early.  The gcc warning can be turned
-off by adding a /* fall through */ comment at the point the fall through
-happens (assuming that the fall through is intentional).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kWc9vZT6BWDaAW2K4bbmfho
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly+aysACgkQAVBC80lX
-0Gx74Af9EQr/Jmy5vXkadUq194+lVw9iMcHP9/4UNQyzjA3UNIDyII2c42Rzr3W7
-v68yLk2+vEDSDMKzBSCarV5MmK+3xaaiTfpLW3pVjThj4ogflYwMMftx+zbULNi5
-oTcoSft8xUe7wBmGHYxyeop2/BfPK7R8l30BZ0+5wEajA1G1B10URuRd+RNYx8cJ
-daXXoHDrTFKbNzkfnjDYK3ePm3g1agVed3ZZzjk3c28ronPMy/W8UVVQmk3aT1/B
-DGEUpn2kWECStgzZaxG6XN4goWqatlODxkzHhnFnZR+rhc+FipYCHI37mU1mZFOD
-esmZMxDnxzLdwhQmUvK0PPUAa1kq+Q==
-=hDj1
------END PGP SIGNATURE-----
-
---Sig_/kWc9vZT6BWDaAW2K4bbmfho--
+My money would be on the code being broken as opposed to you remembering
+wrong.  I'll take a look at it tomorrow.
