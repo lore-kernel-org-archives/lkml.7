@@ -2,116 +2,98 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56896C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F98EC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E42C20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4C920674
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:58:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="etco+EDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbfDWO6N (ORCPT
+        id S1728365AbfDWO6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:58:13 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:56529 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbfDWO6L (ORCPT
+        Tue, 23 Apr 2019 10:58:12 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:36455 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728343AbfDWO6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Apr 2019 10:58:11 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 03CDA3C00C1;
-        Tue, 23 Apr 2019 16:58:09 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dTI8U-6u9sHw; Tue, 23 Apr 2019 16:58:02 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 507E93C0034;
-        Tue, 23 Apr 2019 16:58:02 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 23 Apr
- 2019 16:58:02 +0200
-Date:   Tue, 23 Apr 2019 16:57:59 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Jiada Wang <jiada_wang@mentor.com>
-CC:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
-        <daniel.lezcano@linaro.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <horms+renesas@verge.net.au>,
-        <niklas.soderlund+renesas@ragnatech.se>, <geert+renesas@glider.be>,
-        <sergei.shtylyov@cogentembedded.com>,
-        <marek.vasut+renesas@gmail.com>,
-        <kuninori.morimoto.gx@renesas.com>, <hien.dang.eb@renesas.com>,
-        <fabrizio.castro@bp.renesas.com>, <dien.pham.ry@renesas.com>,
-        <biju.das@bp.renesas.com>, <george_davis@mentor.com>,
-        <joshua_frkuska@mentor.com>, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <rosca.eugeniu@gmail.com>
-Subject: Re: [PATCH v3 1/2] thermal: rcar_gen3_thermal: fix interrupt type
-Message-ID: <20190423145759.GA29037@vmlxhi-102.adit-jv.com>
-References: <20190423141414.24264-1-jiada_wang@mentor.com>
- <20190423141414.24264-2-jiada_wang@mentor.com>
+Received: by mail-it1-f193.google.com with SMTP id y10so635436itc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 07:58:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ag7zBPESARv7AdniPMqyXmsA87Ho5Yldxwq0K1TAMSo=;
+        b=etco+EDy8heu0T+W2qeA00+rqzgwFMn+V8AWyfzZK8wAaMXcbsjKenA9IT3v80AyGn
+         X1xqeWdIyhBSwo8BY7MBq3DLieTuKdEZdfO2lN2pOQdRoUbP98eoPmvPHns6WEypHZDg
+         RWUWsQbe9mcyfiRK2POxV+Z27kmGrO0YQdxO8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ag7zBPESARv7AdniPMqyXmsA87Ho5Yldxwq0K1TAMSo=;
+        b=GdbGdzpw3EBhFiTOteYumXKcTtxaxRTFaWc8dzJTfWbQloiVMXPjb0x0XHLLn0rdYr
+         MNryfM6ocJG7TvBU6FcrUPOTZMF1OSmGsmU9d8WWfER4yQoyJ/AcrC4T0aLQ5EHX5DpA
+         mqTDP8XC0plQuILnBM7+se2ksPZVjzIAhNqavH6PRrUJQEDpdA9gtCJh9c4uJL8Eyg/a
+         um9Y/nltsF5EB3fMAuwkaY2x1XysfvVVKwJNKe7p9LwKJFsc6usS22Y70CILfJK4wrIC
+         uwOLtFnFLhq8AXO1C+Y7wO/R3j1OtfEme4ajyQJkpeNv9x1q/X08l6+Qy6mXzQLICl5F
+         19wA==
+X-Gm-Message-State: APjAAAXLlCvir/N6O/Ahy9B+dX7p98I7lcOcWn599cEQnMTYMUkEuqmY
+        h/Uhym+IxaBRCUmb1MAcHPJnDip6uU7oNDGnjqdX8A==
+X-Google-Smtp-Source: APXvYqwQ57zYiDRU0wIYedbbpGpXu6cwSBYRvjbUmAO64PYYXMHdTUUYGu/a9zxqtoAEoxVN/jBMM8mh4b6AWcfWvzU=
+X-Received: by 2002:a24:650d:: with SMTP id u13mr2565690itb.1.1556031489515;
+ Tue, 23 Apr 2019 07:58:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190423141414.24264-2-jiada_wang@mentor.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
+References: <cover.1553677194.git.kirr@nexedi.com> <d916d401a80e9834c95970d86ca71c0154e988a6.1553677194.git.kirr@nexedi.com>
+In-Reply-To: <d916d401a80e9834c95970d86ca71c0154e988a6.1553677194.git.kirr@nexedi.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 23 Apr 2019 16:57:58 +0200
+Message-ID: <CAJfpegt9DRmwKksR0QSA7NzQP_=a=yJybdL9mOP1cw5goGkdgw@mail.gmail.com>
+Subject: Re: [RESEND1, PATCH 1/2] fuse: convert printk -> pr_*
+To:     Kirill Smelkov <kirr@nexedi.com>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Maxim Patlasov <mpatlasov@parallels.com>,
+        Anatol Pomozov <anatol.pomozov@gmail.com>,
+        Pavel Emelyanov <xemul@openvz.org>,
+        Andrew Gallagher <andrewjcg@fb.com>,
+        "Anand V . Avati" <avati@redhat.com>,
+        Alexey Kuznetsov <kuznet@virtuozzo.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Constantine Shulyupin <const@makelinux.com>,
+        Chad Austin <chadaustin@fb.com>,
+        Dan Schatzberg <dschatzberg@fb.com>,
+        linux-fsdevel@vger.kernel.org,
+        fuse-devel <fuse-devel@lists.sourceforge.net>,
+        linux-kernel@vger.kernel.org, Han-Wen Nienhuys <hanwen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiada,
+On Wed, Mar 27, 2019 at 10:15 AM Kirill Smelkov <kirr@nexedi.com> wrote:
+>
+> Functions, like pr_err, are a more modern variant of printing compared to
+> printk. They could be used to denoise sources by using needed level in
+> the print function name, and by automatically inserting per-driver /
+> function / ... print prefix as defined by pr_fmt macro. pr_* are also
+> said to be used in Documentation/process/coding-style.rst and more
+> recent code - for example overlayfs - uses them instead of printk.
+>
+> Convert CUSE and FUSE to use the new pr_* functions.
+>
+> CUSE output stays completely unchanged, while FUSE output is amended a
+> bit for "trying to steal weird page" warning - the second line now comes
+> also with "fuse:" prefix. I hope it is ok.
 
-On Tue, Apr 23, 2019 at 11:14:13PM +0900, Jiada Wang wrote:
-> Currently IRQF_SHARED type interrupt line is allocated, but it
-> is not appropriate, as the interrupt line isn't shared between
-> different devices, instead IRQF_ONESHOT is the proper type.
-> 
-> By changing interrupt type to IRQF_ONESHOT, now irq handler is
-> no longer needed, as clear of interrupt status can be done in
-> threaded interrupt context.
-> 
-> Because IRQF_ONESHOT type interrupt line is kept disabled until
-> the threaded handler has been run, so there is no need to protect
-> read/write of REG_GEN3_IRQSTR with lock.
-> 
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-> ---
->  drivers/thermal/rcar_gen3_thermal.c | 34 +++++------------------------
->  1 file changed, 6 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-> index 88fa41cf16e8..ebbaef5a3cf1 100644
-> --- a/drivers/thermal/rcar_gen3_thermal.c
-> +++ b/drivers/thermal/rcar_gen3_thermal.c
-> @@ -231,39 +231,17 @@ static void rcar_thermal_irq_set(struct rcar_gen3_thermal_priv *priv, bool on)
->  static irqreturn_t rcar_gen3_thermal_irq(int irq, void *data)
->  {
->  	struct rcar_gen3_thermal_priv *priv = data;
-> +	int i;
->  	u32 status;
-> -	int i, ret = IRQ_HANDLED;
+Yep.  Applied, thanks.
 
-nit: why not keeping 'int i' on the same line?
-
->  
-> -	spin_lock(&priv->lock);
-[..]
-> -	spin_unlock(&priv->lock);
-[..]
-> -	spin_lock_irqsave(&priv->lock, flags);
-[..]
-> -	spin_unlock_irqrestore(&priv->lock, flags);
-[..]
-
-FWIW, after applying the patch, the 'spinlock_t lock' member of
-'struct rcar_gen3_thermal_priv' is no longer used in the driver, except
-to initialize it in probe. Is there any usage expected in future or
-should it be zapped?
-
--- 
-Best regards,
-Eugeniu.
+Miklos
