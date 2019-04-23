@@ -2,151 +2,132 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	TVD_PH_BODY_ACCOUNTS_PRE,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392EDC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834F3C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08675217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4823720811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:03:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="qY8y5Y7+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u18xq3oM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbfDWQCv (ORCPT
+        id S1728455AbfDWQDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:02:51 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45906 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727467AbfDWQCv (ORCPT
+        Tue, 23 Apr 2019 12:03:09 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:55532 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfDWQDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:02:51 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y6so13995084ljd.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:02:50 -0700 (PDT)
+        Tue, 23 Apr 2019 12:03:08 -0400
+Received: by mail-it1-f196.google.com with SMTP id y134so1005743itc.5;
+        Tue, 23 Apr 2019 09:03:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+mjSEdl2bHOdc9zUaXJvV57aQi9xzuQIo11CUWnvHwo=;
-        b=qY8y5Y7+pFkoDUCu5qAAdGClW2u9gdVzifvnirmoig97yNpy85QBKOavjvkEW8FMRL
-         gJMHNQCx5ZtKBPdYK5eNyg3S8UEuJ+sHKqHmyukm0OaeWTAWp31n6/HHaywJLAdXbJvQ
-         ckgotEvA/zsobgd5s+xNeiBeg77Gd/RF+geUrcpno/XhWMFXgnV1XW4kw+z2leqvHi3s
-         tmlyRIWnJpZwg+GM5aAXLdMW8wrcVeq3ygKvJnk0YHKJK6ewvMkCDajMZ5GAwKYuZ51N
-         tC4nAhyjrJulA5g2ENtFfJFX3Kv/OuVrxM6G+Z4Ih5rrqxsZb2ydl8LpVBXlwqqCbxAd
-         e6Tw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YNgfvaet4//5KCvC7rrD4VLrG69zAetrkMFWkNlVCxI=;
+        b=u18xq3oM2aned0Grvi71+rh18cs4rTkfEeN9L14PCWY1wTvGhOMno8lFiOnIxqPgyt
+         rS1QHrMjPI/FWX51A7pftsXl7tJnkcTdNxaG6FlwCFeJSM3xP8xniLLDwubsmcGqRDWu
+         GoLxyqchn0QdSBSAYNgTms67H1Q92+EQ3k5SZcpaPcTBpyqgjMEaUI1JjWWzyY5jPEJ4
+         /v4wDWiM35dFv+9zDXbimdczYIdOWDSp2hoAX35R+mkTEQ04HTbAzDGw7i7Z2qJtsbPX
+         O3lt1hfd22diYtSy11f3fWx0Pi7GI8p6AQwFDugXg+TvO2lvTwaJZGSAkosmS4qLHlGC
+         5IBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+mjSEdl2bHOdc9zUaXJvV57aQi9xzuQIo11CUWnvHwo=;
-        b=scID9oSJB7qOzPGyPBTS8MjfTEaBUqEU/hlQ3nyEEdwjuEnzqiMe5c6qGz7A4isYz7
-         lErA+uTd9YoDlBr+MbBXF7H7FGdEdigAecgKWVi1Or/z+DO1g1CBRYtVm1tCjyQhC+t1
-         M0EQ6WOM79S/si60ZjVFEenEDyui4jjDZ8YtHFiQPktvqXeDnjIlY5uj/mAF8gaRKjnE
-         A1eS6KUYNDdlSJJI9L8Nq38StnX9qyxU7LlDW4F3X8Msv+NsJrXquOGiFgCz9nbYW4Q8
-         sdO4ytLfR0IvfTU/XkAKbYgrE5QvOy1ahcZFNS6rw6HcC0yZQQSLQNp2nE95wOCWnHlT
-         mmVw==
-X-Gm-Message-State: APjAAAWNTeZEFFzXmG6tEC7t1Wdj8N0xG7ekS4lbMcH/kLwfs98kF7KX
-        nj6NaZLycqBAv5BxtyXypDveHDnwdb2Q/h5jgMOoMw==
-X-Google-Smtp-Source: APXvYqyO0Z7AZuogTJR/TgrdZXDnfJydBfKtPSGc7kpwt+P98SlU6lR+bjd1zNPOXSeo3/NgpkGOoVRF/qVvwqW6x1o=
-X-Received: by 2002:a2e:84ce:: with SMTP id q14mr2699587ljh.80.1556035369344;
- Tue, 23 Apr 2019 09:02:49 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YNgfvaet4//5KCvC7rrD4VLrG69zAetrkMFWkNlVCxI=;
+        b=Vk1whSzf/6NyKQPruga8q1PKHnTXZvvDcGr2QdSNYepHmHyF8OjXAlOZXOtvnKC8Ha
+         bqeW3JeS9zIezgdhQZvzUEMYwh2bs/42GBY27kzm/Rq7SgvEkb3QksjolwhKzwgf6fUJ
+         n4T2PmimK3Vtpuxf0AkMzY9xBgLazWxyS0F574qo9BPKlVXXJ9FCJypNAt1wBbc3VnXz
+         wC22oW4gKiIgmZ8c5jShBH/aWth696nKrFbXOs1czPqrsROPiuwzcmSODzKoWXkBdSxw
+         4fbuzZE+BMS43pT5o2QSZPY5LDNk/47jPT0jdrRPs5/8ePYw1D38aw0lePPX+FZ4MsTN
+         VXgQ==
+X-Gm-Message-State: APjAAAULaG5VckcOSq7Bg2dfswYlU1YIIDagMEVV/hHA5E+dfEjtCdq/
+        IILd5o/iMVY5o7KyGcvbJ3Ch6JM03GA=
+X-Google-Smtp-Source: APXvYqwnV50h5unrBdqpgcrAwZQ28giHx6QIA9dcUMPR86ybntenQ45ERVq7zLxguxqO0nCUcebTLQ==
+X-Received: by 2002:a24:70d5:: with SMTP id f204mr2620550itc.32.1556035387070;
+        Tue, 23 Apr 2019 09:03:07 -0700 (PDT)
+Received: from nukespec.gtech ([2601:2c1:8501:182d::6fe])
+        by smtp.gmail.com with ESMTPSA id t67sm7814688ita.35.2019.04.23.09.03.05
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 09:03:06 -0700 (PDT)
+Subject: Re: [PATCH] PCI/LINK: Account for BW notification in vector
+ calculation
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     bhelgaas@google.com, helgaas@kernel.org, linux-pci@vger.kernel.org,
+        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+References: <155597243666.19387.1205950870601742062.stgit@gimli.home>
+ <d1126250-14e0-192c-f219-f143f62c9cdd@gmail.com>
+ <20190422183347.51ba522c@x1.home>
+ <84300da7-9bbd-4f32-c7fa-23724db60b88@gmail.com>
+ <20190423093408.16b07efc@x1.home>
+From:   Alex G <mr.nuke.me@gmail.com>
+Message-ID: <88bd2962-bce4-8259-c38f-1a7e9fdde300@gmail.com>
+Date:   Tue, 23 Apr 2019 11:03:04 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
- <20190417154121.GJ13337@phenom.ffwll.local> <20190418062229.eyog4i62eg4pr6uf@flea>
- <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
- <20190418090221.e57dogn4yx5nwdni@flea> <CAKMK7uHN6QfYyzx4DjRT+7VLRi6N9DorQtw2GoDiNGTgie=DXA@mail.gmail.com>
- <20190420225904.GZ4964@pendragon.ideasonboard.com> <20190423072554.GW13337@phenom.ffwll.local>
- <CAPj87rMWdjEvTJWRvdMLTZyw7pZpo5PpPr0FWcALNRe_D8cYqw@mail.gmail.com> <20190423155416.GI16111@pendragon.ideasonboard.com>
-In-Reply-To: <20190423155416.GI16111@pendragon.ideasonboard.com>
-From:   Daniel Stone <daniel@fooishbar.org>
-Date:   Tue, 23 Apr 2019 17:02:27 +0100
-Message-ID: <CAPj87rOyX_6X-UbgPVrU-uGeeyqgTnp57UYD3QUJeiCWDfk9Kg@mail.gmail.com>
-Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
- common place
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190423093408.16b07efc@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
 
-On Tue, 23 Apr 2019 at 16:54, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Tue, Apr 23, 2019 at 09:59:37AM +0100, Daniel Stone wrote:
-> > On Tue, 23 Apr 2019 at 08:26, Daniel Vetter <daniel@ffwll.ch> wrote:
-> > Totally. Let's take DRM_FORMAT_XRGB8888 + I915_FORMAT_MOD_Y_TILED as
-> > an example. [... details ...]
->
-> Looks like we have different kinds of metadata to consider. On the V4L2
-> side metadata usually refers to the context in which a frame was
-> captured, it doesn't tell how to interpret the contents of the pixels.
-> In the case you just described, the metadata is part of the frame
-> contents. I agree that this is a proper use case for storing such
-> metadata in a plane. What I wouldn't like to see being stored in a plane
-> is for instance gamma tables or similar data that configures the
-> processing pipeline in the display engine (I know we have an API for
-> gamma tables, this is just an example).
->
-> > It would be good to understand what you had in mind when you said that
-> > using multiple planes created a mess. I haven't touched media
-> > encode/decode units at a low level for quite a while (hooray for
-> > gst-v4l2!), but I remember that they often used padding areas around
-> > the buffer for scratch space - maybe motion vectors or similar? That
-> > case is quite different to something like CCS, since the data is only
-> > meaningful to the media engine and must be ignored (but preserved) by
-> > everyone else. Using multiple planes in that case isn't appropriate,
-> > since it's very specific to how that hardware unit deals with that
-> > buffer, instead of something that every consumer needs to understand
-> > in order to use it.
->
-> With metadata unrelated to the pixel content, using a separate plane in
-> the same buffer resulted in an explosion of the number of combinations
-> that we would need to support, and ultimately led to a very ill-defined
-> API. We decided to convey metadata related to the frame capture context
-> (e.g. what exposure time was used for the frame) and processing pipeline
-> configuration data in different buffers than the frame itself.
 
-Yeah, that makes sense. It's not really that different from what
-happens with GPUs either: the final colour buffer the display
-controller gets from a game is the product of a _lot_ of other work
-which is invisible to the display controller, including things like
-depth and stencil buffers, command buffers, etc etc. Those are closely
-related to the frame production, but totally irrelevant for exchanging
-the colour buffer with other subsystems.
+On 4/23/19 10:34 AM, Alex Williamson wrote:
+> On Tue, 23 Apr 2019 09:33:53 -0500
+> Alex G <mr.nuke.me@gmail.com> wrote:
+> 
+>> On 4/22/19 7:33 PM, Alex Williamson wrote:
+>>> On Mon, 22 Apr 2019 19:05:57 -0500
+>>> Alex G <mr.nuke.me@gmail.com> wrote:
+>>>> echo 0000:07:00.0:pcie010 |
+>>>> sudo tee /sys/bus/pci_express/drivers/pcie_bw_notification/unbind
+>>>
+>>> That's a bad solution for users, this is meaningless tracking of a
+>>> device whose driver is actively managing the link bandwidth for power
+>>> purposes.
+>>
+>> 0.5W savings on a 100+W GPU? I agree it's meaningless.
+> 
+> Evidence?  Regardless, I don't have control of the driver that's making
+> these changes, but the claim seems unfounded and irrelevant.
 
-I think we should look at the metadata buffers you're describing in
-the same way. Perhaps each V4L2 buffer could have driver-private
-auxiliary buffer storage, or perhaps it's something you need to
-separately expose to userspace as auxiliary data which must be
-preserved but ignored. But modifiers are really only about what you
-need when exchanging image colour buffers between subsystems, not
-anything else.
+The number of 5mW/Gb/lane doesn't ring a bell? [1] [2]. Your GPU 
+supports 5Gb/s, so likely using an older, more power hungry process. I 
+suspect it's still within the same order of magnitude.
 
-You're pretty close with gamma tables as well; for HDR and other kinds
-of complex colour management, we need to carry a fair bit of auxiliary
-information in order to display the image correctly. These have quite
-different uses though: normally the colour buffer is produced by the
-hardware and the primaries/whitepoints/etc are produced by software,
-with the colour-management details remaining static across the life of
-a swapchain even as you flip between multiple buffers. Given that, it
-doesn't really make sense to try to stuff them into the same storage.
 
-Cheers,
-Daniel
+> I'm assigning a device to a VM [snip]
+> I can see why we might want to be notified of degraded links due to signal issues,
+> but what I'm reporting is that there are also entirely normal reasons
+> [snip] we can't seem to tell the difference
+
+Unfortunately, there is no way in PCI-Express to distinguish between an 
+expected link bandwidth change and one due to error.
+
+If you're using virt-manager to configure the VM, then virt-manager 
+could have a checkbox to disable link bandwidth management messages. I'd 
+rather we avoid kernel-side heuristics (like Lukas suggested). If you're 
+confident that your link will operate as intended, and don't want 
+messages about it, that's your call as a user -- we shouldn't decide 
+this in the kernel.
+
+Alex
+
+[1] 
+https://www.synopsys.com/designware-ip/technical-bulletin/reduce-power-consumption.html
