@@ -2,127 +2,206 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	TVD_PH_BODY_ACCOUNTS_PRE autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40690C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C724C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C88214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE5F214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KfAlM1Gc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2lEgKVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfDWRxH (ORCPT
+        id S1728736AbfDWRxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 13:53:07 -0400
-Received: from mail-eopbgr690050.outbound.protection.outlook.com ([40.107.69.50]:45385
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726655AbfDWRxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:53:06 -0400
+        Tue, 23 Apr 2019 13:53:12 -0400
+Received: from mail-oi1-f182.google.com ([209.85.167.182]:37720 "EHLO
+        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfDWRxK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 13:53:10 -0400
+Received: by mail-oi1-f182.google.com with SMTP id v84so12030251oif.4;
+        Tue, 23 Apr 2019 10:53:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PjUbdGalkUVKkeYeJ96d3eHoeEhZTuaMaUuqW4xuo9g=;
- b=KfAlM1Gcn2iGcanPgGEJa1WxM9vzigluuJjZmm6ruvHfwDMl1H2GE2HTOnOlv8G0eP26vsjf5L5h/h/x+DAk4pJ97bfOe0FX9YYJ+qa/hYuFfCE/Pf9iHt9/QVNelyD5z+Rr7G/2oTDDhuOHmnMrbFwd7YSNRP1EpupPGcWfaRg=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2687.namprd12.prod.outlook.com (52.135.103.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Tue, 23 Apr 2019 17:53:03 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d8ec:7415:96b0:afe0]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::d8ec:7415:96b0:afe0%2]) with mapi id 15.20.1813.017; Tue, 23 Apr 2019
- 17:53:02 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "len.brown@intel.com" <len.brown@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>
-Subject: RE: [PATCH] tools/power turbostat: Make interval calculation per
- thread to reduce jitter
-Thread-Topic: [PATCH] tools/power turbostat: Make interval calculation per
- thread to reduce jitter
-Thread-Index: AQHU4zDAw6kMdRt2pEeSvDZqbzvAVaZKM7PQ
-Date:   Tue, 23 Apr 2019 17:53:02 +0000
-Message-ID: <SN6PR12MB26394D7FEE4582FD19860104F8230@SN6PR12MB2639.namprd12.prod.outlook.com>
-References: <20190325173232.216357-1-Yazen.Ghannam@amd.com>
-In-Reply-To: <20190325173232.216357-1-Yazen.Ghannam@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-originating-ip: [165.204.84.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9f169ded-36ce-47e3-37af-08d6c814883b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2687;
-x-ms-traffictypediagnostic: SN6PR12MB2687:
-x-microsoft-antispam-prvs: <SN6PR12MB2687E0F0F076D137A7122922F8230@SN6PR12MB2687.namprd12.prod.outlook.com>
-x-forefront-prvs: 0016DEFF96
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(39860400002)(396003)(136003)(199004)(189003)(13464003)(4326008)(7736002)(66946007)(25786009)(446003)(2201001)(71190400001)(71200400001)(55016002)(478600001)(305945005)(74316002)(14444005)(486006)(73956011)(256004)(14454004)(97736004)(476003)(6436002)(64756008)(66556008)(2501003)(66476007)(9686003)(86362001)(11346002)(76116006)(66446008)(316002)(76176011)(3846002)(52536014)(102836004)(110136005)(68736007)(99286004)(54906003)(5660300002)(6116002)(8676002)(72206003)(81156014)(6506007)(66066001)(81166006)(8936002)(53936002)(6246003)(186003)(7696005)(26005)(33656002)(53546011)(2906002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2687;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: HjCyaRdpcNwq5wqbHfcrJNUxDo+AiExqVUovpPJHC6nrw8W1zplg8ylNn7Gd81za6NULb01fkqFsTAleAZMaH3ZhAVJoYCfh9n4q597PGkzqRw4woqz/Ncs6mwGJF0z41CYuiVnpeVmzpAxAJHch1OiiJkfqyBNKwKN7nrkPVRJzoE/SI9HoWWTc2dvoBg8zRb6//BAUh/p61Ew9q9txFAT0UXQ0IfwoXdNjKo3BjloV1cMjX9qi1za6aMGlriGPUCK44K23iutZc+opHbCZ3W5u5ix3bF2/gS8Cq7OLrjbAEu5ttE+XDZ/JVcDGZQ2Yu1AW1JyBTPSHtEEw3tuOxkLeb6qJ59D5sg4Wi0TWwRYMfxOhPowm3yOtLH6vong/pl+KNwevdVbXvihXLqJ4OIsMn1o+roqMtc8erR4Ne3g=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Yfw1+MkKUQmoUtIdgPFcAMil9KhywATrKANiYe2fnz0=;
+        b=M2lEgKVJYrZOOeamM4QDu4lxHoDLo1vBj4J+ZKL0uJRrcOuv3rhR9uSMdqksm+6gQq
+         1sagvbRTTFroX2Q5T5o4OpfWumgQ/Vsy2tc/s3w12lNFV04BxsQcrfJCnKgFT6JeoSF2
+         mOU3jy2BIPnJmEvwKM1yILE23cjF8XgnUVaZ2ii2plT3Nd9ecXLp6dbSTmj0iRPY45Da
+         IqeO6Rr0SMxrcQIFNzz9669VGYZLb8erzydya4OV8lqwFYN1Scr8tSBDBB+e1QQaSZDP
+         mVI+E7fZDQSlN25oal3NLVgwLHN49pHwesYnhcaR5dtYQA1fuM5OP7obWi1/BEnTCIqv
+         iqOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Yfw1+MkKUQmoUtIdgPFcAMil9KhywATrKANiYe2fnz0=;
+        b=a52AVpfLAdfXM1b2AN88DDdd4OdaX+7dQ9bX8I/HCnisxiHSQDDWzskdTqnKe6gLc/
+         TWTBOEmhXTfzDuEqJ22IkB54WvQHF1awdw/VAdI2D2fo8kQzpqaGtYh1kOCuYFzDIo0A
+         PIowThUiURjm+z0ZPZNOvxcEVGXc59z+FYjqZHCq5++bXHoMlpCNhUjZ2ufmP2uo0b8U
+         Qc6xCKA1cHQSYaAFPwdTy0PnKFI50MLKdVuNArMiaeP4IJ3+n9P+6T9IPeT6h4gQHfj4
+         5TrgFYz0DvtjdVuPUYXElWcnIy023CS0P1ZD6zM2C4iVjWCv3uEjl0H+eS6802wuyrp/
+         28ng==
+X-Gm-Message-State: APjAAAX41UaCU9r33zzfoqh/madvHA+Fi9NLzkQkutNtwQyVz0Vyfv+4
+        +lJGf20sXCtjrtX4dkQRaOZQvN5og+Y=
+X-Google-Smtp-Source: APXvYqzuUYu42SO0ENNhdufxFis5cqLoF9Oap5Du7PQzewNoYlQ37GJIpsut3mRMlkMBlifWyGXJJg==
+X-Received: by 2002:aca:80d:: with SMTP id 13mr2632037oii.75.1556041989191;
+        Tue, 23 Apr 2019 10:53:09 -0700 (PDT)
+Received: from nukespec.gtech ([2601:2c1:8501:182d::6fe])
+        by smtp.gmail.com with ESMTPSA id k25sm7422188otj.72.2019.04.23.10.53.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 10:53:08 -0700 (PDT)
+Subject: Re: [PATCH] PCI/LINK: Account for BW notification in vector
+ calculation
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, austin_bolen@dell.com,
+        alex_gagniuc@dellteam.com, keith.busch@intel.com,
+        Shyam_Iyer@Dell.com, lukas@wunner.de, okaya@kernel.org,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+References: <155597243666.19387.1205950870601742062.stgit@gimli.home>
+ <d1126250-14e0-192c-f219-f143f62c9cdd@gmail.com>
+ <20190422183347.51ba522c@x1.home>
+ <84300da7-9bbd-4f32-c7fa-23724db60b88@gmail.com>
+ <20190423171050.GA37199@google.com>
+From:   Alex G <mr.nuke.me@gmail.com>
+Message-ID: <9802ef46-40d2-b83c-a0c6-8bd6ac25feaa@gmail.com>
+Date:   Tue, 23 Apr 2019 12:53:07 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f169ded-36ce-47e3-37af-08d6c814883b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 17:53:02.8596
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2687
+In-Reply-To: <20190423171050.GA37199@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.=
-org> On Behalf Of Ghannam, Yazen
-> Sent: Monday, March 25, 2019 12:33 PM
-> To: linux-pm@vger.kernel.org
-> Cc: Ghannam, Yazen <Yazen.Ghannam@amd.com>; linux-kernel@vger.kernel.org;=
- lenb@kernel.org
-> Subject: [PATCH] tools/power turbostat: Make interval calculation per thr=
-ead to reduce jitter
->=20
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
->=20
-> Turbostat currently normalizes TSC and other values by dividing by an
-> interval. This interval is the delta between the start of one global
-> (all counters on all CPUs) sampling and the start of another. However,
-> this introduces a lot of jitter into the data.
->=20
-> In order to reduce jitter, the interval calculation should be based on
-> timestamps taken per thread and close to the start of the thread's
-> sampling.
->=20
-> Define a per thread time value to hold the delta between samples taken
-> on the thread.
->=20
-> Use the timestamp taken at the beginning of sampling to calculate the
-> delta.
->=20
-> Move the thread's beginning timestamp to after the CPU migration to
-> avoid jitter due to the migration.
->=20
-> Use the global time delta for the average time delta.
->=20
-> Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> ---
+On 4/23/19 12:10 PM, Bjorn Helgaas wrote:
+> On Tue, Apr 23, 2019 at 09:33:53AM -0500, Alex G wrote:
+>> On 4/22/19 7:33 PM, Alex Williamson wrote:
+>>> There is nothing wrong happening here that needs to fill logs.  I
+>>> thought maybe if I enabled notification of autonomous bandwidth
+>>> changes that it might categorize these as something we could
+>>> ignore, but it doesn't.  How can we identify only cases where this
+>>> is an erroneous/noteworthy situation?  Thanks,
+>>
+>> You don't. Ethernet doesn't. USB doesn't. This logging behavior is
+>> consistent with every other subsystem that deals with multi-speed links.
+> 
+> Can you point me to the logging in these other subsystems so I can
+> learn more about how they deal with this?
 
-Hi Len,
+I don't have any in-depth articles about the logging in these systems, 
+but I can extract some logs from my machines.
 
-Any comments on this patch?
+Ethernet:
 
-Thanks,
-Yazen
+[Sun Apr 21 11:14:06 2019] e1000e: eno1 NIC Link is Down
+[Sun Apr 21 11:14:17 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
+Duplex, Flow Control: Rx/Tx
+[Sun Apr 21 11:14:23 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
+Duplex, Flow Control: Rx/Tx
+[Sun Apr 21 23:33:31 2019] e1000e: eno1 NIC Link is Down
+[Sun Apr 21 23:33:43 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
+Duplex, Flow Control: Rx/Tx
+[Sun Apr 21 23:33:48 2019] e1000e: eno1 NIC Link is Up 1000 Mbps Full 
+Duplex, Flow Control: Rx/Tx
+
+I used to have one of these "green" ethernet switches that went down to 
+100mbps automatically. You can imagine how "clogged" the logs were with 
+link up messages. Thank goodness that switch was killed in a thunderstorm.
+
+USB will log every device insertion and removal, very verbosely (see 
+appendix A).
+
+
+> I agree that emitting log messages for normal and expected events will
+> lead to user confusion and we need to do something.
+> 
+> e8303bb7a75c ("PCI/LINK: Report degraded links via link bandwidth
+> notification") was merged in v5.1-rc1, so we still have (a little)
+> time to figure this out before v5.1.
+
+I always viewed the system log as a system log, instead of a database of 
+system errors. I may have extremist views, but going back to Alex's 
+example, I prefer to see that the power saving mechanism is doing 
+something to save power on my laptop (I'll just ignore it on a desktop).
+
+If you think increasing code complexity because people don't want things 
+logged into the system log, then I'm certain we can work out some sane 
+solution. It's the same problem we see with GCC, where people want 
+warning messages here, but don't want the same messages there.
+
+Alex
+
+
+P.S. The pedantic in me points out that one of the examples I gave is a 
+terrible example. ASPM "allows hardware-autonomous, dynamic Link power 
+reduction beyond what is achievable by software-only control" [1].
+
+[1] PCI-Express 3.0 -- 5.4.1. Active State Power Management (ASPM)
+
+
+Appendix A:
+
+[1618067.987084] usb 1-3.5: new high-speed USB device number 79 using 
+xhci_hcd
+[1618068.179914] usb 1-3.5: New USB device found, idVendor=0bda, 
+idProduct=4014, bcdDevice= 0.05
+[1618068.179924] usb 1-3.5: New USB device strings: Mfr=3, Product=1, 
+SerialNumber=2
+[1618068.179930] usb 1-3.5: Product: USB Audio
+[1618068.179936] usb 1-3.5: Manufacturer: Generic
+[1618068.179941] usb 1-3.5: SerialNumber: 200901010001
+[1618068.280100] usb 1-3.6: new low-speed USB device number 80 using 
+xhci_hcd
+[1618068.342541] Bluetooth: hci0: Waiting for firmware download to complete
+[1618068.342795] Bluetooth: hci0: Firmware loaded in 1509081 usecs
+[1618068.342887] Bluetooth: hci0: Waiting for device to boot
+[1618068.354919] Bluetooth: hci0: Device booted in 11797 usecs
+[1618068.356006] Bluetooth: hci0: Found Intel DDC parameters: 
+intel/ibt-12-16.ddc
+[1618068.358958] Bluetooth: hci0: Applying Intel DDC parameters completed
+[1618068.378624] usb 1-3.6: New USB device found, idVendor=04d9, 
+idProduct=1400, bcdDevice= 1.43
+[1618068.378626] usb 1-3.6: New USB device strings: Mfr=0, Product=0, 
+SerialNumber=0
+[1618068.390686] input: HID 04d9:1400 as 
+/devices/pci0000:00/0000:00:14.0/usb1/1-3/1-3.6/1-3.6:1.0/0003:04D9:1400.0139/input/input921
+[1618068.444282] hid-generic 0003:04D9:1400.0139: input,hidraw1: USB HID 
+v1.10 Keyboard [HID 04d9:1400] on usb-0000:00:14.0-3.6/input0
+[1618068.456373] input: HID 04d9:1400 Mouse as 
+/devices/pci0000:00/0000:00:14.0/usb1/1-3/1-3.6/1-3.6:1.1/0003:04D9:1400.013A/input/input922
+[1618068.457929] input: HID 04d9:1400 Consumer Control as 
+/devices/pci0000:00/0000:00:14.0/usb1/1-3/1-3.6/1-3.6:1.1/0003:04D9:1400.013A/input/input923
+[1618068.509294] input: HID 04d9:1400 System Control as 
+/devices/pci0000:00/0000:00:14.0/usb1/1-3/1-3.6/1-3.6:1.1/0003:04D9:1400.013A/input/input924
+[1618068.509518] hid-generic 0003:04D9:1400.013A: input,hidraw2: USB HID 
+v1.10 Mouse [HID 04d9:1400] on usb-0000:00:14.0-3.6/input1
+[1618068.588078] usb 1-3.7: new full-speed USB device number 81 using 
+xhci_hcd
+[1618068.679132] usb 1-3.7: New USB device found, idVendor=046d, 
+idProduct=c52b, bcdDevice=12.03
+[1618068.679137] usb 1-3.7: New USB device strings: Mfr=1, Product=2, 
+SerialNumber=0
+[1618068.679139] usb 1-3.7: Product: USB Receiver
+[1618068.679142] usb 1-3.7: Manufacturer: Logitech
+[1618068.692430] logitech-djreceiver 0003:046D:C52B.013D: 
+hiddev96,hidraw3: USB HID v1.11 Device [Logitech USB Receiver] on 
+usb-0000:00:14.0-3.7/input2
+[1618068.817334] input: Logitech Performance MX as 
+/devices/pci0000:00/0000:00:14.0/usb1/1-3/1-3.7/1-3.7:1.2/0003:046D:C52B.013D/0003:046D:101A.013E/input/input925
+[1618068.820357] logitech-hidpp-device 0003:046D:101A.013E: 
+input,hidraw4: USB HID v1.11 Mouse [Logitech Performance MX] on 
+usb-0000:00:14.0-3.7:1
+
+
