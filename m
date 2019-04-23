@@ -2,213 +2,146 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F52C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE32C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF17214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC496214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbfDWG5J (ORCPT
+        id S1726344AbfDWG6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 02:57:09 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:17064 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725888AbfDWG5I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 02:57:08 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 22 Apr 2019 23:57:06 -0700
-Received: from htb-2n-eng-dhcp405.eng.vmware.com (unknown [10.33.114.36])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id E0835B2137;
-        Tue, 23 Apr 2019 02:57:06 -0400 (EDT)
-From:   Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>
-CC:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Nadav Amit <namit@vmware.com>,
-        Dave Hansen <dave.hansen@intel.com>
-Subject: [PATCH] x86/mm/tlb: Remove flush_tlb_info from the stack
-Date:   Mon, 22 Apr 2019 23:57:06 -0700
-Message-ID: <20190423065706.15430-1-namit@vmware.com>
-X-Mailer: git-send-email 2.19.1
+        Tue, 23 Apr 2019 02:58:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:32978 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725888AbfDWG6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 02:58:25 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 23:58:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,384,1549958400"; 
+   d="scan'208";a="164180183"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Apr 2019 23:58:23 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hIpNn-0005Gv-71; Tue, 23 Apr 2019 14:58:23 +0800
+Date:   Tue, 23 Apr 2019 14:57:57 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Tomasz Duszynski <tduszyns@gmail.com>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: drivers/iio/chemical/sps30.c:122:30: sparse: sparse: cast truncates
+ bits from constant value (8004 becomes 4)
+Message-ID: <201904231456.G27oroy1%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: namit@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove flush_tlb_info variables from the stack. This allows to align
-flush_tlb_info to cache-line and avoid potentially unnecessary cache
-line movements. It also allows to have a fixed virtual-to-physical
-translation of the variables, which reduces TLB misses.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   7142eaa58b49d9de492ccc16d48df7c488a5fbb6
+commit: 62129a0849d27cc94ced832bcf9dcde283dcbe08 iio: chemical: sps30: allow changing self cleaning period
+date:   3 months ago
+reproduce:
+        # apt-get install sparse
+        git checkout 62129a0849d27cc94ced832bcf9dcde283dcbe08
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-Use per-CPU struct for flush_tlb_mm_range() and
-flush_tlb_kernel_range(). Add debug assertions to ensure there are
-no nested TLB flushes that might overwrite the per-CPU data. For
-arch_tlbbatch_flush(), use a const struct.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-Results when running a microbenchmarks that performs 10^6 MADV_DONTEED
-operations and touching a page, in which 3 additional threads run a
-busy-wait loop (5 runs):
 
-			base		off-stack
-			----		---------
-avg (per operation)	1.629		1.580	(-3%)
-stddev			0.007		0.012
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Nadav Amit <namit@vmware.com>
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/iio/chemical/sps30.c:122:30: sparse: sparse: cast truncates bits from constant value (8004 becomes 4)
+
+vim +122 drivers/iio/chemical/sps30.c
+
+    91	
+    92	static int sps30_do_cmd(struct sps30_state *state, u16 cmd, u8 *data, int size)
+    93	{
+    94		/*
+    95		 * Internally sensor stores measurements in a following manner:
+    96		 *
+    97		 * PM1: upper two bytes, crc8, lower two bytes, crc8
+    98		 * PM2P5: upper two bytes, crc8, lower two bytes, crc8
+    99		 * PM4: upper two bytes, crc8, lower two bytes, crc8
+   100		 * PM10: upper two bytes, crc8, lower two bytes, crc8
+   101		 *
+   102		 * What follows next are number concentration measurements and
+   103		 * typical particle size measurement which we omit.
+   104		 */
+   105		u8 buf[SPS30_MAX_READ_SIZE] = { cmd >> 8, cmd };
+   106		int i, ret = 0;
+   107	
+   108		switch (cmd) {
+   109		case SPS30_START_MEAS:
+   110			buf[2] = 0x03;
+   111			buf[3] = 0x00;
+   112			buf[4] = crc8(sps30_crc8_table, &buf[2], 2, CRC8_INIT_VALUE);
+   113			ret = sps30_write_then_read(state, buf, 5, NULL, 0);
+   114			break;
+   115		case SPS30_STOP_MEAS:
+   116		case SPS30_RESET:
+   117		case SPS30_START_FAN_CLEANING:
+   118			ret = sps30_write_then_read(state, buf, 2, NULL, 0);
+   119			break;
+   120		case SPS30_READ_AUTO_CLEANING_PERIOD:
+   121			buf[0] = SPS30_AUTO_CLEANING_PERIOD >> 8;
+ > 122			buf[1] = (u8)SPS30_AUTO_CLEANING_PERIOD;
+   123		case SPS30_READ_DATA_READY_FLAG:
+   124		case SPS30_READ_DATA:
+   125		case SPS30_READ_SERIAL:
+   126			/* every two data bytes are checksummed */
+   127			size += size / 2;
+   128			ret = sps30_write_then_read(state, buf, 2, buf, size);
+   129			break;
+   130		case SPS30_AUTO_CLEANING_PERIOD:
+   131			buf[2] = data[0];
+   132			buf[3] = data[1];
+   133			buf[4] = crc8(sps30_crc8_table, &buf[2], 2, CRC8_INIT_VALUE);
+   134			buf[5] = data[2];
+   135			buf[6] = data[3];
+   136			buf[7] = crc8(sps30_crc8_table, &buf[5], 2, CRC8_INIT_VALUE);
+   137			ret = sps30_write_then_read(state, buf, 8, NULL, 0);
+   138			break;
+   139		}
+   140	
+   141		if (ret)
+   142			return ret;
+   143	
+   144		/* validate received data and strip off crc bytes */
+   145		for (i = 0; i < size; i += 3) {
+   146			u8 crc = crc8(sps30_crc8_table, &buf[i], 2, CRC8_INIT_VALUE);
+   147	
+   148			if (crc != buf[i + 2]) {
+   149				dev_err(&state->client->dev,
+   150					"data integrity check failed\n");
+   151				return -EIO;
+   152			}
+   153	
+   154			*data++ = buf[i];
+   155			*data++ = buf[i + 1];
+   156		}
+   157	
+   158		return 0;
+   159	}
+   160	
+
 ---
- arch/x86/mm/tlb.c | 75 ++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 54 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 487b8474c01c..c4ac66dfb34e 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -634,7 +634,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
- 	this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
- }
- 
--static void flush_tlb_func_local(void *info, enum tlb_flush_reason reason)
-+static void flush_tlb_func_local(const void *info, enum tlb_flush_reason reason)
- {
- 	const struct flush_tlb_info *f = info;
- 
-@@ -722,43 +722,62 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
-  */
- unsigned long tlb_single_page_flush_ceiling __read_mostly = 33;
- 
-+
-+static DEFINE_PER_CPU_SHARED_ALIGNED(struct flush_tlb_info, flush_tlb_info);
-+
-+#ifdef CONFIG_DEBUG_VM
-+static DEFINE_PER_CPU(unsigned int, flush_tlb_info_idx);
-+#endif
-+
- void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 				unsigned long end, unsigned int stride_shift,
- 				bool freed_tables)
- {
-+	struct flush_tlb_info *info;
- 	int cpu;
- 
--	struct flush_tlb_info info = {
--		.mm = mm,
--		.stride_shift = stride_shift,
--		.freed_tables = freed_tables,
--	};
--
- 	cpu = get_cpu();
-+	info = this_cpu_ptr(&flush_tlb_info);
-+
-+	/*
-+	 * Ensure that the following code is non-reentrant and flush_tlb_info
-+	 * is not overwritten. This means no TLB flushing is initiated by
-+	 * interrupt handlers and machine-check exception handlers.
-+	 */
-+#ifdef CONFIG_DEBUG_VM
-+	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
-+#endif
- 
- 	/* This is also a barrier that synchronizes with switch_mm(). */
--	info.new_tlb_gen = inc_mm_tlb_gen(mm);
-+	info->new_tlb_gen = inc_mm_tlb_gen(mm);
-+	info->mm = mm;
-+	info->stride_shift = stride_shift;
-+	info->freed_tables = freed_tables;
- 
- 	/* Should we flush just the requested range? */
- 	if ((end != TLB_FLUSH_ALL) &&
- 	    ((end - start) >> stride_shift) <= tlb_single_page_flush_ceiling) {
--		info.start = start;
--		info.end = end;
-+		info->start = start;
-+		info->end = end;
- 	} else {
--		info.start = 0UL;
--		info.end = TLB_FLUSH_ALL;
-+		info->start = 0UL;
-+		info->end = TLB_FLUSH_ALL;
- 	}
- 
- 	if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
--		VM_WARN_ON(irqs_disabled());
-+		lockdep_assert_irqs_enabled();
- 		local_irq_disable();
--		flush_tlb_func_local(&info, TLB_LOCAL_MM_SHOOTDOWN);
-+		flush_tlb_func_local(info, TLB_LOCAL_MM_SHOOTDOWN);
- 		local_irq_enable();
- 	}
- 
- 	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids)
--		flush_tlb_others(mm_cpumask(mm), &info);
-+		flush_tlb_others(mm_cpumask(mm), info);
- 
-+#ifdef CONFIG_DEBUG_VM
-+	barrier();
-+	this_cpu_dec(flush_tlb_info_idx);
-+#endif
- 	put_cpu();
- }
- 
-@@ -787,22 +806,36 @@ static void do_kernel_range_flush(void *info)
- 
- void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- {
--
- 	/* Balance as user space task's flush, a bit conservative */
- 	if (end == TLB_FLUSH_ALL ||
- 	    (end - start) > tlb_single_page_flush_ceiling << PAGE_SHIFT) {
- 		on_each_cpu(do_flush_tlb_all, NULL, 1);
- 	} else {
--		struct flush_tlb_info info;
--		info.start = start;
--		info.end = end;
--		on_each_cpu(do_kernel_range_flush, &info, 1);
-+		struct flush_tlb_info *info;
-+
-+		preempt_disable();
-+
-+#ifdef CONFIG_DEBUG_VM
-+		BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
-+#endif
-+
-+		info = this_cpu_ptr(&flush_tlb_info);
-+		info->start = start;
-+		info->end = end;
-+
-+		on_each_cpu(do_kernel_range_flush, info, 1);
-+
-+#ifdef CONFIG_DEBUG_VM
-+		barrier();
-+		this_cpu_dec(flush_tlb_info_idx);
-+#endif
-+		preempt_enable();
- 	}
- }
- 
- void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- {
--	struct flush_tlb_info info = {
-+	static const struct flush_tlb_info info = {
- 		.mm = NULL,
- 		.start = 0UL,
- 		.end = TLB_FLUSH_ALL,
--- 
-2.19.1
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
