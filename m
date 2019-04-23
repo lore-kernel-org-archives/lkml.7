@@ -2,262 +2,116 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30854C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B042FC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30F5217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7766C217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:11:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BAFFKENl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbfDWUIV convert rfc822-to-8bit (ORCPT
+        id S1727010AbfDWULG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:08:21 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:54342 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbfDWUIV (ORCPT
+        Tue, 23 Apr 2019 16:11:06 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:41191 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfDWULF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:08:21 -0400
-Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 110B7CF2E8;
-        Tue, 23 Apr 2019 22:16:30 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [RFC] Bluetooth: Retry configure request if result is
- L2CAP_CONF_UNKNOWN
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190208025828.30901-1-andrew.smirnov@gmail.com>
-Date:   Tue, 23 Apr 2019 22:08:19 +0200
-Cc:     linux-bluetooth@vger.kernel.org,
-        "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-        Florian Dollinger <dollinger.florian@gmx.de>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <D53F2ED9-E0E6-4290-9E3E-864D2AF43572@holtmann.org>
-References: <20190208025828.30901-1-andrew.smirnov@gmail.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Tue, 23 Apr 2019 16:11:05 -0400
+Received: by mail-vk1-f195.google.com with SMTP id f77so394891vke.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pZSJahBImGp5goo8nvjTMJttMM1GHqLupimfQ6N20KY=;
+        b=BAFFKENlKP6uq62FbGRc0pFV0dPw5/S7P232XJWdODaOdY+WRCJpWjN/jKaVhlivVB
+         5DtllP9khNAO9jBlWbomEMgBLMil2fJtEiqAdflnP3tlJhfmxZQJXr08n4Ifu9Dbmicz
+         zRn4NDkYszIp5RijsnnxRfogXf2xCH9xBcXww=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pZSJahBImGp5goo8nvjTMJttMM1GHqLupimfQ6N20KY=;
+        b=REPr7pXsAT9lfYG/LF6cXRKWcrjptpsHxxTaX+4IlJ2+MxEtRBSSQ0reNrWNDZ06kn
+         MZ7BMxfRWsXkGOJa1qNHQUHgqYFLHIM8Hg1ankjGRmEKgQXYXB4hEkUkXQK6hnFDtCNt
+         1SBoOaH1PNFLen7SMANZfZH7ek3fZPgwgxzYrco70BJPNDvjyViVD23zUk+BUeK4nJfB
+         2Hcw9fxustkn9ri6RP0k4jnDnKoXCR0xQVbAithwA2uhKurZlHbujWH/eVlGX542NDJm
+         piL5aC6iJwefGODkOdPlr4vx3mWONXoa29/DZo2Vc3RQRzoVfedlXOyq0WtQ7d9yb+eV
+         yzCA==
+X-Gm-Message-State: APjAAAV85c+Gx9t+oZEw+RchW0Y5kDXORoDyTfkK84IxxLr4+NNvrEVn
+        X3H6K0wGTBYcb/xeBxHeUi75SqmLyWY=
+X-Google-Smtp-Source: APXvYqxpJXTFY6LBRXLYFQJ/4Tmp4m3PHzccNC9E1+pjnpYcz+MpgIjvB0JLqyy0M8qKF/R2gXklkA==
+X-Received: by 2002:ac5:c383:: with SMTP id s3mr14924078vkk.65.1556050264269;
+        Tue, 23 Apr 2019 13:11:04 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id c192sm11650246vka.10.2019.04.23.13.11.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 13:11:04 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id n4so9051546vsm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:11:03 -0700 (PDT)
+X-Received: by 2002:a05:6102:417:: with SMTP id d23mr5316366vsq.48.1556049882301;
+ Tue, 23 Apr 2019 13:04:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <00000000000060e0ae057a092be8@google.com> <0000000000009e8ef30584976ca9@google.com>
+In-Reply-To: <0000000000009e8ef30584976ca9@google.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Tue, 23 Apr 2019 13:04:31 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jJuU8PjPW-K=wDEaShKTenbADKwF4DcKPwNBrrynD0thg@mail.gmail.com>
+Message-ID: <CAGXu5jJuU8PjPW-K=wDEaShKTenbADKwF4DcKPwNBrrynD0thg@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in crypto_gcm_init_common
+To:     syzbot <syzbot+e736399a2c4054612307@syzkaller.appspotmail.com>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        aviadye@mellanox.com, borisp@mellanox.com,
+        Daniel Borkmann <daniel@iogearbox.net>, davejwatson@fb.com,
+        "David S. Miller" <davem@davemloft.net>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        john.fastabend@gmail.com, k.marinushkin@gmail.com,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Security Officers <security@kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
+On Thu, Mar 21, 2019 at 2:33 AM syzbot
+<syzbot+e736399a2c4054612307@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has bisected this bug to:
+>
+> commit 428490e38b2e352812e0b765d8bceafab0ec441d
+> Author: Jason A. Donenfeld <Jason@zx2c4.com>
+> Date:   Wed Sep 20 14:58:39 2017 +0000
+>
+>      security/keys: rewrite all of big_key crypto
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=160eabcf200000
+> start commit:   428490e3 security/keys: rewrite all of big_key crypto
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=150eabcf200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=110eabcf200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9384ecb1c973baed
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e736399a2c4054612307
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17902f5b400000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111377e5400000
+>
+> Reported-by: syzbot+e736399a2c4054612307@syzkaller.appspotmail.com
+> Fixes: 428490e38b2e ("security/keys: rewrite all of big_key crypto")
 
-> Due to:
-> 
-> - current implementation of l2cap_config_rsp() dropping BT
->   connection if sender of configuration response replied with unknown
->   option failure (Result=0x0003/L2CAP_CONF_UNKNOWN)
-> 
-> - current implementation of l2cap_build_conf_req() adding
->   L2CAP_CONF_RFC(0x04) option to initial configure request sent by
->   the Linux host.
-> 
-> devices that do no recongninze L2CAP_CONF_RFC, such as Xbox One S
-> controllers, will get stuck in endless connect -> configure ->
-> disconnect loop, never connect and be generaly unusable.
-> 
-> To avoid this problem add code to do the following:
-> 
-> 1. Store a mask of supported conf option types per connection
-> 
-> 2. Parse the body of response L2CAP_CONF_UNKNOWN and adjust
->    connection's supported conf option types mask
-> 
-> 3. Retry configuration step the same way it's done for
->    L2CAP_CONF_UNACCEPT
-> 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Pierre-Loup A. Griffais <pgriffais@valvesoftware.com>
-> Cc: Florian Dollinger <dollinger.florian@gmx.de>
-> Cc: Marcel Holtmann <marcel@holtmann.org>
-> Cc: Johan Hedberg <johan.hedberg@gmail.com>
-> Cc: linux-bluetooth@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> 
-> Everyone:
-> 
-> I marked this as an RFC, since I don't have a lot of experience with
-> Bluetooth subsystem and don't have hight degree of confidence about
-> choices made in this patch. I do, however, thins is is good enough to
-> start a discussion about the problem.
-> 
-> Thanks,
-> Andrey Smirnov
+Did this regression get fixed?
 
-so it seems that the remote side claims to support Streaming Mode and that is why we are trying to set it up.
-
-> ACL Data RX: Handle 12 flags 0x02 dlen 16
-      L2CAP: Information Response (0x0b) ident 1 len 8
-        Type: Extended features supported (0x0002)
-        Result: Success (0x0000)
-        Features: 0x00000010
-          Streaming Mode
-
-And that is why we do this.
-
-< ACL Data TX: Handle 12 flags 0x00 dlen 23
-      L2CAP: Configure Request (0x04) ident 2 len 15
-        Destination CID: 64
-        Flags: 0x0000
-        Option: Retransmission and Flow Control (0x04) [mandatory]
-          Mode: Basic (0x00)
-          TX window size: 0
-          Max transmit: 0
-          Retransmission timeout: 0
-          Monitor timeout: 0
-          Maximum PDU size: 0
-
-> ACL Data RX: Handle 12 flags 0x02 dlen 15
-      L2CAP: Configure Response (0x05) ident 2 len 7
-        Source CID: 64
-        Flags: 0x0000
-        Result: Failure - unknown options (0x0003)
-        04
-
-So btmon needs a patch to decide the failed option octet here. We really want do provide a human description of the failed option.
-
-> 
-> include/net/bluetooth/l2cap.h |  1 +
-> net/bluetooth/l2cap_core.c    | 58 ++++++++++++++++++++++++++++++-----
-> 2 files changed, 51 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/net/bluetooth/l2cap.h b/include/net/bluetooth/l2cap.h
-> index 093aedebdf0c..6898bba5d9a8 100644
-> --- a/include/net/bluetooth/l2cap.h
-> +++ b/include/net/bluetooth/l2cap.h
-> @@ -632,6 +632,7 @@ struct l2cap_conn {
-> 	unsigned int		mtu;
-> 
-> 	__u32			feat_mask;
-> +	__u32			known_options;
-> 	__u8			remote_fixed_chan;
-> 	__u8			local_fixed_chan;
-> 
-> diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-> index f17e393b43b4..49be98b6de72 100644
-> --- a/net/bluetooth/l2cap_core.c
-> +++ b/net/bluetooth/l2cap_core.c
-> @@ -3243,8 +3243,10 @@ static int l2cap_build_conf_req(struct l2cap_chan *chan, void *data, size_t data
-> 		rfc.monitor_timeout = 0;
-> 		rfc.max_pdu_size    = 0;
-> 
-> -		l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-> -				   (unsigned long) &rfc, endptr - ptr);
-> +		if (chan->conn->known_options & BIT(L2CAP_CONF_RFC)) {
-> +			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-> +					   (unsigned long)&rfc, endptr - ptr);
-> +		}
-> 		break;
-> 
-> 	case L2CAP_MODE_ERTM:
-> @@ -3263,8 +3265,10 @@ static int l2cap_build_conf_req(struct l2cap_chan *chan, void *data, size_t data
-> 		rfc.txwin_size = min_t(u16, chan->tx_win,
-> 				       L2CAP_DEFAULT_TX_WINDOW);
-> 
-> -		l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-> -				   (unsigned long) &rfc, endptr - ptr);
-> +		if (chan->conn->known_options & BIT(L2CAP_CONF_RFC)) {
-> +			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-> +					   (unsigned long)&rfc, endptr - ptr);
-> +		}
-> 
-> 		if (test_bit(FLAG_EFS_ENABLE, &chan->flags))
-> 			l2cap_add_opt_efs(&ptr, chan, endptr - ptr);
-> @@ -3295,8 +3299,10 @@ static int l2cap_build_conf_req(struct l2cap_chan *chan, void *data, size_t data
-> 			     L2CAP_FCS_SIZE);
-> 		rfc.max_pdu_size = cpu_to_le16(size);
-> 
-> -		l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-> -				   (unsigned long) &rfc, endptr - ptr);
-> +		if (chan->conn->known_options & BIT(L2CAP_CONF_RFC)) {
-> +			l2cap_add_conf_opt(&ptr, L2CAP_CONF_RFC, sizeof(rfc),
-> +					   (unsigned long)&rfc, endptr - ptr);
-> +		}
-> 
-> 		if (test_bit(FLAG_EFS_ENABLE, &chan->flags))
-> 			l2cap_add_opt_efs(&ptr, chan, endptr - ptr);
-> @@ -3550,11 +3556,47 @@ static int l2cap_parse_conf_rsp(struct l2cap_chan *chan, void *rsp, int len,
-> 	void *endptr = data + size;
-> 	int type, olen;
-> 	unsigned long val;
-> +	const bool unknown_options = *result == L2CAP_CONF_UNKNOWN;
-> 	struct l2cap_conf_rfc rfc = { .mode = L2CAP_MODE_BASIC };
-> 	struct l2cap_conf_efs efs;
-> 
-> 	BT_DBG("chan %p, rsp %p, len %d, req %p", chan, rsp, len, data);
-> 
-> +	/* throw out any old stored conf requests */
-> +	*result = L2CAP_CONF_SUCCESS;
-> +
-> +	if (unknown_options) {
-> +		const u8 *option_type = rsp;
-> +
-> +		if (!len) {
-> +			/* If no list of unknown option types is
-> +			 * provided there's nothing for us to do
-> +			 */
-> +			return -ECONNREFUSED;
-> +		}
-> +
-> +		while (len--) {
-> +			BT_DBG("chan %p, unknown option type: %u", chan,
-> +			       *option_type);
-> +			/* "...Hints shall not be included in the
-> +			 * Response and shall not be the sole cause
-> +			 * for rejecting the Request.."
-> +			 */
-> +			if (*option_type & L2CAP_CONF_HINT)
-> +				return -ECONNREFUSED;
-> +			/* Make sure option type is one of the types
-> +			 * supported/used in configure requests
-> +			 */
-> +			if (*option_type < L2CAP_CONF_MTU ||
-> +			    *option_type > L2CAP_CONF_EWS)
-> +				return -ECONNREFUSED;
-> +
-> +			chan->conn->known_options &= ~BIT(*option_type++);
-> +		}
-> +
-> +		return l2cap_build_conf_req(chan, data, size);
-> +	}
-> +
-> 	while (len >= L2CAP_CONF_OPT_SIZE) {
-> 		len -= l2cap_get_conf_opt(&rsp, &type, &olen, &val);
-> 		if (len < 0)
-> @@ -4240,6 +4282,7 @@ static inline int l2cap_config_rsp(struct l2cap_conn *conn,
-> 		}
-> 		goto done;
-> 
-> +	case L2CAP_CONF_UNKNOWN:
-> 	case L2CAP_CONF_UNACCEPT:
-> 		if (chan->num_conf_rsp <= L2CAP_CONF_MAX_CONF_RSP) {
-> 			char req[64];
-> @@ -4249,8 +4292,6 @@ static inline int l2cap_config_rsp(struct l2cap_conn *conn,
-> 				goto done;
-> 			}
-> 
-> -			/* throw out any old stored conf requests */
-> -			result = L2CAP_CONF_SUCCESS;
-> 			len = l2cap_parse_conf_rsp(chan, rsp->data, len,
-> 						   req, sizeof(req), &result);
-> 			if (len < 0) {
-
-So I really wonder if we want to combine CONF_UNKNOWN and CONF_UNACCEPT actually here. It might be better to do them as separate handlers.
-
-Frankly it might be enough if the option code 0x04 is marked as not supported, then just clear
-
-	conn->feat_mask &= ~(L2CAP_FEAT_ERTM | L2CAP_FEAT_STREAMING);
-
-There is really no point for us known about all unsupported / unknown options. Unless we understand them, then don’t bother. Just keep it simple.
-
-Regards
-
-Marcel
-
+-- 
+Kees Cook
