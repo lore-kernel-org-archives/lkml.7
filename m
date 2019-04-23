@@ -2,120 +2,370 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D98DC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F79C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6F7218B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:13:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qmZvYj6N"
+	by mail.kernel.org (Postfix) with ESMTP id 23382218B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556054105;
+	bh=FSO+mr9CVnDs6a5Bt6b7wUNdVfel7EC57Q2do+PVyyQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=C9T9wwtAqxA9teQUNTawTG9DQU1Qy2oeasXBYFIHTNBBOIoQam3rwGjEUe/eai+lD
+	 QIC5j/kIPDRMace9CDmjG6UqAkjy3M/EI68ulSsEx3qJprOp8SnF4h2mJb4nNKmfLg
+	 LDrKNkvxDs7cJD8Wl+gbxkTT+jZLvSaX7NWgDm3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbfDWVNh (ORCPT
+        id S1727614AbfDWVPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:13:37 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:39351 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbfDWVNh (ORCPT
+        Tue, 23 Apr 2019 17:15:03 -0400
+Received: from casper.infradead.org ([85.118.1.10]:39150 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfDWVPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:13:37 -0400
-Received: by mail-qt1-f202.google.com with SMTP id q28so1954611qtj.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 14:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=bZHDbK/yobdrFPeL2PgeVHLRSaUhrYBQOSZn6iUwvTc=;
-        b=qmZvYj6Nysn00Bh5NGtig1mPn1MbVI94aImSuXSzZT/xC5CFCOhyYLNlvuKGHcb2/P
-         xXS95WKixbGhNh+QWqEWmIXeBK/oRgHPxyvtANerGfeiKCiFGiWU2yoWIqP4u77SyQC+
-         RapzuvAOPSppkNLFJNsKId0XkriwvoDYHYdAR2uu80wARk9gV5U0bhytfvdfiHmGpLeh
-         UtYhSQ9UdDgowoVppEH+5wKICBfUChAoozXkix5pYg9v9N0vWaUoXxu5IpOC+XDEDqT9
-         vI+dakC9enOeyuHi0Tp53/VbrIdOS03v+t0xmVWAyji6Ha9bUjCmTpesyiuiZ9J5jDQ9
-         DCDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=bZHDbK/yobdrFPeL2PgeVHLRSaUhrYBQOSZn6iUwvTc=;
-        b=HiWi0snynmm/6KQXv0dxGKy0CbInMU8QZGEKJLnxyqthw9N3uKyHl56rf+d9p7ups3
-         xWM0snZgkKY8RBn3ZeSY4ArcAVydIXyZ1ZNnC/hhiujb0DAoVoTQb86cdq23ILTM+KU3
-         u5eYMeSVmDuInpiTW2EDTCX8kvxnwUWmcJBn+UblGHebndGqHuCoMlXXAwPZheG5QR5Z
-         jA6F0UDiTDXpE/00gNddNuF7g3SvdDyRZTl/0HsP2hjymZkkRKHBAaarm31un9bhQ6Fv
-         uOlVeRho5NUMrKrPTs1INfzu038bK86TjW/QKPitGYlXGCHB1NwrqVOElUorZb48gvGe
-         nw8w==
-X-Gm-Message-State: APjAAAWj3LnyDkPqCn0rRzxWgOecRRQLWSu4RQKUpPNVC5LFCBSLCnoO
-        XMTLxE0Oa2LAvpq+XrsI0HPb+uyr5BA=
-X-Google-Smtp-Source: APXvYqzRDe5K3B29b0tQOgxz9p2HqITP+PMWi9qlWqF+2DE1V558vAOD2DwKQ6iYA9d7OPyAcEUshCgfyIU=
-X-Received: by 2002:a0c:ae04:: with SMTP id y4mr22674010qvc.49.1556054016351;
- Tue, 23 Apr 2019 14:13:36 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 14:13:29 -0700
-In-Reply-To: <CACGdZYLCi+Or=afmBK8hbP3Ay8x8Oaqnp0Yr+jf1PoQiMc7_DQ@mail.gmail.com>
-Message-Id: <20190423211329.149642-1-khazhy@google.com>
-Mime-Version: 1.0
-References: <CACGdZYLCi+Or=afmBK8hbP3Ay8x8Oaqnp0Yr+jf1PoQiMc7_DQ@mail.gmail.com>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH v2] ext4: cond_resched in work-heavy group loops
-From:   Khazhismel Kumykov <khazhy@google.com>
-To:     tytso@mit.edu, adilger.kernel@dilger.ca
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jack@suse.cz, Khazhismel Kumykov <khazhy@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Apr 2019 17:15:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hTGDBgd+f+9t75xdg2kpPSeHSPz3XSe9d3maOhynR+I=; b=CRj0BqMb4HZdXyx4qv1l554gFf
+        dajp+cCQkGn1MURrw1GL1TpYdveA2LEGXKojaUBR/u17WPrsOWKseUqYoOM1Bqvq3r34MWXPlrlVb
+        sEYXN12ImDzQN57S7kAsmIHVrSnfqPeF38nL2AMbFHNele5JJLUEHlZFv7ZM/UGbCHw4SS3oNs2w3
+        iZ9WPkfvCQsHQjzBFX/9IxQWLJq9rqzxio6VoXtzVNw6FqjDoz3wiFmTbC74nxF4aJniYlQc/2T1P
+        Wimt8YKrSP7C88Hb7dWEXr5PqWpC7TIdwTF4ary3D4NgWI2QxdlGDz33VjbGEDLZW4XjIa7o4WMNZ
+        hu+L72tA==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJ2kj-0003zU-El; Tue, 23 Apr 2019 21:14:57 +0000
+Date:   Tue, 23 Apr 2019 18:14:50 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 14/63] Documentation: ACPI: move dsd/graph.txt to
+ firmware-guide/acpi and convert to reST
+Message-ID: <20190423181450.3120530d@coco.lan>
+In-Reply-To: <20190423162932.21428-15-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-15-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These functions may take a long time looping over many groups, which
-may cause issues for non-preempt kernels.
-ext4_mb_init_backend()
-ext4_setup_system_zone()
-ext4_mb_release()
+Em Wed, 24 Apr 2019 00:28:43 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
----
-v2: 
- - a few other places that in testing showed to be slow
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
+>=20
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 
- fs/ext4/block_validity.c | 1 +
- fs/ext4/mballoc.c        | 2 ++
- 2 files changed, 3 insertions(+)
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index 913061c0de1b..16134469ea3c 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -155,6 +155,7 @@ int ext4_setup_system_zone(struct super_block *sb)
- 		return 0;
- 
- 	for (i=0; i < ngroups; i++) {
-+		cond_resched();
- 		if (ext4_bg_has_super(sb, i) &&
- 		    ((i < 5) || ((i % flex_size) == 0)))
- 			add_system_zone(sbi, ext4_group_first_block_no(sb, i),
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index 8ef5f12bbee2..99ba720dbb7a 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -2490,6 +2490,7 @@ static int ext4_mb_init_backend(struct super_block *sb)
- 	sbi->s_buddy_cache->i_ino = EXT4_BAD_INO;
- 	EXT4_I(sbi->s_buddy_cache)->i_disksize = 0;
- 	for (i = 0; i < ngroups; i++) {
-+		cond_resched();
- 		desc = ext4_get_group_desc(sb, i, NULL);
- 		if (desc == NULL) {
- 			ext4_msg(sb, KERN_ERR, "can't read descriptor %u", i);
-@@ -2705,6 +2706,7 @@ int ext4_mb_release(struct super_block *sb)
- 
- 	if (sbi->s_group_info) {
- 		for (i = 0; i < ngroups; i++) {
-+			cond_resched();
- 			grinfo = ext4_get_group_info(sb, i);
- #ifdef DOUBLE_CHECK
- 			kfree(grinfo->bb_bitmap);
--- 
-2.21.0.593.g511ec345e18-goog
+> ---
+>  .../acpi/dsd/graph.rst}                       | 157 +++++++++---------
+>  Documentation/firmware-guide/acpi/index.rst   |   1 +
+>  2 files changed, 81 insertions(+), 77 deletions(-)
+>  rename Documentation/{acpi/dsd/graph.txt =3D> firmware-guide/acpi/dsd/gr=
+aph.rst} (56%)
+>=20
+> diff --git a/Documentation/acpi/dsd/graph.txt b/Documentation/firmware-gu=
+ide/acpi/dsd/graph.rst
+> similarity index 56%
+> rename from Documentation/acpi/dsd/graph.txt
+> rename to Documentation/firmware-guide/acpi/dsd/graph.rst
+> index b9ce910781dc..e0baed35b037 100644
+> --- a/Documentation/acpi/dsd/graph.txt
+> +++ b/Documentation/firmware-guide/acpi/dsd/graph.rst
+> @@ -1,8 +1,11 @@
+> -Graphs
+> +.. SPDX-License-Identifier: GPL-2.0
+> =20
+> +=3D=3D=3D=3D=3D=3D
+> +Graphs
+> +=3D=3D=3D=3D=3D=3D
+> =20
+>  _DSD
+> -----
+> +=3D=3D=3D=3D
+> =20
+>  _DSD (Device Specific Data) [7] is a predefined ACPI device
+>  configuration object that can be used to convey information on
+> @@ -30,7 +33,7 @@ hierarchical data extension array on each depth.
+> =20
+> =20
+>  Ports and endpoints
+> --------------------
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+>  The port and endpoint concepts are very similar to those in Devicetree
+>  [3]. A port represents an interface in a device, and an endpoint
+> @@ -38,9 +41,9 @@ represents a connection to that interface.
+> =20
+>  All port nodes are located under the device's "_DSD" node in the hierarc=
+hical
+>  data extension tree. The data extension related to each port node must b=
+egin
+> -with "port" and must be followed by the "@" character and the number of =
+the port
+> -as its key. The target object it refers to should be called "PRTX", wher=
+e "X" is
+> -the number of the port. An example of such a package would be:
+> +with "port" and must be followed by the "@" character and the number of =
+the
+> +port as its key. The target object it refers to should be called "PRTX",=
+ where
+> +"X" is the number of the port. An example of such a package would be::
+> =20
+>      Package() { "port@4", PRT4 }
+> =20
+> @@ -49,7 +52,7 @@ data extension key of the endpoint nodes must begin with
+>  "endpoint" and must be followed by the "@" character and the number of t=
+he
+>  endpoint. The object it refers to should be called "EPXY", where "X" is =
+the
+>  number of the port and "Y" is the number of the endpoint. An example of =
+such a
+> -package would be:
+> +package would be::
+> =20
+>      Package() { "endpoint@0", EP40 }
+> =20
+> @@ -62,85 +65,85 @@ of that port shall be zero. Similarly, if a port may =
+only have a single
+>  endpoint, the number of that endpoint shall be zero.
+> =20
+>  The endpoint reference uses property extension with "remote-endpoint" pr=
+operty
+> -name followed by a reference in the same package. Such references consis=
+t of the
+> +name followed by a reference in the same package. Such references consis=
+t of
+>  the remote device reference, the first package entry of the port data ex=
+tension
+>  reference under the device and finally the first package entry of the en=
+dpoint
+> -data extension reference under the port. Individual references thus appe=
+ar as:
+> +data extension reference under the port. Individual references thus appe=
+ar as::
+> =20
+>      Package() { device, "port@X", "endpoint@Y" }
+> =20
+> -In the above example, "X" is the number of the port and "Y" is the numbe=
+r of the
+> -endpoint.
+> +In the above example, "X" is the number of the port and "Y" is the numbe=
+r of
+> +the endpoint.
+> =20
+>  The references to endpoints must be always done both ways, to the
+>  remote endpoint and back from the referred remote endpoint node.
+> =20
+> -A simple example of this is show below:
+> +A simple example of this is show below::
+> =20
+>      Scope (\_SB.PCI0.I2C2)
+>      {
+> -	Device (CAM0)
+> -	{
+> -	    Name (_DSD, Package () {
+> -		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> -		Package () {
+> -		    Package () { "compatible", Package () { "nokia,smia" } },
+> -		},
+> -		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> -		Package () {
+> -		    Package () { "port@0", PRT0 },
+> -		}
+> -	    })
+> -	    Name (PRT0, Package() {
+> -		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> -		Package () {
+> -		    Package () { "reg", 0 },
+> -		},
+> -		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> -		Package () {
+> -		    Package () { "endpoint@0", EP00 },
+> -		}
+> -	    })
+> -	    Name (EP00, Package() {
+> -		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> -		Package () {
+> -		    Package () { "reg", 0 },
+> -		    Package () { "remote-endpoint", Package() { \_SB.PCI0.ISP, "port@4=
+", "endpoint@0" } },
+> -		}
+> -	    })
+> -	}
+> +        Device (CAM0)
+> +        {
+> +            Name (_DSD, Package () {
+> +                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> +                Package () {
+> +                    Package () { "compatible", Package () { "nokia,smia"=
+ } },
+> +                },
+> +                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> +                Package () {
+> +                    Package () { "port@0", PRT0 },
+> +                }
+> +            })
+> +            Name (PRT0, Package() {
+> +                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> +                Package () {
+> +                    Package () { "reg", 0 },
+> +                },
+> +                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> +                Package () {
+> +                    Package () { "endpoint@0", EP00 },
+> +                }
+> +            })
+> +            Name (EP00, Package() {
+> +                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> +                Package () {
+> +                    Package () { "reg", 0 },
+> +                    Package () { "remote-endpoint", Package() { \_SB.PCI=
+0.ISP, "port@4", "endpoint@0" } },
+> +                }
+> +            })
+> +        }
+>      }
+> =20
+>      Scope (\_SB.PCI0)
+>      {
+> -	Device (ISP)
+> -	{
+> -	    Name (_DSD, Package () {
+> -		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> -		Package () {
+> -		    Package () { "port@4", PRT4 },
+> -		}
+> -	    })
+> -
+> -	    Name (PRT4, Package() {
+> -		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> -		Package () {
+> -		    Package () { "reg", 4 }, /* CSI-2 port number */
+> -		},
+> -		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> -		Package () {
+> -		    Package () { "endpoint@0", EP40 },
+> -		}
+> -	    })
+> -
+> -	    Name (EP40, Package() {
+> -		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> -		Package () {
+> -		    Package () { "reg", 0 },
+> -		    Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, =
+"port@0", "endpoint@0" } },
+> -		}
+> -	    })
+> -	}
+> +        Device (ISP)
+> +        {
+> +            Name (_DSD, Package () {
+> +                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> +                Package () {
+> +                    Package () { "port@4", PRT4 },
+> +                }
+> +            })
+> +
+> +            Name (PRT4, Package() {
+> +                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> +                Package () {
+> +                    Package () { "reg", 4 }, /* CSI-2 port number */
+> +                },
+> +                ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+> +                Package () {
+> +                    Package () { "endpoint@0", EP40 },
+> +                }
+> +            })
+> +
+> +            Name (EP40, Package() {
+> +                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> +                Package () {
+> +                    Package () { "reg", 0 },
+> +                    Package () { "remote-endpoint", Package () { \_SB.PC=
+I0.I2C2.CAM0, "port@0", "endpoint@0" } },
+> +                }
+> +            })
+> +        }
+>      }
+> =20
+>  Here, the port 0 of the "CAM0" device is connected to the port 4 of
+> @@ -148,27 +151,27 @@ the "ISP" device and vice versa.
+> =20
+> =20
+>  References
+> -----------
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+>  [1] _DSD (Device Specific Data) Implementation Guide.
+> -    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-implemen=
+tation-guide-toplevel-1_1.htm>,
+> +    http://www.uefi.org/sites/default/files/resources/_DSD-implementatio=
+n-guide-toplevel-1_1.htm,
+>      referenced 2016-10-03.
+> =20
+> -[2] Devicetree. <URL:http://www.devicetree.org>, referenced 2016-10-03.
+> +[2] Devicetree. http://www.devicetree.org, referenced 2016-10-03.
+> =20
+>  [3]=C2=A0Documentation/devicetree/bindings/graph.txt
+> =20
+>  [4] Device Properties UUID For _DSD.
+> -    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-p=
+roperties-UUID.pdf>,
+> +    http://www.uefi.org/sites/default/files/resources/_DSD-device-proper=
+ties-UUID.pdf,
+>      referenced 2016-10-04.
+> =20
+>  [5] Hierarchical Data Extension UUID For _DSD.
+> -    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarch=
+ical-data-extension-UUID-v1.1.pdf>,
+> +    http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-=
+data-extension-UUID-v1.1.pdf,
+>      referenced 2016-10-04.
+> =20
+>  [6] Advanced Configuration and Power Interface Specification.
+> -    <URL:http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf>,
+> +    http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf,
+>      referenced 2016-10-04.
+> =20
+>  [7] _DSD Device Properties Usage Rules.
+> -    Documentation/acpi/DSD-properties-rules.txt
+> +    :doc:`../DSD-properties-rules`
+> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/=
+firmware-guide/acpi/index.rst
+> index bedcb0b242a2..f81cfbcb6878 100644
+> --- a/Documentation/firmware-guide/acpi/index.rst
+> +++ b/Documentation/firmware-guide/acpi/index.rst
+> @@ -8,6 +8,7 @@ ACPI Support
+>     :maxdepth: 1
+> =20
+>     namespace
+> +   dsd/graph
+>     enumeration
+>     osi
+>     method-customizing
 
+
+
+Thanks,
+Mauro
