@@ -6,79 +6,86 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3429C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5B5C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA4FA21738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A517F21738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbfDWKWn (ORCPT
+        id S1727334AbfDWKW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:22:43 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53981 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfDWKWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:22:43 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id B17A98063C; Tue, 23 Apr 2019 12:22:31 +0200 (CEST)
-Date:   Tue, 23 Apr 2019 12:22:40 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
-        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, hdegoede@redhat.com, axboe@kernel.dk,
-        linux-ide@vger.kernel.org
-Subject: next-20190408..0418: Suspend/resume problems on Thinkpad X60
-Message-ID: <20190423102239.GA15531@amd>
-References: <20190408173928.GB13260@amd>
- <20190412102812.GA24977@amd>
+        Tue, 23 Apr 2019 06:22:58 -0400
+Received: from foss.arm.com ([217.140.101.70]:53430 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfDWKW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 06:22:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5129374;
+        Tue, 23 Apr 2019 03:22:57 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D5643F557;
+        Tue, 23 Apr 2019 03:22:55 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 11:22:50 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Dhaval Giani <dhaval.giani@gmail.com>
+Cc:     Sasha Levin <alexander.levin@microsoft.com>,
+        shuah <shuah@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+        Tim Bird <tbird20d@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Carpenter,Dan" <dan.carpenter@oracle.com>, willy@infradead.org,
+        gustavo.padovan@collabora.co.uk,
+        Dmitry Vyukov <dvyukov@google.com>, knut.omang@oracle.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: Linux Testing Microconference at LPC
+Message-ID: <20190423102250.GA56999@lakrids.cambridge.arm.com>
+References: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190412102812.GA24977@amd>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 11, 2019 at 10:37:51AM -0700, Dhaval Giani wrote:
+> Hi Folks,
+> 
+> This is a call for participation for the Linux Testing microconference
+> at LPC this year.
+> 
+> For those who were at LPC last year, as the closing panel mentioned,
+> testing is probably the next big push needed to improve quality. From
+> getting more selftests in, to regression testing to ensure we don't
+> break realtime as more of PREEMPT_RT comes in, to more stable distros,
+> we need more testing around the kernel.
+> 
+> We have talked about different efforts around testing, such as fuzzing
+> (using syzkaller and trinity), automating fuzzing with syzbot, 0day
+> testing, test frameworks such as ktests, smatch to find bugs in the
+> past. We want to push this discussion further this year and are
+> interested in hearing from you what you want to talk about, and where
+> kernel testing needs to go next.
 
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'd be interested to discuss what we could do with annotations and
+compiler instrumentation to make the kernel more amenable to static and
+dynamic analysis (and to some extent, documenting implicit
+requirements).
 
-Hi!
+One idea that I'd like to explore in the context of RT is to annotate
+function signatures with their required IRQ/preempt context, such that
+we could dynamically check whether those requirements were violated
+(even if it didn't happen to cause a problem at that point in time), and
+static analysis would be able to find some obviously broken usage. I had
+some rough ideas of how to do the dynamic part atop/within ftrace. Maybe
+there are similar problems elsewhere.
 
-> > It boots ok (unlike mainline -- I'm debugging that), and I can suspend
-> > and resume... but then cursor in X is moving and I can talk to
-> > applications cached in memory, but any access to disk hangs.
->=20
-> Mainline problem was identified.
->=20
-> But resume is still broken. I took advantage of fact that I can still
-> do cached commands, and got complete dmesg. I'm attaching it.
+I know that some clang folk were interested in similar stuff. IIRC Nick
+Desaulniers was interested in whether clang's thread safety analysis
+tooling could be applied to the kernel (e.g. based on lockdep
+annotations).
 
-Still broken in 0418. Ideas would be welcome at this point.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---pf9I7BMVVzbSWLtt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAly+528ACgkQMOfwapXb+vJUIQCfdlG+O8D9R0SH0VcyH9uQ1lq9
-WQsAoJsscMPfrfcXZTCqYo29RRWKli+K
-=Z66R
------END PGP SIGNATURE-----
-
---pf9I7BMVVzbSWLtt--
+Thanks,
+Mark.
