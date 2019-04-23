@@ -2,147 +2,159 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5B0C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD532C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E6D218D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F181218D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="G84/pFxg";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="cGE5+Xyv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uqIRqg1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbfDWWnF (ORCPT
+        id S1728473AbfDWWtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:43:05 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:40168 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728354AbfDWWnC (ORCPT
+        Tue, 23 Apr 2019 18:49:03 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39457 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbfDWWtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:43:02 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NMcIk4029437;
-        Tue, 23 Apr 2019 15:42:48 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : content-type : content-transfer-encoding :
- mime-version; s=facebook; bh=ft13XIUXs/na5BozApRenz43jZoigJPM9OJXpjnNQCo=;
- b=G84/pFxgFacKSO5kKlTWqYxS77lXI5gixEYMAUTfAF1MS0LV9HZ7H2CLJSE1qaS6VQh4
- WWkBehAGTXY/m+6sk/zPUqQf3Bf2dMOtjNfi6c1ret7jjEsv220DuCxcZEccQ5UOToGO
- r7C8Z7e/XiCttYsTUSm69HXS67Lq3kz5ZCI= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2s293grmb9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 23 Apr 2019 15:42:48 -0700
-Received: from frc-hub04.TheFacebook.com (2620:10d:c021:18::174) by
- frc-hub01.TheFacebook.com (2620:10d:c021:18::171) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 23 Apr 2019 15:42:47 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 23 Apr 2019 15:42:47 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ft13XIUXs/na5BozApRenz43jZoigJPM9OJXpjnNQCo=;
- b=cGE5+XyvaauqM7R6Ceg7rR0fsbOpjPu2beoJpb2OvkEXcjEP2L81UQcsy/ccxrNNB4zavjoJUq1LatR9TDNud251S+18RkCeup719jKcTSZjm98IjicPs7nrBLVH9wG7CsaHb5skFQHX1lXurx3rcaVfWhkpHOGbOBZgwmJAQUg=
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.146) by
- MWHPR15MB1502.namprd15.prod.outlook.com (10.173.235.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.17; Tue, 23 Apr 2019 22:42:46 +0000
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::9ccc:f6fa:40e2:f1cd]) by MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::9ccc:f6fa:40e2:f1cd%10]) with mapi id 15.20.1813.017; Tue, 23 Apr
- 2019 22:42:45 +0000
-From:   Tao Ren <taoren@fb.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-CC:     Tao Ren <taoren@fb.com>
-Subject: [PATCH net v2 2/2] net/ncsi: handle overflow when incrementing mac
- address
-Thread-Topic: [PATCH net v2 2/2] net/ncsi: handle overflow when incrementing
- mac address
-Thread-Index: AQHU+iXecLDtt1IY90eudJt4zx65pg==
-Date:   Tue, 23 Apr 2019 22:42:45 +0000
-Message-ID: <20190423224229.2522-1-taoren@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR0201CA0078.namprd02.prod.outlook.com
- (2603:10b6:301:75::19) To MWHPR15MB1216.namprd15.prod.outlook.com
- (2603:10b6:320:23::18)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [2620:10d:c090:200::1:8f70]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d33eb112-7767-48a9-b33f-08d6c83d00fc
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1502;
-x-ms-traffictypediagnostic: MWHPR15MB1502:
-x-microsoft-antispam-prvs: <MWHPR15MB1502AC6775230EA601383109B2230@MWHPR15MB1502.namprd15.prod.outlook.com>
-x-forefront-prvs: 0016DEFF96
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(39860400002)(376002)(346002)(189003)(199004)(6486002)(50226002)(53936002)(316002)(6512007)(6436002)(14454004)(110136005)(81166006)(52116002)(1076003)(71200400001)(2501003)(478600001)(8936002)(99286004)(7416002)(71190400001)(81156014)(97736004)(2906002)(46003)(6116002)(7736002)(68736007)(386003)(66556008)(66446008)(8676002)(66476007)(66946007)(102836004)(25786009)(86362001)(6506007)(2201001)(486006)(2616005)(186003)(14444005)(64756008)(36756003)(256004)(476003)(5660300002)(73956011)(4326008)(305945005)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1502;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: w/R5f166ikQB/mawuBiNuX014n224zEcPBSsxbJ72uSodHx1JCf8acswNJfGRaM2iHn8KZdX26IjBmEnPsq0/czlzYF/1Qix/ZAxMCVIXpskzJevWbPYfLfvWx9vfLUqc7TX5D39HZGf+t5Rfj+dWgORGKDh62CBZA97zmcstVqnJ9AWcIy3X7XC/0qbWyC97uGMDVf62jcES5Mijnw6skrjOBAvf6D0iK5iVoxwaV9gjOA+7FYQhSy0qaiYX18HZT9NYjs4N7mlOwj16FRYT0cKIl+YC4iUVUsNP4UrxqySgNtOApAfjq9vgn0AXNIkYqPAgGCgJcRY2BiAKxrjvOvpd4qie8A/6k0YnmWhdn9IC4zh1wFts/rRIsD4uO4lUzSgVKxzXYtAnBHQndrnzHOm+xSDUt6Za4G4Gu5GEiM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 23 Apr 2019 18:49:02 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l7so15002257ljg.6;
+        Tue, 23 Apr 2019 15:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GFAcF+BNJAUspNATnW1zZ1un5px4lM5fhU2ckCqOLfU=;
+        b=uqIRqg1RjFNLtTkHdroYCCfX3hLuyGL5DDMo1x9QQHSQSGSRS5qzObRovEnyXQ1/zE
+         FTy/qxX/kLTiS2sxTmJHK8WgKYjp7yneJyNe3tdwOJtS2jBKkMkjUzahG3QnG1dSvmLj
+         CM1QFUj2MP1o6TZAxfeeaBFFTKHrNMh4++g9nVp28iVHW7eGXsJXTPK32ioKiaXMTlpP
+         6IfbbYkYfMGKvaXj3TgKGLSordovkXdTWSH+IqndUWhh+Z3xMM+KC763ZIU6IcszCk/6
+         ySM2s2zVLgso4EHhsEnN7y7F6+8PRuGQlF/buTpXBnLJXmtbYOxR/pYijuk0asOrA2L4
+         XR1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GFAcF+BNJAUspNATnW1zZ1un5px4lM5fhU2ckCqOLfU=;
+        b=nWKu4Q1ZwIa0YLHwATGddQEtugDE1z4FvLO4qsWPTfETVMbSZip45rt4Ey6HGt6h3P
+         sBTjQybLN0K7BRm1VOVfSkJitXOwj9J4svbTkHCXmw+x/NNlOsSot4ptgMqz2tNv+oX3
+         hxRFHdevKBWklszrLzqiv1TAYREa5/wySKMc+x12YcSe2x4WF+TCuWx6P/10bkWljlQb
+         w1e+8aAmeaK1GCVd0IwRMYu6PbzO4PX/sDyAqhBRmvPOSzRlJdLWcKl6Aoigt83xd5Lz
+         phlKcecyEp6IUCB+xtfihysyFNOmttnQyx0o6+AMgARUaH6MN8ExaCa8vVbuudfi5snS
+         /mQA==
+X-Gm-Message-State: APjAAAX4rhsXCCoUnKXExV+YaGbcXnNghyM6hUBv6LABZP0vhDMkw/Fa
+        1TAQGtNMcRbEId1saBr5FFc=
+X-Google-Smtp-Source: APXvYqxrJla13/QY5XcjVmsD+3mKA6DpwhKSbOeaIHJPhSl4jAZ0vBJf8k8SZ85FOT+TRef1iQU5Sw==
+X-Received: by 2002:a2e:8446:: with SMTP id u6mr15394840ljh.71.1556059740001;
+        Tue, 23 Apr 2019 15:49:00 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id w2sm4904722lfa.63.2019.04.23.15.48.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 15:48:59 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH 00/12] mips: Post-bootmem-memblock transition fixes
+Date:   Wed, 24 Apr 2019 01:47:36 +0300
+Message-Id: <20190423224748.3765-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d33eb112-7767-48a9-b33f-08d6c83d00fc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 22:42:45.8198
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1502
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_09:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UHJldmlvdXNseSBCTUMncyBNQUMgYWRkcmVzcyBpcyBjYWxjdWxhdGVkIGJ5IHNpbXBseSBhZGRp
-bmcgMSB0byB0aGUNCmxhc3QgYnl0ZSBvZiBuZXR3b3JrIGNvbnRyb2xsZXIncyBNQUMgYWRkcmVz
-cywgYW5kIGl0IHByb2R1Y2VzIGluY29ycmVjdA0KcmVzdWx0IHdoZW4gbmV0d29yayBjb250cm9s
-bGVyJ3MgTUFDIGFkZHJlc3MgZW5kcyB3aXRoIDB4RkYuDQoNClRoZSBwcm9ibGVtIGNhbiBiZSBm
-aXhlZCBieSBjYWxsaW5nICJuZXRfYWRkcl9pbmMiIGZ1bmN0aW9uIHRvIGluY3JlbWVudA0KTUFD
-IGFkZHJlc3M7IGJlc2lkZXMsIHRoZSBNQUMgYWRkcmVzcyBpcyBhbHNvIHZhbGlkYXRlZCBiZWZv
-cmUgYXNzaWduaW5nDQp0byBCTUMuDQoNCkZpeGVzOiBjYjEwYzdjMGRmZDkgKCJuZXQvbmNzaTog
-QWRkIE5DU0kgQnJvYWRjb20gT0VNIGNvbW1hbmQiKQ0KU2lnbmVkLW9mZi1ieTogVGFvIFJlbiA8
-dGFvcmVuQGZiLmNvbT4NCi0tLQ0KIG5ldC9uY3NpL25jc2ktcnNwLmMgfCA2ICsrKysrLQ0KIDEg
-ZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCg0KQ2hhbmdlcyBp
-biB2MjoNCiAtIGluY3JlbWVudCBNQUMgYWRkcmVzcyBieSBjYWxsaW5nIG5ldF9hZGRyX2luYyBm
-dW5jdGlvbi4NCiAtIHZhbGlkYXRlIE1BQyBhZGRyZXNzIGJlZm9yZSBhc3NpZ25pbmcgdG8gQk1D
-Lg0KDQpkaWZmIC0tZ2l0IGEvbmV0L25jc2kvbmNzaS1yc3AuYyBiL25ldC9uY3NpL25jc2ktcnNw
-LmMNCmluZGV4IGRjMDdmY2M3OTM4ZS4uODAyZGIwMWUzMDc1IDEwMDY0NA0KLS0tIGEvbmV0L25j
-c2kvbmNzaS1yc3AuYw0KKysrIGIvbmV0L25jc2kvbmNzaS1yc3AuYw0KQEAgLTExLDYgKzExLDcg
-QEANCiAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQogI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4N
-CiAjaW5jbHVkZSA8bGludXgvbmV0ZGV2aWNlLmg+DQorI2luY2x1ZGUgPGxpbnV4L2V0aGVyZGV2
-aWNlLmg+DQogI2luY2x1ZGUgPGxpbnV4L3NrYnVmZi5oPg0KIA0KICNpbmNsdWRlIDxuZXQvbmNz
-aS5oPg0KQEAgLTY2Nyw3ICs2NjgsMTAgQEAgc3RhdGljIGludCBuY3NpX3JzcF9oYW5kbGVyX29l
-bV9iY21fZ21hKHN0cnVjdCBuY3NpX3JlcXVlc3QgKm5yKQ0KIAluZGV2LT5wcml2X2ZsYWdzIHw9
-IElGRl9MSVZFX0FERFJfQ0hBTkdFOw0KIAltZW1jcHkoc2FkZHIuc2FfZGF0YSwgJnJzcC0+ZGF0
-YVtCQ01fTUFDX0FERFJfT0ZGU0VUXSwgRVRIX0FMRU4pOw0KIAkvKiBJbmNyZWFzZSBtYWMgYWRk
-cmVzcyBieSAxIGZvciBCTUMncyBhZGRyZXNzICovDQotCXNhZGRyLnNhX2RhdGFbRVRIX0FMRU4g
-LSAxXSsrOw0KKwlldGhfYWRkcl9pbmMoKHU4ICopc2FkZHIuc2FfZGF0YSk7DQorCWlmICghaXNf
-dmFsaWRfZXRoZXJfYWRkcigoY29uc3QgdTggKilzYWRkci5zYV9kYXRhKSkNCisJCXJldHVybiAt
-RU5YSU87DQorDQogCXJldCA9IG9wcy0+bmRvX3NldF9tYWNfYWRkcmVzcyhuZGV2LCAmc2FkZHIp
-Ow0KIAlpZiAocmV0IDwgMCkNCiAJCW5ldGRldl93YXJuKG5kZXYsICJOQ1NJOiAnV3JpdGluZyBt
-YWMgYWRkcmVzcyB0byBkZXZpY2UgZmFpbGVkXG4iKTsNCi0tIA0KMi4xNy4xDQoNCg==
+First attempt of making the MIPS subsystem utilizing the memblock early memory
+allocator was done by me a few years ago. I created a patchset with
+21 patches [1]. It turned out to be too complicated and I decided to resend a
+reworked patchset with smaller number of changes [2]. I did this and after a
+small review process a v2 patchset was also posted. Then my spare
+time was over and I couldn't proceed with the patchset support and
+resubmission.
+
+In a year Mike Rapoport took charge in this task and posted a small
+patch which essentially did the bootmem allocator removal from MIPS
+subsystem [3]. A single small patch did in general the whole thing my huge
+patchsetes were intended for in the first place (though it lacked a few fixes).
+Mike even went further and completely removed the bootmem allocator from
+kernel code, so all the subsystems would need to use the only one early
+memory allocator. This significantly simplified the platforms code as well
+as removed a deprecated subsystem with duplicated functionality. Million
+credits to Mike for this.
+
+Getting back to the MIPS subsystem and it memblock allocator usage. Even
+though the patch suggested by Mike [3] fixed most of the problems caused
+by enabling the memblock allocator usage, some of them have been left
+uncovered by it. First of all the PFNs calculation algorithm hasn't been
+fully refactored. A reserved memory declaration loop has been left
+untouched though it was clearly over-complicated for the new initialization
+procedure. Secondly the MIPS platform code reserved the whole space below
+kernel start address, which doesn't seem right since kernel can be
+located much higher than memory space really starts. Thirdly CMA if it
+is enabled reserves memory regions by means of memblock in the first place.
+So the bootmem-init code doesn't need to do it again. Fifthly at early
+platform initialization stage non of bootmem-left methods can be called
+since there is no memory pages mapping at that moment, so __nosave* region
+must be reserved by means of memblock allocator. Finally aside from memblock
+allocator introduction my early patchsets included a series of useful
+alterations like "nomap" property implementation for "reserved-memory"
+dts-nodes, memblock_dump_all() method call after early memory allocator
+initialization for debugging, low-memory test procedure, kernel memory
+mapping printout at boot-time, and so on. So all of these fixes and
+alterations are introduced in this new patchset. Please review. Hope
+this time I'll be more responsive and finish this series up until it
+is merged.
+
+[1] https://lkml.org/lkml/2016/12/18/195
+[2] https://lkml.org/lkml/2018/1/17/1201
+[3] https://lkml.org/lkml/2018/9/10/302
+
+NOTE I added a few "Reviewed-by:  Matt Redfearn <matt.redfearn@mips.com>"
+since some patches of this series have been picked up from my earlier
+patchsets, which Matt's already reviewed. I didn't add the tag for patches,
+which were either new or partially ported.
+
+Serge Semin (12):
+  mips: Make sure kernel .bss exists in boot mem pool
+  mips: Discard rudiments from bootmem_init
+  mips: Combine memblock init and memory reservation loops
+  mips: Reserve memory for the kernel image resources
+  mips: Discard post-CMA-init foreach loop
+  mips: Use memblock to reserve the __nosave memory range
+  mips: Add reserve-nomap memory type support
+  mips: Dump memblock regions for debugging
+  mips: Perform early low memory test
+  mips: Print the kernel virtual mem layout on debugging
+  mips: Make sure dt memory regions are valid
+  mips: Enable OF_RESERVED_MEM config
+
+ arch/mips/Kconfig                |   1 +
+ arch/mips/include/asm/bootinfo.h |   1 +
+ arch/mips/kernel/prom.c          |  18 ++++-
+ arch/mips/kernel/setup.c         | 129 +++++++++----------------------
+ arch/mips/mm/init.c              |  49 ++++++++++++
+ 5 files changed, 102 insertions(+), 96 deletions(-)
+
+-- 
+2.21.0
+
