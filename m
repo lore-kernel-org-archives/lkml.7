@@ -2,432 +2,108 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB383C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21A3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFD420656
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DA220656
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:17:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="MogJTY+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbfDXJRH (ORCPT
+        id S1729618AbfDXJRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:17:07 -0400
-Received: from mga05.intel.com ([192.55.52.43]:1102 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728796AbfDXJQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:16:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 02:16:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,389,1549958400"; 
-   d="scan'208";a="145260879"
-Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
-  by orsmga003.jf.intel.com with ESMTP; 24 Apr 2019 02:16:37 -0700
-From:   Weifeng Voon <weifeng.voon@intel.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Kweh Hock Leong <hock.leong.kweh@intel.com>,
-        Weifeng Voon <weifeng.voon@intel.com>
-Subject: [PATCH 4/7] net: stmmac: introducing support for DWC xPCS logics
-Date:   Thu, 25 Apr 2019 01:17:18 +0800
-Message-Id: <1556126241-2774-5-git-send-email-weifeng.voon@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
-References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
+        Wed, 24 Apr 2019 05:17:17 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49032 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728520AbfDXJQi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 05:16:38 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O9AKK1018404
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 02:16:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=Wjeih4drKxvCXgraFNPv3LrPtimhzFKHZMw/UQDDo9g=;
+ b=MogJTY+sxUi5Eixza1waPiWVNAgY9W50Ipk5t5x/0D1m7928+J0c4v6PCyYagX+WePbL
+ rdORfdLL/dJAEVt2nqeQAmDpX4RgW9Uz0wOjuHcrvGxYHlN44ALd1ZWqKXZedmqkGyGR
+ SEWTbVP0TvEVw4VHrdzn5ohFgcud6gEOfWw= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2s2k8f8emq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 02:16:36 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
+ mail.thefacebook.com (2620:10d:c021:18::176) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Wed, 24 Apr 2019 02:16:35 -0700
+Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
+        id AAAE013BA5DD3; Tue, 23 Apr 2019 14:20:38 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Tao Ren <taoren@fb.com>
+Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
+To:     "David S . Miller" <davem@davemloft.net>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, <openbmc@lists.ozlabs.org>
+CC:     Tao Ren <taoren@fb.com>
+Smtp-Origin-Cluster: prn1c35
+Subject: [PATCH net 1/2] net: add eth_addr_inc in etherdevice.h
+Date:   Tue, 23 Apr 2019 14:20:37 -0700
+Message-ID: <20190423212037.1983760-1-taoren@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_07:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ong Boon Leong <boon.leong.ong@intel.com>
+Add eth_addr_inc function in etherdevice.h to increment MAC address. One
+of the use cases is in ncsi stack, where the host's MAC address needs to
+be incremented to get BMC's MAC address.
 
-xPCS is DWC Ethernet Physical Coding Sublayer that may be integrated
-into a GbE controller that uses DWC EQoS MAC controller. An example of
-HW configuration is shown below:-
-
-  <-----------------GBE Controller---------->|<--External PHY chip-->
-
-  +----------+         +----+    +---+               +--------------+
-  |   EQoS   | <-GMII->|xPCS|<-->|L1 | <-- SGMII --> | External GbE |
-  |   MAC    |         |    |    |PHY|               | PHY Chip     |
-  +----------+         +----+    +---+               +--------------+
-         ^               ^                                  ^
-         |               |                                  |
-         +---------------------MDIO-------------------------+
-
-xPCS is a Clause-45 MDIO Manageable Device (MMD) and we need a way to
-differentiate it from external PHY chip that is discovered over MDIO.
-Therefore, xpcs_phy_addr is introduced in stmmac platform data
-(plat_stmmacenet_data) for differentiating xPCS from 'phy_addr' that
-belongs to external PHY.
-
-Basic functionalities for initializing xPCS and configuring auto
-negotiation (AN), loopback, link status, AN advertisement and Link
-Partner ability are implemented.
-
-xPCS interrupt handling for C37 AN complete is also implemented.
-
-Tested-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
-Reviewed-by: Chuah Kim Tatt <kim.tatt.chuah@intel.com>
-Reviewed-by: Voon Weifeng <weifeng.voon@intel.com>
-Reviewed-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
-Reviewed-by: Baoli Zhang <baoli.zhang@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Tao Ren <taoren@fb.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dw_xpcs.h | 288 ++++++++++++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/hwif.h    |  17 ++
- include/linux/stmmac.h                        |   1 +
- 3 files changed, 306 insertions(+)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dw_xpcs.h
+ include/linux/etherdevice.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dw_xpcs.h b/drivers/net/ethernet/stmicro/stmmac/dw_xpcs.h
-new file mode 100644
-index 0000000..446b714
---- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/dw_xpcs.h
-@@ -0,0 +1,288 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* dw_xpcs.h: DWC Ethernet Physical Coding Sublayer Header
+diff --git a/include/linux/etherdevice.h b/include/linux/etherdevice.h
+index e2f3b21cd72a..d48e3a724c54 100644
+--- a/include/linux/etherdevice.h
++++ b/include/linux/etherdevice.h
+@@ -448,6 +448,19 @@ static inline void eth_addr_dec(u8 *addr)
+ 	u64_to_ether_addr(u, addr);
+ }
+ 
++/**
++ * eth_addr_inc - Increment the given MAC address
 + *
-+ * Copyright (c) 2019, Intel Corporation.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
++ * @addr: Pointer to a six-byte array containing Ethernet address to increment
 + */
-+#ifndef __DW_XPCS_H__
-+#define __DW_XPCS_H__
-+
-+#include <linux/mdio.h>
-+#include <linux/bitops.h>
-+#include "stmmac.h"
-+
-+/* XPCS Control & MII MMD Device Addresses */
-+#define XPCS_MDIO_CONTROL_MMD	MDIO_MMD_VEND1
-+#define XPCS_MDIO_MII_MMD	MDIO_MMD_VEND2
-+
-+/* Control MMD register offsets */
-+#define MDIO_CONTROL_MMD_CTRL		0x9	/* Control */
-+
-+/* Control MMD Control defines */
-+#define MDIO_CONTROL_MMD_CTRL_MII_MMD_EN	1 /* MII MMD Enable */
-+
-+/* MII MMD registers offsets */
-+#define MDIO_MII_MMD_CTRL		0x0	/* Control */
-+#define MDIO_MII_MMD_ADV		0x4	/* AN Advertisement */
-+#define MDIO_MII_MMD_LPA		0x5	/* Link Partner Ability */
-+#define MDIO_MII_MMD_DIGITAL_CTRL_1	0x8000	/* Digital Control 1 */
-+#define MDIO_MII_MMD_AN_CTRL		0x8001	/* AN Control */
-+#define MDIO_MII_MMD_AN_STAT		0x8002	/* AN Status */
-+
-+/* MII MMD Control defines */
-+#define MDIO_MII_MMD_CTRL_ANE		BIT(12)	/* AN Enable */
-+#define MDIO_MII_MMD_CTRL_LBE		BIT(14)	/* Loopback Enable */
-+#define MDIO_MII_MMD_CTRL_RANE		BIT(9)	/* Restart AN */
-+
-+/* MII MMD AN Advertisement & Link Partner Ability */
-+#define MDIO_MII_MMD_HD			BIT(6)	/* Half duplex */
-+#define MDIO_MII_MMD_FD			BIT(5)	/* Full duplex */
-+#define MDIO_MII_MMD_PSE_SHIFT		7	/* Pause Ability shift */
-+#define MDIO_MII_MMD_PSE	GENMASK(8, 7)	/* Pause Ability */
-+
-+/* MII MMD Digital Control 1 defines */
-+#define MDIO_MII_MMD_DIGI_CTRL_1_SGMII_PHY_MD	BIT(0) /* SGMII PHY mode */
-+
-+/* MII MMD AN Control defines */
-+#define MDIO_MII_MMD_AN_CTRL_TX_CONFIG_SHIFT	3 /* TX Config shift */
-+#define AN_CTRL_TX_CONF_PHY_SIDE_SGMII		0x1 /* PHY side SGMII mode */
-+#define AN_CTRL_TX_CONF_MAC_SIDE_SGMII		0x0 /* MAC side SGMII mode */
-+#define MDIO_MII_MMD_AN_CTRL_PCS_MD_SHIFT	1  /* PCS Mode shift */
-+#define MDIO_MII_MMD_AN_CTRL_PCS_MD	GENMASK(2, 1) /* PCS Mode */
-+#define AN_CTRL_PCS_MD_C37_1000BASEX	0x0	/* C37 AN for 1000BASE-X */
-+#define AN_CTRL_PCS_MD_C37_SGMII	0x2	/* C37 AN for SGMII */
-+#define MDIO_MII_MMD_AN_CTRL_AN_INTR_EN	BIT(0)	/* AN Complete Intr Enable */
-+
-+/* MII MMD AN Status defines for C37 AN SGMII Status */
-+#define AN_STAT_C37_AN_CMPLT		BIT(0)	/* AN Complete Intr */
-+#define AN_STAT_C37_AN_FD		BIT(1)	/* Full Duplex */
-+#define AN_STAT_C37_AN_SPEED_SHIFT	2	/* AN Speed shift */
-+#define AN_STAT_C37_AN_SPEED		GENMASK(3, 2)	/* AN Speed */
-+#define AN_STAT_C37_AN_10MBPS		0x0	/* 10 Mbps */
-+#define AN_STAT_C37_AN_100MBPS		0x1	/* 100 Mbps */
-+#define AN_STAT_C37_AN_1000MBPS		0x2	/* 1000 Mbps */
-+#define AN_STAT_C37_AN_LNKSTS		BIT(4)	/* Link Status */
-+
-+/**
-+ * dw_xpcs_init - To initialize xPCS
-+ * @ndev: network device pointer
-+ * @mode: PCS mode
-+ * Description: this is to initialize xPCS
-+ */
-+static inline void dw_xpcs_init(struct net_device *ndev, int pcs_mode)
++static inline void eth_addr_inc(u8 *addr)
 +{
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	int xpcs_phy_addr = priv->plat->xpcs_phy_addr;
++	u64 u = ether_addr_to_u64(addr);
 +
-+	/* Set SGMII PHY mode control */
-+	u16 phydata = (u16)mdiobus_read(priv->mii, xpcs_phy_addr,
-+				    (MII_ADDR_C45 |
-+				     (XPCS_MDIO_MII_MMD <<
-+				      MII_DEVADDR_C45_SHIFT) |
-+				     MDIO_MII_MMD_DIGITAL_CTRL_1));
-+
-+	phydata |= MDIO_MII_MMD_DIGI_CTRL_1_SGMII_PHY_MD;
-+
-+	mdiobus_write(priv->mii, xpcs_phy_addr,
-+		      (MII_ADDR_C45 | (XPCS_MDIO_MII_MMD <<
-+		       MII_DEVADDR_C45_SHIFT) | MDIO_MII_MMD_DIGITAL_CTRL_1),
-+		      (int)phydata);
-+
-+	/* Set PHY side SGMII, PCS Mode & Enable C37 AN complete interrupt */
-+	phydata = (u16)mdiobus_read(priv->mii, xpcs_phy_addr,
-+				    (MII_ADDR_C45 |
-+				     (XPCS_MDIO_MII_MMD <<
-+				      MII_DEVADDR_C45_SHIFT) |
-+				     MDIO_MII_MMD_AN_CTRL));
-+
-+	phydata &= ~MDIO_MII_MMD_AN_CTRL_PCS_MD;
-+	phydata |= (((pcs_mode << MDIO_MII_MMD_AN_CTRL_PCS_MD_SHIFT) &
-+		    MDIO_MII_MMD_AN_CTRL_PCS_MD) |
-+		    (AN_CTRL_TX_CONF_PHY_SIDE_SGMII <<
-+		    MDIO_MII_MMD_AN_CTRL_TX_CONFIG_SHIFT) |
-+		    MDIO_MII_MMD_AN_CTRL_AN_INTR_EN);
-+
-+	mdiobus_write(priv->mii, xpcs_phy_addr,
-+		      (MII_ADDR_C45 | (XPCS_MDIO_MII_MMD <<
-+		       MII_DEVADDR_C45_SHIFT) | MDIO_MII_MMD_AN_CTRL),
-+		      (int)phydata);
++	u++;
++	u64_to_ether_addr(u, addr);
 +}
 +
-+/**
-+ * dw_xpcs_rane - To restart Auto Negotiation (AN)
-+ * @ndev: network device pointer
-+ * @restart: to restart AN
-+ * Description: this is to restart AN.
-+ */
-+static inline void dw_xpcs_rane(struct net_device *ndev, bool restart)
-+{
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	int xpcs_phy_addr = priv->plat->xpcs_phy_addr;
-+
-+	u16 phydata = (u16)mdiobus_read(priv->mii, xpcs_phy_addr,
-+				(MII_ADDR_C45 | (XPCS_MDIO_MII_MMD <<
-+				 MII_DEVADDR_C45_SHIFT) |
-+				 MDIO_MII_MMD_CTRL));
-+
-+	if (restart)
-+		phydata |= MDIO_MII_MMD_CTRL_RANE;
-+
-+	mdiobus_write(priv->mii, xpcs_phy_addr,
-+		      (MII_ADDR_C45 | (XPCS_MDIO_MII_MMD <<
-+		       MII_DEVADDR_C45_SHIFT) | MDIO_MII_MMD_CTRL),
-+		      (int)phydata);
-+}
-+
-+/**
-+ * dw_xpcs_ctrl_ane - To program the MII MMD Control Register.
-+ * @ndev: network device pointer
-+ * @ane: to enable the Auto Negotiation
-+ * @loopback: to cause the PHY to loopback Tx data into Rx path.
-+ * Description: this is the main function to configure the MII MMD
-+ * control register and init the AN Enable and select loopback.
-+ */
-+static inline void dw_xpcs_ctrl_ane(struct net_device *ndev, bool ane,
-+				    bool loopback)
-+{
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	int xpcs_phy_addr = priv->plat->xpcs_phy_addr;
-+
-+	u16 phydata = (u16)mdiobus_read(priv->mii, xpcs_phy_addr,
-+				(MII_ADDR_C45 | (XPCS_MDIO_MII_MMD <<
-+				 MII_DEVADDR_C45_SHIFT) |
-+				 MDIO_MII_MMD_CTRL));
-+
-+	if (ane)
-+		phydata |= (MDIO_MII_MMD_CTRL_ANE | MDIO_MII_MMD_CTRL_RANE);
-+
-+	if (loopback)
-+		phydata |= MDIO_MII_MMD_CTRL_LBE;
-+
-+	mdiobus_write(priv->mii, xpcs_phy_addr,
-+		      (MII_ADDR_C45 | (XPCS_MDIO_MII_MMD <<
-+		       MII_DEVADDR_C45_SHIFT) | MDIO_MII_MMD_CTRL),
-+		      (int)phydata);
-+}
-+
-+/**
-+ * dw_xpcs_get_adv_lp - Get AN Advertisement and Link Partner Ability
-+ * @ndev: network device pointer
-+ * @adv_lp: structure to store the adv, lp status
-+ * Description: this is to expose the Auto Negotiation Advertisement and
-+ * Link partner ability status to ethtool support.
-+ */
-+static inline void dw_xpcs_get_adv_lp(struct net_device *ndev,
-+				      struct rgmii_adv *adv_lp)
-+{
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	int xpcs_phy_addr = priv->plat->xpcs_phy_addr;
-+
-+	/* AN Advertisement Ability */
-+	u16 value = (u16)mdiobus_read(priv->mii, xpcs_phy_addr,
-+				(MII_ADDR_C45 | (XPCS_MDIO_MII_MMD <<
-+				 MII_DEVADDR_C45_SHIFT) |
-+				 MDIO_MII_MMD_ADV));
-+
-+	if (value & MDIO_MII_MMD_FD)
-+		adv_lp->duplex = DUPLEX_FULL;
-+	if (value & MDIO_MII_MMD_HD)
-+		adv_lp->duplex = DUPLEX_HALF;
-+	adv_lp->pause = (u32)((value & MDIO_MII_MMD_PSE) >>
-+			      MDIO_MII_MMD_PSE_SHIFT);
-+
-+	/* Link Partner Ability */
-+	value = (u16)mdiobus_read(priv->mii, xpcs_phy_addr,
-+				  (MII_ADDR_C45 | (XPCS_MDIO_MII_MMD <<
-+				   MII_DEVADDR_C45_SHIFT) |
-+				   MDIO_MII_MMD_LPA));
-+
-+	if (value & MDIO_MII_MMD_FD)
-+		adv_lp->lp_duplex = DUPLEX_FULL;
-+	if (value & MDIO_MII_MMD_HD)
-+		adv_lp->lp_duplex = DUPLEX_HALF;
-+	adv_lp->lp_pause = (u32)((value & MDIO_MII_MMD_PSE) >>
-+				 MDIO_MII_MMD_PSE_SHIFT);
-+}
-+
-+/**
-+ * dw_xpcs_get_linkstatus - Get Link Status
-+ * @an_stat: C37 AN status value
-+ * @x: stmmac extra status
-+ * Description: this is to read the link extra status from <C37 AN SGMII
-+ * status> field of MII MMD AN Status register.
-+ */
-+static inline void dw_xpcs_get_linkstatus(u16 an_stat,
-+					  struct stmmac_extra_stats *x)
-+{
-+	/* Check the link status */
-+	if (an_stat & AN_STAT_C37_AN_LNKSTS) {
-+		int speed_value;
-+
-+		x->pcs_link = 1;
-+
-+		speed_value = ((an_stat & AN_STAT_C37_AN_SPEED) >>
-+				AN_STAT_C37_AN_SPEED_SHIFT);
-+		if (speed_value == AN_STAT_C37_AN_1000MBPS)
-+			x->pcs_speed = SPEED_1000;
-+		else if (speed_value == AN_STAT_C37_AN_100MBPS)
-+			x->pcs_speed = SPEED_100;
-+		else
-+			x->pcs_speed = SPEED_10;
-+
-+		if (an_stat & AN_STAT_C37_AN_FD)
-+			x->pcs_duplex = 1;
-+		else
-+			x->pcs_duplex = 0;
-+
-+		pr_info("Link is Up - %d/%s\n", (int)x->pcs_speed,
-+			x->pcs_duplex ? "Full" : "Half");
-+	} else {
-+		x->pcs_link = 0;
-+		pr_info("Link is Down\n");
-+	}
-+}
-+
-+/**
-+ * dw_xpcs_irq_status - Get xPCS IRQ Status
-+ * @ndev: network device pointer
-+ * @x: stmmac extra status
-+ * Description: this is to read the xPCS IRQ status.
-+ */
-+static inline int dw_xpcs_irq_status(struct net_device *ndev,
-+				     struct stmmac_extra_stats *x)
-+{
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	int xpcs_phy_addr = priv->plat->xpcs_phy_addr;
-+	int ret = IRQ_NONE;
-+
-+	/* C37 AN status */
-+	u16 an_stat = (u16)mdiobus_read(priv->mii, xpcs_phy_addr,
-+					(MII_ADDR_C45 |
-+					 (XPCS_MDIO_MII_MMD <<
-+					  MII_DEVADDR_C45_SHIFT) |
-+					 MDIO_MII_MMD_AN_STAT));
-+
-+	if (an_stat & AN_STAT_C37_AN_CMPLT) {
-+		x->irq_pcs_ane_n++;
-+		dw_xpcs_get_linkstatus(an_stat, x);
-+
-+		/* Clear C37 AN complete status by writing zero */
-+		mdiobus_write(priv->mii, xpcs_phy_addr,
-+			      (MII_ADDR_C45 | (XPCS_MDIO_MII_MMD <<
-+			       MII_DEVADDR_C45_SHIFT) |
-+			       MDIO_MII_MMD_AN_STAT),
-+			      0);
-+		ret = IRQ_HANDLED;
-+	}
-+
-+	return ret;
-+}
-+#endif /* __DW_XPCS_H__ */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 5bb0023..cb7eb48 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -310,6 +310,13 @@ struct stmmac_ops {
- 			     bool loopback);
- 	void (*pcs_rane)(void __iomem *ioaddr, bool restart);
- 	void (*pcs_get_adv_lp)(void __iomem *ioaddr, struct rgmii_adv *adv);
-+	/* xPCS calls */
-+	void (*xpcs_init)(struct net_device *ndev, int pcs_mode);
-+	void (*xpcs_ctrl_ane)(struct net_device *ndev, bool ane, bool loopback);
-+	void (*xpcs_rane)(struct net_device *ndev, bool restart);
-+	void (*xpcs_get_adv_lp)(struct net_device *ndev, struct rgmii_adv *adv);
-+	int (*xpcs_irq_status)(struct net_device *ndev,
-+			       struct stmmac_extra_stats *x);
- 	/* Safety Features */
- 	int (*safety_feat_config)(void __iomem *ioaddr, unsigned int asp);
- 	int (*safety_feat_irq_status)(struct net_device *ndev,
-@@ -382,6 +389,16 @@ struct stmmac_ops {
- 	stmmac_do_void_callback(__priv, mac, pcs_rane, __args)
- #define stmmac_pcs_get_adv_lp(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, mac, pcs_get_adv_lp, __args)
-+#define stmmac_xpcs_init(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mac, xpcs_init, __args)
-+#define stmmac_xpcs_ctrl_ane(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mac, xpcs_ctrl_ane, __args)
-+#define stmmac_xpcs_rane(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mac, xpcs_rane, __args)
-+#define stmmac_xpcs_get_adv_lp(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mac, xpcs_get_adv_lp, __args)
-+#define stmmac_xpcs_irq_status(__priv, __args...) \
-+	stmmac_do_callback(__priv, mac, xpcs_irq_status, __args)
- #define stmmac_safety_feat_config(__priv, __args...) \
- 	stmmac_do_callback(__priv, mac, safety_feat_config, __args)
- #define stmmac_safety_feat_irq_status(__priv, __args...) \
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index 4335bd7..b00e795 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -148,6 +148,7 @@ struct stmmac_txq_cfg {
- struct plat_stmmacenet_data {
- 	int bus_id;
- 	int phy_addr;
-+	int xpcs_phy_addr;
- 	int interface;
- 	struct stmmac_mdio_bus_data *mdio_bus_data;
- 	struct device_node *phy_node;
+ /**
+  * is_etherdev_addr - Tell if given Ethernet address belongs to the device.
+  * @dev: Pointer to a device structure
 -- 
-1.9.1
+2.17.1
 
