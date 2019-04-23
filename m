@@ -2,130 +2,140 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06633C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC5BC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6DD920645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6E220645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J4QWw+fV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuBIkpxD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbfDWI24 (ORCPT
+        id S1727201AbfDWI3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:28:56 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:6696 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727105AbfDWI2z (ORCPT
+        Tue, 23 Apr 2019 04:29:02 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:35671 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfDWI3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:28:55 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cbeccad0001>; Tue, 23 Apr 2019 01:28:29 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Apr 2019 01:28:54 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Apr 2019 01:28:54 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Apr
- 2019 08:28:54 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 23 Apr 2019 08:28:53 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cbeccc00004>; Tue, 23 Apr 2019 01:28:53 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V4 11/16] dt-bindings: PHY: P2U: Add Tegra 194 P2U block
-Date:   Tue, 23 Apr 2019 13:57:25 +0530
-Message-ID: <20190423082730.370-12-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190423082730.370-1-vidyas@nvidia.com>
-References: <20190423082730.370-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 23 Apr 2019 04:29:00 -0400
+Received: by mail-it1-f194.google.com with SMTP id w15so22420608itc.0;
+        Tue, 23 Apr 2019 01:29:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gNYp5B3WW49wZuSSd+AU4UVnQVS79h4V7MG01aCk1c4=;
+        b=BuBIkpxDnqhVJQGHtHsevkVcisx8RJSEdl3bpUqmj9luxaikK6hvXmmbttnMEWmrZ/
+         BW2x7ne3jfVbZgtzkn1N3GIVELGJ/3XB1nWojR+h3w7D8wrVzDrkSZ1zwoT/s36CFxo+
+         RhIWH2MHdf2bwXXp31WRrE8fbiQ4I2HrjvSQMpxxA4RaqC4vn9/wpxRdtzekIdz/zGup
+         UP7i09Pt/cUBlcecq3NkxTYi1qkC+M5XY89dac/u6qcm1DGgt1kbBPbCAIqElT6/BTnU
+         HnZBAN4PHEaqKjWHh7v9PJA1N1fcAR9BHSf0OsBRtkF46+MdV3dZzxnadWZS7O1S3gXr
+         VusA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gNYp5B3WW49wZuSSd+AU4UVnQVS79h4V7MG01aCk1c4=;
+        b=dZNRwpb++/FTy3Kby+rnfqgRJ1MIXAaD+WCalN1opBzMrLsDS3Er7JhEvmOM9bwYic
+         jKRNUjnLEa34vG0Qq3U0gks5/eqIuF4TfEUr5QRagmaDqWGaqb8twvOIYsXsp6ZUcR+5
+         M/1Bk6rAT+t8YRI1gPvinudjZ/1Ah16745Cql1hNDCZUmFyNnUjI66yT7bVIw8uITh+U
+         7OZmyB0///gr1W1bMZlLaKqbD/GQX1Gn97hGE58we22MoweOMzJD+faryVXgNW0yIFPt
+         yWsq2dFBdvX/eyHEXrCm9KYQ8G2+RV8aUKS1UFfAaME0uqL0P6lT08iDx+D6PO5iU6ar
+         OMGg==
+X-Gm-Message-State: APjAAAWZfTQL8FJJId+rcUSY9KBLg8YwN6YxCQnvu9IYwtp+7l9hBHti
+        uwHSWZvPB21TGBKrVCKhflC4tfmAQwU3Kw4zFnU=
+X-Google-Smtp-Source: APXvYqzLDCMUCv6ZvlQ0I9CVUZt9W66tc9GWIZDk1Mun3mpum1TYnPYBmKPnhwPaaahn0GMdUcIHk6lNrNJ60EsoHH4=
+X-Received: by 2002:a02:c4cf:: with SMTP id h15mr16634119jaj.96.1556008139688;
+ Tue, 23 Apr 2019 01:28:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556008110; bh=e4y3GVwYyoc5tTHi1u0vhFYjXSAjhOmxVmDxHjTavBk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=J4QWw+fV0RvnybZU6GbmU1AMWq1RkubFo89y3LcGoDtoNnxn2ywPZMcRwjQtxPtxl
-         GwGPzUJQOK7LicSAoj3Nv961zzlqqxpdt2VOiaA6CWGjpNuVhRjf99+frOwwXoCd4z
-         83RAej1WJUgA449HBWHDPVHHh/lSh19FuFGxw9TthidoCC/BRGbzXRhbVqi0Ed1evR
-         wpNfCqikiSSbYDbaO7pvFPte6ejYz5r6D95Kx1tOjeVA7RssiyQwD9mAPIkQVa3/8I
-         6qPHFlUc/XpMjZo+9aK9sBA5HOJ1mjOCukvg3ZCoJW+jutDAL6RollZyTGMv6dagWq
-         4rFlPS7vB3FpA==
+References: <20190422194205.10404-1-sashal@kernel.org> <20190422194205.10404-61-sashal@kernel.org>
+In-Reply-To: <20190422194205.10404-61-sashal@kernel.org>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Tue, 23 Apr 2019 10:28:56 +0200
+Message-ID: <CAOi1vP8Q=bH9uXVi=35PKpE0T=MNpRViaBJWPMYfD6_pfC8xRw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.0 61/98] libceph: fix breakage caused by
+ multipage bvecs
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Tegra194 P2U (PIPE to UPHY) module block which is a glue
-module instantiated one for each PCIe lane between Synopsys Designware core
-based PCIe IP and Universal PHY block.
----
-Changes since [v3]:
-* None
+On Mon, Apr 22, 2019 at 9:44 PM Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Ilya Dryomov <idryomov@gmail.com>
+>
+> [ Upstream commit 187df76325af5d9e12ae9daec1510307797e54f0 ]
+>
+> A bvec can now consist of multiple physically contiguous pages.
+> This means that bvec_iter_advance() can move to a different page while
+> staying in the same bvec (i.e. ->bi_bvec_done != 0).
+>
+> The messenger works in terms of segments which can now be defined as
+> the smaller of a bvec and a page.  The "more bytes to process in this
+> segment" condition holds only if bvec_iter_advance() leaves us in the
+> same bvec _and_ in the same page.  On next bvec (possibly in the same
+> page) and on next page (possibly in the same bvec) we may need to set
+> ->last_piece.
+>
+> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+> ---
+>  net/ceph/messenger.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
+> index 7e71b0df1fbc..3083988ce729 100644
+> --- a/net/ceph/messenger.c
+> +++ b/net/ceph/messenger.c
+> @@ -840,6 +840,7 @@ static bool ceph_msg_data_bio_advance(struct ceph_msg_data_cursor *cursor,
+>                                         size_t bytes)
+>  {
+>         struct ceph_bio_iter *it = &cursor->bio_iter;
+> +       struct page *page = bio_iter_page(it->bio, it->iter);
+>
+>         BUG_ON(bytes > cursor->resid);
+>         BUG_ON(bytes > bio_iter_len(it->bio, it->iter));
+> @@ -851,7 +852,8 @@ static bool ceph_msg_data_bio_advance(struct ceph_msg_data_cursor *cursor,
+>                 return false;   /* no more data */
+>         }
+>
+> -       if (!bytes || (it->iter.bi_size && it->iter.bi_bvec_done))
+> +       if (!bytes || (it->iter.bi_size && it->iter.bi_bvec_done &&
+> +                      page == bio_iter_page(it->bio, it->iter)))
+>                 return false;   /* more bytes to process in this segment */
+>
+>         if (!it->iter.bi_size) {
+> @@ -899,6 +901,7 @@ static bool ceph_msg_data_bvecs_advance(struct ceph_msg_data_cursor *cursor,
+>                                         size_t bytes)
+>  {
+>         struct bio_vec *bvecs = cursor->data->bvec_pos.bvecs;
+> +       struct page *page = bvec_iter_page(bvecs, cursor->bvec_iter);
+>
+>         BUG_ON(bytes > cursor->resid);
+>         BUG_ON(bytes > bvec_iter_len(bvecs, cursor->bvec_iter));
+> @@ -910,7 +913,8 @@ static bool ceph_msg_data_bvecs_advance(struct ceph_msg_data_cursor *cursor,
+>                 return false;   /* no more data */
+>         }
+>
+> -       if (!bytes || cursor->bvec_iter.bi_bvec_done)
+> +       if (!bytes || (cursor->bvec_iter.bi_bvec_done &&
+> +                      page == bvec_iter_page(bvecs, cursor->bvec_iter)))
+>                 return false;   /* more bytes to process in this segment */
+>
+>         BUG_ON(cursor->last_piece);
 
-Changes since [v2]:
-* Changed node label to reflect new format that includes either 'hsio' or
-  'nvhs' in its name to reflect which UPHY brick they belong to
+Same here, shouldn't be needed.
 
-Changes since [v1]:
-* This is a new patch in v2 series
+Thanks,
 
- .../bindings/phy/phy-tegra194-p2u.txt         | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-new file mode 100644
-index 000000000000..8b543cba483b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-tegra194-p2u.txt
-@@ -0,0 +1,28 @@
-+NVIDIA Tegra194 P2U binding
-+
-+Tegra194 has two PHY bricks namely HSIO (High Speed IO) and NVHS (NVIDIA High
-+Speed) each interfacing with 12 and 8 P2U instances respectively.
-+A P2U instance is a glue logic between Synopsys DesignWare Core PCIe IP's PIPE
-+interface and PHY of HSIO/NVHS bricks. Each P2U instance represents one PCIe
-+lane.
-+
-+Required properties:
-+- compatible: For Tegra19x, must contain "nvidia,tegra194-p2u".
-+- reg: Should be the physical address space and length of respective each P2U
-+       instance.
-+- reg-names: Must include the entry "ctl".
-+
-+Required properties for PHY port node:
-+- #phy-cells: Defined by generic PHY bindings.  Must be 0.
-+
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties.
-+
-+Example:
-+
-+p2u_hsio_0: p2u@3e10000 {
-+	compatible = "nvidia,tegra194-p2u";
-+	reg = <0x03e10000 0x10000>;
-+	reg-names = "ctl";
-+
-+	#phy-cells = <0>;
-+};
--- 
-2.17.1
-
+                Ilya
