@@ -2,117 +2,106 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E365AC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC5DC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D7A218B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556046461;
-	bh=9GSdW1aq+r9nV1/Bl6Pg8a6JY989aBpJAknNyTYBqWU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HxvSbGYmaS4rE1Cjbfq3JnurTBql4HAHQIPAK0wrk6JVxouzwujPOkzkXyloWWwrb
-	 n81wF+ePAgKANnoli1lkrGBGKAXS+V+nTshTdYjfEPmM6+60veO9BG0SFMJxO5d8ZM
-	 w4OSObMgPiEArsM4hDTmL57pjvijb/IiNqGlSaXs=
+	by mail.kernel.org (Postfix) with ESMTP id AA15E218B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:12:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfDWTHk (ORCPT
+        id S1726336AbfDWTMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 15:07:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
+        Tue, 23 Apr 2019 15:12:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60590 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfDWTHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 15:07:40 -0400
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725957AbfDWTMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 15:12:24 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32FDE218DA
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 19:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556046459;
-        bh=9GSdW1aq+r9nV1/Bl6Pg8a6JY989aBpJAknNyTYBqWU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tE8EDMvHYUZdISI2w7FGpF/jSAL/HeobSnoquVCzOrUVjswzg9Awgrk1G5e6HJfKh
-         D38PlZAo5bubEBtS7r0JqfnbpEm0KKC+t8JJxprba6+iU7b7wInB+aTsVdeQDt/OWy
-         ojIsREI7tc6k86ypF0gvGwKIHlBp4QVJ8BnLCfKU=
-Received: by mail-wr1-f42.google.com with SMTP id c12so15461428wrt.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 12:07:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAVFPXF4OIdOHkExtHWfL2Q28eBHa4wKGQRaXkJTXO/j25OKjcAu
-        nHQOkqGxBdM/5EdBOgHHgYxsdTW2RTx96KLC6a8yMQ==
-X-Google-Smtp-Source: APXvYqwbjAAuv9MqdQbukmfVqGACv2C4RdBg4SyS/qRMXdaLvf0h2YAOufody3VVB6sBsgJRHOJRN0uX17QpVKBQXKE=
-X-Received: by 2002:adf:ed82:: with SMTP id c2mr17544533wro.176.1556046457760;
- Tue, 23 Apr 2019 12:07:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <cover.1555965327.git.cedric.xing@intel.com> <f82e81c9cae31634684964d3fc4e9637e7565c69.1555965327.git.cedric.xing@intel.com>
- <CALCETrWpMxoX00SfnCgYdNbT5JmnzHNJ+73NmUjebBEjk7DuJA@mail.gmail.com> <20190423185937.GD10720@linux.intel.com>
-In-Reply-To: <20190423185937.GD10720@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 23 Apr 2019 12:07:26 -0700
-X-Gmail-Original-Message-ID: <CALCETrWcJw7+tSni3zp4kO=r6gVGkVDnc2477fPg0ErUzvJAKg@mail.gmail.com>
-Message-ID: <CALCETrWcJw7+tSni3zp4kO=r6gVGkVDnc2477fPg0ErUzvJAKg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 3/3] selftests/x86: Augment SGX selftest to test
- new __vdso_sgx_enter_enclave() and its callback interface
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Cedric Xing <cedric.xing@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave <dave.hansen@intel.com>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge <serge.ayoun@intel.com>,
-        Shay <shay.katz-zamir@intel.com>,
-        Haitao <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        by mx1.redhat.com (Postfix) with ESMTPS id CE13EC02E60C;
+        Tue, 23 Apr 2019 19:12:23 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-123-167.rdu2.redhat.com [10.10.123.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 836355D705;
+        Tue, 23 Apr 2019 19:12:22 +0000 (UTC)
+Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
+ negative
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Kai <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai <kai.huang@intel.com>, David Rientjes <rientjes@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190418135151.GB12232@hirez.programming.kicks-ass.net>
+ <d931916b-41f5-f12d-8c38-0cccbc00a301@redhat.com>
+ <20190418144036.GE12232@hirez.programming.kicks-ass.net>
+ <4cbd3c18-c9c0-56eb-4e01-ee355a69057a@redhat.com>
+ <20190419102647.GP7905@worktop.programming.kicks-ass.net>
+ <20190419120207.GO4038@hirez.programming.kicks-ass.net>
+ <20190419130304.GV14281@hirez.programming.kicks-ass.net>
+ <20190419131522.GW14281@hirez.programming.kicks-ass.net>
+ <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
+ <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
+ <20190423141714.GO11158@hirez.programming.kicks-ass.net>
+ <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
+Date:   Tue, 23 Apr 2019 15:12:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 23 Apr 2019 19:12:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 11:59 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On 4/23/19 12:27 PM, Linus Torvalds wrote:
+> On Tue, Apr 23, 2019 at 7:17 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>> I'm not aware of an architecture where disabling interrupts is faster
+>> than disabling preemption.
+> I don't thin kit ever is, but I'd worry a bit about the
+> preempt_enable() just because it also checks if need_resched() is true
+> when re-enabling preemption.
 >
-> On Mon, Apr 22, 2019 at 06:29:06PM -0700, Andy Lutomirski wrote:
-> > What's not tested here is running this code with EFLAGS.TF set and
-> > making sure that it unwinds correctly.  Also, Jarkko, unless I missed
-> > something, the vDSO extable code likely has a bug.  If you run the
-> > instruction right before ENCLU with EFLAGS.TF set, then do_debug()
-> > will eat the SIGTRAP and skip to the exception handler.  Similarly, if
-> > you put an instruction breakpoint on ENCLU, it'll get skipped.  Or is
-> > the code actually correct and am I just remembering wrong?
->
-> The code is indeed broken, and I don't see a sane way to make it not
-> broken other than to never do vDSO fixup on #DB or #BP.  But that's
-> probably the right thing to do anyways since an attached debugger is
-> likely the intended recipient the 99.9999999% of the time.
->
-> The crux of the matter is that it's impossible to identify whether or
-> not a #DB/#BP originated from within an enclave, e.g. an INT3 in an
-> enclave will look identical to an INT3 at the AEP.  Even if hardware
-> provided a magic flag, #DB still has scenarios where the intended
-> recipient is ambiguous, e.g. data breakpoint encountered in the enclave
-> but on an address outside of the enclave, breakpoint encountered in the
-> enclave and a code breakpoint on the AEP, etc...
+> So doing preempt_enable() as part of rwsem_read_trylock() might cause
+> us to schedule in *exactly* the wrong place,
 
-Ugh.  It sounds like ignoring the fixup for #DB is the right call.
-But what happens if the enclave contains an INT3 or ICEBP instruction?
- Are they magically promoted to #GP, perhaps?
+You are right on that. However, there is a variant called
+preempt_enable_no_resched() that doesn't have this side effect. So I am
+going to use that one instead.
 
-As a maybe possible alternative, if we made it so that the AEX address
-was not the same as the ENCLU, could we usefully distinguish these
-exceptions based on RIP?  I suppose it's also worth considering
-whether page faults from *inside* the enclave should result in SIGSEGV
-or result in a fixup.  We certainly want page faults from the ENCLU
-instruction itself to get fixed up, but maybe we want most exceptions
-inside the enclave to work a bit differently.  Of course, if we do
-this, we need to make sure that the semantics of returning from the
-signal handler are reasonable.
+> So if we play preemption games, I wonder if we should make them more
+> explicit than hiding them in that helper function, because
+> particularly for the slow path case, I think we'd be much better off
+> just avoiding the busy-loop in the slow path, rather than first
+> scheduling due to preempt_enable(), and then starting to look at the
+> slow path onlly afterwards.
+>
+> IOW, I get the feeling that the preemption-off area might be better
+> off being potentially much bigger, and covering the whole (or a large
+> portion) of the semaphore operation, rather than just the
+> rwsem_read_trylock() fastpath.
+>
+> Hmm?
+
+That is true in general, but doing preempt_disable/enable across
+function boundary is ugly and prone to further problems down the road.
+
+Cheers,
+Longman
+
+>                    Linus
+
+
