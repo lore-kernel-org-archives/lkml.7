@@ -2,146 +2,162 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6156FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDC2C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC56204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483702175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:36:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nsk0p8eC"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="wD4juUgj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfDWMgH (ORCPT
+        id S1727765AbfDWMgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:36:07 -0400
-Received: from mail.efficios.com ([167.114.142.138]:34380 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727714AbfDWMgG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:36:06 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 112C01C9998;
-        Tue, 23 Apr 2019 08:36:05 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id Z4M3JnKGR1fK; Tue, 23 Apr 2019 08:36:04 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 9834F1C998F;
-        Tue, 23 Apr 2019 08:36:04 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9834F1C998F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556022964;
-        bh=Rd3LlGUDLK2cfU5tWtD/3qliE684QQbij918SVFZswo=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=nsk0p8eCRSuUi0FaW7gKVcoTOaro+6FUi8FLrzTHKs+6Siss0rOcJPa4OOW6LF1uF
-         fV5QChqnaCg+PlUkcJ3z3CFTcnnPhD95TJwqkrYBjY+Yat2rsD0tEn0wtqbrW3/3pf
-         acRkdpkBkyDDVUoN+FdsniSHa/5U5WPb0C2X5A65StdZQd1tz8cRaCd4/VkxfGolUp
-         ifbMg9Fa30OsLmRVH0Hs4h/WYSYWHmN5NEsVu1jfQ/r5EL5xWerCTjkY/bXcHwfa7j
-         teNWavL/rTc/5qQSGaWBd3VokqCmW94ecANa96FeIR+zexKFehMDN+YmA6gCU3D8Ma
-         rwQU+wW2FjpIA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 71RnF6UDVH3z; Tue, 23 Apr 2019 08:36:04 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 6FF371C9988;
-        Tue, 23 Apr 2019 08:36:04 -0400 (EDT)
-Date:   Tue, 23 Apr 2019 08:36:04 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Ramana Radhakrishnan <ramana.gcc@googlemail.com>
-Cc:     Szabolcs Nagy <Szabolcs.Nagy@arm.com>, nd <nd@arm.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Will Deacon <Will.Deacon@arm.com>, carlos <carlos@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <515545056.862.1556022964232.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAJA7tRZDKHxLDzuggSmNngfxSTD31EX3mv6YQpcnNXrOtF=9qQ@mail.gmail.com>
-References: <20190416173216.9028-1-mathieu.desnoyers@efficios.com> <1055153722.1072.1555602067220.JavaMail.zimbra@efficios.com> <79996d13-2ba2-ed7d-b202-e7d38f1fd870@arm.com> <604915684.1299.1555607449814.JavaMail.zimbra@efficios.com> <846db7ef-f75e-53b8-3c4c-461ec730a17e@arm.com> <1531569198.1389.1555611422188.JavaMail.zimbra@efficios.com> <a1bd2595-b7ae-b06b-9c71-802901ed8587@arm.com> <CAJA7tRZDKHxLDzuggSmNngfxSTD31EX3mv6YQpcnNXrOtF=9qQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
- and thread creation (v8)
+        Tue, 23 Apr 2019 08:36:11 -0400
+Received: from mail-eopbgr720083.outbound.protection.outlook.com ([40.107.72.83]:24032
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727714AbfDWMgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 08:36:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B6dYOrpM1KCsXTylNQuXvoR/aO0DmUmTP/2rD+p34w4=;
+ b=wD4juUgjhjkYSHccE8mOxZfTQBEfYCiilGDLhG0BEvD5Km5yc6mzdNcx1O2E0e9web9a2D8+O7hVthmKAgAVMM0TMmYM+5WgyZngvt1uNzCs/B9OEjrvGpgUBlMDd2Lq2E9XhWbE/uRtLnBVjwumZFyDkRKAlAc9vJGYm6lSM7Q=
+Received: from DM5PR12MB1546.namprd12.prod.outlook.com (10.172.36.23) by
+ DM5PR12MB1548.namprd12.prod.outlook.com (10.172.37.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Tue, 23 Apr 2019 12:36:04 +0000
+Received: from DM5PR12MB1546.namprd12.prod.outlook.com
+ ([fe80::70fc:f26c:1e22:73ba]) by DM5PR12MB1546.namprd12.prod.outlook.com
+ ([fe80::70fc:f26c:1e22:73ba%10]) with mapi id 15.20.1813.017; Tue, 23 Apr
+ 2019 12:36:04 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     Serge Semin <fancer.lancer@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Huang, Ray" <Ray.Huang@amd.com>,
+        "Zhang, Jerry" <Jerry.Zhang@amd.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>
+Subject: Re: [PATCH] drm: Permit video-buffers writecombine mapping for MIPS
+Thread-Topic: [PATCH] drm: Permit video-buffers writecombine mapping for MIPS
+Thread-Index: AQHU+dChEKiJLSyrBEq8lIyweClEMKZJro0A
+Date:   Tue, 23 Apr 2019 12:36:04 +0000
+Message-ID: <bc89382c-a2cc-c17a-8bc6-54685f1ce726@amd.com>
+References: <20190423123122.32573-1-fancer.lancer@gmail.com>
+In-Reply-To: <20190423123122.32573-1-fancer.lancer@gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: AM6PR0202CA0019.eurprd02.prod.outlook.com
+ (2603:10a6:209:15::32) To DM5PR12MB1546.namprd12.prod.outlook.com
+ (2603:10b6:4:8::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ad036752-cae8-4c6e-e64d-08d6c7e83fd4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1548;
+x-ms-traffictypediagnostic: DM5PR12MB1548:
+x-microsoft-antispam-prvs: <DM5PR12MB1548302E77DDE74B009A785C83230@DM5PR12MB1548.namprd12.prod.outlook.com>
+x-forefront-prvs: 0016DEFF96
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(396003)(136003)(346002)(376002)(199004)(189003)(6246003)(5660300002)(31686004)(68736007)(66574012)(6512007)(110136005)(58126008)(52116002)(46003)(2906002)(76176011)(386003)(486006)(476003)(2616005)(11346002)(446003)(478600001)(186003)(72206003)(102836004)(6506007)(6636002)(53936002)(54906003)(14454004)(8936002)(36756003)(31696002)(8676002)(229853002)(81156014)(6116002)(7736002)(64126003)(316002)(305945005)(86362001)(81166006)(97736004)(14444005)(99286004)(71200400001)(71190400001)(4326008)(25786009)(6486002)(7416002)(65806001)(6436002)(73956011)(256004)(66946007)(65826007)(65956001)(66446008)(66556008)(64756008)(66476007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1548;H:DM5PR12MB1546.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: kK3RYLCrf213vmj1Yt9b4DHZiFVEyw/ShJAkZ0KlQxSQTN0fv52m0W8ahFt5zYb9xxulBil7mJNacwdFtwT6XhcQQSqbu+xZhmy4ssReTwNn7yD5I4VN5NEmj873hv0RTx8rkp0DgA1seowj7aoJauW12UNzrvqUxPI/tjvIph2sMn48leSfwWis0EBhbaVw/HFpWbRk/iPiYyYlAUWJ2fIfmELrjGMCx4pwMX/uohJuVrdpS4mCRmrZPnEUaJF5/+s1iKD8ruB3TuayatXxcGASuFu1Z+OrcOc9L46j9XEPjLCiQdXrV+lzPan5Qk2TxmKUgJuAiHMFBAVMwe0XxhjgMw6ORYphOUUw9CK1Aq42OoWDLbWZwsyRtD8S+n9sTIHNETZCtyD+jsf/VPzmRgnXnOU15RX0Oi4/YY7jBhI=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <03BD4A253FAA65449EA1059CEDCE9597@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v8)
-Thread-Index: ZJbxDlW454V9nz8S8m/nN+sz8LluGw==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad036752-cae8-4c6e-e64d-08d6c7e83fd4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 12:36:04.0974
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1548
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 23, 2019, at 7:59 AM, Ramana Radhakrishnan ramana.gcc@googlemail.com wrote:
-
-> On Tue, Apr 23, 2019 at 12:16 PM Szabolcs Nagy <Szabolcs.Nagy@arm.com> wrote:
->>
->> On 18/04/2019 19:17, Mathieu Desnoyers wrote:
->> > ----- On Apr 18, 2019, at 1:37 PM, Szabolcs Nagy Szabolcs.Nagy@arm.com wrote:
->> >> you have to add a documentation comment somewhere
->> >> explaining if RSEQ_SIG is the value that's passed to
->> >> the kernel and then aarch64 asm code has to use
->> >>
->> >> .inst endianfixup(RSEQ_SIG) // or
->> >> .word RSEQ_SIG
->> >
->> > Using ".word" won't allow objdump to show the instruction it
->> > maps to. It will consider it as data. So .inst is preferred here.
->>
->> is there some specific reason you prefer .inst?
-> 
-> I believe the reasoning here is that in the disassembly you want to
-> see an instruction pattern for an architecture rather than a magic bit
-> pattern that appears to be an "inline" literal pool entry.  I would
-> support the .inst variant so that the disassembler shows the
-> instruction for what it is when debugging. If control reaches the
-> marker instruction, something's gone wrong and thus from a user
-> friendliness perspective I would prefer to see an instruction that
-> clearly indicates that it's undefined .inst directive so that someone
-> disassembling this in an assembly view in GDB sees the right thing
-> (TM) instead of having to reach for the manual and disassembling this
-> by hand.
-
-That's my line of thinking exactly. I might add that having data in a
-literal pool within the instruction stream might be unexpected in some
-compilation environments, e.g. when compiling with -mno-text-section-literals .
-
-So even though the signature may likely end up being placed in a literal
-pool, it's preferable to ensure it is a valid uncommon trap instruction.
-
-Thanks,
-
-Mathieu
-
-> 
->>
->> disassembling a canary value as data (that is
->> never executed, but loaded and compared by the
->> kernel as data) sounds more semantically correct
->> to me than showing it as an instruction.
->>
-> 
-> 
-> 
-> Ramana
-> 
-> 
->> i guess having it as an instruction can avoid
->> issues if some tools dislike .word in .text,
-> > but otherwise .word seems better.
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+QW0gMjMuMDQuMTkgdW0gMTQ6MzEgc2NocmllYiBTZXJnZSBTZW1pbjoNCj4gU2luY2UgY29tbWl0
+IDRiMDUwYmE3YTY2YyAoIk1JUFM6IHBndGFibGUuaDogSW1wbGVtZW50IHRoZQ0KPiBwZ3Byb3Rf
+d3JpdGVjb21iaW5lIGZ1bmN0aW9uIGZvciBNSVBTIikgYW5kIGNvbW1pdCBjNDY4N2IxNWE4NDgg
+KCJNSVBTOiBGaXgNCj4gZGVmaW5pdGlvbiBvZiBwZ3Byb3Rfd3JpdGVjb21iaW5lKCkiKSB3cml0
+ZS1jb21iaW5lIHZtYSBtYXBwaW5nIGlzDQo+IGF2YWlsYWJsZSB0byBiZSB1c2VkIGJ5IGtlcm5l
+bCBzdWJzeXN0ZW1zIGZvciBNSVBTLiBJbiBwYXJ0aWN1bGFyIHRoZQ0KPiB1bmNhY2hlZCBhY2Nl
+bGVyYXRlZCBhdHRyaWJ1dGUgaXMgcmVxdWVzdGVkIHRvIGJlIHNldCBieSBpb3JlbWFwX3djKCkN
+Cj4gbWV0aG9kIGFuZCBieSBnZW5lcmljIFBDSSBtZW1vcnkgcGFnZXMvcmFuZ2VzIG1hcHBpbmcg
+bWV0aG9kcy4gVGhlIHNhbWUNCj4gaXMgZG9uZSBieSB0aGUgZHJtX2lvX3Byb3QoKS90dG1faW9f
+cHJvdCgpIGZ1bmN0aW9ucyBpbiBjYXNlIGlmDQo+IHdyaXRlLWNvbWJpbmUgZmxhZyBpcyBzZXQg
+Zm9yIHZtYSdzIHBhc3NlZCBmb3IgbWFwcGluZy4gQnV0IGZvciBzb21lDQo+IHJlYXNvbiB0aGUg
+cGdwcm90X3dyaXRlY29tYmluZSgpIG1ldGhvZCBjYWxsaW5nIGlzIGlmZGVmZWQgdG8gYmUgYQ0K
+PiBwbGF0Zm9ybS1zcGVjaWZpYyB3aXRoIE1JUFMgc3lzdGVtIGJlaW5nIG1hcmtlZCBhcyBsYWNr
+aW5nIG9mIG9uZS4gQXQgdGhlDQo+IHZlcnkgbGVhc3QgaXQgZG9lc24ndCByZWZsZWN0IHRoZSBj
+dXJyZW50IE1JUFMgcGxhdGZvcm0gaW1wbGVtZW50YXRpb24uDQo+IFNvIGluIG9yZGVyIHRvIGlt
+cHJvdmUgdGhlIERSTSBzdWJzeXN0ZW0gcGVyZm9ybWFuY2Ugb24gTUlQUyB3aXRoIFVDQQ0KPiBt
+YXBwaW5nIGVuYWJsZWQsIHdlIG5lZWQgdG8gaGF2ZSBwZ3Byb3Rfd3JpdGVjb21iaW5lKCkgY2Fs
+bGVkIGZvciBidWZmZXJzLA0KPiB3aGljaCBuZWVkIHN0b3JlIG9wZXJhdGlvbnMgYmVpbmcgY29t
+YmluZWQuIEluIGNhc2UgaWYgcGFydGljdWxhciBNSVBTDQo+IGNoaXAgZG9lc24ndCBzdXBwb3J0
+IHRoZSBVQ0EgYXR0cmlidXRlLCB0aGUgbWFwcGluZyB3aWxsIGZhbGwgYmFjayB0bw0KPiBub25j
+YWNoZWQuDQo+DQo+IENjOiBSYWxmIEJhZWNobGUgPHJhbGZAbGludXgtbWlwcy5vcmc+DQo+IENj
+OiBQYXVsIEJ1cnRvbiA8cGF1bC5idXJ0b25AbWlwcy5jb20+DQo+IENjOiBKYW1lcyBIb2dhbiA8
+amhvZ2FuQGtlcm5lbC5vcmc+DQo+IFNpZ25lZC1vZmYtYnk6IFZhZGltIFYuIFZsYXNvdiA8dmFk
+aW0udmxhc292QHQtcGxhdGZvcm1zLnJ1Pg0KPiBTaWduZWQtb2ZmLWJ5OiBTZXJnZSBTZW1pbiA8
+ZmFuY2VyLmxhbmNlckBnbWFpbC5jb20+DQoNCk5vdCBzdXJlIGFib3V0IGFsbCB0aGUgZGV0YWls
+cywgYnV0IGF0IGxlYXN0IGZyb20gdGhlIHR3byBtaWxlIGhpZ2ggdmlldyANCnRoYXQgc2VlbXMg
+dG8gbWFrZSBzZW5zZS4NCg0KQWNrZWQtYnk6IENocmlzdGlhbiBLw7ZuaWcgPGNocmlzdGlhbi5r
+b2VuaWdAYW1kLmNvbT4NCg0KPiAtLS0NCj4gICBkcml2ZXJzL2dwdS9kcm0vZHJtX3ZtLmMgICAg
+ICAgICAgfCA1ICsrKy0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL3R0bS90dG1fYm9fdXRpbC5jIHwg
+NCArKy0tDQo+ICAgMiBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25z
+KC0pDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJtX3ZtLmMgYi9kcml2ZXJz
+L2dwdS9kcm0vZHJtX3ZtLmMNCj4gaW5kZXggYzMzMDEwNDZkZmFhLi41MDE3OGRjNjQwNjAgMTAw
+NjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fdm0uYw0KPiArKysgYi9kcml2ZXJzL2dw
+dS9kcm0vZHJtX3ZtLmMNCj4gQEAgLTYyLDcgKzYyLDggQEAgc3RhdGljIHBncHJvdF90IGRybV9p
+b19wcm90KHN0cnVjdCBkcm1fbG9jYWxfbWFwICptYXAsDQo+ICAgCS8qIFdlIGRvbid0IHdhbnQg
+Z3JhcGhpY3MgbWVtb3J5IHRvIGJlIG1hcHBlZCBlbmNyeXB0ZWQgKi8NCj4gICAJdG1wID0gcGdw
+cm90X2RlY3J5cHRlZCh0bXApOw0KPiAgIA0KPiAtI2lmIGRlZmluZWQoX19pMzg2X18pIHx8IGRl
+ZmluZWQoX194ODZfNjRfXykgfHwgZGVmaW5lZChfX3Bvd2VycGNfXykNCj4gKyNpZiBkZWZpbmVk
+KF9faTM4Nl9fKSB8fCBkZWZpbmVkKF9feDg2XzY0X18pIHx8IGRlZmluZWQoX19wb3dlcnBjX18p
+IHx8IFwNCj4gKyAgICBkZWZpbmVkKF9fbWlwc19fKQ0KPiAgIAlpZiAobWFwLT50eXBlID09IF9E
+Uk1fUkVHSVNURVJTICYmICEobWFwLT5mbGFncyAmIF9EUk1fV1JJVEVfQ09NQklOSU5HKSkNCj4g
+ICAJCXRtcCA9IHBncHJvdF9ub25jYWNoZWQodG1wKTsNCj4gICAJZWxzZQ0KPiBAQCAtNzMsNyAr
+NzQsNyBAQCBzdGF0aWMgcGdwcm90X3QgZHJtX2lvX3Byb3Qoc3RydWN0IGRybV9sb2NhbF9tYXAg
+Km1hcCwNCj4gICAJCXRtcCA9IHBncHJvdF93cml0ZWNvbWJpbmUodG1wKTsNCj4gICAJZWxzZQ0K
+PiAgIAkJdG1wID0gcGdwcm90X25vbmNhY2hlZCh0bXApOw0KPiAtI2VsaWYgZGVmaW5lZChfX3Nw
+YXJjX18pIHx8IGRlZmluZWQoX19hcm1fXykgfHwgZGVmaW5lZChfX21pcHNfXykNCj4gKyNlbGlm
+IGRlZmluZWQoX19zcGFyY19fKSB8fCBkZWZpbmVkKF9fYXJtX18pDQo+ICAgCXRtcCA9IHBncHJv
+dF9ub25jYWNoZWQodG1wKTsNCj4gICAjZW5kaWYNCj4gICAJcmV0dXJuIHRtcDsNCj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX2JvX3V0aWwuYyBiL2RyaXZlcnMvZ3B1L2Ry
+bS90dG0vdHRtX2JvX3V0aWwuYw0KPiBpbmRleCA4OTVkNzdkNzk5ZTQuLjlmOTE4Yjk5MmY3ZSAx
+MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3R0bS90dG1fYm9fdXRpbC5jDQo+ICsrKyBi
+L2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX2JvX3V0aWwuYw0KPiBAQCAtNTM5LDEzICs1MzksMTMg
+QEAgcGdwcm90X3QgdHRtX2lvX3Byb3QodWludDMyX3QgY2FjaGluZ19mbGFncywgcGdwcm90X3Qg
+dG1wKQ0KPiAgIAkJdG1wID0gcGdwcm90X25vbmNhY2hlZCh0bXApOw0KPiAgICNlbmRpZg0KPiAg
+ICNpZiBkZWZpbmVkKF9faWE2NF9fKSB8fCBkZWZpbmVkKF9fYXJtX18pIHx8IGRlZmluZWQoX19h
+YXJjaDY0X18pIHx8IFwNCj4gLSAgICBkZWZpbmVkKF9fcG93ZXJwY19fKQ0KPiArICAgIGRlZmlu
+ZWQoX19wb3dlcnBjX18pIHx8IGRlZmluZWQoX19taXBzX18pDQo+ICAgCWlmIChjYWNoaW5nX2Zs
+YWdzICYgVFRNX1BMX0ZMQUdfV0MpDQo+ICAgCQl0bXAgPSBwZ3Byb3Rfd3JpdGVjb21iaW5lKHRt
+cCk7DQo+ICAgCWVsc2UNCj4gICAJCXRtcCA9IHBncHJvdF9ub25jYWNoZWQodG1wKTsNCj4gICAj
+ZW5kaWYNCj4gLSNpZiBkZWZpbmVkKF9fc3BhcmNfXykgfHwgZGVmaW5lZChfX21pcHNfXykNCj4g
+KyNpZiBkZWZpbmVkKF9fc3BhcmNfXykNCj4gICAJdG1wID0gcGdwcm90X25vbmNhY2hlZCh0bXAp
+Ow0KPiAgICNlbmRpZg0KPiAgIAlyZXR1cm4gdG1wOw0KDQo=
