@@ -2,77 +2,84 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC47C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7C8C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 624BC20645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB08A20645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 07:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfDWHmG (ORCPT
+        id S1727179AbfDWHmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 03:42:06 -0400
-Received: from mga14.intel.com ([192.55.52.115]:23988 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbfDWHmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 03:42:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 00:42:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,385,1549958400"; 
-   d="scan'208";a="339939624"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Apr 2019 00:42:00 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v3 08/10] iommu/vt-d: Check whether device requires bounce
- buffer
-To:     Christoph Hellwig <hch@lst.de>
-References: <20190421011719.14909-1-baolu.lu@linux.intel.com>
- <20190421011719.14909-9-baolu.lu@linux.intel.com>
- <20190422164755.GC31181@lst.de>
- <76e35340-32c3-ee0d-5232-bd8800248402@linux.intel.com>
- <20190423060858.GA12762@lst.de>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <e11489cf-87cc-a956-7c6c-ffdd26a4e3ec@linux.intel.com>
-Date:   Tue, 23 Apr 2019 15:35:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 03:42:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7216 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726378AbfDWHkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 03:40:21 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 39F63720BF1FCC7CC467;
+        Tue, 23 Apr 2019 15:40:17 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 23 Apr 2019 15:40:08 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        <linux-input@vger.kernel.org>
+Subject: [PATCH next 11/25] input: mouse: Use dev_get_drvdata()
+Date:   Tue, 23 Apr 2019 15:50:06 +0800
+Message-ID: <20190423075020.173734-12-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
+References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190423060858.GA12762@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Using dev_get_drvdata directly.
 
-On 4/23/19 2:08 PM, Christoph Hellwig wrote:
->>> Again, this and the option should not be in a specific iommu driver.
->>>
->>
->> The option of whether bounce is ignored should be in the specific iommu
->> driver.
-> 
-> Why?  As a user I could not care less which IOMMU driver my particular
-> system uses.
-> 
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ drivers/input/mouse/navpoint.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Looks reasonable to me. Let's listen to more opinions.
+diff --git a/drivers/input/mouse/navpoint.c b/drivers/input/mouse/navpoint.c
+index d6e8f58a1de3..3d83a79e14d9 100644
+--- a/drivers/input/mouse/navpoint.c
++++ b/drivers/input/mouse/navpoint.c
+@@ -320,8 +320,7 @@ static int navpoint_remove(struct platform_device *pdev)
+ 
+ static int __maybe_unused navpoint_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct navpoint *navpoint = platform_get_drvdata(pdev);
++	struct navpoint *navpoint = dev_get_drvdata(dev);
+ 	struct input_dev *input = navpoint->input;
+ 
+ 	mutex_lock(&input->mutex);
+@@ -334,8 +333,7 @@ static int __maybe_unused navpoint_suspend(struct device *dev)
+ 
+ static int __maybe_unused navpoint_resume(struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct navpoint *navpoint = platform_get_drvdata(pdev);
++	struct navpoint *navpoint = dev_get_drvdata(dev);
+ 	struct input_dev *input = navpoint->input;
+ 
+ 	mutex_lock(&input->mutex);
+-- 
+2.20.1
 
-Best regards,
-Lu Baolu
