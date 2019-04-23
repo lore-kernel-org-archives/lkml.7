@@ -2,102 +2,96 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C4BC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6441CC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC06821738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:45:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="CVrjjQ79"
+	by mail.kernel.org (Postfix) with ESMTP id 27D6421738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 18:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556045269;
+	bh=ket1OMspX9R3zl6Qx5v01fnFNLhI6W1NQX4Gm5XsGts=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QMjMd/vsJBw/QyQpkn3u6gjhbIXb0iY4yTLu0WxCPSpalGRe5vxbq2UTXelUOoBbA
+	 5+Si8RcKOGQ2r0z5/Zq3Ul1SgdQnDzTrV1VSKn0xonIXntAR/UKMwOQPbuA4EsWi/3
+	 pSAJEMnHvJ6ZocfpHce8UHMtUANJWFnvnfMeQZ5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfDWSpo (ORCPT
+        id S1726196AbfDWSrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 14:45:44 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35499 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfDWSpn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 14:45:43 -0400
-Received: by mail-io1-f67.google.com with SMTP id r18so12659446ioh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:45:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=PpIY/pcnE8PBkyei4ABYv/OQrwv3IcaKyfbDF2jVX5Y=;
-        b=CVrjjQ79twfN3qUGnu9RF9vLUZRZgnnyGEY9+HC4F/AFQ6h7/TWGxXKvY9e2McBiv1
-         1tpqkCl5PTZtO/dqZSEfXrqjW6xrVYCOr8kXHv3uYKS4JzKGlFdDnr6sGpeGCxF0WBoN
-         R4FcruV/ul0RmcXQvWtueX6jaZibLjqR1uM4w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=PpIY/pcnE8PBkyei4ABYv/OQrwv3IcaKyfbDF2jVX5Y=;
-        b=EYSx6fIN+SELXS+81Rd9DlhvEKlLuEqQAOxvmk89HaFAx16SI73ziUOe1ctHKTNZtN
-         cj5JDmbizBpoDkl/4auO78eT8Fpd8jGl1GwA4f0LHKntXAEuiNCCmZMPKxTkk6K2wwtP
-         450HpFUh86gvDXV6dS1GIIYUV7Z7DXTfuDI3DDiAVc22oDyRJCPcYQwGYupKec44+FFo
-         7Ii7ePNYosQNo2E6bINmrLY9ZmkGm48B2PiEQFyb5+G6esfOuKLWhTYFs7xMJ7sPFb0l
-         EvvZsMZUBlhgjK0cTxpGHqOVTrxN+aP/Tu1Ty5toQxBdvAC8JWhfyHyN1iEQVs5N5Alx
-         +giA==
-X-Gm-Message-State: APjAAAWa7kkwfs/+4z69VSHlroONU1j8hszpHK9q2DGYjspfHLaDyKZV
-        p8hX60ji3fE/E+kDd8s6yYIpaA==
-X-Google-Smtp-Source: APXvYqxiNo3NI2pEyiLFV4zIgDZnYuZDR3NysCSKEZjvMGjMjqkJEFoI5uh5jSmSwW22RGDJ6Av7fg==
-X-Received: by 2002:a6b:6909:: with SMTP id e9mr11910764ioc.208.1556045142479;
-        Tue, 23 Apr 2019 11:45:42 -0700 (PDT)
-Received: from swap-tester ([178.128.225.14])
-        by smtp.gmail.com with ESMTPSA id n199sm8075806itn.34.2019.04.23.11.45.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 11:45:41 -0700 (PDT)
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
-Date:   Tue, 23 Apr 2019 18:45:27 +0000
-Message-Id: <20190423184527.6230-1-vpillai@digitalocean.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190423180238.GG22260@pauld.bos.csb>
+        Tue, 23 Apr 2019 14:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbfDWSrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 14:47:48 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF9B021850
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556045267;
+        bh=ket1OMspX9R3zl6Qx5v01fnFNLhI6W1NQX4Gm5XsGts=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mLvi2iBB1E8dkeQdNO8+2obcOrGOxLEBy+V8Nj7ye22AhOGa5d4jUPuLFc3y0DEU0
+         qjvPuDWfafEQ+jH2idcOfbt5XSfaADNrVpEVEwVkQb5XoG4iPq+ZU1LYUGNV2zuOLG
+         YgH41tmJrAFnkGy7LIbMQ4jRJiulenX4xPKs6T6g=
+Received: by mail-wr1-f41.google.com with SMTP id a3so11939126wrx.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:47:46 -0700 (PDT)
+X-Gm-Message-State: APjAAAXO5ZUTN3kzsVntrcms+aujaKCtzbZTQOKPS1q97IKDfUNeha8Q
+        mglrWGnIVcdrXWXB2A3jzai9VOy8co/XDtPf4Rm0cw==
+X-Google-Smtp-Source: APXvYqy9wgeBQNXeIag1wz2EFHXMIbZaQxkV7b2cZTmC7qh7R2UBL2UmqsGHIkr1JCDyZCYAY0pIU4PvF74CGFvFzPc=
+X-Received: by 2002:a5d:4587:: with SMTP id p7mr11047795wrq.77.1556045265532;
+ Tue, 23 Apr 2019 11:47:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAK7LNAQwHRJL=3yD_7P2mMSVnwZbayww+dHC22+v4oTpMZv58w@mail.gmail.com>
+In-Reply-To: <CAK7LNAQwHRJL=3yD_7P2mMSVnwZbayww+dHC22+v4oTpMZv58w@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 23 Apr 2019 11:47:34 -0700
+X-Gmail-Original-Message-ID: <CALCETrVSM0vrMVr2y0ECAQ=tNGvBs=im2Kxongq-jvdzUBevbg@mail.gmail.com>
+Message-ID: <CALCETrVSM0vrMVr2y0ECAQ=tNGvBs=im2Kxongq-jvdzUBevbg@mail.gmail.com>
+Subject: Re: Does vdso_install attempt to re-compile objects under root privilege?
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        X86 ML <x86@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> - Processes with different tags can still share the core
+On Thu, Apr 18, 2019 at 1:08 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> Hi.
+>
+> I have a question about 'vdso_install'.
+>
+>
+> In my understanding, vdso is embedded in the kernel.
+> In addition, you can run 'make vdso_install'
+> to install an unstripped version of vdso.
+> (Mainly, debugging purpose?)
+>
+> By default, 'make vdso_install' will install it to
+> /lib/modules/$(uname -r)/vdso/.
+>
+>
+> Since that directly is owned by root,
+> 'make vdso_install' could potentially be
+> executed by root, isn't it?
+>
+>
+> Currently, 'vdso_install' depends on vdso,
+> so it may cause recompilation of objects
+> in the source tree.
 
-> I may have missed something... Could you explain this statement?
+Hmm.  I suppose an alternative would be for vdso_install to fail if
+the vdso isn't built?
 
-> This, to me, is the whole point of the patch series. If it's not
-> doing this then ... what?
-
-What I meant was, the patch needs some more work to be accurate.
-There are some race conditions where the core violation can still
-happen. In our testing, we saw around 1 to 5% of the time being
-shared with incompatible processes. One example of this happening
-is as follows(let cpu 0 and 1 be siblings):
-- cpu 0 selects a process with a cookie
-- cpu 1 selects a higher priority process without cookie
-- Selection process restarts for cpu 0 and it might select a
-  process with cookie but with lesser priority.
-- Since it is lesser priority, the logic in pick_next_task
-  doesn't compare again for the cookie(trusts pick_task) and
-  proceeds.
-
-This is one of the scenarios that we saw from traces, but there
-might be other race conditions as well. Fix seems a little
-involved and We are working on that.
-
-Thanks
+What's the ideal outcome here?
