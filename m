@@ -2,116 +2,160 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFE2C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985FBC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11533218B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF6A20645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bzkRyZFD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SkJq64AJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbfDWQjK (ORCPT
+        id S1729649AbfDWQjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:39:10 -0400
-Received: from mail-eopbgr760128.outbound.protection.outlook.com ([40.107.76.128]:4455
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729320AbfDWQjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:39:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=ZwaZ3X2AbRD95tFyir8U2kEktX4mKZKiihl9yWLQWx5ciZmOrZCk9k1Zivq/nAUnidSqxLORQklsNIh/akF7IsHU3a/AJEuEsjozEGJ271WTyTqaNamMEehpkLV07Rui0pj0CjFj+DXWMT8xbqZ5+quO9q+gdDpuj/qOW/GE7FA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QCj10GvxBH5jqVxVXHKkclSJOG8y3PVic/X4P7nkveQ=;
- b=JC0crNgpKRTnRgdTzeodDO+Kpwci4FXFMsBC3OCu2RsZa7Q6iv2cDmUs8HsTiQ/OYxH46xptfm/LbvTzEm6Vp/yFtISkj2cNBZULoSuLmy+4hQVFfySjZx6CCI4n283Z0AiIxtuFbasAPeTawdWFS+HrOCnJkukfOT/JrM3dvnE=
-ARC-Authentication-Results: i=1; test.office365.com 1;spf=none;dmarc=none
- action=none header.from=microsoft.com;dkim=none (message not signed);arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QCj10GvxBH5jqVxVXHKkclSJOG8y3PVic/X4P7nkveQ=;
- b=bzkRyZFDGv+6QRT/kamNTmCu9pqPmlTsuwRXXKGi1pdWvVw321qyS+K1RDUQzwk6ZusknmdG0qqm2f+iz6DJUMO5Ba4d4xa83fWgVCvsANs/wyqxp8h+pUYJ7hluwWNT5lngv4fUbSz6vV6FOjmRNPUnCQmN8CwN1zplY1WoIyg=
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
- DM5PR2101MB0981.namprd21.prod.outlook.com (52.132.133.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.4; Tue, 23 Apr 2019 16:39:00 +0000
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::2ca9:7d06:f5b1:7a6f]) by DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::2ca9:7d06:f5b1:7a6f%5]) with mapi id 15.20.1856.004; Tue, 23 Apr 2019
- 16:39:00 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Joseph Salisbury <Joseph.Salisbury@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][v2] drivers: input: serio: Add a module desription to the
- hyperv_keyboard driver
-Thread-Topic: [PATCH][v2] drivers: input: serio: Add a module desription to
- the hyperv_keyboard driver
-Thread-Index: AQHU+fMNuYOwCyuzXkKWF4jDNlQbaQ==
-Date:   Tue, 23 Apr 2019 16:39:00 +0000
-Message-ID: <DM5PR2101MB0918B570C0BCFF4326428A24D7230@DM5PR2101MB0918.namprd21.prod.outlook.com>
-References: <6a2c2e15e90138fcef67bed294d2e82d8d6f679b.1555967323.git.joseph.salisbury@microsoft.com>
-In-Reply-To: <6a2c2e15e90138fcef67bed294d2e82d8d6f679b.1555967323.git.joseph.salisbury@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-04-23T16:38:58.9755938Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c6937a2e-b3f4-4e56-b396-732aa716cce7;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:fc77:f44:39ef:1b45]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 98040326-9c8f-468c-d20b-08d6c80a3057
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR2101MB0981;
-x-ms-traffictypediagnostic: DM5PR2101MB0981:
-x-microsoft-antispam-prvs: <DM5PR2101MB098175F7B08EB0721205C085D7230@DM5PR2101MB0981.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1284;
-x-forefront-prvs: 0016DEFF96
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(39860400002)(346002)(376002)(396003)(366004)(199004)(189003)(186003)(4326008)(1511001)(305945005)(14454004)(7736002)(46003)(25786009)(6246003)(2501003)(2906002)(86612001)(486006)(76176011)(53936002)(102836004)(9686003)(6116002)(71190400001)(2201001)(5660300002)(71200400001)(86362001)(256004)(74316002)(476003)(446003)(11346002)(110136005)(66556008)(8676002)(81156014)(52536014)(81166006)(66446008)(558084003)(55016002)(8936002)(73956011)(64756008)(6436002)(33656002)(229853002)(8990500004)(68736007)(66946007)(6506007)(66476007)(22452003)(99286004)(316002)(54906003)(10090500001)(97736004)(478600001)(76116006)(7696005)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB0981;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jErAA/xLw6tJaNaNKkQYRb8TroDCK7ZgB8GKLG0Pz9tw/WXCHqo2wf4+g6LAs2kuFFVvo6nO9GUboTVcKiaVKg0Au/OC1SHcGWt8hjQabZaf5Uo1j77fuNXrtXhGc4aiU0JItwRjiABMX2GYdTTINQKISBZnIGnlFr5JzLAt8YBNm2AK4iGDfTW6z0XcVgwslfnRITZCpLD4uCvGjRMURcyfLENde4LwWsEJS3US2AXkPcimBExBZXbMPyYuvWA+oT9IjklgIFKkFWQZsKMV9hPgQXTi02GJvk4oNNUX4E1yr0Ju5ifWs0PnwRjG4DbstAdXg/dPu7KdADDeGErWbjCcHspzSfBa6ozefDS5KWMIgdrtnPkRw3Nvo6SGqYbdzehwk8ixraGeqMkv1wFd140BA4tSuUru7pFOFFrD0DA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 23 Apr 2019 12:39:14 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45781 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729241AbfDWQjM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 12:39:12 -0400
+Received: by mail-pf1-f196.google.com with SMTP id e24so7747634pfi.12;
+        Tue, 23 Apr 2019 09:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2yFOemuN+eolbcMH+/FkuAihsixlocXPgjBOPtuP6bo=;
+        b=SkJq64AJRj6L/JcconR1RzVxUNwJaE89UyLSCrjykYgm7VHed/1sbOtWWVRdlN8niw
+         +nS3i5yl0ZH25GUu9DKrpYujqNabEnuDfZdg8N5pxdkLXCbB3DShZBR1ytrKAiS+ppzy
+         RoPxBTK6zcETwFyC1cXvKGmL+1VsMJi3qt6ny4MWT7jWMEIGnPNhuKnCSg7b5zfbcw/1
+         SVz53xsAnmOhCU7hII/u/ATPEQ+7gKaT+0LWaDisMPg6Rl1N8fBFOIapvUfQnVL36Scw
+         b/zH3Kv1YUz/k9t35DB6/mDhqL4nfvVz8XKYIgtm2DY1ACYvbFSZ5kSZYBClu0TjzObG
+         1YeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2yFOemuN+eolbcMH+/FkuAihsixlocXPgjBOPtuP6bo=;
+        b=Zj7mfXZ6PC0WHCx0UYn1IzoezWtyWvTJp2AdVM4CzPkJ5LtmZLbOGH3f3xs2smhfQl
+         W6tdKkT6FSnXmMgFm/TdtjIeSdk/TOQB+dP19npWEuwMPZ7H5+E5NEWyJ6D0JY608h6u
+         o3r1Tv4AqInpu7vVb0nl5uzfXfdVMiMiuPNNaI3SxJZBOQ3zAnYPZCvLIdmdOn2XvySS
+         WkEG1dbZwZV01bZMMp2f1HDrjL4bJbR5vMebLuq7gda4bQv30Ea7jR5jGQkAmVKY031X
+         jVe0ZDgSDedXApJ5Kkb+PO6GOjgYNwhIgpJLXXvaz6fuMs4MYeG18fOtsm2X/QdnVo7s
+         e3Lw==
+X-Gm-Message-State: APjAAAUgoFBBXlpCTa+EB1Dvx7PipRNmC8cvOcJW65GUL0WVYUmn31Fq
+        noQ2hbNkNO5XaE9egiMD6j4=
+X-Google-Smtp-Source: APXvYqyt0eJT3NkmhT2J6r3iHijPGVxGT07haTkb6FEPB0c4A+sKOygu+96OyFnqj/Mw0nYRxCYdsw==
+X-Received: by 2002:a63:4b21:: with SMTP id y33mr26241568pga.37.1556037551867;
+        Tue, 23 Apr 2019 09:39:11 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id v1sm24364801pff.81.2019.04.23.09.39.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 09:39:11 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v4 61/63] Documentation: x86: convert x86_64/fake-numa-for-cpusets to reST
+Date:   Wed, 24 Apr 2019 00:29:30 +0800
+Message-Id: <20190423162932.21428-62-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190423162932.21428-1-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98040326-9c8f-468c-d20b-08d6c80a3057
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 16:39:00.5024
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0981
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9zZXBoIFNhbGlzYnVyeSA8am9zZXBoLnNhbGlzYnVyeUBtaWNyb3NvZnQuY29tPiBT
-ZW50OiBNb25kYXksIEFwcmlsIDIyLCAyMDE5IDg6NDcgUE0NCj4gDQo+IFRoaXMgcGF0Y2ggb25s
-eSBhZGRzIGEgTU9EVUxFX0RFU0NSSVBUSU9OIHN0YXRlbWVudCB0byB0aGUgZHJpdmVyLg0KPiBU
-aGlzIGNoYW5nZSBpcyBvbmx5IGNvc21ldGljLCBzbyB0aGVyZSBzaG91bGQgYmUgbm8gcnVudGlt
-ZSBpbXBhY3QuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBKb3NlcGggU2FsaXNidXJ5IDxqb3NlcGgu
-c2FsaXNidXJ5QG1pY3Jvc29mdC5jb20+DQo+IC0tLQ0KDQpSZXZpZXdlZC1ieTogTWljaGFlbCBL
-ZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+DQo=
+This converts the plain text documentation to reStructuredText format and
+add it to Sphinx TOC tree. No essential content change.
+
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+---
+ ...a-for-cpusets => fake-numa-for-cpusets.rst} | 18 +++++++++++++-----
+ Documentation/x86/x86_64/index.rst             |  1 +
+ 2 files changed, 14 insertions(+), 5 deletions(-)
+ rename Documentation/x86/x86_64/{fake-numa-for-cpusets => fake-numa-for-cpusets.rst} (90%)
+
+diff --git a/Documentation/x86/x86_64/fake-numa-for-cpusets b/Documentation/x86/x86_64/fake-numa-for-cpusets.rst
+similarity index 90%
+rename from Documentation/x86/x86_64/fake-numa-for-cpusets
+rename to Documentation/x86/x86_64/fake-numa-for-cpusets.rst
+index 4b09f18831f8..3c23f45d38f6 100644
+--- a/Documentation/x86/x86_64/fake-numa-for-cpusets
++++ b/Documentation/x86/x86_64/fake-numa-for-cpusets.rst
+@@ -1,5 +1,12 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=====================
++Fake NUMA For CPUSets
++=====================
++
++:Author: David Rientjes <rientjes@cs.washington.edu>
++
+ Using numa=fake and CPUSets for Resource Management
+-Written by David Rientjes <rientjes@cs.washington.edu>
+ 
+ This document describes how the numa=fake x86_64 command-line option can be used
+ in conjunction with cpusets for coarse memory management.  Using this feature,
+@@ -20,7 +27,7 @@ you become more familiar with using this combination for resource control,
+ you'll determine a better setup to minimize the number of nodes you have to deal
+ with.
+ 
+-A machine may be split as follows with "numa=fake=4*512," as reported by dmesg:
++A machine may be split as follows with "numa=fake=4*512," as reported by dmesg::
+ 
+ 	Faking node 0 at 0000000000000000-0000000020000000 (512MB)
+ 	Faking node 1 at 0000000020000000-0000000040000000 (512MB)
+@@ -34,7 +41,7 @@ A machine may be split as follows with "numa=fake=4*512," as reported by dmesg:
+ 
+ Now following the instructions for mounting the cpusets filesystem from
+ Documentation/cgroup-v1/cpusets.txt, you can assign fake nodes (i.e. contiguous memory
+-address spaces) to individual cpusets:
++address spaces) to individual cpusets::
+ 
+ 	[root@xroads /]# mkdir exampleset
+ 	[root@xroads /]# mount -t cpuset none exampleset
+@@ -47,7 +54,7 @@ Now this cpuset, 'ddset', will only allowed access to fake nodes 0 and 1 for
+ memory allocations (1G).
+ 
+ You can now assign tasks to these cpusets to limit the memory resources
+-available to them according to the fake nodes assigned as mems:
++available to them according to the fake nodes assigned as mems::
+ 
+ 	[root@xroads /exampleset/ddset]# echo $$ > tasks
+ 	[root@xroads /exampleset/ddset]# dd if=/dev/zero of=tmp bs=1024 count=1G
+@@ -56,7 +63,8 @@ available to them according to the fake nodes assigned as mems:
+ Notice the difference between the system memory usage as reported by
+ /proc/meminfo between the restricted cpuset case above and the unrestricted
+ case (i.e. running the same 'dd' command without assigning it to a fake NUMA
+-cpuset):
++cpuset)::
++
+ 				Unrestricted	Restricted
+ 	MemTotal:		3091900 kB	3091900 kB
+ 	MemFree:		  42113 kB	1513236 kB
+diff --git a/Documentation/x86/x86_64/index.rst b/Documentation/x86/x86_64/index.rst
+index 7b8c82151358..e2a324cde671 100644
+--- a/Documentation/x86/x86_64/index.rst
++++ b/Documentation/x86/x86_64/index.rst
+@@ -11,3 +11,4 @@ x86_64 Support
+    uefi
+    mm
+    5level-paging
++   fake-numa-for-cpusets
+-- 
+2.20.1
+
