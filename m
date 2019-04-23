@@ -2,83 +2,162 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A93C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EB8C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDA1217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8782A21738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbfDWRPV (ORCPT
+        id S1729404AbfDWRQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 13:15:21 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:55790 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfDWRPV (ORCPT
+        Tue, 23 Apr 2019 13:16:26 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:34011 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfDWRQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:15:21 -0400
-Received: by mail-it1-f194.google.com with SMTP id y134so1420104itc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 10:15:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=go/WpspTufvCzyVRSJz1x1OJRk17MOMRcR7MhLrkz+g=;
-        b=AYE+289seI14avU0cBWJRmyKmn8/LqOffw/3Dvueqo9CrcYl+t30Y4KRP65g5fd6xJ
-         +HC+13lukkkAn64iKBJEK58nM1WMv2z3TDVDcapWhcYPZa/ZYifmW+9ux19014En68nP
-         UW1G0Sk44yVZzZCKCkzh9Yq9qCFgWU3VzyT7Hr7R7li+JMZyZp7jdnMhCxKRjO6NVF91
-         OrKmDHfM1QXwD1F/myrcNRReREVNTDwiDSLAn3ib0BKDqag2/kDwn5jUlUrHnlr5rNcA
-         ujss7UUWNZbQE+hOFwd5kT4BWXl2lWXKd7ejLQVDbVB7qICm+J4QuBsQg/LpwAn4Xr2x
-         g1Lw==
-X-Gm-Message-State: APjAAAXQ3iQMNLW+A40cDgJHV8isOAVr6iNbE5d7u3ULczDXHl8/VLo/
-        3qU5t2uuMJDYoJuKbjvWUpsVwRPjququO1y9GSXlhw==
-X-Google-Smtp-Source: APXvYqzxA0QZw0J123f3fEoyl66/SYWBNklyklOfwwSVivihwi5QRR1EfUBPwCCrkNjNzvnWD3UAmfUSFnpd/rhWQkw=
-X-Received: by 2002:a02:ba94:: with SMTP id g20mr12015282jao.51.1556039720616;
- Tue, 23 Apr 2019 10:15:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190422092804.15534-1-kasong@redhat.com> <965f770a-b103-72fb-eaef-cb337ebe8290@ce.jp.nec.com>
-In-Reply-To: <965f770a-b103-72fb-eaef-cb337ebe8290@ce.jp.nec.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Tue, 23 Apr 2019 10:15:09 -0700
-Message-ID: <CACPcB9d-oNvp1Kag1J8X+QBdgqfU0ps1OztjOk8n=Pw2G6ONWA@mail.gmail.com>
-Subject: Re: [PATCH] x86/kexec: always ensure EFI systab region is mapped
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+        Tue, 23 Apr 2019 13:16:26 -0400
+X-Originating-IP: 93.29.109.196
+Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 81C32C0009;
+        Tue, 23 Apr 2019 17:16:23 +0000 (UTC)
+Message-ID: <4dc994f9d015e25572f8ed6ce9e809695ee49bc5.camel@bootlin.com>
+Subject: Re: [linux-sunxi] [PATCH] drm/sun4i: Unbind components before
+ releasing DRM and mem at master unbind
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date:   Tue, 23 Apr 2019 19:16:23 +0200
+In-Reply-To: <CAGb2v65n2KVUi8YQoo92bQAWUehzMisahah28VtQoJZd3WbC6w@mail.gmail.com>
+References: <20190419080235.24396-1-paul.kocialkowski@bootlin.com>
+         <CAGb2v64iFwqPJ-me2KOWUjGuObg2brjRNvD_pkPw98Y60hnwQg@mail.gmail.com>
+         <1fcd1b7b1b52e67e4f0a28fca567bf3243fe0ada.camel@bootlin.com>
+         <41c94d93321b10ee9173e0b5bce9bc37a1ea7532.camel@bootlin.com>
+         <CAGb2v65n2KVUi8YQoo92bQAWUehzMisahah28VtQoJZd3WbC6w@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 11:21 PM Junichi Nomura <j-nomura@ce.jp.nec.com> wrote:
->
-> On 4/22/19 6:28 PM, Kairui Song wrote:
-> > The reason is the systab region is not mapped by the identity mapping
-> > provided by kexec. Currently kexec only create identity mapping for
-> > mem regions, wihch won't cover the systab. So second kernel will be
-> > accessing a not mapped memory region and cause fault.
-> > But as kexec tend to pad the map region up to PUD size, the
-> > systab could be included in the map by accident, so it worked on
-> > some machines, but that will be broken easily and unstable.
->
-> Is the mapping of ACPI tables just by luck, too?
->
+Hi,
 
-Good question, they should have same issue with systab, I ignored this one.
-Then in first kernel when doing kexec it should ensure both ACPI
-tables and the EFI systab are mapped, that should cover everything and
-make it work.
-Is there anything else missing?
+Le mardi 23 avril 2019 à 10:14 -0700, Chen-Yu Tsai a écrit :
+> On Tue, Apr 23, 2019 at 10:06 AM Paul Kocialkowski
+> <paul.kocialkowski@bootlin.com> wrote:
+> > Hi,
+> > 
+> > Le vendredi 19 avril 2019 à 19:10 +0200, Paul Kocialkowski a écrit :
+> > > Hi,
+> > > 
+> > > On Fri, 2019-04-19 at 09:02 -0700, Chen-Yu Tsai wrote:
+> > > > On Fri, Apr 19, 2019 at 1:03 AM Paul Kocialkowski
+> > > > <paul.kocialkowski@bootlin.com> wrote:
+> > > > > Our components may still be using the DRM device driver (if only to
+> > > > > access our driver's private data), so make sure to unbind them before
+> > > > > the final drm_dev_put.
+> > > > > 
+> > > > > Also release our resserved memory adter unbind to match reverse
+> > > > 
+> > > > typos...
+> > > 
+> > > I'll probably spin up a v2 to fix them, they annoy me as well.
+> > > 
+> > > > > creation order.
+> > > > > 
+> > > > > Fixes: f5a9ed867c83 ("drm/sun4i: Fix component unbinding and component master deletion")
+> > > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/sun4i/sun4i_drv.c | 5 +++--
+> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> > > > > index 843b86661833..29258b404e54 100644
+> > > > > --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
+> > > > > +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> > > > > @@ -149,10 +149,11 @@ static void sun4i_drv_unbind(struct device *dev)
+> > > > >         drm_kms_helper_poll_fini(drm);
+> > > > >         drm_atomic_helper_shutdown(drm);
+> > > > >         drm_mode_config_cleanup(drm);
+> > > > > -       of_reserved_mem_device_release(dev);
+> > > > > -       drm_dev_put(drm);
+> > > > > 
+> > > > >         component_unbind_all(dev, NULL);
+> > > > > +       of_reserved_mem_device_release(dev);
+> > > > 
+> > > > You should probably mention this change in the commit log as well.
+> > > 
+> > > That's what I meant with the line that has typos. Maybe I should make
+> > > it slightly more explicit as:
+> > > 
+> > > Also released our reserved memory after component unbind instead of
+> > > before to match reverse creation order.
+> > > 
+> > > What do you think?
+> 
+> Forgot to reply ...
+> 
+> Looking again, the original already made sense. I'm not sure what I
+> was doing ...
 
--- 
-Best Regards,
-Kairui Song
+I like the improved description better anyway so I'll go with that :)
+
+> > > > Otherwise,
+> > > > 
+> > > > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> > > 
+> > > Thanks for the review!
+> > 
+> > Unless you have objections at this point, I'll send out the patch with
+> > your Reviewed-by soon to get the patch out ASAP.
+> 
+> Works for me. Thanks!
+
+Great, thanks!
+
+Cheers,
+
+Paul
+
+> ChenYu
+> 
+> > Cheers,
+> > 
+> > Paul
+> > 
+> > > Cheers,
+> > > 
+> > > Paul
+> > > 
+> > > > > +
+> > > > > +       drm_dev_put(drm);
+> > > > >  }
+> > > > > 
+> > > > >  static const struct component_master_ops sun4i_drv_master_ops = {
+> > > > > --
+> > > > > 2.21.0
+> > > > > 
+> > > > > --
+> > > > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > > > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > > > > For more options, visit https://groups.google.com/d/optout.
+> > 
+> > --
+> > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> > For more options, visit https://groups.google.com/d/optout.
+
