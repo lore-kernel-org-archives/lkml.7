@@ -2,130 +2,94 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E406C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D967FC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C767218D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3949218D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uR9fVOkR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cigG1jTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbfDWV1r (ORCPT
+        id S1727743AbfDWVa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:27:47 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:48035 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfDWV1r (ORCPT
+        Tue, 23 Apr 2019 17:30:57 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34044 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfDWVa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:27:47 -0400
-Received: by mail-pf1-f202.google.com with SMTP id n63so10440179pfb.14
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 14:27:47 -0700 (PDT)
+        Tue, 23 Apr 2019 17:30:57 -0400
+Received: by mail-lf1-f67.google.com with SMTP id h5so12894887lfm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 14:30:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=41aTYzy88TUD1CyveIip5i2BawgilNUUCUyijcx9oaA=;
-        b=uR9fVOkRKS7Tscs+Ze0Tagavk/8dShLsyV9Xl2jtuL/vKkp0DuxgPCs8GUxx3nhzJL
-         JS0/QboYft1EWQCEotbrAIfCgSwLSI1lwxv00p4VaEeu4NxQDjk2OPqzFJf0nfO+vDdt
-         a0KQAkZx6xTNXFfMe9/SIz2c/9EBQOcowOk6aQNQEz9I0D9WksPeGT6HD+Vy7betuVJB
-         A7m9ey7OSCaq05YaRw8vpne3+8n/Msr76b9nz2ikn8MAtVcHy06+rVBZKR0lJCq5nsAb
-         yHTPMN612oofssR6+VKVdg9GWiwVL0cmCOqg5i2nvG6yrAK9Nf8yEiUxhBa6SbnN6DnZ
-         x/vw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gj/C1n+4JzJjjhUoe8msJVAVKtyw85XXivazIssjzrg=;
+        b=cigG1jTIozfeAIS/XLpR6jV/YEmZREqI1ziiBnf1BbfcpDoj3jhUEXe15oKYKIuGnE
+         jBPvCcMGDw2U+nN6GPExSYnVApWcT64Iy7swJUmzNCeKgR7uVrxmYWoz2erEJ3jiVbab
+         XF0N53UmdOg8uJOYvVxhhV+od04HlT+3VUatNKjeF5yfRDx5dF0Cu9pZoaasj4dN7h9t
+         5IQ01ja27mYBXWbhP1in5Ht5RU+YCYbNdzQ+ND5CL94NqDSGoeqOSIWpOK8uy6z0AUA4
+         qN/IUMWHEMPBk0a4iQaVub+N+1TalO9A71MXI0sTN0Zoq/reYsHlOImQHKu7MGe0C4i4
+         R65g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=41aTYzy88TUD1CyveIip5i2BawgilNUUCUyijcx9oaA=;
-        b=dcj1wNFx7b33zH8uhqyvsZ9XyyxiAEVIIhDUDgTFOPUFQDmH+TN4YiOldpR8M2ntZZ
-         3d2O9rspBPyB+tq2YYqT5DquDBIW+KDuL/hGkgtpzRvsYDyIRuaKRBHacU4HH+Jld3Dm
-         dnRI+IWHtDX/nI2QVz38mNrR8NQVRp5+oIwImKv/jhN0ZnZqMgGbQARu5V0Lf41Agjat
-         lY+Sx9YxMKifkCh9vQH2YyoOOTs/XX7o+j3YtEOD0MqBZgqW9nAjrmQryC8Rt/J5tAjW
-         gAtOkGSr+Q87FnvPcCS6KMo35f8EoOXrOdjswD/1q5oKEfv6L9yDxlLsfnDGcboX+FRT
-         N4Gw==
-X-Gm-Message-State: APjAAAVBxV2Ie8wM0g2lzZTUv5qzJ40L07Uo0miHCtsWVTNMoE9yB9He
-        R6bHPHjidZ8TwMr14hYStK1K3ftqICLc21m+s+Q=
-X-Google-Smtp-Source: APXvYqyhG2vTC3jWAx/p08kp5ptoz96a2fY+KEPJvsAxWPyxEBF38D9nK/P44eHwWUCG6mBl9aGJfLaP27cml/TPvBI=
-X-Received: by 2002:a65:4183:: with SMTP id a3mr26848110pgq.121.1556054866607;
- Tue, 23 Apr 2019 14:27:46 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 14:27:41 -0700
-Message-Id: <20190423212741.12219-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH] kbuild: drop support for cc-ldoption
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
-        corbet@lwn.net
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gj/C1n+4JzJjjhUoe8msJVAVKtyw85XXivazIssjzrg=;
+        b=r1hwGYaV9WBsa46F1CL/yl17y3bGkRzTeVo+3LzDhrxs/6+3C9MbKuV5q8rV7gOZAF
+         daM4xp3yMAGTzuUf7NJCSCrqPDTSD60IgnrmqTsTyPXzPb0c4YNgzM6dW8xgnGk9buh3
+         ERFFnA9wRBlQol67trpXu7k3LfXAdFJNOT5obbdaZSgNG9Bon4WIUBEOZC8WulFooEO6
+         fAFN0A1stD9NQUdmVuRE7kyZJQ3hQsRRDBpUP1Qd0g/tJ87/kMKG6Y0YjYNg69Lmciep
+         udZMIoMd+x37ZBRZ/bQZQzRd7Ds0ogMriBxgUf6e95Pufeb4M6F4FsDjx6IT691NsUik
+         47/A==
+X-Gm-Message-State: APjAAAVeQs8lEmpU3TIebhdheD+j+uPG1j6PZafxegC4svRePaw1oIGh
+        u9S0rH8i6x/j7g+U7Bh0KTF7iy8nx9ttXD/KxOEwzLAA
+X-Google-Smtp-Source: APXvYqw5sqlx6rYco2PwRId3MXLuHuEkR0+CdFN5dPdrXDVjgtRlcAiFlNcLVn70F9u+GsoI/xvF4Hpk9DZI+i3WRqQ=
+X-Received: by 2002:ac2:4647:: with SMTP id s7mr14850759lfo.168.1556055055246;
+ Tue, 23 Apr 2019 14:30:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1555938375.git.mchehab+samsung@kernel.org> <03cdacc3db76c5ff984c1507ea6434650d36d822.1555938376.git.mchehab+samsung@kernel.org>
+In-Reply-To: <03cdacc3db76c5ff984c1507ea6434650d36d822.1555938376.git.mchehab+samsung@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 23 Apr 2019 23:30:43 +0200
+Message-ID: <CACRpkdY_OHTU6dN-2BXYhPYyAVW62nSzqfNx66bAB++=epGMbg@mail.gmail.com>
+Subject: Re: [PATCH v2 15/79] docs: gpio: convert docs to ReST and rename to *.rst
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If you want to see if your linker supports a certain flag, then ask the
-linker directly with ld-option (not the compiler with cc-ldoption).
-Checking for linker flag support is an antipattern that complicates the
-usage of various linkers other than bfd via -fuse-ld={bfd|gold|lld}.
+On Mon, Apr 22, 2019 at 3:28 PM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
 
-Cc: clang-built-linux@googlegroups.com
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
-This should probably wait until all of the call sites have been cleaned
-up. Masahiro sent them for arm and arm64, while I sent cleanups for all
-the rest.
+> The API described at sysfs.txt is deprecated.
+>
+> Still, as it is still part of the Kernel (and will likely be
+> there for some time, as we don't simply remove APIs). So,
+> it makes sense to keep it there.
+>
+> The conversion of this file is trivial:
+>   - add blank lines and identation in order to identify paragraphs;
+>   - mark a literal block as such.
+>
+> At its new index.rst, let's add a :orphan: while this is not linked to
+> the main index.rst file, in order to avoid build warnings.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
+Patch applied to the GPIO tree.
 
- Documentation/kbuild/makefiles.txt | 14 --------------
- scripts/Kbuild.include             |  5 -----
- 2 files changed, 19 deletions(-)
-
-diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-index 03c065855eaf..d65ad5746f94 100644
---- a/Documentation/kbuild/makefiles.txt
-+++ b/Documentation/kbuild/makefiles.txt
-@@ -437,20 +437,6 @@ more details, with real examples.
- 	The second argument is optional, and if supplied will be used
- 	if first argument is not supported.
- 
--    cc-ldoption
--	cc-ldoption is used to check if $(CC) when used to link object files
--	supports the given option.  An optional second option may be
--	specified if first option are not supported.
--
--	Example:
--		#arch/x86/kernel/Makefile
--		vsyscall-flags += $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
--
--	In the above example, vsyscall-flags will be assigned the option
--	-Wl$(comma)--hash-style=sysv if it is supported by $(CC).
--	The second argument is optional, and if supplied will be used
--	if first argument is not supported.
--
-     as-instr
- 	as-instr checks if the assembler reports a specific instruction
- 	and then outputs either option1 or option2
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index 7484b9d8272f..fbfb37d1bcc8 100644
---- a/scripts/Kbuild.include
-+++ b/scripts/Kbuild.include
-@@ -138,11 +138,6 @@ cc-disable-warning = $(call try-run,\
- # Usage:  EXTRA_CFLAGS += $(call cc-ifversion, -lt, 0402, -O1)
- cc-ifversion = $(shell [ $(CONFIG_GCC_VERSION)0 $(1) $(2)000 ] && echo $(3) || echo $(4))
- 
--# cc-ldoption
--# Usage: ldflags += $(call cc-ldoption, -Wl$(comma)--hash-style=both)
--cc-ldoption = $(call try-run,\
--	$(CC) $(1) $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
--
- # ld-option
- # Usage: KBUILD_LDFLAGS += $(call ld-option, -X, -Y)
- ld-option = $(call try-run, $(LD) $(KBUILD_LDFLAGS) $(1) -v,$(1),$(2),$(3))
--- 
-2.21.0.593.g511ec345e18-goog
-
+Yours,
+Linus Walleij
