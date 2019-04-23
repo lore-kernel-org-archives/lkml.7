@@ -3,166 +3,220 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5BEC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4BDC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFF7218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859C4218D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbfDWPqM (ORCPT
+        id S1728632AbfDWPqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:46:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51256 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728614AbfDWPqJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:46:09 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NFeX0q020908
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:46:08 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s25cxrs6g-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:46:08 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 23 Apr 2019 16:46:06 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 23 Apr 2019 16:45:56 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NFjsxQ46137354
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Apr 2019 15:45:54 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 591F042041;
-        Tue, 23 Apr 2019 15:45:54 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 033D842049;
-        Tue, 23 Apr 2019 15:45:52 +0000 (GMT)
-Received: from [9.145.7.116] (unknown [9.145.7.116])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Apr 2019 15:45:51 +0000 (GMT)
-Subject: Re: [PATCH v12 05/31] mm: prepare for FAULT_FLAG_SPECULATIVE
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
-        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
-        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <20190416134522.17540-6-ldufour@linux.ibm.com>
- <20190418220415.GE11645@redhat.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Tue, 23 Apr 2019 17:45:51 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Tue, 23 Apr 2019 11:46:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58686 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727745AbfDWPq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 11:46:29 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 38CD33D965;
+        Tue, 23 Apr 2019 15:46:29 +0000 (UTC)
+Received: from plouf.redhat.com (ovpn-116-226.ams2.redhat.com [10.36.116.226])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A5D95C296;
+        Tue, 23 Apr 2019 15:46:24 +0000 (UTC)
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To:     Jiri Kosina <jikos@kernel.org>, James Feeney <james@nurealm.net>,
+        Peter Hutterer <peter.hutterer@who-t.net>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org
+Subject: [PATCH 1/2] HID: input: make sure the wheel high resolution multiplier is set
+Date:   Tue, 23 Apr 2019 17:46:14 +0200
+Message-Id: <20190423154615.18257-1-benjamin.tissoires@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190418220415.GE11645@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19042315-0020-0000-0000-00000332DF37
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042315-0021-0000-0000-0000218540CC
-Message-Id: <8b102fee-e1bc-28e4-2187-994e39fb6734@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904230106
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 23 Apr 2019 15:46:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 19/04/2019 à 00:04, Jerome Glisse a écrit :
-> On Tue, Apr 16, 2019 at 03:44:56PM +0200, Laurent Dufour wrote:
->> From: Peter Zijlstra <peterz@infradead.org>
->>
->> When speculating faults (without holding mmap_sem) we need to validate
->> that the vma against which we loaded pages is still valid when we're
->> ready to install the new PTE.
->>
->> Therefore, replace the pte_offset_map_lock() calls that (re)take the
->> PTL with pte_map_lock() which can fail in case we find the VMA changed
->> since we started the fault.
->>
->> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->>
->> [Port to 4.12 kernel]
->> [Remove the comment about the fault_env structure which has been
->>   implemented as the vm_fault structure in the kernel]
->> [move pte_map_lock()'s definition upper in the file]
->> [move the define of FAULT_FLAG_SPECULATIVE later in the series]
->> [review error path in do_swap_page(), do_anonymous_page() and
->>   wp_page_copy()]
->> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> 
-> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
-> 
->> ---
->>   mm/memory.c | 87 +++++++++++++++++++++++++++++++++++------------------
->>   1 file changed, 58 insertions(+), 29 deletions(-)
->>
->> diff --git a/mm/memory.c b/mm/memory.c
->> index c6ddadd9d2b7..fc3698d13cb5 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -2073,6 +2073,13 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
->>   }
->>   EXPORT_SYMBOL_GPL(apply_to_page_range);
->>   
->> +static inline bool pte_map_lock(struct vm_fault *vmf)
-> 
-> I am not fan of the name maybe pte_offset_map_lock_if_valid() ? But
-> that just a taste thing. So feel free to ignore this comment.
+Some old mice have a tendency to not accept the high resolution multiplier.
+They reply with a -EPIPE which was previously ignored.
 
-I agree with you that adding _if_valid or something equivalent to 
-highlight the conditional of this function would be a good idea.
+Force the call to resolution multiplier to be synchronous and actually
+check for the answer. If this fails, consider the mouse like a normal one.
 
-I'll think further about that name but yours looks good ;)
+Fixes: 2dc702c991e377 ("HID: input: use the Resolution Multiplier for
+       high-resolution scrolling")
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1700071
+Reported-and-tested-by: James Feeney <james@nurealm.net>
+Cc: stable@vger.kernel.org  # v5.0+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+---
+ drivers/hid/hid-core.c  |  7 +++-
+ drivers/hid/hid-input.c | 81 +++++++++++++++++++++++++----------------
+ include/linux/hid.h     |  2 +-
+ 3 files changed, 56 insertions(+), 34 deletions(-)
 
-
->> +{
->> +	vmf->pte = pte_offset_map_lock(vmf->vma->vm_mm, vmf->pmd,
->> +				       vmf->address, &vmf->ptl);
->> +	return true;
->> +}
->> +
->>   /*
->>    * handle_pte_fault chooses page fault handler according to an entry which was
->>    * read non-atomically.  Before making any commitment, on those architectures
-> 
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 76464aabd20c..92387fc0bf18 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -1637,7 +1637,7 @@ static struct hid_report *hid_get_report(struct hid_report_enum *report_enum,
+  * Implement a generic .request() callback, using .raw_request()
+  * DO NOT USE in hid drivers directly, but through hid_hw_request instead.
+  */
+-void __hid_request(struct hid_device *hid, struct hid_report *report,
++int __hid_request(struct hid_device *hid, struct hid_report *report,
+ 		int reqtype)
+ {
+ 	char *buf;
+@@ -1646,7 +1646,7 @@ void __hid_request(struct hid_device *hid, struct hid_report *report,
+ 
+ 	buf = hid_alloc_report_buf(report, GFP_KERNEL);
+ 	if (!buf)
+-		return;
++		return -ENOMEM;
+ 
+ 	len = hid_report_len(report);
+ 
+@@ -1663,8 +1663,11 @@ void __hid_request(struct hid_device *hid, struct hid_report *report,
+ 	if (reqtype == HID_REQ_GET_REPORT)
+ 		hid_input_report(hid, report->type, buf, ret, 0);
+ 
++	ret = 0;
++
+ out:
+ 	kfree(buf);
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(__hid_request);
+ 
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index 1fce0076e7dc..fadf76f0a386 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1542,52 +1542,71 @@ static void hidinput_close(struct input_dev *dev)
+ 	hid_hw_close(hid);
+ }
+ 
+-static void hidinput_change_resolution_multipliers(struct hid_device *hid)
++static bool __hidinput_change_resolution_multipliers(struct hid_device *hid,
++		struct hid_report *report, bool use_logical_max)
+ {
+-	struct hid_report_enum *rep_enum;
+-	struct hid_report *rep;
+ 	struct hid_usage *usage;
++	bool update_needed = false;
+ 	int i, j;
+ 
+-	rep_enum = &hid->report_enum[HID_FEATURE_REPORT];
+-	list_for_each_entry(rep, &rep_enum->report_list, list) {
+-		bool update_needed = false;
++	if (report->maxfield == 0)
++		return false;
+ 
+-		if (rep->maxfield == 0)
+-			continue;
++	/*
++	 * If we have more than one feature within this report we
++	 * need to fill in the bits from the others before we can
++	 * overwrite the ones for the Resolution Multiplier.
++	 */
++	if (report->maxfield > 1) {
++		hid_hw_request(hid, report, HID_REQ_GET_REPORT);
++		hid_hw_wait(hid);
++	}
+ 
+-		/*
+-		 * If we have more than one feature within this report we
+-		 * need to fill in the bits from the others before we can
+-		 * overwrite the ones for the Resolution Multiplier.
++	for (i = 0; i < report->maxfield; i++) {
++		__s32 value = use_logical_max ?
++			      report->field[i]->logical_maximum :
++			      report->field[i]->logical_minimum;
++
++		/* There is no good reason for a Resolution
++		 * Multiplier to have a count other than 1.
++		 * Ignore that case.
+ 		 */
+-		if (rep->maxfield > 1) {
+-			hid_hw_request(hid, rep, HID_REQ_GET_REPORT);
+-			hid_hw_wait(hid);
+-		}
++		if (report->field[i]->report_count != 1)
++			continue;
+ 
+-		for (i = 0; i < rep->maxfield; i++) {
+-			__s32 logical_max = rep->field[i]->logical_maximum;
++		for (j = 0; j < report->field[i]->maxusage; j++) {
++			usage = &report->field[i]->usage[j];
+ 
+-			/* There is no good reason for a Resolution
+-			 * Multiplier to have a count other than 1.
+-			 * Ignore that case.
+-			 */
+-			if (rep->field[i]->report_count != 1)
++			if (usage->hid != HID_GD_RESOLUTION_MULTIPLIER)
+ 				continue;
+ 
+-			for (j = 0; j < rep->field[i]->maxusage; j++) {
+-				usage = &rep->field[i]->usage[j];
++			*report->field[i]->value = value;
++			update_needed = true;
++		}
++	}
++
++	return update_needed;
++}
+ 
+-				if (usage->hid != HID_GD_RESOLUTION_MULTIPLIER)
+-					continue;
++static void hidinput_change_resolution_multipliers(struct hid_device *hid)
++{
++	struct hid_report_enum *rep_enum;
++	struct hid_report *rep;
++	int ret;
+ 
+-				*rep->field[i]->value = logical_max;
+-				update_needed = true;
++	rep_enum = &hid->report_enum[HID_FEATURE_REPORT];
++	list_for_each_entry(rep, &rep_enum->report_list, list) {
++		bool update_needed = __hidinput_change_resolution_multipliers(hid,
++								     rep, true);
++
++		if (update_needed) {
++			ret = __hid_request(hid, rep, HID_REQ_SET_REPORT);
++			if (ret) {
++				__hidinput_change_resolution_multipliers(hid,
++								    rep, false);
++				return;
+ 			}
+ 		}
+-		if (update_needed)
+-			hid_hw_request(hid, rep, HID_REQ_SET_REPORT);
+ 	}
+ 
+ 	/* refresh our structs */
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index ac0c70b4ce10..5a24ebfb5b47 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -894,7 +894,7 @@ struct hid_field *hidinput_get_led_field(struct hid_device *hid);
+ unsigned int hidinput_count_leds(struct hid_device *hid);
+ __s32 hidinput_calc_abs_res(const struct hid_field *field, __u16 code);
+ void hid_output_report(struct hid_report *report, __u8 *data);
+-void __hid_request(struct hid_device *hid, struct hid_report *rep, int reqtype);
++int __hid_request(struct hid_device *hid, struct hid_report *rep, int reqtype);
+ u8 *hid_alloc_report_buf(struct hid_report *report, gfp_t flags);
+ struct hid_device *hid_allocate_device(void);
+ struct hid_report *hid_register_report(struct hid_device *device,
+-- 
+2.19.2
 
