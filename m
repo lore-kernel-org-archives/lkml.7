@@ -2,64 +2,236 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B40C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1BBC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC1020878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED857218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bHFYCX9d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbfDXEQW (ORCPT
+        id S1726425AbfDXEaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 00:16:22 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:49800 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfDXEQV (ORCPT
+        Wed, 24 Apr 2019 00:30:01 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:44840 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725934AbfDXEaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 00:16:21 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A6C801423FDC2;
-        Tue, 23 Apr 2019 21:16:20 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 21:16:18 -0700 (PDT)
-Message-Id: <20190423.211618.1009243431874480506.davem@davemloft.net>
-To:     taoren@fb.com
-Cc:     maximmi@mellanox.com, bgolaszewski@baylibre.com,
-        sam@mendozajonas.com, jakub.kicinski@netronome.com, joel@jms.id.au,
-        andrew@aj.id.au, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH net v4] net/ncsi: handle overflow when incrementing mac
- address
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190424014310.24253-1-taoren@fb.com>
-References: <20190424014310.24253-1-taoren@fb.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Apr 2019 21:16:21 -0700 (PDT)
+        Wed, 24 Apr 2019 00:30:00 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O4Txcq031028
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 21:29:59 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=DYe1Kczls7Vz3TOywv3SCxyloB0ylRoW+6/MG/k28Aw=;
+ b=bHFYCX9dNv+cHnVzRdmj18VbL4bDaxiJJyLgc94iTPCfRd9wNi3dL/rByW9imQZa6iGr
+ kACIO/RjRo+g9bmaNvlqG0vBB/KS4n/qab2mlGo2lBZ6N+pY8AiRkfvXFNklVhQHI0sR
+ qBwXvEKBnK4lJsv6nu2Q33NJFu6LmyVS0aY= 
+Authentication-Results: fb.com;
+        spf=pass smtp.mailfrom=guro@fb.com
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2s28tp27fe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 21:29:59 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 23 Apr 2019 21:29:52 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id CBFA01142D2E6; Tue, 23 Apr 2019 14:31:36 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-team@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        <cgroups@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v2 4/6] mm: unify SLAB and SLUB page accounting
+Date:   Tue, 23 Apr 2019 14:31:31 -0700
+Message-ID: <20190423213133.3551969-5-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190423213133.3551969-1-guro@fb.com>
+References: <20190423213133.3551969-1-guro@fb.com>
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904240037
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tao Ren <taoren@fb.com>
-Date: Wed, 24 Apr 2019 01:43:32 +0000
+Currently the page accounting code is duplicated in SLAB and SLUB
+internals. Let's move it into new (un)charge_slab_page helpers
+in the slab_common.c file. These helpers will be responsible
+for statistics (global and memcg-aware) and memcg charging.
+So they are replacing direct memcg_(un)charge_slab() calls.
 
-> Previously BMC's MAC address is calculated by simply adding 1 to the
-> last byte of network controller's MAC address, and it produces incorrect
-> result when network controller's MAC address ends with 0xFF.
-> 
-> The problem can be fixed by calling eth_addr_inc() function to increment
-> MAC address; besides, the MAC address is also validated before assigning
-> to BMC.
-> 
-> Fixes: cb10c7c0dfd9 ("net/ncsi: Add NCSI Broadcom OEM command")
-> Signed-off-by: Tao Ren <taoren@fb.com>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ mm/slab.c | 19 +++----------------
+ mm/slab.h | 22 ++++++++++++++++++++++
+ mm/slub.c | 14 ++------------
+ 3 files changed, 27 insertions(+), 28 deletions(-)
 
-Applied and queued up for -stable, thanks everyone.
+diff --git a/mm/slab.c b/mm/slab.c
+index 14466a73d057..53e6b2687102 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -1389,7 +1389,6 @@ static struct page *kmem_getpages(struct kmem_cache *cachep, gfp_t flags,
+ 								int nodeid)
+ {
+ 	struct page *page;
+-	int nr_pages;
+ 
+ 	flags |= cachep->allocflags;
+ 
+@@ -1399,17 +1398,11 @@ static struct page *kmem_getpages(struct kmem_cache *cachep, gfp_t flags,
+ 		return NULL;
+ 	}
+ 
+-	if (memcg_charge_slab(page, flags, cachep->gfporder, cachep)) {
++	if (charge_slab_page(page, flags, cachep->gfporder, cachep)) {
+ 		__free_pages(page, cachep->gfporder);
+ 		return NULL;
+ 	}
+ 
+-	nr_pages = (1 << cachep->gfporder);
+-	if (cachep->flags & SLAB_RECLAIM_ACCOUNT)
+-		mod_lruvec_page_state(page, NR_SLAB_RECLAIMABLE, nr_pages);
+-	else
+-		mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE, nr_pages);
+-
+ 	__SetPageSlab(page);
+ 	/* Record if ALLOC_NO_WATERMARKS was set when allocating the slab */
+ 	if (sk_memalloc_socks() && page_is_pfmemalloc(page))
+@@ -1424,12 +1417,6 @@ static struct page *kmem_getpages(struct kmem_cache *cachep, gfp_t flags,
+ static void kmem_freepages(struct kmem_cache *cachep, struct page *page)
+ {
+ 	int order = cachep->gfporder;
+-	unsigned long nr_freed = (1 << order);
+-
+-	if (cachep->flags & SLAB_RECLAIM_ACCOUNT)
+-		mod_lruvec_page_state(page, NR_SLAB_RECLAIMABLE, -nr_freed);
+-	else
+-		mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE, -nr_freed);
+ 
+ 	BUG_ON(!PageSlab(page));
+ 	__ClearPageSlabPfmemalloc(page);
+@@ -1438,8 +1425,8 @@ static void kmem_freepages(struct kmem_cache *cachep, struct page *page)
+ 	page->mapping = NULL;
+ 
+ 	if (current->reclaim_state)
+-		current->reclaim_state->reclaimed_slab += nr_freed;
+-	memcg_uncharge_slab(page, order, cachep);
++		current->reclaim_state->reclaimed_slab += 1 << order;
++	uncharge_slab_page(page, order, cachep);
+ 	__free_pages(page, order);
+ }
+ 
+diff --git a/mm/slab.h b/mm/slab.h
+index 4a261c97c138..0f5c5444acf1 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -205,6 +205,12 @@ ssize_t slabinfo_write(struct file *file, const char __user *buffer,
+ void __kmem_cache_free_bulk(struct kmem_cache *, size_t, void **);
+ int __kmem_cache_alloc_bulk(struct kmem_cache *, gfp_t, size_t, void **);
+ 
++static inline int cache_vmstat_idx(struct kmem_cache *s)
++{
++	return (s->flags & SLAB_RECLAIM_ACCOUNT) ?
++		NR_SLAB_RECLAIMABLE : NR_SLAB_UNRECLAIMABLE;
++}
++
+ #ifdef CONFIG_MEMCG_KMEM
+ 
+ /* List of all root caches. */
+@@ -352,6 +358,22 @@ static inline void memcg_link_cache(struct kmem_cache *s,
+ 
+ #endif /* CONFIG_MEMCG_KMEM */
+ 
++static __always_inline int charge_slab_page(struct page *page,
++					    gfp_t gfp, int order,
++					    struct kmem_cache *s)
++{
++	memcg_charge_slab(page, gfp, order, s);
++	mod_lruvec_page_state(page, cache_vmstat_idx(s), 1 << order);
++	return 0;
++}
++
++static __always_inline void uncharge_slab_page(struct page *page, int order,
++					       struct kmem_cache *s)
++{
++	mod_lruvec_page_state(page, cache_vmstat_idx(s), -(1 << order));
++	memcg_uncharge_slab(page, order, s);
++}
++
+ static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+ {
+ 	struct kmem_cache *cachep;
+diff --git a/mm/slub.c b/mm/slub.c
+index 195f61785c7d..90563c0b3b5f 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1499,7 +1499,7 @@ static inline struct page *alloc_slab_page(struct kmem_cache *s,
+ 	else
+ 		page = __alloc_pages_node(node, flags, order);
+ 
+-	if (page && memcg_charge_slab(page, flags, order, s)) {
++	if (page && charge_slab_page(page, flags, order, s)) {
+ 		__free_pages(page, order);
+ 		page = NULL;
+ 	}
+@@ -1692,11 +1692,6 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
+ 	if (!page)
+ 		return NULL;
+ 
+-	mod_lruvec_page_state(page,
+-		(s->flags & SLAB_RECLAIM_ACCOUNT) ?
+-		NR_SLAB_RECLAIMABLE : NR_SLAB_UNRECLAIMABLE,
+-		1 << oo_order(oo));
+-
+ 	inc_slabs_node(s, page_to_nid(page), page->objects);
+ 
+ 	return page;
+@@ -1730,18 +1725,13 @@ static void __free_slab(struct kmem_cache *s, struct page *page)
+ 			check_object(s, page, p, SLUB_RED_INACTIVE);
+ 	}
+ 
+-	mod_lruvec_page_state(page,
+-		(s->flags & SLAB_RECLAIM_ACCOUNT) ?
+-		NR_SLAB_RECLAIMABLE : NR_SLAB_UNRECLAIMABLE,
+-		-pages);
+-
+ 	__ClearPageSlabPfmemalloc(page);
+ 	__ClearPageSlab(page);
+ 
+ 	page->mapping = NULL;
+ 	if (current->reclaim_state)
+ 		current->reclaim_state->reclaimed_slab += pages;
+-	memcg_uncharge_slab(page, order, s);
++	uncharge_slab_page(page, order, s);
+ 	__free_pages(page, order);
+ }
+ 
+-- 
+2.20.1
+
