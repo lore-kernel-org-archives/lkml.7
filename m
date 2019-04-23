@@ -2,161 +2,134 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2ABC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F50C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 479FE20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6419B20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:09:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="EyvQcSNn"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="mvLY+Ww0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbfDWQIR (ORCPT
+        id S1728533AbfDWQJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:08:17 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38378 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727754AbfDWQIQ (ORCPT
+        Tue, 23 Apr 2019 12:09:27 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35894 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727737AbfDWQJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:08:16 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d13so16714268qth.5
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:08:16 -0700 (PDT)
+        Tue, 23 Apr 2019 12:09:26 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l23so3458781lja.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:09:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qj9kbZXTr7zKXSHE2IT9VClpI1Uyp0gtKR/7siF1Glk=;
-        b=EyvQcSNnml041xkaDLLIO5BeLznQlgg4BzXua5XmF+zKQuIdaxoK4xv8Ab6lOm8hVT
-         uxxkZZYgYVb2HH/CpDeBq/daRO6WmuPv4h3bfUAGo1c0IlPttssyADTEPaGFoLDb7ISs
-         yJ7ZJ9WH7uxzclDSm2Ks0LY2gK/HYkXN3ya49aUtH4z+V4aJ5f6x7/4gxUg9cBFeOBdQ
-         SBY0sblmRYZzehOakw5F2fLqXIdUCKjjb2D3T4a2tRUk4fRYMjB4PYMKewhXRbkOAs5w
-         QkJD55d1ALn2HSjkTQ5HIqNyPYYjrMO6+2iPZxGwgk2VJWQePi+bb4bXMHfsEvp3IRGV
-         F1uw==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=B987w6H/8sLrkjb92qYyMAxvrC7y1yIfwD5xAOGqELY=;
+        b=mvLY+Ww0TF2UkCnhyiF3YEOBg2yn3r0wRvDrJ/gS91LsuCviMTm9pFFwGJdG2Tt6So
+         Eq7cwxuAhkYjBev0KDzoT0H7w0T+LXcxtJpmhtAKUYblhQ3QxyS5viTPL42IhJOyiIx4
+         AJctrPEGV8JmtmoPb4DC0LvOXbkhR0A7WIn9VhhY61hFhrUHZqO6MTdbzAMpELm3B/CW
+         d8qgw19+oOmEZyIGa6/W36Tvd6GMuevH0Qryuf/c+t+EGtuDJ0hpVlKKf+8G8NkH7s5p
+         /Rp6rGxFlEiDjhL0BI/3A9sttoGT28HVHiWGTRiUneKQ1Ar86g/cWUW9OzAIc0ugFIwl
+         Rjrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qj9kbZXTr7zKXSHE2IT9VClpI1Uyp0gtKR/7siF1Glk=;
-        b=cooeftDgVwSVrLjBkxQgacocr6FXKcpEEGVPmvIrCwNsNnIJue2mhNHcjAbeh0QlWp
-         xavZ7ylhcZ/QUDlJcR5UFjZ9iT/4rf/ffEHtrhqnbOu4a5U4UpY0NHgzL6Z8QomjaZg+
-         AO7KK0lgJ+63fsBg1sDzMRXM/PBdkV/ovO03KiFx0J4MQhPhfIpJxauLUBmr5zMEELUr
-         kjAfRym+gSx9cmqMyoaGrZLfa71kp3Y4cZVbUeX+i3L382Tm4r9elb9GhXJqSxyNVMsB
-         PsxTL2rkRcdQux+ywR8HAe0yWHkHp0c4OlaCurJskYn90l8QiGY+wDiXIbaLqhymqsl9
-         Q1ZA==
-X-Gm-Message-State: APjAAAWsDptRPuWr3aHr18QEWHdbEP0arf0F0LSSILKVc9QXg0NhAV5V
-        s6ry89/HN8dUb8PIB87A+STtgaY2kMrlXahONe+AiA==
-X-Google-Smtp-Source: APXvYqzLdCVPIVDntZf49wW20ABsFtDhDuMTwyIRRq8MruJKVGpP4y3iTg1QpqsEeXOwH9LkwwD8jqyUGsFwDFCtPSE=
-X-Received: by 2002:ac8:33b8:: with SMTP id c53mr21096700qtb.11.1556035695704;
- Tue, 23 Apr 2019 09:08:15 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=B987w6H/8sLrkjb92qYyMAxvrC7y1yIfwD5xAOGqELY=;
+        b=LtHfWT61BKD/iQkBy3JxMZcRyXP4IeETZA2sQicvkYPAvQv7pqnmtTdShG3BuQL453
+         c/x4VmzcvWU84suJgv08TlHjyWRNzQgxVw/VNn4mGBgBLAxXaKXIjXrSlg5V5FRN4759
+         p/FlGI6jTT9Op9wql21UXyBQc3HtSMV9ar5cW4WO0B8upoP/1ZWVlDDlbmpAtRujmSFY
+         /xARgQ4k9+bcHimQvXyeMfEwYkoLNTnyGwiGE402EB+REd32bHE8QAdyLV/2WPcl4QdC
+         OXZD6BMYKbULFPc9PYTFP14iOSJ8mw+03ea/avJrXTuqT0OhcFfIIALuSqWGBxRIyY29
+         mytg==
+X-Gm-Message-State: APjAAAWRO50r0UAwB4hctMj+r4wSfePMgey8l3vPkYgbN1HS/c8um7sX
+        ufZQEFOwtd55s/dRA0OE2MOV6g==
+X-Google-Smtp-Source: APXvYqx+P/bxote7QB0GizHRyFZECju3SA5IlB9D4y57NhwLsHlujQh9IG37ByidE/DTvMqe79C7ew==
+X-Received: by 2002:a2e:9597:: with SMTP id w23mr14252872ljh.111.1556035764793;
+        Tue, 23 Apr 2019 09:09:24 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.82.73])
+        by smtp.gmail.com with ESMTPSA id c5sm4538958ljd.18.2019.04.23.09.09.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 09:09:23 -0700 (PDT)
+Subject: Re: [PATCH v11 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
+To:     masonccyang@mxic.com.tw
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
+        marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        zhengxunli@mxic.com.tw
+References: <1555903925-15292-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555903925-15292-3-git-send-email-masonccyang@mxic.com.tw>
+ <d2a7a471-2847-b774-42b1-9feb8f4c69f3@cogentembedded.com>
+ <OFF96C004A.0EFDDD69-ON482583E5.0032EE18-482583E5.00337F42@mxic.com.tw>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <060316c8-7675-cfaf-bfef-c3e6458bfa82@cogentembedded.com>
+Date:   Tue, 23 Apr 2019 19:09:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-References: <1551289652-7377-1-git-send-email-mw@semihalf.com>
- <20190228093627.vtfglsl2djenohlm@shell.armlinux.org.uk> <CAPv3WKdj+EKr2VR+NcBHQrS9xoxHoMzZOri65G61CH6xLL8jFw@mail.gmail.com>
-In-Reply-To: <CAPv3WKdj+EKr2VR+NcBHQrS9xoxHoMzZOri65G61CH6xLL8jFw@mail.gmail.com>
-From:   Marcin Wojtas <mw@semihalf.com>
-Date:   Tue, 23 Apr 2019 18:08:00 +0200
-Message-ID: <CAPv3WKcDgY_LY_u8mY47ZZqT2iVL9fp5n3Le0UVWsyO4QDYP-A@mail.gmail.com>
-Subject: Re: [net: PATCH] net: mvpp2: disable link IRQ waiting for IDLE frames
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        netdev <netdev@vger.kernel.org>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Grzegorz Jaszczyk <jaz@semihalf.com>,
-        =?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>,
-        nadavh@marvell.com,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Tomasz Nowicki <tn@semihalf.com>,
-        Stefan Chulski <stefanc@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <OFF96C004A.0EFDDD69-ON482583E5.0032EE18-482583E5.00337F42@mxic.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David, Rusell,
+On 04/23/2019 12:22 PM, masonccyang@mxic.com.tw wrote:
 
-czw., 28 lut 2019 o 14:58 Marcin Wojtas <mw@semihalf.com> napisa=C5=82(a):
->
-> Hi Russell,
->
-> czw., 28 lut 2019 o 10:36 Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> napisa=C5=82(a):
-> >
-> > On Wed, Feb 27, 2019 at 06:47:32PM +0100, Marcin Wojtas wrote:
-> > > Current version of the driver was configuring XLG MAC
-> > > in a way to wait 3 IDLE frames before allowing for the
-> > > link-up interrupt to be triggered. This resulted in an
-> > > issue, preventing to detect the link change during RX
-> > > traffic on the interface. Fix that.
-> >
-> > What about noise sensitivity?  Does this now mean that on boards such a=
-s
-> > Macchiatobin Single Shot or Clearfog GT9k where the serdes is connected
-> > directly to a SFP cage, that noise on the serdes lines triggers a link
-> > indication?
-> >
->
-> Afaik waiting for idle frames is not required by any standard. In fact
-> this feature of the XLG MAC caused a risk that after dropping the link
-> during data transfer it would never go up again until remote peer
-> stops it.
->
-> I tested it on 3 different boards with SerDes directly connected to
-> the SFP cage and I'm also not aware of any reporte about
-> noise-triggered false link interrupts in XLG MAC (proprietary Marvell
-> mvpp2x driver did not use waiting 3 idle frames feature). I'd rather
-> assume the MAC is not vulnerable to it, and only properly established
-> link can trigger an event.
->
+>> > Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
+>> >
+>> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> [...]
+>>
+>>   Do dote that I'm opposed to the driver separation as it's presented in
+>> this patches, and I have a large patch reworking both MFD and SPI drivers
+>> in the works.
+>>
+> 
+> Do you mean add your name in both MFD & dt-binding ?
 
-This patch seems to get forgotten - any objections to merge it?
+   Of course not!
 
-Best regards,
-Marcin
+> i.e.,
+> [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF MFD bindings
+> 
+> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> 
+> 
+> [PATCH v12 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
+> 
+> Add a driver for Renesas R-Car Gen3 RPC-IF MFD.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> 
+> Is it ok ?
 
-> Best regards,
-> Marcin
->
-> > >
-> > > Fixes: 4bb043262878 ("net: mvpp2: phylink support")
-> > > Signed-off-by: Marcin Wojtas <mw@semihalf.com>
-> > > ---
-> > >  drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/driver=
-s/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > > index 16066c2..f1378f9 100644
-> > > --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > > +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> > > @@ -4532,8 +4532,7 @@ static void mvpp2_xlg_config(struct mvpp2_port =
-*port, unsigned int mode,
-> > >               ctrl0 |=3D MVPP22_XLG_CTRL0_RX_FLOW_CTRL_EN;
-> > >
-> > >       ctrl4 &=3D ~MVPP22_XLG_CTRL4_MACMODSELECT_GMAC;
-> > > -     ctrl4 |=3D MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC |
-> > > -              MVPP22_XLG_CTRL4_EN_IDLE_CHECK;
-> > > +     ctrl4 |=3D MVPP22_XLG_CTRL4_FWD_FC | MVPP22_XLG_CTRL4_FWD_PFC;
-> > >
-> > >       writel(ctrl0, port->base + MVPP22_XLG_CTRL0_REG);
-> > >       writel(ctrl4, port->base + MVPP22_XLG_CTRL4_REG);
-> > > --
-> > > 2.7.4
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > >
-> >
-> > --
-> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> > FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622k=
-bps up
-> > According to speedtest.net: 11.9Mbps down 500kbps up
+   I'm not OK with the most of the driver code ending up in the SPI driver,
+I think most of the code should be kept in the MFD driver and just be called
+by SPI/HF drivers.
+
+> best regards,
+> Mason
+
+MBR, Sergei
