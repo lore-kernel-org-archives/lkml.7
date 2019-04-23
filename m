@@ -2,114 +2,58 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7693AC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAF4C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B9420651
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34EFF217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729202AbfDWQn1 (ORCPT
+        id S1729159AbfDWQpF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:43:27 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:40429 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727656AbfDWQn1 (ORCPT
+        Tue, 23 Apr 2019 12:45:05 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49970 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfDWQpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:43:27 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TQ4.3kP_1556037781;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TQ4.3kP_1556037781)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 24 Apr 2019 00:43:15 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     mhocko@suse.com, vbabka@suse.cz, rientjes@google.com,
-        kirill@shutemov.name, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        Tue, 23 Apr 2019 12:45:05 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hIyXQ-0003zN-13; Tue, 23 Apr 2019 18:44:56 +0200
+Date:   Tue, 23 Apr 2019 18:44:55 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
         linux-kernel@vger.kernel.org
-Subject: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP eligibility
-Date:   Wed, 24 Apr 2019 00:43:01 +0800
-Message-Id: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+Subject: Re: [rcu:dev.2019.04.16a 38/72] kernel/rcu/tree.c:2408:36: sparse:
+ sparse: incorrect type in initializer (different address spaces)
+Message-ID: <20190423164455.gpaqksylv7ui3gxq@linutronix.de>
+References: <201904231828.a3jAyl28%lkp@intel.com>
+ <20190423124619.GH3923@linux.ibm.com>
+ <20190423150814.4lhcavywthyiwipd@linutronix.de>
+ <20190423163809.GQ3923@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190423163809.GQ3923@linux.ibm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
-vma") introduced THPeligible bit for processes' smaps. But, when checking
-the eligibility for shmem vma, __transparent_hugepage_enabled() is
-called to override the result from shmem_huge_enabled().  It may result
-in the anonymous vma's THP flag override shmem's.  For example, running a
-simple test which create THP for shmem, but with anonymous THP disabled,
-when reading the process's smaps, it may show:
+On 2019-04-23 09:38:09 [-0700], Paul E. McKenney wrote:
+> Ah, thank you!  Shall I fold the above patch into your existing one,
+> or are you looking to do something else here?
 
-7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
-Size:               4096 kB
-...
-[snip]
-...
-ShmemPmdMapped:     4096 kB
-...
-[snip]
-...
-THPeligible:    0
+The problem (that has been reported) isn't introduced by the patch in
+question but existed since the very beginning. I intend to post a patch
+with proper description.
 
-And, /proc/meminfo does show THP allocated and PMD mapped too:
+> 							Thanx, Paul
 
-ShmemHugePages:     4096 kB
-ShmemPmdMapped:     4096 kB
-
-This doesn't make too much sense.  The anonymous THP flag should not
-intervene shmem THP.  Calling shmem_huge_enabled() with checking
-MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
-dax vma check since we already checked if the vma is shmem already.
-
-Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
-v2: Check VM_NOHUGEPAGE per Michal Hocko
-
- mm/huge_memory.c | 4 ++--
- mm/shmem.c       | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 165ea46..5881e82 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -67,8 +67,8 @@ bool transparent_hugepage_enabled(struct vm_area_struct *vma)
- {
- 	if (vma_is_anonymous(vma))
- 		return __transparent_hugepage_enabled(vma);
--	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
--		return __transparent_hugepage_enabled(vma);
-+	if (vma_is_shmem(vma))
-+		return shmem_huge_enabled(vma);
- 
- 	return false;
- }
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 2275a0f..6f09a31 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -3873,6 +3873,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
- 	loff_t i_size;
- 	pgoff_t off;
- 
-+	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
-+	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
-+		return false;
- 	if (shmem_huge == SHMEM_HUGE_FORCE)
- 		return true;
- 	if (shmem_huge == SHMEM_HUGE_DENY)
--- 
-1.8.3.1
-
+Sebastian
