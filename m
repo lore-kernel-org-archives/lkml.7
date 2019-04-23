@@ -2,262 +2,270 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358B4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0EBC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F9021738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4380204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfDWMdy (ORCPT
+        id S1727701AbfDWMfr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:33:54 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:53085 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfDWMdy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:33:54 -0400
-X-Originating-IP: 90.88.160.238
-Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id CFC06C0015;
-        Tue, 23 Apr 2019 12:33:46 +0000 (UTC)
-Message-ID: <f288e1d29277fcd79b251d99f84fb9b165364fac.camel@bootlin.com>
-Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
- common place
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Daniel Vetter <daniel@ffwll.ch>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Date:   Tue, 23 Apr 2019 14:33:46 +0200
-In-Reply-To: <20190423073026.GX13337@phenom.ffwll.local>
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
-         <20190417154121.GJ13337@phenom.ffwll.local>
-         <20190418062229.eyog4i62eg4pr6uf@flea>
-         <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
-         <20190418090221.e57dogn4yx5nwdni@flea>
-         <6578c22ddf5420d4dead69d29f451bc6a91f6c4a.camel@bootlin.com>
-         <20190420224045.GY4964@pendragon.ideasonboard.com>
-         <20190423073026.GX13337@phenom.ffwll.local>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 
+        Tue, 23 Apr 2019 08:35:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40546 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbfDWMfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 08:35:47 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0714D309E972;
+        Tue, 23 Apr 2019 12:35:46 +0000 (UTC)
+Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E46D5D9D4;
+        Tue, 23 Apr 2019 12:35:41 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 06:35:40 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Daniel P. =?UTF-8?B?QmVycmFuZ8Op?=" <berrange@redhat.com>
+Cc:     Yan Zhao <yan.y.zhao@intel.com>,
+        intel-gvt-dev@lists.freedesktop.org, cjia@nvidia.com,
+        kvm@vger.kernel.org, aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        kwankhede@nvidia.com, eauger@redhat.com, yi.l.liu@intel.com,
+        eskultet@redhat.com, ziye.yang@intel.com, mlevitsk@redhat.com,
+        pasic@linux.ibm.com, libvir-list@redhat.com,
+        arei.gonglei@huawei.com, felipe@nutanix.com, Ken.Xue@amd.com,
+        kevin.tian@intel.com, dgilbert@redhat.com, zhenyuw@linux.intel.com,
+        changpeng.liu@intel.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, zhi.a.wang@intel.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com
+Subject: Re: [Qemu-devel] [PATCH 1/2] vfio/mdev: add version field as
+ mandatory attribute for mdev device
+Message-ID: <20190423063540.7ec83c31@x1.home>
+In-Reply-To: <20190423103939.GF6022@redhat.com>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+        <20190419083505.19654-1-yan.y.zhao@intel.com>
+        <20190423103939.GF6022@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 23 Apr 2019 12:35:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 23 Apr 2019 11:39:39 +0100
+Daniel P. Berrangé <berrange@redhat.com> wrote:
 
-On Tue, 2019-04-23 at 09:30 +0200, Daniel Vetter wrote:
-> On Sun, Apr 21, 2019 at 01:40:45AM +0300, Laurent Pinchart wrote:
-> > Hi Paul,
+> On Fri, Apr 19, 2019 at 04:35:04AM -0400, Yan Zhao wrote:
+> > device version attribute in mdev sysfs is used by user space software
+> > (e.g. libvirt) to query device compatibility for live migration of VFIO
+> > mdev devices. This attribute is mandatory if a mdev device supports live
+> > migration.
 > > 
-> > On Thu, Apr 18, 2019 at 01:49:54PM +0200, Paul Kocialkowski wrote:
-> > > On Thu, 2019-04-18 at 11:02 +0200, Maxime Ripard wrote:
-> > > > On Thu, Apr 18, 2019 at 09:52:10AM +0200, Daniel Vetter wrote:
-> > > > > And a lot of people pushed for the "fourcc is a standard", when
-> > > > > really it's totally not.
-> > > > 
-> > > > Even if it's not a standard, having consistency would be a good thing.
-> > > > 
-> > > > And you said yourself that DRM fourcc is now pretty much an authority
-> > > > for the fourcc, so it definitely looks like a standard to me.
-> > > 
-> > > I think trying to make the V4L2 and DRM fourccs converge is a lost
-> > > cause, as it has already significantly diverged. Even if we coordinate
-> > > an effort to introduce new formats with the same fourcc on both sides,
-> > > I don't see what good that would be since the formats we have now are
-> > > still plagued by the inconsistency.
-> > > 
-> > > I think we always need an explicit translation step from either v4l2 or
-> > > drm to the internal representation and back, without ever assuming that
-> > > formats might be compatible because they share the same fourcc.
+> > It consists of two parts: common part and vendor proprietary part.
+> > common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
+> >              identifies device type. e.g., for pci device, it is
+> >              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> > vendor proprietary part: this part is varied in length. vendor driver can
+> >              specify any string to identify a device.
 > > 
-> > I don't agree. APIs evolve, and while we can't switch from one set of
-> > 4CCs to another in existing APIs, we could in new APIs. Boris is working
-> > on new ioctls to handle formats in V4L2, and while 4CC unification could
-> > be impopular from a userspace developers point of view there, I don't
-> > think we have ruled it out completely. The move to the request API is
-> > also an area where a common set of 4CCs could be used, as it will depart
-> > from the existing V4L2 ioctls. To summarize my opinion, we're not there
-> > yet, but I wouldn't rule it out completely for the future.
+> > When reading this attribute, it should show device version string of the
+> > device of type <type-id>. If a device does not support live migration, it
+> > should return errno.
+> > When writing a string to this attribute, it returns errno for
+> > incompatibility or returns written string length in compatibility case.
+> > If a device does not support live migration, it always returns errno.
 > > 
-> > > It looks like so far, V4L2 pixel formats describe a DRM pixel format +
-> > > modifier.
+> > For user space software to use:
+> > 1.
+> > Before starting live migration, user space software first reads source side
+> > mdev device's version. e.g.
+> > "#cat \
+> > /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type/version"
+> > 00028086-193b-i915-GVTg_V5_4
 > > 
-> > DRM modifiers are mostly about tiling and compression, and we hardly
-> > support these in V4L2. What are the modifiers you think are hardcoded in
-> > 4CCs in V4L2 ?
+> > 2.
+> > Then, user space software writes the source side returned version string
+> > to device version attribute in target side, and checks the return value.
+> > If a negative errno is returned in the target side, then mdev devices in
+> > source and target sides are not compatible;
+> > If a positive number is returned and it equals to the length of written
+> > string, then the two mdev devices in source and target side are compatible.
+> > e.g.
+> > (a) compatibility case
+> > "# echo 00028086-193b-i915-GVTg_V5_4 >
+> > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+> > 
+> > (b) incompatibility case
+> > "#echo 00028086-193b-i915-GVTg_V5_1 >
+> > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+> > -bash: echo: write error: Invalid argument  
 > 
-> Hm maybe it was a drm one that didn't come from v4l or anywhere else
-> really, but the NV12MT one is nv12 + some tiling. I think we managed to
-> uapi-bend that one into shape in at least drm.
+> What you have written here seems to imply that each mdev type is able to
+> support many different versions at the same time. Writing a version into
+> this sysfs file then chooses which of the many versions to actually use.
 
-The one I had in mind is V4L2_PIX_FMT_SUNXI_TILED_NV12 which translates
-to DRM_FORMAT_NV12 + DRM_FORMAT_MOD_ALLWINNER_TILED. Seems to be a
-pretty similar case to the Mediatek one indeed.
+That's not actually what's being proposed here, reading the version
+attribute provides an opaque string.  Writing the version attribute
+from a different system reports whether that version string is
+compatible for migration.  IOW, we're not creating a device of a given
+version, we're only reporting if that version is compatible with this
+mdev.  The version is intentionally opaque to allow vendor specific
+nuances, therefore it's rather impractical create the sort of version
+list requested below.
 
-In our cause, that's because the video decoding engine produces its
-destination buffers in a specific tiled format, that the display engine
-can take in directly.
-
-Cheers,
-
-Paul
-
-> -Daniel
+> This is good as it allows for live migration across driver software upgrades.
 > 
-> > > I think Boris (CCed) is working to change that by allowing to
-> > > pass a DRM modifier through V4L2. With that, we'd be in a situation
-> > > where some formats are described by the v4l2 pixfmt alone and some
-> > > formats are also described a modifier (but I looked at it from a
-> > > distance so might have misunderstod). That feels better since it avoids
-> > > the combinatory explosion from describing each format + modifier
-> > > individually.
-> > > 
-> > > What do you think?
-> > > 
-> > > > > v4l tends to conflate pixel format with stuff that we tend to encode
-> > > > > in modifiers a lot more.
-> > > > 
-> > > > Boris is working on adding the modifiers concept to v4l2, so we're
-> > > > converging here, and we can totally have a layer in v4l2 to convert
-> > > > between old v4l2 "format+modifiers" formats, and DRM style formats.
-> > > > 
-> > > > > There's a bunch of reasons we can't just use v4l, and they're as
-> > > > > valid as ever:
-> > > > > 
-> > > > > - We overlap badly in some areas, so even if fourcc codes match, we
-> > > > >   can't use them and need a duplicated DRM_FOURCC code.
-> > > > 
-> > > > Do yo have an example of one of those areas?
-> > > > 
-> > > > > - v4l encodes some metadata into the fourcc that we encode elsewhere,
-> > > > >   e.g. offset for planar yuv formats, or tiling mode
-> > > > 
-> > > > As I was saying, this changes on the v4l2 side, and converging to
-> > > > what DRM is doing.
-> > > > 
-> > > > > - drm fourcc code doesn't actually define the drm_format_info
-> > > > >   uniquely, drivers can override that (that's an explicit design
-> > > > >   intent of modifiers, to allow drivers to add another plane for
-> > > > >   e.g. compression information). You'd need to pull that driver
-> > > > >   knowledge into your format library.
-> > > > 
-> > > > I'm not sure how my patches are changing anything here. This is
-> > > > litterally the same code, with the functions renamed.
-> > > > 
-> > > > If drivers want to override that, then yeah, fine, we can let them do
-> > > > that. Just like any helper this just provides a default that covers
-> > > > most of the cases.
-> > > > 
-> > > > > Iow there's no way we can easily adopt v4l fourcc, except if we do
-> > > > > something like a new addfb flag.
-> > > > 
-> > > > For the formats that would be described as a modifier, sure. For all
-> > > > the others (that are not yet supported by DRM), then I don't really
-> > > > see why not.
-> > > > 
-> > > > > > And given how the current state is a mess in this regard, I'm not too
-> > > > > > optimistic about keeping the formats in their relevant frameworks.
-> > > > > > 
-> > > > > > Having a shared library, governed by both, will make this far easier,
-> > > > > > since it will be easy to discover the formats that are already
-> > > > > > supported by the other subsystem.
-> > > > > 
-> > > > > I think a compat library that (tries to, best effort) convert between
-> > > > > v4l and drm fourcc would make sense. Somewhere in drivers/video, next
-> > > > > to the conversion functions for videomode <-> drm_display_mode
-> > > > > perhaps. That should be useful for drivers.
-> > > > 
-> > > > That's not really what this series is about though. That series is
-> > > > about sharing the (image|pixels) formats database across everyone so
-> > > > that everyone can benefit from it.
-> > > > 
-> > > > > Unifying the formats themselves, and all the associated metadata is
-> > > > > imo a no-go, and was a pretty conscious decision when we implemented
-> > > > > drm_fourcc a few years back.
-> > > > > 
-> > > > > > If we want to keep the current library in DRM, we have two options
-> > > > > > then:
-> > > > > > 
-> > > > > >   - Support all the v4l2 formats in the DRM library, which is
-> > > > > >     essentially what I'm doing in the last patches. However, that
-> > > > > >     would require to have the v4l2 developpers also reviewing stuff
-> > > > > >     there. And given how busy they are, I cannot really see how that
-> > > > > >     would work.
-> > > > > 
-> > > > > Well, if we end up with a common library then yes we need cross
-> > > > > review. There's no way around that. Doesn't matter where exactly that
-> > > > > library is in the filesystem tree, and adding a special MAINTAINERS
-> > > > > entry for anything related to fourcc (both drm and v4l) to make sure
-> > > > > they get cross-posted is easy. No file renaming needed.
-> > > > 
-> > > > That would create some governing issues as well. For example, if you
-> > > > ever have a patch from one fourcc addition (that might or might not be
-> > > > covered by v4l2), will you wait for any v4l2 developper to review it?
-> > > > 
-> > > > If it's shared code, then it should be shared, and every client
-> > > > framework put on an equal footing.
-> > > > 
-> > > > > >   - Develop the same library from within v4l2. That is really a poor
-> > > > > >     solution, since the information would be greatly duplicated
-> > > > > >     between the two, and in terms of maintainance, code, and binary
-> > > > > >     size that would be duplicated too.
-> > > > > 
-> > > > > It's essentially what we decided to do for drm years back.
-> > > > 
-> > > > And it was probably the right solution back then, but I'm really not
-> > > > convinced it's still the right thing to do today.
-> > > > 
-> > > > > > Having it shared allows to easily share, and discover formats from the
-> > > > > > other subsystem, and to have a single, unique place where this is
-> > > > > > centralized.
-> > > > > 
-> > > > > What I think could work as middle ground:
-> > > > > - Put drm_format stuff into a separate .ko
-> > > > > - Add a MAINTAINERS entry to make sure all things fourcc are cross
-> > > > > posted to both drm and v4l lists. Easy on the drm side, since it's all
-> > > > > separate files. Not sure it's so convenient for v4l uapi.
-> > > > > - Add a conversion library that tries to best-effort map between drm
-> > > > > and v4l formats. On the drm side that most likely means you need
-> > > > > offsets for planes, and modifiers too (since those are implied in some
-> > > > > v4l fourcc). Emphasis on "best effort" i.e. only support as much as
-> > > > > the drivers that use this library need.
-> > > > > - Add drm_fourcc as-needed by these drivers that want to use a unified
-> > > > > format space.
-> > > > > 
-> > > > > Forcing this unification on everyone otoh is imo way too much.
-> > > > 
-> > > > v4l2 is starting to converge with DRM, and we're using the DRM API
-> > > > pretty much untouched for that library, so I'm not really sure how
-> > > > anyone is hurt by that unification.
-> > 
-> > -- 
-> > Regards,
-> > 
-> > Laurent Pinchart
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+> A mgmt application may well want to know what versions are supported for an
+> mdev type *before* starting a migration. A mgmt app can query all the 100's
+> of hosts it knows and thus figure out which are valid to use as the target
+> of a migration.
+> 
+> IOW, we want to avoid the ever hitting the incompatibility case in the
+> first place, by only choosing to migrate to a host that we know is going
+> to be compatible.
 
+This is provided, the migration source reports a version string which
+can be queried against the version attribute on other hosts to insure
+compatibility prior to migration.
+
+> This would need some kind of way to report the full list of supported
+> versions against the mdev supported types on the host.
+
+This is not provided, matching versions are vendor specific.
+
+> > 3. if two mdev devices are compatible, user space software can start
+> > live migration, and vice versa.
+> > 
+> > Note: if a mdev device does not support live migration, it either does
+> > not provide a version attribute, or always returns errno when its version
+> > attribute is read/written.
+> > 
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Erik Skultety <eskultet@redhat.com>
+> > Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> > Cc: Cornelia Huck <cohuck@redhat.com>
+> > Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> > Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> > Cc: Neo Jia <cjia@nvidia.com>
+> > Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> > 
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  Documentation/vfio-mediated-device.txt | 36 ++++++++++++++++++++++++++
+> >  samples/vfio-mdev/mbochs.c             | 17 ++++++++++++
+> >  samples/vfio-mdev/mdpy.c               | 16 ++++++++++++
+> >  samples/vfio-mdev/mtty.c               | 16 ++++++++++++
+> >  4 files changed, 85 insertions(+)
+> > 
+> > diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
+> > index c3f69bcaf96e..bc28471c0667 100644
+> > --- a/Documentation/vfio-mediated-device.txt
+> > +++ b/Documentation/vfio-mediated-device.txt
+> > @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
+> >    |     |   |--- available_instances
+> >    |     |   |--- device_api
+> >    |     |   |--- description
+> > +  |     |   |--- version
+> >    |     |   |--- [devices]
+> >    |     |--- [<type-id>]
+> >    |     |   |--- create
+> > @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
+> >    |     |   |--- available_instances
+> >    |     |   |--- device_api
+> >    |     |   |--- description
+> > +  |     |   |--- version
+> >    |     |   |--- [devices]
+> >    |     |--- [<type-id>]
+> >    |          |--- create
+> > @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
+> >    |          |--- available_instances
+> >    |          |--- device_api
+> >    |          |--- description
+> > +  |          |--- version
+> >    |          |--- [devices]
+> >  
+> >  * [mdev_supported_types]
+> > @@ -225,6 +228,8 @@ Directories and files under the sysfs for Each Physical Device
+> >    [<type-id>], device_api, and available_instances are mandatory attributes
+> >    that should be provided by vendor driver.
+> >  
+> > +  version is a mandatory attribute if a mdev device supports live migration.
+> > +
+> >  * [<type-id>]
+> >  
+> >    The [<type-id>] name is created by adding the device driver string as a prefix
+> > @@ -246,6 +251,35 @@ Directories and files under the sysfs for Each Physical Device
+> >    This attribute should show the number of devices of type <type-id> that can be
+> >    created.
+> >  
+> > +* version
+> > +
+> > +  This attribute is rw. It is used to check whether two devices are compatible
+> > +  for live migration. If this attribute is missing, then the corresponding mdev
+> > +  device is regarded as not supporting live migration.
+> > +
+> > +  It consists of two parts: common part and vendor proprietary part.
+> > +  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
+> > +               device type. e.g., for pci device, it is
+> > +               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> > +  vendor proprietary part: this part is varied in length. vendor driver can
+> > +               specify any string to identify a device.
+> > +
+> > +  When reading this attribute, it should show device version string of the device
+> > +  of type <type-id>. If a device does not support live migration, it should
+> > +  return errno.
+> > +  When writing a string to this attribute, it returns errno for incompatibility
+> > +  or returns written string length in compatibility case. If a device does not
+> > +  support live migration, it always returns errno.
+> > +
+> > +  for example.
+> > +  # cat \
+> > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_2/version
+> > +  00028086-193b-i915-GVTg_V5_2
+> > +
+> > +  #echo 00028086-193b-i915-GVTg_V5_2 > \
+> > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
+> > + -bash: echo: write error: Invalid argument
+> > +  
+> 
+> IIUC this path is against the physical device. IOW, the mgmt app would have
+> to first write to the "version" file to choose a version, and then write to
+> the "create" file to actually create an virtual device. This has the obvious
+> concurrency problem if multiple devices are being created at the same time
+> and distinct versions for each device are required. There would need to be
+> a locking scheme defined to ensure safety.
+
+"Create a device of a given version" is not an intended feature of this
+interface aiui.  Writing the version attribute only indicates
+migration compatibility with a binary result.
+ 
+> Wouldn't it be better if we can pass the desired version when we write to
+> the "create" file, so that we avoid any concurrent usage problems. "version"
+> could be just a read-only file with a *list* of supported versions.
+> 
+> eg
+> 
+>   $ cat /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
+>   5.0
+>   5.1
+>   5.2
+> 
+>   $ echo "83b8f4f2-509f-382f-3c1e-e6bfe0fa1001;version=5.2" >
+>       /sys/devices/virtual/mtty/mtty/mdev_supported_types/mtty-2/create
+
+This is reminiscent of the proposed aggregation support, but again,
+this sort of feature is not intended here.  It's no expected that any
+vendor driver would support creating device types of different
+versions, but they may support migration from different versions.
+Thanks,
+
+Alex
