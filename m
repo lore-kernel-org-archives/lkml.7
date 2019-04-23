@@ -2,184 +2,181 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C121C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6645C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697BB218D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00DD218D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t8OafW3s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DBJgJ3JF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbfDWWuT (ORCPT
+        id S1728611AbfDWWvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:50:19 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45988 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfDWWta (ORCPT
+        Tue, 23 Apr 2019 18:51:10 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33557 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfDWWvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:49:30 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y6so14964746ljd.12;
-        Tue, 23 Apr 2019 15:49:27 -0700 (PDT)
+        Tue, 23 Apr 2019 18:51:10 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d55so14189036ede.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:51:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nf5p2Hszyn7zksK8vUlbN9/At8QF1xygcv19ymXYW3s=;
-        b=t8OafW3s67dc/e2f5ea3EKPsRNwVMA+tSDMPuKeRJfh+A7l7j3BT+LhzhKkcgV9Djy
-         YQ75W3UTwjty7OcwReU8rwTZlkmf3YzYQpGlLorRFGY+/j7bXViz3vX3cetkHN4Iz2Qw
-         TqM4NitL9g1h5fz8ZcQh3mT0GGosgBZX2kvNxkfxcoP4ioMBqpuiCcw1sZhrBx/DDzyA
-         KexhVilA/my06BDZM6oeb+oZ72yMNVj3PiSdwODG9QZl+dzQb9grqg3qjGgzlvGHBuQI
-         EW9Tq2juRtaSST6bZXW7cQWxAzSjuuVMnUBrMc6awP+8fptOxjvIXEGKGdMbdN3XHDgc
-         RZ6w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Azihi0+y+0A9GqQQKlVvEfb9wIg0Y4clL04ZCREwPkY=;
+        b=DBJgJ3JFtWrhy6k9uAuDJH1eTtTuqdpkfE62I2fdCmymaSazbsb9HkLkhe+94dUSHL
+         dPdG0lEPRDlK9G005sQJCiSAlaDdUS9TGpd731NTC/aKLaDjl4W6ulM+cRg9wbJd27PK
+         bsXEsFTcqn8gNGHcaS78nfgzY4dw5UjEvmrvpRsUiVTL5+CAogclUPigxD8sO1ehHi/d
+         fBESRTO6Ts73/CXNm7xcFe5t/NHJg7ew8COCVnivHCbOlZQJKBw/w1bpi1B5Dt7aWcQt
+         Uu1F7Fs2caWVvLGN9CCf7Ii+nbQmpir9ZzZQc5SUEWG+v9mPFZkj8ba5ibmYYydO1STg
+         /3kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nf5p2Hszyn7zksK8vUlbN9/At8QF1xygcv19ymXYW3s=;
-        b=thtozZOTsocJ0iKrUppW984pipSwDZYs3QOVR6be6w4GHTqYjcC5hAj9ncfYaYL2+U
-         /P5/xmQxYW/wtXM7Ujs6MZqeqzI1YgRS9O0kXMrxXm+P62bIyuLbf7ceDUPa3tVSJPlT
-         SVUPB2qMZJpJQZ3m8i06fKS3TGGiT+xBUO3oS9RqiVvKH1UXW7sDFpKmlS58UMsFlkPN
-         yOuxXvV+W/Xo/13kysSicbPpqtcbu00u6yuV2nnP97Ey+6MxbwLsbLrrkm04Uoy/bRUp
-         le1OaQMBXhyhzccu0u1KZMdrYr7iHqn1Q+gVgKVLnfjAm92Hn7NDEWIva2PFUFasRDiE
-         tgJA==
-X-Gm-Message-State: APjAAAUULnGdlrAnChhult5Bf81ada12LQuTQyYDIYiiUkMr8Zc7jqr2
-        dVJDXJXrz1pcedf3N/OKOqc=
-X-Google-Smtp-Source: APXvYqx3NfW75naO0rRCrxSVqpPFHGqC3Y3W2/GsE/V2uKHOBfmNUOiAcTk9Si95omHfgqBDlsCJsw==
-X-Received: by 2002:a2e:97d3:: with SMTP id m19mr1224671ljj.63.1556059767142;
-        Tue, 23 Apr 2019 15:49:27 -0700 (PDT)
-Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id w2sm4904722lfa.63.2019.04.23.15.49.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 15:49:26 -0700 (PDT)
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Juergen Gross <jgross@suse.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 03/12] mips: Combine memblock init and memory reservation loops
-Date:   Wed, 24 Apr 2019 01:47:39 +0300
-Message-Id: <20190423224748.3765-4-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190423224748.3765-1-fancer.lancer@gmail.com>
-References: <20190423224748.3765-1-fancer.lancer@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Azihi0+y+0A9GqQQKlVvEfb9wIg0Y4clL04ZCREwPkY=;
+        b=dJhwPW7Iq16r4IK2hj0ClgflwPsDKXmTdXJzCUCb5dnISV8VMfSHdegxOkd9+ntnAb
+         lS8VyBPX83ltfnqqpIvL0Iy8EHpfoSzVy+5cgBoLAQpLgl5QKp0TZlU1wmxNom/RKrho
+         Eihs45cnYJU1x/tAyn147j9SfMQsBWihNbpI8JEfJxNrMd2jYA4hCA5Sagt6dH1oR1nH
+         sNlZjMCKGa9P6GxLdFQFShTGlTNPq78XHKONAcYdPGv1lLDgqthUYLhiWmGSwnycZZ2n
+         gEMuUrZIW49dQ65p5yNE36/jPuLqiFlLtFzwE5Bgymj6kVrCY3BUDRc6TlFnu5eyTjzt
+         tcXA==
+X-Gm-Message-State: APjAAAUmr4snBeAuop63RJ+vueetFES98jdcKwtk0H+A2kSSMIEl086N
+        BoKWXtn9ajGWpeVbLAsNLUInymKJEskV8vCKOtFLUQ==
+X-Google-Smtp-Source: APXvYqzAgWSvFmwXvZqHU/FHFza7GHyetVHeAnFJmJCXz5ucFwqzPKxmGeB1UPL7/LK2EWoMsV3eqS7yhFuHHd/5b0s=
+X-Received: by 2002:a50:b265:: with SMTP id o92mr18010685edd.221.1556059867217;
+ Tue, 23 Apr 2019 15:51:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190416170701.50333-1-wvw@google.com> <1555923800.26198.30.camel@intel.com>
+ <CAGXk5yoXgzYyK9eJMHietgqPqyT_QHXAby6+G_fSwXL-tKfd=Q@mail.gmail.com> <1556000129.26198.50.camel@intel.com>
+In-Reply-To: <1556000129.26198.50.camel@intel.com>
+From:   Wei Wang <wvw@google.com>
+Date:   Tue, 23 Apr 2019 15:50:53 -0700
+Message-ID: <CAGXk5ypj0ULM6mN1ZUYZimuf+7DV3BrN9wJWTm2G27OrizjzwA@mail.gmail.com>
+Subject: Re: [PATCH] thermal: core: skip update disabled thermal zones after suspend
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     Wei Wang <wei.vince.wang@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before bootmem was completely removed from the kernel, the last loop
-in the bootmem_init() had been used to reserve the correspondingly
-marked regions, initialize sparsemem sections and to free the low memory
-pages, which then would be used for early memory allocations. After the
-bootmem removing patchset had been merged the loop was left to do the first
-two things only. But it didn't do them quite well.
+On Mon, Apr 22, 2019 at 11:15 PM Zhang Rui <rui.zhang@intel.com> wrote:
+>
+> On =E4=B8=80, 2019-04-22 at 09:44 -0700, Wei Wang wrote:
+> > On Mon, Apr 22, 2019 at 2:03 AM Zhang Rui <rui.zhang@intel.com>
+> > wrote:
+> > >
+> > >
+> > > On =E4=BA=8C, 2019-04-16 at 10:07 -0700, Wei Wang wrote:
+> > > >
+> > > > It is unnecessary to update disabled thermal zones post suspend
+> > > > and
+> > > > sometimes leads error/warning in bad behaved thermal drivers.
+> > > >
+> > > a good catch, and in fact, there are more issues about thermal
+> > > handling
+> > > for disabled thermal zones, like we're able to read the temperature
+> > > of
+> > > disabled thermal zones, either via sysfs or via function calls like
+> > > thermal_zone_device_update.
+> > Thanks Rui for following up. Yes, we noticed the same behavior. Right
+> > now, individual thermal driver can still respect set_mode and present
+> > value meaningful or return error when thermal zone disabled, and
+> > that's what we do locally.
+> > Currently, sysfs-api documents "Preventing kernel thermal zone driver
+> > actions upon trip points so that user application can take full
+> > charge
+> > of the thermal management.", so is it intended for some other agents
+> > in kernel or user land polling temperature with function call or
+> > sysfs
+> > respectively?
+>
+> hmmm, here we have three cases,
+> 1). we can read the temperature and we can take cooling actions.
+> 2). we can read the temperature only
+> 3). we can not read the temperature
+>
+> we do have a case for 3), e.g. the wifi device, which registers a
+> thermal zone, but it does not work if wifi firmware is unloaded. And
+> IMO, we should set the thermal zone mode to disable for this case.
 
-First of all it leaves the BOOT_MEM_INIT_RAM memory types unreserved,
-which is definitely bug (although it isn't noticeable due to being used
-by the kernel region only, which is fully marked as reserved). Secondly
-the reservation is supposed to be done for any memory including the
-high one. (I couldn't figure out why the highmem was ignored in the first
-place, since platforms and dts' may declare any memory region for
-reservation) Thirdly the reserved_end variable had been used here to not
-accidentally free memory occupied by kernel. Since we already reserved the
-corresponding region higher in this method there is no need in using the
-variable here anymore. Fourthly the sparsemem should be aware of all the
-memory types in the system including the ROM_DATA even if it is going to
-be reserved for the whole system uptime. Finally after all these notes are
-fixed the loop of memory reservation can be freely merged into the memory
-installation loop as it's done in this patch.
+Agree.
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
----
- arch/mips/kernel/setup.c | 48 ++++++----------------------------------
- 1 file changed, 7 insertions(+), 41 deletions(-)
+Another thought of suspend/resume case is in mobile world, most of the
+thermal zone sensors are interrupt capable and the linked cooling
+devices are platform cooling devices whose states won't be affected
+during suspend.  So resetting each thermal zone during suspend/resume
+just wasted cycles/power on mobile due to re-setting trip threshold
+again and again and also delays in device resume. I am proposing that
+we have a flag in device tree per thermal zone to let thermal core not
+reset during suspend/resume.
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 53d93a727d1a..185e0e42e009 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -483,55 +483,21 @@ static void __init bootmem_init(void)
- 			continue;
- 
- 		memblock_add_node(PFN_PHYS(start), PFN_PHYS(end - start), 0);
--	}
--
--	/*
--	 * Register fully available low RAM pages with the bootmem allocator.
--	 */
--	for (i = 0; i < boot_mem_map.nr_map; i++) {
--		unsigned long start, end, size;
--
--		start = PFN_UP(boot_mem_map.map[i].addr);
--		end   = PFN_DOWN(boot_mem_map.map[i].addr
--				    + boot_mem_map.map[i].size);
- 
--		/*
--		 * Reserve usable memory.
--		 */
-+		/* Reserve any memory except the ordinary RAM ranges. */
- 		switch (boot_mem_map.map[i].type) {
- 		case BOOT_MEM_RAM:
- 			break;
--		case BOOT_MEM_INIT_RAM:
--			memory_present(0, start, end);
--			continue;
--		default:
--			/* Not usable memory */
--			if (start > min_low_pfn && end < max_low_pfn)
--				memblock_reserve(boot_mem_map.map[i].addr,
--						boot_mem_map.map[i].size);
--
--			continue;
-+		default: /* Reserve the rest of the memory types at boot time */
-+			memblock_reserve(PFN_PHYS(start), PFN_PHYS(end - start));
-+			break;
- 		}
- 
- 		/*
--		 * We are rounding up the start address of usable memory
--		 * and at the end of the usable range downwards.
--		 */
--		if (start >= max_low_pfn)
--			continue;
--		if (start < reserved_end)
--			start = reserved_end;
--		if (end > max_low_pfn)
--			end = max_low_pfn;
--
--		/*
--		 * ... finally, is the area going away?
-+		 * In any case the added to the memblock memory regions
-+		 * (highmem/lowmem, available/reserved, etc) are considered
-+		 * as present, so inform sparsemem about them.
- 		 */
--		if (end <= start)
--			continue;
--		size = end - start;
--
--		/* Register lowmem ranges */
- 		memory_present(0, start, end);
- 	}
- 
--- 
-2.21.0
+> I'm not sure if there is any case for 2), but if we do, it seems to me
+> that we should set its governor to nop, rather then the way we're
+> describing in the sys-abi file.
++1 noop sounds good. Do you have plan to change it?
 
+>
+> we should fix the code and doc to use "mode" attribute to handle case
+> 3) instead.
+>
+> thanks,
+> rui
+> >
+> > Thanks!
+> > -Wei
+> > >
+> > > For this patch, I will take it as it fixes one of the problem.
+> > >
+> > > thanks,
+> > > rui
+> > >
+> > > >
+> > > > Signed-off-by: Wei Wang <wvw@google.com>
+> > > > ---
+> > > >  drivers/thermal/thermal_core.c | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > >
+> > > > diff --git a/drivers/thermal/thermal_core.c
+> > > > b/drivers/thermal/thermal_core.c
+> > > > index 6590bb5cb688..5baf5cfab999 100644
+> > > > --- a/drivers/thermal/thermal_core.c
+> > > > +++ b/drivers/thermal/thermal_core.c
+> > > > @@ -1494,6 +1494,7 @@ static int thermal_pm_notify(struct
+> > > > notifier_block *nb,
+> > > >                            unsigned long mode, void *_unused)
+> > > >  {
+> > > >       struct thermal_zone_device *tz;
+> > > > +     enum thermal_device_mode tz_mode;
+> > > >
+> > > >       switch (mode) {
+> > > >       case PM_HIBERNATION_PREPARE:
+> > > > @@ -1506,6 +1507,13 @@ static int thermal_pm_notify(struct
+> > > > notifier_block *nb,
+> > > >       case PM_POST_SUSPEND:
+> > > >               atomic_set(&in_suspend, 0);
+> > > >               list_for_each_entry(tz, &thermal_tz_list, node) {
+> > > > +                     tz_mode =3D THERMAL_DEVICE_ENABLED;
+> > > > +                     if (tz->ops->get_mode)
+> > > > +                             tz->ops->get_mode(tz, &tz_mode);
+> > > > +
+> > > > +                     if (tz_mode =3D=3D THERMAL_DEVICE_DISABLED)
+> > > > +                             continue;
+> > > > +
+> > > >                       thermal_zone_device_init(tz);
+> > > >                       thermal_zone_device_update(tz,
+> > > >                                                  THERMAL_EVENT_UN
+> > > > S
+> > > > PECIFIED);
