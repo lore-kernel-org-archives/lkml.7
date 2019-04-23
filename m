@@ -2,111 +2,83 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAC0C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F49C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE0320645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:01:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="k4OxyZlz"
+	by mail.kernel.org (Postfix) with ESMTP id 8B91320645
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfDWOBx (ORCPT
+        id S1727990AbfDWOCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:01:53 -0400
-Received: from onstation.org ([52.200.56.107]:35408 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727180AbfDWOBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 10:01:52 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 135293EE68;
-        Tue, 23 Apr 2019 14:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1556028111;
-        bh=oYGR0hjvSNwgsPFOiD8HrQZMCp/hcytoqTsEFpcLUPE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k4OxyZlzeoTsqKH6nhE0RkZkexsX4lrkr4IX1sWZPCIM0aLlntZ7oALmegma/yAkG
-         7KSyAtZ+FbfIa2YxocuGzsmwm46Z10KOIaN+0VHO8ZgnnvO0LELb+BYdAt2vg4vXC0
-         jyvTlF7KsCR9H/1Obcz8hfB+TTqNiNsRO/WXdwxc=
-Date:   Tue, 23 Apr 2019 10:01:50 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lee.jones@linaro.org, daniel.thompson@linaro.org,
-        jingoohan1@gmail.com, robh+dt@kernel.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        jonathan@marek.ca
-Subject: Re: [PATCH v5 3/3] backlight: lm3630a: add firmware node support
-Message-ID: <20190423140150.GA10071@basecamp>
-References: <20190418151143.26068-1-masneyb@onstation.org>
- <20190418151143.26068-4-masneyb@onstation.org>
- <dc20ab5d-8c44-78a8-3ebc-7fefe8aaf2d5@ti.com>
+        Tue, 23 Apr 2019 10:02:32 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2938 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727180AbfDWOCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 10:02:32 -0400
+Received: from dggemi401-hub.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 4EFF179E4F69FBEFC053;
+        Tue, 23 Apr 2019 22:02:26 +0800 (CST)
+Received: from DGGEMI422-HUB.china.huawei.com (10.1.199.151) by
+ dggemi401-hub.china.huawei.com (10.3.17.134) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Tue, 23 Apr 2019 22:02:25 +0800
+Received: from DGGEMI530-MBX.china.huawei.com ([169.254.7.146]) by
+ dggemi422-hub.china.huawei.com ([10.1.199.151]) with mapi id 14.03.0399.000;
+ Tue, 23 Apr 2019 22:02:21 +0800
+From:   weizhenliang <weizhenliang@huawei.com>
+To:     Christian Brauner <christian@brauner.io>
+CC:     Oleg Nesterov <oleg@redhat.com>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "colona@arista.com" <colona@arista.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v3] signal: trace_signal_deliver when signal_group_exit
+Thread-Topic: [PATCH v3] signal: trace_signal_deliver when signal_group_exit
+Thread-Index: AdT53KXPKZ/rlwOkQKWG95RpVhMV9Q==
+Date:   Tue, 23 Apr 2019 14:02:21 +0000
+Message-ID: <AF4D908CC0E2A24EB308A26962C8C3BDEB16D1@DGGEMI530-MBX.china.huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.40.99.192]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc20ab5d-8c44-78a8-3ebc-7fefe8aaf2d5@ti.com>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 08:49:20AM -0500, Dan Murphy wrote:
-> > +static int lm3630a_parse_led_sources(struct fwnode_handle *node,
-> > +				     int default_led_sources)
-> > +{
-> > +	u32 sources[LM3630A_NUM_SINKS];
-> > +	int ret, num_sources, i;
-> > +
-> > +	num_sources = fwnode_property_read_u32_array(node, "led-sources", NULL,
-> > +						     0);
-> > +	if (num_sources < 0)
-> > +		return default_led_sources;
-> > +	else if (num_sources > ARRAY_SIZE(sources))
-> > +		return -EINVAL;
-> > +
-> > +	ret = fwnode_property_read_u32_array(node, "led-sources", sources,
-> > +					     num_sources);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	for (i = 0; i < num_sources; i++) {
-> > +		if (sources[i] < LM3630A_SINK_0 || sources[i] > LM3630A_SINK_1)
-> > +			return -EINVAL;
-> > +
-> > +		ret |= BIT(sources[i]);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int lm3630a_parse_bank(struct lm3630a_platform_data *pdata,
-> > +			      struct fwnode_handle *node, int *seen_led_sources)
-> 
-> Why is seen_led_sources passed in here?
-> It is initialized on the stack in lm3630a_parse_node but the variable is never referenced in that API.
-
-It's to see all of the led-sources that are configured across all of the
-banks. If it is just in lm3630a_parse_bank(), then it won't catch the
-following invalid configuration:
-
-led@0 {
-	reg = <0>;
-	led-sources = <0 1>;
-	label = "lcd-backlight";
-	default-brightness = <200>;
-};
-
-led@1 {
-	reg = <1>;
-	default-brightness = <150>;
-};
-
-Brian
+T24gVHVlLCBBcHIgMjMsIDIwMTkgYXQgMDk6NDEgUE0gQ2hyaXN0aWFuIHdyb3RlOg0KPk9uIFR1
+ZSwgQXByIDIzLCAyMDE5IGF0IDAxOjEwOjUyUE0gKzAwMDAsIHdlaXpoZW5saWFuZyB3cm90ZToN
+Cj4+IE9uIE1vbiwgQXByIDIyLCAyMDE5IGF0IDExOjI1IFBNIE9sZWcgTmVzdGVyb3YgPG9sZWdA
+cmVkaGF0LmNvbT4gd3JvdGU6DQo+PiA+T24gMDQvMjIsIFpoZW5saWFuZyBXZWkgd3JvdGU6DQo+
+PiA+Pg0KPj4gPj4gLS0tIGEva2VybmVsL3NpZ25hbC5jDQo+PiA+PiArKysgYi9rZXJuZWwvc2ln
+bmFsLmMNCj4+ID4+IEBAIC0yNDQxLDYgKzI0NDEsNyBAQCBib29sIGdldF9zaWduYWwoc3RydWN0
+IGtzaWduYWwgKmtzaWcpDQo+PiA+PiAgCWlmIChzaWduYWxfZ3JvdXBfZXhpdChzaWduYWwpKSB7
+DQo+PiA+PiAgCQlrc2lnLT5pbmZvLnNpX3NpZ25vID0gc2lnbnIgPSBTSUdLSUxMOw0KPj4gPj4g
+IAkJc2lnZGVsc2V0KCZjdXJyZW50LT5wZW5kaW5nLnNpZ25hbCwgU0lHS0lMTCk7DQo+PiA+PiAr
+CQl0cmFjZV9zaWduYWxfZGVsaXZlcihTSUdLSUxMLCBTRU5EX1NJR19OT0lORk8sIFNJR19ERkwp
+Ow0KPj4gPj4gIAkJcmVjYWxjX3NpZ3BlbmRpbmcoKTsNCj4+ID4+ICAJCWdvdG8gZmF0YWw7DQo+
+PiA+PiAgCX0NCj4+ID4NCj4+ID5SZXZpZXdlZC1ieTogT2xlZyBOZXN0ZXJvdiA8b2xlZ0ByZWRo
+YXQuY29tPg0KPj4gDQo+PiBMYXN0IHRpbWUgT2xlZyBzdWdnZXN0ZWQgdXNpbmcgU0lHX0RGTCBh
+cyB0aGUgdGhpcmQgcGFyYW1ldGVyLCBidXQgaXRzIHR5cGUgaXMgJ3ZvaWQgKCopKGludCknLCBi
+dXQgbm90IGV4cGVjdGVkICdzdHJ1Y3Qga19zaWdhY3Rpb24gKicuDQo+DQo+U2lnaCwgSSBzaG91
+bGQndmUgY2F1Z2h0IHRoYXQgaW4gdGhlIGZpcnN0IGNvbW1pdC4NCj5BbHRob3VnaCBpdCBzdWdn
+ZXN0cyB5b3UgZGlkbid0IGV2ZW4gY29tcGlsZSB5b3VyIHBhdGNoLi4uDQo+DQo+PiANCj4+IEhv
+dyBhYm91dA0KPj4gCXRyYWNlX3NpZ25hbF9kZWxpdmVyKFNJR0tJTEwsIFNFTkRfU0lHX05PSU5G
+TywgJnNpZ2hhbmQtPmFjdGlvbltzaWduciANCj4+IC0gMV0pOyA/DQo+DQo+VGhhdCBzaG91bGQg
+d29yaywgeWVzLg0KDQpTb3JyeSBhYm91dCB0aGF0LCBJIHdhcyB0b28gZm9jdXNlZCBvbiB0aGUg
+ZnVuY3Rpb25hbGl0eSBhbmQgZGlkbid0IG5vdGljZSB0aGUgY29tcGlsZSB3YXJuaW5nLg0KQW5k
+IHRoYW5rcyBmb3IgeW91ciByZXBseSwgSSB3aWxsIHBheSBtb3JlIGF0dGVudGlvbiB0byBpdCBp
+biB0aGUgZnV0dXJlLg0KDQpaaGVubGlhbmcgV2VpDQo=
