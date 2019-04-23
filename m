@@ -2,116 +2,90 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464B8C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3705C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227BE208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67D3214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:46:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJxD2reQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbfDWRoJ (ORCPT
+        id S1729471AbfDWRqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 13:44:09 -0400
-Received: from mga14.intel.com ([192.55.52.115]:61565 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbfDWRoI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:44:08 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 10:44:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,386,1549958400"; 
-   d="scan'208";a="133725056"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga007.jf.intel.com with ESMTP; 23 Apr 2019 10:44:07 -0700
-Date:   Tue, 23 Apr 2019 10:44:07 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-Message-ID: <20190423174407.GC10720@linux.intel.com>
-References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
- <20190422183553.GH1236@linux.intel.com>
- <bccc075c-68ce-6324-6f73-4d4e9a1d9683@linux.intel.com>
+        Tue, 23 Apr 2019 13:46:22 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45940 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728644AbfDWRqW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 13:46:22 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y6so14275998ljd.12
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 10:46:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=idflYGrccr6bk59JwBNLLGo6oGTM1fGQypHi1BhPbHA=;
+        b=HJxD2reQVHiCjnNm0Ow6U9669crivX5a5mP3y98hoPsY5LacR2W74B6PJtzV6Vr+pj
+         6OfrhF9YR3B56kHyK5i9T8goHoqaU9mOUIfABZI4srPPdj4vty9g3wYYEzTTVewApyho
+         yXg/UgyU64NH4vt9K5TUYU25fzssx6E/Y/EdTeXMXixmHHQ87G6BJAr4yAK/1vm7AJRk
+         YzfL9NlIgatp5Jo78xaDjGClOgWg8JV9nnCMu6++9j2WYDcxHU+FVepH1+Owgv5muaDy
+         HF/NzUcJaHtZe5K0FNzb1E/N/UxWr1DEJ+I8TBBQfBhHQJO+5Se/CWY+f4k5hdTzFpRU
+         UJ9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=idflYGrccr6bk59JwBNLLGo6oGTM1fGQypHi1BhPbHA=;
+        b=FlZFZUpGYtw80Day7V77CXjfAR9z2o1xFqUXjhMzXzy2ryyVE3+zIyClspwDGQjS1w
+         SavO+oZJ9yYmqxl7LuuBm1mHeq0omkM0Z10TcrjHyvI6JqfZnu0qcWynckibXDNFBctN
+         3jWb8N+QORSkN3Zv54YFSl06+GrbM38ZY/9j2LPYqVTzq4Qy0fZxWxyNtZca4at2POY7
+         +AgVvMANVQ9u6flG4OPyhsyoetAt28hDZA5bKIZn7sl1uo7ZUN4T9mM69CYCrmJ8nFcs
+         3zpVRslvMkYdNGUbJ0q9Tc1oW2ui+2uES2e1sGZlafztVKnJhIuLPSbsrlyNjv9zlA0s
+         kAzQ==
+X-Gm-Message-State: APjAAAX1vWB4E0kG8wMno/29mE635exiLqjQjYq7ikhpuJnbO/qC7cFO
+        w8rQL0/3fD67kFbKK3Pc44NyF5BbAMFkklqD9Co=
+X-Google-Smtp-Source: APXvYqwRgfRWADk5DevouOYXuEdhpKHva0yD2oZsqkMam3rMeOmL0nqQAxD2lzpaIUyzPq+axL45PHvKpW4b3a1IfOU=
+X-Received: by 2002:a2e:9753:: with SMTP id f19mr15505033ljj.54.1556041580042;
+ Tue, 23 Apr 2019 10:46:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bccc075c-68ce-6324-6f73-4d4e9a1d9683@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190214083145.15148-1-benjamin.gaignard@linaro.org> <e25b2626-231b-28d7-93b0-004a21a3685e@st.com>
+In-Reply-To: <e25b2626-231b-28d7-93b0-004a21a3685e@st.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 23 Apr 2019 14:46:18 -0300
+Message-ID: <CAOMZO5A6A2sYzfPgjsqQxWcc4Z0YW9-sENW21KumO_XkN3WBYQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] ARM errata 814220
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Hui Liu <jason.hui.liu@nxp.com>
+Cc:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 11:23:59AM +0800, Like Xu wrote:
-> On 2019/4/23 2:35, Sean Christopherson wrote:
-> >>  #define F(x) bit(X86_FEATURE_##x)
-> >>  int kvm_update_cpuid(struct kvm_vcpu *vcpu)
-> >>@@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
-> >>  	switch (function) {
-> >>  	case 0:
-> >>  		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
-> >>+		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry->eax;
+On Wed, Feb 27, 2019 at 1:21 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+>
+>
+> On 2/14/19 9:31 AM, Benjamin Gaignard wrote:
+> > Implement ARM errata 814220 for Cortex A7.
 > >
-> >This all seems unnecessary.  And by 'all', I mean the existing Intel PT
-> >and XSAVE leaf checks, as well as the new mcp check.  entry->eax comes
-> >directly from hardware, and unless I missed something, PT and XSAVE are
-> >only exposed to the guest when they're supported in hardware.  In other
-> >words, KVM will never need to adjust entry->eax to expose PT or XSAVE.
-> 
-> We call this function for both case KVM_GET_SUPPORTED_CPUID and
-> KVM_GET_EMULATED_CPUID although kvm user could reconfig them via
-> KVM_SET_CPUID* path.
+> > This patch has been wroten by Jason Liu years ago but never send upstream.
+> > I have tried to contact the author on multiple email addresses but I haven't
+> > found any valid one...
+> > I have keep Jason's sign-off and just rebase the patch on to v5-rc6.
 
-Not that it matters, but __do_cpuid_ent() is only used for the non-emulated
-case, KVM_GET_EMULATED_CPUID goes to __do_cpuid_ent_emulated().
- 
-> >The original min() check was added by commit 0771671749b5 ("KVM: Enhance
-> >guest cpuid management"), which doesn't provide any explicit information
-> >on why KVM does min() in the first place.
-> 
-> Exposing cpuid.0.eax in a blind way (with host hardware support)
-> is not a good practice for guest migration and improves compatibility
-> requirements.
+Adding Jason's NXP e-mail address.
 
-Right, but isn't the f_intel_pt check for example completely irrelevant?
-f_intel_pt is true if and only if hardware supports PT, i.e. CPUID.0.EAX
-and thus entry->eax will already be >=0x14.
-
-I don't fully understand whether or not KVM needs to raise the minimum to
-0xb regardless of h/w XSAVE support, but it's likely irrelevant in the end.
-
-Anyways, back to 0x1f, kvm_supported_intel_mcp() returns true if and only
-if hardware's CPUID.0.EAX >= 0x1f, i.e. adjusting entry->eax is always a
-nop.  So if KVM wants to advertise leaf 0x1f only when it's supported in
-hardware then adjusting entry->eax is unnecessary, and if KVM wants to
-unconditionally advertise 0x1f then adjusting entry->eax should also be
-done unconditionally.
-
-> >Given that the original code
-> >was "entry->eax = min(entry->eax, (u32)0xb);", my *guess* is that the
-> >idea was to always report "Extended Topology Enumeration Leaf" as
-> >supported so that userspace can enumerate the VM's topology to the guest
-> >even when hardware itself doesn't do so.
-> 
-> If the host cpu mode is too antiquated to support 0xb, it wouldn't report
-> 0xb for sure. The host cpuid.0.eax has been over 0xb for a long time and
-> reached 0x1f in the latest SDM.
-> 
-> AFAICT, the original code keeps minimum cpuid.0.eax out of features guest
-> just used or at least it claimed to use.
-> 
-> >
-> >Assuming we want to allow userspace to use "V2 Extended Topology
-> >Enumeration Leaf" regardless of hardware support, then this can simply be:
-> >
-> >   entry->eax = min(entry->eax, (u32)0x1f);
-> >
-> >Or am I completely missing something?
+Thanks
