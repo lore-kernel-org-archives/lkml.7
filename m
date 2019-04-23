@@ -2,81 +2,166 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D03C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CDBC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945CC206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D4JBzrxm"
+	by mail.kernel.org (Postfix) with ESMTP id A2653206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfDWPWn (ORCPT
+        id S1728212AbfDWPYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:22:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59566 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfDWPWn (ORCPT
+        Tue, 23 Apr 2019 11:24:40 -0400
+Received: from gateway22.websitewelcome.com ([192.185.46.131]:17338 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726421AbfDWPYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:22:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NMVuLKMVPe43Kq/vQum4B86CrfQwF1HlTDnDbD6D+Ic=; b=D4JBzrxmf1cKvBr7K3398UBi4
-        AWchBA6mOKSNIzLvFd71S6XVLl6m78AaZ3LX7ybPxQd7oqR1Ud6qcClfo8HijdKA2gWsaZvrPstVx
-        a376pGd1ZhTLNBJepPyK0pFTVIicOc4TouggTvNG1TO4EiztR9dZhZ0pW+vptlVwEHx2oHNXzLMcA
-        iDoz6c7eDvNh346TkONbFumxAXuKQCKn95JhHiO6Qym80/xhhd11nYVFSRV2PKtuWX+ok/yYqLbCQ
-        6zE+FSSRj9Z0Tznu7vF1QKZIElPIxG1S7YbYmZ1kJAt3JewuASaOsIEjA9n3oLXec8hEuGPU8lB2J
-        esSUu4rPA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIxFp-0001f4-Iv; Tue, 23 Apr 2019 15:22:41 +0000
-Subject: Re: linux-next: Tree for Apr 23 (crypto/ecrdsa)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vitaly Chikunov <vt@altlinux.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Miller <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-References: <20190423202832.49cdf5bc@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ea752c71-b41f-47f5-290b-3a31bb0e96df@infradead.org>
-Date:   Tue, 23 Apr 2019 08:22:40 -0700
+        Tue, 23 Apr 2019 11:24:39 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 68F71E784
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 10:24:38 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id IxHihzzTliQerIxHihhDv5; Tue, 23 Apr 2019 10:24:38 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.223] (port=46662 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hIxHf-001rSn-WE; Tue, 23 Apr 2019 10:24:38 -0500
+Subject: Re: [PATCH] memstick: mark expected switch fall-throughs
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alex Dubov <oakad@yahoo.com>, LKML <linux-kernel@vger.kernel.org>
+References: <20190213025707.GA16307@embeddedor>
+ <CAGXu5jKdYiMtnO3wbOwCv2fy0PmvCBSLF8ANpBzBg057zaenRg@mail.gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <4398933c-972e-c456-d764-446e9ba6c4c9@embeddedor.com>
+Date:   Tue, 23 Apr 2019 10:24:27 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190423202832.49cdf5bc@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <CAGXu5jKdYiMtnO3wbOwCv2fy0PmvCBSLF8ANpBzBg057zaenRg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.223
+X-Source-L: No
+X-Exim-ID: 1hIxHf-001rSn-WE
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.250.127.223]:46662
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/19 3:28 AM, Stephen Rothwell wrote:
-> Hi all,
+
+
+On 4/23/19 10:15 AM, Kees Cook wrote:
+> On Tue, Feb 12, 2019 at 6:57 PM Gustavo A. R. Silva
+> <gustavo@embeddedor.com> wrote:
+>>
+>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>> cases where we are expecting to fall through.
+>>
+>> This patch fixes the following warnings:
+>>
+>> drivers/memstick/host/jmb38x_ms.c: In function ‘jmb38x_ms_write_data’:
+>> drivers/memstick/host/jmb38x_ms.c:261:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>    host->io_pos++;
+>>    ~~~~~~~~~~~~^~
+>> drivers/memstick/host/jmb38x_ms.c:262:2: note: here
+>>   case 2:
+>>   ^~~~
+>> drivers/memstick/host/jmb38x_ms.c:264:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>    host->io_pos++;
+>>    ~~~~~~~~~~~~^~
+>> drivers/memstick/host/jmb38x_ms.c:265:2: note: here
+>>   case 1:
+>>   ^~~~
+>> drivers/memstick/host/tifm_ms.c: In function ‘tifm_ms_write_data’:
+>> drivers/memstick/host/tifm_ms.c:168:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>    host->io_pos++;
+>>    ~~~~~~~~~~~~^~
+>> drivers/memstick/host/tifm_ms.c:169:2: note: here
+>>   case 2:
+>>   ^~~~
+>> drivers/memstick/host/tifm_ms.c:171:15: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>    host->io_pos++;
+>>    ~~~~~~~~~~~~^~
+>> drivers/memstick/host/tifm_ms.c:172:2: note: here
+>>   case 1:
+>>   ^~~~
+>>
+>> Warning level 3 was used: -Wimplicit-fallthrough=3
+>>
+>> This patch is part of the ongoing efforts to enable
+>> -Wimplicit-fallthrough.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > 
-> News: there will be no linux-next release on Thursday April 25.
-> 
-> Changes since 20190418:
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 > 
 
-on i386 or x86_64:
+Thanks, Kees!
 
-ERROR: "asn1_ber_decoder" [crypto/ecrdsa_generic.ko] undefined!
-ERROR: "look_up_OID" [crypto/ecrdsa_generic.ko] undefined!
-
-
-Do you need a failing config file?
-
-thanks.
--- 
-~Randy
+--
+Gustavo
