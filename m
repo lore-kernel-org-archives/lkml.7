@@ -2,379 +2,152 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0007C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 500BAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B63221841
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2C2206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tF7OkyZX"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XzyiZeS7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfDWNth (ORCPT
+        id S1727871AbfDWNui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:49:37 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:34844 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbfDWNth (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:49:37 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3NDnMMH053765;
-        Tue, 23 Apr 2019 08:49:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556027362;
-        bh=mYbPTBZdrLZhuQ/74oqpj8zFm2bgc2JI7RqmZeeHvAQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tF7OkyZXn83P2Ydf8EFtB5NY51gyW4qvekHkGIuNp5E65/9QttmsSK2VXi8cD/nDF
-         U8JrF6qcvKsza5DD4haLsoC6p8Eq8d8gMSUZMw5rxM/R1/7f7yDQQSI4fBIFfOZS8R
-         b0vrPctnZrJqmGkqjuwgKYiryiy5BpdIzTOMrWNA=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3NDnL8C092983
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 23 Apr 2019 08:49:21 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 23
- Apr 2019 08:49:21 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 23 Apr 2019 08:49:21 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3NDnKgB052644;
-        Tue, 23 Apr 2019 08:49:20 -0500
-Subject: Re: [PATCH v5 3/3] backlight: lm3630a: add firmware node support
-To:     Brian Masney <masneyb@onstation.org>, <lee.jones@linaro.org>,
-        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>,
-        <robh+dt@kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <mark.rutland@arm.com>, <b.zolnierkie@samsung.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-leds@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <jonathan@marek.ca>
-References: <20190418151143.26068-1-masneyb@onstation.org>
- <20190418151143.26068-4-masneyb@onstation.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <dc20ab5d-8c44-78a8-3ebc-7fefe8aaf2d5@ti.com>
-Date:   Tue, 23 Apr 2019 08:49:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190418151143.26068-4-masneyb@onstation.org>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 23 Apr 2019 09:50:38 -0400
+Received: from mail-eopbgr20050.outbound.protection.outlook.com ([40.107.2.50]:24963
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726421AbfDWNui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 09:50:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=I4q+KfkZ548fRBsjhTaA2XKTALFn1gteHj7k7G6UC9k=;
+ b=XzyiZeS7aHSARYn74OUemZZ0FdQIaWrywGgAKENUShgHMqzK5mFrqJ64BpFdhh5u5T8stuqX8kKHuQNSyamBoSXhSnEcRhEsxerBv6UNG299TrnLiemw7jgEWBgXFACuZpZdlINH03cGTJ5LHmjLUbNWaJ7n4Qzg8lqOfC49Pf8=
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
+ VI1PR04MB5901.eurprd04.prod.outlook.com (20.178.205.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Tue, 23 Apr 2019 13:50:34 +0000
+Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
+ ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1813.017; Tue, 23 Apr 2019
+ 13:50:34 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "sean.nyekjaer@prevas.dk" <sean.nyekjaer@prevas.dk>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: [PATCH v1 00/15] add ecspi ERR009165 for i.mx6/7 soc family
+Thread-Topic: [PATCH v1 00/15] add ecspi ERR009165 for i.mx6/7 soc family
+Thread-Index: AQHU+duGTXiEawO6vkOZRAs4Bg3Yeg==
+Date:   Tue, 23 Apr 2019 13:50:34 +0000
+Message-ID: <1556027045-5269-1-git-send-email-yibin.gong@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR04CA0044.apcprd04.prod.outlook.com
+ (2603:1096:202:14::12) To VI1PR04MB4543.eurprd04.prod.outlook.com
+ (2603:10a6:803:6d::26)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: db4fe6c9-adc8-47e5-50f7-08d6c7f2a850
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5901;
+x-ms-traffictypediagnostic: VI1PR04MB5901:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <VI1PR04MB590184D9476C3F1BD46D218A89230@VI1PR04MB5901.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0016DEFF96
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(396003)(376002)(346002)(39860400002)(199004)(189003)(6506007)(102836004)(86362001)(97736004)(386003)(7416002)(36756003)(14444005)(2201001)(25786009)(4326008)(305945005)(26005)(256004)(73956011)(71190400001)(71200400001)(7736002)(64756008)(66556008)(66476007)(478600001)(66446008)(66946007)(316002)(14454004)(81156014)(8676002)(68736007)(54906003)(81166006)(2501003)(966005)(8936002)(186003)(5660300002)(6436002)(110136005)(3846002)(6116002)(6486002)(53936002)(66066001)(6512007)(486006)(476003)(99286004)(50226002)(2616005)(52116002)(2906002)(6306002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5901;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: PpQx5do2VVhhfW9aHljzGOxjB8o8KHWYidwt8ZzwsiWBMc7K6TIm44AambuLRKQGnXJGHwiaRz5x+24s/ISU0CzbjKtSt2dGYYuWKiY9NF8d6UoEtIOh2EcDj0NyHer+wFWyWSVd+D/cOqAy6BGcUzFJkhLtfn/HP+Cbwl6EEFaXlLFwLE5JQEJZ9vpXFWFU5HUFmMPQGdG8U/Sgy7tw2K2m28FbsBj34DTeqReowtgwnF8kqaxpihsYVDjYDcJw0FETZA75yeKvWd8sL5CR+QedNgugv7qtHcmxyNWUVoqH3aDDkL8f2yNxSFJhk6YW+jyJMZ4gLPiEE3Vs9T9dmgU4pqYMqBBzGQriedxMyoiRc+Aofjju/nltvIcIjnNa/GjyAH1vlthYqa7fcE5K6p4MhvXjlvNIrwatYeBeviE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db4fe6c9-adc8-47e5-50f7-08d6c7f2a850
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 13:50:34.4066
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5901
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
-
-On 4/18/19 10:11 AM, Brian Masney wrote:
-> Add fwnode support to the lm3630a driver and optionally allow
-> configuring the label, default brightness level, and maximum brightness
-> level. The two outputs can be controlled by bank A and B independently
-> or bank A can control both outputs.
-> 
-> If the platform data was not configured, then the driver defaults to
-> enabling both banks. This patch changes the default value to disable
-> both banks before parsing the firmware node so that just a single bank
-> can be enabled if desired. There are no in-tree users of this driver.
-> 
-> Driver was tested on a LG Nexus 5 (hammerhead) phone.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
-> Changes since v4
-> - Added new function lm3630a_parse_bank()
-> - Renamed seen variable to seen_led_sources
-> - Use the bitmask returned from lm3630a_parse_led_sources() to compare
->   against the seen_led_sources rather than just the control bank. This
->   eliminated another if statement that was previously present that
->   checked to see if control bank A should control both sinks.
-> - #define LM3630A_BANK_0, LM3630A_BANK_1, LM3630A_SINK_0,
->   LM3630A_SINK_1, and LM3630A_NUM_SINKS and use where appropriate.
-> - Changed all occurances of
->   'if (bank == 0) { BANK_A_WORK } else { BANK_B_WORK }' to
->   'if (bank) { BANK_B_WORK } else { BANK_A_WORK }'
-> - Dropped unnecessary 'ret = 0' from lm3630a_parse_led_sources().
-> - Changed 'if (ret < 0)' to 'if (ret)' in lm3630a_parse_node().
-> - Dropped kerneldoc from lm3630a_parse_led_sources().
-> 
-> Changes since v3
-> - Add support for label
-> - Changed lm3630a_parse_node() to return -ENODEV if no nodes were found
-> - Remove LM3630A_LED{A,B}_DISABLE
-> - Add two additional newlines for code readability
-> - Remove extra newline
-> 
-> Changes since v2
-> - Separated out control banks and outputs via the reg and led-sources
->   properties.
-> - Use fwnode instead of of API
-> - Disable both banks by default before calling lm3630a_parse_node()
-> - Add lots of error handling
-> - Check for duplicate source / bank definitions
-> - Remove extra ;
-> - Make probe() method fail if fwnode parsing fails.
-> 
->  drivers/video/backlight/lm3630a_bl.c     | 149 ++++++++++++++++++++++-
->  include/linux/platform_data/lm3630a_bl.h |   4 +
->  2 files changed, 148 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-> index ef2553f452ca..75d996490cf0 100644
-> --- a/drivers/video/backlight/lm3630a_bl.c
-> +++ b/drivers/video/backlight/lm3630a_bl.c
-> @@ -35,6 +35,14 @@
->  #define REG_MAX		0x50
->  
->  #define INT_DEBOUNCE_MSEC	10
-> +
-> +#define LM3630A_BANK_0		0
-> +#define LM3630A_BANK_1		1
-> +
-> +#define LM3630A_NUM_SINKS	2
-> +#define LM3630A_SINK_0		0
-> +#define LM3630A_SINK_1		1
-> +
->  struct lm3630a_chip {
->  	struct device *dev;
->  	struct delayed_work work;
-> @@ -329,15 +337,17 @@ static const struct backlight_ops lm3630a_bank_b_ops = {
->  
->  static int lm3630a_backlight_register(struct lm3630a_chip *pchip)
->  {
-> -	struct backlight_properties props;
->  	struct lm3630a_platform_data *pdata = pchip->pdata;
-> +	struct backlight_properties props;
-> +	const char *label;
->  
->  	props.type = BACKLIGHT_RAW;
->  	if (pdata->leda_ctrl != LM3630A_LEDA_DISABLE) {
->  		props.brightness = pdata->leda_init_brt;
->  		props.max_brightness = pdata->leda_max_brt;
-> +		label = pdata->leda_label ? pdata->leda_label : "lm3630a_leda";
->  		pchip->bleda =
-> -		    devm_backlight_device_register(pchip->dev, "lm3630a_leda",
-> +		    devm_backlight_device_register(pchip->dev, label,
->  						   pchip->dev, pchip,
->  						   &lm3630a_bank_a_ops, &props);
->  		if (IS_ERR(pchip->bleda))
-> @@ -348,8 +358,9 @@ static int lm3630a_backlight_register(struct lm3630a_chip *pchip)
->  	    (pdata->ledb_ctrl != LM3630A_LEDB_ON_A)) {
->  		props.brightness = pdata->ledb_init_brt;
->  		props.max_brightness = pdata->ledb_max_brt;
-> +		label = pdata->ledb_label ? pdata->ledb_label : "lm3630a_ledb";
->  		pchip->bledb =
-> -		    devm_backlight_device_register(pchip->dev, "lm3630a_ledb",
-> +		    devm_backlight_device_register(pchip->dev, label,
->  						   pchip->dev, pchip,
->  						   &lm3630a_bank_b_ops, &props);
->  		if (IS_ERR(pchip->bledb))
-> @@ -364,6 +375,123 @@ static const struct regmap_config lm3630a_regmap = {
->  	.max_register = REG_MAX,
->  };
->  
-> +static int lm3630a_parse_led_sources(struct fwnode_handle *node,
-> +				     int default_led_sources)
-> +{
-> +	u32 sources[LM3630A_NUM_SINKS];
-> +	int ret, num_sources, i;
-> +
-> +	num_sources = fwnode_property_read_u32_array(node, "led-sources", NULL,
-> +						     0);
-> +	if (num_sources < 0)
-> +		return default_led_sources;
-> +	else if (num_sources > ARRAY_SIZE(sources))
-> +		return -EINVAL;
-> +
-> +	ret = fwnode_property_read_u32_array(node, "led-sources", sources,
-> +					     num_sources);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < num_sources; i++) {
-> +		if (sources[i] < LM3630A_SINK_0 || sources[i] > LM3630A_SINK_1)
-> +			return -EINVAL;
-> +
-> +		ret |= BIT(sources[i]);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int lm3630a_parse_bank(struct lm3630a_platform_data *pdata,
-> +			      struct fwnode_handle *node, int *seen_led_sources)
-
-Why is seen_led_sources passed in here?
-It is initialized on the stack in lm3630a_parse_node but the variable is never referenced in that API.
-
-Dan
-
-> +{
-> +	int led_sources, ret;
-> +	const char *label;
-> +	u32 bank, val;
-> +	bool linear;
-> +
-> +	ret = fwnode_property_read_u32(node, "reg", &bank);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (bank < LM3630A_BANK_0 || bank > LM3630A_BANK_1)
-> +		return -EINVAL;
-> +
-> +	led_sources = lm3630a_parse_led_sources(node, BIT(bank));
-> +	if (led_sources < 0)
-> +		return led_sources;
-> +
-> +	if (*seen_led_sources & led_sources)
-> +		return -EINVAL;
-> +
-> +	*seen_led_sources |= led_sources;
-> +
-> +	linear = fwnode_property_read_bool(node,
-> +					   "ti,linear-mapping-mode");
-> +	if (bank) {
-> +		if (led_sources & BIT(LM3630A_SINK_0) ||
-> +		    !(led_sources & BIT(LM3630A_SINK_1)))
-> +			return -EINVAL;
-> +
-> +		pdata->ledb_ctrl = linear ?
-> +			LM3630A_LEDB_ENABLE_LINEAR :
-> +			LM3630A_LEDB_ENABLE;
-> +	} else {
-> +		if (!(led_sources & BIT(LM3630A_SINK_0)))
-> +			return -EINVAL;
-> +
-> +		pdata->leda_ctrl = linear ?
-> +			LM3630A_LEDA_ENABLE_LINEAR :
-> +			LM3630A_LEDA_ENABLE;
-> +
-> +		if (led_sources & BIT(LM3630A_SINK_1))
-> +			pdata->ledb_ctrl = LM3630A_LEDB_ON_A;
-> +	}
-> +
-> +	ret = fwnode_property_read_string(node, "label", &label);
-> +	if (!ret) {
-> +		if (bank)
-> +			pdata->ledb_label = label;
-> +		else
-> +			pdata->leda_label = label;
-> +	}
-> +
-> +	ret = fwnode_property_read_u32(node, "default-brightness",
-> +				       &val);
-> +	if (!ret) {
-> +		if (bank)
-> +			pdata->ledb_init_brt = val;
-> +		else
-> +			pdata->leda_init_brt = val;
-> +	}
-> +
-> +	ret = fwnode_property_read_u32(node, "max-brightness", &val);
-> +	if (!ret) {
-> +		if (bank)
-> +			pdata->ledb_max_brt = val;
-> +		else
-> +			pdata->leda_max_brt = val;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int lm3630a_parse_node(struct lm3630a_chip *pchip,
-> +			      struct lm3630a_platform_data *pdata)
-> +{
-> +	int ret = -ENODEV, seen_led_sources = 0;
-> +	struct fwnode_handle *node;
-> +
-> +	device_for_each_child_node(pchip->dev, node) {
-> +		ret = lm3630a_parse_bank(pdata, node, &seen_led_sources);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int lm3630a_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> @@ -396,13 +524,18 @@ static int lm3630a_probe(struct i2c_client *client,
->  				     GFP_KERNEL);
->  		if (pdata == NULL)
->  			return -ENOMEM;
-> +
->  		/* default values */
-> -		pdata->leda_ctrl = LM3630A_LEDA_ENABLE;
-> -		pdata->ledb_ctrl = LM3630A_LEDB_ENABLE;
->  		pdata->leda_max_brt = LM3630A_MAX_BRIGHTNESS;
->  		pdata->ledb_max_brt = LM3630A_MAX_BRIGHTNESS;
->  		pdata->leda_init_brt = LM3630A_MAX_BRIGHTNESS;
->  		pdata->ledb_init_brt = LM3630A_MAX_BRIGHTNESS;
-> +
-> +		rval = lm3630a_parse_node(pchip, pdata);
-> +		if (rval) {
-> +			dev_err(&client->dev, "fail : parse node\n");
-> +			return rval;
-> +		}
->  	}
->  	pchip->pdata = pdata;
->  
-> @@ -470,11 +603,17 @@ static const struct i2c_device_id lm3630a_id[] = {
->  	{}
->  };
->  
-> +static const struct of_device_id lm3630a_match_table[] = {
-> +	{ .compatible = "ti,lm3630a", },
-> +	{ },
-> +};
-> +
->  MODULE_DEVICE_TABLE(i2c, lm3630a_id);
->  
->  static struct i2c_driver lm3630a_i2c_driver = {
->  	.driver = {
->  		   .name = LM3630A_NAME,
-> +		   .of_match_table = lm3630a_match_table,
->  		   },
->  	.probe = lm3630a_probe,
->  	.remove = lm3630a_remove,
-> diff --git a/include/linux/platform_data/lm3630a_bl.h b/include/linux/platform_data/lm3630a_bl.h
-> index 7538e38e270b..762e68956f31 100644
-> --- a/include/linux/platform_data/lm3630a_bl.h
-> +++ b/include/linux/platform_data/lm3630a_bl.h
-> @@ -38,9 +38,11 @@ enum lm3630a_ledb_ctrl {
->  
->  #define LM3630A_MAX_BRIGHTNESS 255
->  /*
-> + *@leda_label    : optional led a label.
->   *@leda_init_brt : led a init brightness. 4~255
->   *@leda_max_brt  : led a max brightness.  4~255
->   *@leda_ctrl     : led a disable, enable linear, enable exponential
-> + *@ledb_label    : optional led b label.
->   *@ledb_init_brt : led b init brightness. 4~255
->   *@ledb_max_brt  : led b max brightness.  4~255
->   *@ledb_ctrl     : led b disable, enable linear, enable exponential
-> @@ -50,10 +52,12 @@ enum lm3630a_ledb_ctrl {
->  struct lm3630a_platform_data {
->  
->  	/* led a config.  */
-> +	const char *leda_label;
->  	int leda_init_brt;
->  	int leda_max_brt;
->  	enum lm3630a_leda_ctrl leda_ctrl;
->  	/* led b config. */
-> +	const char *ledb_label;
->  	int ledb_init_brt;
->  	int ledb_max_brt;
->  	enum lm3630a_ledb_ctrl ledb_ctrl;
-> 
+ICBUaGVyZSBpcyBlY3NwaSBFUlIwMDkxNjUgb24gaS5teDYvNyBzb2MgZmFtaWx5LCB3aGljaCBj
+YXVzZSBGSUZPDQp0cmFuc2ZlciB0byBiZSBzZW5kIHR3aWNlIGluIERNQSBtb2RlLiBQbGVhc2Ug
+Z2V0IG1vcmUgaW5mb3JtYXRpb24gZnJvbToNCmh0dHBzOi8vd3d3Lm54cC5jb20vZG9jcy9lbi9l
+cnJhdGEvSU1YNkRRQ0UucGRmLiBUaGUgd29ya2Fyb3VuZCBpcyBhZGRpbmcNCm5ldyBzZG1hIHJh
+bSBzY3JpcHQgd2hpY2ggd29ya3MgaW4gWENIICBtb2RlIGFzIFBJTyBpbnNpZGUgc2RtYSBpbnN0
+ZWFkDQpvZiBTTUMgbW9kZSwgbWVhbndoaWxlLCAnVFhfVEhSRVNIT0xEJyBzaG91bGQgYmUgMC4N
+CiAgVGhlIGlzc3VlIHNob3VsZCBiZSBleGlzdCBvbiBhbGwgbGVnYWN5IGkubXg2Lzcgc29jIGZh
+bWlseSBiZWZvcmUgaS5teDZ1bCwNCk5YUCBmaXggdGhpcyBkZXNpZ24gaXNzdWUgZnJvbSBpLm14
+NnVsLCBzbyBuZXdlciBjaGlwcyBzdWNoIGFzIGkubXg2dWxsLw0KaS5teDhtcS9pLm14OG1tLCBk
+b24ndCBuZWVkIHRoaXMgd29ya2Fyb3VkIGFueW1vcmUuIFRoaXMgcGF0Y2ggc2V0DQphZGQgbmV3
+ICdmc2wsaW14NnVsLWVjc3BpJyBmb3IgZWNzcGkgZHJpdmVyIGFuZCAnZWNzcGlfZml4ZWQnIGlu
+IHNkbWENCmRyaXZlciB0byBjaG9vc2UgaWYgbmVlZCBlcnJhdGEgb3Igbm90Lg0KICBUaGUgZmly
+c3QgdHdvIHJldmVydGVkIHBhdGNoZXMgc2hvdWxkIGJlIHRoZSBzYW1lIGlzc3VlLCB0aG91Z2gs
+IGl0DQpzZWVtcyAnZml4ZWQnIGJ5IGNoYW5naW5nIHRvIG90aGVyIHNocCBzY3JpcHQuIEhvcGUg
+U2VhbiBvciBTYXNjaGEgY291bGQNCmhhdmUgdGhlIGNoYW5jZSB0byB0ZXN0IHRoaXMgcGF0Y2gg
+c2V0IGlmIGNvdWxkIGZpeCB0aGVpciBpc3N1ZXMuDQogIEJlc2lkZXMsIGVuYWJsZSBzZG1hIHN1
+cHBvcnQgZm9yIGkubXg4bW0vOG1xIGFuZCBmaXggZWNzcGkxIG5vdCB3b3JrDQpvbiBpLm14OG1t
+IGJlY2F1c2UgdGhlIGV2ZW50IGlkIGlzIHplcm8uDQoNClBTOg0KIFBsZWFzZSBnZXQgc2RtYSBm
+aXJtd2FyZSBmcm9tIGJlbG93IGxpbnV4LWZpcm13YXJlIGFuZCBjb3B5IGl0IHRvIHlvdXINCmxv
+Y2FsIHJvb3RmcyAvbGliL2Zpcm13YXJlL2lteC9zZG1hLg0KaHR0cHM6Ly9naXQua2VybmVsLm9y
+Zy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvZmlybXdhcmUvbGludXgtZmlybXdhcmUuZ2l0L3Ry
+ZWUvaW14L3NkbWENCg0KUm9iaW4gR29uZyAoMTUpOg0KICBSZXZlcnQgIkFSTTogZHRzOiBpbXg2
+cTogVXNlIGNvcnJlY3QgU0RNQSBzY3JpcHQgZm9yIFNQSTUgY29yZSINCiAgUmV2ZXJ0ICJBUk06
+IGR0czogaW14NjogVXNlIGNvcnJlY3QgU0RNQSBzY3JpcHQgZm9yIFNQSSBjb3JlcyINCiAgUmV2
+ZXJ0ICJkbWFlbmdpbmU6IGlteC1zZG1hOiByZWZpbmUgdG8gbG9hZCBjb250ZXh0IG9ubHkgb25j
+ZSINCiAgZG1hZW5naW5lOiBpbXgtc2RtYTogcmVtb3ZlIGR1cGlsaWNhdGVkIHNkbWFfbG9hZF9j
+b250ZXh0DQogIGRtYTogZW5naW5lOiBpbXgtc2RtYTogYWRkIG1jdV8yX2Vjc3BpIHNjcmlwdA0K
+ICBzcGk6IGlteDogZml4IEVSUjAwOTE2NQ0KICBzcGk6IGlteDogcmVtb3ZlIEVSUjAwOTE2NSB3
+b3JrYXJvdW5kIG9uIGkubXg2dWwNCiAgZHQtYmluZGluZ3M6IHNwaTogaW14OiBhZGQgaS5teDZ1
+bCB0byBzdGF0ZSBlcnJhdGEgZml4ZWQNCiAgZG1hZW5naW5lOiBpbXgtc2RtYTogcmVtb3ZlIEVS
+UjAwOTE2NSBvbiBpLm14NnVsDQogIGR0LWJpbmRpbmdzOiBkbWE6IGlteC1zZG1hOiBhZGQgaS5t
+eDZ1bC82c3ggY29tcGF0aWJsZSBuYW1lDQogIGRtYWVuZ2luZTogaW14LXNkbWE6IGZpeCBlY3Nw
+aTEgcnggZG1hIG5vdCB3b3JrIG9uIGkubXg4bW0NCiAgQVJNNjQ6IGR0czogZnJlZXNjYWxlOiBp
+bXg4bW0vOG1xOiB1cGRhdGUgbmV3IGNvbXBhdGlibGUgbmFtZSBmb3INCiAgICBlY3NwaSBhbmQg
+c2RtYQ0KICBBUk06IGR0czogaW14NnVsOiBhZGQgZG1hIHN1cHBvcnQgb24gZWNzcGkNCiAgQVJN
+OiBkdHM6IGlteDZzbGw6IGNvcnJlY3QgZWNzcGkvc2RtYSBjb21wYXRpYmxlDQogIGFybTY0OiBk
+ZWZjb25maWc6IEVuYWJsZSBTRE1BIG9uIGkubXg4bXEvOG1tDQoNCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kbWEvZnNsLWlteC1zZG1hLnR4dCAgICAgICB8ICAyICsNCiAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9zcGkvZnNsLWlteC1jc3BpLnR4dCAgICAgICB8ICAyICsNCiBhcmNoL2FybS9i
+b290L2R0cy9pbXg2cS5kdHNpICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstDQogYXJjaC9h
+cm0vYm9vdC9kdHMvaW14NnFkbC5kdHNpICAgICAgICAgICAgICAgICAgICAgfCAgOCArLS0NCiBh
+cmNoL2FybS9ib290L2R0cy9pbXg2c2xsLmR0c2kgICAgICAgICAgICAgICAgICAgICB8IDEwICsr
+LS0NCiBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzaSAgICAgICAgICAgICAgICAgICAgICB8
+ICA4ICsrKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS5kdHNpICAgICAg
+ICAgIHwgMTQgKystLS0NCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRz
+aSAgICAgICAgICB8ICA2ICstDQogYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZyAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgMyArDQogZHJpdmVycy9kbWEvaW14LXNkbWEuYyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgfCA2NyArKysrKysrKysrKysrKysrLS0tLS0tDQogZHJpdmVycy9z
+cGkvc3BpLWlteC5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA0NiArKysrKysrKysr
+KystLS0NCiBpbmNsdWRlL2xpbnV4L3BsYXRmb3JtX2RhdGEvZG1hLWlteC1zZG1hLmggICAgICAg
+ICB8ICAxICsNCiAxMiBmaWxlcyBjaGFuZ2VkLCAxMjQgaW5zZXJ0aW9ucygrKSwgNDUgZGVsZXRp
+b25zKC0pDQoNCi0tIA0KMi43LjQNCg0K
