@@ -2,144 +2,262 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FFDC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358B4C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7A521738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:33:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="YYqWWbgX"
+	by mail.kernel.org (Postfix) with ESMTP id F1F9021738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfDWMdm (ORCPT
+        id S1727730AbfDWMdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:33:42 -0400
-Received: from mail-eopbgr800053.outbound.protection.outlook.com ([40.107.80.53]:61502
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726033AbfDWMdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:33:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SFOWcRMqYDhw6jqoVK+LfZMp/kt/wYrgJGBI7ZffPGk=;
- b=YYqWWbgXt1dRe98rTUW4tLQxyZBgm1iSUizVmwAsvhLDeMSJiHen5C1hKtCUqEcfqQoc0J9wYTeQ1rcqR4ymerOIYYShTl0Zc3JOFFx0j2jK/H7KjkFR7+lB5T0ugMJAtBum7zuiu5ZIAuBZVhMEv+ViAAzM/Wj2gcxxNRH9xuE=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6704.namprd05.prod.outlook.com (20.178.249.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.9; Tue, 23 Apr 2019 12:32:59 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::441b:ef64:e316:b294]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::441b:ef64:e316:b294%5]) with mapi id 15.20.1835.010; Tue, 23 Apr 2019
- 12:32:59 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     Deepak Singh Rawat <drawat@vmware.com>, "hch@lst.de" <hch@lst.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Subject: [PATCH] drm/vmwgfx: Fix dma API layer violation
-Thread-Topic: [PATCH] drm/vmwgfx: Fix dma API layer violation
-Thread-Index: AQHU+dCvO3ng+InGw0O++RF6DrHRnA==
-Date:   Tue, 23 Apr 2019 12:32:59 +0000
-Message-ID: <20190423123242.3028-1-thellstrom@vmware.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0347.eurprd05.prod.outlook.com
- (2603:10a6:7:92::42) To MN2PR05MB6141.namprd05.prod.outlook.com
- (2603:10b6:208:c7::25)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 81484530-35b8-4dde-4c7b-08d6c7e7d195
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR05MB6704;
-x-ms-traffictypediagnostic: MN2PR05MB6704:
-x-microsoft-antispam-prvs: <MN2PR05MB6704E53D8566D88A475138F5A1230@MN2PR05MB6704.namprd05.prod.outlook.com>
-x-forefront-prvs: 0016DEFF96
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(39860400002)(376002)(136003)(366004)(199004)(189003)(6506007)(102836004)(2501003)(6436002)(5660300002)(3846002)(386003)(52116002)(6116002)(2906002)(6486002)(66446008)(53936002)(66556008)(66476007)(6512007)(86362001)(66946007)(73956011)(25786009)(66066001)(64756008)(4326008)(107886003)(8676002)(81166006)(50226002)(8936002)(81156014)(1076003)(14454004)(2616005)(486006)(97736004)(71190400001)(256004)(36756003)(26005)(476003)(186003)(71200400001)(305945005)(110136005)(54906003)(316002)(99286004)(7736002)(478600001)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6704;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KQksZ4C6uzYxGixyVe5Srk7e1OVC+jaGvu78aIvOq7ltiP0Xv3c+HFV+89ep2jXgDYqCnfVZ3MxHljcovd8/C+KIEbp1q3R/5CvrbB8w2bJBA/gwFt5aYCFKtZmRfUnWciAmIiTIJwbC/hwe2XP5xKakD+PmW54WABEMzByhruTnaueUkIEBH09E779wZ0EFYHleRAu97krUMdSzPIUuMA2lbCXZogP3aukRUgYE/hFdAGTw5Rs+pUNoUZcvGi7di7a9x5s1dHzIh2Ul3H04M8VK5XH6fzveCmFWUklceE2CxWcQ7PKdLUSvav2FSKGfB2VXsCIKRCcdsIO/KOFsIna13N7J5sUWOX3cMXh290y5XlmJxeJj9MYvnWgnH+B94egYDpRcCi4Qml6iQtDE96XvF764tnDxVoiv5x0Cmag=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 23 Apr 2019 08:33:54 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:53085 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfDWMdy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 08:33:54 -0400
+X-Originating-IP: 90.88.160.238
+Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id CFC06C0015;
+        Tue, 23 Apr 2019 12:33:46 +0000 (UTC)
+Message-ID: <f288e1d29277fcd79b251d99f84fb9b165364fac.camel@bootlin.com>
+Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
+ common place
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Date:   Tue, 23 Apr 2019 14:33:46 +0200
+In-Reply-To: <20190423073026.GX13337@phenom.ffwll.local>
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+         <20190417154121.GJ13337@phenom.ffwll.local>
+         <20190418062229.eyog4i62eg4pr6uf@flea>
+         <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
+         <20190418090221.e57dogn4yx5nwdni@flea>
+         <6578c22ddf5420d4dead69d29f451bc6a91f6c4a.camel@bootlin.com>
+         <20190420224045.GY4964@pendragon.ideasonboard.com>
+         <20190423073026.GX13337@phenom.ffwll.local>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81484530-35b8-4dde-4c7b-08d6c7e7d195
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 12:32:59.0782
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6704
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmVtb3ZlIHRoZSBjaGVjayBmb3IgSU9NTVUgcHJlc2VuY2Ugc2luY2UgaXQgd2FzIGNvbnNpZGVy
-ZWQgYQ0KbGF5ZXIgdmlvbGF0aW9uLg0KVGhpcyBtZWFucyB3ZSBoYXZlIG5vIHJlbGlhYmxlIHdh
-eSB0byBkZXN0aW5ndWlzaCBiZXR3ZWVuIGNvaGVyZW50DQpoYXJkd2FyZSBJT01NVSBETUEgYWRk
-cmVzcyB0cmFuc2xhdGlvbnMgYW5kIGluY29oZXJlbnQgU1dJT1RMQiBETUENCmFkZHJlc3MgdHJh
-bnNsYXRpb25zLCB3aGljaCB3ZSBjYW4ndCBoYW5kbGUuIFNvIGFsd2F5cyBwcmVzdW1lIHRoZQ0K
-Zm9ybWVyLiBUaGlzIG1lYW5zIHRoYXQgaWYgYW55Ym9keSBmb3JjZXMgU1dJT1RMQiB3aXRob3V0
-IGFsc28gc2V0dGluZw0KdGhlIHZtd19mb3JjZV9jb2hlcmVudD0xIHZtd2dmeCBvcHRpb24sIGRy
-aXZlciBvcGVyYXRpb24gd2lsbCBmYWlsLA0KbGlrZSBpdCB3aWxsIG9uIG1vc3Qgb3RoZXIgZ3Jh
-cGhpY3MgZHJpdmVycy4NCg0KU2lnbmVkLW9mZi1ieTogVGhvbWFzIEhlbGxzdHJvbSA8dGhlbGxz
-dHJvbUB2bXdhcmUuY29tPg0KLS0tDQogZHJpdmVycy9ncHUvZHJtL3Ztd2dmeC92bXdnZnhfZHJ2
-LmMgfCAzMyArKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA1
-IGluc2VydGlvbnMoKyksIDI4IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
-cHUvZHJtL3Ztd2dmeC92bXdnZnhfZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vdm13Z2Z4L3Ztd2dm
-eF9kcnYuYw0KaW5kZXggNzRlOTQxMzg4NzdlLi4yNzcyNTMwZGU0Y2IgMTAwNjQ0DQotLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vdm13Z2Z4L3Ztd2dmeF9kcnYuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJt
-L3Ztd2dmeC92bXdnZnhfZHJ2LmMNCkBAIC01NDUsMzAgKzU0NSwxNCBAQCBzdGF0aWMgdm9pZCB2
-bXdfZ2V0X2luaXRpYWxfc2l6ZShzdHJ1Y3Qgdm13X3ByaXZhdGUgKmRldl9wcml2KQ0KIAlkZXZf
-cHJpdi0+aW5pdGlhbF9oZWlnaHQgPSBoZWlnaHQ7DQogfQ0KIA0KLS8qKg0KLSAqIHZtd19hc3N1
-bWVfaW9tbXUgLSBGaWd1cmUgb3V0IHdoZXRoZXIgY29oZXJlbnQgZG1hLXJlbWFwcGluZyBtaWdo
-dCBiZQ0KLSAqIHRha2luZyBwbGFjZS4NCi0gKiBAZGV2OiBQb2ludGVyIHRvIHRoZSBzdHJ1Y3Qg
-ZHJtX2RldmljZS4NCi0gKg0KLSAqIFJldHVybjogdHJ1ZSBpZiBpb21tdSBwcmVzZW50LCBmYWxz
-ZSBvdGhlcndpc2UuDQotICovDQotc3RhdGljIGJvb2wgdm13X2Fzc3VtZV9pb21tdShzdHJ1Y3Qg
-ZHJtX2RldmljZSAqZGV2KQ0KLXsNCi0JY29uc3Qgc3RydWN0IGRtYV9tYXBfb3BzICpvcHMgPSBn
-ZXRfZG1hX29wcyhkZXYtPmRldik7DQotDQotCXJldHVybiAhZG1hX2lzX2RpcmVjdChvcHMpICYm
-IG9wcyAmJg0KLQkJb3BzLT5tYXBfcGFnZSAhPSBkbWFfZGlyZWN0X21hcF9wYWdlOw0KLX0NCi0N
-CiAvKioNCiAgKiB2bXdfZG1hX3NlbGVjdF9tb2RlIC0gRGV0ZXJtaW5lIGhvdyBETUEgbWFwcGlu
-Z3Mgc2hvdWxkIGJlIHNldCB1cCBmb3IgdGhpcw0KICAqIHN5c3RlbS4NCiAgKg0KICAqIEBkZXZf
-cHJpdjogUG9pbnRlciB0byBhIHN0cnVjdCB2bXdfcHJpdmF0ZQ0KICAqDQotICogVGhpcyBmdW5j
-dGlvbnMgdHJpZXMgdG8gZGV0ZXJtaW5lIHRoZSBJT01NVSBzZXR1cCBhbmQgd2hhdCBhY3Rpb25z
-DQotICogbmVlZCB0byBiZSB0YWtlbiBieSB0aGUgZHJpdmVyIHRvIG1ha2Ugc3lzdGVtIHBhZ2Vz
-IHZpc2libGUgdG8gdGhlDQotICogZGV2aWNlLg0KKyAqIFRoaXMgZnVuY3Rpb25zIHRyaWVzIHRv
-IGRldGVybWluZSB3aGF0IGFjdGlvbnMgbmVlZCB0byBiZSB0YWtlbiBieSB0aGUNCisgKiBkcml2
-ZXIgdG8gbWFrZSBzeXN0ZW0gcGFnZXMgdmlzaWJsZSB0byB0aGUgZGV2aWNlLg0KICAqIElmIHRo
-aXMgZnVuY3Rpb24gZGVjaWRlcyB0aGF0IERNQSBpcyBub3QgcG9zc2libGUsIGl0IHJldHVybnMg
-LUVJTlZBTC4NCiAgKiBUaGUgZHJpdmVyIG1heSB0aGVuIHRyeSB0byBkaXNhYmxlIGZlYXR1cmVz
-IG9mIHRoZSBkZXZpY2UgdGhhdCByZXF1aXJlDQogICogRE1BLg0KQEAgLTU3OCwyMyArNTYyLDE2
-IEBAIHN0YXRpYyBpbnQgdm13X2RtYV9zZWxlY3RfbW9kZShzdHJ1Y3Qgdm13X3ByaXZhdGUgKmRl
-dl9wcml2KQ0KIAlzdGF0aWMgY29uc3QgY2hhciAqbmFtZXNbdm13X2RtYV9tYXBfbWF4XSA9IHsN
-CiAJCVt2bXdfZG1hX3BoeXNdID0gIlVzaW5nIHBoeXNpY2FsIFRUTSBwYWdlIGFkZHJlc3Nlcy4i
-LA0KIAkJW3Ztd19kbWFfYWxsb2NfY29oZXJlbnRdID0gIlVzaW5nIGNvaGVyZW50IFRUTSBwYWdl
-cy4iLA0KLQkJW3Ztd19kbWFfbWFwX3BvcHVsYXRlXSA9ICJLZWVwaW5nIERNQSBtYXBwaW5ncy4i
-LA0KKwkJW3Ztd19kbWFfbWFwX3BvcHVsYXRlXSA9ICJDYWNoaW5nIERNQSBtYXBwaW5ncy4iLA0K
-IAkJW3Ztd19kbWFfbWFwX2JpbmRdID0gIkdpdmluZyB1cCBETUEgbWFwcGluZ3MgZWFybHkuIn07
-DQogDQogCWlmICh2bXdfZm9yY2VfY29oZXJlbnQpDQogCQlkZXZfcHJpdi0+bWFwX21vZGUgPSB2
-bXdfZG1hX2FsbG9jX2NvaGVyZW50Ow0KLQllbHNlIGlmICh2bXdfYXNzdW1lX2lvbW11KGRldl9w
-cml2LT5kZXYpKQ0KLQkJZGV2X3ByaXYtPm1hcF9tb2RlID0gdm13X2RtYV9tYXBfcG9wdWxhdGU7
-DQotCWVsc2UgaWYgKCF2bXdfZm9yY2VfaW9tbXUpDQotCQlkZXZfcHJpdi0+bWFwX21vZGUgPSB2
-bXdfZG1hX3BoeXM7DQotCWVsc2UgaWYgKElTX0VOQUJMRUQoQ09ORklHX1NXSU9UTEIpICYmIHN3
-aW90bGJfbnJfdGJsKCkpDQotCQlkZXZfcHJpdi0+bWFwX21vZGUgPSB2bXdfZG1hX2FsbG9jX2Nv
-aGVyZW50Ow0KKwllbHNlIGlmICh2bXdfcmVzdHJpY3RfaW9tbXUpDQorCQlkZXZfcHJpdi0+bWFw
-X21vZGUgPSB2bXdfZG1hX21hcF9iaW5kOw0KIAllbHNlDQogCQlkZXZfcHJpdi0+bWFwX21vZGUg
-PSB2bXdfZG1hX21hcF9wb3B1bGF0ZTsNCiANCi0JaWYgKGRldl9wcml2LT5tYXBfbW9kZSA9PSB2
-bXdfZG1hX21hcF9wb3B1bGF0ZSAmJiB2bXdfcmVzdHJpY3RfaW9tbXUpDQotCQlkZXZfcHJpdi0+
-bWFwX21vZGUgPSB2bXdfZG1hX21hcF9iaW5kOw0KLQ0KIAkvKiBObyBUVE0gY29oZXJlbnQgcGFn
-ZSBwb29sPyBGSVhNRTogQXNrIFRUTSBpbnN0ZWFkISAqLw0KICAgICAgICAgaWYgKCEoSVNfRU5B
-QkxFRChDT05GSUdfU1dJT1RMQikgfHwgSVNfRU5BQkxFRChDT05GSUdfSU5URUxfSU9NTVUpKSAm
-Jg0KIAkgICAgKGRldl9wcml2LT5tYXBfbW9kZSA9PSB2bXdfZG1hX2FsbG9jX2NvaGVyZW50KSkN
-Ci0tIA0KMi4yMC4xDQoNCg==
+Hi,
+
+On Tue, 2019-04-23 at 09:30 +0200, Daniel Vetter wrote:
+> On Sun, Apr 21, 2019 at 01:40:45AM +0300, Laurent Pinchart wrote:
+> > Hi Paul,
+> > 
+> > On Thu, Apr 18, 2019 at 01:49:54PM +0200, Paul Kocialkowski wrote:
+> > > On Thu, 2019-04-18 at 11:02 +0200, Maxime Ripard wrote:
+> > > > On Thu, Apr 18, 2019 at 09:52:10AM +0200, Daniel Vetter wrote:
+> > > > > And a lot of people pushed for the "fourcc is a standard", when
+> > > > > really it's totally not.
+> > > > 
+> > > > Even if it's not a standard, having consistency would be a good thing.
+> > > > 
+> > > > And you said yourself that DRM fourcc is now pretty much an authority
+> > > > for the fourcc, so it definitely looks like a standard to me.
+> > > 
+> > > I think trying to make the V4L2 and DRM fourccs converge is a lost
+> > > cause, as it has already significantly diverged. Even if we coordinate
+> > > an effort to introduce new formats with the same fourcc on both sides,
+> > > I don't see what good that would be since the formats we have now are
+> > > still plagued by the inconsistency.
+> > > 
+> > > I think we always need an explicit translation step from either v4l2 or
+> > > drm to the internal representation and back, without ever assuming that
+> > > formats might be compatible because they share the same fourcc.
+> > 
+> > I don't agree. APIs evolve, and while we can't switch from one set of
+> > 4CCs to another in existing APIs, we could in new APIs. Boris is working
+> > on new ioctls to handle formats in V4L2, and while 4CC unification could
+> > be impopular from a userspace developers point of view there, I don't
+> > think we have ruled it out completely. The move to the request API is
+> > also an area where a common set of 4CCs could be used, as it will depart
+> > from the existing V4L2 ioctls. To summarize my opinion, we're not there
+> > yet, but I wouldn't rule it out completely for the future.
+> > 
+> > > It looks like so far, V4L2 pixel formats describe a DRM pixel format +
+> > > modifier.
+> > 
+> > DRM modifiers are mostly about tiling and compression, and we hardly
+> > support these in V4L2. What are the modifiers you think are hardcoded in
+> > 4CCs in V4L2 ?
+> 
+> Hm maybe it was a drm one that didn't come from v4l or anywhere else
+> really, but the NV12MT one is nv12 + some tiling. I think we managed to
+> uapi-bend that one into shape in at least drm.
+
+The one I had in mind is V4L2_PIX_FMT_SUNXI_TILED_NV12 which translates
+to DRM_FORMAT_NV12 + DRM_FORMAT_MOD_ALLWINNER_TILED. Seems to be a
+pretty similar case to the Mediatek one indeed.
+
+In our cause, that's because the video decoding engine produces its
+destination buffers in a specific tiled format, that the display engine
+can take in directly.
+
+Cheers,
+
+Paul
+
+> -Daniel
+> 
+> > > I think Boris (CCed) is working to change that by allowing to
+> > > pass a DRM modifier through V4L2. With that, we'd be in a situation
+> > > where some formats are described by the v4l2 pixfmt alone and some
+> > > formats are also described a modifier (but I looked at it from a
+> > > distance so might have misunderstod). That feels better since it avoids
+> > > the combinatory explosion from describing each format + modifier
+> > > individually.
+> > > 
+> > > What do you think?
+> > > 
+> > > > > v4l tends to conflate pixel format with stuff that we tend to encode
+> > > > > in modifiers a lot more.
+> > > > 
+> > > > Boris is working on adding the modifiers concept to v4l2, so we're
+> > > > converging here, and we can totally have a layer in v4l2 to convert
+> > > > between old v4l2 "format+modifiers" formats, and DRM style formats.
+> > > > 
+> > > > > There's a bunch of reasons we can't just use v4l, and they're as
+> > > > > valid as ever:
+> > > > > 
+> > > > > - We overlap badly in some areas, so even if fourcc codes match, we
+> > > > >   can't use them and need a duplicated DRM_FOURCC code.
+> > > > 
+> > > > Do yo have an example of one of those areas?
+> > > > 
+> > > > > - v4l encodes some metadata into the fourcc that we encode elsewhere,
+> > > > >   e.g. offset for planar yuv formats, or tiling mode
+> > > > 
+> > > > As I was saying, this changes on the v4l2 side, and converging to
+> > > > what DRM is doing.
+> > > > 
+> > > > > - drm fourcc code doesn't actually define the drm_format_info
+> > > > >   uniquely, drivers can override that (that's an explicit design
+> > > > >   intent of modifiers, to allow drivers to add another plane for
+> > > > >   e.g. compression information). You'd need to pull that driver
+> > > > >   knowledge into your format library.
+> > > > 
+> > > > I'm not sure how my patches are changing anything here. This is
+> > > > litterally the same code, with the functions renamed.
+> > > > 
+> > > > If drivers want to override that, then yeah, fine, we can let them do
+> > > > that. Just like any helper this just provides a default that covers
+> > > > most of the cases.
+> > > > 
+> > > > > Iow there's no way we can easily adopt v4l fourcc, except if we do
+> > > > > something like a new addfb flag.
+> > > > 
+> > > > For the formats that would be described as a modifier, sure. For all
+> > > > the others (that are not yet supported by DRM), then I don't really
+> > > > see why not.
+> > > > 
+> > > > > > And given how the current state is a mess in this regard, I'm not too
+> > > > > > optimistic about keeping the formats in their relevant frameworks.
+> > > > > > 
+> > > > > > Having a shared library, governed by both, will make this far easier,
+> > > > > > since it will be easy to discover the formats that are already
+> > > > > > supported by the other subsystem.
+> > > > > 
+> > > > > I think a compat library that (tries to, best effort) convert between
+> > > > > v4l and drm fourcc would make sense. Somewhere in drivers/video, next
+> > > > > to the conversion functions for videomode <-> drm_display_mode
+> > > > > perhaps. That should be useful for drivers.
+> > > > 
+> > > > That's not really what this series is about though. That series is
+> > > > about sharing the (image|pixels) formats database across everyone so
+> > > > that everyone can benefit from it.
+> > > > 
+> > > > > Unifying the formats themselves, and all the associated metadata is
+> > > > > imo a no-go, and was a pretty conscious decision when we implemented
+> > > > > drm_fourcc a few years back.
+> > > > > 
+> > > > > > If we want to keep the current library in DRM, we have two options
+> > > > > > then:
+> > > > > > 
+> > > > > >   - Support all the v4l2 formats in the DRM library, which is
+> > > > > >     essentially what I'm doing in the last patches. However, that
+> > > > > >     would require to have the v4l2 developpers also reviewing stuff
+> > > > > >     there. And given how busy they are, I cannot really see how that
+> > > > > >     would work.
+> > > > > 
+> > > > > Well, if we end up with a common library then yes we need cross
+> > > > > review. There's no way around that. Doesn't matter where exactly that
+> > > > > library is in the filesystem tree, and adding a special MAINTAINERS
+> > > > > entry for anything related to fourcc (both drm and v4l) to make sure
+> > > > > they get cross-posted is easy. No file renaming needed.
+> > > > 
+> > > > That would create some governing issues as well. For example, if you
+> > > > ever have a patch from one fourcc addition (that might or might not be
+> > > > covered by v4l2), will you wait for any v4l2 developper to review it?
+> > > > 
+> > > > If it's shared code, then it should be shared, and every client
+> > > > framework put on an equal footing.
+> > > > 
+> > > > > >   - Develop the same library from within v4l2. That is really a poor
+> > > > > >     solution, since the information would be greatly duplicated
+> > > > > >     between the two, and in terms of maintainance, code, and binary
+> > > > > >     size that would be duplicated too.
+> > > > > 
+> > > > > It's essentially what we decided to do for drm years back.
+> > > > 
+> > > > And it was probably the right solution back then, but I'm really not
+> > > > convinced it's still the right thing to do today.
+> > > > 
+> > > > > > Having it shared allows to easily share, and discover formats from the
+> > > > > > other subsystem, and to have a single, unique place where this is
+> > > > > > centralized.
+> > > > > 
+> > > > > What I think could work as middle ground:
+> > > > > - Put drm_format stuff into a separate .ko
+> > > > > - Add a MAINTAINERS entry to make sure all things fourcc are cross
+> > > > > posted to both drm and v4l lists. Easy on the drm side, since it's all
+> > > > > separate files. Not sure it's so convenient for v4l uapi.
+> > > > > - Add a conversion library that tries to best-effort map between drm
+> > > > > and v4l formats. On the drm side that most likely means you need
+> > > > > offsets for planes, and modifiers too (since those are implied in some
+> > > > > v4l fourcc). Emphasis on "best effort" i.e. only support as much as
+> > > > > the drivers that use this library need.
+> > > > > - Add drm_fourcc as-needed by these drivers that want to use a unified
+> > > > > format space.
+> > > > > 
+> > > > > Forcing this unification on everyone otoh is imo way too much.
+> > > > 
+> > > > v4l2 is starting to converge with DRM, and we're using the DRM API
+> > > > pretty much untouched for that library, so I'm not really sure how
+> > > > anyone is hurt by that unification.
+> > 
+> > -- 
+> > Regards,
+> > 
+> > Laurent Pinchart
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
