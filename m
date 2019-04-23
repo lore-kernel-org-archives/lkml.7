@@ -2,66 +2,86 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89472C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7345DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5792120843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4251820685
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:48:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Bo0OHQoT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w/Hb5GBd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfDWIra (ORCPT
+        id S1726853AbfDWIsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:47:30 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46458 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfDWIr3 (ORCPT
+        Tue, 23 Apr 2019 04:48:00 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33735 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbfDWIr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:47:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dynh9I705ZiILXgmyOl+SyaOHisQmGgJs3EbSjjJDvE=; b=Bo0OHQoTLJzkglO2o5oz0h0Bbl
-        x+cYSL2ncm4+gW92HkUi/vFcT8Ephg6JndFeHZ4jepBHL1I/i5XJzaHKyHRRWn74a4zMEY1JO1Xmg
-        LygsMQDvpnE0rv9DJI0VZylMSzcLlLlMLL/KivEnDeY2tjAPbHSBGmMCyIltB/AL4PckF1ZIEC4iO
-        LUPkxoyinn88R4YyIbdTmtRbcnnrGprnEWBMgq0jNfGn4UsWhyo1/ZeoR1w5TyzEx+qpdTZvknd44
-        btwBiylEjC2zRgoOEzthn8/ITQy5MpT8ovFl+YZiigLRlg/fF/rxDc5BMrg8kFo2o+ZtAtkrYK/YF
-        DMGv5OdQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIr5H-0001FZ-M5; Tue, 23 Apr 2019 08:47:24 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7277729B47DC9; Tue, 23 Apr 2019 10:47:22 +0200 (CEST)
-Date:   Tue, 23 Apr 2019 10:47:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH 1/5] numa: introduce per-cgroup numa balancing
- locality, statistic
-Message-ID: <20190423084722.GD11158@hirez.programming.kicks-ass.net>
-References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
- <c0ec8861-2387-e73b-e450-2d636557a3dd@linux.alibaba.com>
+        Tue, 23 Apr 2019 04:47:59 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j11so11089228lfm.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 01:47:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2oxM6m5LlrRbJWAsU6VB0Zovu7lyror5LQ3rlFL6M7A=;
+        b=w/Hb5GBdjdAyoYRoi6j4dEobJaCtzCW1lIWBqJCzT1u5aEzYXDrC/Nf1zAkhD2tUBl
+         Ndd7AA0eWS+6x9uGQuHTUo/hPLZETKBTHyG6z7KEvnMASjWDTBANRNspsgG0ZqlAZALi
+         OLwROgDIZSotkhDo9VYWOdGBFD2130rdu4OupOB9crWbEMyVgoYTmziH1GqFtB7Tw8v9
+         6nw/pblHuW0zNzmt7ik6cW0XM2DGayogkkB960rkwrhotn6I2tacXqOWGbG6GuUlxO35
+         PYCLpu8jxViOs5GAP2J6jSVbAjS9pzyjvm2Aqm82/+ONi501jgsabbDo6hkkcMP8U1NK
+         bsOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2oxM6m5LlrRbJWAsU6VB0Zovu7lyror5LQ3rlFL6M7A=;
+        b=t6szPVe77Yct/R4GpfybkARza6vue60Ti5Cqb3FvyhZI6RR/5hpkMI35BPk8M7e888
+         RXFB1oiAqnBx8yutyrbuEE/jIc/Ox0DWxERvV8C5BLnNRqDBREflr1orRaolLPMyNodV
+         xmhR1tjZm7kVqQ0/OZXoGqlmmMitWGEVfoZddAlQygLowyEAv5ynIgOa+mB4VLi3Qgbh
+         coDfBkCRZbA8ScHepbryPZiKVwCKIXaw4NrcDsrTo7L1EOIV9fjVtmqdqmOHiMANTFzN
+         5a1HNtzSSOIBb+9jAGIp1cnhl17w1x9ZxNMbFFvjtRrCVmZ+Jrj4Aad9T/pzbFE9PN4C
+         gT3g==
+X-Gm-Message-State: APjAAAV+jaMRVJ5fvypqrCl22cBt2f8aBv/jd+ukKhc1RnFDBPz8Ijw+
+        I9LNnTDWF34FcNftY21STDiG6zfKpZ/fLZJhhoo8qg==
+X-Google-Smtp-Source: APXvYqzUOCuEeEtUGAim0jDA4allqWRpFfifZX12jU69kEJJ8kkKJqxvy2XBiwD4rYN+x8Vkl9kT4/4++zRcsMx96g4=
+X-Received: by 2002:a19:761a:: with SMTP id c26mr12966059lff.8.1556009276926;
+ Tue, 23 Apr 2019 01:47:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c0ec8861-2387-e73b-e450-2d636557a3dd@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
+In-Reply-To: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 23 Apr 2019 10:47:45 +0200
+Message-ID: <CACRpkdbRgyfVAZ8taoDAZo+QHYYvzOo3mZC4fosxyz0-X37y0Q@mail.gmail.com>
+Subject: Re: [PATCH 0/5] Add pin package management on STM32P157
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 10:11:24AM +0800, 王贇 wrote:
-> +	p->numa_faults_locality[mem_node == numa_node_id() ? 4 : 3] += pages;
+On Wed, Apr 10, 2019 at 1:31 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
 
-Possibly: 3 + !!(mem_node = numa_node_id()), generates better code.
+> The series adds support of chip packages for STM32MP157 SOC.
+
+Patches 1-4 applied to the pin control tree.
+Sorry for slowness :(
+
+Yours,
+Linus Walleij
