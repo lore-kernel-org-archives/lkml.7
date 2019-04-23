@@ -2,112 +2,116 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CD4C282E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50E6C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F1520693
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5FF20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:43:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="D8AQUfJb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqU6ARLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbfDWNnX (ORCPT
+        id S1727930AbfDWNna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:43:23 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34723 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbfDWNnW (ORCPT
+        Tue, 23 Apr 2019 09:43:30 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37151 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfDWNna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:43:22 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y16so2751812ljg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 06:43:21 -0700 (PDT)
+        Tue, 23 Apr 2019 09:43:30 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e6so7643355pgc.4;
+        Tue, 23 Apr 2019 06:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=85v3Amjq2HXZ2KZeuvLNC2xFUYG/wf0ssengDeUmeks=;
-        b=D8AQUfJbGAnfWvJbXUH2psBcRW17OaO4AiqjiWGDnclviZ0Kdu4KX0z1h8ySXiiGX6
-         7Yio3C1VPN4zBcwVLWEK3PRfNYysKcvlr4FsxgRFrHTsG5ZWOiQBu8gQUc+nx5b1YiXD
-         lA9a4nsj3/bR1XUSENekssx3j6bdXJwYN75+yof+sJCF4xEZ9KNhTJObYrw/XDYxvlCw
-         gbaPedZqXK2n2csLLe4OttXxd0UPSgFEU5y/mzx5z/0ggGCA7kCoNm0QdEkvmPHkJxPG
-         lP7o7CwOlP1rtFtOwIeIU5vgG2yAjP0daD23p7BXGVdB746yWUXK5F+SOypQ+WIcUnvJ
-         Z0yA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mA3mF+ycxeUdvUahPhxXN3FfcyNfELyy8iLDdoDE09E=;
+        b=kqU6ARLZVrNi50fCv25akrY3R3TDlpcSWaTOn+OaLTngZRAUjjZ68QTQRbzvxwMGF8
+         TKgq1xtbXDfBCdwZmJYdRH9/g8hSLVAOr3I7fPnZ8KsqB4moyNr2Ivq4z1NrX1sunvCI
+         zyeA5wAT3Qn3iTYQSTLeDVHR+Eu349E87JUMuyFb1tuLbDxb/lFn9w1A68Iz8SDOlqO6
+         /CO6E7cJcDJUWBNlNE9S9RtrxQm/O5a7Au17tjBXkSH5oPC8jP1kYT20wK+iNjYoNqq8
+         joyIrMhOOhheajV9TnyN4Umn6J7tFAPr7cwmWY7dAOB3db91zHeHXRNfuCXa0tQ682l2
+         lv8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=85v3Amjq2HXZ2KZeuvLNC2xFUYG/wf0ssengDeUmeks=;
-        b=mEY6AAYx+uuoXGOiV23xVdmWIq5ZBed8xhkeLHFY2iDKvdWSR5YyOffSkHbBJmBb4t
-         HKU4TyHNmZ+Cmc46zsjHpCW2gW0OMSAOVcz9EtkxlwpF33IwQhSA6KooRwhzZnTZXupD
-         J84oHFi0ExkgSh8WaBMP2t7opAk6R65Hlezey3VW0TqueCoud3ErHOGABiAq7ses5nlM
-         XBpLKxQD2spFSrzVESB2KT5iRu112uUSjia/wXNNGahA0B7UJtdJbUxhOJq61jWn/Gvi
-         ZIcuPU0ncWNrj38Zl6CltfnqavIiyK61z8Fg79faRFHMrZIUKfRaSicytSkuw20TQfZX
-         Y22w==
-X-Gm-Message-State: APjAAAUA+2/lIqOLHNaLxaRA+2/jJD3LiopMBEfsRve6UApqxL+R88Q3
-        cLgbHWCevDaiEoLrGNTymT0pVBXQw1LEkFbk7udm
-X-Google-Smtp-Source: APXvYqzYl/3ecbLLgku7EVW7oSq3VXHocfIn6AhYhdSz0o1SClaJaGwVRAkCSWyVhN8J0OwI1xgCm+bdLgVoR/1HIFk=
-X-Received: by 2002:a2e:5301:: with SMTP id h1mr13429199ljb.196.1556027000274;
- Tue, 23 Apr 2019 06:43:20 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mA3mF+ycxeUdvUahPhxXN3FfcyNfELyy8iLDdoDE09E=;
+        b=IsPGLnfpJKIhLnF870QWef9+J26R98Sw42EcRaQ1mK21DRc2AahVPU89F1XrwTx+B+
+         irnCEwiASuGaAUt/9eo2+x7moycGrgjbfmeMEfBmFPRRUoK1o/bpF6a+N+BtKc6xPUYj
+         aFEioe9F/k7um+sMFSWToWfNdsuraZpocFTDxUjiXT8g3pT86beod90KQQZhtbbVYXDQ
+         OmbtWaLO+7FlqEVcONMBFGqhSlZgR0FHLL/ZNYOLV4CdZc0QzewsZcXMokPgWuuPqGhQ
+         jqcoScvkxHdLhR4jBsR3koKbBvLvb1vuzqFiq1Gt7lMLGQOotTx0nKLwRlG8L3u3v7WT
+         HpwQ==
+X-Gm-Message-State: APjAAAX1iv3ruOOR6JFjJjmh1A9VoYhon6f3E4KkPgsIk24/LjRnvpU1
+        KEfKrLmtadgvsGvQnqXwDF0=
+X-Google-Smtp-Source: APXvYqzKHUvKnbHvWOP3vc8MmOGQBIPY0daPQG/AigqGZaj9m4wYbajx1ahELIYHJMhcHPQ4NRUdRQ==
+X-Received: by 2002:a63:c64a:: with SMTP id x10mr24469513pgg.12.1556027009384;
+        Tue, 23 Apr 2019 06:43:29 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f27sm2867144pfk.111.2019.04.23.06.43.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 06:43:28 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 06:43:26 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH next 07/25] hwmon: s3c: Use dev_get_drvdata()
+Message-ID: <20190423134326.GA19164@roeck-us.net>
+References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
+ <20190423075020.173734-8-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-References: <20190422210041.GA21711@archlinux-i9> <CAHC9VhTtz3OA3EchaZaAeg=DxoGoz_WFdj+Mi9nd9i+cmjmuJA@mail.gmail.com>
- <20190423132926.GK17719@sasha-vm>
-In-Reply-To: <20190423132926.GK17719@sasha-vm>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 23 Apr 2019 09:43:09 -0400
-Message-ID: <CAHC9VhRcdY7G_ES2VqNVpkoU=CRJkJySb3m1sFdgKJwh3JQ2oA@mail.gmail.com>
-Subject: Re: scripts/selinux build error in 4.14 after glibc update
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nicolas Iooss <nicolas.iooss@m4x.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423075020.173734-8-wangkefeng.wang@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 9:29 AM Sasha Levin <sashal@kernel.org> wrote:
-> On Mon, Apr 22, 2019 at 09:59:47PM -0400, Paul Moore wrote:
-> >On Mon, Apr 22, 2019 at 5:00 PM Nathan Chancellor
-> ><natechancellor@gmail.com> wrote:
-> >> Hi all,
-> >>
-> >> After a glibc update to 2.29, my 4.14 builds started failing like so:
-> >
-> >...
-> >
-> >>   HOSTCC  scripts/selinux/genheaders/genheaders
-> >> In file included from scripts/selinux/genheaders/genheaders.c:19:
-> >> ./security/selinux/include/classmap.h:245:2: error: #error New address family defined, please update secclass_map.
-> >>  #error New address family defined, please update secclass_map.
-> >>   ^~~~~
-> >
-> >This is a known problem that has a fix in the selinux/next branch and
-> >will be going up to Linus during the next merge window.  The fix is
-> >quite small and should be relatively easy for you to backport to your
-> >kernel build if you are interested; the patch can be found at the
-> >archive link below:
-> >
-> >https://lore.kernel.org/selinux/20190225005528.28371-1-paulo@paulo.ac
->
-> Why is it waiting for the next merge window? It fixes a build bug that
-> people hit.
+On Tue, Apr 23, 2019 at 03:50:02PM +0800, Kefeng Wang wrote:
+> Using dev_get_drvdata directly.
+> 
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-hwmon@vger.kernel.org
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-I place a reasonably high bar on patches that I send up to Linus
-outside of the merge window and I didn't feel this patch met that
-criteria.  Nathan is only the second person I've seen who has
-encountered this problem, the first being the original patch author.
-As far as I've seen, the problem is only seen by users building older
-kernels on very new userspaces (e.g. glibc v2.29 was released in
-February 2019, Linux v4.14 was released in 2017); this doesn't appear
-to be a large group of people and I didn't want to risk breaking the
-main kernel tree during the -rcX phase for such a small group.
+Applied to hwmon-next.
 
--- 
-paul moore
-www.paul-moore.com
+Thanks,
+Guenter
+
+> ---
+>  drivers/hwmon/s3c-hwmon.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hwmon/s3c-hwmon.c b/drivers/hwmon/s3c-hwmon.c
+> index 0c4710d35d16..0d65aa5985e2 100644
+> --- a/drivers/hwmon/s3c-hwmon.c
+> +++ b/drivers/hwmon/s3c-hwmon.c
+> @@ -98,7 +98,7 @@ static int s3c_hwmon_read_ch(struct device *dev,
+>  static ssize_t s3c_hwmon_show_raw(struct device *dev,
+>  				  struct device_attribute *attr, char *buf)
+>  {
+> -	struct s3c_hwmon *adc = platform_get_drvdata(to_platform_device(dev));
+> +	struct s3c_hwmon *adc = dev_get_drvdata(dev);
+>  	struct sensor_device_attribute *sa = to_sensor_dev_attr(attr);
+>  	int ret;
+>  
+> @@ -164,7 +164,7 @@ static ssize_t s3c_hwmon_ch_show(struct device *dev,
+>  				 char *buf)
+>  {
+>  	struct sensor_device_attribute *sen_attr = to_sensor_dev_attr(attr);
+> -	struct s3c_hwmon *hwmon = platform_get_drvdata(to_platform_device(dev));
+> +	struct s3c_hwmon *hwmon = dev_get_drvdata(dev);
+>  	struct s3c_hwmon_pdata *pdata = dev_get_platdata(dev);
+>  	struct s3c_hwmon_chcfg *cfg;
+>  	int ret;
