@@ -2,147 +2,138 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7E9C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B420C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF9B20685
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BEF218B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:28:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PqnS01Ri"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KTlYUPxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbfDWN2K (ORCPT
+        id S1727917AbfDWN22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:28:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:61972 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727754AbfDWN2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:28:09 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44pPQZ3fBBz9v083;
-        Tue, 23 Apr 2019 15:28:06 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=PqnS01Ri; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id W8mHEisNH4V8; Tue, 23 Apr 2019 15:28:06 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44pPQZ2Scnz9v07b;
-        Tue, 23 Apr 2019 15:28:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556026086; bh=Ez5mm6PUM5Ypfk0XAkoOaZApQ4Vwg8mS5qSiVgOCC1c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PqnS01RiGIWVynuSYd8Xp6pjQtSMPC46ftQ3a3WkAAOsNNKSdE8VbRoMqIekLZOhx
-         IEfIMi7knhwrdAjupdYpE1Kfm182fNgHzRsDnQBoYWt3hf57U7atXaDWWZMdzxboVn
-         oKB+GLwCREiqDQx3GekM1Jb/Hs9fY4GXQLY0Fcyo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B58048B8DD;
-        Tue, 23 Apr 2019 15:28:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id VjckJo6gfVqE; Tue, 23 Apr 2019 15:28:07 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 328778B8C4;
-        Tue, 23 Apr 2019 15:28:07 +0200 (CEST)
-Subject: Re: [PATCH 21/22] watchdog: mpc8xxx_wdt: Convert to use device
- managed functions and other improvements
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1554913683-25454-1-git-send-email-linux@roeck-us.net>
- <1554913683-25454-22-git-send-email-linux@roeck-us.net>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <3631a90f-7c77-d2c2-ef68-01f9daf40ae6@c-s.fr>
-Date:   Tue, 23 Apr 2019 15:28:06 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 09:28:28 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39672 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfDWN22 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 09:28:28 -0400
+Received: by mail-lj1-f194.google.com with SMTP id l7so13518300ljg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 06:28:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=az2eewAoUAngKwYt3jfUJjVHvJWsoW9KqfbViPSA1zI=;
+        b=KTlYUPxcIs3ky4JbfVSD7KmOrUfwPu7Z/zzH+LBPE5xcoxjc4UTDtlcJGkUpxxTc94
+         7J4duCMd4H1oL4V/yEidAePnFeX6P8plqYrhoKnwNABDfBBoIrKw01RHcapFmNmRplIX
+         2vOJEHJCDuhuTIw+7uNgBmImpPAnWc51EGCx1nVW5/3y252uDNmr9vpFPqSd22va2LKX
+         Xwv//ZWgyDBXYznEsSv/xUyDweXdfE814lxNhO5sXs67kLBmmu8QaxcAjESil7GzZP/3
+         uQSEiftQnCWcWgkqVfRB//NHlVlk6RpyMGor/Grl6X5KvyD7VtZlj1FXEihhYHDyqaBy
+         8uGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=az2eewAoUAngKwYt3jfUJjVHvJWsoW9KqfbViPSA1zI=;
+        b=eSUZ01QNS3Zjk/bbL+N0PilFTZ7XyZ9Rf9qntbULZmZSis7iJRiPcon9TRYPwJoFSA
+         QLv8AsDoEo31RaaLezYNd3yrR6Hhx1tUqrPDuGXm+vHs+jFB358GBi5WKi770tukV1+E
+         aPc1HpXCIsaRtq1MDyY0SR0l1ujGimN3UCJZFxgbFmZZRJxFtSS+OAevlafq0t9Dbql/
+         ox9fLhXwUYJfSJ/4q0fiNnvDsqFJnnTaN0+Id+6N9onZ1LS2wU4hRRq55Y0jgw4ixFaG
+         yld/s5FKkGgkrAQ1RfYG9csYRgwqHBrEqMoqe7lX2u4qdLXRsjF2KOF3C0/wHg1KyBWa
+         gcUA==
+X-Gm-Message-State: APjAAAWwsWy7er76HQgDsmhL2UYjSWOOgp5iTaWFa67FlTHznBZ+Ieu/
+        I7L3LP5TqpqR4wutA71Hphu1eA==
+X-Google-Smtp-Source: APXvYqzBTitnnonpNVjFVrddoATE+fSypgI47AVPg8DBxZ+/QkoW8EzffmP5F89P4Vje4/ROxrMywg==
+X-Received: by 2002:a2e:a0c9:: with SMTP id f9mr3304999ljm.62.1556026106182;
+        Tue, 23 Apr 2019 06:28:26 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id y206sm4617107lfc.72.2019.04.23.06.28.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 23 Apr 2019 06:28:25 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
+Cc:     jcrouse@codeaurora.org, vincent.guittot@linaro.org,
+        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
+        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
+        evgreen@chromium.org, sibis@codeaurora.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        georgi.djakov@linaro.org
+Subject: [PATCH v2 0/5] Introduce OPP bandwidth bindings
+Date:   Tue, 23 Apr 2019 16:28:18 +0300
+Message-Id: <20190423132823.7915-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1554913683-25454-22-git-send-email-linux@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Here is a proposal to extend the OPP bindings with bandwidth based on
+a previous discussion [1].
+
+Every functional block on a SoC can contribute to the system power
+efficiency by expressing its own bandwidth needs (to memory or other SoC
+modules). This will allow the system to save power when high throughput
+is not required (and also provide maximum throughput when needed).
+
+There are at least three ways for a device to determine its bandwidth
+needs:
+	1. The device can dynamically calculate the needed bandwidth
+based on some known variable. For example: UART (baud rate), I2C (fast
+mode, high-speed mode, etc), USB (specification version, data transfer
+type), SDHC (SD standard, clock rate, bus-width), Video Encoder/Decoder
+(video format, resolution, frame-rate)
+
+	2. There is a hardware specific value. For example: hardware
+specific constant value (e.g. for PRNG) or use-case specific value that
+is hard-coded.
+
+	3. Predefined SoC/board specific bandwidth values. For example:
+CPU or GPU bandwidth is related to the current core frequency and both
+bandwidth and frequency are scaled together.
+
+This patchset is trying to address point 3 above by extending the OPP
+bindings to support predefined SoC/board bandwidth values and adds
+support in cpufreq-dt to scale the interconnect between the CPU and the
+DDR together with frequency and voltage.
+
+[1] https://patchwork.kernel.org/patch/10577315/
+
+Changes in v2:
+* Added support for configuring multiple interconnect paths per each device
+and changed the way we describe it in DT. (Viresh)
+* Rename the DT property opp-bw-MBps to bandwidth-MBps. (Viresh)
+* Document MBps in property-units.txt. (Rob)
+* New patch to add of_icc_get_by_index() helper function.
+* Add _of_find_paths() to populate OPP tables with interconnect path data
+from DT. (Viresh)
+
+v1: https://lore.kernel.org/lkml/20190313090010.20534-1-georgi.djakov@linaro.org/
 
 
-Le 10/04/2019 à 18:28, Guenter Roeck a écrit :
-> Use device managed functions to simplify error handling, reduce
-> source code size, improve readability, and reduce the likelyhood of bugs.
-> Other improvements as listed below.
-> 
-> The conversion was done automatically with coccinelle using the
-> following semantic patches. The semantic patches and the scripts
-> used to generate this commit log are available at
-> https://github.com/groeck/coccinelle-patches
-> 
-> - Drop assignments to otherwise unused variables
-> - Drop empty remove function
->    This also drops the inaccurate message on remove; the driver won't be
->    removed if the hardware watchdog is running, no matter if the watchdog
->    device is open or not.
-> - Use local variable 'struct device *dev' consistently
-> - Use devm_watchdog_register_driver() to register watchdog device
-> 
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Georgi Djakov (5):
+  dt-bindings: opp: Introduce bandwidth-MBps bindings
+  interconnect: Add of_icc_get_by_index() helper function
+  OPP: Add support for parsing the interconnect bandwidth
+  OPP: Update the bandwidth on OPP frequency changes
+  cpufreq: dt: Add support for interconnect bandwidth scaling
 
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+ Documentation/devicetree/bindings/opp/opp.txt |  38 +++++++
+ .../devicetree/bindings/property-units.txt    |   4 +
+ drivers/cpufreq/cpufreq-dt.c                  |  27 ++++-
+ drivers/interconnect/core.c                   |  45 ++++++--
+ drivers/opp/core.c                            |  96 ++++++++++++++++-
+ drivers/opp/of.c                              | 102 ++++++++++++++++++
+ drivers/opp/opp.h                             |   9 ++
+ include/linux/interconnect.h                  |   6 ++
+ include/linux/pm_opp.h                        |  14 +++
+ 9 files changed, 327 insertions(+), 14 deletions(-)
 
-> ---
->   drivers/watchdog/mpc8xxx_wdt.c | 17 +++--------------
->   1 file changed, 3 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/watchdog/mpc8xxx_wdt.c b/drivers/watchdog/mpc8xxx_wdt.c
-> index 3b5b446b690c..9b6d6a5a27ad 100644
-> --- a/drivers/watchdog/mpc8xxx_wdt.c
-> +++ b/drivers/watchdog/mpc8xxx_wdt.c
-> @@ -204,9 +204,10 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
->   	if (ddata->wdd.timeout < ddata->wdd.min_timeout)
->   		ddata->wdd.timeout = ddata->wdd.min_timeout;
->   
-> -	ret = watchdog_register_device(&ddata->wdd);
-> +	ret = devm_watchdog_register_device(dev, &ddata->wdd);
->   	if (ret) {
-> -		dev_err(dev, "cannot register watchdog device (err=%d)\n", ret);
-> +		dev_err(dev, "cannot register watchdog device (err=%d)\n",
-> +			ret);
->   		return ret;
->   	}
->   
-> @@ -218,17 +219,6 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
->   	return 0;
->   }
->   
-> -static int mpc8xxx_wdt_remove(struct platform_device *ofdev)
-> -{
-> -	struct mpc8xxx_wdt_ddata *ddata = platform_get_drvdata(ofdev);
-> -
-> -	dev_crit(&ofdev->dev, "Watchdog removed, expect the %s soon!\n",
-> -		 reset ? "reset" : "machine check exception");
-> -	watchdog_unregister_device(&ddata->wdd);
-> -
-> -	return 0;
-> -}
-> -
->   static const struct of_device_id mpc8xxx_wdt_match[] = {
->   	{
->   		.compatible = "mpc83xx_wdt",
-> @@ -259,7 +249,6 @@ MODULE_DEVICE_TABLE(of, mpc8xxx_wdt_match);
->   
->   static struct platform_driver mpc8xxx_wdt_driver = {
->   	.probe		= mpc8xxx_wdt_probe,
-> -	.remove		= mpc8xxx_wdt_remove,
->   	.driver = {
->   		.name = "mpc8xxx_wdt",
->   		.of_match_table = mpc8xxx_wdt_match,
-> 
