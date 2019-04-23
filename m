@@ -2,226 +2,213 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E32C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F52C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692BC20643
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:50:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sZQRmjUw"
+	by mail.kernel.org (Postfix) with ESMTP id 0AF17214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 06:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfDWGuy (ORCPT
+        id S1726291AbfDWG5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 02:50:54 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:40374 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfDWGuy (ORCPT
+        Tue, 23 Apr 2019 02:57:09 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:17064 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725888AbfDWG5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 02:50:54 -0400
-Received: by mail-it1-f193.google.com with SMTP id k64so22048071itb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 23:50:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QtwL1OPe7qsu3/8mTHXdUGLPn/VLAaYQGsT1rPrw2P4=;
-        b=sZQRmjUw/omWwKUztO4jamoVwr2GpfTGP/28pj8sLzLBKYUGI3yB9XflgasG85CZKX
-         Kj8m4jtBV3lZJnt8mk7ke3JwJqX5oLbGIUDeKDfXRYSx+Wc74BLn33ms5nIhYkGhtN8p
-         WQtedqTrSiD4SHbSOQkfFXTEtMzdyOXMT6JkvRJKlR1UD4rkS1pYdFm4MUcgtLiSMGGD
-         qJq+ATdXBmcKKld9Ccf6uTP+/rYYrSzWa4C9q5+PYh9lAT9HoJbOb1hevrk5whcwEQCW
-         YDUP4EsCYAga0vkN/liNsbpT8HvegfClI+1wSOy561BDPeHVfKN2hL2xccbwWMARhaWh
-         4Q6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QtwL1OPe7qsu3/8mTHXdUGLPn/VLAaYQGsT1rPrw2P4=;
-        b=pmAg6PO7xoEUa4n1I9Lhl2rRmQvjHUeW9YWWYb3dnymi7Geh0VNZthkdj940qrPUpq
-         tUT7ImIGO4KCgDtVxA/rUUTt9IYOIym6+Io7XQ/b+2loiXTPQYZtTThnMOXzMZrKFsE1
-         7exEWL1gTohItIV6Dul7q1SMXaDZf+ANYzohuBaVYiHKMo/T0uYP5f+AIEViYZJHVdVU
-         AAdq+9GrNPh6QveGXyuFA/QLNa7OqDyI9tFaxNRUHXGmpfLXSUyR0JxCh7z/x+77espe
-         18vw4jOosOIa2W/A7zPeeRFpyVS6J2uw5jyXRRWS7Lzpz0+YlpC5KH3FsqNDmhlFI77N
-         PPng==
-X-Gm-Message-State: APjAAAUp2mvYq+zqvWIFQhFIqsa/WFkel+Sm0NdG6vRm/3CXkLOuykWk
-        o4mHvqT0h1nCEpTJzSVB3kvEimWNX+eKFAbkG0Z+VQ==
-X-Google-Smtp-Source: APXvYqyKbvmzyVgBMtqIALsf+854zmxirunPOgUYLH0wzNZ99E9ydjyCOLELDIsFofV10CP4VIwzxRDYd01ShrSXmLI=
-X-Received: by 2002:a05:6638:94:: with SMTP id v20mr5518782jao.2.1556002253260;
- Mon, 22 Apr 2019 23:50:53 -0700 (PDT)
+        Tue, 23 Apr 2019 02:57:08 -0400
+Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 22 Apr 2019 23:57:06 -0700
+Received: from htb-2n-eng-dhcp405.eng.vmware.com (unknown [10.33.114.36])
+        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id E0835B2137;
+        Tue, 23 Apr 2019 02:57:06 -0400 (EDT)
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>
+CC:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Nadav Amit <namit@vmware.com>,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: [PATCH] x86/mm/tlb: Remove flush_tlb_info from the stack
+Date:   Mon, 22 Apr 2019 23:57:06 -0700
+Message-ID: <20190423065706.15430-1-namit@vmware.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <20180711094040.12506-1-ard.biesheuvel@linaro.org>
- <20180711094040.12506-9-ard.biesheuvel@linaro.org> <CADvTj4rmxgxoJMR4ehZuhHHP3s2KCqO=Vp2igf3-ev_o=+_Duw@mail.gmail.com>
-In-Reply-To: <CADvTj4rmxgxoJMR4ehZuhHHP3s2KCqO=Vp2igf3-ev_o=+_Duw@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 23 Apr 2019 08:50:41 +0200
-Message-ID: <CAKv+Gu-tdB=2ep3MQY2iYteeupKhPHBzi6vouQhmmwy8bRfXDA@mail.gmail.com>
-Subject: Re: [PATCH 8/8] fbdev/efifb: honour UEFI memory map attributes when
- mapping the fb
-To:     James Hilliard <james.hilliard1@gmail.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Jones <pjones@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: namit@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 20 Apr 2019 at 21:03, James Hilliard <james.hilliard1@gmail.com> wrote:
->
-> This patch appears to introduce a regression on my
-> system(https://www.jetwaycomputer.com/NF9B.html).
-> My board uses an Intel gma3650 GPU.
-> It causes a complete failure of all video output.
-> With it reverted I get:
-> [ 1.169444] efifb: probing for efifb
-> [ 1.169499] efifb: framebuffer at 0xcf800000, using 1876k, total 1875k
-> [ 1.169511] efifb: mode is 800x600x32, linelength=3200, pages=1
-> [ 1.169519] efifb: scrolling: redraw
-> [ 1.169528] efifb: Truecolor: size=8:8:8:8, shift=24:16:8:0
-> Without it reverted I get:
-> [ 1.173368] efifb: probing for efifb
-> [ 1.173386] efifb: abort, cannot remap video memory 0x1d5000 @ 0xcf800000
-> [ 1.173395] Trying to free nonexistent resource
-> <00000000cf800000-00000000cf9d4bff>
-> [ 1.173413] efi-framebuffer: probe of efi-framebuffer.0 failed with error -5
->
+Remove flush_tlb_info variables from the stack. This allows to align
+flush_tlb_info to cache-line and avoid potentially unnecessary cache
+line movements. It also allows to have a fixed virtual-to-physical
+translation of the variables, which reduces TLB misses.
 
-Could you please reboot with efi=debug passed on the kernel command
-line and share the entire dmesg kernel log output?
+Use per-CPU struct for flush_tlb_mm_range() and
+flush_tlb_kernel_range(). Add debug assertions to ensure there are
+no nested TLB flushes that might overwrite the per-CPU data. For
+arch_tlbbatch_flush(), use a const struct.
 
+Results when running a microbenchmarks that performs 10^6 MADV_DONTEED
+operations and touching a page, in which 3 additional threads run a
+busy-wait loop (5 runs):
 
+			base		off-stack
+			----		---------
+avg (per operation)	1.629		1.580	(-3%)
+stddev			0.007		0.012
 
-> On Wed, Jul 11, 2018 at 11:40 AM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > If the framebuffer address provided by the Graphics Output Protocol
-> > (GOP) is covered by the UEFI memory map, it will tell us which memory
-> > attributes are permitted when mapping this region. In some cases,
-> > (KVM guest on ARM), violating this will result in loss of coherency,
-> > which means that updates sent to the framebuffer by the guest will
-> > not be observeable by the host, and the emulated display simply does
-> > not work.
-> >
-> > So if the memory map contains such a description, take the attributes
-> > field into account, and add support for creating WT or WB mappings of
-> > the framebuffer region.
-> >
-> > Cc: Peter Jones <pjones@redhat.com>
-> > Tested-by: Laszlo Ersek <lersek@redhat.com>
-> > Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> > Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > ---
-> >  drivers/video/fbdev/efifb.c | 51 +++++++++++++++++++++++++++++--------
-> >  1 file changed, 41 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-> > index 46a4484e3da7..c6f78d27947b 100644
-> > --- a/drivers/video/fbdev/efifb.c
-> > +++ b/drivers/video/fbdev/efifb.c
-> > @@ -20,7 +20,7 @@
-> >  #include <drm/drm_connector.h>  /* For DRM_MODE_PANEL_ORIENTATION_* */
-> >
-> >  static bool request_mem_succeeded = false;
-> > -static bool nowc = false;
-> > +static u64 mem_flags = EFI_MEMORY_WC | EFI_MEMORY_UC;
-> >
-> >  static struct fb_var_screeninfo efifb_defined = {
-> >         .activate               = FB_ACTIVATE_NOW,
-> > @@ -68,8 +68,12 @@ static int efifb_setcolreg(unsigned regno, unsigned red, unsigned green,
-> >
-> >  static void efifb_destroy(struct fb_info *info)
-> >  {
-> > -       if (info->screen_base)
-> > -               iounmap(info->screen_base);
-> > +       if (info->screen_base) {
-> > +               if (mem_flags & (EFI_MEMORY_UC | EFI_MEMORY_WC))
-> > +                       iounmap(info->screen_base);
-> > +               else
-> > +                       memunmap(info->screen_base);
-> > +       }
-> >         if (request_mem_succeeded)
-> >                 release_mem_region(info->apertures->ranges[0].base,
-> >                                    info->apertures->ranges[0].size);
-> > @@ -104,7 +108,7 @@ static int efifb_setup(char *options)
-> >                         else if (!strncmp(this_opt, "width:", 6))
-> >                                 screen_info.lfb_width = simple_strtoul(this_opt+6, NULL, 0);
-> >                         else if (!strcmp(this_opt, "nowc"))
-> > -                               nowc = true;
-> > +                               mem_flags &= ~EFI_MEMORY_WC;
-> >                 }
-> >         }
-> >
-> > @@ -164,6 +168,7 @@ static int efifb_probe(struct platform_device *dev)
-> >         unsigned int size_remap;
-> >         unsigned int size_total;
-> >         char *option = NULL;
-> > +       efi_memory_desc_t md;
-> >
-> >         if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI || pci_dev_disabled)
-> >                 return -ENODEV;
-> > @@ -272,12 +277,35 @@ static int efifb_probe(struct platform_device *dev)
-> >         info->apertures->ranges[0].base = efifb_fix.smem_start;
-> >         info->apertures->ranges[0].size = size_remap;
-> >
-> > -       if (nowc)
-> > -               info->screen_base = ioremap(efifb_fix.smem_start, efifb_fix.smem_len);
-> > -       else
-> > -               info->screen_base = ioremap_wc(efifb_fix.smem_start, efifb_fix.smem_len);
-> > +       if (!efi_mem_desc_lookup(efifb_fix.smem_start, &md)) {
-> > +               if ((efifb_fix.smem_start + efifb_fix.smem_len) >
-> > +                   (md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT))) {
-> > +                       pr_err("efifb: video memory @ 0x%lx spans multiple EFI memory regions\n",
-> > +                              efifb_fix.smem_start);
-> > +                       err = -EIO;
-> > +                       goto err_release_fb;
-> > +               }
-> > +               /*
-> > +                * If the UEFI memory map covers the efifb region, we may only
-> > +                * remap it using the attributes the memory map prescribes.
-> > +                */
-> > +               mem_flags |= EFI_MEMORY_WT | EFI_MEMORY_WB;
-> > +               mem_flags &= md.attribute;
-> > +       }
-> > +       if (mem_flags & EFI_MEMORY_WC)
-> > +               info->screen_base = ioremap_wc(efifb_fix.smem_start,
-> > +                                              efifb_fix.smem_len);
-> > +       else if (mem_flags & EFI_MEMORY_UC)
-> > +               info->screen_base = ioremap(efifb_fix.smem_start,
-> > +                                           efifb_fix.smem_len);
-> > +       else if (mem_flags & EFI_MEMORY_WT)
-> > +               info->screen_base = memremap(efifb_fix.smem_start,
-> > +                                            efifb_fix.smem_len, MEMREMAP_WT);
-> > +       else if (mem_flags & EFI_MEMORY_WB)
-> > +               info->screen_base = memremap(efifb_fix.smem_start,
-> > +                                            efifb_fix.smem_len, MEMREMAP_WB);
-> >         if (!info->screen_base) {
-> > -               pr_err("efifb: abort, cannot ioremap video memory 0x%x @ 0x%lx\n",
-> > +               pr_err("efifb: abort, cannot remap video memory 0x%x @ 0x%lx\n",
-> >                         efifb_fix.smem_len, efifb_fix.smem_start);
-> >                 err = -EIO;
-> >                 goto err_release_fb;
-> > @@ -371,7 +399,10 @@ static int efifb_probe(struct platform_device *dev)
-> >  err_groups:
-> >         sysfs_remove_groups(&dev->dev.kobj, efifb_groups);
-> >  err_unmap:
-> > -       iounmap(info->screen_base);
-> > +       if (mem_flags & (EFI_MEMORY_UC | EFI_MEMORY_WC))
-> > +               iounmap(info->screen_base);
-> > +       else
-> > +               memunmap(info->screen_base);
-> >  err_release_fb:
-> >         framebuffer_release(info);
-> >  err_release_mem:
-> > --
-> > 2.17.1
-> >
-> >
-> >
-> >
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+---
+ arch/x86/mm/tlb.c | 75 ++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 54 insertions(+), 21 deletions(-)
+
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 487b8474c01c..c4ac66dfb34e 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -634,7 +634,7 @@ static void flush_tlb_func_common(const struct flush_tlb_info *f,
+ 	this_cpu_write(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen, mm_tlb_gen);
+ }
+ 
+-static void flush_tlb_func_local(void *info, enum tlb_flush_reason reason)
++static void flush_tlb_func_local(const void *info, enum tlb_flush_reason reason)
+ {
+ 	const struct flush_tlb_info *f = info;
+ 
+@@ -722,43 +722,62 @@ void native_flush_tlb_others(const struct cpumask *cpumask,
+  */
+ unsigned long tlb_single_page_flush_ceiling __read_mostly = 33;
+ 
++
++static DEFINE_PER_CPU_SHARED_ALIGNED(struct flush_tlb_info, flush_tlb_info);
++
++#ifdef CONFIG_DEBUG_VM
++static DEFINE_PER_CPU(unsigned int, flush_tlb_info_idx);
++#endif
++
+ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+ 				unsigned long end, unsigned int stride_shift,
+ 				bool freed_tables)
+ {
++	struct flush_tlb_info *info;
+ 	int cpu;
+ 
+-	struct flush_tlb_info info = {
+-		.mm = mm,
+-		.stride_shift = stride_shift,
+-		.freed_tables = freed_tables,
+-	};
+-
+ 	cpu = get_cpu();
++	info = this_cpu_ptr(&flush_tlb_info);
++
++	/*
++	 * Ensure that the following code is non-reentrant and flush_tlb_info
++	 * is not overwritten. This means no TLB flushing is initiated by
++	 * interrupt handlers and machine-check exception handlers.
++	 */
++#ifdef CONFIG_DEBUG_VM
++	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
++#endif
+ 
+ 	/* This is also a barrier that synchronizes with switch_mm(). */
+-	info.new_tlb_gen = inc_mm_tlb_gen(mm);
++	info->new_tlb_gen = inc_mm_tlb_gen(mm);
++	info->mm = mm;
++	info->stride_shift = stride_shift;
++	info->freed_tables = freed_tables;
+ 
+ 	/* Should we flush just the requested range? */
+ 	if ((end != TLB_FLUSH_ALL) &&
+ 	    ((end - start) >> stride_shift) <= tlb_single_page_flush_ceiling) {
+-		info.start = start;
+-		info.end = end;
++		info->start = start;
++		info->end = end;
+ 	} else {
+-		info.start = 0UL;
+-		info.end = TLB_FLUSH_ALL;
++		info->start = 0UL;
++		info->end = TLB_FLUSH_ALL;
+ 	}
+ 
+ 	if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
+-		VM_WARN_ON(irqs_disabled());
++		lockdep_assert_irqs_enabled();
+ 		local_irq_disable();
+-		flush_tlb_func_local(&info, TLB_LOCAL_MM_SHOOTDOWN);
++		flush_tlb_func_local(info, TLB_LOCAL_MM_SHOOTDOWN);
+ 		local_irq_enable();
+ 	}
+ 
+ 	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids)
+-		flush_tlb_others(mm_cpumask(mm), &info);
++		flush_tlb_others(mm_cpumask(mm), info);
+ 
++#ifdef CONFIG_DEBUG_VM
++	barrier();
++	this_cpu_dec(flush_tlb_info_idx);
++#endif
+ 	put_cpu();
+ }
+ 
+@@ -787,22 +806,36 @@ static void do_kernel_range_flush(void *info)
+ 
+ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ {
+-
+ 	/* Balance as user space task's flush, a bit conservative */
+ 	if (end == TLB_FLUSH_ALL ||
+ 	    (end - start) > tlb_single_page_flush_ceiling << PAGE_SHIFT) {
+ 		on_each_cpu(do_flush_tlb_all, NULL, 1);
+ 	} else {
+-		struct flush_tlb_info info;
+-		info.start = start;
+-		info.end = end;
+-		on_each_cpu(do_kernel_range_flush, &info, 1);
++		struct flush_tlb_info *info;
++
++		preempt_disable();
++
++#ifdef CONFIG_DEBUG_VM
++		BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
++#endif
++
++		info = this_cpu_ptr(&flush_tlb_info);
++		info->start = start;
++		info->end = end;
++
++		on_each_cpu(do_kernel_range_flush, info, 1);
++
++#ifdef CONFIG_DEBUG_VM
++		barrier();
++		this_cpu_dec(flush_tlb_info_idx);
++#endif
++		preempt_enable();
+ 	}
+ }
+ 
+ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+ {
+-	struct flush_tlb_info info = {
++	static const struct flush_tlb_info info = {
+ 		.mm = NULL,
+ 		.start = 0UL,
+ 		.end = TLB_FLUSH_ALL,
+-- 
+2.19.1
+
