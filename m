@@ -2,329 +2,188 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA51DC10F11
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1A1C10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9FD20859
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58E2620811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 00:17:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="kbYWVTwG"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aDuHijj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730926AbfDWAQs (ORCPT
+        id S1730947AbfDWARt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 20:16:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35690 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729338AbfDWAQr (ORCPT
+        Mon, 22 Apr 2019 20:17:49 -0400
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:32924 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729818AbfDWARs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 20:16:47 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y197so16377072wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 17:16:46 -0700 (PDT)
+        Mon, 22 Apr 2019 20:17:48 -0400
+Received: by mail-ot1-f46.google.com with SMTP id j10so11252107otq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Apr 2019 17:17:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=bNcR4GariwcIWB7Ldm6PZ7yAXAc0Mrz3En4tWQRCg7U=;
-        b=kbYWVTwG8SbTFcwewaa8Q247VrcCuwpA62MjRuCq3BA5hU7raNQeF6jRv5IkbLQFXV
-         5bT6WIdBUykZKfLePQYq90a9e0fzuVc7YtwpaEwxOzf5cxFHP3QXxvIcBDhEytJlbkcO
-         3c5oVI/xAwoDLWWrzK0FuRYXH02swaI+J7lMGSN/jmrTEGN7ZJ2Sz06gOR88edz/vT1M
-         fLiH4XtfE/OASp0EDZnP7WUBjRWAQi73KmYDdAQJPJtUV59ir6Hs9YmqsX5278wtPQfb
-         1ZNeJwOHWUV9sqCoYhXYQPYyKfeN68WSg6RuIs/avPEMBIGpjwxv6wPSqkjd0SmIs9d0
-         I/Ig==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=juMVrKHWe6BA8aLmU2ilY/nSc2lXa6zcTAF7dsxRPQs=;
+        b=aDuHijj5KgRVDUQ2ySlFDqHU1xFop6sW1O3BLtOeH7vbKiL/FUVBBlSb+8MiLIU+Tg
+         zcploVM30tpjdIKKd3+W6zqAHaUUHjGIPazPnZ59w2L1KaCIc5sBkzAr7s/rfGzE0Ucs
+         jmSmMUU8vOLz6mt62DMapWoAZE+zVSZ2+sgwAqsCn/CjC+g4xk3KXUsviNzgLzzwnoTb
+         r5HefrvhdkozYSTK/JIvJMRSOyorZldunfSecAZzanT0nDQ/niGkk+S78UzMmss1Gn1G
+         TUs9/byPaBzOMopq+ph0yvQXA9iKBMq40ueVCvCD+dTjygnzE8xFeSKLduY3nCS7RzEs
+         O60Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=bNcR4GariwcIWB7Ldm6PZ7yAXAc0Mrz3En4tWQRCg7U=;
-        b=ghad2lO/qRfaUye5JgOCTtERMKtbuMkP36cWRarwrWzRqhruoI3pSPDSI1EDoWb8gm
-         68ieegGllic+QP53KCF9nRsLB/7hnL3+ROZyqP59A+pUALNHdY8Jbb/CH/G8iLkLEYHN
-         lOL8D1wOJWgvPgojRWAljyendXpFFXnQzCn2277pyMIkvEe9h5Ag2zuy+LXQmTq/VvQt
-         iU9py+qguJnbxqNugLxhedxQrUTpbYMTEhRiu8lJlFzb5tL1U1oWJ+R7qHY3jA89EvYY
-         sSEflIJIa5kx0iyp6Dhrkmc+GNfZ9ix0rfG2tAkKgkxpapBbp9KyVUlM7F7/BgQRBPFp
-         JTpA==
-X-Gm-Message-State: APjAAAV6L675p99NwLPcZPYsAwPSR+TNLa7E7yrjrw7vethxNELMIdoD
-        HPSer1FFtSMWeum3G/gCwhyAQA==
-X-Google-Smtp-Source: APXvYqwyAPYYp1H22CooFegAFUbiag6x5/U80iFNFC9OJ4prSu4lle6EU31DBRzalOWBiwzWdOqWcA==
-X-Received: by 2002:a1c:4cf:: with SMTP id 198mr30935wme.125.1555978605379;
-        Mon, 22 Apr 2019 17:16:45 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id w10sm11011375wrv.8.2019.04.22.17.16.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 22 Apr 2019 17:16:44 -0700 (PDT)
-Message-ID: <5cbe596c.1c69fb81.e252.b9d0@mx.google.com>
-Date:   Mon, 22 Apr 2019 17:16:44 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=juMVrKHWe6BA8aLmU2ilY/nSc2lXa6zcTAF7dsxRPQs=;
+        b=Q22WCR1E8weO0cvtgvgYj96oOGlP3GDktloPBkxcfUjyIceCvfejUiVoIIq3EYrb9t
+         Q6apqIaU6p/mHKb1tDMzhba+mMJSb5LiTTVeDL6D5RACzbSHftG+AIYMPk9MnvsFQ0tI
+         gtb2dNGCOHMQa6+YZrQXsfxEhnWF3fgsLPO2H7d2zMf2OLuQNNj7eu82dL1dEMuy/sIW
+         PI9/ZJ2P+Y005HoG62FWIuhfNG9p4gKRJ8yARUumYzjgPOCZ7Z0L4lmVlM6Z4e4bdmnX
+         c+xSTr3LfApaqUaJ9Hx39b8bGzMpsrYSDrKFChEbGaO2Q2mbO8cHacCK+7FsU3P7ZBs+
+         nGxQ==
+X-Gm-Message-State: APjAAAWzKx5YAcJzC64rcat9bxcioJQnxNsObgzC9K3IXCbD8m3nEEXk
+        zh5dP9Fc3zEHV+BTzqFg2W4bwA==
+X-Google-Smtp-Source: APXvYqwJDH0ahqtxz6b+vjzzuEsFRL9/rFt0U0fWQhjhqUG0gxjx1O1PQjfEQLmmpraiD6wIb4E9aw==
+X-Received: by 2002:a05:6830:1559:: with SMTP id l25mr13480418otp.355.1555978666763;
+        Mon, 22 Apr 2019 17:17:46 -0700 (PDT)
+Received: from localhost (175.sub-174-209-26.myvzw.com. [174.209.26.175])
+        by smtp.gmail.com with ESMTPSA id h23sm7189658oic.10.2019.04.22.17.17.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 22 Apr 2019 17:17:45 -0700 (PDT)
+Date:   Mon, 22 Apr 2019 17:17:43 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+cc:     khilman@baylibre.com
+Subject: Testing the recent RISC-V DT patchsets
+Message-ID: <alpine.DEB.2.21.9999.1904221705170.18377@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.1-rc1-142-ga55b079c961b
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: clk
-X-Kernelci-Lab-Name: lab-baylibre
-X-Kernelci-Branch: clk-next
-Subject: clk/clk-next boot bisection: v5.1-rc1-142-ga55b079c961b on panda
-To:     Jeffrey Hugo <jhugo@codeaurora.org>, tomeu.vizoso@collabora.com,
-        Stephen Boyd <sboyd@kernel.org>,
-        guillaume.tucker@collabora.com, mgalka@collabora.com,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-clk/clk-next boot bisection: v5.1-rc1-142-ga55b079c961b on panda
+I've heard from two separate people who have had trouble getting started 
+with BBL & open-source FSBL test flows with arbitrary DT files on the 
+Freedom Unleashed board.  The following instructions should help get 
+people started.
 
-Summary:
-  Start:      a55b079c961b Merge branch 'clk-hisi' into clk-next
-  Details:    https://kernelci.org/boot/id/5cbe3cdb59b514fd22fe6025
-  Plain log:  https://storage.kernelci.org//clk/clk-next/v5.1-rc1-142-ga55b=
-079c961b/arm/omap2plus_defconfig/gcc-7/lab-baylibre/boot-omap4-panda.txt
-  HTML log:   https://storage.kernelci.org//clk/clk-next/v5.1-rc1-142-ga55b=
-079c961b/arm/omap2plus_defconfig/gcc-7/lab-baylibre/boot-omap4-panda.html
-  Result:     ecbf3f1795fd clk: fixed-factor: Let clk framework find parent
+The core issue, aside from general unfamiliarity, is that multiple parts 
+of the pre-kernel software stack try to parse and/or modify the kernel DT.
+We wish to avoid this as much as possible.
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+Testing with U-boot and OpenSBI is currently left as an exercise for the 
+reader, for a similar reason and because those ports are still quite new.
 
-Parameters:
-  Tree:       clk
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
-  Branch:     clk-next
-  Target:     panda
-  CPU arch:   arm
-  Lab:        lab-baylibre
-  Compiler:   gcc-7
-  Config:     omap2plus_defconfig
-  Test suite: boot
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit ecbf3f1795fda56122632c1d024cfd0d3f4fe353
-Author: Stephen Boyd <sboyd@kernel.org>
-Date:   Fri Apr 12 11:31:50 2019 -0700
-
-    clk: fixed-factor: Let clk framework find parent
-    =
-
-    Convert this driver to a more modern way of specifying parents now that
-    we have a way to specify clk parents by DT index. This lets us nicely
-    avoid a problem where a parent clk name isn't know because the parent
-    clk hasn't been registered yet.
-    =
-
-    Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-    Cc: Jerome Brunet <jbrunet@baylibre.com>
-    Cc: Russell King <linux@armlinux.org.uk>
-    Cc: Michael Turquette <mturquette@baylibre.com>
-    Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-    Cc: Chen-Yu Tsai <wens@csie.org>
-    Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-    Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-
-diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index 241b3f8c61a9..5b09f2cdb7de 100644
---- a/drivers/clk/clk-fixed-factor.c
-+++ b/drivers/clk/clk-fixed-factor.c
-@@ -64,12 +64,14 @@ const struct clk_ops clk_fixed_factor_ops =3D {
- };
- EXPORT_SYMBOL_GPL(clk_fixed_factor_ops);
- =
-
--struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
--		const char *name, const char *parent_name, unsigned long flags,
--		unsigned int mult, unsigned int div)
-+static struct clk_hw *
-+__clk_hw_register_fixed_factor(struct device *dev, struct device_node *np,
-+		const char *name, const char *parent_name, int index,
-+		unsigned long flags, unsigned int mult, unsigned int div)
- {
- 	struct clk_fixed_factor *fix;
- 	struct clk_init_data init;
-+	struct clk_parent_data pdata =3D { .index =3D index };
- 	struct clk_hw *hw;
- 	int ret;
- =
-
-@@ -85,11 +87,17 @@ struct clk_hw *clk_hw_register_fixed_factor(struct devi=
-ce *dev,
- 	init.name =3D name;
- 	init.ops =3D &clk_fixed_factor_ops;
- 	init.flags =3D flags | CLK_IS_BASIC;
--	init.parent_names =3D &parent_name;
-+	if (parent_name)
-+		init.parent_names =3D &parent_name;
-+	else
-+		init.parent_data =3D &pdata;
- 	init.num_parents =3D 1;
- =
-
- 	hw =3D &fix->hw;
--	ret =3D clk_hw_register(dev, hw);
-+	if (dev)
-+		ret =3D clk_hw_register(dev, hw);
-+	else
-+		ret =3D of_clk_hw_register(np, hw);
- 	if (ret) {
- 		kfree(fix);
- 		hw =3D ERR_PTR(ret);
-@@ -97,6 +105,14 @@ struct clk_hw *clk_hw_register_fixed_factor(struct devi=
-ce *dev,
- =
-
- 	return hw;
- }
-+
-+struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
-+		const char *name, const char *parent_name, unsigned long flags,
-+		unsigned int mult, unsigned int div)
-+{
-+	return __clk_hw_register_fixed_factor(dev, NULL, name, parent_name, -1,
-+					      flags, mult, div);
-+}
- EXPORT_SYMBOL_GPL(clk_hw_register_fixed_factor);
- =
-
- struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
-@@ -143,11 +159,10 @@ static const struct of_device_id set_rate_parent_matc=
-hes[] =3D {
- 	{ /* Sentinel */ },
- };
- =
-
--static struct clk *_of_fixed_factor_clk_setup(struct device_node *node)
-+static struct clk_hw *_of_fixed_factor_clk_setup(struct device_node *node)
- {
--	struct clk *clk;
-+	struct clk_hw *hw;
- 	const char *clk_name =3D node->name;
--	const char *parent_name;
- 	unsigned long flags =3D 0;
- 	u32 div, mult;
- 	int ret;
-@@ -165,30 +180,28 @@ static struct clk *_of_fixed_factor_clk_setup(struct =
-device_node *node)
- 	}
- =
-
- 	of_property_read_string(node, "clock-output-names", &clk_name);
--	parent_name =3D of_clk_get_parent_name(node, 0);
- =
-
- 	if (of_match_node(set_rate_parent_matches, node))
- 		flags |=3D CLK_SET_RATE_PARENT;
- =
-
--	clk =3D clk_register_fixed_factor(NULL, clk_name, parent_name, flags,
--					mult, div);
--	if (IS_ERR(clk)) {
-+	hw =3D __clk_hw_register_fixed_factor(NULL, node, clk_name, NULL, 0,
-+					    flags, mult, div);
-+	if (IS_ERR(hw)) {
- 		/*
--		 * If parent clock is not registered, registration would fail.
- 		 * Clear OF_POPULATED flag so that clock registration can be
- 		 * attempted again from probe function.
- 		 */
- 		of_node_clear_flag(node, OF_POPULATED);
--		return clk;
-+		return ERR_CAST(hw);
- 	}
- =
-
--	ret =3D of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	ret =3D of_clk_add_hw_provider(node, of_clk_hw_simple_get, hw);
- 	if (ret) {
--		clk_unregister(clk);
-+		clk_hw_unregister_fixed_factor(hw);
- 		return ERR_PTR(ret);
- 	}
- =
-
--	return clk;
-+	return hw;
- }
- =
-
- /**
-@@ -203,17 +216,17 @@ CLK_OF_DECLARE(fixed_factor_clk, "fixed-factor-clock",
- =
-
- static int of_fixed_factor_clk_remove(struct platform_device *pdev)
- {
--	struct clk *clk =3D platform_get_drvdata(pdev);
-+	struct clk_hw *clk =3D platform_get_drvdata(pdev);
- =
-
- 	of_clk_del_provider(pdev->dev.of_node);
--	clk_unregister_fixed_factor(clk);
-+	clk_hw_unregister_fixed_factor(clk);
- =
-
- 	return 0;
- }
- =
-
- static int of_fixed_factor_clk_probe(struct platform_device *pdev)
- {
--	struct clk *clk;
-+	struct clk_hw *clk;
- =
-
- 	/*
- 	 * This function is not executed when of_fixed_factor_clk_setup
----------------------------------------------------------------------------=
-----
+The following instructions are provided with no warranty whatsoever, and 
+assume knowledge of the shell and Linux.  If implemented carelessly, may 
+trash your filesystems or do other horrible things.
 
 
-Git bisection log:
+- Paul
 
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [21eb35a1ae4db08d32e2b5a8d9fe476c16056511] Merge commit 'tags/clk-f=
-ixes-for-linus^0' into clk-next
-git bisect good 21eb35a1ae4db08d32e2b5a8d9fe476c16056511
-# bad: [a55b079c961be4c94df8616583d0182b51b868a5] Merge branch 'clk-hisi' i=
-nto clk-next
-git bisect bad a55b079c961be4c94df8616583d0182b51b868a5
-# good: [b6c3e3069dadab64103f62cbdf19e5f07c42cc04] Merge branch 'clk-samsun=
-g' into clk-next
-git bisect good b6c3e3069dadab64103f62cbdf19e5f07c42cc04
-# good: [3f644cdb2351fe21cded6ee1e5c13ea7905c3a64] Merge branch 'clk-zynq' =
-into clk-next
-git bisect good 3f644cdb2351fe21cded6ee1e5c13ea7905c3a64
-# good: [dde4eff47c82c52a72af333d9e55370eee6d95d6] clk: Look for parents wi=
-th clkdev based clk_lookups
-git bisect good dde4eff47c82c52a72af333d9e55370eee6d95d6
-# bad: [e04cb6e358cbcdce56cda317725131252ecf6ccd] Merge branch 'clk-parent-=
-rewrite-1' into clk-next
-git bisect bad e04cb6e358cbcdce56cda317725131252ecf6ccd
-# bad: [ecbf3f1795fda56122632c1d024cfd0d3f4fe353] clk: fixed-factor: Let cl=
-k framework find parent
-git bisect bad ecbf3f1795fda56122632c1d024cfd0d3f4fe353
-# good: [601b6e93304a65f8f7c37168763ab9ba5b195ce5] clk: Allow parents to be=
- specified via clkspec index
-git bisect good 601b6e93304a65f8f7c37168763ab9ba5b195ce5
-# first bad commit: [ecbf3f1795fda56122632c1d024cfd0d3f4fe353] clk: fixed-f=
-actor: Let clk framework find parent
----------------------------------------------------------------------------=
-----
+
+These instructions assume that bare metal and Linux RV64 cross-toolchains 
+are installed.  If not, consider using crosstool-ng with the 
+"riscv64-unknown-elf" and "riscv64-unknown-linux-gnu" experimental sample 
+configurations.  You will need both.
+
+1. Put the location of the temporary build tree into the BASE
+   environment variable, and set up some initial directories:
+   export BASE=~/riscv-test; mkdir -p ${BASE}/work
+
+2. Partition a microSD card with (at least) two GPT partitions.
+   Here is a sample sfdisk dump:
+
+label: gpt
+label-id: 074689DB-0440-411C-91DB-440DFE5BA0B6
+device: /dev/sda
+unit: sectors
+first-lba: 34
+last-lba: 62333918
+
+/dev/sda1 : start=        2048, size=        2048, type=5B193300-FC78-40CD-8002-E86C45580B47, uuid=DEAD9378-45FF-44FB-B2E3-F3FEA45ADC9E, name="fsbl"
+/dev/sda2 : start=        4096, size=       65536, type=2E54B353-1271-4842-806F-E436D6AF6985, uuid=1B48DE68-8004-444D-BA47-AAA8DBEBFA60, name="bbl"
+/dev/sda3 : start=       69632, size=    62264287, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, uuid=D672F1FC-3E45-4CC1-835A-E6384A26C395, name="rootfs"
+
+
+3. Download the open-source FSBL:
+   cd ${BASE}
+   git clone https://github.com/sifive/freedom-u540-c000-bootloader
+
+4. Build the open-source FSBL:
+   cd freedom-u540-c000-bootloader
+   CROSSCOMPILE=/opt/rv64gc-mmu-elf/bin/riscv64-unknown-elf- make
+
+5. Write the open-source FSBL to the first partition of the SD card with
+   something like:
+   sudo dd if=fsbl.bin of=/dev/SD-CARD-DEVICE1 conv=nocreat
+
+6. Copy an initramfs sysroot into ${BASE}/work/buildroot_initramfs_sysroot.
+   A reasonable one to start with is the sysroot built by
+   freedom-u-sdk, in work/buildroot_initramfs_sysroot.
+
+7. Set the CROSS_COMPILE environment variable to point to your
+   cross-compiler, in the Linux kernel form:
+   export CROSS_COMPILE=/opt/rv64gc-mmu-linux-8.2.0/bin/riscv64-unknown-linux-gnu-
+
+8. Put something like this into a script and run it:
+
+if [ ! -d ${BASE} ]; then
+    echo Base build directory must be set in the BASE environment variable
+fi
+if [ ! -x ${CROSS_COMPILE}gcc ]; then
+    echo Path to cross-compiler must be set in the CROSS_COMPILE 
+environment variable
+fi
+
+export ARCH=riscv
+export OBJCOPY=${CROSS_COMPILE}objcopy
+export CC=${CROSS_COMPILE}gcc
+
+CORES=$(getconf _NPROCESSORS_ONLN)
+
+#
+#
+
+cd ${BASE}
+git clone -b dev/paulw/reduce-dt-load-v1 
+https://github.com/sifive/riscv-pk
+git clone -b dev/paulw/dts-v5.1-rc6-experimental 
+https://github.com/sifive/riscv-linux
+
+cd riscv-linux
+make -j${CORES} defconfig dtbs vmlinux
+
+${CROSS_COMPILE}strip -o ${BASE}/work/vmlinux-stripped 
+${BASE}/riscv-linux/vmlinux
+
+rm -rf ${BASE}/work/riscv-pk
+mkdir -p ${BASE}/work/riscv-pk
+cd ${BASE}/work/riscv-pk
+ln -sf 
+${BASE}/riscv-linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dtb 
+${BASE}/riscv-pk/linux.dtb
+${BASE}/riscv-pk/configure \
+	--host=riscv64-unknown-linux-gnu \
+	--enable-print-device-tree --with-payload=../vmlinux-stripped
+CFLAGS="-mabi=lp64d -march=rv64imafdc" make
+
+$OBJCOPY -S -O binary --change-addresses -0x80000000 bbl ../bbl.bin
+
+
+9.  Write ${BASE}/work/bbl.bin to the second partition of your microSD 
+    card with something like:
+    sudo dd if=${BASE}/work/bbl.bin of=/dev/SD-CARD-DEVICE2 bs=64k conv=nocreat
+
+10. Boot the microSD card on your Unleashed board.
+
+
