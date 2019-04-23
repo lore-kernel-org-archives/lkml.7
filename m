@@ -2,379 +2,222 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC5DC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1FAC282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1462175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0421D2175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:52:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QH4+OEEi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbfDWPvm (ORCPT
+        id S1728503AbfDWPwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:51:42 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42570 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728405AbfDWPvl (ORCPT
+        Tue, 23 Apr 2019 11:52:15 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34952 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728233AbfDWPwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:51:41 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NFp68l061566
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:51:39 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s240rnhkv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 11:51:39 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 23 Apr 2019 16:51:35 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 23 Apr 2019 16:51:26 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NFpOYb50856158
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Apr 2019 15:51:24 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C634742042;
-        Tue, 23 Apr 2019 15:51:23 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 090384205E;
-        Tue, 23 Apr 2019 15:51:21 +0000 (GMT)
-Received: from [9.145.7.116] (unknown [9.145.7.116])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Apr 2019 15:51:20 +0000 (GMT)
-Subject: Re: [PATCH v12 11/31] mm: protect mremap() against SPF hanlder
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
-        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
-        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <20190416134522.17540-12-ldufour@linux.ibm.com>
- <20190422195157.GB14666@redhat.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Tue, 23 Apr 2019 17:51:20 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Tue, 23 Apr 2019 11:52:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id g8so7830729pgf.2;
+        Tue, 23 Apr 2019 08:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+nZBYYs3xJAIUHfD9A1Bv8gWHxW5vdV7lozuu5wy9Zo=;
+        b=QH4+OEEiHYdEJkdSi5KfK01x3OxOiPVMekKtEd+meNY+51wbhH+YU5L827I3ulrkTx
+         eJykqE20j1Ra7jt8zZKybVysdshUW8O3yf0OOhuIdn8ukZxOH1DdHuRczNeHMIn9bw07
+         zm/1koXtMTBwU3bOph6tUGyUU3qdjwlW5iOUWADCpQwhigXKJJXgdlWxLkhPMaVh5xKg
+         EPnaet5tsqFTCfpKMoRmMkEDkAUi4TfRUcKnhanTZJ8jQ5nQQm0dCX2mrSjB3dLwG00W
+         QynoDeV1Q8WbvzWTFE5F4igkvVUiEcsqglwZuTSRY3k4qcWW0V/xubOmf4G1cIPanbOE
+         FFzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+nZBYYs3xJAIUHfD9A1Bv8gWHxW5vdV7lozuu5wy9Zo=;
+        b=i4/2NiLdel+m2znMeScb3Ag924IUWqF5mPPpq1C5+ENkeTEzsVn60LGlve3VzyETFo
+         MhfIJ3uoibEMCQ7s8XsO9bT1xGsZBxee6zC88VrDjH4Q60UbfNuwi5feH77iuqdy/oER
+         xzYrTn1lmoqgMYwDqWiJZkYxczV76mTTi2txhPx7+fJBlFPfM7hJ2MkU0eWtBh3V7pEJ
+         yi7zsBo/vD2/6/4xNqA5Dh9Q2wY4MQuPlX39LM0taesSE6SrcbHC7Cami3jDV9zqjgcC
+         i4ReDpAFawViczS6xmu80yZDoIS5U3BCYPgc6kzh9PsdaiJueibe4d7BKcCTH+Wb7a09
+         IjwQ==
+X-Gm-Message-State: APjAAAX5Ix98QKFQe+Jt7kQoRCoWGO8UbzYwukVRjvtCASNaj18brcfr
+        864nQ3TxohM+8RllbN3agXY=
+X-Google-Smtp-Source: APXvYqx+wRtFNIE4h+aAA7UaRfM+s4kJOyF5ri3PshN/WkpUk6KhMAu4rVhYoT43rDwS7XANDalLeg==
+X-Received: by 2002:a63:7f0b:: with SMTP id a11mr23731274pgd.234.1556034733724;
+        Tue, 23 Apr 2019 08:52:13 -0700 (PDT)
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id l74sm30098971pfi.174.2019.04.23.08.52.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 08:52:12 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 08:52:10 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rui.zhang@intel.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, Guan Xuetao <gxt@pku.edu.cn>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Mack <daniel@zonque.org>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH 1/7] thermal/drivers/core: Remove the module Kconfig's
+ option
+Message-ID: <20190423155208.GC16014@localhost.localdomain>
+References: <20190402161256.11044-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190422195157.GB14666@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19042315-0020-0000-0000-00000332DF96
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042315-0021-0000-0000-00002185412F
-Message-Id: <665c1e4f-cf0f-31b7-d5f9-287239f7c0d9@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904230107
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402161256.11044-1-daniel.lezcano@linaro.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 22/04/2019 à 21:51, Jerome Glisse a écrit :
-> On Tue, Apr 16, 2019 at 03:45:02PM +0200, Laurent Dufour wrote:
->> If a thread is remapping an area while another one is faulting on the
->> destination area, the SPF handler may fetch the vma from the RB tree before
->> the pte has been moved by the other thread. This means that the moved ptes
->> will overwrite those create by the page fault handler leading to page
->> leaked.
->>
->> 	CPU 1				CPU2
->> 	enter mremap()
->> 	unmap the dest area
->> 	copy_vma()			Enter speculative page fault handler
->> 	   >> at this time the dest area is present in the RB tree
->> 					fetch the vma matching dest area
->> 					create a pte as the VMA matched
->> 					Exit the SPF handler
->> 					<data written in the new page>
->> 	move_ptes()
->> 	  > it is assumed that the dest area is empty,
->>   	  > the move ptes overwrite the page mapped by the CPU2.
->>
->> To prevent that, when the VMA matching the dest area is extended or created
->> by copy_vma(), it should be marked as non available to the SPF handler.
->> The usual way to so is to rely on vm_write_begin()/end().
->> This is already in __vma_adjust() called by copy_vma() (through
->> vma_merge()). But __vma_adjust() is calling vm_write_end() before returning
->> which create a window for another thread.
->> This patch adds a new parameter to vma_merge() which is passed down to
->> vma_adjust().
->> The assumption is that copy_vma() is returning a vma which should be
->> released by calling vm_raw_write_end() by the callee once the ptes have
->> been moved.
->>
->> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> 
-> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
-> 
-> Small comment about a comment below but can be fix as a fixup
-> patch nothing earth shattering.
-> 
->> ---
->>   include/linux/mm.h | 24 ++++++++++++++++-----
->>   mm/mmap.c          | 53 +++++++++++++++++++++++++++++++++++-----------
->>   mm/mremap.c        | 13 ++++++++++++
->>   3 files changed, 73 insertions(+), 17 deletions(-)
->>
->> diff --git a/include/linux/mm.h b/include/linux/mm.h
->> index 906b9e06f18e..5d45b7d8718d 100644
->> --- a/include/linux/mm.h
->> +++ b/include/linux/mm.h
->> @@ -2343,18 +2343,32 @@ void anon_vma_interval_tree_verify(struct anon_vma_chain *node);
->>   
->>   /* mmap.c */
->>   extern int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin);
->> +
->>   extern int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
->>   	unsigned long end, pgoff_t pgoff, struct vm_area_struct *insert,
->> -	struct vm_area_struct *expand);
->> +	struct vm_area_struct *expand, bool keep_locked);
->> +
->>   static inline int vma_adjust(struct vm_area_struct *vma, unsigned long start,
->>   	unsigned long end, pgoff_t pgoff, struct vm_area_struct *insert)
->>   {
->> -	return __vma_adjust(vma, start, end, pgoff, insert, NULL);
->> +	return __vma_adjust(vma, start, end, pgoff, insert, NULL, false);
->>   }
->> -extern struct vm_area_struct *vma_merge(struct mm_struct *,
->> +
->> +extern struct vm_area_struct *__vma_merge(struct mm_struct *mm,
->> +	struct vm_area_struct *prev, unsigned long addr, unsigned long end,
->> +	unsigned long vm_flags, struct anon_vma *anon, struct file *file,
->> +	pgoff_t pgoff, struct mempolicy *mpol,
->> +	struct vm_userfaultfd_ctx uff, bool keep_locked);
->> +
->> +static inline struct vm_area_struct *vma_merge(struct mm_struct *mm,
->>   	struct vm_area_struct *prev, unsigned long addr, unsigned long end,
->> -	unsigned long vm_flags, struct anon_vma *, struct file *, pgoff_t,
->> -	struct mempolicy *, struct vm_userfaultfd_ctx);
->> +	unsigned long vm_flags, struct anon_vma *anon, struct file *file,
->> +	pgoff_t off, struct mempolicy *pol, struct vm_userfaultfd_ctx uff)
->> +{
->> +	return __vma_merge(mm, prev, addr, end, vm_flags, anon, file, off,
->> +			   pol, uff, false);
->> +}
->> +
->>   extern struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *);
->>   extern int __split_vma(struct mm_struct *, struct vm_area_struct *,
->>   	unsigned long addr, int new_below);
->> diff --git a/mm/mmap.c b/mm/mmap.c
->> index b77ec0149249..13460b38b0fb 100644
->> --- a/mm/mmap.c
->> +++ b/mm/mmap.c
->> @@ -714,7 +714,7 @@ static inline void __vma_unlink_prev(struct mm_struct *mm,
->>    */
->>   int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
->>   	unsigned long end, pgoff_t pgoff, struct vm_area_struct *insert,
->> -	struct vm_area_struct *expand)
->> +	struct vm_area_struct *expand, bool keep_locked)
->>   {
->>   	struct mm_struct *mm = vma->vm_mm;
->>   	struct vm_area_struct *next = vma->vm_next, *orig_vma = vma;
->> @@ -830,8 +830,12 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
->>   
->>   			importer->anon_vma = exporter->anon_vma;
->>   			error = anon_vma_clone(importer, exporter);
->> -			if (error)
->> +			if (error) {
->> +				if (next && next != vma)
->> +					vm_raw_write_end(next);
->> +				vm_raw_write_end(vma);
->>   				return error;
->> +			}
->>   		}
->>   	}
->>   again:
->> @@ -1025,7 +1029,8 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
->>   
->>   	if (next && next != vma)
->>   		vm_raw_write_end(next);
->> -	vm_raw_write_end(vma);
->> +	if (!keep_locked)
->> +		vm_raw_write_end(vma);
->>   
->>   	validate_mm(mm);
->>   
->> @@ -1161,12 +1166,13 @@ can_vma_merge_after(struct vm_area_struct *vma, unsigned long vm_flags,
->>    * parameter) may establish ptes with the wrong permissions of NNNN
->>    * instead of the right permissions of XXXX.
->>    */
->> -struct vm_area_struct *vma_merge(struct mm_struct *mm,
->> +struct vm_area_struct *__vma_merge(struct mm_struct *mm,
->>   			struct vm_area_struct *prev, unsigned long addr,
->>   			unsigned long end, unsigned long vm_flags,
->>   			struct anon_vma *anon_vma, struct file *file,
->>   			pgoff_t pgoff, struct mempolicy *policy,
->> -			struct vm_userfaultfd_ctx vm_userfaultfd_ctx)
->> +			struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
->> +			bool keep_locked)
->>   {
->>   	pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
->>   	struct vm_area_struct *area, *next;
->> @@ -1214,10 +1220,11 @@ struct vm_area_struct *vma_merge(struct mm_struct *mm,
->>   							/* cases 1, 6 */
->>   			err = __vma_adjust(prev, prev->vm_start,
->>   					 next->vm_end, prev->vm_pgoff, NULL,
->> -					 prev);
->> +					 prev, keep_locked);
->>   		} else					/* cases 2, 5, 7 */
->>   			err = __vma_adjust(prev, prev->vm_start,
->> -					 end, prev->vm_pgoff, NULL, prev);
->> +					   end, prev->vm_pgoff, NULL, prev,
->> +					   keep_locked);
->>   		if (err)
->>   			return NULL;
->>   		khugepaged_enter_vma_merge(prev, vm_flags);
->> @@ -1234,10 +1241,12 @@ struct vm_area_struct *vma_merge(struct mm_struct *mm,
->>   					     vm_userfaultfd_ctx)) {
->>   		if (prev && addr < prev->vm_end)	/* case 4 */
->>   			err = __vma_adjust(prev, prev->vm_start,
->> -					 addr, prev->vm_pgoff, NULL, next);
->> +					 addr, prev->vm_pgoff, NULL, next,
->> +					 keep_locked);
->>   		else {					/* cases 3, 8 */
->>   			err = __vma_adjust(area, addr, next->vm_end,
->> -					 next->vm_pgoff - pglen, NULL, next);
->> +					 next->vm_pgoff - pglen, NULL, next,
->> +					 keep_locked);
->>   			/*
->>   			 * In case 3 area is already equal to next and
->>   			 * this is a noop, but in case 8 "area" has
->> @@ -3259,9 +3268,20 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
->>   
->>   	if (find_vma_links(mm, addr, addr + len, &prev, &rb_link, &rb_parent))
->>   		return NULL;	/* should never get here */
->> -	new_vma = vma_merge(mm, prev, addr, addr + len, vma->vm_flags,
->> -			    vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
->> -			    vma->vm_userfaultfd_ctx);
->> +
->> +	/* There is 3 cases to manage here in
->> +	 *     AAAA            AAAA              AAAA              AAAA
->> +	 * PPPP....      PPPP......NNNN      PPPP....NNNN      PP........NN
->> +	 * PPPPPPPP(A)   PPPP..NNNNNNNN(B)   PPPPPPPPPPPP(1)       NULL
->> +	 *                                   PPPPPPPPNNNN(2)
->> +	 *                                   PPPPNNNNNNNN(3)
->> +	 *
->> +	 * new_vma == prev in case A,1,2
->> +	 * new_vma == next in case B,3
->> +	 */
->> +	new_vma = __vma_merge(mm, prev, addr, addr + len, vma->vm_flags,
->> +			      vma->anon_vma, vma->vm_file, pgoff,
->> +			      vma_policy(vma), vma->vm_userfaultfd_ctx, true);
->>   	if (new_vma) {
->>   		/*
->>   		 * Source vma may have been merged into new_vma
->> @@ -3299,6 +3319,15 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
->>   			get_file(new_vma->vm_file);
->>   		if (new_vma->vm_ops && new_vma->vm_ops->open)
->>   			new_vma->vm_ops->open(new_vma);
->> +		/*
->> +		 * As the VMA is linked right now, it may be hit by the
->> +		 * speculative page fault handler. But we don't want it to
->> +		 * to start mapping page in this area until the caller has
->> +		 * potentially move the pte from the moved VMA. To prevent
->> +		 * that we protect it right now, and let the caller unprotect
->> +		 * it once the move is done.
->> +		 */
-> 
-> It would be better to say:
-> 		/*
-> 		 * Block speculative page fault on the new VMA before "linking" it as
-> 		 * as once it is linked then it may be hit by speculative page fault.
-> 		 * But we don't want it to start mapping page in this area until the
-> 		 * caller has potentially move the pte from the moved VMA. To prevent
-> 		 * that we protect it before linking and let the caller unprotect it
-> 		 * once the move is done.
-> 		 */
->    
+Hello,
 
-I'm fine with your proposal.
-
-Thanks for reviewing this.
+On Tue, Apr 02, 2019 at 06:12:44PM +0200, Daniel Lezcano wrote:
+> The module support for the thermal subsystem makes little sense:
+>  - some subsystems relying on it are not modules, thus forcing the
+>    framework to be compiled in
+>  - it is compiled in for almost every configs, the remaining ones
+>    are a few platforms where I don't see why we can not switch the thermal
+>    to 'y'. The drivers can stay in tristate.
+>  - platforms need the thermal to be ready as soon as possible at boot time
+>    in order to mitigate
+> 
+> Usually the subsystems framework are compiled-in and the plugs are as module.
+> 
+> Remove the module option. The removal of the module related dead code will
+> come after this patch gets in or is acked.
 
 
->> +		vm_raw_write_begin(new_vma);
->>   		vma_link(mm, new_vma, prev, rb_link, rb_parent);
->>   		*need_rmap_locks = false;
->>   	}
->> diff --git a/mm/mremap.c b/mm/mremap.c
->> index fc241d23cd97..ae5c3379586e 100644
->> --- a/mm/mremap.c
->> +++ b/mm/mremap.c
->> @@ -357,6 +357,14 @@ static unsigned long move_vma(struct vm_area_struct *vma,
->>   	if (!new_vma)
->>   		return -ENOMEM;
->>   
->> +	/* new_vma is returned protected by copy_vma, to prevent speculative
->> +	 * page fault to be done in the destination area before we move the pte.
->> +	 * Now, we must also protect the source VMA since we don't want pages
->> +	 * to be mapped in our back while we are copying the PTEs.
->> +	 */
->> +	if (vma != new_vma)
->> +		vm_raw_write_begin(vma);
->> +
->>   	moved_len = move_page_tables(vma, old_addr, new_vma, new_addr, old_len,
->>   				     need_rmap_locks);
->>   	if (moved_len < old_len) {
->> @@ -373,6 +381,8 @@ static unsigned long move_vma(struct vm_area_struct *vma,
->>   		 */
->>   		move_page_tables(new_vma, new_addr, vma, old_addr, moved_len,
->>   				 true);
->> +		if (vma != new_vma)
->> +			vm_raw_write_end(vma);
->>   		vma = new_vma;
->>   		old_len = new_len;
->>   		old_addr = new_addr;
->> @@ -381,7 +391,10 @@ static unsigned long move_vma(struct vm_area_struct *vma,
->>   		mremap_userfaultfd_prep(new_vma, uf);
->>   		arch_remap(mm, old_addr, old_addr + old_len,
->>   			   new_addr, new_addr + new_len);
->> +		if (vma != new_vma)
->> +			vm_raw_write_end(vma);
->>   	}
->> +	vm_raw_write_end(new_vma);
->>   
->>   	/* Conceal VM_ACCOUNT so old reservation is not undone */
->>   	if (vm_flags & VM_ACCOUNT) {
->> -- 
->> 2.21.0
->>
-> 
+I remember some buzilla entry around this some time back.
 
+Rui, do you remember why you made this to be module?
+
+I dont have strong opinion here, but I would like to see
+a better description why we are going this direction rather
+than "most people dont use it as module". Was there any particular
+specific technical motivation?
+
+
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Acked-by: Guenter Roeck <groeck@chromium.org>
+> For mini2440:
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/configs/mini2440_defconfig        | 2 +-
+>  arch/arm/configs/pxa_defconfig             | 2 +-
+>  arch/mips/configs/ip22_defconfig           | 2 +-
+>  arch/mips/configs/ip27_defconfig           | 2 +-
+>  arch/unicore32/configs/unicore32_defconfig | 2 +-
+>  drivers/thermal/Kconfig                    | 4 ++--
+>  6 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm/configs/mini2440_defconfig b/arch/arm/configs/mini2440_defconfig
+> index d95a8059d30b..0cf1c120c4bb 100644
+> --- a/arch/arm/configs/mini2440_defconfig
+> +++ b/arch/arm/configs/mini2440_defconfig
+> @@ -152,7 +152,7 @@ CONFIG_SPI_S3C24XX=y
+>  CONFIG_SPI_SPIDEV=y
+>  CONFIG_GPIO_SYSFS=y
+>  CONFIG_SENSORS_LM75=y
+> -CONFIG_THERMAL=m
+> +CONFIG_THERMAL=y
+>  CONFIG_WATCHDOG=y
+>  CONFIG_S3C2410_WATCHDOG=y
+>  CONFIG_FB=y
+> diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
+> index d4654755b09c..d4f9dda3a52f 100644
+> --- a/arch/arm/configs/pxa_defconfig
+> +++ b/arch/arm/configs/pxa_defconfig
+> @@ -387,7 +387,7 @@ CONFIG_SENSORS_LM75=m
+>  CONFIG_SENSORS_LM90=m
+>  CONFIG_SENSORS_LM95245=m
+>  CONFIG_SENSORS_NTC_THERMISTOR=m
+> -CONFIG_THERMAL=m
+> +CONFIG_THERMAL=y
+>  CONFIG_WATCHDOG=y
+>  CONFIG_XILINX_WATCHDOG=m
+>  CONFIG_SA1100_WATCHDOG=m
+> diff --git a/arch/mips/configs/ip22_defconfig b/arch/mips/configs/ip22_defconfig
+> index ff40fbc2f439..21a1168ae301 100644
+> --- a/arch/mips/configs/ip22_defconfig
+> +++ b/arch/mips/configs/ip22_defconfig
+> @@ -228,7 +228,7 @@ CONFIG_SERIAL_IP22_ZILOG=m
+>  # CONFIG_HW_RANDOM is not set
+>  CONFIG_RAW_DRIVER=m
+>  # CONFIG_HWMON is not set
+> -CONFIG_THERMAL=m
+> +CONFIG_THERMAL=y
+>  CONFIG_WATCHDOG=y
+>  CONFIG_INDYDOG=m
+>  # CONFIG_VGA_CONSOLE is not set
+> diff --git a/arch/mips/configs/ip27_defconfig b/arch/mips/configs/ip27_defconfig
+> index 81c47e18131b..54db5dedf776 100644
+> --- a/arch/mips/configs/ip27_defconfig
+> +++ b/arch/mips/configs/ip27_defconfig
+> @@ -271,7 +271,7 @@ CONFIG_I2C_PARPORT_LIGHT=m
+>  CONFIG_I2C_TAOS_EVM=m
+>  CONFIG_I2C_STUB=m
+>  # CONFIG_HWMON is not set
+> -CONFIG_THERMAL=m
+> +CONFIG_THERMAL=y
+>  CONFIG_MFD_PCF50633=m
+>  CONFIG_PCF50633_ADC=m
+>  CONFIG_PCF50633_GPIO=m
+> diff --git a/arch/unicore32/configs/unicore32_defconfig b/arch/unicore32/configs/unicore32_defconfig
+> index aebd01fc28e5..360cc9abcdb0 100644
+> --- a/arch/unicore32/configs/unicore32_defconfig
+> +++ b/arch/unicore32/configs/unicore32_defconfig
+> @@ -119,7 +119,7 @@ CONFIG_I2C_PUV3=y
+>  #	Hardware Monitoring support
+>  #CONFIG_SENSORS_LM75=m
+>  #	Generic Thermal sysfs driver
+> -#CONFIG_THERMAL=m
+> +#CONFIG_THERMAL=y
+>  #CONFIG_THERMAL_HWMON=y
+>  
+>  #	Multimedia support
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 653aa27a25a4..ccf5b9408d7a 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -3,7 +3,7 @@
+>  #
+>  
+>  menuconfig THERMAL
+> -	tristate "Generic Thermal sysfs driver"
+> +	bool "Generic Thermal sysfs driver"
+>  	help
+>  	  Generic Thermal Sysfs driver offers a generic mechanism for
+>  	  thermal management. Usually it's made up of one or more thermal
+> @@ -11,7 +11,7 @@ menuconfig THERMAL
+>  	  Each thermal zone contains its own temperature, trip points,
+>  	  cooling devices.
+>  	  All platforms with ACPI thermal support can use this driver.
+> -	  If you want this support, you should say Y or M here.
+> +	  If you want this support, you should say Y here.
+>  
+>  if THERMAL
+>  
+> -- 
+> 2.17.1
+> 
