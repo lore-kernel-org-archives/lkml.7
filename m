@@ -2,104 +2,124 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 411C4C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE8FC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6C1218EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:55:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NIm7S/05"
+	by mail.kernel.org (Postfix) with ESMTP id 30361218EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbfDWUzb (ORCPT
+        id S1728178AbfDWU4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:55:31 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:39885 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbfDWUz3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:55:29 -0400
-Received: by mail-pg1-f201.google.com with SMTP id m35so10720695pgl.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=EMjKTluV8E+qBr/4JM2DWbyEMJk+9Wk2onaYSOfzL3s=;
-        b=NIm7S/05ZnH3qtSdKADbfTY64hdv5puEmb7cOttJ23jX52RR8fRJsVEYkmjLF/niXk
-         YTIbsO2K8SM/EdFXrfI+5AkBhka6+UMRMajoINN60ZhFDIeTgmWHRR9JLbag5vwvHZn6
-         91OO8vbyzb89Dja+8e5HqPyZ/L/C5YYakWNe+f9MtPR7MWu6YN+zKBCS6gv/jS/dd8Jx
-         6jJNSgk5Sn1x4rxgcgai1aayaDo5PxU4rNXle+s4o6Lf61unG9R/4LCwl47P12Kei6sI
-         /E23WgzfDuVUO/Q6Ibw3S3fhO6hkTwfB68qvjemloY/tyKt2otsjPCLwjMoVeO4T0Olx
-         At4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=EMjKTluV8E+qBr/4JM2DWbyEMJk+9Wk2onaYSOfzL3s=;
-        b=Kg3tLeHA4x4w1bzKQx/gA1KxzMIBkfBgnwI4D61Xvd+FQ4P1Erc0ceHwPFqSyBJwc2
-         Gl+M2DtXLLKWg64+4bw6GQHgbmbEfk6MP/QFkJQuY/GfraB6ig+Tj/x5Q8gpy2Qc/LMy
-         aBLm2ACrfLPoX4G/PYYbbPRCfGjmxP4npqwgvKrW0Lg/k4y2j6dpgnS+oSemwX25D0pZ
-         o/cIcArpoQwReicIbN6oHDTrE1Ph09jg8bHvYSEL/T0uf36Wl7zn1wypZiHXz7G4hCr1
-         32vMaVpsdcKlqM1Cetoz3Ac0sfqUoskyLclRkIoSNLXPsI9t9+RUXddJ5JjRZe0U22Ak
-         pGVg==
-X-Gm-Message-State: APjAAAWhQpMPgnsHxPoqDAxE93TktwVEDgLAAiRLL3ty57z7HkBzfzDV
-        Xufb+S6bI16IuDZI1Dak8lgZ1Jq8nzi95IEe/B0=
-X-Google-Smtp-Source: APXvYqz4gAhA8k5Maz6flj/armSFK/B7DYFTv591B0Q4kozBMJs1VxRJUbgCP+ZR3eXLbvMT5uQBs7xd44PmAuvSalU=
-X-Received: by 2002:a63:2b0d:: with SMTP id r13mr27028919pgr.400.1556052928509;
- Tue, 23 Apr 2019 13:55:28 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 13:55:19 -0700
-Message-Id: <20190423205521.246828-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH] mips: vdso: drop unnecessary cc-ldoption
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Hassan Naveed <hnaveed@wavecomp.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 23 Apr 2019 16:56:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:9121 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726083AbfDWU4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 16:56:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 13:56:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,387,1549958400"; 
+   d="scan'208";a="133774408"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga007.jf.intel.com with ESMTP; 23 Apr 2019 13:56:17 -0700
+Date:   Tue, 23 Apr 2019 13:48:10 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v7 15/21] x86/split_lock: Add a sysfs interface to
+ enable/disable split lock detection during run time
+Message-ID: <20190423204809.GD18776@romley-ivt3.sc.intel.com>
+References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
+ <1555536851-17462-16-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1904180042090.3174@nanos.tec.linutronix.de>
+ <20190418005711.GB18776@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1904180832290.3174@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904180832290.3174@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Towards the goal of removing cc-ldoption, it seems that --hash-style=
-was added to binutils 2.17.50.0.2 in 2006. The minimal required version
-of binutils for the kernel according to
-Documentation/process/changes.rst is 2.20.
+On Thu, Apr 18, 2019 at 08:41:30AM +0200, Thomas Gleixner wrote:
+> On Wed, 17 Apr 2019, Fenghua Yu wrote:
+> > On Thu, Apr 18, 2019 at 12:47:24AM +0200, Thomas Gleixner wrote:
+> > > On Wed, 17 Apr 2019, Fenghua Yu wrote:
+> > > 
+> > > > The interface /sys/device/system/cpu/split_lock_detect is added
+> > > > to allow user to control split lock detection and show current split
+> > > > lock detection setting.
+> > > > 
+> > > > Writing [yY1] or [oO][nN] to the file enables split lock detection and
+> > > > writing [nN0] or [oO][fF] disables split lock detection. Split lock
+> > > > detection is enabled or disabled on all CPUs.
+> > > > 
+> > > > Reading the file returns current global split lock detection setting:
+> > > > 0: disabled
+> > > > 1: enabled
+> > > 
+> > > Again, You explain WHAT this patch does and still there is zero
+> > > justification why this sysfs knob is needed at all. I still do not see any
+> > > reason why this knob should exist.
+> > 
+> > An important application has split lock issues which are already discovered
+> > and need to be fixed. But before the issues are fixed, sysadmin still wants to
+> > run the application without rebooting the system, the sysfs knob can be useful
+> > to turn off split lock detection. After the application is done, split lock
+> > detection will be enabled again through the sysfs knob.
+> 
+> Are you sure that you are talking about the real world? I might buy the
+> 'off' part somehow, but the 'on' part is beyond theoretical.
+> 
+> Even the 'off' part is dubious on a multi user machine. I personally would
+> neither think about using the sysfs knob nor about rebooting the machine
+> simply because I'd consider a lock operation accross a cacheline an malicious
+> DoS attempt. Why would I allow that?
+> 
+> So in reality the sysadmin will either move the workload to a machine w/o
+> the #AC magic or just tell the user to fix his crap.
+> 
+> > Without the sysfs knob, sysadmin has to reboot the system with kernel option
+> > "no_split_lock_detect" to run the application before the split lock issues
+> > are fixed.
+> > 
+> > Is this a valid justification why the sysfs knob is needed? If it is, I can
+> > add the justification in the next version.
+> 
+> Why has this information not been in the changelog right away? I'm really
+> tired of asking the same questions and pointing you to
+> Documentation/process over and over.
 
---build-id was added in 2.18 according to binutils-gdb/ld/NEWS.
+So should I remove the sysfs knob patches in the next version?
 
-Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
-Cc: clang-built-linux@googlegroups.com
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- arch/mips/vdso/Makefile | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Or add the following justification and still keep the sysfs knob patches?
+"To workaround or debug a split lock issue, the administrator may need to
+disable or enable split lock detection during run time without rebooting
+the system."
 
-diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-index 0ede4deb8181..7221df24cb23 100644
---- a/arch/mips/vdso/Makefile
-+++ b/arch/mips/vdso/Makefile
-@@ -46,9 +46,7 @@ endif
- VDSO_LDFLAGS := \
- 	-Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1 \
- 	$(addprefix -Wl$(comma),$(filter -E%,$(KBUILD_CFLAGS))) \
--	-nostdlib -shared \
--	$(call cc-ldoption, -Wl$(comma)--hash-style=sysv) \
--	$(call cc-ldoption, -Wl$(comma)--build-id)
-+	-nostdlib -shared -Wl,--hash-style=sysv -Wl,--build-id
- 
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
--- 
-2.21.0.593.g511ec345e18-goog
+Thanks.
 
+-Fenghua
