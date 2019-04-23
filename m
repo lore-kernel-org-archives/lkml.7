@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3638BC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C4FC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01FA218D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B11218D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:42:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJJjFEUo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uWQmXxqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfDWVlv (ORCPT
+        id S1728285AbfDWVmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:41:51 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46249 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfDWVlu (ORCPT
+        Tue, 23 Apr 2019 17:42:11 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37828 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfDWVmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:41:50 -0400
-Received: by mail-lf1-f65.google.com with SMTP id k18so12874216lfj.13;
-        Tue, 23 Apr 2019 14:41:49 -0700 (PDT)
+        Tue, 23 Apr 2019 17:42:11 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v13so2307377ljk.4;
+        Tue, 23 Apr 2019 14:42:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=TbVR3poIYZWQSIC2YhkiQWBZSkY7aCtM0WVr1BRU9qY=;
-        b=dJJjFEUoe0NPCcDTkbfxiR7GESFo/tDc9+9omEvNbvcIMjcSQngH4A7tCUb6p/f6JR
-         WvMlrFjLlQ742Xyc9h83Kt4RXM8K3QzbNB3mW00mvla4aMJzwjrtgv8ao4oVWbW4Zu7X
-         +ocu2lvOC+NhmPVpAJ9m4oFrv8CI+9out7up72vaweOkQWJ17fXQpvHLZp2KyyYjyjjy
-         J1f0yizMViO5Cq4r7yWSmGLHuONsaYNx6XiH4gx6ZY2Xb6IrjqKT71f3492ci0fP1iZO
-         aK5LVGMDNAFT6PfGtML/vu7l3jQnISXD8fGH62aeFUEtH1QbUtOH+fxCAQLv68GaGlmz
-         JNew==
+        bh=txB+of63SNu46wpVXF+9lUHfUB1Dh2QUimcwaZfAJys=;
+        b=uWQmXxqTfrdKvfTL5mYC0M+f1vG1vLoHE1rqPmLHLMxKtestQFEuwztfGqWgWETxZ1
+         08AWXNdViaZ0GNdi/789AHSSY/Ov9eG27guBxlbH7HeMAFAS2SWBpAIN0uLCjFV3t1gS
+         HO6N6/tf5ybvbQymEa6fomTWARAPeXjen3n2LzndNSZDCGKRM0Rw8WcQZrHK4DOpn25s
+         3HkSII1YTL1rwmghHrGthlebTbFVzb6/XbyZUqVbgNd5iDooraAELph4sr6j/T854/ze
+         NMTZptC+Gme6lErfWG4odYvBuM3AkDQ69+ofMm2lbk05GJqmZ6vRibb1z7nVNYQJmyPc
+         knew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TbVR3poIYZWQSIC2YhkiQWBZSkY7aCtM0WVr1BRU9qY=;
-        b=qC7PnOHQlEaeGfEZ7yDrFHm03Z2zE8TrbkHfkEvdcMLVhifhJcAcG0W6wj04NGaXsV
-         9fjUy695uEgAmXQlAmyWnYFiwVwW7hTFu/r5vGAsyEDX+r5nexCmA9EB7vHYp/N4cJ2R
-         qymmn12RUaqa8YZVgsvVh0MS+w4V796e/cpS/4qHxgthc2V97AIUzqmdha20fthVjAo3
-         WlTvN419RBygqk0hnrBdtrehsejI+lvl4kVEVorUn4yzNwZFuqmsf4bjL3OGWszMvpss
-         YPs6tkQoebgofd8mZFC2Kzdns4uR3QWnD6D7Yki52ta1g3U1aVvyQJaQE0B7gW9e08K5
-         oVIg==
-X-Gm-Message-State: APjAAAWcJB7a8xR38eggKo2AOgmcqTA4dTXQluqtRLzyRtEsDAZqfzj8
-        75+7ty0hXSDgWX8UgRlEsVk=
-X-Google-Smtp-Source: APXvYqxEFUYDkIFPZ6hb6LvlGQVeCFHpHHJcTn1f2v6bJyy2iYjOGU20/UaSQMSyULmP/ZOS98EfSw==
-X-Received: by 2002:ac2:545c:: with SMTP id d28mr14884155lfn.144.1556055708492;
-        Tue, 23 Apr 2019 14:41:48 -0700 (PDT)
+        bh=txB+of63SNu46wpVXF+9lUHfUB1Dh2QUimcwaZfAJys=;
+        b=gwzFMgZGmksFWhS8UryZutS2SKzcBloS14fpQ6rSRyilYZ0wlwPeiLSGj3QAt8Biso
+         w/30SVLX82XkvvFdd+niu7axZF9j8mM++cKC/atuvtiyaa0y1JfZTk/7itBTaqAp5TqZ
+         5TULyQkVF48vbV/TW0AoHyUK9T4awB7OuBkzX+T5PDtbEttpMhte/xlRu5YLfePxXniI
+         TD4fm48EEZ0v9Ym025PCcsuLkFgg5R9LeBBM2gPr9CJogjvMyLoFbUOX2w6iCI9LBPEb
+         6fAir5KaVC0Bgar91WqWbjsI//2KX1oCvL1OIZvJSHp5xKLDXodbVaZPIdrI9lNwh87k
+         3CcQ==
+X-Gm-Message-State: APjAAAVsjqXKwJbkLeMIRBoGWDObKyyldRWB5YgKtlguWXZfy3nsU6fD
+        fbLFmx5Rodd6qu1bALWUt6U=
+X-Google-Smtp-Source: APXvYqxyEZwVSpME3EeyESHC7YVQ/r3xJLJLboB3IXxqj+ga2RhtFCYBR70oydXPV1ymtvHxCXhhnQ==
+X-Received: by 2002:a05:651c:c3:: with SMTP id 3mr15253081ljr.8.1556055729106;
+        Tue, 23 Apr 2019 14:42:09 -0700 (PDT)
 Received: from localhost.localdomain (80-167-223-88-cable.dk.customer.tdc.net. [80.167.223.88])
-        by smtp.gmail.com with ESMTPSA id l22sm3601691lja.97.2019.04.23.14.41.47
+        by smtp.gmail.com with ESMTPSA id z206sm3991128lfa.53.2019.04.23.14.42.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 23 Apr 2019 14:41:48 -0700 (PDT)
+        Tue, 23 Apr 2019 14:42:08 -0700 (PDT)
 From:   Daniel Gomez <dagmcr@gmail.com>
 To:     Stefan Popa <stefan.popa@analog.com>,
         Lars-Peter Clausen <lars@metafoo.de>,
@@ -62,14 +62,14 @@ To:     Stefan Popa <stefan.popa@analog.com>,
         Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        linux-iio@vger.kernel.org (open list:ANALOG DEVICES INC AD5758 DRIVER),
         linux-kernel@vger.kernel.org (open list)
 Cc:     dagmcr@gmail.com, javier@dowhile0.org,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        linux-iio@vger.kernel.org (open list:ANALOG DEVICES INC AD5758 DRIVER),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] iio: adxl372: declare missing of table
-Date:   Tue, 23 Apr 2019 23:41:37 +0200
-Message-Id: <1556055697-14723-1-git-send-email-dagmcr@gmail.com>
+Subject: [PATCH v2] iio: dac: ad5758: declare missing of table
+Date:   Tue, 23 Apr 2019 23:41:58 +0200
+Message-Id: <1556055718-14782-1-git-send-email-dagmcr@gmail.com>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,50 +80,51 @@ Add missing <of_device_id> table for SPI driver relying on SPI
 device match since compatible is in a DT binding or in a DTS.
 
 Before this patch:
-modinfo drivers/iio/accel/adxl372_spi.ko | grep alias
+modinfo drivers/iio/dac/ad5758.ko | grep alias
+alias:          spi:ad5758
 
 After this patch:
-modinfo drivers/iio/accel/adxl372_spi.ko | grep alias
-alias:          spi:adxl372
-alias:          of:N*T*Cadi,adxl372C*
-alias:          of:N*T*Cadi,adxl372
+modinfo drivers/iio/dac/ad5758.ko | grep alias
+alias:          spi:ad5758
+alias:          of:N*T*Cadi,ad5758C*
+alias:          of:N*T*Cadi,ad5758
 
 Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
 Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
 ---
- drivers/iio/accel/adxl372_spi.c | 9 +++++++++
+ drivers/iio/dac/ad5758.c | 9 +++++++++
  1 file changed, 9 insertions(+)
 
-diff --git a/drivers/iio/accel/adxl372_spi.c b/drivers/iio/accel/adxl372_spi.c
-index e14e655..3ef7e3a 100644
---- a/drivers/iio/accel/adxl372_spi.c
-+++ b/drivers/iio/accel/adxl372_spi.c
-@@ -7,6 +7,8 @@
- 
+diff --git a/drivers/iio/dac/ad5758.c b/drivers/iio/dac/ad5758.c
+index 2bdf1b0..e8eaa48 100644
+--- a/drivers/iio/dac/ad5758.c
++++ b/drivers/iio/dac/ad5758.c
+@@ -11,6 +11,8 @@
+ #include <linux/kernel.h>
  #include <linux/module.h>
- #include <linux/regmap.h>
+ #include <linux/property.h>
 +#include <linux/of.h>
 +#include <linux/of_device.h>
  #include <linux/spi/spi.h>
+ #include <linux/gpio/consumer.h>
  
- #include "adxl372.h"
-@@ -37,9 +39,16 @@ static const struct spi_device_id adxl372_spi_id[] = {
+@@ -904,9 +906,16 @@ static const struct spi_device_id ad5758_id[] = {
  };
- MODULE_DEVICE_TABLE(spi, adxl372_spi_id);
+ MODULE_DEVICE_TABLE(spi, ad5758_id);
  
-+static const struct of_device_id adxl372_of_match[] = {
-+        { .compatible = "adi,adxl372" },
++static const struct of_device_id ad5758_of_match[] = {
++        { .compatible = "adi,ad5758" },
 +        { },
 +};
-+MODULE_DEVICE_TABLE(of, adxl372_of_match);
++MODULE_DEVICE_TABLE(of, ad5758_of_match);
 +
- static struct spi_driver adxl372_spi_driver = {
+ static struct spi_driver ad5758_driver = {
  	.driver = {
- 		.name = "adxl372_spi",
-+		.of_match_table = adxl372_of_match,
+ 		.name = KBUILD_MODNAME,
++		.of_match_table = ad5758_of_match,
  	},
- 	.probe = adxl372_spi_probe,
- 	.id_table = adxl372_spi_id,
+ 	.probe = ad5758_probe,
+ 	.id_table = ad5758_id,
 -- 
 2.7.4
 
