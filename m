@@ -2,87 +2,130 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F31C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E406C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30980218D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C767218D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:27:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uraAkV58"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uR9fVOkR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfDWV13 (ORCPT
+        id S1728034AbfDWV1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:27:29 -0400
-Received: from ozlabs.org ([203.11.71.1]:43613 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbfDWV13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:27:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pc3g3Nnlz9sNB;
-        Wed, 24 Apr 2019 07:27:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556054847;
-        bh=WjyH/grUIHp3oAWAW6J8c8CRFKGr0TUbE0yRhEsAlCQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uraAkV585idPc6ZjsHMsKG7ODu243fwssHjf4DHwtQYjTpExHs9SiV0bSJ0omffew
-         nUxifxYQ6JdbdcWGfNPhgCqPerB/JXEyVkQRc8jGvd7XpZZpT2hBuc5nTrPyEFCNVx
-         AyuBOcwunW0jmAcUcUufabD28kskjcZNlGmVwT4w0FNlOk457mORlY3aKwGCvcnfwJ
-         7ulWD5/+j9q8UJ1e+ThC5jEa+SDq90xo368+mDDtR6GRqZ5IlDbnAqIGQbcV8rbE42
-         zmT+JaKBqp5zjyiuvzM0qTh0dg/SUrK0p0SMOdTuJRQCFhvXXSXbIrD7ZRbEBClVw7
-         jyiPU/iNRNUiQ==
-Date:   Wed, 24 Apr 2019 07:27:26 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the clk tree
-Message-ID: <20190424072726.0e1318bf@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/jhGerAt9b_NTWsMMsrKjMXt"; protocol="application/pgp-signature"
+        Tue, 23 Apr 2019 17:27:47 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:48035 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfDWV1r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 17:27:47 -0400
+Received: by mail-pf1-f202.google.com with SMTP id n63so10440179pfb.14
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 14:27:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=41aTYzy88TUD1CyveIip5i2BawgilNUUCUyijcx9oaA=;
+        b=uR9fVOkRKS7Tscs+Ze0Tagavk/8dShLsyV9Xl2jtuL/vKkp0DuxgPCs8GUxx3nhzJL
+         JS0/QboYft1EWQCEotbrAIfCgSwLSI1lwxv00p4VaEeu4NxQDjk2OPqzFJf0nfO+vDdt
+         a0KQAkZx6xTNXFfMe9/SIz2c/9EBQOcowOk6aQNQEz9I0D9WksPeGT6HD+Vy7betuVJB
+         A7m9ey7OSCaq05YaRw8vpne3+8n/Msr76b9nz2ikn8MAtVcHy06+rVBZKR0lJCq5nsAb
+         yHTPMN612oofssR6+VKVdg9GWiwVL0cmCOqg5i2nvG6yrAK9Nf8yEiUxhBa6SbnN6DnZ
+         x/vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=41aTYzy88TUD1CyveIip5i2BawgilNUUCUyijcx9oaA=;
+        b=dcj1wNFx7b33zH8uhqyvsZ9XyyxiAEVIIhDUDgTFOPUFQDmH+TN4YiOldpR8M2ntZZ
+         3d2O9rspBPyB+tq2YYqT5DquDBIW+KDuL/hGkgtpzRvsYDyIRuaKRBHacU4HH+Jld3Dm
+         dnRI+IWHtDX/nI2QVz38mNrR8NQVRp5+oIwImKv/jhN0ZnZqMgGbQARu5V0Lf41Agjat
+         lY+Sx9YxMKifkCh9vQH2YyoOOTs/XX7o+j3YtEOD0MqBZgqW9nAjrmQryC8Rt/J5tAjW
+         gAtOkGSr+Q87FnvPcCS6KMo35f8EoOXrOdjswD/1q5oKEfv6L9yDxlLsfnDGcboX+FRT
+         N4Gw==
+X-Gm-Message-State: APjAAAVBxV2Ie8wM0g2lzZTUv5qzJ40L07Uo0miHCtsWVTNMoE9yB9He
+        R6bHPHjidZ8TwMr14hYStK1K3ftqICLc21m+s+Q=
+X-Google-Smtp-Source: APXvYqyhG2vTC3jWAx/p08kp5ptoz96a2fY+KEPJvsAxWPyxEBF38D9nK/P44eHwWUCG6mBl9aGJfLaP27cml/TPvBI=
+X-Received: by 2002:a65:4183:: with SMTP id a3mr26848110pgq.121.1556054866607;
+ Tue, 23 Apr 2019 14:27:46 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 14:27:41 -0700
+Message-Id: <20190423212741.12219-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+Subject: [PATCH] kbuild: drop support for cc-ldoption
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     yamada.masahiro@socionext.com, michal.lkml@markovi.net,
+        corbet@lwn.net
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jhGerAt9b_NTWsMMsrKjMXt
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+If you want to see if your linker supports a certain flag, then ask the
+linker directly with ld-option (not the compiler with cc-ldoption).
+Checking for linker flag support is an antipattern that complicates the
+usage of various linkers other than bfd via -fuse-ld={bfd|gold|lld}.
 
-Hi all,
+Cc: clang-built-linux@googlegroups.com
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+This should probably wait until all of the call sites have been cleaned
+up. Masahiro sent them for arm and arm64, while I sent cleanups for all
+the rest.
 
-Commit
 
-  1a80c922c718 ("fixup! clk: divider: add explicit big endian support")
+ Documentation/kbuild/makefiles.txt | 14 --------------
+ scripts/Kbuild.include             |  5 -----
+ 2 files changed, 19 deletions(-)
 
-is missing a Signed-off-by from its author and committer.
+diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+index 03c065855eaf..d65ad5746f94 100644
+--- a/Documentation/kbuild/makefiles.txt
++++ b/Documentation/kbuild/makefiles.txt
+@@ -437,20 +437,6 @@ more details, with real examples.
+ 	The second argument is optional, and if supplied will be used
+ 	if first argument is not supported.
+ 
+-    cc-ldoption
+-	cc-ldoption is used to check if $(CC) when used to link object files
+-	supports the given option.  An optional second option may be
+-	specified if first option are not supported.
+-
+-	Example:
+-		#arch/x86/kernel/Makefile
+-		vsyscall-flags += $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
+-
+-	In the above example, vsyscall-flags will be assigned the option
+-	-Wl$(comma)--hash-style=sysv if it is supported by $(CC).
+-	The second argument is optional, and if supplied will be used
+-	if first argument is not supported.
+-
+     as-instr
+ 	as-instr checks if the assembler reports a specific instruction
+ 	and then outputs either option1 or option2
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index 7484b9d8272f..fbfb37d1bcc8 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -138,11 +138,6 @@ cc-disable-warning = $(call try-run,\
+ # Usage:  EXTRA_CFLAGS += $(call cc-ifversion, -lt, 0402, -O1)
+ cc-ifversion = $(shell [ $(CONFIG_GCC_VERSION)0 $(1) $(2)000 ] && echo $(3) || echo $(4))
+ 
+-# cc-ldoption
+-# Usage: ldflags += $(call cc-ldoption, -Wl$(comma)--hash-style=both)
+-cc-ldoption = $(call try-run,\
+-	$(CC) $(1) $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
+-
+ # ld-option
+ # Usage: KBUILD_LDFLAGS += $(call ld-option, -X, -Y)
+ ld-option = $(call try-run, $(LD) $(KBUILD_LDFLAGS) $(1) -v,$(1),$(2),$(3))
+-- 
+2.21.0.593.g511ec345e18-goog
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/jhGerAt9b_NTWsMMsrKjMXt
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/gz4ACgkQAVBC80lX
-0GysSgf/T8voy1eM/YFdObYitMDfgeunpVx2KjtkrRivl6GPboHkBZk98RMRAo4C
-D1sO6UlJVKXhFlnbI33tf9zD9RevrSlL89sQvxpdiCSR7OhXEaWAutkofZEbwKkZ
-3CWLR8MbG5hFsdSscRhFyfHzhsQtDVsFbjVnh/4FCk5MJNv9rcRhHZaex6DsIiNU
-l3pzXISFTh48XhdfGrqX5jKe9zRQ2Zxa93zZgceATX9iMhZRFKMeW40kswizNHN4
-ex0OAMvW5bmz0MB1I7tPZKf40b7kW3tgI65uMumtY+NK2C0cJ9/EhPCNjTKgKhGV
-9nnzhM5kujWAZ1wPVOjvUgoVSCMr/Q==
-=4qu1
------END PGP SIGNATURE-----
-
---Sig_/jhGerAt9b_NTWsMMsrKjMXt--
