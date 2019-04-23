@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751B2C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1567C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390FA218D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41C3218D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHY48LhM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LI9TjAH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbfDWWtj (ORCPT
+        id S1728808AbfDWWtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:49:39 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46696 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfDWWtf (ORCPT
+        Tue, 23 Apr 2019 18:49:43 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40422 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728749AbfDWWtk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:49:35 -0400
-Received: by mail-lf1-f68.google.com with SMTP id k18so12985303lfj.13;
-        Tue, 23 Apr 2019 15:49:33 -0700 (PDT)
+        Tue, 23 Apr 2019 18:49:40 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q66so14985225ljq.7;
+        Tue, 23 Apr 2019 15:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HJRvj8BujR+p5SOja4FAemkZIFG1n37I1t4IGxaN5rI=;
-        b=VHY48LhM8TNgdZneoiW3y8NkrZcdRSFuXgtVdkM2iPWLaxjrMRw4rE96YnsFQ07M4J
-         AWYVCKEDNcEFOXjLZ2j7PtdunmbuhnwdaIXS9tdwv5rWB3iL0mXJMm481chlaFJ+QLmG
-         x9wyok20vv7GlzltLfYRx4BhrZXJcjE0SI5nuvVJHENzkQ8D2VNZfQaH7RbrTEF7/JVR
-         L6qlMVv5rcKbyVck7ddB6unYKfdZz02Zl6ujqiC35edvcsESnuXql+zbAAe2RNee1Iu8
-         Z7wBsMUcxy6d6IwRwvjc/0KXt/LrphI3gSBGOpG++jjcdnWbQ9Vxzsh89tJ3kW71MoYX
-         mQtg==
+        bh=cKcAZCZmHBkOFZOBdJVKsgxHPiEdHR2uf5o4k8h8weQ=;
+        b=LI9TjAH2Xp9ixng6oGKtwlyVvGBV0Fx3cil6kEE6VDXWbDUjU1XTGg+FizGETTXW67
+         YDDoDxm8MTqseKi0zaxuiRK2QkBETCd3LXSkrO8o0AAVmU1wKb0uzbx/e2n9y6DGgl9j
+         8UMIzPXDtHKc6OqVsWU7Bmf2+bDoP/FiqxXVtX8g53Mzzy2aKTVrQyjH7q13qJX4JlpM
+         pquXrOjO0L9MnrXj1DsHdnKU3+LzhEq9U73nSXz6JQ/jmi4za/p31L1RM6d9flYT3j2D
+         M5VNynMz37LEji78Td9OOkWz1p9CuZG5xgPonZloenFwKbZvLRZ6sd3eCVBp6MpZR+76
+         968g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HJRvj8BujR+p5SOja4FAemkZIFG1n37I1t4IGxaN5rI=;
-        b=R3oWy11YLH80dvMmwF5HcrdEpe+rp4qmuC6gp22lnIdnjUHtYN1QqATBeA6z5qzcsh
-         GTuOH/H4nfxzffmK4DJ2vDu4/ZFD3Mq5+9BjHdWPHXoqwrWvGS/xYu1Fi9ENDLqKCqpC
-         nOPqQd9XEagVXdKTkbl6wZ/ZmrAKnaophyNSjuWrMxE5cbat0Tmtc2pLxoIwJ98nNKBk
-         TVBkJtToOXck/6Q49UrJDXjAOa1ekfR83rcCe22Vty2LVVo4w642eiiUt990e7h1z9Ny
-         dM1FRkIlblt8/fvK3uM6PO8JnsORnk4reuFI8KT6l+bVr0s1Ua1HY1rRzXClcRJqxO5A
-         jy1g==
-X-Gm-Message-State: APjAAAUP7CGvQyL8bGNxcNCWQMj3nm/fgsxfJIhnDfOQvMAR9IOXkA8C
-        XqfoxQdKJtlKPIX0R0Yhr/A=
-X-Google-Smtp-Source: APXvYqzBPfY2roDZJC/cvUS8pRWGCB3Y6qBzQOGp021YLe4yOcN5c+tUwToi5RT5Wjzp3e+XNVEaTA==
-X-Received: by 2002:a19:7014:: with SMTP id h20mr15944340lfc.158.1556059772953;
-        Tue, 23 Apr 2019 15:49:32 -0700 (PDT)
+        bh=cKcAZCZmHBkOFZOBdJVKsgxHPiEdHR2uf5o4k8h8weQ=;
+        b=cuGFJkxC3kMfkDEqHpDPepuv+gxaNg1vA5NJ9/9D0XR2Qf+gPVFj5UmuemXMPr5T4c
+         vkQ12T8YihmXw5yq1OFj3+PmvSpCxGx+/MpiU/dketJEhJOQHNo84FuZfqYsjFx7w9pO
+         5CnsFdVoLocNnlul3v9AYZEu+i+zpkGqgcy0US+fXa1w5aTbV+8E1CDJil/iwtuK9PH1
+         9WlqFi4nZlXOTAdMf7j37mKmTf3oaI/oxTIETSsn22vTLvrvnsqMaEUw7KOGHvytP2NU
+         iCi7+arwdwpwBpRcTYDhMfsRgcuwU7nA/jVCY2AV5BiGDcKpWY4rA1wAcbEDOZzr04cN
+         QU4w==
+X-Gm-Message-State: APjAAAXEa8jEr+9sicc8YFmfQ2ydEbkqkTvJ4KuS8lsaECWf6pny4NUu
+        PY1rQNCNXfCAfr+6thKptr8=
+X-Google-Smtp-Source: APXvYqyAXeBiz4mUBF6HYRBCUA5Zqa5vUYs5oJ1JyAbZ+J454fbF0zypcDVYEV6KCeBX8Hm2mj46vA==
+X-Received: by 2002:a2e:97da:: with SMTP id m26mr8576895ljj.115.1556059777939;
+        Tue, 23 Apr 2019 15:49:37 -0700 (PDT)
 Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id w2sm4904722lfa.63.2019.04.23.15.49.31
+        by smtp.gmail.com with ESMTPSA id w2sm4904722lfa.63.2019.04.23.15.49.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 15:49:32 -0700 (PDT)
+        Tue, 23 Apr 2019 15:49:37 -0700 (PDT)
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -73,9 +73,9 @@ To:     Ralf Baechle <ralf@linux-mips.org>,
         Juergen Gross <jgross@suse.com>
 Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH 07/12] mips: Add reserve-nomap memory type support
-Date:   Wed, 24 Apr 2019 01:47:43 +0300
-Message-Id: <20190423224748.3765-8-fancer.lancer@gmail.com>
+Subject: [PATCH 10/12] mips: Print the kernel virtual mem layout on debugging
+Date:   Wed, 24 Apr 2019 01:47:46 +0300
+Message-Id: <20190423224748.3765-11-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190423224748.3765-1-fancer.lancer@gmail.com>
 References: <20190423224748.3765-1-fancer.lancer@gmail.com>
@@ -86,88 +86,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It might be necessary to prevent the virtual mapping creation for a
-requested memory region. For instance there is a "no-map" property
-indicating exactly this feature. In this case we need to not only
-reserve the specified region by pretending it doesn't exist in the
-memory space, but completely remove the range from system just by
-removing it from memblock. The same way it's done in default
-early_init_dt_reserve_memory_arch() method.
+It is useful at least for debugging to have the kernel virtual
+memory layout printed at boot time so to have the full information
+about the booted kernel. Make the printing optional and available
+only when DEBUG_KERNEL config is enabled so not to leak a sensitive
+kernel information.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- arch/mips/include/asm/bootinfo.h | 1 +
- arch/mips/kernel/prom.c          | 4 +++-
- arch/mips/kernel/setup.c         | 8 ++++++++
- 3 files changed, 12 insertions(+), 1 deletion(-)
+ arch/mips/mm/init.c | 49 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/arch/mips/include/asm/bootinfo.h b/arch/mips/include/asm/bootinfo.h
-index a301a8f4bc66..235bc2f52113 100644
---- a/arch/mips/include/asm/bootinfo.h
-+++ b/arch/mips/include/asm/bootinfo.h
-@@ -92,6 +92,7 @@ extern unsigned long mips_machtype;
- #define BOOT_MEM_ROM_DATA	2
- #define BOOT_MEM_RESERVED	3
- #define BOOT_MEM_INIT_RAM	4
-+#define BOOT_MEM_NOMAP		5
+diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
+index bbb196ad5f26..c338bbd03b2a 100644
+--- a/arch/mips/mm/init.c
++++ b/arch/mips/mm/init.c
+@@ -31,6 +31,7 @@
+ #include <linux/gfp.h>
+ #include <linux/kcore.h>
+ #include <linux/initrd.h>
++#include <linux/sizes.h>
  
- /*
-  * A memory map that's built upon what was determined
-diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-index 93b8e0b4332f..437a174e3ef9 100644
---- a/arch/mips/kernel/prom.c
-+++ b/arch/mips/kernel/prom.c
-@@ -47,7 +47,9 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- int __init early_init_dt_reserve_memory_arch(phys_addr_t base,
- 					phys_addr_t size, bool nomap)
- {
--	add_memory_region(base, size, BOOT_MEM_RESERVED);
-+	add_memory_region(base, size,
-+			  nomap ? BOOT_MEM_NOMAP : BOOT_MEM_RESERVED);
+ #include <asm/bootinfo.h>
+ #include <asm/cachectl.h>
+@@ -56,6 +57,53 @@ unsigned long empty_zero_page, zero_page_mask;
+ EXPORT_SYMBOL_GPL(empty_zero_page);
+ EXPORT_SYMBOL(zero_page_mask);
+ 
++/*
++ * Print out the kernel virtual memory layout
++ */
++#define MLK(b, t) (void *)b, (void *)t, ((t) - (b)) >> 10
++#define MLM(b, t) (void *)b, (void *)t, ((t) - (b)) >> 20
++#define MLK_ROUNDUP(b, t) (void *)b, (void *)t, DIV_ROUND_UP(((t) - (b)), SZ_1K)
++static void __init mem_print_kmap_info(void)
++{
++#ifdef CONFIG_DEBUG_KERNEL
++	pr_notice("Kernel virtual memory layout:\n"
++		  "    lowmem  : 0x%px - 0x%px  (%4ld MB)\n"
++		  "      .text : 0x%px - 0x%px  (%4td kB)\n"
++		  "      .data : 0x%px - 0x%px  (%4td kB)\n"
++		  "      .init : 0x%px - 0x%px  (%4td kB)\n"
++		  "      .bss  : 0x%px - 0x%px  (%4td kB)\n"
++		  "    vmalloc : 0x%px - 0x%px  (%4ld MB)\n"
++#ifdef CONFIG_HIGHMEM
++		  "    pkmap   : 0x%px - 0x%px  (%4ld MB)\n"
++#endif
++		  "    fixmap  : 0x%px - 0x%px  (%4ld kB)\n",
++		  MLM(PAGE_OFFSET, (unsigned long)high_memory),
++		  MLK_ROUNDUP(_text, _etext),
++		  MLK_ROUNDUP(_sdata, _edata),
++		  MLK_ROUNDUP(__init_begin, __init_end),
++		  MLK_ROUNDUP(__bss_start, __bss_stop),
++		  MLM(VMALLOC_START, VMALLOC_END),
++#ifdef CONFIG_HIGHMEM
++		  MLM(PKMAP_BASE, (PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE)),
++#endif
++		  MLK(FIXADDR_START, FIXADDR_TOP));
 +
- 	return 0;
- }
++	/* Check some fundamental inconsistencies. May add something else? */
++#ifdef CONFIG_HIGHMEM
++	BUILD_BUG_ON(VMALLOC_END < PAGE_OFFSET);
++	BUG_ON(VMALLOC_END < (unsigned long)high_memory);
++	BUILD_BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) < PAGE_OFFSET);
++	BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) <
++		(unsigned long)high_memory);
++#endif
++	BUILD_BUG_ON(FIXADDR_TOP < PAGE_OFFSET);
++	BUG_ON(FIXADDR_TOP < (unsigned long)high_memory);
++#endif /* CONFIG_DEBUG_KERNEL */
++}
++#undef MLK
++#undef MLM
++#undef MLK_ROUNDUP
++
+ /*
+  * Not static inline because used by IP27 special magic initialization code
+  */
+@@ -479,6 +527,7 @@ void __init mem_init(void)
+ 	setup_zero_pages();	/* Setup zeroed pages.  */
+ 	mem_init_free_highmem();
+ 	mem_init_print_info(NULL);
++	mem_print_kmap_info();
  
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 3a5140943f54..2a1b2e7a1bc9 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -178,6 +178,7 @@ static bool __init __maybe_unused memory_region_available(phys_addr_t start,
- 				in_ram = true;
- 			break;
- 		case BOOT_MEM_RESERVED:
-+		case BOOT_MEM_NOMAP:
- 			if ((start >= start_ && start < end_) ||
- 			    (start < start_ && start + size >= start_))
- 				free = false;
-@@ -213,6 +214,9 @@ static void __init print_memory_map(void)
- 		case BOOT_MEM_RESERVED:
- 			printk(KERN_CONT "(reserved)\n");
- 			break;
-+		case BOOT_MEM_NOMAP:
-+			printk(KERN_CONT "(nomap)\n");
-+			break;
- 		default:
- 			printk(KERN_CONT "type %lu\n", boot_mem_map.map[i].type);
- 			break;
-@@ -487,6 +491,9 @@ static void __init bootmem_init(void)
- 		switch (boot_mem_map.map[i].type) {
- 		case BOOT_MEM_RAM:
- 			break;
-+		case BOOT_MEM_NOMAP: /* Discard the range from the system. */
-+			memblock_remove(PFN_PHYS(start), PFN_PHYS(end - start));
-+			continue;
- 		default: /* Reserve the rest of the memory types at boot time */
- 			memblock_reserve(PFN_PHYS(start), PFN_PHYS(end - start));
- 			break;
-@@ -861,6 +868,7 @@ static void __init resource_init(void)
- 			res->flags |= IORESOURCE_SYSRAM;
- 			break;
- 		case BOOT_MEM_RESERVED:
-+		case BOOT_MEM_NOMAP:
- 		default:
- 			res->name = "reserved";
- 		}
+ #ifdef CONFIG_64BIT
+ 	if ((unsigned long) &_text > (unsigned long) CKSEG0)
 -- 
 2.21.0
 
