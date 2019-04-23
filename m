@@ -2,125 +2,118 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30129C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9D1C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F135921773
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:46:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556048813;
-	bh=r9IzEWyW5Le0N3r0EJSg8kliDkNg4GWgud83MRVIXIs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DcUy0SyP8spkj0JkXeYtQhYavLH6nSH9npbHn2ibwpSqY+NbC98JAGvFRvLPMJMnE
-	 xYAY4gZmGejoM+Ppa0svkbIceGweow7xz3plnyWLX6ZCjTj8Drj+9B5zkXdR7EVoF0
-	 GwV+pZVpPjd1TDGHfoTz5xo4Y1WDoyuhMG77t+ac=
+	by mail.kernel.org (Postfix) with ESMTP id CF9C321773
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 19:49:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JBKWk1tR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfDWTqw (ORCPT
+        id S1726893AbfDWTtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 15:46:52 -0400
-Received: from casper.infradead.org ([85.118.1.10]:58734 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfDWTqv (ORCPT
+        Tue, 23 Apr 2019 15:49:32 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46693 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfDWTtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 15:46:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=bXCtVxVs212+Wn50ho2GN+2s0un3+U1RAoWJPEzBmmk=; b=dkSf5AuA4o7pIqttxEX10oHRAh
-        HZo2qbBi+11rjNzG0pclb8FWqA/QaNUrJX48mQx0SlFdX4erPLle3hGmvrccZlb3OGUOf4ennjsG9
-        YYXadd/V0l2gUAIMJuLkmiGAN1r1SVUcIXnMs/VVphryTAOS6gMZKrLJBOm9rGc3APgMAvrt9dVp8
-        /uAll6mOPBAsauo1ZVSzZMczxZmwayNH3hYYa0V+g9Z7ZvvAg0ynAP5we09ise/ygl3PdrM7ysJiU
-        DBD7qwJ7E66ut5QLYcg5eop1BxmRUbsJ7p3j5yvyP4PMyGJScGM9CfmhM1pWvzkcD7/3n7T2hshFM
-        NUw65O3w==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJ1NP-0000Zj-JG; Tue, 23 Apr 2019 19:46:47 +0000
-Date:   Tue, 23 Apr 2019 16:46:40 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Farhan Ali <alifm@linux.ibm.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v2 31/79] docs: s390: convert docs to ReST and rename to
- *.rst
-Message-ID: <20190423164640.0ed01c20@coco.lan>
-In-Reply-To: <3b40a683-a77e-0219-b5bc-2ead38e627af@linux.ibm.com>
-References: <cover.1555938375.git.mchehab+samsung@kernel.org>
-        <fb86b676b3b426732f1f11378868a9bd3b580b46.1555938376.git.mchehab+samsung@kernel.org>
-        <3b40a683-a77e-0219-b5bc-2ead38e627af@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 23 Apr 2019 15:49:31 -0400
+Received: by mail-pl1-f193.google.com with SMTP id o7so5786232pll.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 12:49:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=JqAaK9I/spSaCaSg32F1HZpvpilgyAJuQuVGnfyCAUk=;
+        b=JBKWk1tRiUbt/drJcZZK+fxAj/IFkPWCj8FaR1MO9kt0dOXEQzv6257cr/0W9JMMdu
+         JgYJExvus7KrzfCeodCF129yTnA+C3n/iSQbYhzEwqaSTvTwg1EzYTxsTpUy2LGhWOPs
+         zjEq/6qOTqLP9VHwdInOLb80Q8vNTRH8aWKis=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JqAaK9I/spSaCaSg32F1HZpvpilgyAJuQuVGnfyCAUk=;
+        b=nj8nQoIKTDAAuf45rRHR1vEDrRlY4G6luJbroW2/SXwSnS2tQotrS2r40fierLnFh6
+         qCCNalJ1onrIE28N5RQsfT3LmdKMjQnx8jTpccCOveFnhacSoMZFL/TiYlOVsheUxzr6
+         Fh+hi4sKBXR95J+IX5aB2NYxZsreH3sfwiuYtoQefbU5OLPDQpdo52lphEEhebJ/lMZF
+         oMmIvdc2rPAeWPx5b1KGy7KAlo1GErRhN6xEf2rApjaTSZYPWf6A3b+PhS5MUNOTJTiV
+         wArSoGfljtOQy1CIZqHq29f2wOXRLlyMfvmW8ljJh6M3H5EibqSxd1XmS6RI6anSJgop
+         owGw==
+X-Gm-Message-State: APjAAAVxZq7rii74vm2Uk5VDJ4P7A46RB+cEUYliAUhJ4t+K/f4tM97a
+        Qi42yqfXqv4EvO9ZShbY6GtMEw==
+X-Google-Smtp-Source: APXvYqyHP29unDWinUcnH+Ag9bS8LYObT2ApmXeIFunfZPXS4hb87Bbahe9vbDP2ng987BuDqNPVDg==
+X-Received: by 2002:a17:902:7883:: with SMTP id q3mr27909874pll.60.1556048970907;
+        Tue, 23 Apr 2019 12:49:30 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id 17sm30947814pfw.65.2019.04.23.12.49.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 12:49:29 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        James Morris <jmorris@namei.org>,
+        Alexander Popov <alex.popov@linux.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sandeep Patil <sspatil@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emese Revfy <re.emese@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/3] Refactor memory initialization hardening
+Date:   Tue, 23 Apr 2019 12:49:22 -0700
+Message-Id: <20190423194925.32151-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 23 Apr 2019 12:12:41 -0400
-Farhan Ali <alifm@linux.ibm.com> escreveu:
+This refactors the stack memory initialization configs in order to
+keep things together when adding Clang stack initialization, and in
+preparation for future heap memory initialization configs.
 
-> On 04/22/2019 09:27 AM, Mauro Carvalho Chehab wrote:
-> > Convert all text files with s390 documentation to ReST format.
-> > 
-> > Tried to preserve as much as possible the original document
-> > format. Still, some of the files required some work in order
-> > for it to be visible on both plain text and after converted
-> > to html.
-> > 
-> > The conversion is actually:
-> >    - add blank lines and identation in order to identify paragraphs;
-> >    - fix tables markups;
-> >    - add some lists markups;
-> >    - mark literal blocks;
-> >    - adjust title markups.
-> > 
-> > At its new index.rst, let's add a :orphan: while this is not linked to
-> > the main index.rst file, in order to avoid build warnings.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab<mchehab+samsung@kernel.org>
-> > ---  
-> 
-> Hi Mauro,
-> 
-> How would the s390 rst files be accessed from a top level index.rst 
-> file? Is there a view of the changes? I looked at a link you posted [1] 
-> as a reply in another thread, but I couldn't find the s390 docs there.
-> 
-> [1] https://www.infradead.org/~mchehab/rst_conversion/
+I intend to carry this in the gcc-plugins tree, but I'd really like
+to get Acks from Masahiro (Kconfig changes, Makefile change), and
+from James (adding the new Kconfig.hardening to security/Kconfig).
 
-With just the patch I added on this series, you'll find the s390
-index.html, and one file for each .rst at Documentation/output/s390/.
+Thanks!
 
-In order to have it linked to the main index, you need to add
-s390/index to Documentation/index.rst, but, if you just want to
-see the results, you can just call:
+-Kees
 
-	$ firefox file://`pwd`/Documentation/output/s390/index.html
+v3:
+- clean up menu/if with a merged "depends on" (masahiro)
+- add CONFIG_COMPILE_TEST defaults (masahiro)
 
-I have a patch already that adds s390 to the main index, together with
-other arch conversions:
+v2:
+- add plugin menu (masahiro)
+- adjust patch subject prefixes (masahiro)
+- drop redundent "depends" (masahiro)
+- fixed early use of CC_HAS_AUTO_VAR_INIT (masahiro)
+- dropped default-enabled for STACK_INIT_ALL (masahiro)
 
-	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=convert_rst_renames&id=d28c466a495488e5e57c7893123011342eea40b2
 
-However, as subsystem maintainers may take a while to apply some of those
-patches, and there's a patchset converting x86 arch too, I opted to do
-such additions on a separate patch, in order to reduce merge conflicts.
+Kees Cook (3):
+  security: Create "kernel hardening" config area
+  security: Move stackleak config to Kconfig.hardening
+  security: Implement Clang's stack initialization
 
-Thanks,
-Mauro
+ Makefile                    |   5 ++
+ scripts/gcc-plugins/Kconfig | 126 ++-------------------------
+ security/Kconfig            |   2 +
+ security/Kconfig.hardening  | 164 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 177 insertions(+), 120 deletions(-)
+ create mode 100644 security/Kconfig.hardening
+
+-- 
+2.17.1
+
