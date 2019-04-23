@@ -2,114 +2,166 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D18C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBDBC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92EFB206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:49:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="msYnu0kx"
+	by mail.kernel.org (Postfix) with ESMTP id ED579206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfDWMtu (ORCPT
+        id S1727735AbfDWMug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:49:50 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48608 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfDWMtt (ORCPT
+        Tue, 23 Apr 2019 08:50:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54202 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726033AbfDWMug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:49:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=35dsPaMjiCJMbp0smPFnBa37kyiFHneebblaSoEgPnQ=; b=msYnu0kx2JON/wV/5dmMl8vxA
-        dNCkZAqilQAWKgXdb+pllDgIM1dvdIRn2PTFPCpPa2rT6jXvYFDwgwJ3h3lZoIhmej0toM48+/ppr
-        RohELwfLN2xCfUtByxgahp0hU50CmU7ZInrqna7acSRDLG6c3QibbucubGNFtCp9B+Y0ozgd2WT4o
-        YmvDH3/dt8VwyJiZCrP/zGJP5MwJsY7HaKgut9UodsIMQT0oida9zEnUjEPcD1ArwgTEhu1ogh2g7
-        uhCboq8dRcEn79wKSzqUJPyUl3ZBauPLrK9e+FM9A3107dB1aRvokG5XAdcEqf5koNpX4UdSCUGyU
-        i6pxQQxMA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hIuqu-0004F8-De; Tue, 23 Apr 2019 12:48:48 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A6FE829B8FE27; Tue, 23 Apr 2019 14:48:45 +0200 (CEST)
-Date:   Tue, 23 Apr 2019 14:48:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Michel Lespinasse <walken@google.com>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, dave@stgolabs.net,
-        Jan Kara <jack@suse.cz>, aneesh.kumar@linux.ibm.com,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        mpe@ellerman.id.au, Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, haren@linux.vnet.ibm.com,
-        Nick Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH v12 00/31] Speculative page faults
-Message-ID: <20190423124845.GS4038@hirez.programming.kicks-ass.net>
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <CANN689F1h9XoHPzr_FQY2WfN5bb2TTd6M3HLqoJ-DQuHkNbA7g@mail.gmail.com>
- <20190423104707.GK25106@dhcp22.suse.cz>
- <20190423124148.GA19031@bombadil.infradead.org>
+        Tue, 23 Apr 2019 08:50:36 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NCnZFi020886
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:50:35 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s21eucjma-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:50:34 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 23 Apr 2019 13:50:32 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 13:50:29 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NCoRZt17563738
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 12:50:27 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 84C21A405B;
+        Tue, 23 Apr 2019 12:50:27 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA575A4054;
+        Tue, 23 Apr 2019 12:50:26 +0000 (GMT)
+Received: from [9.145.50.246] (unknown [9.145.50.246])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 12:50:26 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 5/8] s390: vfio-ap: wait for queue empty on queue reset
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1555796980-27920-1-git-send-email-akrowiak@linux.ibm.com>
+ <1555796980-27920-6-git-send-email-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Tue, 23 Apr 2019 14:50:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423124148.GA19031@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1555796980-27920-6-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042312-0008-0000-0000-000002DCB908
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042312-0009-0000-0000-0000224909E7
+Message-Id: <9a23da6d-89a8-227d-b756-6e002b0199e3@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 05:41:48AM -0700, Matthew Wilcox wrote:
-> On Tue, Apr 23, 2019 at 12:47:07PM +0200, Michal Hocko wrote:
-> > Well, I believe we should _really_ re-evaluate the range locking sooner
-> > rather than later. Why? Because it looks like the most straightforward
-> > approach to the mmap_sem contention for most usecases I have heard of
-> > (mostly a mm{unm}ap, mremap standing in the way of page faults).
-> > On a plus side it also makes us think about the current mmap (ab)users
-> > which should lead to an overall code improvements and maintainability.
+On 20/04/2019 23:49, Tony Krowiak wrote:
+> Refactors the AP queue reset function to wait until the queue is empty
+> after the PQAP(ZAPQ) instruction is executed to zero out the queue as
+> required by the AP architecture.
 > 
-> Dave Chinner recently did evaluate the range lock for solving a problem
-> in XFS and didn't like what he saw:
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>   drivers/s390/crypto/vfio_ap_ops.c | 35 ++++++++++++++++++++++++++++++++---
+>   1 file changed, 32 insertions(+), 3 deletions(-)
 > 
-> https://lore.kernel.org/linux-fsdevel/20190418031013.GX29573@dread.disaster.area/T/#md981b32c12a2557a2dd0f79ad41d6c8df1f6f27c
-> 
-> I think scaling the lock needs to be tied to the actual data structure
-> and not have a second tree on-the-side to fake-scale the locking.
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 091804317c5e..31ce30ee784d 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -744,15 +744,44 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>   	return NOTIFY_OK;
+>   }
+>   
+> -static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+> -				    unsigned int retry)
+> +static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
+>   {
+>   	struct ap_queue_status status;
+> +	ap_qid_t qid = AP_MKQID(apid, apqi);
+> +	int retry = 5;
+> +
+> +	do {
+> +		status = ap_tapq(qid, NULL);
+> +		switch (status.response_code) {
+> +		case AP_RESPONSE_NORMAL:
+> +			if (status.queue_empty)
+> +				return;
+> +			msleep(20);
+> +			break;
+> +		case AP_RESPONSE_RESET_IN_PROGRESS:
+> +		case AP_RESPONSE_BUSY:
+> +			msleep(20);
+> +			break;
+> +		default:
+> +			pr_warn("%s: tapq err %02x: 0x%04x may not be empty\n",
+> +				__func__, status.response_code, q->apqn);
 
-Right, which is how I ended up using the split PT locks. They already
-provide fine(r) grained locking.
+q is not defined. use qid ?
+
+
+> +			return;
+> +		}
+> +	} while (--retry);
+> +}
+> +
+> +int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
+> +{
+> +	struct ap_queue_status status;
+> +	int retry = 5;
+>   
+>   	do {
+>   		status = ap_zapq(AP_MKQID(apid, apqi));
+>   		switch (status.response_code) {
+>   		case AP_RESPONSE_NORMAL:
+> +			vfio_ap_mdev_wait_for_qempty(apid, apqi);
+> +			return 0;
+> +		case AP_RESPONSE_DECONFIGURED:
+>   			return 0;
+>   		case AP_RESPONSE_RESET_IN_PROGRESS:
+>   		case AP_RESPONSE_BUSY:
+> @@ -778,7 +807,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>   			     matrix_mdev->matrix.apm_max + 1) {
+>   		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+>   				     matrix_mdev->matrix.aqm_max + 1) {
+> -			ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
+> +			ret = vfio_ap_mdev_reset_queue(apid, apqi);
+>   			/*
+>   			 * Regardless whether a queue turns out to be busy, or
+>   			 * is not operational, we need to continue resetting
+> 
+
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
