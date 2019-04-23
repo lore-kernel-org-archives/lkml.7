@@ -2,217 +2,172 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDD8C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A720C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD66206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F039B206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:56:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G9UWWQ2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfDWMzx (ORCPT
+        id S1727757AbfDWM4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:55:53 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49291 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfDWMzx (ORCPT
+        Tue, 23 Apr 2019 08:56:53 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36476 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfDWM4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:55:53 -0400
-X-Originating-IP: 90.88.147.33
-Received: from aptenodytes (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 449A22000A;
-        Tue, 23 Apr 2019 12:55:48 +0000 (UTC)
-Message-ID: <e4c684bd2fc752cd74f96771f198ace42988c81b.camel@bootlin.com>
-Subject: Re: [PATCH v5 4/4] drm/vc4: Allocate binner bo when starting to use
- the V3D
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Eben Upton <eben@raspberrypi.org>
-Date:   Tue, 23 Apr 2019 14:55:48 +0200
-In-Reply-To: <87tvez802s.fsf@anholt.net>
-References: <20190415123908.28986-1-paul.kocialkowski@bootlin.com>
-         <20190415123908.28986-5-paul.kocialkowski@bootlin.com>
-         <87tvez802s.fsf@anholt.net>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 
+        Tue, 23 Apr 2019 08:56:52 -0400
+Received: by mail-qk1-f194.google.com with SMTP id m137so4777840qke.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 05:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dEze09IdSHBGGlH96R+KwNIu2LaROjVW7jKqngW7jgA=;
+        b=G9UWWQ2WoAseR9WV0y8T5h6iRyZcXmWAiF3BPd9bmTcKSY6bfbwpW9DwstED4UA+xU
+         TCnjAWt8Fy74r6o28OEdrm3swN6R9Gpz3voEiZA4Deoo+FxrE3SjL8gq7VbkNrMzzRn/
+         Vz7RKOc8ePC6EuSRPbkyRalT2fqju2/TfbWeM1KVvtZ+IRlTbqo9kdHY+4zpBzMxLocm
+         QXKL1Mqj9kGjtoHIOTRHRTNiQTqr5lpVR0D2dN3x2+KnI5eQ3wv1YjJ97PqL1ea/6XZB
+         Iw2vduUfWLne7dy7LwYRI6RGkrKT97m46+/lr2Ycoqo0+pRayNvrH+na6qcwX0o2viVL
+         q5Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dEze09IdSHBGGlH96R+KwNIu2LaROjVW7jKqngW7jgA=;
+        b=bOlwgmxGkpq1lzKM94owISAYROyPqy+aYPftEquHYAHm8pbTNCx8KThIG+1rNebS8s
+         w5OAkynfXXTpupqdWusNGTYo5JthJp7vxP14xSrmGbY6njIaJ4rj1UIQeodTd4IyoerZ
+         AgcXP+J6Tl2lJcOovPkTZ0x/WQ6vSVfWnpPNWv9l8hRES0R0ILbORZaGRSqBNaNkn9+X
+         jODwF8JrkXlDgGBeKcBq8VZYjjtXeiLPJh06/+ZEbixAsX1gTjpidnu0Q4M+mXKUN9AW
+         vl/pa9/MVSUztqOwEEx0ApButHDVJYhjU6O1KBSfC7VWXM3ygWVjb/YIZkW6uXLjVysB
+         +6FA==
+X-Gm-Message-State: APjAAAUULMh0XyZuzZZrO+cWF5SjghEK0oJJElxEdZF8d346X4HCltBl
+        vienrwexFhB3H2M9WhroEz4LP1jXV/oNPqfw+E5jrQ==
+X-Google-Smtp-Source: APXvYqwn+wWks9tto2Z41zGXeWqZuRRzCi7D/T8ro52aUdmjCC3FwGne9MA5gGI/UAZaNC+PTyN+SHPHaqRVKfRK8Jc=
+X-Received: by 2002:a37:b444:: with SMTP id d65mr18843156qkf.125.1556024211546;
+ Tue, 23 Apr 2019 05:56:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <cover.1553853990.git.amit.kucheria@linaro.org>
+ <5583cae1-8fea-724a-24a4-59b38a205ac3@free.fr> <CAP245DUNo02QUkGDPFfzow9535GKO9x6ZusETRjEgTmnHL4D2g@mail.gmail.com>
+ <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr>
+In-Reply-To: <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 23 Apr 2019 18:26:40 +0530
+Message-ID: <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] qcom: dts: thermal cleanups
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Apr 23, 2019 at 3:01 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+>
+> On 02/04/2019 20:46, Amit Kucheria wrote:
+>
+> > On Tue, Apr 2, 2019 at 8:58 PM Marc Gonzalez wrote:
+> >>
+> >> On 29/03/2019 11:12, Amit Kucheria wrote:
+> >>
+> >>> Changes since v1:
+> >>> - Devices that are not associated with cooling-maps use the 'hot' type
+> >>> - Remove critical trip from such devices too and restrict that type of CPUs
+> >>> - For 8916, add the sensor on the modem
+> >>>
+> >>> Description:
+> >>> - Expose all temperature sensors on msm8916, msm996, msm8998, sdm845
+> >>> - split up the register address map for msm8998
+> >>> - standardize names of the various thermal-zones across boards to make it
+> >>>   easy for test scripts to parse
+> >>
+> >> This is what I see on msm8998 with your patch series applied on top of
+> >> yesterday's next:
+> >>
+> >> # dmesg | grep of_parse_thermal_zones
+> >> of_parse_thermal_zones: build cpu0-thermal zone 0
+> >> of_parse_thermal_zones: build cpu1-thermal zone 0
+> >> of_parse_thermal_zones: build cpu2-thermal zone 0
+> >> of_parse_thermal_zones: build cpu3-thermal zone 0
+> >> of_parse_thermal_zones: build cpu4-thermal zone 0
+> >> of_parse_thermal_zones: build cpu5-thermal zone 0
+> >> of_parse_thermal_zones: build cpu6-thermal zone 0
+> >> of_parse_thermal_zones: build cpu7-thermal zone 0
+> >> of_parse_thermal_zones: build gpu-thermal-bottom zone 0
+> >> of_parse_thermal_zones: build gpu-thermal-top zone 0
+> >> of_parse_thermal_zones: build cluster0-mhm-thermal zone -22
+> >> of_parse_thermal_zones: build cluster1-mhm-thermal zone -22
+> >> of_parse_thermal_zones: build cluster1-l2-thermal zone 0
+> >> of_parse_thermal_zones: build modem-thermal zone 0
+> >> of_parse_thermal_zones: build mem-thermal zone 0
+> >> of_parse_thermal_zones: build wlan-thermal zone 0
+> >> of_parse_thermal_zones: build q6-dsp-thermal zone 0
+> >> of_parse_thermal_zones: build camera-thermal zone 0
+> >> of_parse_thermal_zones: build multimedia-thermal zone 0
+> >> of_parse_thermal_zones: build pm8998 zone 0
+> >> of_parse_thermal_zones: build battery-thermal zone 0
+> >> of_parse_thermal_zones: build skin-thermal zone 0
+> >>
+> >> NB: -EINVAL for cluster0-mhm-thermal and cluster1-mhm-thermal
+> >>
+> >>
+> >> # cat /sys/devices/virtual/thermal/thermal_zone*/temp
+> >> 35800
+> >> 35200
+> >> 34500
+> >> 34800
+> >> 34500
+> >> 34100
+> >> 34100
+> >> 33500
+> >> 33800
+> >> cat: /sys/devices/virtual/thermal/thermal_zone17/temp: Invalid argument
+> >> 36100
+> >> cat: /sys/devices/virtual/thermal/thermal_zone19/temp: Invalid argument
+> >> 35500
+> >> 36100
+> >> 35800
+> >> 35200
+> >> 35500
+> >> 36100
+> >> cat: /sys/devices/virtual/thermal/thermal_zone8/temp: Invalid argument
+> >> cat: /sys/devices/virtual/thermal/thermal_zone9/temp: Invalid argument
+> >>
+> >>
+> >> Are the failures expected?
+> >> (cluster*-mhm-thermal and thermal_zone*/temp)
+> >
+> > No they are not. Unfortunately, I didn't have HW to test, so
+> > appreciate the help with testing. I'll check the 8, 9, 17 and 19 again
+> > before resubmitting.
+>
+> Looks like Andy merged this series?
 
-On Mon, 2019-04-15 at 13:50 -0700, Eric Anholt wrote:
-> Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
-> 
-> > The binner bo is not required until the V3D is in use, so avoid
-> > allocating it at probe and do it on the first non-dumb BO allocation.
-> > Keep track of which clients are using the V3D and liberate the buffer
-> > when there is none left (through a kref) and protect it with a mutex to
-> > avoid race conditions.
-> > 
-> > The Out-Of-Memory (OOM) interrupt also gets some tweaking, to avoid
-> > enabling it before having allocated a binner bo.
-> 
-> I love your solution to this!
-> 
-> > We also want to keep the BO alive during runtime suspend/resume to avoid
-> > failing to allocate it at resume. This happens when the CMA pool is
-> > full at that point and results in a hard crash.
-> > 
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  drivers/gpu/drm/vc4/vc4_bo.c  | 30 ++++++++++++++++++++++
-> >  drivers/gpu/drm/vc4/vc4_drv.c | 17 +++++++++++++
-> >  drivers/gpu/drm/vc4/vc4_drv.h |  9 +++++++
-> >  drivers/gpu/drm/vc4/vc4_irq.c |  6 +++--
-> >  drivers/gpu/drm/vc4/vc4_v3d.c | 47 +++++++++++++++++++++++++----------
-> >  5 files changed, 94 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/vc4/vc4_bo.c b/drivers/gpu/drm/vc4/vc4_bo.c
-> > index 88ebd681d7eb..5a5276cce9a2 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_bo.c
-> > +++ b/drivers/gpu/drm/vc4/vc4_bo.c
-> > @@ -799,6 +799,28 @@ vc4_prime_import_sg_table(struct drm_device *dev,
-> >  	return obj;
-> >  }
-> >  
-> > +static int vc4_grab_bin_bo(struct drm_device *dev,
-> > +			   struct drm_file *file_priv)
-> > +{
-> > +	struct vc4_file *vc4file = file_priv->driver_priv;
-> > +	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> > +
-> > +	if (!vc4->v3d)
-> > +		return -ENODEV;
-> > +
-> > +	if (vc4file->bin_bo_kref)
-> > +		return 0;
-> > +
-> > +	mutex_lock(&vc4->bin_bo_lock);
-> > +	vc4file->bin_bo_kref = vc4_v3d_bin_bo_get(vc4);
-> > +	mutex_unlock(&vc4->bin_bo_lock);
-> 
-> Interesting.  I think I would have stored a bool for whether he had the
-> kref, instead of a pointer to vc4->bin_bo_kref.  Either way is fine with
-> me, though.
+Argh! my bad, I completely forgot about the need to fix this up. I
+need to get me one of these boards.
 
-Heh, I've changed it to a bool for v6 anyway, it makes the code look
-more symetrical.
+> https://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git/log/?h=for-next
+>
+> I was expecting a respin, or a discussion of the failures.
+>
+> Slightly confused. What next?
+>
 
-> > +
-> > +	if (!vc4file->bin_bo_kref)
-> > +		return -ENOMEM;
-> > +
-> > +	return 0;
-> > +}
-> > diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
-> > index d840b52b9805..b09f771384be 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_drv.c
-> > +++ b/drivers/gpu/drm/vc4/vc4_drv.c
-> > @@ -126,10 +126,25 @@ static int vc4_open(struct drm_device *dev, struct drm_file *file)
-> >  	return 0;
-> >  }
-> >  
-> > +static void vc4_close_bin_bo_release(struct kref *ref)
-> > +{
-> > +	struct vc4_dev *vc4 = container_of(ref, struct vc4_dev, bin_bo_kref);
-> > +
-> > +	return vc4_v3d_bin_bo_free(vc4);
-> > +}
-> 
-> Could we have this be the function that vc4_v3d.c publishes instead of
-> _free, and then we don't need two separate functions for the free path?
+We can either revert that one patch for the msm8998, but I think it
+might be better if I send a fixup patch that could fixup those 4 zones
+instead.
 
-I've made get/put helpers for v6 that shall address this as well.
+Does that work for you?
 
-> >  static void vc4_close(struct drm_device *dev, struct drm_file *file)
-> >  {
-> > +	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> >  	struct vc4_file *vc4file = file->driver_priv;
-> >  
-> > +	mutex_lock(&vc4->bin_bo_lock);
-> > +
-> > +	if (vc4file->bin_bo_kref)
-> > +		kref_put(vc4file->bin_bo_kref, vc4_close_bin_bo_release);
-> > +
-> > +	mutex_unlock(&vc4->bin_bo_lock);
-> > +
-> >  	vc4_perfmon_close_file(vc4file);
-> >  	kfree(vc4file);
-> >  }
-> > @@ -313,6 +338,15 @@ int vc4_v3d_bin_bo_alloc(struct vc4_dev *vc4)
-> >  	return ret;
-> >  }
-> >  
-> > +void vc4_v3d_bin_bo_free(struct vc4_dev *vc4)
-> > +{
-> > +	if (!vc4->bin_bo)
-> > +		return;
-> > +
-> > +	drm_gem_object_put_unlocked(&vc4->bin_bo->base.base);
-> > +	vc4->bin_bo = NULL;
-> 
-> Hmm.  I'm thinking:
-> 
-> We free the bin BO from the DRM fd close operation, but we could have
-> jobs still being executed after the close if userspace didn't happen to
-> wait on them before finishing (closing doesn't wait for execution to
-> complete, and we couldn't reliably wait during close even if we wanted
-> to).  I think to resolve that we need the vc4_exec_info to keep a ref on
-> the bin BO as well (at least, if they had a binning component to their
-> job).
-
-Oh good catch! So since we assign binner slots to exec jobs when
-getting a tile_binning_mode_config_packet, we need to make sure that's
-kept alive as well.
-
-Here is something more I noticed when reworking the code: there are
-subsequent calls in the ioctl handlers that may fall after we got a
-reference to the binner BO. So we need to make sure to put in the
-failure path since the matching legit put won't happen if the ioctl
-errored out.
-
-Cheers,
-
-Paul
-
-> >  #ifdef CONFIG_PM
-> >  static int vc4_v3d_runtime_suspend(struct device *dev)
-> >  {
-> > @@ -321,9 +355,6 @@ static int vc4_v3d_runtime_suspend(struct device *dev)
-> >  
-> >  	vc4_irq_uninstall(vc4->dev);
-> >  
-> > -	drm_gem_object_put_unlocked(&vc4->bin_bo->base.base);
-> > -	vc4->bin_bo = NULL;
-> > -
-> >  	clk_disable_unprepare(v3d->clk);
-> >  
-> >  	return 0;
-> > @@ -335,10 +366,6 @@ static int vc4_v3d_runtime_resume(struct device *dev)
-> >  	struct vc4_dev *vc4 = v3d->vc4;
-> >  	int ret;
-> >  
-> > -	ret = vc4_v3d_bin_bo_alloc(vc4);
-> > -	if (ret)
-> > -		return ret;
-> > -
-> >  	ret = clk_prepare_enable(v3d->clk);
-> >  	if (ret != 0)
-> >  		return ret;
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
+Regards,
+Amit
