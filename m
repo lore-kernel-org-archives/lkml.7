@@ -2,169 +2,183 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DDDC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77858C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F3B2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CFAC218D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/ZfuxG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfDWPof (ORCPT
+        id S1728496AbfDWPoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 23 Apr 2019 11:44:38 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35387 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbfDWPof (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Apr 2019 11:44:35 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:58486 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728233AbfDWPof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:44:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FB6680D;
+Received: by mail-pg1-f193.google.com with SMTP id g8so7820834pgf.2;
+        Tue, 23 Apr 2019 08:44:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UHKhNGF9h6UnRkG1fb5S0yRAer4+UyZQ8Isf84BVwlc=;
+        b=I/ZfuxG4emX1qFeKLWISK6/79zfkCARgP4ZSgnvjXKqP6YbYDE7vO2Z6Rb7bxpLujP
+         wghU3+u88ssKhf6mLMcTDUNu4MJIRcPoToVRsK4RWqMJThO3uFNwG/SG8mVc7sYxNsoi
+         jTuvhc+txnqXi5qMk/Y5tP1T3J7AD9ALqrFKHD8rC/bMJdjlTQlAtJDRVi2BvcDGFYYq
+         N/Bi6gDF5Vms7KSymsgexaN684iDBLPfzbki0s5cXdu+ks7/e8beiWJpVkQbMnUTHKmB
+         YfKWRzddej7uL+KC/JYbEqpSRjeK4RVCmDlyrjLk9tZvgOMHvCsBgqAJnZLk7MXVxOd2
+         7scA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UHKhNGF9h6UnRkG1fb5S0yRAer4+UyZQ8Isf84BVwlc=;
+        b=Xu5LMYsiVfD+RO9Y101cK+UdSgIT0+HraRr2A5TaisSrwyB0ytomb6VIcPSez8v9MO
+         QD8/BNkbIuKX0djTPaLnqY1m+9itcELT1ka4Lsq5dqumKiHIrzEoGjX0ZPLldgiRvklj
+         YR4XP7epHov1ixTMClqnnm3hztjyxoJV8EXqWBtgToGVAcxz95qtSsQmH81Rt+OgA0kR
+         uW07krEfgQn1EqIyJEsNxF9Nhey1kWQUnxkdLxbSqUEV7oIN5Cde66i3p54Sb20+Hj2C
+         u7qUTiBrW/oSthBTEbwbnr4PLBoWpTAS4JclGJj77YAHnXgqBa8c6gC3kQ1AvAmlveIO
+         pywg==
+X-Gm-Message-State: APjAAAVkwPDSR1xWnTXA54mpFQjbM91XEHLYrRpChhwgIOgk8PSwMbCY
+        pikpcw4AKWkFgMK1sDx9+r4=
+X-Google-Smtp-Source: APXvYqxWonr93z+lwNSb0O4bPtLM6S1Q0OOVr8pt+0Qrmm2vVwgFNowIc8Qn/ZlknlLfNE1SDu26gA==
+X-Received: by 2002:a62:62c2:: with SMTP id w185mr3739702pfb.237.1556034274772;
         Tue, 23 Apr 2019 08:44:34 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B37BD3F5AF;
-        Tue, 23 Apr 2019 08:44:32 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 16:44:30 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Amit Daniel Kachhap <amit.kachhap@arm.com>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v10 2/5] KVM: arm/arm64: context-switch ptrauth registers
-Message-ID: <20190423154430.GM3567@e103592.cambridge.arm.com>
-References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
- <1555994558-26349-3-git-send-email-amit.kachhap@arm.com>
- <8636m9awmu.wl-marc.zyngier@arm.com>
- <c961a9d1-8cc8-6e40-de1d-527f7feb0f41@arm.com>
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id m131sm41015465pga.3.2019.04.23.08.44.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 08:44:33 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 08:44:31 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rui.zhang@intel.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, andrew.smirnov@gmail.com
+Subject: Re: [PATCH] thermal/drivers/of: Add a get_temp_id callback function
+Message-ID: <20190423154430.GA16014@localhost.localdomain>
+References: <20190416172203.4679-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c961a9d1-8cc8-6e40-de1d-527f7feb0f41@arm.com>
+In-Reply-To: <20190416172203.4679-1-daniel.lezcano@linaro.org>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 03:54:32PM +0530, Amit Daniel Kachhap wrote:
-> Hi Mark,
+Hello,
+
+On Tue, Apr 16, 2019 at 07:22:03PM +0200, Daniel Lezcano wrote:
+> Currently when we register a sensor, we specify the sensor id and a data
+> pointer to be passed when the get_temp function is called. However the
+> sensor_id is not passed to the get_temp callback forcing the driver to
+> do extra allocation and adding back pointer to find out from the sensor
+> information the driver data and then back to the sensor id.
 > 
-> On 4/23/19 3:09 PM, Marc Zyngier wrote:
-> >On Tue, 23 Apr 2019 05:42:35 +0100,
-> >Amit Daniel Kachhap <amit.kachhap@arm.com> wrote:
-> >>
-> >>From: Mark Rutland <mark.rutland@arm.com>
-> >>
-> >>When pointer authentication is supported, a guest may wish to use it.
-> >>This patch adds the necessary KVM infrastructure for this to work, with
-> >>a semi-lazy context switch of the pointer auth state.
-> >>
-> >>Pointer authentication feature is only enabled when VHE is built
-> >>in the kernel and present in the CPU implementation so only VHE code
-> >>paths are modified.
-> >>
-> >>When we schedule a vcpu, we disable guest usage of pointer
-> >>authentication instructions and accesses to the keys. While these are
-> >>disabled, we avoid context-switching the keys. When we trap the guest
-> >>trying to use pointer authentication functionality, we change to eagerly
-> >>context-switching the keys, and enable the feature. The next time the
-> >>vcpu is scheduled out/in, we start again. However the host key save is
-> >>optimized and implemented inside ptrauth instruction/register access
-> >>trap.
-> >>
-> >>Pointer authentication consists of address authentication and generic
-> >>authentication, and CPUs in a system might have varied support for
-> >>either. Where support for either feature is not uniform, it is hidden
-> >>from guests via ID register emulation, as a result of the cpufeature
-> >>framework in the host.
-> >>
-> >>Unfortunately, address authentication and generic authentication cannot
-> >>be trapped separately, as the architecture provides a single EL2 trap
-> >>covering both. If we wish to expose one without the other, we cannot
-> >>prevent a (badly-written) guest from intermittently using a feature
-> >>which is not uniformly supported (when scheduled on a physical CPU which
-> >>supports the relevant feature). Hence, this patch expects both type of
-> >>authentication to be present in a cpu.
-> >>
-> >>This switch of key is done from guest enter/exit assembly as preparation
-> >>for the upcoming in-kernel pointer authentication support. Hence, these
-> >>key switching routines are not implemented in C code as they may cause
-> >>pointer authentication key signing error in some situations.
-> >>
-> >>Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> >>[Only VHE, key switch in full assembly, vcpu_has_ptrauth checks
-> >>, save host key in ptrauth exception trap]
-> >>Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
-> >>Reviewed-by: Julien Thierry <julien.thierry@arm.com>
-> >>Cc: Marc Zyngier <marc.zyngier@arm.com>
-> >>Cc: Christoffer Dall <christoffer.dall@arm.com>
-> >>Cc: kvmarm@lists.cs.columbia.edu
-> >>---
-> >>Changes since v9:
-> >>
-> >>* Removed hardcoding of enum values[Mark Zyngier].
-> >>* Changed kvm_ptrauth_asm.h to kvm_ptrauth.h[Mark Zyngier].
-> >>* Removed macro __ptrauth_save_state and applied inline [Marc Zyngier].
-> >>* Moved kvm_arm_vcpu_ptrauth_setup_lazy, kvm_arm_vcpu_ptrauth_enable and
-> >>   kvm_arm_vcpu_ptrauth_disable from *.c to kvm_emulate.h file [Marc Zyngier].
-> >>* Added/Modified comments at few places [Marc Zyngier].
-> >>
-> >>  arch/arm/include/asm/kvm_emulate.h   |   2 +
-> >>  arch/arm64/Kconfig                   |   5 +-
-> >>  arch/arm64/include/asm/kvm_emulate.h |  16 ++++++
-> >>  arch/arm64/include/asm/kvm_host.h    |  14 +++++
-> >>  arch/arm64/include/asm/kvm_ptrauth.h | 108 +++++++++++++++++++++++++++++++++++
-> >>  arch/arm64/kernel/asm-offsets.c      |   6 ++
-> >>  arch/arm64/kvm/handle_exit.c         |  36 +++++++++---
-> >>  arch/arm64/kvm/hyp/entry.S           |  15 +++++
-> >>  arch/arm64/kvm/sys_regs.c            |  43 +++++++++++++-
-> >>  virt/kvm/arm/arm.c                   |   2 +
-> >>  10 files changed, 234 insertions(+), 13 deletions(-)
-> >>  create mode 100644 arch/arm64/include/asm/kvm_ptrauth.h
+> Add a new callback get_temp_id() which will be called if set. It will
+> call the get_temp_id() with the sensor id.
+> 
+> That will be more consistent with the registering function.
 
-[...]
+I still do not understand why we need to have a get_id callback.
+The use cases I have seen so far, which I have been intentionally rejecting, are
+mainly solvable by creating other compatible entries. And really, if you
+have, say a bandgap, chip that supports multiple sensors, but on
+SoC version A it has 5 sensors, and on SoC version B it has only 4,
+or on SoC version C, it has 5 but they are either logially located
+in different places (gpu vs iva regions), these are all cases in which
+you want a different compatible!
 
-> >>diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> >>index 7e34b9e..3cfe2eb 100644
-> >>--- a/arch/arm64/Kconfig
-> >>+++ b/arch/arm64/Kconfig
-> >>@@ -1301,8 +1301,9 @@ config ARM64_PTR_AUTH
-> >>  	  context-switched along with the process.
-> >>  	  The feature is detected at runtime. If the feature is not present in
-> >>-	  hardware it will not be advertised to userspace nor will it be
-> >>-	  enabled.
-> >>+	  hardware it will not be advertised to userspace/KVM guest nor will it
-> >>+	  be enabled. However, KVM guest also require VHE mode and hence
-> >>+	  CONFIG_ARM64_VHE=y option to use this feature.
-> >
-> >SVE seems to have the exact same requirements, and has
-> >
-> >	depends on !KVM || ARM64_VHE
-> >
-> >Why don't we have that for PTR_AUTH too?
-> This point came up earlier also and it was suggested by  Dave[1] to leave
-> userspace ptrauth for non-vhe mode as that would bring regression now.
-> [1]:https://lkml.org/lkml/2019/3/27/583
+Do you mind sharing why you need a get sensor id callback?
 
-I see Marc applied this change in
-https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git/commit/?h=queue&id=e19b245fa4c61558536bd34f80845f0c41eab65f0
-
-The risk here is that someone has a custom config from an old kernel
-that explicitly turns CONFIG_ARM64_VHE off, and that try to use that
-config with this patch.
-
-I'm not sure how much we care about that.
-
-Otherwise, blocking this config so that people don't accidentally rely
-on it seems sensible.
-
-[...]
-
-Cheers
----Dave
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Tested-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>  drivers/thermal/of-thermal.c | 19 +++++++++++++------
+>  include/linux/thermal.h      |  1 +
+>  2 files changed, 14 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> index 2df059cc07e2..787d1cbe13f3 100644
+> --- a/drivers/thermal/of-thermal.c
+> +++ b/drivers/thermal/of-thermal.c
+> @@ -78,6 +78,8 @@ struct __thermal_zone {
+>  
+>  	/* sensor interface */
+>  	void *sensor_data;
+> +	int sensor_id;
+> +
+>  	const struct thermal_zone_of_device_ops *ops;
+>  };
+>  
+> @@ -88,10 +90,14 @@ static int of_thermal_get_temp(struct thermal_zone_device *tz,
+>  {
+>  	struct __thermal_zone *data = tz->devdata;
+>  
+> -	if (!data->ops->get_temp)
+> -		return -EINVAL;
+> +	if (data->ops->get_temp)
+> +		return data->ops->get_temp(data->sensor_data, temp);
+>  
+> -	return data->ops->get_temp(data->sensor_data, temp);
+> +	if (data->ops->get_temp_id)
+> +		return data->ops->get_temp_id(data->sensor_id,
+> +					      data->sensor_data, temp);
+> +
+> +	return -EINVAL;
+>  }
+>  
+>  static int of_thermal_set_trips(struct thermal_zone_device *tz,
+> @@ -407,8 +413,8 @@ static struct thermal_zone_device_ops of_thermal_ops = {
+>  /***   sensor API   ***/
+>  
+>  static struct thermal_zone_device *
+> -thermal_zone_of_add_sensor(struct device_node *zone,
+> -			   struct device_node *sensor, void *data,
+> +thermal_zone_of_add_sensor(struct device_node *zone, struct device_node *sensor,
+> +			   int sensor_id, void *data,
+>  			   const struct thermal_zone_of_device_ops *ops)
+>  {
+>  	struct thermal_zone_device *tzd;
+> @@ -426,6 +432,7 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+>  	mutex_lock(&tzd->lock);
+>  	tz->ops = ops;
+>  	tz->sensor_data = data;
+> +	tz->sensor_id = sensor_id;
+>  
+>  	tzd->ops->get_temp = of_thermal_get_temp;
+>  	tzd->ops->get_trend = of_thermal_get_trend;
+> @@ -516,7 +523,7 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+>  		}
+>  
+>  		if (sensor_specs.np == sensor_np && id == sensor_id) {
+> -			tzd = thermal_zone_of_add_sensor(child, sensor_np,
+> +			tzd = thermal_zone_of_add_sensor(child, sensor_np, sensor_id,
+>  							 data, ops);
+>  			if (!IS_ERR(tzd))
+>  				tzd->ops->set_mode(tzd, THERMAL_DEVICE_ENABLED);
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index 5f4705f46c2f..2762d7e6dd86 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -351,6 +351,7 @@ struct thermal_genl_event {
+>   *		   hardware.
+>   */
+>  struct thermal_zone_of_device_ops {
+> +	int (*get_temp_id)(int, void *, int *);
+>  	int (*get_temp)(void *, int *);
+>  	int (*get_trend)(void *, int, enum thermal_trend *);
+>  	int (*set_trips)(void *, int, int);
+> -- 
+> 2.17.1
+> 
