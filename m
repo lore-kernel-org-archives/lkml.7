@@ -2,74 +2,119 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140C0C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DF3C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F2C20835
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CA020835
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556040246;
+	bh=iYPrKA+CLfE+81yGX8HKug1p2zjXsokfBC4B5o7cWfc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sBdpNY2SP35G3bC6h6ODDtJsnhgnWYbnfJX8aPZyY3i+tRiSRKWqeMOJG1TrReA8q
+	 SgXddCUoPX7jkomcYUHGJnBGpY8Jd7d7GD3tAVlJPm9kmyhvsLRqPtpb9VA71hdwor
+	 ph9gaR6jWVQn0WW2Lds84sS6zQrB0f2zstmjEJG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbfDWRYC (ORCPT
+        id S1729392AbfDWRYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 23 Apr 2019 13:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728447AbfDWRYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Apr 2019 13:24:02 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:52858 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729154AbfDWRYB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:24:01 -0400
-Received: by mail-io1-f69.google.com with SMTP id t12so8680437ioc.19
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 10:24:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=VkO5Vfxw4veeWkeJxoQ/C7OfI5b7RDTFdrBLqvxB0XQ=;
-        b=CeAuLyrH1oys/4U/UHal1Q2lGNDUopOLYDVn7D+jEU70I+DwgO/dS2Oyx2dbtwjtp8
-         QfzaUoc+GOHETv4cxpv1n+kwfE7WR5zJepp9l+n0V8GASh79FfqrVJ7wUx747ADash/m
-         jTWDDuSSib7KuzuQ2nhnKklEEn61/JuOiBRJwCofrRGcUegqaw6AJ/kVfANvSO1IRht4
-         1WTnTkdZpArC3+yHYfSEHWaBxqO/ztE7RLgEiIpuSH0FFdKQgqOC2+l1rjIroOPB7C8y
-         PwsowHe58GKi/ltOFwJqrhS8agn6eh8td9WkW15fYlktlwrbJnt3uZRJD+Bpf26hYYaN
-         ERlg==
-X-Gm-Message-State: APjAAAVeTLEDHBJ1cbrRSY03XpV3Sis796/RmDoc7blJhK9yErgZXzEn
-        ei8ioVNC6Gmcx6S3/oTWWGJgL3GhkobRnkRfgaYGyMgz9dfr
-X-Google-Smtp-Source: APXvYqwcG4FqIkJ2PZJZE6YG9HqGfLHkD4/caAtEYA3OSAL+nUPhgkWSA6UhReP81D1s8O+pQ8lYSaDNP2wtMA+Bokrbku+3CzlK
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E30C521850
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 17:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556040241;
+        bh=iYPrKA+CLfE+81yGX8HKug1p2zjXsokfBC4B5o7cWfc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XXy3hiAAkeIWF29U1MFFQT+Kf4podYbKv3dMvIzY5Tn4Rc0LkcSl3npDijWPdNkrA
+         x0splrtWA44skJGul3zEoJT7Nu/OBFWC6o8q2h2iKEfHpvnEu3BNedVoNqyQySFE+2
+         RfGOFajxsstuT3bSmQJ6g2DtIjvgu9ek+2hoKj9Q=
+Received: by mail-wm1-f42.google.com with SMTP id o25so1059095wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 10:24:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAU1oIGcUgx9S4pbYlod7TvQmMvkgg0xkyPZGGUe8QcnfYVDjz3s
+        lrgyqSfvv1nkokh4LyH/UOT79nz9uY6lnqhzXaKNVA==
+X-Google-Smtp-Source: APXvYqwGdQ9MUfdYBNY6hjUK/BccVGSK5ThFMU5wsMOaU6iBhCW5Mb4JaXwnZIEfhA6w9kGN5hNCCNKBSEyjvu3D2Sc=
+X-Received: by 2002:a1c:e188:: with SMTP id y130mr3031759wmg.83.1556040239484;
+ Tue, 23 Apr 2019 10:23:59 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a24:9197:: with SMTP id i145mr2970973ite.117.1556040240602;
- Tue, 23 Apr 2019 10:24:00 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 10:24:00 -0700
-In-Reply-To: <Pine.LNX.4.44L0.1904231240270.1461-100000@iolanthe.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cc2582058735d960@google.com>
-Subject: Re: general protection fault in __dev_printk
-From:   syzbot <syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, dvyukov@google.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, rafael@kernel.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190423065706.15430-1-namit@vmware.com> <CALCETrUohp2rMr9EcoAYm2M=Ktu4Bg2sPfUWMy5JqM-GXsDOBQ@mail.gmail.com>
+ <44A66873-0834-4794-81A5-3B2131314AA4@vmware.com>
+In-Reply-To: <44A66873-0834-4794-81A5-3B2131314AA4@vmware.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 23 Apr 2019 10:23:47 -0700
+X-Gmail-Original-Message-ID: <CALCETrXLjL4vMwQP1tweWvk_+dBvZFdE85ckt8TZSVw2XyW_yQ@mail.gmail.com>
+Message-ID: <CALCETrXLjL4vMwQP1tweWvk_+dBvZFdE85ckt8TZSVw2XyW_yQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/mm/tlb: Remove flush_tlb_info from the stack
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Apr 23, 2019 at 9:56 AM Nadav Amit <namit@vmware.com> wrote:
+>
+> > On Apr 23, 2019, at 9:50 AM, Andy Lutomirski <luto@kernel.org> wrote:
+> >
+> > On Tue, Apr 23, 2019 at 12:12 AM Nadav Amit <namit@vmware.com> wrote:
+>https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=3Dx8=
+6/fixes >> Remove flush_tlb_info variables from the stack. This allows to a=
+lign
+> >> flush_tlb_info to cache-line and avoid potentially unnecessary cache
+> >> line movements. It also allows to have a fixed virtual-to-physical
+> >> translation of the variables, which reduces TLB misses.
+> >>
+> >> Use per-CPU struct for flush_tlb_mm_range() and
+> >> flush_tlb_kernel_range(). Add debug assertions to ensure there are
+> >> no nested TLB flushes that might overwrite the per-CPU data. For
+> >> arch_tlbbatch_flush(), use a const struct.
+> >>
+> >> Results when running a microbenchmarks that performs 10^6 MADV_DONTEED
+> >> operations and touching a page, in which 3 additional threads run a
+> >> busy-wait loop (5 runs):
+> >
+> > Can you add a memset(,,,. 0, sizeof(struct flush_tlb_info)) everywhere
+> > you grab it?  Or, even better, perhaps do something like:
+> >
+> > static inline struct flush_tlb_info *get_flush_tlb_info(void)
+> > {
+> >  /* check reentrancy, make sure that we use smp_processor_id() or
+> > otherwise assert that we're bound to a single CPU. */
+> >  struct flush_tlb_info *ptr =3D this_cpu_ptr(...);
+> >  memset(ptr, 0, sizeof(*ptr));
+> >  return ptr;
+> > }
+> >
+> > static inline void put_flush_tlb_info(void)
+> > {
+> > /* finish checking reentrancy. */
+> > }
+>
+> I=E2=80=99ll check if the compiler is smart enough to avoid redundant ass=
+ignments,
+> and if it is not, I=E2=80=99ll just give all the struct arguments to
+> get_flush_tlb_info() instead of memset() if you don=E2=80=99t mind.
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+Sounds good.
 
-Reported-and-tested-by:  
-syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+>
+> I also want to give a try for parallelizing the remote and local
+> invocations, which really annoys me every time I look at the code.
 
-Tested on:
-
-commit:         d34f9519 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=13448547200000
-
-Note: testing is done by a robot and is best-effort only.
+Yes please!
