@@ -2,74 +2,189 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3072DC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6159C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A2720811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D77D20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbE0ovKO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfDWQGC (ORCPT
+        id S1728598AbfDWQGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:06:02 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:45715 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbfDWQGB (ORCPT
+        Tue, 23 Apr 2019 12:06:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43746 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfDWQGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:06:01 -0400
-Received: by mail-io1-f70.google.com with SMTP id j25so7329608ioj.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:06:01 -0700 (PDT)
+        Tue, 23 Apr 2019 12:06:14 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z9so7824699pgu.10;
+        Tue, 23 Apr 2019 09:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=/08y2m3gGBdkdTWiOB0hDrv+GCpmViZ3xqDkyKBOonQ=;
+        b=rbE0ovKOEPUtZiXT8GKfWp68IRxrFBVu65y+r2ufpuXIWvjTzrze+EDGFNV3DY2eB2
+         KB6TOfoh85x3n5Dv4dTj/1PRR3KYbHevdc0MnjhXOhB/1rgFGGhKVCZZAVorq6XVZIWS
+         mdGFn96aVkkyeiqJLZRi6WoAqNLqckIVLIy0FuhMR4SxRtaRfTgOSRH5jOZKx9apkYi6
+         opuzIhYcgQhOrKKgUsiG9C7WZZZOcg/4KWX8R1J96u9rAoo3lV0UzgOlGseSTcjchju5
+         YQ+yJKztGj3uQJwleWj+4SdXxNS8ANqJKtqLgknAQeMh9WXKbf7WtwmCCquVfI5lM1GT
+         HqxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=oQ+5RDeXMVUx96sriKP1rnJUCvzHQET4JfCD0yTqnK4=;
-        b=f8Y2v4OlMhA8awV2zdhkWE25qVRsuti/ktws9gr9ZZWhw6yl8URY2fLdKP7IMf93pY
-         4lqbSRQ77cg2j7mdPqHaiQh1pux2L+133rwTbm7xYbR1OPZS0/j5zp98nhSQH7rIow3J
-         VHxZF4DYwm15XefM8mVkkDRxI9QjsCghcBhBfO+tldIJAR6uj32BG07QLOjdx1Vn2zxu
-         nAmS2OumRXVC7XTRzanwOxwcerSBlnYtyru8XsHexIfQUgW8Qaj71feSNZG/+o/GFmBq
-         W/JP3KCudqy2K4VSEFeqaQ0ENiOGQCtAjMFKc/XFtG8181f3ku5yRJDycQpLcaEQPr5M
-         2hTA==
-X-Gm-Message-State: APjAAAWhQQum6p18IA2kq8HK3xvUCfQU+KmIrHmGlC7XghTER+L+0286
-        xgLiEaD6GqyrGCt2F53LVOENDavj6o+TVENlGnDTS6OkST+Y
-X-Google-Smtp-Source: APXvYqyO1a8WQjH8I/ukNixhpBGC4KoWjNMgCAiNTPMHTKh/n7na1JXv/Ne2ae0IIThU+LyHskWfggdNwLOlse9EQTS9vIlh+E4o
-MIME-Version: 1.0
-X-Received: by 2002:a05:6602:9:: with SMTP id b9mr10562226ioa.133.1556035560840;
- Tue, 23 Apr 2019 09:06:00 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 09:06:00 -0700
-In-Reply-To: <Pine.LNX.4.44L0.1904231126500.1461-100000@iolanthe.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dca2f3058734c255@google.com>
-Subject: Re: general protection fault in __dev_printk
-From:   syzbot <syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, dvyukov@google.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, rafael@kernel.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=/08y2m3gGBdkdTWiOB0hDrv+GCpmViZ3xqDkyKBOonQ=;
+        b=B8/Qy2SkOujc88jbt1VcPYhfhaOEhAzJR1e5btOyM8pBs22OIIpp1a6Dy9HkqEU3d0
+         d+GnNjhwQKjvpnHUHpGoL3Sm/qKcr2Lhs1OQw6BkVAYY9+Q/o+gb0e3C+GlSLFwj+weh
+         IVy+2SMWAdBZZPDSv9mhOpFR/Of/e7LixWw1TYyQbW+dMRFZKS9ZyaUEBCnuQN6IZHgh
+         Q8NDtJUOdt3fVpo0taTOlVydmx0+3+bKQ9mtSCEyIt4W0Oywk5gPB4LsMFRuN/e8ZAG3
+         CYIPMJx1QGRgvOfVczBNGSN48QDsEBoieS8KbgjXx0NuIMRYK/4BSvAJ3r/6mSgrl057
+         4cEg==
+X-Gm-Message-State: APjAAAV/W4FfHsfABfcp1bc6RIXCTfqmSEK8B4kgWE879KpeZQ/7BFQR
+        VLGtcZ0IhRg3ngPCBoi+HYQ=
+X-Google-Smtp-Source: APXvYqwvCGErpG52qlMI1HiREj+WXP6/uK+sGhaj66OQ1C0xFHt+NaZMg3ehEw8lAab5pmI1HtO1ZA==
+X-Received: by 2002:a62:e412:: with SMTP id r18mr27779355pfh.207.1556035573253;
+        Tue, 23 Apr 2019 09:06:13 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id e193sm28258557pgc.53.2019.04.23.09.06.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 09:06:12 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com
+Cc:     lee.jones@linaro.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org,
+        david.brown@linaro.org, hdegoede@redhat.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v4 1/2] HID: quirks: Refactor ELAN 400 and 401 handling
+Date:   Tue, 23 Apr 2019 09:06:05 -0700
+Message-Id: <20190423160605.9970-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
+References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+There needs to be coordination between hid-quirks and the elan_i2c driver
+about which devices are handled by what drivers.  Currently, both use
+whitelists, which results in valid devices being unhandled by default,
+when they should not be rejected by hid-quirks.  This is quickly becoming
+an issue.
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+Since elan_i2c has a maintained whitelist of what devices it will handle,
+use that to implement a blacklist in hid-quirks so that only the devices
+that need to be handled by elan_i2c get rejected by hid-quirks, and
+everything else is handled by default.  The downside is the whitelist and
+blacklist need to be kept in sync.
 
-Reported-and-tested-by:  
-syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/hid/hid-quirks.c            | 64 ++++++++++++++++++++++++-----
+ drivers/input/mouse/elan_i2c_core.c |  4 ++
+ 2 files changed, 58 insertions(+), 10 deletions(-)
 
-Tested on:
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 77ffba48cc73..656485e08eb7 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -987,17 +987,61 @@ bool hid_ignore(struct hid_device *hdev)
+ 		break;
+ 	case USB_VENDOR_ID_ELAN:
+ 		/*
+-		 * Many Elan devices have a product id of 0x0401 and are handled
+-		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
+-		 * is not (and cannot be) handled by that driver ->
+-		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
++		 * Blacklist of everything that gets handled by the elan_i2c
++		 * input driver.  This should be kept in sync with the whitelist
++		 * that exists in that driver.  This avoids disabling valid
++		 * touchpads and other ELAN devices.
+ 		 */
+-		if (hdev->product == 0x0401 &&
+-		    strncmp(hdev->name, "ELAN0800", 8) != 0)
+-			return true;
+-		/* Same with product id 0x0400 */
+-		if (hdev->product == 0x0400 &&
+-		    strncmp(hdev->name, "QTEC0001", 8) != 0)
++		if ((hdev->product == 0x0401 || hdev->product == 0x0400) &&
++		   (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0100", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0600", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0601", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0602", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0603", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0604", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0605", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0606", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0607", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0608", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0609", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN060B", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN060C", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN060F", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0610", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0611", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0612", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0613", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0614", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0615", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0616", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0617", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0618", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0619", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN061A", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN061B", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN061C", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN061D", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN061E", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN061F", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0620", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0621", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0622", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0623", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0624", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0625", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0626", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0627", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0628", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0629", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN062A", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN062B", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN062C", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN062D", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0631", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN0632", 8) == 0 ||
++		    strncmp(hdev->name, "ELAN1000", 8) == 0 ||
++		    strncmp(hdev->name, "elan,ekth3000", 13) == 0))
+ 			return true;
+ 		break;
+ 	}
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index f9525d6f0bfe..3ded19528cd4 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -1332,6 +1332,10 @@ static const struct i2c_device_id elan_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, elan_id);
+ 
++/*
++ * when these whtielists get updated, the corresponding blacklist in hid-quirks
++ * needs to be updated to match.
++ */
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id elan_acpi_id[] = {
+ 	{ "ELAN0000", 0 },
+-- 
+2.17.1
 
-commit:         d34f9519 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15909780a00000
-
-Note: testing is done by a robot and is best-effort only.
