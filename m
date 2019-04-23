@@ -6,92 +6,89 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A19C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EA8C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E486C217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA72C206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:45:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JHyw5ueF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W/2DxeE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfDWKlP (ORCPT
+        id S1727300AbfDWKpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:41:15 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42785 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbfDWKlO (ORCPT
+        Tue, 23 Apr 2019 06:45:09 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33226 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726402AbfDWKpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:41:14 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x13so2672608ljd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 03:41:12 -0700 (PDT)
+        Tue, 23 Apr 2019 06:45:08 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j11so11358933lfm.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 03:45:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FIqaacCUVnQeT2k9cFYikNnIy+o4Tn2LxvLpusUvSj8=;
-        b=JHyw5ueFWwjikJompbD46jbqdaKvBCacUe4TJaBZ4+Im+KK0Z4OKZKXyVJNUhv6g19
-         eqZeaZhcTuzQ7+Q7O6Ok12qwnCeAhQN3tPcffCwab02kabQr/AV+lDmau8HMzh+tXX27
-         /zLb/nzKhK6368PmheDafuwIe3xx531g0sAZSS0cciDNAGVLW85tqWPDMB0tXX1eZ2Qr
-         poKrdAuJwSoBVy7ca80WYGXDsxXs3aNDz8kIc4W7ueQPlNg5GjeFoTLI8IdKB6CQxKk1
-         SbEBjifUyvoGnd54ehiBh9GogiUn2NLC5wQi1VfLVeS8jx+qyLdicvbK2G0/g811kYuj
-         l/Ow==
+        bh=CE838+i812Sf/vAq30btTvuZmas6cHKmmFF4qebP9bc=;
+        b=W/2DxeE1BL23Pho5KrJ3TIBxO+Kwz+0b+GFzUBmbY+h3DG/1E6dpqXB9gsdlj/lokF
+         k2qwUSxBv4DI05LS17j7mT6IWCCsC3sEynBwHAHGlfGBNXrhtM+vpE3Z03ZXNXRpMHwm
+         gzqcu1buuZJGu2iJC616mw7VBN44ltGEsD6/bUkfIN91iFkdeH+zpW4Al7fQmTyKfySD
+         12nXpn9hucjJoD7NkejtsR9ZLk6J/pccwtP569MetEhjqtmObD83l3RR1ClLK0CtoGjf
+         zd9lx+LUVTXuhJedxjC4LvE4uwYjUKhaaZGRzKqW2DA1ywCAJRi5uyuCiFpt42jqQRh5
+         yDtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FIqaacCUVnQeT2k9cFYikNnIy+o4Tn2LxvLpusUvSj8=;
-        b=Zn2w78LPovQVAzxdmg4VHCVyTo+8I6rVsGDAYRPAjtCxYKXylf2XMx8YvuKWCyFS7K
-         KyOG8rd3ahzDw7qGDoSw5avmLfww+9xQ7PTV1OcBazm951OhfrI7RoOMMOY9HE8+nyZD
-         R1Z4y9b1hgIpplpPYV1NJozcz6WNzNCD+zGhLnhTIHqn4uf4SwFYgn/BbAEq56tjP753
-         dsGpYNs37Lk0ArZFE1JDXeAFHqOWHkCgkfm1trblm4z+9rEr99n/zDfdjcxmvVhBrrFV
-         dTtH4uOkFsNapqrJUiJoDug7YXBhne964RBx3PG5nOeEXrM5Jc8G6/A+MxkjfBtrR/Ns
-         Y/Fg==
-X-Gm-Message-State: APjAAAUyXCKN52Ezja/xkJ1WLDKfxJZcGYn/iN0BW0749qxt8LpzTXq5
-        4065GCGr8jk4sKQebnVYzqwJb4sgCCHovqHA5/Ywig==
-X-Google-Smtp-Source: APXvYqwLgkldZAvlQAYqm8FmkHxfQSCmOWqL+0ElQEHVQQIEiW0bjYcDlxr19xRpveVDHcvGG0Gw0JY8jBXjF0sNvPI=
-X-Received: by 2002:a2e:5056:: with SMTP id v22mr3380905ljd.153.1556016072050;
- Tue, 23 Apr 2019 03:41:12 -0700 (PDT)
+        bh=CE838+i812Sf/vAq30btTvuZmas6cHKmmFF4qebP9bc=;
+        b=mm8/qfxSsbjra1cxUCODAQoB5Gc0+tWgRIXX5EKp2ooalt4H66yNjjheGSx08v6G5E
+         3krqtjBZvcnnNio4Y5OHwmYuZC1x1MuDEJ25B18IQB4KUdyZ7GV19COTlHq4QP6+vCSu
+         bERDCFbtikq1tqwpQJLlxF3/applge9f2/lQwsvIgCwvkdUMMvKFBV7UdC75NwIkzWI5
+         q7ExarJ33EtM0Bh67/FiJ8brhNGjKwvMOobGvjbILIXbwqxeT33oC5KbDXkWLOGveUqw
+         lNujU+BxtlfO5XxHEhm0ZVjj8UIU6EJTZsuWdMMhJ02hzI1M9+jfXxf7g+1ExnaOP2uA
+         Ug5g==
+X-Gm-Message-State: APjAAAXGKqcAqXrRmwpm89gx9u8FFZZs9oiQ71Jj3ZSi2lQCkDFhYUQL
+        TSbZU+TaD+n91c76+V+vh6ewiBTSyu+XMGowzxzYZQ==
+X-Google-Smtp-Source: APXvYqwpaeE+U6bdJNbQ2uj9zsv+p4JyD/CzugJ3IIWgIlAjcCvx0AfSLecds2blhbT8FxhZ02R10mMAz1uC4YsnQco=
+X-Received: by 2002:a19:f001:: with SMTP id p1mr14345018lfc.27.1556016306794;
+ Tue, 23 Apr 2019 03:45:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190415192734.935387-1-arnd@arndb.de> <20190415192734.935387-3-arnd@arndb.de>
-In-Reply-To: <20190415192734.935387-3-arnd@arndb.de>
+References: <20190415202501.941196-1-arnd@arndb.de> <20190415202501.941196-4-arnd@arndb.de>
+In-Reply-To: <20190415202501.941196-4-arnd@arndb.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 23 Apr 2019 12:41:00 +0200
-Message-ID: <CACRpkdaVYZf5y3gn-DFsDCutovtw+3-qyo7oKw3UABdfXDRYsw@mail.gmail.com>
-Subject: Re: [PATCH 3/4] ARM: ep93xx: move pinctrl interfaces into include/linux/soc
+Date:   Tue, 23 Apr 2019 12:44:55 +0200
+Message-ID: <CACRpkdbU3=Jpt=41rfTV4OF6DU8kDLzjTJXqHcifA3A4B7XyKw@mail.gmail.com>
+Subject: Re: [PATCH 4/6] ARM: ks8695: move gpio code back into platform
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
+Cc:     Greg Ungerer <gerg@uclinux.org>, arm-soc <arm@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-ide@vger.kernel.org,
-        Linux Input <linux-input@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 9:30 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Mon, Apr 15, 2019 at 10:27 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-> ep93xx does not have a proper pinctrl driver, but does things
-> ad-hoc through mach/platform.h, which is also used for setting
-> up the boards.
->
-> To avoid using mach/*.h headers completely, let's move the interfaces
-> into include/linux/soc/. This is far from great, but gets the job
-> done here, without the need for a proper pinctrl driver.
+> Properly splitting this out into a portable driver is
+> hard, as the gpio code tightly interacts with the irqchip
+> code. Give up and move it back to its original location,
+> but make the headers private in the process.
 >
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
+I bet a million to one it "just" needs to be reworked into a hierarchical
+interrupt controller with the GPIO at the level below the irqchip adding
+level semantics.
+
+I did provide an example of how to do this in the ixp4xx patchset, but
+if you don't have the hardware at hand I would not recommend trying
+it.
+
+With the goal of getting a better build for ARM32 maintenance I
+think this is a lesser evil, so:
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
