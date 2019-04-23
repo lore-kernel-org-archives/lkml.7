@@ -2,161 +2,167 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E254C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E59C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFE9218C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111A821773
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556052237;
-	bh=iZcjfKLoyfuYnmOUWC4K0MAFDsL7Zw7tp4jJqBMS+e8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yo2wp99vfDZrq5KTQBWA2vhtIgFw9BAfNpqrl97UGLofKpc7y+SqDqMNyWxiuZOO1
-	 HiHwPxqNxNMeexEspvZWxwjJuzOnYZLcf8Mr1AZqj3YFKNpEVHf4NQswp90Ni1tPzm
-	 2/qdRbEs8zu3Ahs2UT0Z6B9Ek6FyZ555hWiQ7BK4=
+	s=default; t=1556052300;
+	bh=eOePmfOV30zr6hMm1Dvg8PIR1FlqEaBUD79Mftfsyvk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UQ15SSAQMXhxt5/mH2sFNSa+tbMLGSl4vn7EvrC8MJJkp/cOTs76aNtzd+WfNiK64
+	 85Jpk4FaD/J+G+BFt6ucT+WYoi7YyGTUxG/5dhw+j2dPxsDzYhYgJHFw02AMtEfnNQ
+	 QyIA6nUE6gG55fB0vHnzunUCKqy2Co0DN8nix7lE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfDWUn4 (ORCPT
+        id S1726088AbfDWUo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:43:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbfDWUn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:43:56 -0400
-Received: from localhost (unknown [92.54.175.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5C5E217D9;
-        Tue, 23 Apr 2019 20:43:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556052235;
-        bh=iZcjfKLoyfuYnmOUWC4K0MAFDsL7Zw7tp4jJqBMS+e8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WTUg3V9wEcvbaRKi+qIskCk7Bmerv6E3JfIL2RPMgxsq/XP1rfiQmDLVfFt7pdfmW
-         FSl8DGcClxygS87yEx0PTfCwV5smLeNYFxx5npdunXMbwADMQYGXgpdBOFNJ3qdZB5
-         K4ELVmdAn3EO5Q9Hf+Wkdym5QO5EbChHLoXIDqyY=
-Date:   Tue, 23 Apr 2019 21:43:51 +0100
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 1/2] f2fs: allow unfixed f2fs_checkpoint.checksum_offset
-Message-ID: <20190423204351.GA87257@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190422093353.61014-1-yuchao0@huawei.com>
+        Tue, 23 Apr 2019 16:44:59 -0400
+Received: from casper.infradead.org ([85.118.1.10]:35720 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfDWUo7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 16:44:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0sN93tP7HgHVmto5WRTmJqavSp1wRhqDaDVwYomO2HU=; b=OPZYtZPc/0bHOPuKhS/JP6SsK4
+        Z3TIF0OzuN93M4tro1dMfONRYjU6uh07Yq8Z17Asrp2pTKrpXj9oM7N6n2ktPZT+5D3AyaO9zluUV
+        QVtgNI+ikpOBxOlZEkI2mokyTdZWuKdAY9Cc/FC4bE/Wa3S59zJ3fiZE+Pi6D1rwN+nabjimrw8Ek
+        APWMt0ycI2DiZDr+SvA8+JUUcCZ07GvEl8M89sU83pqAPT4pFuRT3OsNbcVXKd2HvyTVbMrjm3cif
+        Gd7xYMGcEvOIefA6iQ36qkkbgOp4gCAnqeaDl0kRycUld+hp0uFzV6RLwRFv81McvMsSMUVs7PQUf
+        +yeiGa1g==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJ2Hf-0002b1-5e; Tue, 23 Apr 2019 20:44:55 +0000
+Date:   Tue, 23 Apr 2019 17:44:49 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 04/63] Documentation: ACPI: move osi.txt to
+ firmware-guide/acpi and convert to reST
+Message-ID: <20190423174449.5e2e0329@coco.lan>
+In-Reply-To: <20190423162932.21428-5-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-5-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190422093353.61014-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/22, Chao Yu wrote:
-> Previously, f2fs_checkpoint.checksum_offset points fixed position of
-> f2fs_checkpoint structure:
+Em Wed, 24 Apr 2019 00:28:33 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
+
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
 > 
-> "#define CP_CHKSUM_OFFSET	4092"
-> 
-> It is unnecessary, and it breaks the consecutiveness of nat and sit
-> bitmap stored across checkpoint park block and payload blocks.
-> 
-> This patch allows f2fs to handle unfixed .checksum_offset.
-> 
-> In addition, for the case checksum value is stored in the middle of
-> checkpoint park, calculating checksum value with superposition method
-> like we did for inode_checksum.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > ---
->  fs/f2fs/checkpoint.c    | 27 +++++++++++++++++++++------
->  include/linux/f2fs_fs.h |  4 ++++
->  2 files changed, 25 insertions(+), 6 deletions(-)
+>  Documentation/firmware-guide/acpi/index.rst       |  1 +
+>  .../{acpi/osi.txt => firmware-guide/acpi/osi.rst} | 15 +++++++++------
+>  2 files changed, 10 insertions(+), 6 deletions(-)
+>  rename Documentation/{acpi/osi.txt => firmware-guide/acpi/osi.rst} (97%)
 > 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index 441814607b13..a25556aef8cc 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -794,13 +794,27 @@ static void write_orphan_inodes(struct f2fs_sb_info *sbi, block_t start_blk)
->  	}
->  }
+> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+> index 99677c73f1fb..868bd25a3398 100644
+> --- a/Documentation/firmware-guide/acpi/index.rst
+> +++ b/Documentation/firmware-guide/acpi/index.rst
+> @@ -9,3 +9,4 @@ ACPI Support
 >  
-> +static __u32 f2fs_checkpoint_chksum(struct f2fs_sb_info *sbi,
-> +						struct f2fs_checkpoint *ckpt)
-> +{
-> +	unsigned int chksum_ofs = le32_to_cpu(ckpt->checksum_offset);
-> +	__u32 chksum;
+>     namespace
+>     enumeration
+> +   osi
+> diff --git a/Documentation/acpi/osi.txt b/Documentation/firmware-guide/acpi/osi.rst
+> similarity index 97%
+> rename from Documentation/acpi/osi.txt
+> rename to Documentation/firmware-guide/acpi/osi.rst
+> index 50cde0ceb9b0..29e9ef79ebc0 100644
+> --- a/Documentation/acpi/osi.txt
+> +++ b/Documentation/firmware-guide/acpi/osi.rst
+> @@ -1,5 +1,8 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +	chksum = f2fs_crc32(sbi, ckpt, chksum_ofs);
-> +	if (chksum_ofs < CP_CHKSUM_OFFSET) {
-> +		chksum_ofs += sizeof(chksum);
-> +		chksum = f2fs_chksum(sbi, chksum, (__u8 *)ckpt + chksum_ofs,
-> +						F2FS_BLKSIZE - chksum_ofs);
+> +==========================
+>  ACPI _OSI and _REV methods
+> ---------------------------
+> +==========================
 
-Do we need to cover __cp_payload(sbi) * blksize - chksum_ofs?
+You could probably do just the above, but changing the title
+markups on the other files has the advantage of using the
+same standard on all acpi files.
 
-> +	}
-> +	return chksum;
-> +}
-> +
->  static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
->  		struct f2fs_checkpoint **cp_block, struct page **cp_page,
->  		unsigned long long *version)
->  {
-> -	unsigned long blk_size = sbi->blocksize;
->  	size_t crc_offset = 0;
-> -	__u32 crc = 0;
-> +	__u32 crc;
+Either way, just looking at the conversion itself:
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+
 >  
->  	*cp_page = f2fs_get_meta_page(sbi, cp_addr);
->  	if (IS_ERR(*cp_page))
-> @@ -809,15 +823,16 @@ static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
->  	*cp_block = (struct f2fs_checkpoint *)page_address(*cp_page);
+>  An ACPI BIOS can use the "Operating System Interfaces" method (_OSI)
+>  to find out what the operating system supports. Eg. If BIOS
+> @@ -14,7 +17,7 @@ This document explains how and why the BIOS and Linux should use these methods.
+>  It also explains how and why they are widely misused.
 >  
->  	crc_offset = le32_to_cpu((*cp_block)->checksum_offset);
-> -	if (crc_offset > (blk_size - sizeof(__le32))) {
-> +	if (crc_offset < CP_MIN_CHKSUM_OFFSET ||
-> +			crc_offset > CP_CHKSUM_OFFSET) {
->  		f2fs_put_page(*cp_page, 1);
->  		f2fs_msg(sbi->sb, KERN_WARNING,
->  			"invalid crc_offset: %zu", crc_offset);
->  		return -EINVAL;
->  	}
+>  How to use _OSI
+> ----------------
+> +===============
 >  
-> -	crc = cur_cp_crc(*cp_block);
-> -	if (!f2fs_crc_valid(sbi, crc, *cp_block, crc_offset)) {
-> +	crc = f2fs_checkpoint_chksum(sbi, *cp_block);
-> +	if (crc != cur_cp_crc(*cp_block)) {
->  		f2fs_put_page(*cp_page, 1);
->  		f2fs_msg(sbi->sb, KERN_WARNING, "invalid crc value");
->  		return -EINVAL;
-> @@ -1425,7 +1440,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  	get_sit_bitmap(sbi, __bitmap_ptr(sbi, SIT_BITMAP));
->  	get_nat_bitmap(sbi, __bitmap_ptr(sbi, NAT_BITMAP));
+>  Linux runs on two groups of machines -- those that are tested by the OEM
+>  to be compatible with Linux, and those that were never tested with Linux,
+> @@ -62,7 +65,7 @@ the string when that support is added to the kernel.
+>  That was easy.  Read on, to find out how to do it wrong.
 >  
-> -	crc32 = f2fs_crc32(sbi, ckpt, le32_to_cpu(ckpt->checksum_offset));
-> +	crc32 = f2fs_checkpoint_chksum(sbi, ckpt);
->  	*((__le32 *)((unsigned char *)ckpt +
->  				le32_to_cpu(ckpt->checksum_offset)))
->  				= cpu_to_le32(crc32);
-> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-> index 55da9abed023..65559900d4d7 100644
-> --- a/include/linux/f2fs_fs.h
-> +++ b/include/linux/f2fs_fs.h
-> @@ -164,6 +164,10 @@ struct f2fs_checkpoint {
->  	unsigned char sit_nat_version_bitmap[1];
->  } __packed;
+>  Before _OSI, there was _OS
+> ---------------------------
+> +==========================
 >  
-> +#define CP_CHKSUM_OFFSET	4092	/* default chksum offset in checkpoint */
-> +#define CP_MIN_CHKSUM_OFFSET						\
-> +	(offsetof(struct f2fs_checkpoint, sit_nat_version_bitmap))
-> +
->  /*
->   * For orphan inode management
->   */
-> -- 
-> 2.18.0.rc1
+>  ACPI 1.0 specified "_OS" as an
+>  "object that evaluates to a string that identifies the operating system."
+> @@ -96,7 +99,7 @@ That is the *only* viable strategy, as that is what modern Windows does,
+>  and so doing otherwise could steer the BIOS down an untested path.
+>  
+>  _OSI is born, and immediately misused
+> ---------------------------------------
+> +=====================================
+>  
+>  With _OSI, the *BIOS* provides the string describing an interface,
+>  and asks the OS: "YES/NO, are you compatible with this interface?"
+> @@ -144,7 +147,7 @@ catastrophic failure resulting from the BIOS taking paths that
+>  were never validated under *any* OS.
+>  
+>  Do not use _REV
+> ----------------
+> +===============
+>  
+>  Since _OSI("Linux") went away, some BIOS writers used _REV
+>  to support Linux and Windows differences in the same BIOS.
+> @@ -164,7 +167,7 @@ from mid-2015 onward.  The ACPI specification will also be updated
+>  to reflect that _REV is deprecated, and always returns 2.
+>  
+>  Apple Mac and _OSI("Darwin")
+> -----------------------------
+> +============================
+>  
+>  On Apple's Mac platforms, the ACPI BIOS invokes _OSI("Darwin")
+>  to determine if the machine is running Apple OSX.
+
+
+
+Thanks,
+Mauro
