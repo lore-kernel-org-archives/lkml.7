@@ -2,133 +2,145 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDEAC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890C0C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAC7A218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F5E218D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbfDWRG4 (ORCPT
+        id S1729412AbfDWRH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 13:06:56 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:54707 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729184AbfDWRGz (ORCPT
+        Tue, 23 Apr 2019 13:07:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34054 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728832AbfDWRHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:06:55 -0400
-X-Originating-IP: 93.29.109.196
-Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B8EE3C0009;
-        Tue, 23 Apr 2019 17:06:52 +0000 (UTC)
-Message-ID: <41c94d93321b10ee9173e0b5bce9bc37a1ea7532.camel@bootlin.com>
-Subject: Re: [linux-sunxi] [PATCH] drm/sun4i: Unbind components before
- releasing DRM and mem at master unbind
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date:   Tue, 23 Apr 2019 19:06:52 +0200
-In-Reply-To: <1fcd1b7b1b52e67e4f0a28fca567bf3243fe0ada.camel@bootlin.com>
-References: <20190419080235.24396-1-paul.kocialkowski@bootlin.com>
-         <CAGb2v64iFwqPJ-me2KOWUjGuObg2brjRNvD_pkPw98Y60hnwQg@mail.gmail.com>
-         <1fcd1b7b1b52e67e4f0a28fca567bf3243fe0ada.camel@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+        Tue, 23 Apr 2019 13:07:55 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NH47C5089734
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:07:54 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s240rrhyg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:07:54 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.vnet.ibm.com>;
+        Tue, 23 Apr 2019 18:07:52 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 18:07:48 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NH7lCd8126550
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 17:07:47 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72F404204F;
+        Tue, 23 Apr 2019 17:07:47 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A39DA42041;
+        Tue, 23 Apr 2019 17:07:46 +0000 (GMT)
+Received: from [9.145.7.116] (unknown [9.145.7.116])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 17:07:46 +0000 (GMT)
+Subject: Re: [PATCH] x86/mpx: fix recursive munmap() corruption
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, rguenther@suse.de,
+        mhocko@suse.com, vbabka@suse.cz, luto@amacapital.net,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, stable@vger.kernel.org
+References: <20190401141549.3F4721FE@viggo.jf.intel.com>
+ <alpine.DEB.2.21.1904191248090.3174@nanos.tec.linutronix.de>
+ <87d0lht1c0.fsf@concordia.ellerman.id.au>
+ <6718ede2-1fcb-1a8f-a116-250eef6416c7@linux.vnet.ibm.com>
+ <4f43d4d4-832d-37bc-be7f-da0da735bbec@intel.com>
+From:   Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Date:   Tue, 23 Apr 2019 19:07:45 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <4f43d4d4-832d-37bc-be7f-da0da735bbec@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042317-0008-0000-0000-000002DCF296
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042317-0009-0000-0000-000022494472
+Message-Id: <4e1bbb14-e14f-8643-2072-17b4cdef5326@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Le 23/04/2019 à 18:04, Dave Hansen a écrit :
+> On 4/23/19 4:16 AM, Laurent Dufour wrote:
+>> My only concern is the error path.
+>> Calling arch_unmap() before handling any error case means that it will
+>> have to be undo and there is no way to do so.
+> 
+> Is there a practical scenario where munmap() of the VDSO can split a
+> VMA?  If the VDSO is guaranteed to be a single page, it would have to be
+> a scenario where munmap() was called on a range that included the VDSO
+> *and* other VMA that we failed to split.
+> 
+> But, the scenario would have to be that someone tried to munmap() the
+> VDSO and something adjacent, the munmap() failed, and they kept on using
+> the VDSO and expected the special signal and perf behavior to be maintained.
 
-Le vendredi 19 avril 2019 à 19:10 +0200, Paul Kocialkowski a écrit :
-> Hi,
-> 
-> On Fri, 2019-04-19 at 09:02 -0700, Chen-Yu Tsai wrote:
-> > On Fri, Apr 19, 2019 at 1:03 AM Paul Kocialkowski
-> > <paul.kocialkowski@bootlin.com> wrote:
-> > > Our components may still be using the DRM device driver (if only to
-> > > access our driver's private data), so make sure to unbind them before
-> > > the final drm_dev_put.
-> > > 
-> > > Also release our resserved memory adter unbind to match reverse
-> > 
-> > typos...
-> 
-> I'll probably spin up a v2 to fix them, they annoy me as well.
-> 
-> > > creation order.
-> > > 
-> > > Fixes: f5a9ed867c83 ("drm/sun4i: Fix component unbinding and component master deletion")
-> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > ---
-> > >  drivers/gpu/drm/sun4i/sun4i_drv.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> > > index 843b86661833..29258b404e54 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-> > > +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> > > @@ -149,10 +149,11 @@ static void sun4i_drv_unbind(struct device *dev)
-> > >         drm_kms_helper_poll_fini(drm);
-> > >         drm_atomic_helper_shutdown(drm);
-> > >         drm_mode_config_cleanup(drm);
-> > > -       of_reserved_mem_device_release(dev);
-> > > -       drm_dev_put(drm);
-> > > 
-> > >         component_unbind_all(dev, NULL);
-> > > +       of_reserved_mem_device_release(dev);
-> > 
-> > You should probably mention this change in the commit log as well.
-> 
-> That's what I meant with the line that has typos. Maybe I should make
-> it slightly more explicit as:
-> 
-> Also released our reserved memory after component unbind instead of
-> before to match reverse creation order.
-> 
-> What do you think?
-> 
-> > Otherwise,
-> > 
-> > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-> 
-> Thanks for the review!
+I've to admit that this should not be a common scenario, and unmapping 
+the VDSO is not so common anyway.
 
-Unless you have objections at this point, I'll send out the patch with
-your Reviewed-by soon to get the patch out ASAP.
+> BTW, what keeps the VDSO from merging with an adjacent VMA?  Is it just
+> the vm_ops->close that comes from special_mapping_vmops?
 
-Cheers,
+I'd think so.
 
-Paul
-
-> Cheers,
+>> I don't know what is the rational to move arch_unmap() to the beginning
+>> of __do_munmap() but the error paths must be managed.
 > 
-> Paul
+> It's in the changelog:
 > 
-> > > +
-> > > +       drm_dev_put(drm);
-> > >  }
-> > > 
-> > >  static const struct component_master_ops sun4i_drv_master_ops = {
-> > > --
-> > > 2.21.0
-> > > 
-> > > --
-> > > You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> > > For more options, visit https://groups.google.com/d/optout.
+> 	https://patchwork.kernel.org/patch/10909727/
+> 
+> But, the tl;dr version is: x86 is recursively calling __do_unmap() (via
+> arch_unmap()) in a spot where the internal rbtree data is inconsistent,
+> which causes all kinds of fun.  If we move arch_unmap() to before
+> __do_munmap() does any data structure manipulation, the recursive call
+> doesn't get confused any more.
+
+If only Powerpc is impacted I guess this would be fine but what about 
+the other architectures?
+
+>> There are 2 assumptions here:
+>>   1. 'start' and 'end' are page aligned (this is guaranteed by __do_munmap().
+>>   2. the VDSO is 1 page (this is guaranteed by the union vdso_data_store on powerpc)
+> 
+> Are you sure about #2?  The 'vdso64_pages' variable seems rather
+> unnecessary if the VDSO is only 1 page. ;)
+
+Hum, not so sure now ;)
+I got confused, only the header is one page.
+The test is working as a best effort, and don't cover the case where 
+only few pages inside the VDSO are unmmapped (start > 
+mm->context.vdso_base). This is not what CRIU is doing and so this was 
+enough for CRIU support.
+
+Michael, do you think there is a need to manage all the possibility 
+here, since the only user is CRIU and unmapping the VDSO is not a so 
+good idea for other processes ?
 
