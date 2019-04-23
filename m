@@ -2,236 +2,120 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8AFC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BBEC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8259E218D2
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556053801;
-	bh=sg0arl26xeUKyxgLumfxC03xyPBJ6kvEGQFo0y0CKFo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dJpwrqNjibcTzBpMOyTU+JTqkJtuFBkgOXNzCeeFAyXKGn6STFpShHMWkGdxbSr41
-	 fQRmjwDbi0EaZG133q/wS3XloDMk+ICym0FslpW1Ak5DZ3sZoYAi1/HypEfpSjBcdH
-	 8K6ICTlubijVwheZSkX6ZFBKpuJ0D0092ByeCUU0=
+	by mail.kernel.org (Postfix) with ESMTP id AD517218D2
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 21:11:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JoV0DWkt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfDWVJ7 (ORCPT
+        id S1727487AbfDWVLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 17:09:59 -0400
-Received: from casper.infradead.org ([85.118.1.10]:38646 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfDWVJ7 (ORCPT
+        Tue, 23 Apr 2019 17:11:24 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:38749 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfDWVLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 17:09:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2wCa3nFyIHBkX+W7L08Ddl9/YQMFyOa83nnq8nn7FoI=; b=N2hDZE6qZ5seHNnDs2TmZ6DEwF
-        sapUo2Ma+lbARcWApPNvphi0Kp+5CJ4vZ4obzBQhef/uJTpi7YWjwdZDKYPzLCxyF0y7vTZxxlj4T
-        arPi4FZm1vFa39rVgoYEVK3U53KRUGszkCl18oY8DXYQTkHMdZJQ3K9FD393XK1mDuYPv8j8wAH+S
-        OTRIlrp+do3u+T7UlcsCWUgYXea7GoExQ3u+fyGEyHEOJiuVNgKJ/jqh4Ou2ui3hPc4fZE+vZdU6U
-        C06x/wrfk1xsJJD4X5jcUVCBhaHbpyWcGTX5IEhQtinPda1tvY8qZsMkqidbsWMb5xKIz3F/JH+1l
-        PcbaCB0g==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJ2fq-0003nY-Po; Tue, 23 Apr 2019 21:09:55 +0000
-Date:   Tue, 23 Apr 2019 18:09:48 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 12/63] Documentation: ACPI: move i2c-muxes.txt to
- firmware-guide/acpi and convert to reST
-Message-ID: <20190423180948.326fd3d8@coco.lan>
-In-Reply-To: <20190423162932.21428-13-changbin.du@gmail.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
-        <20190423162932.21428-13-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 23 Apr 2019 17:11:24 -0400
+Received: by mail-qk1-f201.google.com with SMTP id z19so11532622qkj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 14:11:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=eHYZmjesflQdPVGOTGQwO4393GXn5tkz07pTFvSiuzs=;
+        b=JoV0DWktfcvqI23dn2nF/pzJYfmDnrGO6DLOHhfm/g5OBEdGH7oA0Q5TOmf19zZAaj
+         Q60IUoBjPZL39JkzbYjAO7l6GMwxpXnq1wEG8XgusrrYQVYtiA9g6jneFurYicXl+xSC
+         qMS48VdntQhrXMpnnYMv0GMmCfrI3gj0PCPD/kxdao4CZllYceM+0GVfK4esyjY8ef3/
+         FMxMTYl+zc9LYZ/kbIADFqFRmmi83ENVLSsGuTRJvCgmd9EjwqQdy5yaaNy/aLrfnYdQ
+         zSDWWRtFJs9jB0BfTS9KpoESyRcwDiZRmJOj5rvAaboL3Tlzk5CMQompoROIODMjs28W
+         1DEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=eHYZmjesflQdPVGOTGQwO4393GXn5tkz07pTFvSiuzs=;
+        b=mFbshJBNnGpvgZCZM24DKbUM6pMO96QQXaaZRMjNye198gpuvFV4isW0iLRrdj1Vcp
+         97mTyk8l76our7fraDWpDxrqiDPFsYkm3lY0NS4qPCb1f/qPEawOVL70mpRxuZRGRkdH
+         j8IyDnwEDpg029TXnZL5Hvz9ffxhJ+xjdTJJ3ru3gUmtQTBinSA95981BwNMdffPPj3/
+         0tOGLbElo49xmv66VngMeSRQsqWEw5L0/z9QiiF4NobwGLmZVjfYsUm/chgkQE6zHgcx
+         TiWl2S8NdTYnqBa4uBTqzn4dVfsYDN8mGbYwY5BT2EeK+paF0FqWUgadb47Dc/BIzSVb
+         4afA==
+X-Gm-Message-State: APjAAAV6SDa/hAN43suTydUiweVwXAZ3mF913F6PNb9PiKQEQ/5SlEoC
+        VRrWDuF3xbJsE4ZjTEaLe0DvjnQVkW/nSMld7y8=
+X-Google-Smtp-Source: APXvYqwvUVrI5w7+HQ4Voz3Luialg00FkdVOpOuknQ3P85DcnoM1jeEyL7v3WA7N01k1YkXV8bVpSe0gA0rJoBxFp+U=
+X-Received: by 2002:a37:9902:: with SMTP id b2mr10745835qke.239.1556053883187;
+ Tue, 23 Apr 2019 14:11:23 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 14:11:14 -0700
+Message-Id: <20190423211116.261111-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+Subject: [PATCH] powerpc: vdso: drop unnecessary cc-ldoption
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 24 Apr 2019 00:28:41 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+Towards the goal of removing cc-ldoption, it seems that --hash-style=
+was added to binutils 2.17.50.0.2 in 2006. The minimal required version
+of binutils for the kernel according to
+Documentation/process/changes.rst is 2.20.
 
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
+Cc: clang-built-linux@googlegroups.com
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ arch/powerpc/kernel/vdso32/Makefile | 5 ++---
+ arch/powerpc/kernel/vdso64/Makefile | 5 ++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-For the conversion itself:
+diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+index ce199f6e4256..06f54d947057 100644
+--- a/arch/powerpc/kernel/vdso32/Makefile
++++ b/arch/powerpc/kernel/vdso32/Makefile
+@@ -26,9 +26,8 @@ GCOV_PROFILE := n
+ KCOV_INSTRUMENT := n
+ UBSAN_SANITIZE := n
+ 
+-ccflags-y := -shared -fno-common -fno-builtin
+-ccflags-y += -nostdlib -Wl,-soname=linux-vdso32.so.1 \
+-		$(call cc-ldoption, -Wl$(comma)--hash-style=both)
++ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
++	-Wl,-soname=linux-vdso32.so.1 -Wl,--hash-style=both
+ asflags-y := -D__VDSO32__ -s
+ 
+ obj-y += vdso32_wrapper.o
+diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vdso64/Makefile
+index 28e7d112aa2f..32ebb3522ea1 100644
+--- a/arch/powerpc/kernel/vdso64/Makefile
++++ b/arch/powerpc/kernel/vdso64/Makefile
+@@ -12,9 +12,8 @@ GCOV_PROFILE := n
+ KCOV_INSTRUMENT := n
+ UBSAN_SANITIZE := n
+ 
+-ccflags-y := -shared -fno-common -fno-builtin
+-ccflags-y += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
+-		$(call cc-ldoption, -Wl$(comma)--hash-style=both)
++ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
++	-Wl,-soname=linux-vdso64.so.1 -Wl,--hash-style=both
+ asflags-y := -D__VDSO64__ -s
+ 
+ obj-y += vdso64_wrapper.o
+-- 
+2.21.0.593.g511ec345e18-goog
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-> ---
->  Documentation/acpi/i2c-muxes.txt              | 58 ------------------
->  .../firmware-guide/acpi/i2c-muxes.rst         | 61 +++++++++++++++++++
->  Documentation/firmware-guide/acpi/index.rst   |  3 +-
->  3 files changed, 63 insertions(+), 59 deletions(-)
->  delete mode 100644 Documentation/acpi/i2c-muxes.txt
->  create mode 100644 Documentation/firmware-guide/acpi/i2c-muxes.rst
-> 
-> diff --git a/Documentation/acpi/i2c-muxes.txt b/Documentation/acpi/i2c-muxes.txt
-> deleted file mode 100644
-> index 9fcc4f0b885e..000000000000
-> --- a/Documentation/acpi/i2c-muxes.txt
-> +++ /dev/null
-> @@ -1,58 +0,0 @@
-> -ACPI I2C Muxes
-> ---------------
-> -
-> -Describing an I2C device hierarchy that includes I2C muxes requires an ACPI
-> -Device () scope per mux channel.
-> -
-> -Consider this topology:
-> -
-> -+------+   +------+
-> -| SMB1 |-->| MUX0 |--CH00--> i2c client A (0x50)
-> -|      |   | 0x70 |--CH01--> i2c client B (0x50)
-> -+------+   +------+
-> -
-> -which corresponds to the following ASL:
-> -
-> -Device (SMB1)
-> -{
-> -    Name (_HID, ...)
-> -    Device (MUX0)
-> -    {
-> -        Name (_HID, ...)
-> -        Name (_CRS, ResourceTemplate () {
-> -            I2cSerialBus (0x70, ControllerInitiated, I2C_SPEED,
-> -                          AddressingMode7Bit, "^SMB1", 0x00,
-> -                          ResourceConsumer,,)
-> -        }
-> -
-> -        Device (CH00)
-> -        {
-> -            Name (_ADR, 0)
-> -
-> -            Device (CLIA)
-> -            {
-> -                Name (_HID, ...)
-> -                Name (_CRS, ResourceTemplate () {
-> -                    I2cSerialBus (0x50, ControllerInitiated, I2C_SPEED,
-> -                                  AddressingMode7Bit, "^CH00", 0x00,
-> -                                  ResourceConsumer,,)
-> -                }
-> -            }
-> -        }
-> -
-> -        Device (CH01)
-> -        {
-> -            Name (_ADR, 1)
-> -
-> -            Device (CLIB)
-> -            {
-> -                Name (_HID, ...)
-> -                Name (_CRS, ResourceTemplate () {
-> -                    I2cSerialBus (0x50, ControllerInitiated, I2C_SPEED,
-> -                                  AddressingMode7Bit, "^CH01", 0x00,
-> -                                  ResourceConsumer,,)
-> -                }
-> -            }
-> -        }
-> -    }
-> -}
-> diff --git a/Documentation/firmware-guide/acpi/i2c-muxes.rst b/Documentation/firmware-guide/acpi/i2c-muxes.rst
-> new file mode 100644
-> index 000000000000..3a8997ccd7c4
-> --- /dev/null
-> +++ b/Documentation/firmware-guide/acpi/i2c-muxes.rst
-> @@ -0,0 +1,61 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +==============
-> +ACPI I2C Muxes
-> +==============
-> +
-> +Describing an I2C device hierarchy that includes I2C muxes requires an ACPI
-> +Device () scope per mux channel.
-> +
-> +Consider this topology::
-> +
-> +    +------+   +------+
-> +    | SMB1 |-->| MUX0 |--CH00--> i2c client A (0x50)
-> +    |      |   | 0x70 |--CH01--> i2c client B (0x50)
-> +    +------+   +------+
-> +
-> +which corresponds to the following ASL::
-> +
-> +    Device (SMB1)
-> +    {
-> +        Name (_HID, ...)
-> +        Device (MUX0)
-> +        {
-> +            Name (_HID, ...)
-> +            Name (_CRS, ResourceTemplate () {
-> +                I2cSerialBus (0x70, ControllerInitiated, I2C_SPEED,
-> +                            AddressingMode7Bit, "^SMB1", 0x00,
-> +                            ResourceConsumer,,)
-> +            }
-> +
-> +            Device (CH00)
-> +            {
-> +                Name (_ADR, 0)
-> +
-> +                Device (CLIA)
-> +                {
-> +                    Name (_HID, ...)
-> +                    Name (_CRS, ResourceTemplate () {
-> +                        I2cSerialBus (0x50, ControllerInitiated, I2C_SPEED,
-> +                                    AddressingMode7Bit, "^CH00", 0x00,
-> +                                    ResourceConsumer,,)
-> +                    }
-> +                }
-> +            }
-> +
-> +            Device (CH01)
-> +            {
-> +                Name (_ADR, 1)
-> +
-> +                Device (CLIB)
-> +                {
-> +                    Name (_HID, ...)
-> +                    Name (_CRS, ResourceTemplate () {
-> +                        I2cSerialBus (0x50, ControllerInitiated, I2C_SPEED,
-> +                                    AddressingMode7Bit, "^CH01", 0x00,
-> +                                    ResourceConsumer,,)
-> +                    }
-> +                }
-> +            }
-> +        }
-> +    }
-> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-> index d1d069b26bbc..1c89888f6ee8 100644
-> --- a/Documentation/firmware-guide/acpi/index.rst
-> +++ b/Documentation/firmware-guide/acpi/index.rst
-> @@ -12,4 +12,5 @@ ACPI Support
->     osi
->     method-customizing
->     DSD-properties-rules
-> -   gpio-properties
-> \ No newline at end of file
-> +   gpio-properties
-> +   i2c-muxes
-
-
-
-Thanks,
-Mauro
