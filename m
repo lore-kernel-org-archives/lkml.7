@@ -2,84 +2,117 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D12C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F8AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05DF218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA555218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:14:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="f0SX9uln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbfDXFND (ORCPT
+        id S1729146AbfDXFO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 01:13:03 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:44937 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfDXFNB (ORCPT
+        Wed, 24 Apr 2019 01:14:29 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:60096 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726002AbfDXFO3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 01:13:01 -0400
-Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hJADL-00028r-4Z from Jiada_Wang@mentor.com ; Tue, 23 Apr 2019 22:12:59 -0700
-Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Tue, 23 Apr 2019 22:12:54 -0700
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
-        <daniel.lezcano@linaro.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jiada_wang@mentor.com>, <horms+renesas@verge.net.au>,
-        <niklas.soderlund+renesas@ragnatech.se>, <geert+renesas@glider.be>,
-        <sergei.shtylyov@cogentembedded.com>,
-        <marek.vasut+renesas@gmail.com>,
-        <kuninori.morimoto.gx@renesas.com>, <hien.dang.eb@renesas.com>,
-        <fabrizio.castro@bp.renesas.com>, <dien.pham.ry@renesas.com>,
-        <biju.das@bp.renesas.com>, <erosca@de.adit-jv.com>,
-        <george_davis@mentor.com>, <joshua_frkuska@mentor.com>
-Subject: [PATCH v4 2/2] thermal: rcar_gen3_thermal: disable interrupt in .remove
-Date:   Wed, 24 Apr 2019 14:11:45 +0900
-Message-ID: <20190424051145.23072-3-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190424051145.23072-1-jiada_wang@mentor.com>
-References: <20190424051145.23072-1-jiada_wang@mentor.com>
+        Wed, 24 Apr 2019 01:14:29 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O5ENWx003881
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 22:14:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=FKM86vzGVWMsHvjlcaHnvMjzrwLXYOENyblxu5Zhi2w=;
+ b=f0SX9ulnzjlPagikhdDxMKJRzRo4yrdz1V8J/hi1Jj7/0FMWToqhMsLKJ+vXR3L434g4
+ 4Q/lmF+66FxObV+sdkQG3s3EMi8/9dMFTzjSXmz/WoepGbaPF7zjYvKjsurqMW5M6Q04
+ 0YNE7u6cMcQv9kjkhHfC+jE2ErdEUzi4G9k= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2s24kek627-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 22:14:27 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
+ mail.thefacebook.com (2620:10d:c021:18::174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Tue, 23 Apr 2019 22:14:27 -0700
+Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
+        id C2A9C13BA5DE1; Tue, 23 Apr 2019 14:20:49 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Tao Ren <taoren@fb.com>
+Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
+To:     "David S . Miller" <davem@davemloft.net>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, <openbmc@lists.ozlabs.org>
+CC:     Tao Ren <taoren@fb.com>
+Smtp-Origin-Cluster: prn1c35
+Subject: [PATCH net v2 2/2] net/ncsi: handle overflow when incrementing mac address
+Date:   Tue, 23 Apr 2019 14:20:48 -0700
+Message-ID: <20190423212048.1984122-1-taoren@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_03:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently IRQ remains enabled after .remove, later if device is probed,
-IRQ is requested before .thermal_init, this may cause IRQ function be
-called before device is initialized.
+Previously BMC's MAC address is calculated by simply adding 1 to the
+last byte of network controller's MAC address, and it produces incorrect
+result when network controller's MAC address ends with 0xFF.
 
-this patch disables interrupt in .remove, to ensure irq function
-only be called after device is fully initialized.
+The problem can be fixed by calling "net_addr_inc" function to increment
+MAC address; besides, the MAC address is also validated before assigning
+to BMC.
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Fixes: cb10c7c0dfd9 ("net/ncsi: Add NCSI Broadcom OEM command")
+Signed-off-by: Tao Ren <taoren@fb.com>
 ---
- drivers/thermal/rcar_gen3_thermal.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/ncsi/ncsi-rsp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-index 065e16f53285..280230951dfe 100644
---- a/drivers/thermal/rcar_gen3_thermal.c
-+++ b/drivers/thermal/rcar_gen3_thermal.c
-@@ -307,6 +307,9 @@ MODULE_DEVICE_TABLE(of, rcar_gen3_thermal_dt_ids);
- static int rcar_gen3_thermal_remove(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct rcar_gen3_thermal_priv *priv = dev_get_drvdata(dev);
-+
-+	rcar_thermal_irq_set(priv, false);
+Changes in v2:
+ - increment MAC address by calling net_addr_inc function.
+ - validate MAC address before assigning to BMC.
+
+diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
+index dc07fcc7938e..802db01e3075 100644
+--- a/net/ncsi/ncsi-rsp.c
++++ b/net/ncsi/ncsi-rsp.c
+@@ -11,6 +11,7 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/netdevice.h>
++#include <linux/etherdevice.h>
+ #include <linux/skbuff.h>
  
- 	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
+ #include <net/ncsi.h>
+@@ -667,7 +668,10 @@ static int ncsi_rsp_handler_oem_bcm_gma(struct ncsi_request *nr)
+ 	ndev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+ 	memcpy(saddr.sa_data, &rsp->data[BCM_MAC_ADDR_OFFSET], ETH_ALEN);
+ 	/* Increase mac address by 1 for BMC's address */
+-	saddr.sa_data[ETH_ALEN - 1]++;
++	eth_addr_inc((u8 *)saddr.sa_data);
++	if (!is_valid_ether_addr((const u8 *)saddr.sa_data))
++		return -ENXIO;
++
+ 	ret = ops->ndo_set_mac_address(ndev, &saddr);
+ 	if (ret < 0)
+ 		netdev_warn(ndev, "NCSI: 'Writing mac address to device failed\n");
 -- 
-2.19.2
+2.17.1
 
