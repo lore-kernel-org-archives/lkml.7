@@ -2,181 +2,95 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD81FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20213C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23D1206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29C3206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 10:53:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xGW6I8SL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfDWKxb (ORCPT
+        id S1727509AbfDWKxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 06:53:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43956 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726443AbfDWKxa (ORCPT
+        Tue, 23 Apr 2019 06:53:52 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34092 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfDWKxw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 06:53:30 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NAiQIm089847
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 06:53:30 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s204m39h2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 06:53:29 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Tue, 23 Apr 2019 11:53:27 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 23 Apr 2019 11:53:24 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NArNaY58654952
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Apr 2019 10:53:23 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C16ED42049;
-        Tue, 23 Apr 2019 10:53:23 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6AE6542045;
-        Tue, 23 Apr 2019 10:53:23 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Apr 2019 10:53:23 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, jolsa@redhat.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/report: Report OOM in perf report status line
-Date:   Tue, 23 Apr 2019 12:53:03 +0200
-X-Mailer: git-send-email 2.16.4
-X-TM-AS-GCONF: 00
-x-cbid: 19042310-0020-0000-0000-000003329ECA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042310-0021-0000-0000-00002184FEDE
-Message-Id: <20190423105303.61683-1-tmricht@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904230076
+        Tue, 23 Apr 2019 06:53:52 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h5so11387781lfm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 03:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dm0VsNuXtWaNq7ax6YiLsGrK/V6ALwGWhvC/p/yldeQ=;
+        b=xGW6I8SLppPprtIGaTLcbEV+AlP6ePI7QoAYOg1ibgPujKzem3fZ+yRyt7gcgyxZnF
+         2yRxJawQZaK68b1LVsWRSxlE3JWN3FUHSIE3w5mYSTZjRy3aCECeZznKnv1ZYyA3c6pO
+         HWjwv+DBO48MZ8qaGoS9C9cc4BplA7XW4k3Ivfxwy5guyBwTSb5v7as5d3qyB20YOGuu
+         xKF+2w9fXa6QLZnz18cxW+bbSkCHAxs8f86zrqJzELOrLuzBIrjO3NcNOwLex6wvMYc4
+         1aDzysiGATSij7NQNZvjACho1ewOiIlbb1ZSjWhLidzF0XNL38Ok8QePO0j7VJMwPalt
+         gBdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dm0VsNuXtWaNq7ax6YiLsGrK/V6ALwGWhvC/p/yldeQ=;
+        b=S/i6YmBi8zhwcl3lGdz04xbyxPF+JAVXPxHRJom1oPvZAlVau9frZhkPYI+7F4KCdS
+         rHUSHqrQl9q/H8jgjvzh6Ro7XVBrErPub/VeRDhpopDAcsQwk8njPbqE9xfMUK5BdVtS
+         Xzjojb4CyarZJh3/KVn0RrxqVxsUJKr2XAGe6sLfi3tT939Mn2bRyyfseJKG7OPpSkWp
+         60ZdjG1yDEEncJ5e+1QnD1VYKhD3COX9+3LB99zkGJ92wfPKqpWCPavISKQfg8bO/8DE
+         IxXm3FbfvCozsyoldvX1AOls4Z854THLuGrutRJNNOb+gPVGxe8mCQJH49VZJpTikk8q
+         sCBg==
+X-Gm-Message-State: APjAAAWto8C2lro+v08IUCKaUP19in+gbddmOJkzh20N4xPKpk41bkTS
+        U/Zi9dMkaT+pwvKZdDrkxqsvb+Xlc2QWPWIqFnCtgEOu
+X-Google-Smtp-Source: APXvYqy5TWCfEQM/8ZLFBA7gOvgdpENo9ofonlBC3ai6xxUKsFVLEXuLaW9+5dQtQOJODZYUBMNc21H4p8k5YVqbTuQ=
+X-Received: by 2002:a19:f001:: with SMTP id p1mr14368867lfc.27.1556016830067;
+ Tue, 23 Apr 2019 03:53:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <1555048943-39589-1-git-send-email-wen.yang99@zte.com.cn> <1555048943-39589-6-git-send-email-wen.yang99@zte.com.cn>
+In-Reply-To: <1555048943-39589-6-git-send-email-wen.yang99@zte.com.cn>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 23 Apr 2019 12:53:38 +0200
+Message-ID: <CACRpkdZiaTq_uo7=qKkwXy+yuahJjUxs4wVP=UJwOGQ=jHPe=Q@mail.gmail.com>
+Subject: Re: [PATCH 5/5] pinctrl: zte: fix leaked of_node references
+To:     Wen Yang <wen.yang99@zte.com.cn>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        wang.yi59@zte.com.cn, Jun Nie <jun.nie@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An -ENOMEM error is not reported in the GTK GUI.
-Instead this error message pops up on the screen:
+On Fri, Apr 12, 2019 at 8:01 AM Wen Yang <wen.yang99@zte.com.cn> wrote:
 
-[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1
+> The call to of_parse_phandle returns a node pointer with refcount
+> incremented thus it must be explicitly decremented after the last
+> usage.
+>
+> Detected by coccinelle with the following warnings:
+> ./drivers/pinctrl/zte/pinctrl-zx.c:415:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+> ./drivers/pinctrl/zte/pinctrl-zx.c:422:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+> ./drivers/pinctrl/zte/pinctrl-zx.c:436:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+> ./drivers/pinctrl/zte/pinctrl-zx.c:444:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+> ./drivers/pinctrl/zte/pinctrl-zx.c:448:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 407, but without a corresponding object release within this function.
+>
+> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Jun Nie <jun.nie@linaro.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 
-	Processing events... [974K/3M]
-	Error:failed to process sample
+Patch applied with Shawn's ACK.
 
-	0xf4198 [0x8]: failed to process type: 68
-
-However when I use the same perf.data file with --stdio it works:
-
-[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1 --stdio \
-		| head -12
-
-  # Total Lost Samples: 0
-  #
-  # Samples: 76K of event 'cycles'
-  # Event count (approx.): 99056160000
-  #
-  # Overhead  Command          Shared Object      Symbol
-  # ........  ...............  .................  .........
-  #
-     8.81%  find             [kernel.kallsyms]  [k] ftrace_likely_update
-     8.74%  swapper          [kernel.kallsyms]  [k] ftrace_likely_update
-     8.34%  sshd             [kernel.kallsyms]  [k] ftrace_likely_update
-     2.19%  kworker/u512:1-  [kernel.kallsyms]  [k] ftrace_likely_update
-
-The sample precentage is a bit low.....
-
-The GUI always fails in the FINISHED_ROUND event (68) and does not
-indicate the reason why.
-
-When happened is the following. Perf report calls a lot of functions and
-down deep when a FINISHED_ROUND event is processed, these functions are
-called:
-
-  perf_session__process_event()
-  + perf_session__process_user_event()
-    + process_finished_round()
-      + ordered_events__flush()
-        + __ordered_events__flush()
-	  + do_flush()
-	    + ordered_events__deliver_event()
-	      + perf_session__deliver_event()
-	        + machine__deliver_event()
-	          + perf_evlist__deliver_event()
-	            + process_sample_event()
-	              + hist_entry_iter_add() --> only called in GUI case!!!
-	                + hist_iter__report__callback()
-	                  + symbol__inc_addr_sample()
-
-	                    Now this functions runs out of memory and
-			    returns -ENOMEM. This is reported all the way up
-			    until function
-
-perf_session__process_event() returns to its caller, where -ENOMEM is
-changed to -EINVAL and processing stops:
-
- if ((skip = perf_session__process_event(session, event, head)) < 0) {
-      pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
-	     head, event->header.size, event->header.type);
-      err = -EINVAL;
-      goto out_err;
- }
-
-This occurred in the FINISHED_ROUND event when it has to process some
-10000 entries and ran out of memory.
-
-This patch indicates the root cause and displays it in the status line
-of ther perf report GUI.
-
-Output before (on GUI status line):
-0xf4198 [0x8]: failed to process type: 68
-
-Output after:
-0xf4198 [0x8]: failed to process type: 68 [not enough memory]
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Jiri Olsa <jolsa@redhat.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
----
- tools/perf/util/session.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index b17f1c9bc965..e89716175588 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1930,10 +1930,10 @@ reader__process_events(struct reader *rd, struct perf_session *session,
- 
- 	if (size < sizeof(struct perf_event_header) ||
- 	    (skip = rd->process(session, event, file_pos)) < 0) {
--		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
-+		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
- 		       file_offset + head, event->header.size,
--		       event->header.type);
--		err = -EINVAL;
-+		       event->header.type, strerror(-skip));
-+		err = skip;
- 		goto out;
- 	}
- 
--- 
-2.16.4
-
+Yours,
+Linus Walleij
