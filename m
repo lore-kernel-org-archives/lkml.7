@@ -2,91 +2,93 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5DAC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7ECC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 309F820685
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA7A820685
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:44:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNPzXuPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfDWImb (ORCPT
+        id S1726569AbfDWIoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:42:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49580 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725946AbfDWIma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:42:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2AE73ACAC;
-        Tue, 23 Apr 2019 08:42:29 +0000 (UTC)
-Date:   Tue, 23 Apr 2019 10:42:28 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] livepatch: Convert error about unsupported reliable
- stacktrace into a warning
-In-Reply-To: <20190418135858.n3lzq2oxkj52m6bi@treble>
-Message-ID: <alpine.LSU.2.21.1904231041500.19172@pobox.suse.cz>
-References: <20190418112936.13295-1-pmladek@suse.com> <20190418135858.n3lzq2oxkj52m6bi@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 23 Apr 2019 04:44:16 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33901 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfDWIoP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 04:44:15 -0400
+Received: by mail-pf1-f194.google.com with SMTP id b3so7137527pfd.1;
+        Tue, 23 Apr 2019 01:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4BCmLrn9XjloUMHDFcLSGBgSblmX+pc4aRTHqZMNgSM=;
+        b=uNPzXuPSuNlAX27x5umeqjkfmmvqx+KrVN+LRBNQSPtzR+SZIbLIcP1l0ve1LI+Cnf
+         ONESixui6EBweKuJC9jgappYBXvchwm87qVXIrPlLPBOcQxYLtFOnf9YA5uU5GdDdD0J
+         NDyOeJs13yxYE7KwxNXZPs94Kt/pMHSuNmDD9jUdWelE1TnEBxRzWYSDeWEzYjY9WbM8
+         J6oKp8U4ke1ZAKBT2s2iTuFOAzMGjuF3J4BoiKrSr1Zd4/49zLZaiOS9CQP2r0W2HX2W
+         X/HzW+bmo37JJMqO/OSnN0Nxa+EoqmcF35g+iS7mc2YZP6eaRAf9agUQXHnSx06rKH42
+         muyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4BCmLrn9XjloUMHDFcLSGBgSblmX+pc4aRTHqZMNgSM=;
+        b=LMcRcw144Vojr29XRs8gAX/n6PV+Uqp9YsE01CH/ltnZMZMWw8+sdqwfE8HDoKwQZS
+         hVjRJDyCLQIWn9YM1o3nPlUg1sjaWGQiJfISmVcGeqekH5cdgOW8pWatMTMw18b2BLUg
+         d3pqnT1d7CNpfe5TNXQY4Mhqg0vmXdIeF7VN2D+2HrGdpFhCUx9gc1ycAYPkzAU7ZQ86
+         vI/8pihdb7OGKyyoQkptVR6D/Rg+O9Z6I2+NDleVawm8R81CuP7SuMjq2GWIiAne8kWy
+         5FoZXdHluNmbLL/OXARVFmpkAC+QHNUEbuR7qhgIA7J+DACoxnoGuF00uNbfzdAthmQl
+         rIrQ==
+X-Gm-Message-State: APjAAAWMnHBj5FcZdfzNh1v5xWg7QGM/QoIOflKHYt8B3zG1HYHguA51
+        bGPDtjesZDR+lq4KiWEM+b8=
+X-Google-Smtp-Source: APXvYqzQepngjZBl7cXxfzuQnonTn0bFcHmtfgE745U349AWrePtc8biWbCX49kiaK9+GLcJuh9TiQ==
+X-Received: by 2002:a65:6686:: with SMTP id b6mr23788734pgw.419.1556009054323;
+        Tue, 23 Apr 2019 01:44:14 -0700 (PDT)
+Received: from localhost (p1962055-ipbf905funabasi.chiba.ocn.ne.jp. [118.15.107.55])
+        by smtp.gmail.com with ESMTPSA id b2sm19915034pfo.150.2019.04.23.01.44.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 01:44:13 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 08:44:18 +0000
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH next 09/25] input: keyboard: Use dev_get_drvdata()
+Message-ID: <20190423084418.sekqt5jeiqctvofe@penguin>
+References: <20190423075020.173734-1-wangkefeng.wang@huawei.com>
+ <20190423075020.173734-10-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423075020.173734-10-wangkefeng.wang@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Apr 2019, Josh Poimboeuf wrote:
+Hi Kefeng,
 
-> On Thu, Apr 18, 2019 at 01:29:36PM +0200, Petr Mladek wrote:
-> > The commit d0807da78e11d46f ("livepatch: Remove immediate feature") caused
-> > that any livepatch was refused when reliable stacktraces were not supported
-> > on the given architecture.
-> > 
-> > The limitation is too strong. User space processes are safely migrated
-> > even when entering or leaving the kernel. Kthreads transition would
-> > need to get forced. But it is safe when:
-> > 
-> >    + The livepatch does not change the semantic of the code.
-> >    + Callbacks do not depend on a safely finished transition.
-> > 
-> > Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Signed-off-by: Petr Mladek <pmladek@suse.com>
-> > ---
-> >  kernel/livepatch/core.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> > index eb0ee10a1981..14f33ab6c583 100644
-> > --- a/kernel/livepatch/core.c
-> > +++ b/kernel/livepatch/core.c
-> > @@ -1003,11 +1003,10 @@ int klp_enable_patch(struct klp_patch *patch)
-> >  		return -ENODEV;
-> >  
-> >  	if (!klp_have_reliable_stack()) {
-> > -		pr_err("This architecture doesn't have support for the livepatch consistency model.\n");
-> > -		return -EOPNOTSUPP;
-> > +		pr_warn("This architecture doesn't have support for the livepatch consistency model.\n");
-> > +		pr_warn("The livepatch transition may never complete.\n");
-> >  	}
-> >  
-> > -
-> >  	mutex_lock(&klp_mutex);
-> >  
-> >  	ret = klp_init_patch_early(patch);
-> 
-> Thanks Petr.  I would also suggest that we remove the WARN_ONCE() from
-> the weak version of save_stack_trace_tsk_reliable(), since we expect it
-> to be used in this case.
+On Tue, Apr 23, 2019 at 03:50:04PM +0800, Kefeng Wang wrote:
+> Using dev_get_drvdata directly.
 
-Moreover, we have WARN_ON_ONCE(ret == -ENOSYS) in klp_check_stack() where 
-save_stack_trace_tsk_reliable() is called.
+This assumes that generic device's driver data is exactly the same as platform
+device's driver data. This is true today, but does not have to be true
+tomorrow.
 
-Miroslav
+What is the benefit of violating the layering and accessing "parent"
+object's abstraction directly? Performance impact must be negligible...
+
+Thanks.
+
+-- 
+Dmitry
