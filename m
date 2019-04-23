@@ -4,71 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE71C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7EAC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8BB21738
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5598E217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 22:11:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oEJIhRd3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bSMaAQUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbfDWWKH (ORCPT
+        id S1728450AbfDWWLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 18:10:07 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:39071 "EHLO
+        Tue, 23 Apr 2019 18:11:17 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:37480 "EHLO
         mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfDWWKG (ORCPT
+        with ESMTP id S1726325AbfDWWLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 18:10:06 -0400
-Received: by mail-ua1-f66.google.com with SMTP id d5so5334702uan.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:10:05 -0700 (PDT)
+        Tue, 23 Apr 2019 18:11:17 -0400
+Received: by mail-ua1-f66.google.com with SMTP id l17so5350317uar.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:11:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QaCOHOEOCjLoZombeuRIMFkxCo4UDtePXL1HrIXNyOE=;
-        b=oEJIhRd3Yvr3TaM+pW+RRCamM6MiDbQn4Un+pIEY+vreURktZIqaIr8+rDXwALO1JK
-         e0Y1Isj8/AGs4R+4xBEyGwnBGvCm8dVaAofITxvZVkOzHmaBzx6WHJoqD0pj7pOYEJez
-         TQ3K/wuhGGAcYRkJf2rVPRLWzuhOVb0ELYhxA=
+        bh=jlRBsB6IGIWbgBpSBxzuqPEKc4JDD6ALsTbUturvgj4=;
+        b=bSMaAQUwBpg31mfIB0yKhMYIBwQkWPqWs+4gBjimft5C9/y2YFzl4JI18ch7ozKvxm
+         7cp/BgXeIWdwFxtqvUKYNX2/4w2AduwA3DGikKXmUxluNt/PQBK6i/grb47SjHF3ctCF
+         V4u4fWZ9c53ZdkZT+lY/y+cWuX5yWjmlZ5QAI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QaCOHOEOCjLoZombeuRIMFkxCo4UDtePXL1HrIXNyOE=;
-        b=lUtuCMll0e6IrBeM/E/y8Bc87Hdg+NbJ/+Tha6E8xnRM8Hcfweuau+qtR6zu7WfgdH
-         OrhUAp4bsdp1KIQ8pK3VnHRHLr2icPoD60FDuYAUhdcqX1dB/Gv668bhe958clv3E93q
-         Ph0euV6dSoKQDiNZZPbCQXx6FocNxbUTa46DOXIzC+ovXW1Qqpqw84m+2B763ppCor7Y
-         TJ1g0x0oLUJ7hV/HKs2u5BNucHaNWSSw2ppK6yuaef1nAv+sPTZxP/NFaEbwTEiPSITK
-         lqTSP30iqsmILG5Dti9aRSzIXkdxOxZI77M6DGTU8NeZ0c7LkfBj8oRCy8B4JniMMX8+
-         ioEQ==
-X-Gm-Message-State: APjAAAX8qNcuEZ0K8FzkioUx90jqdFocaKm3CKYvysYA9A1q81v9inop
-        vjNx41X2OGSZCSd6yYyPbzGqhcPilXU=
-X-Google-Smtp-Source: APXvYqz/azaPr3SLWHwRiIi+hopa/qvUD5WmnBrQBubzG8U+AAxHyQXXxdVL5gWRBmdAkhNkPhNlsQ==
-X-Received: by 2002:ab0:644c:: with SMTP id j12mr3567425uap.61.1556057404701;
-        Tue, 23 Apr 2019 15:10:04 -0700 (PDT)
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
-        by smtp.gmail.com with ESMTPSA id r63sm5146334vsc.15.2019.04.23.15.10.03
+        bh=jlRBsB6IGIWbgBpSBxzuqPEKc4JDD6ALsTbUturvgj4=;
+        b=LSCN02ZTKz2PZlR7mRVBMbkiMozCAoYdggaFX/n1bQfEsm2Ee2l8a07wYzJkn0bta9
+         eEENvWAU6JFlT9nbrEET+umZtUn3eHSa0wtwDVgsji2jxBMrN1WUl4x5HNep1UnvacbJ
+         KnfqfHaJ7BvAT7PG2axagsF8mdcuIAucOmoHgUbifi+DL55zVEN+NF0CNNIzQRWsLT+m
+         v6jB+HNujslDOoDaCuT19iJTq2/YNz1QUWi9ecjFyEn3nMG35WbqtwCDjm3FjPrEk5Ja
+         N401Xz+wYCmrlYGxUd33p5tiCcr1cF1apJjbHPv1dkL6l/EqQMg5+CckJR2+tQOWH9AU
+         C0Gw==
+X-Gm-Message-State: APjAAAWfWMZ0J+7k3EsdCC9pjoBWaRIqniZrfn5H4bocWJo10k3r04b4
+        45Xzd3Yu6ZMOqjO2PUOeKQ233NmfBdk=
+X-Google-Smtp-Source: APXvYqy2LDTEUak/IKQLe00OABqTRi//6i6KVJPeQLbUgJ9cKEb/+MFrwHXR8A2//3rwY0K90SlhCA==
+X-Received: by 2002:a9f:2c09:: with SMTP id r9mr12917658uaj.56.1556057476195;
+        Tue, 23 Apr 2019 15:11:16 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id y18sm3080099vsm.10.2019.04.23.15.11.15
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 15:10:04 -0700 (PDT)
-Received: by mail-vk1-f181.google.com with SMTP id q189so3565891vkq.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:10:03 -0700 (PDT)
-X-Received: by 2002:a1f:a4d:: with SMTP id 74mr15089491vkk.13.1556057403077;
- Tue, 23 Apr 2019 15:10:03 -0700 (PDT)
+        Tue, 23 Apr 2019 15:11:15 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id f22so9240656vso.7
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 15:11:15 -0700 (PDT)
+X-Received: by 2002:a67:7c8a:: with SMTP id x132mr14921317vsc.172.1556057474640;
+ Tue, 23 Apr 2019 15:11:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190306201413.14153-1-tycho@tycho.ws> <20190306201413.14153-2-tycho@tycho.ws>
-In-Reply-To: <20190306201413.14153-2-tycho@tycho.ws>
+References: <20190306201413.14153-1-tycho@tycho.ws>
+In-Reply-To: <20190306201413.14153-1-tycho@tycho.ws>
 From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 23 Apr 2019 15:09:50 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jKaK-mTq=Qez7E_fYysz916_xEN7Houj-y8gdmNGkMMVw@mail.gmail.com>
-Message-ID: <CAGXu5jKaK-mTq=Qez7E_fYysz916_xEN7Houj-y8gdmNGkMMVw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] seccomp: disallow NEW_LISTENER and TSYNC flags
+Date:   Tue, 23 Apr 2019 15:11:03 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jJDhQ_3jS9-VSUwruFDpb4GwqUs=iz7uNGMkPbLnNWKUw@mail.gmail.com>
+Message-ID: <CAGXu5jJDhQ_3jS9-VSUwruFDpb4GwqUs=iz7uNGMkPbLnNWKUw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] seccomp: fix up grammar in comment
 To:     Tycho Andersen <tycho@tycho.ws>, James Morris <jmorris@namei.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -77,107 +76,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Mar 6, 2019 at 12:14 PM Tycho Andersen <tycho@tycho.ws> wrote:
 >
-> As the comment notes, the return codes for TSYNC and NEW_LISTENER conflict,
-> because they both return positive values, one in the case of success and
-> one in the case of error. So, let's disallow both of these flags together.
->
-> While this is technically a userspace break, all the users I know of are
-> still waiting on me to land this feature in libseccomp, so I think it'll be
-> safe. Also, at present my use case doesn't require TSYNC at all, so this
-> isn't a big deal to disallow. If someone wanted to support this, a path
-> forward would be to add a new flag like
-> TSYNC_AND_LISTENER_YES_I_UNDERSTAND_THAT_TSYNC_WILL_JUST_RETURN_EAGAIN, but
-> the use cases are so different I don't see it really happening.
->
-> Finally, it's worth noting that this does actually fix a UAF issue: at the end
-> of seccomp_set_mode_filter(), we have:
->
->         if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
->                 if (ret < 0) {
->                         listener_f->private_data = NULL;
->                         fput(listener_f);
->                         put_unused_fd(listener);
->                 } else {
->                         fd_install(listener, listener_f);
->                         ret = listener;
->                 }
->         }
-> out_free:
->         seccomp_filter_free(prepared);
->
-> But if ret > 0 because TSYNC raced, we'll install the listener fd and then free
-> the filter out from underneath it, causing a UAF when the task closes it or
-> dies. This patch also switches the condition to be simply if (ret), so that
-> if someone does add the flag mentioned above, they won't have to remember
-> to fix this too.
+> This sentence is kind of a train wreck anyway, but at least dropping the
+> extra pronoun helps somewhat.
 >
 > Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-> Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-> CC: stable@vger.kernel.org # v5.0+
-
-Thanks! Sorry I missed this. James, can you take this for Linus's
-fixes for v5.1? (Or should I send a pull request to you?)
 
 Acked-by: Kees Cook <keescook@chromium.org>
 
-Let's also add:
+James, this can go in for v5.2 -- no rush.
 
-Reported-by: syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com
+-Kees
 
 > ---
->  kernel/seccomp.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
+>  kernel/seccomp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
 > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> index d0d355ded2f4..79bada51091b 100644
+> index e815781ed751..d0d355ded2f4 100644
 > --- a/kernel/seccomp.c
 > +++ b/kernel/seccomp.c
-> @@ -500,7 +500,10 @@ seccomp_prepare_user_filter(const char __user *user_filter)
+> @@ -329,7 +329,7 @@ static int is_ancestor(struct seccomp_filter *parent,
+>   * Expects sighand and cred_guard_mutex locks to be held.
 >   *
->   * Caller must be holding current->sighand->siglock lock.
->   *
-> - * Returns 0 on success, -ve on error.
-> + * Returns 0 on success, -ve on error, or
-> + *   - in TSYNC mode: the pid of a thread which was either not in the correct
-> + *     seccomp mode or did not have an ancestral seccomp filter
-> + *   - in NEW_LISTENER mode: the fd of the new listener
+>   * Returns 0 on success, -ve on error, or the pid of a thread which was
+> - * either not in the correct seccomp mode or it did not have an ancestral
+> + * either not in the correct seccomp mode or did not have an ancestral
+>   * seccomp filter.
 >   */
->  static long seccomp_attach_filter(unsigned int flags,
->                                   struct seccomp_filter *filter)
-> @@ -1256,6 +1259,16 @@ static long seccomp_set_mode_filter(unsigned int flags,
->         if (flags & ~SECCOMP_FILTER_FLAG_MASK)
->                 return -EINVAL;
->
-> +       /*
-> +        * In the successful case, NEW_LISTENER returns the new listener fd.
-> +        * But in the failure case, TSYNC returns the thread that died. If you
-> +        * combine these two flags, there's no way to tell whether something
-> +        * succeded or failed. So, let's disallow this combination.
-
-also a tiny typo: succeeded
-
-> +        */
-> +       if ((flags & SECCOMP_FILTER_FLAG_TSYNC) &&
-> +           (flags && SECCOMP_FILTER_FLAG_NEW_LISTENER))
-> +               return -EINVAL;
-> +
->         /* Prepare the new filter before holding any locks. */
->         prepared = seccomp_prepare_user_filter(filter);
->         if (IS_ERR(prepared))
-> @@ -1302,7 +1315,7 @@ static long seccomp_set_mode_filter(unsigned int flags,
->                 mutex_unlock(&current->signal->cred_guard_mutex);
->  out_put_fd:
->         if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
-> -               if (ret < 0) {
-> +               if (ret) {
->                         listener_f->private_data = NULL;
->                         fput(listener_f);
->                         put_unused_fd(listener);
+>  static inline pid_t seccomp_can_sync_threads(void)
 > --
 > 2.19.1
 >
 
--Kees
 
 -- 
 Kees Cook
