@@ -2,117 +2,143 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E49C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200CDC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AD420645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7198217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:40:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="MqJn7QdS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z9EV0qHl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbfDWQiM (ORCPT
+        id S1729349AbfDWQk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:38:12 -0400
-Received: from mail-eopbgr690122.outbound.protection.outlook.com ([40.107.69.122]:7761
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728728AbfDWQiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:38:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=Wvic7e8yYgB7yadfeMYNGaMJ/uChh/7WBZa04BVNBt9xalblXBWJOX7v9LOiusczis6f7vtpEWlYLouaBylVbaj2zdfeAFp62aXJxGknqZpb1XuBAc1DdxMk115P1eGPsrs//UvECb9MUMkgJ3kreybb47DMoGMqSXDoRNW6uHs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zCdHEaCXEDA2BRH5zNlaLADG0296Lh9oCXjEJXh8DrQ=;
- b=DBshGHtUlqLqfueno6SK5Fi3yIBcts1nmDUyjLEP5/YurVuuYJUklNSUl/dst25FytWgQU23UA03dWcoSSKV+zIRJTLiLz3vfHUlOvLXv16MVixlr1RA7DUHT2pH8PhuFagbMn0atmMCvYqrbPIaeYnNr/Lp/8H8cM/5IdLycXs=
-ARC-Authentication-Results: i=1; test.office365.com 1;spf=none;dmarc=none
- action=none header.from=microsoft.com;dkim=none (message not signed);arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zCdHEaCXEDA2BRH5zNlaLADG0296Lh9oCXjEJXh8DrQ=;
- b=MqJn7QdSCN7F990H1tKngVG0mm9TH6oIedawl+mvJP4dUSvHqSjda1lp7rtS5Y+QlPpBfIiGfLyRw5uBIYAIiR+j1CuHFH59g2fKX3lE5p3GcbROvQ0s2LDVz0ezKHBptxIbchS4sjFKRAd7DP73QjmTwYANbSdU8PikIsoTvhw=
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com (52.132.132.163) by
- DM5PR2101MB1031.namprd21.prod.outlook.com (52.132.128.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.4; Tue, 23 Apr 2019 16:38:06 +0000
-Received: from DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::2ca9:7d06:f5b1:7a6f]) by DM5PR2101MB0918.namprd21.prod.outlook.com
- ([fe80::2ca9:7d06:f5b1:7a6f%5]) with mapi id 15.20.1856.004; Tue, 23 Apr 2019
- 16:38:06 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Joseph Salisbury <Joseph.Salisbury@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "jikos@kernel.org" <jikos@kernel.org>,
-        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][v2] drivers: hid: Add a module description line to the
- hid_hyperv driver
-Thread-Topic: [PATCH][v2] drivers: hid: Add a module description line to the
- hid_hyperv driver
-Thread-Index: AQHU+fLt7DAJsU1n9kWwUlZfOZ1uYQ==
-Date:   Tue, 23 Apr 2019 16:38:05 +0000
-Message-ID: <DM5PR2101MB09183A22984131883E033DA7D7230@DM5PR2101MB0918.namprd21.prod.outlook.com>
-References: <324016691a62a13ce46c9ccd35c7e492bf609fd6.1555967348.git.joseph.salisbury@microsoft.com>
-In-Reply-To: <324016691a62a13ce46c9ccd35c7e492bf609fd6.1555967348.git.joseph.salisbury@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-04-23T16:38:04.5423360Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9514dc48-02c0-4ae0-b9f1-b6ac2568b8a7;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:fc77:f44:39ef:1b45]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6a3c1659-ffe2-42c3-47e6-08d6c80a0fe0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR2101MB1031;
-x-ms-traffictypediagnostic: DM5PR2101MB1031:
-x-microsoft-antispam-prvs: <DM5PR2101MB10311A9D3B21BC974524F605D7230@DM5PR2101MB1031.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1284;
-x-forefront-prvs: 0016DEFF96
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(396003)(39860400002)(136003)(376002)(199004)(189003)(66946007)(476003)(99286004)(9686003)(305945005)(229853002)(46003)(10090500001)(68736007)(64756008)(66476007)(7736002)(486006)(66556008)(66446008)(2906002)(73956011)(2501003)(558084003)(14454004)(53936002)(256004)(55016002)(102836004)(76116006)(186003)(76176011)(7696005)(97736004)(6436002)(86612001)(4326008)(6116002)(71200400001)(71190400001)(81156014)(8676002)(81166006)(52536014)(110136005)(86362001)(8936002)(8990500004)(316002)(478600001)(54906003)(6506007)(22452003)(11346002)(446003)(6246003)(33656002)(10290500003)(2201001)(25786009)(1511001)(74316002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB1031;H:DM5PR2101MB0918.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZZsu79NmJrmQW7Bvx4sbkUc2WTtvOe6nsjDwDGK/9vr2TtBMqtKHtsYv/bx0OlvewI/qt1xVO6uW6thBfdTptaMb91iGtNpoYTElfl8KGOw24wG1VpU81fh2SAL8c5yndo2CY7q5DGK4mqWLhy2CS7sj2VfyASkPMRnPn34rArwU+mHdlrXj8Wq1+yCJ8MIkH135cGlvZ6QrwiUyMD1Kkx4hbzp2qZL86cbQtt0br74WsNx/qMg+xbSM1q2/5rd4OGbshbvECUdJqe6nyHzbAjsNEoENubGUJ3v/OkVyz9YvvOSN22Fq9pfkXA9UVJnCdvYxFpLgGFxnuD2meOtNXVnKKSTzXpIEowlObOwScdUuS5g7lzuAVq+QmcUzKUJnlcN8kDV9CAgYjrTKvlcQyL0Dwwsqd3rb6+yL1gWV/c0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 23 Apr 2019 12:40:26 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:40376 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfDWQkW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 12:40:22 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3NGXbfI042863;
+        Tue, 23 Apr 2019 16:39:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=OnmDEa4Vll+ER2XRN/87fZSs2s5ZyAbUlD8n6HCiMw8=;
+ b=Z9EV0qHlZqVonQ+IibNlvzC8SfWpFIDQmk3Ix+qMsGNUBpraB2Fm957y7GLWq0Ez/E9D
+ oqRookWBvmfmUZeJ7AX1DuCIYfBL2r9r4qX9ejVZ8oH/QJ4eJVOV8XRVup6N5yrg2o+B
+ RLGZiKdvg88dXkgBgQJHvfd14Y0Dx1Sl3gt3r+tjsbQCP9yMCJ1KyWt1ItxbJiYA3UcF
+ vDuDfYjdzosjJiWnkYj+idj5SygvAnS1b2kfeFNGYxI2ew9Cl+adWizRAt/1KCKkku1d
+ itgeLkA11m7QQ2D5288Xdaulxt86kLbi1Ya02aE5hTY27qBQ1tHIpCXmbljBxu60XAXN 5g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2ryrxcwn2c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 16:39:57 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3NGchkw116076;
+        Tue, 23 Apr 2019 16:39:56 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2s0dwec9dy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 16:39:56 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3NGdn4o023727;
+        Tue, 23 Apr 2019 16:39:49 GMT
+Received: from [192.168.1.222] (/50.38.38.67)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 23 Apr 2019 09:39:49 -0700
+Subject: Re: [Question] Should direct reclaim time be bounded?
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>
+References: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
+ <20190423071953.GC25106@dhcp22.suse.cz>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <eac582cf-2f76-4da1-1127-6bb5c8c959e4@oracle.com>
+Date:   Tue, 23 Apr 2019 09:39:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a3c1659-ffe2-42c3-47e6-08d6c80a0fe0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2019 16:38:06.0049
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1031
+In-Reply-To: <20190423071953.GC25106@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9236 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904230113
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9236 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904230113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9zZXBoIFNhbGlzYnVyeSA8am9zZXBoLnNhbGlzYnVyeUBtaWNyb3NvZnQuY29tPiBT
-ZW50OiBNb25kYXksIEFwcmlsIDIyLCAyMDE5IDg6NDcgUE0NCj4gDQo+IFRoaXMgcGF0Y2ggb25s
-eSBhZGRzIGEgTU9EVUxFX0RFU0NSSVBUSU9OIHN0YXRlbWVudCB0byB0aGUgZHJpdmVyLg0KPiBU
-aGlzIGNoYW5nZSBpcyBvbmx5IGNvc21ldGljLCBzbyB0aGVyZSBzaG91bGQgYmUgbm8gcnVudGlt
-ZSBpbXBhY3QuDQo+IA0KPiANCj4gU2lnbmVkLW9mZi1ieTogSm9zZXBoIFNhbGlzYnVyeSA8am9z
-ZXBoLnNhbGlzYnVyeUBtaWNyb3NvZnQuY29tPg0KPiAtLS0NCg0KUmV2aWV3ZWQtYnk6IE1pY2hh
-ZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQuY29tPg0K
+On 4/23/19 12:19 AM, Michal Hocko wrote:
+> On Mon 22-04-19 21:07:28, Mike Kravetz wrote:
+>> In our distro kernel, I am thinking about making allocations try "less hard"
+>> on nodes where we start to see failures.  less hard == NORETRY/NORECLAIM.
+>> I was going to try something like this on an upstream kernel when I noticed
+>> that it seems like direct reclaim may never end/exit.  It 'may' exit, but I
+>> instrumented __alloc_pages_slowpath() and saw it take well over an hour
+>> before I 'tricked' it into exiting.
+>>
+>> [ 5916.248341] hpage_slow_alloc: jiffies 5295742  tries 2   node 0 success
+>> [ 5916.249271]                   reclaim 5295741  compact 1
+> 
+> This is unexpected though. What does tries mean? Number of reclaim
+> attempts? If yes could you enable tracing to see what takes so long in
+> the reclaim path?
+
+tries is the number of times we pass the 'retry:' label in
+__alloc_pages_slowpath.  In this specific case, I am pretty sure all that
+time is in one call to __alloc_pages_direct_reclaim.  My 'trick' to make this
+succeed was to "echo 0 > nr_hugepages" in another shell.
+
+>> This is where it stalled after "echo 4096 > nr_hugepages" on a little VM
+>> with 8GB total memory.
+>>
+>> I have not started looking at the direct reclaim code to see exactly where
+>> we may be stuck, or trying really hard.  My question is, "Is this expected
+>> or should direct reclaim be somewhat bounded?"  With __alloc_pages_slowpath
+>> getting 'stuck' in direct reclaim, the documented behavior for huge page
+>> allocation is not going to happen.
+> 
+> Well, our "how hard to try for hugetlb pages" is quite arbitrary. We
+> used to rety as long as at least order worth of pages have been
+> reclaimed but that didn't make any sense since the lumpy reclaim was
+> gone.
+
+Yes, that is what I am seeing in our older distro kernel and I can at least
+deal with that.
+
+>       So the semantic has change to reclaim&compact as long as there is
+> some progress. From what I understad above it seems that you are not
+> thrashing and calling reclaim again and again but rather one reclaim
+> round takes ages.
+
+Correct
+
+> That being said, I do not think __GFP_RETRY_MAYFAIL is wrong here. It
+> looks like there is something wrong in the reclaim going on.
+
+Ok, I will start digging into that.  Just wanted to make sure before I got
+into it too deep.
+
+BTW - This is very easy to reproduce.  Just try to allocate more huge pages
+than will fit into memory.  I see this 'reclaim taking forever' behavior on
+v5.1-rc5-mmotm-2019-04-19-14-53.  Looks like it was there in v5.0 as well.
+-- 
+Mike Kravetz
