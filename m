@@ -6,24 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E7DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4464FC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45CEB20843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9BE20843
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfDWJvf (ORCPT
+        id S1727389AbfDWJvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 05:51:35 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:39603 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfDWJvc (ORCPT
+        Tue, 23 Apr 2019 05:51:49 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:59685 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727331AbfDWJvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 05:51:32 -0400
+        Tue, 23 Apr 2019 05:51:35 -0400
+X-Originating-IP: 87.231.134.186
 Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
         (Authenticated sender: gregory.clement@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 2138420001E;
-        Tue, 23 Apr 2019 09:51:27 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 77BF04000D;
+        Tue, 23 Apr 2019 09:51:31 +0000 (UTC)
 From:   Gregory CLEMENT <gregory.clement@bootlin.com>
 To:     Stephen Boyd <sboyd@kernel.org>,
         Mike Turquette <mturquette@baylibre.com>,
@@ -38,9 +39,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Antoine Tenart <antoine.tenart@bootlin.com>,
         =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>,
         Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: [PATCH v5 4/6] clk: mvebu: ap806: Fix clock name for the cluster
-Date:   Tue, 23 Apr 2019 11:51:05 +0200
-Message-Id: <20190423095107.21091-5-gregory.clement@bootlin.com>
+Subject: [PATCH v5 5/6] arm64: marvell: enable the  Armada 7K/8K CPU clk driver
+Date:   Tue, 23 Apr 2019 11:51:06 +0200
+Message-Id: <20190423095107.21091-6-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190423095107.21091-1-gregory.clement@bootlin.com>
 References: <20190423095107.21091-1-gregory.clement@bootlin.com>
@@ -51,37 +52,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Actually, the clocks exposed for the cluster are not the CPU clocks, but
-the PLL clock used as entry clock for the CPU clocks. The CPU clock will
-be managed by a driver submitting in the following patches.
+This commit makes sure the driver for the Armada 7K/8K CPU clock is
+enabled.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- drivers/clk/mvebu/ap806-system-controller.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/Kconfig.platforms | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/mvebu/ap806-system-controller.c b/drivers/clk/mvebu/ap806-system-controller.c
-index 0a58824ff053..73ba8fd7860f 100644
---- a/drivers/clk/mvebu/ap806-system-controller.c
-+++ b/drivers/clk/mvebu/ap806-system-controller.c
-@@ -97,7 +97,7 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
- 	cpuclk_freq *= 1000 * 1000;
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 70498a033cf5..b68b89e7bcb4 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -127,6 +127,7 @@ config ARCH_MESON
  
- 	/* CPU clocks depend on the Sample At Reset configuration */
--	name = ap_cp_unique_name(dev, syscon_node, "cpu-cluster-0");
-+	name = ap_cp_unique_name(dev, syscon_node, "pll-cluster-0");
- 	ap806_clks[0] = clk_register_fixed_rate(dev, name, NULL,
- 						0, cpuclk_freq);
- 	if (IS_ERR(ap806_clks[0])) {
-@@ -105,7 +105,7 @@ static int ap806_syscon_common_probe(struct platform_device *pdev,
- 		goto fail0;
- 	}
- 
--	name = ap_cp_unique_name(dev, syscon_node, "cpu-cluster-1");
-+	name = ap_cp_unique_name(dev, syscon_node, "pll-cluster-1");
- 	ap806_clks[1] = clk_register_fixed_rate(dev, name, NULL, 0,
- 						cpuclk_freq);
- 	if (IS_ERR(ap806_clks[1])) {
+ config ARCH_MVEBU
+ 	bool "Marvell EBU SoC Family"
++	select ARMADA_AP_CPU_CLK
+ 	select ARMADA_AP806_SYSCON
+ 	select ARMADA_CP110_SYSCON
+ 	select ARMADA_37XX_CLK
 -- 
 2.20.1
 
