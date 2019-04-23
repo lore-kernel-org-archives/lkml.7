@@ -2,101 +2,102 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135D9C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EDDC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D270320843
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC78021738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qypmTfDB"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JxGHEvwv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfDWJCv (ORCPT
+        id S1726674AbfDWJEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 05:02:51 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39453 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbfDWJCt (ORCPT
+        Tue, 23 Apr 2019 05:04:47 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30524 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725955AbfDWJEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 05:02:49 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n25so17767391wmk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 02:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=A9mkQOCOyKUJCXFL3UmoX1uExjUUiwIU7JlFlpoGkgA=;
-        b=qypmTfDBnIggohr4oTcl1DKf+xQhzrv43qq64kdnrsD5FiChu544D2Z/Q6kDPHyMyE
-         YFr/zzUgt/cRfM02ECYDfFz8ANOaKMQZfoVXdk9Szf/L6Cx0N9zY2TEjP59uvaeYm7Xe
-         A2CteyW3kkGwfrZsA4lxmp7pNmDnZa0Dxc6ynlfMeN+WQnIU9RTYJf2jmZwkBvh4Q5On
-         KFGW76zK0Hd1RFqBtWmy3Cnbt4+pcMfuveWDl9PPOIPhjtMTOb47nFGhA9qIhfKCfhuM
-         B65nCNoiNI2pZpuw+HMJzBH/Wf66saIli5qI8RnEFtEJ6/oYDs9hQEJom43JcDBIWrV3
-         EKig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=A9mkQOCOyKUJCXFL3UmoX1uExjUUiwIU7JlFlpoGkgA=;
-        b=nU6HlsYbxPfTjnJkg3ueG3UBV4tvTRQyguP6uOsjRyNpUaQlPMh7Ukry9UEP06Ins5
-         r3y6vmPF86+6ih1RM6NoSrqSqQ6VF+y4qa1ujQTQMhQXtCPckfDo/z1UUUw97mWSRo/N
-         GNBaI6xRf8E/ewYsZe+TyoTwYDZ5gWHKqOKsksjqeFeJdqiTWvCqdo+Pi+yHbBSRaSr1
-         2ZcTUnq2v6qcbKmI6U/BWyATQeYwBI4wR66q61QYByfyzM48+wZ3WSJ6LqiqJ3fHUQAj
-         9zfV7pR5WvPgcijhBOCghU5ty2abi5RmkpCk1BSALAEIHTuTZpCVsy6o6hrymmp3wcfJ
-         oahg==
-X-Gm-Message-State: APjAAAXQ7Jp5Yft5wddyNfR1KbHVubzHYgodvn8R1fjDgY6nIt0+G5YF
-        wDvV3Kw568XdL3DJq+xxOpkyTA==
-X-Google-Smtp-Source: APXvYqxItRPwOb/4WnO6Xb62IZlKEytOErCBr1HMvACHuQpk5+YTXCFKJJkhl6u146I2ujBEhnUcRw==
-X-Received: by 2002:a1c:ed12:: with SMTP id l18mr1517688wmh.13.1556010168140;
-        Tue, 23 Apr 2019 02:02:48 -0700 (PDT)
-Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id z23sm12361894wma.0.2019.04.23.02.02.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 02:02:47 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, linux-mmc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/7] mmc: meson-gx: correct irq flag
-Date:   Tue, 23 Apr 2019 11:02:31 +0200
-Message-Id: <20190423090235.17244-4-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190423090235.17244-1-jbrunet@baylibre.com>
-References: <20190423090235.17244-1-jbrunet@baylibre.com>
+        Tue, 23 Apr 2019 05:04:47 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3N8uJ8d000872;
+        Tue, 23 Apr 2019 11:04:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=+mz0hyF9dXaVAe6HPjWWWf84hZD6RAwKtqdYMYWN3mg=;
+ b=JxGHEvwvavNtLsWyXwrASgAEB2UbM7f0JcsgZroqFfNf+5z1gTxXRU4fQ42PQD4reuXg
+ HNQJrLor6xI+AUxI/jvZdYcjezfhPTzKXXO8663hlSrYe1mZ50EFDtWKy9bE39iEGZKq
+ AHFRXDmdszWj6b0NBv2bsUVl9YSNICC7XUzO1OHYf6iIBhriAgUvnmtHSKiK0ZV+PNjA
+ 8yVBPTxaCjbar8B9M/Sq7dpjXtn78pJ+E+a80Dqh0+qagCRo8F6Y9KR+u0JP1edpNOla
+ YxX7NWhhMYnDkYWSn9HAprJUdflq99gxiEFC4WCsOzfDPRdTGZ9/ehNY8hlt4kAjMVw1 JQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2ryrvx6g0u-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 23 Apr 2019 11:04:22 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B5F7042;
+        Tue, 23 Apr 2019 09:04:17 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 89D4B1582;
+        Tue, 23 Apr 2019 09:04:17 +0000 (GMT)
+Received: from [10.48.0.204] (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 23 Apr
+ 2019 11:04:17 +0200
+Subject: Re: [PATCH 0/5] Add pin package management on STM32P157
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1554895824-25709-1-git-send-email-alexandre.torgue@st.com>
+ <CACRpkdbRgyfVAZ8taoDAZo+QHYYvzOo3mZC4fosxyz0-X37y0Q@mail.gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <096da7b7-4483-84e8-69fb-a6ececfa2296@st.com>
+Date:   Tue, 23 Apr 2019 11:02:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdbRgyfVAZ8taoDAZo+QHYYvzOo3mZC4fosxyz0-X37y0Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-22_01:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no reason for another device to request the MMC irq. It should
-only be used the MMC device, so remove IRQ_SHARED and replace by
-IRQ_ONESHOT as we don't the irq to fire again until the irq thread is
-done
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/mmc/host/meson-gx-mmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
-index 8b690ecde4c5..3df50b53f834 100644
---- a/drivers/mmc/host/meson-gx-mmc.c
-+++ b/drivers/mmc/host/meson-gx-mmc.c
-@@ -1328,7 +1328,7 @@ static int meson_mmc_probe(struct platform_device *pdev)
- 	       host->regs + SD_EMMC_IRQ_EN);
- 
- 	ret = request_threaded_irq(host->irq, meson_mmc_irq,
--				   meson_mmc_irq_thread, IRQF_SHARED,
-+				   meson_mmc_irq_thread, IRQF_ONESHOT,
- 				   dev_name(&pdev->dev), host);
- 	if (ret)
- 		goto err_init_clk;
--- 
-2.20.1
+On 4/23/19 10:47 AM, Linus Walleij wrote:
+> On Wed, Apr 10, 2019 at 1:31 PM Alexandre Torgue
+> <alexandre.torgue@st.com> wrote:
+> 
+>> The series adds support of chip packages for STM32MP157 SOC.
+> 
+> Patches 1-4 applied to the pin control tree.
+> Sorry for slowness :(
 
+No pb, thanks Linus. I'll take DT patch in my stm32 tree with your ack.
+
+regards
+Alex
+
+> 
+> Yours,
+> Linus Walleij
+> 
