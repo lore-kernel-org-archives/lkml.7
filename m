@@ -2,224 +2,229 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5895C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FB3C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790F321852
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65EE020674
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:24:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tkgZVDtz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KMXFWuzz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfDWOYn (ORCPT
+        id S1728161AbfDWOYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:24:43 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46109 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfDWOYm (ORCPT
+        Tue, 23 Apr 2019 10:24:52 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43696 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbfDWOYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 10:24:42 -0400
-Received: by mail-pl1-f195.google.com with SMTP id o7so5368235pll.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 07:24:42 -0700 (PDT)
+        Tue, 23 Apr 2019 10:24:50 -0400
+Received: by mail-ed1-f68.google.com with SMTP id j20so12781526edq.10;
+        Tue, 23 Apr 2019 07:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lmmh70OfKzbjydOYZ2w+hgBFg5MLh0o81P5DKFNfyBU=;
-        b=tkgZVDtz/6iDYPoez1Jdlyit1pIomXhOWc6DtgUvJ2mIp+ik5Ti7gT/nvlGoP+2tBU
-         851nRlaRYT8cAkgkfzYhGF5ShAZvyqVhPmL+GP8qUgc2D6RcswPicyVQtEGzm/ExN+YC
-         q7rtdBTp8lZwoX6ALtlQXV45DC9qZen3WpxxmTSDUioGvDdhzxTJX1WtUBTaehxov9s7
-         GTIEL1PkXL/DhUOsHMXZLBtUvUJeQBtuG+ApJvmJxMhi/UaBts5HmoCGlBPAtWD8BuUA
-         E1knrf56qxE/B5p9zDMuhwpROCY/UUrpp15K4k308b60JxQmsFE3UAjo5/ZJcod6gzEh
-         uiRw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZiS108X4GvElOC5iTgt1z3RZlSMYed2GU2hUMf31Ocw=;
+        b=KMXFWuzzjDBUk3iFLIwPlvhtxzDFPwfdqJ6fLB6PZqyaZIkGCSsJ7wYhLw4FhMcSDw
+         qcT+JfcS3i62GHJcCfwZwQeqf2NLn1XkZ2ntforFLx+ZXeDuNWGqkYdcCCOAIinrlkAc
+         36Te+atYl2eRF2S+dtr/BUcDotLwsNEdWxnRNey1+voQh1t4cUccCTF8ljD6wBJI+rqt
+         uNg9DFb/9hfAqcBVsIxO4WV+RRsUiCJxY4aBAna8aE5v+AhI5G0JQ6KMspjtOdWueZSP
+         IHXKqCZYFQfWgnbbYsVxGpFyKNbAUxTdx+23l7VnYjWYDivQ0sxl+4/+oHcfK2Ass0SE
+         s+ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lmmh70OfKzbjydOYZ2w+hgBFg5MLh0o81P5DKFNfyBU=;
-        b=OPimlukE2WxV/AW5mckPbK2Ey8mlVLm3Cj3UR/DhjL3Z2MeDDNrRtLm9TwlSeMxDXF
-         J2cmsXMCDMnLGAyK8UbM7ua2SXLzVyRshPtCDMhUiNaygMS9hwNABYM5VLbt6a+KyPV8
-         vnYB8LyOdCVqpTCVw1uNO0VLQYF1gg8Jvwy3MqDQfrEw4875DJsAP3z8qtVpaCZPGJON
-         +g2m6LY+bpVHKzifTHI6wWh6wB4rtzBPeggpnmrcFkPl7QiD7e+LQN0zNzG0S+B1QyEy
-         uLsJSoMbsPUqr/V1iY4D8gP5Ja+ln+eHMYCzdsaOiq4ciL28kq5ixOEjkIgphX2vuuF0
-         pODA==
-X-Gm-Message-State: APjAAAWOii9eFiZfgtFfRXhNPgG/DHgOtm9hnhADj6UFGSyfSRfnazR0
-        uoN/fJXYl7lkxt1jhREg3LBpevK9mR3AvneLWjOO/Q==
-X-Google-Smtp-Source: APXvYqy53i9k8lMzZq9895xmu2e4VGBDisBLb8z6B4VfxOOXsS1tKmxD0saR6VxDg7Ibq3QPzios+tMmvUPgoVUCLG0=
-X-Received: by 2002:a17:902:864b:: with SMTP id y11mr25011287plt.1.1556029481344;
- Tue, 23 Apr 2019 07:24:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190422173838.182736-1-venture@google.com> <CAK8P3a0k_8+R9FeyZsL6Egvi1Z-G0VrvR0TWXzGHryqxTr6thg@mail.gmail.com>
-In-Reply-To: <CAK8P3a0k_8+R9FeyZsL6Egvi1Z-G0VrvR0TWXzGHryqxTr6thg@mail.gmail.com>
-From:   Patrick Venture <venture@google.com>
-Date:   Tue, 23 Apr 2019 07:24:29 -0700
-Message-ID: <CAO=notxuYsBzWBnNran5jH0RujSBeti6-HsjasCRP6Sq0MwGNA@mail.gmail.com>
-Subject: Re: [PATCH] soc: add aspeed folder and misc drivers
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     gregkh <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ZiS108X4GvElOC5iTgt1z3RZlSMYed2GU2hUMf31Ocw=;
+        b=Zm1psrWzAd3GXzCQhYdEUWU8YQcEf2lB6hj7l7bsJy8pHzMHJf7ob2xstlXZPaFx48
+         UYmEzdtzUWrJlzuYr6NlUpDgwN5NZdZIfqQeTpe4coQv1LwVygL6tpMq/N+Tq15Yr/nR
+         +KNZhtvOAEZZrkTNejEb5liq50feaQNUU75qtBHVnrJ8LEUntUVb36VXfSw7Ovj+cZm/
+         2X3BGj1+4wyWnd1aEoSyXghOQSm88Q6c1y2lQGOKjPUaCsdsU/yKhEFJxiRfysQkbr7U
+         2xSNISWUuHvRvh19ssWO9KALxyW9/JJRNQivOextsa9awJjXu5+edzMxpQISq80WjOfo
+         4Mzw==
+X-Gm-Message-State: APjAAAUlbzZY95paZdHndDV7veiFygneRnqhGadzKMl0OT2zu7W76gcl
+        GDGhals427hvl6owQXAL6G0=
+X-Google-Smtp-Source: APXvYqyVrzoDQVvx73p746yEhNdNPInuap78vCqC+WvqidpVN5pxKd7BU7iPCNdFz6TWAf9I3KWtDw==
+X-Received: by 2002:a17:906:970e:: with SMTP id k14mr12862183ejx.283.1556029487143;
+        Tue, 23 Apr 2019 07:24:47 -0700 (PDT)
+Received: from ziggy.stardust ([37.223.141.112])
+        by smtp.gmail.com with ESMTPSA id f17sm4673621eda.20.2019.04.23.07.24.45
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 07:24:46 -0700 (PDT)
+Subject: Re: [PATCH 15/24] dt-bindings: pinctrl: pinctrl-mt65xx: add support
+ for MT8516
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Fabien Parent <fparent@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Yong Mao <yong.mao@mediatek.com>, jjian.zhou@mediatek.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-i2c@vger.kernel.org,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, arm-soc <arm@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-serial@vger.kernel.org,
+        linux-spi <linux-spi@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        stephane.leprovost@mediatek.com
+References: <20190323211612.860-1-fparent@baylibre.com>
+ <20190323211612.860-16-fparent@baylibre.com>
+ <CACRpkdZZ6-+MVdK4bOP4SHxQ8uQ8zENcir7DSteHy4g+B5uySQ@mail.gmail.com>
+ <b1e4eb6c-0d53-0307-99e4-9fef9e2b33d8@gmail.com>
+ <CACRpkdZ8gq+hGRT6EAyP2w9K0jz5RAzWeZ6_UrW+v-BOjd-wbg@mail.gmail.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ jrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <470d475e-b694-ab6a-5ff7-b5635af629bb@gmail.com>
+Date:   Tue, 23 Apr 2019 16:24:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdZ8gq+hGRT6EAyP2w9K0jz5RAzWeZ6_UrW+v-BOjd-wbg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 1:08 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Apr 22, 2019 at 7:38 PM Patrick Venture <venture@google.com> wrote:
-> >
-> > Create a SoC folder for the ASPEED parts and place the misc drivers
-> > currently present into this folder.  These drivers are not generic part
-> > drivers, but rather only apply to the ASPEED SoCs.
-> >
-> > Signed-off-by: Patrick Venture <venture@google.com>
->
-> Looks ok, but please resend to arm@kernel.org or soc@kernel.org
-> so we can track the submission and make sure it gets applied if
-> you want this to go through the arm-soc tree.
 
-Thanks, I didn't see those come up in the get_maintainers output.
 
-I had a longer question related to this patch progression -- if I am
-moving the aspeed gpio driver to the soc folder, the soc tree may have
-the soc/aspeed folder in their next, but the gpio tree wouldn't
-necessarily.  I know the branches sync up when things are merged at
-the top, but I wasn't sure if there was another mechanism for this?
+On 23/04/2019 13:01, Linus Walleij wrote:
+> On Tue, Apr 16, 2019 at 11:12 AM Matthias Brugger
+> <matthias.bgg@gmail.com> wrote:
+> 
+>> Hi Linus,
+>>
+>> On 08/04/2019 22:44, Linus Walleij wrote:
+>>> On Sat, Mar 23, 2019 at 10:17 PM Fabien Parent <fparent@baylibre.com> wrote:
+>>>
+>>>> Add binding documentation of pinctrl-mt65xx for MT8516 SoC.
+>>>>
+>>>> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+>>>
+>>> Patch applied with Rob's ACK.
+>>>
+>>
+>> I don't see this in your for-next branch. Did the patch got lost?
+> 
+> I usually push the devel branch to be tested by the build robots
+> and then mix down the for-next branch.
+> 
+> Recent week(s) the build robot was not responding so it got delayed.
+> 
 
->
-> If Greg wants to pick it up, that's fine too.
->
-> Either way,
->
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
->
-> > ---
-> >  drivers/misc/Kconfig                          | 16 ----------------
-> >  drivers/misc/Makefile                         |  2 --
-> >  drivers/soc/Kconfig                           |  1 +
-> >  drivers/soc/Makefile                          |  1 +
-> >  drivers/soc/aspeed/Kconfig                    | 19 +++++++++++++++++++
-> >  drivers/soc/aspeed/Makefile                   |  2 ++
-> >  .../{misc => soc/aspeed}/aspeed-lpc-ctrl.c    |  0
-> >  .../{misc => soc/aspeed}/aspeed-lpc-snoop.c   |  0
-> >  8 files changed, 23 insertions(+), 18 deletions(-)
-> >  create mode 100644 drivers/soc/aspeed/Kconfig
-> >  create mode 100644 drivers/soc/aspeed/Makefile
-> >  rename drivers/{misc => soc/aspeed}/aspeed-lpc-ctrl.c (100%)
-> >  rename drivers/{misc => soc/aspeed}/aspeed-lpc-snoop.c (100%)
-> >
-> > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> > index 42ab8ec92a04..b80cb6af0cb4 100644
-> > --- a/drivers/misc/Kconfig
-> > +++ b/drivers/misc/Kconfig
-> > @@ -496,22 +496,6 @@ config VEXPRESS_SYSCFG
-> >           bus. System Configuration interface is one of the possible means
-> >           of generating transactions on this bus.
-> >
-> > -config ASPEED_LPC_CTRL
-> > -       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-> > -       tristate "Aspeed ast2400/2500 HOST LPC to BMC bridge control"
-> > -       ---help---
-> > -         Control Aspeed ast2400/2500 HOST LPC to BMC mappings through
-> > -         ioctl()s, the driver also provides a read/write interface to a BMC ram
-> > -         region where the host LPC read/write region can be buffered.
-> > -
-> > -config ASPEED_LPC_SNOOP
-> > -       tristate "Aspeed ast2500 HOST LPC snoop support"
-> > -       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-> > -       help
-> > -         Provides a driver to control the LPC snoop interface which
-> > -         allows the BMC to listen on and save the data written by
-> > -         the host to an arbitrary LPC I/O port.
-> > -
-> >  config PCI_ENDPOINT_TEST
-> >         depends on PCI
-> >         select CRC32
-> > diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> > index d5b7d3404dc7..b9affcdaa3d6 100644
-> > --- a/drivers/misc/Makefile
-> > +++ b/drivers/misc/Makefile
-> > @@ -54,8 +54,6 @@ obj-$(CONFIG_GENWQE)          += genwqe/
-> >  obj-$(CONFIG_ECHO)             += echo/
-> >  obj-$(CONFIG_VEXPRESS_SYSCFG)  += vexpress-syscfg.o
-> >  obj-$(CONFIG_CXL_BASE)         += cxl/
-> > -obj-$(CONFIG_ASPEED_LPC_CTRL)  += aspeed-lpc-ctrl.o
-> > -obj-$(CONFIG_ASPEED_LPC_SNOOP) += aspeed-lpc-snoop.o
-> >  obj-$(CONFIG_PCI_ENDPOINT_TEST)        += pci_endpoint_test.o
-> >  obj-$(CONFIG_OCXL)             += ocxl/
-> >  obj-y                          += cardreader/
-> > diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-> > index c07b4a85253f..b750a88547c7 100644
-> > --- a/drivers/soc/Kconfig
-> > +++ b/drivers/soc/Kconfig
-> > @@ -2,6 +2,7 @@ menu "SOC (System On Chip) specific Drivers"
-> >
-> >  source "drivers/soc/actions/Kconfig"
-> >  source "drivers/soc/amlogic/Kconfig"
-> > +source "drivers/soc/aspeed/Kconfig"
-> >  source "drivers/soc/atmel/Kconfig"
-> >  source "drivers/soc/bcm/Kconfig"
-> >  source "drivers/soc/fsl/Kconfig"
-> > diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> > index 90b686e586c6..83a032db3e44 100644
-> > --- a/drivers/soc/Makefile
-> > +++ b/drivers/soc/Makefile
-> > @@ -4,6 +4,7 @@
-> >  #
-> >
-> >  obj-$(CONFIG_ARCH_ACTIONS)     += actions/
-> > +obj-y                          += aspeed/
-> >  obj-$(CONFIG_ARCH_AT91)                += atmel/
-> >  obj-y                          += bcm/
-> >  obj-$(CONFIG_ARCH_DOVE)                += dove/
-> > diff --git a/drivers/soc/aspeed/Kconfig b/drivers/soc/aspeed/Kconfig
-> > new file mode 100644
-> > index 000000000000..457282cd1da5
-> > --- /dev/null
-> > +++ b/drivers/soc/aspeed/Kconfig
-> > @@ -0,0 +1,19 @@
-> > +menu "Aspeed SoC drivers"
-> > +
-> > +config ASPEED_LPC_CTRL
-> > +       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-> > +       tristate "Aspeed ast2400/2500 HOST LPC to BMC bridge control"
-> > +       ---help---
-> > +         Control Aspeed ast2400/2500 HOST LPC to BMC mappings through
-> > +         ioctl()s, the driver also provides a read/write interface to a BMC ram
-> > +         region where the host LPC read/write region can be buffered.
-> > +
-> > +config ASPEED_LPC_SNOOP
-> > +       tristate "Aspeed ast2500 HOST LPC snoop support"
-> > +       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-> > +       help
-> > +         Provides a driver to control the LPC snoop interface which
-> > +         allows the BMC to listen on and save the data written by
-> > +         the host to an arbitrary LPC I/O port.
-> > +
-> > +
-> > diff --git a/drivers/soc/aspeed/Makefile b/drivers/soc/aspeed/Makefile
-> > new file mode 100644
-> > index 000000000000..cfaa9adc67b5
-> > --- /dev/null
-> > +++ b/drivers/soc/aspeed/Makefile
-> > @@ -0,0 +1,2 @@
-> > +obj-$(CONFIG_ASPEED_LPC_CTRL)  += aspeed-lpc-ctrl.o
-> > +obj-$(CONFIG_ASPEED_LPC_SNOOP) += aspeed-lpc-snoop.o
-> > diff --git a/drivers/misc/aspeed-lpc-ctrl.c b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
-> > similarity index 100%
-> > rename from drivers/misc/aspeed-lpc-ctrl.c
-> > rename to drivers/soc/aspeed/aspeed-lpc-ctrl.c
-> > diff --git a/drivers/misc/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> > similarity index 100%
-> > rename from drivers/misc/aspeed-lpc-snoop.c
-> > rename to drivers/soc/aspeed/aspeed-lpc-snoop.c
-> > --
-> > 2.21.0.593.g511ec345e18-goog
-> >
+I don't see it in the devel branch [1]. Can you please double check?
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=devel
