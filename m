@@ -2,166 +2,387 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7F4C282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DD0C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F42321850
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4970A208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="gItHDwtX"
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="LlPsVx3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfDWUTE (ORCPT
+        id S1727322AbfDWUT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:19:04 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41228 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbfDWUTD (ORCPT
+        Tue, 23 Apr 2019 16:19:56 -0400
+Received: from mail.kmu-office.ch ([178.209.48.109]:36984 "EHLO
+        mail.kmu-office.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfDWUTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:19:03 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t30so12729169lfd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ISPtN114/vVDuvBUDQI+XOUJt45zg0Mc6YZThYyu9sE=;
-        b=gItHDwtXfT3vkgFtkuMveM178GaK6E5BSH/sjG7WZHN92faZ+NIO1mJcaOYaIOXK1p
-         bcO0SzU+RR/oz/yNUATaISXuEoPyA8f8qymglN1JJpQCpAsN27sye6iJBExT/tUJ/kbN
-         4l0mde06G+ysr/0Rw0CMfKb/ILGd/JdqLCmZpxQ8/AVO+RLFcWITTnp9ROlmZdM2eXXI
-         liOIisIYiA/0G23ZhJ04RNJsV8Fzp2YB4Nrkd2cudFbA7PbxP82uHe9V3PeuCecpTzIH
-         EWubVuGPSeJLLeXFs/r/6MEE7c43R6qZ6Np/bmngVrrt0wOaABymndI9VLLE9OgtizXn
-         OOKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ISPtN114/vVDuvBUDQI+XOUJt45zg0Mc6YZThYyu9sE=;
-        b=EdgPUI1MxVMaTvwVUJL8OF21fqXYBoEcPGh2etMSXSS9rU0TELyWc6unYbQTQ6bcqS
-         fnK2T7f7S8kxkdkHnluW1b/veFCbP8XMva+9iwilGJQBM0ps60g25ayfYgnpFckGm2pa
-         gCpcIrCamS3A2MeRAwHj6WlGxE55xFwuohO5oeDwf1XvlQ6bXdevhz2uX0xRZGPskK3z
-         vUsc/JLcE+963xbGHV5CSLal5pYpom6Mib/0DhcEdlLYT7E5WzV39agBO2GMEgSz1mwv
-         TGAxCYfZFzjSKhL1ohJpvEBq6zAxMnl2IubF/DJJ8rA0ntRiJqNEziQRCoA6WrlnMWjm
-         VdtA==
-X-Gm-Message-State: APjAAAXau4mVeyL41DGmpdPGkRRsaoDRaN9F5oP5R7luUDP1JGBaM5UI
-        fZggqWxCf2K/m0HTa6GNtm1nYum6LzJLHbMCsIfq
-X-Google-Smtp-Source: APXvYqzrRBQ5T03gOBocls3T9W4sEi7dljbs3juDVJw6tHxpnKFH8khBxwRVfKUcuCt5dOaJL94v5xypJIJdjS7rrlw=
-X-Received: by 2002:a19:2814:: with SMTP id o20mr14905670lfo.117.1556050740201;
- Tue, 23 Apr 2019 13:19:00 -0700 (PDT)
+        Tue, 23 Apr 2019 16:19:55 -0400
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+        by mail.kmu-office.ch (Postfix) with ESMTPSA id E262D5C1EBF;
+        Tue, 23 Apr 2019 22:19:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+        t=1556050790;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pA15yy7/STfrhzuYJLZPf/C6z5t8qWv6rQv9NMaeUNM=;
+        b=LlPsVx3/B38n4ew3BIO7VmHg7TamhFKZMi903yFec621NKeF2urPiPqTcpnA0eU0Y9gbP1
+        tRgkGdayHPRzrZKzJDJ6iz9SaRFaeqsvVyAIdEBqjtwNp11psBHyBFVD8C2u+VmvLEQD+R
+        OlrsHKN4TZ9NvKcKq2DTBftqciNsrLQ=
 MIME-Version: 1.0
-References: <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
- <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
- <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com>
- <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com> <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
- <20190417145711.GI32622@redhat.com> <CAHC9VhSzo4DsMRknOA-4KKYJEir0wW74+quLheTjRw94OmhscA@mail.gmail.com>
- <20190417162723.GK32622@redhat.com> <CAHC9VhT_nk1jmrTj3W=F+1gP1vU3iZsZ=UGOCwdiBLbUsOc9=w@mail.gmail.com>
- <0ca3f4cf-5c64-2fc0-1885-9dbcca2f4b47@schaufler-ca.com> <5CB7E5D4.2060703@huawei.com>
- <CAHC9VhQkrR+m9_dYLg4VG-26TdUnf8XFjbmuVQ70YCOp6DhN_g@mail.gmail.com>
- <5CB933C4.7000300@huawei.com> <CAHC9VhTdJ6uUOjyxrk=+iOkKe=VN+N9DMPtV=OchAY34x95g=w@mail.gmail.com>
- <5CB9DC75.7010600@huawei.com> <CAHC9VhQqxL+LsK8YTD6PpTHaZsZ-PxAq3atdZKQcZLQZQH7t4g@mail.gmail.com>
- <5CBACC8F.8010409@huawei.com> <CAHC9VhSZBh8B+1CPM=PdLdbSFq1ba1ffuOJTgnzE5oBLXUEDxQ@mail.gmail.com>
- <5CBE8FC4.8060400@huawei.com>
-In-Reply-To: <5CBE8FC4.8060400@huawei.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 23 Apr 2019 16:18:49 -0400
-Message-ID: <CAHC9VhRitKcax43NL5JThKqsysyakmarYiC4qTQTkka5SNNHuw@mail.gmail.com>
-Subject: Re: kernel BUG at kernel/cred.c:434!
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Oleg Nesterov <oleg@redhat.com>, john.johansen@canonical.com,
-        "chengjian (D)" <cj.chengjian@huawei.com>,
-        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SELinux <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 23 Apr 2019 22:19:50 +0200
+From:   Stefan Agner <stefan@agner.ch>
+To:     arnd@arndb.de, arm@kernel.org, tony@atomide.com
+Cc:     linux@armlinux.org.uk, ard.biesheuvel@linaro.org,
+        robin.murphy@arm.com, nicolas.pitre@linaro.org,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, kgene@kernel.org,
+        krzk@kernel.org, robh@kernel.org, ssantosh@kernel.org,
+        jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
+        sebastian.hesselbarth@gmail.com, marc.w.gonzalez@free.fr,
+        mans@mansr.com, ndesaulniers@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] ARM: use arch_extension directive instead of arch
+ argument
+In-Reply-To: <f48c245e7e2b432f6771a5f97ff9f4b5bedc5089.1554968922.git.stefan@agner.ch>
+References: <f48c245e7e2b432f6771a5f97ff9f4b5bedc5089.1554968922.git.stefan@agner.ch>
+Message-ID: <2f3d0fa7ba599f46960ad3e7419477fd@agner.ch>
+X-Sender: stefan@agner.ch
+User-Agent: Roundcube Webmail/1.3.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 12:08 AM Yang Yingliang
-<yangyingliang@huawei.com> wrote:
-> On 2019/4/23 3:48, Paul Moore wrote:
-> > On Sat, Apr 20, 2019 at 3:39 AM Yang Yingliang <yangyingliang@huawei.com> wrote:
-> >> I'm not sure you got my point.
-> > I went back and looked at your previous emails again to try and
-> > understand what you are talking about, and I'm a little confused by
-> > some of the output ...
-> >
-> >> --- a/kernel/acct.c
-> >> +++ b/kernel/acct.c
-> >> @@ -481,6 +481,7 @@ static void do_acct_process(struct bsd_acct_struct
-> >> *acct)
-> >>           flim = current->signal->rlim[RLIMIT_FSIZE].rlim_cur;
-> >>           current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
-> >>           /* Perform file operations on behalf of whoever enabled
-> >> accounting */
-> >> +       pr_info("task:%px new cred:%px real cred:%px cred:%px\n",
-> >> current, file->f_cred, current->real_cred, current->cred);
-> >>           orig_cred = override_creds(file->f_cred);
-> > Okay, with this patch applied we should the task/cred info when
-> > do_acct_process is called.  Got it.
-> >
-> >> Messages:
-> >> [   56.643298] task:ffff88841a9595c0 new cred:ffff88841ae450c0 real
-> >> cred:ffff88841ae450c0 cred:ffff88841ae450c0    //They are same.
-> > Okay, it looks like do_acct_process() was called and f_cred,
-> > real_cred, and cred are all the same.
->
-> This is a original message, without patch applied.
+On 11.04.2019 09:54, Stefan Agner wrote:
+> The LLVM Target parser currently does not allow to specify the security
+> extension as part of -march (see also LLVM Bug 40186 [0]). When trying
+> to use Clang with LLVM's integrated assembler, this leads to build
+> errors such as this:
+>   clang-8: error: the clang compiler does not support '-Wa,-march=armv7-a+sec'
+> 
+> Use ".arch_extension sec" to enable the security extension in a more
+> portable fasion. Also make sure to use ".arch armv7-a" in case a v6/v7
+> multi-platform kernel is being built.
+> 
+> Note that this is technically not exactly the same as the old code
+> checked for availabilty of the security extension by calling as-instr.
+> However, there are already other sites which use ".arch_extension sec"
+> unconditionally, hence de-facto we need an assembler capable of
+> ".arch_extension sec" already today (arch/arm/mm/proc-v7.S). The
+> arch extension "sec" is available since binutils 2.21 according to
+> its documentation [1].
+> 
+> [0] https://bugs.llvm.org/show_bug.cgi?id=40186
+> [1] https://sourceware.org/binutils/docs-2.21/as/ARM-Options.html
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Acked-by: Mans Rullgard <mans@mansr.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-The patch I am referring to is your pr_info patch (above).  I'm not
-talking about any other patches at the moment; I just want to
-understand the example dmesg output you copied into your email.
+Arnd, Tony,
 
-With that in mind, the message above seems to indicate that
-do_acct_process() has been invoked with f_cred, real_cred, and cred
-all pointing to the same credentials struct, yes?
+Patch 3 and 4 got merged by Gregory. I think the other two patches are
+ready to be merged too. I think they should go in together to avoid
+merge conflicts. Tony, if you agree, can you Ack patch 2 so they can get
+merged through arm-soc?
 
-> >> [   56.646609] Process accounting resumed
-> > It looks like do_acct_process() has called check_free_space() now.  So
-> > far so good.
+--
+Stefan
 
-...
-
-> >> [   56.649943] task:ffff88841a9595c0 new cred:ffff88841ae450c0 real
-> >> cred:ffff88841c96c300 cred:ffff88841ae450c0
-> > Wait a minute ... why are we seeing this again?  Looking at the task
-> > pointer and the timestamp, this is the same task exiting and trying to
-> > write to the accounting file, yes?  This output is particularly
-> > curious since it appears that real_cred has changed; where is this
-> > happening?
->
-> This is the message when the BUG_ON was triggered without applying any
-> fix patch.
-
-The only place in the code that generates this message is the bit of
-code that you patches in using the pr_info() patch (above), yes?  If
-so, that would seem to indicate that the same task is calling
-do_acct_process() twice, yes?  I may be fundamentally misunderstanding
-something about process accounting, but I though do_acct_process()
-would only be called once for a given task - while it was exiting.
-Yes, no?
-
-> If we apply this patch "proc: prevent changes to overridden
-> credentials", program
-> runs like this:
-
-I'd like to focus on understanding the dmesg output you shared first,
-because it doesn't seem to make sense to me.
-
--- 
-paul moore
-www.paul-moore.com
+> ---
+> Changes since v1:
+> - Explicitly specify assembler architecture as armv7-a to avoid
+>   build issues when bulding v6/v7 multi arch kernel.
+> 
+> Changes since v2:
+> - Add armv7-a also in mach-tango
+> - Move .arch armv7-a outside of ifdef'ed area in sleep44xx.S
+>   to make the kernel compile also without CONFIG_SMP/PM.
+> 
+>  arch/arm/mach-bcm/Makefile         | 3 ---
+>  arch/arm/mach-bcm/bcm_kona_smc.c   | 2 --
+>  arch/arm/mach-exynos/Makefile      | 4 ----
+>  arch/arm/mach-exynos/exynos-smc.S  | 3 ++-
+>  arch/arm/mach-exynos/sleep.S       | 3 ++-
+>  arch/arm/mach-highbank/Makefile    | 3 ---
+>  arch/arm/mach-highbank/smc.S       | 3 ++-
+>  arch/arm/mach-keystone/Makefile    | 3 ---
+>  arch/arm/mach-keystone/smc.S       | 1 +
+>  arch/arm/mach-omap2/Makefile       | 8 --------
+>  arch/arm/mach-omap2/omap-headsmp.S | 2 ++
+>  arch/arm/mach-omap2/omap-smc.S     | 3 ++-
+>  arch/arm/mach-omap2/sleep33xx.S    | 1 +
+>  arch/arm/mach-omap2/sleep34xx.S    | 2 ++
+>  arch/arm/mach-omap2/sleep43xx.S    | 2 ++
+>  arch/arm/mach-omap2/sleep44xx.S    | 3 +++
+>  arch/arm/mach-tango/Makefile       | 3 ---
+>  arch/arm/mach-tango/smc.S          | 2 ++
+>  18 files changed, 21 insertions(+), 30 deletions(-)
+> 
+> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+> index 8fd23b263c60..b59c813b1af4 100644
+> --- a/arch/arm/mach-bcm/Makefile
+> +++ b/arch/arm/mach-bcm/Makefile
+> @@ -40,9 +40,6 @@ obj-$(CONFIG_ARCH_BCM_MOBILE_L2_CACHE) += kona_l2_cache.o
+>  
+>  # Support for secure monitor traps
+>  obj-$(CONFIG_ARCH_BCM_MOBILE_SMC) += bcm_kona_smc.o
+> -ifeq ($(call as-instr,.arch_extension sec,as_has_sec),as_has_sec)
+> -CFLAGS_bcm_kona_smc.o		+= -Wa,-march=armv7-a+sec -DREQUIRES_SEC
+> -endif
+>  
+>  # BCM2835
+>  obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
+> diff --git a/arch/arm/mach-bcm/bcm_kona_smc.c b/arch/arm/mach-bcm/bcm_kona_smc.c
+> index a55a7ecf146a..541e850a736c 100644
+> --- a/arch/arm/mach-bcm/bcm_kona_smc.c
+> +++ b/arch/arm/mach-bcm/bcm_kona_smc.c
+> @@ -125,9 +125,7 @@ static int bcm_kona_do_smc(u32 service_id, u32 buffer_phys)
+>  		__asmeq("%2", "r4")
+>  		__asmeq("%3", "r5")
+>  		__asmeq("%4", "r6")
+> -#ifdef REQUIRES_SEC
+>  		".arch_extension sec\n"
+> -#endif
+>  		"	smc    #0\n"
+>  		: "=r" (ip), "=r" (r0)
+>  		: "r" (r4), "r" (r5), "r" (r6)
+> diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
+> index cd00c82a1add..44de9f36fd1b 100644
+> --- a/arch/arm/mach-exynos/Makefile
+> +++ b/arch/arm/mach-exynos/Makefile
+> @@ -14,9 +14,5 @@ obj-$(CONFIG_PM_SLEEP)		+= suspend.o
+>  
+>  obj-$(CONFIG_SMP)		+= platsmp.o headsmp.o
+>  
+> -plus_sec := $(call as-instr,.arch_extension sec,+sec)
+> -AFLAGS_exynos-smc.o		:=-Wa,-march=armv7-a$(plus_sec)
+> -AFLAGS_sleep.o			:=-Wa,-march=armv7-a$(plus_sec)
+> -
+>  obj-$(CONFIG_EXYNOS5420_MCPM)	+= mcpm-exynos.o
+>  CFLAGS_mcpm-exynos.o		+= -march=armv7-a
+> diff --git a/arch/arm/mach-exynos/exynos-smc.S
+> b/arch/arm/mach-exynos/exynos-smc.S
+> index d259532ba937..6da31e6a7acb 100644
+> --- a/arch/arm/mach-exynos/exynos-smc.S
+> +++ b/arch/arm/mach-exynos/exynos-smc.S
+> @@ -10,7 +10,8 @@
+>  /*
+>   * Function signature: void exynos_smc(u32 cmd, u32 arg1, u32 arg2, u32 arg3)
+>   */
+> -
+> +	.arch armv7-a
+> +	.arch_extension sec
+>  ENTRY(exynos_smc)
+>  	stmfd	sp!, {r4-r11, lr}
+>  	dsb
+> diff --git a/arch/arm/mach-exynos/sleep.S b/arch/arm/mach-exynos/sleep.S
+> index 2783c3a0c06a..ed93f91853b8 100644
+> --- a/arch/arm/mach-exynos/sleep.S
+> +++ b/arch/arm/mach-exynos/sleep.S
+> @@ -44,7 +44,8 @@ ENTRY(exynos_cpu_resume)
+>  ENDPROC(exynos_cpu_resume)
+>  
+>  	.align
+> -
+> +	.arch armv7-a
+> +	.arch_extension sec
+>  ENTRY(exynos_cpu_resume_ns)
+>  	mrc	p15, 0, r0, c0, c0, 0
+>  	ldr	r1, =CPU_MASK
+> diff --git a/arch/arm/mach-highbank/Makefile b/arch/arm/mach-highbank/Makefile
+> index 55840f414d3e..e7741b883d13 100644
+> --- a/arch/arm/mach-highbank/Makefile
+> +++ b/arch/arm/mach-highbank/Makefile
+> @@ -1,6 +1,3 @@
+>  obj-y					:= highbank.o system.o smc.o
+>  
+> -plus_sec := $(call as-instr,.arch_extension sec,+sec)
+> -AFLAGS_smc.o				:=-Wa,-march=armv7-a$(plus_sec)
+> -
+>  obj-$(CONFIG_PM_SLEEP)			+= pm.o
+> diff --git a/arch/arm/mach-highbank/smc.S b/arch/arm/mach-highbank/smc.S
+> index 407d17baaaa9..860a79135b7b 100644
+> --- a/arch/arm/mach-highbank/smc.S
+> +++ b/arch/arm/mach-highbank/smc.S
+> @@ -16,7 +16,8 @@
+>   * the monitor API number.
+>   * Function signature : void highbank_smc1(u32 fn, u32 arg)
+>   */
+> -
+> +	.arch armv7-a
+> +	.arch_extension sec
+>  ENTRY(highbank_smc1)
+>  	stmfd   sp!, {r4-r11, lr}
+>  	mov	r12, r0
+> diff --git a/arch/arm/mach-keystone/Makefile b/arch/arm/mach-keystone/Makefile
+> index f8b0dccac8dc..739b38be5696 100644
+> --- a/arch/arm/mach-keystone/Makefile
+> +++ b/arch/arm/mach-keystone/Makefile
+> @@ -1,9 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-y					:= keystone.o smc.o
+>  
+> -plus_sec := $(call as-instr,.arch_extension sec,+sec)
+> -AFLAGS_smc.o				:=-Wa,-march=armv7-a$(plus_sec)
+> -
+>  obj-$(CONFIG_SMP)			+= platsmp.o
+>  
+>  # PM domain driver for Keystone SOCs
+> diff --git a/arch/arm/mach-keystone/smc.S b/arch/arm/mach-keystone/smc.S
+> index d15de8179fab..ec03dc499270 100644
+> --- a/arch/arm/mach-keystone/smc.S
+> +++ b/arch/arm/mach-keystone/smc.S
+> @@ -21,6 +21,7 @@
+>   *
+>   * Return: Non zero value on failure
+>   */
+> +	.arch_extension sec
+>  ENTRY(keystone_cpu_smc)
+>  	stmfd   sp!, {r4-r11, lr}
+>  	smc	#0
+> diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+> index 85d1b13c9215..f1d283995b31 100644
+> --- a/arch/arm/mach-omap2/Makefile
+> +++ b/arch/arm/mach-omap2/Makefile
+> @@ -41,11 +41,6 @@ obj-$(CONFIG_SOC_OMAP5)			+= $(omap-4-5-common)
+> $(smp-y) sleep44xx.o
+>  obj-$(CONFIG_SOC_AM43XX)		+= $(omap-4-5-common)
+>  obj-$(CONFIG_SOC_DRA7XX)		+= $(omap-4-5-common) $(smp-y) sleep44xx.o
+>  
+> -plus_sec := $(call as-instr,.arch_extension sec,+sec)
+> -AFLAGS_omap-headsmp.o			:=-Wa,-march=armv7-a$(plus_sec)
+> -AFLAGS_omap-smc.o			:=-Wa,-march=armv7-a$(plus_sec)
+> -AFLAGS_sleep44xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+> -
+>  # Functions loaded to SRAM
+>  obj-$(CONFIG_SOC_OMAP2420)		+= sram242x.o
+>  obj-$(CONFIG_SOC_OMAP2430)		+= sram243x.o
+> @@ -95,9 +90,6 @@ obj-$(CONFIG_POWER_AVS_OMAP)		+= sr_device.o
+>  obj-$(CONFIG_POWER_AVS_OMAP_CLASS3)    += smartreflex-class3.o
+>  
+>  AFLAGS_sleep24xx.o			:=-Wa,-march=armv6
+> -AFLAGS_sleep34xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+> -AFLAGS_sleep33xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+> -AFLAGS_sleep43xx.o			:=-Wa,-march=armv7-a$(plus_sec)
+>  
+>  endif
+>  
+> diff --git a/arch/arm/mach-omap2/omap-headsmp.S
+> b/arch/arm/mach-omap2/omap-headsmp.S
+> index 4c6f14cf92a8..b26c0daaa3c1 100644
+> --- a/arch/arm/mach-omap2/omap-headsmp.S
+> +++ b/arch/arm/mach-omap2/omap-headsmp.S
+> @@ -58,6 +58,8 @@ ENDPROC(omap5_secondary_startup)
+>   * omap5_secondary_startup if the primary CPU was put into HYP mode by
+>   * the boot loader.
+>   */
+> +	.arch armv7-a
+> +	.arch_extension sec
+>  ENTRY(omap5_secondary_hyp_startup)
+>  wait_2:	ldr	r2, =AUX_CORE_BOOT0_PA	@ read from AuxCoreBoot0
+>  	ldr	r0, [r2]
+> diff --git a/arch/arm/mach-omap2/omap-smc.S b/arch/arm/mach-omap2/omap-smc.S
+> index 72506e6cf9e7..a14aee5e81d1 100644
+> --- a/arch/arm/mach-omap2/omap-smc.S
+> +++ b/arch/arm/mach-omap2/omap-smc.S
+> @@ -23,7 +23,8 @@
+>   * link register "lr".
+>   * Function signature : void omap_smc1(u32 fn, u32 arg)
+>   */
+> -
+> +	.arch armv7-a
+> +	.arch_extension sec
+>  ENTRY(omap_smc1)
+>  	stmfd   sp!, {r2-r12, lr}
+>  	mov	r12, r0
+> diff --git a/arch/arm/mach-omap2/sleep33xx.S b/arch/arm/mach-omap2/sleep33xx.S
+> index 47a816468cdb..68fee339d3f1 100644
+> --- a/arch/arm/mach-omap2/sleep33xx.S
+> +++ b/arch/arm/mach-omap2/sleep33xx.S
+> @@ -24,6 +24,7 @@
+>  #define BIT(nr)			(1 << (nr))
+>  
+>  	.arm
+> +	.arch armv7-a
+>  	.align 3
+>  
+>  ENTRY(am33xx_do_wfi)
+> diff --git a/arch/arm/mach-omap2/sleep34xx.S b/arch/arm/mach-omap2/sleep34xx.S
+> index 22daf4efed68..4927304b5902 100644
+> --- a/arch/arm/mach-omap2/sleep34xx.S
+> +++ b/arch/arm/mach-omap2/sleep34xx.S
+> @@ -97,6 +97,8 @@ ENDPROC(enable_omap3630_toggle_l2_on_restore)
+>   *
+>   * r0 = physical address of the parameters
+>   */
+> +	.arch armv7-a
+> +	.arch_extension sec
+>  ENTRY(save_secure_ram_context)
+>  	stmfd	sp!, {r4 - r11, lr}	@ save registers on stack
+>  	mov	r3, r0			@ physical address of parameters
+> diff --git a/arch/arm/mach-omap2/sleep43xx.S b/arch/arm/mach-omap2/sleep43xx.S
+> index 5b9343b58fc7..31dda92d9d03 100644
+> --- a/arch/arm/mach-omap2/sleep43xx.S
+> +++ b/arch/arm/mach-omap2/sleep43xx.S
+> @@ -56,6 +56,8 @@
+>  #define RTC_PMIC_EXT_WAKEUP_EN				BIT(0)
+>  
+>  	.arm
+> +	.arch armv7-a
+> +	.arch_extension sec
+>  	.align 3
+>  
+>  ENTRY(am43xx_do_wfi)
+> diff --git a/arch/arm/mach-omap2/sleep44xx.S b/arch/arm/mach-omap2/sleep44xx.S
+> index 0cae3b070208..fb559d3de1f2 100644
+> --- a/arch/arm/mach-omap2/sleep44xx.S
+> +++ b/arch/arm/mach-omap2/sleep44xx.S
+> @@ -21,8 +21,11 @@
+>  #include "omap44xx.h"
+>  #include "omap4-sar-layout.h"
+>  
+> +	.arch armv7-a
+> +
+>  #if defined(CONFIG_SMP) && defined(CONFIG_PM)
+>  
+> +	.arch_extension sec
+>  .macro	DO_SMC
+>  	dsb
+>  	smc	#0
+> diff --git a/arch/arm/mach-tango/Makefile b/arch/arm/mach-tango/Makefile
+> index da6c633d3cc0..97cd04508fa1 100644
+> --- a/arch/arm/mach-tango/Makefile
+> +++ b/arch/arm/mach-tango/Makefile
+> @@ -1,7 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -plus_sec := $(call as-instr,.arch_extension sec,+sec)
+> -AFLAGS_smc.o := -Wa,-march=armv7-a$(plus_sec)
+> -
+>  obj-y += setup.o smc.o
+>  obj-$(CONFIG_SMP) += platsmp.o
+>  obj-$(CONFIG_SUSPEND) += pm.o
+> diff --git a/arch/arm/mach-tango/smc.S b/arch/arm/mach-tango/smc.S
+> index 361a8dc89804..b1752aaa72bc 100644
+> --- a/arch/arm/mach-tango/smc.S
+> +++ b/arch/arm/mach-tango/smc.S
+> @@ -1,6 +1,8 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  #include <linux/linkage.h>
+>  
+> +	.arch armv7-a
+> +	.arch_extension sec
+>  ENTRY(tango_smc)
+>  	push	{lr}
+>  	mov	ip, r1
