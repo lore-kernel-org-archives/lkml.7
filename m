@@ -2,179 +2,364 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A47C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5FBC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C603C20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:18:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kilf12o9"
+	by mail.kernel.org (Postfix) with ESMTP id C2B7620675
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 13:19:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbfDWNS6 (ORCPT
+        id S1727924AbfDWNTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 09:18:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38016 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726421AbfDWNS6 (ORCPT
+        Tue, 23 Apr 2019 09:19:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48450 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726801AbfDWNTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 09:18:58 -0400
-Received: by mail-wm1-f67.google.com with SMTP id w15so15881wmc.3;
-        Tue, 23 Apr 2019 06:18:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Y0W/ieVXTDACKJD5/u7Zzc0Cn4JWl8Yl/jAASWVNhDI=;
-        b=Kilf12o9zqLuCwvNDvGQhYPzs2yBloa06oYltl4ioofz/JpVZ6RJHCQ0cxhrtPfc4w
-         arwNdnEVxEb3oxt+KVV4Wtcd1ix+mfn/2jh9n2S5QliUOvR6Urr33p+6eHIQGCZyVra3
-         WnN3hjIXIrF5ZnItr8bHV/ktE2hTAo2KFC3VnGakxcYKzstBsfVJbR+7qSH+NZm4U9AD
-         IPiMFTjL0LQpWUAmpSiFgYYWLl7S+Ml6wROcwACqeCdQRr2q0W2ajNsIAyZK7pZcaqEp
-         snhkK8dtYDSBs4agoIX0tGLT2tVAPahGOmpIIoyLaoJaUBypKJHKz//XtZh35kbNhnHH
-         lGCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y0W/ieVXTDACKJD5/u7Zzc0Cn4JWl8Yl/jAASWVNhDI=;
-        b=rkXwgdbM7i5E6biNeeDQ/iB3iYLw1rChVa6miDGDxZXDXzHuHeXmZpmFqzpjel9cjM
-         1K0f0Gzb1BpHUOfg7MnjByltce9SCEWET4ciiIlfClxZtIYdIngmkO2OyEALXf+zAtiK
-         Wyv+aaWONJcAPCCH5+Lq4Plg0KoD6U/6iS10jfbFNDQwSL0wMFFA6n1wokJnCHZiMJh4
-         rXR0r7oenEjnDrNmX+YHHGf8IUuGm0A3q0atLFQhgL5ed4xsKEZDzzVvOIhcvYh1f2sp
-         G+Cs+URRVW7suFskjqvTbZHo/q6MLN5/SPCcb14O1cc/EvQtFM8BlTOW6PprbVhliKAT
-         sjjQ==
-X-Gm-Message-State: APjAAAU8/KUOoMjBdW4mZZCUhZ7jljkGA4yCsw8TNjVM2XnTj8ScnNWc
-        hEir+WngeIRe28ohH/k1R0Q=
-X-Google-Smtp-Source: APXvYqykuK5KPdfhpeIjqFYT0aQvK78KX7WmfXjlBBOgYmgw+aNA7g8+ApQoI5KYZqpJ8IxefTxRBQ==
-X-Received: by 2002:a05:600c:c4:: with SMTP id u4mr2478395wmm.80.1556025535671;
-        Tue, 23 Apr 2019 06:18:55 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id e16sm19913184wrs.0.2019.04.23.06.18.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 06:18:54 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 15:18:53 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, tomi.valkeinen@ti.com, sam@ravnborg.org
-Subject: Re: [PATCH v3 0/4] drm/panel: Support for OSD101T2045-53TS and
- OSD101T2587-53TS
-Message-ID: <20190423131853.GP23448@ulmo>
-References: <20190226075523.28997-1-peter.ujfalusi@ti.com>
- <20190423115506.GE23448@ulmo>
- <c25a9364-f69f-17b4-34d6-ec29e68118d3@ti.com>
+        Tue, 23 Apr 2019 09:19:12 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NDBf7Q067451
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:19:10 -0400
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s211j6ush-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:19:10 -0400
+Received: from localhost
+        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Tue, 23 Apr 2019 14:19:09 +0100
+Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
+        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 23 Apr 2019 14:19:06 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3NDJ2AV23789614
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Apr 2019 13:19:02 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5ECD7C6055;
+        Tue, 23 Apr 2019 13:19:02 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49A32C6057;
+        Tue, 23 Apr 2019 13:19:01 +0000 (GMT)
+Received: from [9.60.75.251] (unknown [9.60.75.251])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Apr 2019 13:19:01 +0000 (GMT)
+Subject: Re: [PATCH v2 3/8] s390: vfio-ap: allow assignment of unavailable AP
+ resources to mdev device
+To:     pmorel@linux.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1555796980-27920-1-git-send-email-akrowiak@linux.ibm.com>
+ <1555796980-27920-4-git-send-email-akrowiak@linux.ibm.com>
+ <2c76d792-00aa-a334-2243-b0f8b91295b2@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Tue, 23 Apr 2019 09:19:00 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ssZxAlvqSOvXAj81"
-Content-Disposition: inline
-In-Reply-To: <c25a9364-f69f-17b4-34d6-ec29e68118d3@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <2c76d792-00aa-a334-2243-b0f8b91295b2@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042313-0036-0000-0000-00000AAC0026
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010980; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01193231; UDB=6.00625501; IPR=6.00974051;
+ MB=3.00026557; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-23 13:19:08
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042313-0037-0000-0000-00004B7F2C82
+Message-Id: <22607063-1194-8fa6-2941-6acecddc3761@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904230091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 4/23/19 8:46 AM, Pierre Morel wrote:
+> On 20/04/2019 23:49, Tony Krowiak wrote:
+>> The AP architecture does not preclude assignment of AP resources that are
+>> not yet in the AP configuration (i.e., not available or not online).
+>> Let's go ahead and implement this facet of the AP architecture for linux
+>> guests.
+>>
+>> Access to AP resources is controlled by bit masks in a guest's SIE
+>> state description (i.e., the control block containing the state of a
+>> guest). When an AP instruction is executed on the guest, the firmware
+>> combines the masks from the guest's SIE state description with the masks
+>> from the host by doing a logical bitwise AND of the masks to create what
+>> are defined as effective masks. The effective masks determine which AP
+>> resources can be accessed by the guest.
+>>
+>> Effective masking allows the assignment of AP resources to a guest even
+>> if the underlying device is not in the AP configuration. If the device
+>> subsequently becomes configured, the guest will automatically have access
+>> to the associated AP resources (e.g., AP queues).
+>>
+>> The current implementation does not allow assignment of AP resources to
+>> an mdev device if the AP queues identified by the assignment are not
+>> bound to the vfio_ap device driver. This patch allows assignment of AP
+>> resources to the mdev device even if the AP queues are not bound to the
+>> vfio_ap device driver, as long as the AP queues are not reserved by the
+>> AP BUS for use by the zcrypt device drivers. If the queues are 
+>> subsequently
+>> bound to the vfio_ap device driver while a running guest is using the 
+>> mdev
+>> device, the guest will automatically gain access to the queues. Effective
+>> masking prevents access to queues until such time as they become 
+>> available.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_ops.c | 160 
+>> +++++---------------------------------
+>>   1 file changed, 18 insertions(+), 142 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
+>> b/drivers/s390/crypto/vfio_ap_ops.c
+>> index eae4ee24460a..221491a9ba95 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -113,122 +113,6 @@ static struct attribute_group 
+>> *vfio_ap_mdev_type_groups[] = {
+>>       NULL,
+>>   };
+>> -struct vfio_ap_queue_reserved {
+>> -    unsigned long *apid;
+>> -    unsigned long *apqi;
+>> -    bool reserved;
+>> -};
+>> -
+>> -/**
+>> - * vfio_ap_has_queue
+>> - *
+>> - * @dev: an AP queue device
+>> - * @data: a struct vfio_ap_queue_reserved reference
+>> - *
+>> - * Flags whether the AP queue device (@dev) has a queue ID containing 
+>> the APQN,
+>> - * apid or apqi specified in @data:
+>> - *
+>> - * - If @data contains both an apid and apqi value, then @data will 
+>> be flagged
+>> - *   as reserved if the APID and APQI fields for the AP queue device 
+>> matches
+>> - *
+>> - * - If @data contains only an apid value, @data will be flagged as
+>> - *   reserved if the APID field in the AP queue device matches
+>> - *
+>> - * - If @data contains only an apqi value, @data will be flagged as
+>> - *   reserved if the APQI field in the AP queue device matches
+>> - *
+>> - * Returns 0 to indicate the input to function succeeded. Returns 
+>> -EINVAL if
+>> - * @data does not contain either an apid or apqi.
+>> - */
+>> -static int vfio_ap_has_queue(struct device *dev, void *data)
+>> -{
+>> -    struct vfio_ap_queue_reserved *qres = data;
+>> -    struct ap_queue *ap_queue = to_ap_queue(dev);
+>> -    ap_qid_t qid;
+>> -    unsigned long id;
+>> -
+>> -    if (qres->apid && qres->apqi) {
+>> -        qid = AP_MKQID(*qres->apid, *qres->apqi);
+>> -        if (qid == ap_queue->qid)
+>> -            qres->reserved = true;
+>> -    } else if (qres->apid && !qres->apqi) {
+>> -        id = AP_QID_CARD(ap_queue->qid);
+>> -        if (id == *qres->apid)
+>> -            qres->reserved = true;
+>> -    } else if (!qres->apid && qres->apqi) {
+>> -        id = AP_QID_QUEUE(ap_queue->qid);
+>> -        if (id == *qres->apqi)
+>> -            qres->reserved = true;
+>> -    } else {
+>> -        return -EINVAL;
+>> -    }
+>> -
+>> -    return 0;
+>> -}
+>> -
+>> -/**
+>> - * vfio_ap_verify_queue_reserved
+>> - *
+>> - * @matrix_dev: a mediated matrix device
+>> - * @apid: an AP adapter ID
+>> - * @apqi: an AP queue index
+>> - *
+>> - * Verifies that the AP queue with @apid/@apqi is reserved by the 
+>> VFIO AP device
+>> - * driver according to the following rules:
+>> - *
+>> - * - If both @apid and @apqi are not NULL, then there must be an AP 
+>> queue
+>> - *   device bound to the vfio_ap driver with the APQN identified by 
+>> @apid and
+>> - *   @apqi
+>> - *
+>> - * - If only @apid is not NULL, then there must be an AP queue device 
+>> bound
+>> - *   to the vfio_ap driver with an APQN containing @apid
+>> - *
+>> - * - If only @apqi is not NULL, then there must be an AP queue device 
+>> bound
+>> - *   to the vfio_ap driver with an APQN containing @apqi
+>> - *
+>> - * Returns 0 if the AP queue is reserved; otherwise, returns 
+>> -EADDRNOTAVAIL.
+>> - */
+>> -static int vfio_ap_verify_queue_reserved(unsigned long *apid,
+>> -                     unsigned long *apqi)
+>> -{
+>> -    int ret;
+>> -    struct vfio_ap_queue_reserved qres;
+>> -
+>> -    qres.apid = apid;
+>> -    qres.apqi = apqi;
+>> -    qres.reserved = false;
+>> -
+>> -    ret = driver_for_each_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+>> -                     &qres, vfio_ap_has_queue);
+>> -    if (ret)
+>> -        return ret;
+>> -
+>> -    if (qres.reserved)
+>> -        return 0;
+>> -
+>> -    return -EADDRNOTAVAIL;
+>> -}
+>> -
+>> -static int
+>> -vfio_ap_mdev_verify_queues_reserved_for_apid(struct ap_matrix_mdev 
+>> *matrix_mdev,
+>> -                         unsigned long apid)
+> 
+> You suppress this function but it is still in use in 
+> assign_adapter_store...
 
---ssZxAlvqSOvXAj81
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Right you are. I must have been removed in a subsequent patch, because
+this code was compiled and tested. It should have been removed here
+though.
 
-On Tue, Apr 23, 2019 at 04:00:26PM +0300, Peter Ujfalusi wrote:
-> Hi Thierry,
->=20
-> On 23/04/2019 14.55, Thierry Reding wrote:
-> > On Tue, Feb 26, 2019 at 09:55:19AM +0200, Peter Ujfalusi wrote:
-> >> Hi,
-> >>
-> >> Changes since v2:
-> >> - Added Reviewed-by from Rob to the binding patches
-> >> - Added help text to Kconfig (osd101t2587-53ts)
-> >> - Print the error values in dev_err/warn
-> >> - Added Reviewed-by from Sam to the osd101t2587-53ts patch
-> >>
-> >> Changes since v1 (only panel-osd-osd101t2587-53ts changed):
-> >> - Removed unused members from struct osd101t2587_panel
-> >> - Use backlight_enable/backlight_disable
-> >> - Use devm_of_find_backlight()
-> >> - osd101t2587_of_match table standardized=20
-> >> - osd101t2587_panel_unprepare() added to shutdown and remove callbacks=
- to turn
-> >>   power off
-> >> - Fix probe in case mipi_dsi_attach() would fail
-> >>
-> >> Add support for OSD101T2045-53TS and OSD101T2587-53TS from One Stop Di=
-splays.
-> >>
-> >> The two panel is similar with one big difference: OSD101T2587-53TS req=
-uires the
-> >> MIPI_DSI_TURN_ON_PERIPHERAL message, thus can not be handled by panel-=
-simple.
-> >>
-> >> Regards,
-> >> Peter
-> >> ---
-> >> Peter Ujfalusi (4):
-> >>   dt-bindings: display: Add bindings for OSD101T2045-53TS
-> >>   drm/panel: simple: Add support for OSD101T2045-53TS
-> >>   dt-bindings: display: Add bindings for OSD101T2587-53TS panel
-> >>   drm/panel: Add OSD101T2587-53TS driver
-> >>
-> >>  .../display/panel/osd,osd101t2045-53ts.txt    |  11 +
-> >>  .../display/panel/osd,osd101t2587-53ts.txt    |  14 +
-> >>  drivers/gpu/drm/panel/Kconfig                 |   9 +
-> >>  drivers/gpu/drm/panel/Makefile                |   1 +
-> >>  .../drm/panel/panel-osd-osd101t2587-53ts.c    | 254 ++++++++++++++++++
-> >>  drivers/gpu/drm/panel/panel-simple.c          |  34 +++
-> >>  6 files changed, 323 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/display/panel/os=
-d,osd101t2045-53ts.txt
-> >>  create mode 100644 Documentation/devicetree/bindings/display/panel/os=
-d,osd101t2587-53ts.txt
-> >>  create mode 100644 drivers/gpu/drm/panel/panel-osd-osd101t2587-53ts.c
-> >=20
-> > Applied all four patches. Note that I had to change the osd vendor
-> > string to osddisplays, which is the one that is documented in
-> > vendor-prefixes.txt.
->=20
-> I recall checking the vendor-prefixes.txt and not finding OSD in there.
-> Odd, as it is indeed there.
->=20
-> > I'm assuming that this is the same vendor, based on the model names. If
-> > this is a different vendor, do let me know.
->=20
-> Yes it is the same one.
->=20
-> Thank you and sorry for missing it,
+> 
+> 
+>> -{
+>> -    int ret;
+>> -    unsigned long apqi;
+>> -    unsigned long nbits = matrix_mdev->matrix.aqm_max + 1;
+>> -
+>> -    if (find_first_bit_inv(matrix_mdev->matrix.aqm, nbits) >= nbits)
+>> -        return vfio_ap_verify_queue_reserved(&apid, NULL);
+>> -
+>> -    for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm, nbits) {
+>> -        ret = vfio_ap_verify_queue_reserved(&apid, &apqi);
+>> -        if (ret)
+>> -            return ret;
+>> -    }
+>> -
+>> -    return 0;
+>> -}
+>> -
+>>   /**
+>>    * vfio_ap_mdev_verify_no_sharing
+>>    *
+>> @@ -359,9 +243,17 @@ static ssize_t assign_adapter_store(struct device 
+>> *dev,
+>>       set_bit_inv(apid, matrix_mdev->matrix.apm);
+>> +    ret = ap_apqn_in_matrix_owned_by_def_drv(matrix_mdev->matrix.apm,
+>> +                         matrix_mdev->matrix.aqm);
+>> +
+>> +    /* If any APQN is owned by a default driver */
+>> +    ret = (ret == 1) ? -EADDRNOTAVAIL : ret;
+>> +    if (ret)
+>> +        goto error;
+>> +
+>>       ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev);
+>>       if (ret)
+>> -        goto share_err;
+>> +        goto error;
+>>       if (matrix_mdev->shadow_crycb)
+>>           set_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+>> @@ -369,7 +261,7 @@ static ssize_t assign_adapter_store(struct device 
+>> *dev,
+>>       ret = count;
+>>       goto done;
+>> -share_err:
+>> +error:
+>>       clear_bit_inv(apid, matrix_mdev->matrix.apm);
+>>   done:
+>>       mutex_unlock(&matrix_dev->lock);
+>> @@ -426,26 +318,6 @@ static ssize_t unassign_adapter_store(struct 
+>> device *dev,
+>>   }
+>>   static DEVICE_ATTR_WO(unassign_adapter);
+>> -static int
+>> -vfio_ap_mdev_verify_queues_reserved_for_apqi(struct ap_matrix_mdev 
+>> *matrix_mdev,
+>> -                         unsigned long apqi)
+>> -{
+>> -    int ret;
+>> -    unsigned long apid;
+>> -    unsigned long nbits = matrix_mdev->matrix.apm_max + 1;
+>> -
+>> -    if (find_first_bit_inv(matrix_mdev->matrix.apm, nbits) >= nbits)
+>> -        return vfio_ap_verify_queue_reserved(NULL, &apqi);
+>> -
+>> -    for_each_set_bit_inv(apid, matrix_mdev->matrix.apm, nbits) {
+>> -        ret = vfio_ap_verify_queue_reserved(&apid, &apqi);
+>> -        if (ret)
+>> -            return ret;
+>> -    }
+>> -
+>> -    return 0;
+>> -}
+>> -
+>>   /**
+>>    * assign_domain_store
+>>    *
+>> @@ -500,12 +372,16 @@ static ssize_t assign_domain_store(struct device 
+>> *dev,
+>>       mutex_lock(&matrix_dev->lock);
+>> -    ret = vfio_ap_mdev_verify_queues_reserved_for_apqi(matrix_mdev, 
+>> apqi);
+>> -    if (ret)
+>> -        goto done;
+>> -
+>>       set_bit_inv(apqi, matrix_mdev->matrix.aqm);
+>> +    ret = ap_apqn_in_matrix_owned_by_def_drv(matrix_mdev->matrix.apm,
+>> +                         matrix_mdev->matrix.aqm);
+>> +
+>> +    /* If any APQN is owned by a default driver */
+>> +    ret = (ret == 1) ? -EADDRNOTAVAIL : ret;
+>> +    if (ret)
+>> +        goto error;
+> 
+> forget to add the error label ?
 
-No worries, it was merged (March 18) after you sent out your series
-(February 26).
+Apparently I did. I'm not sure what happened here since I compiled
+and tested the code. I must have messed something up when formatting
+the patches.
 
-Thierry
+> 
+>> +
+>>       ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev);
+>>       if (ret)
+>>           goto share_err;
+>>
+> 
+> 
 
---ssZxAlvqSOvXAj81
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAly/ELoACgkQ3SOs138+
-s6FHLA//Z+8DwLFrB4bWhdcg9OxhdrF8C2hXzDH0yE1a1rPgcxuAEu/MQvivhvTc
-S2RSk1C+epMUDsHM5eqgSPgGGU4P0vU8tcLWui/ZV1vYIGNgQy0BXFW8jXv5j9E3
-Tj6Hi0fJDeVmUHGo9zr//NBwNSpMFsvNpuhT9nLxXeqFVg1iS9m0grfy6KkX3xUG
-ECfXmSnIKzZQnVeOfvPSNpCzcVJ/6AggRCYsrdX/yQOUMbwqwop3KIBjRm9CmMpa
-gIJj98Ji2U6DOOksNYoSYvBioyWBZ9oZeMepNYHK5iKH8s7BQfT+0TVTEVXXw5EJ
-ide+e4l7JqFtx/Rmb00DytsthMwLsDrv+e542ojPGsAkjkDpNQrEECK3JgEWS50a
-VOujE7LRGrLMglA8iAEjyUKlbbU6Pg1MSj963NN5gSgdO7elOyFtFVFXZVn3B8n+
-KZLhGQxOjoG5RnBY4hJo5CQWirsfQ55VfewxLOeIGLKHwCd0WmrLcFopdakioZ3L
-c7+vmOYir2tHNckW/phpqnoOhW7HiWO1aNn0Bl3GGcUHauoYGUDHMkjCamJYjBSp
-xRhgVZZDWIQBEwIlBhdwFuziebK+95paaXek9At+OHOfibLuAiW1/5CZFqm5DrHW
-hIG0lT9CNfs5gso9qJlHezKcZ5oF+ZS+REmRqbecbTOknTXpzuU=
-=/ZJs
------END PGP SIGNATURE-----
-
---ssZxAlvqSOvXAj81--
