@@ -2,154 +2,136 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6BCC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA76C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62EDB206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FFF4206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 12:55:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D6jgEDFX"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="fxB/5EyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfDWMvH (ORCPT
+        id S1727663AbfDWMzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 08:51:07 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51434 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfDWMvG (ORCPT
+        Tue, 23 Apr 2019 08:55:32 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:53519 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfDWMzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 08:51:06 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B025E5F;
-        Tue, 23 Apr 2019 14:51:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1556023863;
-        bh=fMsj4MfaMmrN9B+gwEZ2g5G6brfCXed+7WelLvVEGTs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D6jgEDFXNhY18UGvcM3sIIROklSGbKNbWccu7hx7qaz8HgahL1sRSsjYWzAbhXino
-         +QV8jL0d1TNl8ENkokxBS66CI68p6iCcRryP81vVz0J0de2rePjdTqHmfCnJGJydKG
-         9CcEH6YVMFVxfBZR4JkP19KKTrDAfimpKw9pYLb8=
-Date:   Tue, 23 Apr 2019 15:50:54 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     Jonas Karlman <jonas@kwiboo.se>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/bridge: dw-hdmi: fix SCDC configuration for
- ddc-i2c-bus
-Message-ID: <20190423125054.GB4816@pendragon.ideasonboard.com>
-References: <VE1PR03MB59031814B5BCAB2152923BDAAC210@VE1PR03MB5903.eurprd03.prod.outlook.com>
- <2275367.P1g2IIHPGP@phil>
+        Tue, 23 Apr 2019 08:55:31 -0400
+Received: by mail-it1-f195.google.com with SMTP id y204so23217423itf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 05:55:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HMaqxlUnEk44LnM3PWYf6hB2VGv2xpvBrBkPQmZvQ1I=;
+        b=fxB/5EyTsJW1blyTqtcFZ2352T56PYvfX9tTUiWnI9kWwTShToOotTg26/ZbI0eRtt
+         /1U3CD42GQAfwW3Vixm5S1XEAhbTZVPdsnToKTlNbtoV1xRMTtyocVfzBaiWxjPkNkX+
+         qBYDFJChLcXP3AvHL/uSczsqqnOIENatgQktI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HMaqxlUnEk44LnM3PWYf6hB2VGv2xpvBrBkPQmZvQ1I=;
+        b=Iksv2T67UjEs31kxqgZmJ5AxCGD6AjW6pXFvflLcVPftVzop8FNq3opgWYA9qcSNVy
+         UPQ+ocmwlT2qp+Xh4zLuX6oOcd4mmy2L/IXAN8RUGWC/glRB6/vPiuNvtP8A/l79vyxz
+         tnfZD8c21lx54PAlDAqiHETGVIkoAPVKAea7hH/3c1gXN4gp82QIl5ID1RyAcYH+eRaa
+         bEqVn5D51UGW9lHcJg1VTjS85l3xgpJ8G2mSplBiVWJfyUt8XxOiffjO0soSJQWfkJbg
+         EbKPRtb809DD1QpbaBJTe5yops9MApnTwolWYcSq5tvvUTaiyIqp+TInOOQsnyS+kmM2
+         0uqA==
+X-Gm-Message-State: APjAAAUljsVslplfVurmpniLor2kZTJHKBqeVka69GQOFYXhRLnHvFCt
+        BHtkc5FlgbHXs/EQSwhEJ3y1RqustBK4/Pi4ZXUZfA==
+X-Google-Smtp-Source: APXvYqxFfCTedi9HW0SvowO5zYgdja9Pzo54lfhfY7R/IwRsV3cfg+qea4Wp0bVOhg8nkVJOnq6uksFRpPo3pYGSLZU=
+X-Received: by 2002:a24:1312:: with SMTP id 18mr1660003itz.121.1556024131137;
+ Tue, 23 Apr 2019 05:55:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2275367.P1g2IIHPGP@phil>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190301170831.23612-1-abbotti@mev.co.uk>
+In-Reply-To: <20190301170831.23612-1-abbotti@mev.co.uk>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 23 Apr 2019 14:55:19 +0200
+Message-ID: <CAJfpegsQvUGz-YRQVrfkTWuSFe==Hg_Y=VpV0ZagKe0qGfxQ7g@mail.gmail.com>
+Subject: Re: [PATCH] fuse: Add ioctl flag for compat ioctl with 64-bit time_t
+To:     Ian Abbott <abbotti@mev.co.uk>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 12:26:02PM +0200, Heiko Stuebner wrote:
-> Am Sonntag, 21. April 2019, 10:25:50 CEST schrieb Jonas Karlman:
-> > When ddc-i2c-bus property is used, a NULL pointer dereference is reported:
-> > 
-> > [   31.041669] Unable to handle kernel NULL pointer dereference at virtual address 00000008
-> > [   31.041671] pgd = 4d3c16f6
-> > [   31.041673] [00000008] *pgd=00000000
-> > [   31.041678] Internal error: Oops: 5 [#1] SMP ARM
-> > 
-> > [   31.041711] Hardware name: Rockchip (Device Tree)
-> > [   31.041718] PC is at i2c_transfer+0x8/0xe4
-> > [   31.041721] LR is at drm_scdc_read+0x54/0x84
-> > [   31.041723] pc : [<c073273c>]    lr : [<c05926c4>]    psr: 280f0013
-> > [   31.041725] sp : edffdad0  ip : 5ccb5511  fp : 00000058
-> > [   31.041727] r10: 00000780  r9 : edf91608  r8 : c11b0f48
-> > [   31.041728] r7 : 00000438  r6 : 00000000  r5 : 00000000  r4 : 00000000
-> > [   31.041730] r3 : edffdae7  r2 : 00000002  r1 : edffdaec  r0 : 00000000
-> > 
-> > [   31.041908] [<c073273c>] (i2c_transfer) from [<c05926c4>] (drm_scdc_read+0x54/0x84)
-> > [   31.041913] [<c05926c4>] (drm_scdc_read) from [<c0592858>] (drm_scdc_set_scrambling+0x30/0xbc)
-> > [   31.041919] [<c0592858>] (drm_scdc_set_scrambling) from [<c05cc0f4>] (dw_hdmi_update_power+0x1440/0x1610)
-> > [   31.041926] [<c05cc0f4>] (dw_hdmi_update_power) from [<c05cc574>] (dw_hdmi_bridge_enable+0x2c/0x70)
-> > [   31.041932] [<c05cc574>] (dw_hdmi_bridge_enable) from [<c05aed48>] (drm_bridge_enable+0x24/0x34)
-> > [   31.041938] [<c05aed48>] (drm_bridge_enable) from [<c0591060>] (drm_atomic_helper_commit_modeset_enables+0x114/0x220)
-> > [   31.041943] [<c0591060>] (drm_atomic_helper_commit_modeset_enables) from [<c05c3fe0>] (rockchip_atomic_helper_commit_tail_rpm+0x28/0x64)
-> > 
-> > hdmi->i2c may not be set when ddc-i2c-bus property is used in device tree.
-> > Fix this by using hdmi->ddc as the i2c adapter when calling drm_scdc_*().
-> > Also report that SCDC is not supported when there is no DDC bus.
-> > 
-> > Fixes: 264fce6cc2c1 ("drm/bridge: dw-hdmi: Add SCDC and TMDS Scrambling support")
-> > Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-> 
-> I've looked that up and yeah, hdmi->ddc seems the right thing to use
-> as it points either to the external i2c or the internal one, so
-> 
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+On Fri, Mar 1, 2019 at 6:08 PM Ian Abbott <abbotti@mev.co.uk> wrote:
+>
+> Currently, a CUSE server running on a 64-bit kernel can tell when an
+> ioctl request comes from a process running a 32-bit ABI, but cannot tell
+> whether the requesting process is using legacy IA32 emulation or x32
+> ABI, for example.  In particular, the server does not know the size of
+> the client process's `time_t` type.
+>
+> For 64-bit kernels, the `FUSE_IOCTL_COMPAT` and `FUSE_IOCTL_32BIT` flags
+> are currently set in the ioctl input request (`struct fuse_ioctl_in`
+> member `flags`) for a 32-bit requesting process.  This patch defines a
+> new flag `FUSE_IOCTL_COMPAT_64TIME` and sets it if the 32-bit requesting
+> process (running on a 64-bit kernel) uses a 64-bit `time_t` type.
 
-That matches my own analysis,
+Hi,
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Thanks for the patch.
 
-> > ---
-> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 12 ++++++++----
-> >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > index 7a47c65d8ecb..fd1c319a4ee0 100644
-> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > @@ -1046,6 +1046,10 @@ static bool dw_hdmi_support_scdc(struct dw_hdmi *hdmi)
-> >  	if (hdmi->version < 0x200a)
-> >  		return false;
-> >  
-> > +	/* Disable if no DDC bus */
-> > +	if (!hdmi->ddc)
-> > +		return false;
-> > +
-> >  	/* Disable if SCDC is not supported, or if an HF-VSDB block is absent */
-> >  	if (!display->hdmi.scdc.supported ||
-> >  	    !display->hdmi.scdc.scrambling.supported)
-> > @@ -1683,13 +1687,13 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
-> >  			 * Source Devices compliant shall set the
-> >  			 * Source Version = 1.
-> >  			 */
-> > -			drm_scdc_readb(&hdmi->i2c->adap, SCDC_SINK_VERSION,
-> > +			drm_scdc_readb(hdmi->ddc, SCDC_SINK_VERSION,
-> >  				       &bytes);
-> > -			drm_scdc_writeb(&hdmi->i2c->adap, SCDC_SOURCE_VERSION,
-> > +			drm_scdc_writeb(hdmi->ddc, SCDC_SOURCE_VERSION,
-> >  				min_t(u8, bytes, SCDC_MIN_SOURCE_VERSION));
-> >  
-> >  			/* Enabled Scrambling in the Sink */
-> > -			drm_scdc_set_scrambling(&hdmi->i2c->adap, 1);
-> > +			drm_scdc_set_scrambling(hdmi->ddc, 1);
-> >  
-> >  			/*
-> >  			 * To activate the scrambler feature, you must ensure
-> > @@ -1705,7 +1709,7 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
-> >  			hdmi_writeb(hdmi, 0, HDMI_FC_SCRAMBLER_CTRL);
-> >  			hdmi_writeb(hdmi, (u8)~HDMI_MC_SWRSTZ_TMDSSWRST_REQ,
-> >  				    HDMI_MC_SWRSTZ);
-> > -			drm_scdc_set_scrambling(&hdmi->i2c->adap, 0);
-> > +			drm_scdc_set_scrambling(hdmi->ddc, 0);
-> >  		}
-> >  	}
-> >  
+I think it should rather use in_x32_syscall() helper and follow that
+naming because there's apparently at least one example in xfs of a
+non-time_t related ioctl that varies between the x32 vs ia32.
 
--- 
-Regards,
+Thanks,
+Miklos
 
-Laurent Pinchart
+>
+> Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+> ---
+>  fs/fuse/file.c            | 5 ++++-
+>  include/uapi/linux/fuse.h | 2 ++
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 06096b60f1df..9777e7a19889 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -2576,8 +2576,11 @@ long fuse_do_ioctl(struct file *file, unsigned int cmd, unsigned long arg,
+>  #if BITS_PER_LONG == 32
+>         inarg.flags |= FUSE_IOCTL_32BIT;
+>  #else
+> -       if (flags & FUSE_IOCTL_COMPAT)
+> +       if (flags & FUSE_IOCTL_COMPAT) {
+>                 inarg.flags |= FUSE_IOCTL_32BIT;
+> +               if (COMPAT_USE_64BIT_TIME)
+> +                       inarg.flags |= FUSE_IOCTL_COMPAT_64TIME;
+> +       }
+>  #endif
+>
+>         /* assume all the iovs returned by client always fits in a page */
+> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> index 2ac598614a8f..1f4a71486601 100644
+> --- a/include/uapi/linux/fuse.h
+> +++ b/include/uapi/linux/fuse.h
+> @@ -335,6 +335,7 @@ struct fuse_file_lock {
+>   * FUSE_IOCTL_RETRY: retry with new iovecs
+>   * FUSE_IOCTL_32BIT: 32bit ioctl
+>   * FUSE_IOCTL_DIR: is a directory
+> + * FUSE_IOCTL_COMPAT_64TIME: 32bit compat ioctl with 64bit time_t
+>   *
+>   * FUSE_IOCTL_MAX_IOV: maximum of in_iovecs + out_iovecs
+>   */
+> @@ -343,6 +344,7 @@ struct fuse_file_lock {
+>  #define FUSE_IOCTL_RETRY       (1 << 2)
+>  #define FUSE_IOCTL_32BIT       (1 << 3)
+>  #define FUSE_IOCTL_DIR         (1 << 4)
+> +#define FUSE_IOCTL_COMPAT_64TIME (1 << 5)
+>
+>  #define FUSE_IOCTL_MAX_IOV     256
+>
+> --
+> 2.20.1
+>
