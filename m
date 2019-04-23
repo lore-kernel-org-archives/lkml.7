@@ -2,77 +2,78 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F283FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDE5C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33FA2077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D322077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfDWJlD (ORCPT
+        id S1727250AbfDWJlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 05:41:03 -0400
-Received: from mail4.tencent.com ([183.57.53.109]:35634 "EHLO
-        mail4.tencent.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfDWJlD (ORCPT
+        Tue, 23 Apr 2019 05:41:14 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:60839 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725990AbfDWJlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 05:41:03 -0400
-Received: from EXHUB-SZMail01.tencent.com (unknown [10.14.6.21])
-        by mail4.tencent.com (Postfix) with ESMTP id 7494750189;
-        Tue, 23 Apr 2019 17:40:49 +0800 (CST)
-Received: from localhost.localdomain (10.35.10.40) by
- EXHUB-SZMail01.tencent.com (10.14.6.21) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 23 Apr 2019 17:40:48 +0800
-From:   Jiang Biao <benbjiang@tencent.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>
-CC:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benbjiang@tencent.com>
-Subject: [PATCH] kvm_main: fix some comments
-Date:   Tue, 23 Apr 2019 17:40:08 +0800
-Message-ID: <20190423094008.67986-1-benbjiang@tencent.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Tue, 23 Apr 2019 05:41:14 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TQ1rapc_1556012469;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TQ1rapc_1556012469)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 23 Apr 2019 17:41:10 +0800
+Subject: Re: [RFC PATCH 3/5] numa: introduce per-cgroup preferred numa node
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+References: <209d247e-c1b2-3235-2722-dd7c1f896483@linux.alibaba.com>
+ <77452c03-bc4c-7aed-e605-d5351f868586@linux.alibaba.com>
+ <20190423085533.GF11158@hirez.programming.kicks-ass.net>
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Message-ID: <e5e39d99-2b7a-db27-5aa0-ecc8d064257b@linux.alibaba.com>
+Date:   Tue, 23 Apr 2019 17:41:09 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.35.10.40]
+In-Reply-To: <20190423085533.GF11158@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-is_dirty has been rename to flush, but the comment for it is
-outdated. And the description about @flush parameter for
-kvm_clear_dirty_log_protect() is missing, add it in this patch
-also.
 
-Signed-off-by: Jiang Biao <benbjiang@tencent.com>
----
- virt/kvm/kvm_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index dc8edc97ba85..40b435e77672 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1138,7 +1138,7 @@ EXPORT_SYMBOL_GPL(kvm_get_dirty_log);
-  *	and reenable dirty page tracking for the corresponding pages.
-  * @kvm:	pointer to kvm instance
-  * @log:	slot id and address to which we copy the log
-- * @is_dirty:	flag set if any page is dirty
-+ * @flush:	if TLB flush is needed by caller
-  *
-  * We need to keep it in mind that VCPU threads can write to the bitmap
-  * concurrently. So, to avoid losing track of dirty pages we keep the
-@@ -1223,6 +1223,7 @@ EXPORT_SYMBOL_GPL(kvm_get_dirty_log_protect);
-  *	and reenable dirty page tracking for the corresponding pages.
-  * @kvm:	pointer to kvm instance
-  * @log:	slot id and address from which to fetch the bitmap of dirty pages
-+ * @flush:	if TLB flush is needed by caller
-  */
- int kvm_clear_dirty_log_protect(struct kvm *kvm,
- 				struct kvm_clear_dirty_log *log, bool *flush)
--- 
-2.17.2 (Apple Git-113)
+On 2019/4/23 下午4:55, Peter Zijlstra wrote:
+> On Mon, Apr 22, 2019 at 10:13:36AM +0800, 王贇 wrote:
+>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> index af171ccb56a2..6513504373b4 100644
+>> --- a/mm/mempolicy.c
+>> +++ b/mm/mempolicy.c
+>> @@ -2031,6 +2031,10 @@ alloc_pages_vma(gfp_t gfp, int order, struct vm_area_struct *vma,
+>>
+>>  	pol = get_vma_policy(vma, addr);
+>>
+>> +	page = alloc_page_numa_preferred(gfp, order);
+>> +	if (page)
+>> +		goto out;
+>> +
+>>  	if (pol->mode == MPOL_INTERLEAVE) {
+>>  		unsigned nid;
+>>
+> 
+> This I think is wrong, it overrides app specific mbind() requests.
 
+The original concern is that we scared the user apps insider cgroup deal
+wrong with memory policy and do bad behavior, but now I agree that we
+should not override the policy, the admin will take the responsibility.
+
+Regards,
+Michael Wang
+
+> 
