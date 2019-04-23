@@ -7,66 +7,65 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6159C282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DB1C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D77D20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C3820693
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbE0ovKO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WzPhDlsl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfDWQGO (ORCPT
+        id S1728620AbfDWQGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:06:14 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43746 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbfDWQGO (ORCPT
+        Tue, 23 Apr 2019 12:06:23 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36317 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfDWQGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:06:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z9so7824699pgu.10;
-        Tue, 23 Apr 2019 09:06:13 -0700 (PDT)
+        Tue, 23 Apr 2019 12:06:23 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 85so7850715pgc.3;
+        Tue, 23 Apr 2019 09:06:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/08y2m3gGBdkdTWiOB0hDrv+GCpmViZ3xqDkyKBOonQ=;
-        b=rbE0ovKOEPUtZiXT8GKfWp68IRxrFBVu65y+r2ufpuXIWvjTzrze+EDGFNV3DY2eB2
-         KB6TOfoh85x3n5Dv4dTj/1PRR3KYbHevdc0MnjhXOhB/1rgFGGhKVCZZAVorq6XVZIWS
-         mdGFn96aVkkyeiqJLZRi6WoAqNLqckIVLIy0FuhMR4SxRtaRfTgOSRH5jOZKx9apkYi6
-         opuzIhYcgQhOrKKgUsiG9C7WZZZOcg/4KWX8R1J96u9rAoo3lV0UzgOlGseSTcjchju5
-         YQ+yJKztGj3uQJwleWj+4SdXxNS8ANqJKtqLgknAQeMh9WXKbf7WtwmCCquVfI5lM1GT
-         HqxQ==
+        bh=YmBBGLsFI/dItK9tYAglKv8q6g7rvI0MS0aWDHWM1Z4=;
+        b=WzPhDlsl1/txZHnSFVSmo++BoptuDbvmlkvBCXWFeLcpjlWN+LHt9kZUbWSFWSHVdl
+         lgIrgGZUZp8KXlCCAQpIS7xbEvqxhMNgIa4d/T5AUdk1LPgKnKvQebZlvBVTI6bBT8q6
+         CnZROJ96MmL/RwtO/2MM7YBFXruKPcalcWVkNtKNj+q9WfXXHQ+X99wIAg9X2REqB5Gg
+         c+9pfznbur2RZBcujJY/cOS7uS19GPhmZSv9GgeY21SBQ/K5ertfmiADtz5ifP7qWDXz
+         K1zgoqRIESWKiLry5kQg4isziscO+gy8TsRYWuQwhrVpJXdGLYPs1Sbfi/+FUTfewflb
+         Untw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/08y2m3gGBdkdTWiOB0hDrv+GCpmViZ3xqDkyKBOonQ=;
-        b=B8/Qy2SkOujc88jbt1VcPYhfhaOEhAzJR1e5btOyM8pBs22OIIpp1a6Dy9HkqEU3d0
-         d+GnNjhwQKjvpnHUHpGoL3Sm/qKcr2Lhs1OQw6BkVAYY9+Q/o+gb0e3C+GlSLFwj+weh
-         IVy+2SMWAdBZZPDSv9mhOpFR/Of/e7LixWw1TYyQbW+dMRFZKS9ZyaUEBCnuQN6IZHgh
-         Q8NDtJUOdt3fVpo0taTOlVydmx0+3+bKQ9mtSCEyIt4W0Oywk5gPB4LsMFRuN/e8ZAG3
-         CYIPMJx1QGRgvOfVczBNGSN48QDsEBoieS8KbgjXx0NuIMRYK/4BSvAJ3r/6mSgrl057
-         4cEg==
-X-Gm-Message-State: APjAAAV/W4FfHsfABfcp1bc6RIXCTfqmSEK8B4kgWE879KpeZQ/7BFQR
-        VLGtcZ0IhRg3ngPCBoi+HYQ=
-X-Google-Smtp-Source: APXvYqwvCGErpG52qlMI1HiREj+WXP6/uK+sGhaj66OQ1C0xFHt+NaZMg3ehEw8lAab5pmI1HtO1ZA==
-X-Received: by 2002:a62:e412:: with SMTP id r18mr27779355pfh.207.1556035573253;
-        Tue, 23 Apr 2019 09:06:13 -0700 (PDT)
+        bh=YmBBGLsFI/dItK9tYAglKv8q6g7rvI0MS0aWDHWM1Z4=;
+        b=jh1MtOGDmXuU/R24RcZm58TTgJuZJmy4zDOfr2BW4VsDzAHjo/s0FL4Snd32GvFUIZ
+         rc+PTUydXQt4m1mrSvV3O7JAAdkIQiyA9+WzWg5zmWLhE9y+70SfLKnijR6ysC6gjo0D
+         JGmSwTj5bJ34aC/3HxWPeejzCt4VOz9Uhei1GTFVaMf5eMN2Itx+jfI8G4UV4SQTmoTH
+         Uw8RjJaQYk2SpbCg7uYMCRazBYynaLD73CtSC8C5ThY1HAA4tYMCt9Z12ReTxdlH7XN0
+         zgBkGJAGYxFwU4OLV6DbkE/Mjq2fdU8EQIglReCAr+w4Jf1jgSofj0PhZiep8/u7cr3/
+         YAfA==
+X-Gm-Message-State: APjAAAVfn4Gh0iI3bs4dg0B8blBW5OYLuW6WvRbZ92WR54yRSNvIQLFc
+        T34MxNmQwYFJvVCHXaC2njI4D9Sv
+X-Google-Smtp-Source: APXvYqyUwG74s8HwKnJndmzf2GHpN3MV6+fjk+FHmjr1RhKpNuL0z/SpALCWrwcIRb3mAS2FSy5RQg==
+X-Received: by 2002:a62:4602:: with SMTP id t2mr27638199pfa.26.1556035581993;
+        Tue, 23 Apr 2019 09:06:21 -0700 (PDT)
 Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id e193sm28258557pgc.53.2019.04.23.09.06.10
+        by smtp.gmail.com with ESMTPSA id m6sm9726800pgq.0.2019.04.23.09.06.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 09:06:12 -0700 (PDT)
+        Tue, 23 Apr 2019 09:06:21 -0700 (PDT)
 From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com
-Cc:     lee.jones@linaro.org, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, agross@kernel.org,
-        david.brown@linaro.org, hdegoede@redhat.com,
+To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org
+Cc:     lee.jones@linaro.org, dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, hdegoede@redhat.com,
         linux-input@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v4 1/2] HID: quirks: Refactor ELAN 400 and 401 handling
-Date:   Tue, 23 Apr 2019 09:06:05 -0700
-Message-Id: <20190423160605.9970-1-jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v4 2/2] arm64: dts: qcom: Add Lenovo Miix 630
+Date:   Tue, 23 Apr 2019 09:06:16 -0700
+Message-Id: <20190423160616.10017-1-jeffrey.l.hugo@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
 References: <20190423160543.9922-1-jeffrey.l.hugo@gmail.com>
@@ -75,116 +74,350 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There needs to be coordination between hid-quirks and the elan_i2c driver
-about which devices are handled by what drivers.  Currently, both use
-whitelists, which results in valid devices being unhandled by default,
-when they should not be rejected by hid-quirks.  This is quickly becoming
-an issue.
+This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
+functionality includes USB (host), microSD-card, keyboard, and trackpad.
 
-Since elan_i2c has a maintained whitelist of what devices it will handle,
-use that to implement a blacklist in hid-quirks so that only the devices
-that need to be handled by elan_i2c get rejected by hid-quirks, and
-everything else is handled by default.  The downside is the whitelist and
-blacklist need to be kept in sync.
-
-Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
- drivers/hid/hid-quirks.c            | 64 ++++++++++++++++++++++++-----
- drivers/input/mouse/elan_i2c_core.c |  4 ++
- 2 files changed, 58 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
+ .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
+ 3 files changed, 309 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
 
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 77ffba48cc73..656485e08eb7 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -987,17 +987,61 @@ bool hid_ignore(struct hid_device *hdev)
- 		break;
- 	case USB_VENDOR_ID_ELAN:
- 		/*
--		 * Many Elan devices have a product id of 0x0401 and are handled
--		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
--		 * is not (and cannot be) handled by that driver ->
--		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
-+		 * Blacklist of everything that gets handled by the elan_i2c
-+		 * input driver.  This should be kept in sync with the whitelist
-+		 * that exists in that driver.  This avoids disabling valid
-+		 * touchpads and other ELAN devices.
- 		 */
--		if (hdev->product == 0x0401 &&
--		    strncmp(hdev->name, "ELAN0800", 8) != 0)
--			return true;
--		/* Same with product id 0x0400 */
--		if (hdev->product == 0x0400 &&
--		    strncmp(hdev->name, "QTEC0001", 8) != 0)
-+		if ((hdev->product == 0x0401 || hdev->product == 0x0400) &&
-+		   (strncmp(hdev->name, "ELAN0000", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0100", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0600", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0601", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0602", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0603", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0604", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0605", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0606", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0607", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0608", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0609", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN060B", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN060C", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN060F", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0610", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0611", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0612", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0613", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0614", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0615", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0616", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0617", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0618", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0619", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN061A", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN061B", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN061C", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN061D", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN061E", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN061F", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0620", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0621", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0622", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0623", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0624", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0625", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0626", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0627", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0628", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0629", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN062A", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN062B", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN062C", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN062D", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0631", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN0632", 8) == 0 ||
-+		    strncmp(hdev->name, "ELAN1000", 8) == 0 ||
-+		    strncmp(hdev->name, "elan,ekth3000", 13) == 0))
- 			return true;
- 		break;
- 	}
-diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-index f9525d6f0bfe..3ded19528cd4 100644
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -1332,6 +1332,10 @@ static const struct i2c_device_id elan_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, elan_id);
- 
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 21d548f02d39..c3e4307bcbd4 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+new file mode 100644
+index 000000000000..1a341d4b1597
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
+@@ -0,0 +1,278 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
++
 +/*
-+ * when these whtielists get updated, the corresponding blacklist in hid-quirks
-+ * needs to be updated to match.
++ * Common include for MSM8998 clamshell devices, ie the Lenovo Miix 630,
++ * Asus NovaGo TP370QL, and HP Envy x2.  All three devices are basically the
++ * same, with differences in peripherals.
 + */
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id elan_acpi_id[] = {
- 	{ "ELAN0000", 0 },
++
++#include "msm8998.dtsi"
++#include "pm8998.dtsi"
++#include "pm8005.dtsi"
++
++/ {
++	chosen {
++	};
++
++	thermal-zones {
++		battery-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens0 0>;
++
++			trips {
++				battery_crit: trip0 {
++					temperature = <60000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		skin-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens1 5>;
++
++			trips {
++				skin_alert: trip0 {
++					temperature = <44000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				skip_crit: trip1 {
++					temperature = <70000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++	};
++
++	vph_pwr: vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&qusb2phy {
++	status = "okay";
++
++	vdda-pll-supply = <&vreg_l12a_1p8>;
++	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
++};
++
++&rpm_requests {
++	pm8998-regulators {
++		compatible = "qcom,rpm-pm8998-regulators";
++
++		vdd_s1-supply = <&vph_pwr>;
++		vdd_s2-supply = <&vph_pwr>;
++		vdd_s3-supply = <&vph_pwr>;
++		vdd_s4-supply = <&vph_pwr>;
++		vdd_s5-supply = <&vph_pwr>;
++		vdd_s6-supply = <&vph_pwr>;
++		vdd_s7-supply = <&vph_pwr>;
++		vdd_s8-supply = <&vph_pwr>;
++		vdd_s9-supply = <&vph_pwr>;
++		vdd_s10-supply = <&vph_pwr>;
++		vdd_s11-supply = <&vph_pwr>;
++		vdd_s12-supply = <&vph_pwr>;
++		vdd_s13-supply = <&vph_pwr>;
++		vdd_l1_l27-supply = <&vreg_s7a_1p025>;
++		vdd_l2_l8_l17-supply = <&vreg_s3a_1p35>;
++		vdd_l3_l11-supply = <&vreg_s7a_1p025>;
++		vdd_l4_l5-supply = <&vreg_s7a_1p025>;
++		vdd_l6-supply = <&vreg_s5a_2p04>;
++		vdd_l7_l12_l14_l15-supply = <&vreg_s5a_2p04>;
++		vdd_l9-supply = <&vph_pwr>;
++		vdd_l10_l23_l25-supply = <&vph_pwr>;
++		vdd_l13_l19_l21-supply = <&vph_pwr>;
++		vdd_l16_l28-supply = <&vph_pwr>;
++		vdd_l18_l22-supply = <&vph_pwr>;
++		vdd_l20_l24-supply = <&vph_pwr>;
++		vdd_l26-supply = <&vreg_s3a_1p35>;
++		vdd_lvs1_lvs2-supply = <&vreg_s4a_1p8>;
++
++		vreg_s3a_1p35: s3 {
++			regulator-min-microvolt = <1352000>;
++			regulator-max-microvolt = <1352000>;
++		};
++		vreg_s4a_1p8: s4 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-allow-set-load;
++		};
++		vreg_s5a_2p04: s5 {
++			regulator-min-microvolt = <1904000>;
++			regulator-max-microvolt = <2040000>;
++		};
++		vreg_s7a_1p025: s7 {
++			regulator-min-microvolt = <900000>;
++			regulator-max-microvolt = <1028000>;
++		};
++		vreg_l1a_0p875: l1 {
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <880000>;
++			regulator-allow-set-load;
++		};
++		vreg_l2a_1p2: l2 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-allow-set-load;
++		};
++		vreg_l3a_1p0: l3 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
++		};
++		vreg_l5a_0p8: l5 {
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <800000>;
++		};
++		vreg_l6a_1p8: l6 {
++			regulator-min-microvolt = <1808000>;
++			regulator-max-microvolt = <1808000>;
++		};
++		vreg_l7a_1p8: l7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		vreg_l8a_1p2: l8 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++		};
++		vreg_l9a_1p8: l9 {
++			regulator-min-microvolt = <1808000>;
++			regulator-max-microvolt = <2960000>;
++		};
++		vreg_l10a_1p8: l10 {
++			regulator-min-microvolt = <1808000>;
++			regulator-max-microvolt = <2960000>;
++		};
++		vreg_l11a_1p0: l11 {
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
++		};
++		vreg_l12a_1p8: l12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		vreg_l13a_2p95: l13 {
++			regulator-min-microvolt = <1808000>;
++			regulator-max-microvolt = <2960000>;
++		};
++		vreg_l14a_1p88: l14 {
++			regulator-min-microvolt = <1880000>;
++			regulator-max-microvolt = <1880000>;
++		};
++		vreg_15a_1p8: l15 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		vreg_l16a_2p7: l16 {
++			regulator-min-microvolt = <2704000>;
++			regulator-max-microvolt = <2704000>;
++		};
++		vreg_l17a_1p3: l17 {
++			regulator-min-microvolt = <1304000>;
++			regulator-max-microvolt = <1304000>;
++		};
++		vreg_l18a_2p7: l18 {
++			regulator-min-microvolt = <2704000>;
++			regulator-max-microvolt = <2704000>;
++		};
++		vreg_l19a_3p0: l19 {
++			regulator-min-microvolt = <3008000>;
++			regulator-max-microvolt = <3008000>;
++		};
++		vreg_l20a_2p95: l20 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-allow-set-load;
++		};
++		vreg_l21a_2p95: l21 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-allow-set-load;
++			regulator-system-load = <800000>;
++		};
++		vreg_l22a_2p85: l22 {
++			regulator-min-microvolt = <2864000>;
++			regulator-max-microvolt = <2864000>;
++		};
++		vreg_l23a_3p3: l23 {
++			regulator-min-microvolt = <3312000>;
++			regulator-max-microvolt = <3312000>;
++		};
++		vreg_l24a_3p075: l24 {
++			regulator-min-microvolt = <3088000>;
++			regulator-max-microvolt = <3088000>;
++		};
++		vreg_l25a_3p3: l25 {
++			regulator-min-microvolt = <3104000>;
++			regulator-max-microvolt = <3312000>;
++		};
++		vreg_l26a_1p2: l26 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++		};
++		vreg_l28_3p0: l28 {
++			regulator-min-microvolt = <3008000>;
++			regulator-max-microvolt = <3008000>;
++		};
++
++		vreg_lvs1a_1p8: lvs1 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		vreg_lvs2a_1p8: lvs2 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++	};
++};
++
++&tlmm {
++	gpio-reserved-ranges = <0 4>, <81 4>;
++
++	touchpad: touchpad {
++		config {
++			pins = "gpio123";
++			bias-pull-up;           /* pull up */
++		};
++	};
++};
++
++&sdhc2 {
++	status = "okay";
++
++	vmmc-supply = <&vreg_l21a_2p95>;
++	vqmmc-supply = <&vreg_l13a_2p95>;
++
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
++	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
++};
++
++&usb3 {
++	status = "okay";
++};
++
++&usb3_dwc3 {
++	dr_mode = "host"; /* Force to host until we have Type-C hooked up */
++};
++
++&usb3phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l2a_1p2>;
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+new file mode 100644
+index 000000000000..407c6a32911c
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
++
++/dts-v1/;
++
++#include "msm8998-clamshell.dtsi"
++
++/ {
++	model = "Lenovo Miix 630";
++	compatible = "lenovo,miix-630", "qcom,msm8998";
++};
++
++&blsp1_i2c6 {
++	status = "okay";
++
++	keyboard@3a {
++		compatible = "hid-over-i2c";
++		interrupt-parent = <&tlmm>;
++		interrupts = <0x79 IRQ_TYPE_LEVEL_LOW>;
++		reg = <0x3a>;
++		hid-descr-addr = <0x0001>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&touchpad>;
++	};
++};
++
++&sdhc2 {
++	cd-gpios = <&tlmm 95 GPIO_ACTIVE_HIGH>;
++};
 -- 
 2.17.1
 
