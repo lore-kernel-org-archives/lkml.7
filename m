@@ -2,156 +2,389 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C17C282CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A116CC10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBEBE206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CF2206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 01:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbfDWBPW (ORCPT
+        id S1729157AbfDWBVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 21:15:22 -0400
-Received: from regular1.263xmail.com ([211.150.70.206]:34816 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728533AbfDWBPV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 21:15:21 -0400
-Received: from zhangqing?rock-chips.com (unknown [192.168.167.78])
-        by regular1.263xmail.com (Postfix) with ESMTP id 16F8325D;
-        Tue, 23 Apr 2019 09:15:12 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from [172.16.12.236] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P29765T139902436968192S1555982110311816_;
-        Tue, 23 Apr 2019 09:15:11 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <1d0c61725f2fedc3f3fadbfa0afc204d>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: linux-arm-kernel@lists.infradead.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH v2] clk: rockchip: undo several noc and special clocks as
- critical on rk3288
-To:     Doug Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Caesar Wang <caesar.wang@rock-chips.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20190412161747.107107-1-dianders@chromium.org>
- <CAD=FV=Xkdc_yPCjVUh96atdiB4fo4h3oNZYe45ef+eLeVUVM8g@mail.gmail.com>
-From:   "elaine.zhang" <zhangqing@rock-chips.com>
-Organization: rockchip
-Message-ID: <a8bd1681-0d24-e8d5-9f81-77e8fcb61c63@rock-chips.com>
-Date:   Tue, 23 Apr 2019 09:15:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 22 Apr 2019 21:21:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42444 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726407AbfDWBVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 21:21:07 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C194B3086215;
+        Tue, 23 Apr 2019 01:21:05 +0000 (UTC)
+Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 253765D71E;
+        Tue, 23 Apr 2019 01:21:01 +0000 (UTC)
+Date:   Mon, 22 Apr 2019 19:21:00 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH 1/2] vfio/mdev: add version field as mandatory attribute
+ for mdev device
+Message-ID: <20190422192100.4d577e4b@x1.home>
+In-Reply-To: <20190423010152.GC32217@joy-OptiPlex-7040>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+        <20190419083505.19654-1-yan.y.zhao@intel.com>
+        <20190422083950.25eb9e7c@x1.home>
+        <20190423010152.GC32217@joy-OptiPlex-7040>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=Xkdc_yPCjVUh96atdiB4fo4h3oNZYe45ef+eLeVUVM8g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 23 Apr 2019 01:21:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi,
+On Mon, 22 Apr 2019 21:01:52 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-在 2019/4/22 下午11:23, Doug Anderson 写道:
-> Elaine,
->
-> On Fri, Apr 12, 2019 at 9:18 AM Douglas Anderson <dianders@chromium.org> wrote:
->> This is mostly a revert of commit 55bb6a633c33 ("clk: rockchip: mark
->> noc and some special clk as critical on rk3288") except that we're
->> keeping "pmu_hclk_otg0" as critical still.
->>
->> NOTE: turning these clocks off doesn't seem to do a whole lot in terms
->> of power savings (checking the power on the logic rail).  It appears
->> to save maybe 1-2mW.  ...but still it seems like we should turn the
->> clocks off if they aren't needed.
->>
->> About "pmu_hclk_otg0" (the one clock from the original commit we're
->> still keeping critical) from an email thread:
->>
->>> pmu ahb clock
->>>
->>> Function: Clock to pmu module when hibernation and/or ADP is
->>> enabled. Must be greater than or equal to 30 MHz.
->>>
->>> If the SOC design does not support hibernation/ADP function, only have
->>> hclk_otg, this clk can be switched according to the usage of otg.
->>> If the SOC design support hibernation/ADP, has two clocks, hclk_otg and
->>> pmu_hclk_otg0.
->>> Hclk_otg belongs to the closed part of otg logic, which can be switched
->>> according to the use of otg.
->>>
->>> pmu_hclk_otg0 belongs to the always on part.
->>>
->>> As for whether pmu_hclk_otg0 can be turned off when otg is not in use,
->>> we have not tested. IC suggest make pmu_hclk_otg0 always on.
->> For the rest of the clocks:
->>
->> atclk: No documentation about this clock other than that it goes to
->> the CPU.  CPU functions fine without it on.  Maybe needed for JTAG?
->>
->> jtag: Presumably this clock is only needed if you're debugging with
->> JTAG.  It doesn't seem like it makes sense to waste power for every
->> rk3288 user.  In any case to do JTAG you'd need private patches to
->> adjust the pinctrl the mux the JTAG out anyway.
->>
->> pclk_dbg, pclk_core_niu: On veyron Chromebooks we turn these two
->> clocks on only during kernel panics in order to access some coresight
->> registers.  Since nothing in the upstream kernel does this we should
->> be able to leave them off safely.  Maybe also needed for JTAG?
->>
->> hsicphy12m_xin12m: There is no indication of why this clock would need
->> to be turned on for boards that don't use HSIC.
->>
->> pclk_ddrupctl[0-1], pclk_publ0[0-1]: On veyron Chromebooks we turn
->> these 4 clocks on only when doing DDR transitions and they are off
->> otherwise.  I see no reason why they'd need to be on in the upstream
->> kernel which doesn't support DDRFreq.
->>
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> ---
->>
->> Changes in v2:
->> - Now keep pmu_hclk_otg0 as critical.
->> - Updated description since this isn't a clean revert.
->> - PWM patches have landed, so just one patch in the series now.
->>
->>   drivers/clk/rockchip/clk-rk3288.c | 13 ++++---------
->>   1 file changed, 4 insertions(+), 9 deletions(-)
-> >From previous discussions I think you're all happy with this patch
-> now, right?  Care to give it an official Reviewed-by tag?
+> On Mon, Apr 22, 2019 at 10:39:50PM +0800, Alex Williamson wrote:
+> > On Fri, 19 Apr 2019 04:35:04 -0400
+> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> >   
+> > > device version attribute in mdev sysfs is used by user space software
+> > > (e.g. libvirt) to query device compatibility for live migration of VFIO
+> > > mdev devices. This attribute is mandatory if a mdev device supports live
+> > > migration.  
+> > 
+> > The Subject: doesn't quite match what's being proposed here.
+> >    
+> > > It consists of two parts: common part and vendor proprietary part.
+> > > common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
+> > >              identifies device type. e.g., for pci device, it is
+> > >              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).  
+> > 
+> > What purpose does this serve?  If it's intended as some sort of
+> > namespace feature, shouldn't we first assume that we can only support
+> > migration to devices of the same type?  Therefore each type would
+> > already have its own namespace.  Also that would make the trailing bit
+> > of the version string listed below in the example redundant.  A vendor
+> > is still welcome to include this in their version string if they wish,
+> > but I think the string should be entirely vendor defined.
+> >  
+> hi Alex,
+> This common part is a kind of namespace.
+> Because if version string is entirely defined by vendors, I'm worried about
+> if there is a case that one vendor's version string happens to deceive and
+> interfere with another vendor's version checking?
+> e.g.
+> vendor A has a version string like: vendor id + device id + mdev type
+> vendor B has a version string like: device id + vendor id + mdev type
+> but vendor A's vendor id is 0x8086, device id is 0x1217
+> vendor B's vendor id is 0x1217, device id is 0x8086.
+> 
+> In this corner case, the two vendors may regard the two device is
+> migratable but actually they are not.
+> 
+> That's the reason for this common part that serve as a kind of namespace
+> that all vendors will comply with to avoid overlap.
 
-Yes.
+If we assume that migration can only occur between matching mdev types,
+this is redundant, each type already has their own namespace.
 
-Reviewed-by: Elaine Zhang <zhangqing@rock-chips.com>
+> > > vendor proprietary part: this part is varied in length. vendor driver can
+> > >              specify any string to identify a device.
+> > > 
+> > > When reading this attribute, it should show device version string of the
+> > > device of type <type-id>. If a device does not support live migration, it
+> > > should return errno.
+> > > When writing a string to this attribute, it returns errno for
+> > > incompatibility or returns written string length in compatibility case.
+> > > If a device does not support live migration, it always returns errno.
+> > > 
+> > > For user space software to use:
+> > > 1.
+> > > Before starting live migration, user space software first reads source side
+> > > mdev device's version. e.g.
+> > > "#cat \
+> > > /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type/version"
+> > > 00028086-193b-i915-GVTg_V5_4
+> > > 
+> > > 2.
+> > > Then, user space software writes the source side returned version string
+> > > to device version attribute in target side, and checks the return value.
+> > > If a negative errno is returned in the target side, then mdev devices in
+> > > source and target sides are not compatible;
+> > > If a positive number is returned and it equals to the length of written
+> > > string, then the two mdev devices in source and target side are compatible.
+> > > e.g.
+> > > (a) compatibility case
+> > > "# echo 00028086-193b-i915-GVTg_V5_4 >
+> > > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+> > > 
+> > > (b) incompatibility case
+> > > "#echo 00028086-193b-i915-GVTg_V5_1 >
+> > > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+> > > -bash: echo: write error: Invalid argument
+> > > 
+> > > 3. if two mdev devices are compatible, user space software can start
+> > > live migration, and vice versa.
+> > > 
+> > > Note: if a mdev device does not support live migration, it either does
+> > > not provide a version attribute, or always returns errno when its version
+> > > attribute is read/written.  
+> > 
+> > I think it would be cleaner to do the former, not supply the
+> > attribute.  This seems to do the latter in the sample drivers.  Thanks,  
+> Ok. you are right!
+> what about just keep one sample driver to show how to do the latter,
+> and let the others do the former?
 
->
-> -Doug
->
->
->
+I'd rather that if a vendor driver doesn't support features requiring
+the version attribute that they don't implement it.  It's confusing to
+developers looking at the sample driver for guidance if we have
+different implementations.  Of course if you'd like to add migration
+support to one of the sample drivers, that'd be very welcome.  Thanks,
 
+Alex
+
+> > > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > > Cc: Erik Skultety <eskultet@redhat.com>
+> > > Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> > > Cc: Cornelia Huck <cohuck@redhat.com>
+> > > Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> > > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> > > Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> > > Cc: Neo Jia <cjia@nvidia.com>
+> > > Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> > > 
+> > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > > ---
+> > >  Documentation/vfio-mediated-device.txt | 36 ++++++++++++++++++++++++++
+> > >  samples/vfio-mdev/mbochs.c             | 17 ++++++++++++
+> > >  samples/vfio-mdev/mdpy.c               | 16 ++++++++++++
+> > >  samples/vfio-mdev/mtty.c               | 16 ++++++++++++
+> > >  4 files changed, 85 insertions(+)
+> > > 
+> > > diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
+> > > index c3f69bcaf96e..bc28471c0667 100644
+> > > --- a/Documentation/vfio-mediated-device.txt
+> > > +++ b/Documentation/vfio-mediated-device.txt
+> > > @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
+> > >    |     |   |--- available_instances
+> > >    |     |   |--- device_api
+> > >    |     |   |--- description
+> > > +  |     |   |--- version
+> > >    |     |   |--- [devices]
+> > >    |     |--- [<type-id>]
+> > >    |     |   |--- create
+> > > @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
+> > >    |     |   |--- available_instances
+> > >    |     |   |--- device_api
+> > >    |     |   |--- description
+> > > +  |     |   |--- version
+> > >    |     |   |--- [devices]
+> > >    |     |--- [<type-id>]
+> > >    |          |--- create
+> > > @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
+> > >    |          |--- available_instances
+> > >    |          |--- device_api
+> > >    |          |--- description
+> > > +  |          |--- version
+> > >    |          |--- [devices]
+> > >  
+> > >  * [mdev_supported_types]
+> > > @@ -225,6 +228,8 @@ Directories and files under the sysfs for Each Physical Device
+> > >    [<type-id>], device_api, and available_instances are mandatory attributes
+> > >    that should be provided by vendor driver.
+> > >  
+> > > +  version is a mandatory attribute if a mdev device supports live migration.
+> > > +
+> > >  * [<type-id>]
+> > >  
+> > >    The [<type-id>] name is created by adding the device driver string as a prefix
+> > > @@ -246,6 +251,35 @@ Directories and files under the sysfs for Each Physical Device
+> > >    This attribute should show the number of devices of type <type-id> that can be
+> > >    created.
+> > >  
+> > > +* version
+> > > +
+> > > +  This attribute is rw. It is used to check whether two devices are compatible
+> > > +  for live migration. If this attribute is missing, then the corresponding mdev
+> > > +  device is regarded as not supporting live migration.
+> > > +
+> > > +  It consists of two parts: common part and vendor proprietary part.
+> > > +  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
+> > > +               device type. e.g., for pci device, it is
+> > > +               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> > > +  vendor proprietary part: this part is varied in length. vendor driver can
+> > > +               specify any string to identify a device.
+> > > +
+> > > +  When reading this attribute, it should show device version string of the device
+> > > +  of type <type-id>. If a device does not support live migration, it should
+> > > +  return errno.
+> > > +  When writing a string to this attribute, it returns errno for incompatibility
+> > > +  or returns written string length in compatibility case. If a device does not
+> > > +  support live migration, it always returns errno.
+> > > +
+> > > +  for example.
+> > > +  # cat \
+> > > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_2/version
+> > > +  00028086-193b-i915-GVTg_V5_2
+> > > +
+> > > +  #echo 00028086-193b-i915-GVTg_V5_2 > \
+> > > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
+> > > + -bash: echo: write error: Invalid argument
+> > > +
+> > >  * [device]
+> > >  
+> > >    This directory contains links to the devices of type <type-id> that have been
+> > > @@ -327,12 +361,14 @@ card.
+> > >          |   |   |-- available_instances
+> > >          |   |   |-- create
+> > >          |   |   |-- device_api
+> > > +        |   |   |-- version
+> > >          |   |   |-- devices
+> > >          |   |   `-- name
+> > >          |   `-- mtty-2
+> > >          |       |-- available_instances
+> > >          |       |-- create
+> > >          |       |-- device_api
+> > > +        |       |-- version
+> > >          |       |-- devices
+> > >          |       `-- name
+> > >          |-- mtty_dev
+> > > diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
+> > > index b038aa9f5a70..2f5ba96b91a2 100644
+> > > --- a/samples/vfio-mdev/mbochs.c
+> > > +++ b/samples/vfio-mdev/mbochs.c
+> > > @@ -1391,11 +1391,28 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+> > >  }
+> > >  MDEV_TYPE_ATTR_RO(device_api);
+> > >  
+> > > +static ssize_t version_show(struct kobject *kobj, struct device *dev,
+> > > +		char *buf)
+> > > +{
+> > > +	/* do not support live migration */
+> > > +	return -EINVAL;
+> > > +}
+> > > +
+> > > +static ssize_t version_store(struct kobject *kobj, struct device *dev,
+> > > +		const char *buf, size_t count)
+> > > +{
+> > > +	/* do not support live migration */
+> > > +	return -EINVAL;
+> > > +}
+> > > +
+> > > +static MDEV_TYPE_ATTR_RW(version);
+> > > +
+> > >  static struct attribute *mdev_types_attrs[] = {
+> > >  	&mdev_type_attr_name.attr,
+> > >  	&mdev_type_attr_description.attr,
+> > >  	&mdev_type_attr_device_api.attr,
+> > >  	&mdev_type_attr_available_instances.attr,
+> > > +	&mdev_type_attr_version.attr,
+> > >  	NULL,
+> > >  };
+> > >  
+> > > diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
+> > > index cc86bf6566e4..ff15fdfc7d46 100644
+> > > --- a/samples/vfio-mdev/mdpy.c
+> > > +++ b/samples/vfio-mdev/mdpy.c
+> > > @@ -695,11 +695,27 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+> > >  }
+> > >  MDEV_TYPE_ATTR_RO(device_api);
+> > >  
+> > > +static ssize_t version_show(struct kobject *kobj, struct device *dev,
+> > > +		char *buf)
+> > > +{
+> > > +	/* do not support live migration */
+> > > +	return -EINVAL;
+> > > +}
+> > > +
+> > > +static ssize_t version_store(struct kobject *kobj, struct device *dev,
+> > > +		const char *buf, size_t count)
+> > > +{
+> > > +	/* do not support live migration */
+> > > +	return -EINVAL;
+> > > +}
+> > > +static MDEV_TYPE_ATTR_RW(version);
+> > > +
+> > >  static struct attribute *mdev_types_attrs[] = {
+> > >  	&mdev_type_attr_name.attr,
+> > >  	&mdev_type_attr_description.attr,
+> > >  	&mdev_type_attr_device_api.attr,
+> > >  	&mdev_type_attr_available_instances.attr,
+> > > +	&mdev_type_attr_version.attr,
+> > >  	NULL,
+> > >  };
+> > >  
+> > > diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
+> > > index 1c77c370c92f..4ae3aad3474d 100644
+> > > --- a/samples/vfio-mdev/mtty.c
+> > > +++ b/samples/vfio-mdev/mtty.c
+> > > @@ -1390,10 +1390,26 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+> > >  
+> > >  MDEV_TYPE_ATTR_RO(device_api);
+> > >  
+> > > +static ssize_t version_show(struct kobject *kobj, struct device *dev,
+> > > +		char *buf)
+> > > +{
+> > > +	/* do not support live migration */
+> > > +	return -EINVAL;
+> > > +}
+> > > +
+> > > +static ssize_t version_store(struct kobject *kobj, struct device *dev,
+> > > +		const char *buf, size_t count)
+> > > +{
+> > > +	/* do not support live migration */
+> > > +	return -EINVAL;
+> > > +}
+> > > +
+> > > +static MDEV_TYPE_ATTR_RW(version);
+> > >  static struct attribute *mdev_types_attrs[] = {
+> > >  	&mdev_type_attr_name.attr,
+> > >  	&mdev_type_attr_device_api.attr,
+> > >  	&mdev_type_attr_available_instances.attr,
+> > > +	&mdev_type_attr_version.attr,
+> > >  	NULL,
+> > >  };
+> > >    
+> > 
+> > _______________________________________________
+> > intel-gvt-dev mailing list
+> > intel-gvt-dev@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev  
 
