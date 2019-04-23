@@ -2,163 +2,111 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F141C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D885C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05512183E
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:32:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L3xeiXnp"
+	by mail.kernel.org (Postfix) with ESMTP id 17911218B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbfDWQco (ORCPT
+        id S1729069AbfDWQcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:32:44 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35343 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbfDWQcm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:32:42 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so7796269plp.2;
-        Tue, 23 Apr 2019 09:32:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+Kb3yhKuecaH+tPIFeyKoNCy2Q2HKYqzIlny4c2UXFY=;
-        b=L3xeiXnpEXxmenNLrs3YPDFeZpH9FfZiKFIk4GYjcLhr2xZro8lXD4MaVnNqw7+jN7
-         +J2IpkhfT5PSmtMDaP4aHuZcPdpjSyAcRtcPy+4/2YeedvJAajM4WtMkuU6OafogY3Sk
-         FFQwZ6w+rtnQ1lAE/l0vN8BawDclFuInn33NfUGeFTZ0hsY5fOoUJdexuV4rIahaeoje
-         5m8SP4/I7OsWUcU2OnSwVsQgJPnuW7AF4GepHV8TUSXtavc7GS53blGwnwMpYxhHTkP2
-         9At0PSe0cpVBGpEQto0JOcGB1xmA2xGOwJD7dr79wAjsa7agDRnkQKXq3jYEtHSRoccZ
-         yr6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+Kb3yhKuecaH+tPIFeyKoNCy2Q2HKYqzIlny4c2UXFY=;
-        b=cPj/IZlpca685pN21K4m16xo6gCW4NGiPPN/hntaxnyS3WXfGVUbav1G+xjD+7k9Po
-         FYe1F9S0KFMpRnlMkqMUnWR0MtkM4pX0P16mx+9Umf+/KT6dMBILxOKQUwbnh6RrDpiU
-         TRFhbQ8YuvYxCfV7mYKdrjJip0sFETPigKI/fDPLliaoSUUBz1hKUjdyjBWO0cW/zeLr
-         CI74rNDQ+pA/mBxcJiWq1W5mseMpIUU1jJrXJngrxEF+6cizYYH9PtABCL5Zfp75sGO6
-         bP1dX6WtBEDWJ/NCbLIH085KVRUlk7u/+HsnREYfJCAyYWQD0KZCwNbCsLpMJX0WzZrS
-         eGqA==
-X-Gm-Message-State: APjAAAVhtT06xxOaQevO+7/qo5xM7S1AQp+G7f9Lb42A0eVThqtDVm67
-        gEXjoiqzA7MOI9OnPIaffd0=
-X-Google-Smtp-Source: APXvYqzuFBXtP4aSifoDWH3IVT1QXDqLt0k1TlsPXALgdM6up9DM5f8I9lUgUEZLrb7aoOMVFUnFqA==
-X-Received: by 2002:a17:902:e490:: with SMTP id cj16mr27286585plb.156.1556037161684;
-        Tue, 23 Apr 2019 09:32:41 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id v1sm24364801pff.81.2019.04.23.09.32.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 09:32:41 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v4 15/63] Documentation: ACPI: move dsd/data-node-references.txt to firmware-guide/acpi and convert to reST
-Date:   Wed, 24 Apr 2019 00:28:44 +0800
-Message-Id: <20190423162932.21428-16-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190423162932.21428-1-changbin.du@gmail.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
+        Tue, 23 Apr 2019 12:32:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60940 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728967AbfDWQcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 12:32:43 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 61CC7307E04F;
+        Tue, 23 Apr 2019 16:32:43 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3BF6E1A913;
+        Tue, 23 Apr 2019 16:32:42 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 23 Apr 2019 18:32:43 +0200 (CEST)
+Date:   Tue, 23 Apr 2019 18:32:41 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] locking/percpu-rwsem: Add DEFINE_PERCPU_RWSEM(), use it to
+ initialize cgroup_threadgroup_rwsem
+Message-ID: <20190423163241.GA15866@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 23 Apr 2019 16:32:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation to reStructuredText format and
-add it to Sphinx TOC tree. No essential content change.
+Turn DEFINE_STATIC_PERCPU_RWSEM() into __DEFINE_PERCPU_RWSEM() with the
+additional "is_static" argument to introduce DEFINE_PERCPU_RWSEM().
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Change cgroup.c to use DEFINE_PERCPU_RWSEM(cgroup_threadgroup_rwsem).
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 ---
- .../acpi/dsd/data-node-references.rst}        | 28 +++++++++++--------
- Documentation/firmware-guide/acpi/index.rst   |  1 +
- 2 files changed, 17 insertions(+), 12 deletions(-)
- rename Documentation/{acpi/dsd/data-node-references.txt => firmware-guide/acpi/dsd/data-node-references.rst} (79%)
+ include/linux/percpu-rwsem.h | 8 ++++++--
+ kernel/cgroup/cgroup.c       | 3 +--
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/acpi/dsd/data-node-references.txt b/Documentation/firmware-guide/acpi/dsd/data-node-references.rst
-similarity index 79%
-rename from Documentation/acpi/dsd/data-node-references.txt
-rename to Documentation/firmware-guide/acpi/dsd/data-node-references.rst
-index c3871565c8cf..79c5368eaecf 100644
---- a/Documentation/acpi/dsd/data-node-references.txt
-+++ b/Documentation/firmware-guide/acpi/dsd/data-node-references.rst
-@@ -1,9 +1,12 @@
--Copyright (C) 2018 Intel Corporation
--Author: Sakari Ailus <sakari.ailus@linux.intel.com>
--
-+.. SPDX-License-Identifier: GPL-2.0
-+.. include:: <isonum.txt>
+diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
+index 6887636..2809b44 100644
+--- a/include/linux/percpu-rwsem.h
++++ b/include/linux/percpu-rwsem.h
+@@ -17,14 +17,18 @@ struct percpu_rw_semaphore {
+ 	int			readers_block;
+ };
  
-+===================================
- Referencing hierarchical data nodes
-------------------------------------
-+===================================
-+
-+:Copyright: |copy| 2018 Intel Corporation
-+:Author: Sakari Ailus <sakari.ailus@linux.intel.com>
+-#define DEFINE_STATIC_PERCPU_RWSEM(name)				\
++#define __DEFINE_PERCPU_RWSEM(name, is_static)				\
+ static DEFINE_PER_CPU(unsigned int, __percpu_rwsem_rc_##name);		\
+-static struct percpu_rw_semaphore name = {				\
++is_static struct percpu_rw_semaphore name = {				\
+ 	.rss = __RCU_SYNC_INITIALIZER(name.rss),			\
+ 	.read_count = &__percpu_rwsem_rc_##name,			\
+ 	.rw_sem = __RWSEM_INITIALIZER(name.rw_sem),			\
+ 	.writer = __RCUWAIT_INITIALIZER(name.writer),			\
+ }
++#define DEFINE_PERCPU_RWSEM(name)		\
++	__DEFINE_PERCPU_RWSEM(name, /* not static */)
++#define DEFINE_STATIC_PERCPU_RWSEM(name)	\
++	__DEFINE_PERCPU_RWSEM(name, static)
  
- ACPI in general allows referring to device objects in the tree only.
- Hierarchical data extension nodes may not be referred to directly, hence this
-@@ -28,13 +31,14 @@ extension key.
+ extern int __percpu_down_read(struct percpu_rw_semaphore *, int);
+ extern void __percpu_up_read(struct percpu_rw_semaphore *);
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 3f2b4bd..2510017 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -101,7 +101,7 @@ static DEFINE_SPINLOCK(cgroup_idr_lock);
+  */
+ static DEFINE_SPINLOCK(cgroup_file_kn_lock);
  
+-struct percpu_rw_semaphore cgroup_threadgroup_rwsem;
++DEFINE_PERCPU_RWSEM(cgroup_threadgroup_rwsem);
  
- Example
---------
-+=======
+ #define cgroup_assert_mutex_or_rcu_locked()				\
+ 	RCU_LOCKDEP_WARN(!rcu_read_lock_held() &&			\
+@@ -5432,7 +5432,6 @@ int __init cgroup_init(void)
+ 	int ssid;
  
--	In the ASL snippet below, the "reference" _DSD property [2] contains a
--	device object reference to DEV0 and under that device object, a
--	hierarchical data extension key "node@1" referring to the NOD1 object
--	and lastly, a hierarchical data extension key "anothernode" referring to
--	the ANOD object which is also the final target node of the reference.
-+In the ASL snippet below, the "reference" _DSD property [2] contains a
-+device object reference to DEV0 and under that device object, a
-+hierarchical data extension key "node@1" referring to the NOD1 object
-+and lastly, a hierarchical data extension key "anothernode" referring to
-+the ANOD object which is also the final target node of the reference.
-+::
+ 	BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16);
+-	BUG_ON(percpu_init_rwsem(&cgroup_threadgroup_rwsem));
+ 	BUG_ON(cgroup_init_cftypes(NULL, cgroup_base_files));
+ 	BUG_ON(cgroup_init_cftypes(NULL, cgroup1_base_files));
  
- 	Device (DEV0)
- 	{
-@@ -75,10 +79,10 @@ Example
- 	    })
- 	}
- 
--Please also see a graph example in graph.txt .
-+Please also see a graph example in :doc:`graph`.
- 
- References
------------
-+==========
- 
- [1] Hierarchical Data Extension UUID For _DSD.
-     <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
-diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-index f81cfbcb6878..6d4e0df4f063 100644
---- a/Documentation/firmware-guide/acpi/index.rst
-+++ b/Documentation/firmware-guide/acpi/index.rst
-@@ -9,6 +9,7 @@ ACPI Support
- 
-    namespace
-    dsd/graph
-+   dsd/data-node-references
-    enumeration
-    osi
-    method-customizing
 -- 
-2.20.1
+2.5.0
+
 
