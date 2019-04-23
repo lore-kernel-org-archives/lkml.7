@@ -2,282 +2,186 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03DEC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24287C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACE12077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A3421738
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 11:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfDWLjZ (ORCPT
+        id S1727594AbfDWLkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 07:39:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57570 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfDWLjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 07:39:24 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 87AFE88309;
-        Tue, 23 Apr 2019 11:39:23 +0000 (UTC)
-Received: from gondolin (dhcp-192-187.str.redhat.com [10.33.192.187])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A74C5646A8;
-        Tue, 23 Apr 2019 11:39:13 +0000 (UTC)
-Date:   Tue, 23 Apr 2019 13:39:11 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
-        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, alex.williamson@redhat.com,
-        eskultet@redhat.com, dgilbert@redhat.com, kevin.tian@intel.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
-        kwankhede@nvidia.com
-Subject: Re: [PATCH 2/2] drm/i915/gvt: export mdev device version to sysfs
- for Intel vGPU
-Message-ID: <20190423133911.5ee7bf38.cohuck@redhat.com>
-In-Reply-To: <20190419083559.19725-1-yan.y.zhao@intel.com>
-References: <20190419083258.19580-1-yan.y.zhao@intel.com>
-        <20190419083559.19725-1-yan.y.zhao@intel.com>
-Organization: Red Hat GmbH
+        Tue, 23 Apr 2019 07:40:47 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:44123 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726421AbfDWLkr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 07:40:47 -0400
+Received: from [IPv6:2001:420:44c1:2579:c4cd:9df1:43f2:db66] ([IPv6:2001:420:44c1:2579:c4cd:9df1:43f2:db66])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id ItmohttJvb8gSItmshZhAB; Tue, 23 Apr 2019 13:40:44 +0200
+Subject: Re: [PATCH v9 4/4] media: cedrus: Add H264 decoding support
+To:     Maxime Ripard <maxime.ripard@bootlin.com>, acourbot@chromium.org,
+        sakari.ailus@linux.intel.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     tfiga@chromium.org, posciak@chromium.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        nicolas.dufresne@collabora.com, jenskuske@gmail.com,
+        jernej.skrabec@gmail.com, jonas@kwiboo.se, ezequiel@collabora.com,
+        linux-sunxi@googlegroups.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+References: <cover.dec5630d6b289e0a50e1880be436050471a05269.1554975396.git-series.maxime.ripard@bootlin.com>
+ <6b92ca41b62929ae2f9dd3872ae0a2c5aa5690d8.1554975396.git-series.maxime.ripard@bootlin.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <1a5dc054-e3dd-94b0-bd34-58c08c0a45ec@xs4all.nl>
+Date:   Tue, 23 Apr 2019 13:40:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <6b92ca41b62929ae2f9dd3872ae0a2c5aa5690d8.1554975396.git-series.maxime.ripard@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 23 Apr 2019 11:39:23 +0000 (UTC)
+X-CMAE-Envelope: MS4wfPh3RfFfFTpkNeekdpJJQ/mw7haiKrQFbMBfakQgGUOiKC1lMRgMPh+l30zp0J+ThLHZuumSbSOPQeFVSED8WYNQ6EYyfZAaQ1374+2BTL44Mdl9GZu/
+ Z7XGYfGeI5Q/Kggtv8FF/Dvchc5yvAr/hK6FJGhsQ04UqciqhsdtI1P4c+aFkTNiTqVZ7Hs88aLApFHcgKPvDw42Ip9ZSKZjEj9U1RQ0BGWsjFnal1iOvbnA
+ cFcoS8aqPGVBYLDehVI8VhPGIjMgpsETL2URPRvXzKyeC14vzS5e/GFAeNVB/leu12kTtIoaV9/a8/kM/yaUv/Y2LPvqfejgYKtKx5IWlIDyorIGgRvMng5e
+ LIMg0hbuVJL6V4bX3Odv+X/MUgmaYgJMwrTt1qLX2o+3Z5WhcRwC1kv2JhmHywyT1XR0dWCiAFi5rG6oCZVSFm3nfztUDiycMY7k1USexoUDmRhZY44Td5xa
+ /5m+HJU2Y01P6h4eT5L8VONH+QJfAd0djFaFZ6tS0CI7LFCKylH/QKpz8pGdigIPvQT+kQ2lQbaT31B6rhzhW0GhM3UJG1w3CYklh0imCWzpQzCmh5MTF6mL
+ dQWROIjnYZdW3HEem1RIMtrPfdldBBkazS7GIRnf3S/qyKD+wuvXq84y/rwN9mfXD2WQLr3WLfMjJ5tDwmLaTJcVp4X65OKudC+wXfKF5nserebd4M5YZY6Q
+ l2BO+00YZRdJAC3k4YuUFl/jgvXcGHDNSPWqjS/1CPzB4Uc72WmF1lbBw49qkIqRHZ9GowOMp5yfcDJl3rEjCQZ5FxzJfMxWzVvTpuSZvreUgGHWtrACLmq1
+ x+XmWvxVEjTLRdytLaySVhcq5WdLAOVibqvKfqFmGVnyeodZpkJapWTvje/VI40sAf5nl2dF+JyGPx45DVLyEd10aT0t4BPPnJ1+j2Qf4JAmofrOm1dRH3NO
+ 5G18jsc9KOqD+rVDtf0XSuad/Ic=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 19 Apr 2019 04:35:59 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+Hi Maxime,
 
-> This feature implements the version attribute for Intel's vGPU mdev
-> devices.
-> 
-> version attribute is rw. It is queried by userspace software like libvirt
-> to check whether two vGPUs are compatible for live migration.
-> 
-> It consists of two parts: common part and vendor proprietary part.
-> common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
->              identifies device type. e.g., for pci device, it is
->              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-> vendor proprietary part: this part is varied in length. vendor driver can
->              specify any string to identify a device.
-> 
-> For Intel vGPU of gen8 and gen9, the vendor proprietary part currently
-> consists of 2 fields: "device id" + "mdev type".
-> 
-> Reading from a vGPU's version attribute, a string is returned in below
-> format: 00028086-<device id>-<mdev type>. e.g.
-> 00028086-193b-i915-GVTg_V5_2.
-> 
-> Writing a string to a vGPU's version attribute will trigger GVT to check
-> whether a vGPU identified by the written string is compatible with
-> current vGPU owning this version attribute. errno is returned if the two
-> vGPUs are incompatible. The length of written string is returned in
-> compatible case.
-> 
-> For other platforms, and for GVT not supporting vGPU live migration
-> feature, errnos are returned when read/write of mdev devices' version
-> attributes.
-> 
-> For old GVT versions where no version attributes exposed in sysfs, it is
-> regarded as not supporting vGPU live migration.
-> 
-> For future platforms, besides the current 2 fields in vendor proprietary
-> part, more fields may be added to identify Intel vGPU well for live
-> migration purpose.
-> 
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Erik Skultety <eskultet@redhat.com>
-> Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Cc: "Tian, Kevin" <kevin.tian@intel.com>
-> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-> c: Neo Jia <cjia@nvidia.com>
-> Cc: Kirti Wankhede <kwankhede@nvidia.com>
-> 
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> ---
->  drivers/gpu/drm/i915/gvt/Makefile         |  2 +-
->  drivers/gpu/drm/i915/gvt/device_version.c | 94 +++++++++++++++++++++++
->  drivers/gpu/drm/i915/gvt/gvt.c            | 55 +++++++++++++
->  drivers/gpu/drm/i915/gvt/gvt.h            |  6 ++
->  4 files changed, 156 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/i915/gvt/device_version.c
-> 
+While rebasing my cedrus-h264 pull request and running sparse over the
+newly rebased code I found these sparse warnings:
 
-(...)
+SPARSE:drivers/staging/media/sunxi/cedrus/cedrus_h264.c drivers/staging/media/sunxi/cedrus/cedrus_h264.c:80:34:  warning: incorrect type in assignment (different base types)
+SPARSE:drivers/staging/media/sunxi/cedrus/cedrus_h264.c drivers/staging/media/sunxi/cedrus/cedrus_h264.c:81:37:  warning: incorrect type in assignment (different base types)
+SPARSE:drivers/staging/media/sunxi/cedrus/cedrus_h264.c drivers/staging/media/sunxi/cedrus/cedrus_h264.c:82:25:  warning: incorrect type in assignment (different base types)
+SPARSE:drivers/staging/media/sunxi/cedrus/cedrus_h264.c drivers/staging/media/sunxi/cedrus/cedrus_h264.c:84:23:  warning: incorrect type in assignment (different base types)
+SPARSE:drivers/staging/media/sunxi/cedrus/cedrus_h264.c drivers/staging/media/sunxi/cedrus/cedrus_h264.c:85:25:  warning: incorrect type in assignment (different base types)
+SPARSE:drivers/staging/media/sunxi/cedrus/cedrus_h264.c drivers/staging/media/sunxi/cedrus/cedrus_h264.c:86:29:  warning: incorrect type in assignment (different base types)
+SPARSE:drivers/staging/media/sunxi/cedrus/cedrus_h264.c drivers/staging/media/sunxi/cedrus/cedrus_h264.c:87:29:  warning: incorrect type in assignment (different base types)
 
-> +static bool is_compatible(const char *self, const char *remote)
-> +{
-> +	if (strlen(remote) != strlen(self))
-> +		return false;
+These warnings seem valid:
+
+On 4/11/19 11:37 AM, Maxime Ripard wrote:
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> new file mode 100644
+> index 000000000000..2c98a3e46d2b
+> --- /dev/null
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> @@ -0,0 +1,574 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Cedrus VPU driver
+> + *
+> + * Copyright (c) 2013 Jens Kuske <jenskuske@gmail.com>
+> + * Copyright (c) 2018 Bootlin
+> + */
 > +
-> +	return (strncmp(self, remote, strlen(self))) ? false : true;
+> +#include <linux/types.h>
+> +
+> +#include <media/videobuf2-dma-contig.h>
+> +
+> +#include "cedrus.h"
+> +#include "cedrus_hw.h"
+> +#include "cedrus_regs.h"
+> +
+> +enum cedrus_h264_sram_off {
+> +	CEDRUS_SRAM_H264_PRED_WEIGHT_TABLE	= 0x000,
+> +	CEDRUS_SRAM_H264_FRAMEBUFFER_LIST	= 0x100,
+> +	CEDRUS_SRAM_H264_REF_LIST_0		= 0x190,
+> +	CEDRUS_SRAM_H264_REF_LIST_1		= 0x199,
+> +	CEDRUS_SRAM_H264_SCALING_LIST_8x8_0	= 0x200,
+> +	CEDRUS_SRAM_H264_SCALING_LIST_8x8_1	= 0x210,
+> +	CEDRUS_SRAM_H264_SCALING_LIST_4x4	= 0x220,
+> +};
+> +
+> +struct cedrus_h264_sram_ref_pic {
+> +	__le32	top_field_order_cnt;
+> +	__le32	bottom_field_order_cnt;
+> +	__le32	frame_info;
+> +	__le32	luma_ptr;
+> +	__le32	chroma_ptr;
+> +	__le32	mv_col_top_ptr;
+> +	__le32	mv_col_bot_ptr;
+> +	__le32	reserved;
+
+These types are __le32, but...
+
+> +} __packed;
+> +
+> +#define CEDRUS_H264_FRAME_NUM		18
+> +
+> +#define CEDRUS_NEIGHBOR_INFO_BUF_SIZE	(16 * SZ_1K)
+> +#define CEDRUS_PIC_INFO_BUF_SIZE	(128 * SZ_1K)
+> +
+> +static void cedrus_h264_write_sram(struct cedrus_dev *dev,
+> +				   enum cedrus_h264_sram_off off,
+> +				   const void *data, size_t len)
+> +{
+> +	const u32 *buffer = data;
+> +	size_t count = DIV_ROUND_UP(len, 4);
+> +
+> +	cedrus_write(dev, VE_AVC_SRAM_PORT_OFFSET, off << 2);
+> +
+> +	while (count--)
+> +		cedrus_write(dev, VE_AVC_SRAM_PORT_DATA, *buffer++);
 > +}
 > +
-> +ssize_t intel_gvt_get_vfio_device_version_len(struct drm_i915_private *dev_priv)
+> +static dma_addr_t cedrus_h264_mv_col_buf_addr(struct cedrus_ctx *ctx,
+> +					      unsigned int position,
+> +					      unsigned int field)
 > +{
-> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-> +		return -ENODEV;
+> +	dma_addr_t addr = ctx->codec.h264.mv_col_buf_dma;
 > +
-> +	return PAGE_SIZE;
+> +	/* Adjust for the position */
+> +	addr += position * ctx->codec.h264.mv_col_buf_field_size * 2;
+> +
+> +	/* Adjust for the field */
+> +	addr += field * ctx->codec.h264.mv_col_buf_field_size;
+> +
+> +	return addr;
 > +}
 > +
-> +ssize_t intel_gvt_get_vfio_device_version(struct drm_i915_private *dev_priv,
-> +		char *buf, const char *mdev_type)
+> +static void cedrus_fill_ref_pic(struct cedrus_ctx *ctx,
+> +				struct cedrus_buffer *buf,
+> +				unsigned int top_field_order_cnt,
+> +				unsigned int bottom_field_order_cnt,
+> +				struct cedrus_h264_sram_ref_pic *pic)
 > +{
-> +	int cnt = 0, ret = 0;
-> +	const char *str = NULL;
+> +	struct vb2_buffer *vbuf = &buf->m2m_buf.vb.vb2_buf;
+> +	unsigned int position = buf->codec.h264.position;
 > +
-> +	/* currently only gen8 & gen9 are supported */
-> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-> +		return -ENODEV;
+> +	pic->top_field_order_cnt = top_field_order_cnt;
+> +	pic->bottom_field_order_cnt = bottom_field_order_cnt;
+> +	pic->frame_info = buf->codec.h264.pic_type << 8;
 > +
-> +	/* first 32 bit common part specifying vendor id and it's a pci
-> +	 * device
-> +	 */
-> +	cnt = snprintf(buf, GVT_DEVICE_VERSION_COMMON_LEN + 1,
-> +			"%08x", GVT_VFIO_DEVICE_VENDOR_ID);
-> +	buf += cnt;
-> +	ret += cnt;
-> +
-> +	/* vendor proprietary part: device id + mdev type */
-> +	/* device id */
-> +	cnt = snprintf(buf, GVT_DEVICE_VERSION_DEVICE_ID_LEN + 2,
-> +			"-%04x", INTEL_DEVID(dev_priv));
-> +	buf += cnt;
-> +	ret += cnt;
-> +
-> +	/* mdev type */
-> +	str = mdev_type;
-> +	cnt = snprintf(buf, strlen(str) + 3, "-%s\n", mdev_type);
-> +	buf += cnt;
-> +	ret += cnt;
-> +
-> +	return ret;
-> +}
+> +	pic->luma_ptr = cedrus_buf_addr(vbuf, &ctx->dst_fmt, 0);
+> +	pic->chroma_ptr = cedrus_buf_addr(vbuf, &ctx->dst_fmt, 1);
+> +	pic->mv_col_top_ptr = cedrus_h264_mv_col_buf_addr(ctx, position, 0);
+> +	pic->mv_col_bot_ptr = cedrus_h264_mv_col_buf_addr(ctx, position, 1);
 
-Looking at this handling, it seems much easier to me to simply use a
-numeric value instead of a string: You don't have to build it via
-sprintf, there are generic functions for parsing a string input into a
-simple number, and you have more options for compatibility (e.g.
-"version must be between m and n" instead of an exact match).
+... here regular types are assigned to the pic fields.
 
-If you still need to encode the device id here, you should be able to
-easily do something like (device_id << 16) | migration_version -- do
-you think that could work?
+I assume that cpu_to_le32() is needed here.
 
-> +
-> +ssize_t intel_gvt_check_vfio_device_version(struct drm_i915_private *dev_priv,
-> +		const char *self, const char *remote)
-> +{
-> +
-> +	/* currently only gen8 & gen9 are supported */
-> +	if (!IS_GEN(dev_priv, 8) && !IS_GEN(dev_priv, 9))
-> +		return -ENODEV;
-> +
-> +	if (!is_compatible(self, remote))
-> +		return -EINVAL;
+I'm not sure how I missed this when I made the initial pull request,
+but I think it would make sense if you post a rebased and fixed v10.
 
-I think the meaning of the error codes should really be standardized
-across vendor drivers, if we need a value for "this device does not
-support migration at all". (Your choices look reasonable for that.)
+Regards,
 
-> +
-> +	return 0;
-> +}
-> diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gvt.c
-> index 43f4242062dd..e720465b93d8 100644
-> --- a/drivers/gpu/drm/i915/gvt/gvt.c
-> +++ b/drivers/gpu/drm/i915/gvt/gvt.c
-> @@ -105,14 +105,69 @@ static ssize_t description_show(struct kobject *kobj, struct device *dev,
->  		       type->weight);
->  }
->  
-> +static ssize_t version_show(struct kobject *kobj, struct device *dev,
-> +		char *buf)
-> +{
-> +#ifdef GVT_MIGRATION_VERSION
-> +	struct drm_i915_private *i915 = kdev_to_i915(dev);
-> +	const char *mdev_type = kobject_name(kobj);
-> +
-> +	return intel_gvt_get_vfio_device_version(i915, buf, mdev_type);
-> +#else
-> +	/* do not support live migration */
-> +	return -EINVAL;
-
-...but this looks inconsistent. I would expect -ENODEV here, same as
-for non-gen{8,9}.
-
-Or simply do not create the attribute at all in that case?
-
-> +#endif
-> +}
-> +
-> +static ssize_t version_store(struct kobject *kobj, struct device *dev,
-> +		const char *buf, size_t count)
-> +{
-> +#ifdef GVT_MIGRATION_VERSION
-> +	char *remote = NULL, *self = NULL;
-> +	int len, ret = 0;
-> +	struct drm_i915_private *i915 = kdev_to_i915(dev);
-> +	const char *mdev_type = kobject_name(kobj);
-> +
-> +	len = intel_gvt_get_vfio_device_version_len(i915);
-> +	if (len < 0)
-> +		return len;
-> +
-> +	self = kmalloc(len, GFP_KERNEL);
-> +	if (!self)
-> +		return -ENOMEM;
-> +
-> +	ret = intel_gvt_get_vfio_device_version(i915, self, mdev_type);
-> +	if (ret < 0)
-> +		goto out;
-> +
-> +	remote = kstrndup(buf, count, GFP_KERNEL);
-> +	if (!remote) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	ret = intel_gvt_check_vfio_device_version(i915, self, remote);
-> +
-> +out:
-> +	kfree(self);
-> +	kfree(remote);
-> +	return (ret < 0 ? ret : count);
-> +#else
-> +	/* do not support live migration */
-> +	return -EINVAL;
-> +#endif
-> +}
-> +
->  static MDEV_TYPE_ATTR_RO(available_instances);
->  static MDEV_TYPE_ATTR_RO(device_api);
->  static MDEV_TYPE_ATTR_RO(description);
-> +static MDEV_TYPE_ATTR_RW(version);
->  
->  static struct attribute *gvt_type_attrs[] = {
->  	&mdev_type_attr_available_instances.attr,
->  	&mdev_type_attr_device_api.attr,
->  	&mdev_type_attr_description.attr,
-> +	&mdev_type_attr_version.attr,
->  	NULL,
->  };
->  
-(...)
+	Hans
