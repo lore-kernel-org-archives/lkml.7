@@ -2,143 +2,114 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 200CDC282DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7693AC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7198217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:40:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z9EV0qHl"
+	by mail.kernel.org (Postfix) with ESMTP id 50B9420651
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbfDWQk0 (ORCPT
+        id S1729202AbfDWQn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:40:26 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:40376 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfDWQkW (ORCPT
+        Tue, 23 Apr 2019 12:43:27 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:40429 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727656AbfDWQn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:40:22 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3NGXbfI042863;
-        Tue, 23 Apr 2019 16:39:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=OnmDEa4Vll+ER2XRN/87fZSs2s5ZyAbUlD8n6HCiMw8=;
- b=Z9EV0qHlZqVonQ+IibNlvzC8SfWpFIDQmk3Ix+qMsGNUBpraB2Fm957y7GLWq0Ez/E9D
- oqRookWBvmfmUZeJ7AX1DuCIYfBL2r9r4qX9ejVZ8oH/QJ4eJVOV8XRVup6N5yrg2o+B
- RLGZiKdvg88dXkgBgQJHvfd14Y0Dx1Sl3gt3r+tjsbQCP9yMCJ1KyWt1ItxbJiYA3UcF
- vDuDfYjdzosjJiWnkYj+idj5SygvAnS1b2kfeFNGYxI2ew9Cl+adWizRAt/1KCKkku1d
- itgeLkA11m7QQ2D5288Xdaulxt86kLbi1Ya02aE5hTY27qBQ1tHIpCXmbljBxu60XAXN 5g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2ryrxcwn2c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Apr 2019 16:39:57 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3NGchkw116076;
-        Tue, 23 Apr 2019 16:39:56 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2s0dwec9dy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Apr 2019 16:39:56 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3NGdn4o023727;
-        Tue, 23 Apr 2019 16:39:49 GMT
-Received: from [192.168.1.222] (/50.38.38.67)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 23 Apr 2019 09:39:49 -0700
-Subject: Re: [Question] Should direct reclaim time be bounded?
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>
-References: <d38a095e-dc39-7e82-bb76-2c9247929f07@oracle.com>
- <20190423071953.GC25106@dhcp22.suse.cz>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <eac582cf-2f76-4da1-1127-6bb5c8c959e4@oracle.com>
-Date:   Tue, 23 Apr 2019 09:39:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190423071953.GC25106@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9236 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904230113
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9236 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904230113
+        Tue, 23 Apr 2019 12:43:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TQ4.3kP_1556037781;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TQ4.3kP_1556037781)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 24 Apr 2019 00:43:15 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     mhocko@suse.com, vbabka@suse.cz, rientjes@google.com,
+        kirill@shutemov.name, akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP eligibility
+Date:   Wed, 24 Apr 2019 00:43:01 +0800
+Message-Id: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/23/19 12:19 AM, Michal Hocko wrote:
-> On Mon 22-04-19 21:07:28, Mike Kravetz wrote:
->> In our distro kernel, I am thinking about making allocations try "less hard"
->> on nodes where we start to see failures.  less hard == NORETRY/NORECLAIM.
->> I was going to try something like this on an upstream kernel when I noticed
->> that it seems like direct reclaim may never end/exit.  It 'may' exit, but I
->> instrumented __alloc_pages_slowpath() and saw it take well over an hour
->> before I 'tricked' it into exiting.
->>
->> [ 5916.248341] hpage_slow_alloc: jiffies 5295742  tries 2   node 0 success
->> [ 5916.249271]                   reclaim 5295741  compact 1
-> 
-> This is unexpected though. What does tries mean? Number of reclaim
-> attempts? If yes could you enable tracing to see what takes so long in
-> the reclaim path?
+The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
+vma") introduced THPeligible bit for processes' smaps. But, when checking
+the eligibility for shmem vma, __transparent_hugepage_enabled() is
+called to override the result from shmem_huge_enabled().  It may result
+in the anonymous vma's THP flag override shmem's.  For example, running a
+simple test which create THP for shmem, but with anonymous THP disabled,
+when reading the process's smaps, it may show:
 
-tries is the number of times we pass the 'retry:' label in
-__alloc_pages_slowpath.  In this specific case, I am pretty sure all that
-time is in one call to __alloc_pages_direct_reclaim.  My 'trick' to make this
-succeed was to "echo 0 > nr_hugepages" in another shell.
+7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+Size:               4096 kB
+...
+[snip]
+...
+ShmemPmdMapped:     4096 kB
+...
+[snip]
+...
+THPeligible:    0
 
->> This is where it stalled after "echo 4096 > nr_hugepages" on a little VM
->> with 8GB total memory.
->>
->> I have not started looking at the direct reclaim code to see exactly where
->> we may be stuck, or trying really hard.  My question is, "Is this expected
->> or should direct reclaim be somewhat bounded?"  With __alloc_pages_slowpath
->> getting 'stuck' in direct reclaim, the documented behavior for huge page
->> allocation is not going to happen.
-> 
-> Well, our "how hard to try for hugetlb pages" is quite arbitrary. We
-> used to rety as long as at least order worth of pages have been
-> reclaimed but that didn't make any sense since the lumpy reclaim was
-> gone.
+And, /proc/meminfo does show THP allocated and PMD mapped too:
 
-Yes, that is what I am seeing in our older distro kernel and I can at least
-deal with that.
+ShmemHugePages:     4096 kB
+ShmemPmdMapped:     4096 kB
 
->       So the semantic has change to reclaim&compact as long as there is
-> some progress. From what I understad above it seems that you are not
-> thrashing and calling reclaim again and again but rather one reclaim
-> round takes ages.
+This doesn't make too much sense.  The anonymous THP flag should not
+intervene shmem THP.  Calling shmem_huge_enabled() with checking
+MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+dax vma check since we already checked if the vma is shmem already.
 
-Correct
+Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each vma")
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+---
+v2: Check VM_NOHUGEPAGE per Michal Hocko
 
-> That being said, I do not think __GFP_RETRY_MAYFAIL is wrong here. It
-> looks like there is something wrong in the reclaim going on.
+ mm/huge_memory.c | 4 ++--
+ mm/shmem.c       | 3 +++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-Ok, I will start digging into that.  Just wanted to make sure before I got
-into it too deep.
-
-BTW - This is very easy to reproduce.  Just try to allocate more huge pages
-than will fit into memory.  I see this 'reclaim taking forever' behavior on
-v5.1-rc5-mmotm-2019-04-19-14-53.  Looks like it was there in v5.0 as well.
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 165ea46..5881e82 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -67,8 +67,8 @@ bool transparent_hugepage_enabled(struct vm_area_struct *vma)
+ {
+ 	if (vma_is_anonymous(vma))
+ 		return __transparent_hugepage_enabled(vma);
+-	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
+-		return __transparent_hugepage_enabled(vma);
++	if (vma_is_shmem(vma))
++		return shmem_huge_enabled(vma);
+ 
+ 	return false;
+ }
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 2275a0f..6f09a31 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -3873,6 +3873,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
+ 	loff_t i_size;
+ 	pgoff_t off;
+ 
++	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
++	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
++		return false;
+ 	if (shmem_huge == SHMEM_HUGE_FORCE)
+ 		return true;
+ 	if (shmem_huge == SHMEM_HUGE_DENY)
 -- 
-Mike Kravetz
+1.8.3.1
+
