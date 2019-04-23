@@ -2,402 +2,260 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 224CDC282E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F76DC282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09FC217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DBA214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 14:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="ygi9OuDj"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="mIg4rQrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfDWO2f (ORCPT
+        id S1728268AbfDWO2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 10:28:35 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39271 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbfDWO2f (ORCPT
+        Tue, 23 Apr 2019 10:28:44 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36156 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbfDWO2o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 10:28:35 -0400
-Received: by mail-qk1-f195.google.com with SMTP id f125so3851819qke.6
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 07:28:34 -0700 (PDT)
+        Tue, 23 Apr 2019 10:28:44 -0400
+Received: by mail-io1-f68.google.com with SMTP id d19so8501592ioc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 07:28:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=kg8h0oxkbuYeyiU8lm843tXNxAiLD0i6ZCwHcRcITqw=;
-        b=ygi9OuDjJkh5HdkwmA7cVBigg4+EZRu0vDBJRl4Eb/LR5Jo4e4iLJH8dHB09Y5D/is
-         OSdHo80uu9S1PpToU9GLaH/idJ2V/nRPV6kYKzfDmA9ikKO6EyN+pPoUVLTVqR6phoTR
-         k3We+QuFll4EDl5wHzwWM5o/MM370q8ubjRrVZNNRkpY48I+kAHP34a6T7Tpn5W2GzNh
-         k41OlFe+imJOcHANcGvMEekJZE211hjOHn0+Haq2vVGHK9mbJIB6/HiGMJMK6OVsykZQ
-         Zofr0VJwRe+fDnyi0CBFv+1wR/E1Yu3NuH8IJC5/n1ya03Bs2fG+/aXwn1rkxfwbkNii
-         o68g==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4y2sOqh3ds2XOGU/ESL87oNg/iti8IWT1yvOaAOnVqg=;
+        b=mIg4rQrd26alg2RnO1mlbqhA7yFeAZMz2sqCZrK5HjMwoKSZHx/5uffD28l2odW/3G
+         6jWP5wWXqt0+mNUM9j+QCxnGXLR85Pkr0JMaeTysTlDjR8QNfwWLfJGpfTrGz/8lKnaX
+         3+80O5v9Z7IcHjYENfEBulrgpMCqnPPI3gzw8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=kg8h0oxkbuYeyiU8lm843tXNxAiLD0i6ZCwHcRcITqw=;
-        b=Kvqh4EIRcGi7U2zwqCG8WLi5FyzL/4Rzv26yeL9h003F08gIc7/yhHijWUVXxcqiSe
-         OSQvgPlJCiTHREDZbhcjuMoxMtlUzejYvjjlhjyxVf1CChsVHurVfSa4SrDMox2ocNkQ
-         YA6lM8elio/UaCBBIJJVcVwzmuD/gPl3DjbYDkumEv0vh9/yWWYZsKjHXi28LmXlJrVK
-         Ws3Ut9YI35SmarKsikR8KnE53klvm8eDS3ILhAlZX700QDfkoeMVjrqKkXtkAtGkAbOO
-         uVn8fiZ2/boh0QY3q2cc7E7t6j/a0CBv/jXPfDWcv7knkm/EnccHJ2Y4Ur7u5/wxHrta
-         A+EQ==
-X-Gm-Message-State: APjAAAUL2iZGYBKUZCD76w8ko3dVeo/htb/Ua8hqfLykyLm4xAzSxd1c
-        jRvRnerp6JXcKMp4jR3AIRkYAA==
-X-Google-Smtp-Source: APXvYqyrIkmw9+qVvg7vQzi6msMq98/vf8Y7jGas6NDXmRnfySspiwyK4o6WAnBwMoUyGD6mAksVMg==
-X-Received: by 2002:ae9:ec07:: with SMTP id h7mr4975574qkg.7.1556029714112;
-        Tue, 23 Apr 2019 07:28:34 -0700 (PDT)
-Received: from tpx230-nicolas (modemcable154.55-37-24.static.videotron.ca. [24.37.55.154])
-        by smtp.gmail.com with ESMTPSA id x24sm9791557qtm.65.2019.04.23.07.28.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 07:28:32 -0700 (PDT)
-Message-ID: <e29914080f1db7b331e6e1b12dc9c7c48d5d7185.camel@ndufresne.ca>
-Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
- common place
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Date:   Tue, 23 Apr 2019 10:28:30 -0400
-In-Reply-To: <f288e1d29277fcd79b251d99f84fb9b165364fac.camel@bootlin.com>
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
-         <20190417154121.GJ13337@phenom.ffwll.local>
-         <20190418062229.eyog4i62eg4pr6uf@flea>
-         <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
-         <20190418090221.e57dogn4yx5nwdni@flea>
-         <6578c22ddf5420d4dead69d29f451bc6a91f6c4a.camel@bootlin.com>
-         <20190420224045.GY4964@pendragon.ideasonboard.com>
-         <20190423073026.GX13337@phenom.ffwll.local>
-         <f288e1d29277fcd79b251d99f84fb9b165364fac.camel@bootlin.com>
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-Zh7rxIBSoDrjPaJGfnkv"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4y2sOqh3ds2XOGU/ESL87oNg/iti8IWT1yvOaAOnVqg=;
+        b=Tgeukk6bYF290mjx3BhawIFu7c3mZbp+OoHK9meRSBob2inTy0Es9BUqRByML9uF6K
+         Hqfe/1xlwFZ5yRYNyCFrArPtOQtJpw1CcRWl3FmoPVqFZpG5w1KHOq9FpeAcxLTflNtI
+         sTzQqQxhn1gzbkTTKIVFVGw1wELs0GTODNFJJdlwFFRmp/VxwC/wc2rM1eN6PMNVXBSn
+         j3OYv2Bao5RnKT3k1JQY8K8MugT3oPQpkodw6RqmlOGUHYIbGTs4leqmKXoJvmhMMA/r
+         FV/9e9eJQ29kAuZhP33JZRa9NegYZAKkfna9lmCewoC8Trx18G+9SNlwuo6yBy7eOFCZ
+         N3Kg==
+X-Gm-Message-State: APjAAAXelthxEQQN5LGnunrPhZ803hF0aJ2DcyAi1UIX6Ax19BgAVaAP
+        9KOMLbpyAP6odD1EpZCk/3EJDs4xiPlDghZygMo7JQ==
+X-Google-Smtp-Source: APXvYqzXuG/ZVKEhAd7IcfGdVJRZj9uxPelrqsrDFW5GwIGXV7dHYv2wZ6LFrMEIBhevofR4HAyorZxLmtWa48tEpuA=
+X-Received: by 2002:a6b:6006:: with SMTP id r6mr3810575iog.294.1556029722358;
+ Tue, 23 Apr 2019 07:28:42 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190411164753.217899-1-almasrymina@google.com>
+In-Reply-To: <20190411164753.217899-1-almasrymina@google.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 23 Apr 2019 16:28:31 +0200
+Message-ID: <CAJfpegsE+NOuR-mM752cBoBwbQF8X5jAkwTKZbn_Xg-mHskA6A@mail.gmail.com>
+Subject: Re: [PATCH] fs: Fix ovl_i_mutex_dir_key/p->lock/cred cred_guard_mutex deadlock
+To:     overlayfs <linux-unionfs@vger.kernel.org>
+Cc:     Greg Thelen <gthelen@google.com>, Shakeel B <shakeelb@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mina Almasry <almasrymina@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Cc: linux-unionfs
 
---=-Zh7rxIBSoDrjPaJGfnkv
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Le mardi 23 avril 2019 =C3=A0 14:33 +0200, Paul Kocialkowski a =C3=A9crit :
-> Hi,
->=20
-> On Tue, 2019-04-23 at 09:30 +0200, Daniel Vetter wrote:
-> > On Sun, Apr 21, 2019 at 01:40:45AM +0300, Laurent Pinchart wrote:
-> > > Hi Paul,
-> > >=20
-> > > On Thu, Apr 18, 2019 at 01:49:54PM +0200, Paul Kocialkowski wrote:
-> > > > On Thu, 2019-04-18 at 11:02 +0200, Maxime Ripard wrote:
-> > > > > On Thu, Apr 18, 2019 at 09:52:10AM +0200, Daniel Vetter wrote:
-> > > > > > And a lot of people pushed for the "fourcc is a standard", when
-> > > > > > really it's totally not.
-> > > > >=20
-> > > > > Even if it's not a standard, having consistency would be a good t=
-hing.
-> > > > >=20
-> > > > > And you said yourself that DRM fourcc is now pretty much an autho=
-rity
-> > > > > for the fourcc, so it definitely looks like a standard to me.
-> > > >=20
-> > > > I think trying to make the V4L2 and DRM fourccs converge is a lost
-> > > > cause, as it has already significantly diverged. Even if we coordin=
-ate
-> > > > an effort to introduce new formats with the same fourcc on both sid=
-es,
-> > > > I don't see what good that would be since the formats we have now a=
-re
-> > > > still plagued by the inconsistency.
-> > > >=20
-> > > > I think we always need an explicit translation step from either v4l=
-2 or
-> > > > drm to the internal representation and back, without ever assuming =
-that
-> > > > formats might be compatible because they share the same fourcc.
-> > >=20
-> > > I don't agree. APIs evolve, and while we can't switch from one set of
-> > > 4CCs to another in existing APIs, we could in new APIs. Boris is work=
-ing
-> > > on new ioctls to handle formats in V4L2, and while 4CC unification co=
-uld
-> > > be impopular from a userspace developers point of view there, I don't
-> > > think we have ruled it out completely. The move to the request API is
-> > > also an area where a common set of 4CCs could be used, as it will dep=
-art
-> > > from the existing V4L2 ioctls. To summarize my opinion, we're not the=
-re
-> > > yet, but I wouldn't rule it out completely for the future.
-> > >=20
-> > > > It looks like so far, V4L2 pixel formats describe a DRM pixel forma=
-t +
-> > > > modifier.
-> > >=20
-> > > DRM modifiers are mostly about tiling and compression, and we hardly
-> > > support these in V4L2. What are the modifiers you think are hardcoded=
- in
-> > > 4CCs in V4L2 ?
-> >=20
-> > Hm maybe it was a drm one that didn't come from v4l or anywhere else
-> > really, but the NV12MT one is nv12 + some tiling. I think we managed to
-> > uapi-bend that one into shape in at least drm.
->=20
-> The one I had in mind is V4L2_PIX_FMT_SUNXI_TILED_NV12 which translates
-> to DRM_FORMAT_NV12 + DRM_FORMAT_MOD_ALLWINNER_TILED. Seems to be a
-> pretty similar case to the Mediatek one indeed.
->=20
-> In our cause, that's because the video decoding engine produces its
-> destination buffers in a specific tiled format, that the display engine
-> can take in directly.
-
-We also have the Samsung tiling (Z pattern) as mentioned here, but also
-linear 16x16 tile placement (also from Samsung ?) and I believe Amlogic
-CODEC patches is bringing another tiling (unavoidable on older Meson8,
-with 64bytes swaps). All these should be expressed as NV12 + mod in DRM
-space.
-
-What is very often not enabled, but affect the performance on mainline
-media drivers is the ARM frame buffer compression. I know that RK chips
-have support for this, and that you can't achieve the maximum
-throughput without that. This one is not documented anywhere, but I
-understand that there is multiple variants that HW vendor licence.
-Though, in general, each SoC are likely running a single variant, so a
-single mod would make sense.
-
-So all this to say that V4L2 equally needs supports for these. What I
-understood through DRM API is that a buffer allocated for let's say
-NV12 + mod, is compatible with linear NV12. That could be used to
-simplify some code, but at the same time, a common API that deals with
-the padding and alignment of each format + mod independently would do
-that same as long as this is not variable depending on which target HW
-uses that same format.
-
-I think DRM + mod reduce the amount of dedicated formats that needs to
-be added, and simplify the documentation of each formats. I was looking
-at the Amlogic Axi configurations on Amlogic S905x recently, and for
-each well known format, there is a bitmask that let you do arbitrary
-swapping of bits, so effectively if we start exposing all these with
-V4L2 style, the list would become very long and hard to maintained.
-
->=20
-> Cheers,
->=20
-> Paul
->=20
-> > -Daniel
-> >=20
-> > > > I think Boris (CCed) is working to change that by allowing to
-> > > > pass a DRM modifier through V4L2. With that, we'd be in a situation
-> > > > where some formats are described by the v4l2 pixfmt alone and some
-> > > > formats are also described a modifier (but I looked at it from a
-> > > > distance so might have misunderstod). That feels better since it av=
-oids
-> > > > the combinatory explosion from describing each format + modifier
-> > > > individually.
-> > > >=20
-> > > > What do you think?
-> > > >=20
-> > > > > > v4l tends to conflate pixel format with stuff that we tend to e=
-ncode
-> > > > > > in modifiers a lot more.
-> > > > >=20
-> > > > > Boris is working on adding the modifiers concept to v4l2, so we'r=
-e
-> > > > > converging here, and we can totally have a layer in v4l2 to conve=
-rt
-> > > > > between old v4l2 "format+modifiers" formats, and DRM style format=
-s.
-> > > > >=20
-> > > > > > There's a bunch of reasons we can't just use v4l, and they're a=
-s
-> > > > > > valid as ever:
-> > > > > >=20
-> > > > > > - We overlap badly in some areas, so even if fourcc codes match=
-, we
-> > > > > >   can't use them and need a duplicated DRM_FOURCC code.
-> > > > >=20
-> > > > > Do yo have an example of one of those areas?
-> > > > >=20
-> > > > > > - v4l encodes some metadata into the fourcc that we encode else=
-where,
-> > > > > >   e.g. offset for planar yuv formats, or tiling mode
-> > > > >=20
-> > > > > As I was saying, this changes on the v4l2 side, and converging to
-> > > > > what DRM is doing.
-> > > > >=20
-> > > > > > - drm fourcc code doesn't actually define the drm_format_info
-> > > > > >   uniquely, drivers can override that (that's an explicit desig=
-n
-> > > > > >   intent of modifiers, to allow drivers to add another plane fo=
-r
-> > > > > >   e.g. compression information). You'd need to pull that driver
-> > > > > >   knowledge into your format library.
-> > > > >=20
-> > > > > I'm not sure how my patches are changing anything here. This is
-> > > > > litterally the same code, with the functions renamed.
-> > > > >=20
-> > > > > If drivers want to override that, then yeah, fine, we can let the=
-m do
-> > > > > that. Just like any helper this just provides a default that cove=
-rs
-> > > > > most of the cases.
-> > > > >=20
-> > > > > > Iow there's no way we can easily adopt v4l fourcc, except if we=
- do
-> > > > > > something like a new addfb flag.
-> > > > >=20
-> > > > > For the formats that would be described as a modifier, sure. For =
-all
-> > > > > the others (that are not yet supported by DRM), then I don't real=
-ly
-> > > > > see why not.
-> > > > >=20
-> > > > > > > And given how the current state is a mess in this regard, I'm=
- not too
-> > > > > > > optimistic about keeping the formats in their relevant framew=
-orks.
-> > > > > > >=20
-> > > > > > > Having a shared library, governed by both, will make this far=
- easier,
-> > > > > > > since it will be easy to discover the formats that are alread=
-y
-> > > > > > > supported by the other subsystem.
-> > > > > >=20
-> > > > > > I think a compat library that (tries to, best effort) convert b=
-etween
-> > > > > > v4l and drm fourcc would make sense. Somewhere in drivers/video=
-, next
-> > > > > > to the conversion functions for videomode <-> drm_display_mode
-> > > > > > perhaps. That should be useful for drivers.
-> > > > >=20
-> > > > > That's not really what this series is about though. That series i=
-s
-> > > > > about sharing the (image|pixels) formats database across everyone=
- so
-> > > > > that everyone can benefit from it.
-> > > > >=20
-> > > > > > Unifying the formats themselves, and all the associated metadat=
-a is
-> > > > > > imo a no-go, and was a pretty conscious decision when we implem=
-ented
-> > > > > > drm_fourcc a few years back.
-> > > > > >=20
-> > > > > > > If we want to keep the current library in DRM, we have two op=
-tions
-> > > > > > > then:
-> > > > > > >=20
-> > > > > > >   - Support all the v4l2 formats in the DRM library, which is
-> > > > > > >     essentially what I'm doing in the last patches. However, =
-that
-> > > > > > >     would require to have the v4l2 developpers also reviewing=
- stuff
-> > > > > > >     there. And given how busy they are, I cannot really see h=
-ow that
-> > > > > > >     would work.
-> > > > > >=20
-> > > > > > Well, if we end up with a common library then yes we need cross
-> > > > > > review. There's no way around that. Doesn't matter where exactl=
-y that
-> > > > > > library is in the filesystem tree, and adding a special MAINTAI=
-NERS
-> > > > > > entry for anything related to fourcc (both drm and v4l) to make=
- sure
-> > > > > > they get cross-posted is easy. No file renaming needed.
-> > > > >=20
-> > > > > That would create some governing issues as well. For example, if =
-you
-> > > > > ever have a patch from one fourcc addition (that might or might n=
-ot be
-> > > > > covered by v4l2), will you wait for any v4l2 developper to review=
- it?
-> > > > >=20
-> > > > > If it's shared code, then it should be shared, and every client
-> > > > > framework put on an equal footing.
-> > > > >=20
-> > > > > > >   - Develop the same library from within v4l2. That is really=
- a poor
-> > > > > > >     solution, since the information would be greatly duplicat=
-ed
-> > > > > > >     between the two, and in terms of maintainance, code, and =
-binary
-> > > > > > >     size that would be duplicated too.
-> > > > > >=20
-> > > > > > It's essentially what we decided to do for drm years back.
-> > > > >=20
-> > > > > And it was probably the right solution back then, but I'm really =
-not
-> > > > > convinced it's still the right thing to do today.
-> > > > >=20
-> > > > > > > Having it shared allows to easily share, and discover formats=
- from the
-> > > > > > > other subsystem, and to have a single, unique place where thi=
-s is
-> > > > > > > centralized.
-> > > > > >=20
-> > > > > > What I think could work as middle ground:
-> > > > > > - Put drm_format stuff into a separate .ko
-> > > > > > - Add a MAINTAINERS entry to make sure all things fourcc are cr=
-oss
-> > > > > > posted to both drm and v4l lists. Easy on the drm side, since i=
-t's all
-> > > > > > separate files. Not sure it's so convenient for v4l uapi.
-> > > > > > - Add a conversion library that tries to best-effort map betwee=
-n drm
-> > > > > > and v4l formats. On the drm side that most likely means you nee=
-d
-> > > > > > offsets for planes, and modifiers too (since those are implied =
-in some
-> > > > > > v4l fourcc). Emphasis on "best effort" i.e. only support as muc=
-h as
-> > > > > > the drivers that use this library need.
-> > > > > > - Add drm_fourcc as-needed by these drivers that want to use a =
-unified
-> > > > > > format space.
-> > > > > >=20
-> > > > > > Forcing this unification on everyone otoh is imo way too much.
-> > > > >=20
-> > > > > v4l2 is starting to converge with DRM, and we're using the DRM AP=
-I
-> > > > > pretty much untouched for that library, so I'm not really sure ho=
-w
-> > > > > anyone is hurt by that unification.
-> > >=20
-> > > --=20
-> > > Regards,
-> > >=20
-> > > Laurent Pinchart
-
---=-Zh7rxIBSoDrjPaJGfnkv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXL8hDgAKCRBxUwItrAao
-HH1WAKCYq4AV39+mMbk/uAJVx5oqTcZulACfc1HmiSCS/5VX587mgIWFv57vmn0=
-=uoRg
------END PGP SIGNATURE-----
-
---=-Zh7rxIBSoDrjPaJGfnkv--
-
+On Thu, Apr 11, 2019 at 6:48 PM Mina Almasry <almasrymina@google.com> wrote:
+>
+> These 3 locks are acquired simultaneously in different order causing
+> deadlock:
+>
+> https://syzkaller.appspot.com/bug?id=00f119b8bb35a3acbcfafb9d36a2752b364e8d66
+>
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 4.19.0-rc5+ #253 Not tainted
+> ------------------------------------------------------
+> syz-executor1/545 is trying to acquire lock:
+> 00000000b04209e4 (&ovl_i_mutex_dir_key[depth]){++++}, at: inode_lock_shared include/linux/fs.h:748 [inline]
+> 00000000b04209e4 (&ovl_i_mutex_dir_key[depth]){++++}, at: do_last fs/namei.c:3323 [inline]
+> 00000000b04209e4 (&ovl_i_mutex_dir_key[depth]){++++}, at: path_openat+0x250d/0x5160 fs/namei.c:3534
+>
+> but task is already holding lock:
+> 0000000044500cca (&sig->cred_guard_mutex){+.+.}, at: prepare_bprm_creds+0x53/0x120 fs/exec.c:1404
+>
+> which lock already depends on the new lock.
+>
+> the existing dependency chain (in reverse order) is:
+>
+> -> #3 (&sig->cred_guard_mutex){+.+.}:
+>        __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+>        __mutex_lock+0x166/0x1700 kernel/locking/mutex.c:1072
+>        mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1102
+>        lock_trace+0x4c/0xe0 fs/proc/base.c:384
+>        proc_pid_stack+0x196/0x3b0 fs/proc/base.c:420
+>        proc_single_show+0x101/0x190 fs/proc/base.c:723
+>        seq_read+0x4af/0x1150 fs/seq_file.c:229
+>        do_loop_readv_writev fs/read_write.c:700 [inline]
+>        do_iter_read+0x4a3/0x650 fs/read_write.c:924
+>        vfs_readv+0x175/0x1c0 fs/read_write.c:986
+>        do_preadv+0x1cc/0x280 fs/read_write.c:1070
+>        __do_sys_preadv fs/read_write.c:1120 [inline]
+>        __se_sys_preadv fs/read_write.c:1115 [inline]
+>        __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1115
+>        do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
+>        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> -> #2 (&p->lock){+.+.}:
+>        __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+>        __mutex_lock+0x166/0x1700 kernel/locking/mutex.c:1072
+>        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+>        seq_read+0x71/0x1150 fs/seq_file.c:161
+>        do_loop_readv_writev fs/read_write.c:700 [inline]
+>        do_iter_read+0x4a3/0x650 fs/read_write.c:924
+>        vfs_readv+0x175/0x1c0 fs/read_write.c:986
+>        kernel_readv fs/splice.c:362 [inline]
+>        default_file_splice_read+0x53c/0xb20 fs/splice.c:417
+>        do_splice_to+0x12e/0x190 fs/splice.c:881
+>        splice_direct_to_actor+0x270/0x8f0 fs/splice.c:953
+>        do_splice_direct+0x2d4/0x420 fs/splice.c:1062
+>        do_sendfile+0x62a/0xe20 fs/read_write.c:1440
+>        __do_sys_sendfile64 fs/read_write.c:1495 [inline]
+>        __se_sys_sendfile64 fs/read_write.c:1487 [inline]
+>        __x64_sys_sendfile64+0x15d/0x250 fs/read_write.c:1487
+>        do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
+>        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> -> #1 (sb_writers#5){.+.+}:
+>        percpu_down_read_preempt_disable include/linux/percpu-rwsem.h:36 [inline]
+>        percpu_down_read include/linux/percpu-rwsem.h:59 [inline]
+>        __sb_start_write+0x214/0x370 fs/super.c:1387
+>        sb_start_write include/linux/fs.h:1566 [inline]
+>        mnt_want_write+0x3f/0xc0 fs/namespace.c:360
+>        ovl_want_write+0x76/0xa0 fs/overlayfs/util.c:24
+>        ovl_create_object+0x142/0x3a0 fs/overlayfs/dir.c:596
+>        ovl_create+0x2b/0x30 fs/overlayfs/dir.c:627
+>        lookup_open+0x1319/0x1b90 fs/namei.c:3234
+>        do_last fs/namei.c:3324 [inline]
+>        path_openat+0x15e7/0x5160 fs/namei.c:3534
+>        do_filp_open+0x255/0x380 fs/namei.c:3564
+>        do_sys_open+0x568/0x700 fs/open.c:1063
+>        ksys_open include/linux/syscalls.h:1276 [inline]
+>        __do_sys_creat fs/open.c:1121 [inline]
+>        __se_sys_creat fs/open.c:1119 [inline]
+>        __x64_sys_creat+0x61/0x80 fs/open.c:1119
+>        do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
+>        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> -> #0 (&ovl_i_mutex_dir_key[depth]){++++}:
+>        lock_acquire+0x1ed/0x520 kernel/locking/lockdep.c:3900
+>        down_read+0xb0/0x1d0 kernel/locking/rwsem.c:24
+>        inode_lock_shared include/linux/fs.h:748 [inline]
+>        do_last fs/namei.c:3323 [inline]
+>        path_openat+0x250d/0x5160 fs/namei.c:3534
+>        do_filp_open+0x255/0x380 fs/namei.c:3564
+>        do_open_execat+0x221/0x8e0 fs/exec.c:853
+>        __do_execve_file.isra.33+0x173f/0x2540 fs/exec.c:1755
+>        do_execveat_common fs/exec.c:1866 [inline]
+>        do_execve fs/exec.c:1883 [inline]
+>        __do_sys_execve fs/exec.c:1964 [inline]
+>        __se_sys_execve fs/exec.c:1959 [inline]
+>        __x64_sys_execve+0x8f/0xc0 fs/exec.c:1959
+>        do_syscall_64+0x1b9/0x820 arch/x86/entry/common.c:290
+>        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> other info that might help us debug this:
+>
+> Chain exists of:
+>   &ovl_i_mutex_dir_key[depth] --> &p->lock --> &sig->cred_guard_mutex
+>
+>  Possible unsafe locking scenario:
+>
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(&sig->cred_guard_mutex);
+>                                lock(&p->lock);
+>                                lock(&sig->cred_guard_mutex);
+>   lock(&ovl_i_mutex_dir_key[depth]);
+>
+>  *** DEADLOCK ***
+>
+> Solution: I establish this locking order for these locks:
+>
+> 1. ovl_i_mutex_dir_key
+> 2. p->lock
+> 3. sig->cred_guard_mutex
+>
+> In this change i fix the locking order of exec.c, which is the only
+> instance that voilates this order.
+>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> ---
+>  fs/exec.c | 20 ++++++++------------
+>  1 file changed, 8 insertions(+), 12 deletions(-)
+>
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 2e0033348d8e..423d90bc75cc 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1742,6 +1742,12 @@ static int __do_execve_file(int fd, struct filename *filename,
+>         if (retval)
+>                 goto out_ret;
+>
+> +       if (!file)
+> +               file = do_open_execat(fd, filename, flags);
+> +       retval = PTR_ERR(file);
+> +       if (IS_ERR(file))
+> +               goto out_free;
+> +
+>         retval = -ENOMEM;
+>         bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);
+>         if (!bprm)
+> @@ -1754,12 +1760,6 @@ static int __do_execve_file(int fd, struct filename *filename,
+>         check_unsafe_exec(bprm);
+>         current->in_execve = 1;
+>
+> -       if (!file)
+> -               file = do_open_execat(fd, filename, flags);
+> -       retval = PTR_ERR(file);
+> -       if (IS_ERR(file))
+> -               goto out_unmark;
+> -
+>         sched_exec();
+>
+>         bprm->file = file;
+> @@ -1775,7 +1775,7 @@ static int __do_execve_file(int fd, struct filename *filename,
+>                                             fd, filename->name);
+>                 if (!pathbuf) {
+>                         retval = -ENOMEM;
+> -                       goto out_unmark;
+> +                       goto out_free;
+>                 }
+>                 /*
+>                  * Record that a name derived from an O_CLOEXEC fd will be
+> @@ -1790,7 +1790,7 @@ static int __do_execve_file(int fd, struct filename *filename,
+>
+>         retval = bprm_mm_init(bprm);
+>         if (retval)
+> -               goto out_unmark;
+> +               goto out_free;
+>
+>         retval = prepare_arg_pages(bprm, argv, envp);
+>         if (retval < 0)
+> @@ -1840,10 +1840,6 @@ static int __do_execve_file(int fd, struct filename *filename,
+>                 mmput(bprm->mm);
+>         }
+>
+> -out_unmark:
+> -       current->fs->in_exec = 0;
+> -       current->in_execve = 0;
+> -
+>  out_free:
+>         free_bprm(bprm);
+>         kfree(pathbuf);
+> --
+> 2.21.0.392.gf8f6787159e-goog
+>
