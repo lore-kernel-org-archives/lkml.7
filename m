@@ -2,76 +2,83 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6185C10F11
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7567EC10F11
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C7A20896
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555985577;
-	bh=MQkv6ow7heCYEuAJ3cwpJEQoeCTRmZyrVFUXLELcntM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f5dcCPfFu7meqcvU4odcpnXds4Sx36nhF0LyEv1nABuI86GCobtUhpsIqP9eppR1m
-	 BsP+6F5eLQWZcdkf+hYW6k1p0P1IW/odHHTrIgfCLXsqUohzn3uxBGFRo8qs3MX72a
-	 XDYJ6AhVUcEqROtYo+p45JkfAxUKQ3FCMwCQEU6c=
+	by mail.kernel.org (Postfix) with ESMTP id 4A5C52077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 02:14:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbfDWCM4 (ORCPT
+        id S1729937AbfDWCOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 22 Apr 2019 22:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55310 "EHLO mail.kernel.org"
+        Mon, 22 Apr 2019 22:14:41 -0400
+Received: from mga11.intel.com ([192.55.52.93]:17352 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbfDWCMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 22 Apr 2019 22:12:55 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 178DD2077C;
-        Tue, 23 Apr 2019 02:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555985575;
-        bh=MQkv6ow7heCYEuAJ3cwpJEQoeCTRmZyrVFUXLELcntM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GL3XtCn2h6elziIXAOq1FLBFrY460XjDL6jXOoHlQGTkn2wB7TmbuwDRxO8zBq2mA
-         5bACSupGWAJTKCt6RM17YDuhFLaI+drHA0oIyUZoCnqcnk1SOv2ueXNqDv1GgKgt6b
-         Ce/L0eyWsalNtPr5xkIFB0xLgp+4J8+B7ZuO08xE=
-Date:   Tue, 23 Apr 2019 10:12:37 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: linux-next: build failure after merge of the imx-mxs tree
-Message-ID: <20190423021235.GE16166@dragon>
-References: <20190423084501.15824b18@canb.auug.org.au>
+        id S1729541AbfDWCOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 22 Apr 2019 22:14:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Apr 2019 19:14:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,384,1549958400"; 
+   d="scan'208";a="339873633"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Apr 2019 19:09:37 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v3 08/10] iommu/vt-d: Check whether device requires bounce
+ buffer
+To:     Christoph Hellwig <hch@lst.de>
+References: <20190421011719.14909-1-baolu.lu@linux.intel.com>
+ <20190421011719.14909-9-baolu.lu@linux.intel.com>
+ <20190422164755.GC31181@lst.de>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <76e35340-32c3-ee0d-5232-bd8800248402@linux.intel.com>
+Date:   Tue, 23 Apr 2019 10:03:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423084501.15824b18@canb.auug.org.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190422164755.GC31181@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hi,
 
-On Tue, Apr 23, 2019 at 08:45:01AM +1000, Stephen Rothwell wrote:
-> Hi all,
+On 4/23/19 12:47 AM, Christoph Hellwig wrote:
+> On Sun, Apr 21, 2019 at 09:17:17AM +0800, Lu Baolu wrote:
+>> +static inline bool device_needs_bounce(struct device *dev)
+>> +{
+>> +	struct pci_dev *pdev = NULL;
+>> +
+>> +	if (intel_no_bounce)
+>> +		return false;
+>> +
+>> +	if (dev_is_pci(dev))
+>> +		pdev = to_pci_dev(dev);
+>> +
+>> +	return pdev ? pdev->untrusted : false;
+>> +}
 > 
-> After merging the imx-mxs tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
+> Again, this and the option should not be in a specific iommu driver.
 > 
-> arch/arm/boot/dts/imx7d-zii-rpu2.dts:46.12-50.4: Warning (io_channels_property): /iio-hwmon: Missing property '#io-channel-cells' in node /soc/aips-bus@30400000/adc@30610000 or bad phandle (referred from io-channels[0])
-> 
-> Caused by commit
-> 
->   69ab5392f517 ("ARM: dts: Add support for ZII i.MX7 RPU2 board")
 
-Fixed.  Thanks for reporting.
+The option of whether bounce is ignored should be in the specific iommu
+driver. Or any other thought?
 
-Shawn
+Best regards,
+Lu Baolu
