@@ -2,143 +2,120 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9117FC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DF9C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8CD206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCFD217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 15:06:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P/gkTfFf"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="ap+rHjm7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbfDWPFn (ORCPT
+        id S1728322AbfDWPGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 11:05:43 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44113 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727673AbfDWPFm (ORCPT
+        Tue, 23 Apr 2019 11:06:24 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:34990 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727673AbfDWPGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 11:05:42 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y12so5099120plk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 08:05:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OD+RZV04VouyQVp1GzCs1QA3xxiEWeSzMkM54So/b1E=;
-        b=P/gkTfFf/IvM4b2jKbyt7svwWoM8xvT8fBn07/PS/H2K5eVPxwxs0B3K491rZsdR4T
-         liBRFWfFFbnkRImFaZKn0XYKl49935OnVwDspPBXJJVfPdy2VMU1gkyUFLq+H/0Es7SG
-         ChbvlSo/H6mPh/ti2aXubOQOQmgWebjklgmojczusppy2BocA17DikVCWC0OKaqiAOaw
-         ns7sn/qvMsRXZZLh613YJq0MDCdlxEdXhJJiuXe7/95u1FIb9O8t0QZ5t6eFLcL0sRmm
-         ZOj+vRVhQmetCdE5eHiG2y+e+czKSpClT8eSHTqUFhBFWDvk3gcbZhyLpXelkI4XDzDO
-         39Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OD+RZV04VouyQVp1GzCs1QA3xxiEWeSzMkM54So/b1E=;
-        b=E2NZa27cd/r6TxI++YIhzz18NX4RMgC7Xf6sNpVDGKCtSsppumlR7kDdSkS3H2A6MW
-         9tKkPEmBvjkNTbVq7qNpW92eO9L/+GO/Spz7HC47psDuynNfRgGg4vIYi54yoHdcGdFQ
-         V1byYmClVBPq3QYCkOHWPxwMQfbrv3ARUiPlNzfpp6Rm/1XjjffMorEfNwZNCDsoU3gW
-         xliPSnfBTmKCvPedaXkRl0cgGDUOhRIUJ9BIfxaLcduOUPC4IOnT6OKOX8DD3zI4vURZ
-         hJXJRpVfx1CrbKhonwXi7okNeP7l4PWovxcC73HNSmKwDYezBIC1/1C7nYoiBM2g+H3n
-         I6AQ==
-X-Gm-Message-State: APjAAAVeWU4J0CxnycumT5xHmMdxXhTfrh9H/n8vOk/L3WOGepVPjF4Q
-        EofVXcPk3hq4JKbENMMxQdCv9/MB7U8mZik9KFQnJVK347lKKQ==
-X-Google-Smtp-Source: APXvYqxD0jWt64GjYbWfNRXykoTSI3tXj/XFafdavhMsZqvORYGpMFssNpaGA8SGXLZQIehqHM06Z6ZmSbBSXcjw7kM=
-X-Received: by 2002:a17:902:2b89:: with SMTP id l9mr25383680plb.329.1556031941580;
- Tue, 23 Apr 2019 08:05:41 -0700 (PDT)
+        Tue, 23 Apr 2019 11:06:24 -0400
+X-Greylist: delayed 1940 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Apr 2019 11:06:23 EDT
+Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
+        by mx0a-00190b01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3NEQxEO008326;
+        Tue, 23 Apr 2019 15:33:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=jan2016.eng;
+ bh=arkhTlxL/xq6hHs8zOa3vPqV/+YR/QoM8F0pg/cukSE=;
+ b=ap+rHjm7bB9xDNr+gszLXDj9SMelEbJNQJ3GdyMufwrnX/llvzNLjBzeRV5QV5gKyzs5
+ XgMJ5u0s24EhjV5jblwgZlXMrJk03wvb03IiK+/SBKVmXwFzrMa4zguRdtF0KMFraOyz
+ 0hDRUeZp0nhMDLUL67twDp+liulr5I2PaBykIhA0n2D/Jpt7WVG+y2+MbFVmljwXPWco
+ LxUcquqqTbroNFw7F/2Gkj95eFgMcMEQIDjX3zQ/S4cWAGolureQf7GEG+KEFLagZL7P
+ QG1WkdpLU1m/YPv5IFYCNIl0ox7mPK2cx2xrV+1utEmVGtv8Uhth+00dwb87dujcJYBw 4A== 
+Received: from prod-mail-ppoint3 (prod-mail-ppoint3.akamai.com [96.6.114.86] (may be forged))
+        by mx0a-00190b01.pphosted.com with ESMTP id 2s22fk8h2p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Apr 2019 15:33:56 +0100
+Received: from pps.filterd (prod-mail-ppoint3.akamai.com [127.0.0.1])
+        by prod-mail-ppoint3.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x3NEWDJd015195;
+        Tue, 23 Apr 2019 10:33:55 -0400
+Received: from email.msg.corp.akamai.com ([172.27.25.32])
+        by prod-mail-ppoint3.akamai.com with ESMTP id 2ryxrurcfe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 23 Apr 2019 10:33:55 -0400
+Received: from USTX2EX-DAG1MB2.msg.corp.akamai.com (172.27.27.102) by
+ ustx2ex-dag1mb3.msg.corp.akamai.com (172.27.27.103) with Microsoft SMTP
+ Server (TLS) id 15.0.1473.3; Tue, 23 Apr 2019 09:33:54 -0500
+Received: from USTX2EX-DAG1MB2.msg.corp.akamai.com ([172.27.6.132]) by
+ ustx2ex-dag1mb2.msg.corp.akamai.com ([172.27.6.132]) with mapi id
+ 15.00.1473.003; Tue, 23 Apr 2019 09:33:54 -0500
+From:   "Banerjee, Debabrata" <dbanerje@akamai.com>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        Dmitry Monakhov <dmonakhov@openvz.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ext4: bad mount opts in no journal mode
+Thread-Topic: [PATCH] ext4: bad mount opts in no journal mode
+Thread-Index: AQHU8LB42sqXQo7D8EG2I+INPmkeGKZJ8oiA
+Date:   Tue, 23 Apr 2019 14:33:53 +0000
+Message-ID: <2C6C280A-9716-4F96-A999-CDFBD0153F61@akamai.com>
+References: <20190411214917.1899-1-dbanerje@akamai.com>
+In-Reply-To: <20190411214917.1899-1-dbanerje@akamai.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/10.18.0.190414
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [172.19.40.193]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <95061BCC4913BC42A12E73C7F7B66B95@akamai.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <00000000000029431d0586d10813@google.com> <Pine.LNX.4.44L0.1904221344550.1384-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1904221344550.1384-100000@iolanthe.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 23 Apr 2019 17:05:30 +0200
-Message-ID: <CAAeHK+zUiv+CSip7OwrQ6FKxwE_+Wh0LTmGW86ipQ5QkaAOT8w@mail.gmail.com>
-Subject: Re: general protection fault in __dev_printk
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>, rafael@kernel.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904230098
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904230098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 7:53 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Thu, 18 Apr 2019, syzbot wrote:
->
-> > syzbot has found a reproducer for the following crash on:
-> >
-> > HEAD commit:    d34f9519 usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10adfe6b200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=c73d1bb5aeaeae20
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=2eb9121678bdb36e6d57
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145cb7e3200000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f8bd2d200000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
-> >
-> > yurex 1-1:0.150: yurex_interrupt - unknown status received: -71
-> > usb 1-1: USB disconnect, device number 112
-> > yurex 1-1:0.150: yurex_interrupt - unknown status received: -71
-> > kasan: CONFIG_KASAN_INLINE enabled
-> > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > general protection fault: 0000 [#1] SMP KASAN PTI
->
-> Andrey:
->
-> This original bug report included a "USB disconnect" line, as shown
-> above.  The newer results, for runs with my patches added, do not.  At
-> least, if such a line was present, it didn't show up in the console
-> output files -- the most recent one contains nothing but repeats of
-> that "yurex_interrupt - unknown status received: -71" line, although
-> for devices on multiple buses.
->
-> Is there any way to get more information about what's happening, such
-> as a complete kernel log?
-
-It should be possible to provide the full log for the result of the
-"syz test" command. I'll talk to Dmitry about this when he's back from
-vacation next week.
-
-> And perhaps to run the test with just a
-> single dummy-hcd bus instead of 6?
-
-Hm, it might be possible to implement overriding of syz-execprog flags
-and provide them via "syz test". It's not implemented right now
-though.
-
-Running the reproducer manually is the most flexible way to make
-changes to the way it's ran or to make changes to the environment. In
-this case I haven't managed to reproduce the hang manually though :(
-
-I see two ways to deal with this right now:
-
-1. Submit your fix (it fixes the original issue for me) and wait until
-it gets into the usb-fuzzer tree. Then maybe syzbot will report the
-hang and provide a better reproducer.
-
-2. Change the testing patch to also suppress those "yurex_interrupt -
-unknown status received: -71" messages and rerun the "syz test"
-command. Hopefully then syzbot will provide the full kernel log.
-
->
-> At this point, I suspect the original general protection fault in
-> the yurex driver has been fixed, but something else in dummy-hcd may be
-> causing the rcu-detected stalls.
->
-> Alan Stern
->
+cGluZz8NCg0K77u/T24gNC8xMS8xOSwgNTo0OSBQTSwgIkRlYmFicmF0YSBCYW5lcmplZSIgPGRi
+YW5lcmplQGFrYW1haS5jb20+IHdyb3RlOg0KDQogICAgRml4ZXM6DQogICAgY29tbWl0IDFlMzgx
+ZjYwZGFkOSAoImV4dDQ6IGRvIG5vdCBhbGxvdyBqb3VybmFsX29wdHMgZm9yIGZzIHcvbyBqb3Vy
+bmFsIikNCiAgICANCiAgICBJbnN0ZWFkIG9mIHJlbW92aW5nIEVYVDRfTU9VTlRfSk9VUk5BTF9D
+SEVDS1NVTSBmcm9tIHNfZGVmX21vdW50X29wdCBhcw0KICAgIEkgYXNzdW1lIHdhcyBpbnRlbmRl
+ZCwgYWxsIG90aGVyIG9wdGlvbnMgd2VyZSBibG93biBhd2F5IGxlYWRpbmcgdG8NCiAgICBfZXh0
+NF9zaG93X29wdGlvbnMoKSBvdXRwdXQgYmVpbmcgaW5jb3JyZWN0LiBJIGRvbid0IHNlZSB3aHkg
+dGhpcyBvcg0KICAgIG90aGVyIGpvdXJuYWwgcmVsYXRlZCBmbGFncyBzaG91bGQgYmUgcmVtb3Zl
+ZCBmcm9tIHNfZGVmX21vdW50X29wdA0KICAgIHJlZ2FyZGxlc3MsIGl0IGlzIG9ubHkgdXNlZCBm
+b3IgY29tcGFyaXNvbiB0byBkaXNwbGF5IG9wdHMsIGFuZCB3ZQ0KICAgIGFscmVhZHkgbWFkZSBz
+dXJlIHRoZXkgY291bGRuJ3QgYmUgc2V0Lg0KICAgIA0KICAgIFNpZ25lZC1vZmYtYnk6IERlYmFi
+cmF0YSBCYW5lcmplZSA8ZGJhbmVyamVAYWthbWFpLmNvbT4NCiAgICAtLS0NCiAgICAgZnMvZXh0
+NC9zdXBlci5jIHwgMSAtDQogICAgIDEgZmlsZSBjaGFuZ2VkLCAxIGRlbGV0aW9uKC0pDQogICAg
+DQogICAgZGlmZiAtLWdpdCBhL2ZzL2V4dDQvc3VwZXIuYyBiL2ZzL2V4dDQvc3VwZXIuYw0KICAg
+IGluZGV4IDZlZDRlYjgxZTY3NC4uNjNlZWYyOTY2NmUwIDEwMDY0NA0KICAgIC0tLSBhL2ZzL2V4
+dDQvc3VwZXIuYw0KICAgICsrKyBiL2ZzL2V4dDQvc3VwZXIuYw0KICAgIEBAIC00MjM4LDcgKzQy
+MzgsNiBAQCBzdGF0aWMgaW50IGV4dDRfZmlsbF9zdXBlcihzdHJ1Y3Qgc3VwZXJfYmxvY2sgKnNi
+LCB2b2lkICpkYXRhLCBpbnQgc2lsZW50KQ0KICAgICAJCQkJICJkYXRhPSwgZnMgbW91bnRlZCB3
+L28gam91cm5hbCIpOw0KICAgICAJCQlnb3RvIGZhaWxlZF9tb3VudF93cTsNCiAgICAgCQl9DQog
+ICAgLQkJc2JpLT5zX2RlZl9tb3VudF9vcHQgJj0gRVhUNF9NT1VOVF9KT1VSTkFMX0NIRUNLU1VN
+Ow0KICAgICAJCWNsZWFyX29wdChzYiwgSk9VUk5BTF9DSEVDS1NVTSk7DQogICAgIAkJY2xlYXJf
+b3B0KHNiLCBEQVRBX0ZMQUdTKTsNCiAgICAgCQlzYmktPnNfam91cm5hbCA9IE5VTEw7DQogICAg
+LS0gDQogICAgMi4yMS4wDQogICAgDQogICAgDQoNCg==
