@@ -2,128 +2,265 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCEFC10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B94C10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B401520811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189F9208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 16:14:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M1A3JZzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbfDWQNH (ORCPT
+        id S1728440AbfDWQO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 12:13:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:45088 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfDWQNH (ORCPT
+        Tue, 23 Apr 2019 12:14:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35664 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727666AbfDWQO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 12:13:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id j25so7348550ioj.12
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:13:06 -0700 (PDT)
+        Tue, 23 Apr 2019 12:14:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id g8so7859987pgf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 09:14:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3sn7KqiGW30dkQKXr6QVLij/1FoqIHbldIq/02XidKw=;
+        b=M1A3JZzHiArlOJub7vpLZFmeS0SpQa4YdZCJPFDTM+xz8gAPxVdsKkTHTXht6hzoO2
+         0Mzmy4nIRehQU/f1TVn96iYucuLKDbn5qK996Fai0xu/nr6Af9DpOQ2j2ZJkFwsPTKyN
+         xTcUveaVGLDEH//tVXhgI+q2Et7tgwuw87XAMiC1mtyhLJGDiZBfNJ2o3G0kj/o7ksY0
+         DeDfxqC4Rw2uqDWoxqRI1vbxrcffaZbK9Gzn2wVemvqilYOVitpMiomSF7pah6T0GmY/
+         B38NEqzctKe2aHDJDhUS9GzQntbIWA/mPXlKj3lU4k7pFtqJpbg4WFXLFths52KdtUEa
+         6GCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=TsBpmWJ2BE859RBEAtZU1hf2lp7jmv5EzAmOLfO0OnE=;
-        b=A+n4bVkDRajeBTA0AEZNfcYULNwdTSucpxJpqFHhJz/MhijqCVehJUOm1WuSVrWlEV
-         GS2CeME3sU55Kyw9b+Z0IazCLVBw3VMydXPOfRfXfmlPq2Nx2GMdopvCcwwkYBnVNFg9
-         krorGPAkKtU78FYc0xBXTu3zS4XShQHdS7u3d+Ltl/UBNApd8UWJwUqt9RfT8EyqrtpW
-         1TTpkTusEy5+YlX0SPUbgjJ5N+TfAUt3Jt7U8VwLBE8Yl1lBrPjqrKvnCpLe+F7hYx7A
-         nm+Qd/ZFamX9IXsxU+Fqd89qgKWu5kVJt3qXogEVEa0gNRy3NuEhobM9pm1WvLAPuzk6
-         i/dg==
-X-Gm-Message-State: APjAAAWjXAl+zbVN/skzNuTfMq0kEI/7jpm3qK9hLNnJAzPKGpAZR8ED
-        HMiA2H5zrCaa/Uk6frner4YJkyDEQ4LSuMspJD8SQFIv0W+Z
-X-Google-Smtp-Source: APXvYqzIw+qJYoBa2d5BBqGlKr84pDJX0ldn6kQyGtIn9iH5nKs5vaN6KyrIn+bBYM1v7YiT4NgV/R+ECA7Wbzz4kIEei2JKLqUe
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3sn7KqiGW30dkQKXr6QVLij/1FoqIHbldIq/02XidKw=;
+        b=KHL6aOVXK7pxXAdebVfzp+GZYjeGLBhRacojFhdjnE12Ezu9AvhkY5GOqq/i3HrzyD
+         Ar8bDJbUtcKodxB1/Yoi79J9LUJ00UH8g0JJF1glc7MTRG2kG5pVn1NJqMEFWTs/Jhsm
+         TbyWU2uCGDERDZYzJXaBREyXaJr01WPnHn3+u7hmuFlQxy/Vt6YLqakzWEDv9SjMUtQu
+         FZZ4h/YPIEOG21WA9qq2SzhuNX9CibJWxmJ5aWjRLYt7zt8L6C3u2FyxuYfdPIgE6+WF
+         RBEijEi5J0o49U1qiutcX8ubuWeiBH4DMintjkaDibWqFx62nJYoKO9RjwUapmD51+G6
+         1t9Q==
+X-Gm-Message-State: APjAAAWSP+SyoxqpZc7HIzCvZ+fotL8oSTcwdaW08bHBapnW6WKERweL
+        F4EmnmNGfiaVWxTGGLvtcYatfg==
+X-Google-Smtp-Source: APXvYqzeHHOioGKfVmk2VQ7/tIhElI8+8hXk8VcQbQ2tgiTIMrjk8HPTGxnrZauiAB7uiApGypWwgw==
+X-Received: by 2002:a65:6414:: with SMTP id a20mr1663736pgv.217.1556036067164;
+        Tue, 23 Apr 2019 09:14:27 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id d69sm32358413pfg.24.2019.04.23.09.14.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 09:14:25 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 10:14:23 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, mike.leach@linaro.org,
+        rjw@rjwysocki.net, robert.walker@arm.com
+Subject: Re: [PATCH v2 29/36] coresight: Use fwnode handle instead of device
+ names
+Message-ID: <20190423161423.GA21070@xps15>
+References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
+ <1555344260-12375-30-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-X-Received: by 2002:a24:36d4:: with SMTP id l203mr2742100itl.143.1556035986559;
- Tue, 23 Apr 2019 09:13:06 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 09:13:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003c9bea058734dc28@google.com>
-Subject: WARNING: locking bug in split_huge_page_to_list
-From:   syzbot <syzbot+35a50f1f6dfd5a0d7378@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com,
-        dave.jiang@intel.com, hughd@google.com, jglisse@redhat.com,
-        jrdr.linux@gmail.com, kirill.shutemov@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
-        rientjes@google.com, syzkaller-bugs@googlegroups.com,
-        vbabka@suse.cz, willy@infradead.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555344260-12375-30-git-send-email-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Apr 15, 2019 at 05:04:12PM +0100, Suzuki K Poulose wrote:
+> We rely on the device names to find a CoreSight device on the
+> coresight bus. The device name however is obtained from the platform,
+> which is bound to the real platform/amba device. As we are about
+> to use different naming scheme for the coresight devices, we can't
+> rely on the platform device name to find the corresponding
+> coresight device. Instead we use the platform agnostic
+> "fwnode handle" of the parent device to find the devices.
+> We also reuse the same fwnode as the parent for the Coresight
+> device we create.
+> 
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-platform.c | 12 +++++--
+>  drivers/hwtracing/coresight/coresight-priv.h     |  4 +--
+>  drivers/hwtracing/coresight/coresight.c          | 42 +++++++++++++++++++-----
+>  include/linux/coresight.h                        |  4 +--
+>  4 files changed, 46 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 318a6ff..c9a59fb 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -214,9 +214,15 @@ static int of_coresight_parse_endpoint(struct device *dev,
+>  		}
+>  
+>  		conn->outport = endpoint.port;
+> -		conn->child_name = devm_kstrdup(dev,
+> -						dev_name(rdev),
+> -						GFP_KERNEL);
+> +		/*
+> +		 * Hold the refcount to the target device. This could be
+> +		 * released via:
+> +		 * 1) coresight_release_platform_data() if the probe fails or
+> +		 *    this device is unregistered.
+> +		 * 2) While removing the target device via
+> +		 *    coresight_remove_match()
+> +		 */
 
-syzbot found the following crash on:
+Many thanks for the documentation - not only does it help me but it also makes
+it easier for other people to contribute to the subsystem.
 
-HEAD commit:    e53f31bf Merge tag '5.1-rc5-smb3-fixes' of git://git.samba..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14ecb7e3200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
-dashboard link: https://syzkaller.appspot.com/bug?extid=35a50f1f6dfd5a0d7378
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> +		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
+>  		conn->child_port = rendpoint.port;
+>  		/* Connection record updated */
+>  		ret = 1;
+> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+> index c216421..61d7f9f 100644
+> --- a/drivers/hwtracing/coresight/coresight-priv.h
+> +++ b/drivers/hwtracing/coresight/coresight-priv.h
+> @@ -200,8 +200,6 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
+>  	return 0;
+>  }
+>  
+> -static inline void
+> -coresight_release_platform_data(struct coresight_platform_data *pdata)
+> -{}
+> +void coresight_release_platform_data(struct coresight_platform_data *pdata);
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Now that we have fixed of_get_coresight_platform_data() I think patch 26 should
+be rolled into this one.  That way everything related to
+coresight_release_platform_data() is done in the same patch and the function
+doesn't have to be modified twice. 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+35a50f1f6dfd5a0d7378@syzkaller.appspotmail.com
+>  
+>  #endif
+> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+> index 82fb411..5169ce1 100644
+> --- a/drivers/hwtracing/coresight/coresight.c
+> +++ b/drivers/hwtracing/coresight/coresight.c
+> @@ -976,6 +976,7 @@ static void coresight_device_release(struct device *dev)
+>  {
+>  	struct coresight_device *csdev = to_coresight_device(dev);
+>  
+> +	fwnode_handle_put(csdev->dev.fwnode);
+>  	kfree(csdev->refcnt);
+>  	kfree(csdev);
+>  }
+> @@ -1007,13 +1008,11 @@ static int coresight_orphan_match(struct device *dev, void *data)
+>  		/* We have found at least one orphan connection */
+>  		if (conn->child_dev == NULL) {
+>  			/* Does it match this newly added device? */
+> -			if (conn->child_name &&
+> -			    !strcmp(dev_name(&csdev->dev), conn->child_name)) {
+> +			if (conn->child_fwnode ==  csdev->dev.fwnode)
+>  				conn->child_dev = csdev;
+> -			} else {
+> +			else
+>  				/* This component still has an orphan */
+>  				still_orphan = true;
+> -			}
+>  		}
+>  	}
+>  
+> @@ -1045,9 +1044,9 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
+>  		struct coresight_connection *conn = &csdev->pdata->conns[i];
+>  		struct device *dev = NULL;
+>  
+> -		if (conn->child_name)
+> -			dev = bus_find_device_by_name(&coresight_bustype, NULL,
+> -						      conn->child_name);
+> +		dev = bus_find_device(&coresight_bustype, NULL,
+> +				      (void *)conn->child_fwnode,
+> +				      device_fwnode_match);
+>  		if (dev) {
+>  			conn->child_dev = to_coresight_device(dev);
+>  			/* and put reference from 'bus_find_device()' */
+> @@ -1082,9 +1081,15 @@ static int coresight_remove_match(struct device *dev, void *data)
+>  		if (conn->child_dev == NULL)
+>  			continue;
+>  
+> -		if (!strcmp(dev_name(&csdev->dev), conn->child_name)) {
+> +		if (csdev->dev.fwnode == conn->child_fwnode) {
+>  			iterator->orphan = true;
+>  			conn->child_dev = NULL;
+> +			/*
+> +			 * Drop the reference to the handle for the remote
+> +			 * device acquired in parsing the connections from
+> +			 * platform data.
+> +			 */
+> +			fwnode_handle_put(conn->child_fwnode);
+>  			/* No need to continue */
+>  			break;
+>  		}
+> @@ -1164,6 +1169,22 @@ static int __init coresight_init(void)
+>  }
+>  postcore_initcall(coresight_init);
+>  
+> +/*
+> + * coresight_release_platform_data: Release references to the devices connected
+> + * to the output port of this device.
+> + */
+> +void coresight_release_platform_data(struct coresight_platform_data *pdata)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < pdata->nr_outport; i++) {
+> +		if (pdata->conns[i].child_fwnode) {
+> +			fwnode_handle_put(pdata->conns[i].child_fwnode);
+> +			pdata->conns[i].child_fwnode = 0;
 
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(class_idx > MAX_LOCKDEP_KEYS)
-WARNING: CPU: 0 PID: 1553 at kernel/locking/lockdep.c:3673  
-__lock_acquire+0x1887/0x3fb0 kernel/locking/lockdep.c:3673
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 1553 Comm: kswapd0 Not tainted 5.1.0-rc5+ #74
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x65c kernel/panic.c:214
-  __warn.cold+0x20/0x45 kernel/panic.c:571
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-RIP: 0010:__lock_acquire+0x1887/0x3fb0 kernel/locking/lockdep.c:3673
-Code: d2 0f 85 7b 1f 00 00 44 8b 3d 29 0d 07 08 45 85 ff 0f 85 20 f3 ff ff  
-48 c7 c6 80 3f 6b 87 48 c7 c7 c0 15 6b 87 e8 67 e3 eb ff <0f> 0b e9 09 f3  
-ff ff 0f 0b e9 41 f1 ff ff 8b 1d c5 32 05 09 85 db
-RSP: 0018:ffff8880a621f448 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815afcb6 RDI: ffffed1014c43e7b
-RBP: ffff8880a621f580 R08: ffff8880a625e440 R09: fffffbfff11335fd
-R10: fffffbfff11335fc R11: ffffffff8899afe3 R12: 00000000692b29d5
-R13: 0000000000000009 R14: 00000000000409d5 R15: 0000000000000000
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4211
-  down_write+0x38/0x90 kernel/locking/rwsem.c:70
-  anon_vma_lock_write include/linux/rmap.h:120 [inline]
-  split_huge_page_to_list+0x5d7/0x2de0 mm/huge_memory.c:2682
-  split_huge_page include/linux/huge_mm.h:148 [inline]
-  deferred_split_scan+0x64b/0xa60 mm/huge_memory.c:2853
-  do_shrink_slab+0x400/0xa80 mm/vmscan.c:551
-  shrink_slab mm/vmscan.c:700 [inline]
-  shrink_slab+0x4be/0x5e0 mm/vmscan.c:680
-  shrink_node+0x552/0x1570 mm/vmscan.c:2724
-  kswapd_shrink_node mm/vmscan.c:3482 [inline]
-  balance_pgdat+0x56c/0xe80 mm/vmscan.c:3640
-  kswapd+0x5f4/0xfd0 mm/vmscan.c:3895
-  kthread+0x357/0x430 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+                        pdata->conns[i].child_fwnode = NULL;
+> +		
+> +	}
+> +}
+> +
+>  struct coresight_device *coresight_register(struct coresight_desc *desc)
+>  {
+>  	int ret;
+> @@ -1208,6 +1229,11 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+>  	csdev->dev.parent = desc->dev;
+>  	csdev->dev.release = coresight_device_release;
+>  	csdev->dev.bus = &coresight_bustype;
+> +	/*
+> +	 * Hold the reference to our parent device. This will be
+> +	 * dropped only in coresight_device_release().
+> +	 */
+> +	csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
+>  	dev_set_name(&csdev->dev, "%s", desc->name);
+>  
+>  	ret = device_register(&csdev->dev);
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index 8c10def..188e759 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -126,15 +126,15 @@ struct coresight_desc {
+>  /**
+>   * struct coresight_connection - representation of a single connection
+>   * @outport:	a connection's output port number.
+> - * @chid_name:	remote component's name.
+>   * @child_port:	remote component's port number @output is connected to.
+> + * @chid_fwnode: remote component's fwnode handle.
+>   * @child_dev:	a @coresight_device representation of the component
+>  		connected to @outport.
+>   */
+>  struct coresight_connection {
+>  	int outport;
+> -	const char *child_name;
+>  	int child_port;
+> +	struct fwnode_handle *child_fwnode;
+>  	struct coresight_device *child_dev;
+>  };
+>  
+> -- 
+> 2.7.4
+> 
