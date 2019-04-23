@@ -2,128 +2,276 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682F8C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6D2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3765820645
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:35:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ARPMzTFP"
+	by mail.kernel.org (Postfix) with ESMTP id BD0E220684
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 08:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfDWIf3 (ORCPT
+        id S1726673AbfDWIiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 04:35:29 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42783 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfDWIf2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 04:35:28 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w25so7108041pfi.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 01:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3KjmHO7ChLmrfdNk+KNRkPAthyrRoIrvcfMb8DQ1Jps=;
-        b=ARPMzTFPN9GUX5Gr7TH7BI5yYbk+JcOIeYpVExOq6QxF0rOE/D5+K2T9PyxRrGyNyZ
-         Da3U6pQfFbg8/fS+9vJ7svZAS/tcuSBv0RHs+jduU0Va783pigWPzt/wrZgjeiO+4Ibg
-         SN2WsAZy6+N+xQCZesklYhDNRFr+REs6rT2HuHMHDfOj/bn4S9CW+Mm33BlojqxzlloI
-         +FwPa/GILkv4w+e0uIrTe7gFCaRvItzpfdLfTmfhOXC8ZMnS5Gx+gXFHIdilZqo/itsZ
-         zuNqmvqGwpBSvCxp2BQ6pNhRjSdujsX6WuD8hMToLAKvPWqGZ+C14n63xPnzSxA5J0c+
-         XpjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3KjmHO7ChLmrfdNk+KNRkPAthyrRoIrvcfMb8DQ1Jps=;
-        b=THgGa46rFUlHxgPz+t5GJEk/v/Lr2/xiL3yIRRBasgeeZvltSIX722yHnluL6zV+W5
-         KyxyMf70nFXpdCL9aV+04PsebUBWNg2bEHDDsWOSTFxC/z2b76bUfhdpHHq0r0kKldaO
-         sEIxaMp9/ZdjqPhUolFj7gtjZ8AX6OH4s52DIXlK5QT3BC0eUs6UkdmmeYpAp+TD9Sll
-         /fDW3O1yDNCSixHs2HWuCn4HyRvJH3toPOS0JC9qfE8+sothHrUb9Sw/CL3EpLzhiTn/
-         gBQnZf8Js7HDhEv4YCezO2WoQefshn/F5kx4HYJBDq4ltDfyT5OC45OtNUV5vDqU9OnD
-         hsWg==
-X-Gm-Message-State: APjAAAXyggyEvkqLH2BPdpdZW8D2e0VKNEoQWOojluJ/g4OWrZpQMsqx
-        BI71HXHEaHgOb9Khk3a0jV7/1Q==
-X-Google-Smtp-Source: APXvYqx8ncasLWzG4WxlGjRpytbUf6yevxYeFMJvGJ8JRusKwyfi3Ja2LfMMoaND9uU1CvmpioWmlQ==
-X-Received: by 2002:a63:fb01:: with SMTP id o1mr13245860pgh.135.1556008527989;
-        Tue, 23 Apr 2019 01:35:27 -0700 (PDT)
-Received: from localhost ([122.166.139.136])
-        by smtp.gmail.com with ESMTPSA id s19sm19448206pfe.74.2019.04.23.01.35.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 01:35:26 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 14:05:24 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        amit.kachhap@gmail.com, rjw@rjwysocki.net, will.deacon@arm.com,
-        catalin.marinas@arm.com, daniel.lezcano@linaro.org,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, mka@chromium.org
-Subject: Re: [PATCH v2 3/3] thermal: cpu_cooling: Migrate to using the EM
- framework
-Message-ID: <20190423083524.io3n64i3orkclw5o@vireshk-i7>
-References: <20190417094301.17622-1-quentin.perret@arm.com>
- <20190417094301.17622-4-quentin.perret@arm.com>
- <20190418035323.onyfxo4kprwqz2wl@vireshk-mac-ubuntu>
- <20190418080429.pn4r6lnftlfsf4c4@queper01-lin>
- <20190422082518.jenl4x7rkmv3j67x@vireshk-i7>
- <20190423080732.rmwxjh67re57sayk@queper01-lin>
+        Tue, 23 Apr 2019 04:38:04 -0400
+Received: from foss.arm.com ([217.140.101.70]:51694 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbfDWIiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 04:38:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FEB2374;
+        Tue, 23 Apr 2019 01:38:03 -0700 (PDT)
+Received: from [10.163.1.68] (unknown [10.163.1.68])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1CD43F706;
+        Tue, 23 Apr 2019 01:37:51 -0700 (PDT)
+Subject: Re: [PATCH V2 2/2] arm64/mm: Enable memory hot remove
+To:     David Hildenbrand <david@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com, mhocko@suse.com,
+        mgorman@techsingularity.net, james.morse@arm.com,
+        robin.murphy@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        cai@lca.pw, logang@deltatee.com, ira.weiny@intel.com
+References: <1555221553-18845-1-git-send-email-anshuman.khandual@arm.com>
+ <1555221553-18845-3-git-send-email-anshuman.khandual@arm.com>
+ <20190415134841.GC13990@lakrids.cambridge.arm.com>
+ <2faba38b-ab79-2dda-1b3c-ada5054d91fa@arm.com>
+ <20190417142154.GA393@lakrids.cambridge.arm.com>
+ <bba0b71c-2d04-d589-e2bf-5de37806548f@arm.com>
+ <20190417173948.GB15589@lakrids.cambridge.arm.com>
+ <1bdae67b-fcd6-7868-8a92-c8a306c04ec6@arm.com>
+ <97413c39-a4a9-ea1b-7093-eb18f950aad7@arm.com>
+ <3f9b39d5-e2d2-8f1b-1c66-4bd977d74f4c@redhat.com>
+ <5c8e4a69-8c71-85e1-3275-c04f84bde639@arm.com>
+ <14364fe5-0999-0c60-d109-af22c13deafa@redhat.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <d6c198ca-5ea4-6f7e-3d95-c89db1d5159b@arm.com>
+Date:   Tue, 23 Apr 2019 14:07:50 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423080732.rmwxjh67re57sayk@queper01-lin>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+In-Reply-To: <14364fe5-0999-0c60-d109-af22c13deafa@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-04-19, 09:07, Quentin Perret wrote:
-> On Monday 22 Apr 2019 at 13:55:18 (+0530), Viresh Kumar wrote:
-> > On 18-04-19, 09:04, Quentin Perret wrote:
-> > > On Thursday 18 Apr 2019 at 09:23:23 (+0530), Viresh Kumar wrote:
-> > > > On 17-04-19, 10:43, Quentin Perret wrote:
-> > > > >  static struct thermal_cooling_device *
-> > > > >  __cpufreq_cooling_register(struct device_node *np,
-> > > > > -			struct cpufreq_policy *policy, u32 capacitance)
-> > > > > +			struct cpufreq_policy *policy,
-> > > > > +			struct em_perf_domain *em)
-> > > > >  {
-> > > > 
-> > > > > +	if (em_is_sane(cpufreq_cdev, em)) {
-> > > > > +		cpufreq_cdev->em = em;
-> > > > >  		cooling_ops = &cpufreq_power_cooling_ops;
-> > > > > -	} else {
-> > > > > +	} else if (policy->freq_table_sorted != CPUFREQ_TABLE_UNSORTED) {
-> > > > >  		cooling_ops = &cpufreq_cooling_ops;
-> > > > > +	} else {
-> > > > > +		WARN(1, "cpu_cooling: no valid frequency table found\n");
-> > > > 
-> > > > Well the frequency table is valid, isn't it ?
-> > > 
-> > > True ...
-> > > 
-> > > > Maybe something like: "cpu_cooling doesn't support unsorted frequency tables" ?
-> > > 
-> > > Right, otherwise I guess that could be confused with the check on
-> > > cpu_table_count_valid_entries() above. And while I'm thinking about it
-> > > perhaps WARN is a bit too much here ? We can handle the error safely so
-> > > pr_err() should be enough ?
-> > 
-> > Hmm, I would keep the WARN as it is hard to miss it compared to a
-> > simple pr_err.
+
+
+On 04/23/2019 01:21 PM, David Hildenbrand wrote:
+> On 23.04.19 09:45, Anshuman Khandual wrote:
+>>
+>>
+>> On 04/23/2019 01:07 PM, David Hildenbrand wrote:
+>>> On 23.04.19 09:31, Anshuman Khandual wrote:
+>>>>
+>>>>
+>>>> On 04/18/2019 10:58 AM, Anshuman Khandual wrote:
+>>>>> On 04/17/2019 11:09 PM, Mark Rutland wrote:
+>>>>>> On Wed, Apr 17, 2019 at 10:15:35PM +0530, Anshuman Khandual wrote:
+>>>>>>> On 04/17/2019 07:51 PM, Mark Rutland wrote:
+>>>>>>>> On Wed, Apr 17, 2019 at 03:28:18PM +0530, Anshuman Khandual wrote:
+>>>>>>>>> On 04/15/2019 07:18 PM, Mark Rutland wrote:
+>>>>>>>>>> On Sun, Apr 14, 2019 at 11:29:13AM +0530, Anshuman Khandual wrote:
+>>>>>>
+>>>>>>>>>>> +	spin_unlock(&init_mm.page_table_lock);
+>>>>>>>>>>
+>>>>>>>>>> What precisely is the page_table_lock intended to protect?
+>>>>>>>>>
+>>>>>>>>> Concurrent modification to kernel page table (init_mm) while clearing entries.
+>>>>>>>>
+>>>>>>>> Concurrent modification by what code?
+>>>>>>>>
+>>>>>>>> If something else can *modify* the portion of the table that we're
+>>>>>>>> manipulating, then I don't see how we can safely walk the table up to
+>>>>>>>> this point without holding the lock, nor how we can safely add memory.
+>>>>>>>>
+>>>>>>>> Even if this is to protect something else which *reads* the tables,
+>>>>>>>> other code in arm64 which modifies the kernel page tables doesn't take
+>>>>>>>> the lock.
+>>>>>>>>
+>>>>>>>> Usually, if you can do a lockless walk you have to verify that things
+>>>>>>>> didn't change once you've taken the lock, but we don't follow that
+>>>>>>>> pattern here.
+>>>>>>>>
+>>>>>>>> As things stand it's not clear to me whether this is necessary or
+>>>>>>>> sufficient.
+>>>>>>>
+>>>>>>> Hence lets take more conservative approach and wrap the entire process of
+>>>>>>> remove_pagetable() under init_mm.page_table_lock which looks safe unless
+>>>>>>> in the worst case when free_pages() gets stuck for some reason in which
+>>>>>>> case we have bigger memory problem to deal with than a soft lock up.
+>>>>>>
+>>>>>> Sorry, but I'm not happy with _any_ solution until we understand where
+>>>>>> and why we need to take the init_mm ptl, and have made some effort to
+>>>>>> ensure that the kernel correctly does so elsewhere. It is not sufficient
+>>>>>> to consider this code in isolation.
+>>>>>
+>>>>> We will have to take the kernel page table lock to prevent assumption regarding
+>>>>> present or future possible kernel VA space layout. Wrapping around the entire
+>>>>> remove_pagetable() will be at coarse granularity but I dont see why it should
+>>>>> not sufficient atleast from this particular tear down operation regardless of
+>>>>> how this might affect other kernel pgtable walkers.
+>>>>>
+>>>>> IIUC your concern is regarding other parts of kernel code (arm64/generic) which
+>>>>> assume that kernel page table wont be changing and hence they normally walk the
+>>>>> table without holding pgtable lock. Hence those current pgtabe walker will be
+>>>>> affected after this change.
+>>>>>
+>>>>>>
+>>>>>> IIUC, before this patch we never clear non-leaf entries in the kernel
+>>>>>> page tables, so readers don't presently need to take the ptl in order to
+>>>>>> safely walk down to a leaf entry.
+>>>>>
+>>>>> Got it. Will look into this.
+>>>>>
+>>>>>>
+>>>>>> For example, the arm64 ptdump code never takes the ptl, and as of this
+>>>>>> patch it will blow up if it races with a hot-remove, regardless of
+>>>>>> whether the hot-remove code itself holds the ptl.
+>>>>>
+>>>>> Got it. Are there there more such examples where this can be problematic. I
+>>>>> will be happy to investigate all such places and change/add locking scheme
+>>>>> in there to make them work with memory hot remove.
+>>>>>
+>>>>>>
+>>>>>> Note that the same applies to the x86 ptdump code; we cannot assume that
+>>>>>> just because x86 does something that it happens to be correct.
+>>>>>
+>>>>> I understand. Will look into other non-x86 platforms as well on how they are
+>>>>> dealing with this.
+>>>>>
+>>>>>>
+>>>>>> I strongly suspect there are other cases that would fall afoul of this,
+>>>>>> in both arm64 and generic code.
+>>>>
+>>>> On X86
+>>>>
+>>>> - kernel_physical_mapping_init() takes the lock for pgtable page allocations as well
+>>>>   as all leaf level entries including large mappings.
+>>>>
+>>>> On Power
+>>>>
+>>>> - remove_pagetable() take an overall high level init_mm.page_table_lock as I had
+>>>>   suggested before. __map_kernel_page() calls [pud|pmd|pte]_alloc_[kernel] which
+>>>>   allocates page table pages are protected with init_mm.page_table_lock but then
+>>>>   the actual setting of the leaf entries are not (unlike x86)
+>>>>
+>>>> 	arch_add_memory()
+>>>> 		create_section_mapping()
+>>>> 			radix__create_section_mapping()
+>>>> 				create_physical_mapping()
+>>>> 					__map_kernel_page()
+>>>> On arm64.
+>>>>
+>>>> Both kernel page table dump and linear mapping (__create_pgd_mapping on init_mm)
+>>>> will require init_mm.page_table_lock to be really safe against this new memory
+>>>> hot remove code. I will do the necessary changes as part of this series next time
+>>>> around. IIUC there is no equivalent generic feature for ARM64_PTDUMP_CORE/DEBUGFS.
+>>>> 	 > 
+>>>>> Will start looking into all such possible cases both on arm64 and generic.
+>>>>> Mean while more such pointers would be really helpful.
+>>>>
+>>>> Generic usage for init_mm.pagetable_lock
+>>>>
+>>>> Unless I have missed something else these are the generic init_mm kernel page table
+>>>> modifiers at runtime (at least which uses init_mm.page_table_lock)
+>>>>
+>>>> 	1. ioremap_page_range()		/* Mapped I/O memory area */
+>>>> 	2. apply_to_page_range()	/* Change existing kernel linear map */
+>>>> 	3. vmap_page_range()		/* Vmalloc area */
+>>>>
+>>>> A. IOREMAP
+>>>>
+>>>> ioremap_page_range()
+>>>> 	ioremap_p4d_range()
+>>>> 		p4d_alloc()
+>>>> 		ioremap_try_huge_p4d() -> p4d_set_huge() -> set_p4d()
+>>>> 		ioremap_pud_range()
+>>>> 			pud_alloc()
+>>>> 			ioremap_try_huge_pud() -> pud_set_huge() -> set_pud()
+>>>> 			ioremap_pmd_range()
+>>>> 				pmd_alloc()
+>>>> 				ioremap_try_huge_pmd() -> pmd_set_huge() -> set_pmd()
+>>>> 				ioremap_pte_range()
+>>>> 					pte_alloc_kernel()
+>>>> 						set_pte_at() -> set_pte()
+>>>> B. APPLY_TO_PAGE_RANGE
+>>>>
+>>>> apply_to_page_range()
+>>>> 	apply_to_p4d_range()
+>>>> 		p4d_alloc()
+>>>> 		apply_to_pud_range()
+>>>> 			pud_alloc()
+>>>> 			apply_to_pmd_range()
+>>>> 				pmd_alloc()
+>>>> 				apply_to_pte_range()
+>>>> 					pte_alloc_kernel()
+>>>>
+>>>> C. VMAP_PAGE_RANGE
+>>>>
+>>>> vmap_page_range()
+>>>> vmap_page_range_noflush()
+>>>> 	vmap_p4d_range()
+>>>> 		p4d_alloc()
+>>>> 		vmap_pud_range()
+>>>> 			pud_alloc()
+>>>> 			vmap_pmd_range()
+>>>> 				pmd_alloc()
+>>>> 				vmap_pte_range()
+>>>> 					pte_alloc_kernel()
+>>>> 					set_pte_at()
+>>>>
+>>>> In all of the above.
+>>>>
+>>>> - Page table pages [p4d|pud|pmd|pte]_alloc_[kernel] settings are protected with init_mm.page_table_lock
+>>>> - Should not it require init_mm.page_table_lock for all leaf level (PUD|PMD|PTE) modification as well ?
+>>>> - Should not this require init_mm.page_table_lock for page table walk itself ?
+>>>>
+>>>> Not taking an overall lock for all these three operations will potentially race with an ongoing memory
+>>>> hot remove operation which takes an overall lock as proposed. Wondering if this has this been safe till
+>>>> now ?
+>>>>
+>>>
+>>> All memory add/remove operations are currently guarded by
+>>> mem_hotplug_lock as far as I know.
+>>
+>> Right but it seems like it guards against concurrent memory hot add or remove operations with
+>> respect to memory block, sections, sysfs etc. But does it cover with respect to other init_mm
+>> modifiers or accessors ?
+>>
 > 
-> Right, I don't really mind either way TBH. But is this worse than having
-> a NULL policy for example ? We have a standard pr_err() in this case.
-> And same thing if the cooling device registration failed actually. Do
-> you see a good reason to deal with EM stuff differently ?
+> Don't think so, it's purely for memory add/remove via
+> add_memory/remove_memory/devm_memremap_pages, not anything beyond that.
+> Whoever uses get_online_mems/put_online_mems is save in respect to that
+> - mostly slab/slub.
 
-Okay, that should be fine then. Use pr_err().
+There are two distinct locking requirements here
 
--- 
-viresh
+* Protect against clearing of intermediate pgtable pages to prevent unhandled aborts while walking
+  the kernel page table.
+
+	- pgtable page clearing happens only through memory hot-remove not with any other modifiers
+	- At minimum we would require get_online_mems() for all concurrent walkers of kernel page table
+
+		- Kernel page table dump on arm64 (with ARM64_PTDUMP_CORE_[DEBUGFS])
+		- Existing generic MM modifiers. Without get_online_mems() not sure how these can be
+		  really safe against memory hot-remove.
+
+			1. ioremap_page_range()
+			2. apply_to_page_range()
+			3. vmap_page_range()
+
+* Protect against each other's accesses (apart from get_online_mems)
+
+	- Take overall init_mm.page_table_lock for [ioremap|apply_to|vmap]_page_range()
+	- Take overall lock while creating/destroying linear mapping on each platform
+	- Hotplug lock through get_online_mems only protects against clearing/adding of intermediate pgtable
+	  pages not general modifications by non-hotplug accessors.
+
+Will appreciate if folks could review the assumptions made above as I might have missed something.
