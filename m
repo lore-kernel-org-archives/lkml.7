@@ -4,86 +4,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772C9C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7F4C282E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 443BC208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F42321850
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:19:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mbuki-mvuki-org.20150623.gappssmtp.com header.i=@mbuki-mvuki-org.20150623.gappssmtp.com header.b="Gr2YwS3q"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="gItHDwtX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfDWUSx (ORCPT
+        id S1727282AbfDWUTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:18:53 -0400
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:35256 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbfDWUSx (ORCPT
+        Tue, 23 Apr 2019 16:19:04 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41228 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfDWUTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:18:53 -0400
-Received: by mail-wm1-f53.google.com with SMTP id y197so1713399wmd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:18:52 -0700 (PDT)
+        Tue, 23 Apr 2019 16:19:03 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t30so12729169lfd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 13:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mbuki-mvuki-org.20150623.gappssmtp.com; s=20150623;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ASdjcawRrrgqD5NQTFWWrPiiL1LVNSOCmnViIVcvQ6Y=;
-        b=Gr2YwS3qU7+5fjpkMPPgO5j7LWl8WnaQDSn+E87hOzPVDtV7IJFviPAHW4Nwsmpl9E
-         zNpD+1L95k15UwdQmn64KWeDIpMPHU1kIda0298HbUTMCmYFL9aE6kgR5bXePIJ4jMfw
-         /BfGBzbGhz3vxGcTWiQera/+BY3vR805TiVK4oGa2pswGKlOjUYoMmpO6fYNLmYSy1HG
-         hVSKjM6DLe+XUzOiFuAIMYbAzW0vdPpgjsAwDve03WdaUk2NjAVUg72k1YZDZMFgE9fa
-         5ATsXw8pTKCxvgl/DQFaiO4O1GSdectA6/Hb1wmH+DLEvUu56E50do6dHudL9+CEGB9a
-         wF8w==
+        bh=ISPtN114/vVDuvBUDQI+XOUJt45zg0Mc6YZThYyu9sE=;
+        b=gItHDwtXfT3vkgFtkuMveM178GaK6E5BSH/sjG7WZHN92faZ+NIO1mJcaOYaIOXK1p
+         bcO0SzU+RR/oz/yNUATaISXuEoPyA8f8qymglN1JJpQCpAsN27sye6iJBExT/tUJ/kbN
+         4l0mde06G+ysr/0Rw0CMfKb/ILGd/JdqLCmZpxQ8/AVO+RLFcWITTnp9ROlmZdM2eXXI
+         liOIisIYiA/0G23ZhJ04RNJsV8Fzp2YB4Nrkd2cudFbA7PbxP82uHe9V3PeuCecpTzIH
+         EWubVuGPSeJLLeXFs/r/6MEE7c43R6qZ6Np/bmngVrrt0wOaABymndI9VLLE9OgtizXn
+         OOKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ASdjcawRrrgqD5NQTFWWrPiiL1LVNSOCmnViIVcvQ6Y=;
-        b=KbKWfketA2O7IsiMAzndRDC9yJBUfO6EKcqYjrPisTwh4RzDPkiOqwhOFLrntqNHn7
-         XYHFgnsVeqlEN3MA9Q9XVRLnHXpT18LxU9f8GtAkxu2uJ27vnEjTHtcc5Z4aKr8TJC1L
-         Mu4Y6UVg+3q47jL1F8m07AwV4trm6g1akZMbkjOZfXkHkoYlN6Cr87XmckE9wzUi2Fq3
-         62qFuN1iFRyvAAPGEDbdn0J1Cg/rYI3Y/sllZS8vaByfZq28h6eqzQMLc0vtGWb7jpfS
-         f13bH+KjxT4WxkLC4ENROFVqbz9t7ovqqipQvqF7vs4LRbTz1vM5gb0MTwq7opeetMxj
-         v4FQ==
-X-Gm-Message-State: APjAAAWUg4M7c3keW9XKDLqBSpQqb7gC03wUvJYzRNE0gPEhOoGYfFGZ
-        FT5SIXSikdcrq5RfiUq1K6GUIE+F2KWBGVE/ay8c8Twj
-X-Google-Smtp-Source: APXvYqz0c74W3/SXXAurawT7D62mo7DC7HpYucHH34+Gj20/qv8EnEvmc2KbfzlCiAGiiZUZopMUy698V0IClWXvKn0=
-X-Received: by 2002:a1c:96d5:: with SMTP id y204mr3682109wmd.22.1556050731126;
- Tue, 23 Apr 2019 13:18:51 -0700 (PDT)
+        bh=ISPtN114/vVDuvBUDQI+XOUJt45zg0Mc6YZThYyu9sE=;
+        b=EdgPUI1MxVMaTvwVUJL8OF21fqXYBoEcPGh2etMSXSS9rU0TELyWc6unYbQTQ6bcqS
+         fnK2T7f7S8kxkdkHnluW1b/veFCbP8XMva+9iwilGJQBM0ps60g25ayfYgnpFckGm2pa
+         gCpcIrCamS3A2MeRAwHj6WlGxE55xFwuohO5oeDwf1XvlQ6bXdevhz2uX0xRZGPskK3z
+         vUsc/JLcE+963xbGHV5CSLal5pYpom6Mib/0DhcEdlLYT7E5WzV39agBO2GMEgSz1mwv
+         TGAxCYfZFzjSKhL1ohJpvEBq6zAxMnl2IubF/DJJ8rA0ntRiJqNEziQRCoA6WrlnMWjm
+         VdtA==
+X-Gm-Message-State: APjAAAXau4mVeyL41DGmpdPGkRRsaoDRaN9F5oP5R7luUDP1JGBaM5UI
+        fZggqWxCf2K/m0HTa6GNtm1nYum6LzJLHbMCsIfq
+X-Google-Smtp-Source: APXvYqzrRBQ5T03gOBocls3T9W4sEi7dljbs3juDVJw6tHxpnKFH8khBxwRVfKUcuCt5dOaJL94v5xypJIJdjS7rrlw=
+X-Received: by 2002:a19:2814:: with SMTP id o20mr14905670lfo.117.1556050740201;
+ Tue, 23 Apr 2019 13:19:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <CANSNSoVpnK6fyfFct7cLNRJAvdLWh0ac=isnPOkOAp4LV+WoSw@mail.gmail.com>
- <Pine.LNX.4.44L0.1904161054060.1605-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1904161054060.1605-100000@iolanthe.rowland.org>
-From:   Jesse Hathaway <jesse@mbuki-mvuki.org>
-Date:   Tue, 23 Apr 2019 15:18:40 -0500
-Message-ID: <CANSNSoXHZf6kb2W1yJ81HztSkc-3BAjxghL6NchTLLyv362mQw@mail.gmail.com>
-Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+References: <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
+ <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
+ <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com>
+ <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com> <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
+ <20190417145711.GI32622@redhat.com> <CAHC9VhSzo4DsMRknOA-4KKYJEir0wW74+quLheTjRw94OmhscA@mail.gmail.com>
+ <20190417162723.GK32622@redhat.com> <CAHC9VhT_nk1jmrTj3W=F+1gP1vU3iZsZ=UGOCwdiBLbUsOc9=w@mail.gmail.com>
+ <0ca3f4cf-5c64-2fc0-1885-9dbcca2f4b47@schaufler-ca.com> <5CB7E5D4.2060703@huawei.com>
+ <CAHC9VhQkrR+m9_dYLg4VG-26TdUnf8XFjbmuVQ70YCOp6DhN_g@mail.gmail.com>
+ <5CB933C4.7000300@huawei.com> <CAHC9VhTdJ6uUOjyxrk=+iOkKe=VN+N9DMPtV=OchAY34x95g=w@mail.gmail.com>
+ <5CB9DC75.7010600@huawei.com> <CAHC9VhQqxL+LsK8YTD6PpTHaZsZ-PxAq3atdZKQcZLQZQH7t4g@mail.gmail.com>
+ <5CBACC8F.8010409@huawei.com> <CAHC9VhSZBh8B+1CPM=PdLdbSFq1ba1ffuOJTgnzE5oBLXUEDxQ@mail.gmail.com>
+ <5CBE8FC4.8060400@huawei.com>
+In-Reply-To: <5CBE8FC4.8060400@huawei.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 23 Apr 2019 16:18:49 -0400
+Message-ID: <CAHC9VhRitKcax43NL5JThKqsysyakmarYiC4qTQTkka5SNNHuw@mail.gmail.com>
+Subject: Re: kernel BUG at kernel/cred.c:434!
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Oleg Nesterov <oleg@redhat.com>, john.johansen@canonical.com,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
+        Ingo Molnar <mingo@redhat.com>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        SELinux <selinux@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 10:00 AM Alan Stern <stern@rowland.harvard.edu> wrote:
-> Whatever the source of the problem, I don't think you're going to find
-> it by looking at the USB code.  Perhaps the early initialization of the
-> functions that _are_ present on the Comtrol card somehow messes up
-> other parts of the system.
+On Tue, Apr 23, 2019 at 12:08 AM Yang Yingliang
+<yangyingliang@huawei.com> wrote:
+> On 2019/4/23 3:48, Paul Moore wrote:
+> > On Sat, Apr 20, 2019 at 3:39 AM Yang Yingliang <yangyingliang@huawei.com> wrote:
+> >> I'm not sure you got my point.
+> > I went back and looked at your previous emails again to try and
+> > understand what you are talking about, and I'm a little confused by
+> > some of the output ...
+> >
+> >> --- a/kernel/acct.c
+> >> +++ b/kernel/acct.c
+> >> @@ -481,6 +481,7 @@ static void do_acct_process(struct bsd_acct_struct
+> >> *acct)
+> >>           flim = current->signal->rlim[RLIMIT_FSIZE].rlim_cur;
+> >>           current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
+> >>           /* Perform file operations on behalf of whoever enabled
+> >> accounting */
+> >> +       pr_info("task:%px new cred:%px real cred:%px cred:%px\n",
+> >> current, file->f_cred, current->real_cred, current->cred);
+> >>           orig_cred = override_creds(file->f_cred);
+> > Okay, with this patch applied we should the task/cred info when
+> > do_acct_process is called.  Got it.
+> >
+> >> Messages:
+> >> [   56.643298] task:ffff88841a9595c0 new cred:ffff88841ae450c0 real
+> >> cred:ffff88841ae450c0 cred:ffff88841ae450c0    //They are same.
+> > Okay, it looks like do_acct_process() was called and f_cred,
+> > real_cred, and cred are all the same.
+>
+> This is a original message, without patch applied.
 
-Thanks for all you help Alan,
+The patch I am referring to is your pr_info patch (above).  I'm not
+talking about any other patches at the moment; I just want to
+understand the example dmesg output you copied into your email.
 
-I think at this point my Linux kernel debugging knowledge has run
-aground. I would
-love to crack this nut, but I doubt that will be possible with my
-current knowledge base.
-For now I am going to run the patched kernel even if I don't
-understand precisely why
-they prevent the box from hanging on boot when the Comtrol card is present.
+With that in mind, the message above seems to indicate that
+do_acct_process() has been invoked with f_cred, real_cred, and cred
+all pointing to the same credentials struct, yes?
+
+> >> [   56.646609] Process accounting resumed
+> > It looks like do_acct_process() has called check_free_space() now.  So
+> > far so good.
+
+...
+
+> >> [   56.649943] task:ffff88841a9595c0 new cred:ffff88841ae450c0 real
+> >> cred:ffff88841c96c300 cred:ffff88841ae450c0
+> > Wait a minute ... why are we seeing this again?  Looking at the task
+> > pointer and the timestamp, this is the same task exiting and trying to
+> > write to the accounting file, yes?  This output is particularly
+> > curious since it appears that real_cred has changed; where is this
+> > happening?
+>
+> This is the message when the BUG_ON was triggered without applying any
+> fix patch.
+
+The only place in the code that generates this message is the bit of
+code that you patches in using the pr_info() patch (above), yes?  If
+so, that would seem to indicate that the same task is calling
+do_acct_process() twice, yes?  I may be fundamentally misunderstanding
+something about process accounting, but I though do_acct_process()
+would only be called once for a given task - while it was exiting.
+Yes, no?
+
+> If we apply this patch "proc: prevent changes to overridden
+> credentials", program
+> runs like this:
+
+I'd like to focus on understanding the dmesg output you shared first,
+because it doesn't seem to make sense to me.
+
+-- 
+paul moore
+www.paul-moore.com
