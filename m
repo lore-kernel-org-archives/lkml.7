@@ -2,113 +2,67 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DF5C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEB9C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104CC20811
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="twa/FD3W"
+	by mail.kernel.org (Postfix) with ESMTP id 833E520811
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 09:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbfDWJ3G (ORCPT
+        id S1727217AbfDWJ3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 05:29:06 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46721 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbfDWJ3F (ORCPT
+        Tue, 23 Apr 2019 05:29:18 -0400
+Received: from smtp03.citrix.com ([162.221.156.55]:30697 "EHLO
+        SMTP03.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727183AbfDWJ3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 05:29:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v2so4886877pge.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 02:29:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w4fZiACkBLsuw5BLuZySw+S4JDknvGfC5Ei1Wz8auhg=;
-        b=twa/FD3WmOktH9MVUXb/BldyzAa94cTWq+B+S4ebxbShNY2tz68WlGR8/5ZjyL48Gh
-         is1gLQKuXAdlVwuuYBQowMOWGgnIU4cLlahPNfTri8ya/Vkqg2xYHyMvm6kCa1JKUHHL
-         DB0JMTZ3PHHGcuL1YReWXA8XA0zLfL56ZxME9SxJbU/ULv5oya+8sBH8pu35OH6ORWJe
-         pC6g0alS54g3O2Ac9cY73AnwM9VJlHJmNtPofCIbswJQsGaT989Es/9OfoLnGhbBqSlj
-         hgPxb/oKA/z6b0ax9JfOa6HYKAsuLpqd1NLUUS5jdBMs2GMG/HGXQQ4kumsm8D3hc1QN
-         SA+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w4fZiACkBLsuw5BLuZySw+S4JDknvGfC5Ei1Wz8auhg=;
-        b=V8U1GrfMoqsz7ytmFLJonP5QKYkoe45WFiCc8hyvJ2SuGpv+OZM9pcNHO22tbSBEK6
-         gcZwdum1fu5qWpg+DuLwO9MGEU2eV1POybLifPjxlpKExABGWFHmkXSN2cq9rrt/F3Ei
-         3isSjDjkKUUrCJsNlY6O8dMogMkQY3JOiZCJfY5J2OrqolxR5FjLF3vaMbzB/Hpsumz2
-         Vafr+7NUdW8YJMLW+htSNBaDb3qSv2aiK013bLO5KqBx7w1bwkwkwWEBYnT5f4U++ZTK
-         xBPP7eK4sMclvaBsGmrTjBqJYpe80akjjggJu+hkIvgFzAnM8piC/1OWCCul+I9gl/fi
-         DIwg==
-X-Gm-Message-State: APjAAAX3N9IHYDzBpPB1IUcOWWqF+jvLg9BQ3ISFwyFCYErW6cozNANH
-        H+BSFCblTF8dCnhh0JRDFtVe7A==
-X-Google-Smtp-Source: APXvYqzyeawPu0YMyAZZFm6KX9YpYBW5MaleqW0+qkdNuOr2h7cbOgN3OqOXryQp3ByD92IOpbNilQ==
-X-Received: by 2002:a63:1d26:: with SMTP id d38mr22898103pgd.357.1556011744623;
-        Tue, 23 Apr 2019 02:29:04 -0700 (PDT)
-Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id q10sm18905809pgh.93.2019.04.23.02.29.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 02:29:04 -0700 (PDT)
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Daniel Drake <drake@endlessm.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH] i915: disable framebuffer compression on GeminiLake
-Date:   Tue, 23 Apr 2019 17:28:10 +0800
-Message-Id: <20190423092810.28359-1-jian-hong@endlessm.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 23 Apr 2019 05:29:16 -0400
+X-IronPort-AV: E=Sophos;i="5.60,385,1549929600"; 
+   d="scan'208";a="84170472"
+From:   Roger Pau Monne <roger.pau@citrix.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Roger Pau Monne <roger.pau@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        <xen-devel@lists.xenproject.org>
+Subject: [PATCH 1/2] xen/pvh: set xen_domain_type to HVM in xen_pvh_init
+Date:   Tue, 23 Apr 2019 11:28:28 +0200
+Message-ID: <20190423092829.67915-1-roger.pau@citrix.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+Or else xen_domain() returns false despite xen_pvh being set.
 
-On many (all?) the Gemini Lake systems we work with, there is frequent
-momentary graphical corruption at the top of the screen, and it seems
-that disabling framebuffer compression can avoid this.
-
-The ticket was reported 6 months ago and has already affected a
-multitude of users, without any real progress being made. So, lets
-disable framebuffer compression on GeminiLake until a solution is found.
-
-Buglink: https://bugs.freedesktop.org/show_bug.cgi?id=108085
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
 ---
- drivers/gpu/drm/i915/intel_fbc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: xen-devel@lists.xenproject.org
+---
+ arch/x86/xen/enlighten_pvh.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/i915/intel_fbc.c b/drivers/gpu/drm/i915/intel_fbc.c
-index 656e684e7c9a..fc018f3f53a1 100644
---- a/drivers/gpu/drm/i915/intel_fbc.c
-+++ b/drivers/gpu/drm/i915/intel_fbc.c
-@@ -1278,6 +1278,10 @@ static int intel_sanitize_fbc_option(struct drm_i915_private *dev_priv)
- 	if (!HAS_FBC(dev_priv))
- 		return 0;
+diff --git a/arch/x86/xen/enlighten_pvh.c b/arch/x86/xen/enlighten_pvh.c
+index 35b7599d2d0b..bbffa409e0e8 100644
+--- a/arch/x86/xen/enlighten_pvh.c
++++ b/arch/x86/xen/enlighten_pvh.c
+@@ -27,6 +27,7 @@ void __init xen_pvh_init(void)
+ 	u64 pfn;
  
-+	/* https://bugs.freedesktop.org/show_bug.cgi?id=108085 */
-+	if (IS_GEMINILAKE(dev_priv))
-+		return 0;
-+
- 	if (IS_BROADWELL(dev_priv) || INTEL_GEN(dev_priv) >= 9)
- 		return 1;
+ 	xen_pvh = 1;
++	xen_domain_type = XEN_HVM_DOMAIN;
+ 	xen_start_flags = pvh_start_info.flags;
  
+ 	msr = cpuid_ebx(xen_cpuid_base() + 2);
 -- 
-2.21.0
+2.17.2 (Apple Git-113)
 
