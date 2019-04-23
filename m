@@ -2,142 +2,255 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B43C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C797C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7783C217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDE420652
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 20:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfDWULo (ORCPT
+        id S1727226AbfDWUNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 16:11:44 -0400
-Received: from mga05.intel.com ([192.55.52.43]:22906 "EHLO mga05.intel.com"
+        Tue, 23 Apr 2019 16:13:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:7594 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfDWULm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 16:11:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 13:11:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,386,1549958400"; 
-   d="scan'208";a="145232471"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Apr 2019 13:11:41 -0700
-Date:   Tue, 23 Apr 2019 13:11:40 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Cedric Xing <cedric.xing@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave <dave.hansen@intel.com>, nhorman@redhat.com,
-        npmccallum@redhat.com, Serge <serge.ayoun@intel.com>,
-        Shay <shay.katz-zamir@intel.com>,
-        Haitao <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kai <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kai <kai.huang@intel.com>, David Rientjes <rientjes@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [RFC PATCH v1 3/3] selftests/x86: Augment SGX selftest to test
- new __vdso_sgx_enter_enclave() and its callback interface
-Message-ID: <20190423201140.GB12691@linux.intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <cover.1555965327.git.cedric.xing@intel.com>
- <f82e81c9cae31634684964d3fc4e9637e7565c69.1555965327.git.cedric.xing@intel.com>
- <CALCETrWpMxoX00SfnCgYdNbT5JmnzHNJ+73NmUjebBEjk7DuJA@mail.gmail.com>
- <20190423185937.GD10720@linux.intel.com>
- <CALCETrWcJw7+tSni3zp4kO=r6gVGkVDnc2477fPg0ErUzvJAKg@mail.gmail.com>
+        id S1725956AbfDWUNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 16:13:14 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E31533092670;
+        Tue, 23 Apr 2019 20:13:12 +0000 (UTC)
+Received: from treble (ovpn-123-99.rdu2.redhat.com [10.10.123.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DF4B060C62;
+        Tue, 23 Apr 2019 20:13:11 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 15:13:06 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
+        julien.thierry@arm.com
+Subject: Re: [RFC 1/6] objtool: Refactor code to make it more suitable for
+ multiple architecture support
+Message-ID: <20190423201306.wyb57hz7xrvqbn75@treble>
+References: <20190409135243.12424-1-raphael.gault@arm.com>
+ <20190409135243.12424-2-raphael.gault@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CALCETrWcJw7+tSni3zp4kO=r6gVGkVDnc2477fPg0ErUzvJAKg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190409135243.12424-2-raphael.gault@arm.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 23 Apr 2019 20:13:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 12:07:26PM -0700, Andy Lutomirski wrote:
-> On Tue, Apr 23, 2019 at 11:59 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Mon, Apr 22, 2019 at 06:29:06PM -0700, Andy Lutomirski wrote:
-> > > What's not tested here is running this code with EFLAGS.TF set and
-> > > making sure that it unwinds correctly.  Also, Jarkko, unless I missed
-> > > something, the vDSO extable code likely has a bug.  If you run the
-> > > instruction right before ENCLU with EFLAGS.TF set, then do_debug()
-> > > will eat the SIGTRAP and skip to the exception handler.  Similarly, if
-> > > you put an instruction breakpoint on ENCLU, it'll get skipped.  Or is
-> > > the code actually correct and am I just remembering wrong?
-> >
-> > The code is indeed broken, and I don't see a sane way to make it not
-> > broken other than to never do vDSO fixup on #DB or #BP.  But that's
-> > probably the right thing to do anyways since an attached debugger is
-> > likely the intended recipient the 99.9999999% of the time.
-> >
-> > The crux of the matter is that it's impossible to identify whether or
-> > not a #DB/#BP originated from within an enclave, e.g. an INT3 in an
-> > enclave will look identical to an INT3 at the AEP.  Even if hardware
-> > provided a magic flag, #DB still has scenarios where the intended
-> > recipient is ambiguous, e.g. data breakpoint encountered in the enclave
-> > but on an address outside of the enclave, breakpoint encountered in the
-> > enclave and a code breakpoint on the AEP, etc...
+On Tue, Apr 09, 2019 at 02:52:38PM +0100, Raphael Gault wrote:
+> The jump destination and relocation offset used previously are only reliable
+> on x86_64 architecture. We abstract these computations by calling arch-dependant
+
+"dependent"
+
+> implementation.
 > 
-> Ugh.  It sounds like ignoring the fixup for #DB is the right call.
-> But what happens if the enclave contains an INT3 or ICEBP instruction?
->  Are they magically promoted to #GP, perhaps?
+> The control flow information and register macro definitions were based on
+> the x86_64 architecture but should be abstract so that each architecture
+> can define the correct values for the registers, especially the registers
+> related to the stack frame (Frame Pointer, Stack Pointer and possibly
+> Return Address).
+> 
+> The ORC unwinder is only supported on x86 at the moment and should thus be
+> in the x86 architecture code. In order not to break the whole structure in
+> case another architecture decides to support the ORC unwinder via objtool
+> we choose to let the implementation be done in the architecture dependant
+> code.
 
-#UD for opt-out, a.k.a. non-debug, enclaves.  Delivered "normally" for
-opt-in debug enclaves, except they're fault-like instead of trap-like.
+It's good practice to put each logical change into a separate patch.
+That will also make the patches easier to review.
 
-> As a maybe possible alternative, if we made it so that the AEX address
-> was not the same as the ENCLU, could we usefully distinguish these
-> exceptions based on RIP?
+For example, each of the above three paragraphs should be a separate
+commit.
 
-Not really, because a user could set a code breakpoint on the AEX or
-insert an INT3, e.g. to break on exit from the enclave.
+Also it's a good idea to run the patches through checkpatch.pl (though
+its warnings should be taken with a grain of salt).
 
-Theoretically the kernel could cross-reference addresses to determine
-whether or not a DRx match occurred on an enclave address, but a) that'd
-be pretty ugly to implement and b) there would still be ambiguity, e.g. if
-there's a code breakpoint on the AEX and a #DB occurs in the enclave, then
-DR6 will record both the in-enclave DRx match and the AEX (non-enclave)
-DRx match.
+> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+> ---
+>  tools/objtool/Build                           |   1 -
+>  tools/objtool/arch.h                          |   9 ++
+>  tools/objtool/arch/x86/Build                  |   1 +
+>  tools/objtool/arch/x86/decode.c               | 106 ++++++++++++++++
+>  tools/objtool/arch/x86/include/arch_special.h |  35 ++++++
+>  tools/objtool/{ => arch/x86/include}/cfi.h    |   0
+>  tools/objtool/{ => arch/x86}/orc_gen.c        |  10 +-
+>  tools/objtool/check.c                         | 114 ++----------------
+>  tools/objtool/check.h                         |   1 +
+>  tools/objtool/orc.h                           |   4 +-
+>  tools/objtool/special.c                       |  18 +--
+>  11 files changed, 173 insertions(+), 126 deletions(-)
+>  create mode 100644 tools/objtool/arch/x86/include/arch_special.h
+>  rename tools/objtool/{ => arch/x86/include}/cfi.h (100%)
+>  rename tools/objtool/{ => arch/x86}/orc_gen.c (96%)
+> 
+> diff --git a/tools/objtool/Build b/tools/objtool/Build
+> index 749becdf5b90..ec925d49565a 100644
+> --- a/tools/objtool/Build
+> +++ b/tools/objtool/Build
+> @@ -2,7 +2,6 @@ objtool-y += arch/$(SRCARCH)/
+>  objtool-y += builtin-check.o
+>  objtool-y += builtin-orc.o
+>  objtool-y += check.o
+> -objtool-y += orc_gen.o
 
-> I suppose it's also worth considering
-> whether page faults from *inside* the enclave should result in SIGSEGV
-> or result in a fixup.  We certainly want page faults from the ENCLU
-> instruction itself to get fixed up, but maybe we want most exceptions
-> inside the enclave to work a bit differently.  Of course, if we do
-> this, we need to make sure that the semantics of returning from the
-> signal handler are reasonable.
+I'm not sure whether moving ORC out to the arch-specific code is the
+best option.  I expect a lot of the ORC code to be generic.  But this
+might be ok for now, until we get another ORC implementation.
 
-Hmm, I'm pretty sure any fault that is 100% in the domain of the enclave
-should result in fixup.
+Another possibility would be to make weak versions of the orc functions
+somewhere (check.c?) and only compile the generic orc_gen.c on arches
+which support it.  Then we could abstract out the arch-specific ORC bits
+later.
 
-Here are a few use cases off the top of my head that would require the
-enclave's runtime to intercept the signal, either to reenter the enclave
-or to feed the fault into the enclave's handler:
+>  objtool-y += orc_dump.o
 
-  - Handle EPC invalidation, e.g. due to VM migration, while a thread is
-    in the enclave since the resulting #PF can occur inside the enclave.
+orc_dump.o doesn't need to be built on arm64.  The "orc dump" option
+should fail accordingly.
 
-  - During enclave development, configure the runtime to call into the
-    enclave on any exception so that the enclave can dump register state.
+>  objtool-y += elf.o
+>  objtool-y += special.o
+> diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
+> index b0d7dc3d71b5..0eff166ca613 100644
+> --- a/tools/objtool/arch.h
+> +++ b/tools/objtool/arch.h
+> @@ -22,6 +22,7 @@
+>  #include <linux/list.h>
+>  #include "elf.h"
+>  #include "cfi.h"
+> +#include "orc.h"
+>  
+>  #define INSN_JUMP_CONDITIONAL	1
+>  #define INSN_JUMP_UNCONDITIONAL	2
+> @@ -70,6 +71,8 @@ struct stack_op {
+>  	struct op_src src;
+>  };
+>  
+> +struct instruction;
+> +
+>  void arch_initial_func_cfi_state(struct cfi_state *state);
+>  
+>  int arch_decode_instruction(struct elf *elf, struct section *sec,
+> @@ -79,4 +82,10 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
+>  
+>  bool arch_callee_saved_reg(unsigned char reg);
+>  
+> +int arch_orc_read_unwind_hints(struct objtool_file *file);
+> +
+> +unsigned long arch_compute_jump_destination(struct instruction *insn);
+> +
+> +unsigned long arch_compute_rela_sym_offset(int addend);
 
-  - Implement copy-on-write or lazy allocation using SGX2 instructions,
-    which would require feeding the #PF back into the enclave.  Purely
-    theoretical AFAIK, but lazy allocation in particular could be
-    interesting, e.g. don't allocate .bss pages at startup time.
+arch_dest_rela_addend_offset() might be a more descriptive name.  Also
+it might be simpler to just make it an arch-specific macro which is 0 on
+arm64 and 4 on x86.
 
-  - An enclave and its runtime might feed #UDs back into the enclave,
-    e.g. to run an unmodified binary in an enclave by wrapping it in a
-    shim of sorts.
+"compute" is implied, it can probably be removed from the names to make
+them a little more concise.
+
+> +
+>  #endif /* _ARCH_H */
+> diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
+> index b998412c017d..74015be53ef0 100644
+> --- a/tools/objtool/arch/x86/Build
+> +++ b/tools/objtool/arch/x86/Build
+> @@ -1,4 +1,5 @@
+>  objtool-y += decode.o
+> +objtool-y += orc_gen.o
+>  
+>  inat_tables_script = arch/x86/tools/gen-insn-attr-x86.awk
+>  inat_tables_maps = arch/x86/lib/x86-opcode-map.txt
+> diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+> index 540a209b78ab..1af7b4996307 100644
+> --- a/tools/objtool/arch/x86/decode.c
+> +++ b/tools/objtool/arch/x86/decode.c
+> @@ -23,6 +23,8 @@
+>  #include "lib/inat.c"
+>  #include "lib/insn.c"
+>  
+> +
+> +#include "../../check.h"
+>  #include "../../elf.h"
+>  #include "../../arch.h"
+>  #include "../../warn.h"
+> @@ -78,6 +80,105 @@ bool arch_callee_saved_reg(unsigned char reg)
+>  	}
+>  }
+>  
+> +unsigned long arch_compute_rela_sym_offset(int addend)
+> +{
+> +	return addend + 4;
+> +}
+> +
+> +int arch_orc_read_unwind_hints(struct objtool_file *file)
+
+I think this function would be better suited for orc_gen.c (which could
+be renamed to just orc.c).
+
+> diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
+> new file mode 100644
+> index 000000000000..bd91b1096359
+> --- /dev/null
+> +++ b/tools/objtool/arch/x86/include/arch_special.h
+> @@ -0,0 +1,35 @@
+> +/*
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+
+This needs the standard header macro guards, e.g.
+
+#ifndef _X86_ARCH_SPECIAL_H
+#define _X86_ARCH_SPECIAL_H
+
+> +
+> +#define EX_ENTRY_SIZE		12
+> +#define EX_ORIG_OFFSET		0
+> +#define EX_NEW_OFFSET		4
+> +
+> +#define JUMP_ENTRY_SIZE		16
+> +#define JUMP_ORIG_OFFSET	0
+> +#define JUMP_NEW_OFFSET		4
+> +
+> +#define ALT_ENTRY_SIZE		13
+> +#define ALT_ORIG_OFFSET		0
+> +#define ALT_NEW_OFFSET		4
+> +#define ALT_FEATURE_OFFSET	8
+> +#define ALT_ORIG_LEN_OFFSET	10
+> +#define ALT_NEW_LEN_OFFSET	11
+> +
+> +#define IGNORE_SHF_EXEC_FLAG	0
+> +
+> +#define JUMP_DYNAMIC_IS_SWITCH_TABLE	0
+
+These flags should be added with the commit which actually uses them.
+
+Also "arch_special.h" is specific to special section parsing, so I'm
+thinking these two macros don't really belong here.  Or maybe the header
+file could be renamed to something more generic.
+
+-- 
+Josh
