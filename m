@@ -2,95 +2,84 @@ Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E295C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BAFC10F03
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6705820835
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138672148D
+	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 17:26:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfDWR0N (ORCPT
+        id S1729466AbfDWR0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 13:26:13 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:39730 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729222AbfDWR0M (ORCPT
+        Tue, 23 Apr 2019 13:26:23 -0400
+Received: from mail2.sp2max.com.br ([138.185.4.9]:39674 "EHLO
+        mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729444AbfDWR0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 13:26:12 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E9878133E8184;
-        Tue, 23 Apr 2019 10:26:11 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 10:26:08 -0700 (PDT)
-Message-Id: <20190423.102608.343500084156113302.davem@davemloft.net>
-To:     mw@semihalf.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, antoine.tenart@bootlin.com,
-        jaz@semihalf.com, gregory.clement@bootlin.com, nadavh@marvell.com,
-        thomas.petazzoni@bootlin.com, linux@armlinux.org.uk,
-        tn@semihalf.com, stefanc@marvell.com
-Subject: Re: [net: PATCH] net: mvpp2: disable link IRQ waiting for IDLE
- frames
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <CAPv3WKcDgY_LY_u8mY47ZZqT2iVL9fp5n3Le0UVWsyO4QDYP-A@mail.gmail.com>
-References: <20190228093627.vtfglsl2djenohlm@shell.armlinux.org.uk>
-        <CAPv3WKdj+EKr2VR+NcBHQrS9xoxHoMzZOri65G61CH6xLL8jFw@mail.gmail.com>
-        <CAPv3WKcDgY_LY_u8mY47ZZqT2iVL9fp5n3Le0UVWsyO4QDYP-A@mail.gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=euc-kr
-Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Apr 2019 10:26:12 -0700 (PDT)
+        Tue, 23 Apr 2019 13:26:22 -0400
+Received: from pgsop.sopnet.com.ar (unknown [179.40.38.12])
+        (Authenticated sender: pablo@fliagreco.com.ar)
+        by mail2.sp2max.com.br (Postfix) with ESMTPA id E84BC7B307D;
+        Tue, 23 Apr 2019 14:26:15 -0300 (-03)
+From:   Pablo Greco <pgreco@centosproject.org>
+To:     linux-sunxi@googlegroups.com
+Cc:     Pablo Greco <pgreco@centosproject.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 2/7] ARM: dts: sun8i: v40: bananapi-m2-berry: Add GPIO pin-bank regulator supplies
+Date:   Tue, 23 Apr 2019 14:25:59 -0300
+Message-Id: <1556040365-10913-3-git-send-email-pgreco@centosproject.org>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1556040365-10913-1-git-send-email-pgreco@centosproject.org>
+References: <1556040365-10913-1-git-send-email-pgreco@centosproject.org>
+X-SP2Max-MailScanner-Information: Please contact the ISP for more information
+X-SP2Max-MailScanner-ID: E84BC7B307D.A3C3A
+X-SP2Max-MailScanner: Sem Virus encontrado
+X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
+        escore=-2.9, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
+        BAYES_00 -1.90)
+X-SP2Max-MailScanner-From: pgreco@centosproject.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcin Wojtas <mw@semihalf.com>
-Date: Tue, 23 Apr 2019 18:08:00 +0200
+The bananapi-m2-berry has the PMIC providing voltage to all the pin-bank
+supply rails from its various regulator outputs, tie them to the pio
+node.
 
-> Hi David, Rusell,
-> 
-> czw., 28 lut 2019 o 14:58 Marcin Wojtas <mw@semihalf.com> napisa©©(a):
->>
->> Hi Russell,
->>
->> czw., 28 lut 2019 o 10:36 Russell King - ARM Linux admin
->> <linux@armlinux.org.uk> napisa©©(a):
->> >
->> > On Wed, Feb 27, 2019 at 06:47:32PM +0100, Marcin Wojtas wrote:
->> > > Current version of the driver was configuring XLG MAC
->> > > in a way to wait 3 IDLE frames before allowing for the
->> > > link-up interrupt to be triggered. This resulted in an
->> > > issue, preventing to detect the link change during RX
->> > > traffic on the interface. Fix that.
->> >
->> > What about noise sensitivity?  Does this now mean that on boards such as
->> > Macchiatobin Single Shot or Clearfog GT9k where the serdes is connected
->> > directly to a SFP cage, that noise on the serdes lines triggers a link
->> > indication?
->> >
->>
->> Afaik waiting for idle frames is not required by any standard. In fact
->> this feature of the XLG MAC caused a risk that after dropping the link
->> during data transfer it would never go up again until remote peer
->> stops it.
->>
->> I tested it on 3 different boards with SerDes directly connected to
->> the SFP cage and I'm also not aware of any reporte about
->> noise-triggered false link interrupts in XLG MAC (proprietary Marvell
->> mvpp2x driver did not use waiting 3 idle frames feature). I'd rather
->> assume the MAC is not vulnerable to it, and only properly established
->> link can trigger an event.
->>
-> 
-> This patch seems to get forgotten - any objections to merge it?
+Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+---
+ arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-If there is agreement, please repost it.
+diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+index f05cabd..2cb2ce0 100644
+--- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
++++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+@@ -123,6 +123,16 @@
+ 	status = "okay";
+ };
+ 
++&pio {
++	pinctrl-names = "default";
++	vcc-pa-supply = <&reg_aldo2>;
++	vcc-pc-supply = <&reg_dcdc1>;
++	vcc-pd-supply = <&reg_dcdc1>;
++	vcc-pe-supply = <&reg_eldo1>;
++	vcc-pf-supply = <&reg_dcdc1>;
++	vcc-pg-supply = <&reg_dldo1>;
++};
++
+ &reg_aldo3 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <2700000>;
+-- 
+1.8.3.1
 
-Thank you.
