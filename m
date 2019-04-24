@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5359DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF059C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D20218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831E5218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117128;
-	bh=kSmBxv0RWRKApnBZxeQzBsigputrP6wEjGlv6b3v2sU=;
+	s=default; t=1556117149;
+	bh=w+qwZ1DNuxddILMDlPxybkeMSD/1rBSfhqhOPcqF8yY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SNjbVk7ySuOaKsp9GwaxRKwYzMhlZ4r+lBVXjRjcA/Cr0Ea5AjrA7xTriRnAVImKN
-	 ynAOz0vYmOQKgpa0q2X7RY7ItFWiMJR/54dRWtq/LDCLB4pbwP0T3+YPwp7r6hztkS
-	 fL5JOUCnUryZKbWZopFe9Kl0Oh/FxccoNEuhe/z8=
+	b=QkiRAaXhirQH440iNU0jLTPPrwnkELtTyP9uO/EVLEj6kdoKAVsg0VfXgBrMe0DnR
+	 geasCvA132vwG57qxMGVHOxnvuTPibzcx8jUi1Tu5FKm+sO5GwvAoKUA3PCuTSCXum
+	 zmsUD/SIfQ6GpwiRbV2AkChr6kD39xE4XJlNDTO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732151AbfDXOp0 (ORCPT
+        id S1731970AbfDXOps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731645AbfDXOjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:39:20 -0400
+        id S1731193AbfDXOey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:34:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF9A521900;
-        Wed, 24 Apr 2019 14:39:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 518F62089F;
+        Wed, 24 Apr 2019 14:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116759;
-        bh=kSmBxv0RWRKApnBZxeQzBsigputrP6wEjGlv6b3v2sU=;
+        s=default; t=1556116493;
+        bh=w+qwZ1DNuxddILMDlPxybkeMSD/1rBSfhqhOPcqF8yY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V3vm7xUixtQf8Yx/uCzS/hi1cGSvtkWN3QnlP0fi6pCMVWRsftd3PzUq7o+Gue270
-         xAA5WTT6G+QbCqCWw782bhysvkZzbg7jG60/V3J4jUbqgeMJlLlsRde9Prtwa0B60W
-         agPXFUNFqKi7BYUHpOrN1hj2VGJkNjGgrxqL3iBU=
+        b=kFJn3GeX+XUZC7zCofgkqpsD75UtWii48+MJELISHrDH2RusJpdbfm3HPqSrlJnsq
+         Gl+QosHiX9FeTpTAr4UuPwEb/eDgtU5ydjcoBKHEMlIijaHg62m1+AowSMNqmFyoOk
+         HJG2QqQNsDMZ72a54GA1VIGCb4+FfQ5K7fbXZQJg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "He, Bo" <bo.he@intel.com>, "Zhang, Jun" <jun.zhang@intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/52] HID: debug: fix race condition with between rdesc_show() and device removal
-Date:   Wed, 24 Apr 2019 10:38:21 -0400
-Message-Id: <20190424143911.28890-3-sashal@kernel.org>
+Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 28/66] net: stmmac: ratelimit RX error logs
+Date:   Wed, 24 Apr 2019 10:33:02 -0400
+Message-Id: <20190424143341.27665-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
-References: <20190424143911.28890-1-sashal@kernel.org>
+In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
+References: <20190424143341.27665-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,60 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "He, Bo" <bo.he@intel.com>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-[ Upstream commit cef0d4948cb0a02db37ebfdc320e127c77ab1637 ]
+[ Upstream commit 972c9be784e077bc56472c78243e0326e525b689 ]
 
-There is a race condition that could happen if hid_debug_rdesc_show()
-is running while hdev is in the process of going away (device removal,
-system suspend, etc) which could result in NULL pointer dereference:
+Ratelimit RX error logs.
 
-	 BUG: unable to handle kernel paging request at 0000000783316040
-	 CPU: 1 PID: 1512 Comm: getevent Tainted: G     U     O 4.19.20-quilt-2e5dc0ac-00029-gc455a447dd55 #1
-	 RIP: 0010:hid_dump_device+0x9b/0x160
-	 Call Trace:
-	  hid_debug_rdesc_show+0x72/0x1d0
-	  seq_read+0xe0/0x410
-	  full_proxy_read+0x5f/0x90
-	  __vfs_read+0x3a/0x170
-	  vfs_read+0xa0/0x150
-	  ksys_read+0x58/0xc0
-	  __x64_sys_read+0x1a/0x20
-	  do_syscall_64+0x55/0x110
-	  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Grab driver_input_lock to make sure the input device exists throughout the
-whole process of dumping the rdesc.
-
-[jkosina@suse.cz: update changelog a bit]
-Signed-off-by: "he, bo" <bo.he@intel.com>
-Signed-off-by: "Zhang, Jun" <jun.zhang@intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/hid/hid-debug.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
-index ebc9ffde41e9..a353a011fbdf 100644
---- a/drivers/hid/hid-debug.c
-+++ b/drivers/hid/hid-debug.c
-@@ -1060,10 +1060,15 @@ static int hid_debug_rdesc_show(struct seq_file *f, void *p)
- 	seq_printf(f, "\n\n");
- 
- 	/* dump parsed data and input mappings */
-+	if (down_interruptible(&hdev->driver_input_lock))
-+		return 0;
-+
- 	hid_dump_device(hdev, f);
- 	seq_printf(f, "\n");
- 	hid_dump_input_mapping(hdev, f);
- 
-+	up(&hdev->driver_input_lock);
-+
- 	return 0;
- }
- 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 7ee545b27af2..e41136d57bfa 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3407,9 +3407,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			 *  ignored
+ 			 */
+ 			if (frame_len > priv->dma_buf_sz) {
+-				netdev_err(priv->dev,
+-					   "len %d larger than size (%d)\n",
+-					   frame_len, priv->dma_buf_sz);
++				if (net_ratelimit())
++					netdev_err(priv->dev,
++						   "len %d larger than size (%d)\n",
++						   frame_len, priv->dma_buf_sz);
+ 				priv->dev->stats.rx_length_errors++;
+ 				break;
+ 			}
+@@ -3466,9 +3467,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			} else {
+ 				skb = rx_q->rx_skbuff[entry];
+ 				if (unlikely(!skb)) {
+-					netdev_err(priv->dev,
+-						   "%s: Inconsistent Rx chain\n",
+-						   priv->dev->name);
++					if (net_ratelimit())
++						netdev_err(priv->dev,
++							   "%s: Inconsistent Rx chain\n",
++							   priv->dev->name);
+ 					priv->dev->stats.rx_dropped++;
+ 					break;
+ 				}
 -- 
 2.19.1
 
