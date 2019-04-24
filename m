@@ -2,129 +2,109 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4D3C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBA3C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2E12148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B99F2148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:10:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fr50Z5vg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsdnSyt4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbfDXBJg (ORCPT
+        id S1729111AbfDXBKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:09:36 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:46973 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbfDXBJe (ORCPT
+        Tue, 23 Apr 2019 21:10:40 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42197 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfDXBKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:09:34 -0400
-Received: by mail-vs1-f65.google.com with SMTP id e2so9409375vsc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:09:33 -0700 (PDT)
+        Tue, 23 Apr 2019 21:10:40 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p20so18430609qtc.9;
+        Tue, 23 Apr 2019 18:10:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2oqPjMyQseedgcBAwrPIUkhy4f51e0TPWLOI4MD8uyk=;
-        b=fr50Z5vg/i8u/My7dlGlG6B1BLTT67r8Bme8belsC4m2zyb1aH5hxRMEq4CKaj+7oS
-         jpDZjpArU829DDNj/kIYxTe80EE3NspkOMJ2Wr94sBAiIzt8ou6DS2nqmLLFIPyp26cL
-         wf/lZP+7japEB/m4DGZvJ66fmX1sEej3KNesI=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tkHovkGoLeUJmBUAXRcEdP2u6Q/Uk6F1LzPacVk5rJ8=;
+        b=gsdnSyt4gtUMCnRM+azrKEaFIk36F6Mmvah/m9Ubdw7XaljkcKtMQFPWJh2uj7HUwF
+         9ALRfjtxdkmZKf0rUYWCz/D6MA237XSRKdr2SK7Fkw1/iP5/AQbdGiOHBrguVDI4BrsO
+         rUvvUA9CPK/xSD8bEn3TXMI7+RCq+MbL2yLh5Ewkuhgk4QvbP06RcVrvgZczegUqG1En
+         /przdaZi/2UhDpY5Tav1+Ng2uMB8r0X6MN1uwVyrXw3eUDDGsGYdMx077Tpv26OC5cAA
+         DdB+GqvbZBhY+NlogbC+/cBGGAHtgR5Nv/qIQueQZ9N6HONFwVLowAdcVHfG/pzmvCkM
+         gLnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2oqPjMyQseedgcBAwrPIUkhy4f51e0TPWLOI4MD8uyk=;
-        b=ezFAVAhnseCQzTxWjS3FflmwQimIFT/WA2eduYkRgmKT99cQWmjn3xZKwnEiOHydxe
-         Iu2RKu8fpZJQus4R56ry/lD0iEKlX+zkK6lNvedGJ5euGCqxDhyvktkPrXxaZiseqpoe
-         TcG6pJp1pz1FIVb1sJihPkrUJsWZK5/gaklvEJXUTyZW58M8/FF7rTB+K3Ubao+3gbmz
-         FzgZwf58F+UVHvVkOT/zaEprQHu1JQDH5/CH2JJVl1Z7Sd+LEutO7ifGxf4+wq5QylBl
-         EzjQOabxmih8niSofT7ayCYg/fEQEgEmwADbryXlrdLAqhNSL4yAOZsvhTmlBkP+2NLx
-         T4Lw==
-X-Gm-Message-State: APjAAAU2T4cFcx/4AKEx3YZfDTARkYq5JpV7BC6bix2nIisoDKoMD5B0
-        UwRk6nhkVyKAJQ6XPPUtyNRvJwZjwvM=
-X-Google-Smtp-Source: APXvYqw3J0M1qtVw2EkGNnJONC+jt1JKQsfG147heah+fQtKB9p2BQTHaQngDEJe+2YAOCbdn5h8Tw==
-X-Received: by 2002:a67:e9c3:: with SMTP id q3mr15520551vso.174.1556068172447;
-        Tue, 23 Apr 2019 18:09:32 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id w69sm6338988vsc.8.2019.04.23.18.09.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 18:09:31 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id f15so9412174vsk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:09:31 -0700 (PDT)
-X-Received: by 2002:a67:e258:: with SMTP id w24mr15056333vse.20.1556068170633;
- Tue, 23 Apr 2019 18:09:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tkHovkGoLeUJmBUAXRcEdP2u6Q/Uk6F1LzPacVk5rJ8=;
+        b=WSj6R3xhJNbLqMsq1d8c/ha581V3Fe7qdZnHuW0NTDXOP5PXkdFjkU0AKyAe9jBrPF
+         /GV9edlnwb7sVGVXY2dUPcSTO75MWOmKAv3oRWfze14nIguokf/UtdqlQgu7RKO5V3UT
+         N0R45XNxSiN5y/kiy5U7v8JzO9H7CKpF4B6PTGdbsQAy57bs4VlVTsKZKTOgey8XR6tU
+         FILDyiQUJJ55SeVz3LBHEw5mLTb1VbN/kR/TjuhfC6NfXGM0cStMQR5tS2Xo5asR0sGo
+         TEAQDrDPl7Destz2LH25raojXs2jGduq0+Q2JJGXpW/oyYd+5+mLWM6VIBYaPK9+NNjz
+         CXBQ==
+X-Gm-Message-State: APjAAAUnSQihUU40g0SAyWfpRZ5qUk3Ktj7LQTcGNMh0ZuAT9Z6ULw6l
+        XSnd2iyBncHQBH8hOdFCJi8nStQgdD4=
+X-Google-Smtp-Source: APXvYqzn9IFQO1GLAIwF4rLgEpLc4SQzDHcjNwDRT6Jzs8JSL/iV2acm2dlR+MGywIAeBpUGEaPYPA==
+X-Received: by 2002:aed:2314:: with SMTP id h20mr24005362qtc.24.1556068238795;
+        Tue, 23 Apr 2019 18:10:38 -0700 (PDT)
+Received: from geeko ([179.183.202.242])
+        by smtp.gmail.com with ESMTPSA id h27sm11319955qtc.1.2019.04.23.18.10.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 18:10:37 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 22:10:28 -0300
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, axboe@kernel.dk, bvanassche@acm.org,
+        Chaitanya.Kulkarni@wdc.com
+Subject: Re: [PATCH v3 0/3] Add documentation of some blk-mq functions
+Message-ID: <20190424011025.GA32345@geeko>
+References: <20190417021030.82998-1-marcos.souza.org@gmail.com>
 MIME-Version: 1.0
-References: <20190410221237.160856-1-dianders@chromium.org>
- <CAD=FV=Wm+T+W=LWTSiwBT3UQWG7YKQdGuL2+BmAFQhk8CYY1mQ@mail.gmail.com> <6e5c9395-51b0-7f28-ec91-de95cb54f58d@rock-chips.com>
-In-Reply-To: <6e5c9395-51b0-7f28-ec91-de95cb54f58d@rock-chips.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 23 Apr 2019 18:09:19 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XuCrymazJDKBYqLezkYkikzGNiv6X0FdzNG0SaR8PuRw@mail.gmail.com>
-Message-ID: <CAD=FV=XuCrymazJDKBYqLezkYkikzGNiv6X0FdzNG0SaR8PuRw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: dw_mmc: Disable SDIO interrupts while suspended to
- fix suspend/resume
-To:     Shawn Lin <shawn.lin@rock-chips.com>
-Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>, stable@vger.kernel.org,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417021030.82998-1-marcos.souza.org@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+gentle ping.
 
-On Tue, Apr 23, 2019 at 5:57 PM Shawn Lin <shawn.lin@rock-chips.com> wrote:
->
-> The intention seems reasonable to me, but just wonder if we need
-> mask/unmask SDIO interrupt when it's never used?
+On Tue, Apr 16, 2019 at 11:10:27PM -0300, Marcos Paulo de Souza wrote:
+> blk_mq_init_sq_queue and blk_mq_init_queue are being documented, more will be
+> added in further patches.
+> 
+> I would like to thank Chaitanya and Bart for their reviews.
+> 
+> Changes from v2:
+> * Changed the description of argument @set of blk_mq_init_sq_queue, making it
+>   less obvious and more informative. Now this argument has two example of
+>   possible flags for tag_set (suggested by Bart)
+> * Cover letter added (suggested by Bart)
+> 
+> Changes from v1:
+> * Change "SQ" to "only one hw_queue (SQ)" in the function signature
+>   documentation (suggested by Chaitanya)
+> 
+> Marcos Paulo de Souza (3):
+>   blk-mq.c: Add documention of function blk_mq_init_queue
+>   blk-mq.c: Rework documention of blk_mq_init_sq_queue function
+>   Documentation: kernel-api.rst: Add block/blk-mq.c
+> 
+>  Documentation/core-api/kernel-api.rst |  6 ++++++
+>  block/blk-mq.c                        | 27 ++++++++++++++++++++++++---
+>  2 files changed, 30 insertions(+), 3 deletions(-)
+> 
+> -- 
+> 2.16.4
+> 
 
-I don't think we do.
-
-Specifically "client_sdio_enb" starts out as false.  If nobody ever
-calls dw_mci_enable_sdio_irq() then "client_sdio_enb" will always
-continue to be false.
-
-Now at suspend time we'll call "__dw_mci_enable_sdio_irq".  Because
-"client_sdio_enb" is false then the local variable "enb" will always
-be false.  Sure we'll clear the "SDMMC_INT_SDIO" from the "INTMASK"
-register, but it should already have been cleared so this is a no-op.
-
-...at resume time we'll have a similar situation where
-"client_sdio_enb" is false and thus we'll (again) just clear the
-"SDMMC_INT_SDIO" from the "INTMASK".
-
-I could potentially optimize away the "mci_writel()" if we're not
-changing anything if you're worried about that?
-
-
-> It's the same
-> situation for SDMMC_CLKEN_LOW_PWR that we couldn't stop providing
-> clock for SDIO cards, so I guess we need to check MMC_CAP_SDIO_IRQ
-> as well.
-
-I think it might be a slightly different situation though.  In this
-case I believe it's not just a problem with clock stoppage.  I believe
-the problem is that the interrupt will be passed to the SDIO device
-driver right away and that'll call back into dw_mmc.  dw_mmc is just
-not in a state to handle it until we've more fully resumed things.
-
-In any case with my patch the only way we'd ever end up unmasking the
-SDIO IRQ here would be if dw_mci_enable_sdio_irq() was called.  That
-will only happen if there's an SDIO card plugged in.
-
-
--Doug
+-- 
+Thanks,
+Marcos
