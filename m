@@ -2,143 +2,94 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24094C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81104C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9A520652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C59220674
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556135427;
+	bh=R0q2vlaBwry72v/Rp0HRRMY6juk7PDgZ094B2Z5TSDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zGmv3dxKf8jovICDLyJ0BnGPBNu4CTE7v4uUeOm/FOgAbGtGBOySnMz6YOZsuLe5w
+	 dVDGWN1D7hakFjo7aZ/DWb/ZXk7Dv6kLQPaDEwtNQ2lvAhXR2H2UdBnuUTM9S/Jn4L
+	 r8CvfJWJPbgCOPyGtBFLsvJLbMKV+Lf/kTfouHNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfDXTs6 (ORCPT
+        id S1731503AbfDXTu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:48:58 -0400
-Received: from [13.77.154.182] ([13.77.154.182]:51878 "EHLO
-        linux.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfDXTs6 (ORCPT
+        Wed, 24 Apr 2019 15:50:26 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37274 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfDXTuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:48:58 -0400
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 44FC330B26EE
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:48:57 -0700 (PDT)
-Received: by mail-ed1-f41.google.com with SMTP id g6so17018841edc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:48:57 -0700 (PDT)
-X-Gm-Message-State: APjAAAW/wLn5+DwrzxSlF2tRHBPQnCHrWMrN68uTSnUfzf2sx24tG96I
-        kBpj+v4Fqmm6OIsq8YzkNRPmw1wH5AnkaeJ6LafVIg==
-X-Google-Smtp-Source: APXvYqzyoILpLCYiSs16/NACIvIjnxi+GIp5W7mO/tmVV9j0fAAJF3XeiFhH0NmOUBQZP2Pc8MRN3YR20FGmzk8BHI4=
-X-Received: by 2002:a17:906:b291:: with SMTP id q17mr17493373ejz.56.1556135335559;
- Wed, 24 Apr 2019 12:48:55 -0700 (PDT)
+        Wed, 24 Apr 2019 15:50:25 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k6so1593632oic.4;
+        Wed, 24 Apr 2019 12:50:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gX5DaKXgzgKwHuI4bQ2Vuz6TWDgQGkcLA/0KBG8pAs0=;
+        b=kSVSDiqBsYJNa+9DsHdcAh9DytMt4VlWCDkghpZ9Zy2tWUDc3YTHM61N93aYKdMbpD
+         wwsYgN0LLGxoXpcsIwa8AWhg0I+tzaWI9mdDvyc3lXjivpA6g6Uj0LqS3goCyU7RHLy0
+         VmB5nXsYc6CS+a5PM45DFD9xeclztGeR44VA5QjG5viEbTuQQxg44fyrcn6ywzf4qPrQ
+         BJg6CpA64suWGcRIyBfBUsK/ZtIBruofDQR8+cazPzj/O59JGuP1LNVC6LZpKWJUQmee
+         2Z9bquEBOREUGhmbiDP/Bw6ADUaiODzU1qFvNyTKm1r5LzBdSZia3Evbrx0higQkDywl
+         HgMw==
+X-Gm-Message-State: APjAAAWFsFctEd6HRyrDqmBjyb4wDtd1PGvY5ZLMHNFDvRm/QYQSMDp1
+        6cJgifRQUyJO5o26xNXzvw==
+X-Google-Smtp-Source: APXvYqzNC0zi2UctBg09jKsdU5XdGqtwFCK4/4d+sdJraGSeL8x7mWFkarGIMtEC3NX3nPmZMB9Vqg==
+X-Received: by 2002:aca:b60a:: with SMTP id g10mr535062oif.35.1556135424386;
+        Wed, 24 Apr 2019 12:50:24 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h24sm7609770otr.39.2019.04.24.12.50.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 12:50:23 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 14:50:22 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        CK HU <ck.hu@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        ginny.chen@mediatek.com, kendrick.hsu@mediatek.com,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Subject: Re: [PATCH v4 01/12] dt-binding: gce: remove thread-num property
+Message-ID: <20190424195022.GB7270@bogus>
+References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+ <20190415125833.38704-2-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
-References: <20190423203843.2898-1-pasha.tatashin@soleen.com> <7f7499bd-8d48-945b-6d69-60685a02c8da@arm.com>
-In-Reply-To: <7f7499bd-8d48-945b-6d69-60685a02c8da@arm.com>
-From:   Pavel Tatashin <patatash@linux.microsoft.com>
-Date:   Wed, 24 Apr 2019 15:48:44 -0400
-X-Gmail-Original-Message-ID: <CA+CK2bCD11x64pJj5gSnsu5jsUqJyU6o+=J4K8oYAsHqz9ULqQ@mail.gmail.com>
-Message-ID: <CA+CK2bCD11x64pJj5gSnsu5jsUqJyU6o+=J4K8oYAsHqz9ULqQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: configurable sparsemem section size
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>,
-        rppt@linux.vnet.ibm.com,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        andrew.murray@arm.com, james.morse@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>, sboyd@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415125833.38704-2-bibby.hsieh@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 5:07 AM Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
-> On 04/24/2019 02:08 AM, Pavel Tatashin wrote:
-> > sparsemem section size determines the maximum size and alignment that
-> > is allowed to offline/online memory block. The bigger the size the less
-> > the clutter in /sys/devices/system/memory/*. On the other hand, however,
-> > there is less flexability in what granules of memory can be added and
-> > removed.
->
-> Is there any scenario where less than a 1GB needs to be added on arm64 ?
+On Mon, Apr 15, 2019 at 08:58:22PM +0800, Bibby Hsieh wrote:
+> "thread-num" is an unused property so we remove it from example.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 1 -
+>  1 file changed, 1 deletion(-)
 
-Yes, DAX hotplug loses 1G of memory without allowing smaller sections.
-Machines on which we are going to be using this functionality have 8G
-of System RAM, therefore losing 1G is a big problem.
-
-For details about using scenario see this cover letter:
-https://lore.kernel.org/lkml/20190421014429.31206-1-pasha.tatashin@soleen.com/
-
->
-> >
-> > Recently, it was enabled in Linux to hotadd persistent memory that
-> > can be either real NV device, or reserved from regular System RAM
-> > and has identity of devdax.
->
-> devdax (even ZONE_DEVICE) support has not been enabled on arm64 yet.
-
-Correct, I use your patches to enable ZONE_DEVICE, and  thus devdax on ARM64:
-https://lore.kernel.org/lkml/1554265806-11501-1-git-send-email-anshuman.khandual@arm.com/
-
->
-> >
-> > The problem is that because ARM64's section size is 1G, and devdax must
-> > have 2M label section, the first 1G is always missed when device is
-> > attached, because it is not 1G aligned.
->
-> devdax has to be 2M aligned ? Does Linux enforce that right now ?
-
-Unfortunately, there is no way around this. Part of the memory can be
-reserved as persistent memory via device tree.
-        memory@40000000 {
-                device_type = "memory";
-                reg = < 0x00000000 0x40000000
-                        0x00000002 0x00000000 >;
-        };
-
-        pmem@1c0000000 {
-                compatible = "pmem-region";
-                reg = <0x00000001 0xc0000000
-                       0x00000000 0x80000000>;
-                volatile;
-                numa-node-id = <0>;
-        };
-
-So, while pmem is section aligned, as it should be, the dax device is
-going to be pmem start address + label size, which is 2M. The actual
-DAX device starts at:
-0x1c0000000 + 2M.
-
-Because section size is 1G, the hotplug will able to add only memory
-starting from
-0x1c0000000 + 1G
-
-> 27 and 28 do not even compile for ARM64_64_PAGES because of MAX_ORDER and
-> SECTION_SIZE mismatch.
-
-Can you please elaborate what configs are you using? I have no
-problems compiling with 27 and 28 bit.
-
-Thank you,
-Pasha
+Reviewed-by: Rob Herring <robh@kernel.org>
