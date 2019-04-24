@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A77C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA63AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF59721902
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84EDD2089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116487;
-	bh=888zvxrjA7XOcy1VzeEiGB+h0t4AqJ63Z5hDuQ3W0II=;
+	s=default; t=1556116491;
+	bh=DqdQEbpVP7GV2qxFZlVhyGL4LkpK+VDBwO6hX6UI/YQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hFEDq9+xo8SnXRkiOSP4k2mvW3L/MJYDKKv2NBd0No7xnpknkcvxqN0Km2vMktouH
-	 fUJxOuFBgGZLPrQGRrNdGY6aWzuq8+eNWmCDKr/WK+MdOI7Wt7XuI/G4lUcNsnXAb9
-	 43xCbnkBun16uEBYmXBs0/FHrtQEj8YyEY+eG5Ww=
+	b=QTv9Psai7okRNu49UZ9cjHrTlXr+gwna/KipzYQZudrm3t3iWZvaA+1zxdLWPNzqt
+	 lY0foW1Cc8KYax9dNhoSfD2VRR9nvayvFY5hU6TOx+vSPEWGTPQ8OaZuaRro9zE99o
+	 DpY1v2Q/b0LWQV/44z+5newd1CPrfyEKqweA3Aks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731152AbfDXOeq (ORCPT
+        id S1731173AbfDXOeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:34:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38594 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:34:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731105AbfDXOeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:34:44 -0400
+        id S1731153AbfDXOer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:34:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 784142089F;
-        Wed, 24 Apr 2019 14:34:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF84E21900;
+        Wed, 24 Apr 2019 14:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116484;
-        bh=888zvxrjA7XOcy1VzeEiGB+h0t4AqJ63Z5hDuQ3W0II=;
+        s=default; t=1556116486;
+        bh=DqdQEbpVP7GV2qxFZlVhyGL4LkpK+VDBwO6hX6UI/YQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q7VEImkxQoytfXRetviqOQF0z8fGecYKvrUDCz7ow730YRQm2Q5xN5/oa2+n5kys9
-         qCwqm3Z9egf7O/B6eenE0cjEOB+KXBxwNUQXQ0OR9aMC4aGHG3rWD+mN+Azq++2Fvd
-         npZBTNROgHrlo/lE7Xb4vz1/EsXgBNZiE7TEABsE=
+        b=xLSRyecC9yiJaIVB/tLMiWU80Qj0DAgTwMw/VI0Th0xvkAqZWfR2mJ2rTE7jprMsu
+         2XhLir/vX50ZV3wY5iwmR1d5ExV4g6DGpK1xzYSYfaUb/1AfpM8EhuTqimh8WgjuZ3
+         +br0GVI/ZMAidVonGYrqgIBN+8ireZiM26iTlYo0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roi Dayan <roid@mellanox.com>,
+Cc:     Omri Kahalon <omrik@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 24/66] net/mlx5: E-Switch, Protect from invalid memory access in offload fdb table
-Date:   Wed, 24 Apr 2019 10:32:58 -0400
-Message-Id: <20190424143341.27665-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 25/66] net/mlx5: E-Switch, Fix esw manager vport indication for more vport commands
+Date:   Wed, 24 Apr 2019 10:32:59 -0400
+Message-Id: <20190424143341.27665-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -60,34 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roi Dayan <roid@mellanox.com>
+From: Omri Kahalon <omrik@mellanox.com>
 
-[ Upstream commit 5c1d260ed10cf08dd7a0299c103ad0a3f9a9f7a1 ]
+[ Upstream commit eca4a928585ac08147e5cc8e2111ecbc6279ee31 ]
 
-The esw offloads structures share a union with the legacy mode structs.
-Reset the offloads struct to zero in init to protect from null
-assumptions made by the legacy mode code.
+Traditionally, the PF (Physical Function) which resides on vport 0 was
+the E-switch manager. Since the ECPF (Embedded CPU Physical Function),
+which resides on vport 0xfffe, was introduced as the E-Switch manager,
+the assumption that the E-switch manager is on vport 0 is incorrect.
 
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Or Gerlitz <ogerlitz@mellanox.com>
+Since the eswitch code already uses the actual vport value, all we
+need is to always set other_vport=1.
+
+Signed-off-by: Omri Kahalon <omrik@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-index d4e6fe5b9300..ce5766a26baa 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-@@ -1402,6 +1402,7 @@ int esw_offloads_init(struct mlx5_eswitch *esw, int nvports)
- {
- 	int err;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 13c48883ed61..619f96940b65 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -81,8 +81,7 @@ static int arm_vport_context_events_cmd(struct mlx5_core_dev *dev, u16 vport,
+ 		 opcode, MLX5_CMD_OP_MODIFY_NIC_VPORT_CONTEXT);
+ 	MLX5_SET(modify_nic_vport_context_in, in, field_select.change_event, 1);
+ 	MLX5_SET(modify_nic_vport_context_in, in, vport_number, vport);
+-	if (vport)
+-		MLX5_SET(modify_nic_vport_context_in, in, other_vport, 1);
++	MLX5_SET(modify_nic_vport_context_in, in, other_vport, 1);
+ 	nic_vport_ctx = MLX5_ADDR_OF(modify_nic_vport_context_in,
+ 				     in, nic_vport_context);
  
-+	memset(&esw->fdb_table.offloads, 0, sizeof(struct offloads_fdb));
- 	mutex_init(&esw->fdb_table.offloads.fdb_prio_lock);
+@@ -110,8 +109,7 @@ static int modify_esw_vport_context_cmd(struct mlx5_core_dev *dev, u16 vport,
+ 	MLX5_SET(modify_esw_vport_context_in, in, opcode,
+ 		 MLX5_CMD_OP_MODIFY_ESW_VPORT_CONTEXT);
+ 	MLX5_SET(modify_esw_vport_context_in, in, vport_number, vport);
+-	if (vport)
+-		MLX5_SET(modify_esw_vport_context_in, in, other_vport, 1);
++	MLX5_SET(modify_esw_vport_context_in, in, other_vport, 1);
+ 	return mlx5_cmd_exec(dev, in, inlen, out, sizeof(out));
+ }
  
- 	err = esw_create_offloads_fdb_tables(esw, nvports);
 -- 
 2.19.1
 
