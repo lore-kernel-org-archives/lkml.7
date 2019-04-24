@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B96FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C69BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1092077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE29821901
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556114286;
-	bh=4CR2co9QDeM2sqBObX24OTDizYn3UMzcVDWciRdYp7Y=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=KoBZjSwe/U+LDJAAwi4tQVuoFHVwNfRYcnFyjS8Qwivn3ZZmMqLOkTttFNLhLxO2w
-	 m3ORCK8NrD1eUT7se1k5qmICsJY3ctbXDAYCOtMhDtN2PEVU5uqF2QQgRm0w39T9kr
-	 nCqKy2mTVmIUUfhx55zbpJjfM/0DwNguZ77tqcRE=
+	s=default; t=1556114291;
+	bh=5E8ghuCRDC6tBp9SP1QbYoJ2EdMunqEPTBkuiYdcQ00=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eFBcfRtLUP0k3wz4hsTGrEjmJDDxHWFiSBL02ZsKYujyX57u8SwQyo5VKbA+B2IHs
+	 yhq2WJ/Xx5HNFlxNBzcLx3yUQSVQEm+GT8zjMnKPYakM/HUqfY99lHXjag1E5/Dv/R
+	 vnthYvEsNGdS7X3bVAQ3Ae9iMC1ImSSqiOedNQXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730928AbfDXN6F (ORCPT
+        id S1730941AbfDXN6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:58:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51582 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 09:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730195AbfDXN6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:58:03 -0400
+        id S1730195AbfDXN6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:58:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EEEC21900;
-        Wed, 24 Apr 2019 13:58:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A882121902;
+        Wed, 24 Apr 2019 13:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556114283;
-        bh=4CR2co9QDeM2sqBObX24OTDizYn3UMzcVDWciRdYp7Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=17cm2UTT5tF1Fd3mTfdIHPXoiHp/47zEjLDHICEqnv5P3CFm1Uuo/7LlD1/UIAicm
-         /EmaSdXpWdfYqifiKQTN3m8ZC5lMLfUPsEFONHAMfNIFYbHCmQC2f8IBqG/++kODsy
-         pG8YAZUvmb9iS7jvEh4ovovBMr7T2Y9jN3sAKtoY=
+        s=default; t=1556114285;
+        bh=5E8ghuCRDC6tBp9SP1QbYoJ2EdMunqEPTBkuiYdcQ00=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MSHZWB7ylipS9CSrilMZ8q5GigS+eBmjvQSmOCWJvWT2ZHzfZntq/heR0FYXcHCOV
+         kPbmx9ZQNGflKPA2HMCeVWHIbHThFeDRQk55/SSM34CVg5VvfFVSaXrdD3hDg4Gg2M
+         3tUnNgahxpo1pQWt9VCTOFAIwE3fGs4MCRtV/HKg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Leonidas P. Papadakos" <papadakospan@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 01/52] arm64: dts: rockchip: fix rk3328-roc-cc gmac2io tx/rx_delay
-Date:   Wed, 24 Apr 2019 09:57:06 -0400
-Message-Id: <20190424135758.22850-1-sashal@kernel.org>
+Cc:     Kangjie Lu <kjlu@umn.edu>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/52] HID: logitech: check the return value of create_singlethread_workqueue
+Date:   Wed, 24 Apr 2019 09:57:07 -0400
+Message-Id: <20190424135758.22850-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190424135758.22850-1-sashal@kernel.org>
+References: <20190424135758.22850-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,42 +57,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
+From: Kangjie Lu <kjlu@umn.edu>
 
-[ Upstream commit 924726888f660b2a86382a5dd051ec9ca1b18190 ]
+[ Upstream commit 6c44b15e1c9076d925d5236ddadf1318b0a25ce2 ]
 
-The rk3328-roc-cc board exhibits tx stability issues with large packets,
-as does the rock64 board, which was fixed with this patch
-https://patchwork.kernel.org/patch/10178969/
+create_singlethread_workqueue may fail and return NULL. The fix checks if it is
+NULL to avoid NULL pointer dereference.  Also, the fix moves the call of
+create_singlethread_workqueue earlier to avoid resource-release issues.
 
-A similar patch was merged for the rk3328-roc-cc here
-https://patchwork.kernel.org/patch/10804863/
-but it doesn't include the tx/rx_delay tweaks, and I find that they
-help with an issue where large transfers would bring the ethernet
-link down, causing a link reset regularly.
-
-Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 246c317f6a68..91061d9cf78b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-@@ -94,8 +94,8 @@
- 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
--	tx_delay = <0x25>;
--	rx_delay = <0x11>;
-+	tx_delay = <0x24>;
-+	rx_delay = <0x18>;
- 	status = "okay";
- };
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 19cc980eebce..8425d3548a41 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -1907,6 +1907,13 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+ 		kfree(data);
+ 		return -ENOMEM;
+ 	}
++	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
++	if (!data->wq) {
++		kfree(data->effect_ids);
++		kfree(data);
++		return -ENOMEM;
++	}
++
+ 	data->hidpp = hidpp;
+ 	data->feature_index = feature_index;
+ 	data->version = version;
+@@ -1951,7 +1958,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+ 	/* ignore boost value at response.fap.params[2] */
  
+ 	/* init the hardware command queue */
+-	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
+ 	atomic_set(&data->workqueue_size, 0);
+ 
+ 	/* initialize with zero autocenter to get wheel in usable state */
 -- 
 2.19.1
 
