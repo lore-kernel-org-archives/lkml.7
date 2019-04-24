@@ -2,81 +2,115 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DACC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D36C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE834218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:04:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="Kk0JP4fx"
+	by mail.kernel.org (Postfix) with ESMTP id E2EF4218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730435AbfDXOED (ORCPT
+        id S1728929AbfDXOEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:04:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36813 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfDXOEA (ORCPT
+        Wed, 24 Apr 2019 10:04:21 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:56850 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbfDXOEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:04:00 -0400
-Received: by mail-io1-f66.google.com with SMTP id d19so11685611ioc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 07:03:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=PqXEjNxslUg0+S8sYhHG+ogG8LevC+eadB4uRbvqHk4=;
-        b=Kk0JP4fx2jiSaWqZ/AfgndAKBk6y4vpHAMPTbFyEwajqLLDjrYCcL1DmiBOpXZe39Z
-         dFkl+YBl6K5WlgysVlPWSKpo1adeIFtjJ6w7/Y2LXSjuoRBtFbzZaLRDhS2an6oMUknG
-         mViTe+RUCvsdlvZLTiJbldJzUGd4MlXlffkSM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=PqXEjNxslUg0+S8sYhHG+ogG8LevC+eadB4uRbvqHk4=;
-        b=UPB9MrPKCIZiOKDvAaHhQy5UtrITBeDtX5hF+ikAWbFlxnI+zrwSAbeVz5QAPGe+dh
-         3SqTA0l9zz8x5KCbkQ5PzZyOIKsfnl8Rsenpwdv+BSQTqRQCyCErZsoef9kzdam7R6dO
-         tqy8yzc6KKcItpoAzxCjClrDrKNVN1f42jiK/D4aw+jfd5xGEVia0haKXI4c58fWfGJZ
-         ZBV7A8oq8HyiYTLqUqh93uVLkVQBAqeuFXOse/lJwwF+htR+1iEXUFk8RHU5sxZhqzf8
-         KHbEzhhPEbFxEM4hm4Xu1tbijiAJC6lRbD3nG0lBmobq5YpZS/aepWLQov8lnIudAvS+
-         nEkQ==
-X-Gm-Message-State: APjAAAUBwCJgfSjV0x6BdHMKjKDw40a09YHY0Zb98+TiALRcQ55Dr82A
-        ATYOrI9Cwe62EeLXSVceeMuQEA==
-X-Google-Smtp-Source: APXvYqwAozdpkiJUfInxG3MA7O96btTpTwj76Ws6GIpisA9lNc3A0y1RjbzHSe/ZjPJaQBdTlxwAOQ==
-X-Received: by 2002:a5e:8b05:: with SMTP id g5mr14948868iok.274.1556114638916;
-        Wed, 24 Apr 2019 07:03:58 -0700 (PDT)
-Received: from swap-tester ([178.128.225.14])
-        by smtp.gmail.com with ESMTPSA id i11sm8607926itb.3.2019.04.24.07.03.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 07:03:58 -0700 (PDT)
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-To:     Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Auld <pauld@redhat.com>
-Subject: Re: [RFC PATCH v2 15/17] sched: Trivial forced-newidle balancer
-Date:   Wed, 24 Apr 2019 14:03:55 +0000
-Message-Id: <20190424140355.17357-1-vpillai@digitalocean.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CAERHkrtP90QJCc-xxqxJbiWg+0jod_U2i-tHayw=Wd+WRDdTFQ@mail.gmail.com>
+        Wed, 24 Apr 2019 10:04:21 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 95AA4807E7; Wed, 24 Apr 2019 16:04:09 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 16:04:17 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com,
+        linux@roeck-us.net, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 24/26] leds: gpio: Use generic support for composing
+ LED names
+Message-ID: <20190424140417.GE14360@amd>
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+ <20190417205439.17685-25-jacek.anaszewski@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="EgVrEAR5UttbsTXg"
+Content-Disposition: inline
+In-Reply-To: <20190417205439.17685-25-jacek.anaszewski@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the hard lockup is reproducible with v2, could you please share more
-details about the lockup?
 
-Thanks
+--EgVrEAR5UttbsTXg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed 2019-04-17 22:54:37, Jacek Anaszewski wrote:
+> Switch to using generic LED support for composing LED class
+> device name.
+>=20
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/leds/leds-gpio.c | 23 ++++++++++-------------
+>  1 file changed, 10 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+> index b26cf78993d1..60fb3c85cf05 100644
+> --- a/drivers/leds/leds-gpio.c
+> +++ b/drivers/leds/leds-gpio.c
+> @@ -77,11 +77,11 @@ static int gpio_blink_set(struct led_classdev *led_cd=
+ev,
+> =20
+>  static int create_gpio_led(const struct gpio_led *template,
+>  	struct gpio_led_data *led_dat, struct device *parent,
+> -	struct device_node *np, gpio_blink_set_t blink_set)
+> +	struct fwnode_handle *fwnode, gpio_blink_set_t blink_set)
+>  {
+> +	struct led_init_data init_data =3D {};
+>  	int ret, state;
+> =20
+> -	led_dat->cdev.name =3D template->name;
+>  	led_dat->cdev.default_trigger =3D template->default_trigger;
+>  	led_dat->can_sleep =3D gpiod_cansleep(led_dat->gpiod);
+>  	if (!led_dat->can_sleep)
+> @@ -112,7 +112,13 @@ static int create_gpio_led(const struct gpio_led *te=
+mplate,
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> -	return devm_led_classdev_register(parent, &led_dat->cdev);
+> +	if (template->name)
+> +		led_dat->cdev.name =3D template->name;
+> +	else
+> +		init_data.fwnode =3D fwnode;
+> +
+> +	return devm_led_classdev_register_ext(parent, &led_dat->cdev,
+> +					      &init_data);
+
+Won't register_ext() overwrite template->name?
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--EgVrEAR5UttbsTXg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzAbOEACgkQMOfwapXb+vIgpgCgvGx71t3YniNRoAyQcibBFCRD
+FxkAoMRwBe9KhXB++Dl2qZE1RYbxCXjr
+=BLw0
+-----END PGP SIGNATURE-----
+
+--EgVrEAR5UttbsTXg--
