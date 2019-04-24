@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC5EC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466D7C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AEBF20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C5A20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128764;
-	bh=YQN2ZKmS+ojBTiSll3vH9+TfzPVM7nny1HEs3+PydVU=;
+	s=default; t=1556128771;
+	bh=wYJvOLFXM690ZlUhoZRZMWv4lJTdf5IP3GfcarvN2mE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aGjZbK2lGL8kN++Va8zJ9IhKRCYPxyAyJVuitFOx2chLOlzvdyLlrISfNQMtiCwNc
-	 2aElE8rkeGutBblwkUQ9I6Z+OKgeJI+Mij1tuV4HrhAp74dK1UvCjORKG9KWoxIZQU
-	 rLu0agzGs48evppKm42PKe7mWviGNAEMzBiVFE8o=
+	b=GOvUx6uiXNNJGAr2VVKTFfNke3orKDKZeM8z2OvfKBJ5e1CYmrcnF0WV4vIztbyo3
+	 TSB1x7/Xp6yqjF/dfGz2NRS6BmQkSYBIm/V2m2wzUILqLXHmy3QxSAHZZiqxF90yRb
+	 Mfj5nJ2m3aRZlTQFFKrKLLXFdzrP74gHhqkPqhig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390313AbfDXR7X (ORCPT
+        id S2392117AbfDXR73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:59:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50138 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:59:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389829AbfDXRYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:24:15 -0400
+        id S2389486AbfDXRYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:24:12 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21462206BA;
-        Wed, 24 Apr 2019 17:24:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 340EB205ED;
+        Wed, 24 Apr 2019 17:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126654;
-        bh=YQN2ZKmS+ojBTiSll3vH9+TfzPVM7nny1HEs3+PydVU=;
+        s=default; t=1556126651;
+        bh=wYJvOLFXM690ZlUhoZRZMWv4lJTdf5IP3GfcarvN2mE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qvI31gUcz5CMzinoPSn3w1tQ2xL3vCNDNUiL3n2aVJ/qB25N6EoH7iR7nY+hRclcK
-         EMqTC8Joe2Onni54svXodU/8U/gTEFGPnsOrdpaOf0e3Rq0mVBRp5HSAff4Luzc+3q
-         qdHNS5lvm0LmscLjUEEXkpS2Xy5Q1nbOvenjyEF4=
+        b=IrPi19eSoJDgcUtpPuetmezvBAurDfET8F1150MgdGwV4iLhLKAOUeHtKOng/Ib9f
+         ZkSfjgf8uFpQN3bUkM1WN6hRiiljAczdc6beMekuVzK08TTqw2uwx3v6SGaZEUmgaO
+         iDVJ3mRCY6TunGDImIPlpLVvrSQmY4AHimieC+jY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 15/44] tpm/tpm_i2c_atmel: Return -E2BIG when the transfer is incomplete
-Date:   Wed, 24 Apr 2019 19:09:53 +0200
-Message-Id: <20190424170851.197513507@linuxfoundation.org>
+Subject: [PATCH 4.9 14/44] modpost: file2alias: check prototype of handler
+Date:   Wed, 24 Apr 2019 19:09:52 +0200
+Message-Id: <20190424170851.046078468@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -62,42 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 442601e87a4769a8daba4976ec3afa5222ca211d upstream
+commit f880eea68fe593342fa6e09be9bb661f3c297aec upstream.
 
-Return -E2BIG when the transfer is incomplete. The upper layer does
-not retry, so not doing that is incorrect behaviour.
+Use specific prototype instead of an opaque pointer so that the
+compiler can catch function prototype mismatch.
 
-Cc: stable@vger.kernel.org
-Fixes: a2871c62e186 ("tpm: Add support for Atmel I2C TPMs")
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm_i2c_atmel.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ scripts/mod/file2alias.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_i2c_atmel.c b/drivers/char/tpm/tpm_i2c_atmel.c
-index 95ce2e9ccdc6..cc4e642d3180 100644
---- a/drivers/char/tpm/tpm_i2c_atmel.c
-+++ b/drivers/char/tpm/tpm_i2c_atmel.c
-@@ -65,7 +65,15 @@ static int i2c_atmel_send(struct tpm_chip *chip, u8 *buf, size_t len)
- 	dev_dbg(&chip->dev,
- 		"%s(buf=%*ph len=%0zx) -> sts=%d\n", __func__,
- 		(int)min_t(size_t, 64, len), buf, len, status);
--	return status;
-+
-+	if (status < 0)
-+		return status;
-+
-+	/* The upper layer does not support incomplete sends. */
-+	if (status != len)
-+		return -E2BIG;
-+
-+	return 0;
- }
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index 6e3ae94cf123..55b4c0dc2b93 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -47,7 +47,7 @@ typedef struct {
+ struct devtable {
+ 	const char *device_id; /* name of table, __mod_<name>__*_device_table. */
+ 	unsigned long id_size;
+-	void *function;
++	int (*do_entry)(const char *filename, void *symval, char *alias);
+ };
  
- static int i2c_atmel_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ /* Define a variable f that holds the value of field f of struct devid
+@@ -1228,12 +1228,11 @@ static bool sym_is(const char *name, unsigned namelen, const char *symbol)
+ static void do_table(void *symval, unsigned long size,
+ 		     unsigned long id_size,
+ 		     const char *device_id,
+-		     void *function,
++		     int (*do_entry)(const char *filename, void *symval, char *alias),
+ 		     struct module *mod)
+ {
+ 	unsigned int i;
+ 	char alias[500];
+-	int (*do_entry)(const char *, void *entry, char *alias) = function;
+ 
+ 	device_id_check(mod->name, device_id, size, id_size, symval);
+ 	/* Leave last one: it's the terminator. */
+@@ -1346,7 +1345,7 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
+ 
+ 			if (sym_is(name, namelen, p->device_id)) {
+ 				do_table(symval, sym->st_size, p->id_size,
+-					 p->device_id, p->function, mod);
++					 p->device_id, p->do_entry, mod);
+ 				break;
+ 			}
+ 		}
 -- 
 2.19.1
 
