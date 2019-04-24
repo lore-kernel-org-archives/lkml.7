@@ -2,117 +2,106 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF3EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64354C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75A220811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C443206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:34:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shVjfj4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbfDXMb6 (ORCPT
+        id S1730121AbfDXMea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:31:58 -0400
-Received: from foss.arm.com ([217.140.101.70]:42816 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbfDXMb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:31:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FFE9A78;
-        Wed, 24 Apr 2019 05:31:57 -0700 (PDT)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E23AF3F238;
-        Wed, 24 Apr 2019 05:31:55 -0700 (PDT)
-Subject: Re: [PATCH] ARM: mach-shmobile: Don't configure ARCH timer if PSCI is
- enabled
-To:     Oleksandr <olekstysh@gmail.com>, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     horms@verge.net.au, magnus.damm@gmail.com, linux@armlinux.org.uk,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-References: <1555521040-16706-1-git-send-email-olekstysh@gmail.com>
- <1b33dca4-e3ae-4588-05f2-37b23ac8df78@arm.com>
- <8c9a1480-7956-9265-14c8-3fbb472e097d@gmail.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <c08c0d02-37f9-9f53-62b9-e5012097d94a@arm.com>
-Date:   Wed, 24 Apr 2019 13:31:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 08:34:30 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33962 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729853AbfDXMe3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 08:34:29 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y16so5899702ljg.1;
+        Wed, 24 Apr 2019 05:34:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0owTF1taWfix8lSIDzrSbqFDN03B9sQPaWwvJtZD0Fs=;
+        b=shVjfj4bF+aS56w2el2dQQxnXUYKKIkmU2/ICVNue+NU9j7RFWrUGDXTGnUxNpyWCv
+         uakMr3DFj3xocUY27wqbF5mwa9YjTUmnACPRv5ZTXsDgTZ0+0sTmjDripLf3xVWaQ8lt
+         XUHVuIcfsW/wjVrpTs1gTw7hEm7/6G5XlTPtYQhZ4y8HhGWaIfkMmZbujApKxYfHrU99
+         J+Y0RpIV+LGjw7B2gTBcfkGffHfL6lsc2ErE+JtY2X5yuhY9m38Dlri5WBOoMDVKb67+
+         eKCIraJLqjMEHcF60XX200+rgIu88EC6wBtNAwt9dSVJPoly9RDpuAvn8OuX7ZFlUA5i
+         JY3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0owTF1taWfix8lSIDzrSbqFDN03B9sQPaWwvJtZD0Fs=;
+        b=SpCjCcZbWDFigwxZHluygZYTd+hu+TCwXRTGIStGc+yBuB8IJ0JWEbHaUEv9lPejHt
+         m1Gb4xue06ZWEk/vSpdzZMFlwcX2isjBdANe/6DTF+ppmtduippGLPjqfWHkyd9eEJDu
+         4j5H5+bOty3i4mrCrpEo4XSbqY8kC8SxbkdeoZ8y2RS7XVryCzs359msJEM6VUuNseGR
+         T1nmEfpXxqwT/ucGru+Sog7aNwtzp8Gy7DJJ7h+3L3Hktf4miYwlyQQxYfSLw1k9Ek/T
+         vzVTpRauwNE3anlWTPa4wuq7QdKv8wHrde7WVszwqLLVrTKaVXzvkSGv94h+zz6x2FAr
+         7Njw==
+X-Gm-Message-State: APjAAAUqdEdWnBNKk+b0iXaBzL3V9wX+frATR7TH9tKX7YI+Vs8rmYXq
+        xXslYA45M+PbtLcLa/lEDVJuDcFHru4=
+X-Google-Smtp-Source: APXvYqzTR3akqwANPWPXwaitPDXB6ywMPEdKBWi3pKGFJAyUGMM2b1PgmqNv23ExBhZQA4uPnULvRw==
+X-Received: by 2002:a2e:7114:: with SMTP id m20mr17449840ljc.120.1556109266736;
+        Wed, 24 Apr 2019 05:34:26 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id t14sm3765962lji.33.2019.04.24.05.34.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 05:34:25 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Peter Korsgaard <peter.korsgaard@barco.com>,
+        Peter Rosin <peda@axentia.se>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] i2c-mux-gpio: Split plat- and dt-specific code up
+Date:   Wed, 24 Apr 2019 15:34:09 +0300
+Message-Id: <20190424123414.25311-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <8c9a1480-7956-9265-14c8-3fbb472e097d@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The main idea of this patchset was to add the dt-based GPIOs support
+in i2c-mux-gpio driver. In particular we needed to have the full GPIOs
+specifier being handled including the dt-flags like GPIO_ACTIVE_HIGH,
+GPIO_ACTIVE_LOW, etc. Due to using a legacy GPIO interface the former
+driver implementation didn't provide this ability.
 
-On 18/04/2019 12:15, Oleksandr wrote:
-> 
-> On 18.04.19 12:32, Julien Grall wrote:
->>> diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c 
->>> b/arch/arm/mach-shmobile/setup-rcar-gen2.c
->>> index eea60b2..bac4490 100644
->>> --- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
->>> +++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
->>> @@ -32,7 +32,7 @@ static const struct of_device_id cpg_matches[] __initconst = {
->>>       { /* sentinel */ }
->>>   };
->>>   -static unsigned int __init get_extal_freq(void)
->>> +static unsigned int __init __maybe_unused get_extal_freq(void)
->>>   {
->>>       const struct of_device_id *match;
->>>       struct device_node *cpg, *extal;
->>> @@ -60,6 +60,12 @@ static unsigned int __init get_extal_freq(void)
->>>     void __init rcar_gen2_timer_init(void)
->>>   {
->>> +/*
->>> + * If CONFIG_PSCI is enabled then most likely we are running on PSCI-enabled
->>> + * U-Boot which, we assume, has already taken care of configuring ARCH timer
->>> + * stuff before switching to non-secure mode.
->>> + */
->>
->> I disagree with that statement. CONFIG_ARM_PSCI may be selected in your 
->> .config for multiple reasons:
->>      - CONFIG_XEN will selected it
->>      - you build a .config targeting multiple platforms
->>
->> Yet you may still want to boot the kernel on older U-boot. Such change would 
->> make it impossible.
->>
->> If there are code that should not be called when PSCI is used, then you need 
->> to make sure the function is not called at runtime.
-> 
-> I got your point.
-> 
-> 
-> As I answered in a previous email:
-> 
->  > But "#if !defined(CONFIG_ARM_PSCI)" wraps secure_cntvoff_init() call as
->  > well, which resets CNTVOFF,
-> 
->  > and this is something I tried to avoid the first from being executed on
->  > a CPU, which is in SVC mode (when running on top of Xen).
-> 
-> What would be a proper way to avoid calling secure_cntvoff_init() at runtime?
-> 
-> Check that we are already in non-secure mode and/or cntvoff is already 0?
+On the way of adding the full dt-GPIO flags support a small set of
+refactorings has been done in order to keep the platform_data-based
+systems support, make the code more readable and the alterations - clearer.
+In general the whole changes might be considered as the plat- and dt-
+specific code split up. In first patch we unpinned the platform-specific
+method of GPIO-chip probing. The second patch makes the driver to return
+an error if of-based (last resort path) failed to retrieve the driver
+private data. The next three patches is the sequence of initial channel
+info retrieval, platform_data-specific code isolation and finally full
+dt-based GPIOs request method introduction. The last patch does what
+we inteded this patchset for in the first place - adds the full dt-GPIO
+specifiers support.
 
-CNTVOFF is controlled by the hypervisor, so you cannot access it from Dom0.
 
-If none of this code should be necessary when PSCI is enabled, then you can 
-check the presence of PSCI (see psci_smp_available()).
+Serge Semin (5):
+  i2c-mux-gpio: Unpin a platform-based device initialization
+  i2c-mux-gpio: Return an error if no config data found
+  i2c-mux-gpio: Save initial channel number to the idle data field
+  i2c-mux-gpio: Unpin the platform-specific GPIOs request code
+  i2c-mux-gpio: Create of-based GPIOs request method
 
-Another solution is to check whether we are running on xen (see xen_domain()).
-
-In any case, I would still surround the two checks because the "armgcnt" should 
-really not be touched by Dom0.
-
-Cheers,
+ drivers/i2c/muxes/i2c-mux-gpio.c | 224 ++++++++++++++++++++-----------
+ 1 file changed, 146 insertions(+), 78 deletions(-)
 
 -- 
-Julien Grall
+2.21.0
+
