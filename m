@@ -2,125 +2,141 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6EDC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EF8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBE3218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7RJe13w"
+	by mail.kernel.org (Postfix) with ESMTP id 58D4621773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfDXKXM (ORCPT
+        id S1728537AbfDXKXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:23:12 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41585 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728953AbfDXKUh (ORCPT
+        Wed, 24 Apr 2019 06:23:15 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:35367 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727645AbfDXKXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:20:37 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 188so9076425pfd.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:20:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=byZGzHb7mBNvQYwj1NTd7kgCiIjW1R3pXbNxGql0JSY=;
-        b=l7RJe13wIUPyhqAezRTph1hO06w08OQqzXcgrOTHCGZrOCgt3Nd7fngbQbOy3594Od
-         Nwn5wqo0LPKZJ40jVWtOd7XhgnmTlxxbuUMF3E8kIxSJqcHJDb9pbB9M4J/h8bcZeUPI
-         x90gDkU396re3dG9QYmvA8FdNSAuICtJfljAhAJQxGLRI9zFUWzVW7h9NUX8wy6KwuCX
-         jX9woaf1v267+HRaj3JD4RzxATeU4h0emJVJBRJXqj61Qsg6RX+cXh3Blpt0dp9hprRr
-         RsoaQKIBo4FQpb/O1k81pbI4m56xnAP97uQ65tUJfFq0QxVrQ7N9NM4mOz5wabJMg/sv
-         x6BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=byZGzHb7mBNvQYwj1NTd7kgCiIjW1R3pXbNxGql0JSY=;
-        b=ufwSTy8o0MmvQ/sjjP9/i+/WBWGB/7nwwswO7+2XWiKJE8iPO/q4+kykxKwPO98LkZ
-         6+hEI+X2LovGWK0hVrJxdPprs0LFwUxsBMXuaSRzJq3KeYYyC5miWjfkGRsLSEsOxv6P
-         k6zJv7htEkbnNsxmptso9UnhGWGqCe5Kr+wTV48cZtPAO99W5aqDOj1Jw0TmCjQVIBJT
-         D5xMqCKkWobCQaTG17rdSDPQTv9Fun7bx9KfSCQK8wLoCgsHZGoQSBFAEGfVboqkAb6K
-         vKc+pmos6qNEzfhoaS9vTTkwpJYUWNYNcP/s5fBRx8N54puj+PKX1mkaQ+/l/jSySPbj
-         8EEQ==
-X-Gm-Message-State: APjAAAV76Tx5sCBwg8zOa+FQjahz3MS9LBviCwIF6JnKXWXp5VxVJCiH
-        DcoTYxH1p6QahVk3GrUujzc=
-X-Google-Smtp-Source: APXvYqz2d565h29uKjEh7JBAgOy8m/5h+2Bo01y3LRLBN7+LyASaSuCZleXGuQFbJv9NIzxDCDvgBA==
-X-Received: by 2002:a62:1249:: with SMTP id a70mr32727130pfj.160.1556101237377;
-        Wed, 24 Apr 2019 03:20:37 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v19sm25051604pfn.62.2019.04.24.03.20.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 03:20:36 -0700 (PDT)
-From:   Yuyang Du <duyuyang@gmail.com>
-To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 03/28] locking/lockdep: Adjust lock usage bit character checks
-Date:   Wed, 24 Apr 2019 18:19:09 +0800
-Message-Id: <20190424101934.51535-4-duyuyang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20190424101934.51535-1-duyuyang@gmail.com>
-References: <20190424101934.51535-1-duyuyang@gmail.com>
+        Wed, 24 Apr 2019 06:23:14 -0400
+Received: from [IPv6:2001:420:44c1:2579:8575:c0e0:a08:6676] ([IPv6:2001:420:44c1:2579:8575:c0e0:a08:6676])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id JF3ThJXcXZVjxJF3WhZzj3; Wed, 24 Apr 2019 12:23:11 +0200
+Subject: Re: [PATCH] v4l: Add source event change for bit-depth
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20190415152723.2481-1-stanimir.varbanov@linaro.org>
+ <20190423064326.lbi3gfprfegqecu4@kekkonen.localdomain>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <a61ded35-2dc1-edb9-9f9a-94bbf78c7abf@xs4all.nl>
+Date:   Wed, 24 Apr 2019 12:23:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190423064326.lbi3gfprfegqecu4@kekkonen.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfLCa3Ah4lBTleABLkvWMy37H1y28aM66nP2zzKGoggdVD5eemu57Faf7YmgF+LQryaXFz7tLm9y6nEriz7oRrWxtjqUw0S7e2tQZZ0BbMckbOjd9MREc
+ UcSkdjdy6vEdS3m/98w9G99XyFObFiBf5lzI2Gt3cHwSb2JUFIkzRkLm4ZxVPkmVHF1l+URFPXhYZg553BauphkKMTVf91qf/cstZQtZeF0ATmZHeViVJUFl
+ 6TKRyOMnE3GFeAYQPJqMRvTKgcwSOUZnlvTXQCBq8Azqel4liCLUr8gvD35L6/X51RmPwaTDj2HAxnNsFTxAR3A+eKQKJuvC4/BtAk8CP7MAm6j2MVzjfdOZ
+ 3wjKa7GrEdqS71BBXk/j2YCt/X/UMhtS9Dr9Q0bk4gJrYLioB4M6I2+eXCBwQTmekUPR3FCyqmR1mEu7C+EVn1BHFzgFT32h5/lEt1FuSt4M8R+wpbyrgVxR
+ gVLkRDvdbHiTqvxl
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lock usage bit characters are defined and determined with tricks.
-Add some explanation to make it a bit clearer, then adjust the logic to
-check the usage, which optimizes the code a bit.
+On 4/23/19 8:43 AM, Sakari Ailus wrote:
+> Hi Stan,
+> 
+> On Mon, Apr 15, 2019 at 06:27:23PM +0300, Stanimir Varbanov wrote:
+>> This event indicate that the source bit-depth is changed during
+>> run-time. The client must get the new format and re-allocate buffers
+>> for it. This can usually happens with video decoder (encoders) when
+>> the bit-stream depth is changed from 8 to 10bits or vice versa.
+> 
+> Thanks for the patch.
+> 
+> How about adding an event for pixelformat change, instead of bit depth? The
+> application presumably knows the formats it can work with, and can adapt to
+> that as well as a change to the bit depth.
 
-No functional change.
+I disagree with this. The pixelformat is set by the application, and it is
+not set by the incoming video format. Of course, a change in the incoming
+video format might force a pixelformat change, but that's not what is signaled
+here. This event just indicates that something changed w.r.t. the video source
+and the flag specifies that is it the bit depth.
 
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
----
- kernel/locking/lockdep.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+So I think this patch is OK (but see the small comment below) since it
+correctly describes what changed.
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4bf396b..ba0080a 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -499,15 +499,26 @@ static inline unsigned long lock_flag(enum lock_usage_bit bit)
- 
- static char get_usage_char(struct lock_class *class, enum lock_usage_bit bit)
- {
-+	/*
-+	 * The usage character defaults to '.' (i.e., irqs disabled and not in
-+	 * irq context), which is the safest usage category.
-+	 */
- 	char c = '.';
- 
--	if (class->usage_mask & lock_flag(bit + LOCK_USAGE_DIR_MASK))
-+	/*
-+	 * The order of the following usage checks matters, which will
-+	 * result in the outcome character as follows:
-+	 *
-+	 * - '+': irq is enabled and not in irq context
-+	 * - '-': in irq context and irq is disabled
-+	 * - '?': in irq context and irq is enabled
-+	 */
-+	if (class->usage_mask & lock_flag(bit + LOCK_USAGE_DIR_MASK)) {
- 		c = '+';
--	if (class->usage_mask & lock_flag(bit)) {
--		c = '-';
--		if (class->usage_mask & lock_flag(bit + LOCK_USAGE_DIR_MASK))
-+		if (class->usage_mask & lock_flag(bit))
- 			c = '?';
--	}
-+	} else if (class->usage_mask & lock_flag(bit))
-+		c = '-';
- 
- 	return c;
- }
--- 
-1.8.3.1
+> 
+>>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 7 +++++++
+>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>>  include/uapi/linux/videodev2.h                  | 1 +
+>>  3 files changed, 9 insertions(+)
+>>
+>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>> index dea9c0cc00ab..92573d7c3e05 100644
+>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>> @@ -397,6 +397,13 @@ call.
+>>  	that many devices are not able to recover from a temporary loss of
+>>  	signal and so restarting streaming I/O is required in order for the
+>>  	hardware to synchronize to the video signal.
+>> +    * - ``V4L2_EVENT_SRC_CH_BITDEPTH``
+>> +      - 0x0002
+>> +      - This event gets triggered when bit-depth change is detected from a
+>> +	video decoder. Applications will have to query the new pixel format
+>> +	and re-negotiate the queue. In most cases the streaming must be stopped
+>> +	and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>` followed by
+>> +	:ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+>>  
+>>  
+>>  Return Value
+>> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
+>> index 64d348e67df9..b4c35b347983 100644
+>> --- a/Documentation/media/videodev2.h.rst.exceptions
+>> +++ b/Documentation/media/videodev2.h.rst.exceptions
+>> @@ -478,6 +478,7 @@ replace define V4L2_EVENT_CTRL_CH_FLAGS ctrl-changes-flags
+>>  replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
+>>  
+>>  replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
+>> +replace define V4L2_EVENT_SRC_CH_BITDEPTH src-changes-flags
+>>  
+>>  replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
+>>  
+>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+>> index 496e6453450c..7398f42eac7d 100644
+>> --- a/include/uapi/linux/videodev2.h
+>> +++ b/include/uapi/linux/videodev2.h
+>> @@ -2271,6 +2271,7 @@ struct v4l2_event_frame_sync {
+>>  };
+>>  
+>>  #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
+>> +#define V4L2_EVENT_SRC_CH_BITDEPTH		(1 << 1)
+
+It's two words, so BIT_DEPTH.
+
+For the future I would also like to see a V4L2_EVENT_SRC_CH_COLORIMETRY flag
+to indicate when the colorimetry of the video changes.
+
+It's actually something that would be of use for vivid today.
+
+Regards,
+
+	Hans
+
+>>  
+>>  struct v4l2_event_src_change {
+>>  	__u32 changes;
+> 
 
