@@ -7,63 +7,66 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0417AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F120EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72F1217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B92EA2183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:13:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmI8O8VN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGTn/dHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388431AbfDXVNm (ORCPT
+        id S2388585AbfDXVNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 17:13:42 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46090 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbfDXVNk (ORCPT
+        Wed, 24 Apr 2019 17:13:46 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41147 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733089AbfDXVNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 17:13:40 -0400
-Received: by mail-lf1-f68.google.com with SMTP id k18so15781117lfj.13;
-        Wed, 24 Apr 2019 14:13:37 -0700 (PDT)
+        Wed, 24 Apr 2019 17:13:37 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t30so15803226lfd.8;
+        Wed, 24 Apr 2019 14:13:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GjKyhYhNibj/Dd5BoaRj7nvklTeCLpfBWZvTQSPTpeA=;
-        b=PmI8O8VN+zj2aIXDBML98fem50ho0MZwWSeTzo4lz1PzB+eywd5mm0BPgHGzaHXUn4
-         QCSj0TqX6alT3I18dTeRZUvmQa7UZEfE1JPyyjhQbhw38Loz3tuGB8Ja1nY+TevaRDJo
-         s1QsYUFJC8cjaiKg1rEohrod14HjDY/s10cuQ/jBVM0qfKIA0i/UyI3JB4tJrhkG9+ds
-         He4Dc2AjsulpAFXQrCEj5KQPbD0iDPhjaGsTWkaJvQGpKvg4vC3BNdyWjB1EiT3yMa6r
-         PvdHBtin1OlVlEKNL3DZuOteaLTrqwy1SOiHduhUEo4w/bil5/NWZ1mUCnd/BCzghXMw
-         eywA==
+        bh=5KhsaICucBSzIi6pewqFTD0VbH13k2SXqO4xc5eabvQ=;
+        b=ZGTn/dHyWO9Gx2gdgM7KVXB0ZSwP+cwl9ETPZMYpSdbQIB1/8NHjcF64SpIP8CvAWV
+         2L19ZIKjafS/Ho6ZMLeTU8cx4XhBf25l0AxjgjY63sq2VBPlnlkGUixOzG8BXYDCuoW3
+         cVWQAniDFtABn0nybUfTG6AW82YgjGzMAF6fEgNSY5E/CajJhUNNp80FSlKbb3nWWNvK
+         LqpW3fdn6JTzAPIRjBVqN5zQId2TqBteh2xYVMW+osABZqherxIUlm30tl9V28bhz5yU
+         1q/M4Rs4lo1CNIzKu0hGvq8rRg08oC5DQN/+hbK8pezPmljsnKI6pnywmboeyCRXOuOu
+         FgCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GjKyhYhNibj/Dd5BoaRj7nvklTeCLpfBWZvTQSPTpeA=;
-        b=EGeOJGCMZhMMe1pmavw+NvnQjiDhetbC2Mce3qm35wLiQ8y1EpVm/Mm6dQ1ajBgaCf
-         TJK4I8TvRSzuoxq8um0izcT8n3Sa5hxyzYoOJerk6L+Hzw1Y1FwdojwD+/tsx3tV0s2j
-         N5Ua38gECbNs4/U8KXJgWj3IBvDEve6FCf6sg4lLZShHHHIvu/2Xmi/FRVOg6Ms3+79g
-         71FskkutyiUif4sRa9Tjaufv8H5caWXVINp8+jEbGsTxC7B7CMCeUfuYyWF/qLH6Q/1h
-         tUPoMps1S66RYMw03z59FFgYAacPIEfj5BDYcRAyit30kARjVfSuwt3NFFx/lezsb+on
-         lxIg==
-X-Gm-Message-State: APjAAAV8nSfctRg7yyUNIM2kmUMhcZxQFZ4cU9v9PlLRc9vtBKUGyWkg
-        vnMHoh8twjUM4Z2v3H5mLSY=
-X-Google-Smtp-Source: APXvYqzH8hgPfmnPoksy7y4d7KScZ7S4cAAb7U0FcZgnSE4YGpXtyOxoHCQzvTBRlOE/u1yKAcyj7A==
-X-Received: by 2002:ac2:5181:: with SMTP id u1mr3728311lfi.59.1556140416763;
-        Wed, 24 Apr 2019 14:13:36 -0700 (PDT)
+        bh=5KhsaICucBSzIi6pewqFTD0VbH13k2SXqO4xc5eabvQ=;
+        b=jY053dcsBwoF8nn8ZbyfIf34tVukJzYpAAoqrP2D9Tp4K4MN9K7mEP/tggDGeT1Z+g
+         H59BbDFqKr2w1p8LO8OrZgeRlDpFIRu9z4m4hE/H9R23Z+E1KLFh/SLlYmDuvO//45b6
+         /5FiZnmHaxNSGYX7GkigGD2n8H1LmmvO3/Ss/HbOhLsR3vEbEt5+NF3XJMVzXCk2L4LR
+         c8PlJT32ROq2Ir6QdCtd6ns9g/4QM9eWV1ahodRUz46UQOxcWfT4zJYtfzoQNQEaLn7a
+         Hdy6b8yYjsWhJz/Sa7UNjtrqNvHFszjQ5lIBQvS6AbtEtTbAwJj0M5ediWcWFEaeGFP8
+         TaAw==
+X-Gm-Message-State: APjAAAXp/Frin2IlN85AocXAvZm9Y1If0LW5r7d/jOplik9nIhbHVXRy
+        2IERgPQLm8hhlM7PxbCB08A=
+X-Google-Smtp-Source: APXvYqz3jkwKHMkN+3DBn3mIqQAkYt0FNl1kCkLC+6au9GLE2u46bh2FX0DM89GvtAaYleliKEMUYg==
+X-Received: by 2002:ac2:598b:: with SMTP id w11mr19531195lfn.62.1556140414975;
+        Wed, 24 Apr 2019 14:13:34 -0700 (PDT)
 Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id m3sm4540248lfh.94.2019.04.24.14.13.35
+        by smtp.gmail.com with ESMTPSA id m3sm4540248lfh.94.2019.04.24.14.13.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 14:13:36 -0700 (PDT)
+        Wed, 24 Apr 2019 14:13:34 -0700 (PDT)
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Richard Leitner <richard.leitner@skidata.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] usb: usb251xb: Create a ports field collector method
-Date:   Thu, 25 Apr 2019 00:12:06 +0300
-Message-Id: <20190424211208.17499-3-fancer.lancer@gmail.com>
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] usb: usb251xb: Add US lanes inversion dts-bindings
+Date:   Thu, 25 Apr 2019 00:12:05 +0300
+Message-Id: <20190424211208.17499-2-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424211208.17499-1-fancer.lancer@gmail.com>
 References: <20190424211208.17499-1-fancer.lancer@gmail.com>
@@ -74,129 +77,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seeing the ports field collection functionality is used four times per
-just one function, it's better to have a dedicated method performing
-the task. Note that this fix filters the port 0 out from the lanes
-swapping property the same way as it has been programmed for the rest
-multi-ports properties. But unlike the rest of ports config registers
-the BIT(0) of the Port Lanes Swap register refers to the Upstream Port
-lanes inversion. This fact hasn't been documented in the driver bindings
-nor there were any mentioning about port 0 being treated as upstream
-port. Lets then leave this fix as is for the properties unification
-and create an additional "swap-us-lanes" in the next patch.
+Since a separate US ports lanes polarity inversion property is going to
+be available the bindings doc-file should be updated with information
+about swap-us-lanes bool property, which will be responsible for it.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/usb/misc/usb251xb.c | 71 ++++++++++++++-----------------------
- 1 file changed, 26 insertions(+), 45 deletions(-)
+ Documentation/devicetree/bindings/usb/usb251xb.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index 04684849d683..4ef34df948ad 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -331,18 +331,31 @@ static int usb251xb_connect(struct usb251xb *hub)
- }
+diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
+index 17915f64b8ee..bc7945e9dbfe 100644
+--- a/Documentation/devicetree/bindings/usb/usb251xb.txt
++++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
+@@ -64,8 +64,10 @@ Optional properties :
+  - power-on-time-ms : Specifies the time it takes from the time the host
+ 	initiates the power-on sequence to a port until the port has adequate
+ 	power. The value is given in ms in a 0 - 510 range (default is 100ms).
+- - swap-dx-lanes : Specifies the ports which will swap the differential-pair
+-	(D+/D-), default is not-swapped.
++ - swap-dx-lanes : Specifies the downstream ports which will swap the
++	differential-pair (D+/D-), default is not-swapped.
++ - swap-us-lanes : Selects the upstream port differential-pair (D+/D-)
++	swapping (boolean, default is not-swapped)
  
- #ifdef CONFIG_OF
-+static void usb251xb_get_ports_field(struct usb251xb *hub,
-+				    const char *prop_name, u8 port_cnt, u8 *fld)
-+{
-+	struct device *dev = hub->dev;
-+	struct property *prop;
-+	const __be32 *p;
-+	u32 port;
-+
-+	of_property_for_each_u32(dev->of_node, prop_name, prop, p, port) {
-+		if ((port >= 1) && (port <= port_cnt))
-+			*fld |= BIT(port);
-+		else
-+			dev_warn(dev, "port %u doesn't exist\n", port);
-+	}
-+}
-+
- static int usb251xb_get_ofdata(struct usb251xb *hub,
- 			       struct usb251xb_data *data)
- {
- 	struct device *dev = hub->dev;
- 	struct device_node *np = dev->of_node;
--	int len, err, i;
--	u32 port, property_u32 = 0;
--	const u32 *cproperty_u32;
-+	int len, err;
-+	u32 property_u32 = 0;
- 	const char *cproperty_char;
- 	char str[USB251XB_STRING_BUFSIZE / 2];
--	struct property *prop;
--	const __be32 *p;
- 
- 	if (!np) {
- 		dev_err(dev, "failed to get ofdata\n");
-@@ -444,46 +457,16 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 		hub->conf_data3 |= BIT(0);
- 
- 	hub->non_rem_dev = USB251XB_DEF_NON_REMOVABLE_DEVICES;
--	cproperty_u32 = of_get_property(np, "non-removable-ports", &len);
--	if (cproperty_u32 && (len / sizeof(u32)) > 0) {
--		for (i = 0; i < len / sizeof(u32); i++) {
--			u32 port = be32_to_cpu(cproperty_u32[i]);
--
--			if ((port >= 1) && (port <= data->port_cnt))
--				hub->non_rem_dev |= BIT(port);
--			else
--				dev_warn(dev, "NRD port %u doesn't exist\n",
--					port);
--		}
--	}
-+	usb251xb_get_ports_field(hub, "non-removable-ports", data->port_cnt,
-+				 &hub->non_rem_dev);
- 
- 	hub->port_disable_sp = USB251XB_DEF_PORT_DISABLE_SELF;
--	cproperty_u32 = of_get_property(np, "sp-disabled-ports", &len);
--	if (cproperty_u32 && (len / sizeof(u32)) > 0) {
--		for (i = 0; i < len / sizeof(u32); i++) {
--			u32 port = be32_to_cpu(cproperty_u32[i]);
--
--			if ((port >= 1) && (port <= data->port_cnt))
--				hub->port_disable_sp |= BIT(port);
--			else
--				dev_warn(dev, "PDS port %u doesn't exist\n",
--					port);
--		}
--	}
-+	usb251xb_get_ports_field(hub, "sp-disabled-ports", data->port_cnt,
-+				 &hub->port_disable_sp);
- 
- 	hub->port_disable_bp = USB251XB_DEF_PORT_DISABLE_BUS;
--	cproperty_u32 = of_get_property(np, "bp-disabled-ports", &len);
--	if (cproperty_u32 && (len / sizeof(u32)) > 0) {
--		for (i = 0; i < len / sizeof(u32); i++) {
--			u32 port = be32_to_cpu(cproperty_u32[i]);
--
--			if ((port >= 1) && (port <= data->port_cnt))
--				hub->port_disable_bp |= BIT(port);
--			else
--				dev_warn(dev, "PDB port %u doesn't exist\n",
--					port);
--		}
--	}
-+	usb251xb_get_ports_field(hub, "bp-disabled-ports", data->port_cnt,
-+				 &hub->port_disable_bp);
- 
- 	hub->max_power_sp = USB251XB_DEF_MAX_POWER_SELF;
- 	if (!of_property_read_u32(np, "sp-max-total-current-microamp",
-@@ -546,10 +529,8 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 	 * register controls the USB DP/DM signal swapping for each port.
- 	 */
- 	hub->port_swap = USB251XB_DEF_PORT_SWAP;
--	of_property_for_each_u32(np, "swap-dx-lanes", prop, p, port) {
--		if (port <= data->port_cnt)
--			hub->port_swap |= BIT(port);
--	}
-+	usb251xb_get_ports_field(hub, "swap-dx-lanes", data->port_cnt,
-+				 &hub->port_swap);
- 
- 	/* The following parameters are currently not exposed to devicetree, but
- 	 * may be as soon as needed.
+ Examples:
+ 	usb2512b@2c {
 -- 
 2.21.0
 
