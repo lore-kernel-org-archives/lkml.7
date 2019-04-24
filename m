@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4EEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3858DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A82521906
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B0F21917
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125927;
-	bh=CEQOLQu/cbUVbOyRH7xxSLmkI0bLKCebSYUX9a7DFuw=;
+	s=default; t=1556125929;
+	bh=QmSciI+MAmLbrAHJvmFTI99rHkdrD0v8Z/Lm8rmX3Bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0TA7MtTwrHSkesq20Rzi8rv3aapf1rd1Y0gP0lBc9Aog3FODlV5YZb4EnBDx7AL2a
-	 gQV84xMvETxiimCvMLCr69xqCqMssze9BOg9wPK+ZgOjiuFfm3GJmdmJBLCUPHUl5r
-	 ZF1svjD+73Eg7S/JlcQLTHo6lJ93v0oHGfTlqxT8=
+	b=Zwx0v7TR/reAiOODgqi+IbP5gVaWAbfkymU99wqTqnIcO9FfYECA8okAc2rppU40B
+	 K9NhPxRn8Ims0t3XkhczhikOWtE3ZDaNrJamWC4ym10JN2kjo6bpvHHY2sS03CGKa0
+	 HpVpPKStSIxzHea6Sx+5HLDkkYeJUy9fHIEz6rYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387540AbfDXRMG (ORCPT
+        id S2387554AbfDXRMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:12:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35724 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:12:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387506AbfDXRME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:12:04 -0400
+        id S2387515AbfDXRMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:12:01 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85B55218B0;
-        Wed, 24 Apr 2019 17:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CA1A218FE;
+        Wed, 24 Apr 2019 17:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125923;
-        bh=CEQOLQu/cbUVbOyRH7xxSLmkI0bLKCebSYUX9a7DFuw=;
+        s=default; t=1556125920;
+        bh=QmSciI+MAmLbrAHJvmFTI99rHkdrD0v8Z/Lm8rmX3Bo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hPsigk0iBWygV9cB9/Yz2Rwct7ICbteorlu6dCw4YhYahxOFZLEAjuQZs9ine4bf8
-         cOliH2mdmnB5dGQpXAXT3O+viFp6w068LbQwIQ879tE4FGngijhlmXesfUO2S4U0dI
-         OcWfvvdHN9BZH1OMbbT3VM7/GXncKcTHFdaz+JCs=
+        b=naUkQtOEXAuzlO2wQKpMLPdMSVM5QQGQ0OEWMmRk1yHmxuq1dzHw52NH2L9GyFTo/
+         SzinDIFxDdhKiUVMWNifDN0J4JpwWJU5kO8WJ+PQjg7cZU1Pedzpe7NkyAkHNd9GZs
+         cexlliZ2hCjrx96E3BqSjTJmcmyeCxIFyqB48P1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
+        stable@vger.kernel.org, Christian Brauner <christian@brauner.io>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Waiman Long <longman@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 005/104] mm/cma.c: cma_declare_contiguous: correct err handling
-Date:   Wed, 24 Apr 2019 19:08:22 +0200
-Message-Id: <20190424170844.481807507@linuxfoundation.org>
+Subject: [PATCH 3.18 004/104] sysctl: handle overflow for file-max
+Date:   Wed, 24 Apr 2019 19:08:21 +0200
+Message-Id: <20190424170844.295726942@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -69,57 +69,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0d3bd18a5efd66097ef58622b898d3139790aa9d ]
+[ Upstream commit 32a5ad9c22852e6bd9e74bdec5934ef9d1480bc5 ]
 
-In case cma_init_reserved_mem failed, need to free the memblock
-allocated by memblock_reserve or memblock_alloc_range.
+Currently, when writing
 
-Quote Catalin's comments:
-  https://lkml.org/lkml/2019/2/26/482
+  echo 18446744073709551616 > /proc/sys/fs/file-max
 
-Kmemleak is supposed to work with the memblock_{alloc,free} pair and it
-ignores the memblock_reserve() as a memblock_alloc() implementation
-detail. It is, however, tolerant to memblock_free() being called on
-a sub-range or just a different range from a previous memblock_alloc().
-So the original patch looks fine to me. FWIW:
+/proc/sys/fs/file-max will overflow and be set to 0.  That quickly
+crashes the system.
 
-Link: http://lkml.kernel.org/r/20190227144631.16708-1-peng.fan@nxp.com
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
+This commit sets the max and min value for file-max.  The max value is
+set to long int.  Any higher value cannot currently be used as the
+percpu counters are long ints and not unsigned integers.
+
+Note that the file-max value is ultimately parsed via
+__do_proc_doulongvec_minmax().  This function does not report error when
+min or max are exceeded.  Which means if a value largen that long int is
+written userspace will not receive an error instead the old value will be
+kept.  There is an argument to be made that this should be changed and
+__do_proc_doulongvec_minmax() should return an error when a dedicated min
+or max value are exceeded.  However this has the potential to break
+userspace so let's defer this to an RFC patch.
+
+Link: http://lkml.kernel.org/r/20190107222700.15954-3-christian@brauner.io
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+[christian@brauner.io: v4]
+  Link: http://lkml.kernel.org/r/20190210203943.8227-3-christian@brauner.io
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/sysctl.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index 7d266e393c44..1f4a7e076a5c 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -340,12 +340,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
- 
- 	ret = cma_init_reserved_mem(base, size, order_per_bit, res_cma);
- 	if (ret)
--		goto err;
-+		goto free_mem;
- 
- 	pr_info("Reserved %ld MiB at %pa\n", (unsigned long)size / SZ_1M,
- 		&base);
- 	return 0;
- 
-+free_mem:
-+	memblock_free(base, size);
- err:
- 	pr_err("Failed to reserve %ld MiB\n", (unsigned long)size / SZ_1M);
- 	return ret;
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 27f8aa765493..a68fed9f6922 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -125,6 +125,7 @@ static int __maybe_unused one = 1;
+ static int __maybe_unused two = 2;
+ static int __maybe_unused four = 4;
+ static unsigned long one_ul = 1;
++static unsigned long long_max = LONG_MAX;
+ static int one_hundred = 100;
+ #ifdef CONFIG_PRINTK
+ static int ten_thousand = 10000;
+@@ -1521,6 +1522,8 @@ static struct ctl_table fs_table[] = {
+ 		.maxlen		= sizeof(files_stat.max_files),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_doulongvec_minmax,
++		.extra1		= &zero,
++		.extra2		= &long_max,
+ 	},
+ 	{
+ 		.procname	= "nr_open",
 -- 
 2.19.1
 
