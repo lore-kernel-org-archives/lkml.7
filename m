@@ -2,124 +2,143 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D09FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AA8C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE4021773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:29:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bTIpmdra"
+	by mail.kernel.org (Postfix) with ESMTP id AA1B021773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbfDXL27 (ORCPT
+        id S1728710AbfDXLeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:28:59 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33732 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbfDXL27 (ORCPT
+        Wed, 24 Apr 2019 07:34:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46240 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727373AbfDXLeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 07:28:59 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f23so16548767ljc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 04:28:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zpPSRLRBcyEqIGmktIrdBgDpqqRpEiCH6Crl7bTU3UA=;
-        b=bTIpmdradLnpLzBM7YP1RVNVFZ0QsZ4jEYaJE/LUn5pXz1hnC27Mvon1cq/dOfNgdf
-         yIchW05XeRH+NONN4sZvVKRVloxINARkgO+ukbvCYMPprysL3jaRvTSDYOUgh56fYRiY
-         tquEPkKu82elaEldCzsnnoKHKOKEAFgV4/twy/bRQFArlp3x1htX2el5MxJBXIr0Lyk/
-         58VrnT/lznZ8FWJ+RSyfRWf1AgM7LU6/wfrJuZRWKy0zhgDeIl5aJ9nLvbtUfCntjEez
-         NlKEIRF/cQaE0xjl8RWnvVOMd9xCI1XWRlzr2Svv+1pcENq3I+rlFuRp+RIqHeoV6Lce
-         ZjTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zpPSRLRBcyEqIGmktIrdBgDpqqRpEiCH6Crl7bTU3UA=;
-        b=m2pQUXw/9W1xes3PcfGaW0L+PXmKyZAJUNnaScb3g0oDRDdQNFedGyKkIBTIaNNUpN
-         vn2TBRVEFbmXKsuAj0jdgwqF2obmjdOGa583m2jo3r62CJZ2PsfL/Cy0IRAnbuXrwzE3
-         dmFQvXJrANcISYFFjt3t8X4Xaj6K6NX8iG87sqro/isYSCycEWy7pQFbxvKPSeAh7ZI/
-         1rHKpr/pRrk6U/fWdRI9mc/RFP/jr9Iq2JN4X39IUO5NF9GIOStFlnzWoY1egJ9i8yxD
-         O+M4b3zpuTCNQRhOQ0JdjtkAh21mBU5GO2fSaK+0f0YAH8Vk3wtBHDd9p1DCbhIwV4mp
-         EChg==
-X-Gm-Message-State: APjAAAUczBrfuiRuouwuel6tHQbnF1lJRS+ur7SuOuqjWKSatx1So1/u
-        RkQoU9n6/hMVQVuo0/vlFOVF2g==
-X-Google-Smtp-Source: APXvYqyFU5bR3HJZqu6EXiTK117Zn0neKbs/DPxre9uviJoFF/dAKpHCF74YAx3MTuDH8nmDD5zatw==
-X-Received: by 2002:a2e:90c9:: with SMTP id o9mr17696263ljg.102.1556105336951;
-        Wed, 24 Apr 2019 04:28:56 -0700 (PDT)
-Received: from centauri.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id f1sm3831573ljc.73.2019.04.24.04.28.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Apr 2019 04:28:56 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 13:28:53 +0200
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] PM / Domains: Enable
- genpd_dev_pm_attach_by_id|name() for single PM domain
-Message-ID: <20190424112853.GC30710@centauri.ideon.se>
-References: <20190418102757.1246-1-ulf.hansson@linaro.org>
- <20190418102757.1246-4-ulf.hansson@linaro.org>
+        Wed, 24 Apr 2019 07:34:06 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OBU8u4138954
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 07:34:04 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s2n2np1w5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 07:34:04 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 24 Apr 2019 12:34:02 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 24 Apr 2019 12:33:58 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3OBXvOw43188232
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Apr 2019 11:33:57 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B0825A4068;
+        Wed, 24 Apr 2019 11:33:55 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DBF48A4064;
+        Wed, 24 Apr 2019 11:33:54 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 24 Apr 2019 11:33:54 +0000 (GMT)
+Date:   Wed, 24 Apr 2019 14:33:53 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Mel Gorman <mgorman@techsingularity.net>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-parisc@vger.kernel.org, linux-mm@kvack.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org
+Subject: Re: DISCONTIGMEM is deprecated
+References: <20190419094335.GJ18914@techsingularity.net>
+ <20190419140521.GI7751@bombadil.infradead.org>
+ <20190421063859.GA19926@rapoport-lnx>
+ <20190421132606.GJ7751@bombadil.infradead.org>
+ <20190421211604.GN18914@techsingularity.net>
+ <20190423071354.GB12114@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190418102757.1246-4-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190423071354.GB12114@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19042411-4275-0000-0000-0000032C0709
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042411-4276-0000-0000-0000383B4F66
+Message-Id: <20190424113352.GA6278@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=877 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904240095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 12:27:57PM +0200, Ulf Hansson wrote:
-> If a call to dev_pm_domain_attach() succeeds to attach a device to its
-> single PM domain, the important point is to prevent following calls to
+On Tue, Apr 23, 2019 at 12:13:54AM -0700, Christoph Hellwig wrote:
+> On Sun, Apr 21, 2019 at 10:16:04PM +0100, Mel Gorman wrote:
+> > 32-bit NUMA systems should be non-existent in practice. The last NUMA
+> > system I'm aware of that was both NUMA and 32-bit only died somewhere
+> > between 2004 and 2007. If someone is running a 64-bit capable system in
+> > 32-bit mode with NUMA, they really are just punishing themselves for fun.
+> 
+> Can we mark it as BROKEN to see if someone shouts and then remove it
+> a year or two down the road?  Or just kill it off now..
 
-nit: s/prevent/ensure/
+How about making SPARSEMEM default for x86-32?
 
-> dev_pm_domain_attach_by_name|id() to fail. This is managed by checking the
-> dev->pm_domain pointer and then return -EEXIST, rather than continue
-> calling genpd_dev_pm_attach_by_id|name().
-> 
-> For this reason, let's enable genpd_dev_pm_attach_by_id|name() to be used
-> for also single PM domains. This simplifies for future users to solely make
-> use of dev_pm_domain_attach_by_id|name() rather than having to combine it
-> with dev_pm_domain_attach().
-> 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  drivers/base/power/domain.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index 801f31c87d16..1b026704a8fc 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -2512,10 +2512,10 @@ struct device *genpd_dev_pm_attach_by_id(struct device *dev,
->  	if (!dev->of_node)
->  		return NULL;
->  
-> -	/* Deal only with devices using multiple PM domains. */
-> +	/* Verify that the index is within a valid range. */
->  	num_domains = of_count_phandle_with_args(dev->of_node, "power-domains",
->  						 "#power-domain-cells");
-> -	if (num_domains < 2 || index >= num_domains)
-> +	if (index >= num_domains)
->  		return NULL;
->  
->  	/* Allocate and register device on the genpd bus. */
-> -- 
-> 2.17.1
-> 
+From ac2dc27414e26f799ea063fd1d01e19d70056f43 Mon Sep 17 00:00:00 2001
+From: Mike Rapoport <rppt@linux.ibm.com>
+Date: Wed, 24 Apr 2019 14:32:12 +0300
+Subject: [PATCH] x86/Kconfig: make SPARSEMEM default for X86_32
 
-Acked-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/x86/Kconfig | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 62fc3fd..77b17af 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1609,10 +1609,6 @@ config ARCH_DISCONTIGMEM_ENABLE
+ 	def_bool y
+ 	depends on NUMA && X86_32
+ 
+-config ARCH_DISCONTIGMEM_DEFAULT
+-	def_bool y
+-	depends on NUMA && X86_32
+-
+ config ARCH_SPARSEMEM_ENABLE
+ 	def_bool y
+ 	depends on X86_64 || NUMA || X86_32 || X86_32_NON_STANDARD
+@@ -1621,7 +1617,7 @@ config ARCH_SPARSEMEM_ENABLE
+ 
+ config ARCH_SPARSEMEM_DEFAULT
+ 	def_bool y
+-	depends on X86_64
++	depends on X86_64 || (NUMA && X86_32)
+ 
+ config ARCH_SELECT_MEMORY_MODEL
+ 	def_bool y
+-- 
+2.7.4
+
+
+-- 
+Sincerely yours,
+Mike.
+
