@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9F7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535A7C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3284021903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B10020675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127541;
-	bh=LdnWpa+EPOFPsBdZsLXq99IeeYT+DOVf79KQlFHbTQY=;
+	s=default; t=1556127548;
+	bh=LhOEeJFALUSv14DlsT1yqn6n//CQtkxkm8MJGVOmYh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c95H0v4EV5boEMRzkIfabD7umR44pFavhgjiJIUUxzUrkryf9DrYWEoSq4Aa+jCeU
-	 zvYBxPDWVac6f3N5h/betXbq/F7t2OyGTdTL7xZ8oAnXtw5jCenNU8VMfxC35BgqIX
-	 hnjIJHQKuuzdHQTR/USmRLDe8vDWTzyOSYr2P9Ng=
+	b=SxL7KUy/o64rD/EFNdhRf0GXy0pM0NkTAzMP7zPmdXXmXdQBn0OJQolpo50f3z3dh
+	 mP0fCNkyb1tcgNyEsUC2xX4cykVmoqvhv/4Q2NCkQSnuB2Dr7KImNJC4bPAUnBbid0
+	 xYT9mS3eXcWq/YbdkYqxUKcSDrxpD9KQH4eYo6cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392110AbfDXRjA (ORCPT
+        id S2404012AbfDXRjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:39:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:39:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392408AbfDXRi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:38:26 -0400
+        id S2392385AbfDXRiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:38:21 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3899D2054F;
-        Wed, 24 Apr 2019 17:38:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF77B21907;
+        Wed, 24 Apr 2019 17:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127505;
-        bh=LdnWpa+EPOFPsBdZsLXq99IeeYT+DOVf79KQlFHbTQY=;
+        s=default; t=1556127500;
+        bh=LhOEeJFALUSv14DlsT1yqn6n//CQtkxkm8MJGVOmYh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IhKnAs9VAaww90arEWDFZ46jtbMhKPLWSTfx+6ZaKfBN4Hhz5HJIRJcEjFC3VPxks
-         6u6IH0/CW6Og1IWaxeXJGLEjSq7bO0jQeAj3nlkOWkGMrKV30Q5azEA2KThNkY3kdx
-         tD5jGuaPFdLJFM50vhAk8DqLmTgOxT0upsF0I7P0=
+        b=NeOX/ZIujfdqIxGpWHKF2TLQNPnHOYgZw4NCxFRHbvUCgBkBZnAuTKjGQMnhA3CqY
+         MSSSEhFqqsSWSCelkyE3D4CQOWqiCIM/VOO372tJgU1YgCc/nnu8APkxFP4oBY6CN8
+         1kE0dYEk+f+ozEaVaeSYY8XpPfkZ0Gjq+NKkRkxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>
-Subject: [PATCH 5.0 115/115] percpu: stop printing kernel addresses
-Date:   Wed, 24 Apr 2019 19:10:51 +0200
-Message-Id: <20190424170931.373394009@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 113/115] mm/vmstat.c: fix /proc/vmstat format for CONFIG_DEBUG_TLBFLUSH=y CONFIG_SMP=n
+Date:   Wed, 24 Apr 2019 19:10:49 +0200
+Message-Id: <20190424170931.272867337@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -58,50 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit 00206a69ee32f03e6f40837684dcbe475ea02266 upstream.
+commit e8277b3b52240ec1caad8e6df278863e4bf42eac upstream.
 
-Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
-at boot "____ptrval____" is printed instead of actual addresses:
+Commit 58bc4c34d249 ("mm/vmstat.c: skip NR_TLB_REMOTE_FLUSH* properly")
+depends on skipping vmstat entries with empty name introduced in
+7aaf77272358 ("mm: don't show nr_indirectly_reclaimable in
+/proc/vmstat") but reverted in b29940c1abd7 ("mm: rename and change
+semantics of nr_indirectly_reclaimable_bytes").
 
-    percpu: Embedded 38 pages/cpu @(____ptrval____) s124376 r0 d31272 u524288
+So skipping no longer works and /proc/vmstat has misformatted lines " 0".
 
-Instead of changing the print to "%px", and leaking kernel addresses,
-just remove the print completely, cfr. e.g. commit 071929dbdd865f77
-("arm64: Stop printing the virtual memory layout").
+This patch simply shows debug counters "nr_tlb_remote_*" for UP.
 
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
+Link: http://lkml.kernel.org/r/155481488468.467.4295519102880913454.stgit@buzz
+Fixes: 58bc4c34d249 ("mm/vmstat.c: skip NR_TLB_REMOTE_FLUSH* properly")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/percpu.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ mm/vmstat.c |    5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -2531,8 +2531,8 @@ int __init pcpu_embed_first_chunk(size_t
- 		ai->groups[group].base_offset = areas[group] - base;
- 	}
- 
--	pr_info("Embedded %zu pages/cpu @%p s%zu r%zu d%zu u%zu\n",
--		PFN_DOWN(size_sum), base, ai->static_size, ai->reserved_size,
-+	pr_info("Embedded %zu pages/cpu s%zu r%zu d%zu u%zu\n",
-+		PFN_DOWN(size_sum), ai->static_size, ai->reserved_size,
- 		ai->dyn_size, ai->unit_size);
- 
- 	rc = pcpu_setup_first_chunk(ai, base);
-@@ -2653,8 +2653,8 @@ int __init pcpu_page_first_chunk(size_t
- 	}
- 
- 	/* we're ready, commit */
--	pr_info("%d %s pages/cpu @%p s%zu r%zu d%zu\n",
--		unit_pages, psize_str, vm.addr, ai->static_size,
-+	pr_info("%d %s pages/cpu s%zu r%zu d%zu\n",
-+		unit_pages, psize_str, ai->static_size,
- 		ai->reserved_size, ai->dyn_size);
- 
- 	rc = pcpu_setup_first_chunk(ai, vm.addr);
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1274,13 +1274,8 @@ const char * const vmstat_text[] = {
+ #endif
+ #endif /* CONFIG_MEMORY_BALLOON */
+ #ifdef CONFIG_DEBUG_TLBFLUSH
+-#ifdef CONFIG_SMP
+ 	"nr_tlb_remote_flush",
+ 	"nr_tlb_remote_flush_received",
+-#else
+-	"", /* nr_tlb_remote_flush */
+-	"", /* nr_tlb_remote_flush_received */
+-#endif /* CONFIG_SMP */
+ 	"nr_tlb_local_flush_all",
+ 	"nr_tlb_local_flush_one",
+ #endif /* CONFIG_DEBUG_TLBFLUSH */
 
 
