@@ -2,88 +2,122 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700A1C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D06C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E9A2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C5D2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbfDXK7j (ORCPT
+        id S1728361AbfDXLAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:59:39 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:51163 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbfDXK7i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:59:38 -0400
-Received: from [192.168.1.115] ([95.114.95.254]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N3sZs-1gbMBU2bM8-00zkri; Wed, 24 Apr 2019 12:59:36 +0200
-Subject: Re: [PATCH 3/4] input: keyboard: gpio_keys_polled: use gpio lookup
- table
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-References: <1555444645-15156-1-git-send-email-info@metux.net>
- <1555444645-15156-4-git-send-email-info@metux.net>
- <20190419074811.7rkq3p6t7s56g4fo@penguin>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <9819838f-9e35-c504-61da-f8c3f9b7ac8e@metux.net>
-Date:   Wed, 24 Apr 2019 12:59:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 24 Apr 2019 07:00:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33890 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726122AbfDXLAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 07:00:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 01297AD94;
+        Wed, 24 Apr 2019 11:00:10 +0000 (UTC)
+Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet
+ card
+To:     Oliver Hartkopp <socketcan@hartkopp.net>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+References: <20190409144250.7237-1-TheSven73@gmail.com>
+ <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
+ <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
+ <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
+ <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
+ <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
+ <CAGngYiVJwRh_ESLfSYWak4RU60T2D1HW0-3Hg1CZbRjWhaSN5Q@mail.gmail.com>
+ <7ceaeb70-f937-bd84-95e5-d7a6baeb5d87@metux.net>
+ <CAGngYiUPZ+g4eXJKvgA9GSJXgOFAAf6Q3qqAheiqNSnJ+Dbx+w@mail.gmail.com>
+ <e07f7575-2617-a11a-fd78-d068b10a8171@metux.net>
+ <06024a8a-ad00-8062-215b-01b2f95a6e24@hartkopp.net>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Openpgp: preference=signencrypt
+Organization: SUSE Linux GmbH
+Message-ID: <c1b783b0-9773-17f5-d043-35e28f7797f0@suse.de>
+Date:   Wed, 24 Apr 2019 13:00:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190419074811.7rkq3p6t7s56g4fo@penguin>
+In-Reply-To: <06024a8a-ad00-8062-215b-01b2f95a6e24@hartkopp.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:AEDuO8R1fQE/yb5isu4m2WsZxXxJQ5RzzLQy1341cR0Z05c5VuF
- yEVwzX9aA0+ifBAy0cb1azTO/KPlQY1fQZNJ2C1LDo7wCfi3fOmlp2Zl1UaW5/iK0+vmiTn
- dDy5+vb3SfcOiAZYlg4e5lPyBwLgMoZ+C2+FwiZ1hPpoO4H+GjFs4SIFPtCKZH5q4qLtNhE
- JQ9qY9fzfu+bgCr/38xig==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ctEO6TONLF0=:KMIVncDUN0GGnZibhfU/WD
- da+qeggi3C5ItMWKc858Edzv6z1DMl8FirAxYz/WYPLovVq3IEvw9vsQZLN4nP6w4B0SZ9rpI
- Ry30DbNGFLL/HM7T6FJXTOb8hkm7u37TtoQZLA2SoVrS/iZdUwZpyJTXMwwcWgAi5ch7wYgA9
- tXyJkGA4zQeYHnNR26LqckITYmaSCGjzouy5QLYyFzcTgUaMqhdQdsCXVxkmiv9ixtLPhxLHs
- ArI+Y4KAnKiDc3ZzDvdhhtOSIz0z8bTZtoWbQjz/PFGVxukwO/b/sDIx2jf1WfSulaS1eXD84
- 4XYt99jvtIPPxRWAcoLxLUiySwlqmwKzoqIXnD6Xr3/n4PlBUlCwvqgmVW4AHpvQC6H4kbJq9
- WUDcR4dQiPhXOdRRDO674w4c6B/NqwvUXal9yN3jdCjtorVp8p/VIq8NiW3cUhQ2U4yVlN7PA
- gJsEQIuHTCKnpyVz2PSOUaHbJNe3hYkwrR8KktT00ZsL6CJZF9ZFKhoyawN0ZTfyWl7DnmQ+O
- jSsG+8wjwFfDsne1GJJgd+gzkhdCRpn64N3k3s5DBEILaee9zeebianc/Qj3dbbQhX2SwMMQh
- 4vkR9XS5wQ6aeKTSLYYKQ4ruePsqOQbtUcmEy/TiV34ig7NdI3Ndj20d9uO+KBOO2mS2BNUL4
- w56o2nj/NCXTkKFbhZZFlpfUUQsOvA5yriERkP9sl2mGxxe9tr2J1i6832X2gaS6HUDv5cL7T
- QgPfmCWaK23gLksqre0PSSsd8zZv5q+OwR/1C9mZl+RLbUXUy/fNAWVqm8I=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.04.19 09:48, Dmitry Torokhov wrote:
+Am 24.04.19 um 12:26 schrieb Oliver Hartkopp:
+> Thanks Enrico!
+> 
+> On 24.04.19 11:40, Enrico Weigelt, metux IT consult wrote:
+>> On 18.04.19 19:34, Sven Van Asbroeck wrote:
+>>
+>>> If you have a fieldbus device you want to add to mainline Linux, and>
+>>> you wish to piggy-back onto the fieldbus_dev subsystem, then we can>
+>> discuss fieldbus API changes/additions/improvements during the> patch
+>> review stage.
+>> With those cases, piggy-backing wouldn't make much sense, as their
+>> semantics is pretty different.
+>>
+>> My whole point here was just that it shouldn't be called "fieldbus",
+>> but iec61158 instead.
+>>
+> 
+> Full ACK!
+> 
+> The Controller Area Network also belongs to the class of field busses
+> and has its own networking subsystem in linux/net/can.
+> 
+> So using a 'class' of communication protocols as naming scheme doesn't
+> fit IMHO.
 
-> I would prefer if gpiod API could parse static board data/gpio lookup
-> tables for child nodes, instead of adding this to gpio-keys. Now that
-> Heikki Krogerus work on software nodes has landed I need to resurrect
-> my patch to gpiolib.
+And - again - NACK. Calling a subsystem just iec61158 is going to hide
+what it is and stand in the way of development of this niche system. I
+asked Enrico to come up with a better naming proposal such as having
+iec61158 as subfolder to human-readable fieldbus, but I did not see him
+coming up with any such new proposals apart from repeating this name.
 
-Of course, a more generic approach would be better.
+Also please read Sven's comment again: It you don't like the current
+naming you'll need to post follow-up patches, as v11 of this subsystem
+has been merged into staging. No complaint about piggy-backing on v10 is
+going to change that fact now!
 
-I did it that way I wasn't that aware that a more generic approach is
-in the pipeline, and I needed something usable now.
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/tree/drivers/staging/fieldbus?h=staging-next
 
-The patch is already used in the field and seems to work quite well,
-but if I'm alway open for better solutions.
+And since we're at it, Enrico's response to me just threw around a bunch
+of acronyms instead of explaining which ones have an _actual_ conflict
+with this subsystem - my point precisely was that if they use sockets or
+ttys then there's no real conflict apart from lots of things classifying
+as "fieldbus".
 
-I figure that the generic solution will still take some time, so can we
-take this one for the next merge window and rework it in the next one ?
-
-
---mtx
+Regards,
+Andreas
 
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
