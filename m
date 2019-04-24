@@ -2,53 +2,55 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273E6C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFF8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFFD120685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAC720652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129006;
-	bh=l918xrfDzjeUIfFFf9zlL1S4EHflc7aq0DdxCFxYMQc=;
+	s=default; t=1556129010;
+	bh=9pLZJHEjM+78ujBOCOAukMA4hlbpOI9vGGeo3zyAOjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ncm0P8Zwf9++vGugFdU64pFC/Zo5ot7yoaxU7SoXqibbHyYGd6Q0blP8HYPwtZjhb
-	 drlFd6BQ3S7o+TwyxYHqm0vdg5hEJAVGzMk4KQ9zA1h2jsvHacAPIlOvX3xZ+cjVSm
-	 vQgT3KoeOIdSRUGmyjZk57+HOdFqjSQVAUEB06M4=
+	b=bRiOZnost2rba/LfhqDPBfcCK90OUs9ExTkSVUI37sCGLzdzWZVUipNpcSnZgYo9N
+	 oAwgG+tsVo0DLBx/KVBdL0qP6xLJMD7t/WWwM/FHN3sU0H8XsNaGELWu6jB9QEVwd8
+	 YwIsiTbxTrg8512GZ/0epo6McP1ZUXH37YmkxmpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389536AbfDXSDZ (ORCPT
+        id S2389145AbfDXRUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:03:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45726 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:20:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389159AbfDXRUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:20:25 -0400
+        id S2388488AbfDXRUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:20:16 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5393205ED;
-        Wed, 24 Apr 2019 17:20:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A044E21934;
+        Wed, 24 Apr 2019 17:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126424;
-        bh=l918xrfDzjeUIfFFf9zlL1S4EHflc7aq0DdxCFxYMQc=;
+        s=default; t=1556126415;
+        bh=9pLZJHEjM+78ujBOCOAukMA4hlbpOI9vGGeo3zyAOjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hxgVNxmySDKdjtND6nWDCAzLwGgBhnG1w1cd2q2reG7aretQLYnjl/QzMgoOJOuuA
-         74C/RXFW1o2HM8bs1goa/Mw55EjoIZR8TWvApMGs/av6j2zjnOcaxFCNu3xgCkrEmg
-         7nIFfFiCKegeb6iTesLtkqNJcWN+O9/yNc5qdHs0=
+        b=gI7dOjFHIgTT2Z68cUMOsIF8sLh7WENm6B+a7tvIWFaUeGidH9w8eUyjaWZm507we
+         3S3e3DWr+SAVq9q8YJ+ziD4Yd/i219f0bOdJaH2Rck6UTtbHoTrlI4QE2Zt9Valob1
+         aZZ1CEIraqKCk38lkcl+76JK1s9YtgiQ7DOr0qpQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
-        Nisha Aram <nisha.aram@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 106/168] thermal/int340x_thermal: Add additional UUIDs
-Date:   Wed, 24 Apr 2019 19:09:10 +0200
-Message-Id: <20190424170929.851303731@linuxfoundation.org>
+        stable@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.4 095/168] sched/fair: Do not re-read ->h_load_next during hierarchical load calculation
+Date:   Wed, 24 Apr 2019 19:08:59 +0200
+Message-Id: <20190424170929.324352320@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,52 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 16fc8eca1975358111dbd7ce65e4ce42d1a848fb ]
+From: Mel Gorman <mgorman@techsingularity.net>
 
-Add more supported DPTF policies than the driver currently exposes.
+commit 0e9f02450da07fc7b1346c8c32c771555173e397 upstream.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Cc: Nisha Aram <nisha.aram@intel.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+A NULL pointer dereference bug was reported on a distribution kernel but
+the same issue should be present on mainline kernel. It occured on s390
+but should not be arch-specific.  A partial oops looks like:
+
+  Unable to handle kernel pointer dereference in virtual kernel address space
+  ...
+  Call Trace:
+    ...
+    try_to_wake_up+0xfc/0x450
+    vhost_poll_wakeup+0x3a/0x50 [vhost]
+    __wake_up_common+0xbc/0x178
+    __wake_up_common_lock+0x9e/0x160
+    __wake_up_sync_key+0x4e/0x60
+    sock_def_readable+0x5e/0x98
+
+The bug hits any time between 1 hour to 3 days. The dereference occurs
+in update_cfs_rq_h_load when accumulating h_load. The problem is that
+cfq_rq->h_load_next is not protected by any locking and can be updated
+by parallel calls to task_h_load. Depending on the compiler, code may be
+generated that re-reads cfq_rq->h_load_next after the check for NULL and
+then oops when reading se->avg.load_avg. The dissassembly showed that it
+was possible to reread h_load_next after the check for NULL.
+
+While this does not appear to be an issue for later compilers, it's still
+an accident if the correct code is generated. Full locking in this path
+would have high overhead so this patch uses READ_ONCE to read h_load_next
+only once and check for NULL before dereferencing. It was confirmed that
+there were no further oops after 10 days of testing.
+
+As Peter pointed out, it is also necessary to use WRITE_ONCE() to avoid any
+potential problems with store tearing.
+
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mike Galbraith <efault@gmx.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: <stable@vger.kernel.org>
+Fixes: 685207963be9 ("sched: Move h_load calculation to task_h_load()")
+Link: https://lkml.kernel.org/r/20190319123610.nsivgf3mjbjjesxb@techsingularity.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/thermal/int340x_thermal/int3400_thermal.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ kernel/sched/fair.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
-index 5836e5554433..0beed2899163 100644
---- a/drivers/thermal/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
-@@ -20,6 +20,13 @@ enum int3400_thermal_uuid {
- 	INT3400_THERMAL_PASSIVE_1,
- 	INT3400_THERMAL_ACTIVE,
- 	INT3400_THERMAL_CRITICAL,
-+	INT3400_THERMAL_ADAPTIVE_PERFORMANCE,
-+	INT3400_THERMAL_EMERGENCY_CALL_MODE,
-+	INT3400_THERMAL_PASSIVE_2,
-+	INT3400_THERMAL_POWER_BOSS,
-+	INT3400_THERMAL_VIRTUAL_SENSOR,
-+	INT3400_THERMAL_COOLING_MODE,
-+	INT3400_THERMAL_HARDWARE_DUTY_CYCLING,
- 	INT3400_THERMAL_MAXIMUM_UUID,
- };
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6022,10 +6022,10 @@ static void update_cfs_rq_h_load(struct
+ 	if (cfs_rq->last_h_load_update == now)
+ 		return;
  
-@@ -27,6 +34,13 @@ static u8 *int3400_thermal_uuids[INT3400_THERMAL_MAXIMUM_UUID] = {
- 	"42A441D6-AE6A-462b-A84B-4A8CE79027D3",
- 	"3A95C389-E4B8-4629-A526-C52C88626BAE",
- 	"97C68AE7-15FA-499c-B8C9-5DA81D606E0A",
-+	"63BE270F-1C11-48FD-A6F7-3AF253FF3E2D",
-+	"5349962F-71E6-431D-9AE8-0A635B710AEE",
-+	"9E04115A-AE87-4D1C-9500-0F3E340BFE75",
-+	"F5A35014-C209-46A4-993A-EB56DE7530A1",
-+	"6ED722A7-9240-48A5-B479-31EEF723D7CF",
-+	"16CAF1B7-DD38-40ED-B1C1-1B8A1913D531",
-+	"BE84BABF-C4D4-403D-B495-3128FD44dAC1",
- };
+-	cfs_rq->h_load_next = NULL;
++	WRITE_ONCE(cfs_rq->h_load_next, NULL);
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_load_next = se;
++		WRITE_ONCE(cfs_rq->h_load_next, se);
+ 		if (cfs_rq->last_h_load_update == now)
+ 			break;
+ 	}
+@@ -6035,7 +6035,7 @@ static void update_cfs_rq_h_load(struct
+ 		cfs_rq->last_h_load_update = now;
+ 	}
  
- struct int3400_thermal_priv {
--- 
-2.19.1
-
+-	while ((se = cfs_rq->h_load_next) != NULL) {
++	while ((se = READ_ONCE(cfs_rq->h_load_next)) != NULL) {
+ 		load = cfs_rq->h_load;
+ 		load = div64_ul(load * se->avg.load_avg,
+ 			cfs_rq_load_avg(cfs_rq) + 1);
 
 
