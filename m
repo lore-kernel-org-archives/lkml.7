@@ -2,284 +2,145 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B1DC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39309C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF02121773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZ1Z/g/N"
+	by mail.kernel.org (Postfix) with ESMTP id 07E10218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556128049;
+	bh=yOlJSrZSSdLLbL7dkbfi+LI8LUDt5VyaUlz6vHMw+uE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=D2tmuDfFssMRRHf2Wq3o0sWO+6Xsbgo7l98Gwt1xkclDpx9NILQIzfoMuM2xgdBkF
+	 LUU/9xPjQZwqNNB3XubuzQfltwnITWwWv1MWV31wAw4OjOr3h1OXfwMUnMC4yvNHwA
+	 FQCFEbQmKosKvm1VjUeMLU6LeHr0YQi0gfXd1NZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391902AbfDXRrN (ORCPT
+        id S2391899AbfDXRr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:47:13 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38055 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391234AbfDXRcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:32:04 -0400
-Received: by mail-pg1-f196.google.com with SMTP id j26so9715414pgl.5;
-        Wed, 24 Apr 2019 10:32:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CbYpFcJey7cXt44hlm0PtSFow9IzRhVJ39cQCZIMB6w=;
-        b=tZ1Z/g/NUbcJ5JLgQk6wa3NUDP0+Tc/L3qLGwbcf220tv1onTOX5hiMlXWnP7vNOhY
-         XazbGPyEH/4Hjr3qhCXefQcKxFuMMgrpu/XwBwMtO4950I3dvdhXDP9BNdF4kTAFkprZ
-         44tHGnaDQhnMLVZgB805iIYqAQDdfqmh/qQWNy2lThTzITCwBpXEdmVNtpH1jq0HPm2s
-         hVCxxy2CiZnki7fOWDDJ0HplG9Xtjv7Nnuq9f1TujYR9fUVsjHgkcnWOxMVk8UE/+l7G
-         BvzV+NFVxiwyEF6hExnE5WsOo9yjodQxP74KHo7aVjD/ouFwlw71gUMDi1pa0ILwAWdF
-         7GtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CbYpFcJey7cXt44hlm0PtSFow9IzRhVJ39cQCZIMB6w=;
-        b=QH528P7ALc0Uyu0Fh2F3oq95/YZOjvglsHBOrOk7u701EqIPFGc1h+qimJt0KurVfr
-         1ikrMWPSq51qabD8hQ1GGy6W2TimiAxVTYyEMe6tMda9RbkUgslgcdBjHMW/ve09fUiJ
-         36NzBZIUVKgCigbc2F1m9q4bHFWQLPljhJlUghniz1uuAKFtOt3eNJuyZHYS/gqhIAUP
-         HURBQxBUjIeSqf09/EC3RUD/Cmn7CtUiK7X49AmVShYbMFu9eISMYwlhM48tOf8QAjl1
-         dqr07Ndhbeobctmq8FkgrgHAc5DazigRxOuSVeUSZj2tZ+j9Qv0WYku9A/QpQ92XgoqA
-         aNNg==
-X-Gm-Message-State: APjAAAVzwZ/T1gmQDBYoQMbxbdy6n3k3dCerXAABMo1lO2D+Q/RVgVWD
-        Wyi/kZxUAHJexuhxnyApIQw=
-X-Google-Smtp-Source: APXvYqzGVEu1O4QjGym5wcVjh3X9UjZwdUOk/9kxw5zuv8U4q0pmtazlcsapKkYpt4n8XV3gIzgrnQ==
-X-Received: by 2002:a63:7d03:: with SMTP id y3mr30805177pgc.8.1556127122646;
-        Wed, 24 Apr 2019 10:32:02 -0700 (PDT)
-Received: from mail.google.com ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id u5sm28827202pfm.121.2019.04.24.10.31.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 10:32:01 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 01:31:47 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>, mingo@redhat.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, x86@kernel.org,
-        fenghua.yu@intel.com, linuxppc-dev@lists.ozlabs.org,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 24/63] Documentation: ACPI: move video_extension.txt
- to firmware-guide/acpi and convert to reST
-Message-ID: <20190424173146.b7vwdswl3btxyq7p@mail.google.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
- <20190423162932.21428-25-changbin.du@gmail.com>
- <20190424115647.092dec38@coco.lan>
+        Wed, 24 Apr 2019 13:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391156AbfDXRb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:31:57 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C70B218B0;
+        Wed, 24 Apr 2019 17:31:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556127116;
+        bh=yOlJSrZSSdLLbL7dkbfi+LI8LUDt5VyaUlz6vHMw+uE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BBlchQBAe/4pYVQJ5d+LWFkMKtgmfLjJcQh0Az1sZnOoihIYox6eBS87BeXcpbSF1
+         TT8fgw2KOqLqlvf0UfXrLmZZ7bDhDzJ+9+CvFYkwbnHC2JGOCUK8nY2lpnHBq/vWOt
+         jtH5cqzf5SLIu7/r+AgO8HSERXOY4ORaRIHbb8dQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 68/96] kprobes: Fix error check when reusing optimized probes
+Date:   Wed, 24 Apr 2019 19:10:13 +0200
+Message-Id: <20190424170924.356154780@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
+References: <20190424170919.829037226@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424115647.092dec38@coco.lan>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 11:56:47AM -0300, Mauro Carvalho Chehab wrote:
-> Em Wed, 24 Apr 2019 00:28:53 +0800
-> Changbin Du <changbin.du@gmail.com> escreveu:
-> 
-> > This converts the plain text documentation to reStructuredText format and
-> > add it to Sphinx TOC tree. No essential content change.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> >  Documentation/firmware-guide/acpi/index.rst   |  1 +
-> >  .../acpi/video_extension.rst}                 | 63 ++++++++++---------
-> >  2 files changed, 36 insertions(+), 28 deletions(-)
-> >  rename Documentation/{acpi/video_extension.txt => firmware-guide/acpi/video_extension.rst} (79%)
-> > 
-> > diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-> > index 0e60f4b7129a..ae609eec4679 100644
-> > --- a/Documentation/firmware-guide/acpi/index.rst
-> > +++ b/Documentation/firmware-guide/acpi/index.rst
-> > @@ -23,3 +23,4 @@ ACPI Support
-> >     i2c-muxes
-> >     acpi-lid
-> >     lpit
-> > +   video_extension
-> > diff --git a/Documentation/acpi/video_extension.txt b/Documentation/firmware-guide/acpi/video_extension.rst
-> > similarity index 79%
-> > rename from Documentation/acpi/video_extension.txt
-> > rename to Documentation/firmware-guide/acpi/video_extension.rst
-> > index 79bf6a4921be..06f7e3230b6e 100644
-> > --- a/Documentation/acpi/video_extension.txt
-> > +++ b/Documentation/firmware-guide/acpi/video_extension.rst
-> > @@ -1,5 +1,8 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=====================
-> >  ACPI video extensions
-> > -~~~~~~~~~~~~~~~~~~~~~
-> > +=====================
-> >  
-> >  This driver implement the ACPI Extensions For Display Adapters for
-> >  integrated graphics devices on motherboard, as specified in ACPI 2.0
-> > @@ -8,9 +11,10 @@ defining the video POST device, retrieving EDID information or to
-> >  setup a video output, etc.  Note that this is an ref. implementation
-> >  only.  It may or may not work for your integrated video device.
-> >  
-> > -The ACPI video driver does 3 things regarding backlight control:
-> > +The ACPI video driver does 3 things regarding backlight control.
-> >  
-> > -1 Export a sysfs interface for user space to control backlight level
-> > +1. Export a sysfs interface for user space to control backlight level
-> > +=====================================================================
-> >  
-> >  If the ACPI table has a video device, and acpi_backlight=vendor kernel
-> >  command line is not present, the driver will register a backlight device
-> 
-> Hmm... you didn't touch on this part of the document:
-> 
-> 	And what ACPI video driver does is:
-> 	actual_brightness: on read, control method _BQC will be evaluated to
-> 	get the brightness level the firmware thinks it is at;
-> 	bl_power: not implemented, will set the current brightness instead;
-> 	brightness: on write, control method _BCM will run to set the requested
-> 	brightness level;
-> 	max_brightness: Derived from the _BCL package(see below);
-> 	type: firmware
-> 
-> You should touch it. My suggestion here is:
-> 
-> 	And what ACPI video driver does is:
-> 
-> 	actual_brightness:
-> 		on read, control method _BQC will be evaluated to
-> 		get the brightness level the firmware thinks it is at;
-> 	bl_power:
-> 		not implemented, will set the current brightness instead;
-> 	brightness:
-> 		on write, control method _BCM will run to set the requested
-> 		brightness level;
-> 	max_brightness:
-> 		Derived from the _BCL package(see below);
-> 	type:
-> 		firmware
->
-Thanks, done.
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-> > @@ -32,26 +36,26 @@ type: firmware
-> >  
-> >  Note that ACPI video backlight driver will always use index for
-> >  brightness, actual_brightness and max_brightness. So if we have
-> > -the following _BCL package:
-> > +the following _BCL package::
-> >  
-> > -Method (_BCL, 0, NotSerialized)
-> > -{
-> > -	Return (Package (0x0C)
-> > +	Method (_BCL, 0, NotSerialized)
-> >  	{
-> > -		0x64,
-> > -		0x32,
-> > -		0x0A,
-> > -		0x14,
-> > -		0x1E,
-> > -		0x28,
-> > -		0x32,
-> > -		0x3C,
-> > -		0x46,
-> > -		0x50,
-> > -		0x5A,
-> > -		0x64
-> > -	})
-> > -}
-> > +		Return (Package (0x0C)
-> > +		{
-> > +			0x64,
-> > +			0x32,
-> > +			0x0A,
-> > +			0x14,
-> > +			0x1E,
-> > +			0x28,
-> > +			0x32,
-> > +			0x3C,
-> > +			0x46,
-> > +			0x50,
-> > +			0x5A,
-> > +			0x64
-> > +		})
-> > +	}
-> >  
-> >  The first two levels are for when laptop are on AC or on battery and are
-> >  not used by Linux currently. The remaining 10 levels are supported levels
-> > @@ -62,13 +66,15 @@ as a "brightness level" indicator. Thus from the user space perspective
-> >  the range of available brightness levels is from 0 to 9 (max_brightness)
-> >  inclusive.
-> >  
-> > -2 Notify user space about hotkey event
-> > +2. Notify user space about hotkey event
-> > +=======================================
-> >  
-> >  There are generally two cases for hotkey event reporting:
-> > +
-> >  i) For some laptops, when user presses the hotkey, a scancode will be
-> >     generated and sent to user space through the input device created by
-> >     the keyboard driver as a key type input event, with proper remap, the
-> > -   following key code will appear to user space:
-> > +   following key code will appear to user space::
-> >  
-> >  	EV_KEY, KEY_BRIGHTNESSUP
-> >  	EV_KEY, KEY_BRIGHTNESSDOWN
-> > @@ -82,7 +88,7 @@ ii) For some laptops, the press of the hotkey will not generate the
-> >      about the event. The event value is defined in the ACPI spec. ACPI
-> >      video driver will generate an key type input event according to the
-> >      notify value it received and send the event to user space through the
-> > -    input device it created:
-> > +    input device it created::
-> >  
-> >  	event		keycode
-> >  	0x86		KEY_BRIGHTNESSUP
-> 
-> Perhaps making this as a table would work better:
-> 
->     input device it created:
-> 
-> 	=====		===================
-> 	event		keycode
-> 	=====		===================
-> 	0x86		KEY_BRIGHTNESSUP
-> 	0x87		KEY_BRIGHTNESSDOWN
-> 	etc.
-> 	=====		===================
-> 
-> 
-Done.
+commit 5f843ed415581cfad4ef8fefe31c138a8346ca8a upstream.
 
-> > @@ -94,13 +100,14 @@ so this would lead to the same effect as case i) now.
-> >  Once user space tool receives this event, it can modify the backlight
-> >  level through the sysfs interface.
-> >  
-> > -3 Change backlight level in the kernel
-> > +3. Change backlight level in the kernel
-> > +=======================================
-> >  
-> >  This works for machines covered by case ii) in Section 2. Once the driver
-> >  received a notification, it will set the backlight level accordingly. This does
-> >  not affect the sending of event to user space, they are always sent to user
-> >  space regardless of whether or not the video module controls the backlight level
-> >  directly. This behaviour can be controlled through the brightness_switch_enabled
-> > -module parameter as documented in admin-guide/kernel-parameters.rst. It is recommended to
-> > -disable this behaviour once a GUI environment starts up and wants to have full
-> > -control of the backlight level.
-> > +module parameter as documented in admin-guide/kernel-parameters.rst. It is
-> > +recommended to disable this behaviour once a GUI environment starts up and
-> > +wants to have full control of the backlight level.
-> 
-> 
-> 
-> Thanks,
-> Mauro
+The following commit introduced a bug in one of our error paths:
 
--- 
-Cheers,
-Changbin Du
+  819319fc9346 ("kprobes: Return error if we fail to reuse kprobe instead of BUG_ON()")
+
+it missed to handle the return value of kprobe_optready() as
+error-value. In reality, the kprobe_optready() returns a bool
+result, so "true" case must be passed instead of 0.
+
+This causes some errors on kprobe boot-time selftests on ARM:
+
+ [   ] Beginning kprobe tests...
+ [   ] Probe ARM code
+ [   ]     kprobe
+ [   ]     kretprobe
+ [   ] ARM instruction simulation
+ [   ]     Check decoding tables
+ [   ]     Run test cases
+ [   ] FAIL: test_case_handler not run
+ [   ] FAIL: Test andge	r10, r11, r14, asr r7
+ [   ] FAIL: Scenario 11
+ ...
+ [   ] FAIL: Scenario 7
+ [   ] Total instruction simulation tests=1631, pass=1433 fail=198
+ [   ] kprobe tests failed
+
+This can happen if an optimized probe is unregistered and next
+kprobe is registered on same address until the previous probe
+is not reclaimed.
+
+If this happens, a hidden aggregated probe may be kept in memory,
+and no new kprobe can probe same address. Also, in that case
+register_kprobe() will return "1" instead of minus error value,
+which can mislead caller logic.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org # v5.0+
+Fixes: 819319fc9346 ("kprobes: Return error if we fail to reuse kprobe instead of BUG_ON()")
+Link: http://lkml.kernel.org/r/155530808559.32517.539898325433642204.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ kernel/kprobes.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -703,7 +703,6 @@ static void unoptimize_kprobe(struct kpr
+ static int reuse_unused_kprobe(struct kprobe *ap)
+ {
+ 	struct optimized_kprobe *op;
+-	int ret;
+ 
+ 	BUG_ON(!kprobe_unused(ap));
+ 	/*
+@@ -715,9 +714,8 @@ static int reuse_unused_kprobe(struct kp
+ 	/* Enable the probe again */
+ 	ap->flags &= ~KPROBE_FLAG_DISABLED;
+ 	/* Optimize it again (remove from op->list) */
+-	ret = kprobe_optready(ap);
+-	if (ret)
+-		return ret;
++	if (!kprobe_optready(ap))
++		return -EINVAL;
+ 
+ 	optimize_kprobe(ap);
+ 	return 0;
+
+
