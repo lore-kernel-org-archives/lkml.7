@@ -2,143 +2,180 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C110FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B45C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B01218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556141256;
-	bh=xUxFNsMZ8txNu7js12qDGeRYYEYc3jJ0GwudbvyOSd4=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=lxpdkeOC53pD0COGRybDoTmNmbSUNMOepf9jn161N5uz5DHVSKoBXq9oszYkJRLbD
-	 /XDPyRRpfqijvsR5RjFOffeIk+dlAWlqaWVASjQsenZ8vtvxZRtLkv+G3tZwG743UK
-	 syIndS46PepW6n16bPNi1vBQeKbidUZI0FZublyo=
+	by mail.kernel.org (Postfix) with ESMTP id 2DE8120835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:32:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="rUaQIBUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387589AbfDXV1f (ORCPT
+        id S1731409AbfDXVco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 17:27:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731175AbfDXV1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 17:27:34 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 990A32183E;
-        Wed, 24 Apr 2019 21:27:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556141253;
-        bh=xUxFNsMZ8txNu7js12qDGeRYYEYc3jJ0GwudbvyOSd4=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=rzaZXS9tp0Wrwyxq4Sl6jD+5RE/ExNHeXPc/36SNn0Z69ZrmA7BV8FUgWkRwfBGfp
-         6hSFUqO9qrTqfhxEZr49uZcbwpb3ErbNK4oZv6N05aLJ7IUbMAOtbw8n5gaLqwXIdK
-         Fx6L6fqUhFOdKJSE0x61mMqu7Iu2qX7h7l+MCGcc=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <E490CD805F7529488761C40FD9D26EF12AB29F5F@dggemm507-mbx.china.huawei.com>
-References: <1553954090-65470-1-git-send-email-nixiaoming@huawei.com> <155605990288.15276.7089726827167650203@swboyd.mtv.corp.google.com> <E490CD805F7529488761C40FD9D26EF12AB29F5F@dggemm507-mbx.china.huawei.com>
-Cc:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Wed, 24 Apr 2019 17:32:44 -0400
+Received: from mail-eopbgr810043.outbound.protection.outlook.com ([40.107.81.43]:63648
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730946AbfDXVcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 17:32:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q0qbdc2MkYIB/BGZJhOG1+y161iGdo+ILHAlWdVZiSU=;
+ b=rUaQIBUWDm4Ukh4FghJJTid0nsreThDNvbKTDoOLjXTvpfmGgh3cUNKYFkZDNyzdpRVD+Y1awBZ8kw9ecXtaavXzrpmkG9UFBzwV3LKuQVxh8dM6v8O0yQdbTnkbM3MbMDtcJeOfO7tcrAYRhlw5bJ5+IkLnOefezsXZxHIKZm4=
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.116.31) by
+ DM6PR12MB2651.namprd12.prod.outlook.com (20.176.116.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.18; Wed, 24 Apr 2019 21:32:39 +0000
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::9183:846f:a93e:9a43]) by DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::9183:846f:a93e:9a43%5]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
+ 21:32:39 +0000
+From:   "Singh, Brijesh" <brijesh.singh@amd.com>
+To:     Steve Rutherford <srutherford@google.com>
+CC:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: RE: [PATCH v3 1/2] clk:Fix divide-by-zero in divider_ro_round_rate_parent
-To:     "jbrunet@baylibre.com" <jbrunet@baylibre.com>,
-        "mojha@codeaurora.org" <mojha@codeaurora.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@codeaurora.org" <sboyd@codeaurora.org>,
-        "soren.brinkmann@xilinx.com" <soren.brinkmann@xilinx.com>,
-        Nixiaoming <nixiaoming@huawei.com>
-Message-ID: <155614125279.15276.7728769195271989477@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Wed, 24 Apr 2019 14:27:32 -0700
+Subject: Re: [RFC PATCH v1 00/10] Add AMD SEV guest live migration support
+Thread-Topic: [RFC PATCH v1 00/10] Add AMD SEV guest live migration support
+Thread-Index: AQHU+rgpwai7tJB3uUaULXjJMShjVaZLrqMAgAAmZAA=
+Date:   Wed, 24 Apr 2019 21:32:39 +0000
+Message-ID: <eee5e112-89bd-331b-6875-34c0712de4cb@amd.com>
+References: <20190424160942.13567-1-brijesh.singh@amd.com>
+ <CABayD+eYsqT49-Smp0a9OGRt2or_L7LNKHpe-iraM62XzGq5_g@mail.gmail.com>
+In-Reply-To: <CABayD+eYsqT49-Smp0a9OGRt2or_L7LNKHpe-iraM62XzGq5_g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0501CA0125.namprd05.prod.outlook.com
+ (2603:10b6:803:42::42) To DM6PR12MB2682.namprd12.prod.outlook.com
+ (2603:10b6:5:4a::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eaa54622-bd62-4599-153c-08d6c8fc6013
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2651;
+x-ms-traffictypediagnostic: DM6PR12MB2651:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <DM6PR12MB26518F94CE1389ACD51A3A9CE53C0@DM6PR12MB2651.namprd12.prod.outlook.com>
+x-forefront-prvs: 00179089FD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(366004)(136003)(39860400002)(346002)(189003)(199004)(7736002)(25786009)(478600001)(26005)(86362001)(31696002)(186003)(6246003)(3846002)(6916009)(6116002)(99286004)(6436002)(305945005)(76176011)(4326008)(6486002)(53936002)(229853002)(102836004)(256004)(14444005)(81156014)(81166006)(68736007)(8676002)(71190400001)(386003)(53546011)(66066001)(2906002)(6512007)(14454004)(36756003)(31686004)(11346002)(2616005)(52116002)(476003)(97736004)(7416002)(66446008)(54906003)(486006)(316002)(446003)(5660300002)(64756008)(966005)(66946007)(66556008)(66476007)(6306002)(8936002)(73956011)(66574012)(6506007)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2651;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cr61WHLL3zDHP8oh8yYthVXqdIZcPjV07phBcic0OzufkzoFFTTJmk5yCB/1kTixZePpowcSP8v79f60X1mlwlcWwMgtv6smEigfcewtD3bhxbQtpR0chUj0OZMXfsZr5LfVus08kdvipTUSZSWOEfmJ3oo5zu8OwJTX8u/uaB5bHSX9tX7TEt12tGOF9pxn+/tTNJgYM2Ta+njn/Cxg64Rbx2QpPWVwJ3YaGDFpx5y9fGt3k0KSXETBv5khO7SKCYJyumjhWXzpvzlTbuVvkZKEKsv0C74vvZn3cOlBMJrfnmBAyskoiD3EDMbzGST6tQxHw7wTtXd1f9CY9DovMSZWaoAnSWNSJXSt4ZpWQlF3FVzX78Ffsih5kgsSTMJ6BoiAwy5yI1MsmEj8BMGiB4QZyhjZgjx8gJNlzOQVo8s=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D3669A442693E444A3F42BFE1337BDDB@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eaa54622-bd62-4599-153c-08d6c8fc6013
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 21:32:39.2413
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2651
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Nixiaoming (2019-04-24 08:31:23)
-> On Wed, Apr 24, 2019 at 6:52 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> >Quoting nixiaoming (2019-03-30 06:54:50)
-> >> In the function divider_recalc_rate() The judgment of the return value=
- of
-> >> _get_div() indicates that the return value of _get_div() can be 0.
-> >
-> >When does _get_div() return 0? It can't be CLK_DIVIDER_MAX_AT_ZERO or
-> >CLK_DIVIDER_POWER_OF_TWO. I suppose it could be CLK_DIVIDER_ONE_BASED if
-> >CLK_DIVIDER_ALLOW_ZERO is set? Or just CLK_DIVIDER_ALLOW_ZERO is set? Or
-> >a table that has 0 in it for some odd reason.
-> >
-> divider_ro_round_rate_parent() is an exported function.
-> There is no parameter check or return value check before=20
-> and after calling _get_div(), which may result in a divide by zero error.
->=20
-> Case1: The "flags" contains CLK_DIVIDER_ONE_BASED, and "val" is 0.
-> Case2: The "flags" does not contain CLK_DIVIDER_ONE_BASED,=20
->     CLK_DIVIDER_POWER_OF_TWO, CLK_DIVIDER_MAX_AT_ZERO, =20
->     "table" is NULL.  "val" is 0xffffffff
-> In both cases _get_div() returns 0
-
-Alright, so this is all theoretical and not happening in practice? Best
-to do nothing then I think.
-
->=20
-> >> In order to avoid the divide-by-zero error, add check for return value
-> >> of _get_div() in the divider_ro_round_rate_parent()
-> >>=20
-> >> Signed-off-by: nixiaoming <nixiaoming@huawei.com>
-> >> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-> >> ---
-> >>  drivers/clk/clk-divider.c | 3 +++
-> >>  1 file changed, 3 insertions(+)
-> >>=20
-> >> diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
-> >> index e5a1726..f4bf7a4 100644
-> >> --- a/drivers/clk/clk-divider.c
-> >> +++ b/drivers/clk/clk-divider.c
-> >> @@ -347,6 +347,9 @@ long divider_ro_round_rate_parent(struct clk_hw *h=
-w, struct clk_hw *parent,
-> >>         int div;
-> >> =20
-> >>         div =3D _get_div(table, val, flags, width);
-> >> +       /* avoid divide-by-zero */
-> >> +       if (!div)
-> >> +               return -EINVAL;
-> >
-> >Can you please give more details on what's happening here? Who's the
-> >caller? What are the arguments being passed in? Shouldn't we check for
-> >CLK_DIVIDER_ALLOW_ZERO and then return prate as it comes in instead of
-> >returning an error?
-> >
-> I found that there may be a divide-by-zero error by code review,
->  for example: "flags" is CLK_DIVIDER_ONE_BASED and "val" is 0.
-> So simply add a return value check to avoid divide-by-zero
->=20
-> thanks for your suggestion,=20
-> I will resend the patch later
-> refer to your advice and divider_recalc_rate() to add a check for CLK_DIV=
-IDER_ALLOW_ZERO
->=20
-
-Ok. I'm actually wondering why divider_ro_round_rate_parent() doesn't
-use clk_divider_bestdiv() instead of _get_div(). I think we did this to
-make things simpler.
-
-We could make clk_divider_bestdiv() take a 'val' argument to start the
-divider loop (and make that 0 for the "normal" case) and then look at
-the 'flags' for CLK_DIVIDER_READ_ONLY to restrict the 'maxdiv' and 'i'
-arguments there to be whatever the val is passed in to be. It would
-require passing the val into _get_maxdiv() too, and only caring about
-the val when the read only flag is set.
-
-Then I think we would naturally get div-by-zero avoidance code and we
-could collapse the divider code paths substantially into
-clk_divider_bestdiv(). It would be even better if that patch could come
-after moving the clk-divider ops to use .determine_rate() instead of
-.round_rate() clk_ops. If we did that then we could enhance the divider
-code to handle rate request clamping.
-
+DQoNCk9uIDQvMjQvMTkgMjoxNSBQTSwgU3RldmUgUnV0aGVyZm9yZCB3cm90ZToNCj4gT24gV2Vk
+LCBBcHIgMjQsIDIwMTkgYXQgOToxMCBBTSBTaW5naCwgQnJpamVzaCA8YnJpamVzaC5zaW5naEBh
+bWQuY29tPiB3cm90ZToNCj4+DQo+PiBUaGUgc2VyaWVzIGFkZCBzdXBwb3J0IGZvciBBTUQgU0VW
+IGd1ZXN0IGxpdmUgbWlncmF0aW9uIGNvbW1hbmRzLiBUbyBwcm90ZWN0IHRoZQ0KPj4gY29uZmlk
+ZW50aWFsaXR5IG9mIGFuIFNFViBwcm90ZWN0ZWQgZ3Vlc3QgbWVtb3J5IHdoaWxlIGluIHRyYW5z
+aXQgd2UgbmVlZCB0bw0KPj4gdXNlIHRoZSBTRVYgY29tbWFuZHMgZGVmaW5lZCBpbiBTRVYgQVBJ
+IHNwZWMgWzFdLg0KPj4NCj4+IFNFViBndWVzdCBWTXMgaGF2ZSB0aGUgY29uY2VwdCBvZiBwcml2
+YXRlIGFuZCBzaGFyZWQgbWVtb3J5LiBQcml2YXRlIG1lbW9yeQ0KPj4gaXMgZW5jcnlwdGVkIHdp
+dGggdGhlIGd1ZXN0LXNwZWNpZmljIGtleSwgd2hpbGUgc2hhcmVkIG1lbW9yeSBtYXkgYmUgZW5j
+cnlwdGVkDQo+PiB3aXRoIGh5cGVydmlzb3Iga2V5LiBUaGUgY29tbWFuZHMgcHJvdmlkZWQgYnkg
+dGhlIFNFViBGVyBhcmUgbWVhbnQgdG8gYmUgdXNlZA0KPj4gZm9yIHRoZSBwcml2YXRlIG1lbW9y
+eSBvbmx5LiBUaGUgcGF0Y2ggc2VyaWVzIGludHJvZHVjZXMgYSBuZXcgaHlwZXJjYWxsLg0KPj4g
+VGhlIGd1ZXN0IE9TIGNhbiB1c2UgdGhpcyBoeXBlcmNhbGwgdG8gbm90aWZ5IHRoZSBwYWdlIGVu
+Y3J5cHRpb24gc3RhdHVzLg0KPj4gSWYgdGhlIHBhZ2UgaXMgZW5jcnlwdGVkIHdpdGggZ3Vlc3Qg
+c3BlY2lmaWMta2V5IHRoZW4gd2UgdXNlIFNFViBjb21tYW5kIGR1cmluZw0KPj4gdGhlIG1pZ3Jh
+dGlvbi4gSWYgcGFnZSBpcyBub3QgZW5jcnlwdGVkIHRoZW4gZmFsbGJhY2sgdG8gZGVmYXVsdC4N
+Cj4+DQo+PiBUaGUgcGF0Y2ggYWRkcyBhIG5ldyBpb2N0bCBLVk1fR0VUX1BBR0VfRU5DX0JJVE1B
+UC4gVGhlIGlvY3RsIGNhbiBiZSB1c2VkDQo+PiBieSB0aGUgcWVtdSB0byBnZXQgdGhlIHBhZ2Ug
+ZW5jcnlwdGVkIGJpdG1hcC4gUWVtdSBjYW4gY29uc3VsdCB0aGlzIGJpdG1hcA0KPj4gZHVyaW5n
+IHRoZSBtaWdyYXRpb24gdG8ga25vdyB3aGV0aGVyIHRoZSBwYWdlIGlzIGVuY3J5cHRlZC4NCj4+
+DQo+PiBbMV0gaHR0cHM6Ly9kZXZlbG9wZXIuYW1kLmNvbS93cC1jb250ZW50L3Jlc291cmNlcy81
+NTc2Ni5QREYNCj4+DQo+PiBUaGUgc2VyaWVzIGlzIHRlc3RlZCB3aXRoIHRoZSBRZW11LCBJIGFt
+IGluIHByb2Nlc3Mgb2YgY2xlYW5pbmcNCj4+IHVwIHRoZSBRZW11IGNvZGUgYW5kIHdpbGwgc3Vi
+bWl0IHNvb24uDQo+Pg0KPj4gV2hpbGUgaW1wbGVtZW50aW5nIHRoZSBtaWdyYXRpb24gSSBzdHVt
+YmxlZCBvbiB0aGUgZm9sbG93IHF1ZXN0aW9uOg0KPj4NCj4+IC0gU2luY2UgdGhlcmUgaXMgYSBn
+dWVzdCBPUyBjaGFuZ2VzIHJlcXVpcmVkIHRvIHN1cHBvcnQgdGhlIG1pZ3JhdGlvbiwNCj4+ICAg
+IHNvIGhvdyBkbyB3ZSBrbm93IHdoZXRoZXIgZ3Vlc3QgT1MgaXMgdXBkYXRlZD8gU2hvdWxkIHdl
+IGV4dGVuZCBLVk0NCj4+ICAgIGNhcGFiaWxpdGllcy9mZWF0dXJlIGJpdHMgdG8gY2hlY2sgdGhp
+cz8NCj4+DQo+PiBUT0RPOg0KPj4gICAtIGFkZCBhbiBpb2N0bCB0byBidWlsZCBlbmNyeXB0aW9u
+IGJpdG1hcC4gVGhlIGVuY3J5cHRpb24gYml0bWFwIGlzIGJ1aWx0IGR1cmluZw0KPj4gICAgIHRo
+ZSBndWVzdCBib290dXAvZXhlY3V0aW9uLiBXZSBzaG91bGQgcHJvdmlkZSBhbiBpb2N0bCBzbyB0
+aGF0IGRlc3RpbmF0aW9uDQo+PiAgICAgY2FuIGJ1aWxkIHRoZSBiaXRtYXAgYXMgaXQgcmVjZWl2
+ZXMgdGhlIHBhZ2VzLg0KPj4gICAtIHJlc2V0IHRoZSBiaXRtYXAgb24gZ3Vlc3QgcmVib290Lg0K
+Pj4NCj4+IFRoZSBjb21wbGV0ZSB0cmVlIHdpdGggcGF0Y2ggaXMgYXZhaWxhYmxlIGF0Og0KPj4g
+aHR0cHM6Ly9naXRodWIuY29tL2NvZG9tYW5pYS9rdm0vdHJlZS9zZXYtbWlncmF0aW9uLXJmYy12
+MQ0KPj4NCj4+IENjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4NCj4+IENj
+OiBJbmdvIE1vbG5hciA8bWluZ29AcmVkaGF0LmNvbT4NCj4+IENjOiAiSC4gUGV0ZXIgQW52aW4i
+IDxocGFAenl0b3IuY29tPg0KPj4gQ2M6IFBhb2xvIEJvbnppbmkgPHBib256aW5pQHJlZGhhdC5j
+b20+DQo+PiBDYzogIlJhZGltIEtyxI1tw6HFmSIgPHJrcmNtYXJAcmVkaGF0LmNvbT4NCj4+IENj
+OiBKb2VyZyBSb2VkZWwgPGpvcm9AOGJ5dGVzLm9yZz4NCj4+IENjOiBCb3Jpc2xhdiBQZXRrb3Yg
+PGJwQHN1c2UuZGU+DQo+PiBDYzogVG9tIExlbmRhY2t5IDx0aG9tYXMubGVuZGFja3lAYW1kLmNv
+bT4NCj4+IENjOiB4ODZAa2VybmVsLm9yZw0KPj4gQ2M6IGt2bUB2Z2VyLmtlcm5lbC5vcmcNCj4+
+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+Pg0KPj4gQnJpamVzaCBTaW5naCAo
+MTApOg0KPj4gICAgS1ZNOiBTVk06IEFkZCBLVk1fU0VWIFNFTkRfU1RBUlQgY29tbWFuZA0KPj4g
+ICAgS1ZNOiBTVk06IEFkZCBLVk1fU0VORF9VUERBVEVfREFUQSBjb21tYW5kDQo+PiAgICBLVk06
+IFNWTTogQWRkIEtWTV9TRVZfU0VORF9GSU5JU0ggY29tbWFuZA0KPj4gICAgS1ZNOiBTVk06IEFk
+ZCBzdXBwb3J0IGZvciBLVk1fU0VWX1JFQ0VJVkVfU1RBUlQgY29tbWFuZA0KPj4gICAgS1ZNOiBT
+Vk06IEFkZCBLVk1fU0VWX1JFQ0VJVkVfVVBEQVRFX0RBVEEgY29tbWFuZA0KPj4gICAgS1ZNOiBT
+Vk06IEFkZCBLVk1fU0VWX1JFQ0VJVkVfRklOSVNIIGNvbW1hbmQNCj4+ICAgIEtWTTogeDg2OiBB
+ZGQgQU1EIFNFViBzcGVjaWZpYyBIeXBlcmNhbGwzDQo+PiAgICBLVk06IFg4NjogSW50cm9kdWNl
+IEtWTV9IQ19QQUdFX0VOQ19TVEFUVVMgaHlwZXJjYWxsDQo+PiAgICBLVk06IHg4NjogSW50cm9k
+dWNlIEtWTV9HRVRfUEFHRV9FTkNfQklUTUFQIGlvY3RsDQo+PiAgICBtbTogeDg2OiBJbnZva2Ug
+aHlwZXJjYWxsIHdoZW4gcGFnZSBlbmNyeXB0aW9uIHN0YXR1cyBpcyBjaGFuZ2VkDQo+Pg0KPj4g
+ICAuLi4vdmlydHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdCAgICAgfCAxMTYgKysr
+Kw0KPj4gICBEb2N1bWVudGF0aW9uL3ZpcnR1YWwva3ZtL2h5cGVyY2FsbHMudHh0ICAgICAgfCAg
+MTQgKw0KPj4gICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9rdm1faG9zdC5oICAgICAgICAgICAgICAg
+fCAgIDMgKw0KPj4gICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9rdm1fcGFyYS5oICAgICAgICAgICAg
+ICAgfCAgMTIgKw0KPj4gICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9tZW1fZW5jcnlwdC5oICAgICAg
+ICAgICAgfCAgIDMgKw0KPj4gICBhcmNoL3g4Ni9rdm0vc3ZtLmMgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCA1NjAgKysrKysrKysrKysrKysrKystDQo+PiAgIGFyY2gveDg2L2t2bS92bXgv
+dm14LmMgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQo+PiAgIGFyY2gveDg2L2t2bS94
+ODYuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxNyArDQo+PiAgIGFyY2gveDg2L21t
+L21lbV9lbmNyeXB0LmMgICAgICAgICAgICAgICAgICAgICB8ICA0NSArLQ0KPj4gICBhcmNoL3g4
+Ni9tbS9wYWdlYXR0ci5jICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTUgKw0KPj4gICBpbmNs
+dWRlL3VhcGkvbGludXgva3ZtLmggICAgICAgICAgICAgICAgICAgICAgfCAgNTEgKysNCj4+ICAg
+aW5jbHVkZS91YXBpL2xpbnV4L2t2bV9wYXJhLmggICAgICAgICAgICAgICAgIHwgICAxICsNCj4+
+ICAgMTIgZmlsZXMgY2hhbmdlZCwgODM0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+
+Pg0KPj4gLS0NCj4+IDIuMTcuMQ0KPj4NCj4gDQo+IFdoYXQncyB0aGUgYmFjay1vZi10aGUtZW52
+ZWxvcGUgbWFyZ2luYWwgY29zdCBvZiB0cmFuc2ZlcnJpbmcgYSAxNmtCDQo+IHJlZ2lvbiBmcm9t
+IG9uZSBob3N0IHRvIGFub3RoZXI/IEknbSBpbnRlcmVzdGVkIGluIHdoYXQgdGhlIGVuZCB0byBl
+bmQNCj4gbWlncmF0aW9uIHBlcmYgY2hhbmdlcyBsb29rIGxpa2UgZm9yIHRoaXMuIElmIHlvdSBo
+YXZlIG1lYXN1cmVkDQo+IG1pZ3JhdGlvbiBwZXJmLCBJJ20gaW50ZXJlc3RlZCBpbiB0aGF0IGFs
+c28uDQo+IA0KDQpJIGhhdmUgbm90IGRvbmUgYSBjb21wbGV0ZSBwZXJmb3JtYW5jZSBhbmFseXNp
+cyB5ZXQhIEZyb20gdGhlIHFlbXUNClFNUCBwcm9tcHQgKHF1ZXJ5LW1pZ3JhdGlvbikgSSBhbSBn
+ZXR0aW5nIH44bWJwcyB0aHJvdWdocHV0IGZyb20NCm9uZSBob3N0IHRvIGFub3RoZXIgKHRoaXMg
+aXMgd2l0aCA0a2IgcmVnaW9ucykuIEkgaGF2ZSBiZWVuIHRvbGQNCnRoYXQgaW5jcmVhc2luZyB0
+aGUgdHJhbnNmZXIgc2l6ZSBmcm9tIDRrYiAtPiAxNmtiIG1heSBub3QgZ2l2ZSBhDQpodWdlIHBl
+cmZvcm1hbmNlIGdhaW4gYmVjYXVzZSBhdCBGVyBsZXZlbCB0aGV5IHN0aWxsIG9wZXJhdGluZw0K
+b24gNGtiIGJsb2Nrcy4gVGhlcmUgaXMgcG9zc2liaWxpdHkgdGhhdCBmdXR1cmUgRlcgdXBkYXRl
+cyBtYXkNCmdpdmUgYSBiaXQgYmV0dGVyIHBlcmZvcm1hbmNlIG9uIDE2a2Igc2l6ZS4NCg0KLUJy
+aWplc2gNCg==
