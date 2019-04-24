@@ -1,126 +1,102 @@
-Return-Path: <SRS0=LehB=SZ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A819C10F03
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8596AC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8BF217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 23 Apr 2019 23:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A32217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:02:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="nFKO+usO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbfDWX6x (ORCPT
+        id S1728716AbfDXACY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 19:58:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbfDWX6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 19:58:53 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C722921738;
-        Tue, 23 Apr 2019 23:58:51 +0000 (UTC)
-Date:   Tue, 23 Apr 2019 19:58:50 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
+        Tue, 23 Apr 2019 20:02:24 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:53963 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfDXACX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 20:02:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1556064143; x=1587600143;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XiNEr+PSJjtuVX087I0r7I3Y9FgKCYJ6yrGmyRyacdU=;
+  b=nFKO+usOTNZsv6wHpU7O5XjMotnakHs4sRSWgr5/0euW+Ryrm7Z/AAvi
+   tsppNyu6dQvAYsDa3VZbT7H51YP9I3gm3WkQcyojR/13YAVfbkHLQI4r0
+   ePneHxPItHxn3C3zPoY3+ghaimY9IdxZmxNbnXMHrRSxcnmnDUib0JS5i
+   pBfJNFMS38cdLOcMI/edQ8AjX/7ZGoeQXCHMwhwiFz1GXwvufOOsFRtKM
+   TsRc7DhgBAA8U6c091x1TNixEh4+ULqdvRy7VZe2AbkMu6Wz5BPwBFWn9
+   hK8Cm9wqyETQVDK5AN55lidIue3Rtl9Lgd6tu7oT4Iaf6ftbLXC6au3xr
+   g==;
+X-IronPort-AV: E=Sophos;i="5.60,387,1549900800"; 
+   d="scan'208";a="106649527"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 24 Apr 2019 08:02:23 +0800
+IronPort-SDR: ePQifEgAGB6/nTd4aRhZTOdmuGkgZxO3KExscOpkbLhYxG3zmCHKUTvh2kwdJDKEEyr6We4PBU
+ VcCVVer06E/iG7V155gtl9IJWbkpkVl55vgud9nl9YRtBs6RD+LIeNWak6agd2RN1Nnu8kqTXX
+ M/BFKZ0aD8cyjO6R16VVKxPPwOLyLaiDgYKBZl5L5hqQakFmxNy6BIzxLxs4IwyChDWyDNpiSx
+ co7EKTVnMHfI77cTE9WoFKcS8dR2QhHPiuqWuuFhnPadZu4ckYPKbV6nefeEkZi6PYrQgNITHt
+ hNy6lQd4TSwDer+fkEf8ZxGq
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP; 23 Apr 2019 16:41:03 -0700
+IronPort-SDR: cA8mCqTqPppT2Ml7LpCNlgN8VnVzAcqm2YLkAzH55HD0iy1M1KnZmrrmrLvas12gEN/6GRPZ7I
+ UPvQPemxtXPqi4Ww+y2kTFbOMTTqaLMrYj9sC1n05Nhg2gBeZCicxelYl58ZCG7R/0o34fwHAb
+ 5f7Mm0dLGcA7xG+MhDWitbFLEu1oalTouSttCiWzr6YZVbS+YC8/n8imcTtBRMQF/vFLlfQlKK
+ f9JhjBEEO/3pYkp+GaD+dmSEMx9SxbfgscZ940tZo50UTh7b9bGU0jd37OWHHoxWRbr63mAj2s
+ puU=
+Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
+  by uls-op-cesaip02.wdc.com with ESMTP; 23 Apr 2019 17:02:22 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andreas Schwab <schwab@suse.de>,
+        Anup Patel <anup@brainfault.org>,
+        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH] trace: Fix preempt_enable_no_resched() abuse
-Message-ID: <20190423195850.6ea5b13e@gandalf.local.home>
-In-Reply-To: <20190423200318.GY14281@hirez.programming.kicks-ass.net>
-References: <20190419130304.GV14281@hirez.programming.kicks-ass.net>
-        <20190419131522.GW14281@hirez.programming.kicks-ass.net>
-        <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
-        <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
-        <20190423141714.GO11158@hirez.programming.kicks-ass.net>
-        <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
-        <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
-        <20190423193435.GX4038@hirez.programming.kicks-ass.net>
-        <88ba7be0-9ec5-941e-1b3f-80fbe05fe3a0@redhat.com>
-        <20190423195559.GY4038@hirez.programming.kicks-ass.net>
-        <20190423200318.GY14281@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH v3 0/3] Miscellaneous kernel command line fixes
+Date:   Tue, 23 Apr 2019 17:02:24 -0700
+Message-Id: <20190424000227.3085-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019 22:03:18 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Assorted command line option fixes for RISC-V.
 
-> On Tue, Apr 23, 2019 at 09:55:59PM +0200, Peter Zijlstra wrote:
-> > On Tue, Apr 23, 2019 at 03:41:32PM -0400, Waiman Long wrote:  
-> 
-> > > I saw a number of instances of
-> > > preempt_enable_no_resched() without right next a schedule().  
-> > 
-> > Look more closely.. and let me know, if true, those are bugs that need
-> > fixing.
-> > 
-> > Argghhh.. BPF...  
-> 
-> /me shakes head, Steve...
+Changes from v2->v3.
+1. Merged patch 1 & 2 into one patch.
 
-/me points finger to Frederic ;-)
+Changes from v1->v2.
+1. Update pr_err string in patch (4/4) as per review.
 
+Atish Patra (3):
+RISC-V: Add RISC-V specific arch_match_cpu_phys_id
+RISC-V: Implement nosmp commandline option.
+RISC-V: Support nr_cpus command line option.
 
-> 
-> ---
-> Subject: trace: Fix preempt_enable_no_resched() abuse
-> 
-> Unless the very next line is schedule(), or implies it, one must not use
-> preempt_enable_no_resched(). It can cause a preemption to go missing and
-> thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
-> 
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Fixes: 37886f6a9f62 ("ring-buffer: add api to allow a tracer to change clock source")
+arch/riscv/kernel/cpu.c     |  3 +--
+arch/riscv/kernel/smp.c     |  5 +++++
+arch/riscv/kernel/smpboot.  |  0
+arch/riscv/kernel/smpboot.c | 22 ++++++++++++++++++++--
+4 files changed, 26 insertions(+), 4 deletions(-)
+create mode 100644 arch/riscv/kernel/smpboot.
 
-That commit just moved the buggy code. That tag should be:
-
-Fixes: 2c2d7329d8af ("tracing/ftrace: use preempt_enable_no_resched_notrace in ring_buffer_time_stamp()")
-
-OK, this isn't quite fair to point all the blame on Frederic, because
-it did fix a bug. But the real fix for that bug was your fix here:
-
-499d79559ffe4b ("sched/core: More notrace annotations")
-
--- Steve
-
-
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  kernel/trace/ring_buffer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 41b6f96e5366..4ee8d8aa3d0f 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -762,7 +762,7 @@ u64 ring_buffer_time_stamp(struct ring_buffer
-> *buffer, int cpu) 
->  	preempt_disable_notrace();
->  	time = rb_time_stamp(buffer);
-> -	preempt_enable_no_resched_notrace();
-> +	preempt_enable_notrace();
->  
->  	return time;
->  }
+--
+2.21.0
 
