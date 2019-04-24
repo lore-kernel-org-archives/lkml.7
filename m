@@ -2,56 +2,54 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355C8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97732C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052D820685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F7520685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129206;
-	bh=0eI/iZ800I59QQTYcTkaDPkrUPp8wwQCIkyYSh6dcC4=;
+	s=default; t=1556129238;
+	bh=W6+BiNvo1pfc4n2o49+wT7805Umg19cOc5uBC6BdxYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tinHuiyFl/+9DHb18uPmokgbNGYPRzaJKR8okU5Gq4pOzTS3ZhqAzrrCpdx/HpNI5
-	 SSgbV1dcjn0HYDonmqDEbH642wvrSW86dbtRIUXqTJG4Uc89UzNVlBrmMmAAlQRm8q
-	 3c6Wg2CJdYv62Q8n3jRmXtw09xjkyDv7Ty+4T67g=
+	b=BannwnQYXlbiQ5BWmPbNJ453r2Cn7+R63kLJIdlOut4fpBl8UkRxlnxGeaC2GtZS5
+	 AsKXE9dq/ytnSv1+2rKec020c6MVDLMzKDvZ35XdjS+cQOJ3obUWELXChA3mO4xRki
+	 Q3NMFnoZw6+Objnvorpc8AptfLpkqhQvS8Pv9rKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388668AbfDXRRi (ORCPT
+        id S2388725AbfDXSHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:17:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42508 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 14:07:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388647AbfDXRRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:17:34 -0400
+        id S2387765AbfDXRRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:17:05 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FADB218B0;
-        Wed, 24 Apr 2019 17:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D165021907;
+        Wed, 24 Apr 2019 17:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126253;
-        bh=0eI/iZ800I59QQTYcTkaDPkrUPp8wwQCIkyYSh6dcC4=;
+        s=default; t=1556126224;
+        bh=W6+BiNvo1pfc4n2o49+wT7805Umg19cOc5uBC6BdxYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mKLJvmUIV5fMYCrVXUkcYNtGytSsO136VZbqT2n8xbQV8Fhvxai7svU8/a6ZGaQlq
-         V+qggbAjgm8JU70vqPp4cL9Z/h8FrBS1OxEW+LDK90nd82VyJIQqc+I0LazemDAEOK
-         haNxoI5fKOLL/5DTQWMIzBiw+/y9qPSLqGJR7hlQ=
+        b=YGTtcvORD1T6AaAXL0vWneXRbXrggWmy57jV/MgzAYuglS/ssBWnXl6nJv7ZyPEeD
+         3SdmzfWW1CPQPtkq6aIJUAfkNTqmQ2Xg7zVapYNpdVSb54f/jqbLYMXcNO74rUDHT0
+         VgCPutUyke5IjCblXSV3hvk39qBuT2iLndqE8k0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 044/168] ARM: 8833/1: Ensure that NEON code always compiles with Clang
-Date:   Wed, 24 Apr 2019 19:08:08 +0200
-Message-Id: <20190424170926.412244164@linuxfoundation.org>
+Subject: [PATCH 4.4 034/168] IB/mlx4: Increase the timeout for CM cache
+Date:   Wed, 24 Apr 2019 19:07:58 +0200
+Message-Id: <20190424170925.751618382@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -64,120 +62,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit de9c0d49d85dc563549972edc5589d195cd5e859 ]
+[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
 
-While building arm32 allyesconfig, I ran into the following errors:
+Using CX-3 virtual functions, either from a bare-metal machine or
+pass-through from a VM, MAD packets are proxied through the PF driver.
 
-  arch/arm/lib/xor-neon.c:17:2: error: You should compile this file with
-  '-mfloat-abi=softfp -mfpu=neon'
+Since the VF drivers have separate name spaces for MAD Transaction Ids
+(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
+in a cache.
 
-  In file included from lib/raid6/neon1.c:27:
-  /home/nathan/cbl/prebuilt/lib/clang/8.0.0/include/arm_neon.h:28:2:
-  error: "NEON support not enabled"
+Following the RDMA Connection Manager (CM) protocol, it is clear when
+an entry has to evicted form the cache. But life is not perfect,
+remote peers may die or be rebooted. Hence, it's a timeout to wipe out
+a cache entry, when the PF driver assumes the remote peer has gone.
 
-Building V=1 showed NEON_FLAGS getting passed along to Clang but
-__ARM_NEON__ was not getting defined. Ultimately, it boils down to Clang
-only defining __ARM_NEON__ when targeting armv7, rather than armv6k,
-which is the '-march' value for allyesconfig.
+During workloads where a high number of QPs are destroyed concurrently,
+excessive amount of CM DREQ retries has been observed
 
->From lib/Basic/Targets/ARM.cpp in the Clang source:
+The problem can be demonstrated in a bare-metal environment, where two
+nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
+have 16 vPorts per physical server.
 
-  // This only gets set when Neon instructions are actually available, unlike
-  // the VFP define, hence the soft float and arch check. This is subtly
-  // different from gcc, we follow the intent which was that it should be set
-  // when Neon instructions are actually available.
-  if ((FPU & NeonFPU) && !SoftFloat && ArchVersion >= 7) {
-    Builder.defineMacro("__ARM_NEON", "1");
-    Builder.defineMacro("__ARM_NEON__");
-    // current AArch32 NEON implementations do not support double-precision
-    // floating-point even when it is present in VFP.
-    Builder.defineMacro("__ARM_NEON_FP",
-                        "0x" + Twine::utohexstr(HW_FP & ~HW_FP_DP));
-  }
+64 processes are associated with each vPort and creates and destroys
+one QP for each of the remote 64 processes. That is, 1024 QPs per
+vPort, all in all 16K QPs. The QPs are created/destroyed using the
+CM.
 
-Ard Biesheuvel recommended explicitly adding '-march=armv7-a' at the
-beginning of the NEON_FLAGS definitions so that __ARM_NEON__ always gets
-definined by Clang. This doesn't functionally change anything because
-that code will only run where NEON is supported, which is implicitly
-armv7.
+When tearing down these 16K QPs, excessive CM DREQ retries (and
+duplicates) are observed. With some cat/paste/awk wizardry on the
+infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
+nodes:
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/287
+cm_rx_duplicates:
+      dreq  2102
+cm_rx_msgs:
+      drep  1989
+      dreq  6195
+       rep  3968
+       req  4224
+       rtu  4224
+cm_tx_msgs:
+      drep  4093
+      dreq 27568
+       rep  4224
+       req  3968
+       rtu  3968
+cm_tx_retries:
+      dreq 23469
 
-Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Nicolas Pitre <nico@linaro.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Note that the active/passive side is equally distributed between the
+two nodes.
+
+Enabling pr_debug in cm.c gives tons of:
+
+[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
+1,sl_cm_id: 0xd393089f} is NULL!
+
+By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
+tear-down phase of the application is reduced from approximately 90 to
+50 seconds. Retries/duplicates are also significantly reduced:
+
+cm_rx_duplicates:
+      dreq  2460
+[]
+cm_tx_retries:
+      dreq  3010
+       req    47
+
+Increasing the timeout further didn't help, as these duplicates and
+retries stems from a too short CMA timeout, which was 20 (~4 seconds)
+on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
+numbers fell down to about 10 for both of them.
+
+Adjustment of the CMA timeout is not part of this commit.
+
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/arm/kernel_mode_neon.txt | 4 ++--
- arch/arm/lib/Makefile                  | 2 +-
- arch/arm/lib/xor-neon.c                | 2 +-
- lib/raid6/Makefile                     | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/infiniband/hw/mlx4/cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/arm/kernel_mode_neon.txt b/Documentation/arm/kernel_mode_neon.txt
-index 525452726d31..b9e060c5b61e 100644
---- a/Documentation/arm/kernel_mode_neon.txt
-+++ b/Documentation/arm/kernel_mode_neon.txt
-@@ -6,7 +6,7 @@ TL;DR summary
- * Use only NEON instructions, or VFP instructions that don't rely on support
-   code
- * Isolate your NEON code in a separate compilation unit, and compile it with
--  '-mfpu=neon -mfloat-abi=softfp'
-+  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp'
- * Put kernel_neon_begin() and kernel_neon_end() calls around the calls into your
-   NEON code
- * Don't sleep in your NEON code, and be aware that it will be executed with
-@@ -87,7 +87,7 @@ instructions appearing in unexpected places if no special care is taken.
- Therefore, the recommended and only supported way of using NEON/VFP in the
- kernel is by adhering to the following rules:
- * isolate the NEON code in a separate compilation unit and compile it with
--  '-mfpu=neon -mfloat-abi=softfp';
-+  '-march=armv7-a -mfpu=neon -mfloat-abi=softfp';
- * issue the calls to kernel_neon_begin(), kernel_neon_end() as well as the calls
-   into the unit containing the NEON code from a compilation unit which is *not*
-   built with the GCC flag '-mfpu=neon' set.
-diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
-index d8a780799506..06348a3d50c2 100644
---- a/arch/arm/lib/Makefile
-+++ b/arch/arm/lib/Makefile
-@@ -35,7 +35,7 @@ $(obj)/csumpartialcopy.o:	$(obj)/csumpartialcopygeneric.S
- $(obj)/csumpartialcopyuser.o:	$(obj)/csumpartialcopygeneric.S
+diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
+index 39a488889fc7..5dc920fe1326 100644
+--- a/drivers/infiniband/hw/mlx4/cm.c
++++ b/drivers/infiniband/hw/mlx4/cm.c
+@@ -39,7 +39,7 @@
  
- ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
--  NEON_FLAGS			:= -mfloat-abi=softfp -mfpu=neon
-+  NEON_FLAGS			:= -march=armv7-a -mfloat-abi=softfp -mfpu=neon
-   CFLAGS_xor-neon.o		+= $(NEON_FLAGS)
-   obj-$(CONFIG_XOR_BLOCKS)	+= xor-neon.o
- endif
-diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
-index 2c40aeab3eaa..c691b901092f 100644
---- a/arch/arm/lib/xor-neon.c
-+++ b/arch/arm/lib/xor-neon.c
-@@ -14,7 +14,7 @@
- MODULE_LICENSE("GPL");
+ #include "mlx4_ib.h"
  
- #ifndef __ARM_NEON__
--#error You should compile this file with '-mfloat-abi=softfp -mfpu=neon'
-+#error You should compile this file with '-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
- #endif
+-#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
++#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
  
- /*
-diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
-index 3b10a48fa040..a84efd4aad37 100644
---- a/lib/raid6/Makefile
-+++ b/lib/raid6/Makefile
-@@ -23,7 +23,7 @@ endif
- ifeq ($(CONFIG_KERNEL_MODE_NEON),y)
- NEON_FLAGS := -ffreestanding
- ifeq ($(ARCH),arm)
--NEON_FLAGS += -mfloat-abi=softfp -mfpu=neon
-+NEON_FLAGS += -march=armv7-a -mfloat-abi=softfp -mfpu=neon
- endif
- ifeq ($(ARCH),arm64)
- CFLAGS_REMOVE_neon1.o += -mgeneral-regs-only
+ struct id_map_entry {
+ 	struct rb_node node;
 -- 
 2.19.1
 
