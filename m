@@ -2,52 +2,60 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2F4C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D47C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5B821773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CBE6218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127988;
-	bh=adpl9U5/cJrbRawGhvQLQOPZNPKkNOgroLkj2pwstw0=;
+	s=default; t=1556128011;
+	bh=STQznUZze8QDmSf8B+bOGRIkORWLMlYfOgqYld8MiaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=khbAK9Wh6mBnunrD2usB0bYdqIg1q/CzijyLoBOrFnTqDhnVWEWBpsK6LBAME+Wg3
-	 BTywPMw0/hSkARhO4wCyXsA01c8vRDPiOM829fvHqt1bxkP/yzTe/X+cXmrNqKNA93
-	 SqCbTqGxxnOC4tdeyt8as9un4lKSuI81FXbAVl8E=
+	b=ECJOd4Z/6qzcFPt8Ci11b9JFyyC3Z0E3Guh6/az5BgTxpQZS9u8lWdMbK8Zcwynhf
+	 QE97LiDOIksiSH6YAYJ0DNfsKaClRRrvVRBp3svTdQ2ZUEoG++UCHUe+daagB1gOYo
+	 XBfWKmHb2bds5cxL+yu4WFywzd5V1/aTyXIO7fmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391443AbfDXRq0 (ORCPT
+        id S2391920AbfDXRqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:46:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59418 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:46:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391363AbfDXRcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:32:39 -0400
+        id S2389873AbfDXRcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:32:20 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C841A2054F;
-        Wed, 24 Apr 2019 17:32:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76EC72190A;
+        Wed, 24 Apr 2019 17:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127158;
-        bh=adpl9U5/cJrbRawGhvQLQOPZNPKkNOgroLkj2pwstw0=;
+        s=default; t=1556127140;
+        bh=STQznUZze8QDmSf8B+bOGRIkORWLMlYfOgqYld8MiaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KXJhtcHpBCLcwmW1kNpKjlxWFeCAb9tu7YwW7HKue/Gxqp1VLrDRhG8X5xSmBkuYv
-         uD7c6GfkK6QQSxToIzAALncKvpl5BDvP/ylq/sqJFnM6P2XB3SWkh6xE00IhrrqdFu
-         o73C5+PYw70SJT9fQ8qahpGQHJt8VzmqIHSwTALw=
+        b=Wmn1kUc5+QAUGFlE3QDlRm7SFwPEvhe90IIj3AUPmcZeYu6kxj34hHNQlItz5lA8T
+         QSE4OcObsR11VyFPVCosGzvgohtlJwz/uFUDWX8veIF+sEmsonscYs1YmMigsbS3a1
+         NCPmn8BkpG7EzDOW0WcUWAx3kRjbKm1m6lyLBpHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 83/96] mmc: sdhci: Handle auto-command errors
-Date:   Wed, 24 Apr 2019 19:10:28 +0200
-Message-Id: <20190424170925.419866103@linuxfoundation.org>
+        stable@vger.kernel.org, Chang-An Chen <chang-an.chen@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        kuohong.wang@mediatek.com, freddy.hsin@mediatek.com
+Subject: [PATCH 4.19 76/96] timers/sched_clock: Prevent generic sched_clock wrap caused by tick_freeze()
+Date:   Wed, 24 Apr 2019 19:10:21 +0200
+Message-Id: <20190424170924.889524656@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -60,109 +68,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit af849c86109d79222e549826068bbf4e7f9a2472 ]
+From: Chang-An Chen <chang-an.chen@mediatek.com>
 
-If the host controller supports auto-commands then enable the auto-command
-error interrupt and handle it. In the case of auto-CMD23, the error is
-treated the same as manual CMD23 error. In the case of auto-CMD12,
-commands-during-transfer are not permitted, so the error handling is
-treated the same as a data error.
+commit 3f2552f7e9c5abef2775c53f7af66532f8bf65bc upstream.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+tick_freeze() introduced by suspend-to-idle in commit 124cf9117c5f ("PM /
+sleep: Make it possible to quiesce timers during suspend-to-idle") uses
+timekeeping_suspend() instead of syscore_suspend() during
+suspend-to-idle. As a consequence generic sched_clock will keep going
+because sched_clock_suspend() and sched_clock_resume() are not invoked
+during suspend-to-idle which can result in a generic sched_clock wrap.
+
+On a ARM system with suspend-to-idle enabled, sched_clock is registered
+as "56 bits at 13MHz, resolution 76ns, wraps every 4398046511101ns", which
+means the real wrapping duration is 8796093022202ns.
+
+[  134.551779] suspend-to-idle suspend (timekeeping_suspend())
+[ 1204.912239] suspend-to-idle resume (timekeeping_resume())
+......
+[ 1206.912239] suspend-to-idle suspend (timekeeping_suspend())
+[ 5880.502807] suspend-to-idle resume (timekeeping_resume())
+......
+[ 6000.403724] suspend-to-idle suspend (timekeeping_suspend())
+[ 8035.753167] suspend-to-idle resume  (timekeeping_resume())
+......
+[ 8795.786684] (2)[321:charger_thread]......
+[ 8795.788387] (2)[321:charger_thread]......
+[    0.057226] (0)[0:swapper/0]......
+[    0.061447] (2)[0:swapper/2]......
+
+sched_clock was not stopped during suspend-to-idle, and sched_clock_poll
+hrtimer was not expired because timekeeping_suspend() was invoked during
+suspend-to-idle. It makes sched_clock wrap at kernel time 8796s.
+
+To prevent this, invoke sched_clock_suspend() and sched_clock_resume() in
+tick_freeze() together with timekeeping_suspend() and timekeeping_resume().
+
+Fixes: 124cf9117c5f (PM / sleep: Make it possible to quiesce timers during suspend-to-idle)
+Signed-off-by: Chang-An Chen <chang-an.chen@mediatek.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Corey Minyard <cminyard@mvista.com>
+Cc: <linux-mediatek@lists.infradead.org>
+Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: Stanley Chu <stanley.chu@mediatek.com>
+Cc: <kuohong.wang@mediatek.com>
+Cc: <freddy.hsin@mediatek.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1553828349-8914-1-git-send-email-chang-an.chen@mediatek.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mmc/host/sdhci.c | 35 +++++++++++++++++++++++++++++++++++
- drivers/mmc/host/sdhci.h |  7 ++++++-
- 2 files changed, 41 insertions(+), 1 deletion(-)
+ kernel/time/sched_clock.c |    4 ++--
+ kernel/time/tick-common.c |    2 ++
+ kernel/time/timekeeping.h |    7 +++++++
+ 3 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 0eb05a42a857..c749d3dc1d36 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -841,6 +841,11 @@ static void sdhci_set_transfer_irqs(struct sdhci_host *host)
- 	else
- 		host->ier = (host->ier & ~dma_irqs) | pio_irqs;
- 
-+	if (host->flags & (SDHCI_AUTO_CMD23 | SDHCI_AUTO_CMD12))
-+		host->ier |= SDHCI_INT_AUTO_CMD_ERR;
-+	else
-+		host->ier &= ~SDHCI_INT_AUTO_CMD_ERR;
-+
- 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
- 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -275,7 +275,7 @@ static u64 notrace suspended_sched_clock
+ 	return cd.read_data[seq & 1].epoch_cyc;
  }
-@@ -2642,6 +2647,21 @@ static void sdhci_timeout_data_timer(struct timer_list *t)
  
- static void sdhci_cmd_irq(struct sdhci_host *host, u32 intmask, u32 *intmask_p)
+-static int sched_clock_suspend(void)
++int sched_clock_suspend(void)
  {
-+	/* Handle auto-CMD12 error */
-+	if (intmask & SDHCI_INT_AUTO_CMD_ERR && host->data_cmd) {
-+		struct mmc_request *mrq = host->data_cmd->mrq;
-+		u16 auto_cmd_status = sdhci_readw(host, SDHCI_AUTO_CMD_STATUS);
-+		int data_err_bit = (auto_cmd_status & SDHCI_AUTO_CMD_TIMEOUT) ?
-+				   SDHCI_INT_DATA_TIMEOUT :
-+				   SDHCI_INT_DATA_CRC;
-+
-+		/* Treat auto-CMD12 error the same as data error */
-+		if (!mrq->sbc && (host->flags & SDHCI_AUTO_CMD12)) {
-+			*intmask_p |= data_err_bit;
-+			return;
-+		}
-+	}
-+
- 	if (!host->cmd) {
- 		/*
- 		 * SDHCI recovers from errors by resetting the cmd and data
-@@ -2676,6 +2696,21 @@ static void sdhci_cmd_irq(struct sdhci_host *host, u32 intmask, u32 *intmask_p)
- 		return;
- 	}
+ 	struct clock_read_data *rd = &cd.read_data[0];
  
-+	/* Handle auto-CMD23 error */
-+	if (intmask & SDHCI_INT_AUTO_CMD_ERR) {
-+		struct mmc_request *mrq = host->cmd->mrq;
-+		u16 auto_cmd_status = sdhci_readw(host, SDHCI_AUTO_CMD_STATUS);
-+		int err = (auto_cmd_status & SDHCI_AUTO_CMD_TIMEOUT) ?
-+			  -ETIMEDOUT :
-+			  -EILSEQ;
-+
-+		if (mrq->sbc && (host->flags & SDHCI_AUTO_CMD23)) {
-+			mrq->sbc->error = err;
-+			sdhci_finish_mrq(host, mrq);
-+			return;
-+		}
-+	}
-+
- 	if (intmask & SDHCI_INT_RESPONSE)
- 		sdhci_finish_command(host);
+@@ -286,7 +286,7 @@ static int sched_clock_suspend(void)
+ 	return 0;
  }
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 33a7728c71fa..0f8c4f3ccafc 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -151,7 +151,8 @@
- #define  SDHCI_INT_ERROR_MASK	0xFFFF8000
  
- #define  SDHCI_INT_CMD_MASK	(SDHCI_INT_RESPONSE | SDHCI_INT_TIMEOUT | \
--		SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX)
-+		SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX | \
-+		SDHCI_INT_AUTO_CMD_ERR)
- #define  SDHCI_INT_DATA_MASK	(SDHCI_INT_DATA_END | SDHCI_INT_DMA_END | \
- 		SDHCI_INT_DATA_AVAIL | SDHCI_INT_SPACE_AVAIL | \
- 		SDHCI_INT_DATA_TIMEOUT | SDHCI_INT_DATA_CRC | \
-@@ -167,6 +168,10 @@
- #define SDHCI_CQE_INT_MASK (SDHCI_CQE_INT_ERR_MASK | SDHCI_INT_CQE)
+-static void sched_clock_resume(void)
++void sched_clock_resume(void)
+ {
+ 	struct clock_read_data *rd = &cd.read_data[0];
  
- #define SDHCI_AUTO_CMD_STATUS	0x3C
-+#define  SDHCI_AUTO_CMD_TIMEOUT	0x00000002
-+#define  SDHCI_AUTO_CMD_CRC	0x00000004
-+#define  SDHCI_AUTO_CMD_END_BIT	0x00000008
-+#define  SDHCI_AUTO_CMD_INDEX	0x00000010
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -491,6 +491,7 @@ void tick_freeze(void)
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), true);
+ 		system_state = SYSTEM_SUSPEND;
++		sched_clock_suspend();
+ 		timekeeping_suspend();
+ 	} else {
+ 		tick_suspend_local();
+@@ -514,6 +515,7 @@ void tick_unfreeze(void)
  
- #define SDHCI_HOST_CONTROL2		0x3E
- #define  SDHCI_CTRL_UHS_MASK		0x0007
--- 
-2.19.1
-
+ 	if (tick_freeze_depth == num_online_cpus()) {
+ 		timekeeping_resume();
++		sched_clock_resume();
+ 		system_state = SYSTEM_RUNNING;
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), false);
+--- a/kernel/time/timekeeping.h
++++ b/kernel/time/timekeeping.h
+@@ -14,6 +14,13 @@ extern u64 timekeeping_max_deferment(voi
+ extern void timekeeping_warp_clock(void);
+ extern int timekeeping_suspend(void);
+ extern void timekeeping_resume(void);
++#ifdef CONFIG_GENERIC_SCHED_CLOCK
++extern int sched_clock_suspend(void);
++extern void sched_clock_resume(void);
++#else
++static inline int sched_clock_suspend(void) { return 0; }
++static inline void sched_clock_resume(void) { }
++#endif
+ 
+ extern void do_timer(unsigned long ticks);
+ extern void update_wall_time(void);
 
 
