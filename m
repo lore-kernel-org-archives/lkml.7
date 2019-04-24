@@ -2,167 +2,112 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5931FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37141C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAB920684
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129379;
-	bh=Rf7kNGlIeQS29H8+rUFgx/ZMAGQ/wDnK+clLLoQv5Mw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x0JCC3iOTsEW1Uxdj/h5pa8OYQ6HjfL02iK7xT7X7nSQA/xAv5akGPW37CS9lM4hz
-	 10LxqCpSDD3khfhilDY8Y25f3yA6TBfcNcib+yu82tZqeDcIdfnYDmIcoIlG96o/8v
-	 1lFHMhw3klcFP00AhiRQOGipnvo9sujFN9R+Xko0=
+	by mail.kernel.org (Postfix) with ESMTP id 1372120684
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388533AbfDXSJi (ORCPT
+        id S2389159AbfDXSJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:09:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387432AbfDXRPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:15:06 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4E882054F;
-        Wed, 24 Apr 2019 17:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126105;
-        bh=Rf7kNGlIeQS29H8+rUFgx/ZMAGQ/wDnK+clLLoQv5Mw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZHz/Q1HQorNLw70z2zhqqU+TGAdGrPCZT8jqIxvCiuxwJbe/Eli4rDtUmYm5l/ZJN
-         V12D8QUea89G/+MXVGqoePlvGWTph6BZY4QyI7CzLTVE2xl/dIDB6Qzdzm7S3CVe1T
-         uWIZup56FsknyrWf6TrQqDtw7ZHAUs4zlFaVUvLk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 3.18 097/104] staging: comedi: vmk80xx: Fix use of uninitialized semaphore
-Date:   Wed, 24 Apr 2019 19:09:54 +0200
-Message-Id: <20190424170910.065005646@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
-References: <20190424170839.996641496@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 14:09:41 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.175]:48436 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387432AbfDXSJk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:09:40 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 3F318400E6CCC
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 13:09:39 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id JMKxhYfbO2PzOJMKxh4Qgg; Wed, 24 Apr 2019 13:09:39 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.223] (port=44244 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hJMKv-0046lv-MS; Wed, 24 Apr 2019 13:09:37 -0500
+Date:   Wed, 24 Apr 2019 13:09:34 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Mattia Dongili <malattia@linux.it>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] platform/x86: sony-laptop: Fix unintentional fall-through
+Message-ID: <20190424180934.GA29307@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.223
+X-Source-L: No
+X-Exim-ID: 1hJMKv-0046lv-MS
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.127.223]:44244
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+It seems that the default case should return AE_CTRL_TERMINATE, instead
+of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
+otherwise the line of code at the end of the function is unreachable and
+makes no sense:
 
-commit 08b7c2f9208f0e2a32159e4e7a4831b7adb10a3e upstream.
+return AE_CTRL_TERMINATE;
 
-If `vmk80xx_auto_attach()` returns an error, the core comedi module code
-will call `vmk80xx_detach()` to clean up.  If `vmk80xx_auto_attach()`
-successfully allocated the comedi device private data,
-`vmk80xx_detach()` assumes that a `struct semaphore limit_sem` contained
-in the private data has been initialized and uses it.  Unfortunately,
-there are a couple of places where `vmk80xx_auto_attach()` can return an
-error after allocating the device private data but before initializing
-the semaphore, so this assumption is invalid.  Fix it by initializing
-the semaphore just after allocating the private data in
-`vmk80xx_auto_attach()` before any other errors can be returned.
+This fix is based on the following thread of discussion:
 
-I believe this was the cause of the following syzbot crash report
-<https://syzkaller.appspot.com/bug?extid=54c2f58f15fe6876b6ad>:
+https://lore.kernel.org/patchwork/patch/959782/
 
-usb 1-1: config 0 has no interface number 0
-usb 1-1: New USB device found, idVendor=10cf, idProduct=8068, bcdDevice=e6.8d
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-vmk80xx 1-1:0.117: driver 'vmk80xx' failed to auto-configure device.
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xe8/0x16e lib/dump_stack.c:113
- assign_lock_key kernel/locking/lockdep.c:786 [inline]
- register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
- __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
- lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
- down+0x12/0x80 kernel/locking/semaphore.c:58
- vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
- comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
- comedi_device_cleanup.part.0+0x68/0x140 drivers/staging/comedi/comedi_fops.c:156
- comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
- comedi_free_board_dev.part.0+0x16/0x90 drivers/staging/comedi/comedi_fops.c:190
- comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
- comedi_release_hardware_device+0x111/0x140 drivers/staging/comedi/comedi_fops.c:2880
- comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
- usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
- really_probe+0x2da/0xb10 drivers/base/dd.c:509
- driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
- __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
- bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
- __device_attach+0x223/0x3a0 drivers/base/dd.c:844
- bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
- device_add+0xad2/0x16e0 drivers/base/core.c:2106
- usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
- generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
- usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
- really_probe+0x2da/0xb10 drivers/base/dd.c:509
- driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
- __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
- bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
- __device_attach+0x223/0x3a0 drivers/base/dd.c:844
- bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
- device_add+0xad2/0x16e0 drivers/base/core.c:2106
- usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
- hub_port_connect drivers/usb/core/hub.c:5089 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
- port_event drivers/usb/core/hub.c:5350 [inline]
- hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
- process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
- worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
- kthread+0x313/0x420 kernel/kthread.c:253
- ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-
-Reported-by: syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/staging/comedi/drivers/vmk80xx.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/sony-laptop.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/comedi/drivers/vmk80xx.c
-+++ b/drivers/staging/comedi/drivers/vmk80xx.c
-@@ -872,6 +872,8 @@ static int vmk80xx_auto_attach(struct co
- 
- 	devpriv->model = boardinfo->model;
- 
-+	sema_init(&devpriv->limit_sem, 8);
+diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+index 4bfbfa3f78e6..2058445fc456 100644
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -4424,14 +4424,16 @@ sony_pic_read_possible_resource(struct acpi_resource *resource, void *context)
+ 			}
+ 			return AE_OK;
+ 		}
 +
- 	ret = vmk80xx_find_usb_endpoints(dev);
- 	if (ret)
- 		return ret;
-@@ -880,8 +882,6 @@ static int vmk80xx_auto_attach(struct co
- 	if (ret)
- 		return ret;
++	case ACPI_RESOURCE_TYPE_END_TAG:
++		return AE_OK;
++
+ 	default:
+ 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
+ 			resource->type);
++		return AE_CTRL_TERMINATE;
  
--	sema_init(&devpriv->limit_sem, 8);
--
- 	usb_set_intfdata(intf, devpriv);
+-	case ACPI_RESOURCE_TYPE_END_TAG:
+-		return AE_OK;
+ 	}
+-	return AE_CTRL_TERMINATE;
+ }
  
- 	if (devpriv->model == VMK8061_MODEL) {
-
+ static int sony_pic_possible_resources(struct acpi_device *device)
+-- 
+2.21.0
 
