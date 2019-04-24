@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B5AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131BDC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30EC218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA1D2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126066;
-	bh=QmKis2BFlJaQlCBpe0IcKs28bpLwZbS6jofxw87qRpU=;
+	s=default; t=1556126070;
+	bh=8SXN7kVEbWneN/fUkuZsPwDRcUCNZxC/qJjPUpWZTNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M7YaN/8UB7GvE5nHSUQkrfz8oqrF033VgKEIcXsDpt6ZjkfwPHu8PVFOX2xW+ixek
-	 InEFNc+krC4jY2r/X+yGYPuXkL9g9R3wo0mc9QR+gF7bZ4nJHsULcEBZdbL1QHb3SP
-	 n0uBwnBTDMD5r1dVizIHuWhJyk9aJczN0sTnNse0=
+	b=xe9LVyj2v50wrLEhbTqH57Raf+sQjoh23zXq065T74EjAF7nFDw41oQpLFR9yyhUR
+	 8025+CexMYtV3Dvqcn/LOdMQKpqRvXjpnpRzW8kA1hXCMY6nqW1lhmaAb8zlxYg9OC
+	 pDmv53qqtZgfUVyD+Y3Hpjb8pIVpTorkOy4q8TeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388066AbfDXROY (ORCPT
+        id S2388075AbfDXRO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:14:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38534 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:14:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388055AbfDXROV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:14:21 -0400
+        id S2388062AbfDXROY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:24 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94440218B0;
-        Wed, 24 Apr 2019 17:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B5AD218FE;
+        Wed, 24 Apr 2019 17:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126061;
-        bh=QmKis2BFlJaQlCBpe0IcKs28bpLwZbS6jofxw87qRpU=;
+        s=default; t=1556126063;
+        bh=8SXN7kVEbWneN/fUkuZsPwDRcUCNZxC/qJjPUpWZTNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dog0Ax4mxH/UtjzBWFdrCrm5BdLEw/QzQevIMQTCMGmamyUoHJ5hpNCFkkjAitUF1
-         B0yiRDRm+a5p15hkVigtDStUHYJ4zYELm/3p3AR0nv8rY14hUk5BKZy3L7Pl31DCEQ
-         IVFDHNNtF8r0NWgcZwdq26iKYsWBjelbIClR2TRg=
+        b=vnIdkv5U5s+4FK4ORMnAETbJWxn8TS5tLnRt4AIq7bZwNuF6+onedthmtI4vHlb6S
+         dLpueLIem8vYepDApjOXZcbQHa4BRAWLGqAPiuDYA5srps4J8W7ferIz/1W39NWPQL
+         2pw3CuRRwmGwIHB0U30Juw0ADcNe+3BUdwjLzFoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Tolnay <dtolnay@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Buland Singh <bsingh@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 034/104] hwrng: virtio - Avoid repeated init of completion
-Date:   Wed, 24 Apr 2019 19:08:51 +0200
-Message-Id: <20190424170857.972033622@linuxfoundation.org>
+Subject: [PATCH 3.18 035/104] hpet: Fix missing = character in the __setup() code of hpet_mmap_enable
+Date:   Wed, 24 Apr 2019 19:08:52 +0200
+Message-Id: <20190424170858.170359281@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -60,55 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit aef027db48da56b6f25d0e54c07c8401ada6ce21 ]
+[ Upstream commit 24d48a61f2666630da130cc2ec2e526eacf229e3 ]
 
-The virtio-rng driver uses a completion called have_data to wait for a
-virtio read to be fulfilled by the hypervisor. The completion is reset
-before placing a buffer on the virtio queue and completed by the virtio
-callback once data has been written into the buffer.
+Commit '3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for
+user processes")' introduced a new kernel command line parameter hpet_mmap,
+that is required to expose the memory map of the HPET registers to
+user-space. Unfortunately the kernel command line parameter 'hpet_mmap' is
+broken and never takes effect due to missing '=' character in the __setup()
+code of hpet_mmap_enable.
 
-Prior to this commit, the driver called init_completion on this
-completion both during probe as well as when registering virtio buffers
-as part of a hwrng read operation. The second of these init_completion
-calls should instead be reinit_completion because the have_data
-completion has already been inited by probe. As described in
-Documentation/scheduler/completion.txt, "Calling init_completion() twice
-on the same completion object is most likely a bug".
+Before this patch:
 
-This bug was present in the initial implementation of virtio-rng in
-f7f510ec1957 ("virtio: An entropy device, as suggested by hpa"). Back
-then the have_data completion was a single static completion rather than
-a member of one of potentially multiple virtrng_info structs as
-implemented later by 08e53fbdb85c ("virtio-rng: support multiple
-virtio-rng devices"). The original driver incorrectly used
-init_completion rather than INIT_COMPLETION to reset have_data during
-read.
+dmesg output with the kernel command line parameter hpet_mmap=1
 
-Tested by running `head -c48 /dev/random | hexdump` within crosvm, the
-Chrome OS virtual machine monitor, and confirming that the virtio-rng
-driver successfully produces random bytes from the host.
+[    0.204152] HPET mmap disabled
 
-Signed-off-by: David Tolnay <dtolnay@gmail.com>
-Tested-by: David Tolnay <dtolnay@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+dmesg output with the kernel command line parameter hpet_mmap=0
+
+[    0.204192] HPET mmap disabled
+
+After this patch:
+
+dmesg output with the kernel command line parameter hpet_mmap=1
+
+[    0.203945] HPET mmap enabled
+
+dmesg output with the kernel command line parameter hpet_mmap=0
+
+[    0.204652] HPET mmap disabled
+
+Fixes: 3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for user processes")
+Signed-off-by: Buland Singh <bsingh@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hw_random/virtio-rng.c | 2 +-
+ drivers/char/hpet.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
-index 72295ea2fd1c..5cdc8c534ad4 100644
---- a/drivers/char/hw_random/virtio-rng.c
-+++ b/drivers/char/hw_random/virtio-rng.c
-@@ -74,7 +74,7 @@ static int virtio_read(struct hwrng *rng, void *buf, size_t size, bool wait)
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index d5d4cd82b9f7..978a782f5e30 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -377,7 +377,7 @@ static __init int hpet_mmap_enable(char *str)
+ 	pr_info("HPET mmap %s\n", hpet_mmap_enabled ? "enabled" : "disabled");
+ 	return 1;
+ }
+-__setup("hpet_mmap", hpet_mmap_enable);
++__setup("hpet_mmap=", hpet_mmap_enable);
  
- 	if (!vi->busy) {
- 		vi->busy = true;
--		init_completion(&vi->have_data);
-+		reinit_completion(&vi->have_data);
- 		register_buffer(vi, buf, size);
- 	}
- 
+ static int hpet_mmap(struct file *file, struct vm_area_struct *vma)
+ {
 -- 
 2.19.1
 
