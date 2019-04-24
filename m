@@ -4,53 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CF6C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDB6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97588218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00241218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117489;
-	bh=E8Db9PTi9XsS4KfFMPmxFrVZmlx4y1wLExNafiq8cx8=;
+	s=default; t=1556117492;
+	bh=g0/hQWvUSHhGfjIbEH4nnfsVp7xs9k3e+Ct+8cLFrJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NOpymSrSiY1EKzYIHpfbXSGteonb6d6MLWkTezL+VyYAYaVRmhEIInM3I0M1Nqd4z
-	 VOO2txK3PXvldOVyWV0ZCRgQpWzdjyBU14AaXSvDT9zE5oiPlTkjG8/05DFKNrwiL6
-	 rp2JS4Uqrmb9dDhYZJB5OCwyP7d+uSyInTXk5Z54=
+	b=BjZys9bmv1kHTCrOr8TIAGTGkFVNBDA/ErUD/kMUftDgANKhxmAUuesrb7QtaSE6l
+	 y75Uj2L/NNZx2SpgwHt2Mo0io1dA5zUUvIsTmpO3FbR0arbe6PC5UJ/g2fBevRITgY
+	 ZoxaExYDBaOmUcUgvaUA0dgy3wW2jg50ab0Wn1nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732815AbfDXOv2 (ORCPT
+        id S1732829AbfDXOva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:51:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50610 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:51:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731695AbfDXOv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:51:26 -0400
+        id S1732808AbfDXOv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:51:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95CAE218FC;
-        Wed, 24 Apr 2019 14:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66FD721905;
+        Wed, 24 Apr 2019 14:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117484;
-        bh=E8Db9PTi9XsS4KfFMPmxFrVZmlx4y1wLExNafiq8cx8=;
+        s=default; t=1556117487;
+        bh=g0/hQWvUSHhGfjIbEH4nnfsVp7xs9k3e+Ct+8cLFrJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLwrvBlg5nRuRWc+QLOEgsPaXJzPbvXWN6Vidq+Q4GjUBjgq1acz4u6kUoQPY2MyW
-         V4xDSiZr0ea+uElFi5tLg2LCYDq7e2WAImnr5qHLGDmK2uNOQQDPJvFIkvLJO8v26O
-         rDrdxxEobQoJg5+PGQLL389oOncdE2WtM+l8OMPM=
+        b=WnG0A+usO4hEoKvRoowGe0tHj271fH1RGdyXRnXX95MWWn0ySPtsfjwKk5QqUceqb
+         lSiud+neB75MLpUpHRxPL8+IojU1L/Ud/cb1wbj51YsgJ5EYwC5oFNTS8AQcSY7lOu
+         fFPYkVt1QI6wlUXgFnk0soezPucIVohx5nus5xXg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 25/28] kernel/sysctl.c: fix out-of-bounds access when setting file-max
-Date:   Wed, 24 Apr 2019 10:50:09 -0400
-Message-Id: <20190424145012.30886-25-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 26/28] xsysace: Fix error handling in ace_setup
+Date:   Wed, 24 Apr 2019 10:50:10 -0400
+Message-Id: <20190424145012.30886-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424145012.30886-1-sashal@kernel.org>
 References: <20190424145012.30886-1-sashal@kernel.org>
@@ -63,91 +58,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 9002b21465fa4d829edfc94a5a441005cffaa972 ]
+[ Upstream commit 47b16820c490149c2923e8474048f2c6e7557cab ]
 
-Commit 32a5ad9c2285 ("sysctl: handle overflow for file-max") hooked up
-min/max values for the file-max sysctl parameter via the .extra1 and
-.extra2 fields in the corresponding struct ctl_table entry.
+If xace hardware reports a bad version number, the error handling code
+in ace_setup() calls put_disk(), followed by queue cleanup. However, since
+the disk data structure has the queue pointer set, put_disk() also
+cleans and releases the queue. This results in blk_cleanup_queue()
+accessing an already released data structure, which in turn may result
+in a crash such as the following.
 
-Unfortunately, the minimum value points at the global 'zero' variable,
-which is an int.  This results in a KASAN splat when accessed as a long
-by proc_doulongvec_minmax on 64-bit architectures:
+[   10.681671] BUG: Kernel NULL pointer dereference at 0x00000040
+[   10.681826] Faulting instruction address: 0xc0431480
+[   10.682072] Oops: Kernel access of bad area, sig: 11 [#1]
+[   10.682251] BE PAGE_SIZE=4K PREEMPT Xilinx Virtex440
+[   10.682387] Modules linked in:
+[   10.682528] CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.0.0-rc6-next-20190218+ #2
+[   10.682733] NIP:  c0431480 LR: c043147c CTR: c0422ad8
+[   10.682863] REGS: cf82fbe0 TRAP: 0300   Tainted: G        W          (5.0.0-rc6-next-20190218+)
+[   10.683065] MSR:  00029000 <CE,EE,ME>  CR: 22000222  XER: 00000000
+[   10.683236] DEAR: 00000040 ESR: 00000000
+[   10.683236] GPR00: c043147c cf82fc90 cf82ccc0 00000000 00000000 00000000 00000002 00000000
+[   10.683236] GPR08: 00000000 00000000 c04310bc 00000000 22000222 00000000 c0002c54 00000000
+[   10.683236] GPR16: 00000000 00000001 c09aa39c c09021b0 c09021dc 00000007 c0a68c08 00000000
+[   10.683236] GPR24: 00000001 ced6d400 ced6dcf0 c0815d9c 00000000 00000000 00000000 cedf0800
+[   10.684331] NIP [c0431480] blk_mq_run_hw_queue+0x28/0x114
+[   10.684473] LR [c043147c] blk_mq_run_hw_queue+0x24/0x114
+[   10.684602] Call Trace:
+[   10.684671] [cf82fc90] [c043147c] blk_mq_run_hw_queue+0x24/0x114 (unreliable)
+[   10.684854] [cf82fcc0] [c04315bc] blk_mq_run_hw_queues+0x50/0x7c
+[   10.685002] [cf82fce0] [c0422b24] blk_set_queue_dying+0x30/0x68
+[   10.685154] [cf82fcf0] [c0423ec0] blk_cleanup_queue+0x34/0x14c
+[   10.685306] [cf82fd10] [c054d73c] ace_probe+0x3dc/0x508
+[   10.685445] [cf82fd50] [c052d740] platform_drv_probe+0x4c/0xb8
+[   10.685592] [cf82fd70] [c052abb0] really_probe+0x20c/0x32c
+[   10.685728] [cf82fda0] [c052ae58] driver_probe_device+0x68/0x464
+[   10.685877] [cf82fdc0] [c052b500] device_driver_attach+0xb4/0xe4
+[   10.686024] [cf82fde0] [c052b5dc] __driver_attach+0xac/0xfc
+[   10.686161] [cf82fe00] [c0528428] bus_for_each_dev+0x80/0xc0
+[   10.686314] [cf82fe30] [c0529b3c] bus_add_driver+0x144/0x234
+[   10.686457] [cf82fe50] [c052c46c] driver_register+0x88/0x15c
+[   10.686610] [cf82fe60] [c09de288] ace_init+0x4c/0xac
+[   10.686742] [cf82fe80] [c0002730] do_one_initcall+0xac/0x330
+[   10.686888] [cf82fee0] [c09aafd0] kernel_init_freeable+0x34c/0x478
+[   10.687043] [cf82ff30] [c0002c6c] kernel_init+0x18/0x114
+[   10.687188] [cf82ff40] [c000f2f0] ret_from_kernel_thread+0x14/0x1c
+[   10.687349] Instruction dump:
+[   10.687435] 3863ffd4 4bfffd70 9421ffd0 7c0802a6 93c10028 7c9e2378 93e1002c 38810008
+[   10.687637] 7c7f1b78 90010034 4bfffc25 813f008c <81290040> 75290100 4182002c 80810008
+[   10.688056] ---[ end trace 13c9ff51d41b9d40 ]---
 
-  | BUG: KASAN: global-out-of-bounds in __do_proc_doulongvec_minmax+0x5d8/0x6a0
-  | Read of size 8 at addr ffff2000133d1c20 by task systemd/1
-  |
-  | CPU: 0 PID: 1 Comm: systemd Not tainted 5.1.0-rc3-00012-g40b114779944 #2
-  | Hardware name: linux,dummy-virt (DT)
-  | Call trace:
-  |  dump_backtrace+0x0/0x228
-  |  show_stack+0x14/0x20
-  |  dump_stack+0xe8/0x124
-  |  print_address_description+0x60/0x258
-  |  kasan_report+0x140/0x1a0
-  |  __asan_report_load8_noabort+0x18/0x20
-  |  __do_proc_doulongvec_minmax+0x5d8/0x6a0
-  |  proc_doulongvec_minmax+0x4c/0x78
-  |  proc_sys_call_handler.isra.19+0x144/0x1d8
-  |  proc_sys_write+0x34/0x58
-  |  __vfs_write+0x54/0xe8
-  |  vfs_write+0x124/0x3c0
-  |  ksys_write+0xbc/0x168
-  |  __arm64_sys_write+0x68/0x98
-  |  el0_svc_common+0x100/0x258
-  |  el0_svc_handler+0x48/0xc0
-  |  el0_svc+0x8/0xc
-  |
-  | The buggy address belongs to the variable:
-  |  zero+0x0/0x40
-  |
-  | Memory state around the buggy address:
-  |  ffff2000133d1b00: 00 00 00 00 00 00 00 00 fa fa fa fa 04 fa fa fa
-  |  ffff2000133d1b80: fa fa fa fa 04 fa fa fa fa fa fa fa 04 fa fa fa
-  | >ffff2000133d1c00: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 00 00
-  |                                ^
-  |  ffff2000133d1c80: fa fa fa fa 00 fa fa fa fa fa fa fa 00 00 00 00
-  |  ffff2000133d1d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Fix the problem by setting the disk queue pointer to NULL before calling
+put_disk(). A more comprehensive fix might be to rearrange the code
+to check the hardware version before initializing data structures,
+but I don't know if this would have undesirable side effects, and
+it would increase the complexity of backporting the fix to older kernels.
 
-Fix the splat by introducing a unsigned long 'zero_ul' and using that
-instead.
-
-Link: http://lkml.kernel.org/r/20190403153409.17307-1-will.deacon@arm.com
-Fixes: 32a5ad9c2285 ("sysctl: handle overflow for file-max")
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Acked-by: Christian Brauner <christian@brauner.io>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 74489a91dd43a ("Add support for Xilinx SystemACE CompactFlash interface")
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/xsysace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 5515d578095b..cf0aeaae567e 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -124,6 +124,7 @@ static int zero;
- static int __maybe_unused one = 1;
- static int __maybe_unused two = 2;
- static int __maybe_unused four = 4;
-+static unsigned long zero_ul;
- static unsigned long one_ul = 1;
- static unsigned long long_max = LONG_MAX;
- static int one_hundred = 100;
-@@ -1683,7 +1684,7 @@ static struct ctl_table fs_table[] = {
- 		.maxlen		= sizeof(files_stat.max_files),
- 		.mode		= 0644,
- 		.proc_handler	= proc_doulongvec_minmax,
--		.extra1		= &zero,
-+		.extra1		= &zero_ul,
- 		.extra2		= &long_max,
- 	},
- 	{
+diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
+index c4328d9d9981..f838119d12b2 100644
+--- a/drivers/block/xsysace.c
++++ b/drivers/block/xsysace.c
+@@ -1062,6 +1062,8 @@ static int ace_setup(struct ace_device *ace)
+ 	return 0;
+ 
+ err_read:
++	/* prevent double queue cleanup */
++	ace->gd->queue = NULL;
+ 	put_disk(ace->gd);
+ err_alloc_disk:
+ 	blk_cleanup_queue(ace->queue);
 -- 
 2.19.1
 
