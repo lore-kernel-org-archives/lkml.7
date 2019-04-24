@@ -2,191 +2,72 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B23C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35750C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36A020835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E6320835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:24:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732466AbfDXWOd (ORCPT
+        id S1731289AbfDXWYe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 18:14:33 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:37152 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731043AbfDXWOc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 18:14:32 -0400
-Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
-        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
-        id S23990768AbfDXWOaBmp1H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
-        Thu, 25 Apr 2019 00:14:30 +0200
-Date:   Thu, 25 Apr 2019 00:14:28 +0200
-From:   Ladislav Michl <ladis@linux-mips.org>
-To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mtd: rawnand: ams-delta: Drop board specific
- partition info
-Message-ID: <20190424221428.GA4172@lenoch>
-References: <20190324223344.24590-1-jmkrzyszt@gmail.com>
- <20190424180212.10830-1-jmkrzyszt@gmail.com>
+        Wed, 24 Apr 2019 18:24:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:13756 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726184AbfDXWYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 18:24:34 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EACDB308A124;
+        Wed, 24 Apr 2019 22:24:33 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 39EB45DEFE;
+        Wed, 24 Apr 2019 22:24:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAG48ez23c1eiEJpBwkV183sesj6EDWoMsEh40GDXQkS1W2_nMA@mail.gmail.com>
+References: <CAG48ez23c1eiEJpBwkV183sesj6EDWoMsEh40GDXQkS1W2_nMA@mail.gmail.com> <155612240208.8564.13865046977065545591.stgit@warthog.procyon.org.uk> <155612246750.8564.9186344007442012471.stgit@warthog.procyon.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     dhowells@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>,
+        keyrings@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>, dwalsh@redhat.com,
+        vgoyal@redhat.com
+Subject: Re: [PATCH 07/11] keys: Move the user and user-session keyrings to the user_namespace
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424180212.10830-1-jmkrzyszt@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3752.1556144671.1@warthog.procyon.org.uk>
+Date:   Wed, 24 Apr 2019 23:24:31 +0100
+Message-ID: <3753.1556144671@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 24 Apr 2019 22:24:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Janusz,
+Jann Horn <jannh@google.com> wrote:
 
-On Wed, Apr 24, 2019 at 08:02:12PM +0200, Janusz Krzysztofik wrote:
-> After recent modifications, only a hardcoded partition info makes
-> the driver device specific.  Other than that, the driver uses GPIO
-> exclusively and can be used on any hardware.
+> Overall, this looks good to me, apart from some details.
 > 
-> Drop the partition info and use MTD partition parser with default list
-> of parser names instead.  For the OF parser to work correctly, pass
-> device of_node to mtd.
-> 
-> Amstrad Delta users should append the following partition info to their
-> kernel command line, possibly embedding it in CONFIG_CMDLINE:
-> 
-> mtdparts=ams-delta-nand:3584k(Kernel),256k(u-boot),256k(u-boot_params),\
-> 256k(Amstrad_LDR),27m(File_system),768k(PBL_reserved)
+> The user_keyring_register keyring is basically just used like an
+> xarray/idr/... that maps from namespaced UIDs to keyrings, right? (Not
+> saying it's a bad idea, just want to make sure I understand it
+> correctly.)
 
-now, when driver is no longer Amstrad Delta specific, why would you want
-to have ams-delta-nand hardcoded on kernel cmdline? I'm assuming at some
-point this driver will become gpio-nand [*] or something like that and
-asking users to change their kernel cmdline twice is just unwise :)
+Well, a keyring is a wrapper around an assoc_array object, the keyring search
+functions do the access checks and the keys garbage collector does the
+cleanup.  Also, each UID is mapped to two keyrings.
 
-[*] btw, it is really shame gpio-nand name is already taken by driver
-living in drivers/mtd/nand/raw/gpio.c which is more likely gpio-mem-nand
-used by at least CompuLab CM-X255 and Picochip picoXcell.
+I'll have a look at applying the rest of your comments tomorrow.
 
-Otherwise your work on this driver is so amazing that I just spent
-couple of hours finding that phone and compiling some decent userspace
-for it :) Thank you!
-
-> For their convenience, that information is added to the board Kconfig
-> entry help text, as well as CONFIG_MTD_CMDLINE_PARTS symbol is selected
-> automatically from the board Kconfig entry if the NAND driver is also
-> selected.
-> 
-> Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-> ---
-> Changelog:
-> v2->v3:
-> - add information on the requirement for passing partition info via
->   kernel command line to the board Kconfig entry help text
-> v1->v2:
-> - fix a typo poitned out by Aaro - thanks!
-> - fix device_node not passed to OF parser via mtd_info
-> - commit message reworded and reformatted a bit for better readability
-> 
->  arch/arm/mach-omap1/Kconfig      |  7 ++++++-
->  drivers/mtd/nand/raw/ams-delta.c | 29 ++---------------------------
->  2 files changed, 8 insertions(+), 28 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap1/Kconfig b/arch/arm/mach-omap1/Kconfig
-> index c4694f26b5c4..41a47d251cac 100644
-> --- a/arch/arm/mach-omap1/Kconfig
-> +++ b/arch/arm/mach-omap1/Kconfig
-> @@ -164,17 +164,22 @@ config MACH_NOKIA770
->  	  have such a device.
->  
->  config MACH_AMS_DELTA
-> -	bool "Amstrad E3 (Delta)"
-> +	bool "Amstrad E3 (Delta) - see help for important information"
->  	depends on ARCH_OMAP1 && ARCH_OMAP15XX
->  	select FIQ
->  	select GPIO_GENERIC_PLATFORM
->  	select LEDS_GPIO_REGISTER
->  	select REGULATOR
->  	select REGULATOR_FIXED_VOLTAGE
-> +	select MTD_CMDLINE_PARTS if MTD_NAND_AMS_DELTA
->  	help
->  	  Support for the Amstrad E3 (codename Delta) videophone. Say Y here
->  	  if you have such a device.
->  
-> +	  If you are using built-in NAND, append the following partition
-> +	  info to kernel command line:
-> +	  mtdparts=ams-delta-nand:3584k(Kernel),256k(u-boot),256k(u-boot_params),256k(Amstrad_LDR),27m(File_system),768k(PBL_reserved)
-> +
->  config MACH_OMAP_GENERIC
->  	bool "Generic OMAP board"
->  	depends on ARCH_OMAP1 && (ARCH_OMAP15XX || ARCH_OMAP16XX)
-> diff --git a/drivers/mtd/nand/raw/ams-delta.c b/drivers/mtd/nand/raw/ams-delta.c
-> index 8312182088c1..e0f09179bbda 100644
-> --- a/drivers/mtd/nand/raw/ams-delta.c
-> +++ b/drivers/mtd/nand/raw/ams-delta.c
-> @@ -41,31 +41,6 @@ struct ams_delta_nand {
->  	bool			data_in;
->  };
->  
-> -/*
-> - * Define partitions for flash devices
-> - */
-> -
-> -static const struct mtd_partition partition_info[] = {
-> -	{ .name		= "Kernel",
-> -	  .offset	= 0,
-> -	  .size		= 3 * SZ_1M + SZ_512K },
-> -	{ .name		= "u-boot",
-> -	  .offset	= 3 * SZ_1M + SZ_512K,
-> -	  .size		= SZ_256K },
-> -	{ .name		= "u-boot params",
-> -	  .offset	= 3 * SZ_1M + SZ_512K + SZ_256K,
-> -	  .size		= SZ_256K },
-> -	{ .name		= "Amstrad LDR",
-> -	  .offset	= 4 * SZ_1M,
-> -	  .size		= SZ_256K },
-> -	{ .name		= "File system",
-> -	  .offset	= 4 * SZ_1M + 1 * SZ_256K,
-> -	  .size		= 27 * SZ_1M },
-> -	{ .name		= "PBL reserved",
-> -	  .offset	= 32 * SZ_1M - 3 * SZ_256K,
-> -	  .size		=  3 * SZ_256K },
-> -};
-> -
->  static void ams_delta_write_commit(struct ams_delta_nand *priv)
->  {
->  	gpiod_set_value(priv->gpiod_nwe, 0);
-> @@ -238,6 +213,7 @@ static int ams_delta_init(struct platform_device *pdev)
->  	mtd->dev.parent = &pdev->dev;
->  
->  	nand_set_controller_data(this, priv);
-> +	nand_set_flash_node(this, pdev->dev.of_node);
->  
->  	priv->gpiod_rdy = devm_gpiod_get_optional(&pdev->dev, "rdy", GPIOD_IN);
->  	if (IS_ERR(priv->gpiod_rdy)) {
-> @@ -315,8 +291,7 @@ static int ams_delta_init(struct platform_device *pdev)
->  		return err;
->  
->  	/* Register the partitions */
-> -	err = mtd_device_register(mtd, partition_info,
-> -				  ARRAY_SIZE(partition_info));
-> +	err = mtd_device_parse_register(mtd, NULL, NULL, NULL, 0);
->  	if (err)
->  		goto err_nand_cleanup;
->  
-> -- 
-> 2.21.0
+Thanks,
+David
