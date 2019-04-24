@@ -2,308 +2,130 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B45C282E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F920C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A1C21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556145404;
-	bh=sgHZdvRFoV1JAO3JhbtTQgcbbBaHHOdARzFokTOeNvQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Swu/eO0YMn463MVI/qbi1Jy+OgPRFAa0HBQT+Z2+WBxiCFtJIJl6e2Gg1+eDAbeQ4
-	 A/J2yriTyi6MU+Gr/sVQt/vbRVYJbTEvoshm0M1gYYFxXVaGveImYw0yJD8OmAjvnH
-	 XK6qfpAUtBW1YxZ6fLvW+/i0Atc1bhagLVAR2ajQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1685421773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:38:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Fs2geGIf";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="NwRVNtwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfDXWgn (ORCPT
+        id S1726536AbfDXWik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 18:36:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbfDXWgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 18:36:42 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1BA7208E4;
-        Wed, 24 Apr 2019 22:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556145401;
-        bh=sgHZdvRFoV1JAO3JhbtTQgcbbBaHHOdARzFokTOeNvQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P68SNt/w9wbcBT+yYsf7tJLpEzRFnvbmrsPZoHXpMRDNqkc22a8hAXlZdmdAvo4sL
-         tk8T7jpmhvnWcNHbLr5w5qiIrs1/dziIa3rk75ntvAsDJFKoBaJyfhot0ip4+XWRfs
-         VgHYDTptYFyzZE26iHPPYF61D9pSXImxyDq1Btuo=
-Date:   Wed, 24 Apr 2019 17:36:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     David Ober <dober@lenovo.com>, linux-pci@vger.kernel.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Karol Herbst <kherbst@redhat.com>,
-        Ben Skeggs <skeggsb@gmail.com>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] pci/quirks: Add quirk to reset nvgpu at boot for the
- Lenovo ThinkPad P50
-Message-ID: <20190424223638.GC11428@google.com>
-References: <20190212220230.1568-1-lyude@redhat.com>
- <20190215004329.GR96272@google.com>
- <2fca9a9feafcd17b27bc71994a71ebc241a93e9a.camel@redhat.com>
- <52b17f8cb24e179e9661d75548d193843ae87b4c.camel@redhat.com>
- <20190321224819.GK251185@google.com>
- <20190322113015.GM251185@google.com>
- <20190404141724.GJ141706@google.com>
- <3987ad435bfdb2d92e5e42648174634814b1646d.camel@redhat.com>
- <20190424185937.GB11428@google.com>
- <4e45b65b2151293d91dfc5811f64f3453f591f9d.camel@redhat.com>
+        Wed, 24 Apr 2019 18:38:40 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:60066 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726399AbfDXWij (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 18:38:39 -0400
+Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
+        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OMbBi6000512;
+        Wed, 24 Apr 2019 15:38:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=yWD41MbIKdKz1pvd4SG7OQ3l9+WA0tWvFS1IwWuTePU=;
+ b=Fs2geGIfgYGcbyZKYs8kXwyL9b04AKxJU4V1hCwWs9OWQWiEj45oc2Zy+m0KgQwMXufS
+ RBgv0Xn32lJ380ZYkaDAmGGftN2218mB4rovv/zwDlSZZD8CfoKwdZUzjFJqovrdfTTb
+ 1/FHXsmGJ/FZC3SKQevnHwAiHUJj403JeOU= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0b-00082601.pphosted.com with ESMTP id 2s2xse0ewu-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 24 Apr 2019 15:38:18 -0700
+Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
+ prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 24 Apr 2019 15:38:15 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 24 Apr 2019 15:38:15 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 24 Apr 2019 15:38:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yWD41MbIKdKz1pvd4SG7OQ3l9+WA0tWvFS1IwWuTePU=;
+ b=NwRVNtwQZzsRhJbfjI0b/DkSVrj/o0OmBzvUFeq3Jp8/uIoftYTA1mxrT+ck5NQJqwqlsRer1hUALDucBE0sXVq9ea0IizKVOFuNI91dk1Qpa17lRmiFMBCPY9NmyRrHF1xK9aO9Rn3dhm1diV+SlazujIAvwrBltemGqG2y0L4=
+Received: from BN8PR15MB3380.namprd15.prod.outlook.com (20.179.75.139) by
+ BN8PR15MB2788.namprd15.prod.outlook.com (20.179.140.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.14; Wed, 24 Apr 2019 22:38:14 +0000
+Received: from BN8PR15MB3380.namprd15.prod.outlook.com
+ ([fe80::b5bc:d69:3cf5:db53]) by BN8PR15MB3380.namprd15.prod.outlook.com
+ ([fe80::b5bc:d69:3cf5:db53%4]) with mapi id 15.20.1835.010; Wed, 24 Apr 2019
+ 22:38:14 +0000
+From:   Yonghong Song <yhs@fb.com>
+To:     Matt Mullins <mmullins@fb.com>, Andrew Hall <hall@fb.com>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        "Andrey Ignatov" <rdna@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: Re: [PATCH bpf-next v4 4/5] tools: sync bpf.h
+Thread-Topic: [PATCH bpf-next v4 4/5] tools: sync bpf.h
+Thread-Index: AQHU+tESW+NX9l0cV0Wfd4fdFhTpXqZL5yaA
+Date:   Wed, 24 Apr 2019 22:38:14 +0000
+Message-ID: <1d9ac989-1227-c685-d908-00c2ff9e73e3@fb.com>
+References: <20190424190721.24453-1-mmullins@fb.com>
+ <20190424190721.24453-5-mmullins@fb.com>
+In-Reply-To: <20190424190721.24453-5-mmullins@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR0201CA0077.namprd02.prod.outlook.com
+ (2603:10b6:301:75::18) To BN8PR15MB3380.namprd15.prod.outlook.com
+ (2603:10b6:408:a6::11)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:5d4c]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9e4f4675-c181-41e2-f235-08d6c9058982
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BN8PR15MB2788;
+x-ms-traffictypediagnostic: BN8PR15MB2788:
+x-microsoft-antispam-prvs: <BN8PR15MB27884FCF77EEC49B1CF16F83D33C0@BN8PR15MB2788.namprd15.prod.outlook.com>
+x-forefront-prvs: 00179089FD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(346002)(366004)(136003)(376002)(189003)(199004)(66446008)(53546011)(66476007)(66556008)(6506007)(11346002)(2616005)(71190400001)(476003)(81166006)(486006)(36756003)(81156014)(14454004)(2501003)(446003)(2906002)(25786009)(8936002)(8676002)(316002)(54906003)(6512007)(110136005)(64756008)(386003)(76176011)(86362001)(256004)(71200400001)(73956011)(4744005)(102836004)(186003)(68736007)(46003)(66946007)(2201001)(97736004)(31696002)(7736002)(478600001)(5660300002)(6486002)(99286004)(52116002)(229853002)(53936002)(31686004)(6246003)(6116002)(4326008)(6436002)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2788;H:BN8PR15MB3380.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eMgoXk4hYkgrT/c9nOafIVkuUE8YygZF1V6JX1/1vXqUyyHxdAxxhwH92msOVrM8Yl4Vd8fEzqHviLXhRuOpO9+XiWQ/S1DhWOZsKIQbnqnRrPHftWoc05zumDAzG84ANFCyg0ni8U53wicYaOwUrmopHgQh4e79nPOjCOjp0SJnR3QEEl/4fOCkVgweQbKI4B7pQIsg/uYCemfZHuIlYdipKjZ0HSiCqXP/hRrW2l/QCQ44lf6RwjKdgQ1CSbA9esIjNu5DCRQz9bN2OB3Vy12Ph+h/AkprPF1UmaEOENBYxd/7AToTRuDIobOWOSkintvAmeADFpfoqJeiVcrc1OeIlqUdx6Jr6F43jJmB60abl/AYqEbyGNQt//eSN7tkputGIQBONsRhd1hGcLju2os/6qOiC26PLcF/J69meKc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <486A4E653C43A74D814B4CBE26D9C39E@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e45b65b2151293d91dfc5811f64f3453f591f9d.camel@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e4f4675-c181-41e2-f235-08d6c9058982
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 22:38:14.0444
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2788
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_14:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 03:16:37PM -0400, Lyude Paul wrote:
-> On Wed, 2019-04-24 at 13:59 -0500, Bjorn Helgaas wrote:
-> > Not being a scheduled work expert, I was unsure if this experiment was
-> > equivalent to what I proposed.
-> > 
-> > I'm always suspicious of singleton solutions like this (using
-> > schedule_work() in runtime_resume()) because usually they seem to be
-> > solving a generic problem that should happen on many kinds of
-> > hardware.  The 0b2fe6594fa2 ("drm/nouveau: Queue hpd_work on (runtime)
-> > resume") commit log says:
-> > 
-> >   We need to call drm_helper_hpd_irq_event() on resume to properly
-> >   detect monitor connection / disconnection on some laptops, use
-> >   hpd_work for this to avoid deadlocks.
-> > 
-> > The situation of a monitor being connected or disconnected during
-> > suspend can happen to *any* GPU, but the commit only changes nouveau,
-> > which of course raises the question of how we deal with that in other
-> > drivers.  If the Nvidia GPU has some unique behavior related to
-> > monitor connection, that would explain special-case code there, but
-> > the commit doesn't mention anything like that.
-> > 
-> > It should be simple to revert 0b2fe6594fa2 and see whether it changes
-> > the behavior at all (well, simple except for the fact that this
-> > problem isn't 100% reproducible in the first place).
-> 
-> It's not 100% reproducible, but it's at least 90% so it's not
-> difficult for me to test at all.
-> 
-> Also, reverting this commit makes no difference either. 
-
-OK, great, that makes it crystal clear.  I didn't know you had
-specifically tested that revert.  Thanks for doing that.
-
-> Note that while that commit only changed nouveau, scheduled_work()
-> is exactly how a number of other drivers (i915 for instance) handle
-> reprobing like this as well.
-
-OK.  The GPU code would be a lot more approachable if similar things
-were done in similar ways.  I spent an hour or so looking for this
-similar code in i915, but gave up.
-
-> The reason being that we can't do full connector reprobing in our
-> runtime resume thread because we could deadlock if someone else is
-> holding a modesetting lock we need and waiting on us to resume at
-> the same time (there's a number of other bug fixes in nouveau for
-> other issues caused by the same deadlock scenario). 
-
-You mention nouveau specifically here, but I assume this is a generic
-deadlock scenario that applies to any GPU, and they all avoid the
-deadlock in the same way.  Right?
-
-> I'm confused here though, it sounds like you're running under the
-> assumption that PCI devices like this aren't reset into a clean
-> state during a system reboot, is that correct?
-
-No, I wasn't trying to say anything about that.  My point here is
-that:
-
-  - you're reporting a problem that only happens with nouveau and
-    only happens during shutdown/reboot
-  - the behavior is similar to a race (not 100% reproducible, seems
-    to happen more if shutdown is faster)
-  - shutdown involves resuming the device (see pci_device_shutdown())
-  - nouveau_pmops_runtime_resume() schedules asynchronous work, which
-    (to my untrained eye) looks unusual
-  - asynchronous work is inherently subject to races
-
-So I think that's all somewhat suspicious.  But if the same problem
-happens without the asynchronous work, obviously the issue is
-elsewhere.
-
-But you *are* right that if the device were actually reset, none of
-this should matter.  It certainly seems that the BIOS neglects to
-reset it in some cases.
-
-I can sort of imagine a BIOS engineer thinking that if the device
-looks like it's in use, we shouldn't reset it, and it's still
-conceivable that some sort of Linux shutdown race could leave it
-looking like it's in use.  But you've been working with Lenovo on
-this, and it seems like that would be pretty obvious to somebody with
-the BIOS source (though I just demonstrated above that even with the
-source it's easy to miss things).
-
-I'm out of ideas, so I think your quirk is the best way forward.  I
-trimmed out some of the commit log backtraces and such, added the
-bugzilla, and tweaked the patch to use pci_iomap() instead of
-ioremap().  Would the patch below work for you?
-
-
-commit 18dc5b3c7ddc
-Author: Lyude Paul <lyude@redhat.com>
-Date:   Tue Feb 12 17:02:30 2019 -0500
-
-    PCI: Reset Lenovo ThinkPad P50 nvgpu at boot if necessary
-    
-    On ThinkPad P50 SKUs with an Nvidia Quadro M1000M instead of the M2000M
-    variant, the BIOS does not always reset the secondary Nvidia GPU during
-    reboot if the laptop is configured in Hybrid Graphics mode.  The reason is
-    unknown, but the following steps and possibly a good bit of patience will
-    reproduce the issue:
-    
-      1. Boot up the laptop normally in Hybrid Graphics mode
-      2. Make sure nouveau is loaded and that the GPU is awake
-      2. Allow the Nvidia GPU to runtime suspend itself after being idle
-      3. Reboot the machine, the more sudden the better (e.g sysrq-b may help)
-      4. If nouveau loads up properly, reboot the machine again and go back to
-         step 2 until you reproduce the issue
-    
-    This results in some very strange behavior: the GPU will be left in exactly
-    the same state it was in when the previously booted kernel started the
-    reboot.  This has all sorts of bad side effects: for starters, this
-    completely breaks nouveau starting with a mysterious EVO channel failure
-    that happens well before we've actually used the EVO channel for anything:
-    
-      nouveau 0000:01:00.0: disp: chid 0 mthd 0000 data 00000400 00001000 00000002
-    
-    This causes a timeout trying to bring up the GR ctx:
-    
-      nouveau 0000:01:00.0: timeout
-      WARNING: CPU: 0 PID: 12 at drivers/gpu/drm/nouveau/nvkm/engine/gr/ctxgf100.c:1547 gf100_grctx_generate+0x7b2/0x850 [nouveau]
-      Hardware name: LENOVO 20EQS64N0B/20EQS64N0B, BIOS N1EET82W (1.55 ) 12/18/2018
-      Workqueue: events_long drm_dp_mst_link_probe_work [drm_kms_helper]
-      ...
-      nouveau 0000:01:00.0: gr: wait for idle timeout (en: 1, ctxsw: 0, busy: 1)
-      nouveau 0000:01:00.0: gr: wait for idle timeout (en: 1, ctxsw: 0, busy: 1)
-      nouveau 0000:01:00.0: fifo: fault 01 [WRITE] at 0000000000008000 engine 00 [GR] client 15 [HUB/SCC_NB] reason c4 [] on channel -1 [0000000000 unknown]
-    
-    The GPU never manages to recover.  Booting without loading nouveau causes
-    issues as well, since the GPU starts sending spurious interrupts that cause
-    other device's IRQs to get disabled by the kernel:
-    
-      irq 16: nobody cared (try booting with the "irqpoll" option)
-      ...
-      handlers:
-      [<000000007faa9e99>] i801_isr [i2c_i801]
-      Disabling IRQ #16
-      ...
-      serio: RMI4 PS/2 pass-through port at rmi4-00.fn03
-      i801_smbus 0000:00:1f.4: Timeout waiting for interrupt!
-      i801_smbus 0000:00:1f.4: Transaction timeout
-      rmi4_f03 rmi4-00.fn03: rmi_f03_pt_write: Failed to write to F03 TX register (-110).
-      i801_smbus 0000:00:1f.4: Timeout waiting for interrupt!
-      i801_smbus 0000:00:1f.4: Transaction timeout
-      rmi4_physical rmi4-00: rmi_driver_set_irq_bits: Failed to change enabled interrupts!
-    
-    This causes the touchpad and sometimes other things to get disabled.
-    
-    Since this happens without nouveau, we can't fix this problem from nouveau
-    itself.
-    
-    Add a PCI quirk for the specific P50 variant of this GPU.  Make sure the
-    GPU is advertising NoReset- so we don't reset the GPU when the machine is
-    in Dedicated graphics mode (where the GPU being initialized by the BIOS is
-    normal and expected).  Map the GPU MMIO space and read the magic 0x2240c
-    register, which will have bit 1 set if the device was POSTed during a
-    previous boot.  Once we've confirmed all of this, reset the GPU and
-    re-disable it - bringing it back to a healthy state.
-    
-    Link: https://bugzilla.kernel.org/show_bug.cgi?id=203003
-    Link: https://lore.kernel.org/lkml/20190212220230.1568-1-lyude@redhat.com
-    Signed-off-by: Lyude Paul <lyude@redhat.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-    Cc: nouveau@lists.freedesktop.org
-    Cc: dri-devel@lists.freedesktop.org
-    Cc: Karol Herbst <kherbst@redhat.com>
-    Cc: Ben Skeggs <skeggsb@gmail.com>
-    Cc: stable@vger.kernel.org
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index a59ad09ce911..819a595b0b1d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5120,3 +5120,61 @@ SWITCHTEC_QUIRK(0x8573);  /* PFXI 48XG3 */
- SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
- SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
- SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
-+
-+/*
-+ * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
-+ * not always reset the secondary Nvidia GPU between reboots if the system
-+ * is configured to use Hybrid Graphics mode.  This results in the GPU
-+ * being left in whatever state it was in during the *previous* boot, which
-+ * causes spurious interrupts from the GPU, which in turn causes us to
-+ * disable the wrong IRQ and end up breaking the touchpad.  Unsurprisingly,
-+ * this also completely breaks nouveau.
-+ *
-+ * Luckily, it seems a simple reset of the Nvidia GPU brings it back to a
-+ * clean state and fixes all these issues.
-+ *
-+ * When the machine is configured in Dedicated display mode, the issue
-+ * doesn't occur.  Fortunately the GPU advertises NoReset+ when in this
-+ * mode, so we can detect that and avoid resetting it.
-+ */
-+static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
-+{
-+	void __iomem *map;
-+	int ret;
-+
-+	if (pdev->subsystem_vendor != PCI_VENDOR_ID_LENOVO ||
-+	    pdev->subsystem_device != 0x222e ||
-+	    !pdev->reset_fn)
-+		return;
-+
-+	if (pci_enable_device_mem(pdev))
-+		return;
-+
-+	/*
-+	 * Based on nvkm_device_ctor() in
-+	 * drivers/gpu/drm/nouveau/nvkm/engine/device/base.c
-+	 */
-+	map = pci_iomap(pdev, 0, 0x23000);
-+	if (!map) {
-+		pci_err(pdev, "Can't map MMIO space\n");
-+		goto out_disable;
-+	}
-+
-+	/*
-+	 * Make sure the GPU looks like it's been POSTed before resetting
-+	 * it.
-+	 */
-+	if (ioread32(map + 0x2240c) & 0x2) {
-+		pci_info(pdev, FW_BUG "GPU left initialized by EFI, resetting\n");
-+		ret = pci_reset_function(pdev);
-+		if (ret < 0)
-+			pci_err(pdev, "Failed to reset GPU: %d\n", ret);
-+	}
-+
-+	iounmap(map);
-+out_disable:
-+	pci_disable_device(pdev);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
-+			      PCI_CLASS_DISPLAY_VGA, 8,
-+			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
+DQoNCk9uIDQvMjQvMTkgMTI6MDcgUE0sIE1hdHQgTXVsbGlucyB3cm90ZToNCj4gVGhpcyBhZGRz
+IEJQRl9QUk9HX1RZUEVfUkFXX1RSQUNFUE9JTlRfV1JJVEFCTEUsIGFuZCBmaXhlcyB1cCB0aGUN
+Cj4gDQo+IAllcnJvcjogZW51bWVyYXRpb24gdmFsdWUg4oCYQlBGX1BST0dfVFlQRV9SQVdfVFJB
+Q0VQT0lOVF9XUklUQUJMReKAmSBub3QgaGFuZGxlZCBpbiBzd2l0Y2ggWy1XZXJyb3I9c3dpdGNo
+LWVudW1dDQo+IA0KPiBidWlsZCBlcnJvcnMgaXQgd291bGQgb3RoZXJ3aXNlIGNhdXNlIGluIGxp
+YmJwZi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1hdHQgTXVsbGlucyA8bW11bGxpbnNAZmIuY29t
+Pg0KDQpBY2tlZC1ieTogWW9uZ2hvbmcgU29uZyA8eWhzQGZiLmNvbT4NCg==
