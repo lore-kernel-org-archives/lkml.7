@@ -2,96 +2,137 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD271C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A04C0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809D5218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556091100;
-	bh=Yq43yR/26yNlNAzPkhntuFD6hSDpczgTcnRzncShN5k=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sU2oqaTAu/7qigtz8xHNqEYDOcaWql9A+kVjch0OAnvgUkROHtGoj9zkhW22VUS2Q
-	 /YvcmBH+WvrFG1qnmaN6QfpPWkTe+jm2edrg8QAxLFboS3kSjCPGLBM/yvdYDU54SE
-	 COEiZ0n0Xg+t7loyPuOypNWwciW7d0rexsV1Pois=
+	by mail.kernel.org (Postfix) with ESMTP id 75BA32089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbfDXHbj (ORCPT
+        id S1730215AbfDXHdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54400 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 03:33:07 -0400
+Received: from foss.arm.com ([217.140.101.70]:38972 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726470AbfDXHbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:31:39 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4210C2089F;
-        Wed, 24 Apr 2019 07:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556091098;
-        bh=Yq43yR/26yNlNAzPkhntuFD6hSDpczgTcnRzncShN5k=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=tE3z7z2hD+BVHGp0DkT32geu3jd/XMaR/gkETky8rVcINgOAkaHuv+75cK8Cd37vg
-         yIDCTzPEzTqp+w5HGITUqdMQYLsCjALeEyBMtDfgShh7hhSLdP+BqgOMCIq7HJ/J/C
-         EHZAjblU0RP9WRNLhZGqOEnzFaZydAVHeNYAskOw=
-Date:   Wed, 24 Apr 2019 09:31:34 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <jroedel@suse.de>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Nicolai Stange <nstange@suse.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/mm: Remove in_nmi() warning from 64bit implementation
- of vmalloc_fault()
-In-Reply-To: <20190424072610.GF4038@hirez.programming.kicks-ass.net>
-Message-ID: <nycvar.YFH.7.76.1904240927550.9803@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm> <20190424072610.GF4038@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1729772AbfDXHdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 03:33:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EC5980D;
+        Wed, 24 Apr 2019 00:33:06 -0700 (PDT)
+Received: from blommer (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87ED53F238;
+        Wed, 24 Apr 2019 00:33:03 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 08:33:01 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alex Matveev <alxmtvv@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] arm64: sysreg: Make mrs_s and msr_s macros work with
+ Clang and LTO
+Message-ID: <20190424073258.d5gv7s7ij5zujd2l@blommer>
+References: <20190423232622.GA11776@beast>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423232622.GA11776@beast>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019, Peter Zijlstra wrote:
+Hi Kees,
 
-> > In-NMI warnings have been added to vmalloc_fault() via ebc8827f75 ("x86: 
-> > Barf when vmalloc and kmemcheck faults happen in NMI") back in the time 
-> > when our NMI entry code could not cope with nested NMIs.
-> > 
-> > These days, it's perfectly fine to take a fault in NMI context and we 
-> > don't have to care about the fact that IRET from the fault handler might 
-> > cause NMI nesting.
-> > 
-> > This warning has already been removed from 32bit implementation of 
-> > vmalloc_fault() in 6863ea0cda8 ("x86/mm: Remove in_nmi() warning from 
-> > vmalloc_fault()"), but 64bit version was omitted.
-> > 
-> > Remove the bogus warning also from 64bit implementation of vmalloc_fault().
+On Tue, Apr 23, 2019 at 04:26:22PM -0700, Kees Cook wrote:
+> Clang's integrated assembler does not allow assembly macros defined
+> in one inline asm block using the .macro directive to be used across
+> separate asm blocks. LLVM developers consider this a feature and not a
+> bug, recommending code refactoring:
 > 
-> Cute; did you actually trigger this?
-
-Nope; Nicolai tripped over it while he was looking into interactions 
-between ftrace and pagefaults.
-
-> > Fixes: 6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
-> > Reported-by: Nicolai Stange <nstange@suse.de>
-> > Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+>   https://bugs.llvm.org/show_bug.cgi?id=19749
 > 
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> As binutils doesn't allow macros to be redefined, this change uses
+> UNDEFINE_MRS_S and UNDEFINE_MSR_S to define corresponding macros
+> in-place and workaround gcc and clang limitations on redefining macros
+> across different assembler blocks.
+
+[...]
+
+> diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
+> index 43d8366c1e87..d359f28765cb 100644
+> --- a/arch/arm64/include/asm/irqflags.h
+> +++ b/arch/arm64/include/asm/irqflags.h
+> @@ -43,7 +43,7 @@ static inline void arch_local_irq_enable(void)
+>  	asm volatile(ALTERNATIVE(
+>  		"msr	daifclr, #2		// arch_local_irq_enable\n"
+>  		"nop",
+> -		"msr_s  " __stringify(SYS_ICC_PMR_EL1) ",%0\n"
+> +		__msr_s(SYS_ICC_PMR_EL1)
+
+Seeing the __stringify() go is nice!
+
+Our assembly happens to use argument 0 by coincidence rather than by deliberate
+design, so please have the macro take the template, e.g.
+
+	__msr_s(SYS_ICC_PMR_EL1, "%x0")
+
+... that ways it's obvious as to which asm parameter is used, and this won't
+complicate refactoring of the assembly (which may shuffle or rename the
+parameters).
+
+Likewise for __mrs_s(), e.g.
+
+	__mrs_s("%x[va]", SYS_WHATEVER);
+
+[...]
+
+> +#define __mrs_s(r)						\
+> +	DEFINE_MRS_S						\
+> +"	mrs_s %0, " __stringify(r) "\n"				\
+> +	UNDEFINE_MRS_S
+> +
+> +#define __msr_s(r)						\
+> +	DEFINE_MSR_S						\
+> +"	msr_s " __stringify(r) ", %0\n"				\
+> +	UNDEFINE_MSR_S
+
+These can be:
+
+#define __mrs_s(v, r)						\
+	DEFINE_MRS_S						\
+"	mrs_s " v ", " __stringify(r) "\n"			\
+	UNDEFINE_MRS_S
+
+
+#define __msr_s(r, v)						\
+	DEFINE_MSR_S						\
+"	msr_s " __stringify(r) ", " v "\n"			\
+	UNDEFINE_MSR_S
+
+
+> +
+> +/* For use with "rZ" constraints. */
+> +#define __msr_s_x0(r)						\
+> +	DEFINE_MSR_S						\
+> +"	msr_s " __stringify(r) ", %x0\n"			\
+> +	UNDEFINE_MSR_S
+
+I don't think we need this. If we pass the template in, this is solved by the
+caller, and we could consistently use the x form regardless.
+
+Otherwise, I think this is as clean as we can make this short of bumping our
+minimum binutils version and using the S<Op0>_<...> names.
 
 Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+Mark.
