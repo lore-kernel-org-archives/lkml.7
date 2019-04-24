@@ -2,51 +2,53 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F51DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23821C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554C3205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B64205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126485;
-	bh=kvoszp9IDmHg9ngeL4CEh7OMph4HwrbQW4aEiH5OQf8=;
+	s=default; t=1556126492;
+	bh=yDrk0dvK7Mmdwxct47QsLccAbbRUV2BSdgCR7syxPSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pzuxJwdCg0QRUrLqE2RRGad60+tduypW48ubyV9kK1em6O5G3dOOwjsOLCp3pkm68
-	 rHNk27drEqbO5ZmQepjCN5JAGBtYm60TMCOAnwa5Pu8bHcsAE8Zm+OBAuxM9gZbaTR
-	 B4W4zfSnaXSz+1xz496jsgLJsqmMCbVDo+3bvp0o=
+	b=YpGivDYdG9hXZvolNYjRUmQckPLl8BpWRAvTj10H4N4HXvg+Ue6wQNNX5CbD7Ogd2
+	 PpsNILaIClbkXKoSPyy3RIdrrrem1hM5OO1KQgFzRDSXjmtxjgZSkNY1NuHFCRDdQq
+	 I/nf89Fv3p5BulTg9gpIdBznNNk/6wymomvGtrg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389333AbfDXRVY (ORCPT
+        id S2389353AbfDXRVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:21:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46850 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:21:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388321AbfDXRVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:21:21 -0400
+        id S2389337AbfDXRV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:21:27 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85D9F205ED;
-        Wed, 24 Apr 2019 17:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 630EF205ED;
+        Wed, 24 Apr 2019 17:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126481;
-        bh=kvoszp9IDmHg9ngeL4CEh7OMph4HwrbQW4aEiH5OQf8=;
+        s=default; t=1556126487;
+        bh=yDrk0dvK7Mmdwxct47QsLccAbbRUV2BSdgCR7syxPSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3aoNn9BsomLihxbZG076t3Dva0X7jzqmZBH4k7m4pILrg3mdZXHlnQiIjJqQLUh8
-         ZRwUEk1FsUR9N7ZF/7eH1sGMqQSNMgvoPVqyygexPb7q+rSnj1QEssGlNwbdOF4dYz
-         iTIhI8Dq7wuIK4R5i9GvvAPo7H/z8f+9rbqhj4sE=
+        b=UYn+VaKQUaSXJOBzL/uek2SbimNjH3Vdh9a1FGi8t5wRGqhwN2FTm6MGX/AE9Faoy
+         2F7oeIgB8KeaoNLnag+iCCiRWjwN9gHFOEywuCVpBDEk6As9DAqQeANEGabLjpzz97
+         cG5Ym8EuB/FNsUJ2h5VWRPa03sTgjY7HCeFt7gC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.4 097/168] PCI: Add function 1 DMA alias quirk for Marvell 9170 SATA controller
-Date:   Wed, 24 Apr 2019 19:09:01 +0200
-Message-Id: <20190424170929.430446249@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ronald=20Tschal=C3=83=C2=A4r?= <ronald@innovation.ch>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 125/168] ACPI / SBS: Fix GPE storm on recent MacBookPros
+Date:   Wed, 24 Apr 2019 19:09:29 +0200
+Message-Id: <20190424170930.757002733@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -59,37 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+[ Upstream commit ca1721c5bee77105829cbd7baab8ee0eab85b06d ]
 
-commit 9cde402a59770a0669d895399c13407f63d7d209 upstream.
+On Apple machines, plugging-in or unplugging the power triggers a GPE
+for the EC. Since these machines expose an SBS device, this GPE ends
+up triggering the acpi_sbs_callback(). This in turn tries to get the
+status of the SBS charger. However, on MBP13,* and MBP14,* machines,
+performing the smbus-read operation to get the charger's status triggers
+the EC's GPE again. The result is an endless re-triggering and handling
+of that GPE, consuming significant CPU resources (> 50% in irq).
 
-There is a Marvell 88SE9170 PCIe SATA controller I found on a board here.
-Some quick testing with the ARM SMMU enabled reveals that it suffers from
-the same requester ID mixup problems as the other Marvell chips listed
-already.
+In the end this is quite similar to commit 3031cddea633 (ACPI / SBS:
+Don't assume the existence of an SBS charger), except that on the above
+machines a status of all 1's is returned. And like there, we just want
+ignore the charger here.
 
-Add the PCI vendor/device ID to the list of chips which need the
-workaround.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=198169
+Signed-off-by: Ronald TschalÃ¤r <ronald@innovation.ch>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/acpi/sbs.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3623,6 +3623,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_M
- /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c14 */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9130,
- 			 quirk_dma_func1_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9170,
-+			 quirk_dma_func1_alias);
- /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c47 + c57 */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9172,
- 			 quirk_dma_func1_alias);
+diff --git a/drivers/acpi/sbs.c b/drivers/acpi/sbs.c
+index cb3dedb1beae..b133dac8a7f2 100644
+--- a/drivers/acpi/sbs.c
++++ b/drivers/acpi/sbs.c
+@@ -443,9 +443,13 @@ static int acpi_ac_get_present(struct acpi_sbs *sbs)
+ 
+ 	/*
+ 	 * The spec requires that bit 4 always be 1. If it's not set, assume
+-	 * that the implementation doesn't support an SBS charger
++	 * that the implementation doesn't support an SBS charger.
++	 *
++	 * And on some MacBooks a status of 0xffff is always returned, no
++	 * matter whether the charger is plugged in or not, which is also
++	 * wrong, so ignore the SBS charger for those too.
+ 	 */
+-	if (!((status >> 4) & 0x1))
++	if (!((status >> 4) & 0x1) || status == 0xffff)
+ 		return -ENODEV;
+ 
+ 	sbs->charger_present = (status >> 15) & 0x1;
+-- 
+2.19.1
+
 
 
