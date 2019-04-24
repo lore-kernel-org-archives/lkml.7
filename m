@@ -2,107 +2,76 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54B4C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43FEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E1D2183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D712183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733279AbfDXUvz (ORCPT
+        id S1733295AbfDXUyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 16:51:55 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33525 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbfDXUvy (ORCPT
+        Wed, 24 Apr 2019 16:54:19 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:42904 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbfDXUyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 16:51:54 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id C3E4B80558; Wed, 24 Apr 2019 22:51:42 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 22:51:50 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Jens Axboe <axboe@kernel.dk>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, lduncan@suse.com, hare@suse.com,
-        mcgrof@kernel.org, jthumshirn@suse.de, hch@lst.de,
-        gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        bvanassche@acm.org
-Cc:     kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
-        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, hdegoede@redhat.com,
-        linux-ide@vger.kernel.org
-Subject: Re: regression -next -- scsi: sd: Rely on the driver core for
- asynchronous probing was Re: next-20190408..0418: Suspend/resume problems on
- Thinkpad X60
-Message-ID: <20190424205150.GA4582@amd>
-References: <20190408173928.GB13260@amd>
- <20190412102812.GA24977@amd>
- <20190423102239.GA15531@amd>
- <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
- <20190424095431.GA32457@amd>
- <20190424104850.GC32457@amd>
- <20190424202119.GA26357@amd>
- <20190424204832.GA3111@amd>
+        Wed, 24 Apr 2019 16:54:18 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id AF9A8804A4;
+        Wed, 24 Apr 2019 22:54:12 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 22:54:09 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        YiPing Xu <xuyiping@hisilicon.com>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>
+Subject: Re: [PATCH 00/25] drm: Kirin driver cleanups to prep for Kirin960
+ support
+Message-ID: <20190424205409.GA27952@ravnborg.org>
+References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190424204832.GA3111@amd>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8
+        a=yLYfaYWzK47y_Idy3iIA:9 a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi John.
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 23, 2019 at 04:20:31PM -0700, John Stultz wrote:
+> This patchset contains one fix (in the front, so its easier to
+> eventually backport), and a series of changes from YiPing to
+> refactor the kirin drm driver so that it can be used on both
+> kirin620 based devices (like the original HiKey board) as well
+> as kirin960 based devices (like the HiKey960 board).
+> 
+> The full kirin960 drm support is still being refactored, but as
+> this base kirin rework was getting to be substantial, I wanted
+> to send out the first chunk for some initial review, so that the
+> review burden wasn't overwhelming.
+> 
+> The full HiKey960 patch stack can be found here:
+>   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/hikey960-mainline-WIP
 
-On Wed 2019-04-24 22:48:32, Pavel Machek wrote:
-> Hi!
->=20
-> > Not block, but it seems scsi subsystem is:
->=20
-> commit 21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3
-> Author: Bart Van Assche <bvanassche@acm.org>
-> Date:   Wed Mar 20 13:09:19 2019 -0700
->=20
->     scsi: sd: Rely on the driver core for asynchronous probing
->=20
->     As explained during the 2018 LSF/MM session about increasing SCSI
->     disk
->         probing concurrency, the problems with the current probing
->     approach are as
->=20
-> Seems to be responsible. Full log attached.
+On the mailing list we are missing patch 25/25 - I only realize now.
 
-Unfortunately, that one does not revert cleanly on top of -next.
-
-Any ideas what is wrong?
-
-Does suspend/resume work for you?
-
-I can test patches.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzAzGYACgkQMOfwapXb+vJq4QCeNjbDQJS2ZM3PimuT0IZmO9cB
-VzAAoLzlKI6Ec0myLfIAxqC1T64C9p6y
-=lQq0
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
+	Sam
