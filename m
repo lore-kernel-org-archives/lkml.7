@@ -2,95 +2,156 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A3EC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9528BC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0811218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:59:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pbnN8AwG"
+	by mail.kernel.org (Postfix) with ESMTP id 6894B218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfDXB7g (ORCPT
+        id S1729363AbfDXB7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:59:36 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45345 "EHLO ozlabs.org"
+        Tue, 23 Apr 2019 21:59:54 -0400
+Received: from mga17.intel.com ([192.55.52.151]:51063 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfDXB7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:59:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pk5d2H5vz9s3q;
-        Wed, 24 Apr 2019 11:59:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556071173;
-        bh=Kggwjgb3lS4lSBQTEiUvpPTrVb/g0WqRx7iivBYuVxE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pbnN8AwG/KKmQVeIbqtV26FvMVafJAcu17i/NPY8HmP4lv7QKbJDHZhBBIuN6KGZV
-         i+oDnJcUa+a6Jl9da4pzAbiPpr4o1RB66buJqluR77th4oST9jhjm2/yRUvCJE8Gfl
-         KiXn6LeUTlW5QOLHnXyUFFmPgjiH3ceK5uLWT8ZagEgNYUI35aqCww88zdn8SpYV6f
-         2xaTxIp0OyZNbCC9hi3oTaQsjWd0j2FbDrUKoMQH3hhXTLWAna4SF913kybej5jEgK
-         E2huyXScgFgix5JkcadcKWyIj33mD8kOkr36XqCVxYnPmh1zh2Y3kdNq8m7D6eg6U3
-         DVASTEI5Gl2ug==
-Date:   Wed, 24 Apr 2019 11:59:32 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Deepak Singh Rawat <drawat@vmware.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>
-Subject: Re: linux-next: Signed-off-by missing for commit in the drm tree
-Message-ID: <20190424115932.330a2174@canb.auug.org.au>
-In-Reply-To: <45f1305e2ea62ca76a86c6cca1693c20d3a0c891.camel@vmware.com>
-References: <20190424102219.48cfdfe2@canb.auug.org.au>
-        <44707352378dcd414b476ec5420db23093fb9351.camel@vmware.com>
-        <20190424111259.6a1aacce@canb.auug.org.au>
-        <45f1305e2ea62ca76a86c6cca1693c20d3a0c891.camel@vmware.com>
+        id S1726461AbfDXB7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 21:59:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 18:59:53 -0700
+X-IronPort-AV: E=Sophos;i="5.60,387,1549958400"; 
+   d="scan'208";a="136840568"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.239.196.111]) ([10.239.196.111])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 23 Apr 2019 18:59:51 -0700
+Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
+ <20190422183553.GH1236@linux.intel.com>
+ <bccc075c-68ce-6324-6f73-4d4e9a1d9683@linux.intel.com>
+ <20190423174407.GC10720@linux.intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <37c014d8-7562-92e6-d577-ddbe3565ea8e@linux.intel.com>
+Date:   Wed, 24 Apr 2019 09:59:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/jxLVVcFoz.UJKb2.QJ5VfFb"; protocol="application/pgp-signature"
+In-Reply-To: <20190423174407.GC10720@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jxLVVcFoz.UJKb2.QJ5VfFb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2019/4/24 1:44, Sean Christopherson wrote:
+> On Tue, Apr 23, 2019 at 11:23:59AM +0800, Like Xu wrote:
+>> On 2019/4/23 2:35, Sean Christopherson wrote:
+>>>>   #define F(x) bit(X86_FEATURE_##x)
+>>>>   int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>>>> @@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+>>>>   	switch (function) {
+>>>>   	case 0:
+>>>>   		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+>>>> +		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry->eax;
+>>>
+>>> This all seems unnecessary.  And by 'all', I mean the existing Intel PT
+>>> and XSAVE leaf checks, as well as the new mcp check.  entry->eax comes
+>>> directly from hardware, and unless I missed something, PT and XSAVE are
+>>> only exposed to the guest when they're supported in hardware.  In other
+>>> words, KVM will never need to adjust entry->eax to expose PT or XSAVE.
+>>
+>> We call this function for both case KVM_GET_SUPPORTED_CPUID and
+>> KVM_GET_EMULATED_CPUID although kvm user could reconfig them via
+>> KVM_SET_CPUID* path.
+> 
+> Not that it matters, but __do_cpuid_ent() is only used for the non-emulated
+> case, KVM_GET_EMULATED_CPUID goes to __do_cpuid_ent_emulated().
 
-Hi Deepak,
+It's true and I have to mention we have two scenarios to get vCPUID:
 
-On Wed, 24 Apr 2019 01:31:59 +0000 Deepak Singh Rawat <drawat@vmware.com> w=
-rote:
->
-> Sorry missed that part and missed your email context about commiter and
-> not the author. I think at this point nothing can be done?
+1. For kvm_dev, we have KVM_GET_EMULATED_CPUID for 
+kvm_dev_ioctl_get_cpuid; (we're talking about this)
 
-Probably, I am pretty sure that Dave does not rebase the drm tree.
---=20
-Cheers,
-Stephen Rothwell
+2. For kvm_vcpu,we have KVM_GET_CPUID2 for kvm_vcpu_ioctl_get_cpuid2;
 
---Sig_/jxLVVcFoz.UJKb2.QJ5VfFb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+>   
+>>> The original min() check was added by commit 0771671749b5 ("KVM: Enhance
+>>> guest cpuid management"), which doesn't provide any explicit information
+>>> on why KVM does min() in the first place.
+>>
+>> Exposing cpuid.0.eax in a blind way (with host hardware support)
+>> is not a good practice for guest migration and improves compatibility
+>> requirements.
+> 
+> Right, but isn't the f_intel_pt check for example completely irrelevant?
+> f_intel_pt is true if and only if hardware supports PT, i.e. CPUID.0.EAX
+> and thus entry->eax will already be >=0x14.
 
------BEGIN PGP SIGNATURE-----
+The f_intel_pt check is not only about hardware supports check but also 
+module_param (pt_mode) supports check.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/wwQACgkQAVBC80lX
-0GyoEAf/caswu7ukXMn0c1mGWx4LgZ6otAOP9JVTCGAIrXlshnkEF/wR2CQmAXsD
-uAIiZRLgFw8zl8nZvgn9BR3dzmRdSikiCslKzN9ClNjXAhj4TQHuTSlx2ZYTyA7+
-2JqwcYUK7OBC0l250p89QteRvTEiaOTvsbFN68EVpCxRM11Nx5oSoCH0nS8RA7X9
-AJ+Ab0Txy7uqqCBTdWB99ZEySumqX1y15xVxiq0eaRkolYv+3dLreiFQDi62+XMQ
-omPZZvfGNWz4R2DUIIE6WEowA8lgUIhjAdZVwbC7vtzjBLymMEhaSroH0IKoMDlf
-LM4fwyiSzx7vSf9xAMt3l5DOqXOS/w==
-=nle/
------END PGP SIGNATURE-----
+So the case is the host does have PT support which means (host 
+CPUID.0.EAX already be >=0x14 for Intel CPUs) but kvm doesn't want 
+advertise it and thus the min() operation is needed.
 
---Sig_/jxLVVcFoz.UJKb2.QJ5VfFb--
+> 
+> I don't fully understand whether or not KVM needs to raise the minimum to
+> 0xb regardless of h/w XSAVE support, but it's likely irrelevant in the end.
+> 
+> Anyways, back to 0x1f, kvm_supported_intel_mcp() returns true if and only
+> if hardware's CPUID.0.EAX >= 0x1f, 
+
+According to latest SDM, the max hardware CPUID.0.EAX is 0x1f and BIOS 
+would expose 0x1f only for multi-chip packaging CPUs (at least for now).
+
+> i.e. adjusting entry->eax is always a
+> nop.  So if KVM wants to advertise leaf 0x1f only when it's supported in
+> hardware then adjusting entry->eax is unnecessary, and if KVM wants to
+> unconditionally advertise 0x1f then adjusting entry->eax should also be
+> done unconditionally.
+
+It we have no check on kvm_supported_intel_mcp() in legacy code,
+CPUID.0.EAX would be min() and thus less than 0x1f which means the 
+cpuid.1f info is not exposed.
+
+I know your point is to avoid min() totally (I thought so at the time) 
+and I have pointed out it's necessary for kvm features setting.
+
+If KVM wants to unconditionally advertise 0x1f (in EMULATED way),
+kvm needs cover other side effects and this patch only advertises 0x1f
+when hardware has it.
+
+It's very common that guest wants to set 0x1f regardless of h/w support
+and this is another story.
+
+> 
+>>> Given that the original code
+>>> was "entry->eax = min(entry->eax, (u32)0xb);", my *guess* is that the
+>>> idea was to always report "Extended Topology Enumeration Leaf" as
+>>> supported so that userspace can enumerate the VM's topology to the guest
+>>> even when hardware itself doesn't do so.
+>>
+>> If the host cpu mode is too antiquated to support 0xb, it wouldn't report
+>> 0xb for sure. The host cpuid.0.eax has been over 0xb for a long time and
+>> reached 0x1f in the latest SDM.
+>>
+>> AFAICT, the original code keeps minimum cpuid.0.eax out of features guest
+>> just used or at least it claimed to use.
+>>
+>>>
+>>> Assuming we want to allow userspace to use "V2 Extended Topology
+>>> Enumeration Leaf" regardless of hardware support, then this can simply be:
+>>>
+>>>    entry->eax = min(entry->eax, (u32)0x1f);
+>>>
+>>> Or am I completely missing something?
+> 
+
