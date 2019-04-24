@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9730C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDCEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71E1218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA57B218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126225;
-	bh=mndFGD+NbQ7efly0W+gyY3LNQA2jJx4fntKFmjcS94I=;
+	s=default; t=1556126230;
+	bh=ru91uAHNXH6vOCQdT+KClw2BtfjQqRbLn5RcvRsPPeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rGSE4j2d9qHmgUoj/sOG8lY9Zk9j/yEfXtgkSfR63fx2pFPQDN6O3dBN5kZ9MNMCB
-	 u//OoKD+QBenw4th/b9AEkVyXPtkpBoBiIGOIZ/kw6lquS9V59PnMT+88HqbIPdfni
-	 XEV/AZEwdW+vVzNoEA9YKoqDH7q0W/Qux9eozpFw=
+	b=dP3Wfl7Dg1uNF094S0/dqccnoT4Jf9HyAFEy6t3bPPYGnF1kWMdXl8LIytE/EttBt
+	 moCpRH0KDwfludSVf9IGjRxX4FDM4O0hamQJYTFcJAHFLoQcC6HVFg1GWafxn5LKoA
+	 hOea5gorbHKy2YC0OdBNTNqGPEPQfBE7gGtfxKoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388545AbfDXRRE (ORCPT
+        id S2388557AbfDXRRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41696 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:17:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387765AbfDXRQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:16:59 -0400
+        id S2388538AbfDXRRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:17:02 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7010E2054F;
-        Wed, 24 Apr 2019 17:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35FBF21905;
+        Wed, 24 Apr 2019 17:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126218;
-        bh=mndFGD+NbQ7efly0W+gyY3LNQA2jJx4fntKFmjcS94I=;
+        s=default; t=1556126221;
+        bh=ru91uAHNXH6vOCQdT+KClw2BtfjQqRbLn5RcvRsPPeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gxPfEdtnG5CmaZY65o7P34DawCfovots/84Vs7NmUTBgMc+nEnp0bunT6NHkLl1yM
-         a1MsUWsHgp37wnPiKoVrr2be2AakAH7wRnrbmZ/lGD2GDg8qS9RDjgCo3ISRb+8TB6
-         A0Rt9wdRKSEQSWoZEiQgT4dMHPiEkx9N2fO65WHA=
+        b=OH4eNbjEhOQquLti87bFiN30iZ+dy324AAxGuB2QWDfAi8CGJy1C977VtV2JLx20J
+         jGzGPcS47UV0bvOZtvH5Gkxiwao5SC14jxYFleP4coMokyuE1HHrFQva9Y5+Wl6Cwy
+         /Zl+lRQFFS4gkDY2/OtGqRVz/brJHtAUTd5Jsl2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 032/168] mmc: omap: fix the maximum timeout setting
-Date:   Wed, 24 Apr 2019 19:07:56 +0200
-Message-Id: <20190424170925.615693331@linuxfoundation.org>
+Subject: [PATCH 4.4 033/168] e1000e: Fix -Wformat-truncation warnings
+Date:   Wed, 24 Apr 2019 19:07:57 +0200
+Message-Id: <20190424170925.686197565@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -60,49 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
+[ Upstream commit 135e7245479addc6b1f5d031e3d7e2ddb3d2b109 ]
 
-When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
+Provide precision hints to snprintf() since we know the destination
+buffer size of the RX/TX ring names are IFNAMSIZ + 5 - 1. This fixes the
+following warnings:
 
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	[ad inf.]
+drivers/net/ethernet/intel/e1000e/netdev.c: In function
+'e1000_request_msix':
+drivers/net/ethernet/intel/e1000e/netdev.c:2109:13: warning: 'snprintf'
+output may be truncated before the last format character
+[-Wformat-truncation=]
+     "%s-rx-0", netdev->name);
+             ^
+drivers/net/ethernet/intel/e1000e/netdev.c:2107:3: note: 'snprintf'
+output between 6 and 21 bytes into a destination of size 20
+   snprintf(adapter->rx_ring->name,
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     sizeof(adapter->rx_ring->name) - 1,
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     "%s-rx-0", netdev->name);
+     ~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/intel/e1000e/netdev.c:2125:13: warning: 'snprintf'
+output may be truncated before the last format character
+[-Wformat-truncation=]
+     "%s-tx-0", netdev->name);
+             ^
+drivers/net/ethernet/intel/e1000e/netdev.c:2123:3: note: 'snprintf'
+output between 6 and 21 bytes into a destination of size 20
+   snprintf(adapter->tx_ring->name,
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     sizeof(adapter->tx_ring->name) - 1,
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     "%s-tx-0", netdev->name);
+     ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Emulator warnings appear to be valid. The TI document SPRU680 [1]
-("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
-(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
-cycles and "0xff and 0xfe cannot be used".
-
-Fix by using 0xfd as the maximum timeout.
-
-Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
-real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
-(OMAP2420) that MMC works as before.
-
-[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
-
-Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/e1000e/netdev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
-index 5bcf4f45f8b4..20d422558fa3 100644
---- a/drivers/mmc/host/omap.c
-+++ b/drivers/mmc/host/omap.c
-@@ -921,7 +921,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
- 	reg &= ~(1 << 5);
- 	OMAP_MMC_WRITE(host, SDIO, reg);
- 	/* Set maximum timeout */
--	OMAP_MMC_WRITE(host, CTO, 0xff);
-+	OMAP_MMC_WRITE(host, CTO, 0xfd);
- }
- 
- static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 6369d88b81c1..6b1cacd86c6e 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -2131,7 +2131,7 @@ static int e1000_request_msix(struct e1000_adapter *adapter)
+ 	if (strlen(netdev->name) < (IFNAMSIZ - 5))
+ 		snprintf(adapter->rx_ring->name,
+ 			 sizeof(adapter->rx_ring->name) - 1,
+-			 "%s-rx-0", netdev->name);
++			 "%.14s-rx-0", netdev->name);
+ 	else
+ 		memcpy(adapter->rx_ring->name, netdev->name, IFNAMSIZ);
+ 	err = request_irq(adapter->msix_entries[vector].vector,
+@@ -2147,7 +2147,7 @@ static int e1000_request_msix(struct e1000_adapter *adapter)
+ 	if (strlen(netdev->name) < (IFNAMSIZ - 5))
+ 		snprintf(adapter->tx_ring->name,
+ 			 sizeof(adapter->tx_ring->name) - 1,
+-			 "%s-tx-0", netdev->name);
++			 "%.14s-tx-0", netdev->name);
+ 	else
+ 		memcpy(adapter->tx_ring->name, netdev->name, IFNAMSIZ);
+ 	err = request_irq(adapter->msix_entries[vector].vector,
 -- 
 2.19.1
 
