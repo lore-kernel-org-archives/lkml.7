@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0DFC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C401C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347B62089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD6A2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117744;
-	bh=9OI4e7G5h1rVd+XwFPX8jug7HwMBucdz4jR5TW70JEs=;
+	s=default; t=1556117755;
+	bh=84pcyOxzzxs+jT/KYCF7tTiVrlr0fAREYKelK3oYX0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GdiTal+b3E7H8RtAiOi9dK+6LMVHkcAa9LFyL6f3BnWC9CmIaYQd1ataqOtImmkru
-	 fxTvuURLOIpFgjLKNQStHHaRm5cOZTMUtoO/0GL3Qff7r+mAEe7mKeb3ISH46bIdqO
-	 6AoPSE0B5QeNvJt6L5iTDBJFegUewiBjz5kH3vf0=
+	b=XwSxZeZKlk4YdGmr93DaeMylZS3E8+Mi0gnGtbfWb0XH5kMNMuJr4T+QKIsZeYYdI
+	 YKprSW4Voe5OS5byHja0AIUKPyex+Y/x61RkPy4OqUOfX03c/EXai/9E97bViFZrQt
+	 7LkAjaSCNcNqqwP0Z+4OT/8+ZcEkaa0U2T2wQ+x4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732934AbfDXOzn (ORCPT
+        id S1731497AbfDXOup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50036 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:50:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732703AbfDXOuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:50:51 -0400
+        id S1732659AbfDXOum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:50:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 238FD21903;
-        Wed, 24 Apr 2019 14:50:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 425A1218FE;
+        Wed, 24 Apr 2019 14:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117450;
-        bh=9OI4e7G5h1rVd+XwFPX8jug7HwMBucdz4jR5TW70JEs=;
+        s=default; t=1556117441;
+        bh=84pcyOxzzxs+jT/KYCF7tTiVrlr0fAREYKelK3oYX0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZ0glvXL5/Vc5d6PiLKiPBJFFWTJexyHODUS/Awt59aVyfmqFCwQhJM/Ycf/qz2KA
-         O8sPpvelH8AidZxvGq7s8+thK5V+3fwvbH4TYkcahpPgNqd/dZQbUD7/kBs+s2DLID
-         J1vy0cGTJUliLZDe+R1uO7WWld84KjO/mfZGt4Xc=
+        b=pa7DrByawyCdXAG6+aDHOFaHuy4jAeXxdUrmMWT04/jtDopZa1eUIFC7vtFM449Iw
+         Bwt7Mso4vi9qDD6wVP4At6rs3sQTcy7u9RrNTRjZmCzLlptYv1hSuZTw0WV89TDuqe
+         Du+5KSPyWeNeJy3AvGdtMP+9YqX152NP2bEcnNCk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 16/28] rtc: da9063: set uie_unsupported when relevant
-Date:   Wed, 24 Apr 2019 10:50:00 -0400
-Message-Id: <20190424145012.30886-16-sashal@kernel.org>
+Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/28] net: stmmac: fix dropping of multi-descriptor RX frames
+Date:   Wed, 24 Apr 2019 10:49:56 -0400
+Message-Id: <20190424145012.30886-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424145012.30886-1-sashal@kernel.org>
 References: <20190424145012.30886-1-sashal@kernel.org>
@@ -58,42 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-[ Upstream commit 882c5e552ffd06856de42261460f46e18319d259 ]
+[ Upstream commit 8ac0c24fe1c256af6644caf3d311029440ec2fbd ]
 
-The DA9063AD doesn't support alarms on any seconds and its granularity is
-the minute. Set uie_unsupported in that case.
+Packets without the last descriptor set should be dropped early. If we
+receive a frame larger than the DMA buffer, the HW will continue using the
+next descriptor. Driver mistakes these as individual frames, and sometimes
+a truncated frame (without the LD set) may look like a valid packet.
 
-Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+This fixes a strange issue where the system replies to 4098-byte ping
+although the MTU/DMA buffer size is set to 4096, and yet at the same
+time it's logging an oversized packet.
+
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-da9063.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/enh_desc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/rtc/rtc-da9063.c b/drivers/rtc/rtc-da9063.c
-index f85cae240f12..7e92e491c2e7 100644
---- a/drivers/rtc/rtc-da9063.c
-+++ b/drivers/rtc/rtc-da9063.c
-@@ -480,6 +480,13 @@ static int da9063_rtc_probe(struct platform_device *pdev)
- 	da9063_data_to_tm(data, &rtc->alarm_time, rtc);
- 	rtc->rtc_sync = false;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+index 2c40cafa2619..77dc5842bd0b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+@@ -205,6 +205,11 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ 	if (unlikely(rdes0 & RDES0_OWN))
+ 		return dma_own;
  
-+	/*
-+	 * TODO: some models have alarms on a minute boundary but still support
-+	 * real hardware interrupts. Add this once the core supports it.
-+	 */
-+	if (config->rtc_data_start != RTC_SEC)
-+		rtc->rtc_dev->uie_unsupported = 1;
++	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
++		stats->rx_length_errors++;
++		return discard_frame;
++	}
 +
- 	irq_alarm = platform_get_irq_byname(pdev, "ALARM");
- 	ret = devm_request_threaded_irq(&pdev->dev, irq_alarm, NULL,
- 					da9063_alarm_event,
+ 	if (unlikely(rdes0 & RDES0_ERROR_SUMMARY)) {
+ 		if (unlikely(rdes0 & RDES0_DESCRIPTOR_ERROR)) {
+ 			x->rx_desc++;
 -- 
 2.19.1
 
