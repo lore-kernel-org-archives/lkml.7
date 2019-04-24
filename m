@@ -2,91 +2,65 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FED4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB50C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696EF218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBBB7218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbfDXKfJ (ORCPT
+        id S1728527AbfDXKe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:35:09 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:43711 "EHLO
+        Wed, 24 Apr 2019 06:34:59 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:38485 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728391AbfDXKfA (ORCPT
+        with ESMTP id S1726355AbfDXKe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:35:00 -0400
+        Wed, 24 Apr 2019 06:34:58 -0400
 Received: from orion.localdomain ([95.114.95.254]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MqK2d-1gy9Zw3L63-00nQ5I; Wed, 24 Apr 2019 12:34:51 +0200
+ 1M4K2r-1hJWDj49Wz-000How; Wed, 24 Apr 2019 12:34:51 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     axboe@kernel.dk, linux-ide@vger.kernel.org,
         linux-nvme@lists.infradead.org
-Subject: [PATCH 3/3] drivers: libata: add sysctl: 'libata.allow_tpm' for self-encrypted devices
-Date:   Wed, 24 Apr 2019 12:34:41 +0200
-Message-Id: <1556102081-11820-4-git-send-email-info@metux.net>
+Subject: libata fixes for NVME + OPAL
+Date:   Wed, 24 Apr 2019 12:34:38 +0200
+Message-Id: <1556102081-11820-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1556102081-11820-1-git-send-email-info@metux.net>
-References: <1556102081-11820-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:bxkFNe0yRwaU7KT04kyF25rMDgtNFYUHppCXAJGr+VQhYhKBSbJ
- l7r3PUUVlq3PupkEUBPvM6RCm4GUZUFu4TY5StEoIqBPlKjmc64guEnarjJ6iHFQpjX3l47
- ccTEzeRk26lowPFHUQCtvX0kvuavY7Of1YWgw4utnxBbrLOlzJ3RYJhjIx+/I56r0ph7SzY
- FagBGA+p6yF1AQdUgRQ3g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NF0ll/bu/ms=:sbSo5mO83/pXu8S4DfB6C9
- d1t6vScaKu4Cm+UkxFoJx9ZU1ptsrn6kfg5ocjfnGPtTO983bCn/Dq5S+HGxWVdD7e27ri65l
- 531kjZKwbMsrfiQzVOQ+35bZ8gwQ1TCjFPYCDJkDYgzCoZC8ZFt9gA3080jSvIg9hlLxQbWLz
- gqPc3wI4ZGnYHzznjWJdeez8UyKD6YWWwZuEefbE+GGEermvs7liLwgXJL6PHXsCVPsSOBBKI
- XZyqN7frg3HRr6+kJuetM9/96tx3TmHscJaiAc4JP38oX6Ks7Mh0RDZdEg7VJkvKNbBp4bIfI
- 6/SxDISiFULwigqm4YYnJheElnUsKpV41bTf56csFPaFB8u+gOo4tNQCLfNetJbw/E5crQqsC
- oBKCR+5oskJSRAMutFAoaqktnEG/8m5aWQ72dOGHMzRgf4pb4n7HK66fGRyv2bQJEVsInkD4k
- JxmD0sY0aHmVFDg73D1hGdjqIV8ZPpIs3J2WEIRyxCzrzedbKDAqTXl+7unDsMitmxHukmnMy
- OkjXV/tcTaNCe3iKtdW53NsjHWuJo0sE0+N4uSGw+6L2jSoaSr4tQ5mUXHJpt2X5cu4RvfFGp
- e+AWQhVrnQyzy4Aw1UQfxUdIOMdwmZ5pTYEJE2NnQmEGrtxBo6tM/iW4VSwkJyrO0Sp+/sKl9
- GiVAWf3V5YKzGYZFBIVBI1c9Gi2U5gwu+3I7KdG20tjxvokbTUAYR3/K52hR4pvpR8YusD8xQ
- fpqXg2p9jFL3y901X/HLps7vFMwdOBaAhd2ejw==
+X-Provags-ID: V03:K1:QWeA5Fetrux63+pUZh2lVQqXIa+Q7g1akJBzgZQsEfXq166C7Fu
+ 4SZ8BIVdFyXQ3uuF6P72faCn94IQHLikS6rHm/upIqFhRAQLmYo62DXeIuNcTpw4X0k418U
+ /ITuqSDVVxX+oeQrY2N4+U/CwI8VywyLSNlCx+/mf79XLMqttRfxDaBrEdQKkxt9H2urk78
+ Awn6YPSovw/xVTLkZ9wtA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CouuiYiQoLg=:LypaoNDllVpZvBjFS/Z0gh
+ ArVZ9HDFwGIyX/EMZqWDNs8Zi/uQJYINtUM2ubEh33/B5i6Sx3TO3MX5T4yXc0nhjbxzfB9M3
+ XiE4QIwIOVIsXD7uHUKUNHxCivOUjHfB+K0NmcaDu/HXzUD66+hqb3CzaqXGvGNegGVeErTan
+ hwNVf76zFAfDXjYL4Tvjjqw00ny9Z1pMHtncbGJn7e6q2v7gSDCrKi5kPgBsUqatqKoI21aEQ
+ F8GRyZC3HrG9zXu3nI6nTvTg98CwZcKVH6a9Ps2+Oa7PB6ywzs8WrO3tDgLm87Yxd4ks0p/uY
+ uhhPG9Y6wKgAMY7B2aa+BZT/qTolp/Nlam4BEoNShybGYfRZYu/fx6SDDB2cVfmaFEeC3qZtd
+ mSP+PGrD+2jjhqFFHeZtbFtjM3Y1ZbYyS+GhdXldiZSlPDygZwHq14QpMh20k/VN3o2/MJeMc
+ nGnv2Et1Cz0gjWIZb1OcPZfWvDy+rvzFOHagdcXXqh1jG1N+CMbbHHImPHpoxKVrbqAgm+Wcu
+ yvhLUscWVDefhkM/GFTlbZyOnoGkN4FouM3ETu6BBYLbFn5CGuPZ0K/DPQ3Qul5IVqJpYaINo
+ bDfVc3wvT0gcaHA3OEwbeqp24iF2lnzOAnfyFCJP4XBQ8fzkrvw8E2XqjYyVclFT8H61RoK8T
+ +mpZ34I/gXKDQzLAUcXv4ICoglDhLLoAyxgfIsaBFnt4Yy65RdiNmOWagvoKYIis6rTlcW0TV
+ S2kN6UztVZjPyfbJjLAMzFq19B39RcNV1pJBgA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-libata tpm functionality, needed for self encrypted devices (OPAL, ...),
-is currently disabled per default and needs to be enabled via kernel
-command line.
+Hello folks,
 
-This patch allows enabling it via sysctl.
 
-The implementation might look a bit 'naive', as there aren't any locks
-or barriers, etc. As we're dealing just w/ a plain boolean value, that's
-only checked when an tpm-related ioctl is called, we're fine w/ that.
+here're some fixes for libata to make NVME and TCG OPAL work:
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/ata/libata-core.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+* fix a little build break in nvme (forgotten include and Kconfig select)
+* introduce sysctl knob for enabling tpm stuff at runtime
+  (sed-util expects since several years, so it seems that piece just might
+  have been forgotten when opal support was mainlined)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index d3044c9..80ba844 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -177,6 +177,13 @@ struct ata_force_ent {
- MODULE_VERSION(DRV_VERSION);
- 
- static struct ctl_table ctl_libata[] = {
-+	{
-+		.procname	= "allow_tpm",
-+		.data		= &libata_allow_tpm,
-+		.maxlen		= sizeof(libata_allow_tpm),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+	},
- 	{}
- };
- 
--- 
-1.9.1
 
+--mtx
