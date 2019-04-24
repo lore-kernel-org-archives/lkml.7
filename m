@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07363C282E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578B8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA18A218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C33218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730513AbfDXOXn (ORCPT
+        id S1730385AbfDXOXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:23:43 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:53331 "EHLO
+        Wed, 24 Apr 2019 10:23:47 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:48409 "EHLO
         relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfDXOXk (ORCPT
+        with ESMTP id S1730421AbfDXOXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:23:40 -0400
+        Wed, 24 Apr 2019 10:23:45 -0400
 Received: from localhost.localdomain (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 6118810001A;
-        Wed, 24 Apr 2019 14:23:35 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 6A7D4100014;
+        Wed, 24 Apr 2019 14:23:39 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     hans.verkuil@cisco.com, acourbot@chromium.org,
         sakari.ailus@linux.intel.com,
@@ -37,9 +37,9 @@ Cc:     tfiga@chromium.org, posciak@chromium.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: [PATCH v10 2/4] media: pixfmt: Add H264 Slice format
-Date:   Wed, 24 Apr 2019 16:22:35 +0200
-Message-Id: <20190424142237.4979-3-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v10 3/4] media: pixfmt: Add H264_SLICE_RAW format documentation
+Date:   Wed, 24 Apr 2019 16:22:36 +0200
+Message-Id: <20190424142237.4979-4-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424142237.4979-1-paul.kocialkowski@bootlin.com>
 References: <20190424142237.4979-1-paul.kocialkowski@bootlin.com>
@@ -52,44 +52,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The H264_SLICE_RAW format is meant to hold the parsed slice data without
-the start code. This will be needed by stateless decoders.
+The H264_SLICE_RAW format introduced before is meant for stateless
+decoders that will need the H264 parsed slice data without the start code.
+
+Let's document it.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c | 1 +
- include/media/h264-ctrls.h           | 5 +++++
- 2 files changed, 6 insertions(+)
+ .../media/uapi/v4l/pixfmt-compressed.rst      | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index ac87c3e37280..f6e1254064d2 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1325,6 +1325,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
- 		case V4L2_PIX_FMT_H264:		descr = "H.264"; break;
- 		case V4L2_PIX_FMT_H264_NO_SC:	descr = "H.264 (No Start Codes)"; break;
- 		case V4L2_PIX_FMT_H264_MVC:	descr = "H.264 MVC"; break;
-+		case V4L2_PIX_FMT_H264_SLICE_RAW:	descr = "H.264 Parsed Slice Data"; break;
- 		case V4L2_PIX_FMT_H263:		descr = "H.263"; break;
- 		case V4L2_PIX_FMT_MPEG1:	descr = "MPEG-1 ES"; break;
- 		case V4L2_PIX_FMT_MPEG2:	descr = "MPEG-2 ES"; break;
-diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-index e2f83b3cdbef..e1404d78d6ff 100644
---- a/include/media/h264-ctrls.h
-+++ b/include/media/h264-ctrls.h
-@@ -11,6 +11,11 @@
- #ifndef _H264_CTRLS_H_
- #define _H264_CTRLS_H_
+diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+index 6c961cfb74da..4b701fc7653e 100644
+--- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
++++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+@@ -52,6 +52,31 @@ Compressed Formats
+       - ``V4L2_PIX_FMT_H264_MVC``
+       - 'M264'
+       - H264 MVC video elementary stream.
++    * .. _V4L2-PIX-FMT-H264-SLICE-RAW:
++
++      - ``V4L2_PIX_FMT_H264_SLICE_RAW``
++      - 'S264'
++      - H264 parsed slice data, without the start code and as
++	extracted from the H264 bitstream.  This format is adapted for
++	stateless video decoders that implement an H264 pipeline
++	(using the :ref:`mem2mem` and :ref:`media-request-api`).
++	Metadata associated with the frame to decode are required to
++	be passed through the ``V4L2_CID_MPEG_VIDEO_H264_SPS``,
++	``V4L2_CID_MPEG_VIDEO_H264_PPS``,
++	``V4L2_CID_MPEG_VIDEO_H264_SCALING_MATRIX``,
++	``V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS`` and
++	``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS`` controls.  See the
++	:ref:`associated Codec Control IDs <v4l2-mpeg-h264>`.  Exactly
++	one output and one capture buffer must be provided for use
++	with this pixel format. The output buffer must contain the
++	appropriate number of macroblocks to decode a full
++	corresponding frame to the matching capture buffer.
++
++	.. note::
++
++	   This format is not yet part of the public kernel API and it
++	   is expected to change.
++
+     * .. _V4L2-PIX-FMT-H263:
  
-+#include <linux/videodev2.h>
-+
-+/* Our pixel format isn't stable at the moment */
-+#define V4L2_PIX_FMT_H264_SLICE_RAW v4l2_fourcc('S', '2', '6', '4') /* H264 parsed slices */
-+
- /*
-  * This is put insanely high to avoid conflicting with controls that
-  * would be added during the phase where those controls are not
+       - ``V4L2_PIX_FMT_H263``
 -- 
 2.21.0
 
