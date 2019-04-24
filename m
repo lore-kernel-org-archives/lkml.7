@@ -2,68 +2,93 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48204C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BB1C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22965218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075ED218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbfDXNuj (ORCPT
+        id S1730067AbfDXNxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:50:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfDXNui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:50:38 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B054B218D2;
-        Wed, 24 Apr 2019 13:50:36 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 09:50:35 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-trace-users@vger.kernel.org" 
-        <linux-trace-users@vger.kernel.org>,
-        Linux Trace Devel <linux-trace-devel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Cc:     Yordan Karadzhov <ykaradzhov@vmware.com>,
-        Slavomir Kaslev <kaslevs@vmware.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Stela Stamenkova <sstamenkova@vmware.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [ANNOUNCE] Call for KernelShark logos!
-Message-ID: <20190424095035.10e55f66@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 24 Apr 2019 09:53:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38790 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727327AbfDXNxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:53:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1D6A4AF56;
+        Wed, 24 Apr 2019 13:53:08 +0000 (UTC)
+Date:   Wed, 24 Apr 2019 15:53:06 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Tobin C . Harding" <me@tobin.cc>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/10] vsprintf: Prevent silent crashes and
+ consolidate error handling
+Message-ID: <20190424135306.xiuhj6dmzrgytulp@pathway.suse.cz>
+References: <20190417115350.20479-1-pmladek@suse.com>
+ <20190419015112.GA18748@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190419015112.GA18748@jagdpanzerIV>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Folks,
+On Fri 2019-04-19 10:51:12, Sergey Senozhatsky wrote:
+> On (04/17/19 13:53), Petr Mladek wrote:
+> > Crash in vsprintf() might be silent when it happens under logbuf_lock
+> > in vprintk_emit(). This patch set prevents most of the crashes by probing
+> > the address. The check is done only by %s and some %p* specifiers that need
+> > to dereference the address.
+> >
+> > Only the first byte of the address is checked to keep it simple. It should
+> > be enough to catch most problems.
+> >
+> > The check is explicitly done in each function that does the dereference.
+> > It helps to avoid the questionable strchr() of affected specifiers. This
+> > change motivated me to do some preparation patches that consolidated
+> > the error handling and cleaned the code a bit.
+> 
+> The patch set looks OK to me.
+> 
+> I got confused by 'pC?' error string, but once you start looking
+> at it as a regex (? - zero or one occurrences) things look OK.
+> Regex in dmesg/serial output might be something very new to people,
+> stack traces, after all, is a rather common error reporting mechanism.
+> So the previous "WARN_ON() + exact unrecognized fmt[N] char" was not
+> totally awful or wrong (well, it was, before we introduced printk_safe()),
+> but I don't have strong objections against that new regex thing.
+> 
+> FWIW,
+> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-KernelShark 1.0 is soon to be released, and we want an official logo
-for it. We currently have a few out there, which you can find here:
+Thanks a lot for review.
 
-  http://kernelshark.org/logos/
+I have pushed the entire patchset into printk.git,
+branch for-5.2-vsprintf-hardening to get some
+test coverage via linux-next.
 
-If you know of a designer, and want them to submit another candidate,
-please email me and let me know. All submissions should be mailed to
-linux-trace-devel@vger.kernel.org (as an attachment, and of limited
-size. Preferably one image per email). I'll wait approximately a month
-and then will open up voting for the new logo on May 22. And will let
-that run for 2 weeks and will have an official logo by June 7th.
+I still expect some feedback, especially from Andy
+who seems to have a vacation these days.
+I think that Andy wanted these changes rather sooner
+than later, so I hope that he would be fine with it.
+I could take it back in case of disagreement.
 
-Enjoy,
-
--- Steve
+Best Regards,
+Petr
