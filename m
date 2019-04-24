@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AE4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C3EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0ED82054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3CA21903
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127378;
-	bh=+GWTc41e1o18/0xIjGTJqgUKBnryJRFgzjqwasWjVZ4=;
+	s=default; t=1556127383;
+	bh=358TBgmDJPbtbbJnzVm7V9fqPiPkS9zX5pxQpMmgEig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rDs7imkE5bhF16TUFgsBaLToWnJVy7ZkHoOn1hwk6gCJ/em57IUSi0ihwhN5L0trR
-	 NBSiIgVfdvVAzKtq0pL6fhu6Iaf5xEuyCNbHp7pc24A3LJUZRzmDsHCr/o+n3TKnRk
-	 qOJ4YGrs7yXf/tbP57WSVqH8fgnpxKJEEaAKwGV8=
+	b=xIp8wlvQBczWdEdoM4evvQZehDJzo6+KyWn+vhX38Hpivtv/2er4C5a9xwL4jjNiM
+	 i0cr990IhXcG0XrtMxwFZkhF4Bu/HYnMIiWZmTtSjOkPiSy9wIGuNBEsazX9pu8V/w
+	 gScbBaxlIhYP4nSFy4LqAHm6DgoDb7IX43CfCE4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403871AbfDXRgQ (ORCPT
+        id S2403896AbfDXRgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:36:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35086 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:36:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392037AbfDXRgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:36:10 -0400
+        id S2403873AbfDXRgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:36:17 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A75BB21905;
-        Wed, 24 Apr 2019 17:36:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 016EF2054F;
+        Wed, 24 Apr 2019 17:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127369;
-        bh=+GWTc41e1o18/0xIjGTJqgUKBnryJRFgzjqwasWjVZ4=;
+        s=default; t=1556127376;
+        bh=358TBgmDJPbtbbJnzVm7V9fqPiPkS9zX5pxQpMmgEig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hjVv+4WN33ITZsmtZx4lvndNale/pzry0ruHQLctBsBk86EwdoilitX6k5Fj2a23G
-         tDCHOhhtUNacATng5RV4nzpfeovmmchlDn1XobDoN4FiXjZSeOEDFIGZAAs+rH3Iu4
-         /IzhruXO/MgGsdmgZTHHQtl8rNiaUXKNpcspsOng=
+        b=2RA3zGCWmFHZQIZO7r6sriUrdyILbVcXMh+y3IM5UxqZGr+a2F+cMl9yMVXVHyHSD
+         qGGBH1NYUO+nARGxcT9fET+YgNayEVrzhp1lXoB17ryH7alKO/Mf+NOrFXF4yR/BxJ
+         oJ7AxjTvdpSDupNq3WQx0DHZjtbcQVk094trXRf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.0 063/115] iio: core: fix a possible circular locking dependency
-Date:   Wed, 24 Apr 2019 19:09:59 +0200
-Message-Id: <20190424170928.806903782@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 5.0 066/115] staging: comedi: vmk80xx: Fix use of uninitialized semaphore
+Date:   Wed, 24 Apr 2019 19:10:02 +0200
+Message-Id: <20190424170928.950606161@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -60,151 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 7f75591fc5a123929a29636834d1bcb8b5c9fee3 upstream.
+commit 08b7c2f9208f0e2a32159e4e7a4831b7adb10a3e upstream.
 
-This fixes a possible circular locking dependency detected warning seen
-with:
-- CONFIG_PROVE_LOCKING=y
-- consumer/provider IIO devices (ex: "voltage-divider" consumer of "adc")
+If `vmk80xx_auto_attach()` returns an error, the core comedi module code
+will call `vmk80xx_detach()` to clean up.  If `vmk80xx_auto_attach()`
+successfully allocated the comedi device private data,
+`vmk80xx_detach()` assumes that a `struct semaphore limit_sem` contained
+in the private data has been initialized and uses it.  Unfortunately,
+there are a couple of places where `vmk80xx_auto_attach()` can return an
+error after allocating the device private data but before initializing
+the semaphore, so this assumption is invalid.  Fix it by initializing
+the semaphore just after allocating the private data in
+`vmk80xx_auto_attach()` before any other errors can be returned.
 
-When using the IIO consumer interface, e.g. iio_channel_get(), the consumer
-device will likely call iio_read_channel_raw() or similar that rely on
-'info_exist_lock' mutex.
+I believe this was the cause of the following syzbot crash report
+<https://syzkaller.appspot.com/bug?extid=54c2f58f15fe6876b6ad>:
 
-typically:
-...
-	mutex_lock(&chan->indio_dev->info_exist_lock);
-	if (chan->indio_dev->info == NULL) {
-		ret = -ENODEV;
-		goto err_unlock;
-	}
-	ret = do_some_ops()
-err_unlock:
-	mutex_unlock(&chan->indio_dev->info_exist_lock);
-	return ret;
-...
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=10cf, idProduct=8068, bcdDevice=e6.8d
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+vmk80xx 1-1:0.117: driver 'vmk80xx' failed to auto-configure device.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xe8/0x16e lib/dump_stack.c:113
+ assign_lock_key kernel/locking/lockdep.c:786 [inline]
+ register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
+ __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
+ lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
+ down+0x12/0x80 kernel/locking/semaphore.c:58
+ vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
+ comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
+ comedi_device_cleanup.part.0+0x68/0x140 drivers/staging/comedi/comedi_fops.c:156
+ comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
+ comedi_free_board_dev.part.0+0x16/0x90 drivers/staging/comedi/comedi_fops.c:190
+ comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
+ comedi_release_hardware_device+0x111/0x140 drivers/staging/comedi/comedi_fops.c:2880
+ comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
+ usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+ really_probe+0x2da/0xb10 drivers/base/dd.c:509
+ driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+ __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+ bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+ __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+ bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+ device_add+0xad2/0x16e0 drivers/base/core.c:2106
+ usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+ generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+ usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+ really_probe+0x2da/0xb10 drivers/base/dd.c:509
+ driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+ __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+ bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+ __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+ bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+ device_add+0xad2/0x16e0 drivers/base/core.c:2106
+ usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+ hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+ port_event drivers/usb/core/hub.c:5350 [inline]
+ hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+ process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+ worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+ kthread+0x313/0x420 kernel/kthread.c:253
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-Same mutex is also hold in iio_device_unregister().
-
-The following deadlock warning happens when:
-- the consumer device has called an API like iio_read_channel_raw()
-  at least once.
-- the consumer driver is unregistered, removed (unbind from sysfs)
-
-======================================================
-WARNING: possible circular locking dependency detected
-4.19.24 #577 Not tainted
-------------------------------------------------------
-sh/372 is trying to acquire lock:
-(kn->count#30){++++}, at: kernfs_remove_by_name_ns+0x3c/0x84
-
-but task is already holding lock:
-(&dev->info_exist_lock){+.+.}, at: iio_device_unregister+0x18/0x60
-
-which lock already depends on the new lock.
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&dev->info_exist_lock){+.+.}:
-       __mutex_lock+0x70/0xa3c
-       mutex_lock_nested+0x1c/0x24
-       iio_read_channel_raw+0x1c/0x60
-       iio_read_channel_info+0xa8/0xb0
-       dev_attr_show+0x1c/0x48
-       sysfs_kf_seq_show+0x84/0xec
-       seq_read+0x154/0x528
-       __vfs_read+0x2c/0x15c
-       vfs_read+0x8c/0x110
-       ksys_read+0x4c/0xac
-       ret_fast_syscall+0x0/0x28
-       0xbedefb60
-
--> #0 (kn->count#30){++++}:
-       lock_acquire+0xd8/0x268
-       __kernfs_remove+0x288/0x374
-       kernfs_remove_by_name_ns+0x3c/0x84
-       remove_files+0x34/0x78
-       sysfs_remove_group+0x40/0x9c
-       sysfs_remove_groups+0x24/0x34
-       device_remove_attrs+0x38/0x64
-       device_del+0x11c/0x360
-       cdev_device_del+0x14/0x2c
-       iio_device_unregister+0x24/0x60
-       release_nodes+0x1bc/0x200
-       device_release_driver_internal+0x1a0/0x230
-       unbind_store+0x80/0x130
-       kernfs_fop_write+0x100/0x1e4
-       __vfs_write+0x2c/0x160
-       vfs_write+0xa4/0x17c
-       ksys_write+0x4c/0xac
-       ret_fast_syscall+0x0/0x28
-       0xbe906840
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&dev->info_exist_lock);
-                               lock(kn->count#30);
-                               lock(&dev->info_exist_lock);
-  lock(kn->count#30);
-
- *** DEADLOCK ***
-...
-
-cdev_device_del() can be called without holding the lock. It should be safe
-as info_exist_lock prevents kernelspace consumers to use the exported
-routines during/after provider removal. cdev_device_del() is for userspace.
-
-Help to reproduce:
-See example: Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
-sysv {
-	compatible = "voltage-divider";
-	io-channels = <&adc 0>;
-	output-ohms = <22>;
-	full-ohms = <222>;
-};
-
-First, go to iio:deviceX for the "voltage-divider", do one read:
-$ cd /sys/bus/iio/devices/iio:deviceX
-$ cat in_voltage0_raw
-
-Then, unbind the consumer driver. It triggers above deadlock warning.
-$ cd /sys/bus/platform/drivers/iio-rescale/
-$ echo sysv > unbind
-
-Note I don't actually expect stable will pick this up all the
-way back into IIO being in staging, but if's probably valid that
-far back.
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Fixes: ac917a81117c ("staging:iio:core set the iio_dev.info pointer to null on unregister")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reported-by: syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/industrialio-core.c |    4 ++--
+ drivers/staging/comedi/drivers/vmk80xx.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1738,10 +1738,10 @@ EXPORT_SYMBOL(__iio_device_register);
-  **/
- void iio_device_unregister(struct iio_dev *indio_dev)
- {
--	mutex_lock(&indio_dev->info_exist_lock);
--
- 	cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
+--- a/drivers/staging/comedi/drivers/vmk80xx.c
++++ b/drivers/staging/comedi/drivers/vmk80xx.c
+@@ -800,6 +800,8 @@ static int vmk80xx_auto_attach(struct co
  
-+	mutex_lock(&indio_dev->info_exist_lock);
+ 	devpriv->model = board->model;
+ 
++	sema_init(&devpriv->limit_sem, 8);
 +
- 	iio_device_unregister_debugfs(indio_dev);
+ 	ret = vmk80xx_find_usb_endpoints(dev);
+ 	if (ret)
+ 		return ret;
+@@ -808,8 +810,6 @@ static int vmk80xx_auto_attach(struct co
+ 	if (ret)
+ 		return ret;
  
- 	iio_disable_all_buffers(indio_dev);
+-	sema_init(&devpriv->limit_sem, 8);
+-
+ 	usb_set_intfdata(intf, devpriv);
+ 
+ 	if (devpriv->model == VMK8055_MODEL)
 
 
