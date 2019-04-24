@@ -2,106 +2,124 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D530AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6927EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D4821900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388852175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="nId/+JzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbfDXTbY (ORCPT
+        id S1730828AbfDXTbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:31:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45464 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbfDXTbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:31:24 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D3B9430BC75B;
-        Wed, 24 Apr 2019 19:31:23 +0000 (UTC)
-Received: from [10.18.17.208] (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A083B1A267;
-        Wed, 24 Apr 2019 19:31:22 +0000 (UTC)
-Subject: Re: [PATCH v3 0/9] klp-convert livepatch build tooling
-To:     Joao Moreira <jmoreira@suse.de>, Miroslav Benes <mbenes@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Matz <matz@suse.de>, Nicolai Stange <nstange@suse.de>,
-        Petr Mladek <pmladek@suse.com>
-References: <20190410155058.9437-1-joe.lawrence@redhat.com>
- <20190417201316.GA690@redhat.com>
- <alpine.LSU.2.21.1904242013310.30239@pobox.suse.cz>
- <bcedf943-6c94-5d23-a637-4f29daf21eda@suse.de>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <97990f04-9c4c-17ad-901c-5285901d5a7f@redhat.com>
-Date:   Wed, 24 Apr 2019 15:31:21 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 15:31:38 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45461 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfDXTbh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 15:31:37 -0400
+Received: by mail-pl1-f195.google.com with SMTP id o5so5451290pls.12
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8JlwrEln20s9/aOucPUHK+u3UqPbgF8b6t88h882nM4=;
+        b=nId/+JzE4bt4YU2hNBj8kFhmTRHl3qvAr81qDvsdscuXJ28cdOi7jSM8qp8FeEGl7M
+         lu16fmXyjh2CbngAfP4d3Q7z8F9ygsVqGqpjG7+zppTJUWILFNwsjakzo1If+Rdw+bIA
+         ts1JjQqaroNuam7nwtWJRT5ocQJGbe+8baiysmZSLh46avcQgcnlFVOgYu9jqbs7o/7n
+         O9Rcv7AqJvZTX48mr9U/sZ2L+vL2E99bAq82zZeHcMJwaXwNFERnrG3adLVU18v4Hn4h
+         W5au4JQb3J0vEiarKg5UnJVkiOnRm/QVhBXPyPMwXaRLHQOgYLK3PGL4/baDf+gtwlcC
+         GsmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8JlwrEln20s9/aOucPUHK+u3UqPbgF8b6t88h882nM4=;
+        b=hStTec7w6PD7AvkqIcsgKUd9PEniqGAecKkoDfCVEX0lVkAxMliXMVTAoZlrMNA4mi
+         OShkZHFq0Eg/NWtOvr9eA0ZTyD3kzRqE3kJgTYXF0aObXREvCnaUpwkwe2WE2EzAFVXS
+         4xncFJWGikVEoGgQitRCkNP4I1oMNeyBTkASI2RNN0Jz5xBgOOrrtu08isv97tK2CskJ
+         P0xGGqoTRpBzQbeDEVg5IRWiEamQ2uMstk+EOyKam32VNHS5gOepPbZCj1zhWPS9DvXd
+         2ys5YeKMdvatQiFkpk3YoXDGxiCuBbngKhpJs3iKV9jtLAXWbMSmqWCZvHwpgtiLVQ6F
+         wmFA==
+X-Gm-Message-State: APjAAAXH6FrQ7ZJozvYEVrKGmuO5hSVhXB3DxnY/gGb1BA0wKTu9PsSN
+        sDN3nI6GFvwJlqg6kb5G4O6VRw==
+X-Google-Smtp-Source: APXvYqyhMplWmiupzeKAhnd683ePbVnUq9bbVkfFpOcWopG8Hor86LspXRFTt8Ho9+6fNXPiC1zHHw==
+X-Received: by 2002:a17:902:b948:: with SMTP id h8mr34476270pls.39.1556134297060;
+        Wed, 24 Apr 2019 12:31:37 -0700 (PDT)
+Received: from ava-linux2.mtv.corp.google.com ([2620:0:1000:1601:6cc0:d41d:b970:fd7])
+        by smtp.googlemail.com with ESMTPSA id g2sm33331313pfd.134.2019.04.24.12.31.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 12:31:36 -0700 (PDT)
+From:   Todd Kjos <tkjos@android.com>
+X-Google-Original-From: Todd Kjos <tkjos@google.com>
+To:     tkjos@google.com, gregkh@linuxfoundation.org, arve@android.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        maco@google.com
+Cc:     joel@joelfernandes.org, kernel-team@android.com
+Subject: [PATCH] binder: check for overflow when alloc for security context
+Date:   Wed, 24 Apr 2019 12:31:18 -0700
+Message-Id: <20190424193118.207428-1-tkjos@google.com>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 MIME-Version: 1.0
-In-Reply-To: <bcedf943-6c94-5d23-a637-4f29daf21eda@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 24 Apr 2019 19:31:23 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/19 3:13 PM, Joao Moreira wrote:
->>> Future Work
->>> -----------
->>>
->>> I don't see an easy way to support multiple homonym <object, name>
->>> symbols with unique <position> values in the current livepatch module
->>> Elf format.  The only solutions that come to mind right now include
->>> renaming homonym symbols somehow to retain the relocation->symbol
->>> relationship when separate object files are combined.  Perhaps an
->>> intermediate linker step could make annotated symbols unique in some way
->>> to achieve this.  /thinking out loud
->> I'd set this aside for now and we can return to it later. I think it could
->> be quite rare in practice.
+When allocating space in the target buffer for the security context,
+make sure the extra_buffers_size doesn't overflow. This can only
+happen if the given size is invalid, but an overflow can turn it
+into a valid size. Fail the transaction if an overflow is detected.
 
-I agree, especially since we can detect this corner case and abort the 
-translation.
+Signed-off-by: Todd Kjos <tkjos@google.com>
+---
+ drivers/android/binder.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
->> I was thinking about renaming the symbol too. We can extend the symbol
->> naming convention we have now and deal with it in klp_resolve_symbols(),
->> but maybe Josh will come up with something clever and cleaner.
-> I think this could work well, but (sorry if I understood Joe's idea
-> wrongly) not as a linker step. Instead of modifying the linker, I think
-> we could create another tool and plug it into the kbuild pipeline prior
-> to the livepatch module linking. This way, we would parse the .o elf
-> files, check for homonyms and rename them based on a convention that is
-> later understood by klp-convert, as suggested.
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index 4b9c7ca492e6d..6f0712f0767c5 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -3121,6 +3121,7 @@ static void binder_transaction(struct binder_proc *proc,
+ 
+ 	if (target_node && target_node->txn_security_ctx) {
+ 		u32 secid;
++		size_t added_size;
+ 
+ 		security_task_getsecid(proc->tsk, &secid);
+ 		ret = security_secid_to_secctx(secid, &secctx, &secctx_sz);
+@@ -3130,7 +3131,15 @@ static void binder_transaction(struct binder_proc *proc,
+ 			return_error_line = __LINE__;
+ 			goto err_get_secctx_failed;
+ 		}
+-		extra_buffers_size += ALIGN(secctx_sz, sizeof(u64));
++		added_size = ALIGN(secctx_sz, sizeof(u64));
++		extra_buffers_size += added_size;
++		if (extra_buffers_size < added_size) {
++			/* integer overflow of extra_buffers_size */
++			return_error = BR_FAILED_REPLY;
++			return_error_param = EINVAL;
++			return_error_line = __LINE__;
++			goto err_bad_extra_size;
++		}
+ 	}
+ 
+ 	trace_binder_transaction(reply, t, target_node);
+@@ -3480,6 +3489,7 @@ static void binder_transaction(struct binder_proc *proc,
+ 	t->buffer->transaction = NULL;
+ 	binder_alloc_free_buf(&target_proc->alloc, t->buffer);
+ err_binder_alloc_buf_failed:
++err_bad_extra_size:
+ 	if (secctx)
+ 		security_release_secctx(secctx, secctx_sz);
+ err_get_secctx_failed:
+-- 
+2.21.0.593.g511ec345e18-goog
 
-My knowledge of the build tools is limited, so there was a bunch of 
-hand-waving you couldn't see when I wrote that paragraph :) But yes, 
-that is basically the idea: plugging into the kbuild pipeline to give 
-these some kinda of .o-unique prefix that klp-convert would interpret 
-and strip accordingly.
-
-> If I am not missing something, this would fix the case where we have
-> homonyms pointing to the same or different positions, without additional
-> user intervention other then adding the SYMPOS annotations.
-> 
-> If you consider this to be useful I can start experiencing.
-> 
-
-It's not the highest priority, but even a prototype of how to insert a 
-script into the pipeline to achieve this would be massively time saving 
-for myself.  If renaming looks easy, we could try to work into the 
-initial klp-convert patchset... if not, save it for a follow up enhancement.
-
-Thanks,
-
--- Joe
