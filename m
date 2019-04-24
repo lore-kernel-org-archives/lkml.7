@@ -2,358 +2,384 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D213C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B44C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E20521900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9C3218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="beWP9sQr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KyX0wpWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732552AbfDXQcw (ORCPT
+        id S1732517AbfDXQdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:32:52 -0400
-Received: from mail-eopbgr30067.outbound.protection.outlook.com ([40.107.3.67]:27141
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730794AbfDXQct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:32:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iDHHYP2GdHjLVyUGfmGDCwWBa2mf63B48A+/HC04UHI=;
- b=beWP9sQry2+TWf1EZUS7oAjhSNB4E3es7TsJUk+xXw+DoS9AFr8A1ZOt3vGr5bR6W1SilLCapDjQ24IUTZVLETFxGW6WOxu1dM5sDlQI9Cm60l0e3Oo6Gk5j1aY/9GzFswqJnRIRGQo+hH2SQ6p5VS7O48s1zo/4NXKHXsr97GY=
-Received: from DB7PR08MB3865.eurprd08.prod.outlook.com (20.178.84.149) by
- DB7PR08MB3676.eurprd08.prod.outlook.com (20.177.120.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.14; Wed, 24 Apr 2019 16:32:44 +0000
-Received: from DB7PR08MB3865.eurprd08.prod.outlook.com
- ([fe80::fdd5:e065:ed96:45da]) by DB7PR08MB3865.eurprd08.prod.outlook.com
- ([fe80::fdd5:e065:ed96:45da%3]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
- 16:32:44 +0000
-From:   Raphael Gault <Raphael.Gault@arm.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Julien Thierry <Julien.Thierry@arm.com>
-Subject: Re: [RFC 3/6] objtool: arm64: Adapt the stack frame checks and the
- section analysis for the arm architecture
-Thread-Topic: [RFC 3/6] objtool: arm64: Adapt the stack frame checks and the
- section analysis for the arm architecture
-Thread-Index: AQHU7tulYY+OqZKg/k6QJwe1WY2Za6ZKSruAgAFOPIA=
-Date:   Wed, 24 Apr 2019 16:32:44 +0000
-Message-ID: <cd86ce1a-7c6a-9ebf-4c84-6cb6ffd88017@arm.com>
-References: <20190409135243.12424-1-raphael.gault@arm.com>
- <20190409135243.12424-4-raphael.gault@arm.com>
- <20190423203627.mwnaknit7cvr3l5l@treble>
-In-Reply-To: <20190423203627.mwnaknit7cvr3l5l@treble>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0473.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a2::29) To DB7PR08MB3865.eurprd08.prod.outlook.com
- (2603:10a6:10:32::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Raphael.Gault@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [217.140.106.53]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: df530419-bfa9-4ec9-bd95-08d6c8d27a6e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB7PR08MB3676;
-x-ms-traffictypediagnostic: DB7PR08MB3676:
-x-microsoft-antispam-prvs: <DB7PR08MB36763E3F72C6ABD742464988ED3C0@DB7PR08MB3676.eurprd08.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(366004)(376002)(346002)(189003)(199004)(40434004)(31696002)(486006)(446003)(26005)(102836004)(2616005)(11346002)(386003)(97736004)(476003)(6116002)(305945005)(186003)(76176011)(72206003)(14454004)(44832011)(3846002)(86362001)(6506007)(30864003)(99286004)(54906003)(2906002)(53546011)(478600001)(31686004)(316002)(256004)(7736002)(5024004)(14444005)(5660300002)(25786009)(6436002)(81166006)(8936002)(81156014)(71200400001)(68736007)(6486002)(71190400001)(8676002)(53936002)(36756003)(6246003)(229853002)(6916009)(6512007)(4326008)(52116002)(66066001)(66946007)(66556008)(64756008)(66446008)(66476007)(73956011);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3676;H:DB7PR08MB3865.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: szV59BndnpIVYFu206OBvhdkdKoSiZPrcOX+wx2znZjfOoz1GYgcMpqQXt6IZYpwjrPaudiMQSd8EI0la+Mhcmtox4R+nmdMtFZPjZo2tXPJza9rkmoX1bMuUgVPrlAsbCqzdVoRmdxmq2Z7CS13y6k7BhdmRP9Omw9jJGhUeG/hSDCqrWbDnKPo8QEIjeWNg12SyEfJbbhlDqVNYeG0TdQr3JAWYxzG/RWG3vrmS2HTotwizjtUC0NBbwZ1NCYGKfJ+EqxIAYgUXVOjEB5ViUh4oYEw8cj9LHAwXWUtxWNEXj3LHohhAdXDTP69h+eZyVizMoCuFngNvVRsV7wJlIvN+woad1tXxsASuG/jhd1HmXKEXadm9AixZv3aMvP4ZderQv+YsE9+ppcEXSjBcwd7ZHF736ZwEv9QV+QwAlI=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0580C5014535A045BCE91B359206E46A@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 12:33:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33439 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730794AbfDXQdk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:33:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id h5so9588429pfo.0;
+        Wed, 24 Apr 2019 09:33:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EpxqYT7wciSenKfeU0lmEAJRB6rmerWPGABXSsTD67w=;
+        b=KyX0wpWg65wYoFUwCF+P0oatuciLbjwH7f42SsGWsAcFtilsLffB//SHd2XOSewIcu
+         mDszDn9VoaN0cOl7CXkPUUFgrV76NyCEgighSWD6aFI61Ulq4zzPhneg6gY8fEy+WFAs
+         eodeHiqtMgrqUb2Z9smPUSKCxifbhO1ZuTWMZhxPvE9SzhkBj3n9Uga50nj1eFbWq5nG
+         2s3/6YZ18b3YqXqsL/mEIiKqnhu+/GsspMMOIRC8gnUdDq8gGlNNmSbokfdlFJ9SJP7p
+         LDVmBFgKfrMvuIwryqIjCeGUTV1DGA3WpQ2jvlnPeUoFtgtPmOdBCUrTPtPSMwIE/zTy
+         h+wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EpxqYT7wciSenKfeU0lmEAJRB6rmerWPGABXSsTD67w=;
+        b=AMn6FqjeZsTNH/C57t24Yc1mcuPoRfIskNC/5Gvm7E/DGATpjI4tXOhbFj1GraH5db
+         BgsvJKMWzw/AaeTnRg8D6umIIaEDV4q7EPSMWs53/1x1K5wvwp+MoUIIgz+cJC9/kFN9
+         b6LCxrQ1Pd8SHteoC8f5X9xGk/amIn9agp547GfADsc63ws04V2R+CoaTt/NCWO+UcBi
+         kSmLciHpa/FZUPBYHQ+zQR8ZJTgziMZVaDe/QlJD8zg1GAdsWhDY4Cr3b3b/et4+st9b
+         +UL3XmnaeaS9065wDeEMlBsnVivvszUEcI00mcv2+un6Rl7oZ7BqSU7/O/wzE67ZKf+A
+         4V5w==
+X-Gm-Message-State: APjAAAXH6Elt4v+kNx+YgkIQZbDv+rn0hRevjSKcqr7vBnzkcPM/QadQ
+        volOPtMiHlNn3/wOHZVitDk=
+X-Google-Smtp-Source: APXvYqwUJ75HKkQcvVkM3hB21BPKyW+V3p5o+fnEnZSrzAMd3/IvY/55EGS89wYpE0mu0rh+FVTlxw==
+X-Received: by 2002:a65:648f:: with SMTP id e15mr31788910pgv.414.1556123619539;
+        Wed, 24 Apr 2019 09:33:39 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id q128sm32292731pga.60.2019.04.24.09.33.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 09:33:38 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 00:33:29 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 10/63] Documentation: ACPI: move
+ initrd_table_override.txt to admin-guide/acpi and convert to reST
+Message-ID: <20190424163328.e3ux6opmr47d5ixg@mail.google.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+ <20190423162932.21428-11-changbin.du@gmail.com>
+ <20190423180734.67c6f470@coco.lan>
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df530419-bfa9-4ec9-bd95-08d6c8d27a6e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 16:32:44.4480
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3676
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423180734.67c6f470@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCkFzIEp1bGllbiBhbHNvIHBvaW50ZWQgb3V0IEkgcmVhbGlzZSB0aGF0IHNpbWlsYXJs
-eSB0byB0aGUgZmlyc3QgcGF0Y2gNCm9mIHRoaXMgc2VyaWVzLCB0aGlzIHBhdGNoIHNob3VsZCBi
-ZSBzcGxpdCBpbnRvIHNtYWxsZXIgb25lcy4gSSB3aWxsIGRvDQp0aGlzIGZvciB0aGUgbmV4dCB2
-ZXJzaW9uLg0KDQpPbiA0LzIzLzE5IDk6MzYgUE0sIEpvc2ggUG9pbWJvZXVmIHdyb3RlOg0KPiBP
-biBUdWUsIEFwciAwOSwgMjAxOSBhdCAwMjo1Mjo0MFBNICswMTAwLCBSYXBoYWVsIEdhdWx0IHdy
-b3RlOg0KPj4gU2luY2UgdGhlIHdheSB0aGUgaW5pdGlhbCBzdGFjayBmcmFtZSB3aGVuIGVudGVy
-aW5nIGEgZnVuY3Rpb24gaXMgZGlmZmVyZW50IHRoYXQgd2hhdCBpcyBkb25lDQo+PiBpbiB0aGUg
-eDg2XzY0IGFyY2hpdGVjdHVyZSwgd2UgbmVlZCB0byBhZGQgc29tZSBtb3JlIGNoZWNrIHRvIHN1
-cHBvcnQgdGhlIGRpZmZlcmVudCBjYXNlcy4NCj4+IEFzIG9wcG9zZWQgYXMgZm9yIHg4Nl82NCwg
-dGhlIHJldHVybiBhZGRyZXNzIGlzIG5vdCBzdG9yZWQgYnkgdGhlIGNhbGwgaW5zdHJ1Y3Rpb24g
-YnV0IGlzIGluc3RlYWQNCj4+IGxvYWRlZCBpbiBhIHJlZ2lzdGVyLiBUaGUgaW5pdGlhbCBzdGFj
-ayBmcmFtZSBpcyB0aHVzIGVtcHR5IHdoZW4gZW50ZXJpbmcgYSBmdW5jdGlvbiBhbmQgMiBwdXNo
-DQo+PiBvcGVyYXRpb25zIGFyZSBuZWVkZWQgdG8gc2V0IGl0IHVwIGNvcnJlY3RseS4gQWxsIHRo
-ZSBkaWZmZXJlbnQgY29tYmluYXRpb25zIG5lZWQgdG8gYmUNCj4+IHRha2VuIGludG8gYWNjb3Vu
-dC4NCj4+DQo+PiBPbiBhcm02NCwgdGhlIC5hbHRpbnN0cl9yZXBsYWNlbWVudCBzZWN0aW9uIGlz
-IG5vdCBmbGFnZ2VkIGFzIGNvbnRhaW5pbmcgZXhlY3V0YWJsZSBpbnN0cnVjdGlvbnMNCj4+IGJ1
-dCB3ZSBzdGlsbCBuZWVkIHRvIHByb2Nlc3MgaXQuDQo+Pg0KPj4gU3dpdGNoIHRhYmxlcyBhcmUg
-YWxzZSBzdG9yZWQgaW4gYSBkaWZmZXJlbnQgd2F5IG9uIGFybTY0IHRoYW4gb24geDg2XzY0IHNv
-IHdlIG5lZWQgdG8gYmUgYWJsZQ0KPj4gdG8gaWRlbnRpZnkgaW4gd2hpY2ggY2FzZSB3ZSBhcmUg
-d2hlbiBsb29raW5nIGZvciBpdC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBSYXBoYWVsIEdhdWx0
-IDxyYXBoYWVsLmdhdWx0QGFybS5jb20+DQo+PiAtLS0NCj4+ICAgdG9vbHMvb2JqdG9vbC9hcmNo
-LmggICAgICAgICAgICAgIHwgIDIgKw0KPj4gICB0b29scy9vYmp0b29sL2FyY2gvYXJtNjQvZGVj
-b2RlLmMgfCAyNyArKysrKysrKysNCj4+ICAgdG9vbHMvb2JqdG9vbC9hcmNoL3g4Ni9kZWNvZGUu
-YyAgIHwgIDUgKysNCj4+ICAgdG9vbHMvb2JqdG9vbC9jaGVjay5jICAgICAgICAgICAgIHwgOTUg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPj4gICB0b29scy9vYmp0b29sL2VsZi5j
-ICAgICAgICAgICAgICAgfCAgMyArLQ0KPj4gICA1IGZpbGVzIGNoYW5nZWQsIDEyMCBpbnNlcnRp
-b25zKCspLCAxMiBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvdG9vbHMvb2JqdG9v
-bC9hcmNoLmggYi90b29scy9vYmp0b29sL2FyY2guaA0KPj4gaW5kZXggMGVmZjE2NmNhNjEzLi5m
-M2JlZjNmMmNlZjMgMTAwNjQ0DQo+PiAtLS0gYS90b29scy9vYmp0b29sL2FyY2guaA0KPj4gKysr
-IGIvdG9vbHMvb2JqdG9vbC9hcmNoLmgNCj4+IEBAIC04OCw0ICs4OCw2IEBAIHVuc2lnbmVkIGxv
-bmcgYXJjaF9jb21wdXRlX2p1bXBfZGVzdGluYXRpb24oc3RydWN0IGluc3RydWN0aW9uICppbnNu
-KTsNCj4+DQo+PiAgIHVuc2lnbmVkIGxvbmcgYXJjaF9jb21wdXRlX3JlbGFfc3ltX29mZnNldChp
-bnQgYWRkZW5kKTsNCj4+DQo+PiArYm9vbCBhcmNoX2lzX2luc25fc2libGluZ19jYWxsKHN0cnVj
-dCBpbnN0cnVjdGlvbiAqaW5zbik7DQo+PiArDQo+PiAgICNlbmRpZiAvKiBfQVJDSF9IICovDQo+
-PiBkaWZmIC0tZ2l0IGEvdG9vbHMvb2JqdG9vbC9hcmNoL2FybTY0L2RlY29kZS5jIGIvdG9vbHMv
-b2JqdG9vbC9hcmNoL2FybTY0L2RlY29kZS5jDQo+PiBpbmRleCAwZmViM2FlM2FmNWQuLjhiMjkz
-ZWFlMmIzOCAxMDA2NDQNCj4+IC0tLSBhL3Rvb2xzL29ianRvb2wvYXJjaC9hcm02NC9kZWNvZGUu
-Yw0KPj4gKysrIGIvdG9vbHMvb2JqdG9vbC9hcmNoL2FybTY0L2RlY29kZS5jDQo+PiBAQCAtMTA1
-LDYgKzEwNSwzMyBAQCB1bnNpZ25lZCBsb25nIGFyY2hfY29tcHV0ZV9yZWxhX3N5bV9vZmZzZXQo
-aW50IGFkZGVuZCkNCj4+ICAgcmV0dXJuIGFkZGVuZDsNCj4+ICAgfQ0KPj4NCj4+ICsvKg0KPj4g
-KyAqIEluIG9yZGVyIHRvIGtub3cgaWYgd2UgYXJlIGluIHByZXNlbmNlIG9mIGEgc2libGluZw0K
-Pj4gKyAqIGNhbGwgYW5kIG5vdCBpbiBwcmVzZW5jZSBvZiBhIHN3aXRjaCB0YWJsZSB3ZSBsb29r
-DQo+PiArICogYmFjayBhdCB0aGUgcHJldmlvdXMgaW5zdHJ1Y3Rpb25zIGFuZCBzZWUgaWYgd2Ug
-YXJlDQo+PiArICoganVtcGluZyBpbnNpZGUgdGhlIHNhbWUgZnVuY3Rpb24gdGhhdCB3ZSBhcmUg
-YWxyZWFkeQ0KPj4gKyAqIGluLg0KPj4gKyAqLw0KPj4gK2Jvb2wgYXJjaF9pc19pbnNuX3NpYmxp
-bmdfY2FsbChzdHJ1Y3QgaW5zdHJ1Y3Rpb24gKmluc24pDQo+PiArew0KPj4gK3N0cnVjdCBpbnN0
-cnVjdGlvbiAqcHJldjsNCj4+ICtzdHJ1Y3QgbGlzdF9oZWFkICpsOw0KPj4gK3N0cnVjdCBzeW1i
-b2wgKnN5bTsNCj4+ICtsaXN0X2Zvcl9lYWNoX3ByZXYobCwgJmluc24tPmxpc3QpIHsNCj4+ICtw
-cmV2ID0gKHZvaWQgKilsOw0KPj4gK2lmICghcHJldi0+ZnVuYw0KPj4gK3x8IHByZXYtPmZ1bmMt
-PnBmdW5jICE9IGluc24tPmZ1bmMtPnBmdW5jKQ0KPj4gK3JldHVybiBmYWxzZTsNCj4+ICtpZiAo
-cHJldi0+c3RhY2tfb3Auc3JjLnJlZyAhPSBBRFJfU09VUkNFKQ0KPj4gK2NvbnRpbnVlOw0KPj4g
-K3N5bSA9IGZpbmRfc3ltYm9sX2NvbnRhaW5pbmcoaW5zbi0+c2VjLCBpbnNuLT5pbW1lZGlhdGUp
-Ow0KPj4gK2lmICghc3ltIHx8IHN5bS0+dHlwZSAhPSBTVFRfRlVOQw0KPj4gK3x8IHN5bS0+cGZ1
-bmMgIT0gaW5zbi0+ZnVuYy0+cGZ1bmMpDQo+PiArcmV0dXJuIHRydWU7DQo+PiArYnJlYWs7DQo+
-PiArfQ0KPj4gK3JldHVybiB0cnVlOw0KPj4gK30NCj4NCj4gSSBnZXQgdGhlIGZlZWxpbmcgdGhl
-cmUgbWlnaHQgYmUgYSBiZXR0ZXIgd2F5IHRvIGRvIHRoaXMsIGJ1dCBJIGNhbid0DQo+IGZpZ3Vy
-ZSBvdXQgd2hhdCB0aGlzIGZ1bmN0aW9uIGlzIGFjdHVhbGx5IGRvaW5nLiAgSXQgbG9va3MgbGlr
-ZSBpdA0KPiBzZWFyY2hlcyBiYWNrd2FyZHMgaW4gdGhlIGZ1bmN0aW9uIGZvciBhbiBpbnN0cnVj
-dGlvbiB3aGljaCBoYXMNCj4gc3RhY2tfb3Auc3JjLnJlZyAhPSBBRFJfU09VUkNFIC0tIHdoYXQg
-ZG9lcyB0aGF0IG1lYW4/ICBBbmQgd2h5IGRvZXNuJ3QNCj4gaXQgZG8gYW55dGhpbmcgd2l0aCB0
-aGUgaW5zdHJ1Y3Rpb24gYWZ0ZXIgaXQgZmluZHMgaXQ/DQo+DQoNCkkgd2lsbCBpbmRlZWQgdHJ5
-IHRvIG1ha2UgaXQgYmV0dGVyLg0KDQo+PiAgIHN0YXRpYyBpbnQgaXNfYXJtNjQoc3RydWN0IGVs
-ZiAqZWxmKQ0KPj4gICB7DQo+PiAgIHN3aXRjaChlbGYtPmVoZHIuZV9tYWNoaW5lKXsNCj4+IGRp
-ZmYgLS1naXQgYS90b29scy9vYmp0b29sL2FyY2gveDg2L2RlY29kZS5jIGIvdG9vbHMvb2JqdG9v
-bC9hcmNoL3g4Ni9kZWNvZGUuYw0KPj4gaW5kZXggMWFmN2I0OTk2MzA3Li44OGMzZDk5Yzc2YmUg
-MTAwNjQ0DQo+PiAtLS0gYS90b29scy9vYmp0b29sL2FyY2gveDg2L2RlY29kZS5jDQo+PiArKysg
-Yi90b29scy9vYmp0b29sL2FyY2gveDg2L2RlY29kZS5jDQo+PiBAQCAtODUsNiArODUsMTEgQEAg
-dW5zaWduZWQgbG9uZyBhcmNoX2NvbXB1dGVfcmVsYV9zeW1fb2Zmc2V0KGludCBhZGRlbmQpDQo+
-PiAgIHJldHVybiBhZGRlbmQgKyA0Ow0KPj4gICB9DQo+Pg0KPj4gK2Jvb2wgYXJjaF9pc19pbnNu
-X3NpYmxpbmdfY2FsbChzdHJ1Y3QgaW5zdHJ1Y3Rpb24gKmluc24pDQo+PiArew0KPj4gK3JldHVy
-biB0cnVlOw0KPj4gK30NCj4NCj4gQWxsIHg4NiBpbnN0cnVjdGlvbnMgYXJlIHNpYmxpbmcgY2Fs
-bHM/DQo+DQoNClRoZSBzZW1lbnRpYyBoZXJlIGlzIGluZGVlZCB3cm9uZy4gSSBpbXBsZW1lbnRl
-ZCBpdCBsaWtlIHRoYXQgb24gdGhlIHg4Ng0Kc2lkZSBiZWNhdXNlIGF0IHRoZSBwbGFjZSBpdCBp
-cyBjYWxsZWQgZnJvbSBpbiBjaGVjay5jIHdlIGFscmVhZHkga25vdw0KdGhhdCB3ZSBhcmUgaW4g
-cHJlc2VuY2Ugb2YgYSBzaWJsaW5nIGNhbGxzIHdoZW4gb24geDg2LiBJIHdpbGwgaW1wcm92ZQ0K
-dGhlc2UgYml0cyBvbiB0aGUgbmV4dCBpdGVyYXRpb24uDQoNCj4+ICsNCj4+ICAgaW50IGFyY2hf
-b3JjX3JlYWRfdW53aW5kX2hpbnRzKHN0cnVjdCBvYmp0b29sX2ZpbGUgKmZpbGUpDQo+PiAgIHsN
-Cj4+ICAgc3RydWN0IHNlY3Rpb24gKnNlYywgKnJlbGFzZWM7DQo+PiBkaWZmIC0tZ2l0IGEvdG9v
-bHMvb2JqdG9vbC9jaGVjay5jIGIvdG9vbHMvb2JqdG9vbC9jaGVjay5jDQo+PiBpbmRleCAxN2Zj
-ZDhjOGY5YzEuLmZhNjEwNjIxNDMxOCAxMDA2NDQNCj4+IC0tLSBhL3Rvb2xzL29ianRvb2wvY2hl
-Y2suYw0KPj4gKysrIGIvdG9vbHMvb2JqdG9vbC9jaGVjay5jDQo+PiBAQCAtMjYxLDEwICsyNjEs
-MTIgQEAgc3RhdGljIGludCBkZWNvZGVfaW5zdHJ1Y3Rpb25zKHN0cnVjdCBvYmp0b29sX2ZpbGUg
-KmZpbGUpDQo+PiAgIHVuc2lnbmVkIGxvbmcgb2Zmc2V0Ow0KPj4gICBzdHJ1Y3QgaW5zdHJ1Y3Rp
-b24gKmluc247DQo+PiAgIGludCByZXQ7DQo+PiArc3RhdGljIGludCBjb21wb3NlZF9pbnNuID0g
-MDsNCj4+DQo+PiAgIGZvcl9lYWNoX3NlYyhmaWxlLCBzZWMpIHsNCj4+DQo+PiAtaWYgKCEoc2Vj
-LT5zaC5zaF9mbGFncyAmIFNIRl9FWEVDSU5TVFIpKQ0KPj4gK2lmICghKHNlYy0+c2guc2hfZmxh
-Z3MgJiBTSEZfRVhFQ0lOU1RSKQ0KPj4gKyYmIChzdHJjbXAoc2VjLT5uYW1lLCAiLmFsdGluc3Ry
-X3JlcGxhY2VtZW50IikgfHwgIUlHTk9SRV9TSEZfRVhFQ19GTEFHKSkNCj4+ICAgY29udGludWU7
-DQo+DQo+IFdlIHNob3VsZCBqdXN0IGZpeCB0aGUgcm9vdCBjYXVzZSBpbnN0ZWFkLCBwcmVzdW1h
-Ymx5Og0KPg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9hbHRlcm5hdGl2
-ZS5oIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9hbHRlcm5hdGl2ZS5oDQo+IGluZGV4IGI5Zjhk
-Nzg3ZWVhOS4uZTllNmI4MWUzZWI0IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2luY2x1ZGUv
-YXNtL2FsdGVybmF0aXZlLmgNCj4gKysrIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9hbHRlcm5h
-dGl2ZS5oDQo+IEBAIC03MSw3ICs3MSw3IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBhcHBseV9hbHRl
-cm5hdGl2ZXNfbW9kdWxlKHZvaWQgKnN0YXJ0LCBzaXplX3QgbGVuZ3RoKSB7IH0NCj4gICBBTFRJ
-TlNUUl9FTlRSWShmZWF0dXJlLGNiKVwNCj4gICAiLnBvcHNlY3Rpb25cbiJcDQo+ICAgIiAuaWYg
-IiBfX3N0cmluZ2lmeShjYikgIiA9PSAwXG4iXA0KPiAtIi5wdXNoc2VjdGlvbiAuYWx0aW5zdHJf
-cmVwbGFjZW1lbnQsIFwiYVwiXG4iXA0KPiArIi5wdXNoc2VjdGlvbiAuYWx0aW5zdHJfcmVwbGFj
-ZW1lbnQsIFwiYXhcIlxuIlwNCj4gICAiNjYzOlxuXHQiXA0KPiAgIG5ld2luc3RyICJcbiJcDQo+
-ICAgIjY2NDpcblx0IlwNCj4NCj4NCg0KSSB3aWxsIHRha2UgeW91ciBhZHZpY2UgYW5kIHN1Z2dl
-c3QgdGhpcyBpbiB0aGUgbmV4dCB2ZXJzaW9uIGFzIHdlbGwuDQoNCj4+DQo+PiAgIGlmIChzdHJj
-bXAoc2VjLT5uYW1lLCAiLmFsdGluc3RyX3JlcGxhY2VtZW50IikgJiYNCj4+IEBAIC0yOTcsMTAg
-KzI5OSwyMiBAQCBzdGF0aWMgaW50IGRlY29kZV9pbnN0cnVjdGlvbnMoc3RydWN0IG9ianRvb2xf
-ZmlsZSAqZmlsZSkNCj4+ICAgV0FSTl9GVU5DKCJpbnZhbGlkIGluc3RydWN0aW9uIHR5cGUgJWQi
-LA0KPj4gICAgIGluc24tPnNlYywgaW5zbi0+b2Zmc2V0LCBpbnNuLT50eXBlKTsNCj4+ICAgcmV0
-ID0gLTE7DQo+PiAtZ290byBlcnI7DQo+PiArZnJlZShpbnNuKTsNCj4+ICtjb250aW51ZTsNCj4N
-Cj4gV2hhdCdzIHRoZSBwdXJwb3NlIG9mIHRoaXMgY2hhbmdlPyAgSWYgaXQncyByZWFsbHkgbmVl
-ZGVkIHRoZW4gaXQgbG9va3MNCj4gbGlrZSBpdCBzaG91bGQgYmUgYSBzZXBhcmF0ZSBwYXRjaC4N
-Cj4NCj4+ICAgfQ0KPj4gLQ0KPj4gLWhhc2hfYWRkKGZpbGUtPmluc25faGFzaCwgJmluc24tPmhh
-c2gsIGluc24tPm9mZnNldCk7DQo+PiArLyoNCj4+ICsgKiBGb3IgYXJtNjQgYXJjaGl0ZWN0dXJl
-LCB3ZSBzb21ldGltZSBzcGxpdCBpbnN0cnVjdGlvbnMgc28gdGhhdA0KPj4gKyAqIHdlIGNhbiB0
-cmFjayB0aGUgc3RhdGUgZXZvbHV0aW9uIChpLmUuIGxvYWQvc3RvcmUgb2YgcGFpcnMgb2YgcmVn
-aXN0ZXJzKS4NCj4+ICsgKiBXZSB0aHVzIG5lZWQgdG8gdGFrZSBib3RoIGludG8gYWNjb3VudCBh
-bmQgbm90IGVyYXNlIHRoZSBwcmV2aW91cyBvbmVzLg0KPj4gKyAqLw0KPg0KPiBFdy4uLiAgSXMg
-dGhpcyBhbiBhcmNoaXRlY3R1cmFsIHRoaW5nLCBvciBqdXN0IGEgcXVpcmsgb2YgdGhlIGFybTY0
-DQo+IGRlY29kZXI/DQo+DQoNClRoZSBtb3RpdmF0aW9uIGZvciB0aGlzIGlzIHRvIHNpbXVsYXRl
-IHRoZSB0d28gY29uc2VjdXRpdmUgb3BlcmF0aW9ucw0KdGhhdCB3b3VsZCBiZSBleGVjdXRlZCBv
-biB4ODYgYnV0IGFyZSBkb25lIGluIG9uZSBvbiBhcm02NC4gVGhpcyBpcw0Kc3RyaWN0bHkgYSBk
-ZWNvZGVyIHJlbGF0ZWQgcXVpcmsuIEkgZG9uJ3Qga25vdyBpZiB0aGVyZSBpcyBhIGJldHRlciB3
-YXkNCnRvIGRvIGl0IHdpdGhvdXQgbW9kaWZ5aW5nIHRoZSBzdHJ1Y3Qgb3Bfc3JjIGFuZCBzdHJ1
-Y3QgaW5zdHJ1Y3Rpb24uDQoNCj4+ICtpZiAoY29tcG9zZWRfaW5zbiA+IDApDQo+PiAraGFzaF9h
-ZGQoZmlsZS0+aW5zbl9oYXNoLCAmaW5zbi0+aGFzaCwgaW5zbi0+b2Zmc2V0ICsgY29tcG9zZWRf
-aW5zbik7DQo+PiArZWxzZQ0KPj4gK2hhc2hfYWRkKGZpbGUtPmluc25faGFzaCwgJmluc24tPmhh
-c2gsIGluc24tPm9mZnNldCk7DQo+PiAraWYgKGluc24tPmxlbiA9PSAwKQ0KPj4gK2NvbXBvc2Vk
-X2luc24rKzsNCj4+ICtlbHNlDQo+PiArY29tcG9zZWRfaW5zbiA9IDA7DQo+PiAgIGxpc3RfYWRk
-X3RhaWwoJmluc24tPmxpc3QsICZmaWxlLT5pbnNuX2xpc3QpOw0KPj4gICB9DQo+Pg0KPj4gQEAg
-LTUxMCwxMCArNTI0LDEwIEBAIHN0YXRpYyBpbnQgYWRkX2p1bXBfZGVzdGluYXRpb25zKHN0cnVj
-dCBvYmp0b29sX2ZpbGUgKmZpbGUpDQo+PiAgIGRlc3Rfb2ZmID0gYXJjaF9jb21wdXRlX2p1bXBf
-ZGVzdGluYXRpb24oaW5zbik7DQo+PiAgIH0gZWxzZSBpZiAocmVsYS0+c3ltLT50eXBlID09IFNU
-VF9TRUNUSU9OKSB7DQo+PiAgIGRlc3Rfc2VjID0gcmVsYS0+c3ltLT5zZWM7DQo+PiAtZGVzdF9v
-ZmYgPSByZWxhLT5hZGRlbmQgKyA0Ow0KPj4gK2Rlc3Rfb2ZmID0gYXJjaF9jb21wdXRlX3JlbGFf
-c3ltX29mZnNldChyZWxhLT5hZGRlbmQpOw0KPj4gICB9IGVsc2UgaWYgKHJlbGEtPnN5bS0+c2Vj
-LT5pZHgpIHsNCj4+ICAgZGVzdF9zZWMgPSByZWxhLT5zeW0tPnNlYzsNCj4+IC1kZXN0X29mZiA9
-IHJlbGEtPnN5bS0+c3ltLnN0X3ZhbHVlICsgcmVsYS0+YWRkZW5kICsgNDsNCj4+ICtkZXN0X29m
-ZiA9IHJlbGEtPnN5bS0+c3ltLnN0X3ZhbHVlICsgYXJjaF9jb21wdXRlX3JlbGFfc3ltX29mZnNl
-dChyZWxhLT5hZGRlbmQpOw0KPj4gICB9IGVsc2UgaWYgKHN0cnN0cihyZWxhLT5zeW0tPm5hbWUs
-ICJfaW5kaXJlY3RfdGh1bmtfIikpIHsNCj4+ICAgLyoNCj4+ICAgICogUmV0cG9saW5lIGp1bXBz
-IGFyZSByZWFsbHkgZHluYW1pYyBqdW1wcyBpbg0KPj4gQEAgLTY2Myw3ICs2NzcsNyBAQCBzdGF0
-aWMgaW50IGhhbmRsZV9ncm91cF9hbHQoc3RydWN0IG9ianRvb2xfZmlsZSAqZmlsZSwNCj4+ICAg
-bGFzdF9vcmlnX2luc24gPSBpbnNuOw0KPj4gICB9DQo+Pg0KPj4gLWlmIChuZXh0X2luc25fc2Ft
-ZV9zZWMoZmlsZSwgbGFzdF9vcmlnX2luc24pKSB7DQo+PiAraWYgKGxhc3Rfb3JpZ19pbnNuICYm
-IG5leHRfaW5zbl9zYW1lX3NlYyhmaWxlLCBsYXN0X29yaWdfaW5zbikpIHsNCj4NCj4gVGhpcyBt
-aWdodCBiZWxvbmcgaW4gYSBzZXBhcmF0ZSBwYXRjaCB3aGljaCBleHBsYWlucyB0aGUgcmVhc29u
-IGZvciB0aGUNCj4gY2hhbmdlLg0KPg0KDQpJIGRpZCB0aGlzIGJlY2F1c2UgSSBlbmNvdW50ZXJl
-ZCBzaXR1YXRpb25zIHdoZXJlIHRoZSBsYXN0X29yaWdfaW5zbiB3YXMNCk5VTEwgYmVjYXVzZSBv
-ZiB0aGUgb2Zmc2V0IGNoZWNrIHBlcmZvcm0gaW4gdGhlIHByZWNlZGluZyBsb29wLiBUaGlzDQpj
-YXVzZWQgYSBudWxsIGRlcmVmZXJlbmNlIHRvIG9jY3VyLiBCdXQgaXQgZGVmaW5pdGVseSBzaG91
-bGQgYmUgc3BsaXQgdXAuDQoNCj4+ICAgZmFrZV9qdW1wID0gbWFsbG9jKHNpemVvZigqZmFrZV9q
-dW1wKSk7DQo+PiAgIGlmICghZmFrZV9qdW1wKSB7DQo+PiAgIFdBUk4oIm1hbGxvYyBmYWlsZWQi
-KTsNCj4+IEBAIC05NzYsNiArOTkwLDE3IEBAIHN0YXRpYyBzdHJ1Y3QgcmVsYSAqZmluZF9zd2l0
-Y2hfdGFibGUoc3RydWN0IG9ianRvb2xfZmlsZSAqZmlsZSwNCj4+ICAgaWYgKGZpbmRfc3ltYm9s
-X2NvbnRhaW5pbmcocm9kYXRhX3NlYywgdGFibGVfb2Zmc2V0KSkNCj4+ICAgY29udGludWU7DQo+
-Pg0KPj4gKy8qDQo+PiArICogSWYgd2UgYXJlIG9uIGFybTY0IGFyY2hpdGVjdHVyZSwgd2Ugbm93
-IHRoYXQgd2UNCj4NCj4gImtub3ciDQo+DQo+PiArICogYXJlIGluIHByZXNlbmNlIG9mIGEgc3dp
-dGNoIHRhYmxlIHRoYW5rcyB0bw0KPj4gKyAqIHRoZSBgYnIgPFhuPmAgaW5zbi4gYnV0IHdlIGNh
-bid0IHJldHJpZXZlIGl0IHlldC4NCj4+ICsgKiBTbyB3ZSBqdXN0IGlnbm9yZSB1bnJlYWNoYWJs
-ZSBmb3IgdGhpcyBmaWxlLg0KPj4gKyAqLw0KPj4gK2lmIChKVU1QX0RZTkFNSUNfSVNfU1dJVENI
-X1RBQkxFKSB7DQo+PiArZmlsZS0+aWdub3JlX3VucmVhY2hhYmxlcyA9IHRydWU7DQo+PiArcmV0
-dXJuIE5VTEw7DQo+PiArfQ0KPj4gKw0KPg0KPiBJIHRoaW5rIHRoaXMgbWVhbnMgc3dpdGNoIHRh
-YmxlIHJlYWRpbmcgaXMgbm90IHlldCBzdXBwb3J0ZWQ/ICBJZiBzbw0KPiB0aGVuIG1heWJlIHRo
-ZSBmbGFnIHNob3VsZCBiZSBjYWxsZWQgU1dJVENIX1RBQkxFX05PVF9TVVBQT1JURUQuDQo+DQo+
-IEJ1dCByZWFsbHkgdGhpcyBuZWVkcyB0byBiZSBmaXhlZCBhbnl3YXkgYmVmb3JlIG1lcmdpbmcg
-dGhlIGNvZGUuDQo+DQoNClRoaXMgd2FzIGluZGVlZCBhbiB1Z2x5IHdheSB0byBkbyB0aGlzLiBJ
-IHdpbGwgcHJvcG9zZSBhIGJldHRlciBzb2x1dGlvbg0KZm9yIHRoaXMgcGFydCBpbiB0aGUgbmV4
-dCBpdGVyYXRpb24uDQoNCj4+ICAgcm9kYXRhX3JlbGEgPSBmaW5kX3JlbGFfYnlfZGVzdChyb2Rh
-dGFfc2VjLCB0YWJsZV9vZmZzZXQpOw0KPj4gICBpZiAocm9kYXRhX3JlbGEpIHsNCj4+ICAgLyoN
-Cj4+IEBAIC0xMjU4LDggKzEyODMsOCBAQCBzdGF0aWMgdm9pZCBzYXZlX3JlZyhzdHJ1Y3QgaW5z
-bl9zdGF0ZSAqc3RhdGUsIHVuc2lnbmVkIGNoYXIgcmVnLCBpbnQgYmFzZSwNCj4+DQo+PiAgIHN0
-YXRpYyB2b2lkIHJlc3RvcmVfcmVnKHN0cnVjdCBpbnNuX3N0YXRlICpzdGF0ZSwgdW5zaWduZWQg
-Y2hhciByZWcpDQo+PiAgIHsNCj4+IC1zdGF0ZS0+cmVnc1tyZWddLmJhc2UgPSBDRklfVU5ERUZJ
-TkVEOw0KPj4gLXN0YXRlLT5yZWdzW3JlZ10ub2Zmc2V0ID0gMDsNCj4+ICtzdGF0ZS0+cmVnc1ty
-ZWddLmJhc2UgPSBpbml0aWFsX2Z1bmNfY2ZpLnJlZ3NbcmVnXS5iYXNlOw0KPj4gK3N0YXRlLT5y
-ZWdzW3JlZ10ub2Zmc2V0ID0gaW5pdGlhbF9mdW5jX2NmaS5yZWdzW3JlZ10ub2Zmc2V0Ow0KPj4g
-ICB9DQo+Pg0KPj4gICAvKg0KPj4gQEAgLTE0MTUsOCArMTQ0MCwzMyBAQCBzdGF0aWMgaW50IHVw
-ZGF0ZV9pbnNuX3N0YXRlKHN0cnVjdCBpbnN0cnVjdGlvbiAqaW5zbiwgc3RydWN0IGluc25fc3Rh
-dGUgKnN0YXRlKQ0KPj4NCj4+ICAgLyogYWRkIGltbSwgJXJzcCAqLw0KPj4gICBzdGF0ZS0+c3Rh
-Y2tfc2l6ZSAtPSBvcC0+c3JjLm9mZnNldDsNCj4+IC1pZiAoY2ZhLT5iYXNlID09IENGSV9TUCkN
-Cj4+ICtpZiAoY2ZhLT5iYXNlID09IENGSV9TUCkgew0KPj4gICBjZmEtPm9mZnNldCAtPSBvcC0+
-c3JjLm9mZnNldDsNCj4+ICtpZiAoc3RhdGUtPnN0YWNrX3NpemUgPT0gMA0KPj4gKyYmIGluaXRp
-YWxfZnVuY19jZmkuY2ZhLmJhc2UgPT0gQ0ZJX0NGQSkgew0KPj4gK2NmYS0+YmFzZSA9IENGSV9D
-RkE7DQo+PiArY2ZhLT5vZmZzZXQgPSAwOw0KPj4gK30NCj4+ICt9DQo+PiArLyoNCj4+ICsgKiBv
-biBhcm02NCB0aGUgc2F2ZS9yZXN0b3JlIG9mIHNwIGludG8gZnAgaXMgbm90IGF1dG9tYXRpYw0K
-Pj4gKyAqIGFuZCB0aGUgZmlyc3Qgb25lIGNhbiBiZSBkb25lIHdpdGhvdXQgdGhlIG90aGVyIHNv
-IHdlDQo+PiArICogbmVlZCB0byBiZSBjYXJlZnVsIG5vdCB0byBpbnZhbGlkYXRlIHRoZSBzdGFj
-ayBmcmFtZSBpbiBzdWNoDQo+PiArICogY2FzZXMuDQo+PiArICovDQo+PiArZWxzZSBpZiAoY2Zh
-LT5iYXNlID09IENGSV9CUCkgew0KPj4gK2lmIChzdGF0ZS0+c3RhY2tfc2l6ZSA9PSAwDQo+PiAr
-JiYgaW5pdGlhbF9mdW5jX2NmaS5jZmEuYmFzZSA9PSBDRklfQ0ZBKSB7DQo+PiArY2ZhLT5iYXNl
-ID0gQ0ZJX0NGQTsNCj4+ICtjZmEtPm9mZnNldCA9IDA7DQo+PiArcmVzdG9yZV9yZWcoc3RhdGUs
-IENGSV9CUCk7DQo+PiArfQ0KPj4gK30NCj4+ICtlbHNlIGlmIChjZmEtPmJhc2UgPT0gQ0ZJX0NG
-QSkgew0KPj4gK2NmYS0+YmFzZSA9IENGSV9TUDsNCj4+ICtpZiAoc3RhdGUtPnN0YWNrX3NpemUg
-Pj0gMTYpDQo+PiArY2ZhLT5vZmZzZXQgPSAxNjsNCj4+ICt9DQo+PiAgIGJyZWFrOw0KPj4gICB9
-DQo+Pg0KPj4gQEAgLTE0MjcsNiArMTQ3NywxNiBAQCBzdGF0aWMgaW50IHVwZGF0ZV9pbnNuX3N0
-YXRlKHN0cnVjdCBpbnN0cnVjdGlvbiAqaW5zbiwgc3RydWN0IGluc25fc3RhdGUgKnN0YXRlKQ0K
-Pj4gICBicmVhazsNCj4+ICAgfQ0KPj4NCj4+ICtpZiAob3AtPnNyYy5yZWcgPT0gQ0ZJX1NQICYm
-IG9wLT5kZXN0LnJlZyA9PSBDRklfQlAgJiYNCj4+ICsgICAgY2ZhLT5iYXNlID09IENGSV9TUCAm
-Jg0KPj4gKyAgICByZWdzW0NGSV9CUF0uYmFzZSA9PSBDRklfQ0ZBICYmDQo+PiArICAgIHJlZ3Nb
-Q0ZJX0JQXS5vZmZzZXQgPT0gLWNmYS0+b2Zmc2V0KSB7DQo+PiArDQo+PiArLyogbW92ICVyc3As
-ICVyYnAgKi8NCj4+ICtjZmEtPmJhc2UgPSBvcC0+ZGVzdC5yZWc7DQo+PiArc3RhdGUtPmJwX3Nj
-cmF0Y2ggPSBmYWxzZTsNCj4+ICticmVhazsNCj4+ICt9DQo+PiAgIGlmIChvcC0+c3JjLnJlZyA9
-PSBDRklfU1AgJiYgY2ZhLT5iYXNlID09IENGSV9TUCkgew0KPj4NCj4+ICAgLyogZHJhcDogbGVh
-IGRpc3AoJXJzcCksICVkcmFwICovDQo+PiBAQCAtMTUxOCw2ICsxNTc4LDkgQEAgc3RhdGljIGlu
-dCB1cGRhdGVfaW5zbl9zdGF0ZShzdHJ1Y3QgaW5zdHJ1Y3Rpb24gKmluc24sIHN0cnVjdCBpbnNu
-X3N0YXRlICpzdGF0ZSkNCj4+ICAgc3RhdGUtPnN0YWNrX3NpemUgLT0gODsNCj4+ICAgaWYgKGNm
-YS0+YmFzZSA9PSBDRklfU1ApDQo+PiAgIGNmYS0+b2Zmc2V0IC09IDg7DQo+PiAraWYgKGNmYS0+
-YmFzZSA9PSBDRklfU1AgJiYgY2ZhLT5vZmZzZXQgPT0gMA0KPj4gKyYmIGluaXRpYWxfZnVuY19j
-ZmkuY2ZhLmJhc2UgPT0gQ0ZJX0NGQSkNCj4+ICtjZmEtPmJhc2UgPSBDRklfQ0ZBOw0KPj4NCj4+
-ICAgYnJlYWs7DQo+Pg0KPj4gQEAgLTE1NTcsNiArMTYyMCw4IEBAIHN0YXRpYyBpbnQgdXBkYXRl
-X2luc25fc3RhdGUoc3RydWN0IGluc3RydWN0aW9uICppbnNuLCBzdHJ1Y3QgaW5zbl9zdGF0ZSAq
-c3RhdGUpDQo+Pg0KPj4gICBjYXNlIE9QX0RFU1RfUFVTSDoNCj4+ICAgc3RhdGUtPnN0YWNrX3Np
-emUgKz0gODsNCj4+ICtpZiAoY2ZhLT5iYXNlID09IENGSV9DRkEpDQo+PiArY2ZhLT5iYXNlID0g
-Q0ZJX1NQOw0KPj4gICBpZiAoY2ZhLT5iYXNlID09IENGSV9TUCkNCj4+ICAgY2ZhLT5vZmZzZXQg
-Kz0gODsNCj4+DQo+PiBAQCAtMTcyOCw3ICsxNzkzLDcgQEAgc3RhdGljIGludCB2YWxpZGF0ZV9i
-cmFuY2goc3RydWN0IG9ianRvb2xfZmlsZSAqZmlsZSwgc3RydWN0IGluc3RydWN0aW9uICpmaXJz
-dCwNCj4+ICAgaW5zbiA9IGZpcnN0Ow0KPj4gICBzZWMgPSBpbnNuLT5zZWM7DQo+Pg0KPj4gLWlm
-IChpbnNuLT5hbHRfZ3JvdXAgJiYgbGlzdF9lbXB0eSgmaW5zbi0+YWx0cykpIHsNCj4+ICtpZiAo
-IWluc24tPnZpc2l0ZWQgJiYgaW5zbi0+YWx0X2dyb3VwICYmIGxpc3RfZW1wdHkoJmluc24tPmFs
-dHMpKSB7DQo+DQo+IFdoeT8gIFRoaXMgbG9va3MgbGlrZSBhbm90aGVyIG9uZSB0aGF0IG1pZ2h0
-IGJlbG9uZyBpbiBhIHNlcGFyYXRlIHBhdGNoLg0KPg0KDQpJbmRlZWQgaXQgYmVsb25ncyB0byBh
-IHNlcGFyYXRlIHBhdGNoLiBJIGRpZCB0aGlzIGJlY2F1c2UgSSBlbmNvdW50ZXJlZA0KYSBzaXR1
-YXRpb24gd2hlcmUgb25lIG9mIHRoZSBhbHRlcm5hdGl2ZSBpbnN0cnVjdGlvbnMgKGluDQouYWx0
-aW5zdHJfcmVwbGFjZW1lbnQpIGp1bXBzIGF0IHRoZSBvZmZzZXQgb2YgYW4gaW5zdHJ1Y3Rpb24g
-d2hpY2ggaXMNCnJlcGxhY2VkIGFzIHdlbGwuIEkgdGh1cyBjb25zaWRlcmVkIHRoYXQgaWYgb25l
-IG9mIHRoZSBpbnN0cnVjdGlvbiBvZg0KdGhlIGdyb3VwIGlzIHJlcGxhY2VkIHRoZW4gYWxsIGlu
-c3RydWN0aW9ucyBvZiB0aGUgZ3JvdXAgc2hvdWxkIGJlDQpyZXBsYWNlZCBhbmQgdGh1cyB0aGlz
-IHdvdWxkIG5ldmVyIGhhcHBlbiBhdCBleGVjdXRpb24uDQoNCj4+ICAgV0FSTl9GVU5DKCJkb24n
-dCBrbm93IGhvdyB0byBoYW5kbGUgYnJhbmNoIHRvIG1pZGRsZSBvZiBhbHRlcm5hdGl2ZSBpbnN0
-cnVjdGlvbiBncm91cCIsDQo+PiAgICAgc2VjLCBpbnNuLT5vZmZzZXQpOw0KPj4gICByZXR1cm4g
-MTsNCj4+IEBAIC0xODcxLDYgKzE5MzYsMTQgQEAgc3RhdGljIGludCB2YWxpZGF0ZV9icmFuY2go
-c3RydWN0IG9ianRvb2xfZmlsZSAqZmlsZSwgc3RydWN0IGluc3RydWN0aW9uICpmaXJzdCwNCj4+
-ICAgY2FzZSBJTlNOX0pVTVBfRFlOQU1JQzoNCj4+ICAgaWYgKGZ1bmMgJiYgbGlzdF9lbXB0eSgm
-aW5zbi0+YWx0cykgJiYNCj4+ICAgICAgIGhhc19tb2RpZmllZF9zdGFja19mcmFtZSgmc3RhdGUp
-KSB7DQo+PiArLyoNCj4+ICsgKiBPbiBhcm02NCBgYnIgPFhuPmAgaW5zbiBjYW4gYmUgdXNlZCBm
-b3Igc3dpdGNoLXRhYmxlcw0KPj4gKyAqIGJ1dCBpdCBjYW5ub3QgYmUgZGlzdGluZ3Vpc2hlZCBp
-biBpdHNlbGYgZnJvbSBhIHNpYmxpbmcNCj4+ICsgKiBjYWxsIHRodXMgd2UgbmVlZCB0byBoYXZl
-IGEgbG9vayBhdCB0aGUgcHJldmlvdXMgaW5zdHJ1Y3Rpb25zDQo+PiArICogdG8gZGV0ZXJtaW5l
-IHdoaWNoIGl0IGlzDQo+PiArICovDQo+PiAraWYgKCFhcmNoX2lzX2luc25fc2libGluZ19jYWxs
-KGluc24pKQ0KPj4gK2JyZWFrOw0KPj4gICBXQVJOX0ZVTkMoInNpYmxpbmcgY2FsbCBmcm9tIGNh
-bGxhYmxlIGluc3RydWN0aW9uIHdpdGggbW9kaWZpZWQgc3RhY2sgZnJhbWUiLA0KPj4gICAgIHNl
-YywgaW5zbi0+b2Zmc2V0KTsNCj4+ICAgcmV0dXJuIDE7DQo+PiBkaWZmIC0tZ2l0IGEvdG9vbHMv
-b2JqdG9vbC9lbGYuYyBiL3Rvb2xzL29ianRvb2wvZWxmLmMNCj4+IGluZGV4IGI4ZjNjY2E4ZTU4
-Yi4uMTM2ZjliOWZiMWQxIDEwMDY0NA0KPj4gLS0tIGEvdG9vbHMvb2JqdG9vbC9lbGYuYw0KPj4g
-KysrIGIvdG9vbHMvb2JqdG9vbC9lbGYuYw0KPj4gQEAgLTc0LDcgKzc0LDggQEAgc3RydWN0IHN5
-bWJvbCAqZmluZF9zeW1ib2xfYnlfb2Zmc2V0KHN0cnVjdCBzZWN0aW9uICpzZWMsIHVuc2lnbmVk
-IGxvbmcgb2Zmc2V0KQ0KPj4gICBzdHJ1Y3Qgc3ltYm9sICpzeW07DQo+Pg0KPj4gICBsaXN0X2Zv
-cl9lYWNoX2VudHJ5KHN5bSwgJnNlYy0+c3ltYm9sX2xpc3QsIGxpc3QpDQo+PiAtaWYgKHN5bS0+
-dHlwZSAhPSBTVFRfU0VDVElPTiAmJg0KPj4gK2lmIChzeW0tPnR5cGUgIT0gU1RUX05PVFlQRSAm
-Jg0KPj4gKyAgICBzeW0tPnR5cGUgIT0gU1RUX1NFQ1RJT04gJiYNCj4NCj4gV2h5PyAgQW5vdGhl
-ciBwb3RlbnRpYWwgc2VwYXJhdGUgcGF0Y2guDQo+DQoNClRoaXMgaXMgYWdhaW4gYSBzcGVjaWFs
-IGNhc2UgSSBlbmNvdW50ZXJlZCB3aGVyZSBzZXZlcmFsIHN5bWJvbHMgY2FuIGJlDQpmb3VuZCB3
-aXRoIHRoZSBzYW1lIG9mZnNldCBzbyB0aGUgc29sZSBjb25kaXRpb24gb2YgdGhlIG9mZnNldCB3
-YXNuJ3QNCmVub3VnaCB0byBkaXN0aW5ndWlzaCB0aGUgY29ycmVjdCBkZXN0aW5hdGlvbi4gSSB0
-aHVzIGFkZGVkIHNvbWUgZXh0cmENCmNoZWNrIG9uIHRoZSB0eXBlIG9mIHRoZSBzeW1ib2wuDQoN
-Cj4+ICAgICAgIHN5bS0+b2Zmc2V0ID09IG9mZnNldCkNCj4+ICAgcmV0dXJuIHN5bTsNCj4+DQo+
-PiAtLQ0KPj4gMi4xNy4xDQo+Pg0KPg0KDQpQbGVhc2UgZmlsbCBmcmVlIHRvIGNvbW1lbnQgYmFj
-ayBvbiBteSBhbnN3ZXJzLiBJIHdvdWxkIHJlYWxseSBsaWtlIHRvDQpnZXQgeW91IG9waW5pb24g
-b24gc29tZSBvZiB0aGUgc3BlY2lhbCBjYXNlcyBJIG1lbnRpb25lZC4NCg0KVGhhbmtzLA0KDQot
-LQ0KUmFwaGFlbCBHYXVsdA0KSU1QT1JUQU5UIE5PVElDRTogVGhlIGNvbnRlbnRzIG9mIHRoaXMg
-ZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUgY29uZmlkZW50aWFsIGFuZCBtYXkgYWxzbyBi
-ZSBwcml2aWxlZ2VkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBwbGVh
-c2Ugbm90aWZ5IHRoZSBzZW5kZXIgaW1tZWRpYXRlbHkgYW5kIGRvIG5vdCBkaXNjbG9zZSB0aGUg
-Y29udGVudHMgdG8gYW55IG90aGVyIHBlcnNvbiwgdXNlIGl0IGZvciBhbnkgcHVycG9zZSwgb3Ig
-c3RvcmUgb3IgY29weSB0aGUgaW5mb3JtYXRpb24gaW4gYW55IG1lZGl1bS4gVGhhbmsgeW91Lg0K
+On Tue, Apr 23, 2019 at 06:07:34PM -0300, Mauro Carvalho Chehab wrote:
+> Em Wed, 24 Apr 2019 00:28:39 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
+> 
+> > This converts the plain text documentation to reStructuredText format and
+> > add it to Sphinx TOC tree. No essential content change.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  Documentation/acpi/initrd_table_override.txt  | 111 ----------------
+> >  Documentation/admin-guide/acpi/index.rst      |   1 +
+> >  .../acpi/initrd_table_override.rst            | 120 ++++++++++++++++++
+> >  3 files changed, 121 insertions(+), 111 deletions(-)
+> >  delete mode 100644 Documentation/acpi/initrd_table_override.txt
+> >  create mode 100644 Documentation/admin-guide/acpi/initrd_table_override.rst
+> > 
+> > diff --git a/Documentation/acpi/initrd_table_override.txt b/Documentation/acpi/initrd_table_override.txt
+> > deleted file mode 100644
+> > index 30437a6db373..000000000000
+> > --- a/Documentation/acpi/initrd_table_override.txt
+> > +++ /dev/null
+> > @@ -1,111 +0,0 @@
+> > -Upgrading ACPI tables via initrd
+> > -================================
+> > -
+> > -1) Introduction (What is this about)
+> > -2) What is this for
+> > -3) How does it work
+> > -4) References (Where to retrieve userspace tools)
+> > -
+> > -1) What is this about
+> > ----------------------
+> > -
+> > -If the ACPI_TABLE_UPGRADE compile option is true, it is possible to
+> > -upgrade the ACPI execution environment that is defined by the ACPI tables
+> > -via upgrading the ACPI tables provided by the BIOS with an instrumented,
+> > -modified, more recent version one, or installing brand new ACPI tables.
+> > -
+> > -When building initrd with kernel in a single image, option
+> > -ACPI_TABLE_OVERRIDE_VIA_BUILTIN_INITRD should also be true for this
+> > -feature to work.
+> > -
+> > -For a full list of ACPI tables that can be upgraded/installed, take a look
+> > -at the char *table_sigs[MAX_ACPI_SIGNATURE]; definition in
+> > -drivers/acpi/tables.c.
+> > -All ACPI tables iasl (Intel's ACPI compiler and disassembler) knows should
+> > -be overridable, except:
+> > -   - ACPI_SIG_RSDP (has a signature of 6 bytes)
+> > -   - ACPI_SIG_FACS (does not have an ordinary ACPI table header)
+> > -Both could get implemented as well.
+> > -
+> > -
+> > -2) What is this for
+> > --------------------
+> > -
+> > -Complain to your platform/BIOS vendor if you find a bug which is so severe
+> > -that a workaround is not accepted in the Linux kernel. And this facility
+> > -allows you to upgrade the buggy tables before your platform/BIOS vendor
+> > -releases an upgraded BIOS binary.
+> > -
+> > -This facility can be used by platform/BIOS vendors to provide a Linux
+> > -compatible environment without modifying the underlying platform firmware.
+> > -
+> > -This facility also provides a powerful feature to easily debug and test
+> > -ACPI BIOS table compatibility with the Linux kernel by modifying old
+> > -platform provided ACPI tables or inserting new ACPI tables.
+> > -
+> > -It can and should be enabled in any kernel because there is no functional
+> > -change with not instrumented initrds.
+> > -
+> > -
+> > -3) How does it work
+> > --------------------
+> > -
+> > -# Extract the machine's ACPI tables:
+> > -cd /tmp
+> > -acpidump >acpidump
+> > -acpixtract -a acpidump
+> > -# Disassemble, modify and recompile them:
+> > -iasl -d *.dat
+> > -# For example add this statement into a _PRT (PCI Routing Table) function
+> > -# of the DSDT:
+> > -Store("HELLO WORLD", debug)
+> > -# And increase the OEM Revision. For example, before modification:
+> > -DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000000)
+> > -# After modification:
+> > -DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000001)
+> > -iasl -sa dsdt.dsl
+> > -# Add the raw ACPI tables to an uncompressed cpio archive.
+> > -# They must be put into a /kernel/firmware/acpi directory inside the cpio
+> > -# archive. Note that if the table put here matches a platform table
+> > -# (similar Table Signature, and similar OEMID, and similar OEM Table ID)
+> > -# with a more recent OEM Revision, the platform table will be upgraded by
+> > -# this table. If the table put here doesn't match a platform table
+> > -# (dissimilar Table Signature, or dissimilar OEMID, or dissimilar OEM Table
+> > -# ID), this table will be appended.
+> > -mkdir -p kernel/firmware/acpi
+> > -cp dsdt.aml kernel/firmware/acpi
+> > -# A maximum of "NR_ACPI_INITRD_TABLES (64)" tables are currently allowed
+> > -# (see osl.c):
+> > -iasl -sa facp.dsl
+> > -iasl -sa ssdt1.dsl
+> > -cp facp.aml kernel/firmware/acpi
+> > -cp ssdt1.aml kernel/firmware/acpi
+> > -# The uncompressed cpio archive must be the first. Other, typically
+> > -# compressed cpio archives, must be concatenated on top of the uncompressed
+> > -# one. Following command creates the uncompressed cpio archive and
+> > -# concatenates the original initrd on top:
+> > -find kernel | cpio -H newc --create > /boot/instrumented_initrd
+> > -cat /boot/initrd >>/boot/instrumented_initrd
+> > -# reboot with increased acpi debug level, e.g. boot params:
+> > -acpi.debug_level=0x2 acpi.debug_layer=0xFFFFFFFF
+> > -# and check your syslog:
+> > -[    1.268089] ACPI: PCI Interrupt Routing Table [\_SB_.PCI0._PRT]
+> > -[    1.272091] [ACPI Debug]  String [0x0B] "HELLO WORLD"
+> > -
+> > -iasl is able to disassemble and recompile quite a lot different,
+> > -also static ACPI tables.
+> > -
+> > -
+> > -4) Where to retrieve userspace tools
+> > -------------------------------------
+> > -
+> > -iasl and acpixtract are part of Intel's ACPICA project:
+> > -http://acpica.org/
+> > -and should be packaged by distributions (for example in the acpica package
+> > -on SUSE).
+> > -
+> > -acpidump can be found in Len Browns pmtools:
+> > -ftp://kernel.org/pub/linux/kernel/people/lenb/acpi/utils/pmtools/acpidump
+> > -This tool is also part of the acpica package on SUSE.
+> > -Alternatively, used ACPI tables can be retrieved via sysfs in latest kernels:
+> > -/sys/firmware/acpi/tables
+> > diff --git a/Documentation/admin-guide/acpi/index.rst b/Documentation/admin-guide/acpi/index.rst
+> > index 3e041206089d..09e4e81e4fb7 100644
+> > --- a/Documentation/admin-guide/acpi/index.rst
+> > +++ b/Documentation/admin-guide/acpi/index.rst
+> > @@ -8,3 +8,4 @@ the Linux ACPI support.
+> >  .. toctree::
+> >     :maxdepth: 1
+> >  
+> > +   initrd_table_override
+> > diff --git a/Documentation/admin-guide/acpi/initrd_table_override.rst b/Documentation/admin-guide/acpi/initrd_table_override.rst
+> > new file mode 100644
+> > index 000000000000..0787b2b91ded
+> > --- /dev/null
+> > +++ b/Documentation/admin-guide/acpi/initrd_table_override.rst
+> > @@ -0,0 +1,120 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +================================
+> > +Upgrading ACPI tables via initrd
+> > +================================
+> > +
+> > +1) Introduction (What is this about)
+> > +2) What is this for
+> > +3) How does it work
+> > +4) References (Where to retrieve userspace tools)
+> 
+> Hmm... I did the same on my conversion, but IMO, the best would be to
+> hide (or remove, if ACPI maintainers agree) the contents, as this may
+> conflict with the body as people may add new stuff and forget to
+> update it.
+> 
+> So, if ACPI maintainers insist on keeping it, I would code this as:
+> 
+> .. Contents
+> 
+>    1) Introduction (What is this about)
+>    2) What is this for
+>    3) How does it work
+>    4) References (Where to retrieve userspace tools)
+> 
+> as this will make this invisible on html/pdf/epub output.
+>
+I just removed it. If anyone wants it back, please comment. Thanks.
+
+> Anyway, with or without the above change:
+> 
+> Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> 
+> > +
+> > +1) What is this about
+> > +=====================
+> > +
+> > +If the ACPI_TABLE_UPGRADE compile option is true, it is possible to
+> > +upgrade the ACPI execution environment that is defined by the ACPI tables
+> > +via upgrading the ACPI tables provided by the BIOS with an instrumented,
+> > +modified, more recent version one, or installing brand new ACPI tables.
+> > +
+> > +When building initrd with kernel in a single image, option
+> > +ACPI_TABLE_OVERRIDE_VIA_BUILTIN_INITRD should also be true for this
+> > +feature to work.
+> > +
+> > +For a full list of ACPI tables that can be upgraded/installed, take a look
+> > +at the char `*table_sigs[MAX_ACPI_SIGNATURE];` definition in
+> > +drivers/acpi/tables.c.
+> > +
+> > +All ACPI tables iasl (Intel's ACPI compiler and disassembler) knows should
+> > +be overridable, except:
+> > +
+> > +  - ACPI_SIG_RSDP (has a signature of 6 bytes)
+> > +  - ACPI_SIG_FACS (does not have an ordinary ACPI table header)
+> > +
+> > +Both could get implemented as well.
+> > +
+> > +
+> > +2) What is this for
+> > +===================
+> > +
+> > +Complain to your platform/BIOS vendor if you find a bug which is so severe
+> > +that a workaround is not accepted in the Linux kernel. And this facility
+> > +allows you to upgrade the buggy tables before your platform/BIOS vendor
+> > +releases an upgraded BIOS binary.
+> > +
+> > +This facility can be used by platform/BIOS vendors to provide a Linux
+> > +compatible environment without modifying the underlying platform firmware.
+> > +
+> > +This facility also provides a powerful feature to easily debug and test
+> > +ACPI BIOS table compatibility with the Linux kernel by modifying old
+> > +platform provided ACPI tables or inserting new ACPI tables.
+> > +
+> > +It can and should be enabled in any kernel because there is no functional
+> > +change with not instrumented initrds.
+> > +
+> > +
+> > +3) How does it work
+> > +===================
+> > +::
+> > +
+> > +  # Extract the machine's ACPI tables:
+> > +  cd /tmp
+> > +  acpidump >acpidump
+> > +  acpixtract -a acpidump
+> > +  # Disassemble, modify and recompile them:
+> > +  iasl -d *.dat
+> > +  # For example add this statement into a _PRT (PCI Routing Table) function
+> > +  # of the DSDT:
+> > +  Store("HELLO WORLD", debug)
+> > +  # And increase the OEM Revision. For example, before modification:
+> > +  DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000000)
+> > +  # After modification:
+> > +  DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000001)
+> > +  iasl -sa dsdt.dsl
+> > +  # Add the raw ACPI tables to an uncompressed cpio archive.
+> > +  # They must be put into a /kernel/firmware/acpi directory inside the cpio
+> > +  # archive. Note that if the table put here matches a platform table
+> > +  # (similar Table Signature, and similar OEMID, and similar OEM Table ID)
+> > +  # with a more recent OEM Revision, the platform table will be upgraded by
+> > +  # this table. If the table put here doesn't match a platform table
+> > +  # (dissimilar Table Signature, or dissimilar OEMID, or dissimilar OEM Table
+> > +  # ID), this table will be appended.
+> > +  mkdir -p kernel/firmware/acpi
+> > +  cp dsdt.aml kernel/firmware/acpi
+> > +  # A maximum of "NR_ACPI_INITRD_TABLES (64)" tables are currently allowed
+> > +  # (see osl.c):
+> > +  iasl -sa facp.dsl
+> > +  iasl -sa ssdt1.dsl
+> > +  cp facp.aml kernel/firmware/acpi
+> > +  cp ssdt1.aml kernel/firmware/acpi
+> > +  # The uncompressed cpio archive must be the first. Other, typically
+> > +  # compressed cpio archives, must be concatenated on top of the uncompressed
+> > +  # one. Following command creates the uncompressed cpio archive and
+> > +  # concatenates the original initrd on top:
+> > +  find kernel | cpio -H newc --create > /boot/instrumented_initrd
+> > +  cat /boot/initrd >>/boot/instrumented_initrd
+> > +  # reboot with increased acpi debug level, e.g. boot params:
+> > +  acpi.debug_level=0x2 acpi.debug_layer=0xFFFFFFFF
+> > +  # and check your syslog:
+> > +  [    1.268089] ACPI: PCI Interrupt Routing Table [\_SB_.PCI0._PRT]
+> > +  [    1.272091] [ACPI Debug]  String [0x0B] "HELLO WORLD"
+> > +
+> > +iasl is able to disassemble and recompile quite a lot different,
+> > +also static ACPI tables.
+> > +
+> > +
+> > +4) Where to retrieve userspace tools
+> > +====================================
+> > +
+> > +iasl and acpixtract are part of Intel's ACPICA project:
+> > +http://acpica.org/
+> > +
+> > +and should be packaged by distributions (for example in the acpica package
+> > +on SUSE).
+> > +
+> > +acpidump can be found in Len Browns pmtools:
+> > +ftp://kernel.org/pub/linux/kernel/people/lenb/acpi/utils/pmtools/acpidump
+> > +
+> > +This tool is also part of the acpica package on SUSE.
+> > +Alternatively, used ACPI tables can be retrieved via sysfs in latest kernels:
+> > +/sys/firmware/acpi/tables
+> 
+> 
+> 
+> Thanks,
+> Mauro
+
+-- 
+Cheers,
+Changbin Du
