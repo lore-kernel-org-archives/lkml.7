@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBD1C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0DAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B75D2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584162175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:12:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PrZ7aZVf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LrjzKFxV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfDXXMq (ORCPT
+        id S1727506AbfDXXMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 19:12:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42538 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfDXXMn (ORCPT
+        Wed, 24 Apr 2019 19:12:49 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37016 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727460AbfDXXMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 19:12:43 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x15so5696868pln.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:12:42 -0700 (PDT)
+        Wed, 24 Apr 2019 19:12:46 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e6so10157568pgc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:12:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MWO4KenSHR25slNpTCUIhefVFREevGFRFzkC3RHE20M=;
-        b=PrZ7aZVfgBiuZtYe4PrbOKtp4idfOdZwylzuSDPuhfaByEedQaMRp7lp+Pd4iBhZQ7
-         DVmaJzF1UIzikdCp4jleLb55o8m8Kn5fZ/sj6boyac+PReSOkQfTT7vRwm+gHfVOIe0F
-         DTY6AUYfSPYHDKkeQ+fc6tlPHng3B5NQdxg8o=
+        bh=USyjebKhKCZCLrhUyqlX69vkoqbsFxWhHCmLAtiPTjk=;
+        b=LrjzKFxVODV8Pr1dnRea7pyPGeBJmS9eBnfVmJ67fomco/hgGamwbbGddXrpUQ5OQ1
+         cdhpoLVzPGviAFCFtMaF3mNFXVCW5MWqQCcNTRs9OtEyYC710xTyziMDzWkwNiE6mZol
+         KhVfqc9y7DRORxOLfn28xAAdbUTtcUbEkoax0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=MWO4KenSHR25slNpTCUIhefVFREevGFRFzkC3RHE20M=;
-        b=IXrzFpjP7gpumEqq1/Xg5sP4Akp8cs3iZO1Lm4M2pW/KxRaC7ihktS4vieoW6638gr
-         +xvwF0kIl7KNdD1Hz/AyJyAfGJuyls+Ob/rBF6zVQq68QE+4FSCjo44CG0lsZcwEYQwa
-         s4FfJkdSqyNbLtEoux6nGyf0nmh81gI3rVvR5cnLNZCcrmYJUAYwO//0Yp/u9iO2QHpf
-         uHsoREr5izqLwEyzSkgUNub3tJkGdhO4hYyjlfJCBpaSycI/obkHCjlIDYVWGgeRhZV3
-         XqwM7gS6f1yolP0Wx+WnCErBATk26zZeNN810YcO+5Q1x0KmMYIY/DVD/fybU0QKF0VM
-         35vw==
-X-Gm-Message-State: APjAAAVi/++5G6nHhvHOAuvzXvYNX5g1n6by1pI+aQ+8jkGuTU2L33Dy
-        N09NP+f5n2EdUX7WLljAMtqr+w==
-X-Google-Smtp-Source: APXvYqxkX+7q5cK6Y/F4x3Q++0IUyKNree3PZVatnmatqo691HD28fZot/p2tmE8gNTbnpiJCJ3Abg==
-X-Received: by 2002:a17:902:bd94:: with SMTP id q20mr5134764pls.334.1556147562468;
-        Wed, 24 Apr 2019 16:12:42 -0700 (PDT)
+        bh=USyjebKhKCZCLrhUyqlX69vkoqbsFxWhHCmLAtiPTjk=;
+        b=mgLm9vNxhh24BwdcKkUFo3/j1NEVSyzXgXLuq8IeET7+GpOl4vjpYiotRWLvdsmlTG
+         hXRmWPrDF1kmPk6m/u65G4dlbJcvxvzmM2YTS/YJ2yRotMGOVfDAlEZiJrNtEp/IBoa/
+         SOEIVm+iLUB9a+k/E0gxaJUohrsy2qih4XvkyA/qLzby5955KtCe2oUlT+qQf7TCF9+F
+         aL5bU3x25/22OdPDypHAdTJKWrbicFuNkkodAD6XuVdTEhhhOq45fA+4lNlmi133byuR
+         rw8mYB5WbUYQmd9ujXegvIvTxCSr6Q4DYUUguqQizvIHug1R8JIFlGSeAKY6b6WCjixi
+         gdqg==
+X-Gm-Message-State: APjAAAXCLVEphHD2saEk1B+9q1QyFwq5Ax/vfbm1xWe/ZdtM2wAH8/zY
+        sel7R8g5wFDTg7ASwuBHngKMgw==
+X-Google-Smtp-Source: APXvYqycbCdQbeLJP1q3+Fn6T26GnvkkzbCWr10Sjc48ytdPZn5nYqG/blhh4GIlO94nIyHI3nBTEw==
+X-Received: by 2002:a62:474a:: with SMTP id u71mr35333692pfa.87.1556147565647;
+        Wed, 24 Apr 2019 16:12:45 -0700 (PDT)
 Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id o81sm34003162pfa.156.2019.04.24.16.12.40
+        by smtp.gmail.com with ESMTPSA id a6sm39947726pgd.67.2019.04.24.16.12.43
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 16:12:40 -0700 (PDT)
+        Wed, 24 Apr 2019 16:12:44 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Shuah Khan <shuah@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -63,9 +63,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Tycho Andersen <tycho@tycho.ws>,
         Serge Hallyn <serge@hallyn.com>,
         linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/8] selftests: Extract logic for multiple test runs
-Date:   Wed, 24 Apr 2019 16:12:32 -0700
-Message-Id: <20190424231237.14776-4-keescook@chromium.org>
+Subject: [PATCH v2 7/8] selftests: Remove KSFT_TAP_LEVEL
+Date:   Wed, 24 Apr 2019 16:12:36 -0700
+Message-Id: <20190424231237.14776-8-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190424231237.14776-1-keescook@chromium.org>
 References: <20190424231237.14776-1-keescook@chromium.org>
@@ -74,134 +74,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This moves the logic for running multiple tests into a single "run_many"
-function of runner.sh. Both "run_tests" and "emit_tests" are modified to
-use it. Summary handling is now controlled by the "per_test_logging"
-shell flag.
+Since sub-testing can now be detected by indentation level, this removes
+KSFT_TAP_LEVEL so that subtests report their TAP header for later parsing.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- tools/testing/selftests/Makefile            |  6 ++---
- tools/testing/selftests/kselftest/runner.sh | 25 ++++++++++++++++++---
- tools/testing/selftests/lib.mk              | 25 +++++++--------------
- 3 files changed, 32 insertions(+), 24 deletions(-)
+ tools/testing/selftests/Makefile            | 6 ------
+ tools/testing/selftests/kselftest/runner.sh | 1 -
+ 2 files changed, 7 deletions(-)
 
 diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index c5f9f736cdbd..4ac1d1c7ce5b 100644
+index 64699f59b95f..9f05448e5e4b 100644
 --- a/tools/testing/selftests/Makefile
 +++ b/tools/testing/selftests/Makefile
-@@ -193,16 +193,14 @@ ifdef INSTALL_PATH
- 	echo "  logfile=\$$BASE_DIR/output.log" >> $(ALL_SCRIPT)
- 	echo "  cat /dev/null > \$$logfile" >> $(ALL_SCRIPT)
- 	echo "fi" >> $(ALL_SCRIPT)
--	echo "export KSFT_TAP_LEVEL=1" >> $(ALL_SCRIPT)
+@@ -86,12 +86,6 @@ else
+ 	endif
+ endif
  
- 	for TARGET in $(TARGETS); do \
- 		BUILD_TARGET=$$BUILD/$$TARGET;	\
--		echo "echo ; echo TAP version 13" >> $(ALL_SCRIPT);	\
--		echo "echo Running tests in $$TARGET" >> $(ALL_SCRIPT); \
--		echo "echo ========================================" >> $(ALL_SCRIPT); \
- 		echo "[ -w /dev/kmsg ] && echo \"kselftest: Running tests in $$TARGET\" >> /dev/kmsg" >> $(ALL_SCRIPT); \
- 		echo "cd $$TARGET" >> $(ALL_SCRIPT); \
-+		echo -n "run_many" >> $(ALL_SCRIPT); \
- 		make -s --no-print-directory OUTPUT=$$BUILD_TARGET -C $$TARGET emit_tests >> $(ALL_SCRIPT); \
-+		echo "" >> $(ALL_SCRIPT);	    \
- 		echo "cd \$$ROOT" >> $(ALL_SCRIPT); \
- 	done;
- 
+-# KSFT_TAP_LEVEL is used from KSFT framework to prevent nested TAP header
+-# printing from tests. Applicable to run_tests case where run_tests adds
+-# TAP header prior running tests and when a test program invokes another
+-# with system() call. Export it here to cover override RUN_TESTS defines.
+-export KSFT_TAP_LEVEL=`echo 1`
+-
+ # Prepare for headers install
+ top_srcdir ?= ../../..
+ include $(top_srcdir)/scripts/subarch.include
 diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-index e1117d703887..f12b0a631273 100644
+index b9f74e5a2ee5..eff3ee303d0d 100644
 --- a/tools/testing/selftests/kselftest/runner.sh
 +++ b/tools/testing/selftests/kselftest/runner.sh
-@@ -2,17 +2,20 @@
+@@ -2,7 +2,6 @@
  # SPDX-License-Identifier: GPL-2.0
  #
  # Runs a set of tests in a given subdirectory.
-+export KSFT_TAP_LEVEL=1
+-export KSFT_TAP_LEVEL=1
  export skip_rc=4
  export logfile=/dev/stdout
-+export per_test_logging=
- 
- run_one()
- {
--	TEST="$1"
--	NUM="$2"
-+	DIR="$1"
-+	TEST="$2"
-+	NUM="$3"
- 
- 	BASENAME_TEST=$(basename $TEST)
- 
--	TEST_HDR_MSG="selftests: "`basename $PWD`:" $BASENAME_TEST"
-+	TEST_HDR_MSG="selftests: $DIR: $BASENAME_TEST"
- 	echo "$TEST_HDR_MSG"
- 	echo "========================================"
- 	if [ ! -x "$TEST" ]; then
-@@ -30,3 +33,19 @@ run_one()
- 		cd - >/dev/null
- 	fi
- }
-+
-+run_many()
-+{
-+	echo "TAP version 13"
-+	DIR=$(basename "$PWD")
-+	test_num=0
-+	for TEST in "$@"; do
-+		BASENAME_TEST=$(basename $TEST)
-+		test_num=$(( test_num + 1 ))
-+		if [ -n "$per_test_logging" ]; then
-+			logfile="/tmp/$BASENAME_TEST"
-+			cat /dev/null > "$logfile"
-+		fi
-+		run_one "$DIR" "$TEST" "$test_num"
-+	done
-+}
-diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-index 6b2d026a94ea..28b8ffedfdf1 100644
---- a/tools/testing/selftests/lib.mk
-+++ b/tools/testing/selftests/lib.mk
-@@ -67,19 +67,11 @@ endif
- 
- .ONESHELL:
- define RUN_TESTS
--	@export KSFT_TAP_LEVEL=`echo 1`;		\
--	test_num=`echo 0`;				\
--	. $(selfdir)/kselftest/runner.sh;		\
--	echo "TAP version 13";				\
--	for TEST in $(1); do				\
--		BASENAME_TEST=`basename $$TEST`;	\
--		test_num=`echo $$test_num+1 | bc`;	\
--		if [ "X$(summary)" != "X" ]; then	\
--		        logfile="/tmp/$$BASENAME_TEST";	\
--			cat /dev/null > "$$logfile";	\
--		fi;					\
--		run_one "$$BASENAME_TEST" "$$test_num";	\
--	done;
-+	@. $(selfdir)/kselftest/runner.sh;	\
-+	if [ "X$(summary)" != "X" ]; then       \
-+		per_test_logging=1;		\
-+	fi;                                     \
-+	run_many $(1)
- endef
- 
- run_tests: all
-@@ -117,12 +109,11 @@ else
- endif
- 
- emit_tests:
--	@test_num=`echo 0`;				\
- 	for TEST in $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_PROGS); do \
- 		BASENAME_TEST=`basename $$TEST`;	\
--		test_num=`echo $$test_num+1 | bc`;	\
--		echo "run_one \"$$BASENAME_TEST\" \"$$test_num\"";	\
--	done;
-+		echo "	\\";				\
-+		echo -n "	\"$$BASENAME_TEST\"";	\
-+	done;						\
- 
- # define if isn't already. It is undefined in make O= case.
- ifeq ($(RM),)
+ export per_test_logging=
 -- 
 2.17.1
 
