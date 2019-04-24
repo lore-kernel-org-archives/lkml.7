@@ -2,117 +2,108 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3084C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884C2C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8322218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553982175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P0GKcWNv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4/rFMz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfDXKWX (ORCPT
+        id S1729915AbfDXKWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:22:23 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51935 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726904AbfDXKWU (ORCPT
+        Wed, 24 Apr 2019 06:22:32 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42943 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729652AbfDXKVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:22:20 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3OAM6hx2530633
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 24 Apr 2019 03:22:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3OAM6hx2530633
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556101327;
-        bh=CThnB17KZek+nJfRny/Q2A0jVLd+g9IuvBRf3erHD2U=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=P0GKcWNvKn95J8L6Na7isSX/rdosZ5rRnaMyihnE9+vnt2XVmWvXp7RZmEgEPwaZx
-         TBzAeZkd1PIpE9HNWWpGDNVkcit4cGEMLq/CfpX6nE74DSV6jZVF48Lw64gg03fHUZ
-         kRve+3J2y/vgrGF0JXrLEuJBgd6HMu7yqb02PeHlkFEnnjiXveShIZW3dlHLOZ+UUs
-         s0skwhDHUiETZetiCIqISFCFdQeQNZKVOOPpZetX7SupYRz+SX+dhtDwIbX9bsyFcc
-         5hEbKMYe6WB/oB1OovDT2sfqw8qaN4K1jdaLKr6pqEccUNOgoTP1XgV5J0rih5TW3F
-         DvSM9EytbVDgg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3OAM6r62530626;
-        Wed, 24 Apr 2019 03:22:06 -0700
-Date:   Wed, 24 Apr 2019 03:22:06 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
-Message-ID: <tip-d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb@git.kernel.org>
-Cc:     paulmck@linux.ibm.com, peterz@infradead.org, mingo@kernel.org,
-        torvalds@linux-foundation.org, lkp@intel.com,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, bigeasy@linutronix.de,
-        tglx@linutronix.de
-Reply-To: tglx@linutronix.de, bigeasy@linutronix.de, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, lkp@intel.com,
-          torvalds@linux-foundation.org, mingo@kernel.org,
-          peterz@infradead.org, paulmck@linux.ibm.com
-In-Reply-To: <20190424085253.12178-1-bigeasy@linutronix.de>
-References: <20190424085253.12178-1-bigeasy@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:smp/hotplug] smpboot: Place the __percpu annotation correctly
-Git-Commit-ID: d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 24 Apr 2019 06:21:23 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x15so4712717pln.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6HDIg6ROZRC2jfQ3nCG9gUelBX+LREsHvgd1/Lztul0=;
+        b=i4/rFMz4p1i8vXbatI/palG8YptRmoo1LHUDBGR8Ay5DruCATulff09VlWu5Tosmlr
+         UtntX8RYUw7NTBXwxNXRYFlJKPwcYBd6vqqMuleUFcbXJiHq09XaMf204+r0Mkewexgc
+         i2VnnVBfDEVIjW1oCSUE74vbrD7D8yol2BamSkMNUdzwqLHN2D7FnDHdiEsxPqkCRme3
+         Lw87IGgzwK6AvnTSc62V8CA7poN+cNjOaYYluOxemK2MO9zoK37PP+so4qDQX+ay5oAV
+         AzaDIqDR8K4PbcBCDPIw1MtPRb8WYsAK5zCcdlrcDIVccLqlnFlyvb5ZAZSnKPl8WNh4
+         nL/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6HDIg6ROZRC2jfQ3nCG9gUelBX+LREsHvgd1/Lztul0=;
+        b=GhbxFv2X8gfpkzmhoT1cUsZEEzThAmjgA/yZOJPFN+9Uq+hfr4YF5yvtEpr0bprBqy
+         ESPJqaT30cs9bEd8FWUmMgR6/Dgt3IKvSCTV0ZktKcedHEs6BBNmF/n1oyBANHVRGKjm
+         Ob/nYo+evofhSOUBHztFeXZLsioNgHfbQ3G+aV2362lQuwMC+AYfsGPiN59WbAogqUdZ
+         /7YU1hKyXru2HUtcm9Jw4/tOAK/wr5FXQlAseuhSISMimSFpMC+uYgHHgeMbXydgQRxC
+         w7AQFpVl2fGAJ51lTHQqKWxVn61nKjOnXBaMNB0/6AU5GHpWoM6NRE/TLOfp29fxwiYx
+         TRZw==
+X-Gm-Message-State: APjAAAVzaXFlPkTiES8tbTa1ERzDdqMZ1c66cY7FTvbo7hX0tdsYfeFy
+        MXK3bUYBmgGneUaWXZGQO0Q=
+X-Google-Smtp-Source: APXvYqyZjsMd1Z5gM5SAuGjYtpVb2bRlxmrAZ+Bp9Gba+Q2kMUbOMeu2GpY0RjMLJD4CtKVHV5l/0g==
+X-Received: by 2002:a17:902:121:: with SMTP id 30mr30487952plb.174.1556101282880;
+        Wed, 24 Apr 2019 03:21:22 -0700 (PDT)
+Received: from localhost.localdomain ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id v19sm25051604pfn.62.2019.04.24.03.21.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 03:21:22 -0700 (PDT)
+From:   Yuyang Du <duyuyang@gmail.com>
+To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
+Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        Yuyang Du <duyuyang@gmail.com>
+Subject: [PATCH 18/28] locking/lockdep: Remove unused argument in __lock_release
+Date:   Wed, 24 Apr 2019 18:19:24 +0800
+Message-Id: <20190424101934.51535-19-duyuyang@gmail.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20190424101934.51535-1-duyuyang@gmail.com>
+References: <20190424101934.51535-1-duyuyang@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb
-Gitweb:     https://git.kernel.org/tip/d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb
-Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate: Wed, 24 Apr 2019 10:52:53 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 24 Apr 2019 12:17:08 +0200
+The @nested is not used in __release_lock so remove it despite that it
+is not used in lock_release in the first place.
 
-smpboot: Place the __percpu annotation correctly
-
-The test robot reported a wrong assignment of a per-CPU variable which
-it detected by using sparse and sent a report. The assignment itself is
-correct. The annotation for sparse was wrong and hence the report.
-The first pointer is a "normal" pointer and points to the per-CPU memory
-area. That means that the __percpu annotation has to be moved.
-
-Move the __percpu annotation to pointer which points to the per-CPU
-area. This change affects only the sparse tool (and is ignored by the
-compiler).
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: f97f8f06a49fe ("smpboot: Provide infrastructure for percpu hotplug threads")
-Link: http://lkml.kernel.org/r/20190424085253.12178-1-bigeasy@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- include/linux/smpboot.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/lockdep.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
-index d0884b525001..9d1bc65d226c 100644
---- a/include/linux/smpboot.h
-+++ b/include/linux/smpboot.h
-@@ -29,7 +29,7 @@ struct smpboot_thread_data;
-  * @thread_comm:	The base name of the thread
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index eb85183..6e79bd6 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3988,7 +3988,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
+  * @nested is an hysterical artifact, needs a tree wide cleanup.
   */
- struct smp_hotplug_thread {
--	struct task_struct __percpu	**store;
-+	struct task_struct		* __percpu *store;
- 	struct list_head		list;
- 	int				(*thread_should_run)(unsigned int cpu);
- 	void				(*thread_fn)(unsigned int cpu);
+ static int
+-__lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
++__lock_release(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	struct task_struct *curr = current;
+ 	struct held_lock *hlock;
+@@ -4276,7 +4276,7 @@ void lock_release(struct lockdep_map *lock, int nested,
+ 	check_flags(flags);
+ 	current->lockdep_recursion = 1;
+ 	trace_lock_release(lock, ip);
+-	if (__lock_release(lock, nested, ip))
++	if (__lock_release(lock, ip))
+ 		check_chain_key(current);
+ 	current->lockdep_recursion = 0;
+ 	raw_local_irq_restore(flags);
+-- 
+1.8.3.1
+
