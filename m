@@ -2,129 +2,91 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442B1C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72BEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141A2208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ho4lluAI"
+	by mail.kernel.org (Postfix) with ESMTP id AB9AA208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730151AbfDXIYH (ORCPT
+        id S1728389AbfDXIZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:24:07 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35477 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbfDXIYG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:24:06 -0400
-Received: by mail-qt1-f194.google.com with SMTP id l17so110606qtp.2;
-        Wed, 24 Apr 2019 01:24:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=N+iTZQSZ69Ij61Cp9RRtOjmDEKD+cralGbazfmiX48M=;
-        b=Ho4lluAI+z5jJxffuLrvL1oAejjg0oZ2WRo//e1gjfXV3bzvJ//aMs6SgmW2Vk6JTB
-         vp3Ctv0JrWYvac7EmqVBl+qfApEs/DlHlCDKlBy1Uz91SrQbUQuEXVHxglkE3gC/62ND
-         6SwzuBASGacTlQl7FA8iZ5YkU9jE8G7xB8mPCyx5+M3vYMyrH/mwnZAbBGMCjgl8leJB
-         bCvD0PANcHdCSwQAa3bldB2/f42BvLwr8VM57cH/HcYjQkoxjXFkcItr0QMaA/XRjlYf
-         MZfzjPmXp2NsG5Xf8R41S+aVdgLAM5smd/okujHK62J2tEwDLr4tK7ye0BRCt75r7mjH
-         eNAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=N+iTZQSZ69Ij61Cp9RRtOjmDEKD+cralGbazfmiX48M=;
-        b=s8fUZ23JdRdstDVgArhf84uGOqQT8JnfG9odm+X6cuS16E/QnTYL59et+QKze7yUXM
-         UE8+b8kfgmh2sjR+TzQhLpMAIfHOJhb2BjxwxBmHpULSOSSgUNKhOgZ4AmS1PuBjnYt2
-         kbRvdoCvLKD4ZW9wJ7vRnFjhZ79XDm3ELDO3woEECDE6iRNrSZbkLda44d/IoHKZGvMf
-         ecDqqEve7DhHl5BOSBHAEJHwhYSoJ05iTT7pbhdOmWXTIy+lYaFfKyjoygDWiYtAMHQ1
-         iAlP0fg6kSYHpazUQ7ZWFP+aNnl6VJ329ouaMV6DI/Jjr7/ugUEA8avgtpoziUWSwVxo
-         1j2Q==
-X-Gm-Message-State: APjAAAXKIz4tUw+xcpaMK5SKQQf55Dy9HIzffpVhaOhPti1ffEoUiAtz
-        6QGS/kSAPZQC7NIF3YmMi+RXN/a6ff58Vq6XC/LqjZMy
-X-Google-Smtp-Source: APXvYqzsyGnnCQPYCD0n9abgEE9w7iApmA3Pg+9cz5QOVDm3H1GBJAhJSwnRFJ2uGceS6kmN5dDYdKx3iqRzs/kQox8=
-X-Received: by 2002:ac8:3042:: with SMTP id g2mr5759911qte.252.1556094245507;
- Wed, 24 Apr 2019 01:24:05 -0700 (PDT)
+        Wed, 24 Apr 2019 04:25:52 -0400
+Received: from thoth.sbs.de ([192.35.17.2]:51342 "EHLO thoth.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbfDXIZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 04:25:52 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id x3O8PghL032179
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Apr 2019 10:25:42 +0200
+Received: from [167.87.52.237] ([167.87.52.237])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x3O8PfvW007319;
+        Wed, 24 Apr 2019 10:25:41 +0200
+Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+References: <cover.1555579429.git.jan.kiszka@siemens.com>
+ <c9f40465c6effc7b8efd6cbf8461d71d80c80033.1555579429.git.jan.kiszka@siemens.com>
+ <20190424075816.GU2654@lahna.fi.intel.com>
+ <8999d3f8-d169-eb85-bd2f-08c99d184ea2@siemens.com>
+ <20190424081802.GV2654@lahna.fi.intel.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <5a28f22c-22f7-760a-d076-68ff19800d44@siemens.com>
+Date:   Wed, 24 Apr 2019 10:25:40 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
+ Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
 MIME-Version: 1.0
-References: <20190403152602.10019-1-steven.price@arm.com>
-In-Reply-To: <20190403152602.10019-1-steven.price@arm.com>
-From:   Enric Balletbo Serra <eballetbo@gmail.com>
-Date:   Wed, 24 Apr 2019 10:23:54 +0200
-Message-ID: <CAFqH_512Z-R9O4oVZFq8dM629kfzKcvBuA1RbkEUn-7WH6jvHg@mail.gmail.com>
-Subject: Re: [PATCH] PM / devfreq: return PTR_ERR not NULL in try_then_request_governor()
-To:     Steven Price <steven.price@arm.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190424081802.GV2654@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 24.04.19 10:18, Mika Westerberg wrote:
+> On Wed, Apr 24, 2019 at 10:12:42AM +0200, Jan Kiszka wrote:
+>> On 24.04.19 09:58, Mika Westerberg wrote:
+>>> +Rafael and linux-acpi.
+>>>
+>>> On Thu, Apr 18, 2019 at 11:23:49AM +0200, Jan Kiszka wrote:
+>>>> From: Jan Kiszka <jan.kiszka@siemens.com>
+>>>>
+>>>> Validated on the Quark platform, this adds interrupt support on rising
+>>>> and/or falling edges.
+>>>
+>>> The irqchip parts look good to me but but the ACPI SCI handling seems
+>>> weird. This is typically handled by ACPI core based on the values read
+>>> from FADT ACPI table. What does it contain on this Quark platform?
+>>
+>> There is no FADT on the original Quark firmware, nor did we add one. As we
+>> are talking about existing devices, possibly not only Quarks, I was going
+>> down the ACPI-independent way to hook into the interrupt. But I'm open to
+>> learn about better alternatives.
+> 
+> Hmm, if it does not have FADT table why would you need SCI then? Is this
+> implementing some real use case?
+> 
 
-Missatge de Steven Price <steven.price@arm.com> del dia dc., 3 d=E2=80=99ab=
-r.
-2019 a les 17:26:
+Maybe I'm looking at the wrong place: Where would I find it? There is definitely 
+no separate entry under /sys/firmware/acpi/tables - but that's also true for my 
+workstation.
 
->
-> The callers of try_then_request_governor() only test for a PTR_ERR using
-> IS_ERR(). However in the case that request_module() fails then NULL is
-> currently returned which will cause a NULL-pointer dereference in the
-> caller.
->
-> Instead convert the error we already have to a valid PTR_ERR and return
-> it.
->
-> Fixes: 23c7b54ca1cd ("PM / devfreq: Fix devfreq_add_device() when drivers=
- are built as modules.")
-> Signed-off-by: Steven Price <steven.price@arm.com>
+In any case: The hardware defines that the GPIO events are sent via SCIs. That 
+fact is probably not expressed in ACPI language.
 
-There is already a fix for that. The fix was initially sent in October [2] =
-but
-unfortunately, it got lost. I resend and now is queued [1]. Hopefully, the =
-Fixes
-tag will help to pick the fix to the proper kernel releases.
+Jan
 
-Thanks,
- Enric
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=
-=3Dfor-next&id=3Db53b0128052ffd687797d5f4deeb76327e7b5711
-[2] https://lkml.org/lkml/2018/10/16/744
-
-
-> ---
->  drivers/devfreq/devfreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> index 0ae3de76833b..d29f66f0e52a 100644
-> --- a/drivers/devfreq/devfreq.c
-> +++ b/drivers/devfreq/devfreq.c
-> @@ -254,7 +254,7 @@ static struct devfreq_governor *try_then_request_gove=
-rnor(const char *name)
->                 /* Restore previous state before return */
->                 mutex_lock(&devfreq_list_lock);
->                 if (err)
-> -                       return NULL;
-> +                       return ERR_PTR(err);
->
->                 governor =3D find_devfreq_governor(name);
->         }
-> --
-> 2.20.1
->
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
