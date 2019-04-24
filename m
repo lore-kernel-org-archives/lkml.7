@@ -2,127 +2,247 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC817C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 02:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3886AC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 02:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749D4218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 02:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556071697;
-	bh=gvHSlNwytK2oKYnJClL+LsmOetPenEFvr1DB+Sej11Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SyOJZLpZ9jMu/t8RsjvS0OtlulNU9IwVb+W7Ad0fvw/+VtgtF6yP6jLyDQcal9dlk
-	 Mb9Kr7F1rp7TZxXtwQWNbmCiMDIKd8REmHKbBI7euShDhDnYUn5tr1Dy6JfX2/mJbP
-	 K6JrwMALDcCEHcg09Ueo5pcnaENIGxLEaYpqgglM=
+	by mail.kernel.org (Postfix) with ESMTP id 0528121773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 02:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbfDXCIQ (ORCPT
+        id S1729252AbfDXCOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 22:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfDXCIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 22:08:16 -0400
-Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F987218D2;
-        Wed, 24 Apr 2019 02:08:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556071694;
-        bh=gvHSlNwytK2oKYnJClL+LsmOetPenEFvr1DB+Sej11Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LhJs262Pkd7I96qWBCSiDSiESMYMcCQDjT7cZEtx5M10Y1qrBt/bFiwG2I6M+bJMb
-         HS7CCGAnnh2lL05VSn1bIKfR3Es8sPhEc9yB/60HVPMAeoNOZy2LLNeCthCZ/xUin5
-         n1/7rZMqFH6zINgVGL1iRC5+Oysv95Gt7ovR6qFU=
-Date:   Wed, 24 Apr 2019 10:08:04 +0800
-From:   Guo Ren <guoren@kernel.org>
-To:     Gary Guo <gary@garyguo.net>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Andrew Waterman <andrew@sifive.com>,
-        Arnd Bergmann <arnd@arndb.de>, Anup Patel <anup.patel@wdc.com>,
-        Xiang Xiaoyan <xiaoyan_xiang@c-sky.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Scott Wood <swood@redhat.com>,
-        "tech-privileged@lists.riscv.org" <tech-privileged@lists.riscv.org>
-Subject: Re: [PATCH] riscv: Support non-coherency memory model
-Message-ID: <20190424020803.GA27332@guoren-Inspiron-7460>
-References: <1555947870-23014-1-git-send-email-guoren@kernel.org>
- <20190422161814.GA30694@lst.de>
- <20190423001348.GA31639@guoren-Inspiron-7460>
- <20190423055548.GA12365@lst.de>
- <20190423154642.GA16001@guoren-Inspiron-7460>
- <d1988350-7da9-37bb-3d8b-93bedea0b732@garyguo.net>
+        Tue, 23 Apr 2019 22:14:49 -0400
+Received: from [13.77.154.182] ([13.77.154.182]:39744 "EHLO
+        linux.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbfDXCOs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 22:14:48 -0400
+X-Greylist: delayed 517 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Apr 2019 22:14:47 EDT
+Received: by linux.microsoft.com (Postfix, from userid 1020)
+        id 6BF3730CB914; Tue, 23 Apr 2019 19:06:09 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by linux.microsoft.com (Postfix) with ESMTP id 68CF85D0A8;
+        Tue, 23 Apr 2019 19:06:09 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 19:06:09 -0700 (PDT)
+From:   nramas@linux.microsoft.com
+X-X-Sender: nramas@linuxonhyperv.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
+To:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+cc:     zohar@linux.ibm.com, vgoyal@redhat.com,
+        balajib@linux.microsoft.com, prsriva@linux.microsoft.com,
+        nramas@linux.microsoft.com
+Subject: [PATCH v1 1/1] Return the verified kernel image signature in
+ kexec_file_load
+Message-ID: <alpine.LRH.2.21.1904231852380.105892@linuxonhyperv.guj3yctzbm1etfxqx2vob5hsef.xx.intern>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1988350-7da9-37bb-3d8b-93bedea0b732@garyguo.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gary,
 
-On Tue, Apr 23, 2019 at 03:57:30PM +0000, Gary Guo wrote:
-> >>> Another point is we could get more attribute bits by modify the riscv
-> >>> spec:
-> >>>   - Remove Global bit, I think it's duplicate with the User bit in linux.
-> >>
-> >> It is in Linux, but it is conceptually very different.
-> > Yes, but hardware could ignore one of them and in riscv linux
-> > _PAGE_GLOBAL is no use at all, see:
-> > grep _PAGE_GLOBAL arch/riscv -r
-> > 
-> > In fact, the _PAGE_KERNEL for pte doesn't contain _PAGE_GLOBAL and it
-> > works on FU540 and qemu. As I've mentioned page attribute bits is very
-> > precious, define a useless bit make people confused.
->  >
-> 
-> The fact that it isn't used yet doesn't imply it is not useful. We don't 
-> use ASIDs at the moment, and without using ASIDs the "global" bit is 
-> indeed not useful. However with ASIDs the bit will be vital for saving 
-> TLB spaces. Without the global bit, the kernel pages become synonyms to 
-> themselves (i.e. they have different tags in TLB but refer to the same 
-> physical page).
-> 
-> The global bit also exists in many other ISAs as well. It's definitely 
-> not a "useless" bits.
-> 
-> Moreover, this bit is already implemented in both Rocket and Ariane. It 
-> is also in the spec for quite a while. The fact that Linux doesn't use 
-> it at the moment is not a reason for removing it.
-> 
+From: Lakshmi Ramasubramanian <nramas@microsoft.com>
 
-Look:
-linux-next git:(riscv_asid_allocator_v2)$ grep GLOBAL arch/riscv -r
-arch/riscv/include/asm/pgtable-bits.h:#define _PAGE_GLOBAL    (1 << 5)    /* Global */
-arch/riscv/include/asm/pgtable-bits.h:                                    _PAGE_USER | _PAGE_GLOBAL))
+Signed-off-by: Lakshmi Ramasubramanian <nramas@microsoft.com>
+---
+When CONFIG_KEXEC_VERIFY_SIG is selected the signature on 
+the new kernel image is verified in kexec_file_load.
+The signature is embedded in the kernel image file.
 
-Your patch tell us _PAGE_USER and _PAGE_GLOBAL are duplicate and why we
-couldn't make _PAGE_USER implies _PAGE_GLOBAL? Can you give an example
-of a real scene in PTE about:
-  _PAGE_USER:0 + _PAGE_GLOBAL:1
-or
-  _PAGE_USER:1 + _PAGE_GLOBAL:0
+This change returns the pointer to the verified signature and 
+the length of that signature. kexec_file_load can log this
+signature for attestation (To attest the signer of the new kernel).
+The change to log the kernel signature for attestation will be added
+in a future change set.
 
-Of cause I know USER & GLOBAL are conceptually very different, but
-there are only 10 attribute-bits for riscv (In fact we've wasted two bits
-to support huge RV32-pfn :P). So I think it is time to merge these two bits
-before hardware supports GLOBAL. Reserve them for future!
 
-Best Regards
- Guo Ren
+  arch/x86/kernel/kexec-bzimage64.c      |  7 +++++--
+  arch/x86/kernel/machine_kexec_64.c     | 10 +++++++---
+  crypto/asymmetric_keys/verify_pefile.c | 18 +++++++++++++++++-
+  include/linux/kexec.h                  |  8 ++++++--
+  include/linux/verification.h           |  4 +++-
+  kernel/kexec_file.c                    | 14 +++++++++++---
+  6 files changed, 49 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 9d7fd5e6689a..030abd8adbce 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -530,11 +530,14 @@ static int bzImage64_cleanup(void *loader_data)
+  }
+
+  #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
+-static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
++static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len,
++				unsigned int *signature_len, void **signature)
+  {
+  	return verify_pefile_signature(kernel, kernel_len,
+  				       NULL,
+-				       VERIFYING_KEXEC_PE_SIGNATURE);
++				       VERIFYING_KEXEC_PE_SIGNATURE,
++					   signature_len,
++					   signature);
+  }
+  #endif
+
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 6f5ca4ebe6e5..b556a9750dd4 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -405,15 +405,19 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+  }
+
+  #ifdef CONFIG_KEXEC_VERIFY_SIG
+-int arch_kexec_kernel_verify_sig(struct kimage *image, void *kernel,
+-				 unsigned long kernel_len)
++int arch_kexec_kernel_verify_sig(struct kimage *image,
++				void *kernel,
++				unsigned long kernel_len,
++				unsigned int *signature_len,
++				void **signature)
+  {
+  	if (!image->fops || !image->fops->verify_sig) {
+  		pr_debug("kernel loader does not support signature verification.");
+  		return -EKEYREJECTED;
+  	}
+
+-	return image->fops->verify_sig(kernel, kernel_len);
++	return image->fops->verify_sig(kernel, kernel_len,
++						signature_len, signature);
+  }
+  #endif
+
+diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_keys/verify_pefile.c
+index 672a94c2c3ff..588a7966922f 100644
+--- a/crypto/asymmetric_keys/verify_pefile.c
++++ b/crypto/asymmetric_keys/verify_pefile.c
+@@ -394,6 +394,12 @@ static int pefile_digest_pe(const void *pebuf, unsigned int pelen,
+   * @pelen: Length of the binary image
+   * @trust_keys: Signing certificate(s) to use as starting points
+   * @usage: The use to which the key is being put.
++ * @signature_len: If non-NULL the number of bytes in the signature
++ *                 will be returned in this out parameter
++ * @signature: If non-NULL a pointer to the buffer containing
++ *             the file signature will be returned in this out parameter.
++ *             The pointer being returned is actually within the buffer
++ *             pointed to by pebuf. So the caller should not try to free it.
+   *
+   * Validate that the certificate chain inside the PKCS#7 message inside the PE
+   * binary image intersects keys we already know and trust.
+@@ -418,7 +424,9 @@ static int pefile_digest_pe(const void *pebuf, unsigned int pelen,
+   */
+  int verify_pefile_signature(const void *pebuf, unsigned pelen,
+  			    struct key *trusted_keys,
+-			    enum key_being_used_for usage)
++			    enum key_being_used_for usage,
++				unsigned int *signature_len,
++				void **signature)
+  {
+  	struct pefile_context ctx;
+  	int ret;
+@@ -448,6 +456,14 @@ int verify_pefile_signature(const void *pebuf, unsigned pelen,
+  	 * contents.
+  	 */
+  	ret = pefile_digest_pe(pebuf, pelen, &ctx);
++	if (ret < 0)
++		goto error;
++
++	/* Check if the caller needs the file signature */
++	if (signature_len != NULL && signature != NULL) {
++		*signature_len = ctx.sig_len;
++		*signature = pebuf + ctx.sig_offset;
++	}
+
+  error:
+  	kfree(ctx.digest);
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index c9481ebcbc0c..1c790a5b03a0 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -131,7 +131,9 @@ typedef int (kexec_cleanup_t)(void *loader_data);
+
+  #ifdef CONFIG_KEXEC_VERIFY_SIG
+  typedef int (kexec_verify_sig_t)(const char *kernel_buf,
+-				 unsigned long kernel_len);
++				 unsigned long kernel_len,
++				 unsigned int *signature_len,
++				 void **signature);
+  #endif
+
+  struct kexec_file_ops {
+@@ -288,7 +290,9 @@ int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+  void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+  int __weak arch_kimage_file_post_load_cleanup(struct kimage *image);
+  int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+-					unsigned long buf_len);
++					unsigned long buf_len,
++					unsigned int *signature_len,
++					void **signature);
+  int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+  					Elf_Shdr *sechdrs, unsigned int relsec);
+  int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+diff --git a/include/linux/verification.h b/include/linux/verification.h
+index a10549a6c7cd..2ad9ff1dab5e 100644
+--- a/include/linux/verification.h
++++ b/include/linux/verification.h
+@@ -42,7 +42,9 @@ extern int verify_pkcs7_signature(const void *data, size_t len,
+  #ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
+  extern int verify_pefile_signature(const void *pebuf, unsigned pelen,
+  				   struct key *trusted_keys,
+-				   enum key_being_used_for usage);
++				   enum key_being_used_for usage,
++				   unsigned int *signature_len,
++				   void **signature);
+  #endif
+
+  #endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b118735fea9d..fb0c94b8e52b 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -54,7 +54,9 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+
+  #ifdef CONFIG_KEXEC_VERIFY_SIG
+  int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+-					unsigned long buf_len)
++					unsigned long buf_len,
++					unsigned int *signature_len,
++					void **signature)
+  {
+  	return -EKEYREJECTED;
+  }
+@@ -126,6 +128,10 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+  	int ret = 0;
+  	void *ldata;
+  	loff_t size;
++#ifdef CONFIG_KEXEC_VERIFY_SIG
++	unsigned int signature_len;
++	void *signature;
++#endif
+
+  	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+  				       &size, INT_MAX, READING_KEXEC_IMAGE);
+@@ -144,12 +150,14 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+
+  #ifdef CONFIG_KEXEC_VERIFY_SIG
+  	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+-					   image->kernel_buf_len);
++					   image->kernel_buf_len,
++					   &signature_len,
++					   &signature);
+  	if (ret) {
+  		pr_debug("kernel signature verification failed.\n");
+  		goto out;
+  	}
+-	pr_debug("kernel signature verification successful.\n");
++	pr_debug("Verified kernel signature. Sig len %d\n", signature_len);
+  #endif
+  	/* It is possible that there no initramfs is being loaded */
+  	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+-- 
+2.17.1
+
