@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D921C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE1B9218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22AC21902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116478;
-	bh=MZOVtwYIxiMB7GuQ7i1fXR3ccGHH9buChcrRgJRJwjw=;
+	s=default; t=1556116484;
+	bh=sMa0LKSd7ygF4I+5+aKVKoakBEUuxOhlxlH0O8rOr2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RpL/36NcN0nXCmZY5abJCawm5KYw0tHr3a1xmHUrwplpQyxWhGpN6WYwLkbnorAn4
-	 ZsE58sXk8aul0+Gcl3X589cdwCaVttFgljVXyEsCuFDpZQIGbbbbGzjIpAM1u/FRyD
-	 HLXh50wLRr0ylFmNlRlnK749776cpb0j93TPph+o=
+	b=uHVU9dWeCrRLM0TbJmXgiU/ZEjzZMt7uowFrYdcOWEW7YAkprHYciRZ/XzP1OtSAv
+	 N7zBG/e8xgdfV5x3OQSaBJduj7zruhtyySm1xOUvQqj85xRwuX2dd9/8iAYmh5eair
+	 ZQPM+IAW7/ijeT/UedxRR/Wnh0L/MRHBNUhadf/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbfDXOeg (ORCPT
+        id S1731132AbfDXOen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:34:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38450 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:34:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731044AbfDXOee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:34:34 -0400
+        id S1731105AbfDXOem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:34:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B75D218FE;
-        Wed, 24 Apr 2019 14:34:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAEEB218FE;
+        Wed, 24 Apr 2019 14:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116473;
-        bh=MZOVtwYIxiMB7GuQ7i1fXR3ccGHH9buChcrRgJRJwjw=;
+        s=default; t=1556116481;
+        bh=sMa0LKSd7ygF4I+5+aKVKoakBEUuxOhlxlH0O8rOr2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R99oIRn6DQk1QOg6Z1lJ2kZbwK0kVhiHKpDftW9YXC9vUMdUyphGfqVGRKMkKwEUD
-         Qr08AB/Q9Z9I9LgPxSybB0cgIE5qpIhO5tw6zDRWtRIRpXJt+MeASNTbDogpPvEcON
-         i23eiQASvVBMJOXkyMtFvTL+8Jx8pwa0e1652MTY=
+        b=H2hHyoVtturDXEaV+ka1oQ2FTfCCVcmYDmsN+/G5NQMXFDFCP873bfhyqrZpJGYDo
+         Z3ay8vOJqwkncKO8f23eJpyfF5dgL1oSIN2Ani12YCM7y1DnEIZ/k3JNXd6rC3eGbO
+         ypcf+dpNdRaMBDU7KwVwajPxAgMnUfTODpGdbsqA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 21/66] HID: quirks: Fix keyboard + touchpad on Lenovo Miix 630
-Date:   Wed, 24 Apr 2019 10:32:55 -0400
-Message-Id: <20190424143341.27665-21-sashal@kernel.org>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 23/66] xdp: fix cpumap redirect SKB creation bug
+Date:   Wed, 24 Apr 2019 10:32:57 -0400
+Message-Id: <20190424143341.27665-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -58,46 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit 2bafa1e9625400bec4c840a168d70ba52607a58d ]
+[ Upstream commit 676e4a6fe703f2dae699ee9d56f14516f9ada4ea ]
 
-Similar to commit edfc3722cfef ("HID: quirks: Fix keyboard + touchpad on
-Toshiba Click Mini not working"), the Lenovo Miix 630 has a combo
-keyboard/touchpad device with vid:pid of 04F3:0400, which is shared with
-Elan touchpads.  The combo on the Miix 630 has an ACPI id of QTEC0001,
-which is not claimed by the elan_i2c driver, so key on that similar to
-what was done for the Toshiba Click Mini.
+We want to avoid leaking pointer info from xdp_frame (that is placed in
+top of frame) like commit 6dfb970d3dbd ("xdp: avoid leaking info stored in
+frame data on page reuse"), and followup commit 97e19cce05e5 ("bpf:
+reserve xdp_frame size in xdp headroom") that reserve this headroom.
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+These changes also affected how cpumap constructed SKBs, as xdpf->headroom
+size changed, the skb data starting point were in-effect shifted with 32
+bytes (sizeof xdp_frame). This was still okay, as the cpumap frame_size
+calculation also included xdpf->headroom which were reduced by same amount.
+
+A bug was introduced in commit 77ea5f4cbe20 ("bpf/cpumap: make sure
+frame_size for build_skb is aligned if headroom isn't"), where the
+xdpf->headroom became part of the SKB_DATA_ALIGN rounding up. This
+round-up to find the frame_size is in principle still correct as it does
+not exceed the 2048 bytes frame_size (which is max for ixgbe and i40e),
+but the 32 bytes offset of pkt_data_start puts this over the 2048 bytes
+limit. This cause skb_shared_info to spill into next frame. It is a little
+hard to trigger, as the SKB need to use above 15 skb_shinfo->frags[] as
+far as I calculate. This does happen in practise for TCP streams when
+skb_try_coalesce() kicks in.
+
+KASAN can be used to detect these wrong memory accesses, I've seen:
+ BUG: KASAN: use-after-free in skb_try_coalesce+0x3cb/0x760
+ BUG: KASAN: wild-memory-access in skb_release_data+0xe2/0x250
+
+Driver veth also construct a SKB from xdp_frame in this way, but is not
+affected, as it doesn't reserve/deduct the room (used by xdp_frame) from
+the SKB headroom. Instead is clears the pointers via xdp_scrub_frame(),
+and allows SKB to use this area.
+
+The fix in this patch is to do like veth and instead allow SKB to (re)use
+the area occupied by xdp_frame, by clearing via xdp_scrub_frame().  (This
+does kill the idea of the SKB being able to access (mem) info from this
+area, but I guess it was a bad idea anyhow, and it was already killed by
+the veth changes.)
+
+Fixes: 77ea5f4cbe20 ("bpf/cpumap: make sure frame_size for build_skb is aligned if headroom isn't")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/hid/hid-quirks.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/bpf/cpumap.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 94088c0ed68a..e24790c988c0 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -744,7 +744,6 @@ static const struct hid_device_id hid_ignore_list[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DEALEXTREAME, USB_DEVICE_ID_DEALEXTREAME_RADIO_SI4701) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DELORME, USB_DEVICE_ID_DELORME_EARTHMATE) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_DELORME, USB_DEVICE_ID_DELORME_EM_LT20) },
--	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, 0x0400) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ESSENTIAL_REALITY, USB_DEVICE_ID_ESSENTIAL_REALITY_P5) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ETT, USB_DEVICE_ID_TC5UH) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ETT, USB_DEVICE_ID_TC4UM) },
-@@ -1025,6 +1024,10 @@ bool hid_ignore(struct hid_device *hdev)
- 		if (hdev->product == 0x0401 &&
- 		    strncmp(hdev->name, "ELAN0800", 8) != 0)
- 			return true;
-+		/* Same with product id 0x0400 */
-+		if (hdev->product == 0x0400 &&
-+		    strncmp(hdev->name, "QTEC0001", 8) != 0)
-+			return true;
- 		break;
- 	}
+diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
+index 8974b3755670..3c18260403dd 100644
+--- a/kernel/bpf/cpumap.c
++++ b/kernel/bpf/cpumap.c
+@@ -162,10 +162,14 @@ static void cpu_map_kthread_stop(struct work_struct *work)
+ static struct sk_buff *cpu_map_build_skb(struct bpf_cpu_map_entry *rcpu,
+ 					 struct xdp_frame *xdpf)
+ {
++	unsigned int hard_start_headroom;
+ 	unsigned int frame_size;
+ 	void *pkt_data_start;
+ 	struct sk_buff *skb;
+ 
++	/* Part of headroom was reserved to xdpf */
++	hard_start_headroom = sizeof(struct xdp_frame) +  xdpf->headroom;
++
+ 	/* build_skb need to place skb_shared_info after SKB end, and
+ 	 * also want to know the memory "truesize".  Thus, need to
+ 	 * know the memory frame size backing xdp_buff.
+@@ -183,15 +187,15 @@ static struct sk_buff *cpu_map_build_skb(struct bpf_cpu_map_entry *rcpu,
+ 	 * is not at a fixed memory location, with mixed length
+ 	 * packets, which is bad for cache-line hotness.
+ 	 */
+-	frame_size = SKB_DATA_ALIGN(xdpf->len + xdpf->headroom) +
++	frame_size = SKB_DATA_ALIGN(xdpf->len + hard_start_headroom) +
+ 		SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+ 
+-	pkt_data_start = xdpf->data - xdpf->headroom;
++	pkt_data_start = xdpf->data - hard_start_headroom;
+ 	skb = build_skb(pkt_data_start, frame_size);
+ 	if (!skb)
+ 		return NULL;
+ 
+-	skb_reserve(skb, xdpf->headroom);
++	skb_reserve(skb, hard_start_headroom);
+ 	__skb_put(skb, xdpf->len);
+ 	if (xdpf->metasize)
+ 		skb_metadata_set(skb, xdpf->metasize);
+@@ -205,6 +209,9 @@ static struct sk_buff *cpu_map_build_skb(struct bpf_cpu_map_entry *rcpu,
+ 	 * - RX ring dev queue index	(skb_record_rx_queue)
+ 	 */
+ 
++	/* Allow SKB to reuse area used by xdp_frame */
++	xdp_scrub_frame(xdpf);
++
+ 	return skb;
+ }
  
 -- 
 2.19.1
