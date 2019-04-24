@@ -2,203 +2,120 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCF0C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA220C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B3120835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A75F2208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:13:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R4yWrQJj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcQzvsRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733075AbfDXVKv (ORCPT
+        id S2388290AbfDXVNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 17:10:51 -0400
-Received: from mail-ua1-f74.google.com ([209.85.222.74]:37881 "EHLO
-        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbfDXVKv (ORCPT
+        Wed, 24 Apr 2019 17:13:36 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46087 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfDXVNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 17:10:51 -0400
-Received: by mail-ua1-f74.google.com with SMTP id w19so2534877uar.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:10:50 -0700 (PDT)
+        Wed, 24 Apr 2019 17:13:35 -0400
+Received: by mail-lf1-f67.google.com with SMTP id k18so15781004lfj.13;
+        Wed, 24 Apr 2019 14:13:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=EEx6KKB2U0RJZ21EFlDN1R7C1ruUVShWYlcQvFlcO3Y=;
-        b=R4yWrQJjCJ8Bn88/SOwrmAKIiYFKv2Ld/L1gosT676YETZR3g9s1zjAw+XfRBUFxUt
-         yYONprmgp2eEy+5GwASlKDn6gwSGZ0K3BrnVJoIFcb+QwADtHOu+KbAC7dIlloZXv2zF
-         InmrO+sJenQD3LDR7GFPk1TMvt2RpsFfAYIYGXpWrLIKvULclDqbRCFRJwtDNItMrOI8
-         ImsP/SuHDwn3Z/5R6WU3lbRAI/gTXNTev2yRr3j9qut3+t+F1PFYVIGFC7djLq6dqM3f
-         vkIjbcwDmU4DyBgpuufndPDpRyb2Mz6pZ85CKWVlgD6Y6JJtcYNhFX0c8qNlKKRe5Tbs
-         sshw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6APf5odZec6P6x0YRNRDRCj5a3L6TwNF2nxCHmgiq/k=;
+        b=hcQzvsRppWmHiS8+WhO1Y0up2V2m2c++KPts/bK0SV7Sjgdg8xir8sLd9IsjsxEWwk
+         sM3IQKJ5uFp4tojS8sVn+TBZk4Hru0pkPaIoCt5XruqamNSFdv5Lp5cJlZThG9uD9x9A
+         9s6tNas0VOkmNGdPTmmb6LuD0DvF6Vc1atS4rt3xTRFq7fNTDLqx/K+uV3ac+oWHRpyf
+         YkMpq+eTuGiQaWy6xfKozas71vbbNbIgOmt1pAa7HsweHQl7EdARvtHlxlsBrCdI62Qe
+         O7E7qBXwlWUDjZ6CS1aDMCr3aoRha8qvBQX+a+nWQGuBv5R7aE9R6OQpXXeBz7Q9cXr6
+         7v+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=EEx6KKB2U0RJZ21EFlDN1R7C1ruUVShWYlcQvFlcO3Y=;
-        b=AK8JHjIwLk0cecNegoRS85uWJuDnKOK6TaXobYtLgp/8YwFXXp2jP+9nJtfE1FMWdQ
-         evPwMWJvL48UTB8vxcqW3bVXtbHsjhl3s9WTkPlUsA6hCeQi1UvNI8h1nmmm3jeeKa75
-         h7MhxNdG0yjsT8IMzyyH7anSYGivDyYG9HKCOlajebSgCjd9+mAGBdNIqVM9J/14vJ9W
-         LzHyzGW58COPLsiWe/vb28l9k6hEOoGU3uT8Fji61Y/YOCA6G9n5OwCS17CRTq81Emeo
-         zT5rAEo1bOUu1iXoQgpdCimaqYRjh9iA4f9wttsQ9IAVp995cfeDumswTTOcO9vNylpW
-         fnLQ==
-X-Gm-Message-State: APjAAAUiZhShPsB4z9fg0MtacA9z8nQTpUURpMk3EwgxZ3HHTlLHHsUB
-        lNF1uQJNI3A5EKuYghUNz1eUH3A0h/PYy51KphQHBA==
-X-Google-Smtp-Source: APXvYqw3/8N6LovTbNOp1ehALE5NeruleVVSOs7bs/5NswFdHy3I9YUuHyhfGtlNzfboNB550I7lH7TLlEGNraFjTGXpbQ==
-X-Received: by 2002:a67:c895:: with SMTP id v21mr855019vsk.5.1556140249661;
- Wed, 24 Apr 2019 14:10:49 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 14:10:39 -0700
-In-Reply-To: <CACdnJuup-y1xAO93wr+nr6ARacxJ9YXgaceQK9TLktE7shab1w@mail.gmail.com>
-Message-Id: <20190424211038.204001-1-matthewgarrett@google.com>
-Mime-Version: 1.0
-References: <CACdnJuup-y1xAO93wr+nr6ARacxJ9YXgaceQK9TLktE7shab1w@mail.gmail.com>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
-Subject: [PATCH V2] mm: Allow userland to request that the kernel clear memory
- on release
-From:   Matthew Garrett <matthewgarrett@google.com>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6APf5odZec6P6x0YRNRDRCj5a3L6TwNF2nxCHmgiq/k=;
+        b=k/9xL4a20W7vH/GVXu4ZzSVNtVNcRGvhQU/6T/qAaf1BSOZbHOLw5P+TRE07Ez2USx
+         Tw/04Vm7eTS51mX1y1VYrV0EWsOOLdarNECw9qGfx4NH42ktUW8n5tcCttsAXDpEuXbp
+         kOxADlNrNNLBwcWfL6iS7ysEhUr3p3eFzZsqTl0vsic0f55NYM1wnWaKipmhDOE35t6P
+         yseNZpOkmihcIu3jmfqeDykxXZMAtUJxh+f5e9DX6NNb3aKUjIyS/EPQhcSHzkuPqfXI
+         nBQKN6rsHbWEB2KckastfRNWWrLW4bH17qlPYCFdlxS1Ti9Bt5BBUayjp/sC3JnrpP92
+         9tYA==
+X-Gm-Message-State: APjAAAUuhfUwacMaUwUtN8FAt3J1k9IMYoxj5d5r0Lcxi7w4y5pPAhPQ
+        SbSXoMQxAg4diuD4e4f/nNQ=
+X-Google-Smtp-Source: APXvYqyY/N3cRAN+WSNd5fobvNeWFfl8s4LWCMdmZEKuKfoMl9WpSKbKxiSR9geChh3hdMZrk0IkmQ==
+X-Received: by 2002:a19:f703:: with SMTP id z3mr18750645lfe.119.1556140413161;
+        Wed, 24 Apr 2019 14:13:33 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.240.123])
+        by smtp.gmail.com with ESMTPSA id m3sm4540248lfh.94.2019.04.24.14.13.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 14:13:32 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Richard Leitner <richard.leitner@skidata.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] usb: usb251xb: Add upstream port lanes polarity inversion
+Date:   Thu, 25 Apr 2019 00:12:04 +0300
+Message-Id: <20190424211208.17499-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Garrett <mjg59@google.com>
+A while ago I created an original patchset with functionality of any ports
+inversion setting implemented. But while I was busy with another work,
+Marco' version of the similar code has already been upstreamed.
+So I decided to at least refactor my patchset extracting alterations,
+which I think might be useful in the driver.
 
-Applications that hold secrets and wish to avoid them leaking can use
-mlock() to prevent the page from being pushed out to swap and
-MADV_DONTDUMP to prevent it from being included in core dumps. Applications
-can also use atexit() handlers to overwrite secrets on application exit.
-However, if an attacker can reboot the system into another OS, they can
-dump the contents of RAM and extract secrets. We can avoid this by setting
-CONFIG_RESET_ATTACK_MITIGATION on UEFI systems in order to request that the
-firmware wipe the contents of RAM before booting another OS, but this means
-rebooting takes a *long* time - the expected behaviour is for a clean
-shutdown to remove the request after scrubbing secrets from RAM in order to
-avoid this.
+Even though the Marco' implementation was correct in general, it lacked a
+small specific detail. The polarity inversion property might be setup for
+downstream and upstream ports. Both of these cases are covered by current
+'swap-dx-lanes' property implementation, but there is no any mentioning
+about number 0 being considered as Upstream port of the hub. This might be
+confusing seeing the rest of the port-related properties accept
+only the ports starting from 1 (which is starting number of downstream
+ports) and don't support number 0. So in order to unify the 'swap-dx-lanes'
+property with the rest port-related ones, I'd suggest to make it being
+responsible for downstream ports only, while upstream port lanes inversion
+would be enabled by setting a new 'swap-us-lanes' boolean property. Current
+property names mnemonic also fits quiet well for this update.
 
-Unfortunately, if an application exits uncleanly, its secrets may still be
-present in RAM. This can't be easily fixed in userland (eg, if the OOM
-killer decides to kill a process holding secrets, we're not going to be able
-to avoid that), so this patch adds a new flag to madvise() to allow userland
-to request that the kernel clear the covered pages whenever the page
-reference count hits zero. Since vm_flags is already full on 32-bit, it
-will only work on 64-bit systems.
+In addition the usb251xb_get_ofdata() method is getting to be too
+complicated with obvious identical peaces of code. In particular it
+concerns the ports-related properties like 'non-removable-ports',
+'sp-disabled-ports' and 'bp-disabled-ports'. We can simplify the code
+responsible for the properties handling by moving a common part into
+a dedicated method. Needless to say that in case if the suggestion made
+above regarding the 'swap-dx-lanes' property alteration is accepted,
+the same could be done for parsing it' code as well.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
----
+So all of these updates are implemented in the patches of this small
+series.
 
-Modified to wipe when the VMA is released rather than on page freeing
 
- include/linux/mm.h                     |  6 ++++++
- include/uapi/asm-generic/mman-common.h |  2 ++
- mm/madvise.c                           | 21 +++++++++++++++++++++
- mm/memory.c                            |  3 +++
- 4 files changed, 32 insertions(+)
+Serge Semin (3):
+  usb: usb251xb: Add US lanes inversion dts-bindings
+  usb: usb251xb: Create a ports field collector method
+  usb: usb251xb: Add US port lanes inversion property
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 6b10c21630f5..64bdab679275 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -257,6 +257,8 @@ extern unsigned int kobjsize(const void *objp);
- #define VM_HIGH_ARCH_2	BIT(VM_HIGH_ARCH_BIT_2)
- #define VM_HIGH_ARCH_3	BIT(VM_HIGH_ARCH_BIT_3)
- #define VM_HIGH_ARCH_4	BIT(VM_HIGH_ARCH_BIT_4)
-+
-+#define VM_WIPEONRELEASE BIT(37)       /* Clear pages when releasing them */
- #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
- 
- #ifdef CONFIG_ARCH_HAS_PKEYS
-@@ -298,6 +300,10 @@ extern unsigned int kobjsize(const void *objp);
- # define VM_GROWSUP	VM_NONE
- #endif
- 
-+#ifndef VM_WIPEONRELEASE
-+# define VM_WIPEONRELEASE VM_NONE
-+#endif
-+
- /* Bits set in the VMA until the stack is in its final location */
- #define VM_STACK_INCOMPLETE_SETUP	(VM_RAND_READ | VM_SEQ_READ)
- 
-diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-index abd238d0f7a4..82dfff4a8e3d 100644
---- a/include/uapi/asm-generic/mman-common.h
-+++ b/include/uapi/asm-generic/mman-common.h
-@@ -64,6 +64,8 @@
- #define MADV_WIPEONFORK 18		/* Zero memory on fork, child only */
- #define MADV_KEEPONFORK 19		/* Undo MADV_WIPEONFORK */
- 
-+#define MADV_WIPEONRELEASE 20
-+#define MADV_DONTWIPEONRELEASE 21
- /* compatibility flags */
- #define MAP_FILE	0
- 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 21a7881a2db4..989c2fde15cf 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -92,6 +92,22 @@ static long madvise_behavior(struct vm_area_struct *vma,
- 	case MADV_KEEPONFORK:
- 		new_flags &= ~VM_WIPEONFORK;
- 		break;
-+	case MADV_WIPEONRELEASE:
-+		/* MADV_WIPEONRELEASE is only supported on anonymous memory. */
-+		if (VM_WIPEONRELEASE == 0 || vma->vm_file ||
-+		    vma->vm_flags & VM_SHARED) {
-+			error = -EINVAL;
-+			goto out;
-+		}
-+		new_flags |= VM_WIPEONRELEASE;
-+		break;
-+	case MADV_DONTWIPEONRELEASE:
-+		if (VM_WIPEONRELEASE == 0) {
-+			error = -EINVAL;
-+			goto out;
-+		}
-+		new_flags &= ~VM_WIPEONRELEASE;
-+		break;
- 	case MADV_DONTDUMP:
- 		new_flags |= VM_DONTDUMP;
- 		break;
-@@ -727,6 +743,8 @@ madvise_behavior_valid(int behavior)
- 	case MADV_DODUMP:
- 	case MADV_WIPEONFORK:
- 	case MADV_KEEPONFORK:
-+	case MADV_WIPEONRELEASE:
-+	case MADV_DONTWIPEONRELEASE:
- #ifdef CONFIG_MEMORY_FAILURE
- 	case MADV_SOFT_OFFLINE:
- 	case MADV_HWPOISON:
-@@ -785,6 +803,9 @@ madvise_behavior_valid(int behavior)
-  *  MADV_DONTDUMP - the application wants to prevent pages in the given range
-  *		from being included in its core dump.
-  *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
-+ *  MADV_WIPEONRELEASE - clear the contents of the memory after the last
-+ *		reference to it has been released
-+ *  MADV_DONTWIPEONRELEASE - cancel MADV_WIPEONRELEASE
-  *
-  * return values:
-  *  zero    - success
-diff --git a/mm/memory.c b/mm/memory.c
-index ab650c21bccd..ff78b527660e 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1091,6 +1091,9 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
- 			page_remove_rmap(page, false);
- 			if (unlikely(page_mapcount(page) < 0))
- 				print_bad_pte(vma, addr, ptent, page);
-+			if (unlikely(vma->vm_flags & VM_WIPEONRELEASE) &&
-+			    page_mapcount(page) == 0)
-+				clear_highpage(page);
- 			if (unlikely(__tlb_remove_page(tlb, page))) {
- 				force_flush = 1;
- 				addr += PAGE_SIZE;
+ .../devicetree/bindings/usb/usb251xb.txt      |  6 +-
+ drivers/usb/misc/usb251xb.c                   | 73 +++++++------------
+ 2 files changed, 32 insertions(+), 47 deletions(-)
+
 -- 
-2.21.0.593.g511ec345e18-goog
+2.21.0
 
