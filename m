@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F02C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26047C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901CB218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01662218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbfDXLIL (ORCPT
+        id S1729599AbfDXLIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:08:11 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37400 "EHLO huawei.com"
+        Wed, 24 Apr 2019 07:08:10 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37404 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727895AbfDXLGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727881AbfDXLGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Apr 2019 07:06:54 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8505C14859F437C5B5DB;
+        by Forcepoint Email with ESMTP id 8A0496E2F7CC0D308FF8;
         Wed, 24 Apr 2019 19:06:51 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Apr 2019 19:06:41 +0800
+ 14.3.439.0; Wed, 24 Apr 2019 19:06:42 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <nhorman@redhat.com>,
         Huazhong Tan <tanhuazhong@huawei.com>,
         Peng Li <lipeng321@huawei.com>
-Subject: [PATCH V2 net-next 05/12] net: hns3: use atomic_t replace u32 for arq's count
-Date:   Wed, 24 Apr 2019 19:05:24 +0800
-Message-ID: <1556103931-64031-6-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 08/12] net: hns3: stop schedule reset service while unloading driver
+Date:   Wed, 24 Apr 2019 19:05:27 +0800
+Message-ID: <1556103931-64031-9-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556103931-64031-1-git-send-email-tanhuazhong@huawei.com>
 References: <1556103931-64031-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,77 +47,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since irq handler and mailbox task will both update arq's count,
-so arq's count should use atomic_t instead of u32, otherwise
-its value may go wrong finally.
+This patch uses HCLGE_STATE_REMOVING/HCLGEVF_STATE_REMOVING flag to
+indicate that the driver is unloading, and we should stop new coming
+reset service to be scheduled, otherwise, reset service will access
+some resource which has been freed by unloading.
 
-Fixes: 07a0556a3a73 ("net: hns3: Changes to support ARQ(Asynchronous Receive Queue)")
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 7 ++++---
- 3 files changed, 6 insertions(+), 5 deletions(-)
+V1->V2: fixes a flag setting error
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 4 +++-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 4 +++-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h | 1 +
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-index 360463a..8b6191f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-@@ -111,7 +111,7 @@ struct hclgevf_mbx_arq_ring {
- 	struct hclgevf_dev *hdev;
- 	u32 head;
- 	u32 tail;
--	u32 count;
-+	atomic_t count;
- 	u16 msg_q[HCLGE_MBX_MAX_ARQ_MSG_NUM][HCLGE_MBX_MAX_ARQ_MSG_SIZE];
- };
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 4d5568e..ead8308 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -2175,7 +2175,8 @@ static void hclge_mbx_task_schedule(struct hclge_dev *hdev)
  
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index 1b428d4..71f356f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -340,7 +340,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
- 	hdev->arq.hdev = hdev;
- 	hdev->arq.head = 0;
- 	hdev->arq.tail = 0;
--	hdev->arq.count = 0;
-+	atomic_set(&hdev->arq.count, 0);
- 	hdev->hw.cmq.csq.next_to_clean = 0;
- 	hdev->hw.cmq.csq.next_to_use = 0;
- 	hdev->hw.cmq.crq.next_to_clean = 0;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-index eb56287..3c22639 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-@@ -212,7 +212,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
- 			/* we will drop the async msg if we find ARQ as full
- 			 * and continue with next message
- 			 */
--			if (hdev->arq.count >= HCLGE_MBX_MAX_ARQ_MSG_NUM) {
-+			if (atomic_read(&hdev->arq.count) >=
-+			    HCLGE_MBX_MAX_ARQ_MSG_NUM) {
- 				dev_warn(&hdev->pdev->dev,
- 					 "Async Q full, dropping msg(%d)\n",
- 					 req->msg[1]);
-@@ -224,7 +225,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
- 			memcpy(&msg_q[0], req->msg,
- 			       HCLGE_MBX_MAX_ARQ_MSG_SIZE * sizeof(u16));
- 			hclge_mbx_tail_ptr_move_arq(hdev->arq);
--			hdev->arq.count++;
-+			atomic_inc(&hdev->arq.count);
- 
- 			hclgevf_mbx_task_schedule(hdev);
- 
-@@ -317,7 +318,7 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
- 		}
- 
- 		hclge_mbx_head_ptr_move_arq(hdev->arq);
--		hdev->arq.count--;
-+		atomic_dec(&hdev->arq.count);
- 		msg_q = hdev->arq.msg_q[hdev->arq.head];
- 	}
+ static void hclge_reset_task_schedule(struct hclge_dev *hdev)
+ {
+-	if (!test_and_set_bit(HCLGE_STATE_RST_SERVICE_SCHED, &hdev->state))
++	if (!test_bit(HCLGE_STATE_REMOVING, &hdev->state) &&
++	    !test_and_set_bit(HCLGE_STATE_RST_SERVICE_SCHED, &hdev->state))
+ 		schedule_work(&hdev->rst_service_task);
  }
+ 
+@@ -7768,6 +7769,7 @@ static void hclge_state_init(struct hclge_dev *hdev)
+ static void hclge_state_uninit(struct hclge_dev *hdev)
+ {
+ 	set_bit(HCLGE_STATE_DOWN, &hdev->state);
++	set_bit(HCLGE_STATE_REMOVING, &hdev->state);
+ 
+ 	if (hdev->service_timer.function)
+ 		del_timer_sync(&hdev->service_timer);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 6ce5b03..01ab843 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1611,7 +1611,8 @@ static void hclgevf_get_misc_vector(struct hclgevf_dev *hdev)
+ 
+ void hclgevf_reset_task_schedule(struct hclgevf_dev *hdev)
+ {
+-	if (!test_bit(HCLGEVF_STATE_RST_SERVICE_SCHED, &hdev->state)) {
++	if (!test_bit(HCLGEVF_STATE_RST_SERVICE_SCHED, &hdev->state) &&
++	    !test_bit(HCLGEVF_STATE_REMOVING, &hdev->state)) {
+ 		set_bit(HCLGEVF_STATE_RST_SERVICE_SCHED, &hdev->state);
+ 		schedule_work(&hdev->rst_service_task);
+ 	}
+@@ -2122,6 +2123,7 @@ static void hclgevf_state_init(struct hclgevf_dev *hdev)
+ static void hclgevf_state_uninit(struct hclgevf_dev *hdev)
+ {
+ 	set_bit(HCLGEVF_STATE_DOWN, &hdev->state);
++	set_bit(HCLGEVF_STATE_REMOVING, &hdev->state);
+ 
+ 	if (hdev->keep_alive_timer.function)
+ 		del_timer_sync(&hdev->keep_alive_timer);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+index ee3a6cb..0cceda3 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+@@ -130,6 +130,7 @@ enum hclgevf_states {
+ 	HCLGEVF_STATE_DOWN,
+ 	HCLGEVF_STATE_DISABLED,
+ 	HCLGEVF_STATE_IRQ_INITED,
++	HCLGEVF_STATE_REMOVING,
+ 	/* task states */
+ 	HCLGEVF_STATE_SERVICE_SCHED,
+ 	HCLGEVF_STATE_RST_SERVICE_SCHED,
 -- 
 2.7.4
 
