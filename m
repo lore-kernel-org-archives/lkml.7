@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EB0C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8820EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB6221900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E7D421902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125911;
-	bh=mTJrMbc6Gv05gm2p9P/9C6siabrpryr8zrGHqRBAy3M=;
+	s=default; t=1556125917;
+	bh=EWe8M8hvLyUBpyhIGhjmksfqK98LSI5ywUbOVWJCwN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5XHduNId94r5QAh9godryf9RZIR42ppLuVp5Z36IjaAeobCUgsp7eEygo4vHCPvQ
-	 x9/cA7qZ2k/fp7UKSBVQ76Nuji9fO92PZBtBYGWRrB0/ML76wCjnr2669MRXnqE4yL
-	 mS1EpEMKSY3xJePznqVZ0l4xhfwhmF0qshbnQ3RY=
+	b=roHkmUmyN9pqbOgtjWtpB7W5imCUEd3zeWH6egCiSH6Pf+QsMs5KVHrVcBKYOxxh9
+	 YSd8pGNlE4DABS4EX8LI24409soaRfsZBs17s7habCuML9ihEvBVKQak+Dm7LyySUI
+	 WNwTXsrv2pkFzLJnTdVtjCmb4JqevgCFomvc11LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387474AbfDXRLu (ORCPT
+        id S2387500AbfDXRL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:11:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35404 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:11:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387424AbfDXRLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:11:47 -0400
+        id S2387466AbfDXRLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:11:49 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C792218FE;
-        Wed, 24 Apr 2019 17:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3498218FE;
+        Wed, 24 Apr 2019 17:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125906;
-        bh=mTJrMbc6Gv05gm2p9P/9C6siabrpryr8zrGHqRBAy3M=;
+        s=default; t=1556125909;
+        bh=EWe8M8hvLyUBpyhIGhjmksfqK98LSI5ywUbOVWJCwN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nviVlSGnlVGmZNz6ETREZDrvEt43ZPnEHHxG/U4xr4AQ+VrpBH7X85xHQYtN9oz3y
-         FbS4VPkCHBT4l3U+6H1Uo3vNjhBMC3rM675EdXD+ZnUKOPdgOCNtGk/fWDMwIXYnq2
-         R7BtYiDT5MGsqx58WfPDA7Z+mRXelYy+vuTRfjes=
+        b=W08Yb8iRaW+qtPM+tY+cgSClT9Q9OyrNTGv1J/PXxU9lN3LwFsOFQwnBe50XaiDye
+         VPc+g6E4MRsmuI1Ktu5r9lG3bt+K14Deb4ArrCedJgscXnVnM8GP3bM8jRBX6a8ZJW
+         fUPfFzZJHNxbLq+ieB6Kx+n+5q9U2hXc0aRxDkf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Coly Li <colyli@suse.de>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 025/104] bcache: fix input overflow to cache set sysfs file io_error_halflife
-Date:   Wed, 24 Apr 2019 19:08:42 +0200
-Message-Id: <20190424170854.601839674@linuxfoundation.org>
+Subject: [PATCH 3.18 026/104] bcache: fix input overflow to sequential_cutoff
+Date:   Wed, 24 Apr 2019 19:08:43 +0200
+Message-Id: <20190424170855.604664394@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -59,48 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a91fbda49f746119828f7e8ad0f0aa2ab0578f65 ]
+[ Upstream commit 8c27a3953e92eb0b22dbb03d599f543a05f9574e ]
 
-Cache set sysfs entry io_error_halflife is used to set c->error_decay.
-c->error_decay is in type unsigned int, and it is converted by
-strtoul_or_return(), therefore overflow to c->error_decay is possible
-for a large input value.
+People may set sequential_cutoff of a cached device via sysfs file,
+but current code does not check input value overflow. E.g. if value
+4294967295 (UINT_MAX) is written to file sequential_cutoff, its value
+is 4GB, but if 4294967296 (UINT_MAX + 1) is written into, its value
+will be 0. This is an unexpected behavior.
 
-This patch fixes the overflow by using strtoul_safe_clamp() to convert
-input string to an unsigned long value in range [0, UINT_MAX], then
-divides by 88 and set it to c->error_decay.
+This patch replaces d_strtoi_h() by sysfs_strtoul_clamp() to convert
+input string to unsigned integer value, and limit its range in
+[0, UINT_MAX]. Then the input overflow can be fixed.
 
 Signed-off-by: Coly Li <colyli@suse.de>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/sysfs.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/md/bcache/sysfs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index 5a5c1f1bd8a5..87daccbbc61b 100644
+index 87daccbbc61b..463ce6757338 100644
 --- a/drivers/md/bcache/sysfs.c
 +++ b/drivers/md/bcache/sysfs.c
-@@ -645,8 +645,17 @@ STORE(__bch_cache_set)
- 		c->error_limit = strtoul_or_return(buf) << IO_ERROR_SHIFT;
+@@ -215,7 +215,9 @@ STORE(__cached_dev)
+ 	d_strtoul(writeback_rate_d_term);
+ 	d_strtoul_nonzero(writeback_rate_p_term_inverse);
  
- 	/* See count_io_errors() for why 88 */
--	if (attr == &sysfs_io_error_halflife)
--		c->error_decay = strtoul_or_return(buf) / 88;
-+	if (attr == &sysfs_io_error_halflife) {
-+		unsigned long v = 0;
-+		ssize_t ret;
-+
-+		ret = strtoul_safe_clamp(buf, v, 0, UINT_MAX);
-+		if (!ret) {
-+			c->error_decay = v / 88;
-+			return size;
-+		}
-+		return ret;
-+	}
+-	d_strtoi_h(sequential_cutoff);
++	sysfs_strtoul_clamp(sequential_cutoff,
++			    dc->sequential_cutoff,
++			    0, UINT_MAX);
+ 	d_strtoi_h(readahead);
  
- 	sysfs_strtoul(journal_delay_ms,		c->journal_delay_ms);
- 	sysfs_strtoul(verify,			c->verify);
+ 	if (attr == &sysfs_clear_stats)
 -- 
 2.19.1
 
