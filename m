@@ -2,116 +2,71 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD618C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA584C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC892089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117843;
-	bh=/b87C1+TXFYYaPXiFZi5GfQL5lUidbvOhmod19WSh5k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BNeKFP4QLVGUhYhishNKiXvIMjPh8aT6T3Obolhvae678Rc1by6Fe3A+X3qtr/XHz
-	 dk166guFuIyn6RZ6Yh6ZHDoCeLCXG7dgf6ZCxh2Yb81jou90Zo7y+V7hqXubdE6/Kg
-	 htom0WYsjwRA8yhUZWKCJtvu+JKLff1f6M6kY/xU=
+	by mail.kernel.org (Postfix) with ESMTP id 81C8C2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732964AbfDXO5W (ORCPT
+        id S1733026AbfDXO5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:57:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49548 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:57:25 -0400
+Received: from verein.lst.de ([213.95.11.211]:54463 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732539AbfDXOuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:50:18 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E6B4218FD;
-        Wed, 24 Apr 2019 14:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117418;
-        bh=/b87C1+TXFYYaPXiFZi5GfQL5lUidbvOhmod19WSh5k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JVd6qJQYmrrVE0jZEMEcgwMnaeknrqSnWtSi0XtBOA7C5jy14NGhNBXxPYOCmoYu5
-         s8en3hMizuL3MTHkpEAfY2EyIya8VZrNYCMvF8JV8pp7yS4iBRJYdNHRfArADX4pQm
-         byBdp4svc+M77jAmSYzwfoT9ZlR+k8sAQ4D2BpyU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "He, Bo" <bo.he@intel.com>, "Zhang, Jun" <jun.zhang@intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/28] HID: debug: fix race condition with between rdesc_show() and device removal
-Date:   Wed, 24 Apr 2019 10:49:46 -0400
-Message-Id: <20190424145012.30886-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424145012.30886-1-sashal@kernel.org>
-References: <20190424145012.30886-1-sashal@kernel.org>
+        id S1732498AbfDXO5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:57:22 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 5CBC367358; Wed, 24 Apr 2019 16:57:06 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 16:57:05 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] dma-mapping: create iommu mapping for newly
+ allocated dma coherent mem
+Message-ID: <20190424145705.GB21480@lst.de>
+References: <20190422165125.21704-1-laurentiu.tudor@nxp.com> <20190422181100.GB32490@lst.de> <VI1PR04MB513407A66107759EC0DFE175EC230@VI1PR04MB5134.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB513407A66107759EC0DFE175EC230@VI1PR04MB5134.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "He, Bo" <bo.he@intel.com>
+I'd be happy to offload all of the mentioned tasks to you if you
+volunteer.
 
-[ Upstream commit cef0d4948cb0a02db37ebfdc320e127c77ab1637 ]
+I think the first step is to move the two USB controller that can only
+DMA to their own BAR off the existing DMA coherent infrastructure.  The
+controllers are already identified using the HCD_LOCAL_MEM flag, so we
+just need to key off that in the hcd_buffer_* routines and call into a
+genalloc that has been fed using the bar, replacing the current
+dma_declare_coherent usage.  Take a look at drivers/pci/p2pdma.c
+for another example of allocating bits of a BAR using genalloc.
 
-There is a race condition that could happen if hid_debug_rdesc_show()
-is running while hdev is in the process of going away (device removal,
-system suspend, etc) which could result in NULL pointer dereference:
+Another issue in that are just popped up, which is remoteproc_virtio.c,
+which looks like a complete trainwreck.  I'll need to spend time to
+figure out what the hell they are trying to first, though.
 
-	 BUG: unable to handle kernel paging request at 0000000783316040
-	 CPU: 1 PID: 1512 Comm: getevent Tainted: G     U     O 4.19.20-quilt-2e5dc0ac-00029-gc455a447dd55 #1
-	 RIP: 0010:hid_dump_device+0x9b/0x160
-	 Call Trace:
-	  hid_debug_rdesc_show+0x72/0x1d0
-	  seq_read+0xe0/0x410
-	  full_proxy_read+0x5f/0x90
-	  __vfs_read+0x3a/0x170
-	  vfs_read+0xa0/0x150
-	  ksys_read+0x58/0xc0
-	  __x64_sys_read+0x1a/0x20
-	  do_syscall_64+0x55/0x110
-	  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Then we need to kill the dma_declare_coherent_memory and
+dma_release_declared_memory exports ASAP to avoid growing more users.
 
-Grab driver_input_lock to make sure the input device exists throughout the
-whole process of dumping the rdesc.
-
-[jkosina@suse.cz: update changelog a bit]
-Signed-off-by: "he, bo" <bo.he@intel.com>
-Signed-off-by: "Zhang, Jun" <jun.zhang@intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hid/hid-debug.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
-index d7179dd3c9ef..3cafa1d28fed 100644
---- a/drivers/hid/hid-debug.c
-+++ b/drivers/hid/hid-debug.c
-@@ -1058,10 +1058,15 @@ static int hid_debug_rdesc_show(struct seq_file *f, void *p)
- 	seq_printf(f, "\n\n");
- 
- 	/* dump parsed data and input mappings */
-+	if (down_interruptible(&hdev->driver_input_lock))
-+		return 0;
-+
- 	hid_dump_device(hdev, f);
- 	seq_printf(f, "\n");
- 	hid_dump_input_mapping(hdev, f);
- 
-+	up(&hdev->driver_input_lock);
-+
- 	return 0;
- }
- 
--- 
-2.19.1
-
+Next is figuring out how we want to plumb the OF / early boot coherent
+regions into the iommu drivers.  I think I want to handle them similar
+to the per-device CMA regions, that is each of the DMA ops has to
+manually call into it instead of the page allocator.  Fortunately we
+are down to only about a hand full of instances that are relevant
+for the reserved memory now.
