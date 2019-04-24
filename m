@@ -2,147 +2,153 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE7FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF71C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0E072077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:54:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CGKMLquy"
+	by mail.kernel.org (Postfix) with ESMTP id 595F42077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556135786;
+	bh=3ooNikhYSJSf9aR+O0ymvPOm0Fkf31OilqpKq5zfE/Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jS0QPGjtmv4waPNacrJWBwLVbm2R49uQo0cOnyTbq9sBNdxo+ff9LFjFZANVhUUUL
+	 xs8TRv/7BauWHtuhMnYDOqMdKH9NmjeMyQ2b9wkPOUHIbyIWrbBCDr4qKq/1+5GTgH
+	 B2J+b+VPW0FJa61fCLU5zcYnu/+2fDuX78xdd8jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732334AbfDXTyn (ORCPT
+        id S1730004AbfDXT4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:54:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35536 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732031AbfDXTyl (ORCPT
+        Wed, 24 Apr 2019 15:56:25 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33230 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbfDXT4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:54:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=99fgFGmI2RlIMaGJ8cuAyYvlGKed2b+6TTuCu4KQIO8=; b=CGKMLquyZfNEhXnFLV4HUFDIy
-        o4pkXF6Iw8P6YimY3BEVLUhAEKL4ZIzbpnyl8u1RbN/ThMe8/FchPrek38xUzOvQoEJoI9NaBLviR
-        X5Xd0P3skHP4RE7wrWpSOBGNPYQMYvipotbsZp9jcUARHZofJIBNULi4dLyGEU42UrE0UPcZHOBsz
-        A0IzsvVfxa1t94jYvGQRqfvNvyYniHsp80j1Mjs2D8fFzs8UVhLXbGgiO32Nx5MS+0stEI/MLJgHR
-        6ofN81Qzl0wEg+Bhw9gpRd9/KwXPLnOB+X+wa+OZXX5eUOEeMDgFZd2vmdusQ5qlUZOXoyyMsfbOD
-        7tuovjo3g==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJNya-0007x4-FC; Wed, 24 Apr 2019 19:54:40 +0000
-Subject: Re: linux-next: Tree for Apr 17 (objtool)
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190417173117.196b5ac6@canb.auug.org.au>
- <7114e2f5-0c1f-c5e4-177c-2a5c61d12d58@infradead.org>
- <20190424160357.6olyocstevbz7wnw@treble>
- <20190424162209.GQ11158@hirez.programming.kicks-ass.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f430f7a9-ba11-5545-cfb6-59deb1ff8693@infradead.org>
-Date:   Wed, 24 Apr 2019 12:54:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 15:56:24 -0400
+Received: by mail-oi1-f196.google.com with SMTP id e5so15350327oii.0;
+        Wed, 24 Apr 2019 12:56:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=20tjOs5lkt8HOpIZuEAhDCtz3Zk/SR29ZFUGIW31En0=;
+        b=s44YskUDCie0dU+VtLSkcOoxiilMBwVfwW332NcsMHXq42TR0NRslQqwydx5+/0AjD
+         7gRN5yAiiLFLzxk0N57TdWzOycP3WB5FkFCiHl2lOkGyOhZoJ8uDKpuyGQgySahbgHJr
+         y2rnkhiwiubdwdwQaI+OJmHtOLAJe4NB9Ud+RY8QdC1MBiLtwNBhMFJwd7swXE/8F5H2
+         41jSRFOsFQstBI7evKUVppOVhI/GMH4wHGFcjaGqIY4IQChGaRPz77Y4P3SXPQcflIVN
+         AJ2U06LVzZl74sPyTMnoZ9NVDNapD2HoU9bnk1PolaMNzkUriEMqrI8R/fWht/MX4hvr
+         chsA==
+X-Gm-Message-State: APjAAAWV7ftaAGed4nswrxfu4GnVChCM2q4p1qbv4sZK0DlLVcEBO5ri
+        MPOBNX2ZDzC37wMtjq1XXw==
+X-Google-Smtp-Source: APXvYqy1AsQ1m3VXKqDbGaZdcv9Hptsq+4jNZUzqEez8a6MrXiEimrnQ0KIW3sxENoU7rPMFMv8Whg==
+X-Received: by 2002:aca:bdc6:: with SMTP id n189mr562593oif.77.1556135783603;
+        Wed, 24 Apr 2019 12:56:23 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g12sm8216830otr.18.2019.04.24.12.56.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 12:56:22 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 14:56:21 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        CK HU <ck.hu@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        ginny.chen@mediatek.com, kendrick.hsu@mediatek.com,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Subject: Re: [PATCH v4 03/12] dt-binding: gce: add binding for gce event
+ property
+Message-ID: <20190424195621.GC7270@bogus>
+References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
+ <20190415125833.38704-4-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20190424162209.GQ11158@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415125833.38704-4-bibby.hsieh@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/19 9:22 AM, Peter Zijlstra wrote:
-> On Wed, Apr 24, 2019 at 11:03:57AM -0500, Josh Poimboeuf wrote:
->> On Wed, Apr 17, 2019 at 08:41:34AM -0700, Randy Dunlap wrote:
+On Mon, Apr 15, 2019 at 08:58:24PM +0800, Bibby Hsieh wrote:
+> Client hardware would send event to GCE hardware,
+> so #event-cells, mediatek,gce-event-names, mediatek,gce-events.
+> present the event.
 > 
->>> on x86_64:
->>>
->>>   CC      drivers/gpu/drm/i915/i915_gem_execbuffer.o
->>> drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x18: redundant UACCESS disable
-> 
->> I haven't looked at this, do you know if this is the same issue as the
->> other note from Randy, or something else?
-> 
-> That smells like the below commit went missing... But I cannot reproduce
-> when building next/master myself.
-> 
-
-This patch is already in linux-next of today & of the reported "problem."
-
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > ---
-> commit 8f4faed01e3015955801c8ef066ec7fd7a8b3902
-> Author: Peter Zijlstra <peterz@infradead.org>
-> Date:   Thu Feb 28 13:52:31 2019 +0100
+>  .../devicetree/bindings/mailbox/mtk-gce.txt     | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
 > 
->     i915, uaccess: Fix redundant CLAC
->     
->     New tooling noticed this:
->     
->      drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x3c: redundant UACCESS disable
->      drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x66: redundant UACCESS disable
->     
->     You don't need user_access_end() if user_access_begin() fails.
->     
->     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->     Cc: Borislav Petkov <bp@alien8.de>
->     Cc: Chris Wilson <chris@chris-wilson.co.uk>
->     Cc: Josh Poimboeuf <jpoimboe@redhat.com>
->     Cc: Linus Torvalds <torvalds@linux-foundation.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Thomas Gleixner <tglx@linutronix.de>
->     Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> 
-> diff --git a/drivers/gpu/drm/i915/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
-> index 02adcaf6ebea..16f80a448820 100644
-> --- a/drivers/gpu/drm/i915/i915_gem_execbuffer.c
-> +++ b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
-> @@ -1667,6 +1667,7 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
->  					     len)) {
->  end_user:
->  				user_access_end();
-> +end:
->  				kvfree(relocs);
->  				err = -EFAULT;
->  				goto err;
-> @@ -1686,7 +1687,7 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
->  		 * relocations were valid.
->  		 */
->  		if (!user_access_begin(urelocs, size))
-> -			goto end_user;
-> +			goto end;
->  
->  		for (copied = 0; copied < nreloc; copied++)
->  			unsafe_put_user(-1,
-> @@ -2695,7 +2696,7 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
->  		 * when we did the "copy_from_user()" above.
->  		 */
->  		if (!user_access_begin(user_exec_list, count * sizeof(*user_exec_list)))
-> -			goto end_user;
-> +			goto end;
->  
->  		for (i = 0; i < args->buffer_count; i++) {
->  			if (!(exec2_list[i].offset & UPDATE))
-> @@ -2709,6 +2710,7 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
->  		}
->  end_user:
->  		user_access_end();
-> +end:;
->  	}
->  
->  	args->flags &= ~__I915_EXEC_UNKNOWN_FLAGS;
-> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> index 1f7f8f2a3f49..2f175d6b296d 100644
+> --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> @@ -21,12 +21,21 @@ Required properties:
+>  	priority: Priority of GCE thread.
+>  	atomic_exec: GCE processing continuous packets of commands in atomic
+>  		way.
+> +- #event-cells: Should be 1.
+> +	<&phandle event_number>
+> +	phandle: Label name of a gce node.
+> +	event_number: the event number defined in 'dt-bindings/gce/mt8173-gce.h'
+> +		      or 'dt-binding/gce/mt8183-gce.h'.
 
+I thought you were going to remove this.
 
--- 
-~Randy
+>  
+>  Required properties for a client device:
+>  - mboxes: Client use mailbox to communicate with GCE, it should have this
+>    property and list of phandle, mailbox specifiers.
+>  - mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
+>    to the register address.
+> +Optional propertier for a client device:
+> +- mediatek,gce-event-names: the event name can be defined by user.
+> +- mediatek,gce-events: u32, the event number defined in
+> +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
+
+From the example, looks like a phandle plus 1 cell.
+
+>  
+>  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+>  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+> @@ -40,6 +49,7 @@ Example:
+>  		clocks = <&infracfg CLK_INFRA_GCE>;
+>  		clock-names = "gce";
+>  		#mbox-cells = <3>;
+> +		#event-cells = <1>;
+>  	};
+>  
+>  Example for a client device:
+> @@ -49,8 +59,9 @@ Example for a client device:
+>  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+>  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+>  		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+> -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+> -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> -
+> +		mediatek,gce-event-names = "rdma0_sof",
+> +					   "rsz0_sof";
+> +		mediatek,gce-events = <&gce CMDQ_EVENT_MDP_RDMA0_SOF>,
+> +				      <&gce CMDQ_EVENT_MDP_RSZ0_SOF>;
+>  		...
+>  	};
+> -- 
+> 2.18.0
+> 
