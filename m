@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B54C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEFFC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46DD6214C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53BC7214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:31:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hY8wrRNi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ImyJduMS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387660AbfDXXbJ (ORCPT
+        id S1728504AbfDXXbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 19:31:09 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46809 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbfDXX3v (ORCPT
+        Wed, 24 Apr 2019 19:31:14 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36925 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728327AbfDXX3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 19:29:51 -0400
-Received: by mail-pl1-f196.google.com with SMTP id o7so7837889pll.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:29:51 -0700 (PDT)
+        Wed, 24 Apr 2019 19:29:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e6so10174212pgc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:29:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=blXK+fhW2mEQpxqZJvgkt/RZCg6FHW8JE+FRJR5g640=;
-        b=hY8wrRNii0tlqC55wtUW9cH2pXg7YGWCoGh1Pwd0hLphAV4C62izv8YqGeA7cf8Bjl
-         pl3IMlKd/oUUfDX5D0WCw6JLxXjI5nBY8v086GngEmgHOVhHjPYr+FfyCOtS9/2zydC2
-         Foh5/IlJDCf30qDOegf4jyBsAkzELVPr1PWKA=
+        bh=qDLGp435DBHv+IBt8VZI4/1RyHvurkWOLpqz2sV7kRI=;
+        b=ImyJduMSZxijfS9rnSybxU/eOvAY+mqxMNHrJZDSx0YBLbFZD9PSReGt2PPjXGsg0d
+         aJg2tcMCe5nLbCl4AzDH3piewxbfQLrBLnSW65f0d7zVHWwiyPydjzcCXmzQt4q4a7Ix
+         jaxx8ErTMTGUdNPpysCu5cvYET60PTAYNy3v0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=blXK+fhW2mEQpxqZJvgkt/RZCg6FHW8JE+FRJR5g640=;
-        b=WFfe7hXt0qnK7Rb52yJ2TAMQkF+NjUZzUU5F7V7zkMEx+lh/g+cOf6R52uqdGPbMWh
-         CVY0i6h1+wmGqNYF9SMp02xY9/QkbaC7NQLFHRL/aWn0EwrsK1dLNiHeunMS+cHxokWO
-         d8iUAhTZghkuRtIUC+qyRXAlhnEqkqJnIQMiLps2ADcEu7C0ZkSyYX2ky1DRIuVgMti8
-         mHxiNkTmEgWpjqtcUf1tlQBz/LyKARr+gil/YRxXYKAqZRSW9HHktOlRztQXoadKVccz
-         F4Iyzu00kcP1dsqZVvNMX+XOD85IgK6NhBT2kkIZVuT0UFYOi8svTiUotnHy7w9nUHaz
-         phFg==
-X-Gm-Message-State: APjAAAVQhl20UNirIC27XHHgMNzeB0nJCezZgmh533G8/CqkVcsiwjhI
-        V0EhKOMNJ0uH7ntwTVaSzTFjBQ==
-X-Google-Smtp-Source: APXvYqxz2suFV78V9hMrYQdkOJj7YUMdYdSrYauoBxNB6aF64LAJ0bimOASKkq73320yfKqKtO3MxQ==
-X-Received: by 2002:a17:902:b089:: with SMTP id p9mr35323136plr.185.1556148591004;
-        Wed, 24 Apr 2019 16:29:51 -0700 (PDT)
+        bh=qDLGp435DBHv+IBt8VZI4/1RyHvurkWOLpqz2sV7kRI=;
+        b=o0mzfmCUnpV7c3+p+iD9HSQNQZmxu/SXFModkS2qCTR6bW0apwhK+O45tWLkL3tkWq
+         owr/wPnNFNGK6UVSsz8pdfXqFkZSYt/1n1tT3G2kkA+nzQUOESckRYj3+I5cyF0Lk7iG
+         p7Y/HThWOlF82ANm+G2UQwQYGtzEj3MQGPHf+mFvDFjtKtWVLQqbp3F7dNhd0LGivTPN
+         jWALjp/Vk/QWIjZzU8ij+rsPVBpSj0P/xAVLYW3QeeaTr0gjaqh/nRxZDqSrN+syquqR
+         UmyZSvepJzxc5nIT/DCuPfUPC+pTh7OtjBX36qpOIv7MB0EM5felhmo3CxB9YHQ5S+Nl
+         q+ow==
+X-Gm-Message-State: APjAAAXXRrjcdxdryXFhyjdXQ6g2hYv/xjAGDjyVkEtIsV2Max0j7bTe
+        aAWcgxNr3cG6H2mj3djyd6kI+g==
+X-Google-Smtp-Source: APXvYqxvi07w3tX9DQFwgTqT+hXo06+W8dJjyeX+5OalGRJxRr8f+lrjCB0F9cSHmUkEBwOeawThxQ==
+X-Received: by 2002:a62:5445:: with SMTP id i66mr6885890pfb.250.1556148589784;
+        Wed, 24 Apr 2019 16:29:49 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id t21sm26694121pfe.22.2019.04.24.16.29.50
+        by smtp.gmail.com with ESMTPSA id c1sm21142401pgq.33.2019.04.24.16.29.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 16:29:50 -0700 (PDT)
+        Wed, 24 Apr 2019 16:29:49 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org,
         groeck@chromium.org, lee.jones@linaro.org
 Cc:     linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH 17/30] mfd: cros_ec: Add fingerprint API
-Date:   Wed, 24 Apr 2019 16:29:05 -0700
-Message-Id: <20190424232918.243308-18-gwendal@chromium.org>
+Subject: [PATCH 16/30] mfd: cros_ec: Fix event processing API
+Date:   Wed, 24 Apr 2019 16:29:04 -0700
+Message-Id: <20190424232918.243308-17-gwendal@chromium.org>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 In-Reply-To: <20190424232918.243308-1-gwendal@chromium.org>
 References: <20190424232918.243308-1-gwendal@chromium.org>
@@ -71,58 +71,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for fingerprint sensors managed by embedded controller.
+Improve API between EC and Host to report events.
 
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
- include/linux/mfd/cros_ec_commands.h | 34 ++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ include/linux/mfd/cros_ec_commands.h | 115 ++++++++++++++++++++++++---
+ 1 file changed, 105 insertions(+), 10 deletions(-)
 
 diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 2d59b4480876..399fedebc388 100644
+index 594db631452f..2d59b4480876 100644
 --- a/include/linux/mfd/cros_ec_commands.h
 +++ b/include/linux/mfd/cros_ec_commands.h
-@@ -3339,6 +3339,40 @@ struct ec_response_get_next_event_v1 {
- #define EC_MKBP_TABLET_MODE	1
- #define EC_MKBP_BASE_ATTACHED	2
- 
-+/* Fingerprint events in 'fp_events' for EC_MKBP_EVENT_FINGERPRINT */
-+#define EC_MKBP_FP_RAW_EVENT(fp_events) ((fp_events) & 0x00FFFFFF)
-+#define EC_MKBP_FP_ERRCODE(fp_events)   ((fp_events) & 0x0000000F)
-+#define EC_MKBP_FP_ENROLL_PROGRESS_OFFSET 4
-+#define EC_MKBP_FP_ENROLL_PROGRESS(fpe) (((fpe) & 0x00000FF0) \
-+					 >> EC_MKBP_FP_ENROLL_PROGRESS_OFFSET)
-+#define EC_MKBP_FP_MATCH_IDX_OFFSET 12
-+#define EC_MKBP_FP_MATCH_IDX_MASK 0x0000F000
-+#define EC_MKBP_FP_MATCH_IDX(fpe) (((fpe) & EC_MKBP_FP_MATCH_IDX_MASK) \
-+					 >> EC_MKBP_FP_MATCH_IDX_OFFSET)
-+#define EC_MKBP_FP_ENROLL               BIT(27)
-+#define EC_MKBP_FP_MATCH                BIT(28)
-+#define EC_MKBP_FP_FINGER_DOWN          BIT(29)
-+#define EC_MKBP_FP_FINGER_UP            BIT(30)
-+#define EC_MKBP_FP_IMAGE_READY          BIT(31)
-+/* code given by EC_MKBP_FP_ERRCODE() when EC_MKBP_FP_ENROLL is set */
-+#define EC_MKBP_FP_ERR_ENROLL_OK               0
-+#define EC_MKBP_FP_ERR_ENROLL_LOW_QUALITY      1
-+#define EC_MKBP_FP_ERR_ENROLL_IMMOBILE         2
-+#define EC_MKBP_FP_ERR_ENROLL_LOW_COVERAGE     3
-+#define EC_MKBP_FP_ERR_ENROLL_INTERNAL         5
-+/* Can be used to detect if image was usable for enrollment or not. */
-+#define EC_MKBP_FP_ERR_ENROLL_PROBLEM_MASK     1
-+/* code given by EC_MKBP_FP_ERRCODE() when EC_MKBP_FP_MATCH is set */
-+#define EC_MKBP_FP_ERR_MATCH_NO                0
-+#define EC_MKBP_FP_ERR_MATCH_NO_INTERNAL       6
-+#define EC_MKBP_FP_ERR_MATCH_NO_TEMPLATES      7
-+#define EC_MKBP_FP_ERR_MATCH_NO_LOW_QUALITY    2
-+#define EC_MKBP_FP_ERR_MATCH_NO_LOW_COVERAGE   4
-+#define EC_MKBP_FP_ERR_MATCH_YES               1
-+#define EC_MKBP_FP_ERR_MATCH_YES_UPDATED       3
-+#define EC_MKBP_FP_ERR_MATCH_YES_UPDATE_FAILED 5
+@@ -500,7 +500,8 @@ enum host_event_code {
+ 	EC_HOST_EVENT_BATTERY_CRITICAL = 7,
+ 	EC_HOST_EVENT_BATTERY = 8,
+ 	EC_HOST_EVENT_THERMAL_THRESHOLD = 9,
+-	EC_HOST_EVENT_THERMAL_OVERLOAD = 10,
++	/* Event generated by a device attached to the EC */
++	EC_HOST_EVENT_DEVICE = 10,
+ 	EC_HOST_EVENT_THERMAL = 11,
+ 	EC_HOST_EVENT_USB_CHARGER = 12,
+ 	EC_HOST_EVENT_KEY_PRESSED = 13,
+@@ -527,15 +528,34 @@ enum host_event_code {
+ 	EC_HOST_EVENT_HANG_DETECT = 20,
+ 	/* Hang detect logic detected a hang and warm rebooted the AP */
+ 	EC_HOST_EVENT_HANG_REBOOT = 21,
 +
-+
- /*****************************************************************************/
- /* Temperature sensor commands */
+ 	/* PD MCU triggering host event */
+ 	EC_HOST_EVENT_PD_MCU = 22,
  
+-	/* EC desires to change state of host-controlled USB mux */
+-	EC_HOST_EVENT_USB_MUX = 28,
++	/* Battery Status flags have changed */
++	EC_HOST_EVENT_BATTERY_STATUS = 23,
++
++	/* EC encountered a panic, triggering a reset */
++	EC_HOST_EVENT_PANIC = 24,
++
++	/* Keyboard fastboot combo has been pressed */
++	EC_HOST_EVENT_KEYBOARD_FASTBOOT = 25,
+ 
+ 	/* EC RTC event occurred */
+ 	EC_HOST_EVENT_RTC = 26,
+ 
++	/* Emulate MKBP event */
++	EC_HOST_EVENT_MKBP = 27,
++
++	/* EC desires to change state of host-controlled USB mux */
++	EC_HOST_EVENT_USB_MUX = 28,
++
++	/* TABLET/LAPTOP mode or detachable base attach/detach event */
++	EC_HOST_EVENT_MODE_CHANGE = 29,
++
++	/* Keyboard recovery combo with hardware reinitialization */
++	EC_HOST_EVENT_KEYBOARD_RECOVERY_HW_REINIT = 30,
++
+ 	/*
+ 	 * The high bit of the event mask is not used as a host event code.  If
+ 	 * it reads back as set, then the entire event mask should be
+@@ -1227,10 +1247,40 @@ enum ec_feature_code {
+ 	EC_FEATURE_USB_MUX = 23,
+ 	/* Motion Sensor code has an internal software FIFO */
+ 	EC_FEATURE_MOTION_SENSE_FIFO = 24,
++	/* Support temporary secure vstore */
++	EC_FEATURE_VSTORE = 25,
++	/* EC decides on USB-C SS mux state, muxes configured by host */
++	EC_FEATURE_USBC_SS_MUX_VIRTUAL = 26,
+ 	/* EC has RTC feature that can be controlled by host commands */
+ 	EC_FEATURE_RTC = 27,
++	/* The MCU exposes a Fingerprint sensor */
++	EC_FEATURE_FINGERPRINT = 28,
++	/* The MCU exposes a Touchpad */
++	EC_FEATURE_TOUCHPAD = 29,
++	/* The MCU has RWSIG task enabled */
++	EC_FEATURE_RWSIG = 30,
++	/* EC has device events support */
++	EC_FEATURE_DEVICE_EVENT = 31,
++	/* EC supports the unified wake masks for LPC/eSPI systems */
++	EC_FEATURE_UNIFIED_WAKE_MASKS = 32,
++	/* EC supports 64-bit host events */
++	EC_FEATURE_HOST_EVENT64 = 33,
++	/* EC runs code in RAM (not in place, a.k.a. XIP) */
++	EC_FEATURE_EXEC_IN_RAM = 34,
+ 	/* EC supports CEC commands */
+ 	EC_FEATURE_CEC = 35,
++	/* EC supports tight sensor timestamping. */
++	EC_FEATURE_MOTION_SENSE_TIGHT_TIMESTAMPS = 36,
++	/*
++	 * EC supports tablet mode detection aligned to Chrome and allows
++	 * setting of threshold by host command using
++	 * MOTIONSENSE_CMD_TABLET_MODE_LID_ANGLE.
++	 */
++	EC_FEATURE_REFINED_TABLET_MODE_HYSTERESIS = 37,
++	/* EC supports audio codec. */
++	EC_FEATURE_AUDIO_CODEC = 38,
++	/* The MCU is a System Companion Processor (SCP). */
++	EC_FEATURE_SCP = 39,
+ 	/* The MCU is an Integrated Sensor Hub */
+ 	EC_FEATURE_ISH = 40,
+ };
+@@ -3153,12 +3203,23 @@ struct ec_result_keyscan_seq_ctrl {
+ } __ec_todo_packed;
+ 
+ /*
+- * Command for retrieving the next pending MKBP event from the EC device
++ * Get the next pending MKBP event.
+  *
+- * The device replies with UNAVAILABLE if there aren't any pending events.
++ * Returns EC_RES_UNAVAILABLE if there is no event pending.
+  */
+ #define EC_CMD_GET_NEXT_EVENT 0x0067
+ 
++#define EC_MKBP_HAS_MORE_EVENTS_SHIFT 7
++
++/*
++ * We use the most significant bit of the event type to indicate to the host
++ * that the EC has more MKBP events available to provide.
++ */
++#define EC_MKBP_HAS_MORE_EVENTS BIT(EC_MKBP_HAS_MORE_EVENTS_SHIFT)
++
++/* The mask to apply to get the raw event type */
++#define EC_MKBP_EVENT_TYPE_MASK (BIT(EC_MKBP_HAS_MORE_EVENTS_SHIFT) - 1)
++
+ enum ec_mkbp_event {
+ 	/* Keyboard matrix changed. The event data is the new matrix state. */
+ 	EC_MKBP_EVENT_KEY_MATRIX = 0,
+@@ -3175,9 +3236,21 @@ enum ec_mkbp_event {
+ 	/* The state of the switches have changed. */
+ 	EC_MKBP_EVENT_SWITCH = 4,
+ 
+-	/* EC sent a sysrq command */
++	/* New Fingerprint sensor event, the event data is fp_events bitmap. */
++	EC_MKBP_EVENT_FINGERPRINT = 5,
++
++	/*
++	 * Sysrq event: send emulated sysrq. The event data is sysrq,
++	 * corresponding to the key to be pressed.
++	 */
+ 	EC_MKBP_EVENT_SYSRQ = 6,
+ 
++	/*
++	 * New 64-bit host event.
++	 * The event data is 8 bytes of host event flags.
++	 */
++	EC_MKBP_EVENT_HOST_EVENT64 = 7,
++
+ 	/* Notify the AP that something happened on CEC */
+ 	EC_MKBP_EVENT_CEC_EVENT = 8,
+ 
+@@ -3187,12 +3260,14 @@ enum ec_mkbp_event {
+ 	/* Number of MKBP events */
+ 	EC_MKBP_EVENT_COUNT,
+ };
++BUILD_ASSERT(EC_MKBP_EVENT_COUNT <= EC_MKBP_EVENT_TYPE_MASK);
+ 
+ union __ec_align_offset1 ec_response_get_next_data {
+ 	uint8_t key_matrix[13];
+ 
+ 	/* Unaligned */
+-	uint32_t  host_event;
++	uint32_t host_event;
++	uint64_t host_event64;
+ 
+ 	struct __ec_todo_unpacked {
+ 		/* For aligning the fifo_info */
+@@ -3200,14 +3275,25 @@ union __ec_align_offset1 ec_response_get_next_data {
+ 		struct ec_response_motion_sense_fifo_info info;
+ 	} sensor_fifo;
+ 
+-	uint32_t   buttons;
+-	uint32_t   switches;
+-	uint32_t   sysrq;
++	uint32_t buttons;
++
++	uint32_t switches;
++
++	uint32_t fp_events;
++
++	uint32_t sysrq;
++
++	/* CEC events from enum mkbp_cec_event */
++	uint32_t cec_events;
+ };
+ 
+ union __ec_align_offset1 ec_response_get_next_data_v1 {
+ 	uint8_t key_matrix[16];
++
++	/* Unaligned */
+ 	uint32_t host_event;
++	uint64_t host_event64;
++
+ 	struct __ec_todo_unpacked {
+ 		/* For aligning the fifo_info */
+ 		uint8_t reserved[3];
+@@ -3215,11 +3301,19 @@ union __ec_align_offset1 ec_response_get_next_data_v1 {
+ 	} sensor_fifo;
+ 
+ 	uint32_t buttons;
++
+ 	uint32_t switches;
++
++	uint32_t fp_events;
++
+ 	uint32_t sysrq;
++
++	/* CEC events from enum mkbp_cec_event */
+ 	uint32_t cec_events;
++
+ 	uint8_t cec_message[16];
+ };
++BUILD_ASSERT(sizeof(union ec_response_get_next_data_v1) == 16);
+ 
+ struct ec_response_get_next_event {
+ 	uint8_t event_type;
+@@ -3238,6 +3332,7 @@ struct ec_response_get_next_event_v1 {
+ #define EC_MKBP_POWER_BUTTON	0
+ #define EC_MKBP_VOL_UP		1
+ #define EC_MKBP_VOL_DOWN	2
++#define EC_MKBP_RECOVERY	3
+ 
+ /* Switches */
+ #define EC_MKBP_LID_OPEN	0
 -- 
 2.21.0.593.g511ec345e18-goog
 
