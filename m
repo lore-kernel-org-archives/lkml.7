@@ -2,122 +2,94 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52162C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F43FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215C021773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A5D21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128127;
-	bh=ZoHvGVSFVuNaTJA1IG6BYbipl8kk0rjoziuacBSlSi8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OquuQRIvoBYctbvevbtxesDoayFAprYV5ohXaA+O4z0Vqys1I6FF8CQQ9qjNMSDKS
-	 mfgBYNKTaDEhuqmxi7li9M78sZnCD3JY4mv9JNzQRL3JlPG/dogPjEehD5iq0rY32x
-	 IQ+7Z4RunDXz2SFBPeD89wEtumebrRbmPfQFSePU=
+	s=default; t=1556128137;
+	bh=0pH6giZBP5EWcjVy6UHsSs54vJYzgd7pl1/aNWcWw6U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=K4g+62RN/BqxPb4PF8uubIqDEc1N8aO0xNedqM4quU6oehZb1ykU/aWa10v3xzN9R
+	 DCer/U0PuR9zz4iAdw8Fpux2OabEFfdNkkuq/eLuUp0FnKfIQdGH6waUGmnuDsUMXe
+	 mXSxdlg22+/MP9r9+HjEipZf2/iOOjwIOQv41gdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391848AbfDXRsp (ORCPT
+        id S2391854AbfDXRs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:48:45 -0400
-Received: from casper.infradead.org ([85.118.1.10]:45360 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390660AbfDXRsl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:48:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=C+jH5MB5a2swmKkEdfeQTYpVl5aRBU1fzkhBf76AiTM=; b=SPdkI3i9xCTD0C8C2HRlxJ8DA3
-        JcezKeaj8JAP8fVRdaJDeDKK6RloQJbb2BuU60+tFeE+UcWTi3KN495/SKkSEmK6o7cBGYmc92V5x
-        PS8zILU/LaafDfuxLVLUPv5FSILDR6mIvL43565SCPSLnLL6LLWHSl8PKlnVoJOl0Vom5bsBe3yYZ
-        pwoy2EiUJKa+UumDtWbeWLGKyY8rT2SXc50+0g54tUYaCfaJgVjPDrhqj9/VsBCLoM+nNuVjx94pV
-        50qmTl+wEPN4xduztx1gI1Obywoh/vh1cgjUSRM857lTM4O0Rq2E9pFGBojPJnHI8CuJ1Vg1iU2c7
-        y9GU4zyQ==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJM0a-0000B8-TV; Wed, 24 Apr 2019 17:48:37 +0000
-Date:   Wed, 24 Apr 2019 14:48:30 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 00/63] Include linux ACPI/PCI/X86 docs into Sphinx
- TOC tree
-Message-ID: <20190424144830.3fe92640@coco.lan>
-In-Reply-To: <20190424154617.kowr5aamjkeceltr@mail.google.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
-        <CAJZ5v0jPyaGQcDfpW5b7A-_3bvkfL78MxFmPtjwCGZ4-=KwUwg@mail.gmail.com>
-        <20190423173644.GA14616@google.com>
-        <20190424154617.kowr5aamjkeceltr@mail.google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 24 Apr 2019 13:48:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391046AbfDXRaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:30:52 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AE6A2054F;
+        Wed, 24 Apr 2019 17:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556127052;
+        bh=0pH6giZBP5EWcjVy6UHsSs54vJYzgd7pl1/aNWcWw6U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=poLNs6QfKrmcn5GJqjX8HX5xj+8KC0EiEgMmwwQz5+0+r2cn7OBj/5LOYo0TpeUJN
+         ISz8AYEr5otynsP1L6E2sC8iMbRLkhtY2iZu1tnfjvkfFZ3scJ0wI0Kc2/GskCIDui
+         sycmMv9OTPp3xF8obM+k/vL9KXFL6NZC0eAwNUPQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 41/96] iio: ad_sigma_delta: select channel when reading register
+Date:   Wed, 24 Apr 2019 19:09:46 +0200
+Message-Id: <20190424170922.667025843@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
+References: <20190424170919.829037226@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 24 Apr 2019 23:46:18 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+From: Dragos Bogdan <dragos.bogdan@analog.com>
 
-> On Tue, Apr 23, 2019 at 12:36:44PM -0500, Bjorn Helgaas wrote:
-> > On Tue, Apr 23, 2019 at 06:39:47PM +0200, Rafael J. Wysocki wrote:
-> > > On Tue, Apr 23, 2019 at 6:30 PM Changbin Du <changbin.du@gmail.com> wrote:
-> > > > Hi Corbet and All,
-> > > > The kernel now uses Sphinx to generate intelligent and beautiful
-> > > > documentation from reStructuredText files. I converted all of the Linux
-> > > > ACPI/PCI/X86 docs to reST format in this serias.
-> > > >
-> > > > In this version I combined ACPI and PCI docs, and added new x86 docs
-> > > > conversion.
-> > > 
-> > > I'm not sure if combining all three into one big patch series has been
-> > > a good idea, honestly.
-> > 
-> > Yeah, if you post this again, I would find it easier to deal with if
-> > linux-pci only got the PCI-related things.  63 patches is a little too
-> > much for one series.
-> >
-> sure, so I will resend them respectively.
+commit fccfb9ce70ed4ea7a145f77b86de62e38178517f upstream.
 
-I reviewed up to patch 39. There are too many files on x86 that seems
-to be mangled by some tab->whitespace conversion, with caused
-very big diffs and lots of broken ascii artwork.
+The desired channel has to be selected in order to correctly fill the
+buffer with the corresponding data.
+The `ad_sd_write_reg()` already does this, but for the
+`ad_sd_read_reg_raw()` this was omitted.
 
-Please ensure that the diffs will contain the minimal amount of stuff
-that would be required for them to be properly formatted as ReST
-files there.
+Fixes: af3008485ea03 ("iio:adc: Add common code for ADI Sigma Delta devices")
+Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Ah, perhaps next time you could format the patches with a lower
-merge similarity logic (using, for example, the parameter -M10).
+---
+ drivers/iio/adc/ad_sigma_delta.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-Regards,
-Mauro
-
-> 
-> > Bjorn
-> 
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -121,6 +121,7 @@ static int ad_sd_read_reg_raw(struct ad_
+ 	if (sigma_delta->info->has_registers) {
+ 		data[0] = reg << sigma_delta->info->addr_shift;
+ 		data[0] |= sigma_delta->info->read_mask;
++		data[0] |= sigma_delta->comm;
+ 		spi_message_add_tail(&t[0], &m);
+ 	}
+ 	spi_message_add_tail(&t[1], &m);
 
 
-
-Thanks,
-Mauro
