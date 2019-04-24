@@ -2,69 +2,98 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68747C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E297CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5F2206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E30206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfDXGZ7 (ORCPT
+        id S1729748AbfDXG0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:25:59 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:48916 "EHLO hermes.aosc.io"
+        Wed, 24 Apr 2019 02:26:25 -0400
+Received: from mga03.intel.com ([134.134.136.65]:4222 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727106AbfDXGZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:25:59 -0400
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 3041B1F6BBC;
-        Wed, 24 Apr 2019 06:25:54 +0000 (UTC)
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH] arm64: dts: allwinner: h6: add PIO VCC bank supplies for Pine H64
-Date:   Wed, 24 Apr 2019 14:25:43 +0800
-Message-Id: <20190424062543.61852-1-icenowy@aosc.io>
+        id S1726002AbfDXG0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 02:26:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 23:26:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,388,1549958400"; 
+   d="scan'208";a="145368045"
+Received: from bxing-ubuntu.jf.intel.com ([10.23.30.27])
+  by fmsmga007.fm.intel.com with ESMTP; 23 Apr 2019 23:26:23 -0700
+From:   Cedric Xing <cedric.xing@intel.com>
+To:     linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org
+Cc:     cedric.xing@intel.com, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, kai.svahn@intel.com, kai.huang@intel.com,
+        jarkko.sakkinen@linux.intel.com
+Subject: [RFC PATCH v2 0/3] An alternative __vdso_sgx_enter_enclave() to allow enclave/host parameter passing using untrusted stack
+Date:   Tue, 23 Apr 2019 23:26:20 -0700
+Message-Id: <20190424062623.4345-1-cedric.xing@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1555965327.git.cedric.xing@intel.com>
+References: <cover.1555965327.git.cedric.xing@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Allwinner H6 SoC features tweakable VCC for PC, PD, PG, PL and PM
-banks.
+The current proposed __vdso_sgx_enter_enclave() requires enclaves to preserve
+%rsp, which prohibits enclaves from allocating space on the untrusted stack.
+However, there are existing enclaves (e.g. those built with current Intel SGX
+SDK libraries) relying on the untrusted stack for passing parameters to
+untrusted functions (aka. o-calls), which requires allocating space on the
+untrusted stack by enclaves. And given its simplicity and convenience, it could
+be desired by future SGX applications as well.  
 
-This patch adds supplies for PC and PD banks on Pine H64 board. PG and
-PM banks are used for Wi-Fi and should be added when Wi-Fi is added; PL
-bank is where PMIC is attached, and currently if a PMIC regulator is
-added for it a dependency loop will happen.
+This patchset introduces a new ABI for __vdso_sgx_enter_enclave() to anchor its
+stack frame on %rbp (instead of %rsp), so as to allow enclaves to "push" onto
+the untrusted stack by decrementing the untrusted %rsp. Additionally, this new
+__vdso_sgx_enter_enclave() will take one more parameter - a callback function,
+to be invoked upon all enclave exits (both AEX and normal exits). The callback
+function will be given the value of %rsp left off by the enclave, so that data
+"pushed" by the enclave (if any) could be addressed/accessed.  Please note that
+the callback function is optional, and if not supplied (i.e. null),
+__vdso_sgx_enter_enclave() will just return (i.e. behave the same as the
+current implementation) after the enclave exits (or AEX due to exceptions).
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+The SGX selftest is augmented by two new tests. One exercises the new callback
+interface, and serves as a simple example to showcase how to use it; while the
+other validates the hand-crafted CFI directives in __vdso_sgx_enter_enclave()
+by single-stepping through it and unwinding call stack at every instruction.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 4802902e128f..d586a51c657d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -127,6 +127,11 @@
- 	status = "okay";
- };
- 
-+&pio {
-+	vcc-pc-supply = <&reg_bldo2>;
-+	vcc-pd-supply = <&reg_cldo1>;
-+};
-+
- &r_i2c {
- 	status = "okay";
- 
+v2:
+  - Revised comments in __vdso_sgx_enter_enclave(). See patch 2/3.
+  - Added stack unwind test. See patch 3/3.
+
+v1: https://lkml.org/lkml/2019/4/22/871
+
+Note: This patchset is based upon SGX1 patch v20
+(https://lkml.org/lkml/2019/4/17/344) by Jarkko Sakkinen
+
+Cedric Xing (3):
+  selftests/x86: Fixed Makefile for SGX selftest
+  x86/vdso: Modify __vdso_sgx_enter_enclave() to allow parameter passing
+    on untrusted stack
+  selftests/x86: Augment SGX selftest to test new
+    __vdso_sgx_enter_enclave() and its callback interface
+
+ arch/x86/entry/vdso/vsgx_enter_enclave.S   | 175 +++++++----
+ arch/x86/include/uapi/asm/sgx.h            |  14 +-
+ tools/testing/selftests/x86/Makefile       |  12 +-
+ tools/testing/selftests/x86/sgx/Makefile   |  49 ++--
+ tools/testing/selftests/x86/sgx/main.c     | 323 ++++++++++++++++++---
+ tools/testing/selftests/x86/sgx/sgx_call.S |  40 ++-
+ 6 files changed, 471 insertions(+), 142 deletions(-)
+
 -- 
-2.18.1
+2.17.1
 
