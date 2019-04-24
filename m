@@ -2,85 +2,90 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A4DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C51C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D1C2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C1B218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:45:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556113541;
+	bh=UWPQQzZDOw35nAjsIVmIl4SovbpSgdZkxtsUF4eH6WA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sPk63UUp9qy+cvrJKvksYCeKH5Y/7xfA9z6K+vBT962KgRR7JvVmCiJtdOig8+AQy
+	 OYZ3Fddxv0MVQ1tZAdN6+V83FP4EqkjldZ9mGA6dgN1gIpAX8BQ+2rRsSCN+wpNV8q
+	 i3EJ0T/Qx6edxTGhc/eKn7TxctLm74gCHh/U0yGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730612AbfDXNol (ORCPT
+        id S1730617AbfDXNpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:44:41 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:45158 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730573AbfDXNoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:44:39 -0400
-Received: from dggemi402-hub.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 24782B446D772BE67D1F;
-        Wed, 24 Apr 2019 21:44:36 +0800 (CST)
-Received: from DGGEMI421-HUB.china.huawei.com (10.1.199.150) by
- dggemi402-hub.china.huawei.com (10.3.17.135) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 24 Apr 2019 21:44:35 +0800
-Received: from DGGEMI530-MBX.china.huawei.com ([169.254.7.146]) by
- dggemi421-hub.china.huawei.com ([10.1.199.150]) with mapi id 14.03.0415.000;
- Wed, 24 Apr 2019 21:44:31 +0800
-From:   weizhenliang <weizhenliang@huawei.com>
-To:     Christian Brauner <christian@brauner.io>
-CC:     "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "colona@arista.com" <colona@arista.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: Re: [PATCH v4] signal: trace_signal_deliver when
- signal_group_exit
-Thread-Topic: Re: [PATCH v4] signal: trace_signal_deliver when
- signal_group_exit
-Thread-Index: AdT6omoJGuAXuaa4TgmwwsGmQ23m2A==
-Date:   Wed, 24 Apr 2019 13:44:31 +0000
-Message-ID: <AF4D908CC0E2A24EB308A26962C8C3BDEB1A17@DGGEMI530-MBX.china.huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.40.99.192]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 09:45:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbfDXNpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:45:39 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48FB52089F;
+        Wed, 24 Apr 2019 13:45:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556113538;
+        bh=UWPQQzZDOw35nAjsIVmIl4SovbpSgdZkxtsUF4eH6WA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WEYcofGKIaf/jOOzyE+uBx/CDp2K80RJ+vE9I82sLFrKv4AY6/liSJ3VnwrdYNwk9
+         g3eqjgNCoTJPeFLJsBE9ygHGm47ldmwC1IQeS7E7IpCFueO3kaGPkGbV9yIG/6G6sA
+         F+24LBlC9OO8mHpWkfyFUHgxOw51BEYf7uOtj9qU=
+Date:   Wed, 24 Apr 2019 15:45:36 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Mark Brown <broonie@kernel.org>,
+        Urja Rannikko <urjaman@gmail.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: rockchip: add missing INTERLEAVED PCM
+ attribute
+Message-ID: <20190424134536.GA20271@kroah.com>
+References: <20180910163932.13722-1-katsuhiro@katsuster.net>
+ <CAD=FV=WKV3eLsg3mWpmCWYjvk2JY4_Q-20v1Ohzy=02+LjpPnw@mail.gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WKV3eLsg3mWpmCWYjvk2JY4_Q-20v1Ohzy=02+LjpPnw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDQvMjQsIENocmlzdGlhbiBCcmF1bmVyIHdyb3RlOg0KPk9uIFdlZCwgQXByIDI0LCAyMDE5
-IGF0IDA4OjUyOjM4UE0gKzA4MDAsIFpoZW5saWFuZyBXZWkgd3JvdGU6DQo+PiANCj4+IEFja2Vk
-LWJ5OiBDaHJpc3RpYW4gQnJhdW5lciA8Y2hyaXN0aWFuQGJyYXVuZXIuaW8+DQo+DQo+SSB0aGlu
-ayB3ZSdyZSBzdXBwb3NlZCB0byB1c2UgbW9yZSBSZXZpZXdlZC1ieXMgc28gZmVlbCBmcmVlIChv
-ciBBbmRyZXcpIHRvIGNoYW5nZSB0aGlzIHRvOg0KPg0KPlJldmlld2VkLWJ5OiBDaHJpc3RpYW4g
-QnJhdW5lciA8Y2hyaXN0aWFuQGJyYXVuZXIuaW8+DQoNCk9rLCBJIHdpbGwgY2hhbmdlIHRoaXMg
-aW4gcGF0Y2ggdjUuDQoNCj4+IC0tLSBhL2tlcm5lbC9zaWduYWwuYw0KPj4gKysrIGIva2VybmVs
-L3NpZ25hbC5jDQo+PiBAQCAtMjQ0MSw2ICsyNDQxLDggQEAgYm9vbCBnZXRfc2lnbmFsKHN0cnVj
-dCBrc2lnbmFsICprc2lnKQ0KPj4gIAlpZiAoc2lnbmFsX2dyb3VwX2V4aXQoc2lnbmFsKSkgew0K
-Pj4gIAkJa3NpZy0+aW5mby5zaV9zaWdubyA9IHNpZ25yID0gU0lHS0lMTDsNCj4+ICAJCXNpZ2Rl
-bHNldCgmY3VycmVudC0+cGVuZGluZy5zaWduYWwsIFNJR0tJTEwpOw0KPj4gKwkJdHJhY2Vfc2ln
-bmFsX2RlbGl2ZXIoU0lHS0lMTCwgU0VORF9TSUdfTk9JTkZPLA0KPj4gKwkJCSZzaWdoYW5kLT5h
-Y3Rpb25bc2lnbnIgLSAxXSk7DQo+DQo+SG0sIHNvcnJ5IGZvciBiZWluZyB0aGUgcmVhbGx5IG5p
-dHBpY2t5IHBlcnNvbiBoZXJlLiBKdXN0IGZvciB0aGUgc2FrZSBvZiBjb25zaXN0ZW5jeSBob3cg
-YWJvdXQgd2UgZG8gZWl0aGVyOg0KPg0KPisJCXRyYWNlX3NpZ25hbF9kZWxpdmVyKFNJR0tJTEws
-IFNFTkRfU0lHX05PSU5GTywNCj4rCQkJJnNpZ2hhbmQtPmFjdGlvbltTSUdLSUxMIC0gMV0pOw0K
-Pg0KPm9yDQo+DQo+KwkJdHJhY2Vfc2lnbmFsX2RlbGl2ZXIoc2lnbnIsIFNFTkRfU0lHX05PSU5G
-TywNCj4rCQkJJnNpZ2hhbmQtPmFjdGlvbltzaWduciAtIDFdKTsNCj4NCj5JJ20gbm90IGdvaW5n
-IHRvIGFyZ3VlIGFib3V0IHRoaXMgdGhvdWdoLiBDYW4ganVzdCBhbHNvIGxlYXZlIGl0IGFzIGlz
-Lg0KDQpUaGFuayB5b3UgZm9yIHlvdXIgY29tbWVudHMgYW5kIGxlYXJuIGZyb20gcmlnb3JvdXMg
-cGVvcGxlISBJIHdpbGwgdGFrZToNCg0KKwkJdHJhY2Vfc2lnbmFsX2RlbGl2ZXIoU0lHS0lMTCwg
-U0VORF9TSUdfTk9JTkZPLA0KKwkJCSZzaWdoYW5kLT5hY3Rpb25bU0lHS0lMTCAtIDFdKTsNCg0K
-QW55IG90aGVyIHN1Z2dlc3Rpb25zIGFib3V0IHRoZSBwYXRjaD8NCg0KV2VpDQo=
+On Tue, Apr 23, 2019 at 03:26:42PM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Sep 10, 2018 at 4:39 PM Katsuhiro Suzuki <katsuhiro@katsuster.net> wrote:
+> >
+> > This patch adds SNDRV_PCM_INFO_INTERLEAVED into PCM hardware info.
+> >
+> > Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> > ---
+> >  sound/soc/rockchip/rockchip_pcm.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> I just tracked down that audio was broken on 4.19 and needs this
+> change to work.  Stable: can you please pick it?  Specifically I
+> believe you'd want to treat it as if it had:
+> 
+> Fixes: 75b31192fe6a ("ASoC: rockchip: add config for rockchip
+> dmaengine pcm register")
+
+What is the git commit id of this patch in Linus's tree?
+
+thanks,
+
+greg k-h
