@@ -2,329 +2,116 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75E0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D29CC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7824F218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4AB208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:30:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v61AX3Mj"
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="oFPPXYeq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388967AbfDXW0P (ORCPT
+        id S1726144AbfDXWai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 18:26:15 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48800 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731292AbfDXWYr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 18:24:47 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3OMOdpE002664;
-        Wed, 24 Apr 2019 17:24:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556144679;
-        bh=7tLocZjR+/71xgmT/zMsub33l0zL7Tl4M/f+FtYZAvI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=v61AX3MjYOHe31lCteEMVyMqe7F5jmIetueC2Zd/S1aKnmtQJl8Rqvg8O4cS/uLZD
-         /gieOPTWiOB4NYBA4fDHhbVphdyV15SUb0I5SdUSHveknZSC9WYrkCaqA77bx9+9fl
-         czRluc6A2vYOzhwKGpzAMNgsy5HYhuP2AUaj0t00=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3OMOcgC110621
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Apr 2019 17:24:38 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
- Apr 2019 17:24:38 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 24 Apr 2019 17:24:38 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3OMObvP049929;
-        Wed, 24 Apr 2019 17:24:38 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>
-CC:     Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RFC PATCH v3 net-next 03/11] net: ethernet: ti: cpsw: ale: add functions to modify VLANs/MDBs
-Date:   Thu, 25 Apr 2019 01:24:19 +0300
-Message-ID: <1556144667-27997-4-git-send-email-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
-References: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
+        Wed, 24 Apr 2019 18:30:38 -0400
+Received: from mail-eopbgr750111.outbound.protection.outlook.com ([40.107.75.111]:12351
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725977AbfDXWai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 18:30:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BF1EMoGsJj/vdH2szJkWXiOHpPwfEoI5SfXGFZfWsJY=;
+ b=oFPPXYeqdNaBtv33oNnHxxUAIP64vJtfMA3qTyhANUuROWV9ANCTgBfp3WxBxC6lHdPlwRCOgUCNudLvthW6JN+1ll1YoJCZp2sw3/HzUhb+8Jtz/nl7Q3HZZMhVnwvJis4Avs/W8y6kNbpdnHBKRRFZDotLsjbYWCexKFF+hdY=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1038.namprd22.prod.outlook.com (10.174.167.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.17; Wed, 24 Apr 2019 22:30:34 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b9d6:bf19:ec58:2765%7]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
+ 22:30:34 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH 01/12] mips: Make sure kernel .bss exists in boot mem pool
+Thread-Topic: [PATCH 01/12] mips: Make sure kernel .bss exists in boot mem
+ pool
+Thread-Index: AQHU+ibOG+PsMBZAKUiYJPpqSM8lrKZL5lUA
+Date:   Wed, 24 Apr 2019 22:30:34 +0000
+Message-ID: <MWHPR2201MB1277E5898485758E08C6AD95C13C0@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190423224748.3765-2-fancer.lancer@gmail.com>
+In-Reply-To: <20190423224748.3765-2-fancer.lancer@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR03CA0009.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::22) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.207.99.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b16e16ab-b88d-4bc1-fd70-08d6c9047792
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1038;
+x-ms-traffictypediagnostic: MWHPR2201MB1038:
+x-microsoft-antispam-prvs: <MWHPR2201MB1038CD01DC96C66FD18FBAC6C13C0@MWHPR2201MB1038.namprd22.prod.outlook.com>
+x-forefront-prvs: 00179089FD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(376002)(396003)(39850400004)(136003)(189003)(199004)(8676002)(7416002)(102836004)(7696005)(52116002)(4326008)(76176011)(7736002)(6506007)(54906003)(305945005)(99286004)(316002)(6246003)(386003)(53936002)(2906002)(14454004)(97736004)(25786009)(74316002)(9686003)(55016002)(478600001)(6116002)(3846002)(66556008)(256004)(4744005)(66446008)(66066001)(446003)(81156014)(6436002)(26005)(6916009)(42882007)(68736007)(81166006)(73956011)(66946007)(66476007)(71190400001)(71200400001)(44832011)(52536014)(186003)(8936002)(229853002)(486006)(476003)(5660300002)(64756008)(11346002)(33656002)(142923001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1038;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: B9fQG92x46c1hWRI1KJp/nCCFZY0PWYitFdayrluhGYYl8bT9Lcs1qk6M0j7GkG2ouCXVx08IQn5tEg+O/xRDDrEtGIkTXAuc5ZUQmf354ClITBvJE/KIOGcMAihRMuDkhNkQJ78/WAshNAue1Kuv/VHtwju/kht1jfR+IKIDBrxlq7iGRnylvKQzJe6dAfV+5GYvqEcGBm4AZICOmO4IDnht9JB+bR7zPmADH28T3atBAEq+VgzXkx9L1zAUEhEpiAiJYReYul/YfnOs47DsFBypIyzLxtleF7kWpkLHNauSSWA2eB9Wwbusb2/aJ3kfmN5ZP3mVNabCm+jGyPIyKbGXnseyVHRVUkoC1rp0nEO9G//SPZm9eKYrvsME97/5ZLOzBn7kF7Y06gTFKbyUZYHZUMAv2HluuZb2O8dgnY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b16e16ab-b88d-4bc1-fd70-08d6c9047792
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 22:30:34.4819
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-
-A following patch introduces switchdev functionality. Add functions
-to cpsw ALE engine to modify VLANs/MDBs
-
-Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw_ale.c | 179 ++++++++++++++++++++++++++++-
- drivers/net/ethernet/ti/cpsw_ale.h |  10 ++
- 2 files changed, 187 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index d09768368dbd..add3f6e4917b 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -400,6 +400,45 @@ int cpsw_ale_del_mcast(struct cpsw_ale *ale, const u8 *addr, int port_mask,
- 	return 0;
- }
- 
-+static int cpsw_ale_read_mc(struct cpsw_ale *ale, u8 *addr, int flags, u16 vid)
-+{
-+	u32 ale_entry[ALE_ENTRY_WORDS] = {0, 0, 0};
-+	int idx;
-+
-+	idx = cpsw_ale_match_addr(ale, addr, (flags & ALE_VLAN) ? vid : 0);
-+	if (idx >= 0)
-+		cpsw_ale_read(ale, idx, ale_entry);
-+
-+	return cpsw_ale_get_port_mask(ale_entry, ale->port_mask_bits);
-+}
-+
-+int cpsw_ale_mcast_add_modify(struct cpsw_ale *ale, u8 *addr, int port_mask,
-+			      int flags, u16 vid, int mcast_state)
-+{
-+	int mcast_members, ret;
-+
-+	mcast_members = cpsw_ale_read_mc(ale, addr, flags, vid) | port_mask;
-+	ret = cpsw_ale_add_mcast(ale, addr, mcast_members, flags, vid,
-+				 mcast_state);
-+
-+	return ret;
-+}
-+
-+int cpsw_ale_mcast_del_modify(struct cpsw_ale *ale, u8 *addr, int port_mask,
-+			      int flags, u16 vid)
-+{
-+	int mcast_members, ret;
-+	int idx;
-+
-+	mcast_members = cpsw_ale_read_mc(ale, addr, flags, vid) & ~port_mask;
-+	idx = cpsw_ale_match_addr(ale, addr, (flags & ALE_VLAN) ? vid : 0);
-+	if (idx < 0)
-+		return 0;
-+	ret = cpsw_ale_del_mcast(ale, addr, mcast_members, flags, vid);
-+
-+	return ret;
-+}
-+
- /* ALE NetCP NU switch specific vlan functions */
- static void cpsw_ale_set_vlan_mcast(struct cpsw_ale *ale, u32 *ale_entry,
- 				    int reg_mcast, int unreg_mcast)
-@@ -415,6 +454,52 @@ static void cpsw_ale_set_vlan_mcast(struct cpsw_ale *ale, u32 *ale_entry,
- 	writel(unreg_mcast, ale->params.ale_regs + ALE_VLAN_MASK_MUX(idx));
- }
- 
-+static int cpsw_ale_read_untagged(struct cpsw_ale *ale, u16 vid)
-+{
-+	u32 ale_entry[ALE_ENTRY_WORDS] = {0, 0, 0};
-+	int idx;
-+
-+	idx = cpsw_ale_match_vlan(ale, vid);
-+	if (idx >= 0)
-+		cpsw_ale_read(ale, idx, ale_entry);
-+
-+	return cpsw_ale_get_vlan_untag_force(ale_entry, ale->vlan_field_bits);
-+}
-+
-+/* returns mask of current members for specificed vlan */
-+static int cpsw_ale_read_vlan_members(struct cpsw_ale *ale, u16 vid)
-+{
-+	u32 ale_entry[ALE_ENTRY_WORDS] = {0, 0, 0};
-+	int idx;
-+
-+	idx = cpsw_ale_match_vlan(ale, vid);
-+	if (idx >= 0)
-+		cpsw_ale_read(ale, idx, ale_entry);
-+
-+	return cpsw_ale_get_vlan_member_list(ale_entry, ale->vlan_field_bits);
-+}
-+
-+/* returns mask of registered/unregistered multicast registration */
-+static int cpsw_ale_read_reg_unreg_mc(struct cpsw_ale *ale, u16 vid, bool unreg)
-+{
-+	u32 ale_entry[ALE_ENTRY_WORDS] = {0, 0, 0};
-+	int idx;
-+	int ret;
-+
-+	idx = cpsw_ale_match_vlan(ale, vid);
-+	if (idx >= 0)
-+		cpsw_ale_read(ale, idx, ale_entry);
-+
-+	if (unreg)
-+		ret = cpsw_ale_get_vlan_unreg_mcast(ale_entry,
-+						    ale->vlan_field_bits);
-+	else
-+		ret = cpsw_ale_get_vlan_reg_mcast(ale_entry,
-+						  ale->vlan_field_bits);
-+
-+	return ret;
-+}
-+
- int cpsw_ale_add_vlan(struct cpsw_ale *ale, u16 vid, int port, int untag,
- 		      int reg_mcast, int unreg_mcast)
- {
-@@ -452,6 +537,11 @@ int cpsw_ale_add_vlan(struct cpsw_ale *ale, u16 vid, int port, int untag,
- 
- int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port_mask)
- {
-+	int reg_mcast =
-+		cpsw_ale_read_reg_unreg_mc(ale, vid, 0) & port_mask;
-+	int unreg_mcast =
-+		cpsw_ale_read_reg_unreg_mc(ale, vid, 1) & port_mask;
-+	int untag = cpsw_ale_read_untagged(ale, vid) & port_mask;
- 	u32 ale_entry[ALE_ENTRY_WORDS] = {0, 0, 0};
- 	int idx;
- 
-@@ -461,16 +551,101 @@ int cpsw_ale_del_vlan(struct cpsw_ale *ale, u16 vid, int port_mask)
- 
- 	cpsw_ale_read(ale, idx, ale_entry);
- 
--	if (port_mask)
-+	if (port_mask) {
-+		cpsw_ale_set_vlan_untag_force(ale_entry, untag,
-+					      ale->vlan_field_bits);
-+		if (!ale->params.nu_switch_ale) {
-+			cpsw_ale_set_vlan_reg_mcast(ale_entry, reg_mcast,
-+						    ale->vlan_field_bits);
-+			cpsw_ale_set_vlan_unreg_mcast(ale_entry, unreg_mcast,
-+						      ale->vlan_field_bits);
-+		} else {
-+			cpsw_ale_set_vlan_mcast(ale, ale_entry, reg_mcast,
-+						unreg_mcast);
-+		}
- 		cpsw_ale_set_vlan_member_list(ale_entry, port_mask,
- 					      ale->vlan_field_bits);
--	else
-+	} else {
- 		cpsw_ale_set_entry_type(ale_entry, ALE_TYPE_FREE);
-+	}
- 
- 	cpsw_ale_write(ale, idx, ale_entry);
-+
- 	return 0;
- }
- 
-+int cpsw_ale_vlan_add_modify(struct cpsw_ale *ale, u16 vid, int port_mask,
-+			     int untag_mask, int reg_mask, int unreg_mask)
-+{
-+	int ret = 0;
-+	int vlan_members = cpsw_ale_read_vlan_members(ale, vid) & ~port_mask;
-+	int reg_mcast_members =
-+		cpsw_ale_read_reg_unreg_mc(ale, vid, 0) & ~port_mask;
-+	int unreg_mcast_members =
-+		cpsw_ale_read_reg_unreg_mc(ale, vid, 1) & ~port_mask;
-+	int untag_members = cpsw_ale_read_untagged(ale, vid) & ~port_mask;
-+
-+	vlan_members |= port_mask;
-+	untag_members |= untag_mask;
-+	reg_mcast_members |= reg_mask;
-+	unreg_mcast_members |= unreg_mask;
-+
-+	ret = cpsw_ale_add_vlan(ale, vid, vlan_members, untag_members,
-+				reg_mcast_members, unreg_mcast_members);
-+	if (ret) {
-+		dev_err(ale->params.dev, "Unable to add vlan\n");
-+		return ret;
-+	}
-+	dev_dbg(ale->params.dev, "port mask 0x%x untag 0x%x\n", vlan_members,
-+		untag_mask);
-+
-+	return ret;
-+}
-+
-+int cpsw_ale_vlan_del_modify(struct cpsw_ale *ale, u16 vid, int port_mask)
-+{
-+	int ret = 0;
-+	int vlan_members;
-+
-+	vlan_members = cpsw_ale_read_vlan_members(ale, vid);
-+	vlan_members &= ~port_mask;
-+
-+	ret = cpsw_ale_del_vlan(ale, vid, vlan_members);
-+	if (ret) {
-+		dev_err(ale->params.dev, "Unable to del vlan\n");
-+		return ret;
-+	}
-+	dev_dbg(ale->params.dev, "port mask 0x%x\n", port_mask);
-+
-+	return ret;
-+}
-+
-+void cpsw_ale_set_unreg_mcast(struct cpsw_ale *ale, int unreg_mcast_mask,
-+			      bool add)
-+{
-+	u32 ale_entry[ALE_ENTRY_WORDS];
-+	int unreg_members = 0;
-+	int type, idx;
-+
-+	for (idx = 0; idx < ale->params.ale_entries; idx++) {
-+		cpsw_ale_read(ale, idx, ale_entry);
-+		type = cpsw_ale_get_entry_type(ale_entry);
-+		if (type != ALE_TYPE_VLAN)
-+			continue;
-+
-+		unreg_members =
-+			cpsw_ale_get_vlan_unreg_mcast(ale_entry,
-+						      ale->vlan_field_bits);
-+		if (add)
-+			unreg_members |= unreg_mcast_mask;
-+		else
-+			unreg_members &= ~unreg_mcast_mask;
-+		cpsw_ale_set_vlan_unreg_mcast(ale_entry, unreg_members,
-+					      ale->vlan_field_bits);
-+		cpsw_ale_write(ale, idx, ale_entry);
-+	}
-+}
-+
- void cpsw_ale_set_allmulti(struct cpsw_ale *ale, int allmulti, int port)
- {
- 	u32 ale_entry[ALE_ENTRY_WORDS];
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index 8a0d25950dc1..b5ac8cc7c677 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -116,4 +116,14 @@ int cpsw_ale_control_set(struct cpsw_ale *ale, int port,
- 			 int control, int value);
- void cpsw_ale_dump(struct cpsw_ale *ale, u32 *data);
- 
-+int cpsw_ale_vlan_add_modify(struct cpsw_ale *ale, u16 vid, int port_mask,
-+			     int untag_mask, int reg_mcast, int unreg_mcast);
-+int cpsw_ale_vlan_del_modify(struct cpsw_ale *ale, u16 vid, int port_mask);
-+int cpsw_ale_mcast_add_modify(struct cpsw_ale *ale, u8 *addr, int port_mask,
-+			      int flags, u16 vid, int mcast_state);
-+int cpsw_ale_mcast_del_modify(struct cpsw_ale *ale, u8 *addr, int port,
-+			      int flags, u16 vid);
-+void cpsw_ale_set_unreg_mcast(struct cpsw_ale *ale, int unreg_mcast_mask,
-+			      bool add);
-+
- #endif
--- 
-2.17.1
-
+SGVsbG8sDQoNClNlcmdlIFNlbWluIHdyb3RlOg0KPiBDdXJyZW50IE1JUFMgcGxhdGZvcm0gY29k
+ZSBtYWtlcyBzdXJlIHRoZSBrZXJuZWwgdGV4dCwgZGF0YSBhbmQgaW5pdA0KPiBzZWN0aW9ucyBh
+cmUgYWRkZWQgdG8gdGhlIGJvb3QgbWVtb3J5IG1hcCBwb29sIHJpZ2h0IGFmdGVyIHRoZQ0KPiBh
+cmNoLXNwZWNpZmljIG1lbW9yeSBzZXR1cCBtZXRob2QgaGFzIGJlZW4gZXhlY3V0ZWQuIEJ1dCBm
+b3Igc29tZSByZWFzb24NCj4gdGhlIE1JUFMgcGxhdGZvcm0gY29kZSBza2lwcGVkIHRoZSBrZXJu
+ZWwgLmJzcyBzZWN0aW9uLCB3aGljaCBkZWZpbml0ZWx5DQo+IHNob3VsZCBiZSBpbiB0aGUgYm9v
+dCBtZW0gcG9vbCBhcyB3ZWxsIGluIGFueSBjYXNlLiBMZXRzIGZpeCB0aGlzIGp1c3QgYmUNCj4g
+YWRkaW5nIHRoZSBzcGFjZSBiZXR3ZWVuIF9fYnNzX3N0YXJ0IGFuZCBfX2Jzc19zdG9wLg0KPiAN
+Cj4gUmV2aWV3ZWQtYnk6IE1hdHQgUmVkZmVhcm4gPG1hdHQucmVkZmVhcm5AbWlwcy5jb20+DQo+
+IFNpZ25lZC1vZmYtYnk6IFNlcmdlIFNlbWluIDxmYW5jZXIubGFuY2VyQGdtYWlsLmNvbT4NCg0K
+QXBwbGllZCB0byBtaXBzLW5leHQuDQoNClRoYW5rcywNCiAgICBQYXVsDQoNClsgVGhpcyBtZXNz
+YWdlIHdhcyBhdXRvLWdlbmVyYXRlZDsgaWYgeW91IGJlbGlldmUgYW55dGhpbmcgaXMgaW5jb3Jy
+ZWN0DQogIHRoZW4gcGxlYXNlIGVtYWlsIHBhdWwuYnVydG9uQG1pcHMuY29tIHRvIHJlcG9ydCBp
+dC4gXQ0K
