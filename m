@@ -2,119 +2,129 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7FAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2A0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F1721773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0431C21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="MtnKvHTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbfDXNHQ (ORCPT
+        id S1730388AbfDXNH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:07:16 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52800 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbfDXNHQ (ORCPT
+        Wed, 24 Apr 2019 09:07:57 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35260 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729107AbfDXNH4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:07:16 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hJHcF-0002pH-9h; Wed, 24 Apr 2019 13:07:11 +0000
-Date:   Wed, 24 Apr 2019 14:07:11 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gaurav Kohli <gkohli@codeaurora.org>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        Martin Kepplinger <martink@posteo.de>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH v2] Input: uinput: Avoid Object-Already-Free with a
- global lock
-Message-ID: <20190424130711.GP2217@ZenIV.linux.org.uk>
-References: <20190418014321.dptin7tpxpldhsns@penguin>
- <bb92c3f2-faf1-04ec-4c67-3aba56c507a9@codeaurora.org>
- <a4d1a2f3-1db7-e300-9569-7b7a2fadd64e@codeaurora.org>
- <20190419071152.x5ghvbybjhv76uxt@penguin>
- <f3cd46fb-2bb1-0422-b2be-3f7625ec9c4e@codeaurora.org>
- <20190423032839.xvbldglrmjxkdntj@penguin>
- <17f4a0be-ab04-8537-9197-32fbca807f3f@codeaurora.org>
- <20190423084944.gj2boxfcg7lp4zad@penguin>
- <20190423110611.GL2217@ZenIV.linux.org.uk>
- <5614f04f-827d-1668-9ed0-60d93e110b8e@codeaurora.org>
+        Wed, 24 Apr 2019 09:07:56 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y197so5007598wmd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 06:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=efC0d41bcdCEPg2sED1pE6Lj8uSJvrJgvXmS3cUlyUg=;
+        b=MtnKvHTCfXNM6o0Xisy931EBHm/M5lxAMjgBSsm5QneZzWcgqB/9ei5sPkiCPbMsdI
+         jabCrvWJrE5dEPorzVRRGf7e1aYoHOUXWu62s+tjlbmmt9YfM9Ys8fJQY5C1nhcsPYh8
+         9pQLXTJTEhNvnXimRrd/cUCHm5zqU1v6KRycWpgXMVgLo/YBspuuIweQLfep+nGvu4Q9
+         GANyJakFdPpSIJz7KWJZ4E+CiLfdB9AbQ8O0RHDtjdNk/aaLCPpcCIrqd64yQvEhFiXU
+         a0YBzEMlkHreYotLSrTCZEvL8uICSxUhWbAK7zbhlps0BNjag9ccxOkJoLwmwLLuOtO5
+         t/kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=efC0d41bcdCEPg2sED1pE6Lj8uSJvrJgvXmS3cUlyUg=;
+        b=sTSLYiM6QWAu1V4irkwW7ODkXNp0PENLTUiygLkM++Dsvv7Phmd/8NOWjRr7uSWKQZ
+         FSeMk3FGAEGBad5/rZfD5H4t2/cx3iV9lSt/m/ehPaZJi4Ld76zOQNXELxYBra/V+N8L
+         EuI0L+mIqJ3MPiOWIiKwbcN9ha4WaXbBlBLDUNE4ITJRZgDbnlGd4aKvJoRQZN9PvUTY
+         zlttfld5blXKelt2+/VKvDEaC6aM7HTNEt9YpfhWAxnK2q2k/ZJi3FZVIYAfedY/3Ux8
+         w1gvAUcyOlFGFFFt+HbcDzUorilzKgb+oWujXReu2KKp5Ui/9/C4VddjVh2Md+yb9VBi
+         KUvg==
+X-Gm-Message-State: APjAAAX1RHMxt/gdPvWYgvmUc9vqZ1jP6PYvfRR34qKZYZx0D1gHxYm7
+        TJzHF2kv+VYYzRSnfWxZcg4X1g==
+X-Google-Smtp-Source: APXvYqxSqhzZdQM+LkndxvGGQ5P9BUBal4exkleRgtWHfaGFuiHITNNwUKpWwWm0uV4rDDv07rePUA==
+X-Received: by 2002:a1c:cc15:: with SMTP id h21mr6534078wmb.85.1556111274838;
+        Wed, 24 Apr 2019 06:07:54 -0700 (PDT)
+Received: from brauner.io (p4FC0A32E.dip0.t-ipconnect.de. [79.192.163.46])
+        by smtp.gmail.com with ESMTPSA id n1sm14163522wmc.19.2019.04.24.06.07.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 24 Apr 2019 06:07:54 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 15:07:52 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Zhenliang Wei <weizhenliang@huawei.com>
+Cc:     ebiederm@xmission.com, oleg@redhat.com, colona@arista.com,
+        akpm@linux-foundation.org, arnd@arndb.de, tglx@linutronix.de,
+        deepa.kernel@gmail.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v4] signal: trace_signal_deliver when signal_group_exit
+Message-ID: <20190424130751.jckvq535ipfx5cq6@brauner.io>
+References: <20190424125238.83264-1-weizhenliang@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5614f04f-827d-1668-9ed0-60d93e110b8e@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190424125238.83264-1-weizhenliang@huawei.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 05:40:40PM +0530, Mukesh Ojha wrote:
+On Wed, Apr 24, 2019 at 08:52:38PM +0800, Zhenliang Wei wrote:
+> In the fixes commit, removing SIGKILL from each thread signal mask
+> and executing "goto fatal" directly will skip the call to
+> "trace_signal_deliver". At this point, the delivery tracking of the SIGKILL
+> signal will be inaccurate.
 > 
-> Al,
+> Therefore, we need to add trace_signal_deliver before "goto fatal"
+> after executing sigdelset.
 > 
-> i tried to put traceprintk inside ioctl after fdget and fdput on a simple
-> call of open  => ioctl => close
-
-in a loop, and multithreaded, presumably?
-
-> on /dev/uinput.
+> Note: SEND_SIG_NOINFO matches the fact that SIGKILL doesn't have any info.
 > 
->           uinput-532   [002] ....    45.312044: SYSC_ioctl: 2     <= f_count
-> >    <After fdget()
->           uinput-532   [002] ....    45.312055: SYSC_ioctl: 2           
-> <After fdput()
->           uinput-532   [004] ....    45.313766: uinput_open: uinput: 1
->           uinput-532   [004] ....    45.313783: SYSC_ioctl: 1
->           uinput-532   [004] ....    45.313788: uinput_ioctl_handler:
-> uinput: uinput_ioctl_handler, 1
->           uinput-532   [004] ....    45.313835: SYSC_ioctl: 1
->           uinput-532   [004] ....    45.313843: uinput_release: uinput:  0
+> Acked-by: Christian Brauner <christian@brauner.io>
+
+I think we're supposed to use more Reviewed-bys so feel free (or Andrew)
+to change this to:
+
+Reviewed-by: Christian Brauner <christian@brauner.io>
+
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> Cc: <stable@vger.kernel.org>
+> Fixes: cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Zhenliang Wei <weizhenliang@huawei.com>
+> ---
+>  kernel/signal.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> 
-> So while a ioctl is running the f_count is 1, so a fput could be run and do
-> atomic_long_dec_and_test
-> this could call release right ?
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 227ba170298e..3edf526db7c6 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -2441,6 +2441,8 @@ bool get_signal(struct ksignal *ksig)
+>  	if (signal_group_exit(signal)) {
+>  		ksig->info.si_signo = signr = SIGKILL;
+>  		sigdelset(&current->pending.signal, SIGKILL);
+> +		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
+> +			&sighand->action[signr - 1]);
 
-Look at ksys_ioctl():
-int ksys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg)
-{
-        int error;
-        struct fd f = fdget(fd);
-an error or refcount bumped
-        if (!f.file)
-                return -EBADF;
-not an error, then.  We know that ->release() won't be called
-until we drop the reference we've just acquired.
-        error = security_file_ioctl(f.file, cmd, arg);
-        if (!error)
-                error = do_vfs_ioctl(f.file, fd, cmd, arg);
-... and we are done with calling ->ioctl(), so
-        fdput(f);
-... we drop the reference we'd acquired.
+Hm, sorry for being the really nitpicky person here. Just for the sake
+of consistency how about we do either:
 
-Seeing refcount 1 inside ->ioctl() is possible, all right:
++		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
++			&sighand->action[SIGKILL - 1]);
 
-CPU1: ioctl(2) resolves fd to struct file *, refcount 2
-CPU2: close(2) rips struct file * from descriptor table and does fput() to drop it;
-	refcount reaches 1 and fput() is done; no call of ->release() yet.
-CPU1: we get arouund to ->ioctl(), where your trace sees refcount 1
-CPU1: done with ->ioctl(), drop our reference.  *NOW* refcount gets to 0, and
-	->release() is called.
+or
 
-IOW, in your trace fput() has already been run by close(2); having somebody else
-do that again while we are in ->ioctl() would be a bug (to start with, where
-did they get that struct file * and why wasn't that reference contributing to
-struct file refcount?)
++		trace_signal_deliver(signr, SEND_SIG_NOINFO,
++			&sighand->action[signr - 1]);
 
-In all cases we only call ->release() once all references gone - both
-the one(s) in descriptor tables and any transient ones acquired by
-fdget(), etc.
+I'm not going to argue about this though. Can just also leave it as is.
 
-I would really like to see a reproducer for the original use-after-free report...
+Christian
