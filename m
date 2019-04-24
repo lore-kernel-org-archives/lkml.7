@@ -2,122 +2,173 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68293C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7DBC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319E920878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F3C218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:13:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fiWOjvLl"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MCiHozPL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbfDXENn (ORCPT
+        id S1728700AbfDXENr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 00:13:43 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44517 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfDXENm (ORCPT
+        Wed, 24 Apr 2019 00:13:47 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15354 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfDXENq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 00:13:42 -0400
-Received: by mail-qk1-f195.google.com with SMTP id y5so10016617qkc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 21:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=gn7rK0B9/eSlSI85DtD0W9jgqm3yeCYqZOhHbw08jS4=;
-        b=fiWOjvLlZOm7gIlf8ejA2rc9r71SLsXuQjK9maF8VGnBgebFo/XytEKm5B3UT3mEFO
-         6jDMJ6SLPvc4HKZ5x69/11mi9IquNfd6I5c6NS+9S72q31JwEbO7qRJaAf7D95WWsnOH
-         mkdTthy5YxsU0LoBnTpImL+jMPHAb+qWHw5atN/x+QK5dcQhRYvXJzGciS7wu+PO58ur
-         E0rrNvbVSJEILAvZ1jK+w/l5ArYHI2OxpJfo9FhFj3q7cFRbu2ylGA9rSqgA/9FyaIpf
-         6DA5zifwQ1m+5TE8ESoMQW/AodjrCs7gE+50b3V5lCihc2KTh2osZF1vl05rS4GzgUki
-         Hi9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=gn7rK0B9/eSlSI85DtD0W9jgqm3yeCYqZOhHbw08jS4=;
-        b=ueXlWsb0jjbbJM3dmleVvLoxdeh7v3l0DxJmbLlRLh/sKNOJGg+G0BJGGvyYprYSki
-         L6pe28sUZ9kPtlr6gmlRBxRtdCuqO3qxOEffterp95VvbxU5HQtrRc01yk59QdWIsglo
-         S8v4lFMRRFAibOg2v/Ip0inQUjSrb37HWN8e46n8Y2OzRf+FBw1XygORsa/FD1zSqaSc
-         6WbZDDWkAkGsFSuFTUNQnMMfmI+0nw92xoo/QUAjaMLL2YoVbW/D83o8/lPBRPebc/Fi
-         Y0TCcy7SuPsedd4A20+LXaTch8dJzUYDQh0KY0lRRV6Z6OiBkcT/7OXyvaTdj3pICks1
-         qe2Q==
-X-Gm-Message-State: APjAAAU1hrNW27BHkUinnVYyQwlnqHsabTYJtukLQf4+Q5UgKA/stEux
-        Zf+knhKfMwuTW/BDeLRZPsR5vA==
-X-Google-Smtp-Source: APXvYqxqUjh7WokEe+vb7gS69ivwktg2BK7z9Scyv6F460xJ1W+ViU3SoxW7BjuRzFSiXqMC5LtjmA==
-X-Received: by 2002:a05:620a:148d:: with SMTP id w13mr22700134qkj.6.1556079221738;
-        Tue, 23 Apr 2019 21:13:41 -0700 (PDT)
-Received: from [192.168.1.169] (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
-        by smtp.gmail.com with ESMTPSA id 50sm5955692qtn.73.2019.04.23.21.13.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 21:13:41 -0700 (PDT)
-Subject: Re: [PATCH V2 1/3] Calculate Thermal Pressure
-To:     Quentin Perret <quentin.perret@arm.com>
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
- <1555443521-579-2-git-send-email-thara.gopinath@linaro.org>
- <20190418101418.5kiw5hkxoflbsvlj@queper01-lin>
-Cc:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5CBFE274.8010103@linaro.org>
-Date:   Wed, 24 Apr 2019 00:13:40 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Wed, 24 Apr 2019 00:13:46 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cbfe2750000>; Tue, 23 Apr 2019 21:13:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 23 Apr 2019 21:13:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 23 Apr 2019 21:13:44 -0700
+Received: from nvidia.com (172.20.13.39) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Apr
+ 2019 04:13:43 +0000
+Date:   Tue, 23 Apr 2019 21:13:41 -0700
+From:   Neo Jia <cjia@nvidia.com>
+To:     Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>
+CC:     Yan Zhao <yan.y.zhao@intel.com>,
+        <intel-gvt-dev@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <aik@ozlabs.ru>, <Zhengxiao.zx@alibaba-inc.com>,
+        <shuangtai.tst@alibaba-inc.com>, <qemu-devel@nongnu.org>,
+        <kwankhede@nvidia.com>, <eauger@redhat.com>, <yi.l.liu@intel.com>,
+        <eskultet@redhat.com>, <ziye.yang@intel.com>,
+        <mlevitsk@redhat.com>, <pasic@linux.ibm.com>,
+        <libvir-list@redhat.com>, <arei.gonglei@huawei.com>,
+        <felipe@nutanix.com>, <Ken.Xue@amd.com>, <kevin.tian@intel.com>,
+        <dgilbert@redhat.com>, <zhenyuw@linux.intel.com>,
+        <alex.williamson@redhat.com>, <changpeng.liu@intel.com>,
+        <cohuck@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <zhi.a.wang@intel.com>, <jonathan.davies@nutanix.com>,
+        <shaopeng.he@intel.com>
+Subject: Re: [Qemu-devel] [PATCH 1/2] vfio/mdev: add version field as
+ mandatory attribute for mdev device
+Message-ID: <20190424041340.GA5498@nvidia.com>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+ <20190419083505.19654-1-yan.y.zhao@intel.com>
+ <20190423103939.GF6022@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190418101418.5kiw5hkxoflbsvlj@queper01-lin>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190423103939.GF6022@redhat.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1556079221; bh=m8gOn2B1g2bQ591PhvROeRFRvKnk6OyIOZF3JB4dA64=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:
+         Content-Transfer-Encoding:In-Reply-To:X-NVConfidentiality:
+         User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=MCiHozPLhh5n80paDMb5cxXglbdstr725AkzgNoSPz0yqUWr0PbulY0dR5taIXz9m
+         vfa9WTKHJ4ZzC//47RK+NT8uZsD0uaQ6+9ZGMFLUfFZJ3FUO/XOLRH3RKXJ3nPvDlF
+         TH4ssSjg1MrWuJ01l7V2/5VtzWX0EsvTlqpk9/2jP7cI5La+yiRUD/z2Ah6o3QDVyF
+         fgtGeXLmtOJRtw7X1D3ZhuD793nroEhYmqmFBooPtHu4Vc/lnwTbiSecx+5qzW/Ad3
+         0JbLnjYLcWtyxzkkKMA/XW45EjocUPA6muujevEnoVMje6/oy3Ip52cuM1L9e7Iei3
+         3eRnHhseUgjgA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/18/2019 06:14 AM, Quentin Perret wrote:
-> On Tuesday 16 Apr 2019 at 15:38:39 (-0400), Thara Gopinath wrote:
->> +/**
->> + * Function to update thermal pressure from cooling device
->> + * or any framework responsible for capping cpu maximum
->> + * capacity.
->> + */
->> +void sched_update_thermal_pressure(struct cpumask *cpus,
->> +				   unsigned long cap_max_freq,
->> +				   unsigned long max_freq)
->> +{
->> +	int cpu;
->> +	unsigned long flags = 0;
->> +	struct thermal_pressure *cpu_thermal;
->> +
->> +	for_each_cpu(cpu, cpus) {
-> 
-> Is it actually required to do this for each CPU ? You could calculate
-> the whole thing once for the first CPU, and apply the result to all CPUs
-> in the policy no ? All CPUs in a policy are capped and uncapped
-> synchronously.
-Hmm. You are right that all cpus in a policy are capped and uncapped
-synchronously from the thermal framework point of view. But the thermal
-pressure decay can happen at different times for each cpu and hence the
-update has to be done on a per cpu basis(especially to keep track of
-other age and other variables in the averaging and accumulating
-algorithm). It can be separated out but I think it will just make the
-solution more complicated.
-> 
->> +		cpu_thermal = per_cpu(thermal_pressure_cpu, cpu);
->> +		if (!cpu_thermal)
->> +			return;
->> +		spin_lock_irqsave(&cpu_thermal->lock, flags);
->> +		thermal_pressure_update(cpu_thermal, cap_max_freq, max_freq, 1);
->> +	}
->> +}
+On Tue, Apr 23, 2019 at 11:39:39AM +0100, Daniel P. Berrang=E9 wrote:
+> On Fri, Apr 19, 2019 at 04:35:04AM -0400, Yan Zhao wrote:
+> > device version attribute in mdev sysfs is used by user space software
+> > (e.g. libvirt) to query device compatibility for live migration of VFIO
+> > mdev devices. This attribute is mandatory if a mdev device supports liv=
+e
+> > migration.
+> >=20
+> > It consists of two parts: common part and vendor proprietary part.
+> > common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
+> >              identifies device type. e.g., for pci device, it is
+> >              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> > vendor proprietary part: this part is varied in length. vendor driver c=
+an
+> >              specify any string to identify a device.
+> >=20
+> > When reading this attribute, it should show device version string of th=
+e
+> > device of type <type-id>. If a device does not support live migration, =
+it
+> > should return errno.
+> > When writing a string to this attribute, it returns errno for
+> > incompatibility or returns written string length in compatibility case.
+> > If a device does not support live migration, it always returns errno.
+> >=20
+> > For user space software to use:
+> > 1.
+> > Before starting live migration, user space software first reads source =
+side
+> > mdev device's version. e.g.
+> > "#cat \
+> > /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9c=
+d/mdev_type/version"
+> > 00028086-193b-i915-GVTg_V5_4
+> >=20
+> > 2.
+> > Then, user space software writes the source side returned version strin=
+g
+> > to device version attribute in target side, and checks the return value=
+.
+> > If a negative errno is returned in the target side, then mdev devices i=
+n
+> > source and target sides are not compatible;
+> > If a positive number is returned and it equals to the length of written
+> > string, then the two mdev devices in source and target side are compati=
+ble.
+> > e.g.
+> > (a) compatibility case
+> > "# echo 00028086-193b-i915-GVTg_V5_4 >
+> > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab=
+1/mdev_type/version"
+> >=20
+> > (b) incompatibility case
+> > "#echo 00028086-193b-i915-GVTg_V5_1 >
+> > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab=
+1/mdev_type/version"
+> > -bash: echo: write error: Invalid argument
+>=20
+> What you have written here seems to imply that each mdev type is able to
+> support many different versions at the same time. Writing a version into
+> this sysfs file then chooses which of the many versions to actually use.
+>=20
+> This is good as it allows for live migration across driver software upgra=
+des.
+>=20
+> A mgmt application may well want to know what versions are supported for =
+an
+> mdev type *before* starting a migration. A mgmt app can query all the 100=
+'s
+> of hosts it knows and thus figure out which are valid to use as the targe=
+t
+> of a migration.
+>=20
+> IOW, we want to avoid the ever hitting the incompatibility case in the
+> first place, by only choosing to migrate to a host that we know is going
+> to be compatible.
+>=20
+> This would need some kind of way to report the full list of supported
+> versions against the mdev supported types on the host.
 
+What would be the typical scenario / use case for mgmt layer to query the v=
+ersion
+information? Do they expect this get done completely offline as long as the
+vendor driver installed on each host?
 
--- 
-Regards
-Thara
+Thanks,
+Neo
+
+>=20
+>=20
