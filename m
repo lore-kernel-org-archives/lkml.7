@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C848C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55704C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB85E2190A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2548C21909
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126285;
-	bh=3+IBm3vxEffwxbgjqY95ru/IDDZZvDRCUAQhEX0Iem0=;
+	s=default; t=1556126287;
+	bh=nWSw3dpRfrh23uz92UnFunuYPReheyzgcl9q1cC91BM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZllSFNfn13V6P1PSAZzkeU5aOzH7ElIk664r0WZdz0S/cu/RuxxknmWxlAfwzkhHJ
-	 tClL4SYhf9HOqsaTIfD0aUN6pilnX0+aXqNS5NQQ4UBdgQGNE5Lo+IYpNLC/NkIQwu
-	 vRe3/1h2veu+MscP1wLqxy49MUcaFMGui/0vKxjs=
+	b=y0BuR9UyXW8Y+ECdXEctCKsdM6i/eqrsSXeFqeQJdQel37i10XhceMiLFBA1LTw3J
+	 92vlHwAR/69whwBl28n11nLt4Gn47HidOEXYu7MxQRch7/XgHDceEqIuJJrWvhnSl8
+	 3ProtJgPPuxXCRsMuUn8+TVb9NdTGw9M/QOSrzCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388771AbfDXRSD (ORCPT
+        id S2388783AbfDXRSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42972 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:18:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388749AbfDXRR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:17:58 -0400
+        id S2388749AbfDXRSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:18:04 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C81E72190A;
-        Wed, 24 Apr 2019 17:17:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2526B21909;
+        Wed, 24 Apr 2019 17:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126278;
-        bh=3+IBm3vxEffwxbgjqY95ru/IDDZZvDRCUAQhEX0Iem0=;
+        s=default; t=1556126283;
+        bh=nWSw3dpRfrh23uz92UnFunuYPReheyzgcl9q1cC91BM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pMlhDq9qZA147iq7YTNcOptkVBC4HlJRNGuq2+0OSPZguSLaU5xnVWsfbaQK4jn1x
-         UuA+zE9W/SrUCSdbxIBZv1mkjOntNtiOONJvSGWyEqDr31MRoM7b0ut7cmH8TYtxnx
-         PH2c8EfEJ0E7KRxsYhjMHEbL0NWzm8mYzw/C/cGE=
+        b=EJWuOhG2hOfrgagpwuh1oZf8Bq8PxYv0zAKBlRoQWRP6vbelG7swkevrLtWx90IwZ
+         gLt2+qMoMKDqINzgKSCDSYGSC7BAKe235k+b7xLX1NPOGpvIVaJk5a2ov2tUhqdpb4
+         tAq+PUwtUN8S8Ex+doqyax0D31I/XBtBOr0LRIds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
-        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
+        stable@vger.kernel.org, David Tolnay <dtolnay@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 056/168] tty: increase the default flip buffer limit to 2*640K
-Date:   Wed, 24 Apr 2019 19:08:20 +0200
-Message-Id: <20190424170927.119056675@linuxfoundation.org>
+Subject: [PATCH 4.4 058/168] hwrng: virtio - Avoid repeated init of completion
+Date:   Wed, 24 Apr 2019 19:08:22 +0200
+Message-Id: <20190424170927.224435608@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,49 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7ab57b76ebf632bf2231ccabe26bea33868118c6 ]
+[ Upstream commit aef027db48da56b6f25d0e54c07c8401ada6ce21 ]
 
-We increase the default limit for buffer memory allocation by a factor of
-10 to 640K to prevent data loss when using fast serial interfaces.
+The virtio-rng driver uses a completion called have_data to wait for a
+virtio read to be fulfilled by the hypervisor. The completion is reset
+before placing a buffer on the virtio queue and completed by the virtio
+callback once data has been written into the buffer.
 
-For example when using RS485 without flow-control at speeds of 1Mbit/s
-an upwards we've run into problems such as applications being too slow
-to read out this buffer (on embedded devices based on imx53 or imx6).
+Prior to this commit, the driver called init_completion on this
+completion both during probe as well as when registering virtio buffers
+as part of a hwrng read operation. The second of these init_completion
+calls should instead be reinit_completion because the have_data
+completion has already been inited by probe. As described in
+Documentation/scheduler/completion.txt, "Calling init_completion() twice
+on the same completion object is most likely a bug".
 
-If you want to write transmitted data to a slow SD card and thus have
-realtime requirements, this limit can become a problem.
+This bug was present in the initial implementation of virtio-rng in
+f7f510ec1957 ("virtio: An entropy device, as suggested by hpa"). Back
+then the have_data completion was a single static completion rather than
+a member of one of potentially multiple virtrng_info structs as
+implemented later by 08e53fbdb85c ("virtio-rng: support multiple
+virtio-rng devices"). The original driver incorrectly used
+init_completion rather than INIT_COMPLETION to reset have_data during
+read.
 
-That shouldn't be the case and 640K buffers fix such problems for us.
+Tested by running `head -c48 /dev/random | hexdump` within crosvm, the
+Chrome OS virtual machine monitor, and confirming that the virtio-rng
+driver successfully produces random bytes from the host.
 
-This value is a maximum limit for allocation only. It has no effect
-on systems that currently run fine. When transmission is slow enough
-applications and hardware can keep up and increasing this limit
-doesn't change anything.
-
-It only _allows_ to allocate more than 2*64K in cases we currently fail to
-allocate memory despite having some.
-
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: David Tolnay <dtolnay@gmail.com>
+Tested-by: David Tolnay <dtolnay@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/tty_buffer.c | 2 +-
+ drivers/char/hw_random/virtio-rng.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
-index 355e9cad680d..4706df20191b 100644
---- a/drivers/tty/tty_buffer.c
-+++ b/drivers/tty/tty_buffer.c
-@@ -25,7 +25,7 @@
-  * Byte threshold to limit memory consumption for flip buffers.
-  * The actual memory limit is > 2x this amount.
-  */
--#define TTYB_DEFAULT_MEM_LIMIT	65536
-+#define TTYB_DEFAULT_MEM_LIMIT	(640 * 1024UL)
+diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
+index 3fa2f8a009b3..1c5c4314c6b5 100644
+--- a/drivers/char/hw_random/virtio-rng.c
++++ b/drivers/char/hw_random/virtio-rng.c
+@@ -73,7 +73,7 @@ static int virtio_read(struct hwrng *rng, void *buf, size_t size, bool wait)
  
- /*
-  * We default to dicing tty buffer allocations to this many characters
+ 	if (!vi->busy) {
+ 		vi->busy = true;
+-		init_completion(&vi->have_data);
++		reinit_completion(&vi->have_data);
+ 		register_buffer(vi, buf, size);
+ 	}
+ 
 -- 
 2.19.1
 
