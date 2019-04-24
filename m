@@ -2,117 +2,341 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4505C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA11C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A91218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:23:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="bY4Til4v"
+	by mail.kernel.org (Postfix) with ESMTP id EA48C218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556119421;
+	bh=9d1hmjgB//BK5rMtAw3JN3GCYB3E2iGu6he6ESdgD20=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rPYtEozthE4oSDKsq8Fiq8UsESq8h5JykC/pZKwJ/ACCp0Zs6TvSO/Se1zy5rR9wt
+	 OeORnw9Fh5TSBSofHGAEVf0/R7k7jdnGqBwGjm7g95iQy4XDDXrEvGt94K0cOMkLGv
+	 1JARbYHo9/ytptwbhIvv7CUcpRXJKKy1rrC04C/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731071AbfDXPXK (ORCPT
+        id S1731101AbfDXPXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:23:10 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36682 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730834AbfDXPXJ (ORCPT
+        Wed, 24 Apr 2019 11:23:39 -0400
+Received: from casper.infradead.org ([85.118.1.10]:54636 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727995AbfDXPXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:23:09 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b1so14403750wru.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+cBgF/gjELKIQRS2aft5rWhJUtq8IN8s1bpX+AMfNMA=;
-        b=bY4Til4viTb6wSpT4OlYv4QpI9Se07j4RdOTQZ+avLco0Rph+7Af0PlmfZXbwLAfyT
-         ZOL4d5Vt8bUNwHyq+Ku8IneIgtUAYuXaJLmE0xYR3NqyxOhWMTm+sn+pDYO5EmguF8wY
-         pD1iPPdevBVLO4C9+pSWVI73Nqqk2+HIulVS9dmjSsErOsLBR8rDSqdMeteBXNj+xVG+
-         cL401vx5JSPn6BUajU7mZbyxy31Qt1DDGLybvLTI1Sit+PZKomqSV63QMJinSkvNYJHb
-         jjnP9hLtnLXbJa3RFOkZwBe69++X8Valj/u4q/gqW3LWrcehcjFCEzPeO5kCkMC4W0ct
-         qSvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+cBgF/gjELKIQRS2aft5rWhJUtq8IN8s1bpX+AMfNMA=;
-        b=EcMNWZP7Ro3KT+EPsd8ijUCxZ27W79Ha0C9mGp3jVZwEySMLRQA5HrJzDJIvlE/scI
-         RqBTCNr9MxowRDQpTE3GD7Oau/D9GXOrl0pvWoJNsgcHuxe7DMJGrVWqq+h321ZvEiJa
-         1DJzoppwWn3/PZ6JPhRjiuK5mF/Yb/Xbho9uOpbaBxxcm7kJyzgwtoMXtKwBMI0QA8N8
-         AkLXNevyajFGoPU43PHd5zOjax/wI/QWv5oVkIEjI1vVCbrpHSU6U+kOlK1Lj4qkp9Sl
-         UZyNzMXiFE5XoAk9oe+1UVGj6KbsYLy3Gz8CK9QaciAdXmztMJlzhp6uXEOgRWjA3dru
-         u5wA==
-X-Gm-Message-State: APjAAAWeJHuOgP9p3RYWNS1ZhGpLs8vd+UtsWveV94OciZS2tamOuvn0
-        ejHBBbyqXu/R3XNXPG7045u/Uw==
-X-Google-Smtp-Source: APXvYqxiG3iLBKTEY4ulOkjoyONgTuKs542ywpnmlXIO7LvwhLf5eP2oawL9c8uwaZMk6sFX2rEu7A==
-X-Received: by 2002:a5d:52c4:: with SMTP id r4mr12785628wrv.79.1556119387967;
-        Wed, 24 Apr 2019 08:23:07 -0700 (PDT)
-Received: from brauner.io (p4FC0A32E.dip0.t-ipconnect.de. [79.192.163.46])
-        by smtp.gmail.com with ESMTPSA id t76sm27103665wmt.8.2019.04.24.08.23.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Apr 2019 08:23:07 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 17:23:06 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     keescook@chromium.org, luto@amacapital.net, jannh@google.com,
-        linux-kernel@vger.kernel.org, stgraber@ubuntu.com
-Subject: Re: SECCOMP_RET_USER_NOTIF: listener improvements
-Message-ID: <20190424152305.32znd5t7r3d3hedj@brauner.io>
-References: <20190424150423.k3embc2vkho2kixp@brauner.io>
- <20190424152001.GL3758@cisco>
+        Wed, 24 Apr 2019 11:23:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jlcS8uWk+Yp7M7Is6NXHNjZVzCGZqfqZLTxx3PEchpU=; b=KoSX8ESoqmD1eio80lW5+aqiRx
+        iwGpshWrI4GEg8eUUd6ADgubx2guBxFy8VEqUdfSTocl8/MBSL8oJ50rnpaDrXYJRH+LXRNg/rihu
+        RvSYRdnLSxrklZOklXGLuKovfdFZ2BmSKDQcEg5KtBz2OwN+Gs4YZOVEtjraoP/Wy5vVDFZlxae/B
+        hjbHCocVCDFAUskUz6Bsv380GJguhnS0nHOEJFuYBaN90swQPRTlpg3fKeFsDdgWskOQH36s8EK2+
+        Ua6DSFVlXeG8SABBeJbCO0+iNEgLzm5amemRTpEFOBqj1ERuB98KOwJmrvS/lM+6R0oIWhxndUWd+
+        DnbTXEfQ==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJJkE-0002EN-8d; Wed, 24 Apr 2019 15:23:34 +0000
+Date:   Wed, 24 Apr 2019 12:23:27 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 27/63] Documentation: PCI: convert PCIEBUS-HOWTO.txt
+ to reST
+Message-ID: <20190424122327.1ff0c975@coco.lan>
+In-Reply-To: <20190423162932.21428-28-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-28-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190424152001.GL3758@cisco>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 09:20:01AM -0600, Tycho Andersen wrote:
-> On Wed, Apr 24, 2019 at 05:04:26PM +0200, Christian Brauner wrote:
-> > Hey everyone,
-> > 
-> > So I was working on making use of the seccomp listener stuff and I
-> > stumbled upon a problem. Imagine a scenario where:
-> > 
-> > 1. Task T1 installs Filter F1 and gets and listener fd for that filter FD1
-> > 2. T1 sends FD1 via SCM_RIGHTS to task T2
-> >    T2 now holds a reference to the same underlying struct file as FD1 via FD2
-> > 3. T2 registers FD2 in an event loop and starts listening for events
-> > 4. T1 exits and wipes FD1
-> > 
-> > Now, T2 still holds a reference to the filter via FD2 which references
-> > the same underlying file as FD1 which has the seccomp filter stashed in
-> > private_data.
-> > So T2 will never get notified that the filter is essentially unused and
-> > doesn't know when to exit, i.e. it has no way of telling when T1 and all
-> > of its children using the same filter are gone.
-> > 
-> > I think we should have a way to do this
-> 
-> Since the only way we ever allow creating a struct file * that points
-> to a struct seccomp_filter *, if there is a notifier attached, the
-> number of tasks still being monitored by a particular filter should be
-> filter->usage - 1 (assuming there is a notifier attached). So we could
-> augment __put_seccomp_filter() to check for this and send out a
-> message with a SECCOMP_NOTIF_FLAG_DEAD flag or something.
-> 
-> > *or* alternatively have a way to attach a process to an existing
-> > filter.
-> 
-> I also think this wouldn't be too hard, since the struct file * has a
-> reference to the filter. So I guess the question is: which of these
-> makes more sense?
+Em Wed, 24 Apr 2019 00:28:56 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-Or we do both... But overall I'm very much in favor of the option to
-attach a task to an existing filter. Re-creating a seccomp context is
-extremely brittle and error-prone. This would take a way a major pain
-point.
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  .../{PCIEBUS-HOWTO.txt => PCIEBUS-HOWTO.rst}  | 140 ++++++++++--------
+>  Documentation/PCI/index.rst                   |   1 +
+>  2 files changed, 82 insertions(+), 59 deletions(-)
+>  rename Documentation/PCI/{PCIEBUS-HOWTO.txt => PCIEBUS-HOWTO.rst} (70%)
 
-Christian
+Names in lowercase after rename, please.
+
+For the changes itself at the txt file:
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+> 
+> diff --git a/Documentation/PCI/PCIEBUS-HOWTO.txt b/Documentation/PCI/PCIEBUS-HOWTO.rst
+> similarity index 70%
+> rename from Documentation/PCI/PCIEBUS-HOWTO.txt
+> rename to Documentation/PCI/PCIEBUS-HOWTO.rst
+> index 15f0bb3b5045..f882ff62c51f 100644
+> --- a/Documentation/PCI/PCIEBUS-HOWTO.txt
+> +++ b/Documentation/PCI/PCIEBUS-HOWTO.rst
+> @@ -1,16 +1,23 @@
+> -		The PCI Express Port Bus Driver Guide HOWTO
+> -	Tom L Nguyen tom.l.nguyen@intel.com
+> -			11/03/2004
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. include:: <isonum.txt>
+>  
+> -1. About this guide
+> +===========================================
+> +The PCI Express Port Bus Driver Guide HOWTO
+> +===========================================
+> +
+> +:Author: Tom L Nguyen tom.l.nguyen@intel.com 11/03/2004
+> +:Copyright: |copy| 2004 Intel Corporation
+> +
+> +About this guide
+> +================
+>  
+>  This guide describes the basics of the PCI Express Port Bus driver
+>  and provides information on how to enable the service drivers to
+>  register/unregister with the PCI Express Port Bus Driver.
+>  
+> -2. Copyright 2004 Intel Corporation
+>  
+> -3. What is the PCI Express Port Bus Driver
+> +What is the PCI Express Port Bus Driver
+> +=======================================
+>  
+>  A PCI Express Port is a logical PCI-PCI Bridge structure. There
+>  are two types of PCI Express Port: the Root Port and the Switch
+> @@ -30,7 +37,8 @@ support (AER), and virtual channel support (VC). These services may
+>  be handled by a single complex driver or be individually distributed
+>  and handled by corresponding service drivers.
+>  
+> -4. Why use the PCI Express Port Bus Driver?
+> +Why use the PCI Express Port Bus Driver?
+> +========================================
+>  
+>  In existing Linux kernels, the Linux Device Driver Model allows a
+>  physical device to be handled by only a single driver. The PCI
+> @@ -51,28 +59,31 @@ PCI Express Ports and distributes all provided service requests
+>  to the corresponding service drivers as required. Some key
+>  advantages of using the PCI Express Port Bus driver are listed below:
+>  
+> -	- Allow multiple service drivers to run simultaneously on
+> -	  a PCI-PCI Bridge Port device.
+> +  - Allow multiple service drivers to run simultaneously on
+> +    a PCI-PCI Bridge Port device.
+>  
+> -	- Allow service drivers implemented in an independent
+> -	  staged approach.
+> +  - Allow service drivers implemented in an independent
+> +    staged approach.
+>  
+> -	- Allow one service driver to run on multiple PCI-PCI Bridge
+> -	  Port devices.
+> +  - Allow one service driver to run on multiple PCI-PCI Bridge
+> +    Port devices.
+>  
+> -	- Manage and distribute resources of a PCI-PCI Bridge Port
+> -	  device to requested service drivers.
+> +  - Manage and distribute resources of a PCI-PCI Bridge Port
+> +    device to requested service drivers.
+>  
+> -5. Configuring the PCI Express Port Bus Driver vs. Service Drivers
+> +Configuring the PCI Express Port Bus Driver vs. Service Drivers
+> +===============================================================
+>  
+> -5.1 Including the PCI Express Port Bus Driver Support into the Kernel
+> +Including the PCI Express Port Bus Driver Support into the Kernel
+> +-----------------------------------------------------------------
+>  
+>  Including the PCI Express Port Bus driver depends on whether the PCI
+>  Express support is included in the kernel config. The kernel will
+>  automatically include the PCI Express Port Bus driver as a kernel
+>  driver when the PCI Express support is enabled in the kernel.
+>  
+> -5.2 Enabling Service Driver Support
+> +Enabling Service Driver Support
+> +-------------------------------
+>  
+>  PCI device drivers are implemented based on Linux Device Driver Model.
+>  All service drivers are PCI device drivers. As discussed above, it is
+> @@ -89,9 +100,11 @@ header file /include/linux/pcieport_if.h, before calling these APIs.
+>  Failure to do so will result an identity mismatch, which prevents
+>  the PCI Express Port Bus driver from loading a service driver.
+>  
+> -5.2.1 pcie_port_service_register
+> +pcie_port_service_register
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +::
+>  
+> -int pcie_port_service_register(struct pcie_port_service_driver *new)
+> +  int pcie_port_service_register(struct pcie_port_service_driver *new)
+>  
+>  This API replaces the Linux Driver Model's pci_register_driver API. A
+>  service driver should always calls pcie_port_service_register at
+> @@ -99,69 +112,76 @@ module init. Note that after service driver being loaded, calls
+>  such as pci_enable_device(dev) and pci_set_master(dev) are no longer
+>  necessary since these calls are executed by the PCI Port Bus driver.
+>  
+> -5.2.2 pcie_port_service_unregister
+> +pcie_port_service_unregister
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +::
+>  
+> -void pcie_port_service_unregister(struct pcie_port_service_driver *new)
+> +  void pcie_port_service_unregister(struct pcie_port_service_driver *new)
+>  
+>  pcie_port_service_unregister replaces the Linux Driver Model's
+>  pci_unregister_driver. It's always called by service driver when a
+>  module exits.
+>  
+> -5.2.3 Sample Code
+> +Sample Code
+> +~~~~~~~~~~~
+>  
+>  Below is sample service driver code to initialize the port service
+>  driver data structure.
+> +::
+>  
+> -static struct pcie_port_service_id service_id[] = { {
+> -	.vendor = PCI_ANY_ID,
+> -	.device = PCI_ANY_ID,
+> -	.port_type = PCIE_RC_PORT,
+> -	.service_type = PCIE_PORT_SERVICE_AER,
+> -	}, { /* end: all zeroes */ }
+> -};
+> +  static struct pcie_port_service_id service_id[] = { {
+> +    .vendor = PCI_ANY_ID,
+> +    .device = PCI_ANY_ID,
+> +    .port_type = PCIE_RC_PORT,
+> +    .service_type = PCIE_PORT_SERVICE_AER,
+> +    }, { /* end: all zeroes */ }
+> +  };
+>  
+> -static struct pcie_port_service_driver root_aerdrv = {
+> -	.name		= (char *)device_name,
+> -	.id_table	= &service_id[0],
+> +  static struct pcie_port_service_driver root_aerdrv = {
+> +    .name		= (char *)device_name,
+> +    .id_table	= &service_id[0],
+>  
+> -	.probe		= aerdrv_load,
+> -	.remove		= aerdrv_unload,
+> +    .probe		= aerdrv_load,
+> +    .remove		= aerdrv_unload,
+>  
+> -	.suspend	= aerdrv_suspend,
+> -	.resume		= aerdrv_resume,
+> -};
+> +    .suspend	= aerdrv_suspend,
+> +    .resume		= aerdrv_resume,
+> +  };
+>  
+>  Below is a sample code for registering/unregistering a service
+>  driver.
+> +::
+>  
+> -static int __init aerdrv_service_init(void)
+> -{
+> -	int retval = 0;
+> +  static int __init aerdrv_service_init(void)
+> +  {
+> +    int retval = 0;
+>  
+> -	retval = pcie_port_service_register(&root_aerdrv);
+> -	if (!retval) {
+> -		/*
+> -		 * FIX ME
+> -		 */
+> -	}
+> -	return retval;
+> -}
+> +    retval = pcie_port_service_register(&root_aerdrv);
+> +    if (!retval) {
+> +      /*
+> +      * FIX ME
+> +      */
+> +    }
+> +    return retval;
+> +  }
+>  
+> -static void __exit aerdrv_service_exit(void)
+> -{
+> -	pcie_port_service_unregister(&root_aerdrv);
+> -}
+> +  static void __exit aerdrv_service_exit(void)
+> +  {
+> +    pcie_port_service_unregister(&root_aerdrv);
+> +  }
+>  
+> -module_init(aerdrv_service_init);
+> -module_exit(aerdrv_service_exit);
+> +  module_init(aerdrv_service_init);
+> +  module_exit(aerdrv_service_exit);
+>  
+> -6. Possible Resource Conflicts
+> +Possible Resource Conflicts
+> +===========================
+>  
+>  Since all service drivers of a PCI-PCI Bridge Port device are
+>  allowed to run simultaneously, below lists a few of possible resource
+>  conflicts with proposed solutions.
+>  
+> -6.1 MSI and MSI-X Vector Resource
+> +MSI and MSI-X Vector Resource
+> +-----------------------------
+>  
+>  Once MSI or MSI-X interrupts are enabled on a device, it stays in this
+>  mode until they are disabled again.  Since service drivers of the same
+> @@ -179,7 +199,8 @@ driver. Service drivers should use (struct pcie_device*)dev->irq to
+>  call request_irq/free_irq. In addition, the interrupt mode is stored
+>  in the field interrupt_mode of struct pcie_device.
+>  
+> -6.3 PCI Memory/IO Mapped Regions
+> +PCI Memory/IO Mapped Regions
+> +----------------------------
+>  
+>  Service drivers for PCI Express Power Management (PME), Advanced
+>  Error Reporting (AER), Hot-Plug (HP) and Virtual Channel (VC) access
+> @@ -188,7 +209,8 @@ registers accessed are independent of each other. This patch assumes
+>  that all service drivers will be well behaved and not overwrite
+>  other service driver's configuration settings.
+>  
+> -6.4 PCI Config Registers
+> +PCI Config Registers
+> +--------------------
+>  
+>  Each service driver runs its PCI config operations on its own
+>  capability structure except the PCI Express capability structure, in
+> diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+> index 7babf43709b0..452723318405 100644
+> --- a/Documentation/PCI/index.rst
+> +++ b/Documentation/PCI/index.rst
+> @@ -9,3 +9,4 @@ Linux PCI Bus Subsystem
+>     :numbered:
+>  
+>     pci
+> +   PCIEBUS-HOWTO
+
+
+
+Thanks,
+Mauro
