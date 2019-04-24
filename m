@@ -2,140 +2,116 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D591C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA29DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 537EB2183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DFB2183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:49:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556138971;
+	bh=vFKxkMdTx4Uvizz7u1yAsOjQ0dHVcCJhqrlMzXejfKU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dDZwym0QkcDvB5t3+0cxuwAHwRZSWlkychr1pGrHnRuO118GHa81x/2naARs2jSG0
+	 tVdeL0tGaAPl/e/yS5UMD6qLho/+hG94Vp9Cm0QNxfWZUFzq/AaQM8Ghl03bDrnLIe
+	 8CoHh/0QjLVCSri/NTpQmv186c9/BymyWgvDVspo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732262AbfDXUsh (ORCPT
+        id S1732424AbfDXUta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 16:48:37 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33250 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731341AbfDXUsg (ORCPT
+        Wed, 24 Apr 2019 16:49:30 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33511 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731341AbfDXUt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 16:48:36 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 65B4480692; Wed, 24 Apr 2019 22:48:24 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 22:48:32 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jens Axboe <axboe@kernel.dk>, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, lduncan@suse.com, hare@suse.com,
-        mcgrof@kernel.org, jthumshirn@suse.de, hch@lst.de,
-        gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        bvanassche@acm.org
-Cc:     kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
-        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, hdegoede@redhat.com,
-        linux-ide@vger.kernel.org
-Subject: regression -next -- scsi: sd: Rely on the driver core for
- asynchronous probing was Re: next-20190408..0418: Suspend/resume problems on
- Thinkpad X60
-Message-ID: <20190424204832.GA3111@amd>
-References: <20190408173928.GB13260@amd>
- <20190412102812.GA24977@amd>
- <20190423102239.GA15531@amd>
- <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
- <20190424095431.GA32457@amd>
- <20190424104850.GC32457@amd>
- <20190424202119.GA26357@amd>
+        Wed, 24 Apr 2019 16:49:29 -0400
+Received: by mail-oi1-f194.google.com with SMTP id e5so15476937oii.0;
+        Wed, 24 Apr 2019 13:49:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hA9wyW5hWL/UGprMldN2tXNfvuMbYYLtufWQs+OYr98=;
+        b=NgN2b5g+7z59SROUrLjYkQlOjGs966ft934Opnqti4Ad86Xqx3DVfYm2lGIep8IF8Q
+         5/gGTNl/zStYVngMsqf3iQUH5LEDPfIqeVw6VD8bTmDSJSAYRkxNJnl3rlzGuaqWtp4D
+         jfqM9q5hRT9miKOdQIvwwzRgWu06c1S4RTd5oN6jC2ik56R9XUaT/EStjthRMBMqx/Pr
+         rwV907+786GM/ECHaublBg2DYfiZO2clWok0YX5EJR1Vbf+hPCeiX5RvHb3EbBEG6Mnb
+         CBhO+rHIPIM0XH3HSjQ2lnVuXGSIYxohQR5p1FhRHauqQEwHryHC/gN4a+/YoH/U+VJF
+         DgDw==
+X-Gm-Message-State: APjAAAVIgzCiFvC9nZQGBKFlUrHqTESrBcfDDgiSwxFV8JIe8Xd7iW5U
+        K4WszHUvUTFE9L7133S9qA==
+X-Google-Smtp-Source: APXvYqxQl9Ydr8xtWFHPej3FcBb6/xoLMBl0WclDB9AVwHhY6wXcxIXRWP45v1OBBTKvAXTK/Yw6rg==
+X-Received: by 2002:aca:3084:: with SMTP id w126mr790535oiw.102.1556138968680;
+        Wed, 24 Apr 2019 13:49:28 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v201sm8735745oia.39.2019.04.24.13.49.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 13:49:27 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 15:49:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V12 1/5] dt-bindings: fsl: scu: add thermal binding
+Message-ID: <20190424204927.GA31960@bogus>
+References: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="GRPZ8SYKNexpdSJ7"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190424202119.GA26357@amd>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 16 Apr 2019 03:22:09 +0000, Anson Huang wrote:
+> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+> system controller, the system controller is in charge of system
+> power, clock and thermal sensors etc. management, Linux kernel
+> has to communicate with system controller via MU (message unit)
+> IPC to get temperature from thermal sensors, this patch adds
+> binding doc for i.MX system controller thermal driver.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No changes.
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
 
---GRPZ8SYKNexpdSJ7
-Content-Type: multipart/mixed; boundary="Qxx1br4bt0+wmkIi"
-Content-Disposition: inline
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> Not block, but it seems scsi subsystem is:
-
-commit 21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3
-Author: Bart Van Assche <bvanassche@acm.org>
-Date:   Wed Mar 20 13:09:19 2019 -0700
-
-    scsi: sd: Rely on the driver core for asynchronous probing
-
-    As explained during the 2018 LSF/MM session about increasing SCSI
-    disk
-        probing concurrency, the problems with the current probing
-    approach are as
-
-Seems to be responsible. Full log attached.
-
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Qxx1br4bt0+wmkIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=delme
-
-# bad: [76c938fcaa4b4a5d8f05fa907925d5043834964e] Add linux-next specific files for 20190423
-# good: [7142eaa58b49d9de492ccc16d48df7c488a5fbb6] Merge tag 'mips_fixes_5.1_3' of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
-git bisect start 'next-20190423' '7142eaa58b49d9de492ccc16d48df7c488a5fbb6'
-# good: [ed04f675fa2c22316d7b57bea1258a18a47537ea] Merge remote-tracking branch 'crypto/master'
-git bisect good ed04f675fa2c22316d7b57bea1258a18a47537ea
-# good: [4a99e5b3463f5c936540958914bff57ec50ac1e0] Merge remote-tracking branch 'spi/for-next'
-git bisect good 4a99e5b3463f5c936540958914bff57ec50ac1e0
-# good: [61cabbda2a7e966b689a6791050ad675e6dff274] Merge remote-tracking branch 'staging/staging-next'
-git bisect good 61cabbda2a7e966b689a6791050ad675e6dff274
-# bad: [c8f0c2453f64529035e25fbfb9de9d24e98baff7] Merge remote-tracking branch 'coresight/next'
-git bisect bad c8f0c2453f64529035e25fbfb9de9d24e98baff7
-# bad: [6fb251c6f174d3cc571391baa9f6e57fff505446] Merge branch 'misc' into for-next
-git bisect bad 6fb251c6f174d3cc571391baa9f6e57fff505446
-# bad: [78a8ab3cc0f95a66c8fb2429030289103de173e7] scsi: qedf: fixup bit operations
-git bisect bad 78a8ab3cc0f95a66c8fb2429030289103de173e7
-# good: [c0327e67ecd86e88f5bc5fd54bfdf9b422a1c93f] scsi: core: remove the scsi_ioctl_reset export
-git bisect good c0327e67ecd86e88f5bc5fd54bfdf9b422a1c93f
-# good: [cbb24e26735f6142ba994b4d44fc2dcd54c3fe1f] scsi: ufs-mediatek: Make some symbols static
-git bisect good cbb24e26735f6142ba994b4d44fc2dcd54c3fe1f
-# bad: [21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3] scsi: sd: Rely on the driver core for asynchronous probing
-git bisect bad 21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3
-# good: [e7f7b6f38a44697428f5a2e7c606de028df2b0e3] scsi: lpfc: change snprintf to scnprintf for possible overflow
-git bisect good e7f7b6f38a44697428f5a2e7c606de028df2b0e3
-# good: [3e14592da654d53d87987aa09753d5a26e45446f] scsi: gdth: Only call dma_free_coherent when buf is not NULL in ioc_general
-git bisect good 3e14592da654d53d87987aa09753d5a26e45446f
-# good: [8378573353728a02602d6f956a3df48db0505c65] scsi: libcxgbi: remove uninitialized variable len
-git bisect good 8378573353728a02602d6f956a3df48db0505c65
-# good: [ea9006dfda65b7dc369aaa2359b3dedfc1bb08b6] scsi: mpt3sas: fix indentation issue
-git bisect good ea9006dfda65b7dc369aaa2359b3dedfc1bb08b6
-# first bad commit: [21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3] scsi: sd: Rely on the driver core for asynchronous probing
-
---Qxx1br4bt0+wmkIi--
-
---GRPZ8SYKNexpdSJ7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzAy6AACgkQMOfwapXb+vIRIwCglgb39piVMku5Vq/sKRL2Qt6k
-s7AAn2Utp1UzwRboUpz63y6yQXF2hodv
-=RW0l
------END PGP SIGNATURE-----
-
---GRPZ8SYKNexpdSJ7--
+If a tag was not added on purpose, please state why and what changed.
