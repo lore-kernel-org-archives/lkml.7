@@ -2,208 +2,246 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F0DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EEDC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC28218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2B6218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117332;
-	bh=AOHhTXH/VHChFcxPI6sZVGOefm8FsZ4hK99Ha0idd9g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mMucbwh+TveAq+SUTqiwTbqANuVGaIFIV+PTkhbaFX06Iy3/4UTOoRmlR1FiyZmud
-	 MfJf2UWkGwbsjkGwjCpw78Q2lFtUZeQ0JW7NUMUmM2EhYJ4+cMfZ0vVETTThMqp8oV
-	 97RhB1MM5tmqAST+sblsiziGyfc6VkJYrBPUshCk=
+	s=default; t=1556117338;
+	bh=RACQuezekI87uWLUmnG3jM14EiJr8aBE68S26M57pGw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=t7bb8xapPYXS+vRFL++u3E+QyRbIl4vSBHUnBUtr1GpXAvIrZEa6aCsCs6OJHiS3B
+	 70z9WK/h+5j2oWxI3mfI047TfMntf8WnfCSj9QH7afb1CimVMRHgV5Efc2i90on52f
+	 Wn+R1y7nqsc3LFqAZfY0yTTpw9mvnO2/2L8wbPPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731815AbfDXOsu (ORCPT
+        id S1732011AbfDXOs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:48:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731042AbfDXOss (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:48:48 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EAD4218FD;
-        Wed, 24 Apr 2019 14:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117327;
-        bh=AOHhTXH/VHChFcxPI6sZVGOefm8FsZ4hK99Ha0idd9g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eNPf+ld4s59Q/JvKn4PDZb0NvrjXi3luiZO/Vh8/6qSwapAMBYmo+rOx4vBtBpe6Z
-         oqtOn9K7npv/bxSIqcHvdq5poyrrdjBGK0ey9aiiiZc8Ht8ax1UKjzcTYzFO3i+Vye
-         mdaWRrMpx6XC6zx+InCxmIw3lM+w0hqzf8Hg8qbw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 35/35] ARM: iop: don't use using 64-bit DMA masks
-Date:   Wed, 24 Apr 2019 10:47:09 -0400
-Message-Id: <20190424144709.30215-35-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424144709.30215-1-sashal@kernel.org>
-References: <20190424144709.30215-1-sashal@kernel.org>
+        Wed, 24 Apr 2019 10:48:57 -0400
+Received: from casper.infradead.org ([85.118.1.10]:49650 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731090AbfDXOsz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:48:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7Shg0OtwYZ50M3niqQeZnsr0hUTXiYPbDu4iMf3r0tM=; b=kY1dXUi73ikUzi+w5/lnS0KqY8
+        f3yV42MiWhAo3kveoUB8njVl8uBuwwjRTL2ZRPnU2ggWqkUH3FE94dgd+weonZg7CKbYp4FLD+fEP
+        fmqb28Mpd94VzsY4OF4qsqfFihiI62jwmz64CZQxG4ndmPbpouqdz+JwpBasNKpns57K2hPbWcFUP
+        X1W4RMbp+gvUVaRhirUZfTr3geBbCZ1QWrmdCO2j0VcIkROfBInTAPLOxEAj7P37BqmckQk8uMY6d
+        Bj9YMOjeT6vBzUY74XLzLQZCoUaJZvPCZXWErefPcajAP80PzME7rEijgm18tiVSBe4jmNkMdZ83S
+        yViuLzAw==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJJCc-0000Zd-MX; Wed, 24 Apr 2019 14:48:51 +0000
+Date:   Wed, 24 Apr 2019 11:48:44 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 21/63] Documentation: ACPI: move cppc_sysfs.txt to
+ admin-guide/acpi and convert to reST
+Message-ID: <20190424114844.5de4cfa5@coco.lan>
+In-Reply-To: <20190423162932.21428-22-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-22-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+Em Wed, 24 Apr 2019 00:28:50 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-[ Upstream commit 2125801ccce19249708ca3245d48998e70569ab8 ]
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  .../acpi/cppc_sysfs.rst}                      | 71 ++++++++++---------
+>  Documentation/admin-guide/acpi/index.rst      |  1 +
+>  2 files changed, 40 insertions(+), 32 deletions(-)
+>  rename Documentation/{acpi/cppc_sysfs.txt => admin-guide/acpi/cppc_sysfs.rst} (51%)
+> 
+> diff --git a/Documentation/acpi/cppc_sysfs.txt b/Documentation/admin-guide/acpi/cppc_sysfs.rst
+> similarity index 51%
+> rename from Documentation/acpi/cppc_sysfs.txt
+> rename to Documentation/admin-guide/acpi/cppc_sysfs.rst
+> index f20fb445135d..a4b99afbe331 100644
+> --- a/Documentation/acpi/cppc_sysfs.txt
+> +++ b/Documentation/admin-guide/acpi/cppc_sysfs.rst
+> @@ -1,5 +1,11 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+>  
+> -	Collaborative Processor Performance Control (CPPC)
+> +==================================================
+> +Collaborative Processor Performance Control (CPPC)
+> +==================================================
+> +
+> +CPPC
+> +====
+>  
+>  CPPC defined in the ACPI spec describes a mechanism for the OS to manage the
+>  performance of a logical processor on a contigious and abstract performance
+> @@ -10,31 +16,28 @@ For more details on CPPC please refer to the ACPI specification at:
+>  
+>  http://uefi.org/specifications
+>  
+> -Some of the CPPC registers are exposed via sysfs under:
+> -
+> -/sys/devices/system/cpu/cpuX/acpi_cppc/
+> -
 
-clang warns about statically defined DMA masks from the DMA_BIT_MASK
-macro with length 64:
 
- arch/arm/mach-iop13xx/setup.c:303:35: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
- static u64 iop13xx_adma_dmamask = DMA_BIT_MASK(64);
-                                  ^~~~~~~~~~~~~~~~
- include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
- #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-                                                      ^ ~~~
+> -for each cpu X
 
-The ones in iop shouldn't really be 64 bit masks, so changing them
-to what the driver can support avoids the warning.
+Hmm... removed by mistake?
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/mach-iop13xx/setup.c |  8 ++++----
- arch/arm/mach-iop13xx/tpmi.c  | 10 +++++-----
- arch/arm/plat-iop/adma.c      |  6 +++---
- 3 files changed, 12 insertions(+), 12 deletions(-)
+> +Some of the CPPC registers are exposed via sysfs under::
+>  
+> ---------------------------------------------------------------------------------
+> +  /sys/devices/system/cpu/cpuX/acpi_cppc/
 
-diff --git a/arch/arm/mach-iop13xx/setup.c b/arch/arm/mach-iop13xx/setup.c
-index 53c316f7301e..fe4932fda01d 100644
---- a/arch/arm/mach-iop13xx/setup.c
-+++ b/arch/arm/mach-iop13xx/setup.c
-@@ -300,7 +300,7 @@ static struct resource iop13xx_adma_2_resources[] = {
- 	}
- };
- 
--static u64 iop13xx_adma_dmamask = DMA_BIT_MASK(64);
-+static u64 iop13xx_adma_dmamask = DMA_BIT_MASK(32);
- static struct iop_adma_platform_data iop13xx_adma_0_data = {
- 	.hw_id = 0,
- 	.pool_size = PAGE_SIZE,
-@@ -324,7 +324,7 @@ static struct platform_device iop13xx_adma_0_channel = {
- 	.resource = iop13xx_adma_0_resources,
- 	.dev = {
- 		.dma_mask = &iop13xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop13xx_adma_0_data,
- 	},
- };
-@@ -336,7 +336,7 @@ static struct platform_device iop13xx_adma_1_channel = {
- 	.resource = iop13xx_adma_1_resources,
- 	.dev = {
- 		.dma_mask = &iop13xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop13xx_adma_1_data,
- 	},
- };
-@@ -348,7 +348,7 @@ static struct platform_device iop13xx_adma_2_channel = {
- 	.resource = iop13xx_adma_2_resources,
- 	.dev = {
- 		.dma_mask = &iop13xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop13xx_adma_2_data,
- 	},
- };
-diff --git a/arch/arm/mach-iop13xx/tpmi.c b/arch/arm/mach-iop13xx/tpmi.c
-index db511ec2b1df..116feb6b261e 100644
---- a/arch/arm/mach-iop13xx/tpmi.c
-+++ b/arch/arm/mach-iop13xx/tpmi.c
-@@ -152,7 +152,7 @@ static struct resource iop13xx_tpmi_3_resources[] = {
- 	}
- };
- 
--u64 iop13xx_tpmi_mask = DMA_BIT_MASK(64);
-+u64 iop13xx_tpmi_mask = DMA_BIT_MASK(32);
- static struct platform_device iop13xx_tpmi_0_device = {
- 	.name = "iop-tpmi",
- 	.id = 0,
-@@ -160,7 +160,7 @@ static struct platform_device iop13xx_tpmi_0_device = {
- 	.resource = iop13xx_tpmi_0_resources,
- 	.dev = {
- 		.dma_mask          = &iop13xx_tpmi_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 	},
- };
- 
-@@ -171,7 +171,7 @@ static struct platform_device iop13xx_tpmi_1_device = {
- 	.resource = iop13xx_tpmi_1_resources,
- 	.dev = {
- 		.dma_mask          = &iop13xx_tpmi_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 	},
- };
- 
-@@ -182,7 +182,7 @@ static struct platform_device iop13xx_tpmi_2_device = {
- 	.resource = iop13xx_tpmi_2_resources,
- 	.dev = {
- 		.dma_mask          = &iop13xx_tpmi_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 	},
- };
- 
-@@ -193,7 +193,7 @@ static struct platform_device iop13xx_tpmi_3_device = {
- 	.resource = iop13xx_tpmi_3_resources,
- 	.dev = {
- 		.dma_mask          = &iop13xx_tpmi_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 	},
- };
- 
-diff --git a/arch/arm/plat-iop/adma.c b/arch/arm/plat-iop/adma.c
-index a4d1f8de3b5b..d9612221e484 100644
---- a/arch/arm/plat-iop/adma.c
-+++ b/arch/arm/plat-iop/adma.c
-@@ -143,7 +143,7 @@ struct platform_device iop3xx_dma_0_channel = {
- 	.resource = iop3xx_dma_0_resources,
- 	.dev = {
- 		.dma_mask = &iop3xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop3xx_dma_0_data,
- 	},
- };
-@@ -155,7 +155,7 @@ struct platform_device iop3xx_dma_1_channel = {
- 	.resource = iop3xx_dma_1_resources,
- 	.dev = {
- 		.dma_mask = &iop3xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop3xx_dma_1_data,
- 	},
- };
-@@ -167,7 +167,7 @@ struct platform_device iop3xx_aau_channel = {
- 	.resource = iop3xx_aau_resources,
- 	.dev = {
- 		.dma_mask = &iop3xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop3xx_aau_data,
- 	},
- };
--- 
-2.19.1
+Did you parse this with Sphinx? It doesn't sound a valid ReST construction
+to my eyes, as:
 
+1) I've seen some versions of Sphinx to abort with severe errors when 
+   there's no blank line after the horizontal bar markup;
+
+2) It will very likely ignore the "::" (I didn't test it myself), as you're
+   not indenting the horizontal bar. End of indentation will mean the end
+   of an (empty) literal block.
+
+So, I would stick with:
+
+
+	Some of the CPPC registers are exposed via sysfs under:
+
+	  /sys/devices/system/cpu/cpuX/acpi_cppc/
+
+	---------------------------------------------------------------------------------
+
+	for each cpu X::
+
+
+or:
+
+	Some of the CPPC registers are exposed via sysfs under:
+
+		/sys/devices/system/cpu/cpuX/acpi_cppc/
+
+	for each cpu X
+
+	--------------------------------------------------------------------------------
+
+	::
+
+(with is closer to the original author's intent)
+
+Same applies to the other similar changes on this document.
+
+>  
+> -$ ls -lR  /sys/devices/system/cpu/cpu0/acpi_cppc/
+> -/sys/devices/system/cpu/cpu0/acpi_cppc/:
+> -total 0
+> --r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
+> --r--r--r-- 1 root root 65536 Mar  5 19:38 highest_perf
+> --r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_freq
+> --r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_nonlinear_perf
+> --r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_perf
+> --r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_freq
+> --r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_perf
+> --r--r--r-- 1 root root 65536 Mar  5 19:38 reference_perf
+> --r--r--r-- 1 root root 65536 Mar  5 19:38 wraparound_time
+> +for each cpu X::
+>  
+> ---------------------------------------------------------------------------------
+> +  $ ls -lR  /sys/devices/system/cpu/cpu0/acpi_cppc/
+> +  /sys/devices/system/cpu/cpu0/acpi_cppc/:
+> +  total 0
+> +  -r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
+> +  -r--r--r-- 1 root root 65536 Mar  5 19:38 highest_perf
+> +  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_freq
+> +  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_nonlinear_perf
+> +  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_perf
+> +  -r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_freq
+> +  -r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_perf
+> +  -r--r--r-- 1 root root 65536 Mar  5 19:38 reference_perf
+> +  -r--r--r-- 1 root root 65536 Mar  5 19:38 wraparound_time
+>  
+>  * highest_perf : Highest performance of this processor (abstract scale).
+> -* nominal_perf : Highest sustained performance of this processor (abstract scale).
+> +* nominal_perf : Highest sustained performance of this processor
+> +  (abstract scale).
+>  * lowest_nonlinear_perf : Lowest performance of this processor with nonlinear
+>    power savings (abstract scale).
+>  * lowest_perf : Lowest performance of this processor (abstract scale).
+> @@ -48,22 +51,26 @@ total 0
+>  * feedback_ctrs : Includes both Reference and delivered performance counter.
+>    Reference counter ticks up proportional to processor's reference performance.
+>    Delivered counter ticks up proportional to processor's delivered performance.
+> -* wraparound_time: Minimum time for the feedback counters to wraparound (seconds).
+> +* wraparound_time: Minimum time for the feedback counters to wraparound
+> +  (seconds).
+>  * reference_perf : Performance level at which reference performance counter
+>    accumulates (abstract scale).
+>  
+> ---------------------------------------------------------------------------------
+>  
+> -		Computing Average Delivered Performance
+> +Computing Average Delivered Performance
+> +=======================================
+> +
+> +Below describes the steps to compute the average performance delivered by
+> +taking two different snapshots of feedback counters at time T1 and T2.
+> +
+> +  T1: Read feedback_ctrs as fbc_t1
+> +      Wait or run some workload
+>  
+> -Below describes the steps to compute the average performance delivered by taking
+> -two different snapshots of feedback counters at time T1 and T2.
+> +  T2: Read feedback_ctrs as fbc_t2
+>  
+> -T1: Read feedback_ctrs as fbc_t1
+> -    Wait or run some workload
+> -T2: Read feedback_ctrs as fbc_t2
+> +::
+>  
+> -delivered_counter_delta = fbc_t2[del] - fbc_t1[del]
+> -reference_counter_delta = fbc_t2[ref] - fbc_t1[ref]
+> +  delivered_counter_delta = fbc_t2[del] - fbc_t1[del]
+> +  reference_counter_delta = fbc_t2[ref] - fbc_t1[ref]
+>  
+> -delivered_perf = (refernce_perf x delivered_counter_delta) / reference_counter_delta
+> +  delivered_perf = (refernce_perf x delivered_counter_delta) / reference_counter_delta
+> diff --git a/Documentation/admin-guide/acpi/index.rst b/Documentation/admin-guide/acpi/index.rst
+> index d68e9914c5ff..9049a7b9f065 100644
+> --- a/Documentation/admin-guide/acpi/index.rst
+> +++ b/Documentation/admin-guide/acpi/index.rst
+> @@ -10,3 +10,4 @@ the Linux ACPI support.
+>  
+>     initrd_table_override
+>     dsdt-override
+> +   cppc_sysfs
+
+
+
+Thanks,
+Mauro
