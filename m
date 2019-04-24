@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CDCC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1300BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FF4206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C311820811
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNSmJ2ei"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kD30lbVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbfDXMeg (ORCPT
+        id S1730237AbfDXMei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:34:36 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36149 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730125AbfDXMec (ORCPT
+        Wed, 24 Apr 2019 08:34:38 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45804 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730140AbfDXMee (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:34:32 -0400
-Received: by mail-lj1-f196.google.com with SMTP id l6so1878107ljb.3;
-        Wed, 24 Apr 2019 05:34:31 -0700 (PDT)
+        Wed, 24 Apr 2019 08:34:34 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t11so14513691lfl.12;
+        Wed, 24 Apr 2019 05:34:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YW8mkRr9Gd3ekemnp28mgGnOxmrO43x9tEZ83C3zgJg=;
-        b=CNSmJ2eitEaO22Rm5rSTGBQSGNibnCZQHV8j6ec9BF2rLCA8SVeQQGJ5uVWI1dHNfn
-         97JTJePCD4Z1SFe5kPGw5tdSScBMq+HUomeNC+OCrecepCD2bYx2y8yKhvw3Bo1gkRvm
-         s+g+XNvGXJi5jMiIqmJ6tlTtS9AxOkpNAuAAsHdoK7X3e6Hr5fd1f58o3Zt4uju2y92N
-         JfX4cdnqbpcLee1Zu6I+Y4i8Ci3LF9feW6AsjhkYyaFa4jrf5wshvNeq4tDgNDpLPGzj
-         zRQKvoAgVvgNpiBpLu10zGoKe0ojeQ7b87+aP7yZBYOuKZIL3uhhgtofLwKTWnPYXcTO
-         oexQ==
+        bh=9M/tOm0l7xcRJSE038y20vsgQZbIvMnyyQr45cZvG0A=;
+        b=kD30lbVM0SpLODmOvZ2HqS8KiXE0qs5E/MNE86hqfLl7UvB5hdcN00sjovKLsdt3k2
+         1eI8to0M3Jj7sqElbIXW4DOMxsY6Xu4PqJwvYulPD4y7NN2QdHxL3gcOiXRMJYWCRsQL
+         6VRdHflz7qOoQWr9daVH0KaRkuWv4TyOPHiaP7MDZMS7tj1XqSJ1Ev/W2aKIe+cTLAlw
+         7n7veGxhSfYvUyN0D0edvCdntSxcnMZVzyTqG0aNlDS84QPUHzkE/5C5Rjg0ibWXE/Ue
+         DL1388HnhXUu0ExE63gPPT5Rr6h/zuXq+EbMi6XqUE62UmeORAiTtw1gfBhl7+meIzzA
+         H85w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YW8mkRr9Gd3ekemnp28mgGnOxmrO43x9tEZ83C3zgJg=;
-        b=Dwpsasdt8NzTjn8xC5uiz52q+XtY7wLey8EgVFWJ1mszy1ChREhurFdPweBq23bcP6
-         8T8nAOcg6BRhPHVCx+7TQqeje9F5vBeSrA7O99m+R+xBALsE0S3ZSTQBNpVQ9t1oVAgy
-         +9XCbCK2zMUMPWEoNmMy0aeQT7al7ftlm90UwezUvPnFr6v5uhbeoKD0/lETq1O1rQ7r
-         LXch2SKQdCWuyGHg2I8HKFgYjJauTLfsceRifubaqB7vxkK3UUHnLMu1O0/+rDyHcptp
-         fXh9UiKW85r3QoCBKMjlD95AFjIzUSo8021YnjzmxKmNR0DULeS1DAve0zD/W7N90Cc+
-         X9vQ==
-X-Gm-Message-State: APjAAAVU+GIdlzY2BvG1Y6CNbKqVA4uO94WDvoCp3T1t38fQmnqyPeLU
-        UYJA6j+H0ogvKyxz31METbI=
-X-Google-Smtp-Source: APXvYqxXCYrW7mwtF1t+GDFiO+IqpaZ7oR8SzyVQN6RUckJAg1xkkZX5L2bakLgH2q5qdPux1jTTng==
-X-Received: by 2002:a2e:888a:: with SMTP id k10mr3820729lji.57.1556109270294;
-        Wed, 24 Apr 2019 05:34:30 -0700 (PDT)
+        bh=9M/tOm0l7xcRJSE038y20vsgQZbIvMnyyQr45cZvG0A=;
+        b=Xr1x5eboXMTNtyCJNIyNg5mOkWIjKulqrQzDZvz/WrL0QvUlP30+OijD5rc1g6kDoZ
+         CJpmbDxyEuROk7dhmku/k3ZYlUEdzFQefBLbJfAQBLPvc8c2jvvQTlt3ApWupJBoRoT6
+         Bk1U7H6PnlgfabdoIZcxL56ag830SBR1UXn3ZS/cwHiIQhF8LJwTfxjBcWOtkBUpdYei
+         kyN7m4eB3Q0nRIDJDCBwlJcZBwunHI2h87aLlciyJ0jtla2vg/JMCCa+GmuiV8oExhme
+         F6lWjEOCgAmmSiL68ecKoZu5UndEUI9FYdtYnYGWQInfyaX83O4Uz5WeYs1kaoCfFbem
+         WY9Q==
+X-Gm-Message-State: APjAAAVO7mKMZZuXQLGOd2tW8W6cQOANrJH4b0wS/oLe3QMKoa88pC1H
+        +35BHgXtULbs0GC698CIp00=
+X-Google-Smtp-Source: APXvYqwPjMAHNQkagANpF1GNWXg7lWPLa0iL6rtyoEK7eaTYaPCrvkESIcorussVIFRZ4fFFcPff9A==
+X-Received: by 2002:ac2:4186:: with SMTP id z6mr16915147lfh.50.1556109271706;
+        Wed, 24 Apr 2019 05:34:31 -0700 (PDT)
 Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id t14sm3765962lji.33.2019.04.24.05.34.29
+        by smtp.gmail.com with ESMTPSA id t14sm3765962lji.33.2019.04.24.05.34.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 05:34:29 -0700 (PDT)
+        Wed, 24 Apr 2019 05:34:31 -0700 (PDT)
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Peter Korsgaard <peter.korsgaard@barco.com>,
         Peter Rosin <peda@axentia.se>
 Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
         linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] i2c-mux-gpio: Save initial channel number to the idle data field
-Date:   Wed, 24 Apr 2019 15:34:12 +0300
-Message-Id: <20190424123414.25311-4-fancer.lancer@gmail.com>
+Subject: [PATCH 4/5] i2c-mux-gpio: Unpin the platform-specific GPIOs request code
+Date:   Wed, 24 Apr 2019 15:34:13 +0300
+Message-Id: <20190424123414.25311-5-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424123414.25311-1-fancer.lancer@gmail.com>
 References: <20190424123414.25311-1-fancer.lancer@gmail.com>
@@ -74,66 +74,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case if the idle state has been specified in the data structure,
-the idle variable is left untouched as before, so to keep a default
-channel number enabled in the mux idle state. But if a platform doesn't
-specify which channel is going to be enabled by default, we as before
-don't setup the deselect callback, but the initial state is saved in the
-idle variable for further initialization. We can safely do this here
-since that variable is used for initial state setting only, when no
-idling lane is specified.
-
-The reason of this change is to prepare the code for future GPIOs request
-path being split up into of- and plat- based methods. The idle variable
-here is used as a container of the initial state for both of the paths in
-case of idle-channel isn't specified.
+The GPIOs request loop can be safely moved to a separate function.
+First of all it shall improve the code readability. Secondly the
+initialization loop at this point is used for both of- and
+platform_data-based initialization paths, but it will be changed in
+the next patch, so by isolating the code we'll simplify the future
+work.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/i2c/muxes/i2c-mux-gpio.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/i2c/muxes/i2c-mux-gpio.c | 105 +++++++++++++++++++------------
+ 1 file changed, 64 insertions(+), 41 deletions(-)
 
 diff --git a/drivers/i2c/muxes/i2c-mux-gpio.c b/drivers/i2c/muxes/i2c-mux-gpio.c
-index a14fe132b0c3..535c83c43371 100644
+index 535c83c43371..317c019e1415 100644
 --- a/drivers/i2c/muxes/i2c-mux-gpio.c
 +++ b/drivers/i2c/muxes/i2c-mux-gpio.c
-@@ -171,7 +171,6 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+@@ -165,12 +165,68 @@ static int i2c_mux_gpio_probe_plat(struct gpiomux *mux,
+ 	return 0;
+ }
+ 
++static int i2c_mux_gpio_request_plat(struct gpiomux *mux,
++					struct platform_device *pdev)
++{
++	struct i2c_mux_core *muxc = platform_get_drvdata(pdev);
++	struct gpio_desc *gpio_desc;
++	struct i2c_adapter *root;
++	struct device *gpio_dev;
++	int i, ret;
++
++	root = i2c_root_adapter(&muxc->parent->dev);
++
++	for (i = 0; i < mux->data.n_gpios; i++) {
++		ret = gpio_request(mux->gpio_base + mux->data.gpios[i],
++				   "i2c-mux-gpio");
++		if (ret) {
++			dev_err(&pdev->dev, "Failed to request GPIO %d\n",
++				mux->data.gpios[i]);
++			goto err_request_gpio;
++		}
++
++		ret = gpio_direction_output(mux->gpio_base + mux->data.gpios[i],
++					    mux->data.idle & (1 << i));
++		if (ret) {
++			dev_err(&pdev->dev,
++				"Failed to set direction of GPIO %d to output\n",
++				mux->data.gpios[i]);
++			i++;	/* gpio_request above succeeded, so must free */
++			goto err_request_gpio;
++		}
++
++		gpio_desc = gpio_to_desc(mux->gpio_base + mux->data.gpios[i]);
++		mux->gpios[i] = gpio_desc;
++
++		if (!muxc->mux_locked)
++			continue;
++
++		gpio_dev = &gpio_desc->gdev->dev;
++		muxc->mux_locked = i2c_root_adapter(gpio_dev) == root;
++	}
++
++	return 0;
++
++err_request_gpio:
++	for (; i > 0; i--)
++		gpio_free(mux->gpio_base + mux->data.gpios[i - 1]);
++
++	return ret;
++}
++
++static void i2c_mux_gpio_free(struct gpiomux *mux)
++{
++	int i;
++
++	for (i = 0; i < mux->data.n_gpios; i++)
++		gpiod_free(mux->gpios[i]);
++}
++
+ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct i2c_mux_core *muxc;
  	struct gpiomux *mux;
  	struct i2c_adapter *parent;
- 	struct i2c_adapter *root;
--	unsigned initial_state;
+-	struct i2c_adapter *root;
  	int i, ret;
  
  	mux = devm_kzalloc(&pdev->dev, sizeof(*mux), GFP_KERNEL);
-@@ -204,12 +203,14 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+@@ -199,8 +255,6 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
  
+ 	platform_set_drvdata(pdev, muxc);
+ 
+-	root = i2c_root_adapter(&parent->dev);
+-
  	muxc->mux_locked = true;
  
--	if (mux->data.idle != I2C_MUX_GPIO_NO_IDLE) {
--		initial_state = mux->data.idle;
-+	/*
-+	 * Set descelect callback if idle state has been setup otherwise just
-+	 * use the idle variable to store the initial muxer value.
-+	 */
-+	if (mux->data.idle != I2C_MUX_GPIO_NO_IDLE)
- 		muxc->deselect = i2c_mux_gpio_deselect;
--	} else {
--		initial_state = mux->data.values[0];
+ 	/*
+@@ -212,37 +266,9 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
+ 	else
+ 		mux->data.idle = mux->data.values[0];
+ 
+-	for (i = 0; i < mux->data.n_gpios; i++) {
+-		struct device *gpio_dev;
+-		struct gpio_desc *gpio_desc;
+-
+-		ret = gpio_request(mux->gpio_base + mux->data.gpios[i],
+-				   "i2c-mux-gpio");
+-		if (ret) {
+-			dev_err(&pdev->dev, "Failed to request GPIO %d\n",
+-				mux->data.gpios[i]);
+-			goto err_request_gpio;
+-		}
+-
+-		ret = gpio_direction_output(mux->gpio_base + mux->data.gpios[i],
+-					    mux->data.idle & (1 << i));
+-		if (ret) {
+-			dev_err(&pdev->dev,
+-				"Failed to set direction of GPIO %d to output\n",
+-				mux->data.gpios[i]);
+-			i++;	/* gpio_request above succeeded, so must free */
+-			goto err_request_gpio;
+-		}
+-
+-		gpio_desc = gpio_to_desc(mux->gpio_base + mux->data.gpios[i]);
+-		mux->gpios[i] = gpio_desc;
+-
+-		if (!muxc->mux_locked)
+-			continue;
+-
+-		gpio_dev = &gpio_desc->gdev->dev;
+-		muxc->mux_locked = i2c_root_adapter(gpio_dev) == root;
 -	}
-+	else
-+		mux->data.idle = mux->data.values[0];
++	ret = i2c_mux_gpio_request_plat(mux, pdev);
++	if (ret)
++		goto alloc_failed;
  
- 	for (i = 0; i < mux->data.n_gpios; i++) {
- 		struct device *gpio_dev;
-@@ -224,7 +225,7 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
- 		}
+ 	if (muxc->mux_locked)
+ 		dev_info(&pdev->dev, "mux-locked i2c mux\n");
+@@ -263,10 +289,9 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
  
- 		ret = gpio_direction_output(mux->gpio_base + mux->data.gpios[i],
--					    initial_state & (1 << i));
-+					    mux->data.idle & (1 << i));
- 		if (ret) {
- 			dev_err(&pdev->dev,
- 				"Failed to set direction of GPIO %d to output\n",
+ add_adapter_failed:
+ 	i2c_mux_del_adapters(muxc);
+-	i = mux->data.n_gpios;
+-err_request_gpio:
+-	for (; i > 0; i--)
+-		gpio_free(mux->gpio_base + mux->data.gpios[i - 1]);
++
++	i2c_mux_gpio_free(mux);
++
+ alloc_failed:
+ 	i2c_put_adapter(parent);
+ 
+@@ -277,12 +302,10 @@ static int i2c_mux_gpio_remove(struct platform_device *pdev)
+ {
+ 	struct i2c_mux_core *muxc = platform_get_drvdata(pdev);
+ 	struct gpiomux *mux = i2c_mux_priv(muxc);
+-	int i;
+ 
+ 	i2c_mux_del_adapters(muxc);
+ 
+-	for (i = 0; i < mux->data.n_gpios; i++)
+-		gpio_free(mux->gpio_base + mux->data.gpios[i]);
++	i2c_mux_gpio_free(mux);
+ 
+ 	i2c_put_adapter(muxc->parent);
+ 
 -- 
 2.21.0
 
