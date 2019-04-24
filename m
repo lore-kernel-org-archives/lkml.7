@@ -6,48 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C69BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2A3C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE29821901
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9D721901
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556114291;
-	bh=5E8ghuCRDC6tBp9SP1QbYoJ2EdMunqEPTBkuiYdcQ00=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFBcfRtLUP0k3wz4hsTGrEjmJDDxHWFiSBL02ZsKYujyX57u8SwQyo5VKbA+B2IHs
-	 yhq2WJ/Xx5HNFlxNBzcLx3yUQSVQEm+GT8zjMnKPYakM/HUqfY99lHXjag1E5/Dv/R
-	 vnthYvEsNGdS7X3bVAQ3Ae9iMC1ImSSqiOedNQXI=
+	s=default; t=1556114295;
+	bh=l6IFbV054H8h7od5b7H/5pNVbZNvscbWGkXTSar9nlM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PHRk7HMr1sTJWkWzn3iDLVIajPIsqN8IdbL2t9FoFGlglWIOk/B47oqekydL7YcEW
+	 FkJbXuyyGs+4RWQPbHt0+acxWUzOXW2URFWYx8Q/ICp+qLoIDphAcuAwuHuqzGWKL1
+	 vacAVMUFb69OsxXvA6+IVmFpoTtlPXyvCszJiOsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbfDXN6J (ORCPT
+        id S1730955AbfDXN6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51612 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 09:58:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730195AbfDXN6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:58:06 -0400
+        id S1730195AbfDXN6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:58:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A882121902;
-        Wed, 24 Apr 2019 13:58:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04B082077C;
+        Wed, 24 Apr 2019 13:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556114285;
-        bh=5E8ghuCRDC6tBp9SP1QbYoJ2EdMunqEPTBkuiYdcQ00=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MSHZWB7ylipS9CSrilMZ8q5GigS+eBmjvQSmOCWJvWT2ZHzfZntq/heR0FYXcHCOV
-         kPbmx9ZQNGflKPA2HMCeVWHIbHThFeDRQk55/SSM34CVg5VvfFVSaXrdD3hDg4Gg2M
-         3tUnNgahxpo1pQWt9VCTOFAIwE3fGs4MCRtV/HKg=
+        s=default; t=1556114291;
+        bh=l6IFbV054H8h7od5b7H/5pNVbZNvscbWGkXTSar9nlM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AcpGXKF+uDpbwZnVuH43aEFyTC0xEzWy7WAJD0yUHlFEaub28+tfDwKF/Sb4I1l/n
+         pFdCgb/Fnwvr5/bcjOOWvIPqPgg+teD+83M4MQ4W1Hfc677BtzE2UH4+oBueXKDv9o
+         MO110x+1/3DmXP5vi59Cj6LHpWhmuFXDHi5LKVBc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kangjie Lu <kjlu@umn.edu>, Jiri Kosina <jkosina@suse.cz>,
         Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/52] HID: logitech: check the return value of create_singlethread_workqueue
-Date:   Wed, 24 Apr 2019 09:57:07 -0400
-Message-Id: <20190424135758.22850-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 01/35] HID: logitech: check the return value of create_singlethread_workqueue
+Date:   Wed, 24 Apr 2019 09:57:33 -0400
+Message-Id: <20190424135807.22994-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424135758.22850-1-sashal@kernel.org>
-References: <20190424135758.22850-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -73,7 +71,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 19cc980eebce..8425d3548a41 100644
+index 614054af904a..b83d4173fc7f 100644
 --- a/drivers/hid/hid-logitech-hidpp.c
 +++ b/drivers/hid/hid-logitech-hidpp.c
 @@ -1907,6 +1907,13 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
