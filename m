@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B8EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD99C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8CF205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CEAC21903
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126709;
-	bh=WFSdFecXGDtv8zwEnf2sq5PJ5I75TjY3e90nD0aIn50=;
+	s=default; t=1556126715;
+	bh=RESRptzGYH+h9x5zOZUnje4y/yt7XLk8hl2mjb+HMVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s4+kEBd1E4buGNK459aGnzQ0Vo8otHSwivTdGlJG0ZrDYIHIoAb5J1PLYe25DauEZ
-	 vUeOfsjY4MZO4nZYyxTLYHKEWzZPLE0UYk0lwx9U0ogX4Q/raxdl2i7ZMYPwK55T2r
-	 amRZaMuEB8ea7zlh/GUd4GLybAG5zF6vc/qYhjKo=
+	b=R1s5WkHxPTE1+q9j2upvqFmZrUL9L6KkuDL+/11tcRVtSBiKG05aZ6XhokTUSx3ix
+	 7n5IhptTxJ3a6F0lvb9eI1Q1FCil1v7fv2iD6kUvVQwMe4CGCLBzvZgeN+AciUT0xq
+	 lDFNvdxGDtfhbDIK3twtumrigkTc61VEvskEiay8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389982AbfDXRZH (ORCPT
+        id S2389992AbfDXRZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50910 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:25:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389964AbfDXRZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:25:04 -0400
+        id S1730580AbfDXRZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:25:09 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 314CB205ED;
-        Wed, 24 Apr 2019 17:25:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13D6D206BA;
+        Wed, 24 Apr 2019 17:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126702;
-        bh=WFSdFecXGDtv8zwEnf2sq5PJ5I75TjY3e90nD0aIn50=;
+        s=default; t=1556126708;
+        bh=RESRptzGYH+h9x5zOZUnje4y/yt7XLk8hl2mjb+HMVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ohv91miXbUegaIfSaOdOliMjza+gLQlgwnJX3TXxRuzVr2/I9pJzdOGY9elGofzGW
-         Q2FG0BHChUXrERnmBy3sVki0+2DoVjtiYZCzUpB7f8jtruYF9d/PAyGVTnyxT7IN18
-         ji96rgLeeque1MyVRdvpEvXIoNIfWlAjnhFy+hjs=
+        b=e3adDDAF8YyAV+yGqZJNqWAlXLXtUj8vb7fDa+Im6bN12mA5l9qGx82990ld1f9m0
+         Ezo74vrsJ58hxppajl8yEpknATeRyxFc+98lhbez7ZadpkWMe+owQOZk+VJrcBcwzE
+         3J3FLQnKSjyv8RchdJUUXm3/A78GOGQEtqzv26L4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 30/44] crypto: x86/poly1305 - fix overflow during partial reduction
-Date:   Wed, 24 Apr 2019 19:10:08 +0200
-Message-Id: <20190424170858.497370141@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.9 32/44] x86/kprobes: Verify stack frame on kretprobe
+Date:   Wed, 24 Apr 2019 19:10:10 +0200
+Message-Id: <20190424170859.202677397@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -61,193 +65,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 678cce4019d746da6c680c48ba9e6d417803e127 upstream.
+commit 3ff9c075cc767b3060bdac12da72fc94dd7da1b8 upstream.
 
-The x86_64 implementation of Poly1305 produces the wrong result on some
-inputs because poly1305_4block_avx2() incorrectly assumes that when
-partially reducing the accumulator, the bits carried from limb 'd4' to
-limb 'h0' fit in a 32-bit integer.  This is true for poly1305-generic
-which processes only one block at a time.  However, it's not true for
-the AVX2 implementation, which processes 4 blocks at a time and
-therefore can produce intermediate limbs about 4x larger.
+Verify the stack frame pointer on kretprobe trampoline handler,
+If the stack frame pointer does not match, it skips the wrong
+entry and tries to find correct one.
 
-Fix it by making the relevant calculations use 64-bit arithmetic rather
-than 32-bit.  Note that most of the carries already used 64-bit
-arithmetic, but the d4 -> h0 carry was different for some reason.
+This can happen if user puts the kretprobe on the function
+which can be used in the path of ftrace user-function call.
+Such functions should not be probed, so this adds a warning
+message that reports which function should be blacklisted.
 
-To be safe I also made the same change to the corresponding SSE2 code,
-though that only operates on 1 or 2 blocks at a time.  I don't think
-it's really needed for poly1305_block_sse2(), but it doesn't hurt
-because it's already x86_64 code.  It *might* be needed for
-poly1305_2block_sse2(), but overflows aren't easy to reproduce there.
-
-This bug was originally detected by my patches that improve testmgr to
-fuzz algorithms against their generic implementation.  But also add a
-test vector which reproduces it directly (in the AVX2 case).
-
-Fixes: b1ccc8f4b631 ("crypto: poly1305 - Add a four block AVX2 variant for x86_64")
-Fixes: c70f4abef07a ("crypto: poly1305 - Add a SSE2 SIMD variant for x86_64")
-Cc: <stable@vger.kernel.org> # v4.3+
-Cc: Martin Willi <martin@strongswan.org>
-Cc: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Martin Willi <martin@strongswan.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Tested-by: Andrea Righi <righi.andrea@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/155094059185.6137.15527904013362842072.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/crypto/poly1305-avx2-x86_64.S |   14 +++++++---
- arch/x86/crypto/poly1305-sse2-x86_64.S |   22 ++++++++++------
- crypto/testmgr.h                       |   44 ++++++++++++++++++++++++++++++++-
- 3 files changed, 67 insertions(+), 13 deletions(-)
+ arch/x86/kernel/kprobes/core.c |   26 ++++++++++++++++++++++++++
+ include/linux/kprobes.h        |    1 +
+ 2 files changed, 27 insertions(+)
 
---- a/arch/x86/crypto/poly1305-avx2-x86_64.S
-+++ b/arch/x86/crypto/poly1305-avx2-x86_64.S
-@@ -321,6 +321,12 @@ ENTRY(poly1305_4block_avx2)
- 	vpaddq		t2,t1,t1
- 	vmovq		t1x,d4
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -545,6 +545,7 @@ void arch_prepare_kretprobe(struct kretp
+ 	unsigned long *sara = stack_addr(regs);
  
-+	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
-+	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
-+	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
-+	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
-+	# integers.  It's true in a single-block implementation, but not here.
-+
- 	# d1 += d0 >> 26
- 	mov		d0,%rax
- 	shr		$26,%rax
-@@ -359,16 +365,16 @@ ENTRY(poly1305_4block_avx2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
+ 	ri->ret_addr = (kprobe_opcode_t *) *sara;
++	ri->fp = sara;
  
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
---- a/arch/x86/crypto/poly1305-sse2-x86_64.S
-+++ b/arch/x86/crypto/poly1305-sse2-x86_64.S
-@@ -251,16 +251,16 @@ ENTRY(poly1305_block_sse2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
+ 	/* Replace the return addr with trampoline addr */
+ 	*sara = (unsigned long) &kretprobe_trampoline;
+@@ -746,15 +747,21 @@ __visible __used void *trampoline_handle
+ 	unsigned long flags, orig_ret_address = 0;
+ 	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
+ 	kprobe_opcode_t *correct_ret_addr = NULL;
++	void *frame_pointer;
++	bool skipped = false;
  
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
-@@ -518,6 +518,12 @@ ENTRY(poly1305_2block_sse2)
- 	paddq		t2,t1
- 	movq		t1,d4
+ 	INIT_HLIST_HEAD(&empty_rp);
+ 	kretprobe_hash_lock(current, &head, &flags);
+ 	/* fixup registers */
+ #ifdef CONFIG_X86_64
+ 	regs->cs = __KERNEL_CS;
++	/* On x86-64, we use pt_regs->sp for return address holder. */
++	frame_pointer = &regs->sp;
+ #else
+ 	regs->cs = __KERNEL_CS | get_kernel_rpl();
+ 	regs->gs = 0;
++	/* On x86-32, we use pt_regs->flags for return address holder. */
++	frame_pointer = &regs->flags;
+ #endif
+ 	regs->ip = trampoline_address;
+ 	regs->orig_ax = ~0UL;
+@@ -776,8 +783,25 @@ __visible __used void *trampoline_handle
+ 		if (ri->task != current)
+ 			/* another task is sharing our hash bucket */
+ 			continue;
++		/*
++		 * Return probes must be pushed on this hash list correct
++		 * order (same as return order) so that it can be poped
++		 * correctly. However, if we find it is pushed it incorrect
++		 * order, this means we find a function which should not be
++		 * probed, because the wrong order entry is pushed on the
++		 * path of processing other kretprobe itself.
++		 */
++		if (ri->fp != frame_pointer) {
++			if (!skipped)
++				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
++			skipped = true;
++			continue;
++		}
  
-+	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
-+	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
-+	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
-+	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
-+	# integers.  It's true in a single-block implementation, but not here.
-+
- 	# d1 += d0 >> 26
- 	mov		d0,%rax
- 	shr		$26,%rax
-@@ -556,16 +562,16 @@ ENTRY(poly1305_2block_sse2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
++		if (skipped)
++			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
++				ri->rp->kp.addr);
  
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -4527,7 +4527,49 @@ static struct hash_testvec poly1305_tv_t
- 		.psize		= 80,
- 		.digest		= "\x13\x00\x00\x00\x00\x00\x00\x00"
- 				  "\x00\x00\x00\x00\x00\x00\x00\x00",
--	},
-+	}, { /* Regression test for overflow in AVX2 implementation */
-+		.plaintext	= "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff",
-+		.psize		= 300,
-+		.digest		= "\xfb\x5e\x96\xd8\x61\xd5\xc7\xc8"
-+				  "\x78\xe5\x87\xcc\x2d\x5a\x22\xe1",
-+	}
+ 		if (orig_ret_address != trampoline_address)
+ 			/*
+@@ -795,6 +819,8 @@ __visible __used void *trampoline_handle
+ 		if (ri->task != current)
+ 			/* another task is sharing our hash bucket */
+ 			continue;
++		if (ri->fp != frame_pointer)
++			continue;
+ 
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
+ 		if (ri->rp && ri->rp->handler) {
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -197,6 +197,7 @@ struct kretprobe_instance {
+ 	struct kretprobe *rp;
+ 	kprobe_opcode_t *ret_addr;
+ 	struct task_struct *task;
++	void *fp;
+ 	char data[0];
  };
  
- /*
 
 
