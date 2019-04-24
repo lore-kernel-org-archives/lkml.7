@@ -2,107 +2,176 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148D6C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBCCC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35A921900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYggKp+x"
+	by mail.kernel.org (Postfix) with ESMTP id 7A42E21901
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556121621;
+	bh=oji+Wi53ymhYmIKY89XzMnHdg2QBdDr51Mdt9eRMP7U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UrCG/5iL1N8RwVUSM6mSbk75ZslJsnypilw/mFpM7mQYVs1ARkngvRZ5ljToMVdrf
+	 MbfpwZUwX18b5Ch8Y+8ZLX6VtQ1qUh0v6LFotDgEWIaR2TriQfB11DJVHbMofOFAuO
+	 EvstRnBWJP0hkMGmhKSAB9kbY+5tb7HyLIZjb/Ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732125AbfDXP7R (ORCPT
+        id S1732137AbfDXQAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:59:17 -0400
-Received: from mail-pl1-f175.google.com ([209.85.214.175]:42539 "EHLO
-        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730620AbfDXP7Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:59:16 -0400
-Received: by mail-pl1-f175.google.com with SMTP id x15so5143418pln.9;
-        Wed, 24 Apr 2019 08:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=F0crqVS1oQC1PHQ4v5nc+AZXy84JZ83AYdQBJxSNry8=;
-        b=nYggKp+xyUFCdNbyIPRx8gntoJ1SsSkN/Qmsq/d3QD/7DzP21eODa71jQJJVPFdTMS
-         cE4SzS2xJ0LQGYw7RvOKoPX+NF0p2Db7Y0sSQWmN34UG2ycJr9Yx6r4s8YaiQqXFfhOF
-         hFi0aIOK8f8qHodrrvyGT10jRkY1KnQ5HjZg2S1ESQkY4A2BH9o/DNUDjn/7lzwmxvPD
-         c+tD8TCtfkjyTDfvPuKWXjrgj10TxMrp2BiQtwMYWl1bVC1n8YuPzm6rp86zcbnuO4Ok
-         WleERDPnByxVgBU82sI+dgN+r94SXHbfqXcI2lmUhHlc1ZrRzrUxgFTWEuKzB4d7mXvg
-         eNuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=F0crqVS1oQC1PHQ4v5nc+AZXy84JZ83AYdQBJxSNry8=;
-        b=SvexHWil56NhJC97F41blKA1uhRxivYX6B97FsO7l/YsUoaEKVRPdyaV7dEQPoxf47
-         6QcbeYuaHTGpwGzSjB24owTiTjRgjonG1Uqb228KAhI2Zg5KBwT6yWL4+YnHkRPHxJEC
-         n2l/zed0wTgOKM/QYXZiE06FrfEzj8/RiQ8dum6PzS0mDB+iUq8DhvB0Z73DN3O61Rcx
-         i+KY+rJq92hcl8USro6FZQITwyZlYPRatP2ji16W72hbL27qBBndI7EVX4rR6dLb2U7x
-         VRJdPa2cO8T3lTdZ4MwVgjlGCh1Ak6EKsNvmLKodft3jA21ZPAlGFPS3SlyU9gAz51wG
-         oe9g==
-X-Gm-Message-State: APjAAAUGtNfI6SjG2KB2Lkm4lSn0FAaNinVuOWaz6xLaYB5CLS/uafgm
-        IRK6PByjr2ckYnHxMyDnP9q0MPL2
-X-Google-Smtp-Source: APXvYqzzBU0Eyep5cINcQ4HfwCHe26Ygf2QlYv+5YCfCf7GZZXAGp0DqASD61kAPhB3Ct1nVyAWfMQ==
-X-Received: by 2002:a17:902:9687:: with SMTP id n7mr33645655plp.105.1556121555435;
-        Wed, 24 Apr 2019 08:59:15 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id v12sm25842822pfe.148.2019.04.24.08.59.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 08:59:14 -0700 (PDT)
-Subject: Re: RFC: zero copy recv()
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <CAD8XO3atijveUR0irCM2z3hsr8Rm9piwTbBp0NTwvzJt9+MHdw@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <d0c9c052-6153-6336-f296-15ad5611f21b@gmail.com>
-Date:   Wed, 24 Apr 2019 08:59:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 24 Apr 2019 12:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730620AbfDXQAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:00:20 -0400
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8993A21901;
+        Wed, 24 Apr 2019 16:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556121618;
+        bh=oji+Wi53ymhYmIKY89XzMnHdg2QBdDr51Mdt9eRMP7U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1/GYxoe4iEmHpvXmeu4J05Ia+SqyPoduXCWSWhvMb3H2DvvlYi9aBZVLfmLrc8BMc
+         UHwC89RKmeKf+AQGysdw4S5ZHm9jUDAzss9qvstDrS5jnumt8PWxREPHnQiM4yV/yr
+         1WgdJRRRrT82ElJHjIh+p3ZnLfFQzrM98xD56Dwo=
+Received: by mail-qt1-f180.google.com with SMTP id c35so6133489qtk.3;
+        Wed, 24 Apr 2019 09:00:18 -0700 (PDT)
+X-Gm-Message-State: APjAAAVGYT34PF5on5pYU1qCjqV8wEsxczVNuJbYncwnUsf7jpMKmxR7
+        sHn6fE6XiDrLl4rPL+xZgiE/rF+dFhdH6hYXuQ==
+X-Google-Smtp-Source: APXvYqzz3osG5s1bPzRj3FVPlzRNHwzG9Beg4bg28IjqhlgMoKcA/Jl+yBhva+tq30i2MynaQsH9+vHLpJ+npxX8NF4=
+X-Received: by 2002:ac8:7647:: with SMTP id i7mr25685276qtr.38.1556121617776;
+ Wed, 24 Apr 2019 09:00:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAD8XO3atijveUR0irCM2z3hsr8Rm9piwTbBp0NTwvzJt9+MHdw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190424092238.6381-1-masneyb@onstation.org> <20190424092238.6381-2-masneyb@onstation.org>
+In-Reply-To: <20190424092238.6381-2-masneyb@onstation.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 24 Apr 2019 11:00:06 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKHVdL96DVwhTnh_8rwuCGrC3Q33AbKyfT+QwxbgfHtow@mail.gmail.com>
+Message-ID: <CAL_JsqKHVdL96DVwhTnh_8rwuCGrC3Q33AbKyfT+QwxbgfHtow@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: tsl2583: convert bindings to
+ YAML format
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 24, 2019 at 4:22 AM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Convert the tsl2583 device tree bindings to the new YAML format.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Changes since v1:
+> - Dropped description from reg and interrupts properties.
+> - Dropped $ref from vcc-supply property.
+> - Changed 'tsl2581@29' in example to 'als-sensor@29'
+>
+> I can no longer find the data sheet for this device linked on AMS's
+> site. The datasheet is still on Digikey [1], however I didn't include it
+> in the binding document since I assume that we should only link to the
+> manufacturer's website.
+> https://media.digikey.com/pdf/Data%20Sheets/Austriamicrosystems%20PDFs/TSL2581,83.pdf
+>
+>  .../devicetree/bindings/iio/light/tsl2583.txt | 25 ----------
+>  .../bindings/iio/light/tsl2583.yaml           | 46 +++++++++++++++++++
+>  2 files changed, 46 insertions(+), 25 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2583.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2583.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2583.txt b/Documentation/devicetree/bindings/iio/light/tsl2583.txt
+> deleted file mode 100644
+> index 059dffa1829a..000000000000
+> --- a/Documentation/devicetree/bindings/iio/light/tsl2583.txt
+> +++ /dev/null
+> @@ -1,25 +0,0 @@
+> -* TAOS TSL 2580/2581/2583 ALS sensor
+> -
+> -Required properties:
+> -
+> -  - compatible: Should be one of
+> -               "amstaos,tsl2580"
+> -               "amstaos,tsl2581"
+> -               "amstaos,tsl2583"
+> -  - reg: the I2C address of the device
+> -
+> -Optional properties:
+> -
+> -  - interrupts: the sole interrupt generated by the device
+> -
+> -  Refer to interrupt-controller/interrupts.txt for generic interrupt client
+> -  node bindings.
+> -
+> -  - vcc-supply: phandle to the regulator that provides power to the sensor.
+> -
+> -Example:
+> -
+> -tsl2581@29 {
+> -       compatible = "amstaos,tsl2581";
+> -       reg = <0x29>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2583.yaml b/Documentation/devicetree/bindings/iio/light/tsl2583.yaml
+> new file mode 100644
+> index 000000000000..6989a8a54c5c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/tsl2583.yaml
+> @@ -0,0 +1,46 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/light/tsl2583.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: AMS/TAOS Ambient Light Sensor (ALS)
+> +
+> +maintainers:
+> +  - Brian Masney <masneyb@onstation.org>
+> +
+> +description: |
+> +  Ambient light sensing with an i2c interface.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amstaos,tsl2580
+> +      - amstaos,tsl2581
+> +      - amstaos,tsl2583
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vcc-supply:
+> +    description: Regulator that provides power to the sensor
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        als-sensor@29 {
 
+light-sensor@29
 
-On 04/23/2019 11:23 PM, Maxim Uvarov wrote:
-> Hello,
-> 
-> On different conferences I see that people are trying to accelerate
-> network with putting packet processing with protocol level completely
-> to user space. It might be DPDK, ODP or AF_XDP  plus some network
-> stack on top of it. Then people are trying to test this solution with
-> some existence applications. And in better way do not modify
-> application binaries and just LD_PRELOAD sockets syscalls (recv(),
-> sendto() and etc). Current recv() expects that application allocates
-> memory and call will "copy" packet to that memory. Copy per packet is
-> slow.  Can we consider about implementing zero copy API calls
-> friendly? Can this change be accepted to kernel?
+With that,
 
-Generic zero copy is hard.
-
-As soon as you have multiple consumers in different domains for the data,
-you need some kind of multiplexing, typically using hardware capabilities.
-
-For TCP, we implemented zero copy last year, which works quite well
-on x86 if your network uses MTU of 4096+headers.
-
-tools/testing/selftests/net/tcp_mmap.c  reaches line rate (100Gbit) on
-a single TCP flow, if using a NIC able to perform header split.
-
-But the model is not to run a legacy application with some LD_PRELOAD
-hack/magic, sorry.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
