@@ -6,52 +6,57 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4FFC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E79C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76755206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12543206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:21:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tZPEhtNb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KHOIjA9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729778AbfDXGUZ (ORCPT
+        id S1729786AbfDXGVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:20:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47010 "EHLO
+        Wed, 24 Apr 2019 02:21:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47134 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfDXGUY (ORCPT
+        with ESMTP id S1726002AbfDXGVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:20:24 -0400
+        Wed, 24 Apr 2019 02:21:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AZYvIvzwpu1jsgX20cUu89IdJc8KumO2IG1It1Q5bmQ=; b=tZPEhtNblm5F9Re4Y1WuHWbA7
-        IvENlC0w46yjIpaLGPqzViNLAeg8C3G8pqiPTg4v7PJa3dVAAPBozMr67gpJ23eRs5Rquom9Q5P11
-        P+dICzcNXWq3dm+8UHKUganQ0YkaCrpmXksMHiA62+MDbKNNN5Hn9Vx9L3jl0TxxVOvTYEMewYTvD
-        4e2U5K+k4L7iplN6khkkGUCQfBT+ILJTfh42YRtv3THACPWdZtSCvDaVTjcu6Jgyu/NTHGXYqzxFQ
-        BCHz97vTfYQR6pa4FosZ5fHTv45kxB7NEOR5yIQb6uUs+kT8W57RIMSrG4LOeSXUnnYzerawSF9QV
-        WMeV4bqKQ==;
+         bh=1Fv91G1W6r/Keg5N/of7tsmV7rm01oISNszMPhG9TTg=; b=KHOIjA9wNM6KLQKnbLEQhxzQc
+        970lfTr8yiNNsEtFifLbQgeX9Mw7DHJkGsmFrZxsv6Mxlg04g7CPFZwFVWsztwmnCtbKjOIVHP9Xp
+        AHpdo0+DdiLYObIjUv9c1wIp5uFjQOkPqkNjX5D5cdKb9X7DHVKAw4wYWc2TLO7WmRCA9Re5Jult6
+        tdurpsXV0dfiSeRy9P31Ka1qmszHCQVh162oVIf8m8BUdaLxR59V+cTo+dPOQAPHc80D8r9/PMVON
+        dGU1PC6UxeEm4xMgoCxJdGA2EMIrzOs7/l6pxPWpKP+VDUWMqzQPU+v+B/ZnvBAazLVuVmf2Q9qLN
+        R3uDnE++Q==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJBGW-0002E0-TA; Wed, 24 Apr 2019 06:20:20 +0000
-Date:   Tue, 23 Apr 2019 23:20:20 -0700
+        id 1hJBHA-0002I3-OL; Wed, 24 Apr 2019 06:21:00 +0000
+Date:   Tue, 23 Apr 2019 23:21:00 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     palmer@sifive.com, aou@eecs.berkeley.edu,
-        Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
+        Anup Patel <anup@brainfault.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Johan Hovold <johan@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Andreas Schwab <schwab@suse.de>,
         linux-riscv@lists.infradead.org,
-        Aurelien Jarno <aurelien@aurel32.net>
-Subject: Re: [PATCH] riscv: vdso: drop unnecessary cc-ldoption
-Message-ID: <20190424062020.GA3902@infradead.org>
-References: <20190423212254.9504-1-ndesaulniers@google.com>
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 1/3] RISC-V: Add RISC-V specific arch_match_cpu_phys_id
+Message-ID: <20190424062100.GB3902@infradead.org>
+References: <20190424000227.3085-1-atish.patra@wdc.com>
+ <20190424000227.3085-2-atish.patra@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190423212254.9504-1-ndesaulniers@google.com>
+In-Reply-To: <20190424000227.3085-2-atish.patra@wdc.com>
 User-Agent: Mutt/1.9.2 (2017-12-15)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,12 +64,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 02:22:53PM -0700, Nick Desaulniers wrote:
-> Towards the goal of removing cc-ldoption, it seems that --hash-style=
-> was added to binutils 2.17.50.0.2 in 2006. The minimal required version
-> of binutils for the kernel according to
-> Documentation/process/changes.rst is 2.20.
+>  }
+> +
+> +bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
+> +{
+> +	return phys_id == cpuid_to_hartid_map(cpu);
+> +}
+>  /* Unsupported */
 
-Looks good,
+Please keep an empty line after function bodys.
+
+Otherwise looks good:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
