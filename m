@@ -2,133 +2,282 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2595C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9673C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819DB218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:12:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gm7ZFFdm"
+	by mail.kernel.org (Postfix) with ESMTP id 63B64218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbfDXDMr (ORCPT
+        id S1728674AbfDXDQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 23:12:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37053 "EHLO ozlabs.org"
+        Tue, 23 Apr 2019 23:16:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:32670 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbfDXDMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 23:12:47 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44plk31kmfz9s47;
-        Wed, 24 Apr 2019 13:12:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556075564;
-        bh=Pef4uz0152MX4CcOjtSGFDRkpz/wudSxiVW/2mNvbss=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gm7ZFFdmzWcTIh8AnZoZGK9ddaUVgqe7e7zZ/eeQCe00PinfNroUZ/IWnANCWS5bl
-         kNqSWoyTpr89Sqejxr6C0cJQAldK+A4//TJoKvOsha9pKvh56iIutXsQOWWZkO+OQ+
-         bd0j2Gke9JeEZhzFAvodQVaKcfEa63xl0CmP0Huzans1E0KBva6LKvQPMS5uTohcNv
-         Q0jcp6HSTcjVVFoMTaPg5zM2kTtKfoL9cfKI6JMi65ZYTLB9d9p5n1t5XPoEJOCzdN
-         hV8rVHQtcLGHZHaoMLfOzzoafjjabXE+3cUsLorLHTvYNfaXJnM/SvKAoGzlzFZnGd
-         xv/vSKjAhpfUA==
-Date:   Wed, 24 Apr 2019 13:12:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Poirier <bpoirier@suse.com>
-Subject: Re: linux-next: manual merge of the bpf-next tree with the bpf tree
-Message-ID: <20190424131240.765178fa@canb.auug.org.au>
-In-Reply-To: <20190417110856.54b4ac1c@canb.auug.org.au>
-References: <20190417110856.54b4ac1c@canb.auug.org.au>
+        id S1726422AbfDXDQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 23:16:15 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 20:16:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,388,1549958400"; 
+   d="scan'208";a="294030231"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
+  by orsmga004.jf.intel.com with ESMTP; 23 Apr 2019 20:16:09 -0700
+Date:   Tue, 23 Apr 2019 23:10:37 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH 1/2] vfio/mdev: add version field as mandatory attribute
+ for mdev device
+Message-ID: <20190424031036.GB26247@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20190419083258.19580-1-yan.y.zhao@intel.com>
+ <20190419083505.19654-1-yan.y.zhao@intel.com>
+ <20190423115932.42619422.cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/hg7Bz6yWY11NDvAbpdPlECU"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423115932.42619422.cohuck@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hg7Bz6yWY11NDvAbpdPlECU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 23, 2019 at 05:59:32PM +0800, Cornelia Huck wrote:
+> On Fri, 19 Apr 2019 04:35:04 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > device version attribute in mdev sysfs is used by user space software
+> > (e.g. libvirt) to query device compatibility for live migration of VFIO
+> > mdev devices. This attribute is mandatory if a mdev device supports live
+> > migration.
+> >
+> > It consists of two parts: common part and vendor proprietary part.
+> > common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
+> >              identifies device type. e.g., for pci device, it is
+> >              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> > vendor proprietary part: this part is varied in length. vendor driver can
+> >              specify any string to identify a device.
+> >
+> > When reading this attribute, it should show device version string of the
+> > device of type <type-id>. If a device does not support live migration, it
+> > should return errno.
+> 
+> It might make more sense if the driver does not register the attribute
+> for the device in that case at all.
+> 
+yes. what about rephrase like this:
+"
+When reading this attribute, it should show device version string of the
+device of type <type-id>.
+If a device does not support live migration, it has two choices:
+1. do not register this version attribute
+2. return -ENODEV on rw this version attribute
+Choice 1 is preferred.
+"
 
-Hi all,
 
-On Wed, 17 Apr 2019 11:08:56 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the bpf-next tree got a conflict in:
->=20
->   tools/bpf/bpftool/map.c
->=20
-> between commit:
->=20
->   e0665239e07f ("bpftool: Fix errno variable usage")
->=20
-> from the bpf tree and commit:
->=20
->   0478c3bf8124 ("bpftool: Use print_entry_error() in case of ENOENT when =
-dumping")
->=20
-> from the bpf-next tree.
->=20
-> diff --cc tools/bpf/bpftool/map.c
-> index 1744bf61a0b8,44b192e87708..000000000000
-> --- a/tools/bpf/bpftool/map.c
-> +++ b/tools/bpf/bpftool/map.c
-> @@@ -722,11 -715,16 +715,16 @@@ static int dump_map_elem(int fd, void *
->   		jsonw_string_field(json_wtr, "error", strerror(lookup_errno));
->   		jsonw_end_object(json_wtr);
->   	} else {
-> + 		const char *msg =3D NULL;
-> +=20
->  -		if (errno =3D=3D ENOENT)
->  +		if (lookup_errno =3D=3D ENOENT)
-> - 			print_entry_plain(map_info, key, NULL);
-> - 		else
-> - 			print_entry_error(map_info, key,
-> - 					  strerror(lookup_errno));
-> + 			msg =3D "<no entry>";
-> + 		else if (lookup_errno =3D=3D ENOSPC &&
-> + 			 map_info->type =3D=3D BPF_MAP_TYPE_REUSEPORT_SOCKARRAY)
-> + 			msg =3D "<cannot read>";
-> +=20
-> + 		print_entry_error(map_info, key,
-> + 				  msg ? : strerror(lookup_errno));
->   	}
->  =20
->   	return 0;
+> > When writing a string to this attribute, it returns errno for
+> > incompatibility or returns written string length in compatibility case.
+> > If a device does not support live migration, it always returns errno.
+> >
+> > For user space software to use:
+> > 1.
+> > Before starting live migration, user space software first reads source side
+> > mdev device's version. e.g.
+> > "#cat \
+> > /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type/version"
+> > 00028086-193b-i915-GVTg_V5_4
+> >
+> > 2.
+> > Then, user space software writes the source side returned version string
+> > to device version attribute in target side, and checks the return value.
+> > If a negative errno is returned in the target side, then mdev devices in
+> > source and target sides are not compatible;
+> > If a positive number is returned and it equals to the length of written
+> > string, then the two mdev devices in source and target side are compatible.
+> > e.g.
+> > (a) compatibility case
+> > "# echo 00028086-193b-i915-GVTg_V5_4 >
+> > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+> >
+> > (b) incompatibility case
+> > "#echo 00028086-193b-i915-GVTg_V5_1 >
+> > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
+> > -bash: echo: write error: Invalid argument
+> >
+> > 3. if two mdev devices are compatible, user space software can start
+> > live migration, and vice versa.
+> >
+> > Note: if a mdev device does not support live migration, it either does
+> > not provide a version attribute, or always returns errno when its version
+> > attribute is read/written.
+> >
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Erik Skultety <eskultet@redhat.com>
+> > Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+> > Cc: Cornelia Huck <cohuck@redhat.com>
+> > Cc: "Tian, Kevin" <kevin.tian@intel.com>
+> > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+> > Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
+> > Cc: Neo Jia <cjia@nvidia.com>
+> > Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> >
+> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> > ---
+> >  Documentation/vfio-mediated-device.txt | 36 ++++++++++++++++++++++++++
+> >  samples/vfio-mdev/mbochs.c             | 17 ++++++++++++
+> >  samples/vfio-mdev/mdpy.c               | 16 ++++++++++++
+> >  samples/vfio-mdev/mtty.c               | 16 ++++++++++++
+> >  4 files changed, 85 insertions(+)
+> >
+> > diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
+> > index c3f69bcaf96e..bc28471c0667 100644
+> > --- a/Documentation/vfio-mediated-device.txt
+> > +++ b/Documentation/vfio-mediated-device.txt
+> > @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
+> >    |     |   |--- available_instances
+> >    |     |   |--- device_api
+> >    |     |   |--- description
+> > +  |     |   |--- version
+> >    |     |   |--- [devices]
+> >    |     |--- [<type-id>]
+> >    |     |   |--- create
+> > @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
+> >    |     |   |--- available_instances
+> >    |     |   |--- device_api
+> >    |     |   |--- description
+> > +  |     |   |--- version
+> >    |     |   |--- [devices]
+> >    |     |--- [<type-id>]
+> >    |          |--- create
+> > @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
+> >    |          |--- available_instances
+> >    |          |--- device_api
+> >    |          |--- description
+> > +  |          |--- version
+> >    |          |--- [devices]
+> >
+> >  * [mdev_supported_types]
+> > @@ -225,6 +228,8 @@ Directories and files under the sysfs for Each Physical Device
+> >    [<type-id>], device_api, and available_instances are mandatory attributes
+> >    that should be provided by vendor driver.
+> >
+> > +  version is a mandatory attribute if a mdev device supports live migration.
+> 
+> What about "An mdev device wishing to support live migration must
+> provide the version attribute."?
+yes, I just want to keep consistent with the line above it 
+" [<type-id>], device_api, and available_instances are mandatory attributes
+  that should be provided by vendor driver."
+what about below one?
+  "version is a mandatory attribute if a mdev device wishing to support live
+  migration."
 
-This is now a conflict between the net-next and bpf trees.
 
---=20
-Cheers,
-Stephen Rothwell
+> > +
+> >  * [<type-id>]
+> >
+> >    The [<type-id>] name is created by adding the device driver string as a prefix
+> > @@ -246,6 +251,35 @@ Directories and files under the sysfs for Each Physical Device
+> >    This attribute should show the number of devices of type <type-id> that can be
+> >    created.
+> >
+> > +* version
+> > +
+> > +  This attribute is rw. It is used to check whether two devices are compatible
+> > +  for live migration. If this attribute is missing, then the corresponding mdev
+> > +  device is regarded as not supporting live migration.
+> > +
+> > +  It consists of two parts: common part and vendor proprietary part.
+> > +  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
+> > +               device type. e.g., for pci device, it is
+> > +               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
+> > +  vendor proprietary part: this part is varied in length. vendor driver can
+> > +               specify any string to identify a device.
+> > +
+> > +  When reading this attribute, it should show device version string of the device
+> > +  of type <type-id>. If a device does not support live migration, it should
+> > +  return errno.
+> > +  When writing a string to this attribute, it returns errno for incompatibility
+> > +  or returns written string length in compatibility case. If a device does not
+> > +  support live migration, it always returns errno.
+> 
+> I'm not sure whether a device that does not support live migration
+> should expose this attribute in the first place. Or is that to cover
+> cases where a driver supports live migration only for some of the
+> devices it supports?
+yes, driver returning error code is to cover the cases where only part of devices it
+supports can be migrated.
 
---Sig_/hg7Bz6yWY11NDvAbpdPlECU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+> Also, I'm not sure if a string that has to be parsed is a good idea...
+> is this 'version' attribute supposed to convey some human-readable
+> information as well? The procedure you describe for compatibility
+> checking does the checking within the vendor driver which I would
+> expect to have a table/rules for that anyway.
+right. if a vendor driver has the confidence to migrate between devices of
+diffent platform or mdev types, it can maintain a compatibility table for that
+purpose. That's the reason why we would leave the compatibility check to vendor
+driver. vendor driver can freely choose its own complicated way to decide
+which device is migratable to which device.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/1CkACgkQAVBC80lX
-0GwexAf/elm7U5ewo/HASPberAvkBUVACmF2FVFV9Y2kc5/P5lTUdiNdRVETtE2T
-7EHmwCU9S5ZGoFo0ya+1R3l+bXLlVpA82qOO3eGl/l3ledV22MBcDpBDHcC8vjvv
-p9YIWZecbXrHyxsqiSSUWQuoe8tEwvg3ycloy4r3K8EwEl0OVpofYzanl8zuMpob
-HYniNf1EUQGI2UW/JvarFduSLrggbuT2OY/e6ISIm7vsMAAXmmXuZ1tUfZLtRsqt
-OOdgA51qhg6TDOt04SuGJPSSw6vPLRSSrRl7dIkWJJ/x/5uN7UKXtE43zSbL4awJ
-z5bHehxyzrrd33ORggzR98D0/VfNSQ==
-=4QhK
------END PGP SIGNATURE-----
+> I think you should also specify which errno writing an incompatible id
+> is supposed to return (probably best something different than if the
+> device does not support live migration at all, if we stick with
+> creating the attribute in that case.)
+Agree. I'll define it clearly in next revison.
 
---Sig_/hg7Bz6yWY11NDvAbpdPlECU--
+Thanks
+Yan
+
+> > +
+> > +  for example.
+> > +  # cat \
+> > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_2/version
+> > +  00028086-193b-i915-GVTg_V5_2
+> > +
+> > +  #echo 00028086-193b-i915-GVTg_V5_2 > \
+> > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
+> > + -bash: echo: write error: Invalid argument
+> > +
+> >  * [device]
+> >
+> >    This directory contains links to the devices of type <type-id> that have been
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
