@@ -2,108 +2,181 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21A3C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 630C0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2DA220656
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:17:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="MogJTY+s"
+	by mail.kernel.org (Postfix) with ESMTP id 3953320656
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbfDXJRR (ORCPT
+        id S1729878AbfDXJRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:17:17 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49032 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728520AbfDXJQi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:16:38 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O9AKK1018404
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 02:16:36 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=Wjeih4drKxvCXgraFNPv3LrPtimhzFKHZMw/UQDDo9g=;
- b=MogJTY+sxUi5Eixza1waPiWVNAgY9W50Ipk5t5x/0D1m7928+J0c4v6PCyYagX+WePbL
- rdORfdLL/dJAEVt2nqeQAmDpX4RgW9Uz0wOjuHcrvGxYHlN44ALd1ZWqKXZedmqkGyGR
- SEWTbVP0TvEVw4VHrdzn5ohFgcud6gEOfWw= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2s2k8f8emq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 02:16:36 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
- mail.thefacebook.com (2620:10d:c021:18::176) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Wed, 24 Apr 2019 02:16:35 -0700
-Received: by devvm24792.prn1.facebook.com (Postfix, from userid 150176)
-        id AAAE013BA5DD3; Tue, 23 Apr 2019 14:20:38 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Tao Ren <taoren@fb.com>
-Smtp-Origin-Hostname: devvm24792.prn1.facebook.com
-To:     "David S . Miller" <davem@davemloft.net>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, <openbmc@lists.ozlabs.org>
-CC:     Tao Ren <taoren@fb.com>
-Smtp-Origin-Cluster: prn1c35
-Subject: [PATCH net 1/2] net: add eth_addr_inc in etherdevice.h
-Date:   Tue, 23 Apr 2019 14:20:37 -0700
-Message-ID: <20190423212037.1983760-1-taoren@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_07:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+        Wed, 24 Apr 2019 05:17:25 -0400
+Received: from mga05.intel.com ([192.55.52.43]:1102 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727228AbfDXJQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 05:16:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 02:16:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,389,1549958400"; 
+   d="scan'208";a="145260869"
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by orsmga003.jf.intel.com with ESMTP; 24 Apr 2019 02:16:34 -0700
+From:   Weifeng Voon <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Kweh Hock Leong <hock.leong.kweh@intel.com>,
+        Weifeng Voon <weifeng.voon@intel.com>
+Subject: [PATCH 2/7] net: stmmac: enable clause 45 mdio support
+Date:   Thu, 25 Apr 2019 01:17:16 +0800
+Message-Id: <1556126241-2774-3-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
+References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add eth_addr_inc function in etherdevice.h to increment MAC address. One
-of the use cases is in ncsi stack, where the host's MAC address needs to
-be incremented to get BMC's MAC address.
+From: Kweh Hock Leong <hock.leong.kweh@intel.com>
 
-Signed-off-by: Tao Ren <taoren@fb.com>
+DWMAC4 is capable to support clause 45 mdio communication.
+This patch enable the feature on stmmac_mdio_write() and
+stmmac_mdio_read() by following phy_write_mmd() and
+phy_read_mmd() mdiobus read write implementation format.
+
+Reviewed-by: Li, Yifan <yifan2.li@intel.com>
+Signed-off-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Weifeng Voon <weifeng.voon@intel.com>
 ---
- include/linux/etherdevice.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 36 +++++++++++++++++++----
+ include/linux/phy.h                               |  2 ++
+ 2 files changed, 32 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/etherdevice.h b/include/linux/etherdevice.h
-index e2f3b21cd72a..d48e3a724c54 100644
---- a/include/linux/etherdevice.h
-+++ b/include/linux/etherdevice.h
-@@ -448,6 +448,19 @@ static inline void eth_addr_dec(u8 *addr)
- 	u64_to_ether_addr(u, addr);
- }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+index bdd3515..149efa6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -34,11 +34,27 @@
  
-+/**
-+ * eth_addr_inc - Increment the given MAC address
-+ *
-+ * @addr: Pointer to a six-byte array containing Ethernet address to increment
-+ */
-+static inline void eth_addr_inc(u8 *addr)
+ #define MII_BUSY 0x00000001
+ #define MII_WRITE 0x00000002
++#define MII_DATA_MASK GENMASK(15, 0)
+ 
+ /* GMAC4 defines */
+ #define MII_GMAC4_GOC_SHIFT		2
++#define MII_GMAC4_REG_ADDR_SHIFT	16
+ #define MII_GMAC4_WRITE			(1 << MII_GMAC4_GOC_SHIFT)
+ #define MII_GMAC4_READ			(3 << MII_GMAC4_GOC_SHIFT)
++#define MII_GMAC4_C45E			BIT(1)
++
++static void stmmac_mdio_c45_setup(struct stmmac_priv *priv, int phyreg,
++				  u32 *val, u32 *data)
 +{
-+	u64 u = ether_addr_to_u64(addr);
++	unsigned int reg_mask = priv->hw->mii.reg_mask;
++	unsigned int reg_shift = priv->hw->mii.reg_shift;
 +
-+	u++;
-+	u64_to_ether_addr(u, addr);
++	*val |= MII_GMAC4_C45E;
++	*val &= ~reg_mask;
++	*val |= ((phyreg >> MII_DEVADDR_C45_SHIFT) << reg_shift) & reg_mask;
++
++	*data |= (phyreg & MII_REGADDR_C45_MASK) << MII_GMAC4_REG_ADDR_SHIFT;
 +}
-+
- /**
-  * is_etherdev_addr - Tell if given Ethernet address belongs to the device.
-  * @dev: Pointer to a device structure
+ 
+ /* XGMAC defines */
+ #define MII_XGMAC_SADDR			BIT(18)
+@@ -166,21 +182,25 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+ 	unsigned int mii_address = priv->hw->mii.addr;
+ 	unsigned int mii_data = priv->hw->mii.data;
+ 	u32 v;
+-	int data;
+ 	u32 value = MII_BUSY;
++	int data = 0;
+ 
+ 	value |= (phyaddr << priv->hw->mii.addr_shift)
+ 		& priv->hw->mii.addr_mask;
+ 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
+ 	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
+ 		& priv->hw->mii.clk_csr_mask;
+-	if (priv->plat->has_gmac4)
++	if (priv->plat->has_gmac4) {
+ 		value |= MII_GMAC4_READ;
++		if (phyreg & MII_ADDR_C45)
++			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
++	}
+ 
+ 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+ 			       100, 10000))
+ 		return -EBUSY;
+ 
++	writel(data, priv->ioaddr + mii_data);
+ 	writel(value, priv->ioaddr + mii_address);
+ 
+ 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+@@ -188,7 +208,7 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+ 		return -EBUSY;
+ 
+ 	/* Read the data from the MII data register */
+-	data = (int)readl(priv->ioaddr + mii_data);
++	data = (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+ 
+ 	return data;
+ }
+@@ -210,6 +230,7 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 	unsigned int mii_data = priv->hw->mii.data;
+ 	u32 v;
+ 	u32 value = MII_BUSY;
++	int data = phydata;
+ 
+ 	value |= (phyaddr << priv->hw->mii.addr_shift)
+ 		& priv->hw->mii.addr_mask;
+@@ -217,10 +238,13 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 
+ 	value |= (priv->clk_csr << priv->hw->mii.clk_csr_shift)
+ 		& priv->hw->mii.clk_csr_mask;
+-	if (priv->plat->has_gmac4)
++	if (priv->plat->has_gmac4) {
+ 		value |= MII_GMAC4_WRITE;
+-	else
++		if (phyreg & MII_ADDR_C45)
++			stmmac_mdio_c45_setup(priv, phyreg, &value, &data);
++	} else {
+ 		value |= MII_WRITE;
++	}
+ 
+ 	/* Wait until any existing MII operation is complete */
+ 	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+@@ -228,7 +252,7 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 		return -EBUSY;
+ 
+ 	/* Set the MII address register to write */
+-	writel(phydata, priv->ioaddr + mii_data);
++	writel(data, priv->ioaddr + mii_data);
+ 	writel(value, priv->ioaddr + mii_address);
+ 
+ 	/* Wait until any existing MII operation is complete */
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 0f9552b1..6710e66 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -198,6 +198,8 @@ static inline const char *phy_modes(phy_interface_t interface)
+ /* Or MII_ADDR_C45 into regnum for read/write on mii_bus to enable the 21 bit
+    IEEE 802.3ae clause 45 addressing mode used by 10GIGE phy chips. */
+ #define MII_ADDR_C45 (1<<30)
++#define MII_DEVADDR_C45_SHIFT	16
++#define MII_REGADDR_C45_MASK	GENMASK(15, 0)
+ 
+ struct device;
+ struct phylink;
 -- 
-2.17.1
+1.9.1
 
