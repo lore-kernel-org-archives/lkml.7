@@ -4,40 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E49C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493B9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72982218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F5720656
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbfDXJQp (ORCPT
+        id S1729483AbfDXJQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:16:45 -0400
+        Wed, 24 Apr 2019 05:16:49 -0400
 Received: from mga05.intel.com ([192.55.52.43]:1102 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbfDXJQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:16:42 -0400
+        id S1728953AbfDXJQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 05:16:48 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 02:16:41 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 02:16:45 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,389,1549958400"; 
-   d="scan'208";a="145260887"
+   d="scan'208";a="145260896"
 Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
-  by orsmga003.jf.intel.com with ESMTP; 24 Apr 2019 02:16:39 -0700
+  by orsmga003.jf.intel.com with ESMTP; 24 Apr 2019 02:16:44 -0700
 From:   Weifeng Voon <weifeng.voon@intel.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Ong Boon Leong <boon.leong.ong@intel.com>,
         Kweh Hock Leong <hock.leong.kweh@intel.com>,
         Weifeng Voon <weifeng.voon@intel.com>
-Subject: [PATCH 5/7] net: stmmac: add xpcs function hooks into main driver and ethtool
-Date:   Thu, 25 Apr 2019 01:17:19 +0800
-Message-Id: <1556126241-2774-6-git-send-email-weifeng.voon@intel.com>
+Subject: [PATCH 7/7] net: stmmac: add xPCS functions for device with DWMACv5.1
+Date:   Thu, 25 Apr 2019 01:17:21 +0800
+Message-Id: <1556126241-2774-8-git-send-email-weifeng.voon@intel.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
 References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
@@ -48,15 +47,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ong Boon Leong <boon.leong.ong@intel.com>
 
-With xPCS functions now ready, we add them into the main driver and
-ethtool logics. To differentiate from EQoS MAC PCS and DWC Ethernet
-xPCS, we introduce 'has_xpcs' in platform data as a mean to indicate
-whether GBE controller includes xPCS or not.
-
-To support platform-specific C37 AN PCS mode selection for MII MMD,
-we introduce 'pcs_mode' in platform data.
-
-The basic framework for xPCS interrupt handling is implemented too.
+We introduce support for driver that has v5.10 IP and is also using
+xPCS as MMD. This can be easily enabled for other product that integrates
+xPCS that is not using v5.00 IP.
 
 Reviewed-by: Chuah Kim Tatt <kim.tatt.chuah@intel.com>
 Reviewed-by: Voon Weifeng <weifeng.voon@intel.com>
@@ -64,185 +57,227 @@ Reviewed-by: Kweh Hock Leong <hock.leong.kweh@intel.com>
 Reviewed-by: Baoli Zhang <baoli.zhang@intel.com>
 Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  2 +
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   | 14 ++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 50 ++++++++++++++++++++++
- include/linux/stmmac.h                             |  2 +
- 4 files changed, 68 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 67 +++++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/hwif.c        | 31 ++++++++++-
+ drivers/net/ethernet/stmicro/stmmac/hwif.h        |  1 +
+ 3 files changed, 98 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index dd95d95..0b8460a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -36,6 +36,7 @@ struct stmmac_resources {
- 	const char *mac;
- 	int wol_irq;
- 	int lpi_irq;
-+	int xpcs_irq;
- 	int irq;
- };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index 7e5d5db..f36aa67 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -20,6 +20,7 @@
+ #include <net/dsa.h>
+ #include "stmmac.h"
+ #include "stmmac_pcs.h"
++#include "dw_xpcs.h"
+ #include "dwmac4.h"
+ #include "dwmac5.h"
  
-@@ -168,6 +169,7 @@ struct stmmac_priv {
- 	int clk_csr;
- 	struct timer_list eee_ctrl_timer;
- 	int lpi_irq;
-+	int xpcs_irq;
- 	int eee_enabled;
- 	int eee_active;
- 	int tx_lpi_timer;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-index 3c749c3..0c146b3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -392,6 +392,10 @@ static int stmmac_ethtool_get_link_ksettings(struct net_device *dev,
- 
- 		mutex_lock(&priv->lock);
- 		stmmac_pcs_ctrl_ane(priv, priv->ioaddr, 1, priv->hw->ps, 0);
-+
-+		if (priv->plat->has_xpcs)
-+			stmmac_xpcs_ctrl_ane(priv, dev, 1, 0);
-+
- 		mutex_unlock(&priv->lock);
- 
- 		return 0;
-@@ -457,6 +461,11 @@ static void stmmac_ethtool_gregs(struct net_device *dev,
- 		pause->autoneg = 1;
- 		if (!adv_lp.pause)
- 			return;
-+	} else if (priv->plat->has_xpcs &&
-+		   !stmmac_xpcs_get_adv_lp(priv, netdev, &adv_lp)) {
-+		pause->autoneg = 1;
-+		if (!adv_lp.pause)
-+			return;
- 	} else {
- 		if (!linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
- 				       netdev->phydev->supported) ||
-@@ -488,6 +497,11 @@ static void stmmac_ethtool_gregs(struct net_device *dev,
- 		pause->autoneg = 1;
- 		if (!adv_lp.pause)
- 			return -EOPNOTSUPP;
-+	} else if (priv->plat->has_xpcs &&
-+		   !stmmac_xpcs_get_adv_lp(priv, netdev, &adv_lp)) {
-+		pause->autoneg = 1;
-+		if (!adv_lp.pause)
-+			return -EOPNOTSUPP;
- 	} else {
- 		if (!linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
- 				       phy->supported) ||
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index ec031e3..d6e315f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -112,6 +112,7 @@
- MODULE_PARM_DESC(chain_mode, "To use chain instead of ring mode");
- 
- static irqreturn_t stmmac_interrupt(int irq, void *dev_id);
-+static irqreturn_t xpcs_interrupt(int irq, void *dev_id);
- 
- #ifdef CONFIG_DEBUG_FS
- static int stmmac_init_fs(struct net_device *dev);
-@@ -2538,6 +2539,10 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
- 	/* Initialize MTL*/
- 	stmmac_mtl_configuration(priv);
- 
-+	/* Initialize the xPCS PHY */
-+	if (priv->plat->has_xpcs)
-+		stmmac_xpcs_init(priv, dev, priv->plat->pcs_mode);
-+
- 	/* Initialize Safety Features */
- 	stmmac_safety_feat_configuration(priv);
- 
-@@ -2579,6 +2584,9 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
- 	if (priv->hw->pcs)
- 		stmmac_pcs_ctrl_ane(priv, priv->hw, 1, priv->hw->ps, 0);
- 
-+	if (priv->plat->has_xpcs)
-+		stmmac_xpcs_ctrl_ane(priv, dev, 1, 0);
-+
- 	/* set TX and RX rings length */
- 	stmmac_set_rings_length(priv);
- 
-@@ -2696,11 +2704,27 @@ static int stmmac_open(struct net_device *dev)
- 		}
- 	}
- 
-+	/* xPCS IRQ line */
-+	if (priv->xpcs_irq > 0) {
-+		ret = request_irq(priv->xpcs_irq, xpcs_interrupt, IRQF_SHARED,
-+				  dev->name, dev);
-+		if (unlikely(ret < 0)) {
-+			netdev_err(priv->dev,
-+				   "%s: ERROR: allocating the xPCS IRQ %d (%d)\n",
-+				   __func__, priv->xpcs_irq, ret);
-+			goto xpcsirq_error;
-+		}
-+	}
-+
- 	stmmac_enable_all_queues(priv);
- 	stmmac_start_all_queues(priv);
- 
- 	return 0;
- 
-+xpcsirq_error:
-+	if (priv->lpi_irq > 0)
-+		free_irq(priv->lpi_irq, dev);
-+
- lpiirq_error:
- 	if (priv->wol_irq != dev->irq)
- 		free_irq(priv->wol_irq, dev);
-@@ -3774,6 +3798,31 @@ static irqreturn_t stmmac_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
+@@ -505,6 +506,34 @@ static void dwmac4_get_adv_lp(void __iomem *ioaddr, struct rgmii_adv *adv)
+ 	dwmac_get_adv_lp(ioaddr, GMAC_PCS_BASE, adv);
  }
  
-+/**
-+ *  xPCS_interrupt - xPCS ISR
-+ *  @irq: interrupt number.
-+ *  @dev_id: to pass the net device pointer.
-+ *  Description: this is the xPCS interrupt service routine.
-+ */
-+static irqreturn_t xpcs_interrupt(int irq, void *dev_id)
++static void dwmac_xpcs_init(struct net_device *ndev, int pcs_mode)
 +{
-+	irqreturn_t ret = IRQ_NONE;
-+	struct net_device *ndev = (struct net_device *)dev_id;
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+
-+	if (unlikely(!ndev)) {
-+		netdev_err(priv->dev, "%s: invalid dev pointer\n",
-+			   __func__);
-+		return ret;
-+	}
-+
-+	/* To handle xPCS interrupts */
-+	if (priv->plat->has_xpcs)
-+		ret = stmmac_xpcs_irq_status(priv, ndev, &priv->xstats);
-+
-+	return ret;
++	dw_xpcs_init(ndev, pcs_mode);
 +}
 +
- #ifdef CONFIG_NET_POLL_CONTROLLER
- /* Polling receive - used by NETCONSOLE and other diagnostic tools
-  * to allow network I/O with interrupts disabled.
-@@ -4263,6 +4312,7 @@ int stmmac_dvr_probe(struct device *device,
- 	priv->dev->irq = res->irq;
- 	priv->wol_irq = res->wol_irq;
- 	priv->lpi_irq = res->lpi_irq;
-+	priv->xpcs_irq = res->xpcs_irq;
++static void dwmac_xpcs_ctrl_ane(struct net_device *ndev, bool ane,
++				bool loopback)
++{
++	dw_xpcs_ctrl_ane(ndev, ane, loopback);
++}
++
++static void dwmac_xpcs_rane(struct net_device *ndev, bool restart)
++{
++	dw_xpcs_rane(ndev, restart);
++}
++
++static void dwmac_xpcs_get_adv_lp(struct net_device *ndev,
++				  struct rgmii_adv *adv)
++{
++	dw_xpcs_get_adv_lp(ndev, adv);
++}
++
++static int dwmac_xpcs_irq_status(struct net_device *ndev,
++				 struct stmmac_extra_stats *x)
++{
++	return dw_xpcs_irq_status(ndev, x);
++}
++
+ /* RGMII or SMII interface */
+ static void dwmac4_phystatus(void __iomem *ioaddr, struct stmmac_extra_stats *x)
+ {
+@@ -799,6 +828,44 @@ static void dwmac4_debug(void __iomem *ioaddr, struct stmmac_extra_stats *x,
+ 	.flex_pps_config = dwmac5_flex_pps_config,
+ };
  
- 	if (res->mac)
- 		memcpy(priv->dev->dev_addr, res->mac, ETH_ALEN);
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index b00e795..2adb78c 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -189,6 +189,8 @@ struct plat_stmmacenet_data {
- 	struct reset_control *stmmac_rst;
- 	struct stmmac_axi *axi;
- 	int has_gmac4;
-+	int has_xpcs;
-+	int pcs_mode;
- 	bool has_sun8i;
- 	bool tso_en;
- 	int mac_port_sel_speed;
++const struct stmmac_ops dwmac510_xpcs_ops = {
++	.core_init = dwmac4_core_init,
++	.set_mac = stmmac_dwmac4_set_mac,
++	.rx_ipc = dwmac4_rx_ipc_enable,
++	.rx_queue_enable = dwmac4_rx_queue_enable,
++	.rx_queue_prio = dwmac4_rx_queue_priority,
++	.tx_queue_prio = dwmac4_tx_queue_priority,
++	.rx_queue_routing = dwmac4_rx_queue_routing,
++	.prog_mtl_rx_algorithms = dwmac4_prog_mtl_rx_algorithms,
++	.prog_mtl_tx_algorithms = dwmac4_prog_mtl_tx_algorithms,
++	.set_mtl_tx_queue_weight = dwmac4_set_mtl_tx_queue_weight,
++	.map_mtl_to_dma = dwmac4_map_mtl_dma,
++	.config_cbs = dwmac4_config_cbs,
++	.dump_regs = dwmac4_dump_regs,
++	.host_irq_status = dwmac4_irq_status,
++	.host_mtl_irq_status = dwmac4_irq_mtl_status,
++	.flow_ctrl = dwmac4_flow_ctrl,
++	.pmt = dwmac4_pmt,
++	.set_umac_addr = dwmac4_set_umac_addr,
++	.get_umac_addr = dwmac4_get_umac_addr,
++	.set_eee_mode = dwmac4_set_eee_mode,
++	.reset_eee_mode = dwmac4_reset_eee_mode,
++	.set_eee_timer = dwmac4_set_eee_timer,
++	.set_eee_pls = dwmac4_set_eee_pls,
++	.xpcs_init = dwmac_xpcs_init,
++	.xpcs_ctrl_ane = dwmac_xpcs_ctrl_ane,
++	.xpcs_rane = dwmac_xpcs_rane,
++	.xpcs_get_adv_lp = dwmac_xpcs_get_adv_lp,
++	.xpcs_irq_status = dwmac_xpcs_irq_status,
++	.debug = dwmac4_debug,
++	.set_filter = dwmac4_set_filter,
++	.safety_feat_config = dwmac5_safety_feat_config,
++	.safety_feat_irq_status = dwmac5_safety_feat_irq_status,
++	.safety_feat_dump = dwmac5_safety_feat_dump,
++	.rxp_config = dwmac5_rxp_config,
++	.flex_pps_config = dwmac5_flex_pps_config,
++};
++
+ int dwmac4_setup(struct stmmac_priv *priv)
+ {
+ 	struct mac_device_info *mac = priv->hw;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+index 81b966a..3725baa 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+@@ -73,6 +73,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 	bool gmac;
+ 	bool gmac4;
+ 	bool xgmac;
++	bool xpcs;
+ 	u32 min_id;
+ 	const struct stmmac_regs_off regs;
+ 	const void *desc;
+@@ -89,6 +90,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = false,
+ 		.xgmac = false,
++		.xpcs = false,
+ 		.min_id = 0,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC3_X_OFFSET,
+@@ -106,6 +108,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = true,
+ 		.gmac4 = false,
+ 		.xgmac = false,
++		.xpcs = false,
+ 		.min_id = 0,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC3_X_OFFSET,
+@@ -123,6 +126,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.xpcs = false,
+ 		.min_id = 0,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -140,6 +144,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.xpcs = false,
+ 		.min_id = DWMAC_CORE_4_00,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -157,6 +162,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.xpcs = false,
+ 		.min_id = DWMAC_CORE_4_10,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -174,6 +180,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.xpcs = false,
+ 		.min_id = DWMAC_CORE_5_10,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -191,6 +198,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = false,
+ 		.xgmac = true,
++		.xpcs = false,
+ 		.min_id = DWXGMAC_CORE_2_10,
+ 		.regs = {
+ 			.ptp_off = PTP_XGMAC_OFFSET,
+@@ -204,7 +212,25 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.tc = &dwmac510_tc_ops,
+ 		.setup = dwxgmac2_setup,
+ 		.quirks = NULL,
+-	},
++	}, {
++		.gmac = false,
++		.gmac4 = true,
++		.xgmac = false,
++		.xpcs = true,
++		.min_id = DWMAC_CORE_5_10,
++		.regs = {
++			.ptp_off = PTP_GMAC4_OFFSET,
++			.mmc_off = MMC_GMAC4_OFFSET,
++		},
++		.desc = &dwmac4_desc_ops,
++		.dma = &dwmac410_dma_ops,
++		.mac = &dwmac510_xpcs_ops,
++		.hwtimestamp = &stmmac_ptp,
++		.mode = &dwmac4_ring_mode_ops,
++		.tc = &dwmac510_tc_ops,
++		.setup = dwmac4_setup,
++		.quirks = NULL,
++	}
+ };
+ 
+ int stmmac_hwif_init(struct stmmac_priv *priv)
+@@ -212,6 +238,7 @@ int stmmac_hwif_init(struct stmmac_priv *priv)
+ 	bool needs_xgmac = priv->plat->has_xgmac;
+ 	bool needs_gmac4 = priv->plat->has_gmac4;
+ 	bool needs_gmac = priv->plat->has_gmac;
++	bool needs_xpcs = priv->plat->has_xpcs;
+ 	const struct stmmac_hwif_entry *entry;
+ 	struct mac_device_info *mac;
+ 	bool needs_setup = true;
+@@ -256,6 +283,8 @@ int stmmac_hwif_init(struct stmmac_priv *priv)
+ 			continue;
+ 		if (needs_xgmac ^ entry->xgmac)
+ 			continue;
++		if (needs_xpcs ^ entry->xpcs)
++			continue;
+ 		/* Use synopsys_id var because some setups can override this */
+ 		if (priv->synopsys_id < entry->min_id)
+ 			continue;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index cb7eb48..485be41 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -495,6 +495,7 @@ struct stmmac_regs_off {
+ extern const struct stmmac_ops dwmac410_ops;
+ extern const struct stmmac_dma_ops dwmac410_dma_ops;
+ extern const struct stmmac_ops dwmac510_ops;
++extern const struct stmmac_ops dwmac510_xpcs_ops;
+ extern const struct stmmac_tc_ops dwmac510_tc_ops;
+ extern const struct stmmac_ops dwxgmac210_ops;
+ extern const struct stmmac_dma_ops dwxgmac210_dma_ops;
 -- 
 1.9.1
 
