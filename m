@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87552C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E850DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B0220675
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB16A21905
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127359;
-	bh=SjD6htXr7CFXazsCXr959/nxj1ZPNcG948lLniQ+4q4=;
+	s=default; t=1556127363;
+	bh=0pH6giZBP5EWcjVy6UHsSs54vJYzgd7pl1/aNWcWw6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQAIXb2L+OMkAVYVuH53yHQ3Xe3rwK/uuLJF1fMd4Pod8QPfbsKwpVqZn2kgI9EOw
-	 5uA1sAJFOxHP2RcfhamuwpRVVQs7rGyn9Pyw/TBGZfsiV2EdOSYbTKU2xFNEZrh5Y5
-	 xF9BO/KEjib9ubt5zhcRFA/6sow9GDHhcdhDXkDI=
+	b=FWVebkCXR2leaUNydd7bhAQDb4wAW5wnXzrNkOKZADE/b7vpw7KgGux93JXm1PEWE
+	 sDblyM+LMY7gYcTmlwysKWunumt6MAkBm/RzNgy+S5TU5SFZ4D492Nb03gi4p2Yag+
+	 JtqUVR5deo06VnMDb8GBYSSbgRNm47XMoQuLRylk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392010AbfDXRf5 (ORCPT
+        id S2392025AbfDXRgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:35:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34790 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:36:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391997AbfDXRfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:35:54 -0400
+        id S2391598AbfDXRf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:35:56 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F031D2054F;
-        Wed, 24 Apr 2019 17:35:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FF2920675;
+        Wed, 24 Apr 2019 17:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127353;
-        bh=SjD6htXr7CFXazsCXr959/nxj1ZPNcG948lLniQ+4q4=;
+        s=default; t=1556127356;
+        bh=0pH6giZBP5EWcjVy6UHsSs54vJYzgd7pl1/aNWcWw6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iZgcbExKT3StRhwGNXzsslFkDNZwfR1t5MnUjzxnlJILXzFY2Wpwsx5eg9eNwW6Rl
-         gB87LnHAN3FKqWZNhjCMloYkApkRme28y4COP+KzvUy7a4VGDIRe5KV7IhMWPpfea1
-         KxsAvPwyfRUto6gKV2PUPTsEnym/G8ol1B9Yr0LU=
+        b=gURLzCv78GQ8hHQIftJMsHQLiau1qAmTc6wRw0O3dB3eENgsR2XU5h2Ok9YZKueeh
+         U32Kiq2oubxeZHiNU4RmD6sTXGcHshYmBCFact9Kj1JCt4FA3/B5KZrhP9Vi+Tdnh8
+         4a6dr3t/Ep+OpDNqxlycSXY4SxB5WPeuBf8aJMTI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        stable@vger.kernel.org, Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.0 058/115] iio: cros_ec: Fix the maths for gyro scale calculation
-Date:   Wed, 24 Apr 2019 19:09:54 +0200
-Message-Id: <20190424170928.584445787@linuxfoundation.org>
+Subject: [PATCH 5.0 059/115] iio: ad_sigma_delta: select channel when reading register
+Date:   Wed, 24 Apr 2019 19:09:55 +0200
+Message-Id: <20190424170928.628801733@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -60,59 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gwendal Grignou <gwendal@chromium.org>
+From: Dragos Bogdan <dragos.bogdan@analog.com>
 
-commit 3d02d7082e5823598090530c3988a35f69689943 upstream.
+commit fccfb9ce70ed4ea7a145f77b86de62e38178517f upstream.
 
-Calculation did not use IIO_DEGREE_TO_RAD and implemented a variant to
-avoid precision loss as we aim a nano value. The offset added to avoid
-rounding error, though, doesn't give us a close result to the expected
-value. E.g.
+The desired channel has to be selected in order to correctly fill the
+buffer with the corresponding data.
+The `ad_sd_write_reg()` already does this, but for the
+`ad_sd_read_reg_raw()` this was omitted.
 
-For 1000dps, the result should be:
-
-    (1000 * pi ) / 180 >> 15 ~= 0.000532632218
-
-But with current calculation we get
-
-    $ cat scale
-    0.000547890
-
-Fix the calculation by just doing the maths involved for a nano value
-
-   val * pi * 10e12 / (180 * 2^15)
-
-so we get a closer result.
-
-    $ cat scale
-    0.000532632
-
-Fixes: c14dca07a31d ("iio: cros_ec_sensors: add ChromeOS EC Contiguous Sensors driver")
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Fixes: af3008485ea03 ("iio:adc: Add common code for ADI Sigma Delta devices")
+Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/iio/adc/ad_sigma_delta.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-@@ -103,9 +103,10 @@ static int cros_ec_sensors_read(struct i
- 			 * Do not use IIO_DEGREE_TO_RAD to avoid precision
- 			 * loss. Round to the nearest integer.
- 			 */
--			*val = div_s64(val64 * 314159 + 9000000ULL, 1000);
--			*val2 = 18000 << (CROS_EC_SENSOR_BITS - 1);
--			ret = IIO_VAL_FRACTIONAL;
-+			*val = 0;
-+			*val2 = div_s64(val64 * 3141592653ULL,
-+					180 << (CROS_EC_SENSOR_BITS - 1));
-+			ret = IIO_VAL_INT_PLUS_NANO;
- 			break;
- 		case MOTIONSENSE_TYPE_MAG:
- 			/*
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -121,6 +121,7 @@ static int ad_sd_read_reg_raw(struct ad_
+ 	if (sigma_delta->info->has_registers) {
+ 		data[0] = reg << sigma_delta->info->addr_shift;
+ 		data[0] |= sigma_delta->info->read_mask;
++		data[0] |= sigma_delta->comm;
+ 		spi_message_add_tail(&t[0], &m);
+ 	}
+ 	spi_message_add_tail(&t[1], &m);
 
 
