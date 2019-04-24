@@ -3,100 +3,143 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52314C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB3BC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE8D208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3615208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732296AbfDXQNf (ORCPT
+        id S1732311AbfDXQNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:13:35 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41946 "EHLO mx1.redhat.com"
+        Wed, 24 Apr 2019 12:13:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47910 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731548AbfDXQNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:13:33 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1730600AbfDXQNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:13:50 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9A06E308BBD9;
-        Wed, 24 Apr 2019 16:13:33 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4420930A9227;
+        Wed, 24 Apr 2019 16:13:50 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 02ACC19729;
-        Wed, 24 Apr 2019 16:13:31 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 699BF646DA;
+        Wed, 24 Apr 2019 16:13:39 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
  Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
  Kingdom.
  Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 01/11] keys: Invalidate used request_key authentication keys
+Subject: [PATCH 02/11] keys: Kill off request_key_async{,_with_auxdata}
 From:   David Howells <dhowells@redhat.com>
 To:     ebiederm@xmission.com
 Cc:     keyrings@vger.kernel.org, dhowells@redhat.com,
         linux-security-module@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         dwalsh@redhat.com, vgoyal@redhat.com
-Date:   Wed, 24 Apr 2019 17:13:31 +0100
-Message-ID: <155612241118.8564.13789880165583709711.stgit@warthog.procyon.org.uk>
+Date:   Wed, 24 Apr 2019 17:13:38 +0100
+Message-ID: <155612241887.8564.13502395682258297008.stgit@warthog.procyon.org.uk>
 In-Reply-To: <155612240208.8564.13865046977065545591.stgit@warthog.procyon.org.uk>
 References: <155612240208.8564.13865046977065545591.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 24 Apr 2019 16:13:33 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 24 Apr 2019 16:13:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Invalidate used request_key authentication keys rather than revoking them
-so that they get cleaned up immediately rather than potentially hanging
-around.  There doesn't seem any need to keep the revoked keys around.
+Kill off request_key_async{,_with_auxdata}() as they're not currently used.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- security/keys/key.c         |    4 ++--
- security/keys/request_key.c |    2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/linux/key.h         |   11 ---------
+ security/keys/request_key.c |   50 -------------------------------------------
+ 2 files changed, 61 deletions(-)
 
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 696f1c092c50..d705b950ce2a 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -459,7 +459,7 @@ static int __key_instantiate_and_link(struct key *key,
+diff --git a/include/linux/key.h b/include/linux/key.h
+index 7099985e35a9..aaa93fe3f587 100644
+--- a/include/linux/key.h
++++ b/include/linux/key.h
+@@ -280,17 +280,6 @@ extern struct key *request_key_with_auxdata(struct key_type *type,
+ 					    size_t callout_len,
+ 					    void *aux);
  
- 			/* disable the authorisation key */
- 			if (authkey)
--				key_revoke(authkey);
-+				key_invalidate(authkey);
+-extern struct key *request_key_async(struct key_type *type,
+-				     const char *description,
+-				     const void *callout_info,
+-				     size_t callout_len);
+-
+-extern struct key *request_key_async_with_auxdata(struct key_type *type,
+-						  const char *description,
+-						  const void *callout_info,
+-						  size_t callout_len,
+-						  void *aux);
+-
+ extern int wait_for_key_construction(struct key *key, bool intr);
  
- 			if (prep->expiry != TIME64_MAX) {
- 				key->expiry = prep->expiry;
-@@ -607,7 +607,7 @@ int key_reject_and_link(struct key *key,
- 
- 		/* disable the authorisation key */
- 		if (authkey)
--			key_revoke(authkey);
-+			key_invalidate(authkey);
- 	}
- 
- 	mutex_unlock(&key_construction_mutex);
+ extern int key_validate(const struct key *key);
 diff --git a/security/keys/request_key.c b/security/keys/request_key.c
-index 75d87f9e0f49..a7b698394257 100644
+index a7b698394257..a5b74b7758f7 100644
 --- a/security/keys/request_key.c
 +++ b/security/keys/request_key.c
-@@ -222,7 +222,7 @@ static int construct_key(struct key *key, const void *callout_info,
- 	/* check that the actor called complete_request_key() prior to
- 	 * returning an error */
- 	WARN_ON(ret < 0 &&
--		!test_bit(KEY_FLAG_REVOKED, &authkey->flags));
-+		!test_bit(KEY_FLAG_INVALIDATED, &authkey->flags));
- 
- 	key_put(authkey);
- 	kleave(" = %d", ret);
+@@ -687,53 +687,3 @@ struct key *request_key_with_auxdata(struct key_type *type,
+ 	return key;
+ }
+ EXPORT_SYMBOL(request_key_with_auxdata);
+-
+-/*
+- * request_key_async - Request a key (allow async construction)
+- * @type: Type of key.
+- * @description: The searchable description of the key.
+- * @callout_info: The data to pass to the instantiation upcall (or NULL).
+- * @callout_len: The length of callout_info.
+- *
+- * As for request_key_and_link() except that it does not add the returned key
+- * to a keyring if found, new keys are always allocated in the user's quota and
+- * no auxiliary data can be passed.
+- *
+- * The caller should call wait_for_key_construction() to wait for the
+- * completion of the returned key if it is still undergoing construction.
+- */
+-struct key *request_key_async(struct key_type *type,
+-			      const char *description,
+-			      const void *callout_info,
+-			      size_t callout_len)
+-{
+-	return request_key_and_link(type, description, callout_info,
+-				    callout_len, NULL, NULL,
+-				    KEY_ALLOC_IN_QUOTA);
+-}
+-EXPORT_SYMBOL(request_key_async);
+-
+-/*
+- * request a key with auxiliary data for the upcaller (allow async construction)
+- * @type: Type of key.
+- * @description: The searchable description of the key.
+- * @callout_info: The data to pass to the instantiation upcall (or NULL).
+- * @callout_len: The length of callout_info.
+- * @aux: Auxiliary data for the upcall.
+- *
+- * As for request_key_and_link() except that it does not add the returned key
+- * to a keyring if found and new keys are always allocated in the user's quota.
+- *
+- * The caller should call wait_for_key_construction() to wait for the
+- * completion of the returned key if it is still undergoing construction.
+- */
+-struct key *request_key_async_with_auxdata(struct key_type *type,
+-					   const char *description,
+-					   const void *callout_info,
+-					   size_t callout_len,
+-					   void *aux)
+-{
+-	return request_key_and_link(type, description, callout_info,
+-				    callout_len, aux, NULL, KEY_ALLOC_IN_QUOTA);
+-}
+-EXPORT_SYMBOL(request_key_async_with_auxdata);
 
