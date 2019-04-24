@@ -2,84 +2,185 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E737C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608C8C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C20C218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B5C21902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:44:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ue6fgFca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731700AbfDXQlY (ORCPT
+        id S1732688AbfDXQol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:41:24 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38319 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732679AbfDXQlX (ORCPT
+        Wed, 24 Apr 2019 12:44:41 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38436 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfDXQol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:41:23 -0400
-Received: by mail-qk1-f195.google.com with SMTP id g1so11251983qki.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 09:41:23 -0700 (PDT)
+        Wed, 24 Apr 2019 12:44:41 -0400
+Received: by mail-pg1-f193.google.com with SMTP id j26so9653303pgl.5;
+        Wed, 24 Apr 2019 09:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rdi04PqMLBm5A89mHKxVJWAwKBP+chl4VgE6VxuYN/4=;
+        b=ue6fgFcaWXCtvUQ4AZgjZXUar9PSH9NaBb+ZtE3nLwcNM1D3F61CleZEaILj/pVWrS
+         Wi5LyzBMSL0hGJ35gzr1K8Lz/EyAdXGV9PDB8C1rFSpAbUSWJdUrF4Gfusto3y+lky13
+         cYWFqtJOFSHQqWmGV+qpAUi1HwEf2kh6E9K5iaOuU0oQq7vyZXMKDrY8sFAv/9lSE5ko
+         M0DZeKP2agxmPhcShJxuXE3HNBNNY8p3mxNOD5utr4RQpZ1ZH2UTpwA2cqsbZYqFtylr
+         rcaKSqV32GkRjet1n95hQon6YQ8n9O6ntPgulAPwMh8t/07kiNQL0rQonHCeiTGPOmlW
+         uKOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0sqL9wKD/SZJdZlnerM3T3x5zYBkHVcaUSYPBUkYViI=;
-        b=rVs10fxroqKo0KwLWZAYIt+U38xzvoHo4V5VHwJFq6TGcBQCEaXdPZcHNXES7NRSUr
-         82aQRmot4/O95hft3KkgmHWbEEZCxGP0ZHhCQhwOFvEjrn5CHUu2nGjDraokwohDA1Yu
-         Gcd2GSzhFGP29dGdqf4SKvGt4PxSl6dz1Q9j2E/bNlMdFLUGfErfn104ihfabQIArUNP
-         37LXUMR5prpuUlOxLA6jKm/i4TY8D3yta53P+yIfvosHVlSLHKYDFuF9NIK9kCQVUJXY
-         yU1I8cW4N80tcnT6lhrUSSVUU1ARCu3WRbnbf8/AEgF4xugQ2AIAFdxx8UVkzyBKsTeh
-         aqEw==
-X-Gm-Message-State: APjAAAVAUjEk7OXat75IU9+sQzkmDIy4gbipbegDWZYVrz3QNwRAV8yn
-        22dL4AukaE/swSUXCm02+HiQjgRyCGLnWnmo0QdTUg==
-X-Google-Smtp-Source: APXvYqx9dPpRLNs/ZmM9syJUTZvS4VFEnNN8RhCpYdGJbaCQ5PNvQKrxEzT0OJBLLHn6mBT27E5tAx6q9VSwC0TE83Y=
-X-Received: by 2002:a37:a892:: with SMTP id r140mr18093783qke.285.1556124082730;
- Wed, 24 Apr 2019 09:41:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rdi04PqMLBm5A89mHKxVJWAwKBP+chl4VgE6VxuYN/4=;
+        b=qTMrCz3g5y9L0Ox1jLkYCnIV0b1jjLjPH9Gscd5+2DRkQf2xzI1ekR/GvHhmPHAieK
+         UiUkv4g1/drisnc62IcWWx7VoUWI8OUQGhaqrU4w5wipe1np4SqmH9ag9HyzdRjhwkSH
+         vc6kQvbkwXLK+oYM7KyKDihr8O3z2GSEO5duCAH0dVf3kPNCAJoNXoc4wwa7mNXovfyJ
+         qNusv5s3seRwL/i8MIrydAgf8VACQHfL8JCghXIYyiNzA6joDNQYrj5LhgM31XEX4v+w
+         YLgTYuXqB/JhLp2sHcy7VHV1lKrgWi6bHWAb20yZaJ5VsP+BWX3hXpIAxXeBpGF1wwOa
+         sH4Q==
+X-Gm-Message-State: APjAAAVz15Rl7NYL6q2YAfauvUm3bqu4knE0BQE4kXm/A5hJYRhjcbSM
+        h7i8Hr2pHQnSv0bT+J468jvJnKSK
+X-Google-Smtp-Source: APXvYqwc1gd/8vmyhdxwaHK4g48HxCZu4kGxfp15JgXVeLS0PwSazeDkfGTmmyc21Il7yIo1S1LbOw==
+X-Received: by 2002:a63:1058:: with SMTP id 24mr27113008pgq.297.1556124279798;
+        Wed, 24 Apr 2019 09:44:39 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id c22sm27913390pfn.136.2019.04.24.09.44.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 09:44:39 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 00:44:30 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 15/63] Documentation: ACPI: move
+ dsd/data-node-references.txt to firmware-guide/acpi and convert to reST
+Message-ID: <20190424164428.r4wgyeexeuaoujuw@mail.google.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+ <20190423162932.21428-16-changbin.du@gmail.com>
+ <20190423181748.24f8aed2@coco.lan>
 MIME-Version: 1.0
-References: <20190423154615.18257-1-benjamin.tissoires@redhat.com>
- <CAO-hwJLCL95pAzO9kco2jo2_uCV2=3f5OEf=P=AoB9EpEjFTAw@mail.gmail.com> <43a56e9b-6e44-76b7-efff-fa8996183fbc@nurealm.net>
-In-Reply-To: <43a56e9b-6e44-76b7-efff-fa8996183fbc@nurealm.net>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 24 Apr 2019 18:41:11 +0200
-Message-ID: <CAO-hwJK614pzseUsGqH65fCnrm=N7970i4_mqi0m1gdkY=J0ag@mail.gmail.com>
-Subject: Re: [PATCH 1/2] HID: input: make sure the wheel high resolution
- multiplier is set
-To:     James Feeney <james@nurealm.net>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423181748.24f8aed2@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 5:42 PM James Feeney <james@nurealm.net> wrote:
+On Tue, Apr 23, 2019 at 06:17:48PM -0300, Mauro Carvalho Chehab wrote:
+> Em Wed, 24 Apr 2019 00:28:44 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
+> 
+> > This converts the plain text documentation to reStructuredText format and
+> > add it to Sphinx TOC tree. No essential content change.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  .../acpi/dsd/data-node-references.rst}        | 28 +++++++++++--------
+> >  Documentation/firmware-guide/acpi/index.rst   |  1 +
+> >  2 files changed, 17 insertions(+), 12 deletions(-)
+> >  rename Documentation/{acpi/dsd/data-node-references.txt => firmware-guide/acpi/dsd/data-node-references.rst} (79%)
+> > 
+> > diff --git a/Documentation/acpi/dsd/data-node-references.txt b/Documentation/firmware-guide/acpi/dsd/data-node-references.rst
+> > similarity index 79%
+> > rename from Documentation/acpi/dsd/data-node-references.txt
+> > rename to Documentation/firmware-guide/acpi/dsd/data-node-references.rst
+> > index c3871565c8cf..79c5368eaecf 100644
+> > --- a/Documentation/acpi/dsd/data-node-references.txt
+> > +++ b/Documentation/firmware-guide/acpi/dsd/data-node-references.rst
+> > @@ -1,9 +1,12 @@
+> > -Copyright (C) 2018 Intel Corporation
+> > -Author: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > -
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +.. include:: <isonum.txt>
+> >  
+> > +===================================
+> >  Referencing hierarchical data nodes
+> > ------------------------------------
+> > +===================================
+> > +
+> > +:Copyright: |copy| 2018 Intel Corporation
+> > +:Author: Sakari Ailus <sakari.ailus@linux.intel.com>
+> >  
+> >  ACPI in general allows referring to device objects in the tree only.
+> >  Hierarchical data extension nodes may not be referred to directly, hence this
+> > @@ -28,13 +31,14 @@ extension key.
+> >  
+> >  
+> >  Example
+> > --------
+> > +=======
+> >  
+> > -	In the ASL snippet below, the "reference" _DSD property [2] contains a
+> > -	device object reference to DEV0 and under that device object, a
+> > -	hierarchical data extension key "node@1" referring to the NOD1 object
+> > -	and lastly, a hierarchical data extension key "anothernode" referring to
+> > -	the ANOD object which is also the final target node of the reference.
+> > +In the ASL snippet below, the "reference" _DSD property [2] contains a
+> > +device object reference to DEV0 and under that device object, a
+> > +hierarchical data extension key "node@1" referring to the NOD1 object
+> > +and lastly, a hierarchical data extension key "anothernode" referring to
+> > +the ANOD object which is also the final target node of the reference.
+> > +::
+> >  
+> >  	Device (DEV0)
+> >  	{
+> > @@ -75,10 +79,10 @@ Example
+> >  	    })
+> >  	}
+> >  
+> > -Please also see a graph example in graph.txt .
+> > +Please also see a graph example in :doc:`graph`.
+> >  
+> >  References
+> > -----------
+> > +==========
+> >  
+> >  [1] Hierarchical Data Extension UUID For _DSD.
+> >      <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
+> 
+> Hmm... on the previous patch, you replaced <URL:some_url> by some_url,
+> with makes sense. Please do the same here and on other patches on
+> this series with a similar way to describe URLs.
 >
-> Hey Benjamin
->
-> On 4/24/19 7:30 AM, Benjamin Tissoires wrote:
-> > Given that this basically breaks a basic functionality of many
-> > Microsoft mice, I went ahead and applied this series to
-> > for-5.1/upstream-fixes
->
-> Is there some reason that both patches should not be applied immediately, to the 5.0 series?
->
-> Or - likely I am uninformed - are the 5.1 patches applied as a set separate from the 5.0 series revisions?
+Done, thanks.
 
-For a patch to be picked up by stable, it first needs to go in Linus'
-tree. Currently we are working on 5.1, so any stable patches need to
-go in 5.1 first. Then, once they hit Linus' tree, the stable team will
-pick them and backport them in the appropriate stable tree.
+> > diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+> > index f81cfbcb6878..6d4e0df4f063 100644
+> > --- a/Documentation/firmware-guide/acpi/index.rst
+> > +++ b/Documentation/firmware-guide/acpi/index.rst
+> > @@ -9,6 +9,7 @@ ACPI Support
+> >  
+> >     namespace
+> >     dsd/graph
+> > +   dsd/data-node-references
+> >     enumeration
+> >     osi
+> >     method-customizing
+> 
+> 
+> 
+> Thanks,
+> Mauro
 
-But distributions can backport them as they wish, so you can make a
-request to your distribution to include them ASAP. They are officially
-upstream, though yet to be sent to Linus.
-
+-- 
 Cheers,
-Benjamin
+Changbin Du
