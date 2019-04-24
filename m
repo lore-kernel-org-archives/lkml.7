@@ -2,217 +2,137 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7C8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70406C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27993218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B72218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556128059;
+	bh=iWtvQPpZp2SdzeY4eoATqU/X9qkqfsrM3MruT4QbHBo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mWoi7dIbdAibqjIeoTRA0Z23yfFdr2sYYa8QI9ID3A0NvIcYs/VoLy78eQKSqpPdU
+	 Vx32FT1YjVWVPFKtB1rN/2BNLVwUIir/rdXWWZaRHKL7umqoQVz4u6r4K6ty0tDOs4
+	 TT9lIplsz3koMb9360shkusGm7U5MfFfX7sW+9Cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392013AbfDXRrd (ORCPT
+        id S2391159AbfDXRb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:47:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43948 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2391156AbfDXRrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:47:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 03243AE58;
-        Wed, 24 Apr 2019 17:47:29 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 19:47:27 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Joao Moreira <jmoreira@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Matz <matz@suse.de>, Nicolai Stange <nstange@suse.de>,
-        Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v3 3/9] livepatch: Add klp-convert tool
-In-Reply-To: <20190423203529.GA15743@redhat.com>
-Message-ID: <alpine.LSU.2.21.1904241941230.30239@pobox.suse.cz>
-References: <20190410155058.9437-1-joe.lawrence@redhat.com> <20190410155058.9437-4-joe.lawrence@redhat.com> <20190423203529.GA15743@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 24 Apr 2019 13:31:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389951AbfDXRby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:31:54 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B10C21903;
+        Wed, 24 Apr 2019 17:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556127114;
+        bh=iWtvQPpZp2SdzeY4eoATqU/X9qkqfsrM3MruT4QbHBo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tB4teeX7S3PQ8wbMPVRNGrcB9yhr/Ojdv6uRONt8dsIrF2si6iwduZPyxPBOPQ9H1
+         tp1zQrxxrzpKNlVM/3imyKr2t5TK44Wp9J7jecp2LFrU7srlGCN5gMaayGSSfRPxAR
+         AZt8JVZLnUR+tEU0bz++oFOFM0rB/o0foQCFEo10=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Francis Deslauriers <francis.deslauriers@efficios.com>,
+        Andrea Righi <righi.andrea@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 67/96] kprobes: Mark ftrace mcount handler functions nokprobe
+Date:   Wed, 24 Apr 2019 19:10:12 +0200
+Message-Id: <20190424170924.281747848@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
+References: <20190424170919.829037226@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019, Joe Lawrence wrote:
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-> On Wed, Apr 10, 2019 at 11:50:52AM -0400, Joe Lawrence wrote:
-> > 
-> > [ ... snip ... ]
-> > 
-> > +static bool convert_rela(struct section *oldsec, struct rela *r,
-> > +		struct sympos *sp, struct elf *klp_elf)
-> > +{
-> > +	struct section *sec;
-> > +	struct rela *r1, *r2;
-> > +
-> > +	sec = get_or_create_klp_rela_section(oldsec, sp, klp_elf);
-> > +	if (!sec) {
-> > +		WARN("Can't create or access klp.rela section (%s.%s)\n",
-> > +				sp->object_name, sp->symbol_name);
-> > +		return false;
-> > +	}
-> > +
-> > +	if (!convert_klp_symbol(r->sym, sp)) {
-> > +		WARN("Unable to convert symbol name (%s.%s)\n", sec->name,
-> > +				r->sym->name);
-> > +		return false;
-> > +	}
-> > +
-> > +	/* Move the converted rela to klp rela section */
-> > +	list_for_each_entry_safe(r1, r2, &oldsec->relas, list) {
-> > +		if (r1->sym->name == r->sym->name) {
-> > +			list_del(&r1->list);
-> > +			list_add(&r1->list, &sec->relas);
-> > +		}
-> > +	}
-> > +	return true;
-> > +}
-> 
-> This one took a while to find and debug, but I believe that
-> convert_rela()'s list removal is not as safe as it thinks it is.
-> 
-> Start with its calling context from main() below:
-> 
-> > +	list_for_each_entry_safe(sec, aux, &klp_elf->sections, list) {
-> > +		if (!is_rela_section(sec))
-> > +			continue;
-> > +
-> > +		list_for_each_entry_safe(rela, tmprela, &sec->relas, list) {
-> > +			if (!must_convert(rela->sym))
-> > +				continue;
-> > +
-> > +			if (!find_missing_position(rela->sym, &sp)) {
-> > +				WARN("Unable to find missing symbol: %s",
-> > +						rela->sym->name);
-> > +				return -1;
-> > +			}
-> > +			if (!convert_rela(sec, rela, &sp, klp_elf)) {
-> > +				WARN("Unable to convert relocation: %s",
-> > +						rela->sym->name);
-> > +				return -1;
-> > +			}
-> > +		}
-> > +	}
-> 
-> AFAIK the *_safe list traversals, they cache the ->next value at the
-> beginning of each iteration, so that one could blow the current element
-> in position away.  The cached ->next value is then assigned when moving
-> to the next iteration.
-> 
-> But notice how convert_rela() looks through the entire list of
-> relocations, moving each rela with a matching symbol?
-> 
-> Consider a slight tweak to samples/livepatch-annotated.c:
-> 
-> 
->   static int livepatch_cmdline_proc_show(struct seq_file *m, void *v)
->   {
-> +         if (saved_command_line)
-> +                 saved_command_line[0] = '\0';
-> +
->           seq_printf(m, "%s livepatch=1\n", saved_command_line);
->           return 0;
->   }
-> 
-> 
-> On my system, this generates relocations like this:
-> 
->   % eu-readelf --relocs samples/livepatch/livepatch-annotated-sample.o
->   Relocation section [ 2] '.rela.text' for section [ 1] '.text' at offset 0x98 contains 9 entries:
->     Offset              Type            Value               Addend Name
->     0x0000000000000001  X86_64_PC32     000000000000000000      -4 __fentry__
->     0x0000000000000008  X86_64_PC32     000000000000000000      -4 saved_command_line
->     0x0000000000000017  X86_64_PC32     000000000000000000      -4 saved_command_line
->     0x000000000000001e  X86_64_32S      000000000000000000      +0 .rodata.str1.1
->     0x0000000000000023  X86_64_PC32     000000000000000000      -4 seq_printf
->     0x0000000000000031  X86_64_PC32     000000000000000000      -4 __fentry__
->     0x0000000000000038  X86_64_32S      000000000000000000      +0 .data
->     0x0000000000000051  X86_64_PC32     000000000000000000      -4 __fentry__
->     0x000000000000003d  X86_64_PC32     000000000000000000      -4 klp_enable_patch
-> 
-> We now have back-to-back rela's with sym->name = "saved_command_line".
-> When the first is converted, convert_rela() will move both of them to
-> the klp rela section.  The linked list values may be consistent, but the
-> cached ->next value will be bogus and the in-flight-traversal will run
-> off the rails.
+commit fabe38ab6b2bd9418350284c63825f13b8a6abba upstream.
 
-Yep, valid, if I'm reading the code correctly.
+Mark ftrace mcount handler functions nokprobe since
+probing on these functions with kretprobe pushes
+return address incorrectly on kretprobe shadow stack.
 
-> I think we can work around it with a combination of 1) only moving a
-> single rela symbol at a time in convert_rela and 2) processing the
-> second (third, etc.) a little bit more so that they are moved
-> individually.
-> 
-> I hacked this together and it works against the livepatch-annotate.c
-> test above so far...
-> 
-> -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
-> 
-> diff --git a/scripts/livepatch/klp-convert.c b/scripts/livepatch/klp-convert.c
-> index 82c27d219372..126395f1c0cd 100644
-> --- a/scripts/livepatch/klp-convert.c
-> +++ b/scripts/livepatch/klp-convert.c
-> @@ -517,6 +517,7 @@ static bool convert_rela(struct section *oldsec, struct rela *r,
->  		if (r1->sym->name == r->sym->name) {
->  			list_del(&r1->list);
->  			list_add(&r1->list, &sec->relas);
-> +			break;
->  		}
->  	}
->  	return true;
+Reported-by: Francis Deslauriers <francis.deslauriers@efficios.com>
+Tested-by: Andrea Righi <righi.andrea@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/155094062044.6137.6419622920568680640.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Couldn't we remove the loop all together instead of breaking it?
+---
+ kernel/trace/ftrace.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-	list_del(&r->list);
-	list_add(&r->list, &sec->relas);
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -34,6 +34,7 @@
+ #include <linux/list.h>
+ #include <linux/hash.h>
+ #include <linux/rcupdate.h>
++#include <linux/kprobes.h>
+ 
+ #include <trace/events/sched.h>
+ 
+@@ -6250,7 +6251,7 @@ void ftrace_reset_array_ops(struct trace
+ 	tr->ops->func = ftrace_stub;
+ }
+ 
+-static inline void
++static nokprobe_inline void
+ __ftrace_ops_list_func(unsigned long ip, unsigned long parent_ip,
+ 		       struct ftrace_ops *ignored, struct pt_regs *regs)
+ {
+@@ -6310,11 +6311,13 @@ static void ftrace_ops_list_func(unsigne
+ {
+ 	__ftrace_ops_list_func(ip, parent_ip, NULL, regs);
+ }
++NOKPROBE_SYMBOL(ftrace_ops_list_func);
+ #else
+ static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_ip)
+ {
+ 	__ftrace_ops_list_func(ip, parent_ip, NULL, NULL);
+ }
++NOKPROBE_SYMBOL(ftrace_ops_no_ops);
+ #endif
+ 
+ /*
+@@ -6341,6 +6344,7 @@ static void ftrace_ops_assist_func(unsig
+ 	preempt_enable_notrace();
+ 	trace_clear_recursion(bit);
+ }
++NOKPROBE_SYMBOL(ftrace_ops_assist_func);
+ 
+ /**
+  * ftrace_ops_get_func - get the function a trampoline should call
 
-could be sufficient.
 
-> @@ -549,8 +550,8 @@ static bool is_converted(char *sname)
->  }
->  
->  /*
-> - * Checks if symbol must be converted (conditions):
-> - * not resolved, not already converted or isn't an exported symbol
-> + * Checks if symbol must be or was already converted (conditions):
-> + * not resolved or isn't an exported symbol
->   */
->  static bool must_convert(struct symbol *sym)
->  {
-> @@ -566,7 +567,7 @@ static bool must_convert(struct symbol *sym)
->  	if (strcmp(sym->name, ".TOC.") == 0)
->  		return false;
->  
-> -	return (!(is_converted(sym->name) || is_exported(sym->name)));
-> +	return (!is_exported(sym->name));
->  }
->  
->  /* Checks if a section is a klp rela section */
-> @@ -640,7 +641,8 @@ int main(int argc, const char **argv)
->  			if (!must_convert(rela->sym))
->  				continue;
->  
-> -			if (!find_missing_position(rela->sym, &sp)) {
-> +			if (!is_converted(rela->sym->name) &&
-> +			    !find_missing_position(rela->sym, &sp)) {
->  				WARN("Unable to find missing symbol: %s",
->  						rela->sym->name);
->  				return -1;
-
-Looks good.
-
-Miroslav
