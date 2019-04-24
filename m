@@ -2,129 +2,336 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F40C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67484C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F78D21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE9A21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbfDXLhL (ORCPT
+        id S1729222AbfDXLlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:37:11 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40259 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729021AbfDXLhH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 07:37:07 -0400
-Received: by mail-io1-f67.google.com with SMTP id i21so14945570iol.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 04:37:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RCPr+Bpv1PvmLhqWlzdwGPLFCdUpiW+JQjNCuXkw1SU=;
-        b=fmfqwBeS4G4PAHj4V8QH2p2KdTxh1GebOV6KdY2S+Zs+RFaA4BDFjVTTsnAsXMOnWl
-         JrQlkcrAcGA+LW7up9lDDiNWmvX3BO2jGC+JiZt3aBNXBuO5P+scae9sal1XuXSqgGj1
-         pE1dxpVq0D16ZSgKsJhHqAMnj/Bam47K9mAL5viZ8zZ7AXECmEDBxQERF5B8CqtFNuTV
-         iKX8I2nSuNXqm7KCx/AFWzKPUYd3PzQ/x8xzATx7B1MqHgBLsoy+xjDMfb4J2DolxwEx
-         KMojWJn5PYStZdB9FF7Fr1+ilMhkM6bO1Lv/A7gy+FnsnF2A7zLmDHsIV+PRuHGKf3bk
-         BJ2w==
-X-Gm-Message-State: APjAAAVU0Zi0XBkSSXfjndqC7EzKw4+JoPj5UnWmnhGtdsbTTMTpIFCs
-        G0YhOY4ypx4RVHdP37amod9H6ScvuhDP8pm5853KKQ==
-X-Google-Smtp-Source: APXvYqyI5JmtSaeO/3yvXINp+4HX/ANhSgcyY5x5fm/9T34K1VLc2XkJQZ636ETsq3CTfrXzmJ86Q5uZL2lp2hpsads=
-X-Received: by 2002:a5e:8b09:: with SMTP id g9mr2043236iok.137.1556105826608;
- Wed, 24 Apr 2019 04:37:06 -0700 (PDT)
+        Wed, 24 Apr 2019 07:41:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50486 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbfDXLlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 07:41:14 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1607330BC412;
+        Wed, 24 Apr 2019 11:41:14 +0000 (UTC)
+Received: from gondolin (dhcp-192-187.str.redhat.com [10.33.192.187])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D29E272BB;
+        Wed, 24 Apr 2019 11:41:11 +0000 (UTC)
+Date:   Wed, 24 Apr 2019 13:41:09 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v2 31/79] docs: s390: convert docs to ReST and rename to
+ *.rst
+Message-ID: <20190424134109.2891a7cc.cohuck@redhat.com>
+In-Reply-To: <fb86b676b3b426732f1f11378868a9bd3b580b46.1555938376.git.mchehab+samsung@kernel.org>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+        <fb86b676b3b426732f1f11378868a9bd3b580b46.1555938376.git.mchehab+samsung@kernel.org>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20190422092804.15534-1-kasong@redhat.com> <965f770a-b103-72fb-eaef-cb337ebe8290@ce.jp.nec.com>
- <CACPcB9d-oNvp1Kag1J8X+QBdgqfU0ps1OztjOk8n=Pw2G6ONWA@mail.gmail.com>
- <24f1dc7c-1dea-79b0-d364-0dc7d605ce01@ce.jp.nec.com> <20190424054135.GG3584@localhost.localdomain>
- <20190424061831.GA9059@dhcp-128-65.nay.redhat.com> <20190424074553.GH3584@localhost.localdomain>
-In-Reply-To: <20190424074553.GH3584@localhost.localdomain>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Wed, 24 Apr 2019 07:36:55 -0400
-Message-ID: <CACPcB9fuXcc7S2xzw7LrHsnCPjN0tuBt+ivuS5v5KukOWW+YcQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/kexec: always ensure EFI systab region is mapped
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Dave Young <dyoung@redhat.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 24 Apr 2019 11:41:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019, 03:46 Baoquan He <bhe@redhat.com> wrote:
->
-> On 04/24/19 at 02:18pm, Dave Young wrote:
-> > On 04/24/19 at 01:41pm, Baoquan He wrote:
-> > > On 04/24/19 at 02:47am, Junichi Nomura wrote:
-> > > > On 4/24/19 2:15 AM, Kairui Song wrote:
-> > > > > On Mon, Apr 22, 2019 at 11:21 PM Junichi Nomura <j-nomura@ce.jp.nec.com> wrote:
-> > > > >> Is the mapping of ACPI tables just by luck, too?
-> > > > >
-> > > > > Good question, they should have same issue with systab, I ignored this one.
-> > > > > Then in first kernel when doing kexec it should ensure both ACPI
-> > > > > tables and the EFI systab are mapped, that should cover everything and
-> > > > > make it work.
-> > > >
-> > > > Right.
-> > > >
-> > > > > Is there anything else missing?
-> > > > No, as far as I looked around get_rsdp_addr().
-> > >
-> > > Have made a draft patch to build ident mapping for ACPI tables too, it's
-> > > based on Kairui's patch. Dave has tested on his t400s laptop, and
-> > > passed. Please check if this adding is OK.
-> > >
-> > > Kairui, you can add this into your patch to make a new one and resend.
-> > > Or I can combine them and send for you today.
->
-> >
-> > Since I can not reproduce the acpi table accessing fault with Kairui's patch,
-> > the test is just sanity testing on same hardware. But the patch looks
-> > good.
->
-> Yes, usually vendor will put these efi systab, ACPI tables together. See
-> the regions you listed on your t420 laptop in another mail:
-> da99f000 - dae9efff Reserved (efi systab fall in this region)
-> daf9f000 - daffefff ACPI tables
->
-> We build 1:1 mapping for kexec kernel down to PMD level. Means for a
-> region, it will align starting address down to PMD size, and align end
-> address up to PMD size. So the end of efi systab, 0xdae9efff, will cause
-> mapping built for the 2MB area, 0xdae00000-0xdaf00000. Clearly ACPI
-> tables are covered by that PMD entry. That's why only efi systab
-> mapping is built, accessing ACPI tables doesn't cause error.
->
-> But we can't assume they will be put together always, so need map ACPI
-> tables too.
->
-> >
-> > With Kairui's fix+ this acpi fix and Junichi's patch everything works.
-> > Can anyone send them for example patch 1/2: kexec early mapping for
-> > efi/acpi,  patch 2/2: Junichi's previous patch.
->
-> Kairui is having a workshop in the US, I can make a patchset to
-> include these two patches.
->
-> For patch 1/2, I will combine the patch Kairui posted and my draft patch,
-> Kairui is the author certainly, since he debugged and found out the root
-> cause, and posted v1 when I was on vacation last week.
->
-> For patch 2/2, I think the version Boris organized is good.
-> http://lkml.kernel.org/r/20190416095209.GG27892@zn.tnic
->
+On Mon, 22 Apr 2019 10:27:20 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 
-Thanks a lot Bao! I was offline for about 1 day due to timezone and
-flight, I have no problem with this and the ACPI mapping part looks
-good to me.
+> Convert all text files with s390 documentation to ReST format.
+> 
+> Tried to preserve as much as possible the original document
+> format. Still, some of the files required some work in order
+> for it to be visible on both plain text and after converted
+> to html.
+> 
+> The conversion is actually:
+>   - add blank lines and identation in order to identify paragraphs;
+>   - fix tables markups;
+>   - add some lists markups;
+>   - mark literal blocks;
+>   - adjust title markups.
+> 
+> At its new index.rst, let's add a :orphan: while this is not linked to
+> the main index.rst file, in order to avoid build warnings.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |    4 +-
+>  Documentation/driver-api/s390-drivers.rst     |    4 +-
+>  Documentation/s390/{3270.txt => 3270.rst}     |   85 +-
+>  Documentation/s390/{cds.txt => cds.rst}       |  354 ++-
+>  .../s390/{CommonIO => common_io.rst}          |   49 +-
+>  Documentation/s390/{DASD => dasd.rst}         |   33 +-
+>  .../{Debugging390.txt => debugging390.rst}    | 2389 ++++++++++-------
+>  .../{driver-model.txt => driver-model.rst}    |  179 +-
+>  Documentation/s390/index.rst                  |   30 +
+>  .../s390/{monreader.txt => monreader.rst}     |   85 +-
+>  Documentation/s390/{qeth.txt => qeth.rst}     |   36 +-
+>  Documentation/s390/s390dbf.rst                |  803 ++++++
+>  Documentation/s390/s390dbf.txt                |  667 -----
+>  Documentation/s390/text_files.rst             |   11 +
+>  .../s390/{vfio-ap.txt => vfio-ap.rst}         |  487 ++--
+>  .../s390/{vfio-ccw.txt => vfio-ccw.rst}       |   90 +-
+>  .../s390/{zfcpdump.txt => zfcpdump.rst}       |    2 +
+>  MAINTAINERS                                   |    4 +-
+>  arch/s390/Kconfig                             |    4 +-
+>  arch/s390/include/asm/debug.h                 |    4 +-
+>  drivers/s390/char/zcore.c                     |    2 +-
+>  21 files changed, 3089 insertions(+), 2233 deletions(-)
+>  rename Documentation/s390/{3270.txt => 3270.rst} (90%)
+>  rename Documentation/s390/{cds.txt => cds.rst} (64%)
+>  rename Documentation/s390/{CommonIO => common_io.rst} (87%)
+>  rename Documentation/s390/{DASD => dasd.rst} (92%)
+>  rename Documentation/s390/{Debugging390.txt => debugging390.rst} (53%)
+>  rename Documentation/s390/{driver-model.txt => driver-model.rst} (73%)
+>  create mode 100644 Documentation/s390/index.rst
+>  rename Documentation/s390/{monreader.txt => monreader.rst} (81%)
+>  rename Documentation/s390/{qeth.txt => qeth.rst} (62%)
+>  create mode 100644 Documentation/s390/s390dbf.rst
+>  delete mode 100644 Documentation/s390/s390dbf.txt
+>  create mode 100644 Documentation/s390/text_files.rst
+>  rename Documentation/s390/{vfio-ap.txt => vfio-ap.rst} (72%)
+>  rename Documentation/s390/{vfio-ccw.txt => vfio-ccw.rst} (89%)
+>  rename Documentation/s390/{zfcpdump.txt => zfcpdump.rst} (97%)
+> 
+
+(...)
+
+> diff --git a/Documentation/s390/3270.txt b/Documentation/s390/3270.rst
+> similarity index 90%
+> rename from Documentation/s390/3270.txt
+> rename to Documentation/s390/3270.rst
+> index 7c715de99774..e09e77954238 100644
+> --- a/Documentation/s390/3270.txt
+> +++ b/Documentation/s390/3270.rst
+
+(...)
+
+> @@ -17,12 +21,12 @@ twenty and thirty years ago.
+>  You may have 3270s in-house and not know it.  If you're using the
+>  VM-ESA operating system, define a 3270 to your virtual machine by using
+>  the command "DEF GRAF <hex-address>"  This paper presumes you will be
+> -defining four 3270s with the CP/CMS commands
+> +defining four 3270s with the CP/CMS commands:
+>  
+> -	DEF GRAF 620
+> -	DEF GRAF 621
+> -	DEF GRAF 622
+> -	DEF GRAF 623
+> +	- DEF GRAF 620
+> +	- DEF GRAF 621
+> +	- DEF GRAF 622
+> +	- DEF GRAF 623
+
+IIUC, this makes this into a bulleted list... but the user is supposed
+to enter these commands (similar to the shell commands further down in
+this file).
+
+>  
+>  Your network connection from VM-ESA allows you to use x3270, tn3270, or
+>  another 3270 emulator, started from an xterm window on your PC or
+
+(...)
+
+> @@ -84,20 +92,22 @@ Here are the installation steps in detail:
+>  		make modules_install
+>  
+>  	2. (Perform this step only if you have configured tub3270 as a
+> -	module.)  Add a line to a file /etc/modprobe.d/*.conf to automatically
+> +	module.)  Add a line to a file `/etc/modprobe.d/*.conf` to automatically
+>  	load the driver when it's needed.  With this line added, you will see
+>  	login prompts appear on your 3270s as soon as boot is complete (or
+>  	with emulated 3270s, as soon as you dial into your vm guest using the
+>  	command "DIAL <vmguestname>").  Since the line-mode major number is
+> -	227, the line to add should be:
+> +	227, the line to add should be::
+> +
+>  		alias char-major-227 tub3270
+>  
+>  	3. Define graphic devices to your vm guest machine, if you
+>  	haven't already.  Define them before you reboot (reipl):
+> -		DEFINE GRAF 620
+> -		DEFINE GRAF 621
+> -		DEFINE GRAF 622
+> -		DEFINE GRAF 623
+> +
+> +		- DEFINE GRAF 620
+> +		- DEFINE GRAF 621
+> +		- DEFINE GRAF 622
+> +		- DEFINE GRAF 623
+
+Same here.
+
+>  
+>  	4. Reboot.  The reboot process scans hardware devices, including
+>  	3270s, and this enables the tub3270 driver once loaded to respond
+
+(...)
+
+
+> diff --git a/Documentation/s390/CommonIO b/Documentation/s390/common_io.rst
+> similarity index 87%
+> rename from Documentation/s390/CommonIO
+> rename to Documentation/s390/common_io.rst
+> index 6e0f63f343b4..846485681ce7 100644
+> --- a/Documentation/s390/CommonIO
+> +++ b/Documentation/s390/common_io.rst
+> @@ -1,5 +1,9 @@
+> -S/390 common I/O-Layer - command line parameters, procfs and debugfs entries
+> -============================================================================
+> +======================
+> +S/390 common I/O-Layer
+> +======================
+> +
+> +command line parameters, procfs and debugfs entries
+> +===================================================
+
+I don't see why this should be split into two lines? If anything needs
+to be changed, I'd drop the hyphen.
+
+>  
+>  Command line parameters
+>  -----------------------
+> @@ -13,7 +17,7 @@ Command line parameters
+>  	device := {all | [!]ipldev | [!]condev | [!]<devno> | [!]<devno>-<devno>}
+>  
+>    The given devices will be ignored by the common I/O-layer; no detection
+> -  and device sensing will be done on any of those devices. The subchannel to 
+> +  and device sensing will be done on any of those devices. The subchannel to
+>    which the device in question is attached will be treated as if no device was
+>    attached.
+>  
+> @@ -28,14 +32,20 @@ Command line parameters
+>    keywords can be used to refer to the CCW based boot device and CCW console
+>    device respectively (these are probably useful only when combined with the '!'
+>    operator). The '!' operator will cause the I/O-layer to _not_ ignore a device.
+> -  The command line is parsed from left to right.
+> +  The command line
+> +  is parsed from left to right.
+
+Why this change?
+
+> +
+> +  For example::
+>  
+> -  For example, 
+>  	cio_ignore=0.0.0023-0.0.0042,0.0.4711
+> +
+>    will ignore all devices ranging from 0.0.0023 to 0.0.0042 and the device
+>    0.0.4711, if detected.
+> -  As another example,
+> +
+> +  As another example::
+> +
+>  	cio_ignore=all,!0.0.4711,!0.0.fd00-0.0.fd02
+> +
+>    will ignore all devices but 0.0.4711, 0.0.fd00, 0.0.fd01, 0.0.fd02.
+>  
+>    By default, no devices are ignored.
+
+(...)
+
+> diff --git a/Documentation/s390/Debugging390.txt b/Documentation/s390/debugging390.rst
+> similarity index 53%
+> rename from Documentation/s390/Debugging390.txt
+> rename to Documentation/s390/debugging390.rst
+> index c35804c238ad..d49305fd5e1a 100644
+> --- a/Documentation/s390/Debugging390.txt
+> +++ b/Documentation/s390/debugging390.rst
+
+I'll skip this one...
+
+(Question for the s390 arch maintainers: I remember that there was some
+interesting stuff in there, but I'm not sure how much of it is still
+accurate/useful... is it worth spending time on trying to update this?)
+
+(...)
+
+
+> diff --git a/Documentation/s390/s390dbf.rst b/Documentation/s390/s390dbf.rst
+> new file mode 100644
+> index 000000000000..ec2a1faa414b
+> --- /dev/null
+> +++ b/Documentation/s390/s390dbf.rst
+
+(...)
+
+> diff --git a/Documentation/s390/s390dbf.txt b/Documentation/s390/s390dbf.txt
+> deleted file mode 100644
+> index 61329fd62e89..000000000000
+> --- a/Documentation/s390/s390dbf.txt
+> +++ /dev/null
+
+I wonder why this does not show up as a rename?
+
+(...)
+
+> diff --git a/Documentation/s390/text_files.rst b/Documentation/s390/text_files.rst
+> new file mode 100644
+> index 000000000000..c94d05d4fa17
+> --- /dev/null
+> +++ b/Documentation/s390/text_files.rst
+> @@ -0,0 +1,11 @@
+> +ibm 3270 changelog
+> +------------------
+> +
+> +.. include:: 3270.ChangeLog
+> +    :literal:
+> +
+> +ibm 3270 config3270.sh
+> +----------------------
+> +
+> +.. literalinclude:: config3270.sh
+> +    :language: shell
+
+
+Another question for the s390 arch maintainers: How valuable is this still?
+
+(...)
+
+> diff --git a/Documentation/s390/vfio-ccw.txt b/Documentation/s390/vfio-ccw.rst
+> similarity index 89%
+> rename from Documentation/s390/vfio-ccw.txt
+> rename to Documentation/s390/vfio-ccw.rst
+> index 2be11ad864ff..1f6d0b56d53e 100644
+> --- a/Documentation/s390/vfio-ccw.txt
+> +++ b/Documentation/s390/vfio-ccw.rst
+
+(...)
+
+> @@ -295,6 +321,6 @@ Reference
+>  1. ESA/s390 Principles of Operation manual (IBM Form. No. SA22-7832)
+>  2. ESA/390 Common I/O Device Commands manual (IBM Form. No. SA22-7204)
+>  3. https://en.wikipedia.org/wiki/Channel_I/O
+> -4. Documentation/s390/cds.txt
+> +4. Documentation/s390/cds.rst
+>  5. Documentation/vfio.txt
+>  6. Documentation/vfio-mediated-device.txt
+
+Are these two renamed in a later patch?
+
+(...)
