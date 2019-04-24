@@ -2,49 +2,60 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73FDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340DEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D77D20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02BA120652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129517;
-	bh=fVBOIT0ckStmQsqm0KVxV9Etdhtq4zIkOnneqJKZrYE=;
+	s=default; t=1556129540;
+	bh=Jf7iOWgv3cBQOxUJ/zKkTLbcNGyFtUjhgdruu2HmMOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2h1fzGfPqRoFWjgmVu10B5jVPIvFa1jF+Z9AbKNue2qy42Gh7SAj5f+FHoyl+91r1
-	 yS2ONfhg9Fxa5a+gZavHyQNOBDLcuGjrIBWcGEQzqWEFS/H9t3l6csLciaeFNgGeyS
-	 aVl8z6QezSxyucyNYNkJigj5ib+AG66DpJKnGY+g=
+	b=sMi+HhndOnF2Z1HCsY5hIJJC8Mm1dzllGPIps7l0MKJrMNblL5Wez2uODyY9ufZxb
+	 kMt7Cha0EGHCAEOyviNGkqoaDics17cQ0pxkGoQRrxVc8+5fN77Qf1QwhMdxZ1HCzq
+	 fNikTVLRC0EEgt0knS7PBIP2sJVxKSpGUnasD4qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388708AbfDXSL4 (ORCPT
+        id S2387776AbfDXRM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37394 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:12:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387856AbfDXRNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:13:21 -0400
+        id S2387742AbfDXRMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:12:53 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ABE521903;
-        Wed, 24 Apr 2019 17:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36F8A218B0;
+        Wed, 24 Apr 2019 17:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126000;
-        bh=fVBOIT0ckStmQsqm0KVxV9Etdhtq4zIkOnneqJKZrYE=;
+        s=default; t=1556125972;
+        bh=Jf7iOWgv3cBQOxUJ/zKkTLbcNGyFtUjhgdruu2HmMOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Njcv20atEskTwWZiNYd2duZuwxo+Nfr0jd21+hx1M70qef3de/l44ivp/tGFqt8vg
-         YhzbQm1mA/Pa0fFIiDyJqCwvYHWjWjvbZZ4SOxBdrHuJl6ZhkysLh+XpifuKBCcJuU
-         MzoWUGGwbEvkA3Cysh0TOneKelGQRsX60BNXzS50=
+        b=lsYt3n5pPherzKVGxvESpbBNsworNjEDog2P9QAg1tnrWlnpAB6UquT5ljYgefvxs
+         MqcqktgeWRues/FKl41KC7kjqt+O4DO8gzoyrkkf4a+L+KSsLStRH5bzfSK36ksEzw
+         CMk3iWf0VHYoYOZv7zkCzXbyWmE6OKBkimwWjePk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 3.18 058/104] xtensa: fix return_address
-Date:   Wed, 24 Apr 2019 19:09:15 +0200
-Message-Id: <20190424170903.484400591@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
+        Waiman Long <longman@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 031/104] locking/lockdep: Add debug_locks check in __lock_downgrade()
+Date:   Wed, 24 Apr 2019 19:08:48 +0200
+Message-Id: <20190424170857.262137613@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -57,42 +68,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+[ Upstream commit 71492580571467fb7177aade19c18ce7486267f5 ]
 
-commit ada770b1e74a77fff2d5f539bf6c42c25f4784db upstream.
+Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
+warning right after a previous lockdep warning. It is likely that the
+previous warning turned off lock debugging causing the lockdep to have
+inconsistency states leading to the lock downgrade warning.
 
-return_address returns the address that is one level higher in the call
-stack than requested in its argument, because level 0 corresponds to its
-caller's return address. Use requested level as the number of stack
-frames to skip.
+Fix that by add a check for debug_locks at the beginning of
+__lock_downgrade().
 
-This fixes the address reported by might_sleep and friends.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Debugged-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/stacktrace.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/locking/lockdep.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/xtensa/kernel/stacktrace.c
-+++ b/arch/xtensa/kernel/stacktrace.c
-@@ -107,10 +107,14 @@ static int return_address_cb(struct stac
- 	return 1;
- }
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index fb90ca3a296e..27de98428367 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3312,6 +3312,9 @@ __lock_set_class(struct lockdep_map *lock, const char *name,
+ 	unsigned int depth;
+ 	int i;
  
-+/*
-+ * level == 0 is for the return address from the caller of this function,
-+ * not from this function itself.
-+ */
- unsigned long return_address(unsigned level)
- {
- 	struct return_addr_data r = {
--		.skip = level + 1,
-+		.skip = level,
- 	};
- 	walk_stackframe(stack_pointer(NULL), return_address_cb, &r);
- 	return r.addr;
++	if (unlikely(!debug_locks))
++		return 0;
++
+ 	depth = curr->lockdep_depth;
+ 	/*
+ 	 * This function is about (re)setting the class of a held lock,
+-- 
+2.19.1
+
 
 
