@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C1CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC38C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE7721901
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3CF21903
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116562;
-	bh=W0hZJTnTMHZpf0S6Khw1JAEIUhq1mfLfg3jmHj1gQQs=;
+	s=default; t=1556116565;
+	bh=036uDLZBpWFkIeUwwhsl8vJev4VbJtMq0NEC30qZVO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iqWVsmoYWLs/d5H0IgoaaEblaRTSkY0S7juOXpVFfCBXCEw4/Gfk7R3n2V21oB86B
-	 LKveGc0vg7pZRDd9+4jRMWGLkkA8jqEHU0qGWBUxIr+CuhnbxDprnmtNI37PvNKV5k
-	 +O5zRFn0H9MQ07UKPRWnBWD6x/lMlaPV9nw7lHZY=
+	b=Oj0opJgs8+MFppqPYKNxuZnx7lCgXtwx0Wel79ur0nxbvvRO1e2b92ZMbASimI4vO
+	 Q/mQwkvaJJSNAwM8Lt5CBWn/YqNRJNZ9tnRm8X7DZAiyP1fVZRupJ+yxzN5wSkzRMV
+	 iKbf81EQr7KHFE6RmvCmfBqbBmNsVHTJbhhQAvkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731508AbfDXOgB (ORCPT
+        id S1731519AbfDXOgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:36:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39648 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:36:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730956AbfDXOf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:35:58 -0400
+        id S1731457AbfDXOf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:35:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9751421903;
-        Wed, 24 Apr 2019 14:35:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C6AC21900;
+        Wed, 24 Apr 2019 14:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116558;
-        bh=W0hZJTnTMHZpf0S6Khw1JAEIUhq1mfLfg3jmHj1gQQs=;
+        s=default; t=1556116556;
+        bh=036uDLZBpWFkIeUwwhsl8vJev4VbJtMq0NEC30qZVO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jLlXPIOE8MbiuMthltvc+4i5KFTqvu7kgKC/NPq24WdmU98Ggc+nU+Rzs8koFh4rn
-         gGvafokqf6QYuI4ss4PicUxBsKwatq91uAoD0ELs6QI0TcBQe0pw0NCxX6cE+3Qm/y
-         pA1TJELsd9jrNNCesr6S8z4SrC5qNJEE0OfaRaz0=
+        b=k4aC8Hi/wfbpQeUcOFGepzWQuTDnTU3krdaX3i/21DIZDBOd7Ran+Uprue/qlkgdb
+         CUnnKmCTvFQaz/fkKqFQHLrSqABTGeZLJ9Gji3VSU89ImpQ8LwgoJGegEAlIqqDuYo
+         cT7FquTWntoFsR4Id5x5qkSTrh0NuPaRXR72X36s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Rientjes <rientjes@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 52/66] KVM: SVM: prevent DBG_DECRYPT and DBG_ENCRYPT overflow
-Date:   Wed, 24 Apr 2019 10:33:26 -0400
-Message-Id: <20190424143341.27665-52-sashal@kernel.org>
+Cc:     Varun Prakash <varun@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 51/66] libcxgb: fix incorrect ppmax calculation
+Date:   Wed, 24 Apr 2019 10:33:25 -0400
+Message-Id: <20190424143341.27665-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -58,61 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Rientjes <rientjes@google.com>
+From: Varun Prakash <varun@chelsio.com>
 
-[ Upstream commit b86bc2858b389255cd44555ce4b1e427b2b770c0 ]
+[ Upstream commit cc5a726c79158bd307150e8d4176ec79b52001ea ]
 
-This ensures that the address and length provided to DBG_DECRYPT and
-DBG_ENCRYPT do not cause an overflow.
+BITS_TO_LONGS() uses DIV_ROUND_UP() because of
+this ppmax value can be greater than available
+per cpu page pods.
 
-At the same time, pass the actual number of pages pinned in memory to
-sev_unpin_memory() as a cleanup.
+This patch removes BITS_TO_LONGS() to fix this
+issue.
 
-Reported-by: Cfir Cohen <cfir@google.com>
-Signed-off-by: David Rientjes <rientjes@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/x86/kvm/svm.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index a9b8e38d78ad..4c110956d188 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -6799,7 +6799,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
- 	struct page **src_p, **dst_p;
- 	struct kvm_sev_dbg debug;
- 	unsigned long n;
--	int ret, size;
-+	unsigned int size;
-+	int ret;
+diff --git a/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c b/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c
+index 74849be5f004..e2919005ead3 100644
+--- a/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c
++++ b/drivers/net/ethernet/chelsio/libcxgb/libcxgb_ppm.c
+@@ -354,7 +354,10 @@ static struct cxgbi_ppm_pool *ppm_alloc_cpu_pool(unsigned int *total,
+ 		ppmax = max;
  
- 	if (!sev_guest(kvm))
- 		return -ENOTTY;
-@@ -6807,6 +6808,11 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
- 	if (copy_from_user(&debug, (void __user *)(uintptr_t)argp->data, sizeof(debug)))
- 		return -EFAULT;
- 
-+	if (!debug.len || debug.src_uaddr + debug.len < debug.src_uaddr)
-+		return -EINVAL;
-+	if (!debug.dst_uaddr)
-+		return -EINVAL;
+ 	/* pool size must be multiple of unsigned long */
+-	bmap = BITS_TO_LONGS(ppmax);
++	bmap = ppmax / BITS_PER_TYPE(unsigned long);
++	if (!bmap)
++		return NULL;
 +
- 	vaddr = debug.src_uaddr;
- 	size = debug.len;
- 	vaddr_end = vaddr + size;
-@@ -6857,8 +6863,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
- 						     dst_vaddr,
- 						     len, &argp->error);
+ 	ppmax = (bmap * sizeof(unsigned long)) << 3;
  
--		sev_unpin_memory(kvm, src_p, 1);
--		sev_unpin_memory(kvm, dst_p, 1);
-+		sev_unpin_memory(kvm, src_p, n);
-+		sev_unpin_memory(kvm, dst_p, n);
+ 	alloc_sz = sizeof(*pools) + sizeof(unsigned long) * bmap;
+@@ -402,6 +405,10 @@ int cxgbi_ppm_init(void **ppm_pp, struct net_device *ndev,
+ 	if (reserve_factor) {
+ 		ppmax_pool = ppmax / reserve_factor;
+ 		pool = ppm_alloc_cpu_pool(&ppmax_pool, &pool_index_max);
++		if (!pool) {
++			ppmax_pool = 0;
++			reserve_factor = 0;
++		}
  
- 		if (ret)
- 			goto err;
+ 		pr_debug("%s: ppmax %u, cpu total %u, per cpu %u.\n",
+ 			 ndev->name, ppmax, ppmax_pool, pool_index_max);
 -- 
 2.19.1
 
