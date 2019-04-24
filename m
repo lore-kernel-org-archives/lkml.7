@@ -2,247 +2,121 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3886AC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 02:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33EDC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 02:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0528121773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 02:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC99D21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 02:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbfDXCOt (ORCPT
+        id S1729364AbfDXCPz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 22:14:49 -0400
-Received: from [13.77.154.182] ([13.77.154.182]:39744 "EHLO
-        linux.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbfDXCOs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 22:14:48 -0400
-X-Greylist: delayed 517 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Apr 2019 22:14:47 EDT
-Received: by linux.microsoft.com (Postfix, from userid 1020)
-        id 6BF3730CB914; Tue, 23 Apr 2019 19:06:09 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by linux.microsoft.com (Postfix) with ESMTP id 68CF85D0A8;
-        Tue, 23 Apr 2019 19:06:09 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 19:06:09 -0700 (PDT)
-From:   nramas@linux.microsoft.com
-X-X-Sender: nramas@linuxonhyperv.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
-To:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
-cc:     zohar@linux.ibm.com, vgoyal@redhat.com,
-        balajib@linux.microsoft.com, prsriva@linux.microsoft.com,
-        nramas@linux.microsoft.com
-Subject: [PATCH v1 1/1] Return the verified kernel image signature in
- kexec_file_load
-Message-ID: <alpine.LRH.2.21.1904231852380.105892@linuxonhyperv.guj3yctzbm1etfxqx2vob5hsef.xx.intern>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Tue, 23 Apr 2019 22:15:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43690 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726920AbfDXCPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 22:15:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9AF78AC63;
+        Wed, 24 Apr 2019 02:15:53 +0000 (UTC)
+Date:   Tue, 23 Apr 2019 19:15:44 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        akpm@linux-foundation.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Paul Mackerras <paulus@samba.org>,
+        Christoph Lameter <cl@linux.com>,
+        linuxppc-dev@lists.ozlabs.org, jgg@mellanox.com
+Subject: Re: [PATCH 5/6] powerpc/mmu: drop mmap_sem now that locked_vm is
+ atomic
+Message-ID: <20190424021544.ygqa4hvwbyb6nuxp@linux-r8p5>
+Mail-Followup-To: Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        akpm@linux-foundation.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Paul Mackerras <paulus@samba.org>, Christoph Lameter <cl@linux.com>,
+        linuxppc-dev@lists.ozlabs.org, jgg@mellanox.com
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+ <20190402204158.27582-6-daniel.m.jordan@oracle.com>
+ <964bd5b0-f1e5-7bf0-5c58-18e75c550841@c-s.fr>
+ <20190403164002.hued52o4mga4yprw@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190403164002.hued52o4mga4yprw@ca-dmjordan1.us.oracle.com>
+User-Agent: NeoMutt/20180323
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 03 Apr 2019, Daniel Jordan wrote:
 
-From: Lakshmi Ramasubramanian <nramas@microsoft.com>
+>On Wed, Apr 03, 2019 at 06:58:45AM +0200, Christophe Leroy wrote:
+>> Le 02/04/2019 à 22:41, Daniel Jordan a écrit :
+>> > With locked_vm now an atomic, there is no need to take mmap_sem as
+>> > writer.  Delete and refactor accordingly.
+>>
+>> Could you please detail the change ?
+>
+>Ok, I'll be more specific in the next version, using some of your language in
+>fact.  :)
+>
+>> It looks like this is not the only
+>> change. I'm wondering what the consequences are.
+>>
+>> Before we did:
+>> - lock
+>> - calculate future value
+>> - check the future value is acceptable
+>> - update value if future value acceptable
+>> - return error if future value non acceptable
+>> - unlock
+>>
+>> Now we do:
+>> - atomic update with future (possibly too high) value
+>> - check the new value is acceptable
+>> - atomic update back with older value if new value not acceptable and return
+>> error
+>>
+>> So if a concurrent action wants to increase locked_vm with an acceptable
+>> step while another one has temporarily set it too high, it will now fail.
+>>
+>> I think we should keep the previous approach and do a cmpxchg after
+>> validating the new value.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@microsoft.com>
----
-When CONFIG_KEXEC_VERIFY_SIG is selected the signature on 
-the new kernel image is verified in kexec_file_load.
-The signature is embedded in the kernel image file.
+Wouldn't the cmpxchg alternative also be exposed the locked_vm changing between
+validating the new value and the cmpxchg() and we'd bogusly fail even when there
+is still just because the value changed (I'm assuming we don't hold any locks,
+otherwise all this is pointless).
 
-This change returns the pointer to the verified signature and 
-the length of that signature. kexec_file_load can log this
-signature for attestation (To attest the signer of the new kernel).
-The change to log the kernel signature for attestation will be added
-in a future change set.
+   current_locked = atomic_read(&mm->locked_vm);
+   new_locked = current_locked + npages;
+   if (new_locked < lock_limit)
+      if (cmpxchg(&mm->locked_vm, current_locked, new_locked) == current_locked)
+      	 /* ENOMEM */
 
+>
+>That's a good idea, and especially worth doing considering that an arbitrary
+>number of threads that charge a low amount of locked_vm can fail just because
+>one thread charges lots of it.
 
-  arch/x86/kernel/kexec-bzimage64.c      |  7 +++++--
-  arch/x86/kernel/machine_kexec_64.c     | 10 +++++++---
-  crypto/asymmetric_keys/verify_pefile.c | 18 +++++++++++++++++-
-  include/linux/kexec.h                  |  8 ++++++--
-  include/linux/verification.h           |  4 +++-
-  kernel/kexec_file.c                    | 14 +++++++++++---
-  6 files changed, 49 insertions(+), 12 deletions(-)
+Yeah but the window for this is quite small, I doubt it would be a real issue.
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 9d7fd5e6689a..030abd8adbce 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -530,11 +530,14 @@ static int bzImage64_cleanup(void *loader_data)
-  }
+What if before doing the atomic_add_return(), we first did the racy new_locked
+check for ENOMEM, then do the speculative add and cleanup, if necessary. This
+would further reduce the scope of the window where false ENOMEM can occur.
 
-  #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
--static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
-+static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len,
-+				unsigned int *signature_len, void **signature)
-  {
-  	return verify_pefile_signature(kernel, kernel_len,
-  				       NULL,
--				       VERIFYING_KEXEC_PE_SIGNATURE);
-+				       VERIFYING_KEXEC_PE_SIGNATURE,
-+					   signature_len,
-+					   signature);
-  }
-  #endif
+>pinned_vm appears to be broken the same way, so I can fix it too unless someone
+>beats me to it.
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 6f5ca4ebe6e5..b556a9750dd4 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -405,15 +405,19 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
-  }
+This should not be a surprise for the rdma folks. Cc'ing Jason nonetheless.
 
-  #ifdef CONFIG_KEXEC_VERIFY_SIG
--int arch_kexec_kernel_verify_sig(struct kimage *image, void *kernel,
--				 unsigned long kernel_len)
-+int arch_kexec_kernel_verify_sig(struct kimage *image,
-+				void *kernel,
-+				unsigned long kernel_len,
-+				unsigned int *signature_len,
-+				void **signature)
-  {
-  	if (!image->fops || !image->fops->verify_sig) {
-  		pr_debug("kernel loader does not support signature verification.");
-  		return -EKEYREJECTED;
-  	}
-
--	return image->fops->verify_sig(kernel, kernel_len);
-+	return image->fops->verify_sig(kernel, kernel_len,
-+						signature_len, signature);
-  }
-  #endif
-
-diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_keys/verify_pefile.c
-index 672a94c2c3ff..588a7966922f 100644
---- a/crypto/asymmetric_keys/verify_pefile.c
-+++ b/crypto/asymmetric_keys/verify_pefile.c
-@@ -394,6 +394,12 @@ static int pefile_digest_pe(const void *pebuf, unsigned int pelen,
-   * @pelen: Length of the binary image
-   * @trust_keys: Signing certificate(s) to use as starting points
-   * @usage: The use to which the key is being put.
-+ * @signature_len: If non-NULL the number of bytes in the signature
-+ *                 will be returned in this out parameter
-+ * @signature: If non-NULL a pointer to the buffer containing
-+ *             the file signature will be returned in this out parameter.
-+ *             The pointer being returned is actually within the buffer
-+ *             pointed to by pebuf. So the caller should not try to free it.
-   *
-   * Validate that the certificate chain inside the PKCS#7 message inside the PE
-   * binary image intersects keys we already know and trust.
-@@ -418,7 +424,9 @@ static int pefile_digest_pe(const void *pebuf, unsigned int pelen,
-   */
-  int verify_pefile_signature(const void *pebuf, unsigned pelen,
-  			    struct key *trusted_keys,
--			    enum key_being_used_for usage)
-+			    enum key_being_used_for usage,
-+				unsigned int *signature_len,
-+				void **signature)
-  {
-  	struct pefile_context ctx;
-  	int ret;
-@@ -448,6 +456,14 @@ int verify_pefile_signature(const void *pebuf, unsigned pelen,
-  	 * contents.
-  	 */
-  	ret = pefile_digest_pe(pebuf, pelen, &ctx);
-+	if (ret < 0)
-+		goto error;
-+
-+	/* Check if the caller needs the file signature */
-+	if (signature_len != NULL && signature != NULL) {
-+		*signature_len = ctx.sig_len;
-+		*signature = pebuf + ctx.sig_offset;
-+	}
-
-  error:
-  	kfree(ctx.digest);
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index c9481ebcbc0c..1c790a5b03a0 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -131,7 +131,9 @@ typedef int (kexec_cleanup_t)(void *loader_data);
-
-  #ifdef CONFIG_KEXEC_VERIFY_SIG
-  typedef int (kexec_verify_sig_t)(const char *kernel_buf,
--				 unsigned long kernel_len);
-+				 unsigned long kernel_len,
-+				 unsigned int *signature_len,
-+				 void **signature);
-  #endif
-
-  struct kexec_file_ops {
-@@ -288,7 +290,9 @@ int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
-  void * __weak arch_kexec_kernel_image_load(struct kimage *image);
-  int __weak arch_kimage_file_post_load_cleanup(struct kimage *image);
-  int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
--					unsigned long buf_len);
-+					unsigned long buf_len,
-+					unsigned int *signature_len,
-+					void **signature);
-  int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
-  					Elf_Shdr *sechdrs, unsigned int relsec);
-  int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-diff --git a/include/linux/verification.h b/include/linux/verification.h
-index a10549a6c7cd..2ad9ff1dab5e 100644
---- a/include/linux/verification.h
-+++ b/include/linux/verification.h
-@@ -42,7 +42,9 @@ extern int verify_pkcs7_signature(const void *data, size_t len,
-  #ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
-  extern int verify_pefile_signature(const void *pebuf, unsigned pelen,
-  				   struct key *trusted_keys,
--				   enum key_being_used_for usage);
-+				   enum key_being_used_for usage,
-+				   unsigned int *signature_len,
-+				   void **signature);
-  #endif
-
-  #endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index b118735fea9d..fb0c94b8e52b 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -54,7 +54,9 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
-
-  #ifdef CONFIG_KEXEC_VERIFY_SIG
-  int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
--					unsigned long buf_len)
-+					unsigned long buf_len,
-+					unsigned int *signature_len,
-+					void **signature)
-  {
-  	return -EKEYREJECTED;
-  }
-@@ -126,6 +128,10 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
-  	int ret = 0;
-  	void *ldata;
-  	loff_t size;
-+#ifdef CONFIG_KEXEC_VERIFY_SIG
-+	unsigned int signature_len;
-+	void *signature;
-+#endif
-
-  	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
-  				       &size, INT_MAX, READING_KEXEC_IMAGE);
-@@ -144,12 +150,14 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
-
-  #ifdef CONFIG_KEXEC_VERIFY_SIG
-  	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
--					   image->kernel_buf_len);
-+					   image->kernel_buf_len,
-+					   &signature_len,
-+					   &signature);
-  	if (ret) {
-  		pr_debug("kernel signature verification failed.\n");
-  		goto out;
-  	}
--	pr_debug("kernel signature verification successful.\n");
-+	pr_debug("Verified kernel signature. Sig len %d\n", signature_len);
-  #endif
-  	/* It is possible that there no initramfs is being loaded */
-  	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
--- 
-2.17.1
-
+Thanks,
+Davidlohr
