@@ -6,48 +6,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DA8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE43C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2DC020811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4400218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127057;
-	bh=SjD6htXr7CFXazsCXr959/nxj1ZPNcG948lLniQ+4q4=;
+	s=default; t=1556127059;
+	bh=X8GOPRzkfroW5iomPW607DfIUvflsSOAwCoIlepwytk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ifp9IRaE6ztXur0Nrl9E0iSFjBcD2tHSqyNViKjMYp8uZcCy2PXaq2SmG7WPuJhUF
-	 +rzW0JMibHIDPDsFby7aa9ftqvmqE/4wWSN+J0PvWvOSz4tAUyK3Xk8SWtHaPJGSjC
-	 1kKx8/R3LQpz0rm/szYkUMfNafYVYclbsFKcNnUs=
+	b=S+wDaNeIO9XewMLUlvx77l/BkqD6tqXaeIMw74nChcKt12BgyypOlGESL1J89Vqce
+	 WcJOU6zIzNjcVx2RU8n3s7rixDo7pAYotWi5/HpeNGmnsYN2JA3onKNzqiSVmjH94i
+	 CqfLAXyfiwRfzelt1uEqVESYmDV2NLvzNsJB+ZmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391075AbfDXRaz (ORCPT
+        id S2391087AbfDXRa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:30:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57186 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:30:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391058AbfDXRau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:30:50 -0400
+        id S2391073AbfDXRaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:30:55 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8B87218B0;
-        Wed, 24 Apr 2019 17:30:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 434DA21907;
+        Wed, 24 Apr 2019 17:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127049;
-        bh=SjD6htXr7CFXazsCXr959/nxj1ZPNcG948lLniQ+4q4=;
+        s=default; t=1556127054;
+        bh=X8GOPRzkfroW5iomPW607DfIUvflsSOAwCoIlepwytk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZsihXZmOH640qNBPtOhIsoLTa5SdA2NKteia4HDt9fALhszTXqwxCQEdLki1NjJlH
-         UngAvlmSrnUAhCbY+eqORz11/hiekhHDQAJnF+uxsg8Xwxi05moChORFXUf1RFf52/
-         ABFS3cjfqkt8WqC92y+QkCg60bd7xlPz7J71ISPw=
+        b=fhhKSLXuNQ+p4Xc9IVzFpG23PqtUNVtRFYfU3aqDfRQKfbrOuAv2doDZo26JRSocA
+         rW3rh4cBj1XHEehbGTlbpHXyc2xngXkJL5MOE+eISEMJqWuqNy/3jRCKyGxBXveXE3
+         0oS8fhCqZ0VMMSy3qREvKvO6KOKZUOzxQjlvxg0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        stable@vger.kernel.org,
+        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 40/96] iio: cros_ec: Fix the maths for gyro scale calculation
-Date:   Wed, 24 Apr 2019 19:09:45 +0200
-Message-Id: <20190424170922.600885770@linuxfoundation.org>
+Subject: [PATCH 4.19 42/96] iio: dac: mcp4725: add missing powerdown bits in store eeprom
+Date:   Wed, 24 Apr 2019 19:09:47 +0200
+Message-Id: <20190424170922.729488454@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -60,59 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gwendal Grignou <gwendal@chromium.org>
+From: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
 
-commit 3d02d7082e5823598090530c3988a35f69689943 upstream.
+commit 06003531502d06bc89d32528f6ec96bf978790f9 upstream.
 
-Calculation did not use IIO_DEGREE_TO_RAD and implemented a variant to
-avoid precision loss as we aim a nano value. The offset added to avoid
-rounding error, though, doesn't give us a close result to the expected
-value. E.g.
+When issuing the write DAC register and write eeprom command, the two
+powerdown bits (PD0 and PD1) are assumed by the chip to be present in
+the bytes sent. Leaving them at 0 implies "powerdown disabled" which is
+a different state that the current one. By adding the current state of
+the powerdown in the i2c write, the chip will correctly power-on exactly
+like as it is at the moment of store_eeprom call.
 
-For 1000dps, the result should be:
+This is documented in MCP4725's datasheet, FIGURE 6-2: "Write Commands
+for DAC Input Register and EEPROM" and MCP4726's datasheet, FIGURE 6-3:
+"Write All Memory Command".
 
-    (1000 * pi ) / 180 >> 15 ~= 0.000532632218
-
-But with current calculation we get
-
-    $ cat scale
-    0.000547890
-
-Fix the calculation by just doing the maths involved for a nano value
-
-   val * pi * 10e12 / (180 * 2^15)
-
-so we get a closer result.
-
-    $ cat scale
-    0.000532632
-
-Fixes: c14dca07a31d ("iio: cros_ec_sensors: add ChromeOS EC Contiguous Sensors driver")
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Acked-by: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/iio/dac/mcp4725.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-+++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-@@ -103,9 +103,10 @@ static int cros_ec_sensors_read(struct i
- 			 * Do not use IIO_DEGREE_TO_RAD to avoid precision
- 			 * loss. Round to the nearest integer.
- 			 */
--			*val = div_s64(val64 * 314159 + 9000000ULL, 1000);
--			*val2 = 18000 << (CROS_EC_SENSOR_BITS - 1);
--			ret = IIO_VAL_FRACTIONAL;
-+			*val = 0;
-+			*val2 = div_s64(val64 * 3141592653ULL,
-+					180 << (CROS_EC_SENSOR_BITS - 1));
-+			ret = IIO_VAL_INT_PLUS_NANO;
- 			break;
- 		case MOTIONSENSE_TYPE_MAG:
- 			/*
+--- a/drivers/iio/dac/mcp4725.c
++++ b/drivers/iio/dac/mcp4725.c
+@@ -98,6 +98,7 @@ static ssize_t mcp4725_store_eeprom(stru
+ 
+ 	inoutbuf[0] = 0x60; /* write EEPROM */
+ 	inoutbuf[0] |= data->ref_mode << 3;
++	inoutbuf[0] |= data->powerdown ? ((data->powerdown_mode + 1) << 1) : 0;
+ 	inoutbuf[1] = data->dac_value >> 4;
+ 	inoutbuf[2] = (data->dac_value & 0xf) << 4;
+ 
 
 
