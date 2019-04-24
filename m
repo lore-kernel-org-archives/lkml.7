@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEE9C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5931FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8439920652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DAB920684
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129363;
-	bh=jrYnxYpJX1H5eu+TRLO8nI0a+g12sYCrQsdiYTmrMYo=;
+	s=default; t=1556129379;
+	bh=Rf7kNGlIeQS29H8+rUFgx/ZMAGQ/wDnK+clLLoQv5Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=viUGrO+ugBNq5fB7kEps9wl6O+1qb1ow4Sckcl5y5XM9HWtFfZ3UbsAxNiLbb5U4i
-	 +I6VEsk4QgqKHrdq7gNj4rUbTNu1AD35ziwK+zRBr5v+W2wSMuka1Cxci5BLMpWCqH
-	 R9oGXgvHFLdgkUi2X210ZHRiP0v0qDxVzx4gHLMI=
+	b=x0JCC3iOTsEW1Uxdj/h5pa8OYQ6HjfL02iK7xT7X7nSQA/xAv5akGPW37CS9lM4hz
+	 10LxqCpSDD3khfhilDY8Y25f3yA6TBfcNcib+yu82tZqeDcIdfnYDmIcoIlG96o/8v
+	 1lFHMhw3klcFP00AhiRQOGipnvo9sujFN9R+Xko0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389111AbfDXSJW (ORCPT
+        id S2388533AbfDXSJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:09:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39728 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 14:09:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387581AbfDXRPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:15:20 -0400
+        id S2387432AbfDXRPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:15:06 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5DFE2054F;
-        Wed, 24 Apr 2019 17:15:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E882054F;
+        Wed, 24 Apr 2019 17:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126119;
-        bh=jrYnxYpJX1H5eu+TRLO8nI0a+g12sYCrQsdiYTmrMYo=;
+        s=default; t=1556126105;
+        bh=Rf7kNGlIeQS29H8+rUFgx/ZMAGQ/wDnK+clLLoQv5Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O/DnTX+PJA0sjXyA0/wmeMlGTZ/0D6hNrGoYmzCyGfX+X4A2dMM0ZP0AvTQLJP+Oa
-         HTlW5NQq8HFRGvPf9dVsLwCFm7RaJ0re9taIclLGZNt3rciUMCZX9JJ3UmP56B7tbm
-         4jObBrXZKG/PKoDi1C97GfF5WEZxRQ1M6adD9fvE=
+        b=ZHz/Q1HQorNLw70z2zhqqU+TGAdGrPCZT8jqIxvCiuxwJbe/Eli4rDtUmYm5l/ZJN
+         V12D8QUea89G/+MXVGqoePlvGWTph6BZY4QyI7CzLTVE2xl/dIDB6Qzdzm7S3CVe1T
+         uWIZup56FsknyrWf6TrQqDtw7ZHAUs4zlFaVUvLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 3.18 101/104] x86/kprobes: Verify stack frame on kretprobe
-Date:   Wed, 24 Apr 2019 19:09:58 +0200
-Message-Id: <20190424170910.587513586@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 3.18 097/104] staging: comedi: vmk80xx: Fix use of uninitialized semaphore
+Date:   Wed, 24 Apr 2019 19:09:54 +0200
+Message-Id: <20190424170910.065005646@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -65,112 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 3ff9c075cc767b3060bdac12da72fc94dd7da1b8 upstream.
+commit 08b7c2f9208f0e2a32159e4e7a4831b7adb10a3e upstream.
 
-Verify the stack frame pointer on kretprobe trampoline handler,
-If the stack frame pointer does not match, it skips the wrong
-entry and tries to find correct one.
+If `vmk80xx_auto_attach()` returns an error, the core comedi module code
+will call `vmk80xx_detach()` to clean up.  If `vmk80xx_auto_attach()`
+successfully allocated the comedi device private data,
+`vmk80xx_detach()` assumes that a `struct semaphore limit_sem` contained
+in the private data has been initialized and uses it.  Unfortunately,
+there are a couple of places where `vmk80xx_auto_attach()` can return an
+error after allocating the device private data but before initializing
+the semaphore, so this assumption is invalid.  Fix it by initializing
+the semaphore just after allocating the private data in
+`vmk80xx_auto_attach()` before any other errors can be returned.
 
-This can happen if user puts the kretprobe on the function
-which can be used in the path of ftrace user-function call.
-Such functions should not be probed, so this adds a warning
-message that reports which function should be blacklisted.
+I believe this was the cause of the following syzbot crash report
+<https://syzkaller.appspot.com/bug?extid=54c2f58f15fe6876b6ad>:
 
-Tested-by: Andrea Righi <righi.andrea@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/155094059185.6137.15527904013362842072.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=10cf, idProduct=8068, bcdDevice=e6.8d
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+vmk80xx 1-1:0.117: driver 'vmk80xx' failed to auto-configure device.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xe8/0x16e lib/dump_stack.c:113
+ assign_lock_key kernel/locking/lockdep.c:786 [inline]
+ register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
+ __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
+ lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
+ down+0x12/0x80 kernel/locking/semaphore.c:58
+ vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
+ comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
+ comedi_device_cleanup.part.0+0x68/0x140 drivers/staging/comedi/comedi_fops.c:156
+ comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
+ comedi_free_board_dev.part.0+0x16/0x90 drivers/staging/comedi/comedi_fops.c:190
+ comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
+ comedi_release_hardware_device+0x111/0x140 drivers/staging/comedi/comedi_fops.c:2880
+ comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
+ usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+ really_probe+0x2da/0xb10 drivers/base/dd.c:509
+ driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+ __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+ bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+ __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+ bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+ device_add+0xad2/0x16e0 drivers/base/core.c:2106
+ usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+ generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+ usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+ really_probe+0x2da/0xb10 drivers/base/dd.c:509
+ driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+ __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+ bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+ __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+ bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+ device_add+0xad2/0x16e0 drivers/base/core.c:2106
+ usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+ hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+ port_event drivers/usb/core/hub.c:5350 [inline]
+ hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+ process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+ worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+ kthread+0x313/0x420 kernel/kthread.c:253
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Reported-by: syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/kprobes/core.c |   26 ++++++++++++++++++++++++++
- include/linux/kprobes.h        |    1 +
- 2 files changed, 27 insertions(+)
+ drivers/staging/comedi/drivers/vmk80xx.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -500,6 +500,7 @@ void arch_prepare_kretprobe(struct kretp
- 	unsigned long *sara = stack_addr(regs);
+--- a/drivers/staging/comedi/drivers/vmk80xx.c
++++ b/drivers/staging/comedi/drivers/vmk80xx.c
+@@ -872,6 +872,8 @@ static int vmk80xx_auto_attach(struct co
  
- 	ri->ret_addr = (kprobe_opcode_t *) *sara;
-+	ri->fp = sara;
+ 	devpriv->model = boardinfo->model;
  
- 	/* Replace the return addr with trampoline addr */
- 	*sara = (unsigned long) &kretprobe_trampoline;
-@@ -701,15 +702,21 @@ __visible __used void *trampoline_handle
- 	unsigned long flags, orig_ret_address = 0;
- 	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
- 	kprobe_opcode_t *correct_ret_addr = NULL;
-+	void *frame_pointer;
-+	bool skipped = false;
++	sema_init(&devpriv->limit_sem, 8);
++
+ 	ret = vmk80xx_find_usb_endpoints(dev);
+ 	if (ret)
+ 		return ret;
+@@ -880,8 +882,6 @@ static int vmk80xx_auto_attach(struct co
+ 	if (ret)
+ 		return ret;
  
- 	INIT_HLIST_HEAD(&empty_rp);
- 	kretprobe_hash_lock(current, &head, &flags);
- 	/* fixup registers */
- #ifdef CONFIG_X86_64
- 	regs->cs = __KERNEL_CS;
-+	/* On x86-64, we use pt_regs->sp for return address holder. */
-+	frame_pointer = &regs->sp;
- #else
- 	regs->cs = __KERNEL_CS | get_kernel_rpl();
- 	regs->gs = 0;
-+	/* On x86-32, we use pt_regs->flags for return address holder. */
-+	frame_pointer = &regs->flags;
- #endif
- 	regs->ip = trampoline_address;
- 	regs->orig_ax = ~0UL;
-@@ -731,8 +738,25 @@ __visible __used void *trampoline_handle
- 		if (ri->task != current)
- 			/* another task is sharing our hash bucket */
- 			continue;
-+		/*
-+		 * Return probes must be pushed on this hash list correct
-+		 * order (same as return order) so that it can be poped
-+		 * correctly. However, if we find it is pushed it incorrect
-+		 * order, this means we find a function which should not be
-+		 * probed, because the wrong order entry is pushed on the
-+		 * path of processing other kretprobe itself.
-+		 */
-+		if (ri->fp != frame_pointer) {
-+			if (!skipped)
-+				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
-+			skipped = true;
-+			continue;
-+		}
+-	sema_init(&devpriv->limit_sem, 8);
+-
+ 	usb_set_intfdata(intf, devpriv);
  
- 		orig_ret_address = (unsigned long)ri->ret_addr;
-+		if (skipped)
-+			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
-+				ri->rp->kp.addr);
- 
- 		if (orig_ret_address != trampoline_address)
- 			/*
-@@ -750,6 +774,8 @@ __visible __used void *trampoline_handle
- 		if (ri->task != current)
- 			/* another task is sharing our hash bucket */
- 			continue;
-+		if (ri->fp != frame_pointer)
-+			continue;
- 
- 		orig_ret_address = (unsigned long)ri->ret_addr;
- 		if (ri->rp && ri->rp->handler) {
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -197,6 +197,7 @@ struct kretprobe_instance {
- 	struct kretprobe *rp;
- 	kprobe_opcode_t *ret_addr;
- 	struct task_struct *task;
-+	void *fp;
- 	char data[0];
- };
- 
+ 	if (devpriv->model == VMK8061_MODEL) {
 
 
