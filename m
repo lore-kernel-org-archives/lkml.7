@@ -7,56 +7,60 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F8CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D35C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25D0218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C762175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KnPdEYYj"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="l4/Paee7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfDXLLA (ORCPT
+        id S1728489AbfDXLL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:11:00 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39095 "EHLO
+        Wed, 24 Apr 2019 07:11:56 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:46395 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfDXLLA (ORCPT
+        with ESMTP id S1727119AbfDXLLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 07:11:00 -0400
+        Wed, 24 Apr 2019 07:11:55 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3OBAnuK2549222
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3OBBUNl2549287
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 24 Apr 2019 04:10:50 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3OBAnuK2549222
+        Wed, 24 Apr 2019 04:11:30 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3OBBUNl2549287
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556104250;
-        bh=kEkNYGlUhakZs8n0q/McYq5CzPWzvB1DFG7c1OBFs8Y=;
+        s=2019041745; t=1556104291;
+        bh=3zSss02+unt8h4SxeVCyr2FpT3qo/PQ+UBzFzk4H7Tw=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=KnPdEYYj2kN8UuIJI7D2TwANd8+u008SABHpNLnCbHp+WaExOferrFhQqOS4nFbjy
-         qjlaCGKImWatkbJQuswrzlzJEOtsE6i1jd0/uuafjdDqn0O2sw9K8daBl740z5gmhS
-         +iEBkqvBRexmymGLHH5F4ZmnMfFTmXTq9zmihXkamVMsvdFq+bwMsT/l/EYQUH+s92
-         DLxWu5csj3kt83N3blpPZbFpJfI261LTuC1UZqO3SsEjeY5NiSf+V3B6RYKpg8vrTg
-         2FbvkRbWEDViGL1HlJCbTI/w3djNi1j3/glLvzz2ZZfLCjvP3iFHMOIN9R4ddPBYik
-         nrVGQf4Szh00A==
+        b=l4/Paee7U1/th0LkWwfQlwCdG6CtWQPv59YPp3xhlhugucwKBW4aM1D0D6hV1jjpf
+         pJn+uGo7KBxEbz6sU1p5GXuczP+8EIHULMiIUibFnbshMGDqeFGq/wX9dvlgJTKc4U
+         ISWV5mSFmXKBXOKrW426CBrbpR7h+CFsT1ceFFrbOeGMPEb2dGS/NZyPpdbgqdlx8P
+         Zexqw6p70qlhZgsrust064R5MVGWPDX1h8bfnO02+G9/w9nFhr5dgHf6mP1aPyQb8+
+         1aEhJD0gEfS+OFTlQChzUw7qBWLv0RpxBtbirrtsc/+ItshrV62g5MHZLIw/AwK8o/
+         Ds6wahBhHtoWw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3OBAnYS2549216;
-        Wed, 24 Apr 2019 04:10:49 -0700
-Date:   Wed, 24 Apr 2019 04:10:49 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3OBBTUE2549283;
+        Wed, 24 Apr 2019 04:11:29 -0700
+Date:   Wed, 24 Apr 2019 04:11:29 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
-Message-ID: <tip-29da93fea3ea39ab9b12270cc6be1b70ef201c9e@git.kernel.org>
-Cc:     rdunlap@infradead.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        hpa@zytor.com, tglx@linutronix.de, mingo@kernel.org
-Reply-To: torvalds@linux-foundation.org, peterz@infradead.org,
-          rdunlap@infradead.org, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de
-In-Reply-To: <20190424072208.754094071@infradead.org>
-References: <20190424072208.754094071@infradead.org>
+From:   tip-bot for Jiri Kosina <tipbot@zytor.com>
+Message-ID: <tip-a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0@git.kernel.org>
+Cc:     dave.hansen@linux.intel.com, peterz@infradead.org,
+        torvalds@linux-foundation.org, luto@kernel.org, jkosina@suse.cz,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, tglx@linutronix.de,
+        jroedel@suse.de, nstange@suse.de, bp@alien8.de, fweisbec@gmail.com,
+        hpa@zytor.com
+Reply-To: mingo@kernel.org, jkosina@suse.cz, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, bp@alien8.de, nstange@suse.de,
+          jroedel@suse.de, fweisbec@gmail.com, hpa@zytor.com,
+          dave.hansen@linux.intel.com, peterz@infradead.org,
+          torvalds@linux-foundation.org, luto@kernel.org
+In-Reply-To: <nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/objtool] mm/uaccess: Use 'unsigned long' to placate UBSAN
- warnings on older GCC versions
-Git-Commit-ID: 29da93fea3ea39ab9b12270cc6be1b70ef201c9e
+Subject: [tip:x86/mm] x86/mm: Remove in_nmi() warning from 64-bit
+ implementation of vmalloc_fault()
+Git-Commit-ID: a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,77 +74,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  29da93fea3ea39ab9b12270cc6be1b70ef201c9e
-Gitweb:     https://git.kernel.org/tip/29da93fea3ea39ab9b12270cc6be1b70ef201c9e
-Author:     Peter Zijlstra <peterz@infradead.org>
-AuthorDate: Wed, 24 Apr 2019 09:19:25 +0200
+Commit-ID:  a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0
+Gitweb:     https://git.kernel.org/tip/a65c88e16f32aa9ef2e8caa68ea5c29bd5eb0ff0
+Author:     Jiri Kosina <jkosina@suse.cz>
+AuthorDate: Wed, 24 Apr 2019 09:04:57 +0200
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 24 Apr 2019 12:19:45 +0200
+CommitDate: Wed, 24 Apr 2019 12:21:35 +0200
 
-mm/uaccess: Use 'unsigned long' to placate UBSAN warnings on older GCC versions
+x86/mm: Remove in_nmi() warning from 64-bit implementation of vmalloc_fault()
 
-Randy reported objtool triggered on his (GCC-7.4) build:
+In-NMI warnings have been added to vmalloc_fault() via:
 
-  lib/strncpy_from_user.o: warning: objtool: strncpy_from_user()+0x315: call to __ubsan_handle_add_overflow() with UACCESS enabled
-  lib/strnlen_user.o: warning: objtool: strnlen_user()+0x337: call to __ubsan_handle_sub_overflow() with UACCESS enabled
+  ebc8827f75 ("x86: Barf when vmalloc and kmemcheck faults happen in NMI")
 
-This is due to UBSAN generating signed-overflow-UB warnings where it
-should not. Prior to GCC-8 UBSAN ignored -fwrapv (which the kernel
-uses through -fno-strict-overflow).
+back in the time when our NMI entry code could not cope with nested NMIs.
 
-Make the functions use 'unsigned long' throughout.
+These days, it's perfectly fine to take a fault in NMI context and we
+don't have to care about the fact that IRET from the fault handler might
+cause NMI nesting.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
+This warning has already been removed from 32-bit implementation of
+vmalloc_fault() in:
+
+  6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
+
+but the 64-bit version was omitted.
+
+Remove the bogus warning also from 64-bit implementation of vmalloc_fault().
+
+Reported-by: Nicolai Stange <nstange@suse.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: luto@kernel.org
-Link: http://lkml.kernel.org/r/20190424072208.754094071@infradead.org
+Fixes: 6863ea0cda8 ("x86/mm: Remove in_nmi() warning from vmalloc_fault()")
+Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1904240902280.9803@cbobk.fhfr.pm
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- lib/strncpy_from_user.c | 5 +++--
- lib/strnlen_user.c      | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/mm/fault.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-index 58eacd41526c..023ba9f3b99f 100644
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -23,10 +23,11 @@
-  * hit it), 'max' is the address space maximum (and we return
-  * -EFAULT if we hit it).
-  */
--static inline long do_strncpy_from_user(char *dst, const char __user *src, long count, unsigned long max)
-+static inline long do_strncpy_from_user(char *dst, const char __user *src,
-+					unsigned long count, unsigned long max)
- {
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
--	long res = 0;
-+	unsigned long res = 0;
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index a0df19b0897d..bd20de9db1a8 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -359,8 +359,6 @@ static noinline int vmalloc_fault(unsigned long address)
+ 	if (!(address >= VMALLOC_START && address < VMALLOC_END))
+ 		return -1;
  
+-	WARN_ON_ONCE(in_nmi());
+-
  	/*
- 	 * Truncate 'max' to the user-specified limit, so that
-diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
-index 1c1a1b0e38a5..7f2db3fe311f 100644
---- a/lib/strnlen_user.c
-+++ b/lib/strnlen_user.c
-@@ -28,7 +28,7 @@
- static inline long do_strnlen_user(const char __user *src, unsigned long count, unsigned long max)
- {
- 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
--	long align, res = 0;
-+	unsigned long align, res = 0;
- 	unsigned long c;
- 
- 	/*
-@@ -42,7 +42,7 @@ static inline long do_strnlen_user(const char __user *src, unsigned long count,
- 	 * Do everything aligned. But that means that we
- 	 * need to also expand the maximum..
- 	 */
--	align = (sizeof(long) - 1) & (unsigned long)src;
-+	align = (sizeof(unsigned long) - 1) & (unsigned long)src;
- 	src -= align;
- 	max += align;
- 
+ 	 * Copy kernel mappings over when needed. This can also
+ 	 * happen within a race in page table update. In the later
