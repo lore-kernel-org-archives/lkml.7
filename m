@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E539EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80ACC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE7F20685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC5420835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556130236;
-	bh=eAGlBkk79v9MDPWXqiQslpoUSPe55yzzRHhdaCRHgY8=;
+	s=default; t=1556130241;
+	bh=yMgygu2Gi+//8VLPNL+G1FTBaRga/OmOo5Va8PZaMOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xGUUs/0FqSuBtpH3DOXM0FVXngBIUV86AQkl8E/eidPSGIGeVCiHqpxNrpEBwLk76
-	 fl5mtL2UhXX+hYAhAEXZyIOkHJk3U1xSa7WwgMUvwRc8Ovfj6mF51TCK9f+tDh3dfN
-	 zYVOjrBjn2oGCx2z6HgJfIlqVvw+NJhmP5X3K9vU=
+	b=0Zt3suXxEXzyR8F0ozrukZufyjVO9uGoIKGmKEhTUlv5aPCMbbfBp+CNiWSgy3wCa
+	 ARDwH0JC19+Zc6Vm1GEFAyXzFZfK+HMlp04MISuRdxg9aYlHIxecBQN79sAhv3KY8a
+	 2fbEBvlQE8V76qWSyXXae5F3P3wkrNELmV7VEqgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387612AbfDXSXq (ORCPT
+        id S2387750AbfDXSYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35964 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 14:24:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbfDXSXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:23:43 -0400
+        id S1733289AbfDXSXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:23:35 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00B452084F;
-        Wed, 24 Apr 2019 18:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 601E820835;
+        Wed, 24 Apr 2019 18:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556130222;
-        bh=eAGlBkk79v9MDPWXqiQslpoUSPe55yzzRHhdaCRHgY8=;
+        s=default; t=1556130214;
+        bh=yMgygu2Gi+//8VLPNL+G1FTBaRga/OmOo5Va8PZaMOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hzU39dB7Mb5LEDH+772DD6EUygszTnBsN9f8tSJjAGAcT1QwipIS05D5HGhukhr8i
-         Rdg3Sxn+2Cu/4oAM2MWKjs5PUEOcfEbP24J45neKeqS1Zk9TBXBH4tMjQPg8AkI+ns
-         M3VeOOVeGlF45dmtoWQHX0xDI/qtgswNkxDgc9RU=
+        b=tvZfRS974tgnyyr/A7Q+CKVCFDwmyuxJudnZj46n2gVmAUnt1G8kHNVbrYRSNwaOV
+         9IrkqKOYHBSy0YTPdIC6A/UnY4p3Ej0xYz/cjKAUTCTY9/+gzV4+U8ajmQA52XgMSr
+         9YeeEn6utxcTZoZXt13vP1uAHBQPmfXXPjbiF/T4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Saurav Kashyap <skashyap@marvell.com>,
         Hannes Reinecke <hare@suse.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 59/96] Revert "scsi: fcoe: clear FC_RP_STARTED flags when receiving a LOGO"
-Date:   Wed, 24 Apr 2019 19:10:04 +0200
-Message-Id: <20190424170923.725970584@linuxfoundation.org>
+Subject: [PATCH 4.14 34/70] Revert "scsi: fcoe: clear FC_RP_STARTED flags when receiving a LOGO"
+Date:   Wed, 24 Apr 2019 19:09:54 +0200
+Message-Id: <20190424170911.716722733@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
-References: <20190424170919.829037226@linuxfoundation.org>
+In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
+References: <20190424170906.751869122@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -82,7 +81,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/scsi/libfc/fc_rport.c
 +++ b/drivers/scsi/libfc/fc_rport.c
-@@ -2153,7 +2153,6 @@ static void fc_rport_recv_logo_req(struc
+@@ -2164,7 +2164,6 @@ static void fc_rport_recv_logo_req(struc
  		FC_RPORT_DBG(rdata, "Received LOGO request while in state %s\n",
  			     fc_rport_state(rdata));
  
