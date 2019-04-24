@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9433C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA5EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4E020685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FACF20685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129665;
-	bh=FQY4rwugQ+ia4BHeILRTlhGVBKL1ZN0fYBIxLvHGXa4=;
+	s=default; t=1556129675;
+	bh=55fWVMcml/L+7lt02kwvT2fvjxgcmjLmqU0svN8ZqnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZIZUXbE3snMhQrdRodExf47bf8yIKtF8nF1KEh7eVodZ7ONCaMve7+Db6r7I9mAT1
-	 1EEWK8hpREwplVEQ3bu3K0YUgVAUsUPnwbq9yW6385PCuja3cqBnai8o0YfXBIzIzS
-	 CFR6qsByW+IVlRjRaZdm1lAemumJWg44TdtZCE+Q=
+	b=Z/6D4agpOphEqBUI8TWq/e4xjFgMONR+H+QqDlkQ5Crjjg8hDwbYRV+9yfBGmNoMg
+	 Bqjweclymi9N72kcf5Q4ZLMDlOibJGTDSFBVom7EsAzCEmDSz98nOtuqX/YCga7wZy
+	 BK1ogLYFrfz/1oPPrTHCzjZ0xtxbhMXoq9GjMPKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733254AbfDXRLY (ORCPT
+        id S1733218AbfDXRLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:11:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34808 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:11:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733240AbfDXRLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:11:20 -0400
+        id S1733201AbfDXRLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:11:16 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94E1D218FE;
-        Wed, 24 Apr 2019 17:11:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B83521902;
+        Wed, 24 Apr 2019 17:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125880;
-        bh=FQY4rwugQ+ia4BHeILRTlhGVBKL1ZN0fYBIxLvHGXa4=;
+        s=default; t=1556125874;
+        bh=55fWVMcml/L+7lt02kwvT2fvjxgcmjLmqU0svN8ZqnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2PzKOqPDbleWFAP33GqAZ0hyT6XgM5UelRdAK0fkQYP4lTvCULqDsmxNYOK4eX9V
-         RrgHl/V+ZfJCuK6LFF7nqm5XAE52QgB+/GzJiAK+Qhk97vuNLc9bjxsXaqAvgXbOaU
-         qRWqeWEo2Afql2+CiJeiLjnC/D1HQEaKiWMz18Ik=
+        b=kPXB0DwUziAwAPwaadm5HtHbvQ3uztD/jjdnqFi4BnHHs25XftXpioAfq0OKdtXIO
+         sa/+LeDQ8NfbUYRO8RBgOjcfzK2+UhsI8qZXaB1P6l7UKV9QNhCzu0bk4N6Y4x6HUx
+         859nuTrEKWRbK2NgyjocJehVHc1TaO2IRdbmF1U4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 016/104] mmc: omap: fix the maximum timeout setting
-Date:   Wed, 24 Apr 2019 19:08:33 +0200
-Message-Id: <20190424170849.710364279@linuxfoundation.org>
+Subject: [PATCH 3.18 014/104] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
+Date:   Wed, 24 Apr 2019 19:08:31 +0200
+Message-Id: <20190424170849.034251880@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -60,49 +61,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
+[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
 
-When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
+We had a test-report where, under memory pressure, adding LUNs to the
+systems would fail (the tests add LUNs strictly in sequence):
 
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	MMC: CTO of 0xff and 0xfe cannot be used!
-	[ad inf.]
+[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
+[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
+[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
+[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
+[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
+[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
+[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
+[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
+[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[ 5525.857838]  sdk: sdk1
+[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
+[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
+[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
+[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
 
-Emulator warnings appear to be valid. The TI document SPRU680 [1]
-("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
-(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
-cycles and "0xff and 0xfe cannot be used".
+Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
+there seems to be no reason to use GFP_ATMOIC here. All the different
+call-contexts use a mutex at some point, and nothing in between that
+requires no sleeping, as far as I could see. Additionally, the code that
+later allocates the block queue for the device (scsi_mq_alloc_queue())
+already uses GFP_KERNEL.
 
-Fix by using 0xfd as the maximum timeout.
+There are similar allocations in two other functions:
+scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
+GFP_KERNEL.
 
-Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
-real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
-(OMAP2420) that MMC works as before.
+Here is the contexts for the three functions so far:
 
-[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
+    scsi_alloc_sdev()
+        scsi_probe_and_add_lun()
+            scsi_sequential_lun_scan()
+                __scsi_scan_target()
+                    scsi_scan_target()
+                        mutex_lock()
+                    scsi_scan_channel()
+                        scsi_scan_host_selected()
+                            mutex_lock()
+            scsi_report_lun_scan()
+                __scsi_scan_target()
+    	            ...
+            __scsi_add_device()
+                mutex_lock()
+            __scsi_scan_target()
+                ...
+        scsi_report_lun_scan()
+            ...
+        scsi_get_host_dev()
+            mutex_lock()
 
-Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+    scsi_probe_and_add_lun()
+        ...
+
+    scsi_add_lun()
+        scsi_probe_and_add_lun()
+            ...
+
+So replace all these, and give them a bit of a better chance to succeed,
+with more chances of reclaim.
+
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/scsi_scan.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
-index 11e5bfedab70..b9f4f39f9359 100644
---- a/drivers/mmc/host/omap.c
-+++ b/drivers/mmc/host/omap.c
-@@ -921,7 +921,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
- 	reg &= ~(1 << 5);
- 	OMAP_MMC_WRITE(host, SDIO, reg);
- 	/* Set maximum timeout */
--	OMAP_MMC_WRITE(host, CTO, 0xff);
-+	OMAP_MMC_WRITE(host, CTO, 0xfd);
- }
+diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+index 3386e72ba7e4..156ee22462e6 100644
+--- a/drivers/scsi/scsi_scan.c
++++ b/drivers/scsi/scsi_scan.c
+@@ -229,7 +229,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
+ 	extern void scsi_requeue_run_queue(struct work_struct *work);
  
- static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
+ 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
+-		       GFP_ATOMIC);
++		       GFP_KERNEL);
+ 	if (!sdev)
+ 		goto out;
+ 
+@@ -791,7 +791,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
+ 	 */
+ 	sdev->inquiry = kmemdup(inq_result,
+ 				max_t(size_t, sdev->inquiry_len, 36),
+-				GFP_ATOMIC);
++				GFP_KERNEL);
+ 	if (sdev->inquiry == NULL)
+ 		return SCSI_SCAN_NO_RESPONSE;
+ 
+@@ -1083,7 +1083,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
+ 	if (!sdev)
+ 		goto out;
+ 
+-	result = kmalloc(result_len, GFP_ATOMIC |
++	result = kmalloc(result_len, GFP_KERNEL |
+ 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
+ 	if (!result)
+ 		goto out_free_sdev;
 -- 
 2.19.1
 
