@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 030B3C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA790C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D292077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E8420811
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127074;
-	bh=vmolo6M6b5hE+qQcXbMvReie0eA82nGKGJ7gKd/8Zgs=;
+	s=default; t=1556127080;
+	bh=o9mOGADLCjQEWq2ZrbpUJnR0cyha0u4YhsK5TZItxRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iZrWoSD9KJocR8m5e7kysAsAe3o4aivX9AuUH+akWz+lJ3y+Cj7qLASoEKrgVkjOE
-	 GaS0NBVFl/Jo5vgsDcM7Mbr7KCj4c7VcI7WSpiIxghtdi1b7of2HKaxcjwqPinYBpO
-	 pkP/ydy9zZxZXL1BHw7GBtC3pyhyIU8jemMJLtjE=
+	b=CW9ifjUzvDtnX/9AkBoapYb/UC2OdYRWpDJxPxvSIvVQ26usI8SF3J3tAKZsBtEe3
+	 lLUnwMObm38FJmSHudAAglvQgO+oZLo3XuP6h1ciowhUwGxYvd/nk6Ka9m/Zf24nPT
+	 qaaRgSgQLv7mBnXIh5H+DJy2poTPB5H3e47q1OO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403774AbfDXRbN (ORCPT
+        id S2391132AbfDXRbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:31:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57600 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:31:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391108AbfDXRbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:31:08 -0400
+        id S2391111AbfDXRbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:31:11 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BBA2218B0;
-        Wed, 24 Apr 2019 17:31:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 269682077C;
+        Wed, 24 Apr 2019 17:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127068;
-        bh=vmolo6M6b5hE+qQcXbMvReie0eA82nGKGJ7gKd/8Zgs=;
+        s=default; t=1556127070;
+        bh=o9mOGADLCjQEWq2ZrbpUJnR0cyha0u4YhsK5TZItxRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=phrJ5yfo3j3jJBTHFGI9S+jkfwDuGFrk8Yg85M4AnBVMSfCNM/z46EgDqsdHEMZYd
-         gJA/cSsADb4fhB0DWSZHm/mBnPvsX2YytD5iDP6zWSR8Nj/tcgLB04t3BRsZq9KWBM
-         W5FhDU0rvooGxkrjso0HR/4NIRF1sdyRsV21wgFw=
+        b=Ypu+AcXOROnCLrIfVjCK9lqzbNPfl/89v71Xg/O/UH+H8Fu1rHjWAq9cPxKLagaOb
+         5w/L8ZV6Hu/sF8u0JRVdC4d60cM4WNm1Mxm74b+Ss80ILvV8N7TZr1p6L51JPEQwm1
+         ZEtlN68g9T4j1KDvF1DbgvMhLANGxEw+kbT3suTM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Wei Wang <weiwan@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 07/96] net: fou: do not use guehdr after iptunnel_pull_offloads in gue_udp_recv
-Date:   Wed, 24 Apr 2019 19:09:12 +0200
-Message-Id: <20190424170920.327112529@linuxfoundation.org>
+Subject: [PATCH 4.19 08/96] tcp: tcp_grow_window() needs to respect tcp_space()
+Date:   Wed, 24 Apr 2019 19:09:13 +0200
+Message-Id: <20190424170920.397467578@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -60,48 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 988dc4a9a3b66be75b30405a5494faf0dc7cffb6 ]
+[ Upstream commit 50ce163a72d817a99e8974222dcf2886d5deb1ae ]
 
-gue tunnels run iptunnel_pull_offloads on received skbs. This can
-determine a possible use-after-free accessing guehdr pointer since
-the packet will be 'uncloned' running pskb_expand_head if it is a
-cloned gso skb (e.g if the packet has been sent though a veth device)
+For some reason, tcp_grow_window() correctly tests if enough room
+is present before attempting to increase tp->rcv_ssthresh,
+but does not prevent it to grow past tcp_space()
 
-Fixes: a09a4c8dd1ec ("tunnels: Remove encapsulation offloads on decap")
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+This is causing hard to debug issues, like failing
+the (__tcp_select_window(sk) >= tp->rcv_wnd) test
+in __tcp_ack_snd_check(), causing ACK delays and possibly
+slow flows.
+
+Depending on tcp_rmem[2], MTU, skb->len/skb->truesize ratio,
+we can see the problem happening on "netperf -t TCP_RR -- -r 2000,2000"
+after about 60 round trips, when the active side no longer sends
+immediate acks.
+
+This bug predates git history.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Wei Wang <weiwan@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/fou.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ipv4/tcp_input.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/net/ipv4/fou.c
-+++ b/net/ipv4/fou.c
-@@ -120,6 +120,7 @@ static int gue_udp_recv(struct sock *sk,
- 	struct guehdr *guehdr;
- 	void *data;
- 	u16 doffset = 0;
-+	u8 proto_ctype;
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -402,11 +402,12 @@ static int __tcp_grow_window(const struc
+ static void tcp_grow_window(struct sock *sk, const struct sk_buff *skb)
+ {
+ 	struct tcp_sock *tp = tcp_sk(sk);
++	int room;
++
++	room = min_t(int, tp->window_clamp, tcp_space(sk)) - tp->rcv_ssthresh;
  
- 	if (!fou)
- 		return 1;
-@@ -211,13 +212,14 @@ static int gue_udp_recv(struct sock *sk,
- 	if (unlikely(guehdr->control))
- 		return gue_control_message(skb, guehdr);
+ 	/* Check #1 */
+-	if (tp->rcv_ssthresh < tp->window_clamp &&
+-	    (int)tp->rcv_ssthresh < tcp_space(sk) &&
+-	    !tcp_under_memory_pressure(sk)) {
++	if (room > 0 && !tcp_under_memory_pressure(sk)) {
+ 		int incr;
  
-+	proto_ctype = guehdr->proto_ctype;
- 	__skb_pull(skb, sizeof(struct udphdr) + hdrlen);
- 	skb_reset_transport_header(skb);
+ 		/* Check #2. Increase window, if skb with such overhead
+@@ -419,8 +420,7 @@ static void tcp_grow_window(struct sock
  
- 	if (iptunnel_pull_offloads(skb))
- 		goto drop;
- 
--	return -guehdr->proto_ctype;
-+	return -proto_ctype;
- 
- drop:
- 	kfree_skb(skb);
+ 		if (incr) {
+ 			incr = max_t(int, incr, 2 * skb->len);
+-			tp->rcv_ssthresh = min(tp->rcv_ssthresh + incr,
+-					       tp->window_clamp);
++			tp->rcv_ssthresh += min(room, incr);
+ 			inet_csk(sk)->icsk_ack.quick |= 1;
+ 		}
+ 	}
 
 
