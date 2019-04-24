@@ -2,212 +2,166 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEF8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80617C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B43218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117075;
-	bh=DIvSz2z8mZELQb2D2PPQVBDA+ZPAQ4k0EB5reJ2Wx7Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1EoZ1QkaKFiem9Q6cPR/yqzdzJl+n2EDjl252Q/MWMBOovNJK/yqNB1t+/IzJIENu
-	 C3lFOMOvghk/GxAVE0BL14RZZhgliEqAsDYOMEk8SjiphOWRqv9oCVnoOFZpfcU42t
-	 eFB8xZU6uQrzYJg0zieOrR4m1xnpAGJ6+cpGNnts=
+	by mail.kernel.org (Postfix) with ESMTP id 45089218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731954AbfDXOoe (ORCPT
+        id S1731711AbfDXOjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:44:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730633AbfDXOjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:39:40 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78B1921900;
-        Wed, 24 Apr 2019 14:39:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116778;
-        bh=DIvSz2z8mZELQb2D2PPQVBDA+ZPAQ4k0EB5reJ2Wx7Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1S3GmBgE4itQ3ZAG8y2Q46sz7S30vxSg1JbcTSpG5LjMvWF4qNfaz6uAMY/f8VFzj
-         9H/EV/tiY0fH8MFo29fk8MLYgYFunmPZv7qy4UD+fKA+c6kO3cY+GiiprztX1myI//
-         ZmpdfPiXrbVJ+LXXb9zxPtXyVrcFOY01q/7TIdJw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arvind Sankar <niveditas98@gmail.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/52] igb: Fix WARN_ONCE on runtime suspend
-Date:   Wed, 24 Apr 2019 10:38:30 -0400
-Message-Id: <20190424143911.28890-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
-References: <20190424143911.28890-1-sashal@kernel.org>
+        Wed, 24 Apr 2019 10:39:33 -0400
+Received: from mail.netline.ch ([148.251.143.178]:33022 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731689AbfDXOjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:39:31 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id 3405E2AA104;
+        Wed, 24 Apr 2019 16:39:27 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id Z1QvlV2QawA9; Wed, 24 Apr 2019 16:39:26 +0200 (CEST)
+Received: from thor (116.245.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.245.116])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 809DE2AA100;
+        Wed, 24 Apr 2019 16:39:26 +0200 (CEST)
+Received: from [::1]
+        by thor with esmtp (Exim 4.92)
+        (envelope-from <michel@daenzer.net>)
+        id 1hJJ3W-0002qp-1S; Wed, 24 Apr 2019 16:39:26 +0200
+Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Alexandre Courbot <acourbot@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
+ <20190418081816.GO13337@phenom.ffwll.local>
+ <8265f098722d0cd5aae606d7ee6d955f168ac8f3.camel@ndufresne.ca>
+ <987372acff18f4c66191ee52fa69dc2917e4a605.camel@bootlin.com>
+ <1d6fb659-0516-41db-257b-258e6116a4f2@daenzer.net>
+ <7479b8df108c66b1711eb89efbfeb4a16480533d.camel@ndufresne.ca>
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Openpgp: preference=signencrypt
+Autocrypt: addr=michel@daenzer.net; prefer-encrypt=mutual; keydata=
+ mQGiBDsehS8RBACbsIQEX31aYSIuEKxEnEX82ezMR8z3LG8ktv1KjyNErUX9Pt7AUC7W3W0b
+ LUhu8Le8S2va6hi7GfSAifl0ih3k6Bv1Itzgnd+7ZmSrvCN8yGJaHNQfAevAuEboIb+MaVHo
+ 9EMJj4ikOcRZCmQWw7evu/D9uQdtkCnRY9iJiAGxbwCguBHtpoGMxDOINCr5UU6qt+m4O+UD
+ /355ohBBzzyh49lTj0kTFKr0Ozd20G2FbcqHgfFL1dc1MPyigej2gLga2osu2QY0ObvAGkOu
+ WBi3LTY8Zs8uqFGDC4ZAwMPoFy3yzu3ne6T7d/68rJil0QcdQjzzHi6ekqHuhst4a+/+D23h
+ Za8MJBEcdOhRhsaDVGAJSFEQB1qLBACOs0xN+XblejO35gsDSVVk8s+FUUw3TSWJBfZa3Imp
+ V2U2tBO4qck+wqbHNfdnU/crrsHahjzBjvk8Up7VoY8oT+z03sal2vXEonS279xN2B92Tttr
+ AgwosujguFO/7tvzymWC76rDEwue8TsADE11ErjwaBTs8ZXfnN/uAANgPLQjTWljaGVsIERh
+ ZW56ZXIgPG1pY2hlbEBkYWVuemVyLm5ldD6IXgQTEQIAHgUCQFXxJgIbAwYLCQgHAwIDFQID
+ AxYCAQIeAQIXgAAKCRBaga+OatuyAIrPAJ9ykonXI3oQcX83N2qzCEStLNW47gCeLWm/QiPY
+ jqtGUnnSbyuTQfIySkK5AQ0EOx6FRRAEAJZkcvklPwJCgNiw37p0GShKmFGGqf/a3xZZEpjI
+ qNxzshFRFneZze4f5LhzbX1/vIm5+ZXsEWympJfZzyCmYPw86QcFxyZflkAxHx9LeD+89Elx
+ bw6wT0CcLvSv8ROfU1m8YhGbV6g2zWyLD0/naQGVb8e4FhVKGNY2EEbHgFBrAAMGA/0VktFO
+ CxFBdzLQ17RCTwCJ3xpyP4qsLJH0yCoA26rH2zE2RzByhrTFTYZzbFEid3ddGiHOBEL+bO+2
+ GNtfiYKmbTkj1tMZJ8L6huKONaVrASFzLvZa2dlc2zja9ZSksKmge5BOTKWgbyepEc5qxSju
+ YsYrX5xfLgTZC5abhhztpYhGBBgRAgAGBQI7HoVFAAoJEFqBr45q27IAlscAn2Ufk2d6/3p4
+ Cuyz/NX7KpL2dQ8WAJ9UD5JEakhfofed8PSqOM7jOO3LCA==
+Message-ID: <8e091392-2365-6c52-1fc2-84ebdc9e83fe@daenzer.net>
+Date:   Wed, 24 Apr 2019 16:39:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <7479b8df108c66b1711eb89efbfeb4a16480533d.camel@ndufresne.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <niveditas98@gmail.com>
+On 2019-04-24 2:01 p.m., Nicolas Dufresne wrote:
+> Le mercredi 24 avril 2019 à 10:31 +0200, Michel Dänzer a écrit :
+>> On 2019-04-19 10:38 a.m., Paul Kocialkowski wrote:
+>>> On Thu, 2019-04-18 at 20:30 -0400, Nicolas Dufresne wrote:
+>>>> Le jeudi 18 avril 2019 à 10:18 +0200, Daniel Vetter a écrit :
+>>
+>>>> In the first, we'd need a mechanism where we can schedule a render at a
+>>>> specific time or vblank. We can of course already implement this in
+>>>> software, but with fences, the scheduling would need to be done in the
+>>>> driver. Then if the fence is signalled earlier, the driver should hold
+>>>> on until the delay is met. If the fence got signalled late, we also
+>>>> need to think of a workflow. As we can't schedule more then one render
+>>>> in DRM at one time, I don't really see yet how to make that work.
+>>>
+>>> Indeed, that's also one of the main issues I've spotted. Before using
+>>> an implicit fence, we basically have to make sure the frame is due for
+>>> display at the next vblank. Otherwise, we need to refrain from using
+>>> the fence and schedule the flip later, which is kind of counter-
+>>> productive.
+>>
+>> Fences are about signalling that the contents of a frame are "done" and
+>> ready to be presented. They're not about specifying which frame is to be
+>> presented when.
+>>
+>>
+>>> I feel like specifying a target vblank would be a good unit for that,
+>>
+>> The mechanism described above works for that.
+>>
+>>> since it's our native granularity after all (while a timestamp is not).
+>>
+>> Note that variable refresh rate (Adaptive Sync / FreeSync / G-Sync)
+>> changes things in this regard. It makes the vblank length variable, and
+>> if you wait for multiple vblanks between flips, you get the maximum
+>> vblank length corresponding to the minimum refresh rate / timing
+>> granularity. Thus, it would be useful to allow userspace to specify a
+>> timestamp corresponding to the earliest time when the flip is to
+>> complete. The kernel could then try to hit that as closely as possible.
+> 
+> Rendering a video stream is more complex then what you describe here.
+> Whenever there is a unexpected delay (late delivery of a frame as an
+> example) you may endup in situation where one frame is ready after the
+> targeted vblank. If there is another frame that targets the following
+> vblank that gets ready on-time, the previous frame should be replaced
+> by the most recent one.
+> 
+> With fences, what happens is that even if you received the next frame
+> on time, naively replacing it is not possible, because we don't know
+> when the fence for the next frame will be signalled. If you simply
+> always replace the current frame, you may endup skipping a lot more
+> vblank then what you expect, and that results in jumpy playback.
 
-[ Upstream commit dabb8338be533c18f50255cf39ff4f66d4dabdbe ]
+So you want to be able to replace a queued flip with another one then.
+That doesn't necessarily require allowing more than one flip to be
+queued ahead of time.
 
-The runtime_suspend device callbacks are not supposed to save
-configuration state or change the power state. Commit fb29f76cc566
-("igb: Fix an issue that PME is not enabled during runtime suspend")
-changed the driver to not save configuration state during runtime
-suspend, however the driver callback still put the device into a
-low-power state. This causes a warning in the pci pm core and results in
-pci_pm_runtime_suspend not calling pci_save_state or pci_finish_runtime_suspend.
+Note that this can also be done in userspace with explicit fencing (by
+only selecting a frame and submitting it to the kernel after all
+corresponding fences have signalled), at least to some degree, but the
+kernel should be able to do it up to a later point in time and more
+reliably, with less risk of missing a flip for a frame which becomes
+ready just in time.
 
-Fix this by not changing the power state either, leaving that to pci pm
-core, and make the same change for suspend callback as well.
 
-Also move a couple of defines into the appropriate header file instead
-of inline in the .c file.
+> Render queues with timestamp are used to smooth rendering and handle
+> rendering collision so that the latency is kept low (like when you have
+> a 100fps video over a 60Hz display). This is normally done in
+> userspace, but with fences, you ask the kernel to render something in
+> an unpredictable future, so we loose the ability to make the final
+> decision.
 
-Fixes: fb29f76cc566 ("igb: Fix an issue that PME is not enabled during runtime suspend")
-Signed-off-by: Arvind Sankar <niveditas98@gmail.com>
-Reviewed-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../net/ethernet/intel/igb/e1000_defines.h    |  2 +
- drivers/net/ethernet/intel/igb/igb_main.c     | 57 +++----------------
- 2 files changed, 10 insertions(+), 49 deletions(-)
+That's just not what fences are intended to be used for with the current
+KMS UAPI.
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_defines.h b/drivers/net/ethernet/intel/igb/e1000_defines.h
-index 8a28f3388f69..dca671591ef6 100644
---- a/drivers/net/ethernet/intel/igb/e1000_defines.h
-+++ b/drivers/net/ethernet/intel/igb/e1000_defines.h
-@@ -194,6 +194,8 @@
- /* enable link status from external LINK_0 and LINK_1 pins */
- #define E1000_CTRL_SWDPIN0  0x00040000  /* SWDPIN 0 value */
- #define E1000_CTRL_SWDPIN1  0x00080000  /* SWDPIN 1 value */
-+#define E1000_CTRL_ADVD3WUC 0x00100000  /* D3 WUC */
-+#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000 /* PHY PM enable */
- #define E1000_CTRL_SDP0_DIR 0x00400000  /* SDP0 Data direction */
- #define E1000_CTRL_SDP1_DIR 0x00800000  /* SDP1 Data direction */
- #define E1000_CTRL_RST      0x04000000  /* Global reset */
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index ffaa6e031632..aa39a068858e 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -8754,9 +8754,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	struct e1000_hw *hw = &adapter->hw;
- 	u32 ctrl, rctl, status;
- 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
--#ifdef CONFIG_PM
--	int retval = 0;
--#endif
-+	bool wake;
- 
- 	rtnl_lock();
- 	netif_device_detach(netdev);
-@@ -8769,14 +8767,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	igb_clear_interrupt_scheme(adapter);
- 	rtnl_unlock();
- 
--#ifdef CONFIG_PM
--	if (!runtime) {
--		retval = pci_save_state(pdev);
--		if (retval)
--			return retval;
--	}
--#endif
--
- 	status = rd32(E1000_STATUS);
- 	if (status & E1000_STATUS_LU)
- 		wufc &= ~E1000_WUFC_LNKC;
-@@ -8793,10 +8783,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		}
- 
- 		ctrl = rd32(E1000_CTRL);
--		/* advertise wake from D3Cold */
--		#define E1000_CTRL_ADVD3WUC 0x00100000
--		/* phy power management enable */
--		#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000
- 		ctrl |= E1000_CTRL_ADVD3WUC;
- 		wr32(E1000_CTRL, ctrl);
- 
-@@ -8810,12 +8796,15 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		wr32(E1000_WUFC, 0);
- 	}
- 
--	*enable_wake = wufc || adapter->en_mng_pt;
--	if (!*enable_wake)
-+	wake = wufc || adapter->en_mng_pt;
-+	if (!wake)
- 		igb_power_down_link(adapter);
- 	else
- 		igb_power_up_link(adapter);
- 
-+	if (enable_wake)
-+		*enable_wake = wake;
-+
- 	/* Release control of h/w to f/w.  If f/w is AMT enabled, this
- 	 * would have already happened in close and is redundant.
- 	 */
-@@ -8858,22 +8847,7 @@ static void igb_deliver_wake_packet(struct net_device *netdev)
- 
- static int __maybe_unused igb_suspend(struct device *dev)
- {
--	int retval;
--	bool wake;
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	retval = __igb_shutdown(pdev, &wake, 0);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 0);
- }
- 
- static int __maybe_unused igb_resume(struct device *dev)
-@@ -8944,22 +8918,7 @@ static int __maybe_unused igb_runtime_idle(struct device *dev)
- 
- static int __maybe_unused igb_runtime_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	int retval;
--	bool wake;
--
--	retval = __igb_shutdown(pdev, &wake, 1);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 1);
- }
- 
- static int __maybe_unused igb_runtime_resume(struct device *dev)
+
 -- 
-2.19.1
-
+Earthling Michel Dänzer               |              https://www.amd.com
+Libre software enthusiast             |             Mesa and X developer
