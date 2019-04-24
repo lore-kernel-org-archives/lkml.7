@@ -2,99 +2,83 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCDAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5D6C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B467B20878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:50:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556121056;
-	bh=xyI8X/Epwpls/Yp1Hrt1fVXlUrpTNtDpT9qvaO5MohI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Z+SFUsGi+8H4I28M0fV4WJ+KbPSeHjFNdKNqbpUMexbWwD4a1u7Etkv4c68YRbzp5
-	 0H5owWw4JquUd0IoyvgykeDJOAX8u1PZvQGdlJfgQRUBLTDZOwKZ2eigJRwtvdY0dY
-	 j2QSSEP9GedHh7s3N1NUjBDyu/CdIo/m/dO4QDnI=
+	by mail.kernel.org (Postfix) with ESMTP id 0D78B21902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731774AbfDXPu4 (ORCPT
+        id S1731809AbfDXPvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:50:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55550 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 11:51:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43708 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730625AbfDXPuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:50:55 -0400
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731710AbfDXPvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 11:51:02 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9FE121900;
-        Wed, 24 Apr 2019 15:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556121055;
-        bh=xyI8X/Epwpls/Yp1Hrt1fVXlUrpTNtDpT9qvaO5MohI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iJMfXyjkOhpgcSa7474tEdsBgrpjBKTLhgMr2tUtGXTRZsZTBW73L7RZ1wN8Wt4+B
-         slByaIbPfAszvtl43OVgJJlApu9zDivfmb6g4BJufJyCjLhDBTrLgUdYN39sbQrUit
-         6cDLSaFe/xaS1LaKTFILcEQQj4WodgqMipsdZ1yM=
-Received: by mail-qk1-f175.google.com with SMTP id m137so7450962qke.3;
-        Wed, 24 Apr 2019 08:50:54 -0700 (PDT)
-X-Gm-Message-State: APjAAAW6HkoYMiA1gS6R7hP9DG1aibkk7jRMAsxbzGS7GrWK/uS7m/D9
-        p2uK5EESAju/ljNmbbS9XMYqOLxmx60HPawqIA==
-X-Google-Smtp-Source: APXvYqysXC8+8b4Gj4x4QEpSCQsC2RTybbXaiLcNEP/G+QJAtQ99sBC/b/J2/V6Qjs5tsC8P1DoWquDG8RrNpqH1/4c=
-X-Received: by 2002:a37:4b92:: with SMTP id y140mr25752210qka.79.1556121054155;
- Wed, 24 Apr 2019 08:50:54 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3829D356F8;
+        Wed, 24 Apr 2019 15:50:57 +0000 (UTC)
+Received: from treble (ovpn-123-99.rdu2.redhat.com [10.10.123.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 51F535C21E;
+        Wed, 24 Apr 2019 15:50:52 +0000 (UTC)
+Date:   Wed, 24 Apr 2019 10:50:45 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 2/3] stacktrace: Remove superfluous WARN_ONCE() from
+ save_stack_trace_tsk_reliable()
+Message-ID: <20190424155045.ecwv2ppur3aekrtq@treble>
+References: <20190424085550.29612-1-pmladek@suse.com>
+ <20190424085550.29612-3-pmladek@suse.com>
 MIME-Version: 1.0
-References: <20190424092238.6381-1-masneyb@onstation.org> <20190424122648.GA15745@basecamp>
-In-Reply-To: <20190424122648.GA15745@basecamp>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 24 Apr 2019 10:50:41 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLQRkBO=DxSqNaGqE=zoQq0n0EQ920pQNGGE+LnVZid5A@mail.gmail.com>
-Message-ID: <CAL_JsqLQRkBO=DxSqNaGqE=zoQq0n0EQ920pQNGGE+LnVZid5A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: tsl2772: convert bindings to
- YAML format
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190424085550.29612-3-pmladek@suse.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 24 Apr 2019 15:51:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 7:26 AM Brian Masney <masneyb@onstation.org> wrote:
->
-> On Wed, Apr 24, 2019 at 05:22:37AM -0400, Brian Masney wrote:
-> > Convert the tsl2772 device tree bindings to the new YAML format.
-> >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > ---
-> > Changes since v1:
-> > - Dropped description from reg and interrupts properties.
-> > - Dropped $ref from led-max-microamp, vdd-supply, and vddio-supply.
-> > - Changed 'tsl2772@39' in example to 'proximity-sensor@39'
->
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        proximity-sensor@39 {
->
-> I didn't think of this until after I sent out that patch, but I think
-> this example should be 'als-proximity-sensor@39' instead of
-> 'proximity-sensor@39'.
+Adding Thomas because this might slightly conflict with some of the
+stacktrace.c improvements he's working on.
 
-I'd just do 'sensor@39' in that case. We normally use light-sensor for
-ALS devices, but we haven't been real consistent here.
+On Wed, Apr 24, 2019 at 10:55:49AM +0200, Petr Mladek wrote:
+> WARN_ONCE() in the generic save_stack_trace_tsk_reliable() is superfluous.
+> The only current user klp_check_stack() writes its own warning when
+> -ENOSYS is returned.
+> 
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  kernel/stacktrace.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+> index f8edee9c792d..83ac0ac5ffd9 100644
+> --- a/kernel/stacktrace.c
+> +++ b/kernel/stacktrace.c
+> @@ -74,6 +74,5 @@ __weak int
+>  save_stack_trace_tsk_reliable(struct task_struct *tsk,
+>  			      struct stack_trace *trace)
+>  {
+> -	WARN_ONCE(1, KERN_INFO "save_stack_tsk_reliable() not implemented yet.\n");
+>  	return -ENOSYS;
+>  }
+> -- 
+> 2.16.4
+> 
 
-Rob
+-- 
+Josh
