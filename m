@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF097C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B7AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E50A20684
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B46820652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129388;
-	bh=4keWdMm/tEZlCwMp8B2v1gf42EFGzm3x08l2s06Jfq8=;
+	s=default; t=1556129398;
+	bh=13z6LkR89jNKfJimZNxW0tKPd4BDNDUOV/SQJnh1vG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bi+e0CHQ09h+Srcm/eDEmIFCtEijTaGxA4TP/irUt8EPZY26/FdN2KHmlk8h1VQJP
-	 lNmS+L6G5XBYrMMXgQNOhXTI8Mf23dAhCYKKczoDe5HDixPnOB1H0wsLG9+Iv3g9lW
-	 NRWj0w8QnDjqtN7PTiFNmApWmM/QyyuwzqsvAJ0E=
+	b=FGCiWgRmQ88MIdkzeQZN11uvRD1Rv/pH3sW8gvKBtu9tGRH5E2nnylA3GTkCN1Iai
+	 kKsrGKtscAZPOwz9a9R+dl1yaFJKaJ6jNyBVuNXh0pJ/pKoC1rJCxVIMtFOYEgDWPG
+	 Zf7OpYoSDMNOlg2TgCSz49D1lmAVMh/9DCk4CG5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388159AbfDXRPD (ORCPT
+        id S2387828AbfDXSJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:15:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39256 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 14:09:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388149AbfDXRO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:14:57 -0400
+        id S2388108AbfDXROt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:49 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F361206BA;
-        Wed, 24 Apr 2019 17:14:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76EA0206BA;
+        Wed, 24 Apr 2019 17:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126097;
-        bh=4keWdMm/tEZlCwMp8B2v1gf42EFGzm3x08l2s06Jfq8=;
+        s=default; t=1556126089;
+        bh=13z6LkR89jNKfJimZNxW0tKPd4BDNDUOV/SQJnh1vG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Inqy+8tvqXu5oX5bO2lKAY73jZfixQYbiWpqM0WAoFN0aRRRcnmRwH5SEhsWBQJ/p
-         d/2TrC9EZbhfhDrSp9vE4Lb6OyG4r2LBwzF4+yMGoqDwj82w1J4CjIkIA2ggh0xoZO
-         ZwJ4gtIEHY1KqqdGDpWfAEQhaT5E6PDYTV996+ig=
+        b=llIUT/34r2YMMtnGTURrizTlu24OTzWdojXZMwSjW9SOc8p3pty2SZqE7ZtgC6AmU
+         nVzCBlQV4y1MmCpHDaZh3wVfxLr7TsKdaV+6FoihnyZC1B1lVzW3/OJXLv9TUrMtgd
+         MRqfWrWmac3V1+JlU1uGTjPblHdncdh2e/YxkJ3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Wei Wang <weiwan@google.com>,
+        stable@vger.kernel.org,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 094/104] tcp: tcp_grow_window() needs to respect tcp_space()
-Date:   Wed, 24 Apr 2019 19:09:51 +0200
-Message-Id: <20190424170909.693071532@linuxfoundation.org>
+Subject: [PATCH 3.18 091/104] net: bridge: multicast: use rcu to access port list from br_multicast_start_querier
+Date:   Wed, 24 Apr 2019 19:09:48 +0200
+Message-Id: <20190424170909.238142357@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -61,63 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit 50ce163a72d817a99e8974222dcf2886d5deb1ae ]
+[ Upstream commit c5b493ce192bd7a4e7bd073b5685aad121eeef82 ]
 
-For some reason, tcp_grow_window() correctly tests if enough room
-is present before attempting to increase tp->rcv_ssthresh,
-but does not prevent it to grow past tcp_space()
+br_multicast_start_querier() walks over the port list but it can be
+called from a timer with only multicast_lock held which doesn't protect
+the port list, so use RCU to walk over it.
 
-This is causing hard to debug issues, like failing
-the (__tcp_select_window(sk) >= tp->rcv_wnd) test
-in __tcp_ack_snd_check(), causing ACK delays and possibly
-slow flows.
-
-Depending on tcp_rmem[2], MTU, skb->len/skb->truesize ratio,
-we can see the problem happening on "netperf -t TCP_RR -- -r 2000,2000"
-after about 60 round trips, when the active side no longer sends
-immediate acks.
-
-This bug predates git history.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Wei Wang <weiwan@google.com>
+Fixes: c83b8fab06fc ("bridge: Restart queries when last querier expires")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_input.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ net/bridge/br_multicast.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -358,11 +358,12 @@ static int __tcp_grow_window(const struc
- static void tcp_grow_window(struct sock *sk, const struct sk_buff *skb)
- {
- 	struct tcp_sock *tp = tcp_sk(sk);
-+	int room;
-+
-+	room = min_t(int, tp->window_clamp, tcp_space(sk)) - tp->rcv_ssthresh;
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -2023,7 +2023,8 @@ static void br_multicast_start_querier(s
  
- 	/* Check #1 */
--	if (tp->rcv_ssthresh < tp->window_clamp &&
--	    (int)tp->rcv_ssthresh < tcp_space(sk) &&
--	    !sk_under_memory_pressure(sk)) {
-+	if (room > 0 && !sk_under_memory_pressure(sk)) {
- 		int incr;
+ 	__br_multicast_open(br, query);
  
- 		/* Check #2. Increase window, if skb with such overhead
-@@ -375,8 +376,7 @@ static void tcp_grow_window(struct sock
- 
- 		if (incr) {
- 			incr = max_t(int, incr, 2 * skb->len);
--			tp->rcv_ssthresh = min(tp->rcv_ssthresh + incr,
--					       tp->window_clamp);
-+			tp->rcv_ssthresh += min(room, incr);
- 			inet_csk(sk)->icsk_ack.quick |= 1;
- 		}
+-	list_for_each_entry(port, &br->port_list, list) {
++	rcu_read_lock();
++	list_for_each_entry_rcu(port, &br->port_list, list) {
+ 		if (port->state == BR_STATE_DISABLED ||
+ 		    port->state == BR_STATE_BLOCKING)
+ 			continue;
+@@ -2035,6 +2036,7 @@ static void br_multicast_start_querier(s
+ 			br_multicast_enable(&port->ip6_own_query);
+ #endif
  	}
++	rcu_read_unlock();
+ }
+ 
+ int br_multicast_toggle(struct net_bridge *br, unsigned long val)
 
 
