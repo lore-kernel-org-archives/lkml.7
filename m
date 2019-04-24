@@ -2,140 +2,162 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE9BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F399C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D00208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:38:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IUJqM/7m";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="CyHnaI7y"
+	by mail.kernel.org (Postfix) with ESMTP id F0AEC208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbfDXWik (ORCPT
+        id S1726757AbfDXWl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 18:38:40 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:37458 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726400AbfDXWij (ORCPT
+        Wed, 24 Apr 2019 18:41:58 -0400
+Received: from gateway20.websitewelcome.com ([192.185.65.13]:22165 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726546AbfDXWl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 18:38:39 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OMbmVq003339;
-        Wed, 24 Apr 2019 15:37:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=lIJ2tBjx6Yt48UGcicrq42LZgFiZDkSqaNqg3F4Yiz0=;
- b=IUJqM/7mZ0G9bNKB4ciKliSzjCvPBcH40ZVEkAxOPeTBO7HukHbcx1ivnW6BFkIX5CjB
- r+T0NNLFDJhtMkAp6af13tsBrSMe6C20rOrYMKTfQjUCzJsEnS40fHTYu6bxJ1iqpXR6
- QbOntVMqOHn+W6htD7GmYQef6Nqn2TWnK5A= 
-Authentication-Results: fb.com;
-        spf=pass smtp.mailfrom=yhs@fb.com
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2s30akr572-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 24 Apr 2019 15:37:49 -0700
-Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
- ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 24 Apr 2019 15:37:47 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 24 Apr 2019 15:37:46 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lIJ2tBjx6Yt48UGcicrq42LZgFiZDkSqaNqg3F4Yiz0=;
- b=CyHnaI7yucdXnEwXRsbAmUshNbAYf8iwcoS5pTaJAD4yN0T3SiU7ozwuV1ORL2OTpGLH+j9U6UyDbGB4jlBaDIHRof82gdrhtSHRLzXEb5tDiIot/AGfGnmPgqwxylETB2YrBg0al8vFVdQAIvt/vj3tqxhvGF4N2/mS0xBDSeo=
-Received: from BN8PR15MB3380.namprd15.prod.outlook.com (20.179.75.139) by
- BN8PR15MB2788.namprd15.prod.outlook.com (20.179.140.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.14; Wed, 24 Apr 2019 22:37:45 +0000
-Received: from BN8PR15MB3380.namprd15.prod.outlook.com
- ([fe80::b5bc:d69:3cf5:db53]) by BN8PR15MB3380.namprd15.prod.outlook.com
- ([fe80::b5bc:d69:3cf5:db53%4]) with mapi id 15.20.1835.010; Wed, 24 Apr 2019
- 22:37:45 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Matt Mullins <mmullins@fb.com>, Andrew Hall <hall@fb.com>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH bpf-next v4 1/5] bpf: add writable context for raw
- tracepoints
-Thread-Topic: [PATCH bpf-next v4 1/5] bpf: add writable context for raw
- tracepoints
-Thread-Index: AQHU+tD+xSmrHq6KZkGnsI6qYwkFE6ZL5wMA
-Date:   Wed, 24 Apr 2019 22:37:45 +0000
-Message-ID: <6e1205c8-dd63-8866-9b9a-7db3bd432186@fb.com>
-References: <20190424190721.24453-1-mmullins@fb.com>
- <20190424190721.24453-2-mmullins@fb.com>
-In-Reply-To: <20190424190721.24453-2-mmullins@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR0201CA0087.namprd02.prod.outlook.com
- (2603:10b6:301:75::28) To BN8PR15MB3380.namprd15.prod.outlook.com
- (2603:10b6:408:a6::11)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:5d4c]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b64d61b9-9e71-4b00-7f11-08d6c9057844
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BN8PR15MB2788;
-x-ms-traffictypediagnostic: BN8PR15MB2788:
-x-microsoft-antispam-prvs: <BN8PR15MB278834DC7490EED8D302DF54D33C0@BN8PR15MB2788.namprd15.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(346002)(366004)(136003)(376002)(189003)(199004)(66446008)(53546011)(66476007)(66556008)(6506007)(11346002)(2616005)(71190400001)(476003)(81166006)(486006)(36756003)(81156014)(14454004)(2501003)(446003)(2906002)(25786009)(8936002)(8676002)(316002)(54906003)(6512007)(110136005)(64756008)(386003)(76176011)(86362001)(5024004)(256004)(71200400001)(73956011)(4744005)(102836004)(186003)(68736007)(46003)(66946007)(2201001)(97736004)(31696002)(7736002)(478600001)(5660300002)(6486002)(99286004)(52116002)(229853002)(53936002)(31686004)(6246003)(6116002)(4326008)(6436002)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB2788;H:BN8PR15MB3380.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3+YXLQepqjiFmE+07Ybb+xRlSTr3eRTQQna8U4CZYn025vyP8+iIN0vZ6/E2FSZKc1V1+ec5PpSRVlaN95FsomQhdCJICJ6IHtA7dFbdXoLj6eIVUq3lGrMVOvlL0zf4XJnJi1nf6gM91Y13/9cg3cGxhoWOWJT+hVAfqgotMf/TkkChCLJv74Z0FSM83bwUknb8dt14YcktmIgPc/8IL3YX4cbZgbu1ccXdeTE/xU230Zm+pA04ea+qIChf0qNrwUMD7kc5sE75eJwZU6Ko2IyCx2UCE58p01bnktgVWdebP5mFTQ78KrIIcvGBK1M9fiCSd2poDph2T2okwyVSYYMiCajX41G9F8wP3KTBP5lvP6p6XW4z2KJHsxUU6w2XJtdT24zxf6AE+4FpP7IWFsu5kFiKB8iA+RU33C9dfZw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5DC83F8E52CB4F43B6956E0AFB83E63B@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 18:41:58 -0400
+X-Greylist: delayed 1460 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Apr 2019 18:41:57 EDT
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 87DB2400C5549
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 17:17:37 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id JQCvh4VaS90onJQCvhEAJN; Wed, 24 Apr 2019 17:17:37 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.223] (port=51686 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hJQCn-001xg5-M8; Wed, 24 Apr 2019 17:17:37 -0500
+Subject: Re: [PATCH v2 wireless-drivers-next] rtlwifi: rtl8723ae: Fix missing
+ break in switch statement
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20190416151722.GA31598@embeddedor>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <6056eaca-5120-ec0f-6e72-2e1bfbde52a9@embeddedor.com>
+Date:   Wed, 24 Apr 2019 17:17:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b64d61b9-9e71-4b00-7f11-08d6c9057844
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 22:37:45.1269
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB2788
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=961 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904240155
-X-FB-Internal: deliver
+In-Reply-To: <20190416151722.GA31598@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.223
+X-Source-L: No
+X-Exim-ID: 1hJQCn-001xg5-M8
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.127.223]:51686
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 7
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDQvMjQvMTkgMTI6MDcgUE0sIE1hdHQgTXVsbGlucyB3cm90ZToNCj4gVGhpcyBpcyBh
-biBvcHQtaW4gaW50ZXJmYWNlIHRoYXQgYWxsb3dzIGEgdHJhY2Vwb2ludCB0byBwcm92aWRlIGEg
-c2FmZQ0KPiBidWZmZXIgdGhhdCBjYW4gYmUgd3JpdHRlbiBmcm9tIGEgQlBGX1BST0dfVFlQRV9S
-QVdfVFJBQ0VQT0lOVCBwcm9ncmFtLg0KPiBUaGUgc2l6ZSBvZiB0aGUgYnVmZmVyIG11c3QgYmUg
-YSBjb21waWxlLXRpbWUgY29uc3RhbnQsIGFuZCBpcyBjaGVja2VkDQo+IGJlZm9yZSBhbGxvd2lu
-ZyBhIEJQRiBwcm9ncmFtIHRvIGF0dGFjaCB0byBhIHRyYWNlcG9pbnQgdGhhdCB1c2VzIHRoaXMN
-Cj4gZmVhdHVyZS4NCj4gDQo+IFRoZSBwb2ludGVyIHRvIHRoaXMgYnVmZmVyIHdpbGwgYmUgdGhl
-IGZpcnN0IGFyZ3VtZW50IG9mIHRyYWNlcG9pbnRzDQo+IHRoYXQgb3B0IGluOyB0aGUgcG9pbnRl
-ciBpcyB2YWxpZCBhbmQgY2FuIGJlIGJwZl9wcm9iZV9yZWFkKCkgYnkgYm90aA0KPiBCUEZfUFJP
-R19UWVBFX1JBV19UUkFDRVBPSU5UIGFuZCBCUEZfUFJPR19UWVBFX1JBV19UUkFDRVBPSU5UX1dS
-SVRBQkxFDQo+IHByb2dyYW1zIHRoYXQgYXR0YWNoIHRvIHN1Y2ggYSB0cmFjZXBvaW50LCBidXQg
-dGhlIGJ1ZmZlciB0byB3aGljaCBpdA0KPiBwb2ludHMgbWF5IG9ubHkgYmUgd3JpdHRlbiBieSB0
-aGUgbGF0dGVyLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTWF0dCBNdWxsaW5zIDxtbXVsbGluc0Bm
-Yi5jb20+DQoNCkFja2VkLWJ5OiBZb25naG9uZyBTb25nIDx5aHNAZmIuY29tPg0KDQo=
+Hi all,
+
+Friendly ping:
+
+Who can take this?
+
+Thanks
+--
+Gustavo
+
+
+On 4/16/19 10:17 AM, Gustavo A. R. Silva wrote:
+> Add missing break statement in order to prevent the code from falling
+> through to case 0x1025, and erroneously setting rtlhal->oem_id to
+> RT_CID_819X_ACER when rtlefuse->eeprom_svid is equal to 0x10EC and
+> none of the cases in switch (rtlefuse->eeprom_smid) match.
+> 
+> This bug was found thanks to the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+> 
+> Fixes: 238ad2ddf34b ("rtlwifi: rtl8723ae: Clean up the hardware info routine")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+> Changes in v2:
+>  - Update tag from wireless-drivers to wireless-drivers-next
+> 
+>  drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
+> index 6bab162e1bb8..655460f61bbc 100644
+> --- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
+> +++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
+> @@ -1675,6 +1675,7 @@ static void _rtl8723e_read_adapter_info(struct ieee80211_hw *hw,
+>  					rtlhal->oem_id = RT_CID_819X_LENOVO;
+>  					break;
+>  				}
+> +				break;
+>  			case 0x1025:
+>  				rtlhal->oem_id = RT_CID_819X_ACER;
+>  				break;
+> 
