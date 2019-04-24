@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82883C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9E5C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46AA6218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00964218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117237;
-	bh=l6IFbV054H8h7od5b7H/5pNVbZNvscbWGkXTSar9nlM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=EP01wfVM2GsPm1Q+/mvSH5r/8vtiXc3llVt2OFOQkIGuVTH4U1a8jUOQiN4qEjGWV
-	 fk9p9Q7XqQc1wHWI3d4KJmZt5IvPc9xIxqJyBSzwq/sedNNlBgoPaV8uMsLGlKETBU
-	 lBmyYSH2CBMuCCAp0p+dodQqNQcZunP/EMC8+ZRU=
+	s=default; t=1556117243;
+	bh=EX9/gjsvzk3QMJHY9F0LrsMt2KPDAAEg13oZ0uElnUM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=veeBlEZbEX/YZfPlmp5xYvh/FnEHJDnVPIVaWy6ltL2ZXcnagRc2rs1Dt3DyDKFRw
+	 904vlNZE6ykth5GJ29WtoLAK8DEFD2fMdToMX/zRK/8usi48Osx5QPfk9fbiPu/gKf
+	 wCicAaD+5MD55nAhjbCT7kxj0z9y3VWblOz5dkGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732117AbfDXOrQ (ORCPT
+        id S1732026AbfDXOrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:47:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46904 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:47:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730859AbfDXOrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:47:14 -0400
+        id S1732135AbfDXOrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:47:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E55F8218FC;
-        Wed, 24 Apr 2019 14:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 538A9218FC;
+        Wed, 24 Apr 2019 14:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117233;
-        bh=l6IFbV054H8h7od5b7H/5pNVbZNvscbWGkXTSar9nlM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oQz2ugRkH9mCC3G0jSKKc0MNGD8bKF3IuLtNgPWiff281rjlbEGAERvdVy3K2w+OT
-         F+DoRG8jxqqCWrk+r/XHZnMoNfI6H/BF60qc9ngM0KqMbJJlzytfUVHlzdglatMxja
-         4daMUfmqwyZGHD0BMi9zfAMtEZh3LkYF9ptnOH54=
+        s=default; t=1556117237;
+        bh=EX9/gjsvzk3QMJHY9F0LrsMt2KPDAAEg13oZ0uElnUM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SQx6vV3RKQduhClgEohVPJ9xNIPW4itf3t46KdyQYjhuj3TBP48EsnIc497ElhuWk
+         0gWZaT+C6aAkG+RoprHVRKOknqxB1SM33o/eM0gFuBB4vX0SsDaiLS2yIO5bx3ha4J
+         TROGixpnqHT+316rrF6Yjj/lKjcydP3tYPKbq6S4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/35] HID: logitech: check the return value of create_singlethread_workqueue
-Date:   Wed, 24 Apr 2019 10:46:35 -0400
-Message-Id: <20190424144709.30215-1-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/35] rtc: sh: Fix invalid alarm warning for non-enabled alarm
+Date:   Wed, 24 Apr 2019 10:46:37 -0400
+Message-Id: <20190424144709.30215-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190424144709.30215-1-sashal@kernel.org>
+References: <20190424144709.30215-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,47 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 6c44b15e1c9076d925d5236ddadf1318b0a25ce2 ]
+[ Upstream commit 15d82d22498784966df8e4696174a16b02cc1052 ]
 
-create_singlethread_workqueue may fail and return NULL. The fix checks if it is
-NULL to avoid NULL pointer dereference.  Also, the fix moves the call of
-create_singlethread_workqueue earlier to avoid resource-release issues.
+When no alarm has been programmed on RSK-RZA1, an error message is
+printed during boot:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+    rtc rtc0: invalid alarm value: 2019-03-14T255:255:255
+
+sh_rtc_read_alarm_value() returns 0xff when querying a hardware alarm
+field that is not enabled.  __rtc_read_alarm() validates the received
+alarm values, and fills in missing fields when needed.
+While 0xff is handled fine for the year, month, and day fields, and
+corrected as considered being out-of-range, this is not the case for the
+hour, minute, and second fields, where -1 is expected for missing
+fields.
+
+Fix this by returning -1 instead, as this value is handled fine for all
+fields.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-sh.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 614054af904a..b83d4173fc7f 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -1907,6 +1907,13 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
- 		kfree(data);
- 		return -ENOMEM;
- 	}
-+	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
-+	if (!data->wq) {
-+		kfree(data->effect_ids);
-+		kfree(data);
-+		return -ENOMEM;
-+	}
-+
- 	data->hidpp = hidpp;
- 	data->feature_index = feature_index;
- 	data->version = version;
-@@ -1951,7 +1958,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
- 	/* ignore boost value at response.fap.params[2] */
+diff --git a/drivers/rtc/rtc-sh.c b/drivers/rtc/rtc-sh.c
+index 6c2d3989f967..9b6a927149a4 100644
+--- a/drivers/rtc/rtc-sh.c
++++ b/drivers/rtc/rtc-sh.c
+@@ -462,7 +462,7 @@ static int sh_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ static inline int sh_rtc_read_alarm_value(struct sh_rtc *rtc, int reg_off)
+ {
+ 	unsigned int byte;
+-	int value = 0xff;	/* return 0xff for ignored values */
++	int value = -1;			/* return -1 for ignored values */
  
- 	/* init the hardware command queue */
--	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
- 	atomic_set(&data->workqueue_size, 0);
- 
- 	/* initialize with zero autocenter to get wheel in usable state */
+ 	byte = readb(rtc->regbase + reg_off);
+ 	if (byte & AR_ENB) {
 -- 
 2.19.1
 
