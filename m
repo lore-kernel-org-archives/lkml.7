@@ -2,90 +2,134 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01508C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A19C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBED206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87676206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730579AbfDXOYS (ORCPT
+        id S1730608AbfDXOYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:24:18 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:58730 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfDXOYR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:24:17 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id DD59B8075F; Wed, 24 Apr 2019 16:24:06 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 16:24:15 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     lee.jones@linaro.org, daniel.thompson@linaro.org,
-        jingoohan1@gmail.com, robh+dt@kernel.org,
-        jacek.anaszewski@gmail.com, mark.rutland@arm.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dmurphy@ti.com, jonathan@marek.ca
-Subject: Re: [PATCH v6 3/3] backlight: lm3630a: add firmware node support
-Message-ID: <20190424142415.GB20237@amd>
-References: <20190424092505.6578-1-masneyb@onstation.org>
- <20190424092505.6578-4-masneyb@onstation.org>
+        Wed, 24 Apr 2019 10:24:37 -0400
+Received: from david.siemens.de ([192.35.17.14]:45305 "EHLO david.siemens.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbfDXOYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:24:36 -0400
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id x3OEOIXw022044
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Apr 2019 16:24:18 +0200
+Received: from [139.25.69.165] ([139.25.69.165])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x3OEOI12018872;
+        Wed, 24 Apr 2019 16:24:18 +0200
+Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+References: <20190424084259.GW2654@lahna.fi.intel.com>
+ <7e328b7e-f4f0-851a-4152-a9ffd058201c@siemens.com>
+ <20190424094506.GA2654@lahna.fi.intel.com>
+ <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
+ <20190424100130.GB2654@lahna.fi.intel.com>
+ <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
+ <20190424103306.GC2654@lahna.fi.intel.com>
+ <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
+ <20190424104613.GD2654@lahna.fi.intel.com>
+ <761ed823-58f4-d166-c415-6b100b1fe615@siemens.com>
+ <20190424131357.GJ2654@lahna.fi.intel.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <0bb42b3e-58cc-a11c-b8ad-fec67da477b4@siemens.com>
+Date:   Wed, 24 Apr 2019 16:24:16 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
+ Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
-Content-Disposition: inline
-In-Reply-To: <20190424092505.6578-4-masneyb@onstation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190424131357.GJ2654@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 24.04.19 15:13, Mika Westerberg wrote:
+> On Wed, Apr 24, 2019 at 02:41:02PM +0200, Jan Kiszka wrote:
+>> On 24.04.19 12:46, Mika Westerberg wrote:
+>>> On Wed, Apr 24, 2019 at 12:39:35PM +0200, Jan Kiszka wrote:
+>>>> On 24.04.19 12:33, Mika Westerberg wrote:
+>>>>> On Wed, Apr 24, 2019 at 12:19:02PM +0200, Jan Kiszka wrote:
+>>>>>>> I think what you want is "GPIO signaled ACPI event". It works so that
+>>>>>>> you declare _AEI method below the GPIO controller listing the GPIOs you
+>>>>>>> want to trigger events for and then either _Lxx, _Exx or _EVT method for
+>>>>>>> each of them under the same controller. GPIO core then handles it
+>>>>>>> automatically when you register the GPIO chip. See also
+>>>>>>> acpi_gpiochip_request_interrupts().
+>>>>>>
+>>>>>> Right, that is was I read as well. Let's assume I would be able to patch the
+>>>>>> tables: Would I describe all the logic of this patch in ACPI terms? Where to
+>>>>>> enable interrupts, how to dispatch the SCI event, how to acknowledge it
+>>>>>> etc.? Will it also take care of locking? (BTW, my locking seems to have some
+>>>>>> remaining inconsistency, on second look.)
+>>>>>
+>>>>> The GPIO core would then take care of it by requesting the GPIO in
+>>>>> question and dispatching to the correct event handler. In this patch you
+>>>>> just leave out the SCI part and only implement the irqchip like you did
+>>>>> already.
+>>>>
+>>>> Could you point me to a gpio driver that works like that already? Would be
+>>>> easier to learn that from an example. That infrastructure with all its
+>>>> different modes is seriously complex and not very well documented.
+>>>
+>>> Pretty much all drivers under drivers/pinctrl/intel.
+>>
+>> OK... that's a purely descriptive way. So, provided we had such ACPI table
+>> entries, that plus some corresponding pinctrl driver would obsolete
+>> gpio-sch.c? Or are there other reason than historical ones for having
+>> gpio-*ch.c drivers around?
+> 
+> No they are for different hardware. The GPIO core will parse necessary
+> ACPI entires when any GPIO driver (with ACPI description) calls
+> gpiochip_add_data() or any of the wrappers.
+> 
+>>>>>> And even if that were possible, we would be back to the square of existing
+>>>>>> devices without those definitions. If this were a recent chipset, I would
+>>>>>> say, "go, fix future firmware versions". But this one is legacy.
+>>>>>
+>>>>> Is it fixing some real issue with these legacy platforms? I mean without
+>>>>> the patch some GPE event is not handled properly? It was not clear to me
+>>>>> from the commit message.
+>>>>>
+>>>> Without that patch, you are forced to poll for event changes in your
+>>>> application, timer-driven. There are application that cannot process these
+>>>> GPIOs because they lack such logic (mraa with node-red-node-intel-gpio is a
+>>>> public example).
+>>>
+>>> But those are using the GPIOs via sysfs or the char device which should
+>>> work without the SCI handling part of your patch, no?
+>>
+>> They work via sysfs. How would the char dev compensate the missing interrupt
+>> support?
+> 
+> I'm trying to say that for the sysfs access (well or char dev) you
+> should not need the sch_sci_handler() thing that is in your current
+> patch.
 
---oLBj+sq0vYjzfsbl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Then I'm still missing the black magic where - in my case - CGTS or RGTS are 
+read, evaluated and written back.
 
-On Wed 2019-04-24 05:25:05, Brian Masney wrote:
-> Add fwnode support to the lm3630a driver and optionally allow
-> configuring the label, default brightness level, and maximum brightness
-> level. The two outputs can be controlled by bank A and B independently
-> or bank A can control both outputs.
->=20
-> If the platform data was not configured, then the driver defaults to
-> enabling both banks. This patch changes the default value to disable
-> both banks before parsing the firmware node so that just a single bank
-> can be enabled if desired. There are no in-tree users of this driver.
->=20
-> Driver was tested on a LG Nexus 5 (hammerhead) phone.
->=20
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Reviewed-by: Dan Murphy <dmurphy@ti.com>
+And we would still need the gpio-sch driver to handle GGPE, GTNE, GTPE when edge 
+events are requested? Is the a reference for /such/ a case? The newer Intels 
+must be different then.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+Jan
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---oLBj+sq0vYjzfsbl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzAcY8ACgkQMOfwapXb+vKHZQCfZ7wxHT3lFTEQnSgosEPjRAN9
-PWkAniD///EKrdym1kbPKR1X8qxmD136
-=BW+m
------END PGP SIGNATURE-----
-
---oLBj+sq0vYjzfsbl--
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
