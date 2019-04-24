@@ -7,56 +7,58 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3858DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA64C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B0F21917
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772D521904
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125929;
-	bh=QmSciI+MAmLbrAHJvmFTI99rHkdrD0v8Z/Lm8rmX3Bo=;
+	s=default; t=1556125931;
+	bh=TN69lk02G35khloepcguA+9t/vIIgMBGjcb6uSMMi3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zwx0v7TR/reAiOODgqi+IbP5gVaWAbfkymU99wqTqnIcO9FfYECA8okAc2rppU40B
-	 K9NhPxRn8Ims0t3XkhczhikOWtE3ZDaNrJamWC4ym10JN2kjo6bpvHHY2sS03CGKa0
-	 HpVpPKStSIxzHea6Sx+5HLDkkYeJUy9fHIEz6rYw=
+	b=tfEpyN0J5NEY0Z5ipRc75aY1XfJ83k+hnmujcAXAWbJaeU9ilQVJjl3A9tzV5jCWG
+	 Qrvg/iGd9c81/t5sVEFSA9KJiTaSSYbPuXBlp9pqtQ8eka0E6IyJTTmu/uMQXZiyBI
+	 a0YfuCtw/aaq0ML/8yhC9ECwKaQTNGmynTDdIuEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387554AbfDXRMI (ORCPT
+        id S2387566AbfDXRMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:12:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:12:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387515AbfDXRMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:12:01 -0400
+        id S2387506AbfDXRMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:12:06 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CA1A218FE;
-        Wed, 24 Apr 2019 17:11:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4462F21903;
+        Wed, 24 Apr 2019 17:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125920;
-        bh=QmSciI+MAmLbrAHJvmFTI99rHkdrD0v8Z/Lm8rmX3Bo=;
+        s=default; t=1556125926;
+        bh=TN69lk02G35khloepcguA+9t/vIIgMBGjcb6uSMMi3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=naUkQtOEXAuzlO2wQKpMLPdMSVM5QQGQ0OEWMmRk1yHmxuq1dzHw52NH2L9GyFTo/
-         SzinDIFxDdhKiUVMWNifDN0J4JpwWJU5kO8WJ+PQjg7cZU1Pedzpe7NkyAkHNd9GZs
-         cexlliZ2hCjrx96E3BqSjTJmcmyeCxIFyqB48P1w=
+        b=fjMoIBZffgtqXVlD1iz+lxmk1Q8GgIEgj1dKeqnDN2pt1l/mkuMGGnhClgIuqFc3c
+         zfBiBAD6ZteznwYIpQgtZuL6UlgVvUxWaDgcq/g7IMyb6LT4U7Y6ZXzEujFJwXpSss
+         gjNzgn/+XhLVVXAJfzboocg0wcGxS+Cnzh7a6DNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Brauner <christian@brauner.io>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Waiman Long <longman@redhat.com>,
+        stable@vger.kernel.org,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@elte.hu>,
+        Joel Fernandes <joelaf@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 004/104] sysctl: handle overflow for file-max
-Date:   Wed, 24 Apr 2019 19:08:21 +0200
-Message-Id: <20190424170844.295726942@linuxfoundation.org>
+Subject: [PATCH 3.18 006/104] mm/vmalloc.c: fix kernel BUG at mm/vmalloc.c:512!
+Date:   Wed, 24 Apr 2019 19:08:23 +0200
+Message-Id: <20190424170844.652230058@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -69,68 +71,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 32a5ad9c22852e6bd9e74bdec5934ef9d1480bc5 ]
+[ Upstream commit afd07389d3f4933c7f7817a92fb5e053d59a3182 ]
 
-Currently, when writing
+One of the vmalloc stress test case triggers the kernel BUG():
 
-  echo 18446744073709551616 > /proc/sys/fs/file-max
+  <snip>
+  [60.562151] ------------[ cut here ]------------
+  [60.562154] kernel BUG at mm/vmalloc.c:512!
+  [60.562206] invalid opcode: 0000 [#1] PREEMPT SMP PTI
+  [60.562247] CPU: 0 PID: 430 Comm: vmalloc_test/0 Not tainted 4.20.0+ #161
+  [60.562293] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+  [60.562351] RIP: 0010:alloc_vmap_area+0x36f/0x390
+  <snip>
 
-/proc/sys/fs/file-max will overflow and be set to 0.  That quickly
-crashes the system.
+it can happen due to big align request resulting in overflowing of
+calculated address, i.e.  it becomes 0 after ALIGN()'s fixup.
 
-This commit sets the max and min value for file-max.  The max value is
-set to long int.  Any higher value cannot currently be used as the
-percpu counters are long ints and not unsigned integers.
+Fix it by checking if calculated address is within vstart/vend range.
 
-Note that the file-max value is ultimately parsed via
-__do_proc_doulongvec_minmax().  This function does not report error when
-min or max are exceeded.  Which means if a value largen that long int is
-written userspace will not receive an error instead the old value will be
-kept.  There is an argument to be made that this should be changed and
-__do_proc_doulongvec_minmax() should return an error when a dedicated min
-or max value are exceeded.  However this has the potential to break
-userspace so let's defer this to an RFC patch.
-
-Link: http://lkml.kernel.org/r/20190107222700.15954-3-christian@brauner.io
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-[christian@brauner.io: v4]
-  Link: http://lkml.kernel.org/r/20190210203943.8227-3-christian@brauner.io
+Link: http://lkml.kernel.org/r/20190124115648.9433-2-urezki@gmail.com
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ingo Molnar <mingo@elte.hu>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Thomas Garnier <thgarnie@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 3 +++
- 1 file changed, 3 insertions(+)
+ mm/vmalloc.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 27f8aa765493..a68fed9f6922 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -125,6 +125,7 @@ static int __maybe_unused one = 1;
- static int __maybe_unused two = 2;
- static int __maybe_unused four = 4;
- static unsigned long one_ul = 1;
-+static unsigned long long_max = LONG_MAX;
- static int one_hundred = 100;
- #ifdef CONFIG_PRINTK
- static int ten_thousand = 10000;
-@@ -1521,6 +1522,8 @@ static struct ctl_table fs_table[] = {
- 		.maxlen		= sizeof(files_stat.max_files),
- 		.mode		= 0644,
- 		.proc_handler	= proc_doulongvec_minmax,
-+		.extra1		= &zero,
-+		.extra2		= &long_max,
- 	},
- 	{
- 		.procname	= "nr_open",
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 33920fc41d6b..fbb00e0d4c56 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -439,7 +439,11 @@ nocache:
+ 	}
+ 
+ found:
+-	if (addr + size > vend)
++	/*
++	 * Check also calculated address against the vstart,
++	 * because it can be 0 because of big align request.
++	 */
++	if (addr + size > vend || addr < vstart)
+ 		goto overflow;
+ 
+ 	va->va_start = addr;
 -- 
 2.19.1
 
