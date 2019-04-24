@@ -2,109 +2,125 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A4BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3F2C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2430321773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556148079;
-	bh=DSmHkoIkwZsm1Mx8ltfExaA4b8nehNkyJDu8NKgo8pI=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=zwyxbwxpGg9nvQDKqKLgmwZBXLzMUz+dAtoy/githtvt/gs6HtSX82+lLczkD6zpW
-	 2pw8Frj6qKNiMj8yjpWjwprmG8zQVviuehBP3CsUMKk3W8yRUnLMpWuW/cEXdl1CXn
-	 uG+09UhCyPMCOvma/+lzwA2qpUKR8eG6Jg4wJLZA=
+	by mail.kernel.org (Postfix) with ESMTP id 910B92175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:22:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V/Bo8PyJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfDXXVS (ORCPT
+        id S1728111AbfDXXW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 19:21:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbfDXXVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 19:21:17 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6CF62175B;
-        Wed, 24 Apr 2019 23:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556148076;
-        bh=DSmHkoIkwZsm1Mx8ltfExaA4b8nehNkyJDu8NKgo8pI=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=gjGboqiJ3iboaJ9xE1Ny624NdCprS5t9kYpU06qxsjIaN3AkYjEhmk8nojpeteq0Z
-         VfblfykldCXCugpYlUmGSY6cU1g4yfipoTPT5520A4cJGF5bjlYGxNGwS8Pf9Krn3t
-         2GgwXjdP4ga0wkZyHufMV2o5cJ84lRiepHweIoOc=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 24 Apr 2019 19:22:56 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:46333 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbfDXXWz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 19:22:55 -0400
+Received: by mail-vs1-f65.google.com with SMTP id e2so11403494vsc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zpUP4bgoXDXJmY6a6D8aHitekGFCVxaOvwDg7tgV9BE=;
+        b=V/Bo8PyJkFQNbcYx4omLQnVBlY3dKuCykR0mypN1aYr+Qfq2+/DtqqZWQQinXnCulE
+         VzF322pqv3XB8QT+XWGAd8fpR7iTpRmqqCthhMxr3UZaep766hXqO8vifxf+4ghoqm58
+         eYntXoWneHCQkrW2mNFamxMMmYlZwos47Jx2A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zpUP4bgoXDXJmY6a6D8aHitekGFCVxaOvwDg7tgV9BE=;
+        b=KT/LbmrqxYXgTQHxBIhFhbzyouzzNlpGQPXXyhe/YbYfiKqO0JHVvVqCFzvhR0wVxC
+         zbgjTImC8Ji3R4jnYmZC4BpMgNsx8az9Q9/M1cH9nESmfXdXOLPVZM/IEigtLt+t34Yf
+         u2RcPBH4Q/nOWyJE4ETsUyIjQ0raWLRe3dJVOjAmgnSZr+MYJEMtghzZH9H4d9OutVJe
+         C+CFOG6OmmcDHIxFQJUqe6dRJ+S3tJX3r1KBM+Rx+OvUEQLLj7Zl1rQRpx4vxzlmDygF
+         NWs0LvXgwcMFDflstgEfkjTfWmhgBIKNuBNgFgz7uIb+O4Ab1oWDI+YvPaGppv6ih0VB
+         naZg==
+X-Gm-Message-State: APjAAAWu7pe34dfsG7Dg/MRI5pTDs0l9KHaYZWqHIhGe8mX+ZsNwSJM4
+        +oZoPYK8Tpd5EVsVfiEfCi23sxyroQo=
+X-Google-Smtp-Source: APXvYqxlpDbocwIV0YLhjOUAySEaSkKaKWaVBsQIgQScWzTD0J853Gp9HC5ff75b8X9/OuFtrOeIvQ==
+X-Received: by 2002:a67:bc01:: with SMTP id t1mr19414311vsn.149.1556148173676;
+        Wed, 24 Apr 2019 16:22:53 -0700 (PDT)
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
+        by smtp.gmail.com with ESMTPSA id m39sm5348068uae.14.2019.04.24.16.22.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 16:22:51 -0700 (PDT)
+Received: by mail-vk1-f170.google.com with SMTP id d30so2630483vkl.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:22:51 -0700 (PDT)
+X-Received: by 2002:a1f:a4d:: with SMTP id 74mr18982332vkk.13.1556148170875;
+ Wed, 24 Apr 2019 16:22:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1556117426-26878-1-git-send-email-vabhav.sharma@nxp.com>
-References: <1556117426-26878-1-git-send-email-vabhav.sharma@nxp.com>
-Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] arm64: drivers: clk: qoriq: increase array size of cmux_to_group
-To:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
-Message-ID: <155614807592.15276.17299738374776352204@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Wed, 24 Apr 2019 16:21:15 -0700
+References: <20190424203408.GA11386@beast> <20190424205117.GA5291@brain-police>
+ <CAGXu5jJzzku0xjJAyD3T5SDeeoxVtA51wfHPGPrejjn_tNfJ4w@mail.gmail.com>
+In-Reply-To: <CAGXu5jJzzku0xjJAyD3T5SDeeoxVtA51wfHPGPrejjn_tNfJ4w@mail.gmail.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 24 Apr 2019 16:22:39 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jL5LKDe=yxB4ByZOH-5CaDeJteFPpDtR2AH07wpMunTEQ@mail.gmail.com>
+Message-ID: <CAGXu5jL5LKDe=yxB4ByZOH-5CaDeJteFPpDtR2AH07wpMunTEQ@mail.gmail.com>
+Subject: Re: [PATCH v2] binfmt_elf: Update READ_IMPLIES_EXEC logic for modern CPUs
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hector Marco-Gisbert <hecmargi@upv.es>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Jason Gunthorpe <jgg@mellanox.com>, X86 ML <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Your subject should be "clk: qoriq: Increase array size of cmux_to_group"
+On Wed, Apr 24, 2019 at 1:54 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Wed, Apr 24, 2019 at 1:51 PM Will Deacon <will.deacon@arm.com> wrote:
+> > Don't you need to hack fs/compat_binfmt_elf.c to pick this up, or am I
+> > missing some trick? Should just be something like below.
+> >
+> > Will
+> >
+> > --->8
+> >
+> > diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
+> > index 15f6e96b3bd9..694bc3ee77eb 100644
+> > --- a/fs/compat_binfmt_elf.c
+> > +++ b/fs/compat_binfmt_elf.c
+> > @@ -116,6 +116,11 @@
+> >  #define        arch_setup_additional_pages compat_arch_setup_additional_pages
+> >  #endif
+> >
+> > +#ifdef compat_elf_read_implies_exec
+> > +#undef elf_read_implies_exec
+> > +#define elf_read_implies_exec compat_elf_read_implies_exec
+> > +#endif
+> > +
+> >  /*
+> >   * Rename a few of the symbols that binfmt_elf.c will define.
+> >   * These are all local so the names don't really matter, but it
+>
+> Argh. I thought I already saw stuff like this somewhere, but I think I
+> must have been looking at some other compat silliness. I'll fix this
+> and split up the series...
 
-Quoting Vabhav Sharma (2019-04-24 07:50:13)
-> From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
->=20
-> Increase size of cmux_to_group array, to accomdate entry of
-> -1 termination.
->=20
-> Added -1, terminated, entry for 4080_cmux_grpX.
->=20
-> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Acked-by: Scott Wood <oss@buserror.net>
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  drivers/clk/clk-qoriq.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-> index 1212a9b..f6606cf 100644
-> --- a/drivers/clk/clk-qoriq.c
-> +++ b/drivers/clk/clk-qoriq.c
-> @@ -79,7 +79,7 @@ struct clockgen_chipinfo {
->         const struct clockgen_muxinfo *cmux_groups[2];
->         const struct clockgen_muxinfo *hwaccel[NUM_HWACCEL];
->         void (*init_periph)(struct clockgen *cg);
-> -       int cmux_to_group[NUM_CMUX]; /* -1 terminates if fewer than NUM_C=
-MUX */
-> +       int cmux_to_group[NUM_CMUX+1]; /* array should be -1 terminated */
+Andrew, can you please drop this patch from -mm for now? I'll pursue
+these changes separately through x86 and arm64 trees.
 
-Please put space around that +.
+Thanks!
 
->         u32 pll_mask;   /* 1 << n bit set if PLL n is valid */
->         u32 flags;      /* CG_xxx */
->  };
-> @@ -601,7 +601,7 @@ static const struct clockgen_chipinfo chipinfo[] =3D {
->                         &p4080_cmux_grp1, &p4080_cmux_grp2
->                 },
->                 .cmux_to_group =3D {
-> -                       0, 0, 0, 0, 1, 1, 1, 1
-> +                       0, 0, 0, 0, 1, 1, 1, 1, -1
->                 },
->                 .pll_mask =3D 0x1f,
->         },
-
-Did you want this patch to go through clk tree? I seem to have acked it,
-which I don't remember. Usually when I ack something I assume it's going
-through some other tree.
-
+-- 
+Kees Cook
