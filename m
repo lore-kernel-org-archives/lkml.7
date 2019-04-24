@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E3CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74559C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D27321905
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478A8218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117447;
-	bh=VPIp3X7U2xKq2vogYXAyIoq3mFs0qIyNzfg3oElyvGo=;
+	s=default; t=1556117454;
+	bh=YIQAdVhr0apGzBMl/aEiIDksJZKPdoyWLEB/z7exXT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhGOTGakRM7OE3sMJBvF9jYgunGIDg03kVrmNKWEmAuQ61W0OvH0teazkylQ3SEpv
-	 f4WS768DvklDJY94657YVSrz/eCmaVVSuAF7SWcCslKwMdG037p+imQewleFJaWjHj
-	 GvJYcjVtVkCYIKvhFCJRA0ijV3Nm48rZNWfZyZqc=
+	b=Q9Pua76yIVTWnDGraRuq4kD3gD0K+cOWS0plx2S7hZL82R3EnjZBgNbN7pfQ4dwj9
+	 WUrWChQxRLI7YovNd4BczHDAzabjUcoCW7t9E+2UrQNeUMgex/al/t06F95Yv/HV6a
+	 nCJTleMr4iD9u1a1ZtIyod+QFFlCtB/L3CmwoKs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732687AbfDXOuq (ORCPT
+        id S1732718AbfDXOuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49948 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:50:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732664AbfDXOuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:50:44 -0400
+        id S1732688AbfDXOur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:50:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7766E218FC;
-        Wed, 24 Apr 2019 14:50:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7789218FE;
+        Wed, 24 Apr 2019 14:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117444;
-        bh=VPIp3X7U2xKq2vogYXAyIoq3mFs0qIyNzfg3oElyvGo=;
+        s=default; t=1556117446;
+        bh=YIQAdVhr0apGzBMl/aEiIDksJZKPdoyWLEB/z7exXT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WSHDnSGx1YZ4acm2WbQGufJCy657bXmkcJiLBqy48fCz5ExUM+A9eBUBUT1Ceulnz
-         Q+rbWCECgWuMU/G3lGyECYtM6KWk9Yh0KaZ+QUs9qkyMoH9v58JnCDB0+HgO8+smjC
-         YQvRZPDwDhzJ64e3/XoWJJjWOE+PdkBwJc44mJ8M=
+        b=fb4EAdPtLKta6QKtKAU3AXjaq7RNYvxHXqgTZk+YiUX4d/bbNMdVl7Dx07LgJ1cIi
+         ADNPFvfFOASVfKFJbbR9fAtax6wa96PGE2itGo5Z5qNbR2gNZEoRre3S51C7jE4siZ
+         WE3k5zm1RmgZt7RHgXPTQsMIb2h9VZTsGF+cktEw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/28] net: stmmac: don't log oversized frames
-Date:   Wed, 24 Apr 2019 10:49:57 -0400
-Message-Id: <20190424145012.30886-13-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
+        linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 14/28] jffs2: fix use-after-free on symlink traversal
+Date:   Wed, 24 Apr 2019 10:49:58 -0400
+Message-Id: <20190424145012.30886-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424145012.30886-1-sashal@kernel.org>
 References: <20190424145012.30886-1-sashal@kernel.org>
@@ -59,33 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 057a0c5642a2ff2db7c421cdcde34294a23bf37b ]
+[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
 
-This is log is harmful as it can trigger multiple times per packet. Delete
-it.
+free the symlink body after the same RCU delay we have for freeing the
+struct inode itself, so that traversal during RCU pathwalk wouldn't step
+into freed memory.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/norm_desc.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/jffs2/readinode.c | 5 -----
+ fs/jffs2/super.c     | 5 ++++-
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-index fd78406e2e9a..01f8f2e94c0f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-@@ -95,8 +95,6 @@ static int ndesc_get_rx_status(void *data, struct stmmac_extra_stats *x,
- 		return dma_own;
+diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
+index 06a71dbd4833..2f236cca6095 100644
+--- a/fs/jffs2/readinode.c
++++ b/fs/jffs2/readinode.c
+@@ -1414,11 +1414,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
  
- 	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
--		pr_warn("%s: Oversized frame spanned multiple buffers\n",
--			__func__);
- 		stats->rx_length_errors++;
- 		return discard_frame;
- 	}
+ 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
+ 
+-	if (f->target) {
+-		kfree(f->target);
+-		f->target = NULL;
+-	}
+-
+ 	fds = f->dents;
+ 	while(fds) {
+ 		fd = fds;
+diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
+index 226640563df3..76aedbc97773 100644
+--- a/fs/jffs2/super.c
++++ b/fs/jffs2/super.c
+@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
+ static void jffs2_i_callback(struct rcu_head *head)
+ {
+ 	struct inode *inode = container_of(head, struct inode, i_rcu);
+-	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
++	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
++
++	kfree(f->target);
++	kmem_cache_free(jffs2_inode_cachep, f);
+ }
+ 
+ static void jffs2_destroy_inode(struct inode *inode)
 -- 
 2.19.1
 
