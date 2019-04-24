@@ -2,173 +2,136 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA5EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B3AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FACF20685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129675;
-	bh=55fWVMcml/L+7lt02kwvT2fvjxgcmjLmqU0svN8ZqnU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/6D4agpOphEqBUI8TWq/e4xjFgMONR+H+QqDlkQ5Crjjg8hDwbYRV+9yfBGmNoMg
-	 Bqjweclymi9N72kcf5Q4ZLMDlOibJGTDSFBVom7EsAzCEmDSz98nOtuqX/YCga7wZy
-	 BK1ogLYFrfz/1oPPrTHCzjZ0xtxbhMXoq9GjMPKQ=
+	by mail.kernel.org (Postfix) with ESMTP id 21ED020685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rm42g9zm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733218AbfDXRLS (ORCPT
+        id S2387974AbfDXSOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:11:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733201AbfDXRLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:11:16 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B83521902;
-        Wed, 24 Apr 2019 17:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125874;
-        bh=55fWVMcml/L+7lt02kwvT2fvjxgcmjLmqU0svN8ZqnU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPXB0DwUziAwAPwaadm5HtHbvQ3uztD/jjdnqFi4BnHHs25XftXpioAfq0OKdtXIO
-         sa/+LeDQ8NfbUYRO8RBgOjcfzK2+UhsI8qZXaB1P6l7UKV9QNhCzu0bk4N6Y4x6HUx
-         859nuTrEKWRbK2NgyjocJehVHc1TaO2IRdbmF1U4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 014/104] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
-Date:   Wed, 24 Apr 2019 19:08:31 +0200
-Message-Id: <20190424170849.034251880@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
-References: <20190424170839.996641496@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 14:14:48 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34206 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733204AbfDXSOq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:14:46 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y16so6995781ljg.1;
+        Wed, 24 Apr 2019 11:14:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BApSBrHWisHavDzlSaMeCHbqeb82OQxHyjXmv1jF2lg=;
+        b=Rm42g9zm0D13PRG00EFQRBQT6gyD3Ljo2oUqSaW9XRRuTq9ESWxCnnoC006pn8cciI
+         9Fariz5tEFi3T+pmSlqdlLWHmEHx+Nd05tVZa/IL9ab4BVVspIFQErKv/74Gz5njrXGJ
+         I6ugZ4WL2LOQM8tdwtxKWWTJjfSyzihQaTYmxqH2pgMj5VJ2yIGY5ElXj+c04WUHPFRE
+         +83omq9EQDkg3QArTR48RPGH6dGLpu/nmF6at4P7cBky6l+7/oTufl9pnxg71ouRPkuT
+         P4ZR39mVRuccU8OJQrpGKvtipmUu5Xbmaij43PDrvPw9sqDR7G7XO1xzcQY2CwPXkNOr
+         uZOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BApSBrHWisHavDzlSaMeCHbqeb82OQxHyjXmv1jF2lg=;
+        b=FcGX7CJ/V3ChoJkVZ2vsYLMH86UF0Vpo8tSDhiE3FDhoARLLXMHQSqG4ZWD/0iY03q
+         PaF+yYJ7yjICSbFCr7/rnQplL+N3BFhiVz/b2TI3ugRTIY8majLWcLsdWZ88yCAKW32V
+         cps0dEmLxz9hRLovYYMMKLZZFLldknsPHz/45U0JXndj8AIQgdTPzmaQbiWDMJOxdW6B
+         zi5b/7xee9GJrvh5+a7aP4sclkELv3DdJmPuLm2zMp+GaPY39LJRy4Kjpha1FC3ZUxJ4
+         KCy7O362aIZYHO6r971h0uwJ5iYwAIKWskv3RsiAugO/Z7R3SsNM7vKiy3pcUI1ZsNC1
+         bLjw==
+X-Gm-Message-State: APjAAAUW/4UaBFabaHbu5LyW4z15Xjg5Sh2ZY3F+JHpeCMM3LHY/hv+F
+        rPxICSYEsf3abxjBqXZHucI=
+X-Google-Smtp-Source: APXvYqwo3QsIfhrr96a7mWSCMCf0fwdTJVLsGref6OEanKjTLyQFY3ChU05e8OU2FD7K9gsGqvnfIw==
+X-Received: by 2002:a2e:9993:: with SMTP id w19mr2950625lji.111.1556129684377;
+        Wed, 24 Apr 2019 11:14:44 -0700 (PDT)
+Received: from [192.168.1.19] (bkw231.neoplus.adsl.tpnet.pl. [83.28.190.231])
+        by smtp.gmail.com with ESMTPSA id y23sm4347983lfy.31.2019.04.24.11.14.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 11:14:43 -0700 (PDT)
+Subject: Re: [PATCH v4 04/26] dt-bindings: leds: Add LED_COLOR_ID definitions
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com,
+        linux@roeck-us.net, Baolin Wang <baolin.wang@linaro.org>,
+        Dan Murphy <dmurphy@ti.com>, Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+ <20190417205439.17685-5-jacek.anaszewski@gmail.com>
+ <20190424134915.GB14360@amd>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <569cc402-f63a-c8e3-8af1-132a674c5da3@gmail.com>
+Date:   Wed, 24 Apr 2019 20:14:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190424134915.GB14360@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
+Pavel,
 
-We had a test-report where, under memory pressure, adding LUNs to the
-systems would fail (the tests add LUNs strictly in sequence):
+On 4/24/19 3:49 PM, Pavel Machek wrote:
+> On Wed 2019-04-17 22:54:17, Jacek Anaszewski wrote:
+>> Add common LED color identifiers.
+>>
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Cc: Baolin Wang <baolin.wang@linaro.org>
+>> Cc: Pavel Machek <pavel@ucw.cz>
+>> Cc: Dan Murphy <dmurphy@ti.com>
+>> Cc: Daniel Mack <daniel@zonque.org>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Simon Shields <simon@lineageos.org>
+>> ---
+>>   include/dt-bindings/leds/common.h | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+>> index da0539490cea..d8c8c38700bd 100644
+>> --- a/include/dt-bindings/leds/common.h
+>> +++ b/include/dt-bindings/leds/common.h
+>> @@ -56,4 +56,15 @@
+>>   #define LED_FUNCTION_WLAN "wlan"
+>>   #define LED_FUNCTION_WPS "wps"
+>>   
+>> +/* Standard LED colors */
+>> +#define LED_COLOR_ID_WHITE	0
+>> +#define LED_COLOR_ID_RED	1
+>> +#define LED_COLOR_ID_GREEN	2
+>> +#define LED_COLOR_ID_BLUE	3
+>> +#define LED_COLOR_ID_AMBER	4
+>> +#define LED_COLOR_ID_VIOLET	5
+>> +#define LED_COLOR_ID_YELLOW	6
+>> +#define LED_COLOR_ID_IR		7
+>> +#define LED_COLOR_ID_COUNT	8
+> 
+> The "_COUNT" define confused me. I was trying to figure out what color
+> it is. We sometimes have "_MAX" in that meaning. 
 
-[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
-[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
-[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
-[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
-[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
-[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
-[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
-[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 5525.857838]  sdk: sdk1
-[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
-[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
-[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+Ack.
 
-Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
-there seems to be no reason to use GFP_ATMOIC here. All the different
-call-contexts use a mutex at some point, and nothing in between that
-requires no sleeping, as far as I could see. Additionally, the code that
-later allocates the block queue for the device (scsi_mq_alloc_queue())
-already uses GFP_KERNEL.
+> Probably can be merged with previous patch?
 
-There are similar allocations in two other functions:
-scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
-GFP_KERNEL.
+Ack.
 
-Here is the contexts for the three functions so far:
-
-    scsi_alloc_sdev()
-        scsi_probe_and_add_lun()
-            scsi_sequential_lun_scan()
-                __scsi_scan_target()
-                    scsi_scan_target()
-                        mutex_lock()
-                    scsi_scan_channel()
-                        scsi_scan_host_selected()
-                            mutex_lock()
-            scsi_report_lun_scan()
-                __scsi_scan_target()
-    	            ...
-            __scsi_add_device()
-                mutex_lock()
-            __scsi_scan_target()
-                ...
-        scsi_report_lun_scan()
-            ...
-        scsi_get_host_dev()
-            mutex_lock()
-
-    scsi_probe_and_add_lun()
-        ...
-
-    scsi_add_lun()
-        scsi_probe_and_add_lun()
-            ...
-
-So replace all these, and give them a bit of a better chance to succeed,
-with more chances of reclaim.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/scsi_scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 3386e72ba7e4..156ee22462e6 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -229,7 +229,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	extern void scsi_requeue_run_queue(struct work_struct *work);
- 
- 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
--		       GFP_ATOMIC);
-+		       GFP_KERNEL);
- 	if (!sdev)
- 		goto out;
- 
-@@ -791,7 +791,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 	 */
- 	sdev->inquiry = kmemdup(inq_result,
- 				max_t(size_t, sdev->inquiry_len, 36),
--				GFP_ATOMIC);
-+				GFP_KERNEL);
- 	if (sdev->inquiry == NULL)
- 		return SCSI_SCAN_NO_RESPONSE;
- 
-@@ -1083,7 +1083,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
- 	if (!sdev)
- 		goto out;
- 
--	result = kmalloc(result_len, GFP_ATOMIC |
-+	result = kmalloc(result_len, GFP_KERNEL |
- 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
- 	if (!result)
- 		goto out_free_sdev;
 -- 
-2.19.1
-
-
-
+Best regards,
+Jacek Anaszewski
