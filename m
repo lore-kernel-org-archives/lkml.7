@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02160C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4426CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB1CA205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1260D205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126662;
-	bh=D6QNZBGbhLHXwYCnnhQVJmWUZ4dhiJZLwc2SIKJkWlM=;
+	s=default; t=1556126665;
+	bh=Js63P6283bQZ1GDzWnyHynaDhARSouKK6KxHoWOmuWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q2c73xmkPIckIgCtB+Qbz0fACQ8G7vlfDYrolkMCAyYOtLJwEbLKLWQLMfkri4X1l
-	 U8Cp+nGXGqdxUsGSRXxD8BxVk51X4RPr9NREvOKwsniDijgg4P4fER/c40Y0blJoM2
-	 zqOF7Gj8z9IuUHrflCF0qmfMDX3Nt+K3nkr8ENJ0=
+	b=1j/0CTPPrULxx9L5gQ65nnOztijtXZYu7vM3FDkUYNaYRc9fZQ9NE84DLJTcpXZJH
+	 fDLdCJhIMaQDKiBs2arN2Pj6vDwWeIuk51zeFCGjD9o+u0RXtj/xmdsynjTd4PyC/T
+	 r7x+/RMT5IY7L6X9qlS4KMFVk85DCKt3Hz214VPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389550AbfDXRYV (ORCPT
+        id S2389861AbfDXRYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:24:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389113AbfDXRYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:24:19 -0400
+        id S2389844AbfDXRYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:24:21 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 202AC205ED;
-        Wed, 24 Apr 2019 17:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8C512054F;
+        Wed, 24 Apr 2019 17:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126657;
-        bh=D6QNZBGbhLHXwYCnnhQVJmWUZ4dhiJZLwc2SIKJkWlM=;
+        s=default; t=1556126660;
+        bh=Js63P6283bQZ1GDzWnyHynaDhARSouKK6KxHoWOmuWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHJg4PBoh0abhruxefJwqfJ1RpR3XeGcVwqdL3Bbrm+9Rr/i4kzctsMawGpkSHhak
-         k20BL5bLo8oZzUzIgWce3yAF9NGNteSvhKcEIYLB8SNnqfUt2YBwRxkNwd1q2OwVwI
-         BuPw93U4MfnrqVoTM70Bcs1P9pZCktVkVvYWfx70=
+        b=hl60v8dVAvajdZosfaDadj/jvcPWqcb0+QVlcN3CTgocRkTzmkUBJ136/HjlSLKR5
+         51UeXmqQr2HMF+6yVd13Ijax9B8VDkyBd3Q6BNWfecrIxD+5wqsvx8vhaayuBaFi/Q
+         b3R7PKtOh/ZgJg+08EMCq4nShj/HQQD4QPjuxvSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 4.9 16/44] CIFS: keep FileInfo handle live during oplock break
-Date:   Wed, 24 Apr 2019 19:09:54 +0200
-Message-Id: <20190424170851.758044274@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.9 17/44] KVM: x86: Dont clear EFER during SMM transitions for 32-bit vCPU
+Date:   Wed, 24 Apr 2019 19:09:55 +0200
+Message-Id: <20190424170851.949127745@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -60,179 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aurelien Aptel <aaptel@suse.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit b98749cac4a695f084a5ff076f4510b23e353ecd upstream.
+commit 8f4dc2e77cdfaf7e644ef29693fa229db29ee1de upstream.
 
-In the oplock break handler, writing pending changes from pages puts
-the FileInfo handle. If the refcount reaches zero it closes the handle
-and waits for any oplock break handler to return, thus causing a deadlock.
+Neither AMD nor Intel CPUs have an EFER field in the legacy SMRAM save
+state area, i.e. don't save/restore EFER across SMM transitions.  KVM
+somewhat models this, e.g. doesn't clear EFER on entry to SMM if the
+guest doesn't support long mode.  But during RSM, KVM unconditionally
+clears EFER so that it can get back to pure 32-bit mode in order to
+start loading CRs with their actual non-SMM values.
 
-To prevent this situation:
+Clear EFER only when it will be written when loading the non-SMM state
+so as to preserve bits that can theoretically be set on 32-bit vCPUs,
+e.g. KVM always emulates EFER_SCE.
 
-* We add a wait flag to cifsFileInfo_put() to decide whether we should
-  wait for running/pending oplock break handlers
+And because CR4.PAE is cleared only to play nice with EFER, wrap that
+code in the long mode check as well.  Note, this may result in a
+compiler warning about cr4 being consumed uninitialized.  Re-read CR4
+even though it's technically unnecessary, as doing so allows for more
+readable code and RSM emulation is not a performance critical path.
 
-* We keep an additionnal reference of the SMB FileInfo handle so that
-  for the rest of the handler putting the handle won't close it.
-  - The ref is bumped everytime we queue the handler via the
-    cifs_queue_oplock_break() helper.
-  - The ref is decremented at the end of the handler
-
-This bug was triggered by xfstest 464.
-
-Also important fix to address the various reports of
-oops in smb2_push_mandatory_locks
-
-Signed-off-by: Aurelien Aptel <aaptel@suse.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Fixes: 660a5d517aaab ("KVM: x86: save/load state on SMM switch")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifsglob.h |    2 ++
- fs/cifs/file.c     |   30 +++++++++++++++++++++++++-----
- fs/cifs/misc.c     |   25 +++++++++++++++++++++++--
- fs/cifs/smb2misc.c |    6 +++---
- 4 files changed, 53 insertions(+), 10 deletions(-)
+ arch/x86/kvm/emulate.c |   23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -1157,6 +1157,7 @@ cifsFileInfo_get_locked(struct cifsFileI
- }
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -2579,15 +2579,13 @@ static int em_rsm(struct x86_emulate_ctx
+ 	 * CR0/CR3/CR4/EFER.  It's all a bit more complicated if the vCPU
+ 	 * supports long mode.
+ 	 */
+-	cr4 = ctxt->ops->get_cr(ctxt, 4);
+ 	if (emulator_has_longmode(ctxt)) {
+ 		struct desc_struct cs_desc;
  
- struct cifsFileInfo *cifsFileInfo_get(struct cifsFileInfo *cifs_file);
-+void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_hdlr);
- void cifsFileInfo_put(struct cifsFileInfo *cifs_file);
+ 		/* Zero CR4.PCIDE before CR0.PG.  */
+-		if (cr4 & X86_CR4_PCIDE) {
++		cr4 = ctxt->ops->get_cr(ctxt, 4);
++		if (cr4 & X86_CR4_PCIDE)
+ 			ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PCIDE);
+-			cr4 &= ~X86_CR4_PCIDE;
+-		}
  
- #define CIFS_CACHE_READ_FLG	1
-@@ -1651,6 +1652,7 @@ GLOBAL_EXTERN spinlock_t gidsidlock;
- #endif /* CONFIG_CIFS_ACL */
+ 		/* A 32-bit code segment is required to clear EFER.LMA.  */
+ 		memset(&cs_desc, 0, sizeof(cs_desc));
+@@ -2601,13 +2599,16 @@ static int em_rsm(struct x86_emulate_ctx
+ 	if (cr0 & X86_CR0_PE)
+ 		ctxt->ops->set_cr(ctxt, 0, cr0 & ~(X86_CR0_PG | X86_CR0_PE));
  
- void cifs_oplock_break(struct work_struct *work);
-+void cifs_queue_oplock_break(struct cifsFileInfo *cfile);
- 
- extern const struct slow_work_ops cifs_oplock_break_ops;
- extern struct workqueue_struct *cifsiod_wq;
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -358,13 +358,31 @@ cifsFileInfo_get(struct cifsFileInfo *ci
- 	return cifs_file;
- }
- 
--/*
-- * Release a reference on the file private data. This may involve closing
-- * the filehandle out on the server. Must be called without holding
-- * tcon->open_file_lock and cifs_file->file_info_lock.
-+/**
-+ * cifsFileInfo_put - release a reference of file priv data
-+ *
-+ * Always potentially wait for oplock handler. See _cifsFileInfo_put().
-  */
- void cifsFileInfo_put(struct cifsFileInfo *cifs_file)
- {
-+	_cifsFileInfo_put(cifs_file, true);
-+}
+-	/* Now clear CR4.PAE (which must be done before clearing EFER.LME).  */
+-	if (cr4 & X86_CR4_PAE)
+-		ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PAE);
+-
+-	/* And finally go back to 32-bit mode.  */
+-	efer = 0;
+-	ctxt->ops->set_msr(ctxt, MSR_EFER, efer);
++	if (emulator_has_longmode(ctxt)) {
++		/* Clear CR4.PAE before clearing EFER.LME. */
++		cr4 = ctxt->ops->get_cr(ctxt, 4);
++		if (cr4 & X86_CR4_PAE)
++			ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PAE);
 +
-+/**
-+ * _cifsFileInfo_put - release a reference of file priv data
-+ *
-+ * This may involve closing the filehandle @cifs_file out on the
-+ * server. Must be called without holding tcon->open_file_lock and
-+ * cifs_file->file_info_lock.
-+ *
-+ * If @wait_for_oplock_handler is true and we are releasing the last
-+ * reference, wait for any running oplock break handler of the file
-+ * and cancel any pending one. If calling this function from the
-+ * oplock break handler, you need to pass false.
-+ *
-+ */
-+void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
-+{
- 	struct inode *inode = d_inode(cifs_file->dentry);
- 	struct cifs_tcon *tcon = tlink_tcon(cifs_file->tlink);
- 	struct TCP_Server_Info *server = tcon->ses->server;
-@@ -411,7 +429,8 @@ void cifsFileInfo_put(struct cifsFileInf
++		/* And finally go back to 32-bit mode.  */
++		efer = 0;
++		ctxt->ops->set_msr(ctxt, MSR_EFER, efer);
++	}
  
- 	spin_unlock(&tcon->open_file_lock);
- 
--	oplock_break_cancelled = cancel_work_sync(&cifs_file->oplock_break);
-+	oplock_break_cancelled = wait_oplock_handler ?
-+		cancel_work_sync(&cifs_file->oplock_break) : false;
- 
- 	if (!tcon->need_reconnect && !cifs_file->invalidHandle) {
- 		struct TCP_Server_Info *server = tcon->ses->server;
-@@ -3913,6 +3932,7 @@ void cifs_oplock_break(struct work_struc
- 							     cinode);
- 		cifs_dbg(FYI, "Oplock release rc = %d\n", rc);
- 	}
-+	_cifsFileInfo_put(cfile, false /* do not wait for ourself */);
- 	cifs_done_oplock_break(cinode);
- }
- 
---- a/fs/cifs/misc.c
-+++ b/fs/cifs/misc.c
-@@ -494,8 +494,7 @@ is_valid_oplock_break(char *buffer, stru
- 					   CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
- 					   &pCifsInode->flags);
- 
--				queue_work(cifsoplockd_wq,
--					   &netfile->oplock_break);
-+				cifs_queue_oplock_break(netfile);
- 				netfile->oplock_break_cancelled = false;
- 
- 				spin_unlock(&tcon->open_file_lock);
-@@ -592,6 +591,28 @@ void cifs_put_writer(struct cifsInodeInf
- 	spin_unlock(&cinode->writers_lock);
- }
- 
-+/**
-+ * cifs_queue_oplock_break - queue the oplock break handler for cfile
-+ *
-+ * This function is called from the demultiplex thread when it
-+ * receives an oplock break for @cfile.
-+ *
-+ * Assumes the tcon->open_file_lock is held.
-+ * Assumes cfile->file_info_lock is NOT held.
-+ */
-+void cifs_queue_oplock_break(struct cifsFileInfo *cfile)
-+{
-+	/*
-+	 * Bump the handle refcount now while we hold the
-+	 * open_file_lock to enforce the validity of it for the oplock
-+	 * break handler. The matching put is done at the end of the
-+	 * handler.
-+	 */
-+	cifsFileInfo_get(cfile);
-+
-+	queue_work(cifsoplockd_wq, &cfile->oplock_break);
-+}
-+
- void cifs_done_oplock_break(struct cifsInodeInfo *cinode)
- {
- 	clear_bit(CIFS_INODE_PENDING_OPLOCK_BREAK, &cinode->flags);
---- a/fs/cifs/smb2misc.c
-+++ b/fs/cifs/smb2misc.c
-@@ -512,7 +512,7 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
- 			clear_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
- 				  &cinode->flags);
- 
--		queue_work(cifsoplockd_wq, &cfile->oplock_break);
-+		cifs_queue_oplock_break(cfile);
- 		kfree(lw);
- 		return true;
- 	}
-@@ -656,8 +656,8 @@ smb2_is_valid_oplock_break(char *buffer,
- 					   CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
- 					   &cinode->flags);
- 				spin_unlock(&cfile->file_info_lock);
--				queue_work(cifsoplockd_wq,
--					   &cfile->oplock_break);
-+
-+				cifs_queue_oplock_break(cfile);
- 
- 				spin_unlock(&tcon->open_file_lock);
- 				spin_unlock(&cifs_tcp_ses_lock);
+ 	smbase = ctxt->ops->get_smbase(ctxt);
+ 	if (emulator_has_longmode(ctxt))
 
 
