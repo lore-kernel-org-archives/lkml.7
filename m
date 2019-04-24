@@ -2,224 +2,103 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57131C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B91C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3C4206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="JYIMVpIt"
+	by mail.kernel.org (Postfix) with ESMTP id 05C55206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:25:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556097928;
+	bh=+Yolj/Ebv3KHvMaI0pOoXjrUD8vd3WuLtJWrxZiEVdk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fPBwFjHqRp2zrWyTcFU6srRkdC0HMds9fwLkG+nQwPgwPoRSmsQjZa1wtyOPQGeh6
+	 N5dpEuBVFHNv0nbg/Ods6SjOwrUyzq6z0WoSBVwkOydaHiI/R/3tRhk8PIHHDYCtMf
+	 BXE1KHJitMu4vKE46leaQUA8tBCRIt8U9ImffKWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbfDXJZY (ORCPT
+        id S1729245AbfDXJZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:25:24 -0400
-Received: from onstation.org ([52.200.56.107]:38274 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726598AbfDXJZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:25:17 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id E99E544895;
-        Wed, 24 Apr 2019 09:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1556097916;
-        bh=1uFaG1NakitykJr2PNCpaGrm7Xn52ydo/8b+LrlMix0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JYIMVpItwzdQ25AwlqW2LCYXIAky1fyRP0El2H/Y1iqV24vTAoawr3djH0KXDvpXn
-         nCBgbfptxfrAv842lkRcH38QFIeqG1Ly4gSU9IF/nLFiX5u7mIrY0DS+uP8r/2B7Dn
-         2A8uvSowzu3bJMv9YeWz2Nth/RDJomXlCgCzrl2M=
-From:   Brian Masney <masneyb@onstation.org>
-To:     lee.jones@linaro.org, daniel.thompson@linaro.org,
-        jingoohan1@gmail.com, robh+dt@kernel.org
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dmurphy@ti.com, jonathan@marek.ca, Rob Herring <robh@kernel.org>
-Subject: [PATCH v6 2/3] dt-bindings: backlight: add lm3630a bindings
-Date:   Wed, 24 Apr 2019 05:25:04 -0400
-Message-Id: <20190424092505.6578-3-masneyb@onstation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190424092505.6578-1-masneyb@onstation.org>
-References: <20190424092505.6578-1-masneyb@onstation.org>
+        Wed, 24 Apr 2019 05:25:26 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34940 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728303AbfDXJZU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 05:25:20 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m10so15535565otp.2;
+        Wed, 24 Apr 2019 02:25:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bi+IcSWROdPLyY+BUL6cQHvJllQ8oSNNVQGgF0Uixpg=;
+        b=CCoJd3OL6SASYvdCjprSGGqfFaiHHrv3A9m4D8IuWuZf9xnmcjvLxYDamnpUZtWK59
+         K1yDE+iOA8ITQQfY6I5zfBhDKk8mnYIS0Wr0LxNDDOzbvZA3Q7GI+YLTl3Wjj31yh6Sl
+         er12MQ7FHipuEMD4YOFfxWoQ7Indej7uqWOB1h/qHGY9lZyeTOqDPF0TrMj8LVCUXS0m
+         6KkQOAcGdsw5zJTk2kYMbuWZX6L2btfzwgC3OUGpIZ4OSrrVoh+FQauIDeop6yMOq/nt
+         Fd9qJ9TfZQwBtIe0mf7JREBE8alaNkzJ6iU+0XY6Uge+pTIkUnchUMw5s5m29ofKbOBp
+         jqqw==
+X-Gm-Message-State: APjAAAWvwIalvezoVlVjkzDqU4g2TWY1ecpKrCY0CtzsF1PmGOqBkjH7
+        RySPVwQTv7hLj1dvm/DZ2bwUVSDmxZe6Gl04PCo=
+X-Google-Smtp-Source: APXvYqyrm1hP1Q2W0IUCtL6eLwN85plGy9syyTvIiRC0e76IQgr5Y0k4OWKMy6Qzpih7Ep2J5p4WjwOvzVshkcql73w=
+X-Received: by 2002:a9d:648f:: with SMTP id g15mr18180708otl.220.1556097919232;
+ Wed, 24 Apr 2019 02:25:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190424023223.29614-1-andy.tang@nxp.com> <20190424040113.aiyaia2p7xrn5ywo@vireshk-i7>
+ <CAJZ5v0hSq60Hv44wOVr5J=rHMFUPFrVKxRYOS4w+zg90oUbMag@mail.gmail.com> <20190424090252.7cmwzxf4t5lwjat6@vireshk-i7>
+In-Reply-To: <20190424090252.7cmwzxf4t5lwjat6@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 24 Apr 2019 11:25:07 +0200
+Message-ID: <CAJZ5v0jOOKW92X8iGPZD8Dfye4K9seXgiYaTLURby9Y3BbMYpg@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: qoriq: Add ls1028a chip support
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andy Tang <andy.tang@nxp.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new backlight bindings for the TI LM3630A dual-string white LED.
+On Wed, Apr 24, 2019 at 11:02 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 24-04-19, 09:24, Rafael J. Wysocki wrote:
+> > On Wed, Apr 24, 2019 at 6:01 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 24-04-19, 10:32, andy.tang@nxp.com wrote:
+> > > > From: Yuantian Tang <andy.tang@nxp.com>
+> > > >
+> > > > Enable cpufreq feature on ls1028a chip by adding its compatible
+> > > > string.
+> > > >
+> > > > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> > > > ---
+> > > >  drivers/cpufreq/qoriq-cpufreq.c |    1 +
+> > > >  1 files changed, 1 insertions(+), 0 deletions(-)
+> > > >
+> > > > diff --git a/drivers/cpufreq/qoriq-cpufreq.c b/drivers/cpufreq/qoriq-cpufreq.c
+> > > > index 4295e54..d308c4d 100644
+> > > > --- a/drivers/cpufreq/qoriq-cpufreq.c
+> > > > +++ b/drivers/cpufreq/qoriq-cpufreq.c
+> > > > @@ -280,6 +280,7 @@ static int qoriq_cpufreq_target(struct cpufreq_policy *policy,
+> > > >
+> > > >       { .compatible = "fsl,ls1012a-clockgen", },
+> > > >       { .compatible = "fsl,ls1021a-clockgen", },
+> > > > +     { .compatible = "fsl,ls1028a-clockgen", },
+> > > >       { .compatible = "fsl,ls1043a-clockgen", },
+> > > >       { .compatible = "fsl,ls1046a-clockgen", },
+> > > >       { .compatible = "fsl,ls1088a-clockgen", },
+> > >
+> > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> >
+> > So do you want me to take this one directly?
+>
+> I actually applied it and then realized it is powerpc and so dropped
+> it. You want me to apply it ?
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes since v5:
-- Change 'lm3630a_bl@38' in examples to 'led-controller@38'
-
-Changes since v4:
-- Drop $ref from led-sources
-- Drop description from reg of i2c address
-- Expand description of reg for the control bank
-- Drop status from examples
-
-Changes since v3:
-- Add label. I didn't add a description for it since that'll come from
-  the common properties once its converted.
-
-Changes since v2:
-- Update description of max-brightness
-- Add description for reg
-- Correct typo: s/tranisiton/transition
-- add reg to control banks
-- add additionalProperties
-
- .../leds/backlight/lm3630a-backlight.yaml     | 129 ++++++++++++++++++
- 1 file changed, 129 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-
-diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-new file mode 100644
-index 000000000000..4d61fe0a98a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-@@ -0,0 +1,129 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/backlight/lm3630a-backlight.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI LM3630A High-Efficiency Dual-String White LED
-+
-+maintainers:
-+  - Lee Jones <lee.jones@linaro.org>
-+  - Daniel Thompson <daniel.thompson@linaro.org>
-+  - Jingoo Han <jingoohan1@gmail.com>
-+
-+description: |
-+  The LM3630A is a current-mode boost converter which supplies the power and
-+  controls the current in up to two strings of 10 LEDs per string.
-+  https://www.ti.com/product/LM3630A
-+
-+properties:
-+  compatible:
-+    const: ti,lm3630a
-+
-+  reg:
-+    maxItems: 1
-+
-+  ti,linear-mapping-mode:
-+    description: |
-+      Enable linear mapping mode. If disabled, then it will use exponential
-+      mapping mode in which the ramp up/down appears to have a more uniform
-+      transition to the human eye.
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+
-+patternProperties:
-+  "^led@[01]$":
-+    type: object
-+    description: |
-+      Properties for a string of connected LEDs.
-+
-+    properties:
-+      reg:
-+        description: |
-+          The control bank that is used to program the two current sinks. The
-+          LM3630A has two control banks (A and B) and are represented as 0 or 1
-+          in this property. The two current sinks can be controlled
-+          independently with both banks, or bank A can be configured to control
-+          both sinks with the led-sources property.
-+        maxItems: 1
-+        minimum: 0
-+        maximum: 1
-+
-+      label:
-+        maxItems: 1
-+
-+      led-sources:
-+        allOf:
-+          - minItems: 1
-+            maxItems: 2
-+            items:
-+              minimum: 0
-+              maximum: 1
-+
-+      default-brightness:
-+        description: Default brightness level on boot.
-+        minimum: 0
-+        maximum: 255
-+
-+      max-brightness:
-+        description: Maximum brightness that is allowed during runtime.
-+        minimum: 0
-+        maximum: 255
-+
-+    required:
-+      - reg
-+
-+    additionalProperties: false
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        led-controller@38 {
-+                compatible = "ti,lm3630a";
-+                reg = <0x38>;
-+
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                led@0 {
-+                        reg = <0>;
-+                        led-sources = <0 1>;
-+                        label = "lcd-backlight";
-+                        default-brightness = <200>;
-+                        max-brightness = <255>;
-+                };
-+        };
-+    };
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        led-controller@38 {
-+                compatible = "ti,lm3630a";
-+                reg = <0x38>;
-+
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                led@0 {
-+                        reg = <0>;
-+                        default-brightness = <150>;
-+                        ti,linear-mapping-mode;
-+                };
-+
-+                led@1 {
-+                        reg = <1>;
-+                        default-brightness = <225>;
-+                        ti,linear-mapping-mode;
-+                };
-+        };
-+    };
--- 
-2.20.1
-
+No, I can do that, thanks!
