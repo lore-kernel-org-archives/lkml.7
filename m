@@ -2,259 +2,159 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731B8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA20C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E68218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:11:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="IXlIGc/W";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="kQUjEdbG"
+	by mail.kernel.org (Postfix) with ESMTP id 8182F218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbfDXMLd (ORCPT
+        id S1729109AbfDXMMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:11:33 -0400
-Received: from mail136-22.atl41.mandrillapp.com ([198.2.136.22]:29908 "EHLO
-        mail136-22.atl41.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727172AbfDXMLc (ORCPT
+        Wed, 24 Apr 2019 08:12:41 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:24082 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfDXMMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:11:32 -0400
-X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Apr 2019 08:11:32 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=hiUbytr/SBl9nWOAUaewKGipJi9riB2gnuiSAmSYE3U=;
- b=IXlIGc/WqweZqiL06fF0RCWx+ZDnSvIxhlZVyNCB2s3Ko5qNBD4DyaEtSObuwK1gKNApWcanmmGl
-   1+vIzhJXhyKOQvN1tKkt8K6B2ynMiB3T1PuTndgewX5dX3esHgUeRLk6aqsUIyjq+qxV1GCdDRFe
-   fg3TIR0HunQjTHm+/2U=
-Received: from pmta04.mandrill.prod.atl01.rsglab.com (127.0.0.1) by mail136-22.atl41.mandrillapp.com id ho19781sb1kd for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:56:29 +0000 (envelope-from <bounce-md_31050260.5cc04eed.v1-8fecc606eca5468f8b88739de64aed02@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1556106989; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=hiUbytr/SBl9nWOAUaewKGipJi9riB2gnuiSAmSYE3U=; 
- b=kQUjEdbGx0RbGDO7zPJb3opL+KAAPe+UdG6KI7ugtNm5+YN5tmwoA2SRC6fBfFOGOJ0oSD
- NxHK0bEcdk/5LL1paqcDVtKAaHdP+4p2CCGOxrsudLacLaduL/W7pIUA7d4GGvjXdOkP2Gz8
- LyedtL9Sd3ciyL2jH2ewqTxiJ6TiA=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [RESEND4, PATCH 1/2] fuse: retrieve: cap requested size to negotiated max_write
-Received: from [87.98.221.171] by mandrillapp.com id 8fecc606eca5468f8b88739de64aed02; Wed, 24 Apr 2019 11:56:29 +0000
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Jakob Unterwurzacher <jakobunt@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        fuse-devel <fuse-devel@lists.sourceforge.net>,
-        stable <stable@vger.kernel.org>
-Message-Id: <20190424115620.GA2723@deco.navytux.spb.ru>
-References: <cover.1553680185.git.kirr@nexedi.com> <12f7d0d98555ee0d174d04bb47644f65c07f035a.1553680185.git.kirr@nexedi.com> <CAJfpegv0NvcsD9gh3aN+ngzsLqbNWUc73ZPN1qHox_14eN9Pqg@mail.gmail.com>
-In-Reply-To: <CAJfpegv0NvcsD9gh3aN+ngzsLqbNWUc73ZPN1qHox_14eN9Pqg@mail.gmail.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.8fecc606eca5468f8b88739de64aed02
-X-Mandrill-User: md_31050260
-Date:   Wed, 24 Apr 2019 11:56:29 +0000
+        Wed, 24 Apr 2019 08:12:41 -0400
+X-IronPort-AV: E=Sophos;i="5.60,389,1549954800"; 
+   d="scan'208";a="28036781"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 Apr 2019 05:12:39 -0700
+Received: from localhost (10.10.76.4) by chn-sv-exch06.mchp-main.com
+ (10.10.76.107) with Microsoft SMTP Server id 14.3.352.0; Wed, 24 Apr 2019
+ 05:12:39 -0700
+Date:   Wed, 24 Apr 2019 14:12:38 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Paul Burton <paul.burton@mips.com>
+CC:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Resend] arch: mips: Fix initrd_start and initrd_end when read
+ from DT
+Message-ID: <20190424121236.uadnsmgg3ctvljdo@soft-dev3.microsemi.net>
+References: <1555409900-31278-1-git-send-email-horatiu.vultur@microchip.com>
+ <20190419205456.uylahdin2jlkeyyy@pburton-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20190419205456.uylahdin2jlkeyyy@pburton-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:44:50PM +0200, Miklos Szeredi wrote:
-> On Wed, Mar 27, 2019 at 11:15 AM Kirill Smelkov <kirr@nexedi.com> wrote:
-> >
-> > FUSE filesystem server and kernel client negotiate during initializatio=
-n
-> > phase, what should be the maximum write size the client will ever issue=
-.
-> > Correspondingly the filesystem server then queues sys_read calls to rea=
-d
-> > requests with buffer capacity large enough to carry request header
-> > + that max_write bytes. A filesystem server is free to set its max_writ=
-e
-> > in anywhere in the range between [1=C2=B7page, fc->max_pages=C2=B7page]=
-. In
-> > particular go-fuse[2] sets max_write by default as 64K, wheres default
-> > fc->max_pages corresponds to 128K. Libfuse also allows users to
-> > configure max_write, but by default presets it to possible maximum.
-> >
-> > If max_write is < fc->max_pages=C2=B7page, and in NOTIFY_RETRIEVE handl=
-er we
-> > allow to retrieve more than max_write bytes, corresponding prepared
-> > NOTIFY_REPLY will be thrown away by fuse_dev_do_read, because the
-> > filesystem server, in full correspondence with server/client contract,
-> > will be only queuing sys_read with ~max_write buffer capacity, and
-> > fuse_dev_do_read throws away requests that cannot fit into server
-> > request buffer. In turn the filesystem server could get stuck waiting
-> > indefinitely for NOTIFY_REPLY since NOTIFY_RETRIEVE handler returned OK
-> > which is understood by clients as that NOTIFY_REPLY was queued and will
-> > be sent back.
-> >
-> > -> Cap requested size to negotiate max_write to avoid the problem.
-> > This aligns with the way NOTIFY_RETRIEVE handler works, which already
-> > unconditionally caps requested retrieve size to fuse_conn->max_pages.
-> > This way it should not hurt NOTIFY_RETRIEVE semantic if we return less
-> > data than was originally requested.
-> >
-> > Please see [1] for context where the problem of stuck filesystem was hi=
-t
-> > for real, how the situation was traced and for more involving patch tha=
-t
-> > did not make it into the tree.
-> >
-> > [1] https://marc.info/?l=3Dlinux-fsdevel&m=3D155057023600853&w=3D2
-> > [2] https://github.com/hanwen/go-fuse
-> >
-> > Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-> > Cc: Han-Wen Nienhuys <hanwen@google.com>
-> > Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
-> > Cc: <stable@vger.kernel.org> # v2.6.36+
-> > ---
-> >  fs/fuse/dev.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> > index 8a63e52785e9..38e94bc43053 100644
-> > --- a/fs/fuse/dev.c
-> > +++ b/fs/fuse/dev.c
-> > @@ -1749,7 +1749,7 @@ static int fuse_retrieve(struct fuse_conn *fc, st=
-ruct inode *inode,
-> >         offset =3D outarg->offset & ~PAGE_MASK;
-> >         file_size =3D i_size_read(inode);
-> >
-> > -       num =3D outarg->size;
-> > +       num =3D min(outarg->size, fc->max_write);
+Hi Paul,
+
+Thank you for your detail explanation. There are few observations below.
+
+The 04/19/2019 20:55, Paul Burton wrote:
+> External E-Mail
 > 
-> This is wrong: the max_size limited num is overwritten if constrained
-> by file size.
+> 
+> Hi Horatiu,
+> 
+> On Tue, Apr 16, 2019 at 12:18:20PM +0200, Horatiu Vultur wrote:
+> > When the bootloader passes arguments to linux kernel through device tree,
+> > it passes the address of initrd_start and initrd_stop, which are in kseg0.
+> > But when linux kernel reads these addresses from device tree, it converts
+> > them to virtual addresses inside the function
+> > __early_init_dt_declare_initrd.
+> 
+> I'm not sure I follow - if the bootloader provides an address in kseg0
+> then it's already a virtual address.
 
-I assume you are meaning this:
+So I am just a novice in this, but in my case the bootloader(Uboot) passes
+the address in kseg0(e.g 0x9f8a6000), but if I understand correctly
+this is just cached access to location 0x1f8a6000.
 
-=09--- a/fs/fuse/dev.c
-=09+++ b/fs/fuse/dev.c
-=09@@ -1745,15 +1745,15 @@ static int fuse_retrieve(struct fuse_conn *fc, s=
-truct inode *inode,
-=09        unsigned int offset;
-=09        size_t total_len =3D 0;
-=09        unsigned int num_pages;
-=09 
-=09        offset =3D outarg->offset & ~PAGE_MASK;
-=09        file_size =3D i_size_read(inode);
-=09 
-=09-       num =3D outarg->size;
-=09+       num =3D min(outarg->size, fc->max_write);
-=09        if (outarg->offset > file_size)
-=09                num =3D 0;
-=09        else if (outarg->offset + num > file_size)
-=09                num =3D file_size - outarg->offset;=09=09<-- THIS
-=09 
-=09        num_pages =3D (num + offset + PAGE_SIZE - 1) >> PAGE_SHIFT;
-=09        num_pages =3D min(num_pages, fc->max_pages);
+> 
+> It looks like __early_init_dt_declare_initrd expects the DT to provide
+> physical addresses, which fits in well with the fact that DTs generally
+> use physical addresses for everything else.
+> 
+> __early_init_dt_declare_initrd calling __va on a virtual address will
+> give you something bogus, and it looks like you're just cancelling this
+> out below. In practice for a typical system where PAGE_OFFSET is the
+> start of kseg0 (0x80000000) the bogus address you get will happen to be
+> the same as the physical address, but that's not guaranteed.
+> 
+> > At a later point then in the function init_initrd, it is checking for
+> > initrd_start to be lower than PAGE_OFFSET, which for a 32 CPU it is not,
+> > therefore it would disable the initrd by setting 0 to initrd_start and
+> > initrd_stop.
+> 
+> The check you mention here is to make sure initrd_start looks like a
+> virtual address - if it's lower than PAGE_OFFSET (typically 0x80000000)
+> then it looks bad & initrd is disabled. I think your comment is
+> backwards - what you have is a physical address, entirely by accident,
+> and you're converting it back to a virtual address again by accident
+> which keeps the check happy.
 
-and then in this case (offset + num > file_size) num overwrite
+I am a little bit confused here. so the initrd_start has to have a
+virtual address(in kseg0) inside the function init_initrd. Meaning that
+when the bootloader passes the arguments to linux through a command line,
+then initrd_start has to be already a virtual address? Because I
+couldn't see a place where it converts the initrd_start. But when the
+bootloader pass the arguments through DT it has to be physical address?
 
-=09num =3D file_size - offset
+> 
+> > The fix consists of checking if linux kernel received a device tree and not
+> > having enable extended virtual address and in that case convert them back
+> > to physical addresses that point in kseg0 as expected.
+> 
+> Can you instead just have your bootloader provide physical addresses in
+> the DT?
 
-can make num only smaller, right? And then the patch is not wrong because t=
-here
-is no other num overwriting in this function except when num is being furth=
-er
-decremented in loop that prepares pages to retrieve.
+Yes, I have done few tests and it seems to work fine, but I need to
+understand it better.
 
-Or am I missing something?  Would it be more clear to cap num to
-max_write after all calculations?  But then - if we are not sure that
-file_size check can only lower num - we have a problem: we are no longer
-sure that num is <=3D outarg->size.
+> 
+> Even if we were to have this code try to sanitize the value with
+> something like __va(__pa(initrd_start)), it only covers systems using
+> the UHI boot protocol which isn't the only way we can obtain a DT. If a
+> system builds in its DTB for example it'll get different behaviour to if
+> it's passed via the UHI protocol by the bootloader.
+> 
+> Thanks,
+>     Paul
+> 
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  arch/mips/kernel/setup.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+> > index 8d1dc6c..774ee00 100644
+> > --- a/arch/mips/kernel/setup.c
+> > +++ b/arch/mips/kernel/setup.c
+> > @@ -264,6 +264,17 @@ static unsigned long __init init_initrd(void)
+> >  		pr_err("initrd start must be page aligned\n");
+> >  		goto disable;
+> >  	}
+> > +
+> > +	/*
+> > +	 * In case the initrd_start and initrd_end are read from DT,
+> > +	 * then they are converted to virtual address, therefore convert
+> > +	 * them back to physical address.
+> > +	 */
+> > +	if (!IS_ENABLED(CONFIG_EVA) && fw_arg0 == -2) {
+> > +		initrd_start = initrd_start - PAGE_OFFSET + PHYS_OFFSET;
+> > +		initrd_end = initrd_end - PAGE_OFFSET + PHYS_OFFSET;
+> > +	}
+> > +
+> >  	if (initrd_start < PAGE_OFFSET) {
+> >  		pr_err("initrd start < PAGE_OFFSET\n");
+> >  		goto disable;
+> > -- 
+> > 2.7.4
+> > 
+> 
 
-
-> Also the patch is whitespace damaged.
-
-I've tried to do the following in my mutt on "RESEND4, PATCH 1/2"
-message:
-
-=09|(cd ~/src/linux/linux && git am -)
-
-and the patch applied successfully. So could you please clarify what
-"whitespace damaged" means?
-
-Attaching the patch once again just in case.
-
-Kirill
-
----- 8< ----
-From 000a5a6c91992f2a361a846cd050444964920f85 Mon Sep 17 00:00:00 2001
-From: Kirill Smelkov <kirr@nexedi.com>
-Date: Wed, 27 Mar 2019 13:00:56 +0300
-Subject: [PATCH] fuse: retrieve: cap requested size to negotiated max_write
-MIME-Version: 1.0
-Content-Type: text/plain; charset=3Dutf-8
-Content-Transfer-Encoding: 8bit
-
-FUSE filesystem server and kernel client negotiate during initialization
-phase, what should be the maximum write size the client will ever issue.
-Correspondingly the filesystem server then queues sys_read calls to read
-requests with buffer capacity large enough to carry request header
-+ that max_write bytes. A filesystem server is free to set its max_write
-in anywhere in the range between [1=C2=B7page, fc->max_pages=C2=B7page]. In
-particular go-fuse[2] sets max_write by default as 64K, wheres default
-fc->max_pages corresponds to 128K. Libfuse also allows users to
-configure max_write, but by default presets it to possible maximum.
-
-If max_write is < fc->max_pages=C2=B7page, and in NOTIFY_RETRIEVE handler w=
-e
-allow to retrieve more than max_write bytes, corresponding prepared
-NOTIFY_REPLY will be thrown away by fuse_dev_do_read, because the
-filesystem server, in full correspondence with server/client contract,
-will be only queuing sys_read with ~max_write buffer capacity, and
-fuse_dev_do_read throws away requests that cannot fit into server
-request buffer. In turn the filesystem server could get stuck waiting
-indefinitely for NOTIFY_REPLY since NOTIFY_RETRIEVE handler returned OK
-which is understood by clients as that NOTIFY_REPLY was queued and will
-be sent back.
-
--> Cap requested size to negotiate max_write to avoid the problem.
-This aligns with the way NOTIFY_RETRIEVE handler works, which already
-unconditionally caps requested retrieve size to fuse_conn->max_pages.
-This way it should not hurt NOTIFY_RETRIEVE semantic if we return less
-data than was originally requested.
-
-Please see [1] for context where the problem of stuck filesystem was hit
-for real, how the situation was traced and for more involving patch that
-did not make it into the tree.
-
-[1] https://marc.info/?l=3Dlinux-fsdevel&m=3D155057023600853&w=3D2
-[2] https://github.com/hanwen/go-fuse
-
-Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-Cc: Han-Wen Nienhuys <hanwen@google.com>
-Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
-Cc: <stable@vger.kernel.org> # v2.6.36+
----
- fs/fuse/dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 9971a35cf1ef..1e2efd873201 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -1749,7 +1749,7 @@ static int fuse_retrieve(struct fuse_conn *fc, struct=
- inode *inode,
- =09offset =3D outarg->offset & ~PAGE_MASK;
- =09file_size =3D i_size_read(inode);
- 
--=09num =3D outarg->size;
-+=09num =3D min(outarg->size, fc->max_write);
- =09if (outarg->offset > file_size)
- =09=09num =3D 0;
- =09else if (outarg->offset + num > file_size)
 -- 
-2.21.0.765.geec228f530
-
+/Horatiu
