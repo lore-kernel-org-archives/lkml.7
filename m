@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1954DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49B0C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF8CF20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A423520835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129130;
-	bh=1QXLjvJhZpBC1YwpufBIkYL+Ewqfrz9VcBjmg8DunMM=;
+	s=default; t=1556129135;
+	bh=9eRShUYR5yadJs5e5s0yTcDTOdNe1UqYKYluOKNEnWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xxSf17ej7/gbW3qv2YwHw8vM9uJJE3QUrgqV2Qaw0GDBK1PdN5HdXw31Tyahy0gc7
-	 oL/SffZRsheO+UFkmumjJoR+ca8m6SzMPincqI2SYn0wwXu2rlMPwWCLa5aq4luNDa
-	 xYl4avU0GexBmZqbjEqpK/O3PkBOFAfcL3x5UJA0=
+	b=kXHlLSnmQ03Mob24H006hhBLbSF7FpSLLDoa521P8g3CIafwtQvC6UTI0xouBXyqi
+	 aE16myWJhGcGy2KoRLaIyBJZElp3wvUiFyp0ckKREUiHU8NtaCLRiR22GSzu7zDBuJ
+	 jIQtSHR+Fj8NYgrHqh/L+Z5EVWODVCbLIhp3SFrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388866AbfDXRSi (ORCPT
+        id S2388844AbfDXRSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:18:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43632 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388419AbfDXRSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:18:34 -0400
+        id S2387929AbfDXRSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:18:25 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F396621908;
-        Wed, 24 Apr 2019 17:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B16952054F;
+        Wed, 24 Apr 2019 17:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126313;
-        bh=1QXLjvJhZpBC1YwpufBIkYL+Ewqfrz9VcBjmg8DunMM=;
+        s=default; t=1556126305;
+        bh=9eRShUYR5yadJs5e5s0yTcDTOdNe1UqYKYluOKNEnWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i015V+Wb0UUkBaz1mfDpkgF3CpjamzcMNiC09S1svEEZx6spotm4STUDyKSmGF0tb
-         Sl+3h/pLkKYYKtWti++AakAYQnABAY/ho4LmzlOqT9jmAKbYvlOIJ9igulcNSTWgzi
-         3jbrocUMiBgIwwj9zDzCI6P7Oy/fF4nSfWhIUZJo=
+        b=Spg9nHtAIRPOsUsXTyJXs5NZYB/9dQ7tonNsMwR8L/8u5DbehLy90vmIDehXHh2Rn
+         ++jJvbQPSvlbBIZQ7xyKywaLWEPIohtSM1mYpTM8ii0Z7+bdOa1AVaHBKDK0Rpc8le
+         Rry2Q0dwBOW1vyhZuBk2iEwABvM0rG90aKgrg+Do=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Vincent <brainn@gmail.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 068/168] drm/dp/mst: Configure no_stop_bit correctly for remote i2c xfers
-Date:   Wed, 24 Apr 2019 19:08:32 +0200
-Message-Id: <20190424170927.789312806@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 048/168] bcache: improve sysfs_strtoul_clamp()
+Date:   Wed, 24 Apr 2019 19:08:12 +0200
+Message-Id: <20190424170926.641232146@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -62,42 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c978ae9bde582e82a04c63a4071701691dd8b35c ]
+[ Upstream commit 596b5a5dd1bc2fa019fdaaae522ef331deef927f ]
 
-We aren't supposed to force a stop+start between every i2c msg
-when performing multi message transfers. This should eg. cause
-the DDC segment address to be reset back to 0 between writing
-the segment address and reading the actual EDID extension block.
+Currently sysfs_strtoul_clamp() is defined as,
+ 82 #define sysfs_strtoul_clamp(file, var, min, max)                   \
+ 83 do {                                                               \
+ 84         if (attr == &sysfs_ ## file)                               \
+ 85                 return strtoul_safe_clamp(buf, var, min, max)      \
+ 86                         ?: (ssize_t) size;                         \
+ 87 } while (0)
 
-To quote the E-DDC spec:
-"... this standard requires that the segment pointer be
- reset to 00h when a NO ACK or a STOP condition is received."
+The problem is, if bit width of var is less then unsigned long, min and
+max may not protect var from integer overflow, because overflow happens
+in strtoul_safe_clamp() before checking min and max.
 
-Since we're going to touch this might as well consult the
-I2C_M_STOP flag to determine whether we want to force the stop
-or not.
+To fix such overflow in sysfs_strtoul_clamp(), to make min and max take
+effect, this patch adds an unsigned long variable, and uses it to macro
+strtoul_safe_clamp() to convert an unsigned long value in range defined
+by [min, max]. Then assign this value to var. By this method, if bit
+width of var is less than unsigned long, integer overflow won't happen
+before min and max are checking.
 
-Cc: Brian Vincent <brainn@gmail.com>
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180928180403.22499-1-ville.syrjala@linux.intel.com
-Reviewed-by: Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>
+Now sysfs_strtoul_clamp() can properly handle smaller data type like
+unsigned int, of cause min and max should be defined in range of
+unsigned int too.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/bcache/sysfs.h | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 5a1bafb5ecbb..ff12d926eb65 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -3019,6 +3019,7 @@ static int drm_dp_mst_i2c_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs
- 		msg.u.i2c_read.transactions[i].i2c_dev_id = msgs[i].addr;
- 		msg.u.i2c_read.transactions[i].num_bytes = msgs[i].len;
- 		msg.u.i2c_read.transactions[i].bytes = msgs[i].buf;
-+		msg.u.i2c_read.transactions[i].no_stop_bit = !(msgs[i].flags & I2C_M_STOP);
- 	}
- 	msg.u.i2c_read.read_i2c_device_id = msgs[num - 1].addr;
- 	msg.u.i2c_read.num_bytes_read = msgs[num - 1].len;
+diff --git a/drivers/md/bcache/sysfs.h b/drivers/md/bcache/sysfs.h
+index 0526fe92a683..e7a3c12aa66f 100644
+--- a/drivers/md/bcache/sysfs.h
++++ b/drivers/md/bcache/sysfs.h
+@@ -80,9 +80,16 @@ do {									\
+ 
+ #define sysfs_strtoul_clamp(file, var, min, max)			\
+ do {									\
+-	if (attr == &sysfs_ ## file)					\
+-		return strtoul_safe_clamp(buf, var, min, max)		\
+-			?: (ssize_t) size;				\
++	if (attr == &sysfs_ ## file) {					\
++		unsigned long v = 0;					\
++		ssize_t ret;						\
++		ret = strtoul_safe_clamp(buf, v, min, max);		\
++		if (!ret) {						\
++			var = v;					\
++			return size;					\
++		}							\
++		return ret;						\
++	}								\
+ } while (0)
+ 
+ #define strtoul_or_return(cp)						\
 -- 
 2.19.1
 
