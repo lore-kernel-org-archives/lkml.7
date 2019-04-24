@@ -2,145 +2,217 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39309C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7C8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E10218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128049;
-	bh=yOlJSrZSSdLLbL7dkbfi+LI8LUDt5VyaUlz6vHMw+uE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D2tmuDfFssMRRHf2Wq3o0sWO+6Xsbgo7l98Gwt1xkclDpx9NILQIzfoMuM2xgdBkF
-	 LUU/9xPjQZwqNNB3XubuzQfltwnITWwWv1MWV31wAw4OjOr3h1OXfwMUnMC4yvNHwA
-	 FQCFEbQmKosKvm1VjUeMLU6LeHr0YQi0gfXd1NZc=
+	by mail.kernel.org (Postfix) with ESMTP id 27993218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391899AbfDXRr2 (ORCPT
+        id S2392013AbfDXRrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:47:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391156AbfDXRb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:31:57 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C70B218B0;
-        Wed, 24 Apr 2019 17:31:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127116;
-        bh=yOlJSrZSSdLLbL7dkbfi+LI8LUDt5VyaUlz6vHMw+uE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BBlchQBAe/4pYVQJ5d+LWFkMKtgmfLjJcQh0Az1sZnOoihIYox6eBS87BeXcpbSF1
-         TT8fgw2KOqLqlvf0UfXrLmZZ7bDhDzJ+9+CvFYkwbnHC2JGOCUK8nY2lpnHBq/vWOt
-         jtH5cqzf5SLIu7/r+AgO8HSERXOY4ORaRIHbb8dQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 68/96] kprobes: Fix error check when reusing optimized probes
-Date:   Wed, 24 Apr 2019 19:10:13 +0200
-Message-Id: <20190424170924.356154780@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
-References: <20190424170919.829037226@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 13:47:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43948 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2391156AbfDXRrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:47:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 03243AE58;
+        Wed, 24 Apr 2019 17:47:29 +0000 (UTC)
+Date:   Wed, 24 Apr 2019 19:47:27 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Joao Moreira <jmoreira@suse.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michael Matz <matz@suse.de>, Nicolai Stange <nstange@suse.de>,
+        Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v3 3/9] livepatch: Add klp-convert tool
+In-Reply-To: <20190423203529.GA15743@redhat.com>
+Message-ID: <alpine.LSU.2.21.1904241941230.30239@pobox.suse.cz>
+References: <20190410155058.9437-1-joe.lawrence@redhat.com> <20190410155058.9437-4-joe.lawrence@redhat.com> <20190423203529.GA15743@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+On Tue, 23 Apr 2019, Joe Lawrence wrote:
 
-commit 5f843ed415581cfad4ef8fefe31c138a8346ca8a upstream.
+> On Wed, Apr 10, 2019 at 11:50:52AM -0400, Joe Lawrence wrote:
+> > 
+> > [ ... snip ... ]
+> > 
+> > +static bool convert_rela(struct section *oldsec, struct rela *r,
+> > +		struct sympos *sp, struct elf *klp_elf)
+> > +{
+> > +	struct section *sec;
+> > +	struct rela *r1, *r2;
+> > +
+> > +	sec = get_or_create_klp_rela_section(oldsec, sp, klp_elf);
+> > +	if (!sec) {
+> > +		WARN("Can't create or access klp.rela section (%s.%s)\n",
+> > +				sp->object_name, sp->symbol_name);
+> > +		return false;
+> > +	}
+> > +
+> > +	if (!convert_klp_symbol(r->sym, sp)) {
+> > +		WARN("Unable to convert symbol name (%s.%s)\n", sec->name,
+> > +				r->sym->name);
+> > +		return false;
+> > +	}
+> > +
+> > +	/* Move the converted rela to klp rela section */
+> > +	list_for_each_entry_safe(r1, r2, &oldsec->relas, list) {
+> > +		if (r1->sym->name == r->sym->name) {
+> > +			list_del(&r1->list);
+> > +			list_add(&r1->list, &sec->relas);
+> > +		}
+> > +	}
+> > +	return true;
+> > +}
+> 
+> This one took a while to find and debug, but I believe that
+> convert_rela()'s list removal is not as safe as it thinks it is.
+> 
+> Start with its calling context from main() below:
+> 
+> > +	list_for_each_entry_safe(sec, aux, &klp_elf->sections, list) {
+> > +		if (!is_rela_section(sec))
+> > +			continue;
+> > +
+> > +		list_for_each_entry_safe(rela, tmprela, &sec->relas, list) {
+> > +			if (!must_convert(rela->sym))
+> > +				continue;
+> > +
+> > +			if (!find_missing_position(rela->sym, &sp)) {
+> > +				WARN("Unable to find missing symbol: %s",
+> > +						rela->sym->name);
+> > +				return -1;
+> > +			}
+> > +			if (!convert_rela(sec, rela, &sp, klp_elf)) {
+> > +				WARN("Unable to convert relocation: %s",
+> > +						rela->sym->name);
+> > +				return -1;
+> > +			}
+> > +		}
+> > +	}
+> 
+> AFAIK the *_safe list traversals, they cache the ->next value at the
+> beginning of each iteration, so that one could blow the current element
+> in position away.  The cached ->next value is then assigned when moving
+> to the next iteration.
+> 
+> But notice how convert_rela() looks through the entire list of
+> relocations, moving each rela with a matching symbol?
+> 
+> Consider a slight tweak to samples/livepatch-annotated.c:
+> 
+> 
+>   static int livepatch_cmdline_proc_show(struct seq_file *m, void *v)
+>   {
+> +         if (saved_command_line)
+> +                 saved_command_line[0] = '\0';
+> +
+>           seq_printf(m, "%s livepatch=1\n", saved_command_line);
+>           return 0;
+>   }
+> 
+> 
+> On my system, this generates relocations like this:
+> 
+>   % eu-readelf --relocs samples/livepatch/livepatch-annotated-sample.o
+>   Relocation section [ 2] '.rela.text' for section [ 1] '.text' at offset 0x98 contains 9 entries:
+>     Offset              Type            Value               Addend Name
+>     0x0000000000000001  X86_64_PC32     000000000000000000      -4 __fentry__
+>     0x0000000000000008  X86_64_PC32     000000000000000000      -4 saved_command_line
+>     0x0000000000000017  X86_64_PC32     000000000000000000      -4 saved_command_line
+>     0x000000000000001e  X86_64_32S      000000000000000000      +0 .rodata.str1.1
+>     0x0000000000000023  X86_64_PC32     000000000000000000      -4 seq_printf
+>     0x0000000000000031  X86_64_PC32     000000000000000000      -4 __fentry__
+>     0x0000000000000038  X86_64_32S      000000000000000000      +0 .data
+>     0x0000000000000051  X86_64_PC32     000000000000000000      -4 __fentry__
+>     0x000000000000003d  X86_64_PC32     000000000000000000      -4 klp_enable_patch
+> 
+> We now have back-to-back rela's with sym->name = "saved_command_line".
+> When the first is converted, convert_rela() will move both of them to
+> the klp rela section.  The linked list values may be consistent, but the
+> cached ->next value will be bogus and the in-flight-traversal will run
+> off the rails.
 
-The following commit introduced a bug in one of our error paths:
+Yep, valid, if I'm reading the code correctly.
 
-  819319fc9346 ("kprobes: Return error if we fail to reuse kprobe instead of BUG_ON()")
+> I think we can work around it with a combination of 1) only moving a
+> single rela symbol at a time in convert_rela and 2) processing the
+> second (third, etc.) a little bit more so that they are moved
+> individually.
+> 
+> I hacked this together and it works against the livepatch-annotate.c
+> test above so far...
+> 
+> -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8-- -->8--
+> 
+> diff --git a/scripts/livepatch/klp-convert.c b/scripts/livepatch/klp-convert.c
+> index 82c27d219372..126395f1c0cd 100644
+> --- a/scripts/livepatch/klp-convert.c
+> +++ b/scripts/livepatch/klp-convert.c
+> @@ -517,6 +517,7 @@ static bool convert_rela(struct section *oldsec, struct rela *r,
+>  		if (r1->sym->name == r->sym->name) {
+>  			list_del(&r1->list);
+>  			list_add(&r1->list, &sec->relas);
+> +			break;
+>  		}
+>  	}
+>  	return true;
 
-it missed to handle the return value of kprobe_optready() as
-error-value. In reality, the kprobe_optready() returns a bool
-result, so "true" case must be passed instead of 0.
+Couldn't we remove the loop all together instead of breaking it?
 
-This causes some errors on kprobe boot-time selftests on ARM:
+	list_del(&r->list);
+	list_add(&r->list, &sec->relas);
 
- [   ] Beginning kprobe tests...
- [   ] Probe ARM code
- [   ]     kprobe
- [   ]     kretprobe
- [   ] ARM instruction simulation
- [   ]     Check decoding tables
- [   ]     Run test cases
- [   ] FAIL: test_case_handler not run
- [   ] FAIL: Test andge	r10, r11, r14, asr r7
- [   ] FAIL: Scenario 11
- ...
- [   ] FAIL: Scenario 7
- [   ] Total instruction simulation tests=1631, pass=1433 fail=198
- [   ] kprobe tests failed
+could be sufficient.
 
-This can happen if an optimized probe is unregistered and next
-kprobe is registered on same address until the previous probe
-is not reclaimed.
+> @@ -549,8 +550,8 @@ static bool is_converted(char *sname)
+>  }
+>  
+>  /*
+> - * Checks if symbol must be converted (conditions):
+> - * not resolved, not already converted or isn't an exported symbol
+> + * Checks if symbol must be or was already converted (conditions):
+> + * not resolved or isn't an exported symbol
+>   */
+>  static bool must_convert(struct symbol *sym)
+>  {
+> @@ -566,7 +567,7 @@ static bool must_convert(struct symbol *sym)
+>  	if (strcmp(sym->name, ".TOC.") == 0)
+>  		return false;
+>  
+> -	return (!(is_converted(sym->name) || is_exported(sym->name)));
+> +	return (!is_exported(sym->name));
+>  }
+>  
+>  /* Checks if a section is a klp rela section */
+> @@ -640,7 +641,8 @@ int main(int argc, const char **argv)
+>  			if (!must_convert(rela->sym))
+>  				continue;
+>  
+> -			if (!find_missing_position(rela->sym, &sp)) {
+> +			if (!is_converted(rela->sym->name) &&
+> +			    !find_missing_position(rela->sym, &sp)) {
+>  				WARN("Unable to find missing symbol: %s",
+>  						rela->sym->name);
+>  				return -1;
 
-If this happens, a hidden aggregated probe may be kept in memory,
-and no new kprobe can probe same address. Also, in that case
-register_kprobe() will return "1" instead of minus error value,
-which can mislead caller logic.
+Looks good.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N . Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org # v5.0+
-Fixes: 819319fc9346 ("kprobes: Return error if we fail to reuse kprobe instead of BUG_ON()")
-Link: http://lkml.kernel.org/r/155530808559.32517.539898325433642204.stgit@devnote2
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- kernel/kprobes.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -703,7 +703,6 @@ static void unoptimize_kprobe(struct kpr
- static int reuse_unused_kprobe(struct kprobe *ap)
- {
- 	struct optimized_kprobe *op;
--	int ret;
- 
- 	BUG_ON(!kprobe_unused(ap));
- 	/*
-@@ -715,9 +714,8 @@ static int reuse_unused_kprobe(struct kp
- 	/* Enable the probe again */
- 	ap->flags &= ~KPROBE_FLAG_DISABLED;
- 	/* Optimize it again (remove from op->list) */
--	ret = kprobe_optready(ap);
--	if (ret)
--		return ret;
-+	if (!kprobe_optready(ap))
-+		return -EINVAL;
- 
- 	optimize_kprobe(ap);
- 	return 0;
-
-
+Miroslav
