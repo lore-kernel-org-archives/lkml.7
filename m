@@ -2,149 +2,113 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A07DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB97C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED2A5218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:51:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HbkLtCh6"
+	by mail.kernel.org (Postfix) with ESMTP id ACEF2206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556124664;
+	bh=KHWGGy0jMAuVixt+Qml8P+H7UayHUqAzgqVvZJvRnpE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QQeURgF4wWt8vB7OP/0ZRG+nuYyF+4DUWgDUlGl6Keg8Q//PHz9rTOk676RJYHyMY
+	 E/L/m7U7prKsdb2RJZgBTXpXBmerYzkyG+R83hG0nzy6XLfyh/uwJ8vsVnvF7LdtNx
+	 nkHPM1udazwOT1dz6T3SB5lUUT4ofH2VknVBcdVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732899AbfDXQvA (ORCPT
+        id S1732882AbfDXQu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:51:00 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:24779 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732571AbfDXQu6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:50:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1556124659; x=1587660659;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=GlUjytnYt3dDfD0kI047DD3j/C12yQtxAL+gnd5rzyQ=;
-  b=HbkLtCh6XsMGoGAEzkK4CJLdjXwQ7bv8MV5J3xJRx+SVa7mE9w9MYN21
-   LORP/1Zg3oYcptpvwIXFnJ6j+p8WoZHBc+Be41ONFsw1pWxVhRm21epBo
-   jCKjIQUZd7w2GnwXt2ZIVCyz6NzvU849E4KP2IkKVugQlKBj2pdBHJmf5
-   qQPUCBEj8CEepD1DN+bevuscBNPQ5YktUsistgj+9t+IIhKYdZR3kTKbh
-   phZsrtJlJzVlkSp1IQuzo4++Jy3x92KQ4gOy+HtspZpMuQ90excBA686Y
-   cSvjVePcr4qK8J7aMbDw0ydBeG1erBGqA3M7693Cjspc6yETuV+yvlF3+
-   A==;
-X-IronPort-AV: E=Sophos;i="5.60,390,1549900800"; 
-   d="scan'208";a="111663282"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 25 Apr 2019 00:50:58 +0800
-IronPort-SDR: Ggx22oOE5oH+C/mscY1kswdsobltge8lhw9AvWTnQbOm8LikbuBEeOJAUUJp3X8WGk1Rr8RRNl
- a8LWQJ+76+jEOOtMOtzeiMN7hkqF5F1YVqnIKfwv4Nt4+3aFvwGPBtDONpdaUmoc+oy7sB1MXt
- cE1AMtpWJyxVOnRa6kS7Y+psXYVS+RgQF76uK7mIWEFXbUIW6fQPsBqdgZf31fca2/DHxkEc1X
- v3XpjGaV45PmqWnn6Mbq2Nki8qph38T8gg5suUwCmj1tB+XZgRMuTmoKDwrdmyOgI1Ft5LN+vT
- hq78KgaIb+OBfimxgpsDFgK/
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP; 24 Apr 2019 09:27:29 -0700
-IronPort-SDR: iKIwQD+L/YrbHh+8Mjv83xcedcVEBFiC5eNSUa0uHyC2o8OqEN5mNdiXRkVFPVGX+kULGjXisq
- LNTS/ceDKZEGekwAkSeetUdE8mtV/ggbXZzG96yo7HXvdLWxB21LZG3iOGrpTVWJvD9nNf1JhL
- ilJN8gi9QCI3DJu/cdF50cHOmTkysowvc4ndBhIXN5Ejf6hKEVGhJnm+9NxVgu1HS1HY24BtuI
- rFctAfZ5hoRACwrxvOmHHnCwIQb1+qeJB8VFRhi/BdiqpNl+C+M80lhizuZZW7m/I1m2Zr6Z0f
- Q78=
-Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.66.167]) ([10.111.66.167])
-  by uls-op-cesaip02.wdc.com with ESMTP; 24 Apr 2019 09:50:57 -0700
-Subject: Re: [PATCH v3 1/3] RISC-V: Add RISC-V specific arch_match_cpu_phys_id
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andreas Schwab <schwab@suse.de>,
-        Anup Patel <anup@brainfault.org>,
-        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
-        Johan Hovold <johan@kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@infradead.org>
-References: <20190424000227.3085-1-atish.patra@wdc.com>
- <20190424000227.3085-2-atish.patra@wdc.com>
- <CAPKp9uZNEdL=Jt7vsxMBo72WR=ArefB6Vi7fLxnxMwAfUT3JOw@mail.gmail.com>
-From:   Atish Patra <atish.patra@wdc.com>
-Message-ID: <0d7be79c-3a74-dcb2-6618-d391e4cfec70@wdc.com>
-Date:   Wed, 24 Apr 2019 09:50:56 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Wed, 24 Apr 2019 12:50:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732242AbfDXQu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:50:56 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3C7C206A3;
+        Wed, 24 Apr 2019 16:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556124655;
+        bh=KHWGGy0jMAuVixt+Qml8P+H7UayHUqAzgqVvZJvRnpE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fE0RcAy7jYUiopBT0sYH4VUqxy4DUVUCqo/yHL/CfjYODRbRmkE0SGnlv7Drse2pW
+         Gr0OztmCg02ob2MQ2iV67Yp+MAa+ddSLbbxAWB4XRWqoz1DlkSLWS6H5Ml9xC+QnEN
+         ung2og8p46XfAl7sGMc6qVXAkfV+6DLz8QvI+jbI=
+Date:   Wed, 24 Apr 2019 18:50:52 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     "Yang, Fei" <fei.yang@intel.com>, Felipe Balbi <balbi@kernel.org>,
+        andrzej.p@collabora.com, Vincent Pelletier <plr.vincent@gmail.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, Josh Gao <jmgao@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH V2] usb: gadget: f_fs: don't free buffer prematurely
+Message-ID: <20190424165052.GF21916@kroah.com>
+References: <1553059940-127038-1-git-send-email-fei.yang@intel.com>
+ <CALAqxLUW9XCq0WqTzpYGZ7B_4CVdsXY6t_dyuwhnOTJ7HajrwQ@mail.gmail.com>
+ <CALAqxLUwB4vYiCM1Yi2CizMu-FvEoBB-eNqwaTFi2b=gnvCCZQ@mail.gmail.com>
+ <CALAqxLXE2Be_a3utjDP2+0mCfHeEypw_PqJPwkoyDM-F2F=jBA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPKp9uZNEdL=Jt7vsxMBo72WR=ArefB6Vi7fLxnxMwAfUT3JOw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALAqxLXE2Be_a3utjDP2+0mCfHeEypw_PqJPwkoyDM-F2F=jBA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/19 2:07 AM, Sudeep Holla wrote:
-> On Wed, Apr 24, 2019 at 1:03 AM Atish Patra <atish.patra@wdc.com> wrote:
->>
->> OF/DT core has a hook for architecture specific logical cpuid to hartid
->> mapping. By implementing this, we can pass the logical cpu id to cpu
->> node parsing functions.
->>
->> Fix the instances where logical cpuid is expected as an argument in
->> of_get_cpu_node.
->>
+On Tue, Apr 02, 2019 at 10:26:51AM +0700, John Stultz wrote:
+> On Wed, Mar 20, 2019 at 11:21 AM John Stultz <john.stultz@linaro.org> wrote:
+> > On Wed, Mar 20, 2019 at 9:40 AM John Stultz <john.stultz@linaro.org> wrote:
+> > > On Tue, Mar 19, 2019 at 10:32 PM <fei.yang@intel.com> wrote:
+> > > Elsewhere it seems the ffs driver takes effort to drop any locks
+> > > before calling usb_ep_dequeue(), so this seems like that should be
+> > > addressed, but it also seems like recent change to the dwc3 driver has
+> > > been made to avoid sleeping in that path (see fec9095bdef4 ("usb:
+> > > dwc3: gadget: remove wait_end_transfer")), which may be why I'm not
+> > > seeing the problem with mainline (and your patch here, of coarse).
+> > > But that also doesn't clarify if its still a potential issue w/
+> > > non-dwc3 platforms.
+> >
+> > Felipe: Given Alan's point, does it make sense to mark the commits
+> > that remove the possible sleep from wait_event_lock_irq() in
+> > dwc3_gadget_ep_dequeue()  for -stable?
+> >
+> > Against 4.19.30, the following set manages to cherry-pick cleanly:
+> > git cherry-pick 1a22ec643580626f439c8583edafdcc73798f2fb
+> > git cherry-pick 09fe1f8d7e2f461275b1cdd832f2cfa5e9be346d
+> > git cherry-pick c3acd59014148470dc58519870fbc779785b4bf7
+> > git cherry-pick 7746a8dfb3f9c91b3a0b63a1d5c2664410e6498d
+> > git cherry-pick d5443bbf5fc8f8389cce146b1fc2987cdd229d12
+> > git cherry-pick d4f1afe5e896c18ae01099a85dab5e1a198bd2a8
+> > git cherry-pick fec9095bdef4e7c988adb603d0d4f92ee735d4a1
+> > # To get things building, revert modified -stable fix
+> > git revert 25ad17d
+> > #pick actual upstream fix replacing the previous
+> > git cherry-pick bd6742249b9ca918565e4e3abaa06665e587f4b5
+> >
+> > (Though I'm always a bit hesitant with -stable backports on subsystems
+> > I don't know well. So I'm not sure if this set is fully correct.)
+> >
+> > This set seems to avoid the crash on reboot I was seeing.
+> >
+> > And of course, I'm sure getting that set backported to 4.14 and 4.9
+> > (and maybe even 4.4, I need to check) will be less clean.
 > 
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> 
->> Signed-off-by: Atish Patra <atish.patra@wdc.com>
->> ---
->>   arch/riscv/kernel/cpu.c | 3 +--
->>   arch/riscv/kernel/smp.c | 5 +++++
->>   2 files changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
->> index cf2fca12414a..c8d2a3223099 100644
->> --- a/arch/riscv/kernel/cpu.c
->> +++ b/arch/riscv/kernel/cpu.c
->> @@ -136,8 +136,7 @@ static void c_stop(struct seq_file *m, void *v)
->>   static int c_show(struct seq_file *m, void *v)
->>   {
->>          unsigned long cpu_id = (unsigned long)v - 1;
->> -       struct device_node *node = of_get_cpu_node(cpuid_to_hartid_map(cpu_id),
->> -                                                  NULL);
-> 
-> I assume it work working just fine as you are doing cpu to hartid
-> conversion here and
-> weak implementation of arch_match_cpu_phys_id does direct match.
-> 
+> Also,  I just wanted to follow up on this as well. Does the above set
+> of cherry-picks look ok to others for 4.19-stable?  Does anyone have
+> suggestions on how they'd like to see backports to 4.14, 4.9 and 4.4?
 
-Yup. That's correct.
+If they are ok, can someone send me the commits as a series of patches,
+as doing the above really doesn't help much :)
 
-Regards,
-Atish
->> +       struct device_node *node = of_get_cpu_node(cpu_id, NULL);
->>          const char *compat, *isa, *mmu;
->>
->>          seq_printf(m, "processor\t: %lu\n", cpu_id);
->> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
->> index 0c41d07ec281..94db72662f60 100644
->> --- a/arch/riscv/kernel/smp.c
->> +++ b/arch/riscv/kernel/smp.c
->> @@ -70,6 +70,11 @@ void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out)
->>          for_each_cpu(cpu, in)
->>                  cpumask_set_cpu(cpuid_to_hartid_map(cpu), out);
->>   }
->> +
->> +bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
->> +{
->> +       return phys_id == cpuid_to_hartid_map(cpu);
->> +}
->>   /* Unsupported */
->>   int setup_profiling_timer(unsigned int multiplier)
->>   {
->> --
->> 2.21.0
->>
-> 
+thanks,
 
+greg k-h
