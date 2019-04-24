@@ -2,181 +2,164 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDC7C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D8CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A22C2148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D7F2148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:02:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0cvYt72F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733077AbfDXRBo (ORCPT
+        id S1733095AbfDXRCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:01:44 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.168]:46031 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732643AbfDXRBn (ORCPT
+        Wed, 24 Apr 2019 13:02:03 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:39138 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732643AbfDXRCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:01:43 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id D081B442A
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:01:42 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id JLHChghcw4FKpJLHCh8ZL9; Wed, 24 Apr 2019 12:01:42 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.223] (port=43278 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hJLHB-003TEy-Rn; Wed, 24 Apr 2019 12:01:42 -0500
-Subject: Re: [PATCH] watchdog: machzwd: Mark expected switch fall-through
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <20190410184905.GA24283@embeddedor>
- <20190410203556.GA18676@roeck-us.net>
- <707a1c55-c185-1227-0a65-136f3bf27617@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <c2e13a6d-0701-414b-ff1d-70e358fc2786@embeddedor.com>
-Date:   Wed, 24 Apr 2019 12:01:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 13:02:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=u0xdQG7XXXGAkZcqa01b+K6zesVH0wqMBXBoQ7iMEt4=; b=0cvYt72FPQJkUjxyWympbr+Vj
+        wGvv11IppIetyusX36ZTLnHI5XpYXkSkIFKcWuoSz/gjMc1tO1aERLMwqMXtwK30Zf7TmTeXl66tf
+        6jr7ObNWW4cgz9ltFXCJOFzRcbRqjQSRnTVMGyfXFyJtduupAxx8sT1gyXJQ8oKr68iVOhQp+OwO4
+        n7NhyVjaCi916yEumN8ZwF2HDMVWQodzq1DUfEgwHx8UAXWFHG8yeMDHuwI2XFAq6vrH2DBWRjI/u
+        aXCLwztl5NT2ymd3b9HFopj0e+qcihtiobMPx/xUzhBZj5Bx5Qhyn+uU8doZPkcOQZZJCw6C5cyzO
+        4e/qdEyHw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJLHL-000695-Hk; Wed, 24 Apr 2019 17:01:52 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 97F8E20D0A200; Wed, 24 Apr 2019 19:01:48 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 19:01:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
+ negative
+Message-ID: <20190424170148.GR12232@hirez.programming.kicks-ass.net>
+References: <20190419120207.GO4038@hirez.programming.kicks-ass.net>
+ <20190419130304.GV14281@hirez.programming.kicks-ass.net>
+ <20190419131522.GW14281@hirez.programming.kicks-ass.net>
+ <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
+ <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
+ <20190423141714.GO11158@hirez.programming.kicks-ass.net>
+ <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
+ <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
+ <20190424070959.GE4038@hirez.programming.kicks-ass.net>
+ <51589ac0-3e1f-040e-02bf-b6de77cbda1d@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <707a1c55-c185-1227-0a65-136f3bf27617@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.223
-X-Source-L: No
-X-Exim-ID: 1hJLHB-003TEy-Rn
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.250.127.223]:43278
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51589ac0-3e1f-040e-02bf-b6de77cbda1d@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
+On Wed, Apr 24, 2019 at 12:49:05PM -0400, Waiman Long wrote:
+> On 4/24/19 3:09 AM, Peter Zijlstra wrote:
+> > On Tue, Apr 23, 2019 at 03:12:16PM -0400, Waiman Long wrote:
+> >> That is true in general, but doing preempt_disable/enable across
+> >> function boundary is ugly and prone to further problems down the road.
+> > We do worse things in this code, and the thing Linus proposes is
+> > actually quite simple, something like so:
+> >
+> > ---
+> > --- a/kernel/locking/rwsem.c
+> > +++ b/kernel/locking/rwsem.c
+> > @@ -912,7 +904,7 @@ rwsem_down_read_slowpath(struct rw_semap
+> >  			raw_spin_unlock_irq(&sem->wait_lock);
+> >  			break;
+> >  		}
+> > -		schedule();
+> > +		schedule_preempt_disabled();
+> >  		lockevent_inc(rwsem_sleep_reader);
+> >  	}
+> >  
+> > @@ -1121,6 +1113,7 @@ static struct rw_semaphore *rwsem_downgr
+> >   */
+> >  inline void __down_read(struct rw_semaphore *sem)
+> >  {
+> > +	preempt_disable();
+> >  	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
+> >  			&sem->count) & RWSEM_READ_FAILED_MASK)) {
+> >  		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE);
+> > @@ -1129,10 +1122,12 @@ inline void __down_read(struct rw_semaph
+> >  	} else {
+> >  		rwsem_set_reader_owned(sem);
+> >  	}
+> > +	preempt_enable();
+> >  }
+> >  
+> >  static inline int __down_read_killable(struct rw_semaphore *sem)
+> >  {
+> > +	preempt_disable();
+> >  	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
+> >  			&sem->count) & RWSEM_READ_FAILED_MASK)) {
+> >  		if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE)))
+> > @@ -1142,6 +1137,7 @@ static inline int __down_read_killable(s
+> >  	} else {
+> >  		rwsem_set_reader_owned(sem);
+> >  	}
+> > +	preempt_enable();
+> >  	return 0;
+> >  }
+> >  
+> 
+> Making that change will help the slowpath to has less preemption points.
 
-I wonder if you took this in you watchdog-next branch.
+That doesn't matter, right? Either it blocks or it goes through quickly.
 
-Thanks
---
-Gustavo
+If you're worried about a parituclar spot we can easily put in explicit
+preemption points.
 
-On 4/10/19 3:51 PM, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 4/10/19 3:35 PM, Guenter Roeck wrote:
->> On Wed, Apr 10, 2019 at 01:49:05PM -0500, Gustavo A. R. Silva wrote:
->>> In preparation to enabling -Wimplicit-fallthrough, mark switch
->>> cases where we are expecting to fall through.
->>>
->>> This patch fixes the following warnings:
->>>
->>> drivers/watchdog/machzwd.c: In function ‘zf_set_timer’:
->>> ./arch/x86/include/asm/io.h:355:14: warning: this statement may fall through [-Wimplicit-fallthrough=]
->>>  #define outw outw
->>> drivers/watchdog/machzwd.c:80:53: note: in expansion of macro ‘outw’
->>>  #define zf_writew(port, data)  { outb(port, INDEX); outw(data, DATA_W); }
->>>                                                      ^~~~
->>> drivers/watchdog/machzwd.c:179:3: note: in expansion of macro ‘zf_writew’
->>>    zf_writew(COUNTER_1, new);
->>>    ^~~~~~~~~
->>> drivers/watchdog/machzwd.c:180:2: note: here
->>>   case WD2:
->>>   ^~~~
->>>
->>> Warning level 3 was used: -Wimplicit-fallthrough=3
->>>
->>> This patch is part of the ongoing efforts to enable
->>> -Wimplicit-fallthrough.
->>>
->>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>
-> 
-> Thank you, Guenter.
-> --
-> Gustavo
-> 
->>> ---
->>>  drivers/watchdog/machzwd.c | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/watchdog/machzwd.c b/drivers/watchdog/machzwd.c
->>> index 88d823d87a4b..108928dbc754 100644
->>> --- a/drivers/watchdog/machzwd.c
->>> +++ b/drivers/watchdog/machzwd.c
->>> @@ -177,6 +177,7 @@ static inline void zf_set_timer(unsigned short new, unsigned char n)
->>>  	switch (n) {
->>>  	case WD1:
->>>  		zf_writew(COUNTER_1, new);
->>> +		/* fall through */
->>>  	case WD2:
->>>  		zf_writeb(COUNTER_2, new > 0xff ? 0xff : new);
->>>  	default:
->>> -- 
->>> 2.21.0
->>>
+> For an uncontended rwsem, this offers no real benefit. Adding
+> preempt_disable() is more complicated than I originally thought.
+
+I'm not sure I get your objection?
+
+> Maybe we are too paranoid about the possibility of a large number of
+> preemptions happening just at the right moment. If p is the probably of
+> a preemption in the middle of the inc-check-dec sequence, which I have
+> already moved as close to each other as possible. We are talking a
+> probability of p^32768. Since p will be really small, the compound
+> probability will be infinitesimally small.
+
+Sure; but we run on many millions of machines every second, so the
+actual accumulated chance of it happening eventually is still fairly
+significant.
+
+> So I would like to not do preemption now for the current patchset. We
+> can restart the discussion later on if there is a real concern that it
+> may actually happen. Please let me know if you still want to add
+> preempt_disable() for the read lock.
+
+I like provably correct schemes over prayers.
+
+As you noted, distros don't usually ship with PREEMPT=y and therefore
+will not be bothered much by any of this.
+
+The old scheme basically worked by the fact that the total supported
+reader count was higher than the number of addressable pages in the
+system and therefore the overflow could not happen.
+
+We now transition to number of CPUs, and for that we pay a little price
+with PREEMPT=y kernels. Either that or cmpxchg.
