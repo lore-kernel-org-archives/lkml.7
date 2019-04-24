@@ -2,165 +2,140 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62160C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34354C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D1620878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E4420878
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:41:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="yXa9OeV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbfDXDjZ (ORCPT
+        id S1728970AbfDXDlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 23:39:25 -0400
-Received: from mga01.intel.com ([192.55.52.88]:46560 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726830AbfDXDjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 23:39:25 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 20:39:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,388,1549958400"; 
-   d="scan'208";a="164506938"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Apr 2019 20:39:19 -0700
-Date:   Tue, 23 Apr 2019 23:33:46 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "dgilbert@redhat.com" <dgilbert@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [Qemu-devel] [PATCH 1/2] vfio/mdev: add version field as
- mandatory attribute for mdev device
-Message-ID: <20190424033346.GC26247@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20190419083258.19580-1-yan.y.zhao@intel.com>
- <20190419083505.19654-1-yan.y.zhao@intel.com>
- <20190422083950.25eb9e7c@x1.home>
- <20190423010152.GC32217@joy-OptiPlex-7040>
- <20190422192100.4d577e4b@x1.home>
- <20190423054157.GA26190@joy-OptiPlex-7040>
- <20190423102419.GE6022@redhat.com>
+        Tue, 23 Apr 2019 23:41:53 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:39541 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbfDXDlx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 23:41:53 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x3O3fOQN020791;
+        Wed, 24 Apr 2019 12:41:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x3O3fOQN020791
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556077285;
+        bh=YN5R4J8MFslfEWj4/fJ8NFzh/Uc6ypge5CDtrk7AyuA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yXa9OeV5MiUdoVbJHssVEmuZCLL1f8KVovbIqfsrBQQvnQm6u+VArc3zD1GEsNLET
+         Ux11nkMBUqvqDTJQjq4KslKC6DGysS9H8fkN0TrA4DzVrZ7w5qLWA6aNHpgAGqkl/0
+         6oZp6XEbNpa4uxHb7rdkLQtPTuH+WYWCnqmEZ9OQX4xnGBIh6hy2xBDSLOaacRNoKA
+         8/cSZ51RvyTwRY1ZmQsLr8iOR7maM2oNw/6wh5COjd0NR3qee3HSx7UgQIwaxKWY6j
+         Pw6pGYumjrFz8Ar+k9t5qNQv3Ow9/uklBmGjB7fm2CNknpbK67i7A+QAEEhF8DhDyW
+         CJMh7Zzz/Jicw==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id n4so9579175vsm.3;
+        Tue, 23 Apr 2019 20:41:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAXHwmoE4p+SEnnO/rNdV6QzcVKnvL7Qy1dL9CZEWJT9735r0f3A
+        HZ7QFvg/HVQKeTwq5pJgxbyCVWWBKIaRK7NBhEw=
+X-Google-Smtp-Source: APXvYqxx3r1xD63gAPsaYHPYeMnzp2CFH9E5rZDblkAF/RYMykC3yiTACWe3SBQ+E87CktgZeEYQiQpElJR2L1qtdFA=
+X-Received: by 2002:a67:7a43:: with SMTP id v64mr16393701vsc.54.1556077284286;
+ Tue, 23 Apr 2019 20:41:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190423102419.GE6022@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAK7LNAQwHRJL=3yD_7P2mMSVnwZbayww+dHC22+v4oTpMZv58w@mail.gmail.com>
+ <CALCETrVSM0vrMVr2y0ECAQ=tNGvBs=im2Kxongq-jvdzUBevbg@mail.gmail.com> <CAHk-=wiV2gLQkp6JFQYewL1uzgWnwEK9fKWP3AfZbcu2Lv_GrQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wiV2gLQkp6JFQYewL1uzgWnwEK9fKWP3AfZbcu2Lv_GrQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 24 Apr 2019 12:40:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQYXE6R+ZPCP_3D3YPczbsmeqHUFN-r0NhFu_TPYz99Qw@mail.gmail.com>
+Message-ID: <CAK7LNAQYXE6R+ZPCP_3D3YPczbsmeqHUFN-r0NhFu_TPYz99Qw@mail.gmail.com>
+Subject: Re: Does vdso_install attempt to re-compile objects under root privilege?
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 06:24:19PM +0800, Daniel P. Berrangé wrote:
-> On Tue, Apr 23, 2019 at 01:41:57AM -0400, Yan Zhao wrote:
-> > On Tue, Apr 23, 2019 at 09:21:00AM +0800, Alex Williamson wrote:
-> > > On Mon, 22 Apr 2019 21:01:52 -0400
-> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > >
-> > > > On Mon, Apr 22, 2019 at 10:39:50PM +0800, Alex Williamson wrote:
-> > > > > On Fri, 19 Apr 2019 04:35:04 -0400
-> > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > > >
-> > > > > > device version attribute in mdev sysfs is used by user space software
-> > > > > > (e.g. libvirt) to query device compatibility for live migration of VFIO
-> > > > > > mdev devices. This attribute is mandatory if a mdev device supports live
-> > > > > > migration.
-> > > > >
-> > > > > The Subject: doesn't quite match what's being proposed here.
-> > > > >
-> > > > > > It consists of two parts: common part and vendor proprietary part.
-> > > > > > common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
-> > > > > >              identifies device type. e.g., for pci device, it is
-> > > > > >              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-> > > > >
-> > > > > What purpose does this serve?  If it's intended as some sort of
-> > > > > namespace feature, shouldn't we first assume that we can only support
-> > > > > migration to devices of the same type?  Therefore each type would
-> > > > > already have its own namespace.  Also that would make the trailing bit
-> > > > > of the version string listed below in the example redundant.  A vendor
-> > > > > is still welcome to include this in their version string if they wish,
-> > > > > but I think the string should be entirely vendor defined.
-> > > > >
-> > > > hi Alex,
-> > > > This common part is a kind of namespace.
-> > > > Because if version string is entirely defined by vendors, I'm worried about
-> > > > if there is a case that one vendor's version string happens to deceive and
-> > > > interfere with another vendor's version checking?
-> > > > e.g.
-> > > > vendor A has a version string like: vendor id + device id + mdev type
-> > > > vendor B has a version string like: device id + vendor id + mdev type
-> > > > but vendor A's vendor id is 0x8086, device id is 0x1217
-> > > > vendor B's vendor id is 0x1217, device id is 0x8086.
-> > > >
-> > > > In this corner case, the two vendors may regard the two device is
-> > > > migratable but actually they are not.
-> > > >
-> > > > That's the reason for this common part that serve as a kind of namespace
-> > > > that all vendors will comply with to avoid overlap.
-> > >
-> > > If we assume that migration can only occur between matching mdev types,
-> > > this is redundant, each type already has their own namespace.
-> > >
-> > hi Alex,
-> > do you mean user space software like libvirt needs to first check whether
-> > mdev type is matching and then check whether version is matching?
-> 
-> I would expect that libvirt (or other mgmt apps) will always first
-> check that the vendor id, device id, mdev type all match. So for the
-> version string it should suffice to be a "normal" numeric value.
-> 
-> Essentially version string just needs to be there to distinguish
-> revisions of the same mdev type over time.
+On Wed, Apr 24, 2019 at 8:40 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-hi Daniel,
-The way that user space software checks that the vendor id, device id, mdev
-type all match and version string is just revisions is somewhat restrictive?
-user space software could not have so much detailed information regarding to
-which devices are compatible, especially when vendor id, device id,
-revision id, and mdev types are not enough or no need to be exactly the same.
-By moving decision making for compatibility from user space to vendor
-driver, user space software can be more change-resistant.
-Agree?
+> On Tue, Apr 23, 2019 at 11:47 AM Andy Lutomirski <luto@kernel.org> wrote:
+> >
+> > Hmm.  I suppose an alternative would be for vdso_install to fail if
+> > the vdso isn't built?
+>
+> I absolutely abhor even the concept of building the kernel as root,
+> and I think it should be actively disallowed. Our build system is
+> good, but it's good as in "clever and complex" rather than necessarily
+> good as in "very secure".
+>
+> So anybody who builds the kernel as root is doing something seriously
+> wrong, in my opinion.
+>
+> That's partly exactly _because_ we have a lot of magical and very
+> powerful build rules, and complicated implicit things going on.
+>
+> For example, our dependencies aren't even about just the files in the
+> kernel repository itself, we have clever things like "if the compiler
+> has been updated and features or version changes, we'll automatically
+> rebuild, because it's part of our clever build system checks".
+>
+> But that is also part of the reason why I absolutely do *not* want any
+> root-building to happen, because our build setup is simply way too
+> clever.
+>
+> If root builds stuff, you'll end up with root-owned generated
+> subdirectories or various config files etc, and even if you don't have
+> security issues, it can complicate the build later as a regular user.
+>
+> I've had the build occasionally fail in odd ways, because some
+> root-owned file was now no longer removable (usually it's the
+> auto-generated header files in the directory, and the root-generated
+> and owned directory is now not writable by the developer any more).
+> And every time it happens, I shudder.
+>
+> So all of that simply boils down to "root should not be running those
+> complex rules for our config and dependency magic".
+>
+> At the same time, "make install" obviously needs to be done as root.
+>
+> All of which is why I opine that "make install" should never build
+> anything at all, it should purely be used as a "install previously
+> built files".
+>
+> So yes, I'd much prefer just failing over trying to build as root (or
+> even trying to figure out dependencies as root).
+>
+> > What's the ideal outcome here?
+>
+> I'd basically like the rule for "make install" to be that it never
+> ever generates a single file in the build tree, so that there are
+> never any root-owned (or root-overwritten) files there.
+>
+> So "make install" should even avoid all dependency checking, for the
+> simple reason that if you happen to do a system update between "make"
+> and "make install", our smart dependencies should never say "oh, the
+> compiler version has changed, so now I'll rebuild everything as root
+> just because 'make install'".
+>
+> So I think the ideal outcome is just "fail if you can't find the files
+> to install".
+>
+>                      Linus
 
-Thanks
-Yan
+I assume this is ACK to change vdso Makefiles.
+I will send patches.
 
-> 
-> Regards,
-> Daniel
-> --
-> |: https://berrange.com      -o-    https://www.flickr.com/photos/dberrange :|
-> |: https://libvirt.org         -o-            https://fstop138.berrange.com :|
-> |: https://entangle-photo.org    -o-    https://www.instagram.com/dberrange :|
+Thanks.
+
+-- 
+Best Regards
+Masahiro Yamada
