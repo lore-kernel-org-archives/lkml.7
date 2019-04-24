@@ -2,99 +2,395 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300C2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A964BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DDC21900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E9621904
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556121359;
+	bh=BRUIQQPEguvsC3mns8XNDyUcpaFWLXj2iBDBHZfcBP0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jkddrSv5yQWHHnBjYiG7XNWaP49B4t8bDK8vPHkSD5jUHoua+A4kCK9xU8wI4MzDE
+	 Dsza5ztO5BLhRXbutgGYS32kt5ZXZZZxnWH4WR2PHbWLomho8kNksmIxlQgFKgqePn
+	 FYGejI1pD8q7So7atwSeVDf9F4MY+kXaRDzs9OVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731888AbfDXPzi (ORCPT
+        id S1731929AbfDXPz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:55:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36030 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730620AbfDXPzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:55:38 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6146730A819D;
-        Wed, 24 Apr 2019 15:55:38 +0000 (UTC)
-Received: from treble (ovpn-123-99.rdu2.redhat.com [10.10.123.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 612F21001E7C;
-        Wed, 24 Apr 2019 15:55:34 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 10:55:32 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] livepatch: Cleanup message handling in
- klp_try_switch_task()
-Message-ID: <20190424155532.3uyxyxwm4c5dqsf5@treble>
-References: <20190424085550.29612-1-pmladek@suse.com>
- <20190424085550.29612-4-pmladek@suse.com>
+        Wed, 24 Apr 2019 11:55:57 -0400
+Received: from casper.infradead.org ([85.118.1.10]:58306 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731689AbfDXPz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 11:55:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qx90ip9GKjnp+3MST6i651lPN+bce5WMp2Kj4b/Gy0E=; b=qLyfvmD+bbI6zT+xEfbORvdlb3
+        MdmzI3IB2vbn696aEacKzp33Oao3diAujRDiwHiFPgtnI45f9pAaO8g3Cb4Uf8xM/LbgPIOmR0OXJ
+        5G1q/TUTGXQC0rsG2iJtdzeOx3N/ioVlf3wmMm5DWDCbqbscKFCiPsaBGglP7fNpuL/u9ytXct/7P
+        WHf8yYqPWnN9eSC8BOWV/usmZP2Zk7gHGxkTIhqOXQRUD2R4BcquCZwjisgucpuqBFbLyNtOlLGWk
+        9Y93YQcUCHRW1XWru4bhSK7QrKGYihEv0o0Jv9Ki/2QLVMEzWBqWw20t3ijQgTa0kpZf79F1dLYqm
+        iuzmhb8Q==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJKFU-0003Sm-9m; Wed, 24 Apr 2019 15:55:52 +0000
+Date:   Wed, 24 Apr 2019 12:55:45 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 33/63] Documentation: PCI: convert
+ endpoint/pci-endpoint.txt to reST
+Message-ID: <20190424125545.52bff5b8@coco.lan>
+In-Reply-To: <20190423162932.21428-34-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-34-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190424085550.29612-4-pmladek@suse.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 24 Apr 2019 15:55:38 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:55:50AM +0200, Petr Mladek wrote:
-> WARN_ON_ONCE() could not be called safely under rq lock because
-> of console deadlock issues. Fortunately, simple printk_deferred()
-> is enough because the warning is printed from a well defined
-> location and context.
+Em Wed, 24 Apr 2019 00:29:02 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
+
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
 > 
-> Also klp_try_switch_task() is called under klp_mutex.
-> Therefore, the buffer for debug messages could be static.
-> 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  kernel/livepatch/transition.c | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
+>  Documentation/PCI/endpoint/index.rst          | 10 ++
+>  .../{pci-endpoint.txt => pci-endpoint.rst}    | 95 +++++++++++--------
+>  Documentation/PCI/index.rst                   |  1 +
+>  3 files changed, 68 insertions(+), 38 deletions(-)
+>  create mode 100644 Documentation/PCI/endpoint/index.rst
+>  rename Documentation/PCI/endpoint/{pci-endpoint.txt => pci-endpoint.rst} (82%)
 > 
-> diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
-> index 9c89ae8b337a..e8183d18227f 100644
-> --- a/kernel/livepatch/transition.c
-> +++ b/kernel/livepatch/transition.c
-> @@ -254,6 +254,7 @@ static int klp_check_stack_func(struct klp_func *func,
->  static int klp_check_stack(struct task_struct *task, char *err_buf)
->  {
->  	static unsigned long entries[MAX_STACK_ENTRIES];
-> +	static int enosys_warned;
->  	struct stack_trace trace;
->  	struct klp_object *obj;
->  	struct klp_func *func;
-> @@ -263,8 +264,16 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
->  	trace.nr_entries = 0;
->  	trace.max_entries = MAX_STACK_ENTRIES;
->  	trace.entries = entries;
+> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+> new file mode 100644
+> index 000000000000..0db4f2fcd7f0
+> --- /dev/null
+> +++ b/Documentation/PCI/endpoint/index.rst
+> @@ -0,0 +1,10 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
->  	ret = save_stack_trace_tsk_reliable(task, &trace);
-> -	WARN_ON_ONCE(ret == -ENOSYS);
-> +	if (ret == -ENOSYS) {
-> +		if (!enosys_warned) {
-> +			printk_deferred(KERN_WARNING "%s: save_stack_trace_tsk_reliable() not supported on this architecture.\n",
-> +					__func__);
-> +			enosys_warned = 1;
-> +		}
-> +		return ret;
-> +	}
+> +======================
+> +PCI Endpoint Framework
+> +======================
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   pci-endpoint
+> diff --git a/Documentation/PCI/endpoint/pci-endpoint.txt b/Documentation/PCI/endpoint/pci-endpoint.rst
+> similarity index 82%
+> rename from Documentation/PCI/endpoint/pci-endpoint.txt
+> rename to Documentation/PCI/endpoint/pci-endpoint.rst
+> index e86a96b66a6a..6674ce5425bf 100644
+> --- a/Documentation/PCI/endpoint/pci-endpoint.txt
+> +++ b/Documentation/PCI/endpoint/pci-endpoint.rst
+> @@ -1,11 +1,17 @@
+> -			    PCI ENDPOINT FRAMEWORK
+> -		    Kishon Vijay Abraham I <kishon@ti.com>
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +======================
+> +PCI Endpoint Framework
+> +======================
 
-We already have a similar printk in patch 1, so is this warning really
-needed?
+Hmm... considering that you decided to create an index file for the
+endpoint, with the same title, I would just remove this from here.
 
--- 
-Josh
+> +
+> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+>  
+>  This document is a guide to use the PCI Endpoint Framework in order to create
+>  endpoint controller driver, endpoint function driver, and using configfs
+>  interface to bind the function driver to the controller driver.
+>  
+> -1. Introduction
+> +Introduction
+> +============
+>  
+>  Linux has a comprehensive PCI subsystem to support PCI controllers that
+>  operates in Root Complex mode. The subsystem has capability to scan PCI bus,
+> @@ -19,24 +25,27 @@ add endpoint mode support in Linux. This will help to run Linux in an
+>  EP system which can have a wide variety of use cases from testing or
+>  validation, co-processor accelerator, etc.
+>  
+> -2. PCI Endpoint Core
+> +PCI Endpoint Core
+> +=================
+>  
+>  The PCI Endpoint Core layer comprises 3 components: the Endpoint Controller
+>  library, the Endpoint Function library, and the configfs layer to bind the
+>  endpoint function with the endpoint controller.
+>  
+> -2.1 PCI Endpoint Controller(EPC) Library
+> +PCI Endpoint Controller(EPC) Library
+> +------------------------------------
+>  
+>  The EPC library provides APIs to be used by the controller that can operate
+>  in endpoint mode. It also provides APIs to be used by function driver/library
+>  in order to implement a particular endpoint function.
+>  
+> -2.1.1 APIs for the PCI controller Driver
+> +APIs for the PCI controller Driver
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+>  This section lists the APIs that the PCI Endpoint core provides to be used
+>  by the PCI controller driver.
+>  
+> -*) devm_pci_epc_create()/pci_epc_create()
+> +* devm_pci_epc_create()/pci_epc_create()
+
+I would, instead, promote this as a sub-level. E. g. something like:
+
+devm_pci_epc_create()/pci_epc_create()
+......................................
+
+(if you do that, you'll need to also promote some similar function
+documentation within this doc)
+
+
+>  
+>     The PCI controller driver should implement the following ops:
+>  	 * write_header: ops to populate configuration space header
+
+Better to add a blank line between those two lines. There's no sense
+(IMHO) on using bold font to the first line here.
+
+> @@ -51,110 +60,116 @@ by the PCI controller driver.
+>     The PCI controller driver can then create a new EPC device by invoking
+>     devm_pci_epc_create()/pci_epc_create().
+>  
+> -*) devm_pci_epc_destroy()/pci_epc_destroy()
+> +* devm_pci_epc_destroy()/pci_epc_destroy()
+>  
+>     The PCI controller driver can destroy the EPC device created by either
+>     devm_pci_epc_create() or pci_epc_create() using devm_pci_epc_destroy() or
+>     pci_epc_destroy().
+>  
+> -*) pci_epc_linkup()
+> +* pci_epc_linkup()
+>  
+>     In order to notify all the function devices that the EPC device to which
+>     they are linked has established a link with the host, the PCI controller
+>     driver should invoke pci_epc_linkup().
+>  
+> -*) pci_epc_mem_init()
+> +* pci_epc_mem_init()
+>  
+>     Initialize the pci_epc_mem structure used for allocating EPC addr space.
+>  
+> -*) pci_epc_mem_exit()
+> +* pci_epc_mem_exit()
+>  
+>     Cleanup the pci_epc_mem structure allocated during pci_epc_mem_init().
+>  
+> -2.1.2 APIs for the PCI Endpoint Function Driver
+> +
+> +APIs for the PCI Endpoint Function Driver
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+>  This section lists the APIs that the PCI Endpoint core provides to be used
+>  by the PCI endpoint function driver.
+>  
+> -*) pci_epc_write_header()
+> +* pci_epc_write_header()
+>  
+>     The PCI endpoint function driver should use pci_epc_write_header() to
+>     write the standard configuration header to the endpoint controller.
+>  
+> -*) pci_epc_set_bar()
+> +* pci_epc_set_bar()
+>  
+>     The PCI endpoint function driver should use pci_epc_set_bar() to configure
+>     the Base Address Register in order for the host to assign PCI addr space.
+>     Register space of the function driver is usually configured
+>     using this API.
+>  
+> -*) pci_epc_clear_bar()
+> +* pci_epc_clear_bar()
+>  
+>     The PCI endpoint function driver should use pci_epc_clear_bar() to reset
+>     the BAR.
+>  
+> -*) pci_epc_raise_irq()
+> +* pci_epc_raise_irq()
+>  
+>     The PCI endpoint function driver should use pci_epc_raise_irq() to raise
+>     Legacy Interrupt, MSI or MSI-X Interrupt.
+>  
+> -*) pci_epc_mem_alloc_addr()
+> +* pci_epc_mem_alloc_addr()
+>  
+>     The PCI endpoint function driver should use pci_epc_mem_alloc_addr(), to
+>     allocate memory address from EPC addr space which is required to access
+>     RC's buffer
+>  
+> -*) pci_epc_mem_free_addr()
+> +* pci_epc_mem_free_addr()
+>  
+>     The PCI endpoint function driver should use pci_epc_mem_free_addr() to
+>     free the memory space allocated using pci_epc_mem_alloc_addr().
+>  
+> -2.1.3 Other APIs
+> +Other APIs
+> +~~~~~~~~~~
+>  
+>  There are other APIs provided by the EPC library. These are used for binding
+>  the EPF device with EPC device. pci-ep-cfs.c can be used as reference for
+>  using these APIs.
+>  
+> -*) pci_epc_get()
+> +* pci_epc_get()
+>  
+>     Get a reference to the PCI endpoint controller based on the device name of
+>     the controller.
+>  
+> -*) pci_epc_put()
+> +* pci_epc_put()
+>  
+>     Release the reference to the PCI endpoint controller obtained using
+>     pci_epc_get()
+>  
+> -*) pci_epc_add_epf()
+> +* pci_epc_add_epf()
+>  
+>     Add a PCI endpoint function to a PCI endpoint controller. A PCIe device
+>     can have up to 8 functions according to the specification.
+>  
+> -*) pci_epc_remove_epf()
+> +* pci_epc_remove_epf()
+>  
+>     Remove the PCI endpoint function from PCI endpoint controller.
+>  
+> -*) pci_epc_start()
+> +* pci_epc_start()
+>  
+>     The PCI endpoint function driver should invoke pci_epc_start() once it
+>     has configured the endpoint function and wants to start the PCI link.
+>  
+> -*) pci_epc_stop()
+> +* pci_epc_stop()
+>  
+>     The PCI endpoint function driver should invoke pci_epc_stop() to stop
+>     the PCI LINK.
+>  
+> -2.2 PCI Endpoint Function(EPF) Library
+> +
+> +PCI Endpoint Function(EPF) Library
+> +----------------------------------
+>  
+>  The EPF library provides APIs to be used by the function driver and the EPC
+>  library to provide endpoint mode functionality.
+>  
+> -2.2.1 APIs for the PCI Endpoint Function Driver
+> +APIs for the PCI Endpoint Function Driver
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+>  This section lists the APIs that the PCI Endpoint core provides to be used
+>  by the PCI endpoint function driver.
+>  
+> -*) pci_epf_register_driver()
+> +* pci_epf_register_driver()
+>  
+>     The PCI Endpoint Function driver should implement the following ops:
+>  	 * bind: ops to perform when a EPC device has been bound to EPF device
+> @@ -166,50 +181,54 @@ by the PCI endpoint function driver.
+>    The PCI Function driver can then register the PCI EPF driver by using
+>    pci_epf_register_driver().
+>  
+> -*) pci_epf_unregister_driver()
+> +* pci_epf_unregister_driver()
+>  
+>    The PCI Function driver can unregister the PCI EPF driver by using
+>    pci_epf_unregister_driver().
+>  
+> -*) pci_epf_alloc_space()
+> +* pci_epf_alloc_space()
+>  
+>    The PCI Function driver can allocate space for a particular BAR using
+>    pci_epf_alloc_space().
+>  
+> -*) pci_epf_free_space()
+> +* pci_epf_free_space()
+>  
+>    The PCI Function driver can free the allocated space
+>    (using pci_epf_alloc_space) by invoking pci_epf_free_space().
+>  
+> -2.2.2 APIs for the PCI Endpoint Controller Library
+> +APIs for the PCI Endpoint Controller Library
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+>  This section lists the APIs that the PCI Endpoint core provides to be used
+>  by the PCI endpoint controller library.
+>  
+> -*) pci_epf_linkup()
+> +* pci_epf_linkup()
+>  
+>     The PCI endpoint controller library invokes pci_epf_linkup() when the
+>     EPC device has established the connection to the host.
+>  
+> -2.2.2 Other APIs
+> +Other APIs
+> +~~~~~~~~~~
+> +
+>  There are other APIs provided by the EPF library. These are used to notify
+>  the function driver when the EPF device is bound to the EPC device.
+>  pci-ep-cfs.c can be used as reference for using these APIs.
+>  
+> -*) pci_epf_create()
+> +* pci_epf_create()
+>  
+>     Create a new PCI EPF device by passing the name of the PCI EPF device.
+>     This name will be used to bind the the EPF device to a EPF driver.
+>  
+> -*) pci_epf_destroy()
+> +* pci_epf_destroy()
+>  
+>     Destroy the created PCI EPF device.
+>  
+> -*) pci_epf_bind()
+> +* pci_epf_bind()
+>  
+>     pci_epf_bind() should be invoked when the EPF device has been bound to
+>     a EPC device.
+>  
+> -*) pci_epf_unbind()
+> +* pci_epf_unbind()
+>  
+>     pci_epf_unbind() should be invoked when the binding between EPC device
+>     and EPF device is lost.
+> diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+> index 86c76c22810b..c8ea2e626c20 100644
+> --- a/Documentation/PCI/index.rst
+> +++ b/Documentation/PCI/index.rst
+> @@ -15,3 +15,4 @@ Linux PCI Bus Subsystem
+>     acpi-info
+>     pci-error-recovery
+>     pcieaer-howto
+> +   endpoint/index
+
+
+
+Thanks,
+Mauro
