@@ -2,65 +2,65 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50995C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F3CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 226E8214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4145A214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:30:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GLcsG0Ov"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mT+yohCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbfDXX35 (ORCPT
+        id S2387412AbfDXXaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 19:29:57 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44147 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbfDXX3z (ORCPT
+        Wed, 24 Apr 2019 19:30:01 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32942 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbfDXX36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 19:29:55 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y12so7500407plk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:29:55 -0700 (PDT)
+        Wed, 24 Apr 2019 19:29:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id h5so10127378pfo.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:29:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WlfCbbT7OTA5XgmosXtgfyWERHQq84J83MXacm4JxJM=;
-        b=GLcsG0OvxWec4ZrR2LTxwMO93rOGm6pfhyvq8Minjh95zg7EkhDyN7X7wbpAlej0v5
-         Bgxg9JZOGqzvUfTx8mzGFWBU3Hvj0Ke6AIU4CJ8SOr+/lJMi6SBeAr1Ckz2gXvl+VAEw
-         YFyQLpZ7dO/E7YcCFLMhOY0icnpRl/7erAFQQ=
+        bh=2CfWB/MzL5riv2vUwvwIZu1C9eJD6EKd88bXbhEPlCA=;
+        b=mT+yohCxUKBYxwtyyDcxlp66jATtDXdI4iisWwzh9dY3pkHUW71UkU67l+DxMkixgK
+         FL5DOfFr47WiZqhiSopF+KEi0Zg6LJSsZt3vaIa+EBDP+w763jFDxlTyc0Zt/0Qkb16C
+         ZUGEFOMD3vkWeVCq7/ExiceB9lKBFsYIVQ3dk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WlfCbbT7OTA5XgmosXtgfyWERHQq84J83MXacm4JxJM=;
-        b=fUvbXXsS1tHjPVNfcr6hijrMR6CLW4uyyG4Hrb1DzROCvd1EIIQkXo1C/4MTJG/bH6
-         6rjx4iMq0PdRgIXODBW1qbwKtgMU5tfuaWpgCtAwVf/mSr21icET9mw75xNAvcbWD3U/
-         1ohpjJfm4brl7qurquXdumWeucvFNN6+wZP4Xb3r84tIgNcnOtm1SsUkXpWb6zigih4x
-         8qQxyId/GJK6ez2KEG9Ii3FYfUmotHwkLiuLj3wwGxF29qqieeNVdiiyc4GePKmPXgy2
-         CAAQgv+nxZOEG4GS6cyPMrSqRKQ4ISe37jgfGcTcE+CifeQwy6QrOuaZ7+YVo9/4zcuF
-         iV1Q==
-X-Gm-Message-State: APjAAAUBEH/5NFfpjFli6IMe44ym5YMn225TOU0Cqv6v+zPVA9kz7DHX
-        dAWt1boLcGXAzhdJI9FvqRaj7g==
-X-Google-Smtp-Source: APXvYqzreulSL3h2Jl7kNM03ljobvMIECiOnXet6Cn71t8Oq33TXxOBaZFit1v7y76vDKxNNle+eQw==
-X-Received: by 2002:a17:902:2a2b:: with SMTP id i40mr4284537plb.80.1556148594917;
-        Wed, 24 Apr 2019 16:29:54 -0700 (PDT)
+        bh=2CfWB/MzL5riv2vUwvwIZu1C9eJD6EKd88bXbhEPlCA=;
+        b=Mwml6Inj0Tgh03WawioacNoCv7PMV0CfI81YTBhFgdpfPuHYa5O6iKln1YR8mH3URt
+         kps93sa0TWpwpgKsRYmQf3kBCn3pMcPSSK3lrSIbeL22x7cjAAxiqkdh4Q2KzHFfIpSs
+         ZuFSCvUVK4PBNn9WhSimq3ZQgnIEZCPwwXWbR2ZFNGeZxJ+YfGN55vg8QeH7OjiJjWah
+         NtpmbQnqr7H9Z3yOW+qTgN4j1baviop+Zr+m5TsSX+eJSwYe9Yq4PPlkqNZFKBjJv50i
+         o3OPDk8TIr+ZtJKz/SgVR77Iju8/cDIhAiWhP79IOWIX36Sb648wPwqA3ti7rnkGbxhu
+         BB3g==
+X-Gm-Message-State: APjAAAUFxESIBPd/QkML/RMLsBO8oU8lfTcOl20FyIN9PcfEBNQ1VVfr
+        8INpi9qWDJgi+JBUvyq/XvrmwA==
+X-Google-Smtp-Source: APXvYqzcUxPtemNmXCth6+3xiRFjNpsmOUXw3Gk+k3WaDIgy+MVPf0+8fCXAs9Cj7R1fYg0nInMQIw==
+X-Received: by 2002:a65:6655:: with SMTP id z21mr33138153pgv.33.1556148597395;
+        Wed, 24 Apr 2019 16:29:57 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id p66sm45139032pfb.4.2019.04.24.16.29.53
+        by smtp.gmail.com with ESMTPSA id f6sm22119368pgq.11.2019.04.24.16.29.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 16:29:54 -0700 (PDT)
+        Wed, 24 Apr 2019 16:29:56 -0700 (PDT)
 From:   Gwendal Grignou <gwendal@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org,
         groeck@chromium.org, lee.jones@linaro.org
 Cc:     linux-kernel@vger.kernel.org,
         Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH 20/30] mfd: cros_ec: Add API for keyboard testing
-Date:   Wed, 24 Apr 2019 16:29:08 -0700
-Message-Id: <20190424232918.243308-21-gwendal@chromium.org>
+Subject: [PATCH 22/30] mfd: cros_ec: Add Smart Battery Firmware update API
+Date:   Wed, 24 Apr 2019 16:29:10 -0700
+Message-Id: <20190424232918.243308-23-gwendal@chromium.org>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 In-Reply-To: <20190424232918.243308-1-gwendal@chromium.org>
 References: <20190424232918.243308-1-gwendal@chromium.org>
@@ -71,49 +71,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add command to allow keyboard testing in factory.
+Add API to update battery firmware.
 
 Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
 ---
- include/linux/mfd/cros_ec_commands.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ include/linux/mfd/cros_ec_commands.h | 73 ++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
 diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 4784f3634793..88d08aa85738 100644
+index 7f98c6e63ad1..49ea905cfd18 100644
 --- a/include/linux/mfd/cros_ec_commands.h
 +++ b/include/linux/mfd/cros_ec_commands.h
-@@ -3142,6 +3142,17 @@ struct ec_params_mkbp_simulate_key {
- 	uint8_t pressed;
- } __ec_align1;
+@@ -4243,6 +4243,79 @@ struct ec_response_battery_vendor_param {
+ 	uint32_t value;
+ } __ec_align4;
  
-+#define EC_CMD_GET_KEYBOARD_ID 0x0063
++/*****************************************************************************/
++/*
++ * Smart Battery Firmware Update Commands
++ */
++#define EC_CMD_SB_FW_UPDATE 0x00B5
 +
-+struct ec_response_keyboard_id {
-+	uint32_t keyboard_id;
-+} __ec_align4;
-+
-+enum keyboard_id {
-+	KEYBOARD_ID_UNSUPPORTED = 0,
-+	KEYBOARD_ID_UNREADABLE = 0xffffffff,
++enum ec_sb_fw_update_subcmd {
++	EC_SB_FW_UPDATE_PREPARE  = 0x0,
++	EC_SB_FW_UPDATE_INFO     = 0x1, /*query sb info */
++	EC_SB_FW_UPDATE_BEGIN    = 0x2, /*check if protected */
++	EC_SB_FW_UPDATE_WRITE    = 0x3, /*check if protected */
++	EC_SB_FW_UPDATE_END      = 0x4,
++	EC_SB_FW_UPDATE_STATUS   = 0x5,
++	EC_SB_FW_UPDATE_PROTECT  = 0x6,
++	EC_SB_FW_UPDATE_MAX      = 0x7,
 +};
 +
- /* Configure keyboard scanning */
- #define EC_CMD_MKBP_SET_CONFIG 0x0064
- #define EC_CMD_MKBP_GET_CONFIG 0x0065
-@@ -3390,6 +3401,13 @@ struct ec_response_get_next_event_v1 {
- #define EC_MKBP_TABLET_MODE	1
- #define EC_MKBP_BASE_ATTACHED	2
- 
-+/* Run keyboard factory test scanning */
-+#define EC_CMD_KEYBOARD_FACTORY_TEST 0x0068
++#define SB_FW_UPDATE_CMD_WRITE_BLOCK_SIZE 32
++#define SB_FW_UPDATE_CMD_STATUS_SIZE 2
++#define SB_FW_UPDATE_CMD_INFO_SIZE 8
 +
-+struct ec_response_keyboard_factory_test {
-+	uint16_t shorted;	/* Keyboard pins are shorted */
-+} __ec_align2;
++struct ec_sb_fw_update_header {
++	uint16_t subcmd;  /* enum ec_sb_fw_update_subcmd */
++	uint16_t fw_id;   /* firmware id */
++} __ec_align4;
 +
- /* Fingerprint events in 'fp_events' for EC_MKBP_EVENT_FINGERPRINT */
- #define EC_MKBP_FP_RAW_EVENT(fp_events) ((fp_events) & 0x00FFFFFF)
- #define EC_MKBP_FP_ERRCODE(fp_events)   ((fp_events) & 0x0000000F)
++struct ec_params_sb_fw_update {
++	struct ec_sb_fw_update_header hdr;
++	union {
++		/* EC_SB_FW_UPDATE_PREPARE  = 0x0 */
++		/* EC_SB_FW_UPDATE_INFO     = 0x1 */
++		/* EC_SB_FW_UPDATE_BEGIN    = 0x2 */
++		/* EC_SB_FW_UPDATE_END      = 0x4 */
++		/* EC_SB_FW_UPDATE_STATUS   = 0x5 */
++		/* EC_SB_FW_UPDATE_PROTECT  = 0x6 */
++		/* Those have no args */
++
++		/* EC_SB_FW_UPDATE_WRITE    = 0x3 */
++		struct __ec_align4 {
++			uint8_t  data[SB_FW_UPDATE_CMD_WRITE_BLOCK_SIZE];
++		} write;
++	};
++} __ec_align4;
++
++struct ec_response_sb_fw_update {
++	union {
++		/* EC_SB_FW_UPDATE_INFO     = 0x1 */
++		struct __ec_align1 {
++			uint8_t data[SB_FW_UPDATE_CMD_INFO_SIZE];
++		} info;
++
++		/* EC_SB_FW_UPDATE_STATUS   = 0x5 */
++		struct __ec_align1 {
++			uint8_t data[SB_FW_UPDATE_CMD_STATUS_SIZE];
++		} status;
++	};
++} __ec_align1;
++
++/*
++ * Entering Verified Boot Mode Command
++ * Default mode is VBOOT_MODE_NORMAL if EC did not receive this command.
++ * Valid Modes are: normal, developer, and recovery.
++ */
++#define EC_CMD_ENTERING_MODE 0x00B6
++
++struct ec_params_entering_mode {
++	int vboot_mode;
++} __ec_align4;
++
++#define VBOOT_MODE_NORMAL    0
++#define VBOOT_MODE_DEVELOPER 1
++#define VBOOT_MODE_RECOVERY  2
++
+ /*****************************************************************************/
+ /*
+  * HDMI CEC commands
 -- 
 2.21.0.593.g511ec345e18-goog
 
