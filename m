@@ -3,51 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,LOTS_OF_MONEY,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91148C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014ABC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB6D21902
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2A121902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125870;
-	bh=Um4XEl7e+G/pt7ndsCEf+TJjeNgN1geWkY1EP4p8LJ8=;
+	s=default; t=1556125872;
+	bh=iI0uQKpgD04pfgLbkG9EXolIfR+AXbdnjsgGhus3v0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r/gHB3SZQwsdAGZ5rzEnvhigCX/zYxXXB9gPU9RP05PBCFjUqTw/c/48J2v1ZytKY
-	 P6pSFc+Q6SP2xNfFP7ZGNhH+8NfgtMIhIsP1rkTQOaZS72Lr9vxHGy9v97104bhRll
-	 Y8tj6FCIs+vxvZ7orV4KxVS96VmPcQqID1n6wNxw=
+	b=E8dr4KxdLoRkugsdz/YHIFu7dZpkDEkYcA5yVT1ad8HSVBsnFX+Ouf+4Vf+Vu5bR7
+	 kQm9Yjk6toWqW8+YHk3+pgL7MsR/pW7oXI7EiwzjKgJzpoPavDX2i7cpPJW8IIJnC8
+	 tw+IgpnsjdB9FiRCuGyrvNtn7rWIYfmkitKQpC3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733188AbfDXRLJ (ORCPT
+        id S1733200AbfDXRLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:11:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34552 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbfDXRLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:11:06 -0400
+        id S1733183AbfDXRLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:11:09 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88B382148D;
-        Wed, 24 Apr 2019 17:11:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6BE21900;
+        Wed, 24 Apr 2019 17:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125866;
-        bh=Um4XEl7e+G/pt7ndsCEf+TJjeNgN1geWkY1EP4p8LJ8=;
+        s=default; t=1556125868;
+        bh=iI0uQKpgD04pfgLbkG9EXolIfR+AXbdnjsgGhus3v0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Emo27hI0psltiTbhBMEGt2w/pmmuU7nLgGfANtBe93lIBu2l4wIqUpPusMzI2ekNx
-         eiPkg44L7NhvSnCC1f+HJlhOF6B/nktf9lp97O+/9iQUQf0LivzoNfBpczfhEP7T9Y
-         M4Tbebwknl++AShyucRW+gM82mTYxSiZZLmMyJRs=
+        b=q63S7WtEm82PZzMgrjUXWINLByHmQ1xSpoYDviGLN6ox4nm9vgVPxIdNyj4Ud7JjR
+         3rvMvb6phEjnX3lDZTkLgH07WuUL0qWh85pjao1IIlEGJOv+Hi8lrwIPPSmToMiG1J
+         H4Phg4msbUMGupol9JJ+R7ftcQDO1V6gegbv9wyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yao Liu <yotta.liu@ucloud.cn>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 011/104] cifs: Fix NULL pointer dereference of devname
-Date:   Wed, 24 Apr 2019 19:08:28 +0200
-Message-Id: <20190424170846.960087652@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 012/104] fs: fix guard_bio_eod to check for real EOD errors
+Date:   Wed, 24 Apr 2019 19:08:29 +0200
+Message-Id: <20190424170847.160708592@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -60,58 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 68e2672f8fbd1e04982b8d2798dd318bf2515dd2 ]
+[ Upstream commit dce30ca9e3b676fb288c33c1f4725a0621361185 ]
 
-There is a NULL pointer dereference of devname in strspn()
+guard_bio_eod() can truncate a segment in bio to allow it to do IO on
+odd last sectors of a device.
 
-The oops looks something like:
+It already checks if the IO starts past EOD, but it does not consider
+the possibility of an IO request starting within device boundaries can
+contain more than one segment past EOD.
 
-  CIFS: Attempting to mount (null)
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  ...
-  RIP: 0010:strspn+0x0/0x50
-  ...
-  Call Trace:
-   ? cifs_parse_mount_options+0x222/0x1710 [cifs]
-   ? cifs_get_volume_info+0x2f/0x80 [cifs]
-   cifs_setup_volume_info+0x20/0x190 [cifs]
-   cifs_get_volume_info+0x50/0x80 [cifs]
-   cifs_smb3_do_mount+0x59/0x630 [cifs]
-   ? ida_alloc_range+0x34b/0x3d0
-   cifs_do_mount+0x11/0x20 [cifs]
-   mount_fs+0x52/0x170
-   vfs_kern_mount+0x6b/0x170
-   do_mount+0x216/0xdc0
-   ksys_mount+0x83/0xd0
-   __x64_sys_mount+0x25/0x30
-   do_syscall_64+0x65/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+In such cases, truncated_bytes can be bigger than PAGE_SIZE, and will
+underflow bvec->bv_len.
 
-Fix this by adding a NULL check on devname in cifs_parse_devname()
+Fix this by checking if truncated_bytes is lower than PAGE_SIZE.
 
-Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+This situation has been found on filesystems such as isofs and vfat,
+which doesn't check the device size before mount, if the device is
+smaller than the filesystem itself, a readahead on such filesystem,
+which spans EOD, can trigger this situation, leading a call to
+zero_user() with a wrong size possibly corrupting memory.
+
+I didn't see any crash, or didn't let the system run long enough to
+check if memory corruption will be hit somewhere, but adding
+instrumentation to guard_bio_end() to check truncated_bytes size, was
+enough to see the error.
+
+The following script can trigger the error.
+
+MNT=/mnt
+IMG=./DISK.img
+DEV=/dev/loop0
+
+mkfs.vfat $IMG
+mount $IMG $MNT
+cp -R /etc $MNT &> /dev/null
+umount $MNT
+
+losetup -D
+
+losetup --find --show --sizelimit 16247280 $IMG
+mount $DEV $MNT
+
+find $MNT -type f -exec cat {} + >/dev/null
+
+Kudos to Eric Sandeen for coming up with the reproducer above
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/buffer.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 7d4c2bf2fea2..f5f5aab3457f 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1186,6 +1186,11 @@ cifs_parse_devname(const char *devname, struct smb_vol *vol)
- 	const char *delims = "/\\";
- 	size_t len;
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 20805db2c987..47b42e8ddca2 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -2986,6 +2986,13 @@ void guard_bio_eod(int rw, struct bio *bio)
+ 	/* Uhhuh. We've got a bio that straddles the device size! */
+ 	truncated_bytes = bio->bi_iter.bi_size - (maxsector << 9);
  
-+	if (unlikely(!devname || !*devname)) {
-+		cifs_dbg(VFS, "Device name not specified.\n");
-+		return -EINVAL;
-+	}
++	/*
++	 * The bio contains more than one segment which spans EOD, just return
++	 * and let IO layer turn it into an EIO
++	 */
++	if (truncated_bytes > bvec->bv_len)
++		return;
 +
- 	/* make sure we have a valid UNC double delimiter prefix */
- 	len = strspn(devname, delims);
- 	if (len != 2)
+ 	/* Truncate the bio.. */
+ 	bio->bi_iter.bi_size -= truncated_bytes;
+ 	bvec->bv_len -= truncated_bytes;
 -- 
 2.19.1
 
