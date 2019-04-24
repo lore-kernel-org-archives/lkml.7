@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD66C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF17AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E26218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AC1218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730860AbfDXNz1 (ORCPT
+        id S1730848AbfDXNz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:55:27 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:50596 "EHLO
+        Wed, 24 Apr 2019 09:55:26 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:50580 "EHLO
         laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730803AbfDXNzX (ORCPT
+        with ESMTP id S1730290AbfDXNzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Apr 2019 09:55:23 -0400
 Received: from ramsan ([84.194.111.163])
         by laurent.telenet-ops.be with bizsmtp
-        id 4DvM2000L3XaVaC01DvMAC; Wed, 24 Apr 2019 15:55:21 +0200
+        id 4DvM2000F3XaVaC01DvMAB; Wed, 24 Apr 2019 15:55:21 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hJIMr-000882-LY; Wed, 24 Apr 2019 15:55:21 +0200
+        id 1hJIMr-000880-K5; Wed, 24 Apr 2019 15:55:21 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hJIMr-0006YY-JY; Wed, 24 Apr 2019 15:55:21 +0200
+        id 1hJIMr-0006YW-Ie; Wed, 24 Apr 2019 15:55:21 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Joerg Roedel <joro@8bytes.org>,
         Magnus Damm <damm+renesas@opensource.se>
@@ -37,9 +37,9 @@ Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
         iommu@lists.linux-foundation.org,
         linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 2/6] iommu/ipmmu-vmsa: Prepare to handle 40-bit error addresses
-Date:   Wed, 24 Apr 2019 15:55:14 +0200
-Message-Id: <20190424135518.25150-3-geert+renesas@glider.be>
+Subject: [PATCH v3 1/6] iommu/ipmmu-vmsa: Link IOMMUs and devices in sysfs
+Date:   Wed, 24 Apr 2019 15:55:13 +0200
+Message-Id: <20190424135518.25150-2-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190424135518.25150-1-geert+renesas@glider.be>
 References: <20190424135518.25150-1-geert+renesas@glider.be>
@@ -48,79 +48,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On R-Car Gen3, the faulting virtual address is a 40-bit address, and
-comprised of two registers.  Read the upper address part, and combine
-both parts, when running on a 64-bit system.
+As of commit 7af9a5fdb9e0ca33 ("iommu/ipmmu-vmsa: Use
+iommu_device_sysfs_add()/remove()"), IOMMU devices show up under
+/sys/class/iommu/, but their "devices" subdirectories are empty.
+Likewise, devices tied to an IOMMU do not have an "iommu" backlink.
+
+Make sure all links are created, on both arm32 and arm64.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
-Apart from this, the driver doesn't support 40-bit IOVA addresses yet.
-
 v3:
-  - Add Reviewed-by,
+  - Fix sysfs path typo in patch description,
 
 v2:
-  - Merge IMEAR/IMELAR.
+  - Add Reviewed-by.
 ---
- drivers/iommu/ipmmu-vmsa.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/iommu/ipmmu-vmsa.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-index 9f2b781e20a0eba6..f2061bd1dc7b8852 100644
+index 9a380c10655e182d..9f2b781e20a0eba6 100644
 --- a/drivers/iommu/ipmmu-vmsa.c
 +++ b/drivers/iommu/ipmmu-vmsa.c
-@@ -186,7 +186,8 @@ static struct ipmmu_vmsa_device *to_ipmmu(struct device *dev)
- #define IMMAIR_ATTR_IDX_WBRWA		1
- #define IMMAIR_ATTR_IDX_DEV		2
+@@ -885,27 +885,37 @@ static int ipmmu_init_arm_mapping(struct device *dev)
  
--#define IMEAR				0x0030
-+#define IMELAR				0x0030	/* IMEAR on R-Car Gen2 */
-+#define IMEUAR				0x0034	/* R-Car Gen3 only */
- 
- #define IMPCTR				0x0200
- #define IMPSTR				0x0208
-@@ -522,14 +523,16 @@ static irqreturn_t ipmmu_domain_irq(struct ipmmu_vmsa_domain *domain)
+ static int ipmmu_add_device(struct device *dev)
  {
- 	const u32 err_mask = IMSTR_MHIT | IMSTR_ABORT | IMSTR_PF | IMSTR_TF;
- 	struct ipmmu_vmsa_device *mmu = domain->mmu;
-+	unsigned long iova;
- 	u32 status;
--	u32 iova;
- 
- 	status = ipmmu_ctx_read_root(domain, IMSTR);
- 	if (!(status & err_mask))
- 		return IRQ_NONE;
- 
--	iova = ipmmu_ctx_read_root(domain, IMEAR);
-+	iova = ipmmu_ctx_read_root(domain, IMELAR);
-+	if (IS_ENABLED(CONFIG_64BIT))
-+		iova |= (u64)ipmmu_ctx_read_root(domain, IMEUAR) << 32;
++	struct ipmmu_vmsa_device *mmu = to_ipmmu(dev);
+ 	struct iommu_group *group;
++	int ret;
  
  	/*
- 	 * Clear the error status flags. Unlike traditional interrupt flag
-@@ -541,10 +544,10 @@ static irqreturn_t ipmmu_domain_irq(struct ipmmu_vmsa_domain *domain)
+ 	 * Only let through devices that have been verified in xlate()
+ 	 */
+-	if (!to_ipmmu(dev))
++	if (!mmu)
+ 		return -ENODEV;
  
- 	/* Log fatal errors. */
- 	if (status & IMSTR_MHIT)
--		dev_err_ratelimited(mmu->dev, "Multiple TLB hits @0x%08x\n",
-+		dev_err_ratelimited(mmu->dev, "Multiple TLB hits @0x%lx\n",
- 				    iova);
- 	if (status & IMSTR_ABORT)
--		dev_err_ratelimited(mmu->dev, "Page Table Walk Abort @0x%08x\n",
-+		dev_err_ratelimited(mmu->dev, "Page Table Walk Abort @0x%lx\n",
- 				    iova);
+-	if (IS_ENABLED(CONFIG_ARM) && !IS_ENABLED(CONFIG_IOMMU_DMA))
+-		return ipmmu_init_arm_mapping(dev);
++	if (IS_ENABLED(CONFIG_ARM) && !IS_ENABLED(CONFIG_IOMMU_DMA)) {
++		ret = ipmmu_init_arm_mapping(dev);
++		if (ret)
++			return ret;
++	} else {
++		group = iommu_group_get_for_dev(dev);
++		if (IS_ERR(group))
++			return PTR_ERR(group);
  
- 	if (!(status & (IMSTR_PF | IMSTR_TF)))
-@@ -560,7 +563,7 @@ static irqreturn_t ipmmu_domain_irq(struct ipmmu_vmsa_domain *domain)
- 		return IRQ_HANDLED;
+-	group = iommu_group_get_for_dev(dev);
+-	if (IS_ERR(group))
+-		return PTR_ERR(group);
++		iommu_group_put(group);
++	}
  
- 	dev_err_ratelimited(mmu->dev,
--			    "Unhandled fault: status 0x%08x iova 0x%08x\n",
-+			    "Unhandled fault: status 0x%08x iova 0x%lx\n",
- 			    status, iova);
+-	iommu_group_put(group);
++	iommu_device_link(&mmu->iommu, dev);
+ 	return 0;
+ }
  
- 	return IRQ_HANDLED;
+ static void ipmmu_remove_device(struct device *dev)
+ {
++	struct ipmmu_vmsa_device *mmu = to_ipmmu(dev);
++
++	iommu_device_unlink(&mmu->iommu, dev);
+ 	arm_iommu_detach_device(dev);
+ 	iommu_group_remove_device(dev);
+ }
 -- 
 2.17.1
 
