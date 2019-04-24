@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302EEC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530D6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF77121904
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1863B21900
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116611;
-	bh=2ZLr2MBeGEAcRLUr9ojdOI8LqgkgqlZeQZAwNzN+EiE=;
+	s=default; t=1556116614;
+	bh=GcMVjUTUf9nDL9WUFI3zP8sCnarkoP5lymrrUrY8QJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oVpLp+A11BoLAOFF68KOt+e9CvOVWVvBqdGldRfdg3apGqtw/fCGpz/jxt/Dx5wRd
-	 rVeoDlQKKU46h5F58F3TLTzD04/skwT5hJLk0SioEwJPscUshM7Oj1bzM697EEjvpA
-	 23tvM/E7X8rplOArM07LdxHVRjH5D9QBxRjDFZVg=
+	b=rN8WGqGxaclz35tNXm8l0bJpmZGrIQ9zY9V1nJ9F7g+5AkYf08eWa7tkchEE99PA6
+	 DvGCN+YsAzOUeEtipB4rztCSGMNiaeSmP1djax/KzR9FZomAgDVMQx23K9cpvq+k0o
+	 1MCnnPkU/KJWMuIWjqZER6Ec8ubTFyoYo6AUDVUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731667AbfDXOgt (ORCPT
+        id S1731675AbfDXOgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:36:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40374 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731629AbfDXOgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:36:44 -0400
+        id S1731648AbfDXOgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:36:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4828C21901;
-        Wed, 24 Apr 2019 14:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D1F421900;
+        Wed, 24 Apr 2019 14:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116603;
-        bh=2ZLr2MBeGEAcRLUr9ojdOI8LqgkgqlZeQZAwNzN+EiE=;
+        s=default; t=1556116606;
+        bh=GcMVjUTUf9nDL9WUFI3zP8sCnarkoP5lymrrUrY8QJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z1HEoxMc31JooNzXPYUv+XjhX9PeaLRDKIH8+Ko62gRpfPHkj79ocL/sjjr2HqhEQ
-         KXPKCoP1uF4tUOtr7zOhBiGYjDQlotSW6fKLd2g7i110iX9kQeX26wNKiqSyeVwMca
-         de1OQVvh+65JDBCo7NQkUHbhNNnVEEj3jCwLW5J8=
+        b=2QwZvQjh2fgnLv5Pi94EQxVsQPEuFjEjsRVoRJkSfk+36UFVIm1KWC6hSuloGipEI
+         ncixh42jcTmvgHN0xSFnCKrP4x5zze6gdvP/mm5O3i/fqbstKGeXEah77bDaj0l3TB
+         fr/xycMrZeK6658GnXihkv7adCOpAXBjlna2eIcQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
         linux-aio@kvack.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 65/66] aio: store event at final iocb_put()
-Date:   Wed, 24 Apr 2019 10:33:39 -0400
-Message-Id: <20190424143341.27665-65-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 66/66] Fix aio_poll() races
+Date:   Wed, 24 Apr 2019 10:33:40 -0400
+Message-Id: <20190424143341.27665-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -60,101 +60,225 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 2bb874c0d873d13bd9b9b9c6d7b7c4edab18c8b4 ]
+[ Upstream commit af5c72b1fc7a00aa484e90b0c4e0eeb582545634 ]
 
-Instead of having aio_complete() set ->ki_res.{res,res2}, do that
-explicitly in its callers, drop the reference (as aio_complete()
-used to do) and delay the rest until the final iocb_put().
+aio_poll() has to cope with several unpleasant problems:
+	* requests that might stay around indefinitely need to
+be made visible for io_cancel(2); that must not be done to
+a request already completed, though.
+	* in cases when ->poll() has placed us on a waitqueue,
+wakeup might have happened (and request completed) before ->poll()
+returns.
+	* worse, in some early wakeup cases request might end
+up re-added into the queue later - we can't treat "woken up and
+currently not in the queue" as "it's not going to stick around
+indefinitely"
+	* ... moreover, ->poll() might have decided not to
+put it on any queues to start with, and that needs to be distinguished
+from the previous case
+	* ->poll() might have tried to put us on more than one queue.
+Only the first will succeed for aio poll, so we might end up missing
+wakeups.  OTOH, we might very well notice that only after the
+wakeup hits and request gets completed (all before ->poll() gets
+around to the second poll_wait()).  In that case it's too late to
+decide that we have an error.
+
+req->woken was an attempt to deal with that.  Unfortunately, it was
+broken.  What we need to keep track of is not that wakeup has happened -
+the thing might come back after that.  It's that async reference is
+already gone and won't come back, so we can't (and needn't) put the
+request on the list of cancellables.
+
+The easiest case is "request hadn't been put on any waitqueues"; we
+can tell by seeing NULL apt.head, and in that case there won't be
+anything async.  We should either complete the request ourselves
+(if vfs_poll() reports anything of interest) or return an error.
+
+In all other cases we get exclusion with wakeups by grabbing the
+queue lock.
+
+If request is currently on queue and we have something interesting
+from vfs_poll(), we can steal it and complete the request ourselves.
+
+If it's on queue and vfs_poll() has not reported anything interesting,
+we either put it on the cancellable list, or, if we know that it
+hadn't been put on all queues ->poll() wanted it on, we steal it and
+return an error.
+
+If it's _not_ on queue, it's either been already dealt with (in which
+case we do nothing), or there's aio_poll_complete_work() about to be
+executed.  In that case we either put it on the cancellable list,
+or, if we know it hadn't been put on all queues ->poll() wanted it on,
+simulate what cancel would've done.
+
+It's a lot more convoluted than I'd like it to be.  Single-consumer APIs
+suck, and unfortunately aio is not an exception...
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/aio.c | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+ fs/aio.c | 90 +++++++++++++++++++++++++-------------------------------
+ 1 file changed, 40 insertions(+), 50 deletions(-)
 
 diff --git a/fs/aio.c b/fs/aio.c
-index 387b224217b5..82bf5dffb272 100644
+index 82bf5dffb272..efa13410e04e 100644
 --- a/fs/aio.c
 +++ b/fs/aio.c
-@@ -1077,16 +1077,10 @@ static inline void iocb_destroy(struct aio_kiocb *iocb)
- 	kmem_cache_free(kiocb_cachep, iocb);
+@@ -181,7 +181,7 @@ struct poll_iocb {
+ 	struct file		*file;
+ 	struct wait_queue_head	*head;
+ 	__poll_t		events;
+-	bool			woken;
++	bool			done;
+ 	bool			cancelled;
+ 	struct wait_queue_entry	wait;
+ 	struct work_struct	work;
+@@ -1606,12 +1606,6 @@ static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
+ 	return 0;
  }
  
--static inline void iocb_put(struct aio_kiocb *iocb)
+-static inline void aio_poll_complete(struct aio_kiocb *iocb, __poll_t mask)
 -{
--	if (refcount_dec_and_test(&iocb->ki_refcnt))
--		iocb_destroy(iocb);
+-	iocb->ki_res.res = mangle_poll(mask);
+-	iocb_put(iocb);
 -}
 -
- /* aio_complete
-  *	Called when the io request on the given iocb is complete.
-  */
--static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
-+static void aio_complete(struct aio_kiocb *iocb)
- {
- 	struct kioctx	*ctx = iocb->ki_ctx;
- 	struct aio_ring	*ring;
-@@ -1094,8 +1088,6 @@ static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
- 	unsigned tail, pos, head;
- 	unsigned long	flags;
- 
--	iocb->ki_res.res = res;
--	iocb->ki_res.res2 = res2;
- 	/*
- 	 * Add a completion event to the ring buffer. Must be done holding
- 	 * ctx->completion_lock to prevent other code from messing with the tail
-@@ -1161,7 +1153,14 @@ static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
- 
- 	if (waitqueue_active(&ctx->wait))
- 		wake_up(&ctx->wait);
--	iocb_put(iocb);
-+}
-+
-+static inline void iocb_put(struct aio_kiocb *iocb)
-+{
-+	if (refcount_dec_and_test(&iocb->ki_refcnt)) {
-+		aio_complete(iocb);
-+		iocb_destroy(iocb);
-+	}
- }
- 
- /* aio_read_events_ring
-@@ -1435,7 +1434,9 @@ static void aio_complete_rw(struct kiocb *kiocb, long res, long res2)
- 		file_end_write(kiocb->ki_filp);
- 	}
- 
--	aio_complete(iocb, res, res2);
-+	iocb->ki_res.res = res;
-+	iocb->ki_res.res2 = res2;
-+	iocb_put(iocb);
- }
- 
- static int aio_prep_rw(struct kiocb *req, const struct iocb *iocb)
-@@ -1583,11 +1584,10 @@ static ssize_t aio_write(struct kiocb *req, const struct iocb *iocb,
- 
- static void aio_fsync_work(struct work_struct *work)
- {
--	struct fsync_iocb *req = container_of(work, struct fsync_iocb, work);
--	int ret;
-+	struct aio_kiocb *iocb = container_of(work, struct aio_kiocb, fsync.work);
- 
--	ret = vfs_fsync(req->file, req->datasync);
--	aio_complete(container_of(req, struct aio_kiocb, fsync), ret, 0);
-+	iocb->ki_res.res = vfs_fsync(iocb->fsync.file, iocb->fsync.datasync);
-+	iocb_put(iocb);
- }
- 
- static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
-@@ -1608,7 +1608,8 @@ static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
- 
- static inline void aio_poll_complete(struct aio_kiocb *iocb, __poll_t mask)
- {
--	aio_complete(iocb, mangle_poll(mask), 0);
-+	iocb->ki_res.res = mangle_poll(mask);
-+	iocb_put(iocb);
- }
- 
  static void aio_poll_complete_work(struct work_struct *work)
+ {
+ 	struct poll_iocb *req = container_of(work, struct poll_iocb, work);
+@@ -1637,9 +1631,11 @@ static void aio_poll_complete_work(struct work_struct *work)
+ 		return;
+ 	}
+ 	list_del_init(&iocb->ki_list);
++	iocb->ki_res.res = mangle_poll(mask);
++	req->done = true;
+ 	spin_unlock_irq(&ctx->ctx_lock);
+ 
+-	aio_poll_complete(iocb, mask);
++	iocb_put(iocb);
+ }
+ 
+ /* assumes we are called with irqs disabled */
+@@ -1667,31 +1663,27 @@ static int aio_poll_wake(struct wait_queue_entry *wait, unsigned mode, int sync,
+ 	__poll_t mask = key_to_poll(key);
+ 	unsigned long flags;
+ 
+-	req->woken = true;
+-
+ 	/* for instances that support it check for an event match first: */
+-	if (mask) {
+-		if (!(mask & req->events))
+-			return 0;
++	if (mask && !(mask & req->events))
++		return 0;
+ 
++	list_del_init(&req->wait.entry);
++
++	if (mask && spin_trylock_irqsave(&iocb->ki_ctx->ctx_lock, flags)) {
+ 		/*
+ 		 * Try to complete the iocb inline if we can. Use
+ 		 * irqsave/irqrestore because not all filesystems (e.g. fuse)
+ 		 * call this function with IRQs disabled and because IRQs
+ 		 * have to be disabled before ctx_lock is obtained.
+ 		 */
+-		if (spin_trylock_irqsave(&iocb->ki_ctx->ctx_lock, flags)) {
+-			list_del(&iocb->ki_list);
+-			spin_unlock_irqrestore(&iocb->ki_ctx->ctx_lock, flags);
+-
+-			list_del_init(&req->wait.entry);
+-			aio_poll_complete(iocb, mask);
+-			return 1;
+-		}
++		list_del(&iocb->ki_list);
++		iocb->ki_res.res = mangle_poll(mask);
++		req->done = true;
++		spin_unlock_irqrestore(&iocb->ki_ctx->ctx_lock, flags);
++		iocb_put(iocb);
++	} else {
++		schedule_work(&req->work);
+ 	}
+-
+-	list_del_init(&req->wait.entry);
+-	schedule_work(&req->work);
+ 	return 1;
+ }
+ 
+@@ -1723,6 +1715,7 @@ static ssize_t aio_poll(struct aio_kiocb *aiocb, const struct iocb *iocb)
+ 	struct kioctx *ctx = aiocb->ki_ctx;
+ 	struct poll_iocb *req = &aiocb->poll;
+ 	struct aio_poll_table apt;
++	bool cancel = false;
+ 	__poll_t mask;
+ 
+ 	/* reject any unknown events outside the normal event mask. */
+@@ -1736,7 +1729,7 @@ static ssize_t aio_poll(struct aio_kiocb *aiocb, const struct iocb *iocb)
+ 	req->events = demangle_poll(iocb->aio_buf) | EPOLLERR | EPOLLHUP;
+ 
+ 	req->head = NULL;
+-	req->woken = false;
++	req->done = false;
+ 	req->cancelled = false;
+ 
+ 	apt.pt._qproc = aio_poll_queue_proc;
+@@ -1749,36 +1742,33 @@ static ssize_t aio_poll(struct aio_kiocb *aiocb, const struct iocb *iocb)
+ 	init_waitqueue_func_entry(&req->wait, aio_poll_wake);
+ 
+ 	mask = vfs_poll(req->file, &apt.pt) & req->events;
+-	if (unlikely(!req->head)) {
+-		/* we did not manage to set up a waitqueue, done */
+-		goto out;
+-	}
+-
+ 	spin_lock_irq(&ctx->ctx_lock);
+-	spin_lock(&req->head->lock);
+-	if (req->woken) {
+-		/* wake_up context handles the rest */
+-		mask = 0;
++	if (likely(req->head)) {
++		spin_lock(&req->head->lock);
++		if (unlikely(list_empty(&req->wait.entry))) {
++			if (apt.error)
++				cancel = true;
++			apt.error = 0;
++			mask = 0;
++		}
++		if (mask || apt.error) {
++			list_del_init(&req->wait.entry);
++		} else if (cancel) {
++			WRITE_ONCE(req->cancelled, true);
++		} else if (!req->done) { /* actually waiting for an event */
++			list_add_tail(&aiocb->ki_list, &ctx->active_reqs);
++			aiocb->ki_cancel = aio_poll_cancel;
++		}
++		spin_unlock(&req->head->lock);
++	}
++	if (mask) { /* no async, we'd stolen it */
++		aiocb->ki_res.res = mangle_poll(mask);
+ 		apt.error = 0;
+-	} else if (mask || apt.error) {
+-		/* if we get an error or a mask we are done */
+-		WARN_ON_ONCE(list_empty(&req->wait.entry));
+-		list_del_init(&req->wait.entry);
+-	} else {
+-		/* actually waiting for an event */
+-		list_add_tail(&aiocb->ki_list, &ctx->active_reqs);
+-		aiocb->ki_cancel = aio_poll_cancel;
+ 	}
+-	spin_unlock(&req->head->lock);
+ 	spin_unlock_irq(&ctx->ctx_lock);
+-
+-out:
+-	if (unlikely(apt.error))
+-		return apt.error;
+-
+ 	if (mask)
+-		aio_poll_complete(aiocb, mask);
+-	return 0;
++		iocb_put(aiocb);
++	return apt.error;
+ }
+ 
+ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
 -- 
 2.19.1
 
