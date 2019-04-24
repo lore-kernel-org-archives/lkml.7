@@ -2,128 +2,160 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98937C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B111AC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D6B2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF102175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QAxDYqgJ"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="nHKXxWrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfDXLK1 (ORCPT
+        id S1727966AbfDXLKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:10:27 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39445 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfDXLK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 07:10:26 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3OBA9OH2549134
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 24 Apr 2019 04:10:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3OBA9OH2549134
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556104210;
-        bh=EGhWyfl1jyjNzP3g5Rc/daNTDVIIRKTDGS5dPtDElaY=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=QAxDYqgJr73POHPk2o3OtGLllOzDcf0DHwTGY0DUalQhgw493wMPdfbJf1wzRdzsR
-         MQPjyNESbCJHhxdx5OBecABwYAhJ4HviCE+xouchnfdrdgD3XEw3aK9/R+MXfTCuUI
-         LmFJVuKP8uiUmaS974581fzo+SCO+oksiGaQsKO6XeGp0q7zRb6oKmZz+6YnOX/5rx
-         Mawolx/BcDdvdEyaBiG1kGDF1FXACWj4g98hCIY9EqppaFPkGowVMIW5dyDPsym2SS
-         MVvmxK2uKH0IsfY0dnbH2tLJ220joS45hAkaxzyrAI2bSmGRpSkfZkFdsu9p8RQbsW
-         /RmnR4ufOMXDg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3OBA9cX2549131;
-        Wed, 24 Apr 2019 04:10:09 -0700
-Date:   Wed, 24 Apr 2019 04:10:09 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
-Message-ID: <tip-6ae865615fc43d014da2fd1f1bba7e81ee622d1b@git.kernel.org>
-Cc:     rdunlap@infradead.org, mingo@kernel.org,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, hpa@zytor.com, tglx@linutronix.de
-Reply-To: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-          peterz@infradead.org, hpa@zytor.com, tglx@linutronix.de,
-          rdunlap@infradead.org, mingo@kernel.org
-In-Reply-To: <20190424072208.695962771@infradead.org>
-References: <20190424072208.695962771@infradead.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/objtool] x86/uaccess: Dont leak the AC flag into
- __put_user() argument evaluation
-Git-Commit-ID: 6ae865615fc43d014da2fd1f1bba7e81ee622d1b
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 24 Apr 2019 07:10:31 -0400
+Received: from mail-eopbgr40054.outbound.protection.outlook.com ([40.107.4.54]:13126
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726441AbfDXLKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 07:10:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZPEiu42rgo6AAkZPM/0toMixmUc0zuDGTMqtvHqDWnY=;
+ b=nHKXxWrBy84W+McNcwKrMITv1pI7V13DiFxt8aRGPzVhYzAthrvK1F0AOf+7y5Ha3FFHnvT/FhLvl/9OUPmhHHg90NYvAmw4WJDBL88hIyQuD/k2OVWPjn5UcCLY9V8IjRnh0yiMvVCA0RCGvU2VdVezIZEPxb/R89AxyQFGNvs=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5229.eurprd05.prod.outlook.com (20.178.12.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.18; Wed, 24 Apr 2019 11:10:25 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::711b:c0d6:eece:f044]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::711b:c0d6:eece:f044%5]) with mapi id 15.20.1835.010; Wed, 24 Apr 2019
+ 11:10:25 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christoph Lameter <cl@linux.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH 5/6] powerpc/mmu: drop mmap_sem now that locked_vm is
+ atomic
+Thread-Topic: [PATCH 5/6] powerpc/mmu: drop mmap_sem now that locked_vm is
+ atomic
+Thread-Index: AQHU+kOniVAZZpNOp0ONWbu0yPpKu6ZLKBIA
+Date:   Wed, 24 Apr 2019 11:10:24 +0000
+Message-ID: <20190424111018.GA16077@mellanox.com>
+References: <20190402204158.27582-1-daniel.m.jordan@oracle.com>
+ <20190402204158.27582-6-daniel.m.jordan@oracle.com>
+ <964bd5b0-f1e5-7bf0-5c58-18e75c550841@c-s.fr>
+ <20190403164002.hued52o4mga4yprw@ca-dmjordan1.us.oracle.com>
+ <20190424021544.ygqa4hvwbyb6nuxp@linux-r8p5>
+In-Reply-To: <20190424021544.ygqa4hvwbyb6nuxp@linux-r8p5>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR01CA0090.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:41::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.49.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 63bba6c3-5097-4877-7923-08d6c8a572eb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5229;
+x-ms-traffictypediagnostic: VI1PR05MB5229:
+x-microsoft-antispam-prvs: <VI1PR05MB5229D9FD8B261989270574DBCF3C0@VI1PR05MB5229.eurprd05.prod.outlook.com>
+x-forefront-prvs: 00179089FD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(346002)(39860400002)(376002)(396003)(189003)(199004)(6116002)(3846002)(11346002)(486006)(6506007)(81156014)(476003)(81166006)(110136005)(8936002)(316002)(8676002)(97736004)(66066001)(186003)(2616005)(7736002)(33656002)(446003)(386003)(76176011)(102836004)(5660300002)(26005)(2501003)(305945005)(14454004)(66556008)(36756003)(66446008)(2201001)(6486002)(6436002)(478600001)(71200400001)(229853002)(6512007)(99286004)(25786009)(64756008)(53936002)(256004)(14444005)(86362001)(66574012)(93886005)(52116002)(6246003)(1076003)(66946007)(71190400001)(66476007)(73956011)(68736007)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5229;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: e44iCNVsn7lwiLfBWGPu9SQGqnQC2MKTJE98tHmglzlPpe+tP530yvBkc07F00kylak2nzNGsALS8RuBZZ3q6BK5dP6U63jPvS9e7HwZts4Gyg3+60HePaabcUiG1BYQFXfD/fOWrrKnG8EhntUZssJ17ADV1KBUiCm8UG8L/gsQNZ9YTyF6oUMxT2SOPxrLhHCexJhxAuPyIK6jLHeNcORYev3/6fMvbcGaLbJIwrAeXis+Lo0PI4fQJMWSkNw/C3pV1ZvVfC5kC1C4eZHgHOseRFpl6/erTjajZq6I1NKIvax0+wi12m/Ft8CfVAgm1SL7QkqW8r5Sj/yFt4nXaQ9azUuHvcZ3mdV1woyfLiZx6IJwgf4DxTIp4czZ2UHV7h2ZPZMghNhMXFPUtrLoIXvUfM+jHyqCe5NMHP60pU8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A15126D875D7F04E8A1DFEE8CAACE598@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63bba6c3-5097-4877-7923-08d6c8a572eb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 11:10:25.2484
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5229
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  6ae865615fc43d014da2fd1f1bba7e81ee622d1b
-Gitweb:     https://git.kernel.org/tip/6ae865615fc43d014da2fd1f1bba7e81ee622d1b
-Author:     Peter Zijlstra <peterz@infradead.org>
-AuthorDate: Wed, 24 Apr 2019 09:19:24 +0200
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 24 Apr 2019 12:19:45 +0200
-
-x86/uaccess: Dont leak the AC flag into __put_user() argument evaluation
-
-The __put_user() macro evaluates it's @ptr argument inside the
-__uaccess_begin() / __uaccess_end() region. While this would normally
-not be expected to be an issue, an UBSAN bug (it ignored -fwrapv,
-fixed in GCC 8+) would transform the @ptr evaluation for:
-
-  drivers/gpu/drm/i915/i915_gem_execbuffer.c: if (unlikely(__put_user(offset, &urelocs[r-stack].presumed_offset))) {
-
-into a signed-overflow-UB check and trigger the objtool AC validation.
-
-Finish this commit:
-
-  2a418cf3f5f1 ("x86/uaccess: Don't leak the AC flag into __put_user() value evaluation")
-
-and explicitly evaluate all 3 arguments early.
-
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: luto@kernel.org
-Fixes: 2a418cf3f5f1 ("x86/uaccess: Don't leak the AC flag into __put_user() value evaluation")
-Link: http://lkml.kernel.org/r/20190424072208.695962771@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/include/asm/uaccess.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index 5ca7b91faf67..bb21913885a3 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -427,10 +427,11 @@ do {									\
- ({								\
- 	__label__ __pu_label;					\
- 	int __pu_err = -EFAULT;					\
--	__typeof__(*(ptr)) __pu_val;				\
--	__pu_val = x;						\
-+	__typeof__(*(ptr)) __pu_val = (x);			\
-+	__typeof__(ptr) __pu_ptr = (ptr);			\
-+	__typeof__(size) __pu_size = (size);			\
- 	__uaccess_begin();					\
--	__put_user_size(__pu_val, (ptr), (size), __pu_label);	\
-+	__put_user_size(__pu_val, __pu_ptr, __pu_size, __pu_label);	\
- 	__pu_err = 0;						\
- __pu_label:							\
- 	__uaccess_end();					\
+T24gVHVlLCBBcHIgMjMsIDIwMTkgYXQgMDc6MTU6NDRQTSAtMDcwMCwgRGF2aWRsb2hyIEJ1ZXNv
+IHdyb3RlOg0KPiBPbiBXZWQsIDAzIEFwciAyMDE5LCBEYW5pZWwgSm9yZGFuIHdyb3RlOg0KPiAN
+Cj4gPiBPbiBXZWQsIEFwciAwMywgMjAxOSBhdCAwNjo1ODo0NUFNICswMjAwLCBDaHJpc3RvcGhl
+IExlcm95IHdyb3RlOg0KPiA+ID4gTGUgMDIvMDQvMjAxOSDDoCAyMjo0MSwgRGFuaWVsIEpvcmRh
+biBhIMOpY3JpdMKgOg0KPiA+ID4gPiBXaXRoIGxvY2tlZF92bSBub3cgYW4gYXRvbWljLCB0aGVy
+ZSBpcyBubyBuZWVkIHRvIHRha2UgbW1hcF9zZW0gYXMNCj4gPiA+ID4gd3JpdGVyLiAgRGVsZXRl
+IGFuZCByZWZhY3RvciBhY2NvcmRpbmdseS4NCj4gPiA+IA0KPiA+ID4gQ291bGQgeW91IHBsZWFz
+ZSBkZXRhaWwgdGhlIGNoYW5nZSA/DQo+ID4gDQo+ID4gT2ssIEknbGwgYmUgbW9yZSBzcGVjaWZp
+YyBpbiB0aGUgbmV4dCB2ZXJzaW9uLCB1c2luZyBzb21lIG9mIHlvdXIgbGFuZ3VhZ2UgaW4NCj4g
+PiBmYWN0LiAgOikNCj4gPiANCj4gPiA+IEl0IGxvb2tzIGxpa2UgdGhpcyBpcyBub3QgdGhlIG9u
+bHkNCj4gPiA+IGNoYW5nZS4gSSdtIHdvbmRlcmluZyB3aGF0IHRoZSBjb25zZXF1ZW5jZXMgYXJl
+Lg0KPiA+ID4gDQo+ID4gPiBCZWZvcmUgd2UgZGlkOg0KPiA+ID4gLSBsb2NrDQo+ID4gPiAtIGNh
+bGN1bGF0ZSBmdXR1cmUgdmFsdWUNCj4gPiA+IC0gY2hlY2sgdGhlIGZ1dHVyZSB2YWx1ZSBpcyBh
+Y2NlcHRhYmxlDQo+ID4gPiAtIHVwZGF0ZSB2YWx1ZSBpZiBmdXR1cmUgdmFsdWUgYWNjZXB0YWJs
+ZQ0KPiA+ID4gLSByZXR1cm4gZXJyb3IgaWYgZnV0dXJlIHZhbHVlIG5vbiBhY2NlcHRhYmxlDQo+
+ID4gPiAtIHVubG9jaw0KPiA+ID4gDQo+ID4gPiBOb3cgd2UgZG86DQo+ID4gPiAtIGF0b21pYyB1
+cGRhdGUgd2l0aCBmdXR1cmUgKHBvc3NpYmx5IHRvbyBoaWdoKSB2YWx1ZQ0KPiA+ID4gLSBjaGVj
+ayB0aGUgbmV3IHZhbHVlIGlzIGFjY2VwdGFibGUNCj4gPiA+IC0gYXRvbWljIHVwZGF0ZSBiYWNr
+IHdpdGggb2xkZXIgdmFsdWUgaWYgbmV3IHZhbHVlIG5vdCBhY2NlcHRhYmxlIGFuZCByZXR1cm4N
+Cj4gPiA+IGVycm9yDQo+ID4gPiANCj4gPiA+IFNvIGlmIGEgY29uY3VycmVudCBhY3Rpb24gd2Fu
+dHMgdG8gaW5jcmVhc2UgbG9ja2VkX3ZtIHdpdGggYW4gYWNjZXB0YWJsZQ0KPiA+ID4gc3RlcCB3
+aGlsZSBhbm90aGVyIG9uZSBoYXMgdGVtcG9yYXJpbHkgc2V0IGl0IHRvbyBoaWdoLCBpdCB3aWxs
+IG5vdyBmYWlsLg0KPiA+ID4gDQo+ID4gPiBJIHRoaW5rIHdlIHNob3VsZCBrZWVwIHRoZSBwcmV2
+aW91cyBhcHByb2FjaCBhbmQgZG8gYSBjbXB4Y2hnIGFmdGVyDQo+ID4gPiB2YWxpZGF0aW5nIHRo
+ZSBuZXcgdmFsdWUuDQo+IA0KPiBXb3VsZG4ndCB0aGUgY21weGNoZyBhbHRlcm5hdGl2ZSBhbHNv
+IGJlIGV4cG9zZWQgdGhlIGxvY2tlZF92bSBjaGFuZ2luZyBiZXR3ZWVuDQo+IHZhbGlkYXRpbmcg
+dGhlIG5ldyB2YWx1ZSBhbmQgdGhlIGNtcHhjaGcoKSBhbmQgd2UnZCBib2d1c2x5IGZhaWwgZXZl
+biB3aGVuIHRoZXJlDQo+IGlzIHN0aWxsIGp1c3QgYmVjYXVzZSB0aGUgdmFsdWUgY2hhbmdlZCAo
+SSdtIGFzc3VtaW5nIHdlIGRvbid0IGhvbGQgYW55IGxvY2tzLA0KPiBvdGhlcndpc2UgYWxsIHRo
+aXMgaXMgcG9pbnRsZXNzKS4NCj4gDQo+ICAgY3VycmVudF9sb2NrZWQgPSBhdG9taWNfcmVhZCgm
+bW0tPmxvY2tlZF92bSk7DQo+ICAgbmV3X2xvY2tlZCA9IGN1cnJlbnRfbG9ja2VkICsgbnBhZ2Vz
+Ow0KPiAgIGlmIChuZXdfbG9ja2VkIDwgbG9ja19saW1pdCkNCj4gICAgICBpZiAoY21weGNoZygm
+bW0tPmxvY2tlZF92bSwgY3VycmVudF9sb2NrZWQsIG5ld19sb2NrZWQpID09IGN1cnJlbnRfbG9j
+a2VkKQ0KPiAgICAgIAkgLyogRU5PTUVNICovDQoNCldlbGwgaXQgbmVlZHMgYSBsb29wLi4NCg0K
+YWdhaW46DQogICBjdXJyZW50X2xvY2tlZCA9IGF0b21pY19yZWFkKCZtbS0+bG9ja2VkX3ZtKTsN
+CiAgIG5ld19sb2NrZWQgPSBjdXJyZW50X2xvY2tlZCArIG5wYWdlczsNCiAgIGlmIChuZXdfbG9j
+a2VkIDwgbG9ja19saW1pdCkNCiAgICAgIGlmIChjbXB4Y2hnKCZtbS0+bG9ja2VkX3ZtLCBjdXJy
+ZW50X2xvY2tlZCwgbmV3X2xvY2tlZCkgIT0gY3VycmVudF9sb2NrZWQpDQogICAgICAgICAgICBn
+b3RvIGFnYWluOw0KDQpTbyBpdCB3b24ndCBoYXZlIGJvZ3VzIGZhaWx1cmVzIGFzIHRoZXJlIGlz
+IG5vIHVud2luZCBhZnRlcg0KZXJyb3IuIEJhc2ljYWxseSB0aGlzIGlzIGEgbG9hZCBsb2NrZWQv
+c3RvcmUgY29uZGl0aW9uYWwgc3R5bGUgb2YNCmxvY2tpbmcgcGF0dGVybi4NCg0KPiA+IFRoYXQn
+cyBhIGdvb2QgaWRlYSwgYW5kIGVzcGVjaWFsbHkgd29ydGggZG9pbmcgY29uc2lkZXJpbmcgdGhh
+dCBhbiBhcmJpdHJhcnkNCj4gPiBudW1iZXIgb2YgdGhyZWFkcyB0aGF0IGNoYXJnZSBhIGxvdyBh
+bW91bnQgb2YgbG9ja2VkX3ZtIGNhbiBmYWlsIGp1c3QgYmVjYXVzZQ0KPiA+IG9uZSB0aHJlYWQg
+Y2hhcmdlcyBsb3RzIG9mIGl0Lg0KPiANCj4gWWVhaCBidXQgdGhlIHdpbmRvdyBmb3IgdGhpcyBp
+cyBxdWl0ZSBzbWFsbCwgSSBkb3VidCBpdCB3b3VsZCBiZSBhIHJlYWwgaXNzdWUuDQo+IA0KPiBX
+aGF0IGlmIGJlZm9yZSBkb2luZyB0aGUgYXRvbWljX2FkZF9yZXR1cm4oKSwgd2UgZmlyc3QgZGlk
+IHRoZSByYWN5IG5ld19sb2NrZWQNCj4gY2hlY2sgZm9yIEVOT01FTSwgdGhlbiBkbyB0aGUgc3Bl
+Y3VsYXRpdmUgYWRkIGFuZCBjbGVhbnVwLCBpZiBuZWNlc3NhcnkuIFRoaXMNCj4gd291bGQgZnVy
+dGhlciByZWR1Y2UgdGhlIHNjb3BlIG9mIHRoZSB3aW5kb3cgd2hlcmUgZmFsc2UgRU5PTUVNIGNh
+biBvY2N1ci4NCj4gDQo+ID4gcGlubmVkX3ZtIGFwcGVhcnMgdG8gYmUgYnJva2VuIHRoZSBzYW1l
+IHdheSwgc28gSSBjYW4gZml4IGl0IHRvbyB1bmxlc3Mgc29tZW9uZQ0KPiA+IGJlYXRzIG1lIHRv
+IGl0Lg0KPiANCj4gVGhpcyBzaG91bGQgbm90IGJlIGEgc3VycHJpc2UgZm9yIHRoZSByZG1hIGZv
+bGtzLiBDYydpbmcgSmFzb24gbm9uZXRoZWxlc3MuDQoNCkkgdGhpbmsgd2UgYWNjZXB0ZWQgdGhp
+cyB0aW55IHJhY2UgYXMgYSBzaWRlIGVmZmVjdCBvZiByZW1vdmluZyB0aGUNCmxvY2ssIHdoaWNo
+IHdhcyB2ZXJ5IGJlbmVmaWNpYWwuIFJlYWxseSB0aGUgdGltZSB3aW5kb3cgYmV0d2VlbiB0aGUN
+CmF0b21pYyBmYWlsaW5nIGFuZCB1bndpbmQgaXMgdmVyeSBzbWFsbCwgYW5kIHRoZXJlIGFyZSBl
+bm91Z2ggb3RoZXINCndheXMgYSBob3N0aWxlIHVzZXIgY291bGQgRE9TIGxvY2tlZF92bSB0aGF0
+IEkgZG9uJ3QgdGhpbmsgaXQgcmVhbGx5DQptYXR0ZXJzIGluIHByYWN0aWNlLi4NCg0KSG93ZXZl
+ciwgdGhlIGNtcHhjaGcgc2VlbXMgYmV0dGVyLCBzbyBhIGhlbHBlciB0byBpbXBsZW1lbnQgdGhh
+dCB3b3VsZA0KcHJvYmFibHkgYmUgdGhlIGJlc3QgdGhpbmcgdG8gZG8uDQoNCkphc29uDQo=
