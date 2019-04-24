@@ -2,103 +2,89 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CCCC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C4CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4498F206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128173;
-	bh=tQdCcNDeVZWig8zpzh+Yi0vkyQ7flSnznIs5Eieqw7I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2Rsw6F0uIyc3jX4eSzJXL1ZgFVRzwHW53gIqGU4WmN2nA3ad+G9hhMhET4tHCone
-	 eQlVDsowUacG1NzI+oGUPgD5n6CPACagDTLxteroEhktJMYie1wj64/nx1kSgzQWEV
-	 jz9wW5SF+Z3nEV+4Dn/B1S8O8nGJkpTNnwWZkwKU=
+	by mail.kernel.org (Postfix) with ESMTP id CBB3D206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:49:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjtwjemJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390975AbfDXRaW (ORCPT
+        id S2391430AbfDXRth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390951AbfDXRaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:30:15 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8CD42077C;
-        Wed, 24 Apr 2019 17:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127015;
-        bh=tQdCcNDeVZWig8zpzh+Yi0vkyQ7flSnznIs5Eieqw7I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bTBagT+UZMwfK3JfQGsxSsRGrfrwSxBfHSPpxBj6V14gOO5FuHk9OxeUski00M6dk
-         YWaqYdR8WklMKENxqsS96EwP5X3CEYPbbMPv0e1s5Xs4sMhcivCIzhmWZhi/nQNGxh
-         5gPDnY+UWaDEc1GtSDc0ZusPmL4TmkcWJpFXsT0w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 4.19 29/96] cifs: Fix use-after-free in SMB2_write
-Date:   Wed, 24 Apr 2019 19:09:34 +0200
-Message-Id: <20190424170921.822261176@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
-References: <20190424170919.829037226@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 13:49:37 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:39645 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390964AbfDXRaS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:30:18 -0400
+Received: by mail-it1-f194.google.com with SMTP id e13so7587066itk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 10:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WHhfLu4wuVkD8pobkkPo2fIc8av3brC/CMmAV15vS3I=;
+        b=AjtwjemJWW4bdhAM8ETVn5kyELe01ISf2iOLJRElsXF+0a6lwH7DGig+CCUgCEyw4P
+         MKw/WJdkJ9c2FoSknYFVtjkwkODWJPgUFU42Aa8Nz9cg/8rDw+anCH+3tn1ryGisye4s
+         mtGIeh+sWhpBxqiCYSYT4t2KzzTNOq3ds0vZpeFQ/sk02ubY/R/b3z6vArc4ChfFp1Xn
+         ZK9wKJ5DhYu94VyafrYu96LPYMpSYeVJ3fkd/MlrhMA2HwXrSdXwnCQ0MJx8HpJmJJQi
+         YDedoLBLcpzOzQfrOdrXU1TrKrHKSv9h2F6oZVA3rp5uW1wpsROejEzCHVy5mQZcfGgG
+         h9Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WHhfLu4wuVkD8pobkkPo2fIc8av3brC/CMmAV15vS3I=;
+        b=hMjdm+Ked5wrhdVZAnZi60BXzsA02HBN5q7X8gngXCRNgqBh7eoznvX+MQgXOXPQNt
+         a3lqBi78em1+oWZHNOok3dXEtLcSc4QtL18ssBDQxnF7dqNZuNKnaexI3VKnvwxL/lBK
+         QU8GZdLxdbfWxTMZpuc6wT3QAUuejEbEFOFfbmWIWgEq7R+Y/r05UjW90KLyKJ9N+9mq
+         SGGoQXTiZEmx0TLDdtQoYbx6iZprVnvUWU7fckfjgFvVn/w73Q0wIL/CPGhrQ0sf/4pu
+         +UhL1+CCo27GK+rAez9yAD+oe3VAU8gCzrDSZoaO/yK/USFcjiEhRKvfbpOQp11RdfLf
+         B5dQ==
+X-Gm-Message-State: APjAAAUilfpeqZD9vUMgXunBS4ymmLIspd6gpxeHTT3REBcacOIxUuMp
+        q/YOkd1tBirE5/eUaBVIJz3oB/MxcyNvt7wqNDMeNw==
+X-Google-Smtp-Source: APXvYqw/1KKOdtb17KTKv/fEV8z+hZmpaUZLaHqCdkjhIfgVQqbw6/MyDqe/91K9Yoz2tlffGeVTlbuN1fwnM560ub4=
+X-Received: by 2002:a02:ccb0:: with SMTP id t16mr23615766jap.137.1556127017979;
+ Wed, 24 Apr 2019 10:30:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAJ4FQ9AczEXM27=Pn_5iaaAXZ=nA+6FQu7_TRdcC=5RHpDFx4g@mail.gmail.com>
+ <20190424170418.GB4253@kroah.com>
+In-Reply-To: <20190424170418.GB4253@kroah.com>
+From:   =?UTF-8?Q?Ambro=C5=BE_Bizjak?= <abizjak.pro@gmail.com>
+Date:   Wed, 24 Apr 2019 19:30:06 +0200
+Message-ID: <CAJ4FQ9AQO0=_A5ueWt41JxUcLoa8-4JSGiD3_fOHQqJwKH6gRQ@mail.gmail.com>
+Subject: Re: Oops in current tree in i2c
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Thanks! I just tested the patch with 4.19.36 and it works for me.
 
-commit 6a3eb3360667170988f8a6477f6686242061488a upstream.
-
-There is a KASAN use-after-free:
-BUG: KASAN: use-after-free in SMB2_write+0x1342/0x1580
-Read of size 8 at addr ffff8880b6a8e450 by task ln/4196
-
-Should not release the 'req' because it will use in the trace.
-
-Fixes: eccb4422cf97 ("smb3: Add ftrace tracepoints for improved SMB3 debugging")
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org> 4.18+
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/cifs/smb2pdu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -3591,7 +3591,6 @@ SMB2_write(const unsigned int xid, struc
- 
- 	rc = cifs_send_recv(xid, io_parms->tcon->ses, &rqst,
- 			    &resp_buftype, flags, &rsp_iov);
--	cifs_small_buf_release(req);
- 	rsp = (struct smb2_write_rsp *)rsp_iov.iov_base;
- 
- 	if (rc) {
-@@ -3609,6 +3608,7 @@ SMB2_write(const unsigned int xid, struc
- 				     io_parms->offset, *nbytes);
- 	}
- 
-+	cifs_small_buf_release(req);
- 	free_rsp_buf(resp_buftype, rsp);
- 	return rc;
- }
-
-
+On Wed, Apr 24, 2019 at 7:04 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Apr 24, 2019 at 06:59:09PM +0200, Ambro=C5=BE Bizjak wrote:
+> > Hi everyone,
+> >
+> > This buggy i2c patch (see https://lkml.org/lkml/2018/10/27/248) has
+> > just landed in stable 4.19.36 without the appropriate fix, causing
+> > oops on boot on many machines. For example we're experiencing this
+> > issue with the NixOS distribution
+> > (https://github.com/NixOS/nixpkgs/issues/60126). I am currently trying
+> > the fix (https://github.com/torvalds/linux/commit/b59dfdaef173677b0b7e1=
+0f375226c0a1114fd20)
+> > and will report if fixes the crash.
+>
+> Good catch, that fix is needed, will go queue that up now, thanks!
+>
+> greg k-h
