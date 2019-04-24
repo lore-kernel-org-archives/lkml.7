@@ -2,60 +2,60 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20ECC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BBAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD102183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD83218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+43NYA9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GnVPoX4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfDXWtm (ORCPT
+        id S1727145AbfDXWtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 18:49:42 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42237 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbfDXWtm (ORCPT
+        Wed, 24 Apr 2019 18:49:47 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33909 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfDXWtp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 18:49:42 -0400
-Received: by mail-lj1-f193.google.com with SMTP id i186so4501508lji.9;
-        Wed, 24 Apr 2019 15:49:40 -0700 (PDT)
+        Wed, 24 Apr 2019 18:49:45 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y16so7627161ljg.1;
+        Wed, 24 Apr 2019 15:49:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gijtPULiobsGHYV3TOfcwTxfm4m5F6+46+RVKD3rH9s=;
-        b=A+43NYA9AtQ3bIiQ2aNyTrNFc95ey7PkPWZXM+uc4JDbV5zwM146vx5wuicqwNIFu0
-         j+gzrAmIi0dKVSSL7sGq76Uawrn6cjILMK69IKB0VIN6H7g0/RA/qY4wD5r9hhr+ToRH
-         LVPAk11pY3UhfhT0LUpMSWc7OEgnEhM4Lixc3YsMm4fvUNy6R2Jw6ArEE0ce0WmYcQlR
-         hMwuX25NJJwEgRKz0m3FBrU1UDIMOxY7SSJGZrzVppqp9OQ0m5A+2aL0UuxMEdaQN1gM
-         /pegiZw46MscpolBqJAIPGFWpuCgwwHjfflPextb/ZpE+Bam6P5Ivfj4rJIYBjkMBaEI
-         66Sw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Qb30F3csxPMWkF7SUL4LY++a+c/C+BjbyqzAzgW0ngI=;
+        b=GnVPoX4wjGW29Mn+/bzbvUiYx2G+0/RjIJRAgujgPbO/Q9U0no+tqduDD/x8cqb2qz
+         Uq69/PmiPxyg1+sfvfczzaIOJO7uh5Cwnu1mPmgUCgP5ZJfqjMImg0u+aID4q12y5S0B
+         cvpg5Ofec+7zFtjcrkBARAhIytOFGMU+COZW8ekRq+1Fk11LE/k3LsaXqhWRJTLsPyGT
+         c2kZU3rlMzVo1zBYioSoPqS4ymayJgJA3p58gXMBStthpUsD+r6xYI8bdM3vk+vIUyqg
+         j/8DJcGE89xOYbvPt7xdMvjRHEqIgKYR8hVKcYOZCbKBCudr+bcSGpbiyR6yzytUhrGJ
+         I0AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gijtPULiobsGHYV3TOfcwTxfm4m5F6+46+RVKD3rH9s=;
-        b=lFWkjK6Vk46GgvQZIEzyZLfRw7wK4auYFQIrZBUSM17ZX4KdjSeZopnM2RzY/r7J4n
-         X8o30mDL8MI9Ydk3xjl/1XtgQjJC5V8lLBxR4BK2c/1sW6KTgBUPNpTUjuHx9HCMyHCC
-         U35S9AUUlphM/JABdylnXRCbSpw/XAVP/CesXIznd9py822sDZB7q7jSUq0QqvwrEAfy
-         5zrOB64Nra0ZUwENOSmKclC+tPi/74v8W3jy7IkPRmCZ3xBoxlRrBH7wQ4Lu3XIqDUiv
-         kcxddTsCfEHrqWmrTzl2D8w7zfXox0bEB/NgzAtRAcHeYDjs9p+IHWUfb7VIoL7ng6CQ
-         DRhg==
-X-Gm-Message-State: APjAAAU/BPNEJ3dAtl3nelsI3bgqPbt8UvlhRR8zxa4J+OyIxf9tQeqN
-        K3rB2lxWLniRlPHm6sDHvUh0/2u5
-X-Google-Smtp-Source: APXvYqxGPvV37XRBWOmU1cGRCBPIQb4jveoxGIQGssA8+cQymAZI4xNyaDmvlDeh/orC+yze0UifCw==
-X-Received: by 2002:a2e:8ec5:: with SMTP id e5mr18950288ljl.7.1556146179839;
-        Wed, 24 Apr 2019 15:49:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Qb30F3csxPMWkF7SUL4LY++a+c/C+BjbyqzAzgW0ngI=;
+        b=eEPPvQs3ufEz8iXZ4ky5eXjGWxDFX59W+el0TCyHfxQyQubSXDSHis+vhwcP1guwTt
+         /0PrxTb3W4s1tAHyrkqe0+Hx8s2Ygkc6MPqB6PGzby1vhNZrajVE6gHzyfDOWZGZnbmj
+         Q6L8pfuKi/i6qz+XLVh3KorovcaiZnFiwRH6g/b0xt4OxERh94zn+k5x1zkXr/h2Q9Gv
+         UxRCT4EJMSthVfrcib9XNmWxjp+ZJ/0QMXSrv6MOYD6AmKqFueaTnoSKQjSQQ52cwwCh
+         npdIRvY6cdNhyS4g2OV6wR0xOpn8gWlx+zTRx0H+LPOFDCoplayEHzUCmQ2IywnLv1fa
+         AvSw==
+X-Gm-Message-State: APjAAAWJcQrVBqUWN5CG3eI5U63UxbRmHblHjampy0gchtXImS8ZdRtb
+        tB6+bH9EVHCIy9CO5vAsTtE=
+X-Google-Smtp-Source: APXvYqxg5+DJ+yNzHU1rMIIbivfXlF8nPhjHWF0r6nNdhdwuKKoKxi2iZ20d0sjn3KPK0+XZ7kXW5Q==
+X-Received: by 2002:a2e:9ed3:: with SMTP id h19mr19006445ljk.129.1556146182369;
+        Wed, 24 Apr 2019 15:49:42 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id s24sm4219879ljs.30.2019.04.24.15.49.38
+        by smtp.gmail.com with ESMTPSA id s24sm4219879ljs.30.2019.04.24.15.49.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 15:49:39 -0700 (PDT)
+        Wed, 24 Apr 2019 15:49:41 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -67,10 +67,12 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/6] Add support for Maxim 77663 MFD
-Date:   Thu, 25 Apr 2019 01:48:54 +0300
-Message-Id: <20190424224900.8018-1-digetx@gmail.com>
+Subject: [PATCH v3 2/6] mfd: max77620: Support Maxim 77663
+Date:   Thu, 25 Apr 2019 01:48:56 +0300
+Message-Id: <20190424224900.8018-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424224900.8018-1-digetx@gmail.com>
+References: <20190424224900.8018-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,46 +80,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Add support for Maxim 77663 using the Max77620 driver. The hardware
+is very similar to Max77663/20024, although there are couple minor
+differences.
 
-This series adds support for the Maxim 77663 chip that provides PMIC, RTC,
-GPIO and watchdog timer functionality. The hardware is very similar to the
-Maxim 77620/20024 hardware units that are already supported by the kernel,
-hence we will reuse the existing drivers for 77663. The GPIO, regulator,
-RTC and watchdog timer functionality was tested on a Nexus 7 tablet that
-has the Max77663 chip, everything is working perfectly fine. I'm looking
-at upstreaming support for that tablet device and Max77663 is one of the
-core components that are currently missing in the upstream kernel.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/mfd/max77620.c       | 69 +++++++++++++++++++++++++++++++++++-
+ include/linux/mfd/max77620.h |  1 +
+ 2 files changed, 69 insertions(+), 1 deletion(-)
 
-Changelog:
-
-v3: Dropped "Support device-tree properly" patch since turned out that
-    I2C core takes care of the device-tree matching and I wasn't aware of
-    it.
-
-v2: Added PINCTRL sub-device to Max77663 MFD as it looks compatible with
-    77620.
-
-    Added new "maxim,system-power-controller" OF property.
-
-    Patch "Support device-tree properly" now doesn't remove driver's
-    "id_table" since potentially it could have some use in the downstream
-    kernel forks and it doesn't hurt to keep it around.
-
-Dmitry Osipenko (6):
-  mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
-  mfd: max77620: Support Maxim 77663
-  regulator: max77620: Support Maxim 77663
-  dt-bindings: mfd: max77620: Add compatible for Maxim 77663
-  dt-bindings: mfd: max77620: Add maxim,system-power-controller property
-  mfd: max77620: Provide system power-off functionality
-
- .../devicetree/bindings/mfd/max77620.txt      |  7 +-
- drivers/mfd/max77620.c                        | 88 ++++++++++++++++++-
- drivers/regulator/max77620-regulator.c        | 26 +++++-
- include/linux/mfd/max77620.h                  |  5 +-
- 4 files changed, 121 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/mfd/max77620.c b/drivers/mfd/max77620.c
+index d8ddd1a6f304..9b0009c29610 100644
+--- a/drivers/mfd/max77620.c
++++ b/drivers/mfd/max77620.c
+@@ -111,6 +111,26 @@ static const struct mfd_cell max20024_children[] = {
+ 	},
+ };
+ 
++static const struct mfd_cell max77663_children[] = {
++	{ .name = "max77620-pinctrl", },
++	{ .name = "max77620-clock", },
++	{ .name = "max77663-pmic", },
++	{ .name = "max77620-watchdog", },
++	{
++		.name = "max77620-gpio",
++		.resources = gpio_resources,
++		.num_resources = ARRAY_SIZE(gpio_resources),
++	}, {
++		.name = "max77620-rtc",
++		.resources = rtc_resources,
++		.num_resources = ARRAY_SIZE(rtc_resources),
++	}, {
++		.name = "max77663-power",
++		.resources = power_resources,
++		.num_resources = ARRAY_SIZE(power_resources),
++	},
++};
++
+ static const struct regmap_range max77620_readable_ranges[] = {
+ 	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_DVSSD4),
+ };
+@@ -171,6 +191,35 @@ static const struct regmap_config max20024_regmap_config = {
+ 	.volatile_table = &max77620_volatile_table,
+ };
+ 
++static const struct regmap_range max77663_readable_ranges[] = {
++	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_CID5),
++};
++
++static const struct regmap_access_table max77663_readable_table = {
++	.yes_ranges = max77663_readable_ranges,
++	.n_yes_ranges = ARRAY_SIZE(max77663_readable_ranges),
++};
++
++static const struct regmap_range max77663_writable_ranges[] = {
++	regmap_reg_range(MAX77620_REG_CNFGGLBL1, MAX77620_REG_CID5),
++};
++
++static const struct regmap_access_table max77663_writable_table = {
++	.yes_ranges = max77663_writable_ranges,
++	.n_yes_ranges = ARRAY_SIZE(max77663_writable_ranges),
++};
++
++static const struct regmap_config max77663_regmap_config = {
++	.name = "power-slave",
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = MAX77620_REG_CID5 + 1,
++	.cache_type = REGCACHE_RBTREE,
++	.rd_table = &max77663_readable_table,
++	.wr_table = &max77663_writable_table,
++	.volatile_table = &max77620_volatile_table,
++};
++
+ /*
+  * MAX77620 and MAX20024 has the following steps of the interrupt handling
+  * for TOP interrupts:
+@@ -237,6 +286,9 @@ static int max77620_get_fps_period_reg_value(struct max77620_chip *chip,
+ 	case MAX20024:
+ 		fps_min_period = MAX20024_FPS_PERIOD_MIN_US;
+ 		break;
++	case MAX77663:
++		fps_min_period = MAX20024_FPS_PERIOD_MIN_US;
++		break;
+ 	case MAX77620:
+ 		fps_min_period = MAX77620_FPS_PERIOD_MIN_US;
+ 		break;
+@@ -274,6 +326,9 @@ static int max77620_config_fps(struct max77620_chip *chip,
+ 	case MAX77620:
+ 		fps_max_period = MAX77620_FPS_PERIOD_MAX_US;
+ 		break;
++	case MAX77663:
++		fps_max_period = MAX20024_FPS_PERIOD_MAX_US;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -375,6 +430,9 @@ static int max77620_initialise_fps(struct max77620_chip *chip)
+ 	}
+ 
+ skip_fps:
++	if (chip->chip_id == MAX77663)
++		return 0;
++
+ 	/* Enable wake on EN0 pin */
+ 	ret = regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG2,
+ 				 MAX77620_ONOFFCNFG2_WK_EN0,
+@@ -453,6 +511,11 @@ static int max77620_probe(struct i2c_client *client,
+ 		n_mfd_cells = ARRAY_SIZE(max20024_children);
+ 		rmap_config = &max20024_regmap_config;
+ 		break;
++	case MAX77663:
++		mfd_cells = max77663_children;
++		n_mfd_cells = ARRAY_SIZE(max77663_children);
++		rmap_config = &max77663_regmap_config;
++		break;
+ 	default:
+ 		dev_err(chip->dev, "ChipID is invalid %d\n", chip->chip_id);
+ 		return -EINVAL;
+@@ -546,6 +609,9 @@ static int max77620_i2c_suspend(struct device *dev)
+ 		return ret;
+ 	}
+ 
++	if (chip->chip_id == MAX77663)
++		goto out;
++
+ 	/* Disable WK_EN0 */
+ 	ret = regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG2,
+ 				 MAX77620_ONOFFCNFG2_WK_EN0, 0);
+@@ -581,7 +647,7 @@ static int max77620_i2c_resume(struct device *dev)
+ 	 * For MAX20024: No need to configure WKEN0 on resume as
+ 	 * it is configured on Init.
+ 	 */
+-	if (chip->chip_id == MAX20024)
++	if (chip->chip_id == MAX20024 || chip->chip_id == MAX77663)
+ 		goto out;
+ 
+ 	/* Enable WK_EN0 */
+@@ -603,6 +669,7 @@ static int max77620_i2c_resume(struct device *dev)
+ static const struct i2c_device_id max77620_id[] = {
+ 	{"max77620", MAX77620},
+ 	{"max20024", MAX20024},
++	{"max77663", MAX77663},
+ 	{},
+ };
+ 
+diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
+index b4fd5a7c2aaa..82407fe85ca2 100644
+--- a/include/linux/mfd/max77620.h
++++ b/include/linux/mfd/max77620.h
+@@ -324,6 +324,7 @@ enum max77620_fps_src {
+ enum max77620_chip_id {
+ 	MAX77620,
+ 	MAX20024,
++	MAX77663,
+ };
+ 
+ struct max77620_chip {
 -- 
 2.21.0
 
