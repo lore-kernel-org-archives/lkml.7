@@ -2,140 +2,116 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0939C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E18C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACAC321773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293AD2183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCTbTvOm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqLg0zPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387862AbfDXSc7 (ORCPT
+        id S2387898AbfDXSdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:32:59 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41477 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733024AbfDXSc6 (ORCPT
+        Wed, 24 Apr 2019 14:33:18 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42344 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733024AbfDXSdR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:32:58 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t30so15457787lfd.8;
-        Wed, 24 Apr 2019 11:32:57 -0700 (PDT)
+        Wed, 24 Apr 2019 14:33:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p6so9788586pgh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:33:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a7PyW//ODouHJ0UFL0G/u5+dubQwstZk66ZTCET5hDg=;
-        b=iCTbTvOmNjQO0lutCP4K479JWvDLnKRbytD2MpfFLv4uDsaXEK7P6gKr7eImEO5H9X
-         3FmEKvbHt6Vkc0kKtxfNMvlBgFeA8Yv+0BUl0kbvIu+QApNGe3Y/JzyzfsVVpHIHWUV6
-         zkDAgTybXa8OJ1raV34XvWyArlYpch9p4Clh7GOivZ+X0gVI4AI26Ad/bjSzF2ujREtX
-         mI8HRIbDSVBhWeMdZNfCi2hGvZYeVd0TtqQENm+Gz6Zo7qgknkFMRH6eTn/97WvKrG8d
-         Ds6a+XNSDrbcwp66E209jnDyJeBO5CJ5nAe5dqwlBCdxo7mOmwMmIBcP9HV1W/K64kOL
-         FT0g==
+         :content-disposition:in-reply-to:user-agent;
+        bh=8TEy0tx0jHylJx7e47yPJO+qgMm3AFlPvz5zMS1qhSY=;
+        b=eqLg0zPNqnOMeNBKAwLI6PomFBg1//aO8UxynQI5ck9qKMhfU30AOHPk5LfJnq7R3w
+         Z693bDoY5BcWklK0yQyMjTKsv7XI2oN9DVtSFLjkzaow2O/nmJVKJxdmbQYaeYrWAdgC
+         MB9QCGPCFzweWL8xdNjUylzB+tT9HbflspBwpDho0ZmKLVzEB9nWwPQWn7RebXNaKkaX
+         GZP8VlrMejBnji+h4jFl+qSeR1YKgNKytt1IzHUeXUELql2koND7HL3mAhJl3jmX1D9w
+         6ui9v+KD0tbMtJRny4Ow8MocSqRIze3m6r07tQlXmp3wmuwkGH1kA2lEcLf5LVuZN3CS
+         m6yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a7PyW//ODouHJ0UFL0G/u5+dubQwstZk66ZTCET5hDg=;
-        b=TGbJOrciV8xxGhrjkaize+cu2QZjWLYCbTdtkzHoj02WEw/oInGlgvHE+7DG3UY6zU
-         21PWgj6ICyToPytGZWQfKkGH/cepLBUikfkbGy90sPjs1QFA+5b8s+rudM1xSuILHMOm
-         VUL0Ft8ezGcH20P9pqO72UiehRMb1sIejs3BIfoZH66M6kTCKB7ZsIIdSxlpQXemqyUI
-         mL/cI9GUp3IGHFB4pxRbSUG2OedEv8bgP1CpNx9GEC58md+IoomVVzvbY1FUvgrY8yFZ
-         wUnIxHxQc0Pm5M+qHAnx06yBzSMgbfTeTtRUso8zargyD/RXNT26YIZMJ9UWVgSjGiA1
-         /Tsg==
-X-Gm-Message-State: APjAAAUkXPgBdBAbpW8Z2WGsFOPp+vXBw2devsit/BAeitIqq9SH81hE
-        /t+mGI69f5Z6LhYyD2HgxwM=
-X-Google-Smtp-Source: APXvYqzcTQx8ECJ8TJyG2Sv+GZuNYIBoadQ/NELoBXWO0zAUH3fVnlEHVUkwgVOCMUu2sSafs8g1xg==
-X-Received: by 2002:a19:f50e:: with SMTP id j14mr17143444lfb.11.1556130776679;
-        Wed, 24 Apr 2019 11:32:56 -0700 (PDT)
-Received: from localhost.localdomain ([193.183.105.170])
-        by smtp.gmail.com with ESMTPSA id d80sm4750993lfd.90.2019.04.24.11.32.55
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8TEy0tx0jHylJx7e47yPJO+qgMm3AFlPvz5zMS1qhSY=;
+        b=Ea03MnSp2mws20Blx7YheYpcNIHrkkQ5o8s3CTqxXQxKT6ntwpoM86VDvbzHmIIWMK
+         6TSO+LqNQNusXS/aDzs96GZ82P3IAr6G1iJ6bNqLsajN6SHvVbTiC6paRthl5SbATBIL
+         BtC6FJZr4eOHnnnZNlO/6xamT//WtgOGhPFKwS+Eup7qxBFnLy+n8ype2O5pCUbyI237
+         vQi0VMxo2XWc6kv3AmI/42SwrCdQ3z2MogT2rDdyNWHWNhjRC8nTAwhsPFZHRoMV1uxk
+         DExz2Cz0N0nGR1Bi78Q8S+SuPhf3lCo5mYhZVZSQsMr7Jl9razNOuFrdNHTRVFth8skY
+         3sRA==
+X-Gm-Message-State: APjAAAVvNh6rJ7GuLL8i1TiyfH7A/V4TtMLAUdwQYr0KXS/ATwOSpZ2j
+        GKhubWmuIdz4E+RiYOv4W7Y=
+X-Google-Smtp-Source: APXvYqyY7PI6qWpkkSXcac3wixJyG1JL6PVz0l3idYqFErVnnnB1azTnKuYcgT6q0FkE26K1aXkecg==
+X-Received: by 2002:a63:5a4b:: with SMTP id k11mr31878166pgm.119.1556130796862;
+        Wed, 24 Apr 2019 11:33:16 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id c28sm9686899pgm.42.2019.04.24.11.33.15
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 11:32:55 -0700 (PDT)
-Received: from [127.0.0.1] (helo=jeknote.loshitsa1.net)
-        by localhost.localdomain with esmtp (Exim 4.92)
-        (envelope-from <jekhor@gmail.com>)
-        id 1hJMhP-0002iw-Tq; Wed, 24 Apr 2019 21:32:51 +0300
-Date:   Wed, 24 Apr 2019 21:32:51 +0300
-From:   Yauhen Kharuzhy <jekhor@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 0/2] Intel Cherry Trail Whiskey Cove LEDs support
-Message-ID: <20190424183251.GA21254@jeknote.loshitsa1.net>
-References: <20190212205901.13037-1-jekhor@gmail.com>
- <21337ca0-bb91-9ca9-117b-89c47c6b2ade@redhat.com>
+        Wed, 24 Apr 2019 11:33:16 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 11:33:11 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     robin.murphy@arm.com, vdumpa@nvidia.com, linux@armlinux.org.uk,
+        catalin.marinas@arm.com, will.deacon@arm.com, joro@8bytes.org,
+        m.szyprowski@samsung.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        tony@atomide.com
+Subject: Re: [PATCH v2 RFC/RFT 1/5] ARM: dma-mapping: Add fallback normal
+ page allocations
+Message-ID: <20190424183310.GA6168@Asurada-Nvidia.nvidia.com>
+References: <20190326230131.16275-1-nicoleotsuka@gmail.com>
+ <20190326230131.16275-2-nicoleotsuka@gmail.com>
+ <20190424150638.GA22191@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <21337ca0-bb91-9ca9-117b-89c47c6b2ade@redhat.com>
+In-Reply-To: <20190424150638.GA22191@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 21, 2019 at 09:28:42PM +0200, Hans de Goede wrote:
-> Hi Yauhen,
+Hi Christoph,
 
-> I had a discussion with Jacek Anaszewski about this in another thread and
-> I believe we have come up with a solution for this which should work
-> nicely and should allow us to move forward with your driver (after
-> it is reworked to match the solution. So the solution we've come up with is:
+On Wed, Apr 24, 2019 at 05:06:38PM +0200, Christoph Hellwig wrote:
+> On Tue, Mar 26, 2019 at 04:01:27PM -0700, Nicolin Chen wrote:
+> >  	page = dma_alloc_from_contiguous(dev, count, order, gfp & __GFP_NOWARN);
+> > +	if (!page)
+> > +		page = alloc_pages(gfp, order);
 > 
-> 1) After thinking a bit more about the primary use-case for this, I've come
-> to the conclusion that putting LED1 / the charging LED in software-controlled
-> mode is also the correct thing to do on the GPD win / pocket. The reason for
-> this is that ideally the LED would glow while charging and be simply solid
-> on when the battery is full, the hw control does not allow this, so the GPD
-> win/pocket can benefit from sw-control too.
+> We have this fallback in most callers already.  And with me adding
+> it to the dma-iommu code in one series, and you to arm here I think
+> we really need to take a step back and think of a better way
+> to handle this, and the general mess that dma_alloc_from_contiguous.
 > 
-> 2) To allow the desired behavior we need to define a new
-> "<supply-name>-charging-glow-full-solid" trigger in
-> drivers/power/supply/power_supply_leds.c; and this must be the default
-> trigger for the Intel Cherry Trail Whiskey Cove LED driver so that
-> everything will just work. Also we must restore the original hw control
-> setting on reboot/shut-down so that this is used on the GPD win/pocket when
-> Linux is not running.
-> 
-> 3) To be able to actually implement this new trigger we first need 2 things
-> in the kernel internal LED APIs:
-> 
-> 3a) An API for triggers to put the LED in glowing mode, we've come up
-> with the following prototype for this:
-> 
-> void led_trigger_glow(struct led_trigger *trigger, unsigned long *cylce_time);
-> 
-> Where cycle_time is the number of milliseconds for a full glow cycle (from off
-> to full-on to off again).  So if cylce_time is set to 1000 then the LED glows
-> at 1 Hz, 500, 2 HZ, etc. Note as with led_trigger_blink() the time passed to
-> led_trigger_glow is passed by reference as the LED driver may round it to
-> match what the hardware can do and the rounded value is returned to the caller
-> through the reference.
-> 
-> 3b) 3a) in turn will require adding a new optional glow_set callback to
-> struct led_classdev which will then get called by led_trigger_glow if available.
-> 
-> We've not discussed yet what to do if led_trigger_glow gets called on
-> a led_classdev which does not implement the new glow_set callback, I guess
-> the most sensible thing to do then is to fallback to blinking with delay_on
-> and delay_off set to cylce_time / 2.
-> 
-> If you can make some time to work on this solution that would be great. Please
-> let me know if you've any questions about the solution outlined below.
-> 
-> Note that glowing is only exported as in kernel functionality, I see no
-> use-case for exporting this to userspace and keeping this in kernel allows
-> us to keep things nice and simple.
-> 
+> So what about:
 
-Hi,
-Unfortunately I am too busy now at fulltime job, so I don't know when I
-will return to this. But I still plan to do  :)
- 
+Thanks for the suggestion!
 
--- 
-Yauhen Kharuzhy
+>  (1) change the dma_alloc_from_contiguous prototype to be:
+> 
+> struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp);
+> 
+>      that is: calculate order and count internally, pass the full gfp_t
+>      and mask it internally, and drop the pointless from in the name.
+>      I'd also use the oppurtunity to forbid a NULL dev argument and
+>      opencode those uses.
+>  
+>  (2) handle the alloc_pages fallback internally.  Note that we should
+>      use alloc_pages_node as we do in dma-direct.
+
+I feel it's similar to my previous set, which did most of these
+internally except the renaming part. But Catalin had a concern
+that some platforms might have limits on CMA range [1]. Will it
+be still okay to do the fallback internally?
+
+[1: https://www.spinics.net/lists/arm-kernel/msg714295.html ]
