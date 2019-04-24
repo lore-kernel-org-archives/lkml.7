@@ -2,136 +2,152 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225BAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2081BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62AC218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116919;
-	bh=6FnYK8tpkJRKEBgCryFJbaQQAnR4mPdtoYBkDzoVrO4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RAB4UghCdIbvPU3FvHn/A4mxk3SALxU0f1rlwvJhM2A7pl3xkBaAH3LOMMU2BVyZx
-	 KTOCvJl5qSYA+McBzV3NdI8iy9Bj+RJfwK+yBT4pnsi8p4v++4EgiTNWyPB1F2ibqU
-	 9XFwdP8PIybDsUOxyiKGVa4sD1Us+TTqNsm7vJrQ=
+	by mail.kernel.org (Postfix) with ESMTP id E4905218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732131AbfDXOl5 (ORCPT
+        id S1732154AbfDXOmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 24 Apr 2019 10:42:00 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:47393 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731289AbfDXOl5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Apr 2019 10:41:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731443AbfDXOlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:41:05 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D65B21901;
-        Wed, 24 Apr 2019 14:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116865;
-        bh=6FnYK8tpkJRKEBgCryFJbaQQAnR4mPdtoYBkDzoVrO4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SjQbnkGdDG1SrTj//23LqzXDx8WVGcPDdOkkGrt6H40awj2SAEicv/mrj+U7xN5Ik
-         km8PplOZEgYsTiUHak/SOHGh5eYprHPqUXOWNOAEBeFysmIzCmy+Ul82wi/Rtk9vKO
-         0XUSjr2slodxaFYf5S3kK/07XbON51d7i2KVT8gk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 45/52] hugetlbfs: fix memory leak for resv_map
-Date:   Wed, 24 Apr 2019 10:39:03 -0400
-Message-Id: <20190424143911.28890-45-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
-References: <20190424143911.28890-1-sashal@kernel.org>
+X-Originating-IP: 90.88.147.33
+Received: from aptenodytes (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 05D1A20020;
+        Wed, 24 Apr 2019 14:41:52 +0000 (UTC)
+Message-ID: <93c8e6834728b7e5979013df757017d309ee6a89.camel@bootlin.com>
+Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Michel =?ISO-8859-1?Q?D=E4nzer?= <michel@daenzer.net>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Alexandre Courbot <acourbot@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Date:   Wed, 24 Apr 2019 16:41:52 +0200
+In-Reply-To: <8e091392-2365-6c52-1fc2-84ebdc9e83fe@daenzer.net>
+References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
+         <20190418081816.GO13337@phenom.ffwll.local>
+         <8265f098722d0cd5aae606d7ee6d955f168ac8f3.camel@ndufresne.ca>
+         <987372acff18f4c66191ee52fa69dc2917e4a605.camel@bootlin.com>
+         <1d6fb659-0516-41db-257b-258e6116a4f2@daenzer.net>
+         <7479b8df108c66b1711eb89efbfeb4a16480533d.camel@ndufresne.ca>
+         <8e091392-2365-6c52-1fc2-84ebdc9e83fe@daenzer.net>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Kravetz <mike.kravetz@oracle.com>
+Hi,
 
-[ Upstream commit 58b6e5e8f1addd44583d61b0a03c0f5519527e35 ]
+On Wed, 2019-04-24 at 16:39 +0200, Michel Dänzer wrote:
+> On 2019-04-24 2:01 p.m., Nicolas Dufresne wrote:
+> > Le mercredi 24 avril 2019 à 10:31 +0200, Michel Dänzer a écrit :
+> > > On 2019-04-19 10:38 a.m., Paul Kocialkowski wrote:
+> > > > On Thu, 2019-04-18 at 20:30 -0400, Nicolas Dufresne wrote:
+> > > > > Le jeudi 18 avril 2019 à 10:18 +0200, Daniel Vetter a écrit :
+> > > > > In the first, we'd need a mechanism where we can schedule a render at a
+> > > > > specific time or vblank. We can of course already implement this in
+> > > > > software, but with fences, the scheduling would need to be done in the
+> > > > > driver. Then if the fence is signalled earlier, the driver should hold
+> > > > > on until the delay is met. If the fence got signalled late, we also
+> > > > > need to think of a workflow. As we can't schedule more then one render
+> > > > > in DRM at one time, I don't really see yet how to make that work.
+> > > > 
+> > > > Indeed, that's also one of the main issues I've spotted. Before using
+> > > > an implicit fence, we basically have to make sure the frame is due for
+> > > > display at the next vblank. Otherwise, we need to refrain from using
+> > > > the fence and schedule the flip later, which is kind of counter-
+> > > > productive.
+> > > 
+> > > Fences are about signalling that the contents of a frame are "done" and
+> > > ready to be presented. They're not about specifying which frame is to be
+> > > presented when.
+> > > 
+> > > 
+> > > > I feel like specifying a target vblank would be a good unit for that,
+> > > 
+> > > The mechanism described above works for that.
+> > > 
+> > > > since it's our native granularity after all (while a timestamp is not).
+> > > 
+> > > Note that variable refresh rate (Adaptive Sync / FreeSync / G-Sync)
+> > > changes things in this regard. It makes the vblank length variable, and
+> > > if you wait for multiple vblanks between flips, you get the maximum
+> > > vblank length corresponding to the minimum refresh rate / timing
+> > > granularity. Thus, it would be useful to allow userspace to specify a
+> > > timestamp corresponding to the earliest time when the flip is to
+> > > complete. The kernel could then try to hit that as closely as possible.
+> > 
+> > Rendering a video stream is more complex then what you describe here.
+> > Whenever there is a unexpected delay (late delivery of a frame as an
+> > example) you may endup in situation where one frame is ready after the
+> > targeted vblank. If there is another frame that targets the following
+> > vblank that gets ready on-time, the previous frame should be replaced
+> > by the most recent one.
+> > 
+> > With fences, what happens is that even if you received the next frame
+> > on time, naively replacing it is not possible, because we don't know
+> > when the fence for the next frame will be signalled. If you simply
+> > always replace the current frame, you may endup skipping a lot more
+> > vblank then what you expect, and that results in jumpy playback.
+> 
+> So you want to be able to replace a queued flip with another one then.
+> That doesn't necessarily require allowing more than one flip to be
+> queued ahead of time.
 
-When mknod is used to create a block special file in hugetlbfs, it will
-allocate an inode and kmalloc a 'struct resv_map' via resv_map_alloc().
-inode->i_mapping->private_data will point the newly allocated resv_map.
-However, when the device special file is opened bd_acquire() will set
-inode->i_mapping to bd_inode->i_mapping.  Thus the pointer to the
-allocated resv_map is lost and the structure is leaked.
+There might be other ways to do it, but this one has plenty of
+advantages.
 
-Programs to reproduce:
-        mount -t hugetlbfs nodev hugetlbfs
-        mknod hugetlbfs/dev b 0 0
-        exec 30<> hugetlbfs/dev
-        umount hugetlbfs/
+> Note that this can also be done in userspace with explicit fencing (by
+> only selecting a frame and submitting it to the kernel after all
+> corresponding fences have signalled), at least to some degree, but the
+> kernel should be able to do it up to a later point in time and more
+> reliably, with less risk of missing a flip for a frame which becomes
+> ready just in time.
 
-resv_map structures are only needed for inodes which can have associated
-page allocations.  To fix the leak, only allocate resv_map for those
-inodes which could possibly be associated with page allocations.
+Indeed, but it would be great if we could do that with implicit fencing
+as well.
 
-Link: http://lkml.kernel.org/r/20190401213101.16476-1-mike.kravetz@oracle.com
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Reported-by: Yufen Yu <yuyufen@huawei.com>
-Suggested-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/hugetlbfs/inode.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+> > Render queues with timestamp are used to smooth rendering and handle
+> > rendering collision so that the latency is kept low (like when you have
+> > a 100fps video over a 60Hz display). This is normally done in
+> > userspace, but with fences, you ask the kernel to render something in
+> > an unpredictable future, so we loose the ability to make the final
+> > decision.
+> 
+> That's just not what fences are intended to be used for with the current
+> KMS UAPI.
 
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index a7fa037b876b..a3a3d256fb0e 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -741,11 +741,17 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
- 					umode_t mode, dev_t dev)
- {
- 	struct inode *inode;
--	struct resv_map *resv_map;
-+	struct resv_map *resv_map = NULL;
- 
--	resv_map = resv_map_alloc();
--	if (!resv_map)
--		return NULL;
-+	/*
-+	 * Reserve maps are only needed for inodes that can have associated
-+	 * page allocations.
-+	 */
-+	if (S_ISREG(mode) || S_ISLNK(mode)) {
-+		resv_map = resv_map_alloc();
-+		if (!resv_map)
-+			return NULL;
-+	}
- 
- 	inode = new_inode(sb);
- 	if (inode) {
-@@ -780,8 +786,10 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
- 			break;
- 		}
- 		lockdep_annotate_inode_mutex_key(inode);
--	} else
--		kref_put(&resv_map->refs, resv_map_release);
-+	} else {
-+		if (resv_map)
-+			kref_put(&resv_map->refs, resv_map_release);
-+	}
- 
- 	return inode;
- }
+Yes, and I think we're discussing towards changing that in the future.
+
+Cheers,
+
+Paul
+
 -- 
-2.19.1
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
