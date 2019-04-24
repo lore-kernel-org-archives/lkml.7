@@ -4,53 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E89EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75CAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C68F2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D53218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116579;
-	bh=74xBXs82dF+8/rjRbk8hW01/Uqht2fSrvI+ViXOX3U8=;
+	s=default; t=1556116582;
+	bh=c2SzM4ouugjjRHit0TX3VSCrw2FWnHJtGKYLg3TbwQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FkPOTo7szu6ojq/dbafd8dgfFptw+lz6MX2m05DUSpvlP6R9dihYAFwAG4lqOUUXR
-	 3a9pVYiKXDXYmPYS5Wm2rmTT/xZPvyrvYcmzqIfTrHXlIER7Qg1VaFD6V5jBAqiUY/
-	 h8O8Kgtsxefrl2omLiactLnmjOLSZx8k8NjxKvDY=
+	b=ZScsug69PNBcMI91J1iDPxtY3K9RLDDvMRKVLTy/Tzrw3bq52dwzbTJM48SlaQ3bB
+	 gnTk8zPbemOk0vNNZhVemh0C6PmGE9gKmnsPxyK04ItN0o45VopLjU2cQ9VKPlLgbL
+	 2C++0lFhbbVvb1HBSBxSAqvxgHd+MdlZjhGtRGdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731575AbfDXOgS (ORCPT
+        id S1731563AbfDXOgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:36:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39868 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:36:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731024AbfDXOgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:36:11 -0400
+        id S1731034AbfDXOgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:36:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DD9C218FE;
-        Wed, 24 Apr 2019 14:36:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F060218FD;
+        Wed, 24 Apr 2019 14:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116570;
-        bh=74xBXs82dF+8/rjRbk8hW01/Uqht2fSrvI+ViXOX3U8=;
+        s=default; t=1556116572;
+        bh=c2SzM4ouugjjRHit0TX3VSCrw2FWnHJtGKYLg3TbwQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+M5wo0lLCDaEmkjp0gPX/kQDH8EgGeOb3y046WtPOv5LYpzIWodGc0RRdJMGu/Yx
-         tJB8LEciTVQjGSFTGrNK99VZZhqfV4/8DjscDb5uW4yJQpBS9JOB3Xbh9d9BT8DeZw
-         SQTTipA5RJJHq2j1xFkHRic1P3/Ole4XDlfQ0Nuw=
+        b=mlpPTil+Hh/iGdCJIRZUHVePHSAf83laWbhQiUu7qldnhMTelnIrr9ZVk6wVBXqm1
+         yx+dKWywPsdrWO/fG9pp+qhjjyaNvVZavjUW3nSWJy9ZYcJ8KerHh0wAL/RatPqKca
+         I++UMXApNLL+nH48I6ykVEEzsdx1VtQ0V7DhRNfw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 56/66] kernel/sysctl.c: fix out-of-bounds access when setting file-max
-Date:   Wed, 24 Apr 2019 10:33:30 -0400
-Message-Id: <20190424143341.27665-56-sashal@kernel.org>
+Cc:     John Pittman <jpittman@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 57/66] null_blk: prevent crash from bad home_node value
+Date:   Wed, 24 Apr 2019 10:33:31 -0400
+Message-Id: <20190424143341.27665-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -63,91 +57,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: John Pittman <jpittman@redhat.com>
 
-[ Upstream commit 9002b21465fa4d829edfc94a5a441005cffaa972 ]
+[ Upstream commit 7ff684a683d777c4956fce93e60accbab2bd7696 ]
 
-Commit 32a5ad9c2285 ("sysctl: handle overflow for file-max") hooked up
-min/max values for the file-max sysctl parameter via the .extra1 and
-.extra2 fields in the corresponding struct ctl_table entry.
+At module load, if the selected home_node value is greater than
+the available numa nodes, the system will crash in
+__alloc_pages_nodemask() due to a bad paging request.  Prevent this
+user error crash by detecting the bad value, logging an error, and
+setting g_home_node back to the default of NUMA_NO_NODE.
 
-Unfortunately, the minimum value points at the global 'zero' variable,
-which is an int.  This results in a KASAN splat when accessed as a long
-by proc_doulongvec_minmax on 64-bit architectures:
-
-  | BUG: KASAN: global-out-of-bounds in __do_proc_doulongvec_minmax+0x5d8/0x6a0
-  | Read of size 8 at addr ffff2000133d1c20 by task systemd/1
-  |
-  | CPU: 0 PID: 1 Comm: systemd Not tainted 5.1.0-rc3-00012-g40b114779944 #2
-  | Hardware name: linux,dummy-virt (DT)
-  | Call trace:
-  |  dump_backtrace+0x0/0x228
-  |  show_stack+0x14/0x20
-  |  dump_stack+0xe8/0x124
-  |  print_address_description+0x60/0x258
-  |  kasan_report+0x140/0x1a0
-  |  __asan_report_load8_noabort+0x18/0x20
-  |  __do_proc_doulongvec_minmax+0x5d8/0x6a0
-  |  proc_doulongvec_minmax+0x4c/0x78
-  |  proc_sys_call_handler.isra.19+0x144/0x1d8
-  |  proc_sys_write+0x34/0x58
-  |  __vfs_write+0x54/0xe8
-  |  vfs_write+0x124/0x3c0
-  |  ksys_write+0xbc/0x168
-  |  __arm64_sys_write+0x68/0x98
-  |  el0_svc_common+0x100/0x258
-  |  el0_svc_handler+0x48/0xc0
-  |  el0_svc+0x8/0xc
-  |
-  | The buggy address belongs to the variable:
-  |  zero+0x0/0x40
-  |
-  | Memory state around the buggy address:
-  |  ffff2000133d1b00: 00 00 00 00 00 00 00 00 fa fa fa fa 04 fa fa fa
-  |  ffff2000133d1b80: fa fa fa fa 04 fa fa fa fa fa fa fa 04 fa fa fa
-  | >ffff2000133d1c00: fa fa fa fa 04 fa fa fa fa fa fa fa 00 00 00 00
-  |                                ^
-  |  ffff2000133d1c80: fa fa fa fa 00 fa fa fa fa fa fa fa 00 00 00 00
-  |  ffff2000133d1d00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-Fix the splat by introducing a unsigned long 'zero_ul' and using that
-instead.
-
-Link: http://lkml.kernel.org/r/20190403153409.17307-1-will.deacon@arm.com
-Fixes: 32a5ad9c2285 ("sysctl: handle overflow for file-max")
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Acked-by: Christian Brauner <christian@brauner.io>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: John Pittman <jpittman@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- kernel/sysctl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/null_blk_main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 28ec71d914c7..f50f1471c119 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -126,6 +126,7 @@ static int zero;
- static int __maybe_unused one = 1;
- static int __maybe_unused two = 2;
- static int __maybe_unused four = 4;
-+static unsigned long zero_ul;
- static unsigned long one_ul = 1;
- static unsigned long long_max = LONG_MAX;
- static int one_hundred = 100;
-@@ -1723,7 +1724,7 @@ static struct ctl_table fs_table[] = {
- 		.maxlen		= sizeof(files_stat.max_files),
- 		.mode		= 0644,
- 		.proc_handler	= proc_doulongvec_minmax,
--		.extra1		= &zero,
-+		.extra1		= &zero_ul,
- 		.extra2		= &long_max,
- 	},
- 	{
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index 62c9654b9ce8..fd7a9be54595 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1749,6 +1749,11 @@ static int __init null_init(void)
+ 		return -EINVAL;
+ 	}
+ 
++	if (g_home_node != NUMA_NO_NODE && g_home_node >= nr_online_nodes) {
++		pr_err("null_blk: invalid home_node value\n");
++		g_home_node = NUMA_NO_NODE;
++	}
++
+ 	if (g_queue_mode == NULL_Q_RQ) {
+ 		pr_err("null_blk: legacy IO path no longer available\n");
+ 		return -EINVAL;
 -- 
 2.19.1
 
