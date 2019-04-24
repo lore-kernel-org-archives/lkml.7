@@ -2,95 +2,118 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937FAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FACC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605C120674
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B12C20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jnXyb2lO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbfDXToP (ORCPT
+        id S1728441AbfDXTph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:44:15 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15194 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728269AbfDXTll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:41:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 12:41:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,390,1549958400"; 
-   d="scan'208";a="340454867"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Apr 2019 12:41:39 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "H Peter Anvin" <hpa@zytor.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>,
-        "Xiaoyao Li " <xiaoyao.li@intel.com>,
-        "Christopherson Sean J" <sean.j.christopherson@intel.com>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Michael Chan" <michael.chan@broadcom.com>
-Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "x86" <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v8 01/15] x86/common: Align cpu_caps_cleared and cpu_caps_set to unsigned long
-Date:   Wed, 24 Apr 2019 12:32:48 -0700
-Message-Id: <1556134382-58814-2-git-send-email-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.5.0
-In-Reply-To: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
-References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
+        Wed, 24 Apr 2019 15:45:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60860 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfDXTph (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 15:45:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nXNCzgXPp/MC/y/PJgs7pmMKbFnjx8a6N8WFYhwtNcs=; b=jnXyb2lOVttIJoTmHH09wDdgf
+        n8NwsMb9Q8EZ9BhZYTUEmA/PHtyPiQZOmqBu9mXa6yS7FNimIsZTp3th5+3stcuYygHbNmLLYqBGT
+        QahsATylTqjWyQwmQWDXx0qU89AA6/OXLd2NCoPGpUOZ+2qhJ4st3eHGbksMYs7v8Vz1EtlVHBU/V
+        0d2uWTvtE1ut2NEV0rW9PoEWWmPOPkZ6B4Ll/v8YqCWjQwzFWcsIDvwui3aaYqTf72W1WXM1j/0xM
+        JpCvyP3P7MY/egBVMNbkcye19upsSYlZcw08/CLq5k4oepPII8zRfmSr6JNXtPbV5jb8VqzdiXZp7
+        XpWmu0naw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJNpM-0005aH-OA; Wed, 24 Apr 2019 19:45:08 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E5F80203E8871; Wed, 24 Apr 2019 21:45:05 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 21:45:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexander Potapenko <glider@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>, linux-mm@kvack.org,
+        David Rientjes <rientjes@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev@googlegroups.com,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        linux-btrfs@vger.kernel.org, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: Re: [patch V2 18/29] lockdep: Move stack trace logic into
+ check_prev_add()
+Message-ID: <20190424194505.GR11158@hirez.programming.kicks-ass.net>
+References: <20190418084119.056416939@linutronix.de>
+ <20190418084254.729689921@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190418084254.729689921@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cpu_caps_cleared[] and cpu_caps_set[] may not be aligned to unsigned long.
-Atomic operations (i.e. set_bit() and clear_bit()) on the bitmaps may
-access two cache lines (a.k.a. split lock) and cause the CPU to do a bus
-lock to block all memory accesses from other processors to ensure
-atomicity.
+On Thu, Apr 18, 2019 at 10:41:37AM +0200, Thomas Gleixner wrote:
+> There is only one caller of check_prev_add() which hands in a zeroed struct
+> stack trace and a function pointer to save_stack(). Inside check_prev_add()
+> the stack_trace struct is checked for being empty, which is always
+> true. Based on that one code path stores a stack trace which is unused. The
+> comment there does not make sense either. It's all leftovers from
+> historical lockdep code (cross release).
 
-To avoid the overall performance degradation from the bus locking, align
-the two variables to unsigned long.
+I was more or less expecting a revert of:
 
-Defining the variables as unsigned long may also fix the issue because
-they will be naturally aligned to unsigned long. But that needs additional
-code changes. Adding __aligned(unsigned long) is a simpler fix.
+ce07a9415f26 ("locking/lockdep: Make check_prev_add() able to handle external stack_trace")
 
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/kernel/cpu/common.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+And then I read the comment that went with the "static struct
+stack_trace trace" that got removed (in the above commit) and realized
+that your patch will consume more stack entries.
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index cb28e98a0659..3716e2bb028b 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -488,8 +488,9 @@ static const char *table_lookup_model(struct cpuinfo_x86 *c)
- 	return NULL;		/* Not found */
- }
- 
--__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS];
--__u32 cpu_caps_set[NCAPINTS + NBUGINTS];
-+/* Aligned to unsigned long to avoid split lock in atomic bitmap ops */
-+__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
-+__u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
- 
- void load_percpu_segment(int cpu)
- {
--- 
-2.19.1
+The problem is when the held lock stack in check_prevs_add() has multple
+trylock entries on top, in that case we call check_prev_add() multiple
+times, and this patch will then save the exact same stack-trace multiple
+times, consuming static resources.
 
+Possibly we should copy what stackdepot does (but we cannot use it
+directly because stackdepot uses locks; but possible we can share bits),
+but that is a patch for another day I think.
+
+So while convoluted, perhaps we should retain this code for now.
