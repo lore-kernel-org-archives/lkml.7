@@ -2,183 +2,129 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CA0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4084C282E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF4A2183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A122175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R5KQiyKp"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="dvJtRlOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731770AbfDXUeM (ORCPT
+        id S1731782AbfDXUns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 16:34:12 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33011 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfDXUeL (ORCPT
+        Wed, 24 Apr 2019 16:43:48 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39403 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728258AbfDXUns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 16:34:11 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t16so9882827plo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 13:34:11 -0700 (PDT)
+        Wed, 24 Apr 2019 16:43:48 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k45so17187122edb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 13:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=suc5YIphguybOVTE6QyZmRLNdlVBsBpozTlH+RsbifA=;
-        b=R5KQiyKpY4aUSx9teSJh93jt0UeO1AONuuDa9IZDvbiNZCO8R3kVQ5iUT0dLm2O9e5
-         lL/MuPn5JfrXxme4DLLRG+j4lP6WAFbmE1Lhz+x3wo9Eh0lAKDGILxcJPTX9+EVcX+/3
-         S8zS8fDIjvJiMdAU3kqSh8NMHLUxMyxSKXpbw=
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3uQ6pt/79DaqV1w1HqJ3riyr5/sBvHSK6/Hzd6NMzp4=;
+        b=dvJtRlOFxT2cfx81ZV1rLhKqHcn8wP2dkltllzCy9vGNw9dCzrxYafuNn9nXLujGYh
+         r8KoU13+AeniwVXgc+5SvHyy9qPkc7xV8mX4t5Ed52uWdqlkciy8+zrrvBToREKKetCx
+         pxTzVNN/CnXf7j+4dQlzA5QY3JiiQz92Hpz12WJH2+ZRoxvVV8GsZKUg9UmhLUN3M+lw
+         JYhxE8Qqw62YesIQjDOqszN5E4+qjxPaCr3WTjbqXxAYnnL65L2o2yzdlmsYe1NcqCtJ
+         r1EHPXmGQtacfX2M02uzrnZwa6pNZgYpC0gjFWqjsm9oCIFQqctsxRZaZfWoXNg54JXI
+         LHcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=suc5YIphguybOVTE6QyZmRLNdlVBsBpozTlH+RsbifA=;
-        b=XW0N3Yp0KElfspIoSHY2iVJ+xi6UPeJVW6bpDXZMrhBvu/AWoz6J+ocHRlEt5OkCXu
-         UUx7r0VAnKFXAZYJ2GRIcya6nyt43SsGLrIsCJ1MED9iKsRyUUPduyL55DrkdMJsWu1O
-         /A4gqXQQGl+QhfigIJgXeARoHRRIqpDu6rSis3IVLx5Qf0/KHH3KnlZzn/gQlTPXR8P0
-         YwuwgKlNcymAZdaaMaUHfW+XRzb+HU0/rqj5gfbflLE1ItqucR9Uakl3NiWbMXftopg2
-         9GCAckUrPnLRooAf09t9Jt+1djvpbBY7Mj9C/Kyf4w8SnwRUfcJk5qDMzDDtjU7czJCK
-         na0w==
-X-Gm-Message-State: APjAAAWctL4DIGFs42LY73xS/fSCg3mV0Pyen/TMvUYgC7lXnDAp1Z1y
-        jNWhNy8zPDtPByHmql/dmvL/lQ==
-X-Google-Smtp-Source: APXvYqxUBKxS6wikJnQuKLXX6a6Z/8pD+GkMvzVv6y2IAqFW8W3uvRYvN4Yye5p83JuELO8tsE35sQ==
-X-Received: by 2002:a17:902:2aa8:: with SMTP id j37mr35147430plb.164.1556138050966;
-        Wed, 24 Apr 2019 13:34:10 -0700 (PDT)
-Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
-        by smtp.gmail.com with ESMTPSA id d3sm26389989pfn.113.2019.04.24.13.34.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 13:34:09 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 13:34:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Hector Marco-Gisbert <hecmargi@upv.es>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Will Deacon <will.deacon@arm.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] binfmt_elf: Update READ_IMPLIES_EXEC logic for modern CPUs
-Message-ID: <20190424203408.GA11386@beast>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3uQ6pt/79DaqV1w1HqJ3riyr5/sBvHSK6/Hzd6NMzp4=;
+        b=G1LM5tOeOD1s9lXbuUiETbDhgLQSW7yxVz3hSws0XpqlWdJYj9q6QFTsUqw99BNwgq
+         jizZVDM0nr0DavrkQKBs6LOtnBjQMOxIUw7anmGc9WhS3YcdREVFVIckxAlLpmpXoRTb
+         9CYWGAfEY0AcSaUExChjQ1CH2egEuU1hQ0wuCODE4XIjP0VzT57Nu8xWwuimZ1FgsJp3
+         AzHM/hLSvoGjPw7w1GBaH4+Ka388Mkf0XKScw6R1emrJZUY6RFOlnLbyRDuhfDpNbitL
+         T1S7jT2sbehZOjUnP8MvU6mSpJetn8tOi2ACCrBHH0Zo5v6vcPU18BW15NPHDFCGxvVI
+         f0gQ==
+X-Gm-Message-State: APjAAAXhNZVl2KwbEr4/eswCOD3x5WAFGPxjIGtcUgNyJ8QhSIBiChbk
+        s0HY1Lmmsw+dw8ZEea3Ek3P89iMldSCR+kXcngsWs1bZ
+X-Google-Smtp-Source: APXvYqwwtgxviomoeB178elsaWelBPDBbhr4KEN1wrW4lNWd86vBErwAgnmmMXG7JMKrSJmUjpuHPaC2EjvlBKqmsPs=
+X-Received: by 2002:a50:978e:: with SMTP id e14mr21377731edb.91.1556138626271;
+ Wed, 24 Apr 2019 13:43:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190417150331.90219ca42a1c0db8632d0fd5@linux-foundation.org>
+ <CAPcyv4hB47NJrVi1sm+7msL+6dJNhBD10BJbtLPZRcK2JK6+pg@mail.gmail.com> <1556025416.2956.0.camel@suse.de>
+In-Reply-To: <1556025416.2956.0.camel@suse.de>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 24 Apr 2019 16:43:35 -0400
+Message-ID: <CA+CK2bBS_cWJCWDCQAXKU6t=r=nAC908jz8uQ90DjKT5XcuNtw@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] mm: Sub-section memory hotplug support
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        stable <stable@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The READ_IMPLIES_EXEC work-around was designed for old CPUs lacking NX
-(to have the visible permission flags on memory regions reflect reality:
-they are all executable), and for old toolchains that lacked the ELF
-PT_GNU_STACK marking (under the assumption that toolchains that couldn't
-even specify memory protection flags may have it wrong for all memory
-regions).
+I am also taking a look at this work now. I will review and test it in
+the next couple of days.
 
-This logic is sensible, but was implemented in a way that equated having
-a PT_GNU_STACK marked executable as being as "broken" as lacking the
-PT_GNU_STACK marking entirely. This is not a reasonable assumption
-for CPUs that have had NX support from the start (or very close to
-the start). This confusion has led to situations where modern 64-bit
-programs with explicitly marked executable stack are forced into the
-READ_IMPLIES_EXEC state when no such thing is needed. (And leads to
-unexpected failures when mmap()ing regions of device driver memory that
-wish to disallow VM_EXEC[1].)
+Pasha
 
-To fix this, elf_read_implies_exec() is adjusted on arm64 (where NX has
-always existed and toolchains have implemented PT_GNU_STACK for a while),
-and x86 is adjusted to handle this combination of possible outcomes:
-
-              CPU: | lacks NX  | has NX, ia32     | has NX, x86_64   |
- ELF:              |           |                  |                  |
- ------------------------------|------------------|------------------|
- missing GNU_STACK | needs RIE | needs RIE        | no RIE           |
- GNU_STACK == RWX  | needs RIE | no RIE: stack X  | no RIE: stack X  |
- GNU_STACK == RW   | needs RIE | no RIE: stack NX | no RIE: stack NX |
-
-This has the effect of making binfmt_elf's EXSTACK_DEFAULT actually take
-on the correct architecture default of being non-executable on arm64 and
-x86_64, and being executable on ia32.
-
-[1] https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
-
-Suggested-by: Hector Marco-Gisbert <hecmargi@upv.es>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2: adjust arm64 to avoid is_compat_task() (marc.w.gonzalez)
----
- arch/arm64/include/asm/elf.h |  8 +++++++-
- arch/x86/include/asm/elf.h   | 24 +++++++++++++++++++++---
- 2 files changed, 28 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-index 6adc1a90e7e6..f1bb4b388b8f 100644
---- a/arch/arm64/include/asm/elf.h
-+++ b/arch/arm64/include/asm/elf.h
-@@ -107,7 +107,13 @@
-  */
- #define elf_check_arch(x)		((x)->e_machine == EM_AARCH64)
- 
--#define elf_read_implies_exec(ex,stk)	(stk != EXSTACK_DISABLE_X)
-+/*
-+ * 64-bit processes should not automatically gain READ_IMPLIES_EXEC. Only
-+ * 32-bit processes without PT_GNU_STACK should trigger READ_IMPLIES_EXEC
-+ * out of an abundance of caution against ancient toolchains not knowing
-+ * how to mark memory protection flags correctly.
-+ */
-+#define compat_elf_read_implies_exec(ex, stk)	(stk == EXSTACK_DEFAULT)
- 
- #define CORE_DUMP_USE_REGSET
- #define ELF_EXEC_PAGESIZE	PAGE_SIZE
-diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-index 69c0f892e310..5e65f1dcefc9 100644
---- a/arch/x86/include/asm/elf.h
-+++ b/arch/x86/include/asm/elf.h
-@@ -280,10 +280,28 @@ extern u32 elf_hwcap2;
- 
- /*
-  * An executable for which elf_read_implies_exec() returns TRUE will
-- * have the READ_IMPLIES_EXEC personality flag set automatically.
-+ * have the READ_IMPLIES_EXEC personality flag set automatically. This
-+ * is needed either to show the truth about a memory mapping (i.e. CPUs
-+ * that lack NX have all memory implicitly executable, so this makes
-+ * sure that the visible permissions reflect reality), or to deal with
-+ * old toolchains on new CPUs. Old binaries entirely lacking a GNU_STACK
-+ * indicate they were likely built with a toolchain that has no idea about
-+ * memory permissions, and so we must default to the lowest reasonable
-+ * common denominator for the architecture: on ia32 we assume all memory
-+ * to be executable by default, and on x86_64 we assume all memory to be
-+ * non-executable by default.
-+ *
-+ *              CPU: | lacks NX  | has NX, ia32     | has NX, x86_64   |
-+ * ELF:              |           |                  |                  |
-+ * ------------------------------|------------------|------------------|
-+ * missing GNU_STACK | needs RIE | needs RIE        | no RIE           |
-+ * GNU_STACK == RWX  | needs RIE | no RIE: stack X  | no RIE: stack X  |
-+ * GNU_STACK == RW   | needs RIE | no RIE: stack NX | no RIE: stack NX |
-+ *
-  */
--#define elf_read_implies_exec(ex, executable_stack)	\
--	(executable_stack != EXSTACK_DISABLE_X)
-+#define elf_read_implies_exec(ex, stk)				\
-+	(!(__supported_pte_mask & _PAGE_NX) ||			\
-+	 (mmap_is_ia32() && stk == EXSTACK_DEFAULT))
- 
- struct task_struct;
- 
--- 
-2.17.1
-
-
--- 
-Kees Cook
+On Tue, Apr 23, 2019 at 9:17 AM Oscar Salvador <osalvador@suse.de> wrote:
+>
+> On Wed, 2019-04-17 at 15:59 -0700, Dan Williams wrote:
+> > On Wed, Apr 17, 2019 at 3:04 PM Andrew Morton <akpm@linux-foundation.
+> > org> wrote:
+> > >
+> > > On Wed, 17 Apr 2019 11:38:55 -0700 Dan Williams <dan.j.williams@int
+> > > el.com> wrote:
+> > >
+> > > > The memory hotplug section is an arbitrary / convenient unit for
+> > > > memory
+> > > > hotplug. 'Section-size' units have bled into the user interface
+> > > > ('memblock' sysfs) and can not be changed without breaking
+> > > > existing
+> > > > userspace. The section-size constraint, while mostly benign for
+> > > > typical
+> > > > memory hotplug, has and continues to wreak havoc with 'device-
+> > > > memory'
+> > > > use cases, persistent memory (pmem) in particular. Recall that
+> > > > pmem uses
+> > > > devm_memremap_pages(), and subsequently arch_add_memory(), to
+> > > > allocate a
+> > > > 'struct page' memmap for pmem. However, it does not use the
+> > > > 'bottom
+> > > > half' of memory hotplug, i.e. never marks pmem pages online and
+> > > > never
+> > > > exposes the userspace memblock interface for pmem. This leaves an
+> > > > opening to redress the section-size constraint.
+> > >
+> > > v6 and we're not showing any review activity.  Who would be
+> > > suitable
+> > > people to help out here?
+> >
+> > There was quite a bit of review of the cover letter from Michal and
+> > David, but you're right the details not so much as of yet. I'd like
+> > to
+> > call out other people where I can reciprocate with some review of my
+> > own. Oscar's altmap work looks like a good candidate for that.
+>
+> Thanks Dan for ccing me.
+> I will take a look at the patches soon.
+>
+> --
+> Oscar Salvador
+> SUSE L3
