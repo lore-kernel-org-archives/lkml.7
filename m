@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B294C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2206C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F3221903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659572077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127025;
-	bh=5fW2Za/Z85Hc2k9/7Ir7KPZiBL27o/c2OPj/dA2t3fc=;
+	s=default; t=1556127031;
+	bh=BJpjWrulrbJR5wn8zEMd2Fgf4wYFCG/auu6n56H0ARw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2ukYQ9R0en1kVMKimj/p85L+EjTkS6jtzHLKrSxYLwnb3q1p9U96BnvGUi1JRZD6
-	 VnCSnpovv76ASm66gYGaelWJA9kqJ8/Td1K/NE/Y1F4cV9nXBkGdkuW38GaQwwmWZD
-	 hOoIOvPDPzBWoewExbKE2OLt2/U+Z+Rslhvgni7M=
+	b=vHIqmQ3rlvBdL24J6bMr584gNQxuWdIKWoNwULb4f7dEaV7KkwJY3+/CGEl52R9Np
+	 M/QnUcIu9vmiMvOQvo6fLHzcs0e4b+jp73fExy2gYAs/GHO9TDCZYosNytJOC+qNWs
+	 24mwnsExlDFBK0VR9nFtYrwmPTw1Yk8sHBZnkMfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390986AbfDXRaY (ORCPT
+        id S2390998AbfDXRaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56696 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390971AbfDXRaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:30:21 -0400
+        id S2390982AbfDXRaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:30:23 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14DA621905;
-        Wed, 24 Apr 2019 17:30:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B16FF2077C;
+        Wed, 24 Apr 2019 17:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127020;
-        bh=5fW2Za/Z85Hc2k9/7Ir7KPZiBL27o/c2OPj/dA2t3fc=;
+        s=default; t=1556127023;
+        bh=BJpjWrulrbJR5wn8zEMd2Fgf4wYFCG/auu6n56H0ARw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YYQMrbfU6yohu8nbNu8Vbo9WQi5oPzRGIqyiSI109HQJqil80PBCu11CEKiKcfUjR
-         s9raTWQ0I59sIp1AUzQnkzcBdPjz8gGpRWer8fXEjUjy9iPDmII/o6KwaFoW9bwfN1
-         eQveHZaLp944xRm3xnUHI3F4rO8LzOt7i0SfMBkg=
+        b=dANn7qymhjaAiOtdlHJly9s6uZieZEV0eP674yDj7nYiEu+S4LjJNc8rnQKQ6+Egk
+         l4JSs5jQQg+5id5az9tE0pV12Bp0poRoPIaA1wyhLs63pR75JflP/Nti+C0MVo8qJN
+         RT+1H9gz52iy/DlJPB2IIHHW0/ZyH4sI2GD3aWOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
         Steve French <stfrench@microsoft.com>,
         Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 4.19 30/96] cifs: Fix use-after-free in SMB2_read
-Date:   Wed, 24 Apr 2019 19:09:35 +0200
-Message-Id: <20190424170921.895943586@linuxfoundation.org>
+Subject: [PATCH 4.19 31/96] cifs: fix handle leak in smb2_query_symlink()
+Date:   Wed, 24 Apr 2019 19:09:36 +0200
+Message-Id: <20190424170921.979543686@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -59,47 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit 088aaf17aa79300cab14dbee2569c58cfafd7d6e upstream.
+commit e6d0fb7b34f264f72c33053558a360a6a734905e upstream.
 
-There is a KASAN use-after-free:
-BUG: KASAN: use-after-free in SMB2_read+0x1136/0x1190
-Read of size 8 at addr ffff8880b4e45e50 by task ln/1009
+If we enter smb2_query_symlink() for something that is not a symlink
+and where the SMB2_open() would succeed we would never end up
+closing this handle and would thus leak a handle on the server.
 
-Should not release the 'req' because it will use in the trace.
+Fix this by immediately calling SMB2_close() on successfull open.
 
-Fixes: eccb4422cf97 ("smb3: Add ftrace tracepoints for improved SMB3 debugging")
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org> 4.18+
 Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2pdu.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/cifs/smb2ops.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -3273,8 +3273,6 @@ SMB2_read(const unsigned int xid, struct
- 	rqst.rq_nvec = 1;
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -1906,6 +1906,8 @@ smb2_query_symlink(const unsigned int xi
  
- 	rc = cifs_send_recv(xid, ses, &rqst, &resp_buftype, flags, &rsp_iov);
--	cifs_small_buf_release(req);
--
- 	rsp = (struct smb2_read_rsp *)rsp_iov.iov_base;
- 
- 	if (rc) {
-@@ -3293,6 +3291,8 @@ SMB2_read(const unsigned int xid, struct
- 				    io_parms->tcon->tid, ses->Suid,
- 				    io_parms->offset, io_parms->length);
- 
-+	cifs_small_buf_release(req);
-+
- 	*nbytes = le32_to_cpu(rsp->DataLength);
- 	if ((*nbytes > CIFS_MAX_MSGSIZE) ||
- 	    (*nbytes > io_parms->length)) {
+ 	rc = SMB2_open(xid, &oparms, utf16_path, &oplock, NULL, &err_iov,
+ 		       &resp_buftype);
++	if (!rc)
++		SMB2_close(xid, tcon, fid.persistent_fid, fid.volatile_fid);
+ 	if (!rc || !err_iov.iov_base) {
+ 		rc = -ENOENT;
+ 		goto free_path;
 
 
