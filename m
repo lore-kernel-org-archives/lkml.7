@@ -2,54 +2,60 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE865C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282BAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB3520835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E8D2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ViqkAqCn"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Xkj//cMb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388971AbfDXTH5 (ORCPT
+        id S2389038AbfDXTIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:07:57 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:36960 "EHLO
+        Wed, 24 Apr 2019 15:08:21 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:37056 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730531AbfDXTH5 (ORCPT
+        by vger.kernel.org with ESMTP id S1729617AbfDXTIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:07:57 -0400
+        Wed, 24 Apr 2019 15:08:21 -0400
 Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
-        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OJ3O4V018909;
-        Wed, 24 Apr 2019 12:07:37 -0700
+        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OJ3K69018884;
+        Wed, 24 Apr 2019 12:07:59 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=facebook;
- bh=yAtvfpbreo1+TQY+KrNZG9h3fZsfDQzNvha7lc7f0tg=;
- b=ViqkAqCnwtAAmeWqpQ06th31RtukqC/1gdWj87zEUGBgdiMgjnUe7keCJdrugGvgfeJZ
- u+v/EINijhckJE8SKCsCjIjJNSFGE2+LKnh1qZ+VhRxa/vevge/YfSjtNd8GiNMsNICJ
- Q2byitxj4WrjfF76JX7Co47PBEgWJ2TCCEs= 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=facebook;
+ bh=tCTVtGQN9fNMBhQBg/1ZtHa/rhayiJ6+l+OhZ3BsKwc=;
+ b=Xkj//cMbdOzGgwCXcH5ab6d3b8+LPD1gjH6+stwl5GEGUxCTD0OQ278uOlNDIgxMnCiD
+ oZGaGFDB9+0wXtEOWVrxfm5aws1ljTTW7Ug+IACLyUU3yxBbiBVcMX2hOE51S+RZBjKp
+ y75YFZeGset261VJgLA6G/BFfV2rjprpv40= 
 Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0b-00082601.pphosted.com with ESMTP id 2s27u3w3kk-2
+        by mx0b-00082601.pphosted.com with ESMTP id 2s27u3w3n4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 24 Apr 2019 12:07:37 -0700
+        Wed, 24 Apr 2019 12:07:59 -0700
 Received: from mmullins-1.thefacebook.com (2620:10d:c081:10::13) by
  mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server id
- 15.1.1713.5; Wed, 24 Apr 2019 12:07:30 -0700
+ 15.1.1713.5; Wed, 24 Apr 2019 12:07:57 -0700
 From:   Matt Mullins <mmullins@fb.com>
 To:     <hall@fb.com>, <mmullins@fb.com>, <ast@kernel.org>,
         <bpf@vger.kernel.org>, <netdev@vger.kernel.org>
 CC:     <linux-kernel@vger.kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>
-Subject: [PATCH bpf-next v4 0/5] writable contexts for bpf raw tracepoints
-Date:   Wed, 24 Apr 2019 12:07:16 -0700
-Message-ID: <20190424190721.24453-1-mmullins@fb.com>
+        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrey Ignatov <rdna@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: [PATCH bpf-next v4 4/5] tools: sync bpf.h
+Date:   Wed, 24 Apr 2019 12:07:20 -0700
+Message-ID: <20190424190721.24453-5-mmullins@fb.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190424190721.24453-1-mmullins@fb.com>
+References: <20190424190721.24453-1-mmullins@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
@@ -63,77 +69,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds an opt-in interface for tracepoints to expose a writable context to
-BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE programs that are attached, while
-supporting read-only access from existing BPF_PROG_TYPE_RAW_TRACEPOINT
-programs, as well as from non-BPF-based tracepoints.
+This adds BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, and fixes up the
 
-The initial motivation is to support tracing that can be observed from the
-remote end of an NBD socket, e.g. by adding flags to the struct nbd_request
-header.  Earlier attempts included adding an NBD-specific tracepoint fd, but in
-code review, I was recommended to implement it more generically -- as a result,
-this patchset is far simpler than my initial try.
+	error: enumeration value ‘BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE’ not handled in switch [-Werror=switch-enum]
 
-v3->v4:
-  * fixed a silly copy/paste typo in include/trace/events/bpf_test_run.h
-    (_TRACE_NBD_H -> _TRACE_BPF_TEST_RUN_H)
-  * fixed incorrect/misleading wording in patch 1's commit message,
-    since the pointer cannot be directly dereferenced in a
-    BPF_PROG_TYPE_RAW_TRACEPOINT
-  * cleaned up the error message wording if the prog_tests fail
-  * Addressed feedback from Yonghong
-    * reject non-pointer-sized accesses to the buffer pointer
-    * use sizeof(struct nbd_request) as one-byte-past-the-end in
-      raw_tp_writable_reject_nbd_invalid.c
-    * use BPF_MOV64_IMM instead of BPF_LD_IMM64
+build errors it would otherwise cause in libbpf.
 
-v2->v3:
-  * Andrew addressed Josef's comments:
-    * C-style commenting in nbd.c
-    * Collapsed identical events into a single DECLARE_EVENT_CLASS.
-      This saves about 2kB of kernel text
+Signed-off-by: Matt Mullins <mmullins@fb.com>
+---
+ tools/include/uapi/linux/bpf.h | 1 +
+ tools/lib/bpf/libbpf.c         | 1 +
+ tools/lib/bpf/libbpf_probes.c  | 1 +
+ 3 files changed, 3 insertions(+)
 
-v1->v2:
-  * add selftests
-    * sync tools/include/uapi/linux/bpf.h
-  * reject variable offset into the buffer
-  * add string representation of PTR_TO_TP_BUFFER to reg_type_str
-
-Andrew Hall (1):
-  nbd: add tracepoints for send/receive timing
-
-Matt Mullins (4):
-  bpf: add writable context for raw tracepoints
-  nbd: trace sending nbd requests
-  tools: sync bpf.h
-  selftests: bpf: test writable buffers in raw tps
-
- MAINTAINERS                                   |   1 +
- drivers/block/nbd.c                           |  13 +++
- include/linux/bpf.h                           |   2 +
- include/linux/bpf_types.h                     |   1 +
- include/linux/tracepoint-defs.h               |   1 +
- include/trace/bpf_probe.h                     |  27 ++++-
- include/trace/events/bpf_test_run.h           |  50 ++++++++
- include/trace/events/nbd.h                    | 107 ++++++++++++++++++
- include/uapi/linux/bpf.h                      |   1 +
- kernel/bpf/syscall.c                          |   8 +-
- kernel/bpf/verifier.c                         |  31 +++++
- kernel/trace/bpf_trace.c                      |  24 ++++
- net/bpf/test_run.c                            |   4 +
- tools/include/uapi/linux/bpf.h                |   1 +
- tools/lib/bpf/libbpf.c                        |   1 +
- tools/lib/bpf/libbpf_probes.c                 |   1 +
- .../raw_tp_writable_reject_nbd_invalid.c      |  42 +++++++
- .../bpf/prog_tests/raw_tp_writable_test_run.c |  80 +++++++++++++
- .../selftests/bpf/verifier/raw_tp_writable.c  |  34 ++++++
- 19 files changed, 425 insertions(+), 4 deletions(-)
- create mode 100644 include/trace/events/bpf_test_run.h
- create mode 100644 include/trace/events/nbd.h
- create mode 100644 tools/testing/selftests/bpf/prog_tests/raw_tp_writable_reject_nbd_invalid.c
- create mode 100644 tools/testing/selftests/bpf/prog_tests/raw_tp_writable_test_run.c
- create mode 100644 tools/testing/selftests/bpf/verifier/raw_tp_writable.c
-
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 3c38ac9a92a7..c5335d53ce82 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -166,6 +166,7 @@ enum bpf_prog_type {
+ 	BPF_PROG_TYPE_LIRC_MODE2,
+ 	BPF_PROG_TYPE_SK_REUSEPORT,
+ 	BPF_PROG_TYPE_FLOW_DISSECTOR,
++	BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE,
+ };
+ 
+ enum bpf_attach_type {
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index d5b830d60601..9b6ce703c057 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -1681,6 +1681,7 @@ static bool bpf_prog_type__needs_kver(enum bpf_prog_type type)
+ 	case BPF_PROG_TYPE_UNSPEC:
+ 	case BPF_PROG_TYPE_TRACEPOINT:
+ 	case BPF_PROG_TYPE_RAW_TRACEPOINT:
++	case BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE:
+ 	case BPF_PROG_TYPE_PERF_EVENT:
+ 		return false;
+ 	case BPF_PROG_TYPE_KPROBE:
+diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+index 8c3a1c04dcb2..26eff2f39bed 100644
+--- a/tools/lib/bpf/libbpf_probes.c
++++ b/tools/lib/bpf/libbpf_probes.c
+@@ -93,6 +93,7 @@ probe_load(enum bpf_prog_type prog_type, const struct bpf_insn *insns,
+ 	case BPF_PROG_TYPE_CGROUP_DEVICE:
+ 	case BPF_PROG_TYPE_SK_MSG:
+ 	case BPF_PROG_TYPE_RAW_TRACEPOINT:
++	case BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE:
+ 	case BPF_PROG_TYPE_LWT_SEG6LOCAL:
+ 	case BPF_PROG_TYPE_LIRC_MODE2:
+ 	case BPF_PROG_TYPE_SK_REUSEPORT:
 -- 
 2.17.1
 
