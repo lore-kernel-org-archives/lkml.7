@@ -2,175 +2,149 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCA6C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A07DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D49218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2A5218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:51:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HbkLtCh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732861AbfDXQuz (ORCPT
+        id S1732899AbfDXQvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:50:55 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:60443 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732242AbfDXQuy (ORCPT
+        Wed, 24 Apr 2019 12:51:00 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:24779 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732571AbfDXQu6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:50:54 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 19C18200B5;
-        Wed, 24 Apr 2019 18:50:51 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 18:50:49 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>
-Subject: Re: [PATCH 11/25] drm: kirin: Move kirin_crtc, kirin_plane,
- kirin_format to kirin_drm_drv.h
-Message-ID: <20190424165049.GD20110@ravnborg.org>
-References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
- <1556061656-1733-12-git-send-email-john.stultz@linaro.org>
+        Wed, 24 Apr 2019 12:50:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1556124659; x=1587660659;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=GlUjytnYt3dDfD0kI047DD3j/C12yQtxAL+gnd5rzyQ=;
+  b=HbkLtCh6XsMGoGAEzkK4CJLdjXwQ7bv8MV5J3xJRx+SVa7mE9w9MYN21
+   LORP/1Zg3oYcptpvwIXFnJ6j+p8WoZHBc+Be41ONFsw1pWxVhRm21epBo
+   jCKjIQUZd7w2GnwXt2ZIVCyz6NzvU849E4KP2IkKVugQlKBj2pdBHJmf5
+   qQPUCBEj8CEepD1DN+bevuscBNPQ5YktUsistgj+9t+IIhKYdZR3kTKbh
+   phZsrtJlJzVlkSp1IQuzo4++Jy3x92KQ4gOy+HtspZpMuQ90excBA686Y
+   cSvjVePcr4qK8J7aMbDw0ydBeG1erBGqA3M7693Cjspc6yETuV+yvlF3+
+   A==;
+X-IronPort-AV: E=Sophos;i="5.60,390,1549900800"; 
+   d="scan'208";a="111663282"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Apr 2019 00:50:58 +0800
+IronPort-SDR: Ggx22oOE5oH+C/mscY1kswdsobltge8lhw9AvWTnQbOm8LikbuBEeOJAUUJp3X8WGk1Rr8RRNl
+ a8LWQJ+76+jEOOtMOtzeiMN7hkqF5F1YVqnIKfwv4Nt4+3aFvwGPBtDONpdaUmoc+oy7sB1MXt
+ cE1AMtpWJyxVOnRa6kS7Y+psXYVS+RgQF76uK7mIWEFXbUIW6fQPsBqdgZf31fca2/DHxkEc1X
+ v3XpjGaV45PmqWnn6Mbq2Nki8qph38T8gg5suUwCmj1tB+XZgRMuTmoKDwrdmyOgI1Ft5LN+vT
+ hq78KgaIb+OBfimxgpsDFgK/
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP; 24 Apr 2019 09:27:29 -0700
+IronPort-SDR: iKIwQD+L/YrbHh+8Mjv83xcedcVEBFiC5eNSUa0uHyC2o8OqEN5mNdiXRkVFPVGX+kULGjXisq
+ LNTS/ceDKZEGekwAkSeetUdE8mtV/ggbXZzG96yo7HXvdLWxB21LZG3iOGrpTVWJvD9nNf1JhL
+ ilJN8gi9QCI3DJu/cdF50cHOmTkysowvc4ndBhIXN5Ejf6hKEVGhJnm+9NxVgu1HS1HY24BtuI
+ rFctAfZ5hoRACwrxvOmHHnCwIQb1+qeJB8VFRhi/BdiqpNl+C+M80lhizuZZW7m/I1m2Zr6Z0f
+ Q78=
+Received: from c02v91rdhtd5.sdcorp.global.sandisk.com (HELO [10.111.66.167]) ([10.111.66.167])
+  by uls-op-cesaip02.wdc.com with ESMTP; 24 Apr 2019 09:50:57 -0700
+Subject: Re: [PATCH v3 1/3] RISC-V: Add RISC-V specific arch_match_cpu_phys_id
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andreas Schwab <schwab@suse.de>,
+        Anup Patel <anup@brainfault.org>,
+        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
+        Johan Hovold <johan@kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@infradead.org>
+References: <20190424000227.3085-1-atish.patra@wdc.com>
+ <20190424000227.3085-2-atish.patra@wdc.com>
+ <CAPKp9uZNEdL=Jt7vsxMBo72WR=ArefB6Vi7fLxnxMwAfUT3JOw@mail.gmail.com>
+From:   Atish Patra <atish.patra@wdc.com>
+Message-ID: <0d7be79c-3a74-dcb2-6618-d391e4cfec70@wdc.com>
+Date:   Wed, 24 Apr 2019 09:50:56 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556061656-1733-12-git-send-email-john.stultz@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=BTeA3XvPAAAA:8
-        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=KKAkSRfTAAAA:8 a=6BsCes5lsf5TXTDByRIA:9
-        a=CjuIK1q_8ugA:10 a=tafbbOV3vt1XuEhzTjGK:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=cvBusfyB2V15izCimMoJ:22
+In-Reply-To: <CAPKp9uZNEdL=Jt7vsxMBo72WR=ArefB6Vi7fLxnxMwAfUT3JOw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John.
-
-On Tue, Apr 23, 2019 at 04:20:42PM -0700, John Stultz wrote:
-> From: Xu YiPing <xuyiping@hisilicon.com>
+On 4/24/19 2:07 AM, Sudeep Holla wrote:
+> On Wed, Apr 24, 2019 at 1:03 AM Atish Patra <atish.patra@wdc.com> wrote:
+>>
+>> OF/DT core has a hook for architecture specific logical cpuid to hartid
+>> mapping. By implementing this, we can pass the logical cpu id to cpu
+>> node parsing functions.
+>>
+>> Fix the instances where logical cpuid is expected as an argument in
+>> of_get_cpu_node.
+>>
 > 
-> As part of refactoring the kirin driver to better support
-> different hardware revisions, this patch moves some shared
-> structures and helpers to the common kirin_drm_drv.h
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 > 
-> These structures will later used by both kirin620 and
-> future kirin960 driver
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>> ---
+>>   arch/riscv/kernel/cpu.c | 3 +--
+>>   arch/riscv/kernel/smp.c | 5 +++++
+>>   2 files changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
+>> index cf2fca12414a..c8d2a3223099 100644
+>> --- a/arch/riscv/kernel/cpu.c
+>> +++ b/arch/riscv/kernel/cpu.c
+>> @@ -136,8 +136,7 @@ static void c_stop(struct seq_file *m, void *v)
+>>   static int c_show(struct seq_file *m, void *v)
+>>   {
+>>          unsigned long cpu_id = (unsigned long)v - 1;
+>> -       struct device_node *node = of_get_cpu_node(cpuid_to_hartid_map(cpu_id),
+>> -                                                  NULL);
 > 
-> Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
-> Cc: Rongrong Zou <zourongrong@gmail.com>
-> Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Cc: Chen Feng <puck.chen@hisilicon.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel <dri-devel@lists.freedesktop.org>
-> Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
-> [jstultz: reworded commit message]
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 27 ++-----------------------
->  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h | 24 ++++++++++++++++++++++
->  2 files changed, 26 insertions(+), 25 deletions(-)
+> I assume it work working just fine as you are doing cpu to hartid
+> conversion here and
+> weak implementation of arch_match_cpu_phys_id does direct match.
 > 
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> index f54cf99..69604ad 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> @@ -38,12 +38,6 @@
->  #define OUT_OVLY	ADE_OVLY2 /* output overlay compositor */
->  #define ADE_DEBUG	1
->  
-> -#define to_kirin_crtc(crtc) \
-> -	container_of(crtc, struct kirin_crtc, base)
-> -
-> -#define to_kirin_plane(plane) \
-> -	container_of(plane, struct kirin_plane, base)
-> -
->  
->  struct ade_hw_ctx {
->  	void __iomem  *base;
-> @@ -59,18 +53,6 @@ struct ade_hw_ctx {
->  	struct drm_crtc *crtc;
->  };
->  
-> -struct kirin_crtc {
-> -	struct drm_crtc base;
-> -	void *hw_ctx;
-> -	bool enable;
-> -};
-> -
-> -struct kirin_plane {
-> -	struct drm_plane base;
-> -	void *hw_ctx;
-> -	u32 ch;
-> -};
-> -
->  struct ade_data {
->  	struct kirin_crtc crtc;
->  	struct kirin_plane planes[ADE_CH_NUM];
-> @@ -78,12 +60,7 @@ struct ade_data {
->  };
 
+Yup. That's correct.
 
-This struct: 
->  /* ade-format info: */
-> -struct ade_format {
-> -	u32 pixel_format;
-> -	enum ade_fb_format ade_format;
-> -};
-> -
-> -static const struct ade_format ade_formats[] = {
-> +static const struct kirin_format ade_formats[] = {
->  	/* 16bpp RGB: */
->  	{ DRM_FORMAT_RGB565, ADE_RGB_565 },
->  	{ DRM_FORMAT_BGR565, ADE_BGR_565 },
-> @@ -127,7 +104,7 @@ static u32 ade_get_format(u32 pixel_format)
->  
->  	for (i = 0; i < ARRAY_SIZE(ade_formats); i++)
->  		if (ade_formats[i].pixel_format == pixel_format)
-> -			return ade_formats[i].ade_format;
-> +			return ade_formats[i].hw_format;
->  
->  	/* not found */
->  	DRM_ERROR("Not found pixel format!!fourcc_format= %d\n",
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-> index ad027d1..b6626f5 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-> @@ -13,6 +13,30 @@
->  
->  #define MAX_CRTC	2
->  
-> +#define to_kirin_crtc(crtc) \
-> +	container_of(crtc, struct kirin_crtc, base)
-> +
-> +#define to_kirin_plane(plane) \
-> +	container_of(plane, struct kirin_plane, base)
-> +
-> +/* kirin-format translate table */
-> +struct kirin_format {
-> +	u32 pixel_format;
-> +	u32 hw_format;
-> +};
-Is renamed.
-The member hw_format is renamed and no longer uses an enum.
-(The sole user of this enum type).
+Regards,
+Atish
+>> +       struct device_node *node = of_get_cpu_node(cpu_id, NULL);
+>>          const char *compat, *isa, *mmu;
+>>
+>>          seq_printf(m, "processor\t: %lu\n", cpu_id);
+>> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+>> index 0c41d07ec281..94db72662f60 100644
+>> --- a/arch/riscv/kernel/smp.c
+>> +++ b/arch/riscv/kernel/smp.c
+>> @@ -70,6 +70,11 @@ void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out)
+>>          for_each_cpu(cpu, in)
+>>                  cpumask_set_cpu(cpuid_to_hartid_map(cpu), out);
+>>   }
+>> +
+>> +bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
+>> +{
+>> +       return phys_id == cpuid_to_hartid_map(cpu);
+>> +}
+>>   /* Unsupported */
+>>   int setup_profiling_timer(unsigned int multiplier)
+>>   {
+>> --
+>> 2.21.0
+>>
+> 
 
-These changes are not included in the changelog - should they be part of
-this patch?
-And also the change from enum to u32 is not understood.
-
-	Sam
