@@ -2,208 +2,199 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A43C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68300C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0C220652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F0720652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129073;
-	bh=1/SyIu0OXXX2OtItZtMTZDyFUPZSjpx3GPUXkohNUIQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q4iylqD4zVMgEGgzrmggpbpZ1r3CwbKZl7MrIKuKIAZQjis0e3J5J+WCQTMXWgnJz
-	 fwpiJtlGqPnraJlSR5wbUEG7b9wLMYucrE0SphN5kRW4fgSR3fOYz6jf3OVFvM+Xbu
-	 zfuUwt19fiBAFN5Sj4QsIkyX8GCQozUvcuP1Z17Q=
+	s=default; t=1556129083;
+	bh=EDtUZor5aMJF3wM9lw3Z+oHRA5Y9c0u2gD1aMiaw6lY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=EuKoaHF5WOeTFNstM9wg6QkLVHQAQbZ2xRMZ4giMDO0XtAutWxyqyz/kFpUnPlpVE
+	 eq7jE4r3Z8Wrd7yf5q5WH56vmPW8B2gOFhr9sZmWijG5lQhqOFdcBpR5DihDDefawI
+	 N28NcKup09LuMEGKOrGNTims2W9su4ahnnT96bO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389761AbfDXSEc (ORCPT
+        id S2389799AbfDXSEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:04:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387953AbfDXRTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:19:17 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61D64205ED;
-        Wed, 24 Apr 2019 17:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126355;
-        bh=1/SyIu0OXXX2OtItZtMTZDyFUPZSjpx3GPUXkohNUIQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hK5dWuUifKEhIktAjRVg8e4AmeHHWMB683FAbLNNbbzMS0St/TjYgzMMehym5oAFc
-         mBgXIV4qhKNxvDxyo3HHVfc2POc7N8Zg4JkN2yUQEYhxm/+fjeB1kOJxALkgY19dtU
-         t1k67Lebq6NuOM1J9tTq3zkspJgI8WiRtESjI4Qs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>,
-        Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>,
-        Bob Briscoe <research@bobbriscoe.net>,
-        Lawrence Brakmo <brakmo@fb.com>,
-        Florian Westphal <fw@strlen.de>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        Yuchung Cheng <ycheng@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Andrew Shewmaker <agshew@gmail.com>,
-        Glenn Judd <glenn.judd@morganstanley.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 083/168] tcp: Ensure DCTCP reacts to losses
-Date:   Wed, 24 Apr 2019 19:08:47 +0200
-Message-Id: <20190424170928.734963793@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
-References: <20190424170923.452349382@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 14:04:42 -0400
+Received: from casper.infradead.org ([85.118.1.10]:48034 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389233AbfDXSEk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:04:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=QQxjRBbmdgAM9Bh3kBDiayTByaZ8rOIgL5n86+QEto4=; b=eHPgs9VBSJ+I8+KqGmbMTju2lr
+        c0xcIJhkO2M5DD563NVO7255UOmAOc+vpo2IvNPVwyqe69ZqXkx9iioAWr9eJ4b2LMu+rhf8rYyUo
+        mtQXyGjUMNv/lFhjz4jaEpC7/Tp0UkNaMIXXlAM2xteretCYdUOIlYuRI08ZjgbyPhkjYAtk47b7m
+        OA0nNjLt5UlGU5fFoI53mMacP+QpIDgHjTG4uSifigHWhQfA2mF9d0P2n0WuaAsakliiGpFMUgQjo
+        rvB17MoDNgV16L/zRs1kMRB1oFucBzRHljfN9aiZfld7RN8Wcr4XEM55inxhU1IiOVWlqKJ5tLTjt
+        pHQcNoMQ==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJMG2-0001jj-TS; Wed, 24 Apr 2019 18:04:35 +0000
+Date:   Wed, 24 Apr 2019 15:04:28 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 21/63] Documentation: ACPI: move cppc_sysfs.txt to
+ admin-guide/acpi and convert to reST
+Message-ID: <20190424150428.7eb70014@coco.lan>
+In-Reply-To: <20190424172232.qtzogm6sweaa4gva@mail.google.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-22-changbin.du@gmail.com>
+        <20190424114844.5de4cfa5@coco.lan>
+        <20190424172232.qtzogm6sweaa4gva@mail.google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
+Em Thu, 25 Apr 2019 01:22:34 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-[ Upstream commit aecfde23108b8e637d9f5c5e523b24fb97035dc3 ]
+> On Wed, Apr 24, 2019 at 11:48:44AM -0300, Mauro Carvalho Chehab wrote:
+> > Em Wed, 24 Apr 2019 00:28:50 +0800
+> > Changbin Du <changbin.du@gmail.com> escreveu:
+> >   
+> > > This converts the plain text documentation to reStructuredText format and
+> > > add it to Sphinx TOC tree. No essential content change.
+> > > 
+> > > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > > ---
+> > >  .../acpi/cppc_sysfs.rst}                      | 71 ++++++++++---------
+> > >  Documentation/admin-guide/acpi/index.rst      |  1 +
+> > >  2 files changed, 40 insertions(+), 32 deletions(-)
+> > >  rename Documentation/{acpi/cppc_sysfs.txt => admin-guide/acpi/cppc_sysfs.rst} (51%)
+> > > 
+> > > diff --git a/Documentation/acpi/cppc_sysfs.txt b/Documentation/admin-guide/acpi/cppc_sysfs.rst
+> > > similarity index 51%
+> > > rename from Documentation/acpi/cppc_sysfs.txt
+> > > rename to Documentation/admin-guide/acpi/cppc_sysfs.rst
+> > > index f20fb445135d..a4b99afbe331 100644
+> > > --- a/Documentation/acpi/cppc_sysfs.txt
+> > > +++ b/Documentation/admin-guide/acpi/cppc_sysfs.rst
+> > > @@ -1,5 +1,11 @@
+> > > +.. SPDX-License-Identifier: GPL-2.0
+> > >  
+> > > -	Collaborative Processor Performance Control (CPPC)
+> > > +==================================================
+> > > +Collaborative Processor Performance Control (CPPC)
+> > > +==================================================
+> > > +
+> > > +CPPC
+> > > +====
+> > >  
+> > >  CPPC defined in the ACPI spec describes a mechanism for the OS to manage the
+> > >  performance of a logical processor on a contigious and abstract performance
+> > > @@ -10,31 +16,28 @@ For more details on CPPC please refer to the ACPI specification at:
+> > >  
+> > >  http://uefi.org/specifications
+> > >  
+> > > -Some of the CPPC registers are exposed via sysfs under:
+> > > -
+> > > -/sys/devices/system/cpu/cpuX/acpi_cppc/
+> > > -  
+> > 
+> >   
+> > > -for each cpu X  
+> > 
+> > Hmm... removed by mistake?
+> >  
+> I comfirmed that no content removed.
 
-RFC8257 §3.5 explicitly states that "A DCTCP sender MUST react to
-loss episodes in the same way as conventional TCP".
+At this patch, it looks that you removed the line: "for each cpu X"
+(or am I reading it wrong?)
 
-Currently, Linux DCTCP performs no cwnd reduction when losses
-are encountered. Optionally, the dctcp_clamp_alpha_on_loss resets
-alpha to its maximal value if a RTO happens. This behavior
-is sub-optimal for at least two reasons: i) it ignores losses
-triggering fast retransmissions; and ii) it causes unnecessary large
-cwnd reduction in the future if the loss was isolated as it resets
-the historical term of DCTCP's alpha EWMA to its maximal value (i.e.,
-denoting a total congestion). The second reason has an especially
-noticeable effect when using DCTCP in high BDP environments, where
-alpha normally stays at low values.
+> 
+> > > +Some of the CPPC registers are exposed via sysfs under::
+> > >  
+> > > ---------------------------------------------------------------------------------
+> > > +  /sys/devices/system/cpu/cpuX/acpi_cppc/  
+> > 
+> > Did you parse this with Sphinx? It doesn't sound a valid ReST construction
+> > to my eyes, as:
+> > 
+> > 1) I've seen some versions of Sphinx to abort with severe errors when 
+> >    there's no blank line after the horizontal bar markup;
+> > 
+> > 2) It will very likely ignore the "::" (I didn't test it myself), as you're
+> >    not indenting the horizontal bar. End of indentation will mean the end
+> >    of an (empty) literal block.
+> > 
+> > So, I would stick with:
+> > 
+> > 
+> > 	Some of the CPPC registers are exposed via sysfs under:
+> > 
+> > 	  /sys/devices/system/cpu/cpuX/acpi_cppc/
+> > 
+> > 	---------------------------------------------------------------------------------
+> > 
+> > 	for each cpu X::
+> > 
+> > 
+> > or:
+> > 
+> > 	Some of the CPPC registers are exposed via sysfs under:
+> > 
+> > 		/sys/devices/system/cpu/cpuX/acpi_cppc/
+> > 
+> > 	for each cpu X
+> > 
+> > 	--------------------------------------------------------------------------------
+> > 
+> > 	::
+> > 
+> > (with is closer to the original author's intent)
+> > 
+> > Same applies to the other similar changes on this document.
+> >  
+> I didn't seen any warning here and the generated html is good. So I think it is
+> ok.
 
-This patch replace the clamping of alpha by setting ssthresh to
-half of cwnd for both fast retransmissions and RTOs, at most once
-per RTT. Consequently, the dctcp_clamp_alpha_on_loss module parameter
-has been removed.
+Basically, what you're doing is:
 
-The table below shows experimental results where we measured the
-drop probability of a PIE AQM (not applying ECN marks) at a
-bottleneck in the presence of a single TCP flow with either the
-alpha-clamping option enabled or the cwnd halving proposed by this
-patch. Results using reno or cubic are given for comparison.
+<rst>
 
-                          |  Link   |   RTT    |    Drop
-                 TCP CC   |  speed  | base+AQM | probability
-        ==================|=========|==========|============
-                    CUBIC |  40Mbps |  7+20ms  |    0.21%
-                     RENO |         |          |    0.19%
-        DCTCP-CLAMP-ALPHA |         |          |   25.80%
-         DCTCP-HALVE-CWND |         |          |    0.22%
-        ------------------|---------|----------|------------
-                    CUBIC | 100Mbps |  7+20ms  |    0.03%
-                     RENO |         |          |    0.02%
-        DCTCP-CLAMP-ALPHA |         |          |   23.30%
-         DCTCP-HALVE-CWND |         |          |    0.04%
-        ------------------|---------|----------|------------
-                    CUBIC | 800Mbps |   1+1ms  |    0.04%
-                     RENO |         |          |    0.05%
-        DCTCP-CLAMP-ALPHA |         |          |   18.70%
-         DCTCP-HALVE-CWND |         |          |    0.06%
+::
 
-We see that, without halving its cwnd for all source of losses,
-DCTCP drives the AQM to large drop probabilities in order to keep
-the queue length under control (i.e., it repeatedly faces RTOs).
-Instead, if DCTCP reacts to all source of losses, it can then be
-controlled by the AQM using similar drop levels than cubic or reno.
+foo
+   literal-block bar
 
-Signed-off-by: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
-Signed-off-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
-Cc: Bob Briscoe <research@bobbriscoe.net>
-Cc: Lawrence Brakmo <brakmo@fb.com>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Daniel Borkmann <borkmann@iogearbox.net>
-Cc: Yuchung Cheng <ycheng@google.com>
-Cc: Neal Cardwell <ncardwell@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Andrew Shewmaker <agshew@gmail.com>
-Cc: Glenn Judd <glenn.judd@morganstanley.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/tcp_dctcp.c |   36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+</rst>
 
---- a/net/ipv4/tcp_dctcp.c
-+++ b/net/ipv4/tcp_dctcp.c
-@@ -66,11 +66,6 @@ static unsigned int dctcp_alpha_on_init
- module_param(dctcp_alpha_on_init, uint, 0644);
- MODULE_PARM_DESC(dctcp_alpha_on_init, "parameter for initial alpha value");
- 
--static unsigned int dctcp_clamp_alpha_on_loss __read_mostly;
--module_param(dctcp_clamp_alpha_on_loss, uint, 0644);
--MODULE_PARM_DESC(dctcp_clamp_alpha_on_loss,
--		 "parameter for clamping alpha on loss");
--
- static struct tcp_congestion_ops dctcp_reno;
- 
- static void dctcp_reset(const struct tcp_sock *tp, struct dctcp *ca)
-@@ -211,21 +206,23 @@ static void dctcp_update_alpha(struct so
- 	}
- }
- 
--static void dctcp_state(struct sock *sk, u8 new_state)
-+static void dctcp_react_to_loss(struct sock *sk)
- {
--	if (dctcp_clamp_alpha_on_loss && new_state == TCP_CA_Loss) {
--		struct dctcp *ca = inet_csk_ca(sk);
-+	struct dctcp *ca = inet_csk_ca(sk);
-+	struct tcp_sock *tp = tcp_sk(sk);
- 
--		/* If this extension is enabled, we clamp dctcp_alpha to
--		 * max on packet loss; the motivation is that dctcp_alpha
--		 * is an indicator to the extend of congestion and packet
--		 * loss is an indicator of extreme congestion; setting
--		 * this in practice turned out to be beneficial, and
--		 * effectively assumes total congestion which reduces the
--		 * window by half.
--		 */
--		ca->dctcp_alpha = DCTCP_MAX_ALPHA;
--	}
-+	ca->loss_cwnd = tp->snd_cwnd;
-+	tp->snd_ssthresh = max(tp->snd_cwnd >> 1U, 2U);
-+}
-+
-+static void dctcp_state(struct sock *sk, u8 new_state)
-+{
-+	if (new_state == TCP_CA_Recovery &&
-+	    new_state != inet_csk(sk)->icsk_ca_state)
-+		dctcp_react_to_loss(sk);
-+	/* We handle RTO in dctcp_cwnd_event to ensure that we perform only
-+	 * one loss-adjustment per RTT.
-+	 */
- }
- 
- static void dctcp_cwnd_event(struct sock *sk, enum tcp_ca_event ev)
-@@ -237,6 +234,9 @@ static void dctcp_cwnd_event(struct sock
- 	case CA_EVENT_ECN_NO_CE:
- 		dctcp_ce_state_1_to_0(sk);
- 		break;
-+	case CA_EVENT_LOSS:
-+		dctcp_react_to_loss(sk);
-+		break;
- 	default:
- 		/* Don't care for the rest. */
- 		break;
+(where "foo" is the horizontal bar markup)
 
+I would avoid such pattern for two reasons:
 
+1) it sounds a violation of ReST syntax to format an in
+   indented paragraph some non-blank lines after a non-indented
+   line. As such, I won't doubt that different versions of Sphinx
+   would handle it differently. I'm even tempted to open a BZ
+   to Sphinx in order for them to provide a fix for that, if the
+   latest version of Sphinx accepts such crazy markup.
+
+2) It is very confusing for any human reading it.
+
+Thanks,
+Mauro
