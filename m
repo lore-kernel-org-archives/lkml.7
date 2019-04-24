@@ -2,119 +2,104 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 642B7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48341C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3376320811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E2520811
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:48:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="ysIVUGqb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="IHNJ6npa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732016AbfDXVpv (ORCPT
+        id S1730922AbfDXVsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 17:45:51 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45499 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730699AbfDXVpv (ORCPT
+        Wed, 24 Apr 2019 17:48:10 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:15282 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727737AbfDXVsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 17:45:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s15so27130329wra.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:45:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=YXfb7/x46GwVe34W3JSpQn/ItDTlnSQexlC8/AGXnEM=;
-        b=ysIVUGqbq6R4R6oYQ51AUsWYMYYPCxtZ5kZwTanvTSWFj17wdzUc5wD8DPRd+I9P1h
-         iRsqmuZmXqoE/r/l1UukCJAHd6aGOF4T/sFsu19l0VM3yOhBLjO/oMmOYVkVDoNPw4RX
-         TDZrqb/Z+/8igr92fgvITb4hnyO+ZcTb5FMN8K5pwK2+sBDVbSqCW4LttFweEwOHFvSZ
-         d98sHHPvJi4v2Y3QioGwjmTZs7H+sgUm27YsOYboii8DP8/QHKJfjOxwo1o5jkeQg7dW
-         mIj4UPpwFRYJc/luoA8dEUKIM3PU58tPKJPBowpHhhaxyqM2eyq2cAfGu59GlkWM4my/
-         q5Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=YXfb7/x46GwVe34W3JSpQn/ItDTlnSQexlC8/AGXnEM=;
-        b=QZ8cboYIq81CcNrHvWkBN+T45PTkS7cjLlyJUuteZSJjNwnFn3nDVlSU1TiGi3NoEv
-         S7t9i388fN2Wtk6j3oEz94mUV1/ed+n/S/Y1Yb6Qy+IfgfaEKBw4KIUojrR5SqgOFBLp
-         ogiWJY+vyxPSOk/2nh1iK8V35QIq4wIYI6wPBQmQaOHdLbCfMhTe7K4mTOuT8hCKgUpW
-         16dTQpuTNgz9CaYPuazhtj0WOvSSPsLr4mSWnYehEJZbMM/q8ztLI0z7LilnauN+J5n5
-         7bPtgtrDJZGny0DivWtJXfeV231fkOrqxiGOyfRx6c+wTXMGLZTInl5sxexeJGQlwb+B
-         Rd4g==
-X-Gm-Message-State: APjAAAXyf8vYKk5wic5b72qXkEFnTIO5/cLaFXcRsusexIk1U/Frrt/d
-        mUBOZ6gGw59gMl9oqdF1qemBtQ==
-X-Google-Smtp-Source: APXvYqxNoK2eEf6CzgQZLG4E0DrDCpVHmL3FIff5zepdff5c823IHWTLE0mvb1hkdufzeOMH+E8FFQ==
-X-Received: by 2002:a05:6000:3:: with SMTP id h3mr4076712wrx.314.1556142349326;
-        Wed, 24 Apr 2019 14:45:49 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id q202sm5464346wme.9.2019.04.24.14.45.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 14:45:48 -0700 (PDT)
-Message-ID: <5cc0d90c.1c69fb81.e38ee.fe07@mx.google.com>
-Date:   Wed, 24 Apr 2019 14:45:48 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 24 Apr 2019 17:48:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1556142490; x=1587678490;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XB0jNm8XAmZo+/vy/Z4p8xplRHuYAnev6DXaDcrItTg=;
+  b=IHNJ6npa/FJ68pk6SIA1/3tvEvN3YPe3BNkcqyq8HOP8FOIkJ81SyiGA
+   pwWUKMPbEdcDjVLqUXT3Ez9MKZGW/yzWsnIj9BF/gy+/VuJLGNBDZ1iR6
+   0jiohTM874J7PBRL4oKE3qU3itTRmFZh0mcRenIQeBqMdggEnIJ+c2kOO
+   22iEjUn5m82D0suuY6FUzRcTrs5YSCKl9h++31cTIJkfjciZJW/4xW5cG
+   qXoQn79okMy0X4be9ZsOJynUboEwXLE1pA0LvlcaxF2ISpRb1glYl/jub
+   xc2YmlO95PEy0CZBUSrP95IYmtiIsV9PcDXQ23Vqa9UDfu+11F1LN55C8
+   A==;
+X-IronPort-AV: E=Sophos;i="5.60,391,1549900800"; 
+   d="scan'208";a="106739571"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Apr 2019 05:48:09 +0800
+IronPort-SDR: Q4SkDT2QZma0Ih23bnsRCIckv8cgDlwjYcF2ZanEusLVOSVHnOww6KZ+IPAPxYV9wLJqz0eeNU
+ jni+XoKaLHkLv1G0dQ4OajwVwH/tz6kIE/UdGPKc8gIG7AFs4b0KrbVgkkgQ1UzR5BcwnJg8JJ
+ kytOrak38i6MPPuJILwDQ0D6HEIQl8E6XORLdb3iBqWH5Ac/yrlIGRvGvwr2m80lecOvxDFTyk
+ V08iPuV6Edh/5OQIBbnAClCSYWUXYACVWNl3iId8k07bhZfCAENBa8WkARxVEVvifMpUgOYm//
+ a+esa4+aHDK4EOdLJfFRpqXT
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP; 24 Apr 2019 14:26:48 -0700
+IronPort-SDR: HLkDr4BUsM9O2QFWPr3nEUiN5P3LUaDU6JBXt/kqUeRrDEIkSnCaz6SdfwxdnINKhXUlwrQukO
+ 0oXxnessp/5y57i64ZMlIBpWwCnSeJyGptiU9XJ4bjs/M3yCkLU+x7fSNxWs34DqpwoGUFAzwC
+ jj22z1kBSqrEpbqVfuk/Wcm9tM0gHt/Yqs3pKPxigHkBrJdq2JxXDYxMg2Ki4ax6x/5xNmSxNN
+ 5HLO2nXzam2pATOgsLP1OVa4D4IIh80H/sLg2x/eowj3Xw67eC+a9JfuxONpfKEhvqlCB/RQF8
+ 1ps=
+Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
+  by uls-op-cesaip02.wdc.com with ESMTP; 24 Apr 2019 14:48:09 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andreas Schwab <schwab@suse.de>,
+        Anup Patel <anup@brainfault.org>,
+        Johan Hovold <johan@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>
+Subject: [PATCH v4 0/4] Miscellaneous kernel command line fixes
+Date:   Wed, 24 Apr 2019 14:47:57 -0700
+Message-Id: <20190424214801.18880-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v3.18.138-105-g84a721a30d55
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-3.18.y
-In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
-References: <20190424170839.996641496@linuxfoundation.org>
-Subject: Re: [PATCH 3.18 000/104] 3.18.139-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-3.18.y boot: 47 boots: 1 failed, 44 passed with 2 offline (=
-v3.18.138-105-g84a721a30d55)
+Assorted command line option fixes for RISC-V.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--3.18.y/kernel/v3.18.138-105-g84a721a30d55/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-3.18.=
-y/kernel/v3.18.138-105-g84a721a30d55/
+Changes from v3->v4.
+1. Fixed few checkpatch warnings.
 
-Tree: stable-rc
-Branch: linux-3.18.y
-Git Describe: v3.18.138-105-g84a721a30d55
-Git Commit: 84a721a30d5546bc805cdbd24c4065a20d883de8
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 22 unique boards, 12 SoC families, 13 builds out of 189
+Changes from v2->v3.
+1. Merged patch 1 & 2 into one patch.
 
-Boot Failure Detected:
+Changes from v1->v2.
+1. Update pr_err string in patch (4/4) as per review.
 
-x86_64:
+Atish Patra (4):
+RISC-V: Add RISC-V specific arch_match_cpu_phys_id
+RISC-V: Implement nosmp commandline option.
+RISC-V: Support nr_cpus command line option.
+RISC-V: Fix minor checkpatch issues.
 
-    x86_64_defconfig:
-        gcc-7:
-            minnowboard-turbot-E3826: 1 failed lab
+arch/riscv/kernel/cpu.c     |  3 +--
+arch/riscv/kernel/smp.c     |  8 +++++++-
+arch/riscv/kernel/smpboot.  |  0
+arch/riscv/kernel/smpboot.c | 22 ++++++++++++++++++++--
+4 files changed, 28 insertions(+), 5 deletions(-)
+create mode 100644 arch/riscv/kernel/smpboot.
 
-Offline Platforms:
+--
+2.21.0
 
-arm:
-
-    multi_v7_defconfig:
-        gcc-7
-            tegra20-iris-512: 1 offline lab
-
-    tegra_defconfig:
-        gcc-7
-            tegra20-iris-512: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
