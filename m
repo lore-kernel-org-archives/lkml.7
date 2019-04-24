@@ -2,118 +2,76 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951EAC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3876C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 629AD218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71830218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1LRsLPpm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CCYcxtrb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbfDXMwN (ORCPT
+        id S1730354AbfDXMwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:52:13 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56306 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729107AbfDXMwN (ORCPT
+        Wed, 24 Apr 2019 08:52:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49456 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729107AbfDXMwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:52:13 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OCfGXP016096;
-        Wed, 24 Apr 2019 14:51:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=ctm+W81ZWox/COgWpf+FCLXq5fOtwKtzTtyPOJXJ5IQ=;
- b=1LRsLPpm3ncNy5btDO6Aut0vHyE4Io1S73hgxZ5PhprbdDiPzJmXWTbjdZa3aJ10kDFs
- 8z7/BQyABgKaiV5lHkPe+C3kkSSBDEzL7jbZJ5PKx/cFmT8t5zd8k0QKflj4xjgra24k
- vqproO0SgVCZ6cRWtGA+Vd47LIlh+d2EakDmhuis4jfIksvq1vu70w/YS8JIs7GYVX09
- ZnV4SC2fhBOCjgmkdGrSOakyuSqrYr1Hyeisxwo0fMLLIZitgtccwq9TdvzxSFUmbc0X
- lDa3Dax26Bwa8UdvIb0zwO8EuMMVHHqfHZLikb0XyVUywieGpKP4et8+fhWNruMGkbGU Ew== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rytad6khw-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 24 Apr 2019 14:51:42 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A8CCB3A;
-        Wed, 24 Apr 2019 12:51:38 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7AA1125C5;
-        Wed, 24 Apr 2019 12:51:38 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 24 Apr
- 2019 14:51:38 +0200
-Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr 2019 14:51:38
- +0200
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Alexandre Torgue" <alexandre.torgue@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 2/2] iio: adc: stm32-dfsdm: missing error case during probe
-Date:   Wed, 24 Apr 2019 14:51:26 +0200
-Message-ID: <1556110286-1526-3-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556110286-1526-1-git-send-email-fabien.dessenne@st.com>
-References: <1556110286-1526-1-git-send-email-fabien.dessenne@st.com>
+        Wed, 24 Apr 2019 08:52:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=nFdnTVYAcbMJaGQ2loaGa8ia9MP+KgbDIAKGKeFfms0=; b=CCYcxtrb468ZR3mCrUSKzylGy
+        STj8PvCJl74UmSQta188gvkeKgzEw76p6GKSPj6pqD65Nc/2UluDjObZZHFi07H/U+T4dOCRpAtVH
+        /o6uBf8AlWzc0lApEUk4CL3Mu1keffDN25PuV2EK7SWZFL6+mCzd82LBDuC51W6k5DOsAjqE0pDQs
+        QhwPd6w8j51YUYGgS0FA9swXn7sAgWwCcyw9El6AKsoOVVcw6tLzGNTy7MmBD01QNUWAO/TES1uXf
+        w6OpOLyffnbHgjVPlQ0D7VQgnDlQ98Mrhb6XCrrvuldE49p5dkZpuZFLaZYEK/9361LgdxR0hpBkx
+        oHllqvA9A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJHNm-0008So-9X; Wed, 24 Apr 2019 12:52:14 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B5BFF29B8FCEF; Wed, 24 Apr 2019 14:52:12 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 14:52:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kairui Song <kasong@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC PATCH v4] perf/x86: make perf callchain work without
+ CONFIG_FRAME_POINTER
+Message-ID: <20190424125212.GN12232@hirez.programming.kicks-ass.net>
+References: <20190422162652.15483-1-kasong@redhat.com>
+ <20190423113501.GN11158@hirez.programming.kicks-ass.net>
+ <CACPcB9f8JuALCw1i-V2N01GuTQRfjrCya6esOTM8dGwvf+oT7w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.25]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_08:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACPcB9f8JuALCw1i-V2N01GuTQRfjrCya6esOTM8dGwvf+oT7w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During probe, check the devm_ioremap_resource() error value.
-Also return the devm_clk_get() error value instead of -EINVAL.
+On Wed, Apr 24, 2019 at 08:42:40AM -0400, Kairui Song wrote:
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- drivers/iio/adc/stm32-dfsdm-core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> Sure, the updated comments looks much better. Will the maintainer
+> squash the comment update or should I send a V5?
 
-diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
-index 0a4d374..26e2011 100644
---- a/drivers/iio/adc/stm32-dfsdm-core.c
-+++ b/drivers/iio/adc/stm32-dfsdm-core.c
-@@ -233,6 +233,8 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
- 	}
- 	priv->dfsdm.phys_base = res->start;
- 	priv->dfsdm.base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->dfsdm.base))
-+		return PTR_ERR(priv->dfsdm.base);
- 
- 	/*
- 	 * "dfsdm" clock is mandatory for DFSDM peripheral clocking.
-@@ -242,8 +244,10 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
- 	 */
- 	priv->clk = devm_clk_get(&pdev->dev, "dfsdm");
- 	if (IS_ERR(priv->clk)) {
--		dev_err(&pdev->dev, "No stm32_dfsdm_clk clock found\n");
--		return -EINVAL;
-+		ret = PTR_ERR(priv->clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get clock (%d)\n", ret);
-+		return ret;
- 	}
- 
- 	priv->aclk = devm_clk_get(&pdev->dev, "audio");
--- 
-2.7.4
-
+I've squashed it, I've just not gotten around to stuffing it a git tree
+yet. Should happen 'soon'.
