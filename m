@@ -2,108 +2,322 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 052F5C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4265BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6D9B20811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:27:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iU1/aiQT"
+	by mail.kernel.org (Postfix) with ESMTP id F229C20811
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbfDXM1O (ORCPT
+        id S1730037AbfDXM1m convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:27:14 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51044 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726880AbfDXM1N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:27:13 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OC6eQN024358;
-        Wed, 24 Apr 2019 14:26:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=h9D+RmnNCvP7dwWVcYtp3MBpjBes7RInZNX3mwfwoo8=;
- b=iU1/aiQTc/ikYT7DchSugv7ll+UijXK1m05lk2SWXlxczUnjSsO5OZHgbN+hMNQ33eo/
- vtRzQhZoe39oWMBznj5tCPI4EEPrZfsAWHSjD5VAwZ5+JyVsQAEfVHLI6WmlsAoZ+Ww8
- kiLXyV5RnscLnOuzG0W77Nf6rv802g+yOAHBc9vTekTFw1Fx559yGIXCH8kIw/MM+BKM
- axoEJukU4PK7+MutFY6XpGCYmdl4+eAmsqq839gcOlsZiVXb+xdbNFfC+nV6gR8UT2Gm
- ZoRjldpibfpqt15lNZCTvrQUEASZg/5UrKEbliVEGIl4Gk53wJN8rjYTS8xW8Uq5d5oR 7g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rytad6fg8-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 24 Apr 2019 14:26:56 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1492D31;
-        Wed, 24 Apr 2019 12:26:55 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DA84C254E;
-        Wed, 24 Apr 2019 12:26:54 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr
- 2019 14:26:54 +0200
-Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr 2019 14:26:54
- +0200
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        <linux-rtc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
+        Wed, 24 Apr 2019 08:27:42 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51542 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726880AbfDXM1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 08:27:42 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 03B073EC7201D982273E;
+        Wed, 24 Apr 2019 20:27:39 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Apr 2019
+ 20:27:36 +0800
+Date:   Wed, 24 Apr 2019 13:27:25 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     "Life is hard, and then you die" <ronald@innovation.ch>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        "Lars-Peter Clausen" <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        <linux-input@vger.kernel.org>, <linux-iio@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH] rtc: stm32: manage the get_irq probe defer case
-Date:   Wed, 24 Apr 2019 14:26:48 +0200
-Message-ID: <1556108808-32722-1-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
+Subject: Re: [PATCH 3/3] iio: light: apple-ib-als: Add driver for ALS on
+ iBridge chip.
+Message-ID: <20190424132725.00007633@huawei.com>
+In-Reply-To: <20190423103855.GB12528@innovation.ch>
+References: <20190422031251.11968-1-ronald@innovation.ch>
+        <20190422031251.11968-4-ronald@innovation.ch>
+        <alpine.DEB.2.21.1904221101420.964@vps.pmeerw.net>
+        <20190422130138.336fb227@archlinux>
+        <20190423103855.GB12528@innovation.ch>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.25]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_08:,,
- signatures=0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Manage the -EPROBE_DEFER error case for the wake IRQ.
+On Tue, 23 Apr 2019 03:38:55 -0700
+"Life is hard, and then you die" <ronald@innovation.ch> wrote:
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- drivers/rtc/rtc-stm32.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+>   Hi Jonathan, Peter,
+> 
+> On Mon, Apr 22, 2019 at 01:01:38PM +0100, Jonathan Cameron wrote:
+> > On Mon, 22 Apr 2019 11:17:27 +0200 (CEST)
+> > Peter Meerwald-Stadler <pmeerw@pmeerw.net> wrote:
+> >   
+> > > On Sun, 21 Apr 2019, Ronald Tschalär wrote:
+> > >   
+> > > > On 2016/2017 MacBook Pro's with a Touch Bar the ALS is attached to,
+> > > > and exposed via the iBridge device. This provides the driver for that
+> > > > sensor.    
+> > > 
+> > > some comments below inline  
+> > I'll 'nest' on Peter's review to avoid repetition.
+> > 
+> > A few additional comments inline.  
+> 
+> Thank you both for your reviews. I've applied most of your
+> suggestions, so I'm limiting my responses below to just those places
+> where I need further clarification or can provide some answers.
+> 
+> [snip]
+> > > > +static int appleals_read_raw(struct iio_dev *iio_dev,
+> > > > +			     struct iio_chan_spec const *chan,
+> > > > +			     int *val, int *val2, long mask)
+> > > > +{
+> > > > +	struct appleals_device *als_dev =
+> > > > +				*(struct appleals_device **)iio_priv(iio_dev);
+> > > > +	__s32 value;
+> > > > +	int rc;
+> > > > +
+> > > > +	*val = 0;
+> > > > +	*val2 = 0;    
+> > > 
+> > > no need to set these here
+> > >   
+> > > > +
+> > > > +	switch (mask) {
+> > > > +	case IIO_CHAN_INFO_RAW:
+> > > > +	case IIO_CHAN_INFO_PROCESSED:
+> > > > +		*val = appleals_get_field_value(als_dev, als_dev->illum_field);  
+> > 
+> > How can one read by both processed and raw?  
+> 
+> From my understanding, processed is a converted and normalized value
+> of raw? But since the raw value is already in Lux the processed value
+> is then the same. Furthermore, looking at userspace apps that read
+> these values (e.g. iio-sensor-proxy, lightsd) they seem to be all over
+> the map in terms of what sysfs entries they read:
+> in_illuminance_input, in_intensity_both_raw, etc. So I figured
+> providing both would provide maximal compatibility.
+> 
+> What then is currently the preferred approach here?
 
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index c5908cf..8e6c9b3 100644
---- a/drivers/rtc/rtc-stm32.c
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -788,11 +788,14 @@ static int stm32_rtc_probe(struct platform_device *pdev)
- 	ret = device_init_wakeup(&pdev->dev, true);
- 	if (rtc->data->has_wakeirq) {
- 		rtc->wakeirq_alarm = platform_get_irq(pdev, 1);
--		if (rtc->wakeirq_alarm <= 0)
--			ret = rtc->wakeirq_alarm;
--		else
-+		if (rtc->wakeirq_alarm > 0) {
- 			ret = dev_pm_set_dedicated_wake_irq(&pdev->dev,
- 							    rtc->wakeirq_alarm);
-+		} else {
-+			ret = rtc->wakeirq_alarm;
-+			if (rtc->wakeirq_alarm == -EPROBE_DEFER)
-+				goto err;
-+		}
- 	}
- 	if (ret)
- 		dev_warn(&pdev->dev, "alarm can't wake up the system: %d", ret);
--- 
-2.7.4
+Just provide the processed value.  We may have to fix any userspace apps
+that aren't checking both.  For the raw version they should be applying the
+scale in userspace.
+
+> 
+> > > > +	case IIO_CHAN_INFO_HYSTERESIS:
+> > > > +		if (val == APPLEALS_DYN_SENS) {
+> > > > +			if (als_dev->cur_hysteresis != APPLEALS_DYN_SENS) {
+> > > > +				als_dev->cur_hysteresis = val;
+> > > > +				illum = appleals_get_field_value(als_dev,
+> > > > +							als_dev->illum_field);
+> > > > +				appleals_update_dyn_sensitivity(als_dev, illum);  
+> > 
+> > There is some debate in another thread on whether dynamic sensitivity can be
+> > mapped to hysteresis or not...  
+> 
+> Is that the "drivers: iio: Add more data field for iio driver
+> hysteresis parsing" thread?
+
+That's the one.
+
+> 
+> In any case, I'm using the value 0 here to indicate that the
+> pseudo-percent-relative change sensitivity should be used. Better
+> suggestions certainly welcome.
+
+It seems we are converging on a new IIO_CHAN_INFO type for sensitivity.
+
+> 
+> [snip]
+> > > > +static const struct iio_chan_spec appleals_channels[] = {
+> > > > +	{
+> > > > +		.type = IIO_INTENSITY,
+> > > > +		.modified = 1,
+> > > > +		.channel2 = IIO_MOD_LIGHT_BOTH,
+> > > > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
+> > > > +			BIT(IIO_CHAN_INFO_RAW),  
+> > Why return both processed and raw?  We don't generally allow that in IIO
+> > (there are a few historical exceptions due to us getting it wrong the
+> > first time).  
+> 
+> Ok. But which should be used then, especially in view of the fact that
+> different user-space apps/daemons appear to use different values?
+ forwards.
+
+> 
+> [snip]
+> > > > +static int appleals_config_iio(struct appleals_device *als_dev)  
+> [snip]
+> > > > +	iio_dev = iio_device_alloc(sizeof(als_dev));    
+> > > 
+> > > how about using the devm_ variants?  
+> 
+> The problem is that there is no device with the proper lifetime here.
+> In particular we can't use hid_device (the only struct device
+> available here) because the instances of those can (and do) outlive
+> the module. This is a consequence of the hid-driver demuxing: e.g.
+> when this als module is unloaded, the hid_device is still in use by
+> the touchbar driver, and if this als module is then loaded again it
+> will get associated with that same hid_device again.
+Fair enough.
+
+> 
+> [snip]
+> > > > +	rc = iio_device_register(iio_dev);
+> > > > +	if (rc) {
+> > > > +		dev_err(als_dev->log_dev, "failed to register iio device: %d\n",
+> > > > +			rc);
+> > > > +		goto unreg_iio_trig;
+> > > > +	}
+> > > > +
+> > > > +	als_dev->iio_dev = iio_dev;  
+> > 
+> > I really don't like nest of pointers going on in here.  I haven't dug
+> > down to check if any of them can be remove, but they are definitely
+> > ugly to deal with.  
+> 
+> I'm not sure how this can be avoided: *iio_dev is allocated by
+> iio_device_alloc(), and this is just storing that pointer in our data
+> structure for this als device.
+
+You are probably correct.  Ugly will have to stay :(
+This tends to happen when we end up merging various different
+driver subsystems together like this.
+
+> 
+> [snip]
+> > > > +static int appleals_probe(struct hid_device *hdev,
+> > > > +			  const struct hid_device_id *id)
+> > > > +{
+> > > > +	struct appleals_device *als_dev =
+> > > > +		appleib_get_drvdata(hid_get_drvdata(hdev),
+> > > > +				    &appleals_hid_driver);
+> > > > +	struct hid_field *state_field;
+> > > > +	struct hid_field *illum_field;
+> > > > +	int rc;
+> > > > +
+> > > > +	/* find als fields and reports */
+> > > > +	state_field = appleib_find_hid_field(hdev, HID_USAGE_SENSOR_ALS,
+> > > > +					    HID_USAGE_SENSOR_PROP_REPORT_STATE);
+> > > > +	illum_field = appleib_find_hid_field(hdev, HID_USAGE_SENSOR_ALS,
+> > > > +					     HID_USAGE_SENSOR_LIGHT_ILLUM);
+> > > > +	if (!state_field || !illum_field)
+> > > > +		return -ENODEV;
+> > > > +
+> > > > +	if (als_dev->hid_dev) {
+> > > > +		dev_warn(als_dev->log_dev,
+> > > > +			 "Found duplicate ambient light sensor - ignoring\n");  
+> > 
+> > I'll bite.  So how can this actually happen?  What fundamentally breaks in
+> > your model if there really are two?  Can you fix whatever that is so
+> > as to drop this handling?  
+> 
+> This should indeed never happen - the check is just defensive
+> programming, in case either some new device in some new model appears,
+> or due to some bug somewhere.
+> 
+> To actually handle this I'd need to split up appleals_device into a
+> per iBridge-device part and a per ALS-device part, and allow multiple
+> ALS-device parts. This is certainly doable, but seemed a bit overkill
+> for something that is unlikely to ever be needed.
+
+Fair enough I guess.
+
+> 
+> [snip]
+> > > > +static void appleals_remove(struct hid_device *hdev)
+> > > > +{
+> > > > +	struct appleals_device *als_dev =
+> > > > +		appleib_get_drvdata(hid_get_drvdata(hdev),
+> > > > +				    &appleals_hid_driver);
+> > > > +    
+> > > 
+> > > could be a lot less if devm_ were used?  
+> 
+> Agreed, but see explanation above of why this can't be used.
+> 
+> > > > +	if (als_dev->iio_dev) {
+> > > > +		iio_device_unregister(als_dev->iio_dev);
+> > > > +
+> > > > +		iio_trigger_unregister(als_dev->iio_trig);
+> > > > +		iio_trigger_free(als_dev->iio_trig);
+> > > > +		als_dev->iio_trig = NULL;  
+> > 
+> > I would be decidedly worried if you actually have any paths
+> > where setting these to NULL do anything useful. By the time
+> > we get here we should absolutely 'know' nothing will touch
+> > these pointers.  
+> 
+> I guess I was being overly paranoid here. I've removed these now.
+> 
+> > It is these that are blocking Peter's suggestion of using
+> > devm to clean all of this up automatically for you.  
+> 
+> No, that is for a different reason - see above.
+> 
+> [snip]
+> > > > +static int appleals_platform_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +	struct appleib_platform_data *pdata = pdev->dev.platform_data;
+> > > > +	struct appleib_device *ib_dev = pdata->ib_dev;
+> > > > +	struct appleals_device *als_dev;
+> > > > +	int rc;
+> > > > +
+> > > > +	als_dev = kzalloc(sizeof(*als_dev), GFP_KERNEL);
+> > > > +	if (!als_dev)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	als_dev->ib_dev = ib_dev;
+> > > > +	als_dev->log_dev = pdata->log_dev;
+> > > > +
+> > > > +	rc = appleib_register_hid_driver(ib_dev, &appleals_hid_driver, als_dev);  
+> > 
+> > Hmm. This is all a bit odd.  We register a platform device, to call it's driver
+> > so that it can then register another driver?  I'll let Lee comment on that but
+> > it does seem overly complex.  
+> 
+> "Normally" this call would be to hid_register_driver().
+
+> However, as I
+> tried to explain in the cover letter and module comments, at least one
+> of the hid_device's needs to be shared by both this als driver and the
+> touchbar driver. But the linux device/driver architecture does not
+> allow multiple drivers to be attached to a single device. Hence the
+> mfd driver implements demuxing hid_driver that allows multiple
+> hid_drivers to be registered for a single hid_device. And this is why
+> we register our hid_driver with this demuxing driver here instead of
+> directly via hid_register_driver().
+
+I'd expect a probe to create a device managed by the driver.  The drive would normally
+be registered on module load, hence _init, rather than probe.
+
+I can't find any instances of hid_register_driver being called from a probe function.
+
+Jonathan
+
+
+> 
+> Does this make sense?
+> 
+> 
+>   Cheers,
+> 
+>   Ronald
+> 
+
 
