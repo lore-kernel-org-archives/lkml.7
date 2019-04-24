@@ -6,122 +6,175 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A459C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED46BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B72C218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF650218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732691AbfDXQjM (ORCPT
+        id S1732700AbfDXQkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:39:12 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:59707 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731530AbfDXQjL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:39:11 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 87C59200A9;
-        Wed, 24 Apr 2019 18:39:09 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 18:39:08 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>
-Subject: Re: [PATCH 02/25] drm: kirin: Remove HISI_KIRIN_DW_DSI config option
-Message-ID: <20190424163908.GB20110@ravnborg.org>
-References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
- <1556061656-1733-3-git-send-email-john.stultz@linaro.org>
+        Wed, 24 Apr 2019 12:40:42 -0400
+Received: from foss.arm.com ([217.140.101.70]:48670 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731234AbfDXQkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:40:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2D55374;
+        Wed, 24 Apr 2019 09:40:39 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A7E0C3F557;
+        Wed, 24 Apr 2019 09:40:35 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 17:40:33 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andi Kleen <andi@firstfloor.org>, Chris Lameter <cl@linux.com>,
+        Ben Maurer <bmaurer@fb.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH for 5.2 08/10] rseq/selftests: aarch64 code
+ signature: handle big-endian environment
+Message-ID: <20190424164032.GD21101@lakrids.cambridge.arm.com>
+References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com>
+ <20190424152502.14246-9-mathieu.desnoyers@efficios.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556061656-1733-3-git-send-email-john.stultz@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=BTeA3XvPAAAA:8
-        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=KKAkSRfTAAAA:8 a=lDplpNyqA4p3idxBvDsA:9
-        a=CjuIK1q_8ugA:10 a=tafbbOV3vt1XuEhzTjGK:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=cvBusfyB2V15izCimMoJ:22
+In-Reply-To: <20190424152502.14246-9-mathieu.desnoyers@efficios.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John.
-
-On Tue, Apr 23, 2019 at 04:20:33PM -0700, John Stultz wrote:
-> The CONFIG_HISI_KIRIN_DW_DSI option is only used w/ kirin
-> driver, so cut out the middleman and condense the config
-> logic down.
+On Wed, Apr 24, 2019 at 11:25:00AM -0400, Mathieu Desnoyers wrote:
+> Handle compiling with -mbig-endian on aarch64, which generates binaries
+> with mixed code vs data endianness (little endian code, big endian
+> data).
 > 
-> Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
-> Cc: Rongrong Zou <zourongrong@gmail.com>
-> Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Cc: Chen Feng <puck.chen@hisilicon.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel <dri-devel@lists.freedesktop.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Else mismatch between code endianness for the generated signatures and
+> data endianness for the RSEQ_SIG parameter passed to the rseq
+> registration will trigger application segmentation faults when the
+> kernel try to abort rseq critical sections.
+> 
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> CC: Peter Zijlstra <peterz@infradead.org>
+> CC: Thomas Gleixner <tglx@linutronix.de>
+> CC: Joel Fernandes <joelaf@google.com>
+> CC: Catalin Marinas <catalin.marinas@arm.com>
+> CC: Dave Watson <davejwatson@fb.com>
+> CC: Will Deacon <will.deacon@arm.com>
+> CC: Shuah Khan <shuah@kernel.org>
+> CC: Andi Kleen <andi@firstfloor.org>
+> CC: linux-kselftest@vger.kernel.org
+> CC: "H . Peter Anvin" <hpa@zytor.com>
+> CC: Chris Lameter <cl@linux.com>
+> CC: Russell King <linux@arm.linux.org.uk>
+> CC: Michael Kerrisk <mtk.manpages@gmail.com>
+> CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
+> CC: Paul Turner <pjt@google.com>
+> CC: Boqun Feng <boqun.feng@gmail.com>
+> CC: Josh Triplett <josh@joshtriplett.org>
+> CC: Steven Rostedt <rostedt@goodmis.org>
+> CC: Ben Maurer <bmaurer@fb.com>
+> CC: linux-api@vger.kernel.org
+> CC: Andy Lutomirski <luto@amacapital.net>
+> CC: Andrew Morton <akpm@linux-foundation.org>
+> CC: Linus Torvalds <torvalds@linux-foundation.org>
 > ---
->  drivers/gpu/drm/hisilicon/kirin/Kconfig  | 10 +---------
->  drivers/gpu/drm/hisilicon/kirin/Makefile |  4 ++--
->  2 files changed, 3 insertions(+), 11 deletions(-)
+>  tools/testing/selftests/rseq/rseq-arm64.h | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/Kconfig b/drivers/gpu/drm/hisilicon/kirin/Kconfig
-> index 499f644..6ef7906 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/Kconfig
-> +++ b/drivers/gpu/drm/hisilicon/kirin/Kconfig
-> @@ -4,16 +4,8 @@ config DRM_HISI_KIRIN
->  	select DRM_KMS_HELPER
->  	select DRM_GEM_CMA_HELPER
->  	select DRM_KMS_CMA_HELPER
-> -	select HISI_KIRIN_DW_DSI
-> +	select DRM_MIPI_DSI
->  	help
->  	  Choose this option if you have a hisilicon Kirin chipsets(hi6220).
->  	  If M is selected the module will be called kirin-drm.
+> diff --git a/tools/testing/selftests/rseq/rseq-arm64.h b/tools/testing/selftests/rseq/rseq-arm64.h
+> index b41a2a48e965..200dae9e4208 100644
+> --- a/tools/testing/selftests/rseq/rseq-arm64.h
+> +++ b/tools/testing/selftests/rseq/rseq-arm64.h
+> @@ -6,7 +6,20 @@
+>   * (C) Copyright 2018 - Will Deacon <will.deacon@arm.com>
+>   */
 >  
-> -config HISI_KIRIN_DW_DSI
-> -	tristate "HiSilicon Kirin specific extensions for Synopsys DW MIPI DSI"
-> -	depends on DRM_HISI_KIRIN
-> -	select DRM_MIPI_DSI
-> -	help
-> -	 This selects support for HiSilicon Kirin SoC specific extensions for
-> -	 the Synopsys DesignWare DSI driver. If you want to enable MIPI DSI on
-> -	 hi6220 based SoC, you should selet this option.
-
-Nice simplification. We are now down to two very small Kconfig files.
-Consider to merge them into one Kconfig file in the top-level dir.
-
-	Sam
-
-
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/Makefile b/drivers/gpu/drm/hisilicon/kirin/Makefile
-> index cdf6158..3585327 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/Makefile
-> +++ b/drivers/gpu/drm/hisilicon/kirin/Makefile
-> @@ -1,6 +1,6 @@
->  kirin-drm-y := kirin_drm_drv.o \
-> -	       kirin_drm_ade.o
-> +	       kirin_drm_ade.o \
-> +	       dw_drm_dsi.o
+> -#define RSEQ_SIG	0xd428bc00	/* BRK #0x45E0 */
+> +/*
+> + * aarch64 -mbig-endian generates mixed endianness code vs data:
+> + * little-endian code and big-endian data. Ensure the RSEQ_SIG signature
+> + * matches code endianness.
+> + */
+> +#define RSEQ_SIG_CODE	0xd428bc00	/* BRK #0x45E0.  */
+> +
+> +#ifdef __AARCH64EB__
+> +#define RSEQ_SIG_DATA	0x00bc28d4	/* BRK #0x45E0.  */
+> +#else
+> +#define RSEQ_SIG_DATA	RSEQ_SIG_CODE
+> +#endif
+> +
+> +#define RSEQ_SIG	RSEQ_SIG_DATA
 >  
->  obj-$(CONFIG_DRM_HISI_KIRIN) += kirin-drm.o
+>  #define rseq_smp_mb()	__asm__ __volatile__ ("dmb ish" ::: "memory")
+>  #define rseq_smp_rmb()	__asm__ __volatile__ ("dmb ishld" ::: "memory")
+> @@ -121,7 +134,7 @@ do {										\
 >  
-> -obj-$(CONFIG_HISI_KIRIN_DW_DSI) += dw_drm_dsi.o
-> -- 
-> 2.7.4
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>  #define RSEQ_ASM_DEFINE_ABORT(label, abort_label)				\
+>  	"	b	222f\n"							\
+> -	"	.inst 	"	__rseq_str(RSEQ_SIG) "\n"			\
+> +	"	.inst 	"	__rseq_str(RSEQ_SIG_CODE) "\n"			\
+
+I don't think this is right; the .inst directive _should_ emit the value
+in the instruction stream endianness (i.e. LE, regardless of the data
+endianness).
+
+That's certainly the case with the kernel.org crosstool GCC:
+
+[mark@lakrids:/mnt/data/tests/inst-test]% cat test.c                               
+void func(void)
+{
+        asm volatile(".inst 0xd4000001");
+}
+[mark@lakrids:/mnt/data/tests/inst-test]% usekorg 8.1.0 aarch64-linux-gcc -c test.c
+[mark@lakrids:/mnt/data/tests/inst-test]% usekorg 8.1.0 aarch64-linux-objdump -d test.o
+
+test.o:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000000000 <func>:
+   0:   d4000001        svc     #0x0
+   4:   d503201f        nop
+   8:   d65f03c0        ret
+[mark@lakrids:/mnt/data/tests/inst-test]% usekorg 8.1.0 aarch64-linux-gcc -mbig-endian -c test.c
+[mark@lakrids:/mnt/data/tests/inst-test]% usekorg 8.1.0 aarch64-linux-objdump -d test.o         
+
+test.o:     file format elf64-bigaarch64
+
+
+Disassembly of section .text:
+
+0000000000000000 <func>:
+   0:   d4000001        svc     #0x0
+   4:   d503201f        nop
+   8:   d65f03c0        ret
+
+
+
+Have you tested this? Is there some toolchain that doesn't get this
+right?
+
+Thanks,
+Mark.
