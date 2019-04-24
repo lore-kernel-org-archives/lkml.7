@@ -2,112 +2,240 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1F9C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82A5C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACFA920811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:29:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KXIpJa9u"
+	by mail.kernel.org (Postfix) with ESMTP id 8DED120811
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbfDXO3A (ORCPT
+        id S1730609AbfDXO3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:29:00 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:59116 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfDXO3A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:29:00 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3OEORte068948;
-        Wed, 24 Apr 2019 14:28:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=oY1ord+Lme18r5cTWR+elxrt0Fz3inO6k/ATmNNr7Uc=;
- b=KXIpJa9ub20F5bqyCnAs8cxsTRjRMLjy9i/6Nd0k0ihE+apuO1ACmBzSXnqMf/gRuWjf
- mW1eG4ogCcIqfj4MOAF4yCmS7peDp9vOszFETqP9C0TejXzzl2JLYuV2+4GvizcwTolj
- 9eZemNscdH/8PzhJYNT4h0QICwwJ9bc7F+/wij5sG/CCUbf2YqRS2qlzsu05FaeejvsS
- LBu+FQzGpFTJgCeUWUXyTU6mr1A1PO7p1PdgfheBa1IBLeZXZ5YqPJ0tEg5YLrgWqEBL
- RbgcC499v8RTBGG9H4O/T09rGvn8TIe3L4sUqO2bC7dLmKY6OZ4pGbaVN2KpZYQnI/1v Zg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2ryrxd2xbt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 14:28:46 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3OESj3l181472;
-        Wed, 24 Apr 2019 14:28:45 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2s0dwevfqr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 14:28:45 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3OESdQW024688;
-        Wed, 24 Apr 2019 14:28:39 GMT
-Received: from kadam (/196.111.187.26)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Apr 2019 07:28:38 -0700
-Date:   Wed, 24 Apr 2019 17:28:17 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Oscar Gomez Fuente <oscargomezf@gmail.com>
-Cc:     devel@driverdev.osuosl.org, tkjos@android.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        arve@android.com, joel@joelfernandes.org, maco@android.com,
-        sumit.semwal@linaro.org, christian@brauner.io
-Subject: Re: [PATCH] staging: ion: solve warning symbol was not declared
-Message-ID: <20190424142817.GD14798@kadam>
-References: <1555958967-29149-1-git-send-email-oscargomezf@gmail.com>
+        Wed, 24 Apr 2019 10:29:30 -0400
+Received: from foss.arm.com ([217.140.101.70]:44926 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbfDXO33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:29:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F39D80D;
+        Wed, 24 Apr 2019 07:29:29 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B526D3F5AF;
+        Wed, 24 Apr 2019 07:29:27 -0700 (PDT)
+Subject: Re: [PATCH v10 2/5] KVM: arm/arm64: context-switch ptrauth registers
+To:     Dave Martin <Dave.Martin@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
+ <1555994558-26349-3-git-send-email-amit.kachhap@arm.com>
+ <20190424133903.GU3567@e103592.cambridge.arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <4e475e1f-80f2-372a-2c16-a03ac947525a@arm.com>
+Date:   Wed, 24 Apr 2019 15:29:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555958967-29149-1-git-send-email-oscargomezf@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9236 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904240113
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9236 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904240113
+In-Reply-To: <20190424133903.GU3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 08:49:27PM +0200, Oscar Gomez Fuente wrote:
-> These changes solve warning symbol was not declared in the functions:
-> ion_carveout_heap_create and ion_chunk_heap_create
+On 24/04/2019 14:39, Dave Martin wrote:
+> On Tue, Apr 23, 2019 at 10:12:35AM +0530, Amit Daniel Kachhap wrote:
+>> From: Mark Rutland <mark.rutland@arm.com>
+>>
+>> When pointer authentication is supported, a guest may wish to use it.
+>> This patch adds the necessary KVM infrastructure for this to work, with
+>> a semi-lazy context switch of the pointer auth state.
+>>
+>> Pointer authentication feature is only enabled when VHE is built
+>> in the kernel and present in the CPU implementation so only VHE code
+>> paths are modified.
+>>
+>> When we schedule a vcpu, we disable guest usage of pointer
+>> authentication instructions and accesses to the keys. While these are
+>> disabled, we avoid context-switching the keys. When we trap the guest
+>> trying to use pointer authentication functionality, we change to eagerly
+>> context-switching the keys, and enable the feature. The next time the
+>> vcpu is scheduled out/in, we start again. However the host key save is
+>> optimized and implemented inside ptrauth instruction/register access
+>> trap.
+>>
+>> Pointer authentication consists of address authentication and generic
+>> authentication, and CPUs in a system might have varied support for
+>> either. Where support for either feature is not uniform, it is hidden
+>> from guests via ID register emulation, as a result of the cpufeature
+>> framework in the host.
+>>
+>> Unfortunately, address authentication and generic authentication cannot
+>> be trapped separately, as the architecture provides a single EL2 trap
+>> covering both. If we wish to expose one without the other, we cannot
+>> prevent a (badly-written) guest from intermittently using a feature
+>> which is not uniformly supported (when scheduled on a physical CPU which
+>> supports the relevant feature). Hence, this patch expects both type of
+>> authentication to be present in a cpu.
+>>
+>> This switch of key is done from guest enter/exit assembly as preparation
+>> for the upcoming in-kernel pointer authentication support. Hence, these
+>> key switching routines are not implemented in C code as they may cause
+>> pointer authentication key signing error in some situations.
+>>
+>> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+>> [Only VHE, key switch in full assembly, vcpu_has_ptrauth checks
+>> , save host key in ptrauth exception trap]
+>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>> Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>> Cc: kvmarm@lists.cs.columbia.edu
+>> ---
+>> Changes since v9:
+>>
+>> * Removed hardcoding of enum values[Mark Zyngier].
+>> * Changed kvm_ptrauth_asm.h to kvm_ptrauth.h[Mark Zyngier].
+>> * Removed macro __ptrauth_save_state and applied inline [Marc Zyngier].
+>> * Moved kvm_arm_vcpu_ptrauth_setup_lazy, kvm_arm_vcpu_ptrauth_enable and
+>>   kvm_arm_vcpu_ptrauth_disable from *.c to kvm_emulate.h file [Marc Zyngier].
+>> * Added/Modified comments at few places [Marc Zyngier].
 > 
-> Signed-off-by: Oscar Gomez Fuente <oscargomezf@gmail.com>
+> [...]
+> 
+>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> 
+> [...]
+> 
+>> @@ -1058,9 +1087,11 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
+>>  					 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
+>>  					 (0xfUL << ID_AA64ISAR1_GPA_SHIFT) |
+>>  					 (0xfUL << ID_AA64ISAR1_GPI_SHIFT);
+>> -		if (val & ptrauth_mask)
+>> -			kvm_debug("ptrauth unsupported for guests, suppressing\n");
+>> -		val &= ~ptrauth_mask;
+>> +		if (!vcpu_has_ptrauth(vcpu)) {
+>> +			if (val & ptrauth_mask)
+>> +				kvm_debug("ptrauth unsupported for guests, suppressing\n");
+>> +			val &= ~ptrauth_mask;
+>> +		}
+> 
+> Hmmm, didn't spot this before, but this error message no longer makes
+> sense now that KVM _does_ support pointer auth.
+> 
+> Without vcpu_has_ptrauth(vcpu), we should just silently mask out the
+> relevant ID fields now (same as for SVE).
+> 
+> The patch below should achieve that.
+> 
+> --8<--
+> 
+> From c6065122c5cccef57108dff990ce8fb43426f88e Mon Sep 17 00:00:00 2001
+> From: Dave Martin <Dave.Martin@arm.com>
+> Date: Wed, 24 Apr 2019 14:32:29 +0100
+> Subject: [PATCH] KVM: arm64: sys_regs: Remove warning about missing pointer
+>  auth support
+> 
+> KVM does support pointer auth for guests now, so it is
+> inappropriate (and confusing) to print a warning to dmesg when
+> userspace explicitly does not ask for pointer auth to be turned on
+> for a vcpu.
+> 
+> So, just squash the virtual ptrauth ID_AA64ISAR1_EL1 fields when
+> appropriate and remove the warning.
+> 
+> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 > ---
->  drivers/staging/android/ion/ion_carveout_heap.c | 2 +-
->  drivers/staging/android/ion/ion_chunk_heap.c    | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm64/kvm/sys_regs.c | 15 +++++----------
+>  1 file changed, 5 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/staging/android/ion/ion_carveout_heap.c b/drivers/staging/android/ion/ion_carveout_heap.c
-> index bb9d614..3f359ae 100644
-> --- a/drivers/staging/android/ion/ion_carveout_heap.c
-> +++ b/drivers/staging/android/ion/ion_carveout_heap.c
-> @@ -103,7 +103,7 @@ static struct ion_heap_ops carveout_heap_ops = {
->  	.unmap_kernel = ion_heap_unmap_kernel,
->  };
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 7f06c2e..f599f5e 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1082,16 +1082,11 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
 >  
-> -struct ion_heap *ion_carveout_heap_create(phys_addr_t base, size_t size)
-> +static inline struct ion_heap *ion_carveout_heap_create(phys_addr_t base, size_t size)
+>  	if (id == SYS_ID_AA64PFR0_EL1 && !vcpu_has_sve(vcpu)) {
+>  		val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
+> -	} else if (id == SYS_ID_AA64ISAR1_EL1) {
+> -		const u64 ptrauth_mask = (0xfUL << ID_AA64ISAR1_APA_SHIFT) |
+> -					 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
+> -					 (0xfUL << ID_AA64ISAR1_GPA_SHIFT) |
+> -					 (0xfUL << ID_AA64ISAR1_GPI_SHIFT);
+> -		if (!vcpu_has_ptrauth(vcpu)) {
+> -			if (val & ptrauth_mask)
+> -				kvm_debug("ptrauth unsupported for guests, suppressing\n");
+> -			val &= ~ptrauth_mask;
+> -		}
+> +	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
+> +		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
+> +			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
+> +			 (0xfUL << ID_AA64ISAR1_GPA_SHIFT) |
+> +			 (0xfUL << ID_AA64ISAR1_GPI_SHIFT));
+>  	}
+>  
+>  	return val;
+> 
 
-Why are you making it inline?  Btw, normally we just leave it for the
-compiler to choose which functions to make inline.
+Since the series isn't in -next yet, I've squashed the above with the
+other nits I had in -queue.
 
-regards,
-dan carpenter
+Thanks,
 
+	M.
+-- 
+Jazz is not dead. It just smells funny...
