@@ -2,107 +2,141 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D52EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEF9C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC0B218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:52:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jwhQig4b"
+	by mail.kernel.org (Postfix) with ESMTP id 7A73821902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556117569;
+	bh=g0/hQWvUSHhGfjIbEH4nnfsVp7xs9k3e+Ct+8cLFrJs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JsS4hUclBG7blzWl08bD8dB5P+4BGfcigJwhAZLlFSC1MlE6gYW29LBFQjH3hdOmT
+	 ts/wNGOcvcNY5a06eqx9SQ3mDxE2V8kam2c4LPnPmCnYrBrut3qTAOQIqdRwmooyug
+	 lbWmb2OODxzUDCAEcQyuHC6ynq8Eq201wpii3mPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733001AbfDXOwp (ORCPT
+        id S1731134AbfDXOwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:52:45 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54886 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732972AbfDXOwc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:52:32 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OEpfHp014817;
-        Wed, 24 Apr 2019 16:52:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=bgQxOGyNh/KQn11Y3ySkJgKTQZZg3JBZGVmCcVIASZk=;
- b=jwhQig4bD+sHIea4YALQAROAOm8Ohu/gKfaUjBzxrieTy4ucqDYODHgSfxIHsUi1nKsY
- bntViK1oRIz/7bpw3Sy7cV3lwH1u7e7SkFbR/87zlTEDAZSp4GgBAH9QfYaMRfBM+Uou
- 9OnucmFQOgaDDpx1vvBVV2yvZO6FoZDoydizBqulj/W3H5c5mgEHl4Z1kp30rs94jdJr
- nI5kLbJq/UactpbAaCDodvGmUh5Qz1Jtb+vtXAqKG2lzWIjhPRWA3tIS0myf1pjEptns
- VP2woRq++rqZjA595kWOInFbPSH34WsIJNh949l9rSsHmST8QGNEjOlXakrd0FwTzcpP 5w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rytad7878-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 24 Apr 2019 16:52:16 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1C18F31;
-        Wed, 24 Apr 2019 14:52:16 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EFDFD2881;
-        Wed, 24 Apr 2019 14:52:15 +0000 (GMT)
-Received: from SFHDAG3NODE2.st.com (10.75.127.8) by SFHDAG5NODE1.st.com
- (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 24 Apr
- 2019 16:52:15 +0200
-Received: from SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96]) by
- SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96%20]) with mapi id
- 15.00.1347.000; Wed, 24 Apr 2019 16:52:16 +0200
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-To:     Fabien DESSENNE <fabien.dessenne@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] spi: stm32: return the get_irq error
-Thread-Topic: [PATCH] spi: stm32: return the get_irq error
-Thread-Index: AQHU+pqvA0yJgg8S5EmBKq89hP7HV6ZLQ+CA
-Date:   Wed, 24 Apr 2019 14:52:16 +0000
-Message-ID: <6c11793b-bcfc-e069-56db-7e963d22dc6e@st.com>
-References: <1556109524-21874-1-git-send-email-fabien.dessenne@st.com>
-In-Reply-To: <1556109524-21874-1-git-send-email-fabien.dessenne@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A12641FDC7F83E418048CC3BBE567653@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 10:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732300AbfDXOwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:52:33 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0623321905;
+        Wed, 24 Apr 2019 14:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556117551;
+        bh=g0/hQWvUSHhGfjIbEH4nnfsVp7xs9k3e+Ct+8cLFrJs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I2avyrz9UgjF57+vWAFb1KLrW9QVuKDAEow4X/Qk97icclbnc45goeCbwQj+PJP/y
+         e6XYHq+uj+hvmhedaXOC3MOHPJrgCXu/9+M2WC1B2EObYAJMQipu/CSWM75vagOJRf
+         2UIVNT1N7xc6YhOSvAEDRmoWHI52GotOU/k52aTQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 13/15] xsysace: Fix error handling in ace_setup
+Date:   Wed, 24 Apr 2019 10:51:50 -0400
+Message-Id: <20190424145152.31351-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190424145152.31351-1-sashal@kernel.org>
+References: <20190424145152.31351-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_09:,,
- signatures=0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8yNC8xOSAyOjM4IFBNLCBGYWJpZW4gRGVzc2VubmUgd3JvdGU6DQo+IER1cmluZyBwcm9i
-ZSwgcmV0dXJuIHRoZSAiZ2V0X2lycSIgZXJyb3IgdmFsdWUgaW5zdGVhZCBvZiAtRU5PRU5ULiBU
-aGlzDQo+IGFsbG93cyB0aGUgZHJpdmVyIHRvIGJlIGRlZmVyIHByb2JlZCBpZiBuZWVkZWQuDQo+
-IA0KPiBTaWduZWQtb2ZmLWJ5OiBGYWJpZW4gRGVzc2VubmUgPGZhYmllbi5kZXNzZW5uZUBzdC5j
-b20+DQoNCkFja2VkLWJ5OiBBbWVsaWUgRGVsYXVuYXkgPGFtZWxpZS5kZWxhdW5heUBzdC5jb20+
-DQoNCj4gLS0tDQo+ICAgZHJpdmVycy9zcGkvc3BpLXN0bTMyLmMgfCA1ICsrKy0tDQo+ICAgMSBm
-aWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL3NwaS9zcGktc3RtMzIuYyBiL2RyaXZlcnMvc3BpL3NwaS1zdG0zMi5j
-DQo+IGluZGV4IDQxODZlZDIuLmIyMjJjZTggMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc3BpL3Nw
-aS1zdG0zMi5jDQo+ICsrKyBiL2RyaXZlcnMvc3BpL3NwaS1zdG0zMi5jDQo+IEBAIC0xODM5LDgg
-KzE4MzksOSBAQCBzdGF0aWMgaW50IHN0bTMyX3NwaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2KQ0KPiAgIA0KPiAgIAlzcGktPmlycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwg
-MCk7DQo+ICAgCWlmIChzcGktPmlycSA8PSAwKSB7DQo+IC0JCWRldl9lcnIoJnBkZXYtPmRldiwg
-Im5vIGlycTogJWRcbiIsIHNwaS0+aXJxKTsNCj4gLQkJcmV0ID0gLUVOT0VOVDsNCj4gKwkJcmV0
-ID0gc3BpLT5pcnE7DQo+ICsJCWlmIChyZXQgIT0gLUVQUk9CRV9ERUZFUikNCj4gKwkJCWRldl9l
-cnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBnZXQgaXJxOiAlZFxuIiwgcmV0KTsNCj4gICAJCWdv
-dG8gZXJyX21hc3Rlcl9wdXQ7DQo+ICAgCX0NCj4gICAJcmV0ID0gZGV2bV9yZXF1ZXN0X3RocmVh
-ZGVkX2lycSgmcGRldi0+ZGV2LCBzcGktPmlycSwNCj4g
+From: Guenter Roeck <linux@roeck-us.net>
+
+[ Upstream commit 47b16820c490149c2923e8474048f2c6e7557cab ]
+
+If xace hardware reports a bad version number, the error handling code
+in ace_setup() calls put_disk(), followed by queue cleanup. However, since
+the disk data structure has the queue pointer set, put_disk() also
+cleans and releases the queue. This results in blk_cleanup_queue()
+accessing an already released data structure, which in turn may result
+in a crash such as the following.
+
+[   10.681671] BUG: Kernel NULL pointer dereference at 0x00000040
+[   10.681826] Faulting instruction address: 0xc0431480
+[   10.682072] Oops: Kernel access of bad area, sig: 11 [#1]
+[   10.682251] BE PAGE_SIZE=4K PREEMPT Xilinx Virtex440
+[   10.682387] Modules linked in:
+[   10.682528] CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.0.0-rc6-next-20190218+ #2
+[   10.682733] NIP:  c0431480 LR: c043147c CTR: c0422ad8
+[   10.682863] REGS: cf82fbe0 TRAP: 0300   Tainted: G        W          (5.0.0-rc6-next-20190218+)
+[   10.683065] MSR:  00029000 <CE,EE,ME>  CR: 22000222  XER: 00000000
+[   10.683236] DEAR: 00000040 ESR: 00000000
+[   10.683236] GPR00: c043147c cf82fc90 cf82ccc0 00000000 00000000 00000000 00000002 00000000
+[   10.683236] GPR08: 00000000 00000000 c04310bc 00000000 22000222 00000000 c0002c54 00000000
+[   10.683236] GPR16: 00000000 00000001 c09aa39c c09021b0 c09021dc 00000007 c0a68c08 00000000
+[   10.683236] GPR24: 00000001 ced6d400 ced6dcf0 c0815d9c 00000000 00000000 00000000 cedf0800
+[   10.684331] NIP [c0431480] blk_mq_run_hw_queue+0x28/0x114
+[   10.684473] LR [c043147c] blk_mq_run_hw_queue+0x24/0x114
+[   10.684602] Call Trace:
+[   10.684671] [cf82fc90] [c043147c] blk_mq_run_hw_queue+0x24/0x114 (unreliable)
+[   10.684854] [cf82fcc0] [c04315bc] blk_mq_run_hw_queues+0x50/0x7c
+[   10.685002] [cf82fce0] [c0422b24] blk_set_queue_dying+0x30/0x68
+[   10.685154] [cf82fcf0] [c0423ec0] blk_cleanup_queue+0x34/0x14c
+[   10.685306] [cf82fd10] [c054d73c] ace_probe+0x3dc/0x508
+[   10.685445] [cf82fd50] [c052d740] platform_drv_probe+0x4c/0xb8
+[   10.685592] [cf82fd70] [c052abb0] really_probe+0x20c/0x32c
+[   10.685728] [cf82fda0] [c052ae58] driver_probe_device+0x68/0x464
+[   10.685877] [cf82fdc0] [c052b500] device_driver_attach+0xb4/0xe4
+[   10.686024] [cf82fde0] [c052b5dc] __driver_attach+0xac/0xfc
+[   10.686161] [cf82fe00] [c0528428] bus_for_each_dev+0x80/0xc0
+[   10.686314] [cf82fe30] [c0529b3c] bus_add_driver+0x144/0x234
+[   10.686457] [cf82fe50] [c052c46c] driver_register+0x88/0x15c
+[   10.686610] [cf82fe60] [c09de288] ace_init+0x4c/0xac
+[   10.686742] [cf82fe80] [c0002730] do_one_initcall+0xac/0x330
+[   10.686888] [cf82fee0] [c09aafd0] kernel_init_freeable+0x34c/0x478
+[   10.687043] [cf82ff30] [c0002c6c] kernel_init+0x18/0x114
+[   10.687188] [cf82ff40] [c000f2f0] ret_from_kernel_thread+0x14/0x1c
+[   10.687349] Instruction dump:
+[   10.687435] 3863ffd4 4bfffd70 9421ffd0 7c0802a6 93c10028 7c9e2378 93e1002c 38810008
+[   10.687637] 7c7f1b78 90010034 4bfffc25 813f008c <81290040> 75290100 4182002c 80810008
+[   10.688056] ---[ end trace 13c9ff51d41b9d40 ]---
+
+Fix the problem by setting the disk queue pointer to NULL before calling
+put_disk(). A more comprehensive fix might be to rearrange the code
+to check the hardware version before initializing data structures,
+but I don't know if this would have undesirable side effects, and
+it would increase the complexity of backporting the fix to older kernels.
+
+Fixes: 74489a91dd43a ("Add support for Xilinx SystemACE CompactFlash interface")
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/xsysace.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
+index c4328d9d9981..f838119d12b2 100644
+--- a/drivers/block/xsysace.c
++++ b/drivers/block/xsysace.c
+@@ -1062,6 +1062,8 @@ static int ace_setup(struct ace_device *ace)
+ 	return 0;
+ 
+ err_read:
++	/* prevent double queue cleanup */
++	ace->gd->queue = NULL;
+ 	put_disk(ace->gd);
+ err_alloc_disk:
+ 	blk_cleanup_queue(ace->queue);
+-- 
+2.19.1
+
