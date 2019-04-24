@@ -2,142 +2,389 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8915DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1B4C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5EC21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:42:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmE2Yk0w"
+	by mail.kernel.org (Postfix) with ESMTP id 5267A2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556127755;
+	bh=d3wDB2jx9tIdH9yAU7vQoVkPSgwJIiHweh2MldQb1k8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZFWCUAhTYH5AcbvuP+XIrGWrCQTcTb2jr9q1A5B1D8fyvQM/xOIRiteTo3YfJgIqQ
+	 uTPMMDJVKEPTnmd5/CDs5kTgM0ltG4PArfld3ZmQGp8bOtescN4qRg+UqfMI7KVtkN
+	 3EN20k7SFWPWSlgQ3WhdPxlUb1qQNAOBhz8ukChY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404082AbfDXRmY (ORCPT
+        id S2392087AbfDXRme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:42:24 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37306 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392001AbfDXRfy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:35:54 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k6so1243760oic.4;
-        Wed, 24 Apr 2019 10:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RoiHWPNMrW1wAZiv9BalAZvBSP4FzqSrxbMz8PnXL24=;
-        b=cmE2Yk0wjzqgTtMAU7K2bGXt33qkVvJCcQYzNCinhhqRauWmVPq/hdrQhNxMwaVLrs
-         bvvqWtUeYVD7INNqNjSiLtGOu6C2voTqD/n54vG6n65ULh1f7+J1tSWFlmHJtbJCNe6h
-         FtF5OOW2Id9Dll9YduLZJfjcdqwtczX1g1XnojZMq5QQw24WR21sPTndwQG5WGFKq4Id
-         3bGOlxmXfISJTbbzSiQriUfGMCzdA0NyN6To92sN2xsTZqTPF3uRFMaSj9CiTnHMnzZc
-         srT4h+q5KyYG83y8eSFC0MT7HK+sExfxinjv/KSQNNTK8f525O++wujZta0cIyDeoMXs
-         qF/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RoiHWPNMrW1wAZiv9BalAZvBSP4FzqSrxbMz8PnXL24=;
-        b=epQQSmLJaBX2P17GGwo7e0kb6V+ifptH5UCTtOReQ3BpsEc2OevXGh/FOEVVVILnFi
-         NiUoj4z3pN4yW8rsRBGJdDP3MuBVcdS2iz26lf3sBudXpYMSJrasCI+oNZIuyYDhUF1J
-         q9NtXy+ybA2pE8NM4y2uP0cKQhstzftOvYHOGKwUkdtcooLWNo1EMJz4j3+2RZtmndbs
-         s6lNyqc2a4RsMKssrwChZlmTS7GATlhqH+jNzvKRB6W86kynVi9ZbB8wo2UtxV2UGzlg
-         br0mapN9J06LrmH4ri5PNA1VbabzIqngEQKdXZqJAAb2rj5XFDJyPBCr+fRJXBjKVECm
-         TAxQ==
-X-Gm-Message-State: APjAAAXqE38m1/clIcp2V2mEQOGh5NPC+h8H2Ct4/IoCygV4sIJWd/Qc
-        9AUGcrVYaCXZqNzgFlV9wiEZhdWixBM=
-X-Google-Smtp-Source: APXvYqwqpysJtUpOFE289xqEGkNeYoEoZ3HyQV63T+OWlvUv+OApdxgs2oN0VodPBtDQYKf0hgO63g==
-X-Received: by 2002:aca:b588:: with SMTP id e130mr128467oif.161.1556127353588;
-        Wed, 24 Apr 2019 10:35:53 -0700 (PDT)
-Received: from nukespec.gtech ([2601:2c1:8501:182d::6fe])
-        by smtp.gmail.com with ESMTPSA id 75sm1474746otn.31.2019.04.24.10.35.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 10:35:52 -0700 (PDT)
-Subject: Re: [PATCH] PCI: Add link_change error handler and vfio-pci user
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Alex_Gagniuc@Dellteam.com
-Cc:     bhelgaas@google.com, helgaas@kernel.org, linux-pci@vger.kernel.org,
-        Austin.Bolen@dell.com, keith.busch@intel.com, Shyam.Iyer@dell.com,
-        lukas@wunner.de, okaya@kernel.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org
-References: <155605909349.3575.13433421148215616375.stgit@gimli.home>
- <44c43b8c1739488181930c074bb6eddb@ausx13mps321.AMER.DELL.COM>
- <20190424111943.376d7d24@x1.home>
-From:   Alex G <mr.nuke.me@gmail.com>
-Message-ID: <1ee5f50e-a34b-5e15-e6d8-c32f1e1e73ea@gmail.com>
-Date:   Wed, 24 Apr 2019 12:35:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 13:42:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391996AbfDXRfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:35:51 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EFDD218B0;
+        Wed, 24 Apr 2019 17:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556127350;
+        bh=d3wDB2jx9tIdH9yAU7vQoVkPSgwJIiHweh2MldQb1k8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o3MpkvG8Q2W66DgByfT9TnyvRHyNImKGdfzkZGUaaf12tqGUwXyMjjgNhzVmrL+Hw
+         4XObIxeLo1l0EYB5Uw73f1bH/7UW/vwgnf8P/v2b6Ev0OpRJkqcwp58Z48QP+5p3TB
+         2iqDA2ek1DO7aRwku3cwwom3VDxQhTmWsIZ8K9Wc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.0 057/115] iio:chemical:bme680: Fix SPI read interface
+Date:   Wed, 24 Apr 2019 19:09:53 +0200
+Message-Id: <20190424170928.551993937@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
+References: <20190424170924.797924502@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190424111943.376d7d24@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/19 12:19 PM, Alex Williamson wrote:
-> On Wed, 24 Apr 2019 16:45:45 +0000
-> <Alex_Gagniuc@Dellteam.com> wrote:
->> On 4/23/2019 5:42 PM, Alex Williamson wrote:
->>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->>> index 7e12d0163863..233cd4b5b6e8 100644
->>> --- a/drivers/pci/probe.c
->>> +++ b/drivers/pci/probe.c
->>> @@ -2403,6 +2403,19 @@ void pcie_report_downtraining(struct pci_dev *dev)
->>
->> I don't think you want to change pcie_report_downtraining(). You're
->> advertising to "report" something, by nomenclature, but then go around
->> and also call a notification callback. This is also used during probe,
->> and you've now just killed your chance to notice you've booted with a
->> degraded link.
->> If what you want to do is silence the bandwidth notification, you want
->> to modify the threaded interrupt that calls this.
-> 
-> During probe, ie. discovery, a device wouldn't have a driver attached,
-> so we'd fall through to simply printing the link status.  Nothing
-> lost afaict.  The "report" verb doesn't have a subject here, report to
-> whom?  Therefore I thought it reasonable that a driver ask that it be
-> reported to them via a callback.  I don't see that as such a stretch of
-> the interface.
+From: Mike Looijmans <mike.looijmans@topic.nl>
 
-That's just stretching the logic, and IMO makes the intent harder to 
-understand. The argument relies on the state of the PCI device and 
-logic, which is not obvious to the casual observer. If you want to 
-bypass the bandwidth notification, then bypass the notification.
+commit 73f3bc6da506711302bb67572440eb84b1ec4a2c upstream.
 
->>>    	if (PCI_FUNC(dev->devfn) != 0 || dev->is_virtfn)
->>>    		return;
->>>    
->>> +	/*
->>> +	 * If driver handles link_change event, defer to driver.  PCIe drivers
->>> +	 * can call pcie_print_link_status() to print current link info.
->>> +	 */
->>> +	device_lock(&dev->dev);
->>> +	if (dev->driver && dev->driver->err_handler &&
->>> +	    dev->driver->err_handler->link_change) {
->>> +		dev->driver->err_handler->link_change(dev);
->>> +		device_unlock(&dev->dev);
->>> +		return;
->>> +	}
->>> +	device_unlock(&dev->dev);
->>
->> Can we write this such that there is a single lock()/unlock() pair?
-> 
-> Not without introducing a tracking variable, ex.
-[snip bad code]
-> That's not markedly better imo, but if it's preferred I can send a v2.
+The SPI interface implementation was completely broken.
 
-How about:
+When using the SPI interface, there are only 7 address bits, the upper bit
+is controlled by a page select register. The core needs access to both
+ranges, so implement register read/write for both regions. The regmap
+paging functionality didn't agree with a register that needs to be read
+and modified, so I implemented a custom paging algorithm.
 
-if (!invoke_link_changed_handler(pdev))
-	very_useful_downtraining_message(pdev);
+This fixes that the device wouldn't even probe in SPI mode.
 
-> Alex
-Alex
+The SPI interface then isn't different from I2C, merged them into the core,
+and the I2C/SPI named registers are no longer needed.
+
+Implemented register value caching for the registers to reduce the I2C/SPI
+data transfers considerably.
+
+The calibration set reads as all zeroes until some undefined point in time,
+and I couldn't determine what makes it valid. The datasheet mentions these
+registers but does not provide any hints on when they become valid, and they
+aren't even enumerated in the memory map. So check the calibration and
+retry reading it from the device after each measurement until it provides
+something valid.
+
+Despite the size this is suitable for a stable backport given that
+it seems the SPI support never worked.
+
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+Fixes: 1b3bd8592780 ("iio: chemical: Add support for Bosch BME680 sensor");
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/iio/chemical/bme680.h      |    6 -
+ drivers/iio/chemical/bme680_core.c |   38 ++++++++++++
+ drivers/iio/chemical/bme680_i2c.c  |   21 ------
+ drivers/iio/chemical/bme680_spi.c  |  115 +++++++++++++++++++++++++------------
+ 4 files changed, 118 insertions(+), 62 deletions(-)
+
+--- a/drivers/iio/chemical/bme680.h
++++ b/drivers/iio/chemical/bme680.h
+@@ -2,11 +2,9 @@
+ #ifndef BME680_H_
+ #define BME680_H_
+ 
+-#define BME680_REG_CHIP_I2C_ID			0xD0
+-#define BME680_REG_CHIP_SPI_ID			0x50
++#define BME680_REG_CHIP_ID			0xD0
+ #define   BME680_CHIP_ID_VAL			0x61
+-#define BME680_REG_SOFT_RESET_I2C		0xE0
+-#define BME680_REG_SOFT_RESET_SPI		0x60
++#define BME680_REG_SOFT_RESET			0xE0
+ #define   BME680_CMD_SOFTRESET			0xB6
+ #define BME680_REG_STATUS			0x73
+ #define   BME680_SPI_MEM_PAGE_BIT		BIT(4)
+--- a/drivers/iio/chemical/bme680_core.c
++++ b/drivers/iio/chemical/bme680_core.c
+@@ -63,9 +63,23 @@ struct bme680_data {
+ 	s32 t_fine;
+ };
+ 
++static const struct regmap_range bme680_volatile_ranges[] = {
++	regmap_reg_range(BME680_REG_MEAS_STAT_0, BME680_REG_GAS_R_LSB),
++	regmap_reg_range(BME680_REG_STATUS, BME680_REG_STATUS),
++	regmap_reg_range(BME680_T2_LSB_REG, BME680_GH3_REG),
++};
++
++static const struct regmap_access_table bme680_volatile_table = {
++	.yes_ranges	= bme680_volatile_ranges,
++	.n_yes_ranges	= ARRAY_SIZE(bme680_volatile_ranges),
++};
++
+ const struct regmap_config bme680_regmap_config = {
+ 	.reg_bits = 8,
+ 	.val_bits = 8,
++	.max_register = 0xef,
++	.volatile_table = &bme680_volatile_table,
++	.cache_type = REGCACHE_RBTREE,
+ };
+ EXPORT_SYMBOL(bme680_regmap_config);
+ 
+@@ -316,6 +330,10 @@ static s16 bme680_compensate_temp(struct
+ 	s64 var1, var2, var3;
+ 	s16 calc_temp;
+ 
++	/* If the calibration is invalid, attempt to reload it */
++	if (!calib->par_t2)
++		bme680_read_calib(data, calib);
++
+ 	var1 = (adc_temp >> 3) - (calib->par_t1 << 1);
+ 	var2 = (var1 * calib->par_t2) >> 11;
+ 	var3 = ((var1 >> 1) * (var1 >> 1)) >> 12;
+@@ -865,8 +883,28 @@ int bme680_core_probe(struct device *dev
+ {
+ 	struct iio_dev *indio_dev;
+ 	struct bme680_data *data;
++	unsigned int val;
+ 	int ret;
+ 
++	ret = regmap_write(regmap, BME680_REG_SOFT_RESET,
++			   BME680_CMD_SOFTRESET);
++	if (ret < 0) {
++		dev_err(dev, "Failed to reset chip\n");
++		return ret;
++	}
++
++	ret = regmap_read(regmap, BME680_REG_CHIP_ID, &val);
++	if (ret < 0) {
++		dev_err(dev, "Error reading chip ID\n");
++		return ret;
++	}
++
++	if (val != BME680_CHIP_ID_VAL) {
++		dev_err(dev, "Wrong chip ID, got %x expected %x\n",
++				val, BME680_CHIP_ID_VAL);
++		return -ENODEV;
++	}
++
+ 	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+ 	if (!indio_dev)
+ 		return -ENOMEM;
+--- a/drivers/iio/chemical/bme680_i2c.c
++++ b/drivers/iio/chemical/bme680_i2c.c
+@@ -23,8 +23,6 @@ static int bme680_i2c_probe(struct i2c_c
+ {
+ 	struct regmap *regmap;
+ 	const char *name = NULL;
+-	unsigned int val;
+-	int ret;
+ 
+ 	regmap = devm_regmap_init_i2c(client, &bme680_regmap_config);
+ 	if (IS_ERR(regmap)) {
+@@ -33,25 +31,6 @@ static int bme680_i2c_probe(struct i2c_c
+ 		return PTR_ERR(regmap);
+ 	}
+ 
+-	ret = regmap_write(regmap, BME680_REG_SOFT_RESET_I2C,
+-			   BME680_CMD_SOFTRESET);
+-	if (ret < 0) {
+-		dev_err(&client->dev, "Failed to reset chip\n");
+-		return ret;
+-	}
+-
+-	ret = regmap_read(regmap, BME680_REG_CHIP_I2C_ID, &val);
+-	if (ret < 0) {
+-		dev_err(&client->dev, "Error reading I2C chip ID\n");
+-		return ret;
+-	}
+-
+-	if (val != BME680_CHIP_ID_VAL) {
+-		dev_err(&client->dev, "Wrong chip ID, got %x expected %x\n",
+-				val, BME680_CHIP_ID_VAL);
+-		return -ENODEV;
+-	}
+-
+ 	if (id)
+ 		name = id->name;
+ 
+--- a/drivers/iio/chemical/bme680_spi.c
++++ b/drivers/iio/chemical/bme680_spi.c
+@@ -11,28 +11,93 @@
+ 
+ #include "bme680.h"
+ 
++struct bme680_spi_bus_context {
++	struct spi_device *spi;
++	u8 current_page;
++};
++
++/*
++ * In SPI mode there are only 7 address bits, a "page" register determines
++ * which part of the 8-bit range is active. This function looks at the address
++ * and writes the page selection bit if needed
++ */
++static int bme680_regmap_spi_select_page(
++	struct bme680_spi_bus_context *ctx, u8 reg)
++{
++	struct spi_device *spi = ctx->spi;
++	int ret;
++	u8 buf[2];
++	u8 page = (reg & 0x80) ? 0 : 1; /* Page "1" is low range */
++
++	if (page == ctx->current_page)
++		return 0;
++
++	/*
++	 * Data sheet claims we're only allowed to change bit 4, so we must do
++	 * a read-modify-write on each and every page select
++	 */
++	buf[0] = BME680_REG_STATUS;
++	ret = spi_write_then_read(spi, buf, 1, buf + 1, 1);
++	if (ret < 0) {
++		dev_err(&spi->dev, "failed to set page %u\n", page);
++		return ret;
++	}
++
++	buf[0] = BME680_REG_STATUS;
++	if (page)
++		buf[1] |= BME680_SPI_MEM_PAGE_BIT;
++	else
++		buf[1] &= ~BME680_SPI_MEM_PAGE_BIT;
++
++	ret = spi_write(spi, buf, 2);
++	if (ret < 0) {
++		dev_err(&spi->dev, "failed to set page %u\n", page);
++		return ret;
++	}
++
++	ctx->current_page = page;
++
++	return 0;
++}
++
+ static int bme680_regmap_spi_write(void *context, const void *data,
+ 				   size_t count)
+ {
+-	struct spi_device *spi = context;
++	struct bme680_spi_bus_context *ctx = context;
++	struct spi_device *spi = ctx->spi;
++	int ret;
+ 	u8 buf[2];
+ 
+ 	memcpy(buf, data, 2);
++
++	ret = bme680_regmap_spi_select_page(ctx, buf[0]);
++	if (ret)
++		return ret;
++
+ 	/*
+ 	 * The SPI register address (= full register address without bit 7)
+ 	 * and the write command (bit7 = RW = '0')
+ 	 */
+ 	buf[0] &= ~0x80;
+ 
+-	return spi_write_then_read(spi, buf, 2, NULL, 0);
++	return spi_write(spi, buf, 2);
+ }
+ 
+ static int bme680_regmap_spi_read(void *context, const void *reg,
+ 				  size_t reg_size, void *val, size_t val_size)
+ {
+-	struct spi_device *spi = context;
++	struct bme680_spi_bus_context *ctx = context;
++	struct spi_device *spi = ctx->spi;
++	int ret;
++	u8 addr = *(const u8 *)reg;
++
++	ret = bme680_regmap_spi_select_page(ctx, addr);
++	if (ret)
++		return ret;
++
++	addr |= 0x80; /* bit7 = RW = '1' */
+ 
+-	return spi_write_then_read(spi, reg, reg_size, val, val_size);
++	return spi_write_then_read(spi, &addr, 1, val, val_size);
+ }
+ 
+ static struct regmap_bus bme680_regmap_bus = {
+@@ -45,8 +110,8 @@ static struct regmap_bus bme680_regmap_b
+ static int bme680_spi_probe(struct spi_device *spi)
+ {
+ 	const struct spi_device_id *id = spi_get_device_id(spi);
++	struct bme680_spi_bus_context *bus_context;
+ 	struct regmap *regmap;
+-	unsigned int val;
+ 	int ret;
+ 
+ 	spi->bits_per_word = 8;
+@@ -56,45 +121,21 @@ static int bme680_spi_probe(struct spi_d
+ 		return ret;
+ 	}
+ 
++	bus_context = devm_kzalloc(&spi->dev, sizeof(*bus_context), GFP_KERNEL);
++	if (!bus_context)
++		return -ENOMEM;
++
++	bus_context->spi = spi;
++	bus_context->current_page = 0xff; /* Undefined on warm boot */
++
+ 	regmap = devm_regmap_init(&spi->dev, &bme680_regmap_bus,
+-				  &spi->dev, &bme680_regmap_config);
++				  bus_context, &bme680_regmap_config);
+ 	if (IS_ERR(regmap)) {
+ 		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
+ 				(int)PTR_ERR(regmap));
+ 		return PTR_ERR(regmap);
+ 	}
+ 
+-	ret = regmap_write(regmap, BME680_REG_SOFT_RESET_SPI,
+-			   BME680_CMD_SOFTRESET);
+-	if (ret < 0) {
+-		dev_err(&spi->dev, "Failed to reset chip\n");
+-		return ret;
+-	}
+-
+-	/* after power-on reset, Page 0(0x80-0xFF) of spi_mem_page is active */
+-	ret = regmap_read(regmap, BME680_REG_CHIP_SPI_ID, &val);
+-	if (ret < 0) {
+-		dev_err(&spi->dev, "Error reading SPI chip ID\n");
+-		return ret;
+-	}
+-
+-	if (val != BME680_CHIP_ID_VAL) {
+-		dev_err(&spi->dev, "Wrong chip ID, got %x expected %x\n",
+-				val, BME680_CHIP_ID_VAL);
+-		return -ENODEV;
+-	}
+-	/*
+-	 * select Page 1 of spi_mem_page to enable access to
+-	 * to registers from address 0x00 to 0x7F.
+-	 */
+-	ret = regmap_write_bits(regmap, BME680_REG_STATUS,
+-				BME680_SPI_MEM_PAGE_BIT,
+-				BME680_SPI_MEM_PAGE_1_VAL);
+-	if (ret < 0) {
+-		dev_err(&spi->dev, "failed to set page 1 of spi_mem_page\n");
+-		return ret;
+-	}
+-
+ 	return bme680_core_probe(&spi->dev, regmap, id->name);
+ }
+ 
+
+
