@@ -2,181 +2,134 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B709C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B7BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E44C2148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51002148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:02:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TNCp7lyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729698AbfDXF7g (ORCPT
+        id S1729699AbfDXGCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 01:59:36 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37984 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbfDXF7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 01:59:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AFDCA78;
-        Tue, 23 Apr 2019 22:59:35 -0700 (PDT)
-Received: from [10.163.1.68] (unknown [10.163.1.68])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7260F3F5AF;
-        Tue, 23 Apr 2019 22:59:27 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH V2 2/2] arm64/mm: Enable memory hot remove
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
-        catalin.marinas@arm.com, mhocko@suse.com,
-        mgorman@techsingularity.net, james.morse@arm.com,
-        robin.murphy@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        ira.weiny@intel.com
-References: <1555221553-18845-1-git-send-email-anshuman.khandual@arm.com>
- <1555221553-18845-3-git-send-email-anshuman.khandual@arm.com>
- <20190415134841.GC13990@lakrids.cambridge.arm.com>
- <2faba38b-ab79-2dda-1b3c-ada5054d91fa@arm.com>
- <20190417142154.GA393@lakrids.cambridge.arm.com>
- <bba0b71c-2d04-d589-e2bf-5de37806548f@arm.com>
- <20190417173948.GB15589@lakrids.cambridge.arm.com>
- <1bdae67b-fcd6-7868-8a92-c8a306c04ec6@arm.com>
- <97413c39-a4a9-ea1b-7093-eb18f950aad7@arm.com>
- <20190423160525.GD56999@lakrids.cambridge.arm.com>
-Message-ID: <ebb9aba0-5ca3-41ed-4183-9d72a354f529@arm.com>
-Date:   Wed, 24 Apr 2019 11:29:28 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 24 Apr 2019 02:02:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45564 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfDXGCQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 02:02:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=X3h64l/wY0EE4rZccIp76Io2Tn8JB+21FPtnVxtmP2g=; b=TNCp7lyNV3qKsrfkkabg3FMsI
+        hh2bl6pgG93CzJhpPNs0hQ47OFZbmkBjzrsYlRAkiYSzodRYjGH0T4PAbSGz2SBvhkZjR/7gBHkLp
+        lVINV25Q6NX7yhcZQpV7RaWkw+PcHp5O8oHTuP+sFBuWGaqKFdtlzy3Mt3ZMAI0VKpk0Bp1quygQx
+        mvwkbrcAaUP6FNTt/TDZW0ydimlk1tHWZy2Qwfn2MXnkg6CzZyCS2197ZOXAgfAQlaU75ekTBc2Gt
+        EfvJw/JnKZuwVYsndMXgh6H5O+C7ch4x0613v13xM2rjRdnqM2Np5DNe798P9BryAli4KEzzc8ql2
+        3SMAUZGzQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJAyy-0004tV-Hu; Wed, 24 Apr 2019 06:02:12 +0000
+Date:   Tue, 23 Apr 2019 23:02:12 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ondrej Zary <linux@zary.sk>
+Cc:     Rik Faith <faith@cs.unc.edu>,
+        "David A . Hinds" <dahinds@users.sourceforge.net>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/4] fdomain: Resurrect driver (core)
+Message-ID: <20190424060212.GA5506@infradead.org>
+References: <20190422173323.15365-1-linux@zary.sk>
+ <20190422173323.15365-2-linux@zary.sk>
 MIME-Version: 1.0
-In-Reply-To: <20190423160525.GD56999@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190422173323.15365-2-linux@zary.sk>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/23/2019 09:35 PM, Mark Rutland wrote:
-> On Tue, Apr 23, 2019 at 01:01:58PM +0530, Anshuman Khandual wrote:
->> Generic usage for init_mm.pagetable_lock
->>
->> Unless I have missed something else these are the generic init_mm kernel page table
->> modifiers at runtime (at least which uses init_mm.page_table_lock)
->>
->> 	1. ioremap_page_range()		/* Mapped I/O memory area */
->> 	2. apply_to_page_range()	/* Change existing kernel linear map */
->> 	3. vmap_page_range()		/* Vmalloc area */
-> 
-> Internally, those all use the __p??_alloc() functions to handle racy
-> additions by transiently taking the PTL when installing a new table, but
-> otherwise walk kernel tables _without_ the PTL held. Note that none of
-> these ever free an intermediate level of table.
+> +/* FIFO_COUNT: The host adapter has an 8K cache (host adapters based on the
+> + * 18C30 chip have a 2k cache).  When this many 512 byte blocks are filled by
+> + * the SCSI device, an interrupt will be raised.  Therefore, this could be as
+> + * low as 0, or as high as 16.  Note, however, that values which are too high
+> + * or too low seem to prevent any interrupts from occurring, and thereby lock
+> + * up the machine.
+> + */
 
-Right they dont free intermediate level page table but I was curious about the
-only the leaf level modifications.
+Normally we use
 
-> 
-> I believe that the idea is that operations on separate VMAs should never
+/*
+ * ...
+ */
 
-I guess you meant kernel virtual range with 'VMA' but not the actual VMA which is
-vm_area_struct applicable only for the user space not the kernel.
+style comments.  I'm not sure it is worth bothering to change it in this
+driver, though.
 
-> conflict at the leaf level, and operations on the same VMA should be
-> serialised somehow w.r.t. that VMA.
+> +		cmd->SCp.ptr += len;
+> +		cmd->SCp.this_residual -= len;
+> +		if (!cmd->SCp.this_residual && cmd->SCp.buffers_residual) {
+> +			--cmd->SCp.buffers_residual;
+> +			++cmd->SCp.buffer;
+> +			cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
 
-AFAICT see there is nothing other than hotplug lock i.e mem_hotplug_lock which
-prevents concurrent init_mm modifications and the current situation is only safe
-because some how these VA areas dont overlap with respect to intermediate page
-table level spans.
+This isn't safe on highmem systems.  At very least we need a depends on
+!HIGHMEM for the drivers selecting this core driver.  If you feel like
+doing the work it should use scsi_kmap_atomic_sg and
+scsi_kunmap_atomic_sg.
 
-> 
-> AFAICT, these functions are _never_ called on the linear/direct map or
-> vmemmap VA ranges, and whether or not these can conflict with hot-remove
-> is entirely dependent on whether those ranges can share a level of table
-> with the vmalloc region.
+> +static void fdomain_work(struct work_struct *work)
+> +{
+> +	struct fdomain *fd = container_of(work, struct fdomain, work);
+> +	struct Scsi_Host *sh = container_of((void *)fd, struct Scsi_Host,
+> +					    hostdata);
 
-Right but all these VA ranges (linear, vmemmap, vmalloc) are wired in on init_mm
-hence wondering if it is prudent to assume layout scheme which varies a lot based
-on different architectures while deciding possible race protections. Wondering why
-these user should not call [get|put]_online_mems() to prevent race with hotplug.
-Will try this out.
+This looks odd.  We should never need a void cast for container_of.
 
-Unless generic MM expects these VA ranges (linear, vmemmap, vmalloc) layout to be
-in certain manner from the platform guaranteeing non-overlap at intermediate level
-page table spans. Only then we would not a lock.
- 
-> 
-> Do you know how likely that is to occur? e.g. what proportion of the
+> +	/* Abort calls fdomain_finish_cmd, so we do nothing here. */
+> +	if (cmd->SCp.phase & aborted)
+> +		;
 
-TBH I dont know.
+This is a no-op..
 
-> vmalloc region may share a level of table with the linear or vmemmap
-> regions in a typical arm64 or x86 configuration? Can we deliberately
-> provoke this failure case?
+> +	if (fd->chip == tmc1800 && !cmd->SCp.have_data_in
+> +	    && (cmd->SCp.sent_command >= cmd->cmd_len)) {
 
-I have not enumerated those yet but there are multiple configs on arm64 and
-probably on x86 which decides kernel VA space layout causing these potential
-races. But regardless its not right to assume on vmalloc range span and not
-take a lock.
+&& goes on the first line, no need for the inner braces on the second
+line.
 
-Not sure how to provoke this failure case from user space with simple hotplug
-because vmalloc physical allocation normally cannot be controlled without a
-hacked kernel change.
+> +int fdomain_host_reset(struct scsi_cmnd *cmd)
 
-> 
-> [...]
-> 
->> In all of the above.
->>
->> - Page table pages [p4d|pud|pmd|pte]_alloc_[kernel] settings are
->>   protected with init_mm.page_table_lock
-> 
-> Racy addition is protect in this manner.
+Should be static.
 
-Right.
+> +struct scsi_host_template fdomain_template = {
 
-> 
->> - Should not it require init_mm.page_table_lock for all leaf level
->>   (PUD|PMD|PTE) modification as well ?
-> 
-> As above, I believe that the PTL is assumed to not be necessary there
-> since other mutual exclusion should be in effect to prevent racy
-> modification of leaf entries.
+Should be marked const.
 
-Wondering what are those mutual exclusions other than the memory hotplug lock.
-Again if its on kernel VA space layout assumptions its not a good idea.
+> +	if (fdomain_test_loopback(base))
+> +		return NULL;
+> +
+> +	if (!irq) {
+> +		if (dev_is_pci(dev)) {
+> +			dev_err(dev, "PCI card has no IRQ assigned");
+> +			return NULL;
+> +		}
+> +		irq = irqs[(inb(base + Configuration1) & 0x0e) >> 1];
 
-> 
->> - Should not this require init_mm.page_table_lock for page table walk
->>   itself ?
->>
->> Not taking an overall lock for all these three operations will
->> potentially race with an ongoing memory hot remove operation which
->> takes an overall lock as proposed. Wondering if this has this been
->> safe till now ?
-> 
-> I suspect that the answer is that hot-remove is not thoroughly
-> stress-tested today, and conflicts are possible but rare.
+The irqs lookup should probably go into the callers that need it.
 
-Will make these generic modifiers call [get|put]_online_mems() in a separate
-patch at least to protect themselves from memory hot remove operation.
+> +	else if (sig && (sig->bios_major > 0) &&
 
-> 
-> As above, can we figure out how likely conflicts are, and try to come up
-> with a stress test?
+No need for the inner braces.
 
-Will try something out by hot plugging a memory range without actually onlining it
-while there is another vmalloc stress running on the system.
+> +EXPORT_SYMBOL(fdomain_create);
 
-> 
-> Is it possible to avoid these specific conflicts (ignoring ptdump) by
-> aligning VA regions such that they cannot share intermediate levels of
-> table?
-
-Kernel VA space layout is platform specific where core MM does not mandate much. 
-Hence generic modifiers should not make any assumptions regarding it but protect
-themselves with locks. Doing any thing other than that is just pushing the problem
-to future.
+EXPORT_SYMBOL_GPL for internals like this and fdomain_destroy.
