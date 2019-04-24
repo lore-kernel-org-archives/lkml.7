@@ -2,276 +2,228 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CB1C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E793C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D382148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE75021773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:29:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfDXK2p (ORCPT
+        id S1728177AbfDXK3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:28:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58018 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726135AbfDXK2o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:28:44 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OAO7Ak076096
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 06:28:43 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s2np199ep-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 06:28:43 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 24 Apr 2019 11:28:41 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 24 Apr 2019 11:28:39 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3OAScpI38469700
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 10:28:38 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33E4A4C046;
-        Wed, 24 Apr 2019 10:28:38 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C33904C040;
-        Wed, 24 Apr 2019 10:28:36 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.112])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 24 Apr 2019 10:28:36 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Wed, 24 Apr 2019 13:28:36 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] docs/vm: add documentation of memory models
-Date:   Wed, 24 Apr 2019 13:28:35 +0300
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-GCONF: 00
-x-cbid: 19042410-0028-0000-0000-00000364F203
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042410-0029-0000-0000-00002424439E
-Message-Id: <1556101715-31966-1-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904240086
+        Wed, 24 Apr 2019 06:29:47 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41188 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726405AbfDXK3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 06:29:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 339AFA78;
+        Wed, 24 Apr 2019 03:29:46 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 893B63F5AF;
+        Wed, 24 Apr 2019 03:29:40 -0700 (PDT)
+Subject: Re: [PATCH v10 2/5] KVM: arm/arm64: context-switch ptrauth registers
+To:     Dave Martin <Dave.Martin@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
+ <1555994558-26349-3-git-send-email-amit.kachhap@arm.com>
+ <8636m9awmu.wl-marc.zyngier@arm.com>
+ <c961a9d1-8cc8-6e40-de1d-527f7feb0f41@arm.com>
+ <20190423154430.GM3567@e103592.cambridge.arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <09bd4e79-c507-1f00-01c5-38afb2a62077@arm.com>
+Date:   Wed, 24 Apr 2019 11:29:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190423154430.GM3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Describe what {FLAT,DISCONTIG,SPARSE}MEM are and how they manage to
-maintain pfn <-> struct page correspondence.
+On 23/04/2019 16:44, Dave Martin wrote:
+> On Tue, Apr 23, 2019 at 03:54:32PM +0530, Amit Daniel Kachhap wrote:
+>> Hi Mark,
+>>
+>> On 4/23/19 3:09 PM, Marc Zyngier wrote:
+>>> On Tue, 23 Apr 2019 05:42:35 +0100,
+>>> Amit Daniel Kachhap <amit.kachhap@arm.com> wrote:
+>>>>
+>>>> From: Mark Rutland <mark.rutland@arm.com>
+>>>>
+>>>> When pointer authentication is supported, a guest may wish to use it.
+>>>> This patch adds the necessary KVM infrastructure for this to work, with
+>>>> a semi-lazy context switch of the pointer auth state.
+>>>>
+>>>> Pointer authentication feature is only enabled when VHE is built
+>>>> in the kernel and present in the CPU implementation so only VHE code
+>>>> paths are modified.
+>>>>
+>>>> When we schedule a vcpu, we disable guest usage of pointer
+>>>> authentication instructions and accesses to the keys. While these are
+>>>> disabled, we avoid context-switching the keys. When we trap the guest
+>>>> trying to use pointer authentication functionality, we change to eagerly
+>>>> context-switching the keys, and enable the feature. The next time the
+>>>> vcpu is scheduled out/in, we start again. However the host key save is
+>>>> optimized and implemented inside ptrauth instruction/register access
+>>>> trap.
+>>>>
+>>>> Pointer authentication consists of address authentication and generic
+>>>> authentication, and CPUs in a system might have varied support for
+>>>> either. Where support for either feature is not uniform, it is hidden
+>>> >from guests via ID register emulation, as a result of the cpufeature
+>>>> framework in the host.
+>>>>
+>>>> Unfortunately, address authentication and generic authentication cannot
+>>>> be trapped separately, as the architecture provides a single EL2 trap
+>>>> covering both. If we wish to expose one without the other, we cannot
+>>>> prevent a (badly-written) guest from intermittently using a feature
+>>>> which is not uniformly supported (when scheduled on a physical CPU which
+>>>> supports the relevant feature). Hence, this patch expects both type of
+>>>> authentication to be present in a cpu.
+>>>>
+>>>> This switch of key is done from guest enter/exit assembly as preparation
+>>>> for the upcoming in-kernel pointer authentication support. Hence, these
+>>>> key switching routines are not implemented in C code as they may cause
+>>>> pointer authentication key signing error in some situations.
+>>>>
+>>>> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+>>>> [Only VHE, key switch in full assembly, vcpu_has_ptrauth checks
+>>>> , save host key in ptrauth exception trap]
+>>>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>>>> Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+>>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>>>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>>>> Cc: kvmarm@lists.cs.columbia.edu
+>>>> ---
+>>>> Changes since v9:
+>>>>
+>>>> * Removed hardcoding of enum values[Mark Zyngier].
+>>>> * Changed kvm_ptrauth_asm.h to kvm_ptrauth.h[Mark Zyngier].
+>>>> * Removed macro __ptrauth_save_state and applied inline [Marc Zyngier].
+>>>> * Moved kvm_arm_vcpu_ptrauth_setup_lazy, kvm_arm_vcpu_ptrauth_enable and
+>>>>   kvm_arm_vcpu_ptrauth_disable from *.c to kvm_emulate.h file [Marc Zyngier].
+>>>> * Added/Modified comments at few places [Marc Zyngier].
+>>>>
+>>>>  arch/arm/include/asm/kvm_emulate.h   |   2 +
+>>>>  arch/arm64/Kconfig                   |   5 +-
+>>>>  arch/arm64/include/asm/kvm_emulate.h |  16 ++++++
+>>>>  arch/arm64/include/asm/kvm_host.h    |  14 +++++
+>>>>  arch/arm64/include/asm/kvm_ptrauth.h | 108 +++++++++++++++++++++++++++++++++++
+>>>>  arch/arm64/kernel/asm-offsets.c      |   6 ++
+>>>>  arch/arm64/kvm/handle_exit.c         |  36 +++++++++---
+>>>>  arch/arm64/kvm/hyp/entry.S           |  15 +++++
+>>>>  arch/arm64/kvm/sys_regs.c            |  43 +++++++++++++-
+>>>>  virt/kvm/arm/arm.c                   |   2 +
+>>>>  10 files changed, 234 insertions(+), 13 deletions(-)
+>>>>  create mode 100644 arch/arm64/include/asm/kvm_ptrauth.h
+> 
+> [...]
+> 
+>>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>>> index 7e34b9e..3cfe2eb 100644
+>>>> --- a/arch/arm64/Kconfig
+>>>> +++ b/arch/arm64/Kconfig
+>>>> @@ -1301,8 +1301,9 @@ config ARM64_PTR_AUTH
+>>>>  	  context-switched along with the process.
+>>>>  	  The feature is detected at runtime. If the feature is not present in
+>>>> -	  hardware it will not be advertised to userspace nor will it be
+>>>> -	  enabled.
+>>>> +	  hardware it will not be advertised to userspace/KVM guest nor will it
+>>>> +	  be enabled. However, KVM guest also require VHE mode and hence
+>>>> +	  CONFIG_ARM64_VHE=y option to use this feature.
+>>>
+>>> SVE seems to have the exact same requirements, and has
+>>>
+>>> 	depends on !KVM || ARM64_VHE
+>>>
+>>> Why don't we have that for PTR_AUTH too?
+>> This point came up earlier also and it was suggested by  Dave[1] to leave
+>> userspace ptrauth for non-vhe mode as that would bring regression now.
+>> [1]:https://lkml.org/lkml/2019/3/27/583
+> 
+> I see Marc applied this change in
+> https://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm.git/commit/?h=queue&id=e19b245fa4c61558536bd34f80845f0c41eab65f0
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- Documentation/vm/index.rst        |   1 +
- Documentation/vm/memory-model.rst | 171 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 172 insertions(+)
- create mode 100644 Documentation/vm/memory-model.rst
+That's only for me not to forget anything, and it hasn't been folded
+into the original patch yet.
 
-diff --git a/Documentation/vm/index.rst b/Documentation/vm/index.rst
-index b58cc3b..e8d943b 100644
---- a/Documentation/vm/index.rst
-+++ b/Documentation/vm/index.rst
-@@ -37,6 +37,7 @@ descriptions of data structures and algorithms.
-    hwpoison
-    hugetlbfs_reserv
-    ksm
-+   memory-model
-    mmu_notifier
-    numa
-    overcommit-accounting
-diff --git a/Documentation/vm/memory-model.rst b/Documentation/vm/memory-model.rst
-new file mode 100644
-index 0000000..914c52a
---- /dev/null
-+++ b/Documentation/vm/memory-model.rst
-@@ -0,0 +1,171 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. _physical_memory_model:
-+
-+=====================
-+Physical Memory Model
-+=====================
-+
-+Physical memory in a system may be addressed in different ways. The
-+simplest case is when the physical memory starts at address 0 and
-+spans a contiguous range up to the maximal address. It could be,
-+however, that this range contains small holes that are not accessible
-+for the CPU. Then there could be several contiguous ranges at
-+completely distinct addresses. And, don't forget about NUMA, where
-+different memory banks are attached to different CPUs.
-+
-+Linux abstracts this diversity using one of the three memory models:
-+FLATMEM, DISCONTIGMEM and SPARSEMEM. Each architecture defines what
-+memory models it supports, what is the default memory model and
-+whether it possible to manually override that default.
-+
-+All the memory models track the status of physical page frames using
-+:c:type:`struct page` arranged in one or more arrays.
-+
-+Regardless of the selected memory model, there exists one-to-one
-+mapping between the physical page frame number (PFN) and the
-+corresponding `struct page`.
-+
-+Each memory model defines :c:func:`pfn_to_page` and :c:func:`page_to_pfn`
-+helpers that allow the conversion from PFN to `struct page` and vise
-+versa.
-+
-+FLATMEM
-+=======
-+
-+The simplest memory model is FLATMEM. This model is suitable for
-+non-NUMA systems with contiguous, or mostly contiguous, physical
-+memory.
-+
-+In the FLATMEM memory model, there is a global `mem_map` array that
-+maps the entire physical memory. For most architectures, the holes
-+have entries in the `mem_map` array. The `struct page` objects
-+corresponding to the holes are never fully initialized.
-+
-+To allocate the `mem_map` array, architecture specific setup code
-+should call :c:func:`free_area_init_node` function or its convenience
-+wrapper :c:func:`free_area_init`. Yet, the mappings array is not
-+usable until the call to :c:func:`memblock_free_all` that hands all
-+the memory to the page allocator.
-+
-+If an architecture enables `CONFIG_ARCH_HAS_HOLES_MEMORYMODEL` option,
-+it may free parts of the `mem_map` array that do not cover the
-+actual physical pages. In such case, the architecture specific
-+:c:func:`pfn_valid` implementation should take the holes in the
-+`mem_map` into account.
-+
-+With FLATMEM, the conversion between a PFN and the `struct page` is
-+straightforward: `PFN - ARCH_PFN_OFFSET` is an index to the
-+`mem_map` array.
-+
-+The `ARCH_PFN_OFFSET` defines the first page frame number for
-+systems that their physical memory does not start at 0.
-+
-+DISCONTIGMEM
-+============
-+
-+The DISCONTIGMEM model treats the physical memory as a collection of
-+`nodes` similarly to how Linux NUMA support does. For each node Linux
-+constructs an independent memory management subsystem represented by
-+`struct pglist_data` (or `pg_data_t` for short). Among other
-+things, `pg_data_t` holds the `node_mem_map` array that maps
-+physical pages belonging to that node. The `node_start_pfn` field of
-+`pg_data_t` is the number of the first page frame belonging to that
-+node.
-+
-+The architecture setup code should call :c:func:`free_area_init_node` for
-+each node in the system to initialize the `pg_data_t` object and its
-+`node_mem_map`.
-+
-+Every `node_mem_map` behaves exactly as FLATMEM's `mem_map` -
-+every physical page frame in a node has a `struct page` entry in the
-+`node_mem_map` array. When DISCONTIGMEM is enabled, a portion of the
-+`flags` field of the `struct page` encodes the node number of the
-+node hosting that page.
-+
-+The conversion between a PFN and the `struct page` in the
-+DISCONTIGMEM model became slightly more complex as it has to determine
-+which node hosts the physical page and which `pg_data_t` object
-+holds the `struct page`.
-+
-+Architectures that support DISCONTIGMEM provide :c:func:`pfn_to_nid`
-+to convert PFN to the node number. The opposite conversion helper
-+:c:func:`page_to_nid` is generic as it uses the node number encoded in
-+page->flags.
-+
-+Once the node number is known, the PFN can be used to index
-+appropriate `node_mem_map` array to access the `struct page` and
-+the offset of the `struct page` from the `node_mem_map` plus
-+`node_start_pfn` is the PFN of that page.
-+
-+SPARSEMEM
-+=========
-+
-+SPARSEMEM is the most versatile memory model available in Linux and it
-+is the only memory model that supports several advanced features such
-+as hot-plug and hot-remove of the physical memory, alternative memory
-+maps for non-volatile memory devices and deferred initialization of
-+the memory map for larger systems.
-+
-+The SPARSEMEM model presents the physical memory as a collection of
-+sections. A section is represented with :c:type:`struct mem_section`
-+that contains `section_mem_map` that is, logically, a pointer to an
-+array of struct pages. However, it is stored with some other magic
-+that aids the sections management. The section size and maximal number
-+of section is specified using `SECTION_SIZE_BITS` and
-+`MAX_PHYSMEM_BITS` constants defined by each architecture that
-+supports SPARSEMEM. While `MAX_PHYSMEM_BITS` is an actual width of a
-+physical address that an architecture supports, the
-+`SECTION_SIZE_BITS` is an arbitrary value.
-+
-+The maximal number of sections is denoted `NR_MEM_SECTIONS` and
-+defined as
-+
-+.. math::
-+
-+   NR\_MEM\_SECTIONS = 2 ^ {(MAX\_PHYSMEM\_BITS - SECTION\_SIZE\_BITS)}
-+
-+The `mem_section` objects are arranged in a two dimensional array
-+called `mem_sections`. The size and placement of this array depend
-+on `CONFIG_SPARSEMEM_EXTREME` and the maximal possible number of
-+sections:
-+
-+* When `CONFIG_SPARSEMEM_EXTREME` is disabled, the `mem_sections`
-+  array is static and has `NR_MEM_SECTIONS` rows. Each row holds a
-+  single `mem_section` object.
-+* When `CONFIG_SPARSEMEM_EXTREME` is enabled, the `mem_sections`
-+  array is dynamically allocated. Each row contains PAGE_SIZE worth of
-+  `mem_section` objects and the number of rows is calculated to fit
-+  all the memory sections.
-+
-+The architecture setup code should call :c:func:`memory_present` for
-+each active memory range or use :c:func:`memblocks_present` or
-+:c:func:`sparse_memory_present_with_active_regions` wrappers to
-+initialize the memory sections. Next, the actual memory maps should be
-+set up using :c:func:`sparse_init`.
-+
-+With SPARSEMEM there are two possible ways to convert a PFN to the
-+corresponding `struct page` - a "classic sparse" and "sparse
-+vmemmap". The selection is made at build time and it is determined by
-+the value of `CONFIG_SPARSEMEM_VMEMMAP`.
-+
-+The classic sparse encodes the section number of a page in page->flags
-+and uses high bits of a PFN to access the section that maps that page
-+frame. Inside a section, the PFN is the index to the array of pages.
-+
-+The sparse vmemmap uses a virtually mapped memory map to optimize
-+pfn_to_page and page_to_pfn operations. There is a global `struct
-+page *vmemmap` pointer that points to a virtually contiguous array of
-+`struct page` objects. A PFN is an index to that array and the the
-+offset of the `struct page` from `vmemmap` is the PFN of that
-+page.
-+
-+To use vmemmap, an architecture has to reserve a range of virtual
-+addresses that will map the physical pages containing the memory
-+map. and make sure that `vmemmap` points to that range. In addition,
-+the architecture should implement :c:func:`vmemmap_populate` method
-+that will allocate the physical memory and create page tables for the
-+virtual memory map. If an architecture does not have any special
-+requirements for the vmemmap mappings, it can use default
-+:c:func:`vmemmap_populate_basepages` provided by the generic memory
-+management.
+> The risk here is that someone has a custom config from an old kernel
+> that explicitly turns CONFIG_ARM64_VHE off, and that try to use that
+> config with this patch.
+> 
+> I'm not sure how much we care about that.
+> 
+> Otherwise, blocking this config so that people don't accidentally rely
+> on it seems sensible.
+
+What I'm trying to do is to reduce the amount of valid kernel
+configurations that we need to validate independently.
+
+At this stage, I'm tempted to just restrict it as described above, and
+maybe relax it if someone shouts at me.
+
+Thanks,
+
+	M.
 -- 
-2.7.4
-
+Jazz is not dead. It just smells funny...
