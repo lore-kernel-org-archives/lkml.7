@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FBAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0606BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354EC21902
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0AC1218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116945;
-	bh=BXi32L2xU14VbT2sRgevLkPVZjUx0+x5HdGUzF9hGXw=;
+	s=default; t=1556116965;
+	bh=MB7Y3mWB13g6WEFgVqxjBmbpTbh/cnfSVdR8/1EcTOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DNYCQ6YjBtYGpo30DZpyWEojMzjeuBYwpvImC/mKZwC0+NoawmhZIKlSrV/aqo8fm
-	 HVxDtDVnT9/qJ6MG6Qp7hcFIkZo3saHMWRmr//vT+64ufSN/L6tTQPlB3PvuqZRhWI
-	 8feaKjMW2+F4KUvItlh/fnrCSncs9Woo4OG+IGto=
+	b=0xohRkW21fOzcP38s0sKcx0+MMqrhhcmwzc1RSS5uHT8pGX+JviZL103zaANm6fhk
+	 N2FkmNGzJIouJVhuxVOj4GCkU2LpWEgRk4T7x5607OufwcW/pq51+xaSVVMe0rF7tU
+	 Vvt1dpGPalQddbywi1vzt1zONeBxwSriDmnzTbP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732174AbfDXOmX (ORCPT
+        id S1731980AbfDXOkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:42:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43302 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:40:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732019AbfDXOkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:40:55 -0400
+        id S1731369AbfDXOkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:40:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402BA21901;
-        Wed, 24 Apr 2019 14:40:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21D5B21903;
+        Wed, 24 Apr 2019 14:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116854;
-        bh=BXi32L2xU14VbT2sRgevLkPVZjUx0+x5HdGUzF9hGXw=;
+        s=default; t=1556116835;
+        bh=MB7Y3mWB13g6WEFgVqxjBmbpTbh/cnfSVdR8/1EcTOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iL3CzlN236NrQPdHhOAfNMRNESGYqVTOiIBIA3h3NG5ehoR3hokvhL4wAuudAY7x4
-         Q57jHN5HQwgYS9pewN05Tk1sWAoW4GBU2hQ+3HyT07zdp8pkzJhKC3fU+yfMYt0d78
-         L5VDfVBZU93tJMB0yZqqxcV8jIn3bVfcQsEWTtY8=
+        b=Ah3hfEeAIEOgVsnGfbGbaYdjEDJVK8RX6/DyAKvU4PEAWQWYC6/WhFCPTU1v9bmZK
+         JYKdS3E/uqcJZcpGw1ZeX8sEmRgNiYUqb4ysizXrcIXnGXliU9UQRfLA+c1NmWVOEV
+         b9JMESuxSWOT1KdecndqKOKosjL7AKT7bQqHJKH4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 41/52] net: hns: Fix WARNING when remove HNS driver with SMMU enabled
-Date:   Wed, 24 Apr 2019 10:38:59 -0400
-Message-Id: <20190424143911.28890-41-sashal@kernel.org>
+Cc:     Wei Li <liwei391@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 36/52] arm64: fix wrong check of on_sdei_stack in nmi context
+Date:   Wed, 24 Apr 2019 10:38:54 -0400
+Message-Id: <20190424143911.28890-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
 References: <20190424143911.28890-1-sashal@kernel.org>
@@ -60,101 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Wei Li <liwei391@huawei.com>
 
-[ Upstream commit 8601a99d7c0256b7a7fdd1ab14cf6c1f1dfcadc6 ]
+[ Upstream commit 1c41860864c8ae0387ef7d44f0000e99cbb2e06d ]
 
-When enable SMMU, remove HNS driver will cause a WARNING:
+When doing unwind_frame() in the context of pseudo nmi (need enable
+CONFIG_ARM64_PSEUDO_NMI), reaching the bottom of the stack (fp == 0,
+pc != 0), function on_sdei_stack() will return true while the sdei acpi
+table is not inited in fact. This will cause a "NULL pointer dereference"
+oops when going on.
 
-[  141.924177] WARNING: CPU: 36 PID: 2708 at drivers/iommu/dma-iommu.c:443 __iommu_dma_unmap+0xc0/0xc8
-[  141.954673] Modules linked in: hns_enet_drv(-)
-[  141.963615] CPU: 36 PID: 2708 Comm: rmmod Tainted: G        W         5.0.0-rc1-28723-gb729c57de95c-dirty #32
-[  141.983593] Hardware name: Huawei D05/D05, BIOS Hisilicon D05 UEFI Nemo 1.8 RC0 08/31/2017
-[  142.000244] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  142.009886] pc : __iommu_dma_unmap+0xc0/0xc8
-[  142.018476] lr : __iommu_dma_unmap+0xc0/0xc8
-[  142.027066] sp : ffff000013533b90
-[  142.033728] x29: ffff000013533b90 x28: ffff8013e6983600
-[  142.044420] x27: 0000000000000000 x26: 0000000000000000
-[  142.055113] x25: 0000000056000000 x24: 0000000000000015
-[  142.065806] x23: 0000000000000028 x22: ffff8013e66eee68
-[  142.076499] x21: ffff8013db919800 x20: 0000ffffefbff000
-[  142.087192] x19: 0000000000001000 x18: 0000000000000007
-[  142.097885] x17: 000000000000000e x16: 0000000000000001
-[  142.108578] x15: 0000000000000019 x14: 363139343a70616d
-[  142.119270] x13: 6e75656761705f67 x12: 0000000000000000
-[  142.129963] x11: 00000000ffffffff x10: 0000000000000006
-[  142.140656] x9 : 1346c1aa88093500 x8 : ffff0000114de4e0
-[  142.151349] x7 : 6662666578303d72 x6 : ffff0000105ffec8
-[  142.162042] x5 : 0000000000000000 x4 : 0000000000000000
-[  142.172734] x3 : 00000000ffffffff x2 : ffff0000114de500
-[  142.183427] x1 : 0000000000000000 x0 : 0000000000000035
-[  142.194120] Call trace:
-[  142.199030]  __iommu_dma_unmap+0xc0/0xc8
-[  142.206920]  iommu_dma_unmap_page+0x20/0x28
-[  142.215335]  __iommu_unmap_page+0x40/0x60
-[  142.223399]  hnae_unmap_buffer+0x110/0x134
-[  142.231639]  hnae_free_desc+0x6c/0x10c
-[  142.239177]  hnae_fini_ring+0x14/0x34
-[  142.246540]  hnae_fini_queue+0x2c/0x40
-[  142.254080]  hnae_put_handle+0x38/0xcc
-[  142.261619]  hns_nic_dev_remove+0x54/0xfc [hns_enet_drv]
-[  142.272312]  platform_drv_remove+0x24/0x64
-[  142.280552]  device_release_driver_internal+0x17c/0x20c
-[  142.291070]  driver_detach+0x4c/0x90
-[  142.298259]  bus_remove_driver+0x5c/0xd8
-[  142.306148]  driver_unregister+0x2c/0x54
-[  142.314037]  platform_driver_unregister+0x10/0x18
-[  142.323505]  hns_nic_dev_driver_exit+0x14/0xf0c [hns_enet_drv]
-[  142.335248]  __arm64_sys_delete_module+0x214/0x25c
-[  142.344891]  el0_svc_common+0xb0/0x10c
-[  142.352430]  el0_svc_handler+0x24/0x80
-[  142.359968]  el0_svc+0x8/0x7c0
-[  142.366104] ---[ end trace 60ad1cd58e63c407 ]---
-
-The tx ring buffer map when xmit and unmap when xmit done. So in
-hnae_init_ring() did not map tx ring buffer, but in hnae_fini_ring()
-have a unmap operation for tx ring buffer, which is already unmapped
-when xmit done, than cause this WARNING.
-
-The hnae_alloc_buffers() is called in hnae_init_ring(),
-so the hnae_free_buffers() should be in hnae_fini_ring(), not in
-hnae_free_desc().
-
-In hnae_fini_ring(), adds a check is_rx_ring() as in hnae_init_ring().
-When the ring buffer is tx ring, adds a piece of code to ensure that
-the tx ring is unmap.
-
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Julien Thierry <julien.thierry@arm.com>
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hnae.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/sdei.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
-index 79d03f8ee7b1..c7fa97a7e1f4 100644
---- a/drivers/net/ethernet/hisilicon/hns/hnae.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
-@@ -150,7 +150,6 @@ static int hnae_alloc_buffers(struct hnae_ring *ring)
- /* free desc along with its attached buffer */
- static void hnae_free_desc(struct hnae_ring *ring)
- {
--	hnae_free_buffers(ring);
- 	dma_unmap_single(ring_to_dev(ring), ring->desc_dma_addr,
- 			 ring->desc_num * sizeof(ring->desc[0]),
- 			 ring_to_dma_dir(ring));
-@@ -183,6 +182,9 @@ static int hnae_alloc_desc(struct hnae_ring *ring)
- /* fini ring, also free the buffer for the ring */
- static void hnae_fini_ring(struct hnae_ring *ring)
- {
-+	if (is_rx_ring(ring))
-+		hnae_free_buffers(ring);
+diff --git a/arch/arm64/kernel/sdei.c b/arch/arm64/kernel/sdei.c
+index 5ba4465e44f0..ea94cf8f9dc6 100644
+--- a/arch/arm64/kernel/sdei.c
++++ b/arch/arm64/kernel/sdei.c
+@@ -94,6 +94,9 @@ static bool on_sdei_normal_stack(unsigned long sp, struct stack_info *info)
+ 	unsigned long low = (unsigned long)raw_cpu_read(sdei_stack_normal_ptr);
+ 	unsigned long high = low + SDEI_STACK_SIZE;
+ 
++	if (!low)
++		return false;
 +
- 	hnae_free_desc(ring);
- 	kfree(ring->desc_cb);
- 	ring->desc_cb = NULL;
+ 	if (sp < low || sp >= high)
+ 		return false;
+ 
+@@ -111,6 +114,9 @@ static bool on_sdei_critical_stack(unsigned long sp, struct stack_info *info)
+ 	unsigned long low = (unsigned long)raw_cpu_read(sdei_stack_critical_ptr);
+ 	unsigned long high = low + SDEI_STACK_SIZE;
+ 
++	if (!low)
++		return false;
++
+ 	if (sp < low || sp >= high)
+ 		return false;
+ 
 -- 
 2.19.1
 
