@@ -2,135 +2,138 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE1DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A41EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD86F218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3FD2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:54:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSYYeM2z"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Mw3rCB4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729946AbfDXHv0 (ORCPT
+        id S1730006AbfDXHyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:51:26 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41905 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728927AbfDXHv0 (ORCPT
+        Wed, 24 Apr 2019 03:54:15 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:29762 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729767AbfDXHyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:51:26 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 188so8868110pfd.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 00:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MUzBcZSYyjNmVAln4pH9+hDa+BhI195V73WdadLwrkU=;
-        b=WSYYeM2z+eSgl8RJu1kf4xsUmWL7TbV5E6Ksim/kAqfLPjA9PZ2Ruuvb75pEEBqmaO
-         hmWO8ZJfjNoZbzzYPXrRpUjgt+lJD3bGSmVjVYN2/NEqvqoD8j0iKTDs2o+VhkFoWGds
-         2h1UGZnLo647Fkru6r8zZyfQfjZNFXTKr9jQeyHFnKf7ysfUwJ7XjFtutT1KGrKFfwRs
-         +1WMMPH3DzHK5klPDLqH4FpXyp+8fnxG4KLx4sguNKZYUyYmi4AeFPShJ9wO/0d1Aky0
-         sdobm3ERFskuhlTX5kM4GeTCYdI9x1W8Jb5znHsCNaQYZE9DWOvN6IULgWk6dDXp8VfP
-         Tagw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MUzBcZSYyjNmVAln4pH9+hDa+BhI195V73WdadLwrkU=;
-        b=MC9ilCj33wD/atcWKFdJEWGHqJr2H0zcZd+kQCYbimazJCT4Zm06ZTt40ec2THEK8W
-         BRGVkt2GYFm3b4fen/igHlWUY2qceM4iUR9ByteCB+D9ctgd7N8ZjbZy5UEhVbbBSvom
-         nLSBOzdO/+elD0+HaiOREeID23ZXK+Js4SqFGQN4kYpVnd5Ag2WSo4/q2aK9O4Vg96SJ
-         j3d/leVc34eItF9Ka4EykX9CtEUgoAr6Rlpkz1zfCE1nXzazliNFFHgEgVW3+LrdanP5
-         4lML6+DUvWJCRsX8/wX7dU5Ydg8jNKo86rKtDv1OqML2NxfJLWhrIq8wyMU7PpSEw8lO
-         bcPw==
-X-Gm-Message-State: APjAAAU+fbXJj6w5q1uS8kUYmp32YErh84aYwWByXugBTtcl/ao6/2Hq
-        SGPKe7Bzf7SDWCqJ+EonuAI=
-X-Google-Smtp-Source: APXvYqxujmGRGHIEdw7D/0pkEzjunqAgdRRM4DDeb4gBYviMbCW/tf7YM7mgvUfEu4nd/i+ZrtWk2g==
-X-Received: by 2002:a63:6e88:: with SMTP id j130mr6603072pgc.452.1556092285074;
-        Wed, 24 Apr 2019 00:51:25 -0700 (PDT)
-Received: from pcliush.allwinnertech.com ([223.197.233.48])
-        by smtp.gmail.com with ESMTPSA id y23sm26230823pfn.25.2019.04.24.00.51.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 24 Apr 2019 00:51:24 -0700 (PDT)
-From:   damon <liush.damon@gmail.com>
-To:     palmer@sifive.com
-Cc:     aou@eecs.berkeley.edu, anup.patel@wdc.com, liush.damon@gmail.com,
-        rppt@linux.ibm.com, sorear2@gmail.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] RISC-V: redefine PTRS_PER_PGD/PTRS_PER_PMD/PTRS_PER_PTE
-Date:   Wed, 24 Apr 2019 15:51:08 +0800
-Message-Id: <1556092268-4646-1-git-send-email-liush.damon@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 24 Apr 2019 03:54:14 -0400
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x3O7s7Hw001120
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:54:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x3O7s7Hw001120
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556092448;
+        bh=d8tLUPQuotT5ix5INuwcDDtJ04zVlYR579nlv7aEMAY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Mw3rCB4cp16IDv9Q0MMLtobh35DJSBdnjnVUTxDKgOupY0ttm5e6peMqbfogKCSVY
+         dmEXn/jMZ8d3ldKhJXiqC01glKFnGd55hs8D8NneMaePFEyoDeKmhbgTUr9R6It9V9
+         EEJWvCZ9b6zHbhybyOkaqD+uT7INnUR8lCKb62vzzMZu7DyFKnisjAYU9heqaP2ffR
+         6H5CVW3bMLMx5GbWIdt9U35Zi93evVKQ4FhKnpPsVhz1CaNXTCiACkV5qKwLAXd768
+         xCMaLJt9Ub9A+L9JLb/t03iBk2Nbatdz+7YyzgkIH3VBAx4DH2JwalixPZVIaEmb6v
+         5oWKfLMu/s/Ww==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id n16so5697596uae.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 00:54:07 -0700 (PDT)
+X-Gm-Message-State: APjAAAVi+ToNHoW+iNmV76DDBkEKwYAYk8oz/oI2fy+LjcXzoE9nNfho
+        T+8AnuhU7NkemkDXgs46I51VWRs2dtRsQ5hD3Lw=
+X-Google-Smtp-Source: APXvYqzhm8k+7OGkHRnEANdXMXLjXmdwvKtCLlAdOLC1qAnlptmu10ApMVxgFnNQZRCChH3NqjAAbYEVOGl0uoFuEnQ=
+X-Received: by 2002:ab0:20c1:: with SMTP id z1mr2133420ual.109.1556092446522;
+ Wed, 24 Apr 2019 00:54:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190423211932.4906-1-ndesaulniers@google.com> <CAEbi=3fn42-rcXOh28N09G9Gng8o9RE8_A8=ow0=JeMEXVF_ig@mail.gmail.com>
+In-Reply-To: <CAEbi=3fn42-rcXOh28N09G9Gng8o9RE8_A8=ow0=JeMEXVF_ig@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 24 Apr 2019 16:53:30 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQaPoL=bWzY_HcbJqM_s3j4+RC=-HFL+DwJWNOCTvNOfQ@mail.gmail.com>
+Message-ID: <CAK7LNAQaPoL=bWzY_HcbJqM_s3j4+RC=-HFL+DwJWNOCTvNOfQ@mail.gmail.com>
+Subject: Re: [PATCH] nds32: vdso: drop unnecessary cc-ldoption
+To:     Greentime Hu <green.hu@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the number of addresses to define the relevant macros.
+On Wed, Apr 24, 2019 at 3:59 PM Greentime Hu <green.hu@gmail.com> wrote:
+>
+> Hi Nick & Yamada,
+>
+> Nick Desaulniers <ndesaulniers@google.com> =E6=96=BC 2019=E5=B9=B44=E6=9C=
+=8824=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=885:19=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> >
+> > Towards the goal of removing cc-ldoption, it seems that --hash-style=3D
+> > was added to binutils 2.17.50.0.2 in 2006. The minimal required version
+> > of binutils for the kernel according to
+> > Documentation/process/changes.rst is 2.20.
+> >
+> > Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
+> > Cc: clang-built-linux@googlegroups.com
+> > Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > ---
+> >  arch/nds32/kernel/vdso/Makefile | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso/M=
+akefile
+> > index e6c50a701313..d379645cad74 100644
+> > --- a/arch/nds32/kernel/vdso/Makefile
+> > +++ b/arch/nds32/kernel/vdso/Makefile
+> > @@ -11,10 +11,8 @@ obj-vdso :=3D note.o datapage.o sigreturn.o gettimeo=
+fday.o
+> >  targets :=3D $(obj-vdso) vdso.so vdso.so.dbg
+> >  obj-vdso :=3D $(addprefix $(obj)/, $(obj-vdso))
+> >
+> > -ccflags-y :=3D -shared -fno-common -fno-builtin
+> > -ccflags-y +=3D -nostdlib -Wl,-soname=3Dlinux-vdso.so.1 \
+> > -               $(call cc-ldoption, -Wl$(comma)--hash-style=3Dsysv)
+> > -ccflags-y +=3D -fPIC -Wl,-shared -g
+> > +ccflags-y :=3D -shared -fno-common -fno-builtin -nostdlib -fPIC -Wl,-s=
+hared -g \
+> > +       -Wl,-soname=3Dlinux-vdso.so.1 -Wl,--hash-style=3Dsysv
+> >
+> >  # Disable gcov profiling for VDSO code
+> >  GCOV_PROFILE :=3D n
+>
+> Thank you.
+> Acked-by: Greentime Hu <greentime@andestech.com>
 
-Signed-off-by: damon <liush.damon@gmail.com>
----
- arch/riscv/include/asm/pgtable-32.h | 2 ++
- arch/riscv/include/asm/pgtable-64.h | 3 ++-
- arch/riscv/include/asm/pgtable.h    | 8 ++++++--
- 3 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/include/asm/pgtable-32.h b/arch/riscv/include/asm/pgtable-32.h
-index d61974b7..433886b 100644
---- a/arch/riscv/include/asm/pgtable-32.h
-+++ b/arch/riscv/include/asm/pgtable-32.h
-@@ -17,6 +17,8 @@
- #include <asm-generic/pgtable-nopmd.h>
- #include <linux/const.h>
- 
-+#define __PAGETABLE_PMD_FOLDED    1
-+#define MAX_USER_VA_BITS	32
- /* Size of region mapped by a page global directory */
- #define PGDIR_SHIFT     22
- #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
-diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
-index 7aa0ea9..a56d4d0 100644
---- a/arch/riscv/include/asm/pgtable-64.h
-+++ b/arch/riscv/include/asm/pgtable-64.h
-@@ -16,6 +16,7 @@
- 
- #include <linux/const.h>
- 
-+#define MAX_USER_VA_BITS	39
- #define PGDIR_SHIFT     30
- /* Size of region mapped by a page global directory */
- #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
-@@ -34,7 +35,7 @@
- #define pmd_val(x)      ((x).pmd)
- #define __pmd(x)        ((pmd_t) { (x) })
- 
--#define PTRS_PER_PMD    (PAGE_SIZE / sizeof(pmd_t))
-+#define PTRS_PER_PMD    (1 << (PGDIR_SHIFT - PMD_SHIFT))
- 
- static inline int pud_present(pud_t pud)
- {
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 1141364..9148043 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -33,9 +33,13 @@
- #endif /* CONFIG_64BIT */
- 
- /* Number of entries in the page global directory */
--#define PTRS_PER_PGD    (PAGE_SIZE / sizeof(pgd_t))
-+#define PTRS_PER_PGD (1 << (MAX_USER_VA_BITS - PGDIR_SHIFT))
- /* Number of entries in the page table */
--#define PTRS_PER_PTE    (PAGE_SIZE / sizeof(pte_t))
-+#ifdef __PAGETABLE_PMD_FOLDED
-+#define PTRS_PER_PTE   (1 << (PGDIR_SHIFT - PAGE_SHIFT))
-+#else
-+#define PTRS_PER_PTE   (1 << (PMD_SHIFT - PAGE_SHIFT))
-+#endif
- 
- /* Number of PGD entries that a user-mode program can use */
- #define USER_PTRS_PER_PGD   (TASK_SIZE / PGDIR_SIZE)
--- 
-1.9.1
+Who do you expect to pick up this patch?
 
+You are the NDS32 maintainer
+according to MAINTAINERS.
+
+
+ANDES ARCHITECTURE
+M:      Greentime Hu <green.hu@gmail.com>
+M:      Vincent Chen <deanbo422@gmail.com>
+T:      git https://github.com/andestech/linux.git
+S:      Supported
+F:      arch/nds32/
+F:      Documentation/devicetree/bindings/interrupt-controller/andestech,at=
+ivic32.txt
+F:      Documentation/devicetree/bindings/nds32/
+K:      nds32
+N:      nds32
+
+
+You do not maintain https://github.com/andestech/linux.git any more, do you=
+?
+
+
+--=20
+Best Regards
+Masahiro Yamada
