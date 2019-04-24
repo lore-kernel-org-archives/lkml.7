@@ -2,244 +2,95 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA57C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F08C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696FA218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23A621773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:32:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbfDXNai (ORCPT
+        id S1728696AbfDXNb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:30:38 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46338 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfDXNah (ORCPT
+        Wed, 24 Apr 2019 09:31:59 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:39541 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726904AbfDXNb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:30:37 -0400
-Received: by mail-qt1-f193.google.com with SMTP id w26so13426285qto.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 06:30:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hZ4M9Io+vxUkyqK34cCWUDRN+7XRjk6lhLR+A0NuYVU=;
-        b=WKf5F3egt4XB+4xW/BWg5aaxFPSHG2Pf355Cm3TfZl4UXicstpXsqJYTLyEV3sgdwd
-         RwvCBv++PAv3nJVWTMZEkIBJjYfzRKH/6LRLoNTIZKW1YKfq75GRqj2Kmbv0rbJ1NGyr
-         iPNXkZspWKdNrPrxle7dFvzUwOuPG0RqBnfiKlDGopEWbHoHG5F+oEkrrLiY0ORIXPDX
-         qGr1+Jp6icuZgbkrKnRSUZA79AzW1YAuUKKeq9gAXqV9EoAsmIbgebS+bnR9JXi6CRWz
-         rY9fFylOT7N+d6nzsTh5notTGqKqeFEaPUlyWzRNTjNh2lPGs5MrvFQNDQHdBlR/Ndgj
-         hJEQ==
-X-Gm-Message-State: APjAAAWkAybu83ygHdfFBNhDDQ0j5Virj4kt5NHGIKYbhmn9925MxNgX
-        TQPH01c0c2ORsWhgf0Z/V7u7uaGRX1Huw51edJdA/PN6
-X-Google-Smtp-Source: APXvYqzYFH9BBtykJYKoreMaWTEcePJBi39zZGLV6EXF4eWlCO41W8sQvg5UHUogeMVsAee5XajVj7uE8CWKR6QZ7nI=
-X-Received: by 2002:a0c:aed4:: with SMTP id n20mr25701121qvd.136.1556112636589;
- Wed, 24 Apr 2019 06:30:36 -0700 (PDT)
+        Wed, 24 Apr 2019 09:31:59 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-138-_Wh5CtMQPvaSf2MjPGY3wA-1; Wed, 24 Apr 2019 14:31:55 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
+ 24 Apr 2019 14:33:08 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 24 Apr 2019 14:33:08 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Reshetova, Elena'" <elena.reshetova@intel.com>,
+        'Theodore Ts'o' <tytso@mit.edu>,
+        Ingo Molnar <mingo@kernel.org>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>
+CC:     Daniel Borkmann <daniel@iogearbox.net>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Thread-Index: AQHU9E1UquBTkhVACE2y3BuRFoekIqY8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAARJkYIAAWDaAgAAZlPCACqsuAIAALsDQ
+Date:   Wed, 24 Apr 2019 13:33:08 +0000
+Message-ID: <bf7cb17c44224fe29daf5ba66d908b2b@AcuMS.aculab.com>
+References: <20190415060918.3766-1-elena.reshetova@intel.com>
+ <20190415072535.GA51449@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C4F90F@IRSMSX102.ger.corp.intel.com>
+ <20190416073444.GC127769@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C51962@IRSMSX102.ger.corp.intel.com>
+ <20190416120822.GV11158@hirez.programming.kicks-ass.net>
+ <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
+ <20190416154348.GB3004@mit.edu>
+ <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com>
+ <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com>
+ <20190417151555.GG4686@mit.edu>
+ <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com>
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C5E473@IRSMSX102.ger.corp.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20190423154615.18257-1-benjamin.tissoires@redhat.com>
-In-Reply-To: <20190423154615.18257-1-benjamin.tissoires@redhat.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 24 Apr 2019 15:30:25 +0200
-Message-ID: <CAO-hwJLCL95pAzO9kco2jo2_uCV2=3f5OEf=P=AoB9EpEjFTAw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] HID: input: make sure the wheel high resolution
- multiplier is set
-To:     Jiri Kosina <jikos@kernel.org>, James Feeney <james@nurealm.net>,
-        Peter Hutterer <peter.hutterer@who-t.net>
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: _Wh5CtMQPvaSf2MjPGY3wA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 5:46 PM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> Some old mice have a tendency to not accept the high resolution multiplier.
-> They reply with a -EPIPE which was previously ignored.
->
-> Force the call to resolution multiplier to be synchronous and actually
-> check for the answer. If this fails, consider the mouse like a normal one.
->
-> Fixes: 2dc702c991e377 ("HID: input: use the Resolution Multiplier for
->        high-resolution scrolling")
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1700071
-> Reported-and-tested-by: James Feeney <james@nurealm.net>
-> Cc: stable@vger.kernel.org  # v5.0+
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> ---
+RnJvbTogUmVzaGV0b3ZhLCBFbGVuYQ0KPiBTZW50OiAyNCBBcHJpbCAyMDE5IDEyOjQzDQo+DQo+
+IFNvcnJ5IGZvciB0aGUgZGVsYXkgLSBFYXN0ZXIgaG9saWRheXMgKyBJIHdhcyB0cnlpbmcgdG8g
+YXJyYW5nZSBteSBicmFpbiBhcm91bmQgcHJvcG9zZWQgb3B0aW9ucy4NCj4gSGVyZSB3aGF0IEkg
+dGhpbmsgb3VyIG9wdGlvbnMgYXJlIHdpdGggcmVnYXJkcyB0byB0aGUgc291cmNlIG9mIHJhbmRv
+bW5lc3M6DQo+IA0KPiAxKSByZHRzYyBvciB2YXJpYXRpb25zIGJhc2VkIG9uIGl0IChEYXZpZCBw
+cm9wb3NlZCBzb21lIENSQy1iYXNlZCB2YXJpYW50cyBmb3IgZXhhbXBsZSkNCg0KRG8gSSByZW1l
+bWJlciBzb21ldGhpbmcgYWJvdXQgcmR0c2MgYmVpbmcgbWFkZSBsZXNzIGFjY3VyYXRlIGluIG9y
+ZGVyIHRvDQptYWtlIGl0IChzbGlnaHRseSkgbW9yZSBkaWZmaWN1bHQgdG8gdXNlIGl0IHRvIG1l
+YXN1cmUgdGltaW5nIGF0dGFja3M/DQoNCklmIHRydWUsIGFuZCBpdCBhcHBsaWVzIHRvIHRoZSBr
+ZXJuZWwgKGVnIGluIGEgVk0pIHRoZW4gdGhpcyBpcyBwcm9iYWJseQ0KYWxsIHBvaW50bGVzcyEN
+Cg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2Fk
+LCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5v
+OiAxMzk3Mzg2IChXYWxlcykNCg==
 
-Given that this basically breaks a basic functionality of many
-Microsoft mice, I went ahead and applied this series to
-for-5.1/upstream-fixes
-
-Cheers,
-Benjamin
-
->  drivers/hid/hid-core.c  |  7 +++-
->  drivers/hid/hid-input.c | 81 +++++++++++++++++++++++++----------------
->  include/linux/hid.h     |  2 +-
->  3 files changed, 56 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> index 76464aabd20c..92387fc0bf18 100644
-> --- a/drivers/hid/hid-core.c
-> +++ b/drivers/hid/hid-core.c
-> @@ -1637,7 +1637,7 @@ static struct hid_report *hid_get_report(struct hid_report_enum *report_enum,
->   * Implement a generic .request() callback, using .raw_request()
->   * DO NOT USE in hid drivers directly, but through hid_hw_request instead.
->   */
-> -void __hid_request(struct hid_device *hid, struct hid_report *report,
-> +int __hid_request(struct hid_device *hid, struct hid_report *report,
->                 int reqtype)
->  {
->         char *buf;
-> @@ -1646,7 +1646,7 @@ void __hid_request(struct hid_device *hid, struct hid_report *report,
->
->         buf = hid_alloc_report_buf(report, GFP_KERNEL);
->         if (!buf)
-> -               return;
-> +               return -ENOMEM;
->
->         len = hid_report_len(report);
->
-> @@ -1663,8 +1663,11 @@ void __hid_request(struct hid_device *hid, struct hid_report *report,
->         if (reqtype == HID_REQ_GET_REPORT)
->                 hid_input_report(hid, report->type, buf, ret, 0);
->
-> +       ret = 0;
-> +
->  out:
->         kfree(buf);
-> +       return ret;
->  }
->  EXPORT_SYMBOL_GPL(__hid_request);
->
-> diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-> index 1fce0076e7dc..fadf76f0a386 100644
-> --- a/drivers/hid/hid-input.c
-> +++ b/drivers/hid/hid-input.c
-> @@ -1542,52 +1542,71 @@ static void hidinput_close(struct input_dev *dev)
->         hid_hw_close(hid);
->  }
->
-> -static void hidinput_change_resolution_multipliers(struct hid_device *hid)
-> +static bool __hidinput_change_resolution_multipliers(struct hid_device *hid,
-> +               struct hid_report *report, bool use_logical_max)
->  {
-> -       struct hid_report_enum *rep_enum;
-> -       struct hid_report *rep;
->         struct hid_usage *usage;
-> +       bool update_needed = false;
->         int i, j;
->
-> -       rep_enum = &hid->report_enum[HID_FEATURE_REPORT];
-> -       list_for_each_entry(rep, &rep_enum->report_list, list) {
-> -               bool update_needed = false;
-> +       if (report->maxfield == 0)
-> +               return false;
->
-> -               if (rep->maxfield == 0)
-> -                       continue;
-> +       /*
-> +        * If we have more than one feature within this report we
-> +        * need to fill in the bits from the others before we can
-> +        * overwrite the ones for the Resolution Multiplier.
-> +        */
-> +       if (report->maxfield > 1) {
-> +               hid_hw_request(hid, report, HID_REQ_GET_REPORT);
-> +               hid_hw_wait(hid);
-> +       }
->
-> -               /*
-> -                * If we have more than one feature within this report we
-> -                * need to fill in the bits from the others before we can
-> -                * overwrite the ones for the Resolution Multiplier.
-> +       for (i = 0; i < report->maxfield; i++) {
-> +               __s32 value = use_logical_max ?
-> +                             report->field[i]->logical_maximum :
-> +                             report->field[i]->logical_minimum;
-> +
-> +               /* There is no good reason for a Resolution
-> +                * Multiplier to have a count other than 1.
-> +                * Ignore that case.
->                  */
-> -               if (rep->maxfield > 1) {
-> -                       hid_hw_request(hid, rep, HID_REQ_GET_REPORT);
-> -                       hid_hw_wait(hid);
-> -               }
-> +               if (report->field[i]->report_count != 1)
-> +                       continue;
->
-> -               for (i = 0; i < rep->maxfield; i++) {
-> -                       __s32 logical_max = rep->field[i]->logical_maximum;
-> +               for (j = 0; j < report->field[i]->maxusage; j++) {
-> +                       usage = &report->field[i]->usage[j];
->
-> -                       /* There is no good reason for a Resolution
-> -                        * Multiplier to have a count other than 1.
-> -                        * Ignore that case.
-> -                        */
-> -                       if (rep->field[i]->report_count != 1)
-> +                       if (usage->hid != HID_GD_RESOLUTION_MULTIPLIER)
->                                 continue;
->
-> -                       for (j = 0; j < rep->field[i]->maxusage; j++) {
-> -                               usage = &rep->field[i]->usage[j];
-> +                       *report->field[i]->value = value;
-> +                       update_needed = true;
-> +               }
-> +       }
-> +
-> +       return update_needed;
-> +}
->
-> -                               if (usage->hid != HID_GD_RESOLUTION_MULTIPLIER)
-> -                                       continue;
-> +static void hidinput_change_resolution_multipliers(struct hid_device *hid)
-> +{
-> +       struct hid_report_enum *rep_enum;
-> +       struct hid_report *rep;
-> +       int ret;
->
-> -                               *rep->field[i]->value = logical_max;
-> -                               update_needed = true;
-> +       rep_enum = &hid->report_enum[HID_FEATURE_REPORT];
-> +       list_for_each_entry(rep, &rep_enum->report_list, list) {
-> +               bool update_needed = __hidinput_change_resolution_multipliers(hid,
-> +                                                                    rep, true);
-> +
-> +               if (update_needed) {
-> +                       ret = __hid_request(hid, rep, HID_REQ_SET_REPORT);
-> +                       if (ret) {
-> +                               __hidinput_change_resolution_multipliers(hid,
-> +                                                                   rep, false);
-> +                               return;
->                         }
->                 }
-> -               if (update_needed)
-> -                       hid_hw_request(hid, rep, HID_REQ_SET_REPORT);
->         }
->
->         /* refresh our structs */
-> diff --git a/include/linux/hid.h b/include/linux/hid.h
-> index ac0c70b4ce10..5a24ebfb5b47 100644
-> --- a/include/linux/hid.h
-> +++ b/include/linux/hid.h
-> @@ -894,7 +894,7 @@ struct hid_field *hidinput_get_led_field(struct hid_device *hid);
->  unsigned int hidinput_count_leds(struct hid_device *hid);
->  __s32 hidinput_calc_abs_res(const struct hid_field *field, __u16 code);
->  void hid_output_report(struct hid_report *report, __u8 *data);
-> -void __hid_request(struct hid_device *hid, struct hid_report *rep, int reqtype);
-> +int __hid_request(struct hid_device *hid, struct hid_report *rep, int reqtype);
->  u8 *hid_alloc_report_buf(struct hid_report *report, gfp_t flags);
->  struct hid_device *hid_allocate_device(void);
->  struct hid_report *hid_register_report(struct hid_device *device,
-> --
-> 2.19.2
->
