@@ -4,47 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688A5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8870C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C7F2190A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8198D21909
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126126;
-	bh=R580lzfzdQEJtXUu5mhGG4c1inGPATvBJyNZdGLnAZc=;
+	s=default; t=1556126130;
+	bh=VrjvUy0eGpI8rf5exHklPhueAayyHnH1mZW3CVDziQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AdiJ69wkI23CNFOHAfEH87FpVem3awQjedGjrV6K+CTHYSw633pEZu5ie7eLhiaVB
-	 bdpvYyh/0H31D8vxjTnMKtegxh7lTUjptuF7gdmMzb7/iySiLvzC6AMR7r6u5t6w1h
-	 VSJ20bLCRtV1jrSNsdD7udiCQXHNNPmPi2fiS9us=
+	b=p1el3/Oybty+5WZVT4lv/siIdO/CnUUrdx0YVJvXfZfa7S0p2gaK0fwQVfB7sMC6U
+	 BZgrYRAF4vfn2MmYHLiRhDGzMBt2B5fh5JPSjQAVNCWBw4B19NvGoyJa2OQBYBiBiT
+	 i4V7r5XIOymu96dWcY4/2uJY9g0zq4ss7wmYz8Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388211AbfDXRPU (ORCPT
+        id S2388245AbfDXRP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:15:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39618 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388198AbfDXRPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:15:14 -0400
+        id S2388223AbfDXRPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:15:22 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79B2F218B0;
-        Wed, 24 Apr 2019 17:15:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83A88206BA;
+        Wed, 24 Apr 2019 17:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126114;
-        bh=R580lzfzdQEJtXUu5mhGG4c1inGPATvBJyNZdGLnAZc=;
+        s=default; t=1556126122;
+        bh=VrjvUy0eGpI8rf5exHklPhueAayyHnH1mZW3CVDziQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KbE1AK6allPJ/EcvDV6d6/ff/5I2ct4tBl0OgBbsiMk6FZ1Ecy0xjPCn9vyjP9YDM
-         9MdSZlMTESPxGpOopwX/gWq7m6u/wlbwQ0tl6VN1X9touRQvvlHigrVcE1gMExpPr4
-         v03zM68S6CS/cjVgfrpAFvSZ06FRYWo0KamiUcuc=
+        b=NuxmEnZ58c44Cvz/U5DZVO0WSvGi73qG6gujp0axtYqKK7aPMg/BNUTkZtE5PPnPZ
+         Yw1nFuZX8xy8py5udUQIjZIiQIdfNV3zidYZINdzaXyiTU4iHRFYNAYrwn8qIUUBTY
+         jpOKhueDJNqudKpZQDNqXJZK5EOH62MyJm+S8Uv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 3.18 099/104] staging: comedi: ni_usb6501: Fix possible double-free of ->usb_rx_buf
-Date:   Wed, 24 Apr 2019 19:09:56 +0200
-Message-Id: <20190424170910.400338006@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 3.18 102/104] kprobes: Fix error check when reusing optimized probes
+Date:   Wed, 24 Apr 2019 19:09:59 +0200
+Message-Id: <20190424170910.677981256@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -57,44 +65,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit af4b54a2e5ba18259ff9aac445bf546dd60d037e upstream.
+commit 5f843ed415581cfad4ef8fefe31c138a8346ca8a upstream.
 
-`ni6501_alloc_usb_buffers()` is called from `ni6501_auto_attach()` to
-allocate RX and TX buffers for USB transfers.  It allocates
-`devpriv->usb_rx_buf` followed by `devpriv->usb_tx_buf`.  If the
-allocation of `devpriv->usb_tx_buf` fails, it frees
-`devpriv->usb_rx_buf`, leaving the pointer set dangling, and returns an
-error.  Later, `ni6501_detach()` will be called from the core comedi
-module code to clean up.  `ni6501_detach()` also frees both
-`devpriv->usb_rx_buf` and `devpriv->usb_tx_buf`, but
-`devpriv->usb_rx_buf` may have already beed freed, leading to a
-double-free error.  Fix it bu removing the call to
-`kfree(devpriv->usb_rx_buf)` from `ni6501_alloc_usb_buffers()`, relying
-on `ni6501_detach()` to free the memory.
+The following commit introduced a bug in one of our error paths:
 
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: stable <stable@vger.kernel.org>
+  819319fc9346 ("kprobes: Return error if we fail to reuse kprobe instead of BUG_ON()")
+
+it missed to handle the return value of kprobe_optready() as
+error-value. In reality, the kprobe_optready() returns a bool
+result, so "true" case must be passed instead of 0.
+
+This causes some errors on kprobe boot-time selftests on ARM:
+
+ [   ] Beginning kprobe tests...
+ [   ] Probe ARM code
+ [   ]     kprobe
+ [   ]     kretprobe
+ [   ] ARM instruction simulation
+ [   ]     Check decoding tables
+ [   ]     Run test cases
+ [   ] FAIL: test_case_handler not run
+ [   ] FAIL: Test andge	r10, r11, r14, asr r7
+ [   ] FAIL: Scenario 11
+ ...
+ [   ] FAIL: Scenario 7
+ [   ] Total instruction simulation tests=1631, pass=1433 fail=198
+ [   ] kprobe tests failed
+
+This can happen if an optimized probe is unregistered and next
+kprobe is registered on same address until the previous probe
+is not reclaimed.
+
+If this happens, a hidden aggregated probe may be kept in memory,
+and no new kprobe can probe same address. Also, in that case
+register_kprobe() will return "1" instead of minus error value,
+which can mislead caller logic.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org # v5.0+
+Fixes: 819319fc9346 ("kprobes: Return error if we fail to reuse kprobe instead of BUG_ON()")
+Link: http://lkml.kernel.org/r/155530808559.32517.539898325433642204.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/ni_usb6501.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/kprobes.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/comedi/drivers/ni_usb6501.c
-+++ b/drivers/staging/comedi/drivers/ni_usb6501.c
-@@ -478,10 +478,8 @@ static int ni6501_alloc_usb_buffers(stru
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -668,7 +668,6 @@ static void unoptimize_kprobe(struct kpr
+ static int reuse_unused_kprobe(struct kprobe *ap)
+ {
+ 	struct optimized_kprobe *op;
+-	int ret;
  
- 	size = le16_to_cpu(devpriv->ep_tx->wMaxPacketSize);
- 	devpriv->usb_tx_buf = kzalloc(size, GFP_KERNEL);
--	if (!devpriv->usb_tx_buf) {
--		kfree(devpriv->usb_rx_buf);
-+	if (!devpriv->usb_tx_buf)
- 		return -ENOMEM;
--	}
+ 	BUG_ON(!kprobe_unused(ap));
+ 	/*
+@@ -682,9 +681,8 @@ static int reuse_unused_kprobe(struct kp
+ 	/* Enable the probe again */
+ 	ap->flags &= ~KPROBE_FLAG_DISABLED;
+ 	/* Optimize it again (remove from op->list) */
+-	ret = kprobe_optready(ap);
+-	if (ret)
+-		return ret;
++	if (!kprobe_optready(ap))
++		return -EINVAL;
  
+ 	optimize_kprobe(ap);
  	return 0;
- }
 
 
