@@ -2,183 +2,332 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCD0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71512C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935F0218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:05:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="AIeAB/VQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2949520878
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556118408;
+	bh=w3jmq8bvvs8ed5hMssuZjL9W/Th8DjCm7i+LW8Q5ONI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=yKKDSwLMHKSp8h3F10u67kRbZCSsghPY8WIW39nrH1Z117qcYfpQq2OWVxh1LKmwJ
+	 JAD8z/nsK0XfnT7JJcPuGdZpXOBCu3G+ULieBuaiOaaKz0TUbAVQ0S3a50Esotgyio
+	 dBbuOWOLg/mab85M7c2GIGNNDsnYGN7fPx3W/3+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbfDXPFp (ORCPT
+        id S1730813AbfDXPGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:05:45 -0400
-Received: from mail.efficios.com ([167.114.142.138]:54858 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbfDXPFp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:05:45 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 857B41D9C92;
-        Wed, 24 Apr 2019 11:05:43 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id XWz1UxIaRdFA; Wed, 24 Apr 2019 11:05:42 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id D256B1D9C8D;
-        Wed, 24 Apr 2019 11:05:42 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D256B1D9C8D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556118342;
-        bh=vRHyAKZsUbc+CKDKMbdkJIHSA9WpHMut7TkZM7B2J1U=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=AIeAB/VQ+cDiiSeNVGuQIHcyccnPbOtg58lzAJPcKjA3Ro/JCB5GY9HGrlIB/GIkW
-         rB0pbSJ4LHtcigKyzohnsN7bpIHCDN5lZzpIvd/suHLLIMfV0yDwxMS7yf8iONCWjo
-         sjW0rAeXjTfZC5hEOSfNC8YdgybY9yEXL8UvbYACH6iav/qnm+nAJ6dJYdVa8LvwDB
-         9SnWYJBQpTcqGNyhj0XCTyEbudmvuR51nAwGZBqIowIQo0COkihiYDhUa+ezMnkQqE
-         P1ugviJhF2cqAHFz7evx95hVMOn4bNb2i/35nr8US73xuFHRRLS0e6ONAsOa6uCt+Z
-         buSe+AHardvig==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 241tTS0s2E05; Wed, 24 Apr 2019 11:05:42 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id B019E1D9C80;
-        Wed, 24 Apr 2019 11:05:42 -0400 (EDT)
-Date:   Wed, 24 Apr 2019 11:05:42 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Carlos O'Donell <codonell@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        heiko carstens <heiko.carstens@de.ibm.com>,
-        gor <gor@linux.ibm.com>, schwidefsky <schwidefsky@de.ibm.com>,
-        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        carlos <carlos@redhat.com>, Florian Weimer <fweimer@redhat.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <1103046939.521.1556118342613.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1031613720.1496.1555613900993.JavaMail.zimbra@efficios.com>
-References: <20190212194253.1951-1-mathieu.desnoyers@efficios.com> <20190212194253.1951-2-mathieu.desnoyers@efficios.com> <5166fbe9-cfe0-8554-abc7-4fc844cf2765@redhat.com> <1965431879.7576.1553529272844.JavaMail.zimbra@efficios.com> <602718e0-7375-deb7-b6e6-2d17022173c5@redhat.com> <20190404214151.6ogrm34dok52az4h@pburton-laptop> <1031613720.1496.1555613900993.JavaMail.zimbra@efficios.com>
-Subject: Re: [PATCH 1/4] glibc: Perform rseq(2) registration at C startup
- and thread creation (v7)
+        Wed, 24 Apr 2019 11:06:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727444AbfDXPGq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 11:06:46 -0400
+Received: from [192.168.0.101] (unknown [58.212.133.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B8572084F;
+        Wed, 24 Apr 2019 15:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556118404;
+        bh=w3jmq8bvvs8ed5hMssuZjL9W/Th8DjCm7i+LW8Q5ONI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dizPYcLYkqRMqel+GAwYhykd+yTEL3pD+OZTzEJVjSTfaZhi7eHtY+uXRP37VFGfi
+         GYpV/hisnoR1RBpH87MNwqMQ6ZQkm57SA0FA/WpKsGvA8oxo0ywBoW21QAdQQLntSs
+         bKfFJXe3+6nfY8yGVoHJbjR/89NrrUxpFiLdtgkw=
+Subject: Re: [PATCH v2 2/2] f2fs: introduce DATA_GENERIC_ENHANCE
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+References: <20190415072632.2158-1-yuchao0@huawei.com>
+ <20190415072632.2158-2-yuchao0@huawei.com>
+ <20190424093613.GA45953@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <2a519411-b9bb-f153-c8b9-8eaca1f66837@kernel.org>
+Date:   Wed, 24 Apr 2019 23:06:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20190424093613.GA45953@jaegeuk-macbookpro.roam.corp.google.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v7)
-Thread-Index: 7m11ofhkxzIm+Ccm0xLpdzhlit83GM7rDAkAgAAOc4Dxk0rRpnhaLnMD
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 18, 2019, at 2:58 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+On 2019-4-24 17:36, Jaegeuk Kim wrote:
+> On 04/15, Chao Yu wrote:
+>> Previously, f2fs_is_valid_blkaddr(, blkaddr, DATA_GENERIC) will check
+>> whether @blkaddr locates in main area or not.
+>>
+>> That check is weak, since the block address in range of main area can
+>> point to the address which is not valid in segment info table, and we
+>> can not detect such condition, we may suffer worse corruption as system
+>> continues running.
+>>
+>> So this patch introduce DATA_GENERIC_ENHANCE to enhance the sanity check
+>> which trigger SIT bitmap check rather than only range check.
+>>
+>> This patch did below changes as wel:
+>> - set SBI_NEED_FSCK in f2fs_is_valid_blkaddr().
+>> - get rid of is_valid_data_blkaddr() to avoid panic if blkaddr is invalid.
+>> - introduce verify_fio_blkaddr() to wrap fio {new,old}_blkaddr validation check.
+>> - spread blkaddr check in:
+>>  * f2fs_get_node_info()
+>>  * __read_out_blkaddrs()
+>>  * f2fs_submit_page_read()
+>>  * ra_data_block()
+>>  * do_recover_data()
+>>
+>> This patch can fix bug reported from bugzilla below:
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=203215
+>> https://bugzilla.kernel.org/show_bug.cgi?id=203223
+>> https://bugzilla.kernel.org/show_bug.cgi?id=203231
+>> https://bugzilla.kernel.org/show_bug.cgi?id=203235
+>> https://bugzilla.kernel.org/show_bug.cgi?id=203241
+> 
+> Hi Chao,
+> 
+> This introduces failures on xfstests/generic/446, and I'm testing the below
+> patch on top of this. Could you check this patch, so that I could combine
+> both of them?
+> 
+> From 8c1808c1743ad75d1ad8d1dc5a53910edaf7afd7 Mon Sep 17 00:00:00 2001
+> From: Jaegeuk Kim <jaegeuk@kernel.org>
+> Date: Wed, 24 Apr 2019 00:21:07 +0100
+> Subject: [PATCH] f2fs: consider data race on read and truncation on
+>  DATA_GENERIC_ENHANCE
+> 
+> DATA_GENERIC_ENHANCE enhanced to validate block addresses on read/write paths.
+> But, xfstest/generic/446 compalins some generated kernel messages saying invalid
+> bitmap was detected when reading a block. The reaons is, when we get the
+> block addresses from extent_cache, there is no lock to synchronize it from
+> truncating the blocks in parallel.
+> 
+> This patch tries to return EFAULT without warning and setting SBI_NEED_FSCK
+> in this case.
+> 
+> Fixes: ("f2fs: introduce DATA_GENERIC_ENHANCE")
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+>  fs/f2fs/checkpoint.c | 35 ++++++++++++++++++-----------------
+>  fs/f2fs/data.c       | 25 ++++++++++++++++++-------
+>  fs/f2fs/f2fs.h       |  6 ++++++
+>  fs/f2fs/gc.c         |  9 ++++++---
+>  4 files changed, 48 insertions(+), 27 deletions(-)
+> 
+> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> index e37fbbf843a5..805a33088e82 100644
+> --- a/fs/f2fs/checkpoint.c
+> +++ b/fs/f2fs/checkpoint.c
+> @@ -130,26 +130,28 @@ struct page *f2fs_get_tmp_page(struct f2fs_sb_info *sbi, pgoff_t index)
+>  	return __get_meta_page(sbi, index, false);
+>  }
+>  
+> -static bool __is_bitmap_valid(struct f2fs_sb_info *sbi, block_t blkaddr)
+> +static bool __is_bitmap_valid(struct f2fs_sb_info *sbi, block_t blkaddr,
+> +							int type)
+>  {
+>  	struct seg_entry *se;
+>  	unsigned int segno, offset;
+>  	bool exist;
+>  
+> +	if (type != DATA_GENERIC_ENHANCE && type != DATA_GENERIC_ENHANCE_READ)
+> +		return true;
+> +
+>  	segno = GET_SEGNO(sbi, blkaddr);
+>  	offset = GET_BLKOFF_FROM_SEG0(sbi, blkaddr);
+>  	se = get_seg_entry(sbi, segno);
+>  
+>  	exist = f2fs_test_bit(offset, se->cur_valid_map);
+> -
+> -	if (!exist) {
+> +	if (!exist && type == DATA_GENERIC_ENHANCE) {
+>  		f2fs_msg(sbi->sb, KERN_ERR, "Inconsistent error "
+>  			"blkaddr:%u, sit bitmap:%d", blkaddr, exist);
+>  		set_sbi_flag(sbi, SBI_NEED_FSCK);
+>  		WARN_ON(1);
+> -		return false;
+>  	}
+> -	return true;
+> +	return exist;
+>  }
+>  
+>  bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+> @@ -173,23 +175,22 @@ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+>  			return false;
+>  		break;
+>  	case META_POR:
+> +		if (unlikely(blkaddr >= MAX_BLKADDR(sbi) ||
+> +			blkaddr < MAIN_BLKADDR(sbi)))
+> +			return false;
+> +		break;
+>  	case DATA_GENERIC:
+>  	case DATA_GENERIC_ENHANCE:
+> +	case DATA_GENERIC_ENHANCE_READ:
+>  		if (unlikely(blkaddr >= MAX_BLKADDR(sbi) ||
+> -			blkaddr < MAIN_BLKADDR(sbi))) {
+> -			if (type == DATA_GENERIC ||
+> -				type == DATA_GENERIC_ENHANCE) {
+> -				f2fs_msg(sbi->sb, KERN_WARNING,
+> -					"access invalid blkaddr:%u", blkaddr);
+> -				set_sbi_flag(sbi, SBI_NEED_FSCK);
+> -				WARN_ON(1);
+> -			}
+> +				blkaddr < MAIN_BLKADDR(sbi))) {
+> +			f2fs_msg(sbi->sb, KERN_WARNING,
+> +				"access invalid blkaddr:%u", blkaddr);
+> +			set_sbi_flag(sbi, SBI_NEED_FSCK);
+> +			WARN_ON(1);
+>  			return false;
+>  		} else {
+> -			if (type == DATA_GENERIC_ENHANCE) {
+> -				if (!__is_bitmap_valid(sbi, blkaddr))
+> -					return false;
+> -			}
+> +			return __is_bitmap_valid(sbi, blkaddr, type);
+>  		}
+>  		break;
+>  	case META_GENERIC:
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 34d248ac9e0f..d32a82f25f5a 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -564,9 +564,6 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
+>  	struct bio_post_read_ctx *ctx;
+>  	unsigned int post_read_steps = 0;
+>  
+> -	if (!f2fs_is_valid_blkaddr(sbi, blkaddr, DATA_GENERIC_ENHANCE))
+> -		return ERR_PTR(-EFAULT);
+> -
+>  	bio = f2fs_bio_alloc(sbi, min_t(int, nr_pages, BIO_MAX_PAGES), false);
+>  	if (!bio)
+>  		return ERR_PTR(-ENOMEM);
+> @@ -597,9 +594,6 @@ static int f2fs_submit_page_read(struct inode *inode, struct page *page,
+>  	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>  	struct bio *bio;
+>  
+> -	if (!f2fs_is_valid_blkaddr(sbi, blkaddr, DATA_GENERIC_ENHANCE))
+> -		return -EFAULT;
+> -
+>  	bio = f2fs_grab_read_bio(inode, blkaddr, 1, 0);
+>  	if (IS_ERR(bio))
+>  		return PTR_ERR(bio);
+> @@ -741,6 +735,11 @@ struct page *f2fs_get_read_data_page(struct inode *inode, pgoff_t index,
+>  
+>  	if (f2fs_lookup_extent_cache(inode, index, &ei)) {
+>  		dn.data_blkaddr = ei.blk + index - ei.fofs;
+> +		if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode), dn.data_blkaddr,
+> +						DATA_GENERIC_ENHANCE_READ)) {
 
-> ----- On Apr 4, 2019, at 5:41 PM, Paul Burton paul.burton@mips.com wrote:
-> [...]
-> 
->>> 2a. A uncommon TRAP hopefully with some immediate data encoded (maybe uncommon)
->> 
->> Our break instruction has a 19b immediate in nanoMIPS (20b for microMIPS
->> & classic MIPS) so that could be something like:
->> 
->>  break 0x7273       # ASCII 'rs'
->> 
-> 
-> Hi Paul,
-> 
-> I like this uncommon break instruction as signature choice.
-> 
-> However, if I try to compile assembler with a break 0x7273 instruction
-> with mips64 and mips32 toolchains (gcc version 8.2.0 (Ubuntu
-> 8.2.0-1ubuntu2~18.04))
-> I get:
-> 
-> /tmp/ccVh9F7T.s: Assembler messages:
-> /tmp/ccVh9F7T.s:24: Error: operand 1 out of range `break 0x7273'
-> 
-> It works up to the value 0x3FF, which seems to use the top 10
-> code bits:
-> 
->   a:	03ff 0007 	break	0x3ff
-> 
-> Would a "break 0x350" be a good choice as well ?
-> 
-> Any idea why 0x7273 is not accepted by my assembler ?
-> 
-> I also tried crafting the assembler with values between 0x3FF and 0x7273
-> in the 20 code bits. It seems fine from an objdump perspective:
-> 
-> ".long 0x03FFFC7\n\t"
-> 
-> generates:
-> 
->  10:	003f ffc7 	break	0x3f,0x3ff
-> 
-> What I don't understand is why the instruction generated by my
-> toolchain ends with the last 6 bits "000111", whereas the mips32
-> instruction set specifies break as ending with "001101" [1].
-> What am I missing ?
-> 
-> Also, the nanomips break code [2] has a completely different
-> instruction layout. Should we use a different signature when
-> compiling for nanomips ? What #ifdef should we use ? Do I
-> need a special toolchain to generate nanomips binaries ?
+If I'm not missing anything, we just need use DATA_GENERIC_ENHANCE_READ to cover
+below two paths:
+- gc_data_segment -> f2fs_get_read_data_page
+- move_data_page -> f2fs_get_lock_data_page -> f2fs_get_read_data_page
 
-Hi Paul, I'm still waiting for feedback on the MIPS front.
+Other paths which calls f2fs_get_read_data_page is safe to verify blkaddr with
+DATA_GENERIC_ENHANCE?
 
-Meanwhile, I plan to use #define RSEQ_SIG 0x0350000d which maps to:
+> +			err = -EFAULT;
+> +			goto put_err;
+> +		}
+>  		goto got_it;
+>  	}
+>  
+> @@ -754,6 +753,13 @@ struct page *f2fs_get_read_data_page(struct inode *inode, pgoff_t index,
+>  		err = -ENOENT;
+>  		goto put_err;
+>  	}
+> +	if (dn.data_blkaddr != NEW_ADDR &&
+> +			!f2fs_is_valid_blkaddr(F2FS_I_SB(inode),
+> +						dn.data_blkaddr,
+> +						DATA_GENERIC_ENHANCE)) {
+> +		err = -EFAULT;
+> +		goto put_err;
+> +	}
+>  got_it:
+>  	if (PageUptodate(page)) {
+>  		unlock_page(page);
+> @@ -1566,7 +1572,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
+>  		}
+>  
+>  		if (!f2fs_is_valid_blkaddr(F2FS_I_SB(inode), block_nr,
+> -							DATA_GENERIC_ENHANCE)) {
+> +						DATA_GENERIC_ENHANCE_READ)) {
+>  			ret = -EFAULT;
+>  			goto out;
+>  		}
+> @@ -2528,6 +2534,11 @@ static int f2fs_write_begin(struct file *file, struct address_space *mapping,
+>  		zero_user_segment(page, 0, PAGE_SIZE);
+>  		SetPageUptodate(page);
+>  	} else {
+> +		if (!f2fs_is_valid_blkaddr(sbi, blkaddr,
+> +				DATA_GENERIC_ENHANCE_READ)) {
 
-   0350000d 	break	0x350
-
-and use RSEQ_SIG in assembly with:
-
-   ".word " __rseq_str(RSEQ_SIG) "\n\t"
-
-on big and little endian MIPS, for MIPS32 and MIPS64, based on
-code generated with gcc version 8.2.0 (Ubuntu 8.2.0-1ubuntu2~18.04).
-
-Let me know if it needs to be tweaked.
+Need DATA_GENERIC_ENHANCE because write() is exclusive with truncate() due to
+inode_lock()?
 
 Thanks,
 
-Mathieu
-
-
+> +			err = -EFAULT;
+> +			goto fail;
+> +		}
+>  		err = f2fs_submit_page_read(inode, page, blkaddr);
+>  		if (err)
+>  			goto fail;
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index f5ffc09705eb..533fafca68f4 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -212,6 +212,12 @@ enum {
+>  	META_POR,
+>  	DATA_GENERIC,		/* check range only */
+>  	DATA_GENERIC_ENHANCE,	/* strong check on range and segment bitmap */
+> +	DATA_GENERIC_ENHANCE_READ,	/*
+> +					 * strong check on range and segment
+> +					 * bitmap but no warning due to race
+> +					 * condition of read on truncated area
+> +					 * by extent_cache
+> +					 */
+>  	META_GENERIC,
+>  };
+>  
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index 3a097949b5d4..963fb4571fd9 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -656,6 +656,11 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
+>  
+>  	if (f2fs_lookup_extent_cache(inode, index, &ei)) {
+>  		dn.data_blkaddr = ei.blk + index - ei.fofs;
+> +		if (unlikely(!f2fs_is_valid_blkaddr(sbi, dn.data_blkaddr,
+> +						DATA_GENERIC_ENHANCE_READ))) {
+> +			err = -EFAULT;
+> +			goto put_page;
+> +		}
+>  		goto got_it;
+>  	}
+>  
+> @@ -669,14 +674,12 @@ static int ra_data_block(struct inode *inode, pgoff_t index)
+>  		err = -ENOENT;
+>  		goto put_page;
+>  	}
+> -
+> -got_it:
+>  	if (unlikely(!f2fs_is_valid_blkaddr(sbi, dn.data_blkaddr,
+>  						DATA_GENERIC_ENHANCE))) {
+>  		err = -EFAULT;
+>  		goto put_page;
+>  	}
+> -
+> +got_it:
+>  	/* read page */
+>  	fio.page = page;
+>  	fio.new_blkaddr = fio.old_blkaddr = dn.data_blkaddr;
 > 
-> Thanks,
-> 
-> Mathieu
-> 
-> [1]
-> http://hades.mech.northwestern.edu/images/1/16/MIPS32_Architecture_Volume_II-A_Instruction_Set.pdf
-> [2]
-> https://s3-eu-west-1.amazonaws.com/downloads-mips/I7200/I7200+product+launch/MIPS_nanomips32_ISA_TRM_01_01_MD01247.pdf
-> 
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
