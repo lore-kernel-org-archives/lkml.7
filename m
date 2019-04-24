@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DBDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E87EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE16221903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D46CD218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127485;
-	bh=bcdpiQDj9nJt9Y2SPltlmtpFRK7R02Rq07zDAnSLf54=;
+	s=default; t=1556127488;
+	bh=p+jBVZs35rk9TKVCeijqSwaj9ywYFKMuGFHdlkuTxNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IoC9pzltB/p5fFnpaZ6SQkfIp2/eQGbax7rLAOhVdPYKsuCvedKcJSaxlxfNRHF+v
-	 EGgVC1B4FZtzpziCUhpNXV9VmpcOYD+3gvaUcblizxjVGZ/YWyvyjq6A+5iVpLzv4K
-	 PFCeFwa/lJPv7AsQtwBtKsvkd1CrDCqrflwmz8Vs=
+	b=N4qlxp/dyBs88uiJRACOXeFZhPp/iHmLLYNvqBa75mTXItk64O8ysbxFFsxiv2zky
+	 ann3RjGL9dhh0wYEWLfUl0EzSQqhh79uvdonN9nLxzOFXhE+idaAp0fkgBCepiVv6J
+	 jiVboiwCIVGmXxaGGeuO6qIsbvpGIwMUQFCpfD0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392338AbfDXRiF (ORCPT
+        id S2392353AbfDXRiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37180 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:38:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392316AbfDXRiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:38:03 -0400
+        id S2392336AbfDXRiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:38:05 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7117F20675;
-        Wed, 24 Apr 2019 17:38:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D6AB218B0;
+        Wed, 24 Apr 2019 17:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127481;
-        bh=bcdpiQDj9nJt9Y2SPltlmtpFRK7R02Rq07zDAnSLf54=;
+        s=default; t=1556127484;
+        bh=p+jBVZs35rk9TKVCeijqSwaj9ywYFKMuGFHdlkuTxNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uCY+VqoMvnALQHmgo+dy3uvdVqAxf1Z7otc6ILVfYqsRTg0tJjNoE8oL2drhDezVW
-         mhjhevUyIn2jd8v7KqJHqGFkr8Nz6K/iBShODI48Dc1dT2n/YaEYYCvDXVBMTBMxCr
-         223RdCJEsgTaTDp45QFc0honhmtI9Y7j+ZlHbhdI=
+        b=rrkFkycGvXoxBVuYPn8sb/PhwtReOqWF1rbhbb7IbiOezLmpXAleIWFPpuo01sGlQ
+         asIzJHyeXWCnqIyBdfQFt/+gwFe5WtIWjavNFEYh8Tne6ZzYgshHmSWjKnHG5FKGxA
+         hzmneOdX6FoPbkDhYSPjItckD3qcy1yiaiEZc5y8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Auld <pauld@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Ben Segall <bsegall@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 107/115] sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup
-Date:   Wed, 24 Apr 2019 19:10:43 +0200
-Message-Id: <20190424170930.943233129@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Mantas=20Mikul=C4=97nas?= <grawity@gmail.com>,
+        Tadeusz Struk <tadeusz.struk@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <james.morris@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 108/115] tpm: fix an invalid condition in tpm_common_poll
+Date:   Wed, 24 Apr 2019 19:10:44 +0200
+Message-Id: <20190424170931.001860087@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -64,99 +63,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e8e19226398db8265a8e675fcc0118b9e80c9e8 ]
+[ Upstream commit 7110629263469b4664d00b38ef80a656eddf3637 ]
 
-With extremely short cfs_period_us setting on a parent task group with a large
-number of children the for loop in sched_cfs_period_timer() can run until the
-watchdog fires. There is no guarantee that the call to hrtimer_forward_now()
-will ever return 0.  The large number of children can make
-do_sched_cfs_period_timer() take longer than the period.
+The poll condition should only check response_length,
+because reads should only be issued if there is data to read.
+The response_read flag only prevents double writes.
+The problem was that the write set the response_read to false,
+enqued a tpm job, and returned. Then application called poll
+which checked the response_read flag and returned EPOLLIN.
+Then the application called read, but got nothing.
+After all that the async_work kicked in.
+Added also mutex_lock around the poll check to prevent
+other possible race conditions.
 
- NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
- RIP: 0010:tg_nop+0x0/0x10
-  <IRQ>
-  walk_tg_tree_from+0x29/0xb0
-  unthrottle_cfs_rq+0xe0/0x1a0
-  distribute_cfs_runtime+0xd3/0xf0
-  sched_cfs_period_timer+0xcb/0x160
-  ? sched_cfs_slack_timer+0xd0/0xd0
-  __hrtimer_run_queues+0xfb/0x270
-  hrtimer_interrupt+0x122/0x270
-  smp_apic_timer_interrupt+0x6a/0x140
-  apic_timer_interrupt+0xf/0x20
-  </IRQ>
-
-To prevent this we add protection to the loop that detects when the loop has run
-too many times and scales the period and quota up, proportionally, so that the timer
-can complete before then next period expires.  This preserves the relative runtime
-quota while preventing the hard lockup.
-
-A warning is issued reporting this state and the new values.
-
-Signed-off-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190319130005.25492-1-pauld@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 9488585b21bef0df12 ("tpm: add support for partial reads")
+Reported-by: Mantas Mikulėnas <grawity@gmail.com>
+Tested-by: Mantas Mikulėnas <grawity@gmail.com>
+Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: James Morris <james.morris@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/char/tpm/tpm-dev-common.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 5e61a1a99e38..eeb605656d59 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4859,12 +4859,15 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
+diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
+index 5eecad233ea1..744b0237300a 100644
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -203,12 +203,19 @@ __poll_t tpm_common_poll(struct file *file, poll_table *wait)
+ 	__poll_t mask = 0;
+ 
+ 	poll_wait(file, &priv->async_wait, wait);
++	mutex_lock(&priv->buffer_mutex);
+ 
+-	if (!priv->response_read || priv->response_length)
++	/*
++	 * The response_length indicates if there is still response
++	 * (or part of it) to be consumed. Partial reads decrease it
++	 * by the number of bytes read, and write resets it the zero.
++	 */
++	if (priv->response_length)
+ 		mask = EPOLLIN | EPOLLRDNORM;
+ 	else
+ 		mask = EPOLLOUT | EPOLLWRNORM;
+ 
++	mutex_unlock(&priv->buffer_mutex);
+ 	return mask;
  }
  
-+extern const u64 max_cfs_quota_period;
-+
- static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- {
- 	struct cfs_bandwidth *cfs_b =
- 		container_of(timer, struct cfs_bandwidth, period_timer);
- 	int overrun;
- 	int idle = 0;
-+	int count = 0;
- 
- 	raw_spin_lock(&cfs_b->lock);
- 	for (;;) {
-@@ -4872,6 +4875,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 		if (!overrun)
- 			break;
- 
-+		if (++count > 3) {
-+			u64 new, old = ktime_to_ns(cfs_b->period);
-+
-+			new = (old * 147) / 128; /* ~115% */
-+			new = min(new, max_cfs_quota_period);
-+
-+			cfs_b->period = ns_to_ktime(new);
-+
-+			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-+			cfs_b->quota *= new;
-+			cfs_b->quota = div64_u64(cfs_b->quota, old);
-+
-+			pr_warn_ratelimited(
-+        "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-+	                        smp_processor_id(),
-+	                        div_u64(new, NSEC_PER_USEC),
-+                                div_u64(cfs_b->quota, NSEC_PER_USEC));
-+
-+			/* reset count so we don't come right back in here */
-+			count = 0;
-+		}
-+
- 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
- 	}
- 	if (idle)
 -- 
 2.19.1
 
