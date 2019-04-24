@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30937C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB1EC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3417206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56972218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:57:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bnXIRuWR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cG+fQY9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733014AbfDXQ5N (ORCPT
+        id S1733028AbfDXQ5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:57:13 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46712 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731043AbfDXQ5M (ORCPT
+        Wed, 24 Apr 2019 12:57:17 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:51697 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732996AbfDXQ5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Apr 2019 12:57:12 -0400
-Received: by mail-io1-f66.google.com with SMTP id p23so16418832iol.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 09:57:11 -0700 (PDT)
+Received: by mail-it1-f195.google.com with SMTP id s3so7600241itk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 09:57:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3uSSI3VPvGi/6BY9R43l36Z4dacwuiCKP0Ld8kBlr44=;
-        b=bnXIRuWRTnwCPHHhh2ttCAx++Rqo0b1IVaW/AbygR3fSMDmvw7lwKaFDt5fQa/iF6V
-         zmbwzkNKV+g8Z7LcmuuvLVZvy5jwatrKZTF7q2duq2Mh2nv9crmk8/Qr1VJULepb/JdO
-         BgfRAmYp+DclgUOwEGIe3koYhTJIcjxQcL3+E=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YTSeJIYVVKEnXcJnV7bjOxDH8UqsAQJMm7uj/RoHc/s=;
+        b=cG+fQY9VQXX5sGXPfVxe/CmxKqlVpwzZbm2KOxI0C7YX9gt5ryJlBtiqWtztRyupnO
+         /0O/0lpK04q0BD3elcn+ZgROQXcexUPJFV/OnfWqCFM5nEn0UtzwbMoCDPUehpenh/cY
+         HN/K4EBJseNau9iFmp7FKHBmnGOz63P1gUUfk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3uSSI3VPvGi/6BY9R43l36Z4dacwuiCKP0Ld8kBlr44=;
-        b=WP0pJtQwwg6pfIfGeK75RW5z5eLF7Eo1IXPnL6uk+rL2a1Rc7cdRELEdO0RatwK0yj
-         lnM5NDeq26HVohWOAfEKTH5wGxx21IfHZrfy9BBO/zJ9OMEaF5O2W1gkcwSmqhydqPDb
-         c6OdO46nZjp2hIZgxjx8Ir9+/jXSmNKSHWl+sYlzBmso4hiCT6bFOWi3F+Njj5XNtrAq
-         QkmourLOnoseXuV4i2emtl6pce5i35KzfOcxcRk+3hTG1kUUKngif8bfDm56i8w7xi78
-         ZL4nnoiRx9BzY9EMDT5BubQ6w6xyAAiQaOdGCHAsDMx3aB/pR7Ii11E0f90L5iodLgl5
-         fw9w==
-X-Gm-Message-State: APjAAAVqWxMxLFfSja8Jlr2ad/WZIPIa61yKC1PxVvlsqifUUKskhtwX
-        KXk1zqvxI4lmBLEMvdZWUV5WVA==
-X-Google-Smtp-Source: APXvYqyadBr1IMFjQTX9rGDKQWx5Nq0vOnBgcQDq0K1n+HzSEENHc5KgWSursVWvZgxrPUrh/R253Q==
-X-Received: by 2002:a6b:e30e:: with SMTP id u14mr9682312ioc.220.1556125030045;
-        Wed, 24 Apr 2019 09:57:10 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YTSeJIYVVKEnXcJnV7bjOxDH8UqsAQJMm7uj/RoHc/s=;
+        b=fNfWQfXSOKhYEhyiY9UN+nNZ8wlJ+xt5Sn1OT28uR1RD62eG7KFURdCPYzlvN83+5f
+         /hSm/Onkjg1eXbLdptMi9JcNkP1yVEG6on1EXXQ+kRtWWf6w2rRVHQYOM27kNHg7XGp+
+         7z04XtCKdLF2xUj2NW/pMMgftQ3G33dp3ioOq4ye9yqtg9azz9vCtE1w0KuJyR0luJG3
+         6rwgepjK2AsYl7wzJLE35VX5Nvt/Ky0hxCN0oH1MKV8ofi8z7cI4i04oRxGDKiFZ9EzF
+         gSq9YhwWzS9YTUv3aUHtRnhtjvR3ZGb3XHpbnkhKktoGvianEYr9jBrF0epz1S6n6LFh
+         7J/Q==
+X-Gm-Message-State: APjAAAUkqufMNtDCCs/4rkST8QH2xJpDyhD1IC6scxf6/LVfqFob0aoR
+        CYqbmr84fIZG/7fQIg5DuMHz6A==
+X-Google-Smtp-Source: APXvYqzlCVwt3IcLnBdfqx8MsFI6HCttJpxsusitm4jsmQ7lSGjrjjyI+PJO0cXCvPsT/UI7HAt3Tw==
+X-Received: by 2002:a24:9197:: with SMTP id i145mr11851ite.117.1556125031674;
+        Wed, 24 Apr 2019 09:57:11 -0700 (PDT)
 Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
-        by smtp.gmail.com with ESMTPSA id t67sm9371420ita.35.2019.04.24.09.57.08
+        by smtp.gmail.com with ESMTPSA id t67sm9371420ita.35.2019.04.24.09.57.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 24 Apr 2019 09:57:09 -0700 (PDT)
+        Wed, 24 Apr 2019 09:57:10 -0700 (PDT)
 From:   Nick Crews <ncrews@chromium.org>
 To:     enric.balletbo@collabora.com, bleung@chromium.org, sre@kernel.org,
         linux-pm@vger.kernel.org
@@ -60,10 +60,12 @@ Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
         lamzin@google.com, bartfab@google.com, derat@google.com,
         dtor@google.com, sjg@chromium.org, jchwong@chromium.org,
         tbroch@chromium.org, Nick Crews <ncrews@chromium.org>
-Subject: [PATCH v8 1/2] platform/chrome: wilco_ec: Add property helper library
-Date:   Wed, 24 Apr 2019 10:56:50 -0600
-Message-Id: <20190424165651.236391-1-ncrews@chromium.org>
+Subject: [PATCH v8 2/2] power_supply: platform/chrome: wilco_ec: Add charging config driver
+Date:   Wed, 24 Apr 2019 10:56:51 -0600
+Message-Id: <20190424165651.236391-2-ncrews@chromium.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190424165651.236391-1-ncrews@chromium.org>
+References: <20190424165651.236391-1-ncrews@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,25 +73,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A Property is typically a data item that is stored to NVRAM
-by the EC. Each of these data items has an index associated
-with it, known as the Property ID (PID). Properties may have
-variable lengths, up to a max of WILCO_EC_PROPERTY_MAX_SIZE
-bytes. Properties can be simple integers, or they may be more
-complex binary data.
-
-This patch adds support for getting and setting properties.
-This will be useful for setting the charge algorithm and charge
-schedules, which all use properties.
+Add control of the charging algorithm used on Wilco devices.
+See Documentation/ABI/testing/sysfs-class-power-wilco for the
+userspace interface and other info.
 
 Signed-off-by: Nick Crews <ncrews@chromium.org>
-Acked-for-chrome-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
-v7 changes:
--Remove bogus gerrit FROMLIST tag in commit title
+v8 changes:
+-Several documentation and comment fixups.
 v6 changes:
--Add EC_* prefix to enum property_ops so they are more unique.
+-Remove CHARGE_MODE_ILLEGAL from enum charge_mode. It's not a
+ public type, and error checking could be performed in other ways.
 -Split up the commit so properties are added in a first commit
+-Move CONFIG_CHARGER_WILCO to the power/supply Kconfig
+-Use PTR_ERR_OR_ZERO() macro in probe()
 v5 changes:
 -Remove OP_SYNC, it has no immediate use case.
 -Merge properties.h into wilco-ec.h
@@ -129,242 +127,325 @@ and Wilco EC codes
 -Add valid input checks to charge_type
 -Properly convert charge_type when get()ting
 
- drivers/platform/chrome/wilco_ec/Makefile     |   2 +-
- drivers/platform/chrome/wilco_ec/properties.c | 132 ++++++++++++++++++
- include/linux/platform_data/wilco-ec.h        |  71 ++++++++++
- 3 files changed, 204 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/chrome/wilco_ec/properties.c
+ .../ABI/testing/sysfs-class-power-wilco       |  30 +++
+ drivers/platform/chrome/wilco_ec/core.c       |  13 ++
+ drivers/power/supply/Kconfig                  |   9 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/wilco-charger.c          | 187 ++++++++++++++++++
+ include/linux/platform_data/wilco-ec.h        |   2 +
+ 6 files changed, 242 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-power-wilco
+ create mode 100644 drivers/power/supply/wilco-charger.c
 
-diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
-index 063e7fb4ea17..29b734137786 100644
---- a/drivers/platform/chrome/wilco_ec/Makefile
-+++ b/drivers/platform/chrome/wilco_ec/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--wilco_ec-objs				:= core.o mailbox.o
-+wilco_ec-objs				:= core.o mailbox.o properties.o
- obj-$(CONFIG_WILCO_EC)			+= wilco_ec.o
- wilco_ec_debugfs-objs			:= debugfs.o
- obj-$(CONFIG_WILCO_EC_DEBUGFS)		+= wilco_ec_debugfs.o
-diff --git a/drivers/platform/chrome/wilco_ec/properties.c b/drivers/platform/chrome/wilco_ec/properties.c
+diff --git a/Documentation/ABI/testing/sysfs-class-power-wilco b/Documentation/ABI/testing/sysfs-class-power-wilco
 new file mode 100644
-index 000000000000..e69682c95ea2
+index 000000000000..da1d6ffe5e3c
 --- /dev/null
-+++ b/drivers/platform/chrome/wilco_ec/properties.c
-@@ -0,0 +1,132 @@
++++ b/Documentation/ABI/testing/sysfs-class-power-wilco
+@@ -0,0 +1,30 @@
++What:		/sys/class/power_supply/wilco-charger/charge_type
++Date:		April 2019
++KernelVersion:	5.2
++Description:
++		What charging algorithm to use:
++
++		Standard: Fully charges battery at a standard rate.
++		Adaptive: Battery settings adaptively optimized based on
++			typical battery usage pattern.
++		Fast: Battery charges over a shorter period.
++		Trickle: Extends battery lifespan, intended for users who
++			primarily use their Chromebook while connected to AC.
++		Custom: A low and high threshold percentage is specified.
++			Charging begins when level drops below
++			charge_control_start_threshold, and ceases when
++			level is above charge_control_end_threshold.
++
++What:		/sys/class/power_supply/wilco-charger/charge_control_start_threshold
++Date:		April 2019
++KernelVersion:	5.2
++Description:
++		Used when charge_type="Custom", as described above. Measured in
++		percentages. The valid range is [50, 95].
++
++What:		/sys/class/power_supply/wilco-charger/charge_control_end_threshold
++Date:		April 2019
++KernelVersion:	5.2
++Description:
++		Used when charge_type="Custom", as described above. Measured in
++		percentages. The valid range is [55, 100].
+diff --git a/drivers/platform/chrome/wilco_ec/core.c b/drivers/platform/chrome/wilco_ec/core.c
+index 05e1e2be1c91..a8e3ef59f4ea 100644
+--- a/drivers/platform/chrome/wilco_ec/core.c
++++ b/drivers/platform/chrome/wilco_ec/core.c
+@@ -89,8 +89,20 @@ static int wilco_ec_probe(struct platform_device *pdev)
+ 		goto unregister_debugfs;
+ 	}
+ 
++	/* Register child device to be found by charger config driver. */
++	ec->charger_pdev = platform_device_register_data(dev, "wilco-charger",
++							 PLATFORM_DEVID_AUTO,
++							 NULL, 0);
++	if (IS_ERR(ec->charger_pdev)) {
++		dev_err(dev, "Failed to create charger platform device\n");
++		ret = PTR_ERR(ec->charger_pdev);
++		goto unregister_rtc;
++	}
++
+ 	return 0;
+ 
++unregister_rtc:
++	platform_device_unregister(ec->rtc_pdev);
+ unregister_debugfs:
+ 	if (ec->debugfs_pdev)
+ 		platform_device_unregister(ec->debugfs_pdev);
+@@ -102,6 +114,7 @@ static int wilco_ec_remove(struct platform_device *pdev)
+ {
+ 	struct wilco_ec_device *ec = platform_get_drvdata(pdev);
+ 
++	platform_device_unregister(ec->charger_pdev);
+ 	platform_device_unregister(ec->rtc_pdev);
+ 	if (ec->debugfs_pdev)
+ 		platform_device_unregister(ec->debugfs_pdev);
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index e901b9879e7e..0c67eff871c8 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -660,4 +660,13 @@ config FUEL_GAUGE_SC27XX
+ 	 Say Y here to enable support for fuel gauge with SC27XX
+ 	 PMIC chips.
+ 
++config CHARGER_WILCO
++	tristate "Wilco EC based charger for ChromeOS"
++	depends on WILCO_EC
++	help
++	  Say Y here to enable control of the charging routines performed
++	  by the Embedded Controller on the Chromebook named Wilco. Further
++	  information can be found in
++	  Documentation/ABI/testing/sysfs-class-power-wilco
++
+ endif # POWER_SUPPLY
+diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+index b731c2a9b695..2b603a142701 100644
+--- a/drivers/power/supply/Makefile
++++ b/drivers/power/supply/Makefile
+@@ -87,3 +87,4 @@ obj-$(CONFIG_AXP288_CHARGER)	+= axp288_charger.o
+ obj-$(CONFIG_CHARGER_CROS_USBPD)	+= cros_usbpd-charger.o
+ obj-$(CONFIG_CHARGER_SC2731)	+= sc2731_charger.o
+ obj-$(CONFIG_FUEL_GAUGE_SC27XX)	+= sc27xx_fuel_gauge.o
++obj-$(CONFIG_CHARGER_WILCO)	+= wilco-charger.o
+diff --git a/drivers/power/supply/wilco-charger.c b/drivers/power/supply/wilco-charger.c
+new file mode 100644
+index 000000000000..b3c6d7cdd731
+--- /dev/null
++++ b/drivers/power/supply/wilco-charger.c
+@@ -0,0 +1,187 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
++ * Charging control driver for the Wilco EC
++ *
 + * Copyright 2019 Google LLC
++ *
++ * See Documentation/ABI/testing/sysfs-class-power and
++ * Documentation/ABI/testing/sysfs-class-power-wilco for userspace interface
++ * and other info.
 + */
 +
++#include <linux/module.h>
++#include <linux/platform_device.h>
 +#include <linux/platform_data/wilco-ec.h>
-+#include <linux/string.h>
-+#include <linux/unaligned/le_memmove.h>
++#include <linux/power_supply.h>
 +
-+/* Operation code; what the EC should do with the property */
-+enum ec_property_op {
-+	EC_OP_GET = 0,
-+	EC_OP_SET = 1,
++#define DRV_NAME "wilco-charger"
++
++/* Property IDs and related EC constants */
++#define PID_CHARGE_MODE		0x0710
++#define PID_CHARGE_LOWER_LIMIT	0x0711
++#define PID_CHARGE_UPPER_LIMIT	0x0712
++
++enum charge_mode {
++	CHARGE_MODE_STD = 1,	/* Used for Standard */
++	CHARGE_MODE_EXP = 2,	/* Express Charge, used for Fast */
++	CHARGE_MODE_AC = 3,	/* Mostly AC use, used for Trickle */
++	CHARGE_MODE_AUTO = 4,	/* Used for Adaptive */
++	CHARGE_MODE_CUSTOM = 5,	/* Used for Custom */
 +};
 +
-+struct ec_property_request {
-+	u8 op; /* One of enum ec_property_op */
-+	u8 property_id[4]; /* The 32 bit PID is stored Little Endian */
-+	u8 length;
-+	u8 data[WILCO_EC_PROPERTY_MAX_SIZE];
-+} __packed;
++#define CHARGE_LOWER_LIMIT_MIN	50
++#define CHARGE_LOWER_LIMIT_MAX	95
++#define CHARGE_UPPER_LIMIT_MIN	55
++#define CHARGE_UPPER_LIMIT_MAX	100
 +
-+struct ec_property_response {
-+	u8 reserved[2];
-+	u8 op; /* One of enum ec_property_op */
-+	u8 property_id[4]; /* The 32 bit PID is stored Little Endian */
-+	u8 length;
-+	u8 data[WILCO_EC_PROPERTY_MAX_SIZE];
-+} __packed;
-+
-+static int send_property_msg(struct wilco_ec_device *ec,
-+			     struct ec_property_request *rq,
-+			     struct ec_property_response *rs)
++/* Convert from POWER_SUPPLY_PROP_CHARGE_TYPE value to the EC's charge mode */
++static int psp_val_to_charge_mode(int psp_val)
 +{
-+	struct wilco_ec_message ec_msg;
++	switch (psp_val) {
++	case POWER_SUPPLY_CHARGE_TYPE_TRICKLE:
++		return CHARGE_MODE_AC;
++	case POWER_SUPPLY_CHARGE_TYPE_FAST:
++		return CHARGE_MODE_EXP;
++	case POWER_SUPPLY_CHARGE_TYPE_STANDARD:
++		return CHARGE_MODE_STD;
++	case POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE:
++		return CHARGE_MODE_AUTO;
++	case POWER_SUPPLY_CHARGE_TYPE_CUSTOM:
++		return CHARGE_MODE_CUSTOM;
++	default:
++		return -EINVAL;
++	}
++}
++
++/* Convert from EC's charge mode to POWER_SUPPLY_PROP_CHARGE_TYPE value */
++static int charge_mode_to_psp_val(enum charge_mode mode)
++{
++	switch (mode) {
++	case CHARGE_MODE_AC:
++		return POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
++	case CHARGE_MODE_EXP:
++		return POWER_SUPPLY_CHARGE_TYPE_FAST;
++	case CHARGE_MODE_STD:
++		return POWER_SUPPLY_CHARGE_TYPE_STANDARD;
++	case CHARGE_MODE_AUTO:
++		return POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE;
++	case CHARGE_MODE_CUSTOM:
++		return POWER_SUPPLY_CHARGE_TYPE_CUSTOM;
++	default:
++		return -EINVAL;
++	}
++}
++
++static enum power_supply_property wilco_charge_props[] = {
++	POWER_SUPPLY_PROP_CHARGE_TYPE,
++	POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD,
++	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
++};
++
++static int wilco_charge_get_property(struct power_supply *psy,
++				     enum power_supply_property psp,
++				     union power_supply_propval *val)
++{
++	struct wilco_ec_device *ec = power_supply_get_drvdata(psy);
++	u32 property_id;
 +	int ret;
++	u8 raw;
 +
-+	memset(&ec_msg, 0, sizeof(ec_msg));
-+	ec_msg.type = WILCO_EC_MSG_PROPERTY;
-+	ec_msg.request_data = rq;
-+	ec_msg.request_size = sizeof(*rq);
-+	ec_msg.response_data = rs;
-+	ec_msg.response_size = sizeof(*rs);
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CHARGE_TYPE:
++		property_id = PID_CHARGE_MODE;
++		break;
++	case POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD:
++		property_id = PID_CHARGE_LOWER_LIMIT;
++		break;
++	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
++		property_id = PID_CHARGE_UPPER_LIMIT;
++		break;
++	default:
++		return -EINVAL;
++	}
 +
-+	ret = wilco_ec_mailbox(ec, &ec_msg);
++	ret = wilco_ec_get_byte_property(ec, property_id, &raw);
 +	if (ret < 0)
 +		return ret;
-+	if (rs->op != rq->op)
-+		return -EBADMSG;
-+	if (memcmp(rq->property_id, rs->property_id, sizeof(rs->property_id)))
-+		return -EBADMSG;
++	if (property_id == PID_CHARGE_MODE) {
++		ret = charge_mode_to_psp_val(raw);
++		if (ret < 0)
++			return -EBADMSG;
++		raw = ret;
++	}
++	val->intval = raw;
 +
 +	return 0;
 +}
 +
-+int wilco_ec_get_property(struct wilco_ec_device *ec,
-+			  struct wilco_ec_property_msg *prop_msg)
++static int wilco_charge_set_property(struct power_supply *psy,
++				     enum power_supply_property psp,
++				     const union power_supply_propval *val)
 +{
-+	struct ec_property_request rq;
-+	struct ec_property_response rs;
-+	int ret;
++	struct wilco_ec_device *ec = power_supply_get_drvdata(psy);
++	int mode;
 +
-+	memset(&rq, 0, sizeof(rq));
-+	rq.op = EC_OP_GET;
-+	put_unaligned_le32(prop_msg->property_id, rq.property_id);
-+
-+	ret = send_property_msg(ec, &rq, &rs);
-+	if (ret < 0)
-+		return ret;
-+
-+	prop_msg->length = rs.length;
-+	memcpy(prop_msg->data, rs.data, rs.length);
-+
-+	return 0;
++	switch (psp) {
++	case POWER_SUPPLY_PROP_CHARGE_TYPE:
++		mode = psp_val_to_charge_mode(val->intval);
++		if (mode < 0)
++			return -EINVAL;
++		return wilco_ec_set_byte_property(ec, PID_CHARGE_MODE, mode);
++	case POWER_SUPPLY_PROP_CHARGE_CONTROL_START_THRESHOLD:
++		if (val->intval < CHARGE_LOWER_LIMIT_MIN ||
++		    val->intval > CHARGE_LOWER_LIMIT_MAX)
++			return -EINVAL;
++		return wilco_ec_set_byte_property(ec, PID_CHARGE_LOWER_LIMIT,
++						  val->intval);
++	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
++		if (val->intval < CHARGE_UPPER_LIMIT_MIN ||
++		    val->intval > CHARGE_UPPER_LIMIT_MAX)
++			return -EINVAL;
++		return wilco_ec_set_byte_property(ec, PID_CHARGE_UPPER_LIMIT,
++						  val->intval);
++	default:
++		return -EINVAL;
++	}
 +}
-+EXPORT_SYMBOL_GPL(wilco_ec_get_property);
 +
-+int wilco_ec_set_property(struct wilco_ec_device *ec,
-+			  struct wilco_ec_property_msg *prop_msg)
++static int wilco_charge_property_is_writeable(struct power_supply *psy,
++					      enum power_supply_property psp)
 +{
-+	struct ec_property_request rq;
-+	struct ec_property_response rs;
-+	int ret;
-+
-+	memset(&rq, 0, sizeof(rq));
-+	rq.op = EC_OP_SET;
-+	put_unaligned_le32(prop_msg->property_id, rq.property_id);
-+	rq.length = prop_msg->length;
-+	memcpy(rq.data, prop_msg->data, prop_msg->length);
-+
-+	ret = send_property_msg(ec, &rq, &rs);
-+	if (ret < 0)
-+		return ret;
-+	if (rs.length != prop_msg->length)
-+		return -EBADMSG;
-+
-+	return 0;
++	return 1;
 +}
-+EXPORT_SYMBOL_GPL(wilco_ec_set_property);
 +
-+int wilco_ec_get_byte_property(struct wilco_ec_device *ec, u32 property_id,
-+			       u8 *val)
++static const struct power_supply_desc wilco_ps_desc = {
++	.properties		= wilco_charge_props,
++	.num_properties		= ARRAY_SIZE(wilco_charge_props),
++	.get_property		= wilco_charge_get_property,
++	.set_property		= wilco_charge_set_property,
++	.property_is_writeable	= wilco_charge_property_is_writeable,
++	.name			= DRV_NAME,
++	.type			= POWER_SUPPLY_TYPE_MAINS,
++};
++
++static int wilco_charge_probe(struct platform_device *pdev)
 +{
-+	struct wilco_ec_property_msg msg;
-+	int ret;
++	struct wilco_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
++	struct power_supply_config psy_cfg = {};
++	struct power_supply *psy;
 +
-+	msg.property_id = property_id;
++	psy_cfg.drv_data = ec;
++	psy = devm_power_supply_register(&pdev->dev, &wilco_ps_desc, &psy_cfg);
 +
-+	ret = wilco_ec_get_property(ec, &msg);
-+	if (ret < 0)
-+		return ret;
-+	if (msg.length != 1)
-+		return -EBADMSG;
-+
-+	*val = msg.data[0];
-+
-+	return 0;
++	return PTR_ERR_OR_ZERO(psy);
 +}
-+EXPORT_SYMBOL_GPL(wilco_ec_get_byte_property);
 +
-+int wilco_ec_set_byte_property(struct wilco_ec_device *ec, u32 property_id,
-+			       u8 val)
-+{
-+	struct wilco_ec_property_msg msg;
++static struct platform_driver wilco_charge_driver = {
++	.probe	= wilco_charge_probe,
++	.driver = {
++		.name = DRV_NAME,
++	}
++};
++module_platform_driver(wilco_charge_driver);
 +
-+	msg.property_id = property_id;
-+	msg.data[0] = val;
-+	msg.length = 1;
-+
-+	return wilco_ec_set_property(ec, &msg);
-+}
-+EXPORT_SYMBOL_GPL(wilco_ec_set_byte_property);
++MODULE_ALIAS("platform:" DRV_NAME);
++MODULE_AUTHOR("Nick Crews <ncrews@chromium.org>");
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Wilco EC charge control driver");
 diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
-index 1ff224793c99..50a21bd5fd44 100644
+index 50a21bd5fd44..66d9f177bec2 100644
 --- a/include/linux/platform_data/wilco-ec.h
 +++ b/include/linux/platform_data/wilco-ec.h
-@@ -123,4 +123,75 @@ struct wilco_ec_message {
+@@ -32,6 +32,7 @@
+  * @data_size: Size of the data buffer used for EC communication.
+  * @debugfs_pdev: The child platform_device used by the debugfs sub-driver.
+  * @rtc_pdev: The child platform_device used by the RTC sub-driver.
++ * @charger_pdev: Child platform_device used by the charger config sub-driver.
   */
- int wilco_ec_mailbox(struct wilco_ec_device *ec, struct wilco_ec_message *msg);
+ struct wilco_ec_device {
+ 	struct device *dev;
+@@ -43,6 +44,7 @@ struct wilco_ec_device {
+ 	size_t data_size;
+ 	struct platform_device *debugfs_pdev;
+ 	struct platform_device *rtc_pdev;
++	struct platform_device *charger_pdev;
+ };
  
-+/*
-+ * A Property is typically a data item that is stored to NVRAM
-+ * by the EC. Each of these data items has an index associated
-+ * with it, known as the Property ID (PID). Properties may have
-+ * variable lengths, up to a max of WILCO_EC_PROPERTY_MAX_SIZE
-+ * bytes. Properties can be simple integers, or they may be more
-+ * complex binary data.
-+ */
-+
-+#define WILCO_EC_PROPERTY_MAX_SIZE	4
-+
-+/**
-+ * struct ec_property_set_msg - Message to get or set a property.
-+ * @property_id: Which property to get or set.
-+ * @length: Number of bytes of |data| that are used.
-+ * @data: Actual property data.
-+ */
-+struct wilco_ec_property_msg {
-+	u32 property_id;
-+	int length;
-+	u8 data[WILCO_EC_PROPERTY_MAX_SIZE];
-+};
-+
-+/**
-+ * wilco_ec_get_property() - Retrieve a property from the EC.
-+ * @ec: Embedded Controller device.
-+ * @prop_msg: Message for request and response.
-+ *
-+ * The property_id field of |prop_msg| should be filled before calling this
-+ * function. The result will be stored in the data and length fields.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int wilco_ec_get_property(struct wilco_ec_device *ec,
-+			  struct wilco_ec_property_msg *prop_msg);
-+
-+/**
-+ * wilco_ec_set_property() - Store a property on the EC.
-+ * @ec: Embedded Controller device.
-+ * @prop_msg: Message for request and response.
-+ *
-+ * The property_id, length, and data fields of |prop_msg| should be
-+ * filled before calling this function.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int wilco_ec_set_property(struct wilco_ec_device *ec,
-+			  struct wilco_ec_property_msg *prop_msg);
-+
-+/**
-+ * wilco_ec_get_byte_property() - Retrieve a byte-size property from the EC.
-+ * @ec: Embedded Controller device.
-+ * @property_id: Which property to retrieve.
-+ * @val: The result value, will be filled by this function.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int wilco_ec_get_byte_property(struct wilco_ec_device *ec, u32 property_id,
-+			       u8 *val);
-+
-+/**
-+ * wilco_ec_get_byte_property() - Store a byte-size property on the EC.
-+ * @ec: Embedded Controller device.
-+ * @property_id: Which property to store.
-+ * @val: Value to store.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int wilco_ec_set_byte_property(struct wilco_ec_device *ec, u32 property_id,
-+			       u8 val);
-+
- #endif /* WILCO_EC_H */
+ /**
 -- 
 2.20.1
 
