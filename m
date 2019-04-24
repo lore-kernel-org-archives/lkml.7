@@ -2,236 +2,285 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886C4C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CEAC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 563D121773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3810521773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:06:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbfDXNCP (ORCPT
+        id S1730293AbfDXNGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:02:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:41910 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726322AbfDXNCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:02:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 06:02:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,389,1549958400"; 
-   d="scan'208";a="136979691"
-Received: from nzhao1-mobl.ccr.corp.intel.com ([10.249.168.79])
-  by orsmga008.jf.intel.com with ESMTP; 24 Apr 2019 06:02:07 -0700
-Message-ID: <1556110926.2390.13.camel@intel.com>
-Subject: Re: [PATCH 1/7] thermal/drivers/core: Remove the module Kconfig's
- option
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, Guan Xuetao <gxt@pku.edu.cn>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Daniel Mack <daniel@zonque.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-Date:   Wed, 24 Apr 2019 21:02:06 +0800
-In-Reply-To: <20190423155208.GC16014@localhost.localdomain>
-References: <20190402161256.11044-1-daniel.lezcano@linaro.org>
-         <20190423155208.GC16014@localhost.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 24 Apr 2019 09:06:35 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:45799 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726322AbfDXNGe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:06:34 -0400
+Received: from [IPv6:2001:420:44c1:2579:8575:c0e0:a08:6676] ([IPv6:2001:420:44c1:2579:8575:c0e0:a08:6676])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id JHbYhA5sxNExlJHbbhR6iB; Wed, 24 Apr 2019 15:06:32 +0200
+Subject: Re: [PATCH v9 3/4] [media] cxusb: add analog mode support for Medion
+ MD95700
+To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc:     Michael Krufky <mkrufky@linuxtv.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Walls <awalls@md.metrocast.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org
+References: <cover.1553903063.git.mail@maciej.szmigiero.name>
+ <0c30210a0d946cac6b17755e7d255541ff535023.1553903063.git.mail@maciej.szmigiero.name>
+ <b33ebf2a-9507-9940-4474-6f37af4d8010@xs4all.nl>
+ <3927f261-9052-0b89-62c2-6fe8b4876ba1@maciej.szmigiero.name>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <5c01b351-7ea0-b057-32c7-1029af700fe5@xs4all.nl>
+Date:   Wed, 24 Apr 2019 15:06:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <3927f261-9052-0b89-62c2-6fe8b4876ba1@maciej.szmigiero.name>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMtKnHmO81JPcaeNKsbUlQBMa6PB25U/TySKUIkB/vOyVLeN17cUniGkKOs9A+gUY9i2O2O4YBft3B/tIzUzkBTflCyFDj128Quqkl3p2xDeL+yrFhyO
+ ybbgzfR9oV9gsSNDdcPsuS4g3p9oU+gxgr2vQJ8vJnG8eft1w9JXkYqpUXe577+4wGlSqOK4hmCQeCfq6frxAmyjAENORA9aG0X2q0C36Yw7jn+SqqltKyVf
+ bemarlasMxeQGiEsCFTe6u4+uLf1RIIR7VFWIJaSciM7Q3mKUcz2UDFtY5GdFRTChVHY1RGl4M0kBnL62/z8usIH7Fo91R0/j0Va3lIJScc7xXJAl8zRjcf4
+ WypzgxeI55w39rCLSWv7lYu/Fa2eBsbSjcnRerJmjE2krEhv8PGueaNWSysCFhw1lYxd2Ps71Wqygmt5kf5bwUwMTVxYfzhFGZdVvW/R4feH+z6hCV4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 二, 2019-04-23 at 08:52 -0700, Eduardo Valentin wrote:
-> Hello,
+On 4/16/19 1:40 AM, Maciej S. Szmigiero wrote:
+> On 12.04.2019 11:22, Hans Verkuil wrote:
+>> On 3/30/19 12:51 AM, Maciej S. Szmigiero wrote:
+>>> This patch adds support for analog part of Medion 95700 in the cxusb
+>>> driver.
+>>>
+>>> What works:
+>>> * Video capture at various sizes with sequential fields,
+>>> * Input switching (TV Tuner, Composite, S-Video),
+>>> * TV and radio tuning,
+>>> * Video standard switching and auto detection,
+>>> * Radio mode switching (stereo / mono),
+>>> * Unplugging while capturing,
+>>> * DVB / analog coexistence.
+>>>
+>>> What does not work yet:
+>>> * Audio,
+>>> * VBI,
+>>> * Picture controls.
+>>>
+>>> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+>>> ---
+> (..)
+>>> +static int cxusb_medion_try_s_fmt_vid_cap(struct file *file,
+>>> +					  struct v4l2_format *f,
+>>> +					  bool isset)
+>>> +{
+>>> +	struct dvb_usb_device *dvbdev = video_drvdata(file);
+>>> +	struct cxusb_medion_dev *cxdev = dvbdev->priv;
+>>> +	struct v4l2_subdev_format subfmt;
+>>> +	int ret;
+>>> +
+>>> +	if (isset && (vb2_start_streaming_called(&cxdev->videoqueue) ||
+>>> +		      cxdev->stop_streaming))
+>>
+>> This should be:
+>>
+>> 	if (isset && vb2_is_busy(&cxdev->videoqueue))
+>>
+>> As long as buffers are allocated you can no longer change the format.
+>>
+>>> +		return -EBUSY;
+>>> +
+>>> +	memset(&subfmt, 0, sizeof(subfmt));
+>>> +	subfmt.which = isset ? V4L2_SUBDEV_FORMAT_ACTIVE :
+>>> +		V4L2_SUBDEV_FORMAT_TRY;
+>>> +	subfmt.format.width = f->fmt.pix.width & ~1;
+>>> +	subfmt.format.height = f->fmt.pix.height & ~1;
+>>> +	subfmt.format.code = MEDIA_BUS_FMT_FIXED;
+>>> +	subfmt.format.field = V4L2_FIELD_SEQ_TB;
+>>
+>> Why FIELD_SEQ_TB? If memory serves the cx25840 always uses FIELD_INTERLACED.
 > 
-> On Tue, Apr 02, 2019 at 06:12:44PM +0200, Daniel Lezcano wrote:
-> > 
-> > The module support for the thermal subsystem makes little sense:
-> >  - some subsystems relying on it are not modules, thus forcing the
-> >    framework to be compiled in
-> >  - it is compiled in for almost every configs, the remaining ones
-> >    are a few platforms where I don't see why we can not switch the
-> > thermal
-> >    to 'y'. The drivers can stay in tristate.
-> >  - platforms need the thermal to be ready as soon as possible at
-> > boot time
-> >    in order to mitigate
-> > 
-> > Usually the subsystems framework are compiled-in and the plugs are
-> > as module.
-> > 
-> > Remove the module option. The removal of the module related dead
-> > code will
-> > come after this patch gets in or is acked.
+> It looks like all the existing cx25840 users use an intelligent bridge
+> chip (or a MPEG encoder), which normalize the video data received to
+> a nice V4L2_FIELD_INTERLACED.
 > 
-> I remember some buzilla entry around this some time back.
-> 
-> Rui, do you remember why you made this to be module?
-> 
-> I dont have strong opinion here, but I would like to see
-> a better description why we are going this direction rather
-> than "most people dont use it as module". Was there any particular
-> specific technical motivation?
-> 
-I checked the change log, it seems that we make CONFIG_THERMAL from
-bool to tristate long time ago.
+> However, this device uses a "dumb" USB bridge chip which does not do any
+> video processing (other than dropping parts of it if the host PC is not
+> receiving it fast enough), so the output data matches what the cx25840
+> chip produces - and it produces a sequential fields format.
 
-commit 63c4ec905d63834a97ec7dbbf0a2ec89ef5872be
-Author:     Zhang Rui <rui.zhang@intel.com>
-AuthorDate: Mon Apr 21 16:07:13 2008 +0800
-Commit:     Len Brown <len.brown@intel.com>
-CommitDate: Tue Apr 29 02:44:00 2008 -0400
+Ah. But in that case it is SEQ_BT for NTSC and SEQ_TB for all other standards.
 
-    thermal: add the support for building the generic thermal as a
-module
-    
-    Build the generic thermal driver as module "thermal_sys".
-    
-    Make ACPI thermal, video, processor and fan SELECT the generic
-    thermal driver, as these drivers rely on it to build the sysfs I/F.
-    
-    Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-    Acked-by: Jean Delvare <khali@linux-fr.org>
-    Signed-off-by: Len Brown <len.brown@intel.com>
-
-But the things described in the changelog does not seem to be a solid
-reason why we need thermal to be a module.
-
-Anyway, let's try bool instead of tristate and see if everything still
-works well.
-
-thanks,
-rui
 > 
-> > 
-> > 
-> > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Acked-by: Guenter Roeck <groeck@chromium.org>
-> > For mini2440:
-> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  arch/arm/configs/mini2440_defconfig        | 2 +-
-> >  arch/arm/configs/pxa_defconfig             | 2 +-
-> >  arch/mips/configs/ip22_defconfig           | 2 +-
-> >  arch/mips/configs/ip27_defconfig           | 2 +-
-> >  arch/unicore32/configs/unicore32_defconfig | 2 +-
-> >  drivers/thermal/Kconfig                    | 4 ++--
-> >  6 files changed, 7 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/arch/arm/configs/mini2440_defconfig
-> > b/arch/arm/configs/mini2440_defconfig
-> > index d95a8059d30b..0cf1c120c4bb 100644
-> > --- a/arch/arm/configs/mini2440_defconfig
-> > +++ b/arch/arm/configs/mini2440_defconfig
-> > @@ -152,7 +152,7 @@ CONFIG_SPI_S3C24XX=y
-> >  CONFIG_SPI_SPIDEV=y
-> >  CONFIG_GPIO_SYSFS=y
-> >  CONFIG_SENSORS_LM75=y
-> > -CONFIG_THERMAL=m
-> > +CONFIG_THERMAL=y
-> >  CONFIG_WATCHDOG=y
-> >  CONFIG_S3C2410_WATCHDOG=y
-> >  CONFIG_FB=y
-> > diff --git a/arch/arm/configs/pxa_defconfig
-> > b/arch/arm/configs/pxa_defconfig
-> > index d4654755b09c..d4f9dda3a52f 100644
-> > --- a/arch/arm/configs/pxa_defconfig
-> > +++ b/arch/arm/configs/pxa_defconfig
-> > @@ -387,7 +387,7 @@ CONFIG_SENSORS_LM75=m
-> >  CONFIG_SENSORS_LM90=m
-> >  CONFIG_SENSORS_LM95245=m
-> >  CONFIG_SENSORS_NTC_THERMISTOR=m
-> > -CONFIG_THERMAL=m
-> > +CONFIG_THERMAL=y
-> >  CONFIG_WATCHDOG=y
-> >  CONFIG_XILINX_WATCHDOG=m
-> >  CONFIG_SA1100_WATCHDOG=m
-> > diff --git a/arch/mips/configs/ip22_defconfig
-> > b/arch/mips/configs/ip22_defconfig
-> > index ff40fbc2f439..21a1168ae301 100644
-> > --- a/arch/mips/configs/ip22_defconfig
-> > +++ b/arch/mips/configs/ip22_defconfig
-> > @@ -228,7 +228,7 @@ CONFIG_SERIAL_IP22_ZILOG=m
-> >  # CONFIG_HW_RANDOM is not set
-> >  CONFIG_RAW_DRIVER=m
-> >  # CONFIG_HWMON is not set
-> > -CONFIG_THERMAL=m
-> > +CONFIG_THERMAL=y
-> >  CONFIG_WATCHDOG=y
-> >  CONFIG_INDYDOG=m
-> >  # CONFIG_VGA_CONSOLE is not set
-> > diff --git a/arch/mips/configs/ip27_defconfig
-> > b/arch/mips/configs/ip27_defconfig
-> > index 81c47e18131b..54db5dedf776 100644
-> > --- a/arch/mips/configs/ip27_defconfig
-> > +++ b/arch/mips/configs/ip27_defconfig
-> > @@ -271,7 +271,7 @@ CONFIG_I2C_PARPORT_LIGHT=m
-> >  CONFIG_I2C_TAOS_EVM=m
-> >  CONFIG_I2C_STUB=m
-> >  # CONFIG_HWMON is not set
-> > -CONFIG_THERMAL=m
-> > +CONFIG_THERMAL=y
-> >  CONFIG_MFD_PCF50633=m
-> >  CONFIG_PCF50633_ADC=m
-> >  CONFIG_PCF50633_GPIO=m
-> > diff --git a/arch/unicore32/configs/unicore32_defconfig
-> > b/arch/unicore32/configs/unicore32_defconfig
-> > index aebd01fc28e5..360cc9abcdb0 100644
-> > --- a/arch/unicore32/configs/unicore32_defconfig
-> > +++ b/arch/unicore32/configs/unicore32_defconfig
-> > @@ -119,7 +119,7 @@ CONFIG_I2C_PUV3=y
-> >  #	Hardware Monitoring support
-> >  #CONFIG_SENSORS_LM75=m
-> >  #	Generic Thermal sysfs driver
-> > -#CONFIG_THERMAL=m
-> > +#CONFIG_THERMAL=y
-> >  #CONFIG_THERMAL_HWMON=y
-> >  
-> >  #	Multimedia support
-> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> > index 653aa27a25a4..ccf5b9408d7a 100644
-> > --- a/drivers/thermal/Kconfig
-> > +++ b/drivers/thermal/Kconfig
-> > @@ -3,7 +3,7 @@
-> >  #
-> >  
-> >  menuconfig THERMAL
-> > -	tristate "Generic Thermal sysfs driver"
-> > +	bool "Generic Thermal sysfs driver"
-> >  	help
-> >  	  Generic Thermal Sysfs driver offers a generic mechanism
-> > for
-> >  	  thermal management. Usually it's made up of one or more
-> > thermal
-> > @@ -11,7 +11,7 @@ menuconfig THERMAL
-> >  	  Each thermal zone contains its own temperature, trip
-> > points,
-> >  	  cooling devices.
-> >  	  All platforms with ACPI thermal support can use this
-> > driver.
-> > -	  If you want this support, you should say Y or M here.
-> > +	  If you want this support, you should say Y here.
-> >  
-> >  if THERMAL
-> >  
+>>> +	subfmt.format.colorspace = V4L2_COLORSPACE_SMPTE170M;
+>>> +
+>>> +	ret = v4l2_subdev_call(cxdev->cx25840, pad, set_fmt, NULL, &subfmt);
+>>> +	if (ret != 0) {
+>>> +		if (ret != -ERANGE)
+>>> +			return ret;
+>>> +
+>>> +		/* try some common formats */
+>>> +		subfmt.format.width = 720;
+>>> +		subfmt.format.height = 576;
+>>> +		ret = v4l2_subdev_call(cxdev->cx25840, pad, set_fmt, NULL,
+>>> +				       &subfmt);
+>>> +		if (ret != 0) {
+>>> +			if (ret != -ERANGE)
+>>> +				return ret;
+>>> +
+>>> +			subfmt.format.width = 640;
+>>> +			subfmt.format.height = 480;
+>>> +			ret = v4l2_subdev_call(cxdev->cx25840, pad, set_fmt,
+>>> +					       NULL, &subfmt);
+>>> +			if (ret != 0)
+>>> +				return ret;
+>>> +		}
+>>
+>> Why these fallbacks? Is this really needed?
+> 
+> V4L2 docs say that VIDIOC_{S,TRY}_FMT ioctls "should not return an error
+> code unless the type field is invalid", that is, they should not return
+> an error for invalid or unsupported image widths or heights.
+> They should instead return something sensible for these image parameters.
+> 
+> However, cx25840 driver set_fmt callback simply returns -ERANGE if it
+> does not like the provided width or height.
+
+I think the right approach here is to modify cx25840 so that it updates
+the width/height to stay within the limits of the HW.
+
+BTW, a quick scan shows that none of the drivers that call set_fmt actually
+check the return value :-)
+
+So changing the cx25840 behavior certainly won't make things worse for
+existing drivers.
+
+> In this case the code above simply tries first the bigger PAL capture
+> resolution then the smaller NTSC one.
+> Which one will be accepted by the cx25840 depends on the currently set
+> broadcast standard and parameters of the last signal that was received,
+> at least one of these resolutions seem to work even without any
+> signal being received since the chip was powered up.
+> 
+> This way the API guarantees should be kept by the driver.
+
+This is basically a work-around for a cx25840 bug.
+
+In any case, since the driver initializes to PAL the 720x576 resolution
+should be fine.
+
+BTW, I noticed that cxdev->norm is initialized to 0. Why isn't that
+PAL?
+
+> 
+>>> +int cxusb_medion_analog_init(struct dvb_usb_device *dvbdev)
+>>> +{
+>>> +	struct cxusb_medion_dev *cxdev = dvbdev->priv;
+>>> +	u8 tuner_analog_msg_data[] = { 0x9c, 0x60, 0x85, 0x54 };
+>>> +	struct i2c_msg tuner_analog_msg = { .addr = 0x61, .flags = 0,
+>>> +					    .buf = tuner_analog_msg_data,
+>>> +					    .len =
+>>> +					    sizeof(tuner_analog_msg_data) };
+>>> +	struct v4l2_subdev_format subfmt;
+>>> +	int ret;
+>>> +
+>>> +	/* switch tuner to analog mode so IF demod will become accessible */
+>>> +	ret = i2c_transfer(&dvbdev->i2c_adap, &tuner_analog_msg, 1);
+>>> +	if (ret != 1)
+>>> +		dev_warn(&dvbdev->udev->dev,
+>>> +			 "tuner analog switch failed (%d)\n", ret);
+>>> +
+>>> +	/*
+>>> +	 * cx25840 might have lost power during mode switching so we need
+>>> +	 * to set it again
+>>> +	 */
+>>> +	ret = v4l2_subdev_call(cxdev->cx25840, core, reset, 0);
+>>> +	if (ret != 0)
+>>> +		dev_warn(&dvbdev->udev->dev,
+>>> +			 "cx25840 reset failed (%d)\n", ret);
+>>> +
+>>> +	ret = v4l2_subdev_call(cxdev->cx25840, video, s_routing,
+>>> +			       CX25840_COMPOSITE1, 0, 0);
+>>> +	if (ret != 0)
+>>> +		dev_warn(&dvbdev->udev->dev,
+>>> +			 "cx25840 initial input setting failed (%d)\n", ret);
+>>> +
+>>> +	/* composite */
+>>> +	cxdev->input = 1;
+>>> +	cxdev->norm = 0;
+>>> +
+>>> +	/* TODO: setup audio samples insertion */
+>>> +
+>>> +	ret = v4l2_subdev_call(cxdev->cx25840, core, s_io_pin_config,
+>>> +			       sizeof(cxusub_medion_pin_config) /
+>>> +			       sizeof(cxusub_medion_pin_config[0]),
+>>> +			       cxusub_medion_pin_config);
+>>> +	if (ret != 0)
+>>> +		dev_warn(&dvbdev->udev->dev,
+>>> +			"cx25840 pin config failed (%d)\n", ret);
+>>> +
+>>> +	/* make sure that we aren't in radio mode */
+>>> +	v4l2_subdev_call(cxdev->tda9887, video, s_std, V4L2_STD_PAL);
+>>> +	v4l2_subdev_call(cxdev->tuner, video, s_std, V4L2_STD_PAL);
+>>> +	v4l2_subdev_call(cxdev->cx25840, video, s_std, cxdev->norm);
+>>> +
+>>> +	memset(&subfmt, 0, sizeof(subfmt));
+>>> +	subfmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+>>> +	subfmt.format.width = cxdev->width;
+>>> +	subfmt.format.height = cxdev->height;
+>>> +	subfmt.format.code = MEDIA_BUS_FMT_FIXED;
+>>> +	subfmt.format.field = V4L2_FIELD_SEQ_TB;
+>>> +	subfmt.format.colorspace = V4L2_COLORSPACE_SMPTE170M;
+>>> +
+>>> +	ret = v4l2_subdev_call(cxdev->cx25840, pad, set_fmt, NULL, &subfmt);
+>>> +	if (ret != 0) {
+>>> +		subfmt.format.width = 640;
+>>> +		subfmt.format.height = 480;
+>>
+>> Why the fallback to 640x480?
+> 
+> This resolution seems to work even without any signal being received,
+> and it is a sensible NTSC-like resolution so it makes a good fallback
+> if restoring the previously used resolution has failed.
+
+But it is really a work-around for a cx25840 bug. Just fix set_fmt
+and you should not need this anymore.
+
+Regards.
+
+	Hans
+
+> 
+>>> +		ret = v4l2_subdev_call(cxdev->cx25840, pad, set_fmt, NULL,
+>>> +				       &subfmt);
+>>> +		if (ret != 0)
+>>> +			dev_warn(&dvbdev->udev->dev,
+>>> +				 "cx25840 format set failed (%d)\n", ret);
+>>> +	}
+>>> +
+>>> +	if (ret == 0) {
+>>> +		cxdev->width = subfmt.format.width;
+>>> +		cxdev->height = subfmt.format.height;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+> 
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+> 
+> Thanks and best regards,
+> Maciej
+> 
+
