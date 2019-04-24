@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7C6C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C1CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F28821903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE7721901
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116556;
-	bh=63QqnRs3gh2IRgev1DmEpzaiu47OZZz96OoFblJcNOQ=;
+	s=default; t=1556116562;
+	bh=W0hZJTnTMHZpf0S6Khw1JAEIUhq1mfLfg3jmHj1gQQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X0ToQLXv3QxLKC41uXxMXFWVKTs+zr5Jj8whNdYNR1JyH2+cFOGI9P3jlC3vLYUMe
-	 ZA24mMe9+oRxzbcoccPOZTOK9l4Drsj7NrWShfdQHEnnQAABwJhgXlj6FPGpAfQ19t
-	 v4839RrB6Ss3nABg9EvTl9LPmcUcbRvWPz7Gi1H4=
+	b=iqWVsmoYWLs/d5H0IgoaaEblaRTSkY0S7juOXpVFfCBXCEw4/Gfk7R3n2V21oB86B
+	 LKveGc0vg7pZRDd9+4jRMWGLkkA8jqEHU0qGWBUxIr+CuhnbxDprnmtNI37PvNKV5k
+	 +O5zRFn0H9MQ07UKPRWnBWD6x/lMlaPV9nw7lHZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730931AbfDXOfz (ORCPT
+        id S1731508AbfDXOgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:35:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39586 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:36:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731457AbfDXOfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:35:53 -0400
+        id S1730956AbfDXOf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:35:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC0DF21903;
-        Wed, 24 Apr 2019 14:35:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9751421903;
+        Wed, 24 Apr 2019 14:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116552;
-        bh=63QqnRs3gh2IRgev1DmEpzaiu47OZZz96OoFblJcNOQ=;
+        s=default; t=1556116558;
+        bh=W0hZJTnTMHZpf0S6Khw1JAEIUhq1mfLfg3jmHj1gQQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5AVutWMsNPaM2oTHtmq9UCleSnHqT4g9Gion2epptQ3/KA0EkqcilQWU2DQWif57
-         YF7fKD3U6EdFaf0wBOujAP2tSWQo1vhMyNLbh3sKbQxpbFRHg/SRa88DEHf/h7SGTX
-         hzec20OL0TFJF2ffIIfErEndOR4oX7f8p22qhlE8=
+        b=jLlXPIOE8MbiuMthltvc+4i5KFTqvu7kgKC/NPq24WdmU98Ggc+nU+Rzs8koFh4rn
+         gGvafokqf6QYuI4ss4PicUxBsKwatq91uAoD0ELs6QI0TcBQe0pw0NCxX6cE+3Qm/y
+         pA1TJELsd9jrNNCesr6S8z4SrC5qNJEE0OfaRaz0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 50/66] net: hns: Fix WARNING when remove HNS driver with SMMU enabled
-Date:   Wed, 24 Apr 2019 10:33:24 -0400
-Message-Id: <20190424143341.27665-50-sashal@kernel.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 52/66] KVM: SVM: prevent DBG_DECRYPT and DBG_ENCRYPT overflow
+Date:   Wed, 24 Apr 2019 10:33:26 -0400
+Message-Id: <20190424143341.27665-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -60,101 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: David Rientjes <rientjes@google.com>
 
-[ Upstream commit 8601a99d7c0256b7a7fdd1ab14cf6c1f1dfcadc6 ]
+[ Upstream commit b86bc2858b389255cd44555ce4b1e427b2b770c0 ]
 
-When enable SMMU, remove HNS driver will cause a WARNING:
+This ensures that the address and length provided to DBG_DECRYPT and
+DBG_ENCRYPT do not cause an overflow.
 
-[  141.924177] WARNING: CPU: 36 PID: 2708 at drivers/iommu/dma-iommu.c:443 __iommu_dma_unmap+0xc0/0xc8
-[  141.954673] Modules linked in: hns_enet_drv(-)
-[  141.963615] CPU: 36 PID: 2708 Comm: rmmod Tainted: G        W         5.0.0-rc1-28723-gb729c57de95c-dirty #32
-[  141.983593] Hardware name: Huawei D05/D05, BIOS Hisilicon D05 UEFI Nemo 1.8 RC0 08/31/2017
-[  142.000244] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  142.009886] pc : __iommu_dma_unmap+0xc0/0xc8
-[  142.018476] lr : __iommu_dma_unmap+0xc0/0xc8
-[  142.027066] sp : ffff000013533b90
-[  142.033728] x29: ffff000013533b90 x28: ffff8013e6983600
-[  142.044420] x27: 0000000000000000 x26: 0000000000000000
-[  142.055113] x25: 0000000056000000 x24: 0000000000000015
-[  142.065806] x23: 0000000000000028 x22: ffff8013e66eee68
-[  142.076499] x21: ffff8013db919800 x20: 0000ffffefbff000
-[  142.087192] x19: 0000000000001000 x18: 0000000000000007
-[  142.097885] x17: 000000000000000e x16: 0000000000000001
-[  142.108578] x15: 0000000000000019 x14: 363139343a70616d
-[  142.119270] x13: 6e75656761705f67 x12: 0000000000000000
-[  142.129963] x11: 00000000ffffffff x10: 0000000000000006
-[  142.140656] x9 : 1346c1aa88093500 x8 : ffff0000114de4e0
-[  142.151349] x7 : 6662666578303d72 x6 : ffff0000105ffec8
-[  142.162042] x5 : 0000000000000000 x4 : 0000000000000000
-[  142.172734] x3 : 00000000ffffffff x2 : ffff0000114de500
-[  142.183427] x1 : 0000000000000000 x0 : 0000000000000035
-[  142.194120] Call trace:
-[  142.199030]  __iommu_dma_unmap+0xc0/0xc8
-[  142.206920]  iommu_dma_unmap_page+0x20/0x28
-[  142.215335]  __iommu_unmap_page+0x40/0x60
-[  142.223399]  hnae_unmap_buffer+0x110/0x134
-[  142.231639]  hnae_free_desc+0x6c/0x10c
-[  142.239177]  hnae_fini_ring+0x14/0x34
-[  142.246540]  hnae_fini_queue+0x2c/0x40
-[  142.254080]  hnae_put_handle+0x38/0xcc
-[  142.261619]  hns_nic_dev_remove+0x54/0xfc [hns_enet_drv]
-[  142.272312]  platform_drv_remove+0x24/0x64
-[  142.280552]  device_release_driver_internal+0x17c/0x20c
-[  142.291070]  driver_detach+0x4c/0x90
-[  142.298259]  bus_remove_driver+0x5c/0xd8
-[  142.306148]  driver_unregister+0x2c/0x54
-[  142.314037]  platform_driver_unregister+0x10/0x18
-[  142.323505]  hns_nic_dev_driver_exit+0x14/0xf0c [hns_enet_drv]
-[  142.335248]  __arm64_sys_delete_module+0x214/0x25c
-[  142.344891]  el0_svc_common+0xb0/0x10c
-[  142.352430]  el0_svc_handler+0x24/0x80
-[  142.359968]  el0_svc+0x8/0x7c0
-[  142.366104] ---[ end trace 60ad1cd58e63c407 ]---
+At the same time, pass the actual number of pages pinned in memory to
+sev_unpin_memory() as a cleanup.
 
-The tx ring buffer map when xmit and unmap when xmit done. So in
-hnae_init_ring() did not map tx ring buffer, but in hnae_fini_ring()
-have a unmap operation for tx ring buffer, which is already unmapped
-when xmit done, than cause this WARNING.
-
-The hnae_alloc_buffers() is called in hnae_init_ring(),
-so the hnae_free_buffers() should be in hnae_fini_ring(), not in
-hnae_free_desc().
-
-In hnae_fini_ring(), adds a check is_rx_ring() as in hnae_init_ring().
-When the ring buffer is tx ring, adds a piece of code to ensure that
-the tx ring is unmap.
-
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Cfir Cohen <cfir@google.com>
+Signed-off-by: David Rientjes <rientjes@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hnae.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kvm/svm.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
-index 79d03f8ee7b1..c7fa97a7e1f4 100644
---- a/drivers/net/ethernet/hisilicon/hns/hnae.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
-@@ -150,7 +150,6 @@ static int hnae_alloc_buffers(struct hnae_ring *ring)
- /* free desc along with its attached buffer */
- static void hnae_free_desc(struct hnae_ring *ring)
- {
--	hnae_free_buffers(ring);
- 	dma_unmap_single(ring_to_dev(ring), ring->desc_dma_addr,
- 			 ring->desc_num * sizeof(ring->desc[0]),
- 			 ring_to_dma_dir(ring));
-@@ -183,6 +182,9 @@ static int hnae_alloc_desc(struct hnae_ring *ring)
- /* fini ring, also free the buffer for the ring */
- static void hnae_fini_ring(struct hnae_ring *ring)
- {
-+	if (is_rx_ring(ring))
-+		hnae_free_buffers(ring);
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index a9b8e38d78ad..4c110956d188 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -6799,7 +6799,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+ 	struct page **src_p, **dst_p;
+ 	struct kvm_sev_dbg debug;
+ 	unsigned long n;
+-	int ret, size;
++	unsigned int size;
++	int ret;
+ 
+ 	if (!sev_guest(kvm))
+ 		return -ENOTTY;
+@@ -6807,6 +6808,11 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+ 	if (copy_from_user(&debug, (void __user *)(uintptr_t)argp->data, sizeof(debug)))
+ 		return -EFAULT;
+ 
++	if (!debug.len || debug.src_uaddr + debug.len < debug.src_uaddr)
++		return -EINVAL;
++	if (!debug.dst_uaddr)
++		return -EINVAL;
 +
- 	hnae_free_desc(ring);
- 	kfree(ring->desc_cb);
- 	ring->desc_cb = NULL;
+ 	vaddr = debug.src_uaddr;
+ 	size = debug.len;
+ 	vaddr_end = vaddr + size;
+@@ -6857,8 +6863,8 @@ static int sev_dbg_crypt(struct kvm *kvm, struct kvm_sev_cmd *argp, bool dec)
+ 						     dst_vaddr,
+ 						     len, &argp->error);
+ 
+-		sev_unpin_memory(kvm, src_p, 1);
+-		sev_unpin_memory(kvm, dst_p, 1);
++		sev_unpin_memory(kvm, src_p, n);
++		sev_unpin_memory(kvm, dst_p, n);
+ 
+ 		if (ret)
+ 			goto err;
 -- 
 2.19.1
 
