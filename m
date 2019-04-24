@@ -2,132 +2,258 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BA7C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EEDC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A374121903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEA521903
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117814;
-	bh=+U7kIkfNl3p5D5Qc1w5yryv07uz6UAhQPCv6Mz6CDqg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IyCJmHMtW3txrOKFWHW6vqdYcLUz71/rRxpZrPhLAx1oijU1+AEfTMWJxBVadxRnD
-	 I3liNNND9Wrf0v7ziC8T4OF3BmyG0edsLO7mC8MdOgrfsdtIWOCcLgUFDHGGQpCP3M
-	 2D1Zpp7T3uBRdVR3v7cEZVIzezPCh1S3I+dVTVbo=
+	s=default; t=1556117821;
+	bh=MB7DgREFx4xhQOu72JGnS2pWkknaYZorcsmqFXjSlDk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DqXMknBeaOh1N0xUjrjD215uwvz6BNBEiGYzcXyR4RJsGWFlbPEv+bGmlVR9aDJnd
+	 346RgMg7R/YBD829bglGMEp6zvqpU8zxmhYR5Q8tdn83z6rZ3J/LIHjCdjtSaS1uQ7
+	 MhxQKd/SqsqP2fbfmhCEQPM4oNqFTRdoM/T1FVyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732952AbfDXO4x (ORCPT
+        id S1732998AbfDXO5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732566AbfDXOu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:50:28 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C681D218FC;
-        Wed, 24 Apr 2019 14:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117427;
-        bh=+U7kIkfNl3p5D5Qc1w5yryv07uz6UAhQPCv6Mz6CDqg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GtLJpyq5dbMU/h4jo6i89HvmZLJ5wTI0AxOrB3xRY3A0cdGyye3R3oTDWopR0dRk6
-         63PC8UtXDQ90JOmojTcUX2B0KhPOjbJR0ra7Ycgb2fw/5OMh+O6wUB32+rqvurKl6y
-         kvwMlTyIuCWdAvfcB46yC/IAkq35edQTkgPSMT6M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/28] batman-adv: Reduce tt_global hash refcnt only for removed entry
-Date:   Wed, 24 Apr 2019 10:49:50 -0400
-Message-Id: <20190424145012.30886-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424145012.30886-1-sashal@kernel.org>
-References: <20190424145012.30886-1-sashal@kernel.org>
+        Wed, 24 Apr 2019 10:57:00 -0400
+Received: from casper.infradead.org ([85.118.1.10]:51590 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbfDXO45 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:56:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=HAegWhTw52zFr6txY4cu/OvT7InTwy7rOkvAWwmB5RM=; b=LJr48VvTgnXLO74Hxq76Gu1DM6
+        7NtAg0qBrp5QUUJrZqMmWDYOxG+soFK0D7BfNgJNYJxf/ujAROBCM6PQHsftBPTG2/+jbq9N6/vul
+        ItTW+k/ATPBzYZlZbOkkhsWuctjlcx9rWNhKyxHRX9Yl7IegX4Gn8IkvtGv/J8NuhF51GO78WY34b
+        1Ljr+zvvyvvbGfGKdo2Javdy7kRperh3vnK8H5NhSw/rUg87/y30fgf6UL3+CJuCCU8s7x7ry5WgL
+        aiP/1zCAd1MsiH6klZUyiuLZ9vNkri5n7DCdqNFX1+8sieblpcMquosw1mlRRYcy103ibNTlHgSSt
+        RL2wT0Aw==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJJKP-000176-Rq; Wed, 24 Apr 2019 14:56:54 +0000
+Date:   Wed, 24 Apr 2019 11:56:47 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>, mingo@redhat.com
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, x86@kernel.org,
+        fenghua.yu@intel.com, linuxppc-dev@lists.ozlabs.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 24/63] Documentation: ACPI: move video_extension.txt
+ to firmware-guide/acpi and convert to reST
+Message-ID: <20190424115647.092dec38@coco.lan>
+In-Reply-To: <20190423162932.21428-25-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-25-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+Em Wed, 24 Apr 2019 00:28:53 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-[ Upstream commit f131a56880d10932931e74773fb8702894a94a75 ]
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  Documentation/firmware-guide/acpi/index.rst   |  1 +
+>  .../acpi/video_extension.rst}                 | 63 ++++++++++---------
+>  2 files changed, 36 insertions(+), 28 deletions(-)
+>  rename Documentation/{acpi/video_extension.txt => firmware-guide/acpi/video_extension.rst} (79%)
+> 
+> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+> index 0e60f4b7129a..ae609eec4679 100644
+> --- a/Documentation/firmware-guide/acpi/index.rst
+> +++ b/Documentation/firmware-guide/acpi/index.rst
+> @@ -23,3 +23,4 @@ ACPI Support
+>     i2c-muxes
+>     acpi-lid
+>     lpit
+> +   video_extension
+> diff --git a/Documentation/acpi/video_extension.txt b/Documentation/firmware-guide/acpi/video_extension.rst
+> similarity index 79%
+> rename from Documentation/acpi/video_extension.txt
+> rename to Documentation/firmware-guide/acpi/video_extension.rst
+> index 79bf6a4921be..06f7e3230b6e 100644
+> --- a/Documentation/acpi/video_extension.txt
+> +++ b/Documentation/firmware-guide/acpi/video_extension.rst
+> @@ -1,5 +1,8 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=====================
+>  ACPI video extensions
+> -~~~~~~~~~~~~~~~~~~~~~
+> +=====================
+>  
+>  This driver implement the ACPI Extensions For Display Adapters for
+>  integrated graphics devices on motherboard, as specified in ACPI 2.0
+> @@ -8,9 +11,10 @@ defining the video POST device, retrieving EDID information or to
+>  setup a video output, etc.  Note that this is an ref. implementation
+>  only.  It may or may not work for your integrated video device.
+>  
+> -The ACPI video driver does 3 things regarding backlight control:
+> +The ACPI video driver does 3 things regarding backlight control.
+>  
+> -1 Export a sysfs interface for user space to control backlight level
+> +1. Export a sysfs interface for user space to control backlight level
+> +=====================================================================
+>  
+>  If the ACPI table has a video device, and acpi_backlight=vendor kernel
+>  command line is not present, the driver will register a backlight device
 
-The batadv_hash_remove is a function which searches the hashtable for an
-entry using a needle, a hashtable bucket selection function and a compare
-function. It will lock the bucket list and delete an entry when the compare
-function matches it with the needle. It returns the pointer to the
-hlist_node which matches or NULL when no entry matches the needle.
+Hmm... you didn't touch on this part of the document:
 
-The batadv_tt_global_free is not itself protected in anyway to avoid that
-any other function is modifying the hashtable between the search for the
-entry and the call to batadv_hash_remove. It can therefore happen that the
-entry either doesn't exist anymore or an entry was deleted which is not the
-same object as the needle. In such an situation, the reference counter (for
-the reference stored in the hashtable) must not be reduced for the needle.
-Instead the reference counter of the actually removed entry has to be
-reduced.
+	And what ACPI video driver does is:
+	actual_brightness: on read, control method _BQC will be evaluated to
+	get the brightness level the firmware thinks it is at;
+	bl_power: not implemented, will set the current brightness instead;
+	brightness: on write, control method _BCM will run to set the requested
+	brightness level;
+	max_brightness: Derived from the _BCL package(see below);
+	type: firmware
 
-Otherwise the reference counter will underflow and the object might be
-freed before all its references were dropped. The kref helpers reported
-this problem as:
+You should touch it. My suggestion here is:
 
-  refcount_t: underflow; use-after-free.
+	And what ACPI video driver does is:
 
-Fixes: 7683fdc1e886 ("batman-adv: protect the local and the global trans-tables with rcu")
-Reported-by: Martin Weinelt <martin@linuxlounge.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/batman-adv/translation-table.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+	actual_brightness:
+		on read, control method _BQC will be evaluated to
+		get the brightness level the firmware thinks it is at;
+	bl_power:
+		not implemented, will set the current brightness instead;
+	brightness:
+		on write, control method _BCM will run to set the requested
+		brightness level;
+	max_brightness:
+		Derived from the _BCL package(see below);
+	type:
+		firmware
 
-diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
-index 4f18fcd2d3c0..af4a02ad8503 100644
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -615,14 +615,26 @@ static void batadv_tt_global_free(struct batadv_priv *bat_priv,
- 				  struct batadv_tt_global_entry *tt_global,
- 				  const char *message)
- {
-+	struct batadv_tt_global_entry *tt_removed_entry;
-+	struct hlist_node *tt_removed_node;
-+
- 	batadv_dbg(BATADV_DBG_TT, bat_priv,
- 		   "Deleting global tt entry %pM (vid: %d): %s\n",
- 		   tt_global->common.addr,
- 		   BATADV_PRINT_VID(tt_global->common.vid), message);
- 
--	batadv_hash_remove(bat_priv->tt.global_hash, batadv_compare_tt,
--			   batadv_choose_tt, &tt_global->common);
--	batadv_tt_global_entry_put(tt_global);
-+	tt_removed_node = batadv_hash_remove(bat_priv->tt.global_hash,
-+					     batadv_compare_tt,
-+					     batadv_choose_tt,
-+					     &tt_global->common);
-+	if (!tt_removed_node)
-+		return;
-+
-+	/* drop reference of remove hash entry */
-+	tt_removed_entry = hlist_entry(tt_removed_node,
-+				       struct batadv_tt_global_entry,
-+				       common.hash_entry);
-+	batadv_tt_global_entry_put(tt_removed_entry);
- }
- 
- /**
--- 
-2.19.1
+> @@ -32,26 +36,26 @@ type: firmware
+>  
+>  Note that ACPI video backlight driver will always use index for
+>  brightness, actual_brightness and max_brightness. So if we have
+> -the following _BCL package:
+> +the following _BCL package::
+>  
+> -Method (_BCL, 0, NotSerialized)
+> -{
+> -	Return (Package (0x0C)
+> +	Method (_BCL, 0, NotSerialized)
+>  	{
+> -		0x64,
+> -		0x32,
+> -		0x0A,
+> -		0x14,
+> -		0x1E,
+> -		0x28,
+> -		0x32,
+> -		0x3C,
+> -		0x46,
+> -		0x50,
+> -		0x5A,
+> -		0x64
+> -	})
+> -}
+> +		Return (Package (0x0C)
+> +		{
+> +			0x64,
+> +			0x32,
+> +			0x0A,
+> +			0x14,
+> +			0x1E,
+> +			0x28,
+> +			0x32,
+> +			0x3C,
+> +			0x46,
+> +			0x50,
+> +			0x5A,
+> +			0x64
+> +		})
+> +	}
+>  
+>  The first two levels are for when laptop are on AC or on battery and are
+>  not used by Linux currently. The remaining 10 levels are supported levels
+> @@ -62,13 +66,15 @@ as a "brightness level" indicator. Thus from the user space perspective
+>  the range of available brightness levels is from 0 to 9 (max_brightness)
+>  inclusive.
+>  
+> -2 Notify user space about hotkey event
+> +2. Notify user space about hotkey event
+> +=======================================
+>  
+>  There are generally two cases for hotkey event reporting:
+> +
+>  i) For some laptops, when user presses the hotkey, a scancode will be
+>     generated and sent to user space through the input device created by
+>     the keyboard driver as a key type input event, with proper remap, the
+> -   following key code will appear to user space:
+> +   following key code will appear to user space::
+>  
+>  	EV_KEY, KEY_BRIGHTNESSUP
+>  	EV_KEY, KEY_BRIGHTNESSDOWN
+> @@ -82,7 +88,7 @@ ii) For some laptops, the press of the hotkey will not generate the
+>      about the event. The event value is defined in the ACPI spec. ACPI
+>      video driver will generate an key type input event according to the
+>      notify value it received and send the event to user space through the
+> -    input device it created:
+> +    input device it created::
+>  
+>  	event		keycode
+>  	0x86		KEY_BRIGHTNESSUP
 
+Perhaps making this as a table would work better:
+
+    input device it created:
+
+	=====		===================
+	event		keycode
+	=====		===================
+	0x86		KEY_BRIGHTNESSUP
+	0x87		KEY_BRIGHTNESSDOWN
+	etc.
+	=====		===================
+
+
+> @@ -94,13 +100,14 @@ so this would lead to the same effect as case i) now.
+>  Once user space tool receives this event, it can modify the backlight
+>  level through the sysfs interface.
+>  
+> -3 Change backlight level in the kernel
+> +3. Change backlight level in the kernel
+> +=======================================
+>  
+>  This works for machines covered by case ii) in Section 2. Once the driver
+>  received a notification, it will set the backlight level accordingly. This does
+>  not affect the sending of event to user space, they are always sent to user
+>  space regardless of whether or not the video module controls the backlight level
+>  directly. This behaviour can be controlled through the brightness_switch_enabled
+> -module parameter as documented in admin-guide/kernel-parameters.rst. It is recommended to
+> -disable this behaviour once a GUI environment starts up and wants to have full
+> -control of the backlight level.
+> +module parameter as documented in admin-guide/kernel-parameters.rst. It is
+> +recommended to disable this behaviour once a GUI environment starts up and
+> +wants to have full control of the backlight level.
+
+
+
+Thanks,
+Mauro
