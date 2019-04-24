@@ -2,178 +2,109 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28FBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B659C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 753542089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0265820878
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sejCTUVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbfDXFll (ORCPT
+        id S1729591AbfDXFnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 01:41:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58334 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfDXFll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 01:41:41 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 730F62CD806;
-        Wed, 24 Apr 2019 05:41:40 +0000 (UTC)
-Received: from localhost (ovpn-12-131.pek2.redhat.com [10.72.12.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D6C831797E;
-        Wed, 24 Apr 2019 05:41:37 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 13:41:35 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Kairui Song <kasong@redhat.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Dave Young <dyoung@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: Re: [PATCH] x86/kexec: always ensure EFI systab region is mapped
-Message-ID: <20190424054135.GG3584@localhost.localdomain>
-References: <20190422092804.15534-1-kasong@redhat.com>
- <965f770a-b103-72fb-eaef-cb337ebe8290@ce.jp.nec.com>
- <CACPcB9d-oNvp1Kag1J8X+QBdgqfU0ps1OztjOk8n=Pw2G6ONWA@mail.gmail.com>
- <24f1dc7c-1dea-79b0-d364-0dc7d605ce01@ce.jp.nec.com>
+        Wed, 24 Apr 2019 01:43:11 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44316 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfDXFnL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 01:43:11 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z16so4179762pgv.11
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 22:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6HIZTkS3Ox8iXaeKIsvQHo6rr7RP7xjOKxUXvZEMDZs=;
+        b=sejCTUVDzsykocveLP8Mc5h43M3uPsL9O44qSiQMFXvM968FB8pYrzHMWyBCh5sDaC
+         a9RLZdcP5r+AOXiUpj8aVmM68s/YyMQxPTWrKGOqrqx2jmN3zC/nhpIQ25wt6PrF8rRY
+         pdWZ5dL7CZ3FolB01yeN1ztrShz7Aii+Qw5hjFTXDkSWpODVCfIkJyROySyuWOe3i0DB
+         qkppFzhpksQMDo7fgqElDx4ITIXJ79UwNdP5jFboHCSYofxb/rTT134K58+NOYdV37An
+         Xs2zP3ZlC429HGXP2zu7e1XcOI5LqqZ3qRJtKcDqSG+wjQyEMvTz877kmqQPhPtGZXtk
+         4mZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6HIZTkS3Ox8iXaeKIsvQHo6rr7RP7xjOKxUXvZEMDZs=;
+        b=AFTnBZRDyP7C6/iI4dGlme2OgXk72tiQfL9qB9gcFsH0dYl7GP5TOuuo7AKOD0jRiP
+         n6dugP7EX9fag6UsRKlzJvrvAB6wADGkWS0c8JtXYrx1J3+cnpb4R+lPJ5OYiBOxsHKJ
+         AzjvevhTuDdXOdZj/4GfV8l5UPSqs7Rgg0FWCOkEvWEhs0nioaamQwf4TPulqHyf2Wr4
+         Am1SHpxZz6aeb/junDzZRqvgrXzeguuVsF2YTvWrznDCU2KCG5rQ3y43pinWSalYYgok
+         DEM8UZOiszSZWWF15KQvRXE1UlspE7bC2kvJ7enuwTshRjf4nOoW7LdGhWeW1OpkMgLe
+         ujHw==
+X-Gm-Message-State: APjAAAVoFOj7wBKKHATSc9gKt2i+4hmUy8rbcwzx7vAdlTFLi5vC0nbr
+        4I6YkRgUBjQH1F6k+3axk8wx2MnE
+X-Google-Smtp-Source: APXvYqwgCjmYB5yhAIxByFNRFJF47oQpEnJKaCoxklRrv9REVXh0fdRvyFoCwEU5Kb4orZWT+D6rLQ==
+X-Received: by 2002:a65:6656:: with SMTP id z22mr11164388pgv.333.1556084590568;
+        Tue, 23 Apr 2019 22:43:10 -0700 (PDT)
+Received: from localhost ([175.223.32.169])
+        by smtp.gmail.com with ESMTPSA id f27sm6407193pfk.111.2019.04.23.22.43.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 22:43:09 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 14:43:05 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC][PATCH 0/2] Access console drivers list under console_sem
+Message-ID: <20190424054305.GA28894@jagdpanzerIV>
+References: <20190423062511.1118-1-sergey.senozhatsky@gmail.com>
+ <20190423094801.377b8059@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <24f1dc7c-1dea-79b0-d364-0dc7d605ce01@ce.jp.nec.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 24 Apr 2019 05:41:40 +0000 (UTC)
+In-Reply-To: <20190423094801.377b8059@gandalf.local.home>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/24/19 at 02:47am, Junichi Nomura wrote:
-> On 4/24/19 2:15 AM, Kairui Song wrote:
-> > On Mon, Apr 22, 2019 at 11:21 PM Junichi Nomura <j-nomura@ce.jp.nec.com> wrote:
-> >> Is the mapping of ACPI tables just by luck, too?
+On (04/23/19 09:48), Steven Rostedt wrote:
+> > 	RFC
 > > 
-> > Good question, they should have same issue with systab, I ignored this one.
-> > Then in first kernel when doing kexec it should ensure both ACPI
-> > tables and the EFI systab are mapped, that should cover everything and
-> > make it work.
+> > 	Normally, we grab console_sem lock before we iterate consoles
+> > list, which is necessary if we want to be race free. The only exception
+> > to this rule is console_flush_on_panic(). However, it seems that we are
+> > not fully race free - register_console() iterates console drivers list
+> > in unsafe manner in several places. E.g. the following scenarion:
+> > 
+> > 	CPU0					CPU1
+> > 	register_console()			unregister_console()
+> > 						 console_lock()
+> > 	  for_each_console()			  // modify console_drivers
+> > 	    con->foo				    kfree(con)
+> > 
+> > So I have two quick-n-dirty patches, which remove unsafe console list
+> > access.
+> > 
+> > What do you think?
 > 
-> Right.
-> 
-> > Is there anything else missing?
-> No, as far as I looked around get_rsdp_addr().
+> I just skimmed the patches and haven't done a thorough review, but the
+> concept seems sane to me.
 
-Have made a draft patch to build ident mapping for ACPI tables too, it's
-based on Kairui's patch. Dave has tested on his t400s laptop, and
-passed. Please check if this adding is OK.
+Thank you Steven. Let me know if anything doesn't work for you.
 
-Kairui, you can add this into your patch to make a new one and resend.
-Or I can combine them and send for you today.
+I have vague memories of a kernel Oops at con->foo dereferencing
+(saw a message on linux-rt-users list a while ago, if I'm not
+mistaken). And it seems that we have some races in printk code.
 
-From 7f17fcb12a6fddbb0f5e56e5137cc81f25c04af4 Mon Sep 17 00:00:00 2001
-From: Baoquan He <bhe@redhat.com>
-Date: Wed, 24 Apr 2019 09:57:01 +0800
-Subject: [PATCH] x86/kexec: Prepare ACPI table mapping for kexec kernel
-
-If the kernel decompressing code accesses ACPI tabels in kexec-ed kernel,
-they also need be 1:1 mapped.
-
----
- arch/x86/kernel/machine_kexec_64.c | 54 ++++++++++++++++++++++++++++--
- 1 file changed, 51 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index d5da54893f97..e2948aea27d4 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -30,6 +30,48 @@
- #include <asm/setup.h>
- #include <asm/set_memory.h>
- 
-+#ifdef CONFIG_ACPI
-+/**
-+ * Used while adding mapping for ACPI tables.
-+ * Can be reused when other iomem regions need be mapped
-+ */
-+struct init_pgtable_data {
-+	struct x86_mapping_info *info;
-+	pgd_t *level4p;
-+};
-+
-+static int mem_region_callback(struct resource *res, void *arg)
-+{
-+	struct init_pgtable_data *data= arg;
-+	unsigned long mstart, mend;
-+
-+	mstart = res->start;
-+	mend = mstart + resource_size(res) - 1;
-+
-+	return kernel_ident_mapping_init(data->info,
-+			data->level4p, mstart, mend);
-+}
-+
-+static int init_acpi_pgtable(struct x86_mapping_info *info,
-+				   pgd_t *level4p)
-+{
-+	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	struct init_pgtable_data data;
-+
-+	data.info = info;
-+	data.level4p = level4p;
-+	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
-+				   &data, mem_region_callback);
-+}
-+#else
-+static int init_acpi_pgtable(struct x86_mapping_info *info,
-+				   pgd_t *level4p)
-+{
-+	return 0;
-+}
-+#endif
-+
- #ifdef CONFIG_KEXEC_FILE
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 		&kexec_bzImage64_ops,
-@@ -114,6 +156,8 @@ static void *alloc_pgt_page(void *data)
- 	return p;
- }
- 
-+
-+
- #ifdef CONFIG_EFI
- static int init_efi_systab_pgtable(struct x86_mapping_info *info,
- 				   pgd_t *level4p)
-@@ -191,14 +235,18 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 			return result;
- 	}
- 
--	/*
--	 * Prepare EFI systab mapping for kexec kernel, systab is not
--	 * covered by pfn_mapped.
-+	/**
-+	 * Prepare EFI systab and ACPI table mapping for kexec kernel,
-+	 * since they are not covered by pfn_mapped.
- 	 */
- 	result = init_efi_systab_pgtable(&info, level4p);
- 	if (result)
- 		return result;
- 
-+	result = init_acpi_pgtable(&info, level4p);
-+	if (result)
-+		return result;
-+
- 	return init_transition_pgtable(image, level4p);
- }
- 
--- 
-2.17.2
-
+	-ss
