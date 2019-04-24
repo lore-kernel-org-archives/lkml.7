@@ -2,119 +2,261 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB9EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C40C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3972089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128588;
-	bh=225g5NqxTGsZgapnTJ2tLSHKTrRYVOZmSfLdVtQFubE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CozEwCzzO0iMuH30uniMMvxSsswHGUw5qTj9lsHaia2/cPSUKLLQDfSQHnbokUXgk
-	 a/jYxaYtE0bWGCCV6uyYDVMNMS5IwJSesAEUN8GQ2+yYJvZ9P4FmjbjiEdjuxEPIN5
-	 y6jUhSjSHT+POd6ZgfUuPH1y1UZ+hzn5aTYRNhl0=
+	by mail.kernel.org (Postfix) with ESMTP id 4484920685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:56:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RckZ4pIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390316AbfDXR41 (ORCPT
+        id S2392463AbfDXR43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:56:27 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45485 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390808AbfDXR4Y (ORCPT
+        Wed, 24 Apr 2019 13:56:29 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40310 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403786AbfDXR40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:56:24 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y6so17712662ljd.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 10:56:23 -0700 (PDT)
+        Wed, 24 Apr 2019 13:56:26 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c207so9685062pfc.7;
+        Wed, 24 Apr 2019 10:56:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hAMP8lrnIAYvASMIpak2/qo17VBuOdCnb72SQGQnKPk=;
-        b=Pq10Ge2gP/s9W7oSsdB/c6u6LKJMWhFciYSFHNDhMzz6ALdyugqQaS1y+WHW3T18xq
-         G9EPbo/mv7TNQWWm4Ydgu+6hjxI4QHlI3hQZZdATGuF0R7V4m9quSMNk/2K2K35OvOp8
-         jIXjIJ8rXClzaOmvT3sZDKaGEXa+AIVBXOeEU=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nn95F9/oxRsjhaP/vqYEb2kwBw3lresYDu+ZATb/62A=;
+        b=RckZ4pIYy4Mj29QZ80JL/2mzryzIpZD6CgBI8xEQFtZbMrYWB7yH8Rb+c2FIoqS2OI
+         JMvzhQlaE5+FVVwnTBJPagGGz6u+tB7omL6LzQPb3G45poY4MYkmVpY0NgRMXe+Lv+b6
+         fWIc3aCkPc1IYZ7FLh814x2XiybnZKEK8itwxtZcKPRPXIStRlFKRfcfEQ446QP7WKgT
+         C2jGH4hVEWOlmYBT16x/qHKc0N9AUUESKR0FNMEpjXKrnLgHprVN6d38KBYsKM/TDAYZ
+         E2YVjH7AHrdPcBu/ucF7R1slZWv2EiSp5pAIw2qWTZ+GwTg3/3IgOTTcTZBaXh0wFSz8
+         p5PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hAMP8lrnIAYvASMIpak2/qo17VBuOdCnb72SQGQnKPk=;
-        b=kc9yAg6NjTakkvjyootBWxgP+VTk4DadwLzGmsQbM7KLs4DhsMJqd+aeDUPN07oeCO
-         WKVLl/KHeF9g/z+Q4t0NUqVwratO+dzFsW4jfg5x3VCrzTjxM64YmK+t/OtxeOCSXRfG
-         li2eUHjpGHhKrilMuuniSqqMSBLPRCYOMZ05csCZie5DJvgFe5Im8/NS0gcPiZe1VQwe
-         tTJ/F6RGd8G+4975SEk8kTkFNk+NpT3qUFWjYUtd8yC040Mwhp6+iekI0pUAHwBXtLhO
-         nmFoar4TmH8EInZFRsl864li+Hiil4Ur35tEaQxpTbY+370ahucx1jITgwtanKJ3Vuq/
-         VocA==
-X-Gm-Message-State: APjAAAV5DI9U0Bq+e1W3C1MgGqOCR5/ZJFN0JIrj/NGznpbeA5XP1oXJ
-        WetpfrdF1Eb+0MwraRFT9pibp+2XhOI=
-X-Google-Smtp-Source: APXvYqyJMezR8XA4TT2BvhBeAYqIEKvB0hRNq5RIIbKCpOk66XFP2CfIn88vBJ2H9+cD7xOZifVdPQ==
-X-Received: by 2002:a2e:810d:: with SMTP id d13mr18024499ljg.93.1556128581942;
-        Wed, 24 Apr 2019 10:56:21 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id 77sm4069977ljs.58.2019.04.24.10.56.20
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nn95F9/oxRsjhaP/vqYEb2kwBw3lresYDu+ZATb/62A=;
+        b=Q5YByTPiH+Xol+NcrX8PlD+9GqEufirSrurpdHb+e8K0dYBdddxL3KwU07vajGC3zk
+         u4fbIywPwLkuHdUFm5jOMLS/UMIQ1/eCQqztjFnZm8VUVpN5D6OEa9acwbt9CiJFSjKp
+         JminHSDNxEwlLd9g79RSzVOMZ3TQyJTtO/u56GxX92tEuOUWfGwuZ6sBEqFXzQZ/u65Y
+         iljIEXDLrsFztGTssabZjTPfiOL/cnCV8pOhMqu0sA51do1/NEaI9gzfh2LGC7vi2UOM
+         d6ZzvBCflm9alW3nyAIMKYlDfepkpHitutRpTTfAlY06HlIHZdwgKUQh8SFepDMYH8j+
+         p6nw==
+X-Gm-Message-State: APjAAAXRzXyWzQledff8/wqQf3TMp7GGdvt9b43fr906xbwpnXWT8bk6
+        3Iv+y5bEOWySj7cFyfDo6Wo=
+X-Google-Smtp-Source: APXvYqyC7xZu9irrJLXAAUD0X2zZImswc0bcYsKVoHVKIDC2TcMNsFE0QngKXpNX66QZ/FezeXZ4GA==
+X-Received: by 2002:a65:4183:: with SMTP id a3mr31948842pgq.121.1556128585109;
+        Wed, 24 Apr 2019 10:56:25 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id 6sm29275630pfp.143.2019.04.24.10.56.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 10:56:21 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id i186so3817693lji.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 10:56:20 -0700 (PDT)
-X-Received: by 2002:a2e:9213:: with SMTP id k19mr3850766ljg.118.1556128580498;
- Wed, 24 Apr 2019 10:56:20 -0700 (PDT)
+        Wed, 24 Apr 2019 10:56:24 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     rjw@rjwysocki.net, Jonathan Corbet <corbet@lwn.net>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v5 19/23] Documentation: ACPI: move apei/einj.txt to firmware-guide/acpi and convert to reST
+Date:   Thu, 25 Apr 2019 01:53:02 +0800
+Message-Id: <20190424175306.25880-20-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190424175306.25880-1-changbin.du@gmail.com>
+References: <20190424175306.25880-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-References: <20190419120207.GO4038@hirez.programming.kicks-ass.net>
- <20190419130304.GV14281@hirez.programming.kicks-ass.net> <20190419131522.GW14281@hirez.programming.kicks-ass.net>
- <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com> <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
- <20190423141714.GO11158@hirez.programming.kicks-ass.net> <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
- <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com> <20190424070959.GE4038@hirez.programming.kicks-ass.net>
- <51589ac0-3e1f-040e-02bf-b6de77cbda1d@redhat.com> <20190424170148.GR12232@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190424170148.GR12232@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 24 Apr 2019 10:56:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whA4dDdp+KT_ZWnKr5ERqhUtsf3wRTh7HL1Dcg0vGYV_g@mail.gmail.com>
-Message-ID: <CAHk-=whA4dDdp+KT_ZWnKr5ERqhUtsf3wRTh7HL1Dcg0vGYV_g@mail.gmail.com>
-Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count negative
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:02 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> > For an uncontended rwsem, this offers no real benefit. Adding
-> > preempt_disable() is more complicated than I originally thought.
->
-> I'm not sure I get your objection?
+This converts the plain text documentation to reStructuredText format and
+add it to Sphinx TOC tree. No essential content change.
 
-I'm not sure it's an objection, but I do think that it's sad if we
-have to do the preempt_enable/disable around the fastpath.
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ .../acpi/apei/einj.rst}                       | 94 ++++++++++---------
+ Documentation/firmware-guide/acpi/index.rst   |  1 +
+ 2 files changed, 52 insertions(+), 43 deletions(-)
+ rename Documentation/{acpi/apei/einj.txt => firmware-guide/acpi/apei/einj.rst} (67%)
 
-Is the *only* reason for the preempt-disable to avoid the (very
-unlikely) case of unbounded preemption in between the "increment
-reader counts" and "decrement it again because we noticed it turned
-negative"?
+diff --git a/Documentation/acpi/apei/einj.txt b/Documentation/firmware-guide/acpi/apei/einj.rst
+similarity index 67%
+rename from Documentation/acpi/apei/einj.txt
+rename to Documentation/firmware-guide/acpi/apei/einj.rst
+index e550c8b98139..e588bccf5158 100644
+--- a/Documentation/acpi/apei/einj.txt
++++ b/Documentation/firmware-guide/acpi/apei/einj.rst
+@@ -1,13 +1,16 @@
+-			APEI Error INJection
+-			~~~~~~~~~~~~~~~~~~~~
++.. SPDX-License-Identifier: GPL-2.0
++
++====================
++APEI Error INJection
++====================
+ 
+ EINJ provides a hardware error injection mechanism. It is very useful
+ for debugging and testing APEI and RAS features in general.
+ 
+ You need to check whether your BIOS supports EINJ first. For that, look
+-for early boot messages similar to this one:
++for early boot messages similar to this one::
+ 
+-ACPI: EINJ 0x000000007370A000 000150 (v01 INTEL           00000001 INTL 00000001)
++  ACPI: EINJ 0x000000007370A000 000150 (v01 INTEL           00000001 INTL 00000001)
+ 
+ which shows that the BIOS is exposing an EINJ table - it is the
+ mechanism through which the injection is done.
+@@ -23,11 +26,11 @@ order to see the APEI,EINJ,... functionality supported and exposed by
+ the BIOS menu.
+ 
+ To use EINJ, make sure the following are options enabled in your kernel
+-configuration:
++configuration::
+ 
+-CONFIG_DEBUG_FS
+-CONFIG_ACPI_APEI
+-CONFIG_ACPI_APEI_EINJ
++  CONFIG_DEBUG_FS
++  CONFIG_ACPI_APEI
++  CONFIG_ACPI_APEI_EINJ
+ 
+ The EINJ user interface is in <debugfs mount point>/apei/einj.
+ 
+@@ -37,20 +40,22 @@ The following files belong to it:
+ 
+   This file shows which error types are supported:
+ 
++  ================  ===================================
+   Error Type Value	Error Description
+-  ================	=================
+-  0x00000001		Processor Correctable
+-  0x00000002		Processor Uncorrectable non-fatal
+-  0x00000004		Processor Uncorrectable fatal
+-  0x00000008		Memory Correctable
+-  0x00000010		Memory Uncorrectable non-fatal
+-  0x00000020		Memory Uncorrectable fatal
+-  0x00000040		PCI Express Correctable
+-  0x00000080		PCI Express Uncorrectable fatal
+-  0x00000100		PCI Express Uncorrectable non-fatal
+-  0x00000200		Platform Correctable
+-  0x00000400		Platform Uncorrectable non-fatal
+-  0x00000800		Platform Uncorrectable fatal
++  ================  ===================================
++  0x00000001        Processor Correctable
++  0x00000002        Processor Uncorrectable non-fatal
++  0x00000004        Processor Uncorrectable fatal
++  0x00000008        Memory Correctable
++  0x00000010        Memory Uncorrectable non-fatal
++  0x00000020        Memory Uncorrectable fatal
++  0x00000040        PCI Express Correctable
++  0x00000080        PCI Express Uncorrectable fatal
++  0x00000100        PCI Express Uncorrectable non-fatal
++  0x00000200        Platform Correctable
++  0x00000400        Platform Uncorrectable non-fatal
++  0x00000800        Platform Uncorrectable fatal
++  ================  ===================================
+ 
+   The format of the file contents are as above, except present are only
+   the available error types.
+@@ -73,9 +78,12 @@ The following files belong to it:
+   injection. Value is a bitmask as specified in ACPI5.0 spec for the
+   SET_ERROR_TYPE_WITH_ADDRESS data structure:
+ 
+-	Bit 0 - Processor APIC field valid (see param3 below).
+-	Bit 1 - Memory address and mask valid (param1 and param2).
+-	Bit 2 - PCIe (seg,bus,dev,fn) valid (see param4 below).
++    Bit 0
++      Processor APIC field valid (see param3 below).
++    Bit 1
++      Memory address and mask valid (param1 and param2).
++    Bit 2
++      PCIe (seg,bus,dev,fn) valid (see param4 below).
+ 
+   If set to zero, legacy behavior is mimicked where the type of
+   injection specifies just one bit set, and param1 is multiplexed.
+@@ -121,7 +129,7 @@ BIOS versions based on the ACPI 5.0 specification have more control over
+ the target of the injection. For processor-related errors (type 0x1, 0x2
+ and 0x4), you can set flags to 0x3 (param3 for bit 0, and param1 and
+ param2 for bit 1) so that you have more information added to the error
+-signature being injected. The actual data passed is this:
++signature being injected. The actual data passed is this::
+ 
+ 	memory_address = param1;
+ 	memory_address_range = param2;
+@@ -131,7 +139,7 @@ signature being injected. The actual data passed is this:
+ For memory errors (type 0x8, 0x10 and 0x20) the address is set using
+ param1 with a mask in param2 (0x0 is equivalent to all ones). For PCI
+ express errors (type 0x40, 0x80 and 0x100) the segment, bus, device and
+-function are specified using param1:
++function are specified using param1::
+ 
+          31     24 23    16 15    11 10      8  7        0
+ 	+-------------------------------------------------+
+@@ -152,26 +160,26 @@ documentation for details (and expect changes to this API if vendors
+ creativity in using this feature expands beyond our expectations).
+ 
+ 
+-An error injection example:
++An error injection example::
+ 
+-# cd /sys/kernel/debug/apei/einj
+-# cat available_error_type		# See which errors can be injected
+-0x00000002	Processor Uncorrectable non-fatal
+-0x00000008	Memory Correctable
+-0x00000010	Memory Uncorrectable non-fatal
+-# echo 0x12345000 > param1		# Set memory address for injection
+-# echo $((-1 << 12)) > param2		# Mask 0xfffffffffffff000 - anywhere in this page
+-# echo 0x8 > error_type			# Choose correctable memory error
+-# echo 1 > error_inject			# Inject now
++  # cd /sys/kernel/debug/apei/einj
++  # cat available_error_type		# See which errors can be injected
++  0x00000002	Processor Uncorrectable non-fatal
++  0x00000008	Memory Correctable
++  0x00000010	Memory Uncorrectable non-fatal
++  # echo 0x12345000 > param1		# Set memory address for injection
++  # echo $((-1 << 12)) > param2		# Mask 0xfffffffffffff000 - anywhere in this page
++  # echo 0x8 > error_type			# Choose correctable memory error
++  # echo 1 > error_inject			# Inject now
+ 
+-You should see something like this in dmesg:
++You should see something like this in dmesg::
+ 
+-[22715.830801] EDAC sbridge MC3: HANDLING MCE MEMORY ERROR
+-[22715.834759] EDAC sbridge MC3: CPU 0: Machine Check Event: 0 Bank 7: 8c00004000010090
+-[22715.834759] EDAC sbridge MC3: TSC 0
+-[22715.834759] EDAC sbridge MC3: ADDR 12345000 EDAC sbridge MC3: MISC 144780c86
+-[22715.834759] EDAC sbridge MC3: PROCESSOR 0:306e7 TIME 1422553404 SOCKET 0 APIC 0
+-[22716.616173] EDAC MC3: 1 CE memory read error on CPU_SrcID#0_Channel#0_DIMM#0 (channel:0 slot:0 page:0x12345 offset:0x0 grain:32 syndrome:0x0 -  area:DRAM err_code:0001:0090 socket:0 channel_mask:1 rank:0)
++  [22715.830801] EDAC sbridge MC3: HANDLING MCE MEMORY ERROR
++  [22715.834759] EDAC sbridge MC3: CPU 0: Machine Check Event: 0 Bank 7: 8c00004000010090
++  [22715.834759] EDAC sbridge MC3: TSC 0
++  [22715.834759] EDAC sbridge MC3: ADDR 12345000 EDAC sbridge MC3: MISC 144780c86
++  [22715.834759] EDAC sbridge MC3: PROCESSOR 0:306e7 TIME 1422553404 SOCKET 0 APIC 0
++  [22716.616173] EDAC MC3: 1 CE memory read error on CPU_SrcID#0_Channel#0_DIMM#0 (channel:0 slot:0 page:0x12345 offset:0x0 grain:32 syndrome:0x0 -  area:DRAM err_code:0001:0090 socket:0 channel_mask:1 rank:0)
+ 
+ For more information about EINJ, please refer to ACPI specification
+ version 4.0, section 17.5 and ACPI 5.0, section 18.6.
+diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+index 869badba6d7a..fca854f017d8 100644
+--- a/Documentation/firmware-guide/acpi/index.rst
++++ b/Documentation/firmware-guide/acpi/index.rst
+@@ -18,6 +18,7 @@ ACPI Support
+    debug
+    aml-debugger
+    apei/output_format
++   apei/einj
+    gpio-properties
+    i2c-muxes
+    acpi-lid
+-- 
+2.20.1
 
-If that's the only reason, then I think we should just accept the
-race. You still have a "slop" of 15 bits (so 16k processes) hitting
-the same mutex, and they'd all have to be preempted in that same
-"small handful instructions" window.
-
-Even if the likelihood of *one* process hitting that race is 90% (and
-no, it really isn't), then the likelihood of having 16k processes
-hitting that race is 0.9**16384.
-
-We call numbers like that "we'll hit it some time long after the heat
-death of the universe" numbers.
-
-     Linus
