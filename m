@@ -2,375 +2,151 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD7FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400E3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF672089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CFAF2089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730570AbfDXNoI (ORCPT
+        id S1730594AbfDXNo3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:44:08 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:57799 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729124AbfDXNoH (ORCPT
+        Wed, 24 Apr 2019 09:44:29 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:48222 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730573AbfDXNo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:44:07 -0400
-X-Originating-IP: 90.88.147.33
-Received: from aptenodytes (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id AE536240017;
-        Wed, 24 Apr 2019 13:44:02 +0000 (UTC)
-Message-ID: <9aba66fdd46daa78f0557c1d2019e30c05be706a.camel@bootlin.com>
-Subject: Re: [PATCH v6 4/4] drm/vc4: Allocate binner bo when starting to use
- the V3D
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Eben Upton <eben@raspberrypi.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Date:   Wed, 24 Apr 2019 15:44:02 +0200
-In-Reply-To: <87pnpcpr5r.fsf@anholt.net>
-References: <20190423144028.30036-1-paul.kocialkowski@bootlin.com>
-         <20190423144028.30036-5-paul.kocialkowski@bootlin.com>
-         <87pnpcpr5r.fsf@anholt.net>
-Organization: Bootlin
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 
+        Wed, 24 Apr 2019 09:44:29 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-50-CiFaQrbeNPCHVcud67r0LA-1; Wed, 24 Apr 2019 14:44:26 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
+ 24 Apr 2019 14:45:38 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 24 Apr 2019 14:45:38 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Fenghua Yu' <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "Michael Chan" <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: RE: [PATCH v7 15/21] x86/split_lock: Add a sysfs interface to
+ enable/disable split lock detection during run time
+Thread-Topic: [PATCH v7 15/21] x86/split_lock: Add a sysfs interface to
+ enable/disable split lock detection during run time
+Thread-Index: AQHU+hcuIxO/8RRUC06MiZvP1071Y6ZLUq/w
+Date:   Wed, 24 Apr 2019 13:45:38 +0000
+Message-ID: <4a90dd7bf26f44a795ecf55aa54b8ce5@AcuMS.aculab.com>
+References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
+ <1555536851-17462-16-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1904180042090.3174@nanos.tec.linutronix.de>
+ <20190418005711.GB18776@romley-ivt3.sc.intel.com>
+ <alpine.DEB.2.21.1904180832290.3174@nanos.tec.linutronix.de>
+ <20190423204809.GD18776@romley-ivt3.sc.intel.com>
+In-Reply-To: <20190423204809.GD18776@romley-ivt3.sc.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: CiFaQrbeNPCHVcud67r0LA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
-
-On Tue, 2019-04-23 at 10:28 -0700, Eric Anholt wrote:
-> Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
+From: Fenghua Yu
+> Sent: 23 April 2019 21:48
 > 
-> > The binner BO is not required until the V3D is in use, so avoid
-> > allocating it at probe and do it on the first non-dumb BO allocation.
-> > 
-> > Keep track of which clients are using the V3D and liberate the buffer
-> > when there is none left, using a kref. Protect the logic with a
-> > mutex to avoid race conditions.
-> > 
-> > The binner BO is created at the time of the first render ioctl and is
-> > destroyed when there is no client and no exec job using it left.
-> > 
-> > The Out-Of-Memory (OOM) interrupt also gets some tweaking, to avoid
-> > enabling it before having allocated a binner bo.
-> > 
-> > We also want to keep the BO alive during runtime suspend/resume to avoid
-> > failing to allocate it at resume. This happens when the CMA pool is
-> > full at that point and results in a hard crash.
-> > 
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  drivers/gpu/drm/vc4/vc4_bo.c  | 45 +++++++++++++++++++++++++--
-> >  drivers/gpu/drm/vc4/vc4_drv.c |  6 ++++
-> >  drivers/gpu/drm/vc4/vc4_drv.h | 14 +++++++++
-> >  drivers/gpu/drm/vc4/vc4_gem.c | 13 ++++++++
-> >  drivers/gpu/drm/vc4/vc4_irq.c | 21 +++++++++----
-> >  drivers/gpu/drm/vc4/vc4_v3d.c | 58 +++++++++++++++++++++++++++--------
-> >  6 files changed, 135 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/vc4/vc4_bo.c b/drivers/gpu/drm/vc4/vc4_bo.c
-> > index 88ebd681d7eb..03a26de620de 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_bo.c
-> > +++ b/drivers/gpu/drm/vc4/vc4_bo.c
-> > @@ -799,20 +799,47 @@ vc4_prime_import_sg_table(struct drm_device *dev,
-> >  	return obj;
-> >  }
-> >  
-> > +static int vc4_grab_bin_bo(struct vc4_dev *vc4, struct vc4_file *vc4file)
-> > +{
-> > +	int ret;
-> > +
-> > +	if (!vc4->v3d)
-> > +		return -ENODEV;
-> > +
-> > +	if (vc4file->bin_bo_used)
-> > +		return 0;
-> > +
-> > +	ret = vc4_v3d_bin_bo_get(vc4);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	vc4file->bin_bo_used = true;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  int vc4_create_bo_ioctl(struct drm_device *dev, void *data,
-> >  			struct drm_file *file_priv)
-> >  {
-> >  	struct drm_vc4_create_bo *args = data;
-> > +	struct vc4_file *vc4file = file_priv->driver_priv;
-> > +	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> >  	struct vc4_bo *bo = NULL;
-> >  	int ret;
-> >  
-> > +	ret = vc4_grab_bin_bo(vc4, vc4file);
-> > +	if (ret)
-> > +		return ret;
+> On Thu, Apr 18, 2019 at 08:41:30AM +0200, Thomas Gleixner wrote:
+> > On Wed, 17 Apr 2019, Fenghua Yu wrote:
+> > > On Thu, Apr 18, 2019 at 12:47:24AM +0200, Thomas Gleixner wrote:
+> > > > On Wed, 17 Apr 2019, Fenghua Yu wrote:
+> > > >
+> > > > > The interface /sys/device/system/cpu/split_lock_detect is added
+> > > > > to allow user to control split lock detection and show current split
+> > > > > lock detection setting.
+> > > > >
+> > > > > Writing [yY1] or [oO][nN] to the file enables split lock detection and
+> > > > > writing [nN0] or [oO][fF] disables split lock detection. Split lock
+> > > > > detection is enabled or disabled on all CPUs.
+> > > > >
+> > > > > Reading the file returns current global split lock detection setting:
+> > > > > 0: disabled
+> > > > > 1: enabled
+> > > >
+> > > > Again, You explain WHAT this patch does and still there is zero
+> > > > justification why this sysfs knob is needed at all. I still do not see any
+> > > > reason why this knob should exist.
+> > >
+> > > An important application has split lock issues which are already discovered
+> > > and need to be fixed. But before the issues are fixed, sysadmin still wants to
+> > > run the application without rebooting the system, the sysfs knob can be useful
+> > > to turn off split lock detection. After the application is done, split lock
+> > > detection will be enabled again through the sysfs knob.
+> >
+> > Are you sure that you are talking about the real world? I might buy the
+> > 'off' part somehow, but the 'on' part is beyond theoretical.
+> >
+> > Even the 'off' part is dubious on a multi user machine. I personally would
+> > neither think about using the sysfs knob nor about rebooting the machine
+> > simply because I'd consider a lock operation accross a cacheline an malicious
+> > DoS attempt. Why would I allow that?
+> >
+> > So in reality the sysadmin will either move the workload to a machine w/o
+> > the #AC magic or just tell the user to fix his crap.
+> >
+> > > Without the sysfs knob, sysadmin has to reboot the system with kernel option
+> > > "no_split_lock_detect" to run the application before the split lock issues
+> > > are fixed.
+> > >
+> > > Is this a valid justification why the sysfs knob is needed? If it is, I can
+> > > add the justification in the next version.
+> >
+> > Why has this information not been in the changelog right away? I'm really
+> > tired of asking the same questions and pointing you to
+> > Documentation/process over and over.
 > 
-> Interesting note -- we'll now throw -ENODEV from this ioctl when v3d
-> isn't present.  I think that's actually totally fine and maybe I should
-> have done that for the !v3d patches originally.
-
-By the way, if you'd like me to try and improve the return codes around
-our ioctl handlers specifically, I'm definitely up for that.
-
-> >  	/*
-> >  	 * We can't allocate from the BO cache, because the BOs don't
-> >  	 * get zeroed, and that might leak data between users.
-> >  	 */
-> >  	bo = vc4_bo_create(dev, args->size, false, VC4_BO_TYPE_V3D);
-> > -	if (IS_ERR(bo))
-> > +	if (IS_ERR(bo)) {
-> > +		vc4_v3d_bin_bo_put(vc4);
-> >  		return PTR_ERR(bo);
-> > +	}
+> So should I remove the sysfs knob patches in the next version?
 > 
-> I actually don't think you want the bin_bo_put()s in the error paths
-> here -- vc4_grab_bin_bo has put a flag in vc4file that we need a
-> bin_bo_put() when the file is closed, and if we take these error paths
-> there will be a refcount underflow once the file gets closed.
+> Or add the following justification and still keep the sysfs knob patches?
+> "To workaround or debug a split lock issue, the administrator may need to
+> disable or enable split lock detection during run time without rebooting
+> the system."
 
-Oh yes you're right, I lost sight of the fact that we only ref once for
-the whole file in the ioctl handlers. That's not the case with the exec
-job though, but the calls are already balanced there for the error
-paths as far as I could see.
+I've also not seen patches to fix all the places where 'lock bit' operations
+get used on int [] data.
+Testing had showed one structure that needed 'fixing', there are some others
+that are in .bss/.data.
+A kernel build could suddenly have them misaligned and crossing a cache line.
 
-> >  	bo->madv = VC4_MADV_WILLNEED;
-> >  
-> > @@ -846,6 +873,8 @@ vc4_create_shader_bo_ioctl(struct drm_device *dev, void *data,
-> >  			   struct drm_file *file_priv)
-> >  {
-> >  	struct drm_vc4_create_shader_bo *args = data;
-> > +	struct vc4_file *vc4file = file_priv->driver_priv;
-> > +	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> >  	struct vc4_bo *bo = NULL;
-> >  	int ret;
-> >  
-> > @@ -865,9 +894,15 @@ vc4_create_shader_bo_ioctl(struct drm_device *dev, void *data,
-> >  		return -EINVAL;
-> >  	}
-> >  
-> > +	ret = vc4_grab_bin_bo(vc4, vc4file);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> >  	bo = vc4_bo_create(dev, args->size, true, VC4_BO_TYPE_V3D_SHADER);
-> > -	if (IS_ERR(bo))
-> > +	if (IS_ERR(bo)) {
-> > +		vc4_v3d_bin_bo_put(vc4);
-> >  		return PTR_ERR(bo);
-> > +	}
-> >  
-> >  	bo->madv = VC4_MADV_WILLNEED;
-> >  
-> > @@ -893,8 +928,12 @@ vc4_create_shader_bo_ioctl(struct drm_device *dev, void *data,
-> >  	 * races for users to do doing things like mmap the shader BO.
-> >  	 */
-> >  	ret = drm_gem_handle_create(file_priv, &bo->base.base, &args->handle);
-> > +	goto complete;
-> > +
-> > +fail:
-> > +	vc4_v3d_bin_bo_put(vc4);
-> >  
-> > - fail:
-> > +complete:
-> >  	drm_gem_object_put_unlocked(&bo->base.base);
-> >  
-> >  	return ret;
-> > diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
-> > index 6d9be20a32be..0f99ad03614e 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_drv.c
-> > +++ b/drivers/gpu/drm/vc4/vc4_drv.c
-> > @@ -128,8 +128,12 @@ static int vc4_open(struct drm_device *dev, struct drm_file *file)
-> >  
-> >  static void vc4_close(struct drm_device *dev, struct drm_file *file)
-> >  {
-> > +	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> >  	struct vc4_file *vc4file = file->driver_priv;
-> >  
-> > +	if (vc4file->bin_bo_used)
-> > +		vc4_v3d_bin_bo_put(vc4);
-> > +
-> >  	vc4_perfmon_close_file(vc4file);
-> >  	kfree(vc4file);
-> >  }
-> > @@ -274,6 +278,8 @@ static int vc4_drm_bind(struct device *dev)
-> >  	drm->dev_private = vc4;
-> >  	INIT_LIST_HEAD(&vc4->debugfs_list);
-> >  
-> > +	mutex_init(&vc4->bin_bo_lock);
-> > +
-> >  	ret = vc4_bo_cache_init(drm);
-> >  	if (ret)
-> >  		goto dev_put;
-> > diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-> > index 4f13f6262491..5bfca83deb8e 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_drv.h
-> > +++ b/drivers/gpu/drm/vc4/vc4_drv.h
-> > @@ -216,6 +216,11 @@ struct vc4_dev {
-> >  	 * the minor is available (after drm_dev_register()).
-> >  	 */
-> >  	struct list_head debugfs_list;
-> > +
-> > +	/* Mutex for binner bo allocation. */
-> > +	struct mutex bin_bo_lock;
-> > +	/* Reference count for our binner bo. */
-> > +	struct kref bin_bo_kref;
-> >  };
-> >  
-> >  static inline struct vc4_dev *
-> > @@ -584,6 +589,11 @@ struct vc4_exec_info {
-> >  	 * NULL otherwise.
-> >  	 */
-> >  	struct vc4_perfmon *perfmon;
-> > +
-> > +	/* Whether the exec has taken a reference to the binner BO, which should
-> > +	 * happen with a VC4_PACKET_TILE_BINNING_MODE_CONFIG packet.
-> > +	 */
-> > +	bool bin_bo_used;
-> >  };
-> >  
-> >  /* Per-open file private data. Any driver-specific resource that has to be
-> > @@ -594,6 +604,8 @@ struct vc4_file {
-> >  		struct idr idr;
-> >  		struct mutex lock;
-> >  	} perfmon;
-> > +
-> > +	bool bin_bo_used;
-> >  };
-> > diff --git a/drivers/gpu/drm/vc4/vc4_irq.c b/drivers/gpu/drm/vc4/vc4_irq.c
-> > index 723dc86b4511..e226c24e543f 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_irq.c
-> > +++ b/drivers/gpu/drm/vc4/vc4_irq.c
-> > @@ -59,18 +59,22 @@ vc4_overflow_mem_work(struct work_struct *work)
-> >  {
-> >  	struct vc4_dev *vc4 =
-> >  		container_of(work, struct vc4_dev, overflow_mem_work);
-> > -	struct vc4_bo *bo = vc4->bin_bo;
-> > +	struct vc4_bo *bo;
-> >  	int bin_bo_slot;
-> >  	struct vc4_exec_info *exec;
-> >  	unsigned long irqflags;
-> >  
-> > -	if (!bo)
-> > -		return;
-> > +	mutex_lock(&vc4->bin_bo_lock);
-> > +
-> > +	if (!vc4->bin_bo)
-> > +		goto complete;
-> > +
-> > +	bo = vc4->bin_bo;
-> >  
-> >  	bin_bo_slot = vc4_v3d_get_bin_slot(vc4);
-> >  	if (bin_bo_slot < 0) {
-> >  		DRM_ERROR("Couldn't allocate binner overflow mem\n");
-> > -		return;
-> > +		goto complete;
-> >  	}
-> >  
-> >  	spin_lock_irqsave(&vc4->job_lock, irqflags);
-> > @@ -101,6 +105,9 @@ vc4_overflow_mem_work(struct work_struct *work)
-> >  	V3D_WRITE(V3D_INTCTL, V3D_INT_OUTOMEM);
-> >  	V3D_WRITE(V3D_INTENA, V3D_INT_OUTOMEM);
-> >  	spin_unlock_irqrestore(&vc4->job_lock, irqflags);
-> > +
-> > +complete:
-> > +	mutex_unlock(&vc4->bin_bo_lock);
-> >  }
-> >  
-> >  static void
-> > @@ -252,8 +259,10 @@ vc4_irq_postinstall(struct drm_device *dev)
-> >  	if (!vc4->v3d)
-> >  		return 0;
-> >  
-> > -	/* Enable both the render done and out of memory interrupts. */
-> > -	V3D_WRITE(V3D_INTENA, V3D_DRIVER_IRQS);
-> > +	/* Enable the render done interrupts. The out-of-memory interrupt is
-> > +	 * enabled as soon as we have a binner BO allocated.
-> > +	 */
-> > +	V3D_WRITE(V3D_INTENA, V3D_INT_FLDONE | V3D_INT_FRDONE);
-> >  
-> >  	return 0;
-> >  }
-> > diff --git a/drivers/gpu/drm/vc4/vc4_v3d.c b/drivers/gpu/drm/vc4/vc4_v3d.c
-> > index c16db4665af6..55abaae71856 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_v3d.c
-> > +++ b/drivers/gpu/drm/vc4/vc4_v3d.c
-> > @@ -294,6 +294,14 @@ static int bin_bo_alloc(struct vc4_dev *vc4)
-> >  			WARN_ON_ONCE(sizeof(vc4->bin_alloc_used) * 8 !=
-> >  				     bo->base.base.size / vc4->bin_alloc_size);
-> >  
-> > +			kref_init(&vc4->bin_bo_kref);
-> > +
-> > +			/* Enable the out-of-memory interrupt to set our
-> > +			 * newly-allocated binner BO, potentially from an
-> > +			 * already-pending-but-masked interupt.
-> > +			 */
-> > +			V3D_WRITE(V3D_INTENA, V3D_INT_OUTOMEM);
-> > +
-> >  			break;
-> >  		}
-> >  
-> > @@ -313,6 +321,43 @@ static int bin_bo_alloc(struct vc4_dev *vc4)
-> >  	return ret;
-> >  }
-> >  
-> > +int vc4_v3d_bin_bo_get(struct vc4_dev *vc4)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	mutex_lock(&vc4->bin_bo_lock);
-> > +
-> > +	if (vc4->bin_bo) {
-> > +		kref_get(&vc4->bin_bo_kref);
-> > +		goto complete;
-> > +	}
-> > +
-> > +	ret = bin_bo_alloc(vc4);
-> > +
-> > +complete:
-> > +	mutex_unlock(&vc4->bin_bo_lock);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static void bin_bo_release(struct kref *ref)
-> > +{
-> > +	struct vc4_dev *vc4 = container_of(ref, struct vc4_dev, bin_bo_kref);
-> > +
-> > +	if (!vc4->bin_bo)
-> > +		return;
-> 
-> Could we WARN_ON_ONCE instead of returning silenty?  If we're going from
-> 1->0 refcount without a bin_bo allocated, something has gone terribly
-> wrong and we want to know.
+All the places that cast the pointer to the bit ops are suspect.
 
-Yes that would definitely be good. Crafting v7 in that direction.
+	David
 
-Cheers,
-
-Paul
-
-> > +	drm_gem_object_put_unlocked(&vc4->bin_bo->base.base);
-> > +	vc4->bin_bo = NULL;
-> > +}
--- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
