@@ -2,156 +2,116 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940B3C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D45C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 656BB20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA27320835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLotHtY+"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="H71LRfRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388362AbfDXS60 (ORCPT
+        id S2388421AbfDXS6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:58:26 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33974 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727055AbfDXS6Z (ORCPT
+        Wed, 24 Apr 2019 14:58:30 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:36158 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727055AbfDXS62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:58:25 -0400
-Received: by mail-qk1-f193.google.com with SMTP id n68so11540744qka.1;
-        Wed, 24 Apr 2019 11:58:25 -0700 (PDT)
+        Wed, 24 Apr 2019 14:58:28 -0400
+Received: by mail-it1-f195.google.com with SMTP id y10so8073224itc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:58:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2UctWeOPYH7gh4xbfG1yAVrMDrr9BA28kij+L+zI8ew=;
-        b=CLotHtY+q8bXpvMX/SmQYLYdHZDyptDBtVd2cOQxdfaESxO2GsaKBrVF49T8XhHBCG
-         Szqjxn5y7AoftBOAS7GPEHxEAWyzpAK2xrGl2bZBmHGrZ+rjWzBZObsUloOpGA8UTEQZ
-         kZQUgRbPVKQ9r3GhKJgmOXE/mrXnfkT0RfZRB7ybzGmJPsfAwouSLyKmAjjiJGiqn7OP
-         Cvt7SiavnNk5zXR6a6jFgB4tjsojrv5Az9VpqVXcJjpKcJ14M55qHMrYQDwyBrPy9xu8
-         GzkveWV12G8hWu9HkoHepAdt5dv7rStCnYO8qRP82Q9471RkyW7m8IH6sRVxInSuA1aC
-         4yxg==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=/T1HbxMN+ndVKYcaRHpxcbbsgU7fYHok3PpEnUoeplU=;
+        b=H71LRfRpXjOawAclrjyT7fhPMqFOBOoNK2XAXlDKv3IuwkWprFIjQS8CTPb3Q8HlnA
+         YrHBEl4Qs737X8U5ZnYDQyO5r9tPwvf0AyTiFp1OqPYsodGcp0lot3Kgul+apeYsCiJm
+         PEWJSulmnEHM9BKAJSpgR/kB8MYzPxZ3GvV7LjWaXHJAsSmAYe6GsIj89eJZ4JUOM0kt
+         GildtIh80ZbFgsl6E0EDjLJAecayxtc7zhFCD5vyzzdfZJC/EfsmXgcb5x4mfIPheSqJ
+         ZZCZ/HeMD54FqNQ7wQzC36Kq6cIvxLHwQVXJktuxupjo9PyVZJYz7uZSiHZEGSeT+5Iv
+         MN4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2UctWeOPYH7gh4xbfG1yAVrMDrr9BA28kij+L+zI8ew=;
-        b=NncOPWAGT+Z8jhL/FERUSTVw/VKvHpIn12dCtptDgpquk4nRvGUJapk6OYrdX+jkl2
-         tYxAILOgKytuqj/AxcClc6gZgCsBpliuIopH6YQTFXDdUZ076ERcbTSRuZCQi7heOz5V
-         0WBCkB3DY1acKNkCFcJtvArsIwvLZoGwWifOIGXIl02/DLUIa9BxZMbR7OqVUGG2ccLA
-         XIxXHrdvz/oKwh2kH/XiCs+7KuX4pTdglapqX2r4q4DWdED9VaMcm8shPtTaSr1IfCVX
-         +3pP27y50SjFxokzPUf1zX3ACgI8mGhmjK4XpmY1ySQQYFEM4kC3H+w7t0Q3seDKkqul
-         LYpA==
-X-Gm-Message-State: APjAAAUdpBQt/v3GhraOCdcXin0DuaUN9a7NwLIKSiqlkngaPMMOJM1d
-        o4emcW5O73WTObtKSC4nnqxuUHk=
-X-Google-Smtp-Source: APXvYqySASYIr0SDVnE1yI4p69ruXx8VnZB5EJq1r5YfXGQ2XGY2NfeGtV1O8ehNtrYV+VmNpea+aA==
-X-Received: by 2002:a05:620a:1334:: with SMTP id p20mr1205504qkj.244.1556132304679;
-        Wed, 24 Apr 2019 11:58:24 -0700 (PDT)
-Received: from gabell (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id h189sm564936qkc.89.2019.04.24.11.58.21
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=/T1HbxMN+ndVKYcaRHpxcbbsgU7fYHok3PpEnUoeplU=;
+        b=jg0pDCvTQWMaR/vR3SQn74CkgawfCIeU/yumK6WAMgrWHNeEhnubXPs/R+RtPNHFdZ
+         SNGE4BiTZNn6VNnyd9HCH++2E8t+qWIIkjPY8GkAGio3cXrzzSWojqhug+yXWwBqwpKk
+         PUUqFfDd88HRe2ct/nq4bot5GINtSebHuODSmYli01BLeGBxk9VJmrqShFcvEYdOd4Km
+         qJPJRwCm8nZ9svpNolT7wTCWWGQlDQRm9VxM10n9PtLNh98HSxyY8fNmvBhApqBPXptR
+         UBz+uYD6em6Ei2ETV+u1RtAXOgrD+vS6g8yX85xrauyJK1BZ25okQwCTkY4bd9GyNblC
+         2uyQ==
+X-Gm-Message-State: APjAAAXU+mqi58dlokDQkgcZAgcVbOmW03jH97si00nwtoqQT9YoFks9
+        ovZ0qHBdslXkqLo+R8kz2mvaYg==
+X-Google-Smtp-Source: APXvYqz/ZiejlNwq5qfqJFkIbFpH8jXSloDXM+ua64jl8aMMMGziS7/ZV48R7ZX/9TlMjnBd9u00+Q==
+X-Received: by 2002:a24:3a13:: with SMTP id m19mr439055itm.88.1556132308063;
+        Wed, 24 Apr 2019 11:58:28 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id s8sm1075669iot.55.2019.04.24.11.58.27
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 11:58:23 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 14:58:14 -0400
-From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     corbet@lwn.net, frowand.list@gmail.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        robh@kernel.org, shuah@kernel.org, yamada.masahiro@socionext.com,
-        pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com,
-        dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        khilman@baylibre.com, knut.omang@oracle.com,
-        Felix Guo <felixguoxiuping@gmail.com>, wfg@linux.intel.com,
-        joel@jms.id.au, jdike@addtoit.com, dan.carpenter@oracle.com,
-        devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Tim.Bird@sony.com, linux-um@lists.infradead.org,
-        rostedt@goodmis.org, julia.lawall@lip6.fr,
-        kunit-dev@googlegroups.com, richard@nod.at,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        daniel@ffwll.ch, mpe@ellerman.id.au, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v1 14/17] Documentation: kunit: add documentation for
- KUnit
-Message-ID: <20190424185813.xabwr4lt6aunvpsd@gabell>
-References: <20190404220652.19765-1-brendanhiggins@google.com>
- <20190404220652.19765-15-brendanhiggins@google.com>
+        Wed, 24 Apr 2019 11:58:27 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 11:58:26 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Kevin Hilman <khilman@baylibre.com>
+cc:     Atish Patra <atish.patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 0/2] tty: serial: add DT bindings and serial driver
+ for the SiFive FU540 UART
+In-Reply-To: <7h5zr9dcsi.fsf@baylibre.com>
+Message-ID: <alpine.DEB.2.21.9999.1904241157300.10713@viisi.sifive.com>
+References: <20190413020111.23400-1-paul.walmsley@sifive.com> <7hmukmew5j.fsf@baylibre.com> <883f3d5f-9b04-1435-30d3-2b48ab7eb76d@wdc.com> <7h5zr9dcsi.fsf@baylibre.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190404220652.19765-15-brendanhiggins@google.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Brendan,
+Hi Kevin,
 
-KUNIT_ASSERT_NOT_ERR_OR_NULL() should be replaced to
-KUNIT_EXPECT_NOT_ERR_OR_NULL(), right?
+On Fri, 19 Apr 2019, Kevin Hilman wrote:
+> Atish Patra <atish.patra@wdc.com> writes:
+> > On 4/18/19 4:22 PM, Kevin Hilman wrote:
+> >> Paul Walmsley <paul.walmsley@sifive.com> writes:
+> >> 
+> >>> This series adds a serial driver, with console support, for the
+> >>> UART IP block present on the SiFive FU540 SoC.  The programming
+> >>> model is straightforward, but unique.
+> >>>
+> >>> Boot-tested on a SiFive FU540 HiFive-U board, using BBL and the
+> >>> open-source FSBL (with appropriate patches to the DT data).
+> >>>
+> >>> This fifth version fixes a bug in the set_termios handler,
+> >>> found by Andreas Schwab <schwab@suse.de>.
+> >>>
+> >>> The patches in this series can also be found, with the PRCI patches,
+> >>> DT patches, and DT prerequisite patch, at:
+> >>>
+> >>> https://github.com/sifive/riscv-linux/tree/dev/paulw/serial-v5.1-rc4
 
-On Thu, Apr 04, 2019 at 03:06:49PM -0700, Brendan Higgins wrote:
-> Add documentation for KUnit, the Linux kernel unit testing framework.
-> - Add intro and usage guide for KUnit
-> - Add API reference
-> 
-> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
+...
 
-<snip>
+> I've just updated to u-boot master branch with SMP enabled, and build a
+> new openSBI (also from master branch) with u-boot payload. Using your
+> v5.1-rc4_unleashed branch, I see 4 CPUs booting:
+> https://termbin.com/kg13
 
-> diff --git a/Documentation/kunit/start.rst b/Documentation/kunit/start.rst
-> new file mode 100644
-> index 0000000000000..5cdba5091905e
-> --- /dev/null
-> +++ b/Documentation/kunit/start.rst
+Now that the serial driver is working for you, care to send a Tested-by: ?
 
-<snip>
 
-> +Assertions
-> +~~~~~~~~~~
-> +
-> +KUnit also has the concept of an *assertion*. An assertion is just like an
-> +expectation except the assertion immediately terminates the test case if it is
-> +not satisfied.
-> +
-> +For example:
-> +
-> +.. code-block:: c
-> +
-> +	static void mock_test_do_expect_default_return(struct kunit *test)
-> +	{
-> +		struct mock_test_context *ctx = test->priv;
-> +		struct mock *mock = ctx->mock;
-> +		int param0 = 5, param1 = -5;
-> +		const char *two_param_types[] = {"int", "int"};
-> +		const void *two_params[] = {&param0, &param1};
-> +		const void *ret;
-> +
-> +		ret = mock->do_expect(mock,
-> +				      "test_printk", test_printk,
-> +				      two_param_types, two_params,
-> +				      ARRAY_SIZE(two_params));
+thanks,
 
-> +		KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ret);
+- Paul
 
-		KUNIT_EXPECT_NOT_ERR_OR_NULL(test, ret);
-
-> +		KUNIT_EXPECT_EQ(test, -4, *((int *) ret));
-> +	}
-> +
-> +In this example, the method under test should return a pointer to a value, so
-> +if the pointer returned by the method is null or an errno, we don't want to
-> +bother continuing the test since the following expectation could crash the test
-
-> +case. `ASSERT_NOT_ERR_OR_NULL(...)` allows us to bail out of the test case if
-
-  +case. `KUNIT_EXPECT_NOT_ERR_OR_NULL(...)` allows us to bail out of the test case if
-
-Thanks!
-Masa
