@@ -2,228 +2,95 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9B5C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A3EC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEAAD21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:53:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556070786;
-	bh=x3TVKicgp13gQiB/D6y+092OpLcNHyBRyvRzFXik6N8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OBWc51q6ZSNmOWsUgwuAJ+EFOWHH2/7+q7/G6vbd6C16gF/a3VCHrwZZ+zZ4t1Gmj
-	 kYhKeznpihXpD6LAsvMo/OKYsxH59jrVc83hkRmbhaK3hbmJKIe98i+TkGgRJ1oUIM
-	 Ocj9ulS+EMd8cH/a32HXsE5HMo747zPoZNMkUlM4=
+	by mail.kernel.org (Postfix) with ESMTP id F0811218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:59:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pbnN8AwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbfDXBxG (ORCPT
+        id S1729267AbfDXB7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49056 "EHLO mail.kernel.org"
+        Tue, 23 Apr 2019 21:59:36 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45345 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729009AbfDXBxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:53:05 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726840AbfDXB7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 21:59:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFBE121903;
-        Wed, 24 Apr 2019 01:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556070783;
-        bh=x3TVKicgp13gQiB/D6y+092OpLcNHyBRyvRzFXik6N8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Pgw89Y1+BoZW/S8InwiAALyS8gHflLETLjFG/kniB6pE2is4XtX5r0RgEW1TyrqWY
-         SJRx1DN6az5wOiii05mv5i43U/u4OxGW8upCFl+cubojbViej6eTlU2UV6RhgVXz8I
-         oi87cFyrJNsFhQE0Xtc75uKN15J4duyo3n692lhY=
-Received: by mail-qk1-f170.google.com with SMTP id f125so5076273qke.6;
-        Tue, 23 Apr 2019 18:53:03 -0700 (PDT)
-X-Gm-Message-State: APjAAAWPcS3xjO6NwF/Ked54c8nLIhlVtyJQNckgGrE+Hrt/ONDkHEUw
-        uacZ2KELExNcx7eYJycBAXVyzKA7e+CnuKc7FA==
-X-Google-Smtp-Source: APXvYqyxLrc36Z3BNbK/A4HHfW8n24e0BsUnfv77DepAjECikieODygbDT0rEz+lcRWC2TL9pOa/Vo1Z2ougaeWC4LI=
-X-Received: by 2002:a37:4b92:: with SMTP id y140mr22918682qka.79.1556070782893;
- Tue, 23 Apr 2019 18:53:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190418151143.26068-1-masneyb@onstation.org> <20190418151143.26068-3-masneyb@onstation.org>
-In-Reply-To: <20190418151143.26068-3-masneyb@onstation.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 23 Apr 2019 20:52:51 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLZqA=cKLo3Jw7fizt06ytADL8YbhhRKS=mLo05hAaf2A@mail.gmail.com>
-Message-ID: <CAL_JsqLZqA=cKLo3Jw7fizt06ytADL8YbhhRKS=mLo05hAaf2A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] dt-bindings: backlight: add lm3630a bindings
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree@vger.kernel.org,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pk5d2H5vz9s3q;
+        Wed, 24 Apr 2019 11:59:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556071173;
+        bh=Kggwjgb3lS4lSBQTEiUvpPTrVb/g0WqRx7iivBYuVxE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pbnN8AwG/KKmQVeIbqtV26FvMVafJAcu17i/NPY8HmP4lv7QKbJDHZhBBIuN6KGZV
+         i+oDnJcUa+a6Jl9da4pzAbiPpr4o1RB66buJqluR77th4oST9jhjm2/yRUvCJE8Gfl
+         KiXn6LeUTlW5QOLHnXyUFFmPgjiH3ceK5uLWT8ZagEgNYUI35aqCww88zdn8SpYV6f
+         2xaTxIp0OyZNbCC9hi3oTaQsjWd0j2FbDrUKoMQH3hhXTLWAna4SF913kybej5jEgK
+         E2huyXScgFgix5JkcadcKWyIj33mD8kOkr36XqCVxYnPmh1zh2Y3kdNq8m7D6eg6U3
+         DVASTEI5Gl2ug==
+Date:   Wed, 24 Apr 2019 11:59:32 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Deepak Singh Rawat <drawat@vmware.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>
+Subject: Re: linux-next: Signed-off-by missing for commit in the drm tree
+Message-ID: <20190424115932.330a2174@canb.auug.org.au>
+In-Reply-To: <45f1305e2ea62ca76a86c6cca1693c20d3a0c891.camel@vmware.com>
+References: <20190424102219.48cfdfe2@canb.auug.org.au>
+        <44707352378dcd414b476ec5420db23093fb9351.camel@vmware.com>
+        <20190424111259.6a1aacce@canb.auug.org.au>
+        <45f1305e2ea62ca76a86c6cca1693c20d3a0c891.camel@vmware.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/jxLVVcFoz.UJKb2.QJ5VfFb"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 10:12 AM Brian Masney <masneyb@onstation.org> wrote:
->
-> Add new backlight bindings for the TI LM3630A dual-string white LED.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
-> Changes since v4:
-> - Drop $ref from led-sources
-> - Drop description from reg of i2c address
-> - Expand description of reg for the control bank
-> - Drop status from examples
->
-> Changes since v3:
-> - Add label. I didn't add a description for it since that'll come from
->   the common properties once its converted.
->
-> Changes since v2:
-> - Update description of max-brightness
-> - Add description for reg
-> - Correct typo: s/tranisiton/transition
-> - add reg to control banks
-> - add additionalProperties
->
->  .../leds/backlight/lm3630a-backlight.yaml     | 129 ++++++++++++++++++
->  1 file changed, 129 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
->
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> new file mode 100644
-> index 000000000000..e754df569365
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> @@ -0,0 +1,129 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/backlight/lm3630a-backlight.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI LM3630A High-Efficiency Dual-String White LED
-> +
-> +maintainers:
-> +  - Lee Jones <lee.jones@linaro.org>
-> +  - Daniel Thompson <daniel.thompson@linaro.org>
-> +  - Jingoo Han <jingoohan1@gmail.com>
-> +
-> +description: |
-> +  The LM3630A is a current-mode boost converter which supplies the power and
-> +  controls the current in up to two strings of 10 LEDs per string.
-> +  https://www.ti.com/product/LM3630A
-> +
-> +properties:
-> +  compatible:
-> +    const: ti,lm3630a
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ti,linear-mapping-mode:
-> +    description: |
-> +      Enable linear mapping mode. If disabled, then it will use exponential
-> +      mapping mode in which the ramp up/down appears to have a more uniform
-> +      transition to the human eye.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +patternProperties:
-> +  "^led@[01]$":
-> +    type: object
-> +    description: |
-> +      Properties for a string of connected LEDs.
-> +
-> +    properties:
-> +      reg:
-> +        description: |
-> +          The control bank that is used to program the two current sinks. The
-> +          LM3630A has two control banks (A and B) and are represented as 0 or 1
-> +          in this property. The two current sinks can be controlled
-> +          independently with both banks, or bank A can be configured to control
-> +          both sinks with the led-sources property.
-> +        maxItems: 1
-> +        minimum: 0
-> +        maximum: 1
-> +
-> +      label:
-> +        maxItems: 1
-> +
-> +      led-sources:
-> +        allOf:
-> +          - minItems: 1
-> +            maxItems: 2
-> +            items:
-> +              minimum: 0
-> +              maximum: 1
-> +
-> +      default-brightness:
-> +        description: Default brightness level on boot.
-> +        minimum: 0
-> +        maximum: 255
-> +
-> +      max-brightness:
-> +        description: Maximum brightness that is allowed during runtime.
-> +        minimum: 0
-> +        maximum: 255
-> +
-> +    required:
-> +      - reg
-> +
-> +    additionalProperties: false
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        lm3630a_bl@38 {
+--Sig_/jxLVVcFoz.UJKb2.QJ5VfFb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Still needs:
+Hi Deepak,
 
-led-controller@38
+On Wed, 24 Apr 2019 01:31:59 +0000 Deepak Singh Rawat <drawat@vmware.com> w=
+rote:
+>
+> Sorry missed that part and missed your email context about commiter and
+> not the author. I think at this point nothing can be done?
 
-> +                compatible = "ti,lm3630a";
-> +                reg = <0x38>;
-> +
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                led@0 {
-> +                        reg = <0>;
-> +                        led-sources = <0 1>;
-> +                        label = "lcd-backlight";
-> +                        default-brightness = <200>;
-> +                        max-brightness = <255>;
-> +                };
-> +        };
-> +    };
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        lm3630a_bl@38 {
+Probably, I am pretty sure that Dave does not rebase the drm tree.
+--=20
+Cheers,
+Stephen Rothwell
 
-And here.
+--Sig_/jxLVVcFoz.UJKb2.QJ5VfFb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-With those fixed:
+-----BEGIN PGP SIGNATURE-----
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/wwQACgkQAVBC80lX
+0GyoEAf/caswu7ukXMn0c1mGWx4LgZ6otAOP9JVTCGAIrXlshnkEF/wR2CQmAXsD
+uAIiZRLgFw8zl8nZvgn9BR3dzmRdSikiCslKzN9ClNjXAhj4TQHuTSlx2ZYTyA7+
+2JqwcYUK7OBC0l250p89QteRvTEiaOTvsbFN68EVpCxRM11Nx5oSoCH0nS8RA7X9
+AJ+Ab0Txy7uqqCBTdWB99ZEySumqX1y15xVxiq0eaRkolYv+3dLreiFQDi62+XMQ
+omPZZvfGNWz4R2DUIIE6WEowA8lgUIhjAdZVwbC7vtzjBLymMEhaSroH0IKoMDlf
+LM4fwyiSzx7vSf9xAMt3l5DOqXOS/w==
+=nle/
+-----END PGP SIGNATURE-----
+
+--Sig_/jxLVVcFoz.UJKb2.QJ5VfFb--
