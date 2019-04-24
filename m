@@ -2,120 +2,109 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87282C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72753C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5807021773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:48:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="HolPvSPE"
+	by mail.kernel.org (Postfix) with ESMTP id E69DE21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbfDXKst (ORCPT
+        id S1729025AbfDXKs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:48:49 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:38259 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbfDXKss (ORCPT
+        Wed, 24 Apr 2019 06:48:56 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39670 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbfDXKsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:48:48 -0400
-Received: by mail-it1-f194.google.com with SMTP id q19so5393349itk.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:48:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P/RmtPqUFWsBAvuBo3FUv0MSPV82C2xBBc4X67jiyXw=;
-        b=HolPvSPEUTfrdjPhSINOjKvLflcaXPi/GzsKlKr+6VUWMIC2XSfh2YtB/7MXyWQoPt
-         Y0EYJi9J4oo6Pmqm9VBIiASuhBlh4BHOa7cYbApICwwD0d5L9RJ2rpyQp7B7qevpH1p+
-         uT4dayTDutnNSjLmZqWSVxo+XCwopB2r1lNPk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P/RmtPqUFWsBAvuBo3FUv0MSPV82C2xBBc4X67jiyXw=;
-        b=I3BN6Ws4pYiFQj861XX5u7+3BUHVdYDDJHQ1+meG+vS1LeBgfl2jsJhKtqYhaY5QiY
-         J/dlc9i6HcFMmaSbQjThdNuH302B09VJggGdhUe/aH3Pc3ZxCnZpYYPKJpxvr9oo6Cof
-         gMhLD4yCgJF6Q9B49bL2yDQc3oPy00+MiNYWC0BijdGbx+BNp1RYDix+6gWEQBLtr4VN
-         d7F1brCKBrw2ylOXx+zkohT5ut0BbgXkYlCubkhApPemL9kyRJpQXuPwYJrJfTkJYxNm
-         zenLP01ulVlmFzC0G/g1riaFIcK8QWw+Z+8/QJSCcUosJzd7Ydrbwv+aqxj1fv4SKtY1
-         Sdmg==
-X-Gm-Message-State: APjAAAWz05UAULZeXfQSuNlXtaycp7q4agasHkgA2zIz2n9hgu3YUed4
-        EACEKTB77MctbIA5TEmDFjZ21nwZC/IPa/NfPzMz2w==
-X-Google-Smtp-Source: APXvYqxFWE+Aig7lRZOH3TPXBuf0M35Jzu3BA8swAiEWeCJvTONQvR1PVJHf8+yyYp3fn6wgrBFfhAIRx9u1jYhRVJc=
-X-Received: by 2002:a24:1312:: with SMTP id 18mr5458911itz.121.1556102927958;
- Wed, 24 Apr 2019 03:48:47 -0700 (PDT)
+        Wed, 24 Apr 2019 06:48:54 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 14EBF804D1; Wed, 24 Apr 2019 12:48:42 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 12:48:50 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
+        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org, hdegoede@redhat.com,
+        linux-ide@vger.kernel.org
+Subject: Re: next-20190408..0418: Suspend/resume problems on Thinkpad X60
+Message-ID: <20190424104850.GC32457@amd>
+References: <20190408173928.GB13260@amd>
+ <20190412102812.GA24977@amd>
+ <20190423102239.GA15531@amd>
+ <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
+ <20190424095431.GA32457@amd>
 MIME-Version: 1.0
-References: <cover.1553680185.git.kirr@nexedi.com> <d74b17b9d33c3dcc7a1f2fa2914fb3c4e7cda127.1553680185.git.kirr@nexedi.com>
-In-Reply-To: <d74b17b9d33c3dcc7a1f2fa2914fb3c4e7cda127.1553680185.git.kirr@nexedi.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 24 Apr 2019 12:48:36 +0200
-Message-ID: <CAJfpegurLOLoNd9p2avcXPhSvP+ux8V+A=ghBySSpn0pX_Afpg@mail.gmail.com>
-Subject: Re: [RESEND4, PATCH 2/2] fuse: require /dev/fuse reads to have enough
- buffer capacity as negotiated
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Jakob Unterwurzacher <jakobunt@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fuse-devel <fuse-devel@lists.sourceforge.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="V88s5gaDVPzZ0KCq"
+Content-Disposition: inline
+In-Reply-To: <20190424095431.GA32457@amd>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 27, 2019 at 11:44 AM Kirill Smelkov <kirr@nexedi.com> wrote:
->
-> A FUSE filesystem server queues /dev/fuse sys_read calls to get
-> filesystem requests to handle. It does not know in advance what would be
-> that request as it can be anything that client issues - LOOKUP, READ,
-> WRITE, ... Many requests are short and retrieve data from the
-> filesystem. However WRITE and NOTIFY_REPLY write data into filesystem.
->
-> Before getting into operation phase, FUSE filesystem server and kernel
-> client negotiate what should be the maximum write size the client will
-> ever issue. After negotiation the contract in between server/client is
-> that the filesystem server then should queue /dev/fuse sys_read calls with
-> enough buffer capacity to receive any client request - WRITE in
-> particular, while FUSE client should not, in particular, send WRITE
-> requests with > negotiated max_write payload. FUSE client in kernel and
-> libfuse historically reserve 4K for request header. This way the
-> contract is that filesystem server should queue sys_reads with
-> 4K+max_write buffer.
->
-> If the filesystem server does not follow this contract, what can happen
-> is that fuse_dev_do_read will see that request size is > buffer size,
-> and then it will return EIO to client who issued the request but won't
-> indicate in any way that there is a problem to filesystem server.
-> This can be hard to diagnose because for some requests, e.g. for
-> NOTIFY_REPLY which mimics WRITE, there is no client thread that is
-> waiting for request completion and that EIO goes nowhere, while on
-> filesystem server side things look like the kernel is not replying back
-> after successful NOTIFY_RETRIEVE request made by the server.
->
-> -> We can make the problem easy to diagnose if we indicate via error
-> return to filesystem server when it is violating the contract.
-> This should not practically cause problems because if a filesystem
-> server is using shorter buffer, writes to it were already very likely to
-> cause EIO, and if the filesystem is read-only it should be too following
-> 8K minimum buffer size (= either FUSE_MIN_READ_BUFFER, see 1d3d752b47,
-> or = 4K + min(max_write)=4k cared to be so by process_init_reply).
->
-> Please see [1] for context where the problem of stuck filesystem was hit
-> for real (because kernel client was incorrectly sending more than
-> max_write data with NOTIFY_REPLY; see also previous patch), how the
-> situation was traced and for more involving patch that did not make it
-> into the tree.
->
-> [1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
 
-Applied.
+--V88s5gaDVPzZ0KCq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Miklos
+On Wed 2019-04-24 11:54:31, Pavel Machek wrote:
+> On Tue 2019-04-23 07:55:05, Jens Axboe wrote:
+> > On 4/23/19 4:22 AM, Pavel Machek wrote:
+> > > Hi!
+> > >=20
+> > >>> It boots ok (unlike mainline -- I'm debugging that), and I can susp=
+end
+> > >>> and resume... but then cursor in X is moving and I can talk to
+> > >>> applications cached in memory, but any access to disk hangs.
+> > >>
+> > >> Mainline problem was identified.
+> > >>
+> > >> But resume is still broken. I took advantage of fact that I can still
+> > >> do cached commands, and got complete dmesg. I'm attaching it.
+> > >=20
+> > > Still broken in 0418. Ideas would be welcome at this point.
+> >=20
+> > Bisect it?
+>=20
+> commit fdbbda7b3a0622fcfe630238d0bf6c57c4ba3663
+> Merge: 3c442d5 6c88d73
+> Author: Jens Axboe <axboe@kernel.dk>
+> Date:   Mon Apr 22 13:57:36 2019 -0600
+>=20
+> Works ok. So... block is not responsible.
+>=20
+> Let me check
+>=20
+> commit 91b112cf3b599f06f1e810cfedf37023f25d5588
+> Merge: fb2c4a8 e32d939
+> Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Date:   Mon Apr 22 01:52:48 2019 +0200
+
+Suspend/resume ok, so pm not responsible. Let me check next-20190423.
+
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--V88s5gaDVPzZ0KCq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzAPxIACgkQMOfwapXb+vI1uQCgvej4szRBNmj2+c0bvr6nbSwS
+bK8AnRJ6UoIYC5FNDBPHXMoYdG+b7Xp8
+=mYGZ
+-----END PGP SIGNATURE-----
+
+--V88s5gaDVPzZ0KCq--
