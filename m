@@ -2,158 +2,128 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93427C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596E1C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F33820835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F9520835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:06:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I89vLGSu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IlO/27Bi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388952AbfDXTFR (ORCPT
+        id S2388616AbfDXTGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:05:17 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:40667 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfDXTFQ (ORCPT
+        Wed, 24 Apr 2019 15:06:10 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:43155 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728079AbfDXTGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:05:16 -0400
-Received: by mail-vk1-f193.google.com with SMTP id l17so4286008vke.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:05:16 -0700 (PDT)
+        Wed, 24 Apr 2019 15:06:09 -0400
+Received: by mail-vs1-f65.google.com with SMTP id t23so11042572vso.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:06:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gp/6aiOgwCuUZZwIpCOM/3lPPaM1FZHxJCz2Nt+7++4=;
-        b=I89vLGSuLKELhoRLQzX/y/2utZukhs7ixGcDl4q+IwsV+rJIX43dH1Cy1G6NQl0310
-         TLw/WS8ed61d+8lWjBzqq8DByn1H4V56+Ode9ac9h+Mix6iqzi2+/a2V2krwheLx+FTw
-         ISDAeIFLJLs2dAYkRThNmhQChhM5E62v7coUI=
+         :cc;
+        bh=BYlYZIp9lVnO/LNggOaWNdZ4LmpCU45Xr9GtlfTw+Ig=;
+        b=IlO/27Bi20zcbrxsGvdgGo/fRy3nfNfBe0ISD3MwMQI/5k+Hgc0336YP0WN9cVlC4h
+         LPsefUpAgeUnh5I1oREBOpqsvdcyzcnsRteVn8YdE1BquO2SadyY+SeKCTq9+IYHdQ73
+         27nhRDP+rPwW7brWevnpQRWY2N5bVOUk8mKKs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gp/6aiOgwCuUZZwIpCOM/3lPPaM1FZHxJCz2Nt+7++4=;
-        b=P2qQNMClPg51ErcbRNjA8Q7Q+9eKxbMK5VuYqyCNpRWxIJYMsyzDlw17JaO3a0cej4
-         vGX7KpbjjRHJfVxT1uR5vhzDiZ3x/RqYjBm+yiGLYxV+wJFE4F+NPN1Ti21QUWvWYcNF
-         yT56rALfggiWig7pfRTqOdaeXPuOAMrXegE3V0mz5hd7QTfVMiLIrWQ1LCADoT2qVrot
-         xZaE7CKz3MgCLymlSDLoXA+xIulsieGqM/c7SsiGROjLOxWxjG2ztIkswnwDS1qwHGfX
-         GOZaPm3Sfl9hQzA71QOSK2KbR6HZDluOJCS3fniXQV7AZXdCNWiHJz9S8Miz6qswrRch
-         oRMg==
-X-Gm-Message-State: APjAAAUCI7RC9ZTOvzde6A1qcq1rRvl0NZifpCKWXUHWh0FYX/37r5Rb
-        TwM5P7N7rZ0at0cGDgTe/T+9lYdUKZE=
-X-Google-Smtp-Source: APXvYqx0pNH7koHbjuBAYdn1k9yMACavXXGA3REV1eRZb4O2wzITiSVXETNBmbUCeAhCeOlxfRc4Sg==
-X-Received: by 2002:a1f:a9c2:: with SMTP id s185mr18670821vke.5.1556132715164;
-        Wed, 24 Apr 2019 12:05:15 -0700 (PDT)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
-        by smtp.gmail.com with ESMTPSA id c2sm6564008vsc.32.2019.04.24.12.05.13
+         :message-id:subject:to:cc;
+        bh=BYlYZIp9lVnO/LNggOaWNdZ4LmpCU45Xr9GtlfTw+Ig=;
+        b=flvENPOSquiTazxB3CI5psWr6nwraiKg+XhLnWBTbrbPNAYzTFMYtjyLowngofbq0D
+         gm4qlLgF6lrGGN0DRpQVUAjhfoO7jKrJEW9KZBgx1qH/iUSnLrhbiXT1qH9/nNr1pRmj
+         o3EuO/4BEACLK6fDgz1qQH5djYhaV+ccSXleRn2G0dH7v9DBuWbzYoqq56yOFbih2o7t
+         1MlI5ZiuNwKDWb0RYgoVVXprss+hacfoFmxUSqYqJ9yWZvDn/7MHv6V0ov9PtsGY2ml2
+         wMbMckiHihdutKTNaiFQxPFXBZFuPXN4h2r3LYnXcPrv1LwfjPalv2N5StY13DwDloZd
+         YXRQ==
+X-Gm-Message-State: APjAAAVJXFvNwa53rrpcqO05i6zR9yL3YVlYTk04Xd9XYyoYxTe4ns6G
+        qrJUrJ5J5NbcYP5w3tzTBtR+EI6By1Q=
+X-Google-Smtp-Source: APXvYqyUcasQnS8XsAgCdQOmxUz0dZ2gsNUJdrtl7pa80eVicOTU3No4QHNuvhf7Xzek9RLS0G98AQ==
+X-Received: by 2002:a05:6102:398:: with SMTP id m24mr18526851vsq.23.1556132768014;
+        Wed, 24 Apr 2019 12:06:08 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id r3sm14977651vkr.18.2019.04.24.12.06.06
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 12:05:13 -0700 (PDT)
-Received: by mail-vk1-f180.google.com with SMTP id 195so4287154vkx.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:05:13 -0700 (PDT)
-X-Received: by 2002:a1f:2e07:: with SMTP id u7mr18400910vku.44.1556132713051;
- Wed, 24 Apr 2019 12:05:13 -0700 (PDT)
+        Wed, 24 Apr 2019 12:06:07 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id f22so11054438vso.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:06:06 -0700 (PDT)
+X-Received: by 2002:a67:eecb:: with SMTP id o11mr18354214vsp.66.1556132766437;
+ Wed, 24 Apr 2019 12:06:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190424181543.GA31200@embeddedor>
-In-Reply-To: <20190424181543.GA31200@embeddedor>
+References: <20190320222831.8243-1-mcgrof@kernel.org> <CAGXu5jK1oaEXYEKM45Ai3bPELTEF=aO0-OSSnpcnOdWtQf2+cw@mail.gmail.com>
+ <a57954c3-d343-aae3-69a8-7166df8d5042@sandeen.net>
+In-Reply-To: <a57954c3-d343-aae3-69a8-7166df8d5042@sandeen.net>
 From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 24 Apr 2019 12:05:01 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jKRO45m1TRDPA09sv0j+cZCC8e1w+oQty4YfOttKP3FYA@mail.gmail.com>
-Message-ID: <CAGXu5jKRO45m1TRDPA09sv0j+cZCC8e1w+oQty4YfOttKP3FYA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Mark expected switch fall-throughs
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
+Date:   Wed, 24 Apr 2019 12:05:54 -0700
+X-Gmail-Original-Message-ID: <CAGXu5j+rkR3DsKUVdm+-tTqjoQ38tNMe1bGdxiDRgrcKX3j9HA@mail.gmail.com>
+Message-ID: <CAGXu5j+rkR3DsKUVdm+-tTqjoQ38tNMe1bGdxiDRgrcKX3j9HA@mail.gmail.com>
+Subject: Re: [PATCH 0/6] sysctl: add pending proc_do_large_bitmap fix
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Eric Sandeen <sandeen@redhat.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 11:15 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
+On Wed, Apr 24, 2019 at 10:42 AM Eric Sandeen <sandeen@sandeen.net> wrote:
 >
-> In preparation to enabling -Wimplicit-fallthrough, mark switch
-> cases where we are expecting to fall through.
+> On 3/21/19 11:42 AM, Kees Cook wrote:
+> > On Wed, Mar 20, 2019 at 3:28 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> >>
+> >> Andrew, Kees,
+> >>
+> >> Eric sent a fix out for proc_do_large_bitmap() last month for when
+> >> using a large input buffer. After patch review a test case for the issue
+> >> was built and submitted. I noticed there were a few issues with the
+> >> tests, but instead of just asking Eric to address them I've taken
+> >> care of them and ammended the commit where necessary. There's a
+> >> few issues he reported which I also address and fix in this series.
+> >>
+> >> Since we *do* expect users of these scripts to also use them on older
+> >> kernels, I've also addressed not breaking calling the script for them,
+> >> and gives us an easy way to easily extend our tests cases for future
+> >> kernels as well.
+> >>
+> >> Before anyone considers these for stable as minor fixes, I'd recommend
+> >> we also address the discrepancy on the read side of things: modify the
+> >> test script to use diff against the target file instead of using the
+> >> temp file.
+> >>
+> >> Eric Sandeen (2):
+> >>   test_sysctl: add proc_do_large_bitmap() test case
+> >>   sysctl: Fix proc_do_large_bitmap for large input buffers
+> >>
+> >> Luis Chamberlain (4):
+> >>   test_sysctl: remove superfluous test_reqs()
+> >>   test_sysctl: load module before testing for it
+> >>   test_sysctl: ignore diff output on verify_diff_w()
+> >>   test_sysctl: allow graceful use on older kernels
+> >
+> > Thanks for collecting and updating these!
+> >
+> > Acked-by: Kees Cook <keescook@chromium.org>
+> >
+> > Andrew, can you carry these?
 >
-> This patch fixes the following warnings:
->
-> drivers/platform/x86/thinkpad_acpi.c: In function =E2=80=98thermal_get_se=
-nsor=E2=80=99:
-> drivers/platform/x86/thinkpad_acpi.c:6316:6: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
->    if (idx >=3D 8 && idx <=3D 15) {
->       ^
-> drivers/platform/x86/thinkpad_acpi.c:6322:2: note: here
->   case TPACPI_THERMAL_TPEC_8:
->   ^~~~
-> drivers/platform/x86/thinkpad_acpi.c: In function =E2=80=98hotkey_notify=
-=E2=80=99:
-> drivers/platform/x86/thinkpad_acpi.c:4208:7: warning: this statement may =
-fall through [-Wimplicit-fallthrough=3D]
->     if (tp_features.hotkey_wlsw &&
->        ^
-> drivers/platform/x86/thinkpad_acpi.c:4216:3: note: here
->    default:
->    ^~~~~~~
->
-> Warning level 3 was used: -Wimplicit-fallthrough=3D3
->
-> Notice that, in this particular case, the code comments are modified
-> in accordance with what GCC is expecting to find.
->
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Ping?  This seems to have never made it off the list into anybody's
+> tree.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Andrew, do you want me to send this to you again, or carry separately?
 
 -Kees
 
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
-thinkpad_acpi.c
-> index 57d9ae9d8e56..826e9a276818 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -4212,7 +4212,7 @@ static void hotkey_notify(struct ibm_struct *ibm, u=
-32 event)
->                                 known_ev =3D true;
->                                 break;
->                         }
-> -                       /* fallthrough to default */
-> +                       /* fallthrough - to default */
->                 default:
->                         known_ev =3D false;
->                 }
-> @@ -6317,8 +6317,8 @@ static int thermal_get_sensor(int idx, s32 *value)
->                         t =3D TP_EC_THERMAL_TMP8;
->                         idx -=3D 8;
->                 }
-> -               /* fallthrough */
->  #endif
-> +               /* fallthrough */
->         case TPACPI_THERMAL_TPEC_8:
->                 if (idx <=3D 7) {
->                         if (!acpi_ec_read(t + idx, &tmp))
-> --
-> 2.21.0
->
-
-
---=20
+-- 
 Kees Cook
