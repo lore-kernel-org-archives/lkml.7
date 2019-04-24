@@ -6,110 +6,86 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5435C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FED4C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA9421773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696EF218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbfDXKfB (ORCPT
+        id S1728911AbfDXKfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:35:01 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:37775 "EHLO
+        Wed, 24 Apr 2019 06:35:09 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:43711 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbfDXKe7 (ORCPT
+        with ESMTP id S1728391AbfDXKfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:34:59 -0400
+        Wed, 24 Apr 2019 06:35:00 -0400
 Received: from orion.localdomain ([95.114.95.254]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MIMOy-1hXUrf1As0-00EMiV; Wed, 24 Apr 2019 12:34:51 +0200
+ 1MqK2d-1gy9Zw3L63-00nQ5I; Wed, 24 Apr 2019 12:34:51 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     axboe@kernel.dk, linux-ide@vger.kernel.org,
         linux-nvme@lists.infradead.org
-Subject: [PATCH 1/3] drivers: nvme: target: core: fix build break
-Date:   Wed, 24 Apr 2019 12:34:39 +0200
-Message-Id: <1556102081-11820-2-git-send-email-info@metux.net>
+Subject: [PATCH 3/3] drivers: libata: add sysctl: 'libata.allow_tpm' for self-encrypted devices
+Date:   Wed, 24 Apr 2019 12:34:41 +0200
+Message-Id: <1556102081-11820-4-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556102081-11820-1-git-send-email-info@metux.net>
 References: <1556102081-11820-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:JIJa60MgCLYfsCVEtja+ZNwi6Nh7ryNozR5rx1XJQm46Ttr/VAU
- lhNmBEgXb0AAPxZWu/M6IKARrllglAUgcykj8p5EFE+oSGDc21AcsZRPuEPX03Tkh3G6pWY
- Bj3XpBEVZuZYgzYG63xE0wX+gpWQJGOkvrQmK6RTkQUcJxgLh+s3spYmTcc0bDQ72ypWH3V
- +Mh1XGVWRwibM8DC2fAVg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1gDUjChnQmE=:SsOBK/idME24zIhnOurG1i
- 8FkjY1OOlHMtWD2fU+H7PShKk6HO+TtJRAWYe0CXlbjUfts0eHU7a7zOQDRhNRX14hbmg0dvi
- LDZT+m3D0h8YlTusr2k2QBByK58KcL/q1Kg4vFDZdC85DQNfux8AzPwvQ1ISMi48LzEqEhwig
- GhPgEFdq0a3slKoTyRBOGeQkVNLUjwkF9AG+KzB6x8OpcWcFdXIt+N3jSt1itoj9HaXodkQzb
- 5f4wtV8YuCsMeZcD6opCfztnHJ+qYEujx0sn189bUwEx/mR2ZDJf7zWpjVCn30xOQN1hvx5z2
- R59qaD5+bwjkXbjeT9lDKMb5FIhQOSoIo7D3jzctBznkHjWFAN6knQp68t5N7A57FNVHB675p
- T3XyiVEvvkVroXuAWfoj7lB2z/YnwPqcEqWoVjuBwaHWrFpktq9gN3H9F8W5igQrN6Kl0KHr5
- Zr5RJLCMv7VV0f5OouSBKqPR+lx0jWJIwV+H4UkTXids7IixgPEoyZDHkbi2n5KKjJHWYEpM0
- IbM+i568qhbtp1/T7gAH0IG8ekIey6NzpJwFpf7yp1dKlMwKeaydbUploI2dPIFmsvG7IoNwV
- qkQ0fyPXXQm/++Ww39rSpkhLjScYdGuE3lgRRYflRSfkgr7HhZiIFjGX1S4Uhfkb/U1/lplP7
- 9Ybq3qZ4zDLL1TX1L99owMCNh8mbwCUGObb+LG+GKi8FeMYTjn67UxTVsEthK7L1rI9+URI8K
- gAkC1KZQP6+XK/pFBVQEib7YVkSUnTXxWvcDiQ==
+X-Provags-ID: V03:K1:bxkFNe0yRwaU7KT04kyF25rMDgtNFYUHppCXAJGr+VQhYhKBSbJ
+ l7r3PUUVlq3PupkEUBPvM6RCm4GUZUFu4TY5StEoIqBPlKjmc64guEnarjJ6iHFQpjX3l47
+ ccTEzeRk26lowPFHUQCtvX0kvuavY7Of1YWgw4utnxBbrLOlzJ3RYJhjIx+/I56r0ph7SzY
+ FagBGA+p6yF1AQdUgRQ3g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NF0ll/bu/ms=:sbSo5mO83/pXu8S4DfB6C9
+ d1t6vScaKu4Cm+UkxFoJx9ZU1ptsrn6kfg5ocjfnGPtTO983bCn/Dq5S+HGxWVdD7e27ri65l
+ 531kjZKwbMsrfiQzVOQ+35bZ8gwQ1TCjFPYCDJkDYgzCoZC8ZFt9gA3080jSvIg9hlLxQbWLz
+ gqPc3wI4ZGnYHzznjWJdeez8UyKD6YWWwZuEefbE+GGEermvs7liLwgXJL6PHXsCVPsSOBBKI
+ XZyqN7frg3HRr6+kJuetM9/96tx3TmHscJaiAc4JP38oX6Ks7Mh0RDZdEg7VJkvKNbBp4bIfI
+ 6/SxDISiFULwigqm4YYnJheElnUsKpV41bTf56csFPaFB8u+gOo4tNQCLfNetJbw/E5crQqsC
+ oBKCR+5oskJSRAMutFAoaqktnEG/8m5aWQ72dOGHMzRgf4pb4n7HK66fGRyv2bQJEVsInkD4k
+ JxmD0sY0aHmVFDg73D1hGdjqIV8ZPpIs3J2WEIRyxCzrzedbKDAqTXl+7unDsMitmxHukmnMy
+ OkjXV/tcTaNCe3iKtdW53NsjHWuJo0sE0+N4uSGw+6L2jSoaSr4tQ5mUXHJpt2X5cu4RvfFGp
+ e+AWQhVrnQyzy4Aw1UQfxUdIOMdwmZ5pTYEJE2NnQmEGrtxBo6tM/iW4VSwkJyrO0Sp+/sKl9
+ GiVAWf3V5YKzGYZFBIVBI1c9Gi2U5gwu+3I7KdG20tjxvokbTUAYR3/K52hR4pvpR8YusD8xQ
+ fpqXg2p9jFL3y901X/HLps7vFMwdOBaAhd2ejw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Build breaks:
+libata tpm functionality, needed for self encrypted devices (OPAL, ...),
+is currently disabled per default and needs to be enabled via kernel
+command line.
 
-    drivers/nvme/target/core.c: In function 'nvmet_req_alloc_sgl':
-    drivers/nvme/target/core.c:939:12: error: implicit declaration of \
-function 'sgl_alloc'; did you mean 'bio_alloc'? \
-[-Werror=implicit-function-declaration]
-      req->sg = sgl_alloc(req->transfer_len, GFP_KERNEL, &req->sg_cnt);
-                ^~~~~~~~~
-                bio_alloc
-    drivers/nvme/target/core.c:939:10: warning: assignment makes pointer \
-from integer without a cast [-Wint-conversion]
-      req->sg = sgl_alloc(req->transfer_len, GFP_KERNEL, &req->sg_cnt);
-              ^
-    drivers/nvme/target/core.c: In function 'nvmet_req_free_sgl':
-    drivers/nvme/target/core.c:952:3: error: implicit declaration of \
-function 'sgl_free'; did you mean 'ida_free'? [-Werror=implicit-function-declaration]
-       sgl_free(req->sg);
-       ^~~~~~~~
-       ida_free
+This patch allows enabling it via sysctl.
 
-Cause:
-
-    1. missing include to <linux/scatterlist.h>
-    2. SGL_ALLOC needs to be enabled
-
-Therefore adding the missing include, as well as Kconfig dependency.
+The implementation might look a bit 'naive', as there aren't any locks
+or barriers, etc. As we're dealing just w/ a plain boolean value, that's
+only checked when an tpm-related ioctl is called, we're fine w/ that.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/nvme/target/Kconfig | 1 +
- drivers/nvme/target/core.c  | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/ata/libata-core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
-index d94f25c..3ef0a4e 100644
---- a/drivers/nvme/target/Kconfig
-+++ b/drivers/nvme/target/Kconfig
-@@ -3,6 +3,7 @@ config NVME_TARGET
- 	tristate "NVMe Target support"
- 	depends on BLOCK
- 	depends on CONFIGFS_FS
-+	select SGL_ALLOC
- 	help
- 	  This enabled target side support for the NVMe protocol, that is
- 	  it allows the Linux kernel to implement NVMe subsystems and
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index b3e765a..08851f5 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -8,6 +8,7 @@
- #include <linux/random.h>
- #include <linux/rculist.h>
- #include <linux/pci-p2pdma.h>
-+#include <linux/scatterlist.h>
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index d3044c9..80ba844 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -177,6 +177,13 @@ struct ata_force_ent {
+ MODULE_VERSION(DRV_VERSION);
  
- #include "nvmet.h"
+ static struct ctl_table ctl_libata[] = {
++	{
++		.procname	= "allow_tpm",
++		.data		= &libata_allow_tpm,
++		.maxlen		= sizeof(libata_allow_tpm),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++	},
+ 	{}
+ };
  
 -- 
 1.9.1
