@@ -2,107 +2,249 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E8FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F2EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45F1206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F8A2148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556125144;
+	bh=qh0zhjCyw7iuEcVva2OmK+Zg+5010XeeqUjNWsf+JBo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fm5a4MjdXIbYWOqzxvj1tVU6Y/zVTfYDYdprK8je+fbGZ+MTTljOY2ZLbAxQ50EXw
+	 ETVAt5LwSytODTz9apUkMMx+oJS/QNsOGk6hJMfvTOzyhNd41fxrc3DFXexXvtyFU2
+	 PeUZ1Elj3Yfn++e1jiiNVS3tLu0IcpRtwWmSeyOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733051AbfDXQ54 (ORCPT
+        id S1733059AbfDXQ7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:57:56 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:60804 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731724AbfDXQ54 (ORCPT
+        Wed, 24 Apr 2019 12:59:03 -0400
+Received: from casper.infradead.org ([85.118.1.10]:36700 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730844AbfDXQ7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:57:56 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 1F4E1200AD;
-        Wed, 24 Apr 2019 18:57:53 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 18:57:51 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Xu YiPing <xuyiping@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>
-Subject: Re: [PATCH 12/25] drm: kirin: Reanme dc_ops to kirin_drm_data
-Message-ID: <20190424165751.GB21067@ravnborg.org>
-References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
- <1556061656-1733-13-git-send-email-john.stultz@linaro.org>
- <20190424165226.GE20110@ravnborg.org>
+        Wed, 24 Apr 2019 12:59:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=EquihUCty+ZcFfE5dWtYBS32BiOe8KzbeB7dO0oQ3KI=; b=WH6CgPHtXHsiSC0oRrWer8MaVG
+        VPqRt3ery5umY4lIPzwecIIsD3vjzlhJe9vR0krUDJYaHJ2gLfNKD+CFtPEzZH5MYDMQXZpRFYlom
+        pFh6nojZ4kkw6fdGGpbrW0gek0MFf7aHPzBeLUKeUciNJ6O992UELDEOwg2KhYPvWEZVa6agg4ku5
+        sBUfW5N5uOR7Rcvz5XwHhZ3IBdzdw6gLtZUbkvhIkCVHYazsJ2rMa0k/MmeVZgNWCGV5iFqNdI0ru
+        KQvp/pkSK1tAOvlfLP/EdMoV4plpKp0ExniykHkladzTJIxDWnJjw3V2CgSBXZYjukWFn/WzYAF0f
+        qlZgC3Gg==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJLEY-0005rG-Kg; Wed, 24 Apr 2019 16:58:59 +0000
+Date:   Wed, 24 Apr 2019 13:58:52 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 35/63] Documentation: PCI: convert
+ endpoint/pci-test-function.txt to reST
+Message-ID: <20190424135852.08810789@coco.lan>
+In-Reply-To: <20190423162932.21428-36-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-36-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424165226.GE20110@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=BTeA3XvPAAAA:8
-        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=KKAkSRfTAAAA:8 a=oFkJ97iAnQrfrlizSGYA:9
-        a=CjuIK1q_8ugA:10 a=tafbbOV3vt1XuEhzTjGK:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=cvBusfyB2V15izCimMoJ:22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi again.
+Em Wed, 24 Apr 2019 00:29:04 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-On Wed, Apr 24, 2019 at 06:52:26PM +0200, Sam Ravnborg wrote:
-> Hi John.
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
 > 
-> On Tue, Apr 23, 2019 at 04:20:43PM -0700, John Stultz wrote:
-> > From: Xu YiPing <xuyiping@hisilicon.com>
-> > 
-> > As part of refactoring the kirin driver to better support
-> > different hardware revisions, this patch renames the
-> > struct kirin_dc_ops to struct kirin_drm_data and cleans
-> > up the related variable names.
-> > 
-> > Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
-> > Cc: Rongrong Zou <zourongrong@gmail.com>
-> > Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> > Cc: Chen Feng <puck.chen@hisilicon.com>
-> > Cc: David Airlie <airlied@linux.ie>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: dri-devel <dri-devel@lists.freedesktop.org>
-> > Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
-> > [jstultz: reworded commit message]
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> >  drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c |  2 +-
-> >  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 16 ++++++++--------
-> >  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h |  4 ++--
-> >  3 files changed, 11 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> > index 69604ad..221bfbb 100644
-> > --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> > +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> > @@ -1055,7 +1055,7 @@ static void ade_drm_cleanup(struct platform_device *pdev)
-> >  {
-> >  }
-> >  
-> > -const struct kirin_dc_ops ade_dc_ops = {
-> > +struct kirin_drm_data ade_driver_data = {
-> >  	.init = ade_drm_init,
-> >  	.cleanup = ade_drm_cleanup
-> >  };
-> This rename does not help readability. An _ops often/always hold
-> function pointers. Where _data hold data.
-> So it looks wrong to name this _data.
-Reading later pathes the rename makes good sense, so disregard this.
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  Documentation/PCI/endpoint/index.rst          |  1 +
+>  ...est-function.txt => pci-test-function.rst} | 32 +++++++++++--------
+>  2 files changed, 20 insertions(+), 13 deletions(-)
+>  rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (84%)
+> 
+> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+> index 3951de9f923c..b680a3fc4fec 100644
+> --- a/Documentation/PCI/endpoint/index.rst
+> +++ b/Documentation/PCI/endpoint/index.rst
+> @@ -9,3 +9,4 @@ PCI Endpoint Framework
+>  
+>     pci-endpoint
+>     pci-endpoint-cfs
+> +   pci-test-function
+> diff --git a/Documentation/PCI/endpoint/pci-test-function.txt b/Documentation/PCI/endpoint/pci-test-function.rst
+> similarity index 84%
+> rename from Documentation/PCI/endpoint/pci-test-function.txt
+> rename to Documentation/PCI/endpoint/pci-test-function.rst
+> index 5916f1f592bb..ba02cddcec37 100644
+> --- a/Documentation/PCI/endpoint/pci-test-function.txt
+> +++ b/Documentation/PCI/endpoint/pci-test-function.rst
+> @@ -1,5 +1,10 @@
+> -				PCI TEST
+> -		    Kishon Vijay Abraham I <kishon@ti.com>
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=================
+> +PCI Test Function
+> +=================
+> +
+> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+>  
+>  Traditionally PCI RC has always been validated by using standard
+>  PCI cards like ethernet PCI cards or USB PCI cards or SATA PCI cards.
+> @@ -23,30 +28,31 @@ The PCI endpoint test device has the following registers:
+>  	8) PCI_ENDPOINT_TEST_IRQ_TYPE
+>  	9) PCI_ENDPOINT_TEST_IRQ_NUMBER
+>  
+> -*) PCI_ENDPOINT_TEST_MAGIC
+> +* PCI_ENDPOINT_TEST_MAGIC
 
-	Sam
+Same comment as on a previous patch. I suspect that the author's intention
+for all stuff under Documentation/PCI/endpoint/ (or perhaps this is due
+tothe markup language he uses) is to have:
+
+	 *) foo
+
+as a chapter, e. g. the right conversion would be, instead:
+
+	PCI_ENDPOINT_TEST_MAGIC
+	=======================
+
+(same applies to the other similar markups here and on other files under
+the endpoint/ directory)
+
+>  
+>  This register will be used to test BAR0. A known pattern will be written
+>  and read back from MAGIC register to verify BAR0.
+>  
+> -*) PCI_ENDPOINT_TEST_COMMAND:
+> +* PCI_ENDPOINT_TEST_COMMAND:
+>  
+>  This register will be used by the host driver to indicate the function
+>  that the endpoint device must perform.
+>  
+> -Bitfield Description:
+> +Bitfield Description::
+> +
+>    Bit 0		: raise legacy IRQ
+>    Bit 1		: raise MSI IRQ
+>    Bit 2		: raise MSI-X IRQ
+>    Bit 3		: read command (read data from RC buffer)
+>    Bit 4		: write command (write data to RC buffer)
+> -  Bit 5		: copy command (copy data from one RC buffer to another
+> -		  RC buffer)
+> +  Bit 5		: copy command (copy data from one RC buffer to another RC buffer)
+
+Please use a table instead:
+
+ Bitfield Description:
+
+  =====		=======================================================
+  Bit 0		raise legacy IRQ
+  Bit 1		raise MSI IRQ
+  Bit 2		raise MSI-X IRQ
+  Bit 3		read command (read data from RC buffer)
+  Bit 4		write command (write data to RC buffer)
+  Bit 5		copy command (copy data from one RC buffer to another
+		RC buffer)
+  =====		=======================================================
+
+
+
+>  
+> -*) PCI_ENDPOINT_TEST_STATUS
+> +* PCI_ENDPOINT_TEST_STATUS
+>  
+>  This register reflects the status of the PCI endpoint device.
+>  
+> -Bitfield Description:
+> +Bitfield Description::
+> +
+>    Bit 0		: read success
+>    Bit 1		: read fail
+>    Bit 2		: write success
+> @@ -57,17 +63,17 @@ Bitfield Description:
+>    Bit 7		: source address is invalid
+>    Bit 8		: destination address is invalid
+
+Same here:
+
+ Bitfield Description:
+
+  =====		==============================
+  Bit 0		read success
+  Bit 1		read fail
+  Bit 2		write success
+  Bit 3		write fail
+  Bit 4		copy success
+  Bit 5		copy fail
+  Bit 6		IRQ raised
+  Bit 7		source address is invalid
+  Bit 8		destination address is invalid
+  =====		==============================
+
+
+>  
+> -*) PCI_ENDPOINT_TEST_SRC_ADDR
+> +* PCI_ENDPOINT_TEST_SRC_ADDR
+>  
+>  This register contains the source address (RC buffer address) for the
+>  COPY/READ command.
+>  
+> -*) PCI_ENDPOINT_TEST_DST_ADDR
+> +* PCI_ENDPOINT_TEST_DST_ADDR
+>  
+>  This register contains the destination address (RC buffer address) for
+>  the COPY/WRITE command.
+>  
+> -*) PCI_ENDPOINT_TEST_IRQ_TYPE
+> +* PCI_ENDPOINT_TEST_IRQ_TYPE
+>  
+>  This register contains the interrupt type (Legacy/MSI) triggered
+>  for the READ/WRITE/COPY and raise IRQ (Legacy/MSI) commands.
+> @@ -77,7 +83,7 @@ Possible types:
+
+You need a blank line before - MSI, in order to not use a bold font for
+"Possible types:".
+
+>   - MSI		: 1
+>   - MSI-X	: 2
+>  
+> -*) PCI_ENDPOINT_TEST_IRQ_NUMBER
+> +* PCI_ENDPOINT_TEST_IRQ_NUMBER
+>  
+>  This register contains the triggered ID interrupt.
+>  
+
+Same here: ou need a blank line on this text:
+
+	 Admissible values:
++
+	  - Legacy      : 0
+	  - MSI         : [1 .. 32]
+	  - MSI-X       : [1 .. 2048]
+
+
+In order to avoid using bold font for "Admissible values".
+
+
+Thanks,
+Mauro
