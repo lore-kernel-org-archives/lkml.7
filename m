@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28458C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D3BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D04218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD47218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126080;
-	bh=MAdC0CzWx1En/pYZncQdkfNiBYyZbyWFIA/wJISf8PQ=;
+	s=default; t=1556126083;
+	bh=/SOrtXNBHLSkG+/N7ZeLAWI9sfZ/iI/hZ4E73ywJWQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qlVeixZgwc4sMGoVfZ+hvNWPuOtgjPI5nexZN2mZcmEWp+wYtzP8krf73OKPe45XH
-	 8CxBEwYDPmbERi4OqUZQ92NZCs16EE3lUUpo0sEe1sgHTHuZp87h3ytmlTN9pA4Qo8
-	 ixeUostwHXsHGf/oqc4/kCkFBjJ/dBypxzLFM6oU=
+	b=exOepQNUEKN+vOMexoR7W5yB/Wn60rCmL7jK/nM5Gj/5QEowCa3bD2xORmjUUIQip
+	 S+lA+AnxfZHW0mLEOSUloY1SG/w7i4C29aUHOc11VICx01D/ejOjNCgParkrn6FPEw
+	 DShKsdp8enhH5yXlnbRT2/O7P9DAsCkS8pwizIic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388092AbfDXROh (ORCPT
+        id S2388103AbfDXROm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38738 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:14:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388079AbfDXROc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:14:32 -0400
+        id S2388079AbfDXROi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:38 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CC312054F;
-        Wed, 24 Apr 2019 17:14:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9608C206BA;
+        Wed, 24 Apr 2019 17:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126072;
-        bh=MAdC0CzWx1En/pYZncQdkfNiBYyZbyWFIA/wJISf8PQ=;
+        s=default; t=1556126078;
+        bh=/SOrtXNBHLSkG+/N7ZeLAWI9sfZ/iI/hZ4E73ywJWQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQ+WRluBaHTF6FYsI/zAZE35wFvpRZBx+hiBJ6svidEiwOQhGyuXi2Uv1u7djRi1w
-         MOcPhSzNS6PjDdBCnYofTxsr/AgI5U2o1+2M07zrKqRNMb0csNQaAchhE8eeEUX9X+
-         a0r/VTB1/95dc11TviIgG9HDPbh6iAd80YGb3PvQ=
+        b=QMxqB6hrjfrnUfCBrIk4hKZCDASjA1uJjSRNBI2aoBkhLRZEmU110GqhZzyfUyeqo
+         jICED5BBvl+J6Butp4qvueDOusoSLYGdat0XuhD2uY3EFpkN0H889yl7R4ECmHCroT
+         Cl3gv+FdsSFjWIftRIcEpEdF4KFQkw67sgmY0Ktk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zumeng Chen <zumeng.chen@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 038/104] wlcore: Fix memory leak in case wl12xx_fetch_firmware failure
-Date:   Wed, 24 Apr 2019 19:08:55 +0200
-Message-Id: <20190424170858.521963314@linuxfoundation.org>
+Subject: [PATCH 3.18 079/104] serial: uartps: console_setup() cant be placed to init section
+Date:   Wed, 24 Apr 2019 19:09:36 +0200
+Message-Id: <20190424170907.027804591@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -60,57 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ba2ffc96321c8433606ceeb85c9e722b8113e5a7 ]
+[ Upstream commit 4bb1ce2350a598502b23088b169e16b43d4bc639 ]
 
-Release fw_status, raw_fw_status, and tx_res_if when wl12xx_fetch_firmware
-failed instead of meaningless goto out to avoid the following memory leak
-reports(Only the last one listed):
+When console device is rebinded, console_setup() is called again.
+But marking it as __init means that function will be clear after boot is
+complete. If console device is binded again console_setup() is not found
+and error "Unable to handle kernel paging request at virtual address"
+is reported.
 
-unreferenced object 0xc28a9a00 (size 512):
-  comm "kworker/0:4", pid 31298, jiffies 2783204 (age 203.290s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-  backtrace:
-    [<6624adab>] kmemleak_alloc+0x40/0x74
-    [<500ddb31>] kmem_cache_alloc_trace+0x1ac/0x270
-    [<db4d731d>] wl12xx_chip_wakeup+0xc4/0x1fc [wlcore]
-    [<76c5db53>] wl1271_op_add_interface+0x4a4/0x8f4 [wlcore]
-    [<cbf30777>] drv_add_interface+0xa4/0x1a0 [mac80211]
-    [<65bac325>] ieee80211_reconfig+0x9c0/0x1644 [mac80211]
-    [<2817c80e>] ieee80211_restart_work+0x90/0xc8 [mac80211]
-    [<7e1d425a>] process_one_work+0x284/0x42c
-    [<55f9432e>] worker_thread+0x2fc/0x48c
-    [<abb582c6>] kthread+0x148/0x160
-    [<63144b13>] ret_from_fork+0x14/0x2c
-    [< (null)>] (null)
-    [<1f6e7715>] 0xffffffff
-
-Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wlcore/main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/tty/serial/xilinx_uartps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index 575c8f6d4009..16b69b026f8f 100644
---- a/drivers/net/wireless/ti/wlcore/main.c
-+++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -1110,8 +1110,11 @@ static int wl12xx_chip_wakeup(struct wl1271 *wl, bool plt)
- 		goto out;
- 
- 	ret = wl12xx_fetch_firmware(wl, plt);
--	if (ret < 0)
--		goto out;
-+	if (ret < 0) {
-+		kfree(wl->fw_status);
-+		kfree(wl->raw_fw_status);
-+		kfree(wl->tx_res_if);
-+	}
- 
- out:
- 	return ret;
+diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+index df28ef14382b..892446cc28fa 100644
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1120,7 +1120,7 @@ static void cdns_uart_console_write(struct console *co, const char *s,
+  *
+  * Return: 0 on success, negative errno otherwise.
+  */
+-static int __init cdns_uart_console_setup(struct console *co, char *options)
++static int cdns_uart_console_setup(struct console *co, char *options)
+ {
+ 	struct uart_port *port = &cdns_uart_port[co->index];
+ 	int baud = 9600;
 -- 
 2.19.1
 
