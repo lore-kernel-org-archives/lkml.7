@@ -2,30 +2,30 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD09C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A192C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E05E218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B81218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfDXFMz (ORCPT
+        id S1729257AbfDXFM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 01:12:55 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:44915 "EHLO
+        Wed, 24 Apr 2019 01:12:59 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:44926 "EHLO
         relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfDXFMy (ORCPT
+        with ESMTP id S1726151AbfDXFM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 01:12:54 -0400
+        Wed, 24 Apr 2019 01:12:56 -0400
 Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
         by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hJADC-00026h-3q from Jiada_Wang@mentor.com ; Tue, 23 Apr 2019 22:12:50 -0700
+        id 1hJADG-00027M-HL from Jiada_Wang@mentor.com ; Tue, 23 Apr 2019 22:12:54 -0700
 Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
  svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Tue, 23 Apr 2019 22:12:45 -0700
+ (TLS) id 15.0.1320.4; Tue, 23 Apr 2019 22:12:50 -0700
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <rui.zhang@intel.com>, <edubezval@gmail.com>,
         <daniel.lezcano@linaro.org>
@@ -38,10 +38,12 @@ CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <fabrizio.castro@bp.renesas.com>, <dien.pham.ry@renesas.com>,
         <biju.das@bp.renesas.com>, <erosca@de.adit-jv.com>,
         <george_davis@mentor.com>, <joshua_frkuska@mentor.com>
-Subject: [PATCH v4 0/2] thermal: rcar_gen3_thermal: fix IRQ issues
-Date:   Wed, 24 Apr 2019 14:11:43 +0900
-Message-ID: <20190424051145.23072-1-jiada_wang@mentor.com>
+Subject: [PATCH v4 1/2] thermal: rcar_gen3_thermal: fix interrupt type
+Date:   Wed, 24 Apr 2019 14:11:44 +0900
+Message-ID: <20190424051145.23072-2-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.19.2
+In-Reply-To: <20190424051145.23072-1-jiada_wang@mentor.com>
+References: <20190424051145.23072-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -52,37 +54,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are issues with interrupt handling in rcar_gen3_thermal driver.
+Currently IRQF_SHARED type interrupt line is allocated, but it
+is not appropriate, as the interrupt line isn't shared between
+different devices, instead IRQF_ONESHOT is the proper type.
 
-Currently IRQ is remain enabled after .remove, later if device is probed,
-IRQ is requested before .thermal_init, this may cause IRQ function be
-triggered but not able to clear IRQ status, thus cause system to hang.
+By changing interrupt type to IRQF_ONESHOT, now irq handler is
+no longer needed, as clear of interrupt status can be done in
+threaded interrupt context.
 
-Since the irq line isn't shared between different devices,
-so the proper interrupt type flag should be IRQF_ONESHOT.
+Because IRQF_ONESHOT type interrupt line is kept disabled until
+the threaded handler has been run, so there is no need to protect
+read/write of REG_GEN3_IRQSTR with lock.
 
-This patch-set fix these interrupt handling retated issues.
-
+Fixes: 7d4b269776ec6 ("enable hardware interrupts for trip points")
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
-v4: remove 'spinlock_t lock'
-    add Fixes tag in ("thermal: rcar_gen3_thermal: fix interrupt type")
-    fix typos in ("thermal: rcar_gen3_thermal: disable interrupt in .remove")
+ drivers/thermal/rcar_gen3_thermal.c | 38 +++++------------------------
+ 1 file changed, 6 insertions(+), 32 deletions(-)
 
-v3: fix to use correct code base
-    remove unused "flag" variable in rcar_gen3_thermal_irq
-
-v2: use irq type IRQF_ONESHOT instead of IRQF_SHARED
-    disable interrupt in .remove
-
-v1: initial version
-
-Jiada Wang (2):
-  thermal: rcar_gen3_thermal: fix interrupt type
-  thermal: rcar_gen3_thermal: disable interrupt in .remove
-
- drivers/thermal/rcar_gen3_thermal.c | 41 +++++++----------------------
- 1 file changed, 9 insertions(+), 32 deletions(-)
-
+diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
+index 88fa41cf16e8..065e16f53285 100644
+--- a/drivers/thermal/rcar_gen3_thermal.c
++++ b/drivers/thermal/rcar_gen3_thermal.c
+@@ -14,7 +14,6 @@
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/spinlock.h>
+ #include <linux/sys_soc.h>
+ #include <linux/thermal.h>
+ 
+@@ -82,7 +81,6 @@ struct rcar_gen3_thermal_tsc {
+ struct rcar_gen3_thermal_priv {
+ 	struct rcar_gen3_thermal_tsc *tscs[TSC_MAX_NUM];
+ 	unsigned int num_tscs;
+-	spinlock_t lock; /* Protect interrupts on and off */
+ 	void (*thermal_init)(struct rcar_gen3_thermal_tsc *tsc);
+ };
+ 
+@@ -232,38 +230,16 @@ static irqreturn_t rcar_gen3_thermal_irq(int irq, void *data)
+ {
+ 	struct rcar_gen3_thermal_priv *priv = data;
+ 	u32 status;
+-	int i, ret = IRQ_HANDLED;
++	int i;
+ 
+-	spin_lock(&priv->lock);
+ 	for (i = 0; i < priv->num_tscs; i++) {
+ 		status = rcar_gen3_thermal_read(priv->tscs[i], REG_GEN3_IRQSTR);
+ 		rcar_gen3_thermal_write(priv->tscs[i], REG_GEN3_IRQSTR, 0);
+ 		if (status)
+-			ret = IRQ_WAKE_THREAD;
++			thermal_zone_device_update(priv->tscs[i]->zone,
++						   THERMAL_EVENT_UNSPECIFIED);
+ 	}
+ 
+-	if (ret == IRQ_WAKE_THREAD)
+-		rcar_thermal_irq_set(priv, false);
+-
+-	spin_unlock(&priv->lock);
+-
+-	return ret;
+-}
+-
+-static irqreturn_t rcar_gen3_thermal_irq_thread(int irq, void *data)
+-{
+-	struct rcar_gen3_thermal_priv *priv = data;
+-	unsigned long flags;
+-	int i;
+-
+-	for (i = 0; i < priv->num_tscs; i++)
+-		thermal_zone_device_update(priv->tscs[i]->zone,
+-					   THERMAL_EVENT_UNSPECIFIED);
+-
+-	spin_lock_irqsave(&priv->lock, flags);
+-	rcar_thermal_irq_set(priv, true);
+-	spin_unlock_irqrestore(&priv->lock, flags);
+-
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -371,8 +347,6 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
+ 	if (soc_device_match(r8a7795es1))
+ 		priv->thermal_init = rcar_gen3_thermal_init_r8a7795es1;
+ 
+-	spin_lock_init(&priv->lock);
+-
+ 	platform_set_drvdata(pdev, priv);
+ 
+ 	/*
+@@ -390,9 +364,9 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
+ 		if (!irqname)
+ 			return -ENOMEM;
+ 
+-		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
+-						rcar_gen3_thermal_irq_thread,
+-						IRQF_SHARED, irqname, priv);
++		ret = devm_request_threaded_irq(dev, irq, NULL,
++						rcar_gen3_thermal_irq,
++						IRQF_ONESHOT, irqname, priv);
+ 		if (ret)
+ 			return ret;
+ 	}
 -- 
 2.19.2
 
