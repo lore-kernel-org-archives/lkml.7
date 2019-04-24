@@ -2,110 +2,110 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3A6C10F11
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA30DC282E3
 	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFDD218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756A1218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:20:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="1pMiJS4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbfDXPUG (ORCPT
+        id S1730937AbfDXPUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:20:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45848 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727995AbfDXPUF (ORCPT
+        Wed, 24 Apr 2019 11:20:09 -0400
+Received: from mail-pg1-f180.google.com ([209.85.215.180]:43747 "EHLO
+        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730827AbfDXPUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:20:05 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OFJCT3067983
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:20:04 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s2s1pw1an-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:20:04 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
-        Wed, 24 Apr 2019 16:20:02 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 24 Apr 2019 16:19:58 +0100
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3OFJvdi33947686
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 15:19:57 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0635628068;
-        Wed, 24 Apr 2019 15:19:57 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2436428058;
-        Wed, 24 Apr 2019 15:19:56 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.41.179.222])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 24 Apr 2019 15:19:56 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au,
-        robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
-        hverkuil@xs4all.nl, Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH v2 4/4] ARM: dts: aspeed-g5: Add video engine
-Date:   Wed, 24 Apr 2019 10:19:54 -0500
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-x-cbid: 19042415-0052-0000-0000-000003B05DD1
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010987; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01193748; UDB=6.00625814; IPR=6.00974571;
- MB=3.00026577; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-24 15:20:00
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042415-0053-0000-0000-0000609E5C6A
-Message-Id: <1556119194-10917-1-git-send-email-eajames@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=893 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904240118
+        Wed, 24 Apr 2019 11:20:06 -0400
+Received: by mail-pg1-f180.google.com with SMTP id z9so9528657pgu.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E9qkLBGCDRzuLJUlze/rabSNC/gT4ZSQ5pV/MvHU5pQ=;
+        b=1pMiJS4OcpwbaIwCiOWRc+JpT+oAeUGqMAu5cxVGeZIZ/nShn9Y1HKTT2py+sHlyD1
+         CV68C61S0MnIQZgWv56q6zQYzYpNjQr++bVso2n/853msE5se+ndU0yT43jJmJq2zDoV
+         6K0ObAHLMl1vZ52mU/GJVZWoxtFTz+AO4Fq+aD/ujI79KS314NWgHaDUMKBW/gzXRSUh
+         1QGRb9ahRDk/kw/KFKuPY11bK4f1PrOBbxe2RDQBiTcSEhEMSHjjGlGA/Dt7A8ltyXMJ
+         BhLGws5h+FtzNfIomq79Fzn3f35DR2ZRYwuSEnMZh4zcf99GzZCWhvEKF4PS44GLe8QM
+         bw2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E9qkLBGCDRzuLJUlze/rabSNC/gT4ZSQ5pV/MvHU5pQ=;
+        b=IWWrj5UKY6XgQChne7MPKuQK1kDoS8KJsgdGeL5eB7R0Kc6qGmShZJr0/zDTgDbm16
+         viqt/go71vze9yx9Dc+JZHHdJUCQ/kijau6G5SQyQDVwKNeIG9Ol4T9Z250p8pedZ5/T
+         laPAlMFYSH8MS9ZG9AcMeP/8FfqnpYFsL/dexbvAfPVpl8F0GJQVixHxwIgHR05zJipB
+         NgdlBHvNSnf+lszMhwgR++5MAkHS4elVXu6A4TSlJcwaddAFiLTvMm/xgAT8sDCxz/IM
+         ++TZ9BJ7N2mHPeUlPFDydxXPHYhVSKRRdlmT1heH3Zy+NSqdpg0F7YQQEnrBJ8rzRlMW
+         pTgw==
+X-Gm-Message-State: APjAAAVYeEt1aGMCqWOJb+vWg4ygi81zHTBkl22Fjcd5Sj700JJ26tRH
+        Fm06vIk2DBtVibKBcfhS39idmiYIXy6pvw==
+X-Google-Smtp-Source: APXvYqzSQCOyERmgvvj02ps+Sh6aw7wF9Fc82eOcJ/wQ0lCMSNw3tSSgutbWujC7Z1uzKu9bfxEA4g==
+X-Received: by 2002:a65:64d3:: with SMTP id t19mr31687928pgv.57.1556119204691;
+        Wed, 24 Apr 2019 08:20:04 -0700 (PDT)
+Received: from cisco ([2601:282:901:dd7b:7136:cebf:c0d3:8091])
+        by smtp.gmail.com with ESMTPSA id y10sm28305726pfm.27.2019.04.24.08.20.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 08:20:03 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 09:20:01 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     keescook@chromium.org, luto@amacapital.net, jannh@google.com,
+        linux-kernel@vger.kernel.org, stgraber@ubuntu.com
+Subject: Re: SECCOMP_RET_USER_NOTIF: listener improvements
+Message-ID: <20190424152001.GL3758@cisco>
+References: <20190424150423.k3embc2vkho2kixp@brauner.io>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424150423.k3embc2vkho2kixp@brauner.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a node to describe the video engine on the AST2500.
+On Wed, Apr 24, 2019 at 05:04:26PM +0200, Christian Brauner wrote:
+> Hey everyone,
+> 
+> So I was working on making use of the seccomp listener stuff and I
+> stumbled upon a problem. Imagine a scenario where:
+> 
+> 1. Task T1 installs Filter F1 and gets and listener fd for that filter FD1
+> 2. T1 sends FD1 via SCM_RIGHTS to task T2
+>    T2 now holds a reference to the same underlying struct file as FD1 via FD2
+> 3. T2 registers FD2 in an event loop and starts listening for events
+> 4. T1 exits and wipes FD1
+> 
+> Now, T2 still holds a reference to the filter via FD2 which references
+> the same underlying file as FD1 which has the seccomp filter stashed in
+> private_data.
+> So T2 will never get notified that the filter is essentially unused and
+> doesn't know when to exit, i.e. it has no way of telling when T1 and all
+> of its children using the same filter are gone.
+> 
+> I think we should have a way to do this
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- arch/arm/boot/dts/aspeed-g5.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Since the only way we ever allow creating a struct file * that points
+to a struct seccomp_filter *, if there is a notifier attached, the
+number of tasks still being monitored by a particular filter should be
+filter->usage - 1 (assuming there is a notifier attached). So we could
+augment __put_seccomp_filter() to check for this and send out a
+message with a SECCOMP_NOTIF_FLAG_DEAD flag or something.
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 85ed9db..c6d5edc 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -243,6 +243,16 @@
- 				status = "disabled";
- 			};
- 
-+			video: video@1e700000 {
-+				compatible = "aspeed,ast2500-video-engine";
-+				reg = <0x1e700000 0x1000>;
-+				clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
-+					 <&syscon ASPEED_CLK_GATE_ECLK>;
-+				clock-names = "vclk", "eclk";
-+				interrupts = <7>;
-+				status = "disabled";
-+			};
-+
- 			sram: sram@1e720000 {
- 				compatible = "mmio-sram";
- 				reg = <0x1e720000 0x9000>;	// 36K
--- 
-1.8.3.1
+> *or* alternatively have a way to attach a process to an existing
+> filter.
 
+I also think this wouldn't be too hard, since the struct file * has a
+reference to the filter. So I guess the question is: which of these
+makes more sense?
+
+Tycho
