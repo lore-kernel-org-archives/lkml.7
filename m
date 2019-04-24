@@ -2,86 +2,104 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1D8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7F1C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A5120878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:39:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oeEKVgfG"
+	by mail.kernel.org (Postfix) with ESMTP id AF39720878
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfDXJjA (ORCPT
+        id S1727875AbfDXJld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:39:00 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:56980 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbfDXJi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:38:59 -0400
-Received: from zn.tnic (p200300EC2F08C6006C678EE1EA32B98E.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:c600:6c67:8ee1:ea32:b98e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 723871EC04B7;
-        Wed, 24 Apr 2019 11:38:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1556098738;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=JejLD+R960TRX+8V0U0wI4gGRyzSQFE2oqtfqgoPky8=;
-        b=oeEKVgfGTgBDxThbtK4sOa2Wm+0pNaO62N0zaerGXSinbmPDRZp2/4pOjRrRp9DMMW6+EL
-        dyf34GfeCzfaUMR9Mx10DwotXD5EGnVFoRTstn2c8wW9np5M7nYZF1+p82sahWcs7Mfx9c
-        9Y0MBYKkzw4I+1mLUVQoOtTrZdp+DXg=
-Date:   Wed, 24 Apr 2019 11:38:52 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     j-nomura@ce.jp.nec.com, kasong@redhat.com, dyoung@redhat.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
-        kexec@lists.infradead.org, hpa@zytor.com
-Subject: Re: [PATCH v5 0/2] x86/boot: Use efi_setup_data for searching RSDP
- on kexec-ed kernel
-Message-ID: <20190424093852.GB30142@zn.tnic>
-References: <20190424092944.30481-1-bhe@redhat.com>
+        Wed, 24 Apr 2019 05:41:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:34583 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbfDXJld (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 05:41:33 -0400
+Received: from [192.168.1.115] ([95.114.95.254]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MQdtO-1h7lEh1sxy-00Nk9L; Wed, 24 Apr 2019 11:40:05 +0200
+Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet
+ card
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+References: <20190409144250.7237-1-TheSven73@gmail.com>
+ <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
+ <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
+ <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
+ <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
+ <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
+ <CAGngYiVJwRh_ESLfSYWak4RU60T2D1HW0-3Hg1CZbRjWhaSN5Q@mail.gmail.com>
+ <7ceaeb70-f937-bd84-95e5-d7a6baeb5d87@metux.net>
+ <CAGngYiUPZ+g4eXJKvgA9GSJXgOFAAf6Q3qqAheiqNSnJ+Dbx+w@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <e07f7575-2617-a11a-fd78-d068b10a8171@metux.net>
+Date:   Wed, 24 Apr 2019 11:40:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <CAGngYiUPZ+g4eXJKvgA9GSJXgOFAAf6Q3qqAheiqNSnJ+Dbx+w@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190424092944.30481-1-bhe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:sPEu/ZQ8A/s2Oj+J95ERmhskebn++VDuhKDUCEfuzUlJuje5mwM
+ mdsD12lpR5VOgPwqyWizYwh6PltSAty3Q6n6mfxW/AfL/ZQRt+ikZaCbzc2SGuc8mQVyTRz
+ 8EhitEoy048U7diAkcMvq7mXsUwOODo91kXBBXLgvDmtd7lPM4MNgdMlVFrzqEVw6ApvqUG
+ hNJHCJctteySiwODwtFtA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jKPz/DgbKEc=:U/3mAmhnYIK0lvUVWncSfF
+ DLmODzAlYja4WFrCdBiCGWjoH6yDt3csESufr1VQlVcXKGAW033wQXF5tQ0ygoMfSg0GreYHi
+ 2bUg0UwUH4ePq9xftyS4p9HsPTKgXcPbK6LxVj8XLHB4FkmStMqY0ny88LnvDvxHgtGY4ecQL
+ DCwKIG19izDyp+jgBY8X99uz9s/nSfx7PbhJ6bCo7NxMBKcXc6RNd9+p6BASON6Ut5wwabd89
+ Ms2ucmP4InXOLN7ILkHWk6jqXdg/nUqgxcDfehxZC9W4B7u9ApezUjtBy2UNpcwmc45FDb6+8
+ GJZ5P8uyWok67kabDo5fnesY0lx4RlXJIuLYvxfm+gZJjSGuE1CWRqV5+UftMKsGSCMr76t70
+ 9HBUQi2IjGXApJEv38VFQGKcMmhMxV2gF49inHaNkuyJdQx2N1s0tpAmdu/SCl4TmIxmm65BG
+ kcLp9Txuw91YfvdXGu+1M6w0oSly0B1BZkw14m4EXPwZGZGufjGkxRm4nUM/As4iUl53/qL2E
+ +SXhLqUCJEpqjt9GP8ZEwUoFNWks00++K/h5bNSdSBk4plYMLn+aEDSbU2t1MUHY1lKKawWCg
+ dCfsPJ+702JN5zfVuCGAvkQxNQ1yb0NncZm7duuSoEuoAAGVw06jpB+odI+QXNQ3NG4CV7JrI
+ n33Nov/28kOoRGWg4xSiCQGgw4DCdTIho8QTOpBdDGs1GCGgCkINrhsJj4R9YGaPwLsAFW65U
+ kV4Pt6hLO7NwjDRAyGMRUfTE3aoEqyp2Vjgo3S2AnZHzQ/WKniblMPmyjdK+AxUdXnEk7oe92
+ XxiJjWHYd8/8hUJTlqri8ljMqNKi9rwoKcMVzX1J/gzUjnJ6/I1/ZB+TEprS46VkLorAm3CA7
+ MFPyOGi6UDI5mtvZVGwZCeAAHy6puofTJ8P74izg5l1uuof5aKZRBatbSCSWpb9R97QxKvmCQ
+ a83ZApQ3QVQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 05:29:42PM +0800, Baoquan He wrote:
-> In this series, patch 2/2 has dependency on patch 1/1, otherwise
-> it may cause system to reset to firmware on some machines.
-> 
-> The patch 2/2 is the version Boris organized:
-> http://lkml.kernel.org/r/20190416095209.GG27892@zn.tnic
-> 
-> Patch 1/1 is based on Kairui's v1 patch, and add ACPI tables mapping:
-> http://lkml.kernel.org/r/20190422092804.15534-1-kasong@redhat.com
-> 
-> Dave Young confirmed this patchset passed test on his t420 laptop, where
-> the system resetting issue caused by patch 2/2 was found.
+On 18.04.19 19:34, Sven Van Asbroeck wrote:
 
-I guess but this does not give me the warm and fuzzy feeling one week
-before the merge window.
+> If you have a fieldbus device you want to add to mainline Linux, and> you wish to piggy-back onto the fieldbus_dev subsystem, then we can>
+discuss fieldbus API changes/additions/improvements during the> patch
+review stage.
+With those cases, piggy-backing wouldn't make much sense, as their
+semantics is pretty different.
 
-So:
+My whole point here was just that it shouldn't be called "fieldbus",
+but iec61158 instead.
 
-https://git.kernel.org/tip/36f0c423552dacaca152324b8e9bda42a6d88865
 
-and we all can relax ourselves and take the next release cycle to test
-the hell out of this before reenabling it again.
+--mtx
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
