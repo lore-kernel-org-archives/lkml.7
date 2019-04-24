@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDC2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA54DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B49721903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A102921906
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127111;
-	bh=uvDQ7J1He+P4kMvTRiXCsL1gRFSKQTQJ4Sz5ob7YAug=;
+	s=default; t=1556127113;
+	bh=xm9ei95JbKMxxDCtd2eG0BR8le4JJv/5MyDXMBhYaqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M0tKkE5tLyvlxeJUHEKBBf59pqJqRxMAqhTeWeET4W1vOPdraCQmIrOo9nx4zd8A1
-	 pN7sQJQ+jbwDrSiD4Uqdttmj9zMYwvUqo218v+4SPHB3OkjOmDnn60ODdEI20eybdK
-	 uC9LShqHdgi6Q8TJlXE52hwhTtAx0jwLgtVoRIsg=
+	b=T0nehA2DPBiIMz/hQ22xzClO9rrzjfHPLBRUa80vQvAdVCLfVZPmV67Qtqt2cOjJk
+	 Ctb7M81eBgY5QFhzo1XbJ1Rcr40Xt6IVGylB/zJpCZel5L41vwuZElzHg3mripyHwP
+	 tpoD2lvsM5OSlpItQEnxvxkGc8pDHKPtwAnBo7Bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391277AbfDXRbt (ORCPT
+        id S2391292AbfDXRbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58302 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:31:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390475AbfDXRbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:31:46 -0400
+        id S2391273AbfDXRbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:31:49 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3CFD2054F;
-        Wed, 24 Apr 2019 17:31:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50F9E21903;
+        Wed, 24 Apr 2019 17:31:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127106;
-        bh=uvDQ7J1He+P4kMvTRiXCsL1gRFSKQTQJ4Sz5ob7YAug=;
+        s=default; t=1556127108;
+        bh=xm9ei95JbKMxxDCtd2eG0BR8le4JJv/5MyDXMBhYaqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UwqqntwBzz4De/kUFcL98gFE08LKjWb6S89XUgKQpxbqyaeZeU55g0WOObV1CA9tw
-         25Y02GGvutD5bOBR09bnMiigWwS7MUtmPMyDNVNqsYU7lTWA2fj8aQaMWSTVTzqIme
-         +hK6gFKFDy7rglAjSFHinuhsUGpnK4jYaoCV22mc=
+        b=P49Tu6DOpp3O6WNh65OBteAddrbSH6b/q06f5Xet3PPKQYJcJv6MKMolSlzE/sbxK
+         YcoqW2ny+iW3WhhfWH+xORgzA3eAFcRcg52QKswOASv5//gIH9HfTyVio7kjUIdQ6m
+         N0Apw6Cs3U1j4tJhApGQIj4Hew1FCuruZTqdQTNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christian Gromm <christian.gromm@microchip.com>
-Subject: [PATCH 4.19 47/96] staging: most: core: use device description as name
-Date:   Wed, 24 Apr 2019 19:09:52 +0200
-Message-Id: <20190424170923.034658273@linuxfoundation.org>
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.19 65/96] arm64: futex: Restore oldval initialization to work around buggy compilers
+Date:   Wed, 24 Apr 2019 19:10:10 +0200
+Message-Id: <20190424170924.131665768@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -59,33 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Gromm <christian.gromm@microchip.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 131ac62253dba79daf4a6d83ab12293d2b9863d3 upstream.
+commit ff8acf929014b7f87315588e0daf8597c8aa9d1c upstream.
 
-This patch uses the device description to clearly identity a device
-attached to the bus. It is needed as the currently useed mdevX
-notation is not sufficiant in case more than one network
-interface controller is being used at the same time.
+Commit 045afc24124d ("arm64: futex: Fix FUTEX_WAKE_OP atomic ops with
+non-zero result value") removed oldval's zero initialization in
+arch_futex_atomic_op_inuser because it is not necessary. Unfortunately,
+Android's arm64 GCC 4.9.4 [1] does not agree:
+
+../kernel/futex.c: In function 'do_futex':
+../kernel/futex.c:1658:17: warning: 'oldval' may be used uninitialized
+in this function [-Wmaybe-uninitialized]
+   return oldval == cmparg;
+                 ^
+In file included from ../kernel/futex.c:73:0:
+../arch/arm64/include/asm/futex.h:53:6: note: 'oldval' was declared here
+  int oldval, ret, tmp;
+      ^
+
+GCC fails to follow that when ret is non-zero, futex_atomic_op_inuser
+returns right away, avoiding the uninitialized use that it claims.
+Restoring the zero initialization works around this issue.
+
+[1]: https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Christian Gromm <christian.gromm@microchip.com>
+Fixes: 045afc24124d ("arm64: futex: Fix FUTEX_WAKE_OP atomic ops with non-zero result value")
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/most/core.c |    2 +-
+ arch/arm64/include/asm/futex.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/most/core.c
-+++ b/drivers/staging/most/core.c
-@@ -1412,7 +1412,7 @@ int most_register_interface(struct most_
+--- a/arch/arm64/include/asm/futex.h
++++ b/arch/arm64/include/asm/futex.h
+@@ -50,7 +50,7 @@ do {									\
+ static inline int
+ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *_uaddr)
+ {
+-	int oldval, ret, tmp;
++	int oldval = 0, ret, tmp;
+ 	u32 __user *uaddr = __uaccess_mask_ptr(_uaddr);
  
- 	INIT_LIST_HEAD(&iface->p->channel_list);
- 	iface->p->dev_id = id;
--	snprintf(iface->p->name, STRING_SIZE, "mdev%d", id);
-+	strcpy(iface->p->name, iface->description);
- 	iface->dev.init_name = iface->p->name;
- 	iface->dev.bus = &mc.bus;
- 	iface->dev.parent = &mc.dev;
+ 	pagefault_disable();
 
 
