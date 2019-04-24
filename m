@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460CBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D0AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18BF7218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19BC21905
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127173;
-	bh=Z38Q4RplQPvZdRj9T13BK59Dr2zpud/8AU35EjdsxFc=;
+	s=default; t=1556127177;
+	bh=bo2aulTAxicZiE39XAzO3FAOvczOP38m53ofMhCvz2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IARLwfUiIiHTTNmIp8cB5VodX3GOjl8xU03l2fqLkZh30KHe+xFzJ06HRjVvyeVuj
-	 JVC5gW1BYMSiQYo4ZOx+HWT1YTNKg4QPO82s06IFnCxwlwcRiLjNMWT6EaYLRqktun
-	 +9nbaMrumIjKjCcMRO845ZvdcIlvNnMB1Tox7b7A=
+	b=bZ+kJNn6lPFFXTKc97ZxRUBJTgv+2O5aUmV2+Xoh1wkU1i9xIdAAkm70Zbfyge/3O
+	 fnPw57TcvrvTBIYz4o/UzHxGTPrAmrYWZ9meJQgIAgTmfoD1ExiebUmZ0/T9VDKDJo
+	 WvTSbmQcwW8XIb631GYYcQj9e2/0r0rqXJ2xU/dM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390717AbfDXRcv (ORCPT
+        id S2391197AbfDXRc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59584 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:32:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391434AbfDXRct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:32:49 -0400
+        id S2391173AbfDXRcw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:32:52 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 429FA2054F;
-        Wed, 24 Apr 2019 17:32:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1B1921939;
+        Wed, 24 Apr 2019 17:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127168;
-        bh=Z38Q4RplQPvZdRj9T13BK59Dr2zpud/8AU35EjdsxFc=;
+        s=default; t=1556127171;
+        bh=bo2aulTAxicZiE39XAzO3FAOvczOP38m53ofMhCvz2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RPUWn8/h9HQ8jzB3JFboNrTYXqm5B+RiT8OqLTNKapnkx4sXbsyXpehgGcRkExWBq
-         iPZdLYsLci9mee3sIt4iiLQ3e0EBKhMS0cfMsbWaNTkvbimuSTD+KUrKgSawdNf9TU
-         mgZEQOWpoIpPExiQRTMycRtboeEHRU09USYBC9I4=
+        b=ulJ7vWhAt3CyVrwVVKFOiJYCdXJnTJ+5efCy4eyxFgeKGUp0vosvP02peIa79O8pI
+         i09pbhk1eXd8uY9f9meM2jA2eAR065jEshGU0Al7Qh9aNSakOiM2satPGUTp2VeMOE
+         oCSDruTmpI7VsNrfMtmiwBLV/9+z1zZ+PMJKoPIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Yue Haibing <yuehaibing@huawei.com>,
+        James Morris <james.morris@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 86/96] tpm/tpm_i2c_atmel: Return -E2BIG when the transfer is incomplete
-Date:   Wed, 24 Apr 2019 19:10:31 +0200
-Message-Id: <20190424170925.629747231@linuxfoundation.org>
+Subject: [PATCH 4.19 87/96] tpm: Fix the type of the return value in calc_tpm2_event_size()
+Date:   Wed, 24 Apr 2019 19:10:32 +0200
+Message-Id: <20190424170925.704176363@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -62,36 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 442601e87a4769a8daba4976ec3afa5222ca211d ]
+commit b9d0a85d6b2e76630cfd4c475ee3af4109bfd87a upstream
 
-Return -E2BIG when the transfer is incomplete. The upper layer does
-not retry, so not doing that is incorrect behaviour.
+calc_tpm2_event_size() has an invalid signature because
+it returns a 'size_t' where as its signature says that
+it returns 'int'.
 
-Cc: stable@vger.kernel.org
-Fixes: a2871c62e186 ("tpm: Add support for Atmel I2C TPMs")
+Cc: <stable@vger.kernel.org>
+Fixes: 4d23cc323cdb ("tpm: add securityfs support for TPM 2.0 firmware event log")
+Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: James Morris <james.morris@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm_i2c_atmel.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/char/tpm/eventlog/tpm2.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_i2c_atmel.c b/drivers/char/tpm/tpm_i2c_atmel.c
-index 32a8e27c5382..cc4e642d3180 100644
---- a/drivers/char/tpm/tpm_i2c_atmel.c
-+++ b/drivers/char/tpm/tpm_i2c_atmel.c
-@@ -69,6 +69,10 @@ static int i2c_atmel_send(struct tpm_chip *chip, u8 *buf, size_t len)
- 	if (status < 0)
- 		return status;
- 
-+	/* The upper layer does not support incomplete sends. */
-+	if (status != len)
-+		return -E2BIG;
-+
- 	return 0;
- }
- 
+diff --git a/drivers/char/tpm/eventlog/tpm2.c b/drivers/char/tpm/eventlog/tpm2.c
+index 1b8fa9de2cac..41b9f6c92da7 100644
+--- a/drivers/char/tpm/eventlog/tpm2.c
++++ b/drivers/char/tpm/eventlog/tpm2.c
+@@ -37,8 +37,8 @@
+  *
+  * Returns size of the event. If it is an invalid event, returns 0.
+  */
+-static int calc_tpm2_event_size(struct tcg_pcr_event2 *event,
+-				struct tcg_pcr_event *event_header)
++static size_t calc_tpm2_event_size(struct tcg_pcr_event2 *event,
++				   struct tcg_pcr_event *event_header)
+ {
+ 	struct tcg_efi_specid_event *efispecid;
+ 	struct tcg_event_field *event_field;
 -- 
 2.19.1
 
