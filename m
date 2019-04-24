@@ -2,276 +2,164 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C08EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0645DC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F36E20685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1CD20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129344;
-	bh=wToHujuOLWcjerZxzICOO1r8wigCrHnaRq95DOiAb78=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=hOPoJnE5CCT02aM0Vebdp66Sj4rDuIJ/qnOCOl4ymSxCTdmOlrxiS447c7YTnkTtl
-	 SwjATlHre8GvY5ewr1DLiG581PHLDO3Hh+bzsQfjS95dxpLelQ7zICzeoKyZr72IzZ
-	 Bt9cQA+KXVU5V9cOIX3K0949ZwYU/M+T/04SUsY0=
+	s=default; t=1556129350;
+	bh=4PkFK/5JRgPg8+wljYH2Ft6CbTmBcu8x858tE2OoWhE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I3Dh/T7WmGy4KjTFDVxSRgceAX8XsSjn/MwyJ7dCE+WcYcvEqDLjN4WWuyOHsV71/
+	 FhCNZ9sAjyxhLOv05cN1XC1vMHfhMc0Fg6F8r+732zQsgKYkXlNTImYx/yFL6ZWceX
+	 Z9rEJd+nmLjqgdUNHEbs8jwSBVc/OvxDds8D1sIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388576AbfDXSJD (ORCPT
+        id S2388233AbfDXRP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:09:03 -0400
-Received: from casper.infradead.org ([85.118.1.10]:48580 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfDXSJB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:09:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HhQ7jYzghgIqKgaAgfN76700l4OvgCKkOAd2ol9E0lU=; b=HxlYlSpmH7r5MFlhylXWNgWOFx
-        pTx99hWG4+DIyjCa/WBRRbokCmSxtYMlWfXUuPkuUJ9gwnUINs5JGuwXSvw5I44vVxOhC3iRHXp7u
-        Z1iCmkBWtIT2gKRLi5h4nEle7u3PTMjbfGyLvqJN5qbXyxfVWEytpkuIFJTA4gifT2If8ap94O+jL
-        79F5TWQ5txbqkjlLKe2K9XoUn65IiQM/5h3WQEwNzFR4hmDj6K8oir9+tGEJgA3gSAqzncFpvuDi4
-        vNiU5/QL+zLJCyFogbpW8Qrn+N9Y0NNTz2nVw86kV0KgVe7VdAcLqmYW3u9Hsf1lU4MsZs8zz3+r6
-        BUPvEmxQ==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJMKH-0001uS-M8; Wed, 24 Apr 2019 18:08:58 +0000
-Date:   Wed, 24 Apr 2019 15:08:52 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     rjw@rjwysocki.net, Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5 08/23] Documentation: ACPI: move
- method-customizing.txt to firmware-guide/acpi and convert to reST
-Message-ID: <20190424150852.0e415da1@coco.lan>
-In-Reply-To: <20190424175306.25880-9-changbin.du@gmail.com>
-References: <20190424175306.25880-1-changbin.du@gmail.com>
-        <20190424175306.25880-9-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 24 Apr 2019 13:15:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387854AbfDXRPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:15:25 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33FC6218B0;
+        Wed, 24 Apr 2019 17:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556126124;
+        bh=4PkFK/5JRgPg8+wljYH2Ft6CbTmBcu8x858tE2OoWhE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S/Fo0muj6UIMTB54Pp7qO+EUN9wvIp1WZ8K+QMJeaq08rEXBnPtNyqHp/iF7CEXOi
+         JC8bQJZ5EW///grUq7+ozl6zFr1wqLu7zhVyYjndwJo4r11TFRisUBNBBKPjwx6dkT
+         w9tT6SQvh/B2RcOcocIlk09jQMyjIQv8vwMAcxSo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Phil Auld <pauld@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Ben Segall <bsegall@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 103/104] sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup
+Date:   Wed, 24 Apr 2019 19:10:00 +0200
+Message-Id: <20190424170910.825695366@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
+References: <20190424170839.996641496@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 25 Apr 2019 01:52:51 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+[ Upstream commit 2e8e19226398db8265a8e675fcc0118b9e80c9e8 ]
 
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+With extremely short cfs_period_us setting on a parent task group with a large
+number of children the for loop in sched_cfs_period_timer() can run until the
+watchdog fires. There is no guarantee that the call to hrtimer_forward_now()
+will ever return 0.  The large number of children can make
+do_sched_cfs_period_timer() take longer than the period.
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+ NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
+ RIP: 0010:tg_nop+0x0/0x10
+  <IRQ>
+  walk_tg_tree_from+0x29/0xb0
+  unthrottle_cfs_rq+0xe0/0x1a0
+  distribute_cfs_runtime+0xd3/0xf0
+  sched_cfs_period_timer+0xcb/0x160
+  ? sched_cfs_slack_timer+0xd0/0xd0
+  __hrtimer_run_queues+0xfb/0x270
+  hrtimer_interrupt+0x122/0x270
+  smp_apic_timer_interrupt+0x6a/0x140
+  apic_timer_interrupt+0xf/0x20
+  </IRQ>
 
-> ---
->  Documentation/acpi/method-customizing.txt     | 73 ---------------
->  Documentation/firmware-guide/acpi/index.rst   |  3 +-
->  .../acpi/method-customizing.rst               | 89 +++++++++++++++++++
->  3 files changed, 91 insertions(+), 74 deletions(-)
->  delete mode 100644 Documentation/acpi/method-customizing.txt
->  create mode 100644 Documentation/firmware-guide/acpi/method-customizing.rst
-> 
-> diff --git a/Documentation/acpi/method-customizing.txt b/Documentation/acpi/method-customizing.txt
-> deleted file mode 100644
-> index 7235da975f23..000000000000
-> --- a/Documentation/acpi/method-customizing.txt
-> +++ /dev/null
-> @@ -1,73 +0,0 @@
-> -Linux ACPI Custom Control Method How To
-> -=======================================
-> -
-> -Written by Zhang Rui <rui.zhang@intel.com>
-> -
-> -
-> -Linux supports customizing ACPI control methods at runtime.
-> -
-> -Users can use this to
-> -1. override an existing method which may not work correctly,
-> -   or just for debugging purposes.
-> -2. insert a completely new method in order to create a missing
-> -   method such as _OFF, _ON, _STA, _INI, etc.
-> -For these cases, it is far simpler to dynamically install a single
-> -control method rather than override the entire DSDT, because kernel
-> -rebuild/reboot is not needed and test result can be got in minutes.
-> -
-> -Note: Only ACPI METHOD can be overridden, any other object types like
-> -      "Device", "OperationRegion", are not recognized. Methods
-> -      declared inside scope operators are also not supported.
-> -Note: The same ACPI control method can be overridden for many times,
-> -      and it's always the latest one that used by Linux/kernel.
-> -Note: To get the ACPI debug object output (Store (AAAA, Debug)),
-> -      please run "echo 1 > /sys/module/acpi/parameters/aml_debug_output".
-> -
-> -1. override an existing method
-> -   a) get the ACPI table via ACPI sysfs I/F. e.g. to get the DSDT,
-> -      just run "cat /sys/firmware/acpi/tables/DSDT > /tmp/dsdt.dat"
-> -   b) disassemble the table by running "iasl -d dsdt.dat".
-> -   c) rewrite the ASL code of the method and save it in a new file,
-> -   d) package the new file (psr.asl) to an ACPI table format.
-> -      Here is an example of a customized \_SB._AC._PSR method,
-> -
-> -      DefinitionBlock ("", "SSDT", 1, "", "", 0x20080715)
-> -      {
-> -	Method (\_SB_.AC._PSR, 0, NotSerialized)
-> -	{
-> -		Store ("In AC _PSR", Debug)
-> -		Return (ACON)
-> -	}
-> -      }
-> -      Note that the full pathname of the method in ACPI namespace
-> -      should be used.
-> -   e) assemble the file to generate the AML code of the method.
-> -      e.g. "iasl -vw 6084 psr.asl" (psr.aml is generated as a result)
-> -      If parameter "-vw 6084" is not supported by your iASL compiler,
-> -      please try a newer version.
-> -   f) mount debugfs by "mount -t debugfs none /sys/kernel/debug"
-> -   g) override the old method via the debugfs by running
-> -      "cat /tmp/psr.aml > /sys/kernel/debug/acpi/custom_method"
-> -
-> -2. insert a new method
-> -   This is easier than overriding an existing method.
-> -   We just need to create the ASL code of the method we want to
-> -   insert and then follow the step c) ~ g) in section 1.
-> -
-> -3. undo your changes
-> -   The "undo" operation is not supported for a new inserted method
-> -   right now, i.e. we can not remove a method currently.
-> -   For an overridden method, in order to undo your changes, please
-> -   save a copy of the method original ASL code in step c) section 1,
-> -   and redo step c) ~ g) to override the method with the original one.
-> -
-> -
-> -Note: We can use a kernel with multiple custom ACPI method running,
-> -      But each individual write to debugfs can implement a SINGLE
-> -      method override. i.e. if we want to insert/override multiple
-> -      ACPI methods, we need to redo step c) ~ g) for multiple times.
-> -
-> -Note: Be aware that root can mis-use this driver to modify arbitrary
-> -      memory and gain additional rights, if root's privileges got
-> -      restricted (for example if root is not allowed to load additional
-> -      modules after boot).
-> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-> index 61d67763851b..d1d069b26bbc 100644
-> --- a/Documentation/firmware-guide/acpi/index.rst
-> +++ b/Documentation/firmware-guide/acpi/index.rst
-> @@ -10,5 +10,6 @@ ACPI Support
->     namespace
->     enumeration
->     osi
-> +   method-customizing
->     DSD-properties-rules
-> -   gpio-properties
-> +   gpio-properties
-> \ No newline at end of file
-> diff --git a/Documentation/firmware-guide/acpi/method-customizing.rst b/Documentation/firmware-guide/acpi/method-customizing.rst
-> new file mode 100644
-> index 000000000000..de3ebcaed4cf
-> --- /dev/null
-> +++ b/Documentation/firmware-guide/acpi/method-customizing.rst
-> @@ -0,0 +1,89 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=======================================
-> +Linux ACPI Custom Control Method How To
-> +=======================================
-> +
-> +:Author: Zhang Rui <rui.zhang@intel.com>
-> +
-> +
-> +Linux supports customizing ACPI control methods at runtime.
-> +
-> +Users can use this to:
-> +
-> +1. override an existing method which may not work correctly,
-> +   or just for debugging purposes.
-> +2. insert a completely new method in order to create a missing
-> +   method such as _OFF, _ON, _STA, _INI, etc.
-> +
-> +For these cases, it is far simpler to dynamically install a single
-> +control method rather than override the entire DSDT, because kernel
-> +rebuild/reboot is not needed and test result can be got in minutes.
-> +
-> +.. note::
-> +
-> +  - Only ACPI METHOD can be overridden, any other object types like
-> +    "Device", "OperationRegion", are not recognized. Methods
-> +    declared inside scope operators are also not supported.
-> +
-> +  - The same ACPI control method can be overridden for many times,
-> +    and it's always the latest one that used by Linux/kernel.
-> +
-> +  - To get the ACPI debug object output (Store (AAAA, Debug)),
-> +    please run::
-> +
-> +      echo 1 > /sys/module/acpi/parameters/aml_debug_output
-> +
-> +
-> +1. override an existing method
-> +==============================
-> +a) get the ACPI table via ACPI sysfs I/F. e.g. to get the DSDT,
-> +   just run "cat /sys/firmware/acpi/tables/DSDT > /tmp/dsdt.dat"
-> +b) disassemble the table by running "iasl -d dsdt.dat".
-> +c) rewrite the ASL code of the method and save it in a new file,
-> +d) package the new file (psr.asl) to an ACPI table format.
-> +   Here is an example of a customized \_SB._AC._PSR method::
-> +
-> +      DefinitionBlock ("", "SSDT", 1, "", "", 0x20080715)
-> +      {
-> +         Method (\_SB_.AC._PSR, 0, NotSerialized)
-> +         {
-> +            Store ("In AC _PSR", Debug)
-> +            Return (ACON)
-> +         }
-> +      }
-> +
-> +   Note that the full pathname of the method in ACPI namespace
-> +   should be used.
-> +e) assemble the file to generate the AML code of the method.
-> +   e.g. "iasl -vw 6084 psr.asl" (psr.aml is generated as a result)
-> +   If parameter "-vw 6084" is not supported by your iASL compiler,
-> +   please try a newer version.
-> +f) mount debugfs by "mount -t debugfs none /sys/kernel/debug"
-> +g) override the old method via the debugfs by running
-> +   "cat /tmp/psr.aml > /sys/kernel/debug/acpi/custom_method"
-> +
-> +2. insert a new method
-> +======================
-> +This is easier than overriding an existing method.
-> +We just need to create the ASL code of the method we want to
-> +insert and then follow the step c) ~ g) in section 1.
-> +
-> +3. undo your changes
-> +====================
-> +The "undo" operation is not supported for a new inserted method
-> +right now, i.e. we can not remove a method currently.
-> +For an overridden method, in order to undo your changes, please
-> +save a copy of the method original ASL code in step c) section 1,
-> +and redo step c) ~ g) to override the method with the original one.
-> +
-> +
-> +.. note:: We can use a kernel with multiple custom ACPI method running,
-> +   But each individual write to debugfs can implement a SINGLE
-> +   method override. i.e. if we want to insert/override multiple
-> +   ACPI methods, we need to redo step c) ~ g) for multiple times.
-> +
-> +.. note:: Be aware that root can mis-use this driver to modify arbitrary
-> +   memory and gain additional rights, if root's privileges got
-> +   restricted (for example if root is not allowed to load additional
-> +   modules after boot).
+To prevent this we add protection to the loop that detects when the loop has run
+too many times and scales the period and quota up, proportionally, so that the timer
+can complete before then next period expires.  This preserves the relative runtime
+quota while preventing the hard lockup.
+
+A warning is issued reporting this state and the new values.
+
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190319130005.25492-1-pauld@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/sched/fair.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 4aa559b09e9c..9020fbe8d785 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3771,6 +3771,8 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
+ 	return HRTIMER_NORESTART;
+ }
+ 
++extern const u64 max_cfs_quota_period;
++
+ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ {
+ 	struct cfs_bandwidth *cfs_b =
+@@ -3778,6 +3780,7 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ 	ktime_t now;
+ 	int overrun;
+ 	int idle = 0;
++	int count = 0;
+ 
+ 	raw_spin_lock(&cfs_b->lock);
+ 	for (;;) {
+@@ -3787,6 +3790,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ 		if (!overrun)
+ 			break;
+ 
++		if (++count > 3) {
++			u64 new, old = ktime_to_ns(cfs_b->period);
++
++			new = (old * 147) / 128; /* ~115% */
++			new = min(new, max_cfs_quota_period);
++
++			cfs_b->period = ns_to_ktime(new);
++
++			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
++			cfs_b->quota *= new;
++			cfs_b->quota = div64_u64(cfs_b->quota, old);
++
++			pr_warn_ratelimited(
++        "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
++	                        smp_processor_id(),
++	                        div_u64(new, NSEC_PER_USEC),
++                                div_u64(cfs_b->quota, NSEC_PER_USEC));
++
++			/* reset count so we don't come right back in here */
++			count = 0;
++		}
++
+ 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
+ 	}
+ 	raw_spin_unlock(&cfs_b->lock);
+-- 
+2.19.1
 
 
 
-Thanks,
-Mauro
