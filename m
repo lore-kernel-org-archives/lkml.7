@@ -2,121 +2,120 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 830C3C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B78EC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4EB20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:18:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="dSdMKSL7"
+	by mail.kernel.org (Postfix) with ESMTP id 463E220656
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbfDXJSD (ORCPT
+        id S1728670AbfDXJSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:18:03 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:45140 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727366AbfDXJSC (ORCPT
+        Wed, 24 Apr 2019 05:18:50 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:33317 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727344AbfDXJSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:18:02 -0400
-X-IronPort-AV: E=Sophos;i="5.60,389,1549954800"; 
-   d="scan'208";a="30557777"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 Apr 2019 02:18:01 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.106) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Wed, 24 Apr 2019 02:18:01 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BHiZ4ykzoYg0qah29A8OpwZ/Q6UJtFtdWTuO3P9vkKM=;
- b=dSdMKSL7m9ODoY+YvL2kLA3QV/ojF3b1Y6Dfj+I8IYbd7aABpmal49n4Gpnv4rmkFd8KyuJjAlfVJabfUWd71vIe6lfip0AwKe2fXEV90GYRlQSqPWg2exDCiv47BF8MfMKTBvUaj5S6HNh2PROmsM5q2dMxOEWXQk2yHybrq0I=
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com (10.172.54.17) by
- MWHPR11MB1776.namprd11.prod.outlook.com (10.175.53.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Wed, 24 Apr 2019 09:17:59 +0000
-Received: from MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::f01a:9325:7a65:cdb4]) by MWHPR11MB1549.namprd11.prod.outlook.com
- ([fe80::f01a:9325:7a65:cdb4%4]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
- 09:17:59 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <broonie@kernel.org>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <Ludovic.Desroches@microchip.com>
-CC:     <linux-spi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <Claudiu.Beznea@microchip.com>
-Subject: [PATCH] spi: atmel-quadspi: fix crash while suspending
-Thread-Topic: [PATCH] spi: atmel-quadspi: fix crash while suspending
-Thread-Index: AQHU+n6cb7ejKkN0g0+RIq8NlPMpTQ==
-Date:   Wed, 24 Apr 2019 09:17:59 +0000
-Message-ID: <1556097463-29672-1-git-send-email-claudiu.beznea@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR04CA0090.eurprd04.prod.outlook.com
- (2603:10a6:803:64::25) To MWHPR11MB1549.namprd11.prod.outlook.com
- (2603:10b6:301:c::17)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Claudiu.Beznea@microchip.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9a656f66-bf3b-45df-fa9d-08d6c895be56
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR11MB1776;
-x-ms-traffictypediagnostic: MWHPR11MB1776:
-x-microsoft-antispam-prvs: <MWHPR11MB1776D6B1A9DE3C9D5B8A1EB4873C0@MWHPR11MB1776.namprd11.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(376002)(136003)(396003)(346002)(199004)(189003)(186003)(102836004)(66446008)(2906002)(68736007)(14454004)(8676002)(2501003)(73956011)(53936002)(66476007)(66946007)(64756008)(81166006)(81156014)(386003)(6506007)(6436002)(8936002)(316002)(7736002)(50226002)(25786009)(305945005)(86362001)(3846002)(6116002)(71190400001)(54906003)(36756003)(97736004)(476003)(2616005)(66066001)(107886003)(486006)(66556008)(5660300002)(110136005)(99286004)(4326008)(71200400001)(26005)(478600001)(72206003)(52116002)(6636002)(6486002)(6512007)(14444005)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1776;H:MWHPR11MB1549.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hYN4QanHfs0J/Yi9gCcerjcqoK41L/fhw8pA3sYx2trp772fjVRNZsptYB0C1AiWuP6FnqfmacSWAhcfM30Whw2/vG8lHIhvki2e5mKDLD99hKnbF0cl2FusunFsooHLs/Rgv+s6xMBvzusDSxMIqtJtmNDxys1eniGr1vjZbK9eloAUIa2TIfhV8ZHar3FeplrqpfIbbrx118ej9P5ahh/yPRJZBWHFyzFp7OYyA1d+KR37/8oEUh8m7otgm2BqSBERGbIW3wJyFiDxPSWEVaB/hbORUWBzCmr6luzGQ9Fa8qwUrtFC2jRLpwud8phulog/D10/jXoBH/VozOvx4Q0/RUQeDerBwUJoAe/Q+2nPjWoGkgpRYrHX2ZdjR2sqKvo+kTO7gaHFcRJqPy0Zh8K4b52fWkK8QMIFoKWkI9g=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 05:18:49 -0400
+Received: from [192.168.1.115] ([95.114.95.254]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N8n8I-1ghTNx1D7O-015neJ; Wed, 24 Apr 2019 11:17:19 +0200
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+To:     Daniel Colascione <dancol@google.com>,
+        Christian Brauner <christian@brauner.io>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-team <kernel-team@android.com>,
+        Tycho Andersen <tycho@tycho.ws>
+References: <20190411175043.31207-1-joel@joelfernandes.org>
+ <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
+ <20190417130940.GC32622@redhat.com>
+ <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
+ <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
+ <20190419190247.GB251571@google.com>
+ <20190419191858.iwcvqm6fihbkaata@brauner.io>
+ <20190419194902.GE251571@google.com>
+ <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
+ <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
+ <CAKOZueuBTwyrLtpVQaoTAgjGSgeHY7392sKv5uAYdy4XKNHKHQ@mail.gmail.com>
+ <CAHrFyr6f_CUP__818e1u6TaHd-XpWY6NOxri4yzzR6rNY5rk_w@mail.gmail.com>
+ <CAKOZuetiqFx0qW9rdCVWsKQxwaYK2Vis8EXsDba6=F5dp=da6Q@mail.gmail.com>
+ <CAHrFyr6FntUgsCRw2b1B9+pjLQ2+pJMTULywRC1woNW4PvtyiQ@mail.gmail.com>
+ <CAKOZuesw9JK6DLhFTxN74rH5PDqGn7qbCQT4aaP1qtahSoRZ8w@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <322efe1d-4acd-8ca5-1a76-51b90819ef44@metux.net>
+Date:   Wed, 24 Apr 2019 11:17:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a656f66-bf3b-45df-fa9d-08d6c895be56
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 09:17:59.3641
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1776
-X-OriginatorOrg: microchip.com
+In-Reply-To: <CAKOZuesw9JK6DLhFTxN74rH5PDqGn7qbCQT4aaP1qtahSoRZ8w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:ye7t1S/OG+TUT+i7U72x78anEJ9gMND+G3YFGNWW3yG+tukUjfe
+ zaqzSDWxPdAyCL7N6iwGOfxYopumuQKyuT7Ch3x93EIQA9iGjLUQQyw5eQQkZl8Tiv5vB5n
+ 32X0ccnQu1PqJpplku1jAmFF8omC2T2CDRBsDr8vWhIXRNI1AfKeEvVCRV5vuDpoUxC66g1
+ tH8t/47ScCyQ1uRpTpXHQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:kL3mUu5jf70=:JQDcJBa9YIqvC5dRDBul0B
+ pSTrWp2GbCdti8fcDy7hdhjH1zHOSdkpy0otxoKPMff7TBTcvw42sy7O+DYUfLmSRTUdrpbDM
+ o4FQiIgEI0+VsP6Oyvjw7WJi3O69Xy0pWOaZD+rKY3x7Ev5wAWwXFe5B89zdaRlpYt4KGmmEY
+ j/b8jqK5SqryAKxYTMcqUREQOKJKlvh4uk/0Wmf0KtBizKJ72iP0yvyzRVhAgNKan7FBvFMnu
+ FHeml73hEkHynb94ywggGoL+Rhb2id3z52wsv/ygZf1FWIH8YHDQ7xxgKeoycUl8pnAEyEqg+
+ qZXOa1LfjIrelm+Pd/FEl7Dnn5KKKfN8etYuHJXHwVRUfENvwJUhe2oz2VODSezrEKnrnHrTP
+ orgoR9wbhONVV54qvIRazArdO7AahbaTJYDrSdR5HFQP1dc+nfVuz8MHNHgZd/h1d0MaF7COg
+ O7mTCa5u2E8NVegmdgBOKXsqYs8gpvY8hibRaYEqt6WyvgFggASHam6E5foSsZusjjsUMMI2V
+ tuJ9BeYqWT82ITKjr2xpTEeH55h/ks8AkSYK+zg6Zgm++g/s2hDUanPtQfoj4guAoGCkRJ1yY
+ N7ZKEyCMF8T1OaiDPnHcNCJ5CS4kTfPjHXTHPH2xu3OEr/C9cHsHmNcy5yfs1xl5UoVGOCPFX
+ WeVxU+hRT9/1JW2Cxq7Ee6W2l46YR/gR0aYWjp9biJ1UrYdslpCwPgQhSbqmPidJvfhVONhKq
+ bOh8h0xY22v++CIX4468xpRZPY3JFElgZqzq9U1cuUSxDiW0wYXlagp7RCCawm6zQmnJ/u5Jm
+ fMolAM3nRoc2elTJPIexK4O/ZFd+AnCYRapeuDJh8ZADL1k7No+sJeAo2AOuB1WIS4jRlfmMo
+ 56IA4lh6NPBRbHqZRcaS51yKmBiRkJciXkwBbw+2VNa7FNTg0HopjGXqmi1HZztcKfblDg92C
+ pk9eZjt//HbSD/1+1W0keuZV+B0wvJeQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQ2xhdWRpdSBCZXpuZWEgPGNsYXVkaXUuYmV6bmVhQG1pY3JvY2hpcC5jb20+DQoNCmF0
-bWVsX3FzcGkgb2JqZWN0cyBhcmUga2VwdCBpbiBzcGlfY29udHJvbGxlciBvYmplY3RzLCBzbywg
-Zmlyc3QgZ2V0DQpwb2ludGVyIHRvIHNwaV9jb250cm9sbGVyIG9iamVjdCBhbmQgdGhlbiBnZXQg
-YXRtZWxfcXNwaSBvYmplY3QgZnJvbQ0Kc3BpX2NvbnRyb2xsZXIgb2JqZWN0Lg0KDQpGaXhlczog
-MmQzMGFjNWVkNjMzICgibXRkOiBzcGktbm9yOiBhdG1lbC1xdWFkc3BpOiBVc2Ugc3BpLW1lbSBp
-bnRlcmZhY2UgZm9yIGF0bWVsLXF1YWRzcGkgZHJpdmVyIikNClNpZ25lZC1vZmYtYnk6IENsYXVk
-aXUgQmV6bmVhIDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPg0KLS0tDQogZHJpdmVycy9z
-cGkvYXRtZWwtcXVhZHNwaS5jIHwgNiArKysrLS0NCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRp
-b25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zcGkvYXRtZWwt
-cXVhZHNwaS5jIGIvZHJpdmVycy9zcGkvYXRtZWwtcXVhZHNwaS5jDQppbmRleCBlNTQxMDk3NTlk
-MzQuLjlmMjRkNWYwYjQzMSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc3BpL2F0bWVsLXF1YWRzcGku
-Yw0KKysrIGIvZHJpdmVycy9zcGkvYXRtZWwtcXVhZHNwaS5jDQpAQCAtNTcwLDcgKzU3MCw4IEBA
-IHN0YXRpYyBpbnQgYXRtZWxfcXNwaV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikNCiANCiBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGF0bWVsX3FzcGlfc3VzcGVuZChzdHJ1
-Y3QgZGV2aWNlICpkZXYpDQogew0KLQlzdHJ1Y3QgYXRtZWxfcXNwaSAqYXEgPSBkZXZfZ2V0X2Ry
-dmRhdGEoZGV2KTsNCisJc3RydWN0IHNwaV9jb250cm9sbGVyICpjdHJsID0gZGV2X2dldF9kcnZk
-YXRhKGRldik7DQorCXN0cnVjdCBhdG1lbF9xc3BpICphcSA9IHNwaV9jb250cm9sbGVyX2dldF9k
-ZXZkYXRhKGN0cmwpOw0KIA0KIAljbGtfZGlzYWJsZV91bnByZXBhcmUoYXEtPnFzcGljayk7DQog
-CWNsa19kaXNhYmxlX3VucHJlcGFyZShhcS0+cGNsayk7DQpAQCAtNTgwLDcgKzU4MSw4IEBAIHN0
-YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXRtZWxfcXNwaV9zdXNwZW5kKHN0cnVjdCBkZXZpY2Ug
-KmRldikNCiANCiBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGF0bWVsX3FzcGlfcmVzdW1lKHN0
-cnVjdCBkZXZpY2UgKmRldikNCiB7DQotCXN0cnVjdCBhdG1lbF9xc3BpICphcSA9IGRldl9nZXRf
-ZHJ2ZGF0YShkZXYpOw0KKwlzdHJ1Y3Qgc3BpX2NvbnRyb2xsZXIgKmN0cmwgPSBkZXZfZ2V0X2Ry
-dmRhdGEoZGV2KTsNCisJc3RydWN0IGF0bWVsX3FzcGkgKmFxID0gc3BpX2NvbnRyb2xsZXJfZ2V0
-X2RldmRhdGEoY3RybCk7DQogDQogCWNsa19wcmVwYXJlX2VuYWJsZShhcS0+cGNsayk7DQogCWNs
-a19wcmVwYXJlX2VuYWJsZShhcS0+cXNwaWNrKTsNCi0tIA0KMi43LjQNCg0K
+On 20.04.19 01:29, Daniel Colascione wrote:
+
+> The point I'm making, to be> very clear, is *NOT* that process monitoring is "not worth>
+considering", but that process monitoring is subtle and complicated>
+enough that it ought to be considered as a standalone project,>
+independent of pidfds proper and of the very simple and effective> pidfd
+system that Joel has proposed in his patch series.
+
+At that point I'm wondering: what pidfd is actually meant for,
+if not process monitoring ?
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
