@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF22C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7853BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC562183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DC0214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fy/9XkPO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7dEqTDn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfDXWtr (ORCPT
+        id S1727246AbfDXWuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 18:49:47 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45770 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfDXWtn (ORCPT
+        Wed, 24 Apr 2019 18:50:15 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38034 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbfDXWtp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 18:49:43 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y6so18403277ljd.12;
-        Wed, 24 Apr 2019 15:49:41 -0700 (PDT)
+        Wed, 24 Apr 2019 18:49:45 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p14so18419576ljg.5;
+        Wed, 24 Apr 2019 15:49:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Wxo1mTlnG7HCW7qNviKHVt088dVN4BbKUg558KqhhM4=;
-        b=Fy/9XkPOMq1yqeTye0ts8QJTTc2IFDE/YJ1Rg+/jFlVbcgceN41W/isH/sjy/1PB1A
-         WicGhSqqlITCmWe36fgAXDBywxTmS7Nc0zmljrqTVzT/267gFjqtcLKBPudiNEDrcD0u
-         rkPMQRm2hoEfy/vDDpoBHJLjOvwf6anBEonryBtpFvI1wA3b+2yBu6EOpn4xbAzRsXW4
-         MXDGjhl90XHrVyCdzU7m+y2ttk/2ui67MhYh79fM6Tn9LHCyBo76myVJ8U2fHZm6r8pH
-         LFWgDJixhY8fmIzBjlCho3LMvO4dKK+2VNafetI+96fi8fI9SkRdoCq50MXser0ZO+sz
-         ANzg==
+        bh=pwolm0wYaQsW4TCiJ23NvsAidX1qtREXRI4t9bNq3t4=;
+        b=T7dEqTDnOnEPiPQxEhSnYUahcVUvGeP13NfyKNeJGRUxozHmLDEOEsjGrI9N+m1cvp
+         XKROFOBe9aunce8eDso5pd7tIh5AUPp4VWNiiDkhylIIEQmaU20OEMC19/do8ZGCYHFC
+         rI9KACiqPowL9JW/1tOsm7FvJgaCCe7asNwwVCjXyrIHNBVBQHFvc/9J94WizxrbpWRk
+         EkEIt8VVMu3a0P/d17OCq5RB/eoRocpmE4OCrds5fCo6jXAjJHCAXwQltDNmRSQa+pnw
+         X/xuGZesxQHVJ/f1blx0qHeWOqkQ5QXGADZwhBjPtqeALX8TmxGP7Z3UP+kmxZ5pP/oA
+         evnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Wxo1mTlnG7HCW7qNviKHVt088dVN4BbKUg558KqhhM4=;
-        b=ZpjEiVx3dgvKTApUopzbS9XRNy2lm3gGD7KGwEINHa9MAt1R3S+zysHNFq9fO9XO9Z
-         OGhMUX2SzZHKnvjG5fXGc4KoqazQhwg1S+kdtf9fdbP23X6VooYAPeKY01nrTDR9+Ucy
-         NeaoqG10S2jSLr/3qXyteBjdQiN106hOLhTTWt4X4eob9yX64XL4QkBekc4em2YcjTbN
-         fJHctcPj71/5lszE9VDN64K/YJNEL/Gdq+Th84MV9RBcCdiIFcxS4St73DSkF+418MDu
-         gyUR0i2p4+rv7i0dnkV2Ts3X7tFpi1+bUFV27HUCO9kicynCXeU8sI+g9l4zX/8fWTXs
-         2chQ==
-X-Gm-Message-State: APjAAAXpGA5n95tHx5DR9mXHmEb3gHTQmIjoLsrpYUHxP5ns/ofInxSc
-        oBhJXiLLpIKDJULoaWqFUtA=
-X-Google-Smtp-Source: APXvYqyc0oAXxM/t5T6zmR5tBU4aWWH/SC6UG9R329mdCUCGmb8ScxNa0T3KexfXETAdcZJMTtPLCg==
-X-Received: by 2002:a2e:82d0:: with SMTP id n16mr497430ljh.180.1556146181129;
-        Wed, 24 Apr 2019 15:49:41 -0700 (PDT)
+        bh=pwolm0wYaQsW4TCiJ23NvsAidX1qtREXRI4t9bNq3t4=;
+        b=abpE423wJHzzfEXmdMuS8iJf6nhNn6/CFPYP7hu6anZDk/rWsnCyu0vK/lHSjsQNP1
+         eEJRFMTgcrI3yJwh91Cw8HXLbouLxCbdAuuosh0wX1I3OXR1CDr32tLxcmhMaQn/7iqt
+         FrPTQgGDThqnln0x6sE16ub6SkOOVmKLIfIwdhd3TCO3lMBE0H7K83wOQQ2WwR2lqpX9
+         zQXRv+sypTGFlDkfNMC0ENbIuaVs2YSMw2HGhRwofW8vBhpuQfqCMyZi/z7KONiQ8x+m
+         RTq7pdGDYj4TKRsasbKSHmlCzH/ouDbRwz7v1xzOD2Evt6kHCL5lj1Xi3WanSaGC/Rhc
+         wCfg==
+X-Gm-Message-State: APjAAAXvd+eWxrgPU3Y3/43oHqRIoKuCE0TxIOzubX7AVktFHDTVLg9D
+        1KCbRQoWEwI4gKfcFui5Vo4=
+X-Google-Smtp-Source: APXvYqzg5HOV4K7u73Qs5DeN4VE0ULPrLp6KSTh3WTfz7zgbWT0DGJAkOvNhFMwDlHn3ZmyCMtxUEA==
+X-Received: by 2002:a2e:99c5:: with SMTP id l5mr20044034ljj.55.1556146183564;
+        Wed, 24 Apr 2019 15:49:43 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id s24sm4219879ljs.30.2019.04.24.15.49.39
+        by smtp.gmail.com with ESMTPSA id s24sm4219879ljs.30.2019.04.24.15.49.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 15:49:40 -0700 (PDT)
+        Wed, 24 Apr 2019 15:49:42 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -67,9 +67,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/6] mfd: max77620: Fix swapped FPS_PERIOD_MAX_US values
-Date:   Thu, 25 Apr 2019 01:48:55 +0300
-Message-Id: <20190424224900.8018-2-digetx@gmail.com>
+Subject: [PATCH v3 3/6] regulator: max77620: Support Maxim 77663
+Date:   Thu, 25 Apr 2019 01:48:57 +0300
+Message-Id: <20190424224900.8018-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424224900.8018-1-digetx@gmail.com>
 References: <20190424224900.8018-1-digetx@gmail.com>
@@ -80,30 +80,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The FPS_PERIOD_MAX_US definitions are swapped for MAX20024 and MAX77620,
-fix it.
+Add support for Maxim 77663.
 
-Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- include/linux/mfd/max77620.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/max77620-regulator.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mfd/max77620.h b/include/linux/mfd/max77620.h
-index ad2a9a852aea..b4fd5a7c2aaa 100644
---- a/include/linux/mfd/max77620.h
-+++ b/include/linux/mfd/max77620.h
-@@ -136,8 +136,8 @@
- #define MAX77620_FPS_PERIOD_MIN_US		40
- #define MAX20024_FPS_PERIOD_MIN_US		20
+diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
+index 1607ac673e44..7d6b53828056 100644
+--- a/drivers/regulator/max77620-regulator.c
++++ b/drivers/regulator/max77620-regulator.c
+@@ -761,6 +761,24 @@ static struct max77620_regulator_info max20024_regs_info[MAX77620_NUM_REGS] = {
+ 	RAIL_LDO(LDO8, ldo8, "in-ldo7-8", N, 800000, 3950000, 50000),
+ };
  
--#define MAX77620_FPS_PERIOD_MAX_US		2560
--#define MAX20024_FPS_PERIOD_MAX_US		5120
-+#define MAX20024_FPS_PERIOD_MAX_US		2560
-+#define MAX77620_FPS_PERIOD_MAX_US		5120
++static struct max77620_regulator_info max77663_regs_info[MAX77620_NUM_REGS] = {
++	RAIL_SD(SD0, sd0, "in-sd0", SD0, 600000, 3387500, 12500, 0xFF, NONE),
++	RAIL_SD(SD1, sd1, "in-sd1", SD1, 800000, 1587500, 12500, 0xFF, NONE),
++	RAIL_SD(SD2, sd2, "in-sd2", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++	RAIL_SD(SD3, sd3, "in-sd3", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++	RAIL_SD(SD4, sd4, "in-sd4", SDX, 600000, 3787500, 12500, 0xFF, NONE),
++
++	RAIL_LDO(LDO0, ldo0, "in-ldo0-1", N, 800000, 2375000, 25000),
++	RAIL_LDO(LDO1, ldo1, "in-ldo0-1", N, 800000, 2375000, 25000),
++	RAIL_LDO(LDO2, ldo2, "in-ldo2",   P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO3, ldo3, "in-ldo3-5", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO4, ldo4, "in-ldo4-6", P, 800000, 1587500, 12500),
++	RAIL_LDO(LDO5, ldo5, "in-ldo3-5", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO6, ldo6, "in-ldo4-6", P, 800000, 3950000, 50000),
++	RAIL_LDO(LDO7, ldo7, "in-ldo7-8", N, 800000, 3950000, 50000),
++	RAIL_LDO(LDO8, ldo8, "in-ldo7-8", N, 800000, 3950000, 50000),
++};
++
+ static int max77620_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct max77620_chip *max77620_chip = dev_get_drvdata(pdev->dev.parent);
+@@ -785,9 +803,14 @@ static int max77620_regulator_probe(struct platform_device *pdev)
+ 	case MAX77620:
+ 		rinfo = max77620_regs_info;
+ 		break;
+-	default:
++	case MAX20024:
+ 		rinfo = max20024_regs_info;
+ 		break;
++	case MAX77663:
++		rinfo = max77663_regs_info;
++		break;
++	default:
++		return -EINVAL;
+ 	}
  
- #define MAX77620_REG_FPS_GPIO1			0x54
- #define MAX77620_REG_FPS_GPIO2			0x55
+ 	config.regmap = pmic->rmap;
+@@ -881,6 +904,7 @@ static const struct dev_pm_ops max77620_regulator_pm_ops = {
+ static const struct platform_device_id max77620_regulator_devtype[] = {
+ 	{ .name = "max77620-pmic", },
+ 	{ .name = "max20024-pmic", },
++	{ .name = "max77663-pmic", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(platform, max77620_regulator_devtype);
 -- 
 2.21.0
 
