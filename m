@@ -7,48 +7,56 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63472C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79D4C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EEA21908
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B512C21900
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126166;
-	bh=gvnVwVOOkuhspf6BCCmOZUhj42Gw1XgbohQZKjgX4PQ=;
+	s=default; t=1556126172;
+	bh=i0lU2Bc0l7jcOrHAieyZqLEbCF5ZTXlZyj+HDgdyJu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vdxfnedWI+jLh+z+D2irWFhrcs5BpKEbj5vpWZIzzWrR9WvF8kdqN1RDvwpdQIpZu
-	 AFUFJJwx+X52H2+HBEs3Kpaf2XuGVoZptXq7hi46MMYeEUqAF+0ToTLC3919PLdxaJ
-	 BLLJJFHiAGws/e0Y6mKgJmW2mGjFHpl+alBokKIo=
+	b=X2SOSL23KHFSwQFhfiXsfqUhDXmNrTO/40AqAcQPpSBP+LF1pmC3KtGh3UzXEoCR7
+	 N6jyhL/GGVDEyK6u/Y8L36OLrxgkjRPypyc2KM+1d+TIzQaCnTSvUHay/PpfuJIo5A
+	 7M9UrooKrXmuTDDU8W8DCRJ4MbJpaI5OkgX7mp3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388364AbfDXRQF (ORCPT
+        id S2387694AbfDXRQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:16:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40496 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:16:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388293AbfDXRQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:16:01 -0400
+        id S2388293AbfDXRQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:16:07 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B9C02054F;
-        Wed, 24 Apr 2019 17:15:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2807B21903;
+        Wed, 24 Apr 2019 17:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126160;
-        bh=gvnVwVOOkuhspf6BCCmOZUhj42Gw1XgbohQZKjgX4PQ=;
+        s=default; t=1556126165;
+        bh=i0lU2Bc0l7jcOrHAieyZqLEbCF5ZTXlZyj+HDgdyJu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/y61Uyt6bgSL4lzwY2w5IHmTCFPhxL5lWc6tGoXXK43xHG3IZZksfZgTkXnPV4Tz
-         qT12J6oQ0KroonM1Mn80p6cAXjKYMFRzpIkQAKcmppPz8fl4VxChONmsQMrPVXttZL
-         qvzjSzeYJt1uhHgiag3tAgQf6/duiCGADSNrrGa8=
+        b=AhfJB04ZpnmOJ0rFzNzM6FFnJIdK9uAr3uZn+ApstLXqd2LSkfLP53tsI6cPyMGGT
+         dyocGpHIPOiHiI06u/OiwLx76FHOGY/0hJ4ht0ZMs5rD5GVz3YeN0gOJoqAJXmt+g2
+         jsoLrUKJkGo523CL+hdAhYJn0hDLJf+Cnj+mdg+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Christian Brauner <christian@brauner.io>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 012/168] tracing: kdb: Fix ftdump to not sleep
-Date:   Wed, 24 Apr 2019 19:07:36 +0200
-Message-Id: <20190424170924.247114528@linuxfoundation.org>
+Subject: [PATCH 4.4 014/168] sysctl: handle overflow for file-max
+Date:   Wed, 24 Apr 2019 19:07:38 +0200
+Message-Id: <20190424170924.385228692@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,141 +69,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 31b265b3baaf55f209229888b7ffea523ddab366 ]
+[ Upstream commit 32a5ad9c22852e6bd9e74bdec5934ef9d1480bc5 ]
 
-As reported back in 2016-11 [1], the "ftdump" kdb command triggers a
-BUG for "sleeping function called from invalid context".
+Currently, when writing
 
-kdb's "ftdump" command wants to call ring_buffer_read_prepare() in
-atomic context.  A very simple solution for this is to add allocation
-flags to ring_buffer_read_prepare() so kdb can call it without
-triggering the allocation error.  This patch does that.
+  echo 18446744073709551616 > /proc/sys/fs/file-max
 
-Note that in the original email thread about this, it was suggested
-that perhaps the solution for kdb was to either preallocate the buffer
-ahead of time or create our own iterator.  I'm hoping that this
-alternative of adding allocation flags to ring_buffer_read_prepare()
-can be considered since it means I don't need to duplicate more of the
-core trace code into "trace_kdb.c" (for either creating my own
-iterator or re-preparing a ring allocator whose memory was already
-allocated).
+/proc/sys/fs/file-max will overflow and be set to 0.  That quickly
+crashes the system.
 
-NOTE: another option for kdb is to actually figure out how to make it
-reuse the existing ftrace_dump() function and totally eliminate the
-duplication.  This sounds very appealing and actually works (the "sr
-z" command can be seen to properly dump the ftrace buffer).  The
-downside here is that ftrace_dump() fully consumes the trace buffer.
-Unless that is changed I'd rather not use it because it means "ftdump
-| grep xyz" won't be very useful to search the ftrace buffer since it
-will throw away the whole trace on the first grep.  A future patch to
-dump only the last few lines of the buffer will also be hard to
-implement.
+This commit sets the max and min value for file-max.  The max value is
+set to long int.  Any higher value cannot currently be used as the
+percpu counters are long ints and not unsigned integers.
 
-[1] https://lkml.kernel.org/r/20161117191605.GA21459@google.com
+Note that the file-max value is ultimately parsed via
+__do_proc_doulongvec_minmax().  This function does not report error when
+min or max are exceeded.  Which means if a value largen that long int is
+written userspace will not receive an error instead the old value will be
+kept.  There is an argument to be made that this should be changed and
+__do_proc_doulongvec_minmax() should return an error when a dedicated min
+or max value are exceeded.  However this has the potential to break
+userspace so let's defer this to an RFC patch.
 
-Link: http://lkml.kernel.org/r/20190308193205.213659-1-dianders@chromium.org
-
-Reported-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20190107222700.15954-3-christian@brauner.io
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+[christian@brauner.io: v4]
+  Link: http://lkml.kernel.org/r/20190210203943.8227-3-christian@brauner.io
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/ring_buffer.h | 2 +-
- kernel/trace/ring_buffer.c  | 5 +++--
- kernel/trace/trace.c        | 6 ++++--
- kernel/trace/trace_kdb.c    | 6 ++++--
- 4 files changed, 12 insertions(+), 7 deletions(-)
+ kernel/sysctl.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 19d0778ec382..121c8f99ecdd 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -125,7 +125,7 @@ ring_buffer_consume(struct ring_buffer *buffer, int cpu, u64 *ts,
- 		    unsigned long *lost_events);
- 
- struct ring_buffer_iter *
--ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu);
-+ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags);
- void ring_buffer_read_prepare_sync(void);
- void ring_buffer_read_start(struct ring_buffer_iter *iter);
- void ring_buffer_read_finish(struct ring_buffer_iter *iter);
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 74b20e3ab8c6..5e091614fe39 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4042,6 +4042,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
-  * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
-  * @buffer: The ring buffer to read from
-  * @cpu: The cpu buffer to iterate over
-+ * @flags: gfp flags to use for memory allocation
-  *
-  * This performs the initial preparations necessary to iterate
-  * through the buffer.  Memory is allocated, buffer recording
-@@ -4059,7 +4060,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
-  * This overall must be paired with ring_buffer_read_finish.
-  */
- struct ring_buffer_iter *
--ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
-+ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_iter *iter;
-@@ -4067,7 +4068,7 @@ ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 		return NULL;
- 
--	iter = kmalloc(sizeof(*iter), GFP_KERNEL);
-+	iter = kmalloc(sizeof(*iter), flags);
- 	if (!iter)
- 		return NULL;
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8c097de8a596..ae00e68ceae3 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3122,7 +3122,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter->buffer_iter[cpu] =
--				ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
-+				ring_buffer_read_prepare(iter->trace_buffer->buffer,
-+							 cpu, GFP_KERNEL);
- 		}
- 		ring_buffer_read_prepare_sync();
- 		for_each_tracing_cpu(cpu) {
-@@ -3132,7 +3133,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	} else {
- 		cpu = iter->cpu_file;
- 		iter->buffer_iter[cpu] =
--			ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
-+			ring_buffer_read_prepare(iter->trace_buffer->buffer,
-+						 cpu, GFP_KERNEL);
- 		ring_buffer_read_prepare_sync();
- 		ring_buffer_read_start(iter->buffer_iter[cpu]);
- 		tracing_iter_reset(iter, cpu);
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index 57149bce6aad..896458285fdd 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -50,14 +50,16 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter.buffer_iter[cpu] =
--			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu);
-+			ring_buffer_read_prepare(iter.trace_buffer->buffer,
-+						 cpu, GFP_ATOMIC);
- 			ring_buffer_read_start(iter.buffer_iter[cpu]);
- 			tracing_iter_reset(&iter, cpu);
- 		}
- 	} else {
- 		iter.cpu_file = cpu_file;
- 		iter.buffer_iter[cpu_file] =
--			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu_file);
-+			ring_buffer_read_prepare(iter.trace_buffer->buffer,
-+						 cpu_file, GFP_ATOMIC);
- 		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
- 		tracing_iter_reset(&iter, cpu_file);
- 	}
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index beadcf83ceba..2f98b11477b8 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -126,6 +126,7 @@ static int __maybe_unused one = 1;
+ static int __maybe_unused two = 2;
+ static int __maybe_unused four = 4;
+ static unsigned long one_ul = 1;
++static unsigned long long_max = LONG_MAX;
+ static int one_hundred = 100;
+ #ifdef CONFIG_PRINTK
+ static int ten_thousand = 10000;
+@@ -1603,6 +1604,8 @@ static struct ctl_table fs_table[] = {
+ 		.maxlen		= sizeof(files_stat.max_files),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_doulongvec_minmax,
++		.extra1		= &zero,
++		.extra2		= &long_max,
+ 	},
+ 	{
+ 		.procname	= "nr_open",
 -- 
 2.19.1
 
