@@ -2,55 +2,52 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D516C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37933C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE672077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED96D2077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127014;
-	bh=OS+p5ej5D8/SOpqa4vimgsmEOtERq5sJlscv5/6S9wE=;
+	s=default; t=1556127020;
+	bh=9Hr+vbr3MYJUocQqbkui8bZAihin5517wLa+64ztmbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LQn9gR+MQvSEBDdcRwV9Or9NpFw06gYGjGs8ziKLSaPoysK5i2soVy8AXSOpGOWJV
-	 J4A8sd6emZkRSjkW4u9DL903KdPKJVZSVMipRPGhXq1BpXHM/y54EV8nfRFgWZciE2
-	 3lo0UrIWVhktZez4ojbQ2ZcvQGeRriTp2xlWEA1w=
+	b=bX6p4Y+xCaCkZaYH/rE6Hy8quKlUtcCXLmY/z4iyttszbz2UaA6slh9H3DfEwv9H+
+	 iq03RHG9v5wLBa5BFdlqlnec/sW3+PrV7bP+Y+ssAP2dg9W6MqBHw2oDfb2idboa4z
+	 +06eoj8DeoOWws2qFJvM9GPa9WnNUe/itfQBhfBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390941AbfDXRaM (ORCPT
+        id S2390965AbfDXRaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:30:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56468 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:30:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390923AbfDXRaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:30:09 -0400
+        id S2390923AbfDXRaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:30:13 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 061E82054F;
-        Wed, 24 Apr 2019 17:30:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44C4D2054F;
+        Wed, 24 Apr 2019 17:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127007;
-        bh=OS+p5ej5D8/SOpqa4vimgsmEOtERq5sJlscv5/6S9wE=;
+        s=default; t=1556127012;
+        bh=9Hr+vbr3MYJUocQqbkui8bZAihin5517wLa+64ztmbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=189gHIrKIZH0mGzmtBLANUO8CEkSG7yagjRUvkOv/FcEYVEOoKPao4o3d9tJmVlAd
-         XcraNGEodknC2GM+dT4XuFEVzinvFaS8DYC9yrteFqJXKF7eM/fgUF/BRrqEHeimHT
-         VnNC7+qSdxADHvWDZgDp5JelfFyTDvn2iPLO1kIY=
+        b=TAIlaSAziEiH7fxzX+PeyRFteOktpON2fe8ov2QyVc7GENZu4Ute/MLWv0zobDYlM
+         95kDtQT4KztFSfbzALCgetGnEoAh3tnQQlw7qbpxgINw7HUeTEdRZtwSLyekIcoNuP
+         MPncGlejq8/eoePUDNYjo+S2U2q5xOzfaI7cN3Xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Oskolkov <posk@google.com>,
-        Tom Herbert <tom@herbertland.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 26/96] net: IP6 defrag: use rbtrees for IPv6 defrag
-Date:   Wed, 24 Apr 2019 19:09:31 +0200
-Message-Id: <20190424170921.604680042@linuxfoundation.org>
+        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>
+Subject: [PATCH 4.19 28/96] CIFS: keep FileInfo handle live during oplock break
+Date:   Wed, 24 Apr 2019 19:09:33 +0200
+Message-Id: <20190424170921.753222908@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -63,435 +60,179 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4289fcc9b16b89619ee1c54f829e05e56de8b9a ]
+From: Aurelien Aptel <aaptel@suse.com>
 
-Currently, IPv6 defragmentation code drops non-last fragments that
-are smaller than 1280 bytes: see
-commit 0ed4229b08c1 ("ipv6: defrag: drop non-last frags smaller than min mtu")
+commit b98749cac4a695f084a5ff076f4510b23e353ecd upstream.
 
-This behavior is not specified in IPv6 RFCs and appears to break
-compatibility with some IPv6 implemenations, as reported here:
-https://www.spinics.net/lists/netdev/msg543846.html
+In the oplock break handler, writing pending changes from pages puts
+the FileInfo handle. If the refcount reaches zero it closes the handle
+and waits for any oplock break handler to return, thus causing a deadlock.
 
-This patch re-uses common IP defragmentation queueing and reassembly
-code in IPv6, removing the 1280 byte restriction.
+To prevent this situation:
 
-v2: change handling of overlaps to match that of upstream.
+* We add a wait flag to cifsFileInfo_put() to decide whether we should
+  wait for running/pending oplock break handlers
 
-Signed-off-by: Peter Oskolkov <posk@google.com>
-Reported-by: Tom Herbert <tom@herbertland.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Florian Westphal <fw@strlen.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+* We keep an additionnal reference of the SMB FileInfo handle so that
+  for the rest of the handler putting the handle won't close it.
+  - The ref is bumped everytime we queue the handler via the
+    cifs_queue_oplock_break() helper.
+  - The ref is decremented at the end of the handler
+
+This bug was triggered by xfstest 464.
+
+Also important fix to address the various reports of
+oops in smb2_push_mandatory_locks
+
+Signed-off-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/net/ipv6_frag.h |  11 +-
- net/ipv6/reassembly.c   | 240 +++++++++++-----------------------------
- 2 files changed, 75 insertions(+), 176 deletions(-)
+ fs/cifs/cifsglob.h |    2 ++
+ fs/cifs/file.c     |   30 +++++++++++++++++++++++++-----
+ fs/cifs/misc.c     |   25 +++++++++++++++++++++++--
+ fs/cifs/smb2misc.c |    6 +++---
+ 4 files changed, 53 insertions(+), 10 deletions(-)
 
-diff --git a/include/net/ipv6_frag.h b/include/net/ipv6_frag.h
-index 6ced1e6899b6..28aa9b30aece 100644
---- a/include/net/ipv6_frag.h
-+++ b/include/net/ipv6_frag.h
-@@ -82,8 +82,15 @@ ip6frag_expire_frag_queue(struct net *net, struct frag_queue *fq)
- 	__IP6_INC_STATS(net, __in6_dev_get(dev), IPSTATS_MIB_REASMTIMEOUT);
- 
- 	/* Don't send error if the first segment did not arrive. */
--	head = fq->q.fragments;
--	if (!(fq->q.flags & INET_FRAG_FIRST_IN) || !head)
-+	if (!(fq->q.flags & INET_FRAG_FIRST_IN))
-+		goto out;
-+
-+	/* sk_buff::dev and sk_buff::rbnode are unionized. So we
-+	 * pull the head out of the tree in order to be able to
-+	 * deal with head->dev.
-+	 */
-+	head = inet_frag_pull_head(&fq->q);
-+	if (!head)
- 		goto out;
- 
- 	head->dev = dev;
-diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
-index 7c943392c128..095825f964e2 100644
---- a/net/ipv6/reassembly.c
-+++ b/net/ipv6/reassembly.c
-@@ -69,8 +69,8 @@ static u8 ip6_frag_ecn(const struct ipv6hdr *ipv6h)
- 
- static struct inet_frags ip6_frags;
- 
--static int ip6_frag_reasm(struct frag_queue *fq, struct sk_buff *prev,
--			  struct net_device *dev);
-+static int ip6_frag_reasm(struct frag_queue *fq, struct sk_buff *skb,
-+			  struct sk_buff *prev_tail, struct net_device *dev);
- 
- static void ip6_frag_expire(struct timer_list *t)
- {
-@@ -111,21 +111,26 @@ static int ip6_frag_queue(struct frag_queue *fq, struct sk_buff *skb,
- 			  struct frag_hdr *fhdr, int nhoff,
- 			  u32 *prob_offset)
- {
--	struct sk_buff *prev, *next;
--	struct net_device *dev;
--	int offset, end, fragsize;
- 	struct net *net = dev_net(skb_dst(skb)->dev);
-+	int offset, end, fragsize;
-+	struct sk_buff *prev_tail;
-+	struct net_device *dev;
-+	int err = -ENOENT;
- 	u8 ecn;
- 
- 	if (fq->q.flags & INET_FRAG_COMPLETE)
- 		goto err;
- 
-+	err = -EINVAL;
- 	offset = ntohs(fhdr->frag_off) & ~0x7;
- 	end = offset + (ntohs(ipv6_hdr(skb)->payload_len) -
- 			((u8 *)(fhdr + 1) - (u8 *)(ipv6_hdr(skb) + 1)));
- 
- 	if ((unsigned int)end > IPV6_MAXPLEN) {
- 		*prob_offset = (u8 *)&fhdr->frag_off - skb_network_header(skb);
-+		/* note that if prob_offset is set, the skb is freed elsewhere,
-+		 * we do not free it here.
-+		 */
- 		return -1;
- 	}
- 
-@@ -145,7 +150,7 @@ static int ip6_frag_queue(struct frag_queue *fq, struct sk_buff *skb,
- 		 */
- 		if (end < fq->q.len ||
- 		    ((fq->q.flags & INET_FRAG_LAST_IN) && end != fq->q.len))
--			goto err;
-+			goto discard_fq;
- 		fq->q.flags |= INET_FRAG_LAST_IN;
- 		fq->q.len = end;
- 	} else {
-@@ -162,70 +167,35 @@ static int ip6_frag_queue(struct frag_queue *fq, struct sk_buff *skb,
- 		if (end > fq->q.len) {
- 			/* Some bits beyond end -> corruption. */
- 			if (fq->q.flags & INET_FRAG_LAST_IN)
--				goto err;
-+				goto discard_fq;
- 			fq->q.len = end;
- 		}
- 	}
- 
- 	if (end == offset)
--		goto err;
-+		goto discard_fq;
- 
-+	err = -ENOMEM;
- 	/* Point into the IP datagram 'data' part. */
- 	if (!pskb_pull(skb, (u8 *) (fhdr + 1) - skb->data))
--		goto err;
--
--	if (pskb_trim_rcsum(skb, end - offset))
--		goto err;
--
--	/* Find out which fragments are in front and at the back of us
--	 * in the chain of fragments so far.  We must know where to put
--	 * this fragment, right?
--	 */
--	prev = fq->q.fragments_tail;
--	if (!prev || prev->ip_defrag_offset < offset) {
--		next = NULL;
--		goto found;
--	}
--	prev = NULL;
--	for (next = fq->q.fragments; next != NULL; next = next->next) {
--		if (next->ip_defrag_offset >= offset)
--			break;	/* bingo! */
--		prev = next;
--	}
--
--found:
--	/* RFC5722, Section 4, amended by Errata ID : 3089
--	 *                          When reassembling an IPv6 datagram, if
--	 *   one or more its constituent fragments is determined to be an
--	 *   overlapping fragment, the entire datagram (and any constituent
--	 *   fragments) MUST be silently discarded.
--	 */
--
--	/* Check for overlap with preceding fragment. */
--	if (prev &&
--	    (prev->ip_defrag_offset + prev->len) > offset)
- 		goto discard_fq;
- 
--	/* Look for overlap with succeeding segment. */
--	if (next && next->ip_defrag_offset < end)
-+	err = pskb_trim_rcsum(skb, end - offset);
-+	if (err)
- 		goto discard_fq;
- 
--	/* Note : skb->ip_defrag_offset and skb->dev share the same location */
-+	/* Note : skb->rbnode and skb->dev share the same location. */
- 	dev = skb->dev;
--	if (dev)
--		fq->iif = dev->ifindex;
- 	/* Makes sure compiler wont do silly aliasing games */
- 	barrier();
--	skb->ip_defrag_offset = offset;
- 
--	/* Insert this fragment in the chain of fragments. */
--	skb->next = next;
--	if (!next)
--		fq->q.fragments_tail = skb;
--	if (prev)
--		prev->next = skb;
--	else
--		fq->q.fragments = skb;
-+	prev_tail = fq->q.fragments_tail;
-+	err = inet_frag_queue_insert(&fq->q, skb, offset, end);
-+	if (err)
-+		goto insert_error;
-+
-+	if (dev)
-+		fq->iif = dev->ifindex;
- 
- 	fq->q.stamp = skb->tstamp;
- 	fq->q.meat += skb->len;
-@@ -246,44 +216,48 @@ static int ip6_frag_queue(struct frag_queue *fq, struct sk_buff *skb,
- 
- 	if (fq->q.flags == (INET_FRAG_FIRST_IN | INET_FRAG_LAST_IN) &&
- 	    fq->q.meat == fq->q.len) {
--		int res;
- 		unsigned long orefdst = skb->_skb_refdst;
- 
- 		skb->_skb_refdst = 0UL;
--		res = ip6_frag_reasm(fq, prev, dev);
-+		err = ip6_frag_reasm(fq, skb, prev_tail, dev);
- 		skb->_skb_refdst = orefdst;
--		return res;
-+		return err;
- 	}
- 
- 	skb_dst_drop(skb);
--	return -1;
-+	return -EINPROGRESS;
- 
-+insert_error:
-+	if (err == IPFRAG_DUP) {
-+		kfree_skb(skb);
-+		return -EINVAL;
-+	}
-+	err = -EINVAL;
-+	__IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
-+			IPSTATS_MIB_REASM_OVERLAPS);
- discard_fq:
- 	inet_frag_kill(&fq->q);
--err:
- 	__IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
- 			IPSTATS_MIB_REASMFAILS);
-+err:
- 	kfree_skb(skb);
--	return -1;
-+	return err;
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -1263,6 +1263,7 @@ cifsFileInfo_get_locked(struct cifsFileI
  }
  
- /*
-  *	Check if this packet is complete.
-- *	Returns NULL on failure by any reason, and pointer
-- *	to current nexthdr field in reassembled frame.
-  *
-  *	It is called with locked fq, and caller must check that
-  *	queue is eligible for reassembly i.e. it is not COMPLETE,
-  *	the last and the first frames arrived and all the bits are here.
+ struct cifsFileInfo *cifsFileInfo_get(struct cifsFileInfo *cifs_file);
++void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_hdlr);
+ void cifsFileInfo_put(struct cifsFileInfo *cifs_file);
+ 
+ #define CIFS_CACHE_READ_FLG	1
+@@ -1763,6 +1764,7 @@ GLOBAL_EXTERN spinlock_t gidsidlock;
+ #endif /* CONFIG_CIFS_ACL */
+ 
+ void cifs_oplock_break(struct work_struct *work);
++void cifs_queue_oplock_break(struct cifsFileInfo *cfile);
+ 
+ extern const struct slow_work_ops cifs_oplock_break_ops;
+ extern struct workqueue_struct *cifsiod_wq;
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -358,13 +358,31 @@ cifsFileInfo_get(struct cifsFileInfo *ci
+ 	return cifs_file;
+ }
+ 
+-/*
+- * Release a reference on the file private data. This may involve closing
+- * the filehandle out on the server. Must be called without holding
+- * tcon->open_file_lock and cifs_file->file_info_lock.
++/**
++ * cifsFileInfo_put - release a reference of file priv data
++ *
++ * Always potentially wait for oplock handler. See _cifsFileInfo_put().
   */
--static int ip6_frag_reasm(struct frag_queue *fq, struct sk_buff *prev,
--			  struct net_device *dev)
-+static int ip6_frag_reasm(struct frag_queue *fq, struct sk_buff *skb,
-+			  struct sk_buff *prev_tail, struct net_device *dev)
+ void cifsFileInfo_put(struct cifsFileInfo *cifs_file)
  {
- 	struct net *net = container_of(fq->q.net, struct net, ipv6.frags);
--	struct sk_buff *fp, *head = fq->q.fragments;
--	int    payload_len, delta;
- 	unsigned int nhoff;
--	int sum_truesize;
-+	void *reasm_data;
-+	int payload_len;
- 	u8 ecn;
- 
- 	inet_frag_kill(&fq->q);
-@@ -292,121 +266,40 @@ static int ip6_frag_reasm(struct frag_queue *fq, struct sk_buff *prev,
- 	if (unlikely(ecn == 0xff))
- 		goto out_fail;
- 
--	/* Make the one we just received the head. */
--	if (prev) {
--		head = prev->next;
--		fp = skb_clone(head, GFP_ATOMIC);
--
--		if (!fp)
--			goto out_oom;
--
--		fp->next = head->next;
--		if (!fp->next)
--			fq->q.fragments_tail = fp;
--		prev->next = fp;
--
--		skb_morph(head, fq->q.fragments);
--		head->next = fq->q.fragments->next;
--
--		consume_skb(fq->q.fragments);
--		fq->q.fragments = head;
--	}
--
--	WARN_ON(head == NULL);
--	WARN_ON(head->ip_defrag_offset != 0);
-+	reasm_data = inet_frag_reasm_prepare(&fq->q, skb, prev_tail);
-+	if (!reasm_data)
-+		goto out_oom;
- 
--	/* Unfragmented part is taken from the first segment. */
--	payload_len = ((head->data - skb_network_header(head)) -
-+	payload_len = ((skb->data - skb_network_header(skb)) -
- 		       sizeof(struct ipv6hdr) + fq->q.len -
- 		       sizeof(struct frag_hdr));
- 	if (payload_len > IPV6_MAXPLEN)
- 		goto out_oversize;
- 
--	delta = - head->truesize;
--
--	/* Head of list must not be cloned. */
--	if (skb_unclone(head, GFP_ATOMIC))
--		goto out_oom;
--
--	delta += head->truesize;
--	if (delta)
--		add_frag_mem_limit(fq->q.net, delta);
--
--	/* If the first fragment is fragmented itself, we split
--	 * it to two chunks: the first with data and paged part
--	 * and the second, holding only fragments. */
--	if (skb_has_frag_list(head)) {
--		struct sk_buff *clone;
--		int i, plen = 0;
--
--		clone = alloc_skb(0, GFP_ATOMIC);
--		if (!clone)
--			goto out_oom;
--		clone->next = head->next;
--		head->next = clone;
--		skb_shinfo(clone)->frag_list = skb_shinfo(head)->frag_list;
--		skb_frag_list_init(head);
--		for (i = 0; i < skb_shinfo(head)->nr_frags; i++)
--			plen += skb_frag_size(&skb_shinfo(head)->frags[i]);
--		clone->len = clone->data_len = head->data_len - plen;
--		head->data_len -= clone->len;
--		head->len -= clone->len;
--		clone->csum = 0;
--		clone->ip_summed = head->ip_summed;
--		add_frag_mem_limit(fq->q.net, clone->truesize);
--	}
--
- 	/* We have to remove fragment header from datagram and to relocate
- 	 * header in order to calculate ICV correctly. */
- 	nhoff = fq->nhoffset;
--	skb_network_header(head)[nhoff] = skb_transport_header(head)[0];
--	memmove(head->head + sizeof(struct frag_hdr), head->head,
--		(head->data - head->head) - sizeof(struct frag_hdr));
--	if (skb_mac_header_was_set(head))
--		head->mac_header += sizeof(struct frag_hdr);
--	head->network_header += sizeof(struct frag_hdr);
--
--	skb_reset_transport_header(head);
--	skb_push(head, head->data - skb_network_header(head));
--
--	sum_truesize = head->truesize;
--	for (fp = head->next; fp;) {
--		bool headstolen;
--		int delta;
--		struct sk_buff *next = fp->next;
--
--		sum_truesize += fp->truesize;
--		if (head->ip_summed != fp->ip_summed)
--			head->ip_summed = CHECKSUM_NONE;
--		else if (head->ip_summed == CHECKSUM_COMPLETE)
--			head->csum = csum_add(head->csum, fp->csum);
--
--		if (skb_try_coalesce(head, fp, &headstolen, &delta)) {
--			kfree_skb_partial(fp, headstolen);
--		} else {
--			fp->sk = NULL;
--			if (!skb_shinfo(head)->frag_list)
--				skb_shinfo(head)->frag_list = fp;
--			head->data_len += fp->len;
--			head->len += fp->len;
--			head->truesize += fp->truesize;
--		}
--		fp = next;
--	}
--	sub_frag_mem_limit(fq->q.net, sum_truesize);
-+	skb_network_header(skb)[nhoff] = skb_transport_header(skb)[0];
-+	memmove(skb->head + sizeof(struct frag_hdr), skb->head,
-+		(skb->data - skb->head) - sizeof(struct frag_hdr));
-+	if (skb_mac_header_was_set(skb))
-+		skb->mac_header += sizeof(struct frag_hdr);
-+	skb->network_header += sizeof(struct frag_hdr);
++	_cifsFileInfo_put(cifs_file, true);
++}
 +
-+	skb_reset_transport_header(skb);
-+
-+	inet_frag_reasm_finish(&fq->q, skb, reasm_data);
++/**
++ * _cifsFileInfo_put - release a reference of file priv data
++ *
++ * This may involve closing the filehandle @cifs_file out on the
++ * server. Must be called without holding tcon->open_file_lock and
++ * cifs_file->file_info_lock.
++ *
++ * If @wait_for_oplock_handler is true and we are releasing the last
++ * reference, wait for any running oplock break handler of the file
++ * and cancel any pending one. If calling this function from the
++ * oplock break handler, you need to pass false.
++ *
++ */
++void _cifsFileInfo_put(struct cifsFileInfo *cifs_file, bool wait_oplock_handler)
++{
+ 	struct inode *inode = d_inode(cifs_file->dentry);
+ 	struct cifs_tcon *tcon = tlink_tcon(cifs_file->tlink);
+ 	struct TCP_Server_Info *server = tcon->ses->server;
+@@ -411,7 +429,8 @@ void cifsFileInfo_put(struct cifsFileInf
  
--	head->next = NULL;
--	head->dev = dev;
--	head->tstamp = fq->q.stamp;
--	ipv6_hdr(head)->payload_len = htons(payload_len);
--	ipv6_change_dsfield(ipv6_hdr(head), 0xff, ecn);
--	IP6CB(head)->nhoff = nhoff;
--	IP6CB(head)->flags |= IP6SKB_FRAGMENTED;
--	IP6CB(head)->frag_max_size = fq->q.max_size;
-+	skb->dev = dev;
-+	ipv6_hdr(skb)->payload_len = htons(payload_len);
-+	ipv6_change_dsfield(ipv6_hdr(skb), 0xff, ecn);
-+	IP6CB(skb)->nhoff = nhoff;
-+	IP6CB(skb)->flags |= IP6SKB_FRAGMENTED;
-+	IP6CB(skb)->frag_max_size = fq->q.max_size;
+ 	spin_unlock(&tcon->open_file_lock);
  
- 	/* Yes, and fold redundant checksum back. 8) */
--	skb_postpush_rcsum(head, skb_network_header(head),
--			   skb_network_header_len(head));
-+	skb_postpush_rcsum(skb, skb_network_header(skb),
-+			   skb_network_header_len(skb));
+-	oplock_break_cancelled = cancel_work_sync(&cifs_file->oplock_break);
++	oplock_break_cancelled = wait_oplock_handler ?
++		cancel_work_sync(&cifs_file->oplock_break) : false;
  
- 	rcu_read_lock();
- 	__IP6_INC_STATS(net, __in6_dev_get(dev), IPSTATS_MIB_REASMOKS);
-@@ -414,6 +307,7 @@ static int ip6_frag_reasm(struct frag_queue *fq, struct sk_buff *prev,
- 	fq->q.fragments = NULL;
- 	fq->q.rb_fragments = RB_ROOT;
- 	fq->q.fragments_tail = NULL;
-+	fq->q.last_run_head = NULL;
- 	return 1;
- 
- out_oversize:
-@@ -425,6 +319,7 @@ static int ip6_frag_reasm(struct frag_queue *fq, struct sk_buff *prev,
- 	rcu_read_lock();
- 	__IP6_INC_STATS(net, __in6_dev_get(dev), IPSTATS_MIB_REASMFAILS);
- 	rcu_read_unlock();
-+	inet_frag_kill(&fq->q);
- 	return -1;
+ 	if (!tcon->need_reconnect && !cifs_file->invalidHandle) {
+ 		struct TCP_Server_Info *server = tcon->ses->server;
+@@ -4170,6 +4189,7 @@ void cifs_oplock_break(struct work_struc
+ 							     cinode);
+ 		cifs_dbg(FYI, "Oplock release rc = %d\n", rc);
+ 	}
++	_cifsFileInfo_put(cfile, false /* do not wait for ourself */);
+ 	cifs_done_oplock_break(cinode);
  }
  
-@@ -463,10 +358,6 @@ static int ipv6_frag_rcv(struct sk_buff *skb)
- 		return 1;
- 	}
+--- a/fs/cifs/misc.c
++++ b/fs/cifs/misc.c
+@@ -490,8 +490,7 @@ is_valid_oplock_break(char *buffer, stru
+ 					   CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
+ 					   &pCifsInode->flags);
  
--	if (skb->len - skb_network_offset(skb) < IPV6_MIN_MTU &&
--	    fhdr->frag_off & htons(IP6_MF))
--		goto fail_hdr;
--
- 	iif = skb->dev ? skb->dev->ifindex : 0;
- 	fq = fq_find(net, fhdr->identification, hdr, iif);
- 	if (fq) {
-@@ -484,6 +375,7 @@ static int ipv6_frag_rcv(struct sk_buff *skb)
- 		if (prob_offset) {
- 			__IP6_INC_STATS(net, __in6_dev_get_safely(skb->dev),
- 					IPSTATS_MIB_INHDRERRORS);
-+			/* icmpv6_param_prob() calls kfree_skb(skb) */
- 			icmpv6_param_prob(skb, ICMPV6_HDR_FIELD, prob_offset);
- 		}
- 		return ret;
--- 
-2.19.1
-
+-				queue_work(cifsoplockd_wq,
+-					   &netfile->oplock_break);
++				cifs_queue_oplock_break(netfile);
+ 				netfile->oplock_break_cancelled = false;
+ 
+ 				spin_unlock(&tcon->open_file_lock);
+@@ -588,6 +587,28 @@ void cifs_put_writer(struct cifsInodeInf
+ 	spin_unlock(&cinode->writers_lock);
+ }
+ 
++/**
++ * cifs_queue_oplock_break - queue the oplock break handler for cfile
++ *
++ * This function is called from the demultiplex thread when it
++ * receives an oplock break for @cfile.
++ *
++ * Assumes the tcon->open_file_lock is held.
++ * Assumes cfile->file_info_lock is NOT held.
++ */
++void cifs_queue_oplock_break(struct cifsFileInfo *cfile)
++{
++	/*
++	 * Bump the handle refcount now while we hold the
++	 * open_file_lock to enforce the validity of it for the oplock
++	 * break handler. The matching put is done at the end of the
++	 * handler.
++	 */
++	cifsFileInfo_get(cfile);
++
++	queue_work(cifsoplockd_wq, &cfile->oplock_break);
++}
++
+ void cifs_done_oplock_break(struct cifsInodeInfo *cinode)
+ {
+ 	clear_bit(CIFS_INODE_PENDING_OPLOCK_BREAK, &cinode->flags);
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -555,7 +555,7 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 			clear_bit(CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
+ 				  &cinode->flags);
+ 
+-		queue_work(cifsoplockd_wq, &cfile->oplock_break);
++		cifs_queue_oplock_break(cfile);
+ 		kfree(lw);
+ 		return true;
+ 	}
+@@ -719,8 +719,8 @@ smb2_is_valid_oplock_break(char *buffer,
+ 					   CIFS_INODE_DOWNGRADE_OPLOCK_TO_L2,
+ 					   &cinode->flags);
+ 				spin_unlock(&cfile->file_info_lock);
+-				queue_work(cifsoplockd_wq,
+-					   &cfile->oplock_break);
++
++				cifs_queue_oplock_break(cfile);
+ 
+ 				spin_unlock(&tcon->open_file_lock);
+ 				spin_unlock(&cifs_tcp_ses_lock);
 
 
