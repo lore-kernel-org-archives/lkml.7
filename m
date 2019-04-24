@@ -2,113 +2,129 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E532CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5D3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3ACE20685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129102;
-	bh=7A8aLgpe/AiMTyLVXR2e5pLsMz6ePp+bOn33afXoUSU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pwZiZyuzSsre3BmKWSfO0gW0K/hz/93di5NThpX7WkASgLjBegHHGXSVDebjZ0IwK
-	 bqU/TJWsIXFW67QcJaJCDLCB7yGz+8ooMfpmssf5b4HmPmtDzKZ6O4lk6Ta/WpT3hL
-	 qYn4sygmCI30ugdCVbrz2AG0EPmwc+LOkHr771Lk=
+	by mail.kernel.org (Postfix) with ESMTP id AC6D920685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcjsUmMl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389994AbfDXSFB (ORCPT
+        id S2390171AbfDXSFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:05:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733140AbfDXRSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:18:55 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D885E21916;
-        Wed, 24 Apr 2019 17:18:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126334;
-        bh=7A8aLgpe/AiMTyLVXR2e5pLsMz6ePp+bOn33afXoUSU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wo8P/f6mARWBB0qKSrJ7pWfU2tMvXyhOkBz8E1AHUfRaLLo9QxoP6lWvMKIzDkPRQ
-         7qcnR0cMpzOAG1ldWWPxboljPssNAQ61w4xDwL5ntFRNbK0D+dWQu/2MsAjyoxuj+5
-         gdb9vS6TSjG9FAuJl4xyzXQlctHuOVNDtLGrOeW4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
-        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 049/168] fbdev: fbmem: fix memory access if logo is bigger than the screen
-Date:   Wed, 24 Apr 2019 19:08:13 +0200
-Message-Id: <20190424170926.705577108@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
-References: <20190424170923.452349382@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 14:05:05 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33462 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731658AbfDXSFE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:05:04 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f23so17806319ljc.0;
+        Wed, 24 Apr 2019 11:05:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HI3T0IIQ3hYRgFT2kbrbmKI1w9gYSnhGHb68BtDunSk=;
+        b=KcjsUmMlTVLE+nyyXAjoSt1Sg6lAi0j5b0McuCOR8YjvLtmphNQzyuBnV90Y6IZlPQ
+         TsmQUtrps1CC6kBWxpo2fT6t7CYI3rWfDMsfgk2LapMSiM1/7fjdE7uWJ9BE6qfwA/0z
+         gsjSR/zYzFYSGvkO4MJFUrDgcg8MEft14GpE0+Wh2vEadEpk49yL4teKImy/i9pZ7agM
+         W5DIMZr38uoGt39+IQLw7OKFQoDAMia5uUv2QSAaQifwz0MQGkn3gD+wNhKqTRIUNuo3
+         G3u/OuUygq0TyubZgs8ydUaEe178/dD9FyVl4GlG4Fg34awY+IIyX/5YBiwSovfPTyUs
+         c88w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HI3T0IIQ3hYRgFT2kbrbmKI1w9gYSnhGHb68BtDunSk=;
+        b=joM/kMQC3CGXTkutkZYkc4O/lCansr72aNMSjH1Yrfxhs/MEVOAgQpHmvdRhVXb4sZ
+         Bcpainlbwi/V4+C3tM4V52ZwdGbI5B6imaIFF5cyUBz1k8yIhlVgqFLdT1qoSvYo1zkF
+         7Ym+uXdd1D4oTEP9E2IKxGPNrKGkxW4ysd3zUdVOpg+YfuDasSXgXhTHl5DxOs4PNlMz
+         ZxfQqxCO7OHhYh09Wd18jgHQ6qBaO4+eCe6lDuEKHa1aNfC7/i86tT3e9Y0VB0kOPyk6
+         lUkgUaYiYJgtzjCn1UIScz6af1Tfj6s8fFxkfuUGmqNu64bVp4lkUUCCiRh7RPShlm+A
+         ugJg==
+X-Gm-Message-State: APjAAAUFU0YN1uG5M6r/29NhtmXjxkRGcsQUr+7W89TTq7UAMcKKpBgM
+        /ToUwgokev9s+VudGVU2VYU=
+X-Google-Smtp-Source: APXvYqwC1qPhZixYx+9on+SCq91GsktdC1TqXpdTxfx6buG+oJjFIRd9pEnfRoxQUNOz/qKKGi3WlQ==
+X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr18700224lje.22.1556129101735;
+        Wed, 24 Apr 2019 11:05:01 -0700 (PDT)
+Received: from [192.168.1.19] (bkw231.neoplus.adsl.tpnet.pl. [83.28.190.231])
+        by smtp.gmail.com with ESMTPSA id z13sm4011837ljk.41.2019.04.24.11.04.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 11:05:01 -0700 (PDT)
+Subject: Re: [PATCH v4 02/26] leds: class: Improve LED and LED flash class
+ registration API
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com,
+        linux@roeck-us.net, Baolin Wang <baolin.wang@linaro.org>,
+        Dan Murphy <dmurphy@ti.com>, Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+ <20190417205439.17685-3-jacek.anaszewski@gmail.com>
+ <20190424134633.GA14360@amd>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <5a738825-a8f9-f4ca-0a38-773fe145048f@gmail.com>
+Date:   Wed, 24 Apr 2019 20:04:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190424134633.GA14360@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
+Hi Pavel,
 
-There is no clipping on the x or y axis for logos larger that the framebuffer
-size. Therefore: a logo bigger than screen size leads to invalid memory access:
+Thanks for the review.
 
-[    1.254664] Backtrace:
-[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
-[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
-[    1.254774]  r4:c6a3e800
-[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
-[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
-[    1.254852]  r4:c6808c00
-[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
-[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
-[    1.254928]  r4:c6808c00
-[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
-[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
+On 4/24/19 3:46 PM, Pavel Machek wrote:
+> Hi!
+> 
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Cc: Baolin Wang <baolin.wang@linaro.org>
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+>> +/**
+>> + * led_classdev_register_ext - register a new object of LED class with
+>> + *			       init data
+>> + * @parent: LED controller device this LED is driven by
+>> + * @led_cdev: the led_classdev structure for this device
+>> + * @init_data: the LED class device initialization data
+>> + *
+>> + * Returns: 0 on success or negative error value on failure
+>> + */
+>> +extern int led_classdev_register_ext(struct device *parent,
+>> +				     struct led_classdev *led_cdev,
+>> +				     struct led_init_data *init_data);
+>> +#define led_classdev_register(parent, led_cdev)			\
+>> +	led_classdev_register_ext(parent, led_cdev, NULL)
+>> +extern int devm_led_classdev_register_ext(struct device *parent,
+>> +					  struct led_classdev *led_cdev,
+>> +					  struct led_init_data *init_data);
+>> +#define devm_led_classdev_register(parent, led_cdev)		\
+>> +	devm_led_classdev_register_ext(parent, led_cdev, NULL)
+> 
+> Static inline (instead of macro) might be preffered. More type safety
+> and less confusing behaviour in case of errors...
 
-So prevent displaying a logo bigger than screen size and avoid invalid
-memory access.
+This is kind of alias. You have type control in the function being
+mapped. With inline we'd have to nest the function calls, i.e.
+it will worsen performance by this one additional call level.
 
-Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
-Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/video/fbdev/core/fbmem.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index ea2bd6208a2f..9eae191728d2 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -425,6 +425,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
- {
- 	unsigned int x;
- 
-+	if (image->width > info->var.xres || image->height > info->var.yres)
-+		return;
-+
- 	if (rotate == FB_ROTATE_UR) {
- 		for (x = 0;
- 		     x < num && image->dx + image->width <= info->var.xres;
 -- 
-2.19.1
-
-
-
+Best regards,
+Jacek Anaszewski
