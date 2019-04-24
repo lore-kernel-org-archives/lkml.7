@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA05DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FFEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5EF21902
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010F3218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="b73xLpSu"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="oLENeaLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731521AbfDXP00 (ORCPT
+        id S1731593AbfDXP0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:26:26 -0400
+        Wed, 24 Apr 2019 11:26:35 -0400
 Received: from mail.efficios.com ([167.114.142.138]:57984 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731093AbfDXPZm (ORCPT
+        with ESMTP id S1727995AbfDXPZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:25:42 -0400
+        Wed, 24 Apr 2019 11:25:39 -0400
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 11F361D91C9;
-        Wed, 24 Apr 2019 11:25:41 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id E33141D9193;
+        Wed, 24 Apr 2019 11:25:37 -0400 (EDT)
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id K9vbXd3f7roD; Wed, 24 Apr 2019 11:25:40 -0400 (EDT)
+        with ESMTP id 8-uXNksQ2cPx; Wed, 24 Apr 2019 11:25:37 -0400 (EDT)
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 853901D91C6;
-        Wed, 24 Apr 2019 11:25:40 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 853901D91C6
+        by mail.efficios.com (Postfix) with ESMTP id CA4071D9180;
+        Wed, 24 Apr 2019 11:25:36 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com CA4071D9180
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556119540;
-        bh=DCmt1f7ebDuw8znshKo0sgR6MYHScO2p10uW028uR5A=;
+        s=default; t=1556119536;
+        bh=ywHZBM285Oi7ZNY1INp8Fr4OzMaiucwZoNO/gC6Rwc8=;
         h=From:To:Date:Message-Id;
-        b=b73xLpSu+0Si1g8YTW+/YGwwyNQO3usuENff8DS3PAT9RptinZjKtzFE1zCa3+txp
-         qwEaSfiKdfKm+nSB8uNRBqmtHL951ZLesWa4Wwwr4e0UD9EnylAN5Q38gnAy/cJH4J
-         YStmMfqSD/lF09M81YWXEAZCNMNEsn+rOBgjFiDv3y4DFYB638TUIdfcfWOO9//+Bn
-         qRxJ25MEZ8kw/Cr9s3jlqqfekuYNi8wrUz8SSdnXAJZjAhMg7ykBAKKNKBSk2NATz1
-         D7L6WAaYerMHqBuj2Cih1THrKyl554tLc8FfNLNT60UQO2wvnmbSLLmTgX/Vt7q9bB
-         zzKaZ5CLg7rmQ==
+        b=oLENeaLgea+9Ht7cVcbI9V1L1dZ3Top+barXfwZ+Jb6cVo2JeNayyOhUOStqovNUh
+         weKpk82jixeMIL6Cj3tuf5Rqwu5vTB+H2aCxM8SvUDfeIKWh2k+aCYTD06C7saOBbB
+         0wD02SvwqR1MEaTJolUrrg0IOSjz4nTj6ivW22t3WigukW4Dnf5FZRCnVOvLLQbM+p
+         MVrKd/5d4sUiSVa4kwRCM+EKX/4ZEOTjhaMxVsKi5CgrOxhKf5m1fQGU2+EvDN1hSr
+         Yp1/7oZ/xVMmp1kBfXwvLOyEFiNXc69HW7ncL3E5dgaA/xSmtRVsSYtZHJv+OKDsdI
+         4+ctRkrhq0K3A==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id KTSo_b_kNxZj; Wed, 24 Apr 2019 11:25:40 -0400 (EDT)
+        with ESMTP id eC6GLKTZuzNr; Wed, 24 Apr 2019 11:25:36 -0400 (EDT)
 Received: from thinkos.internal.efficios.com (192-222-157-41.qc.cable.ebox.net [192.222.157.41])
-        by mail.efficios.com (Postfix) with ESMTPSA id 032C81D9199;
-        Wed, 24 Apr 2019 11:25:37 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTPSA id 3F7F51D9163;
+        Wed, 24 Apr 2019 11:25:36 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
@@ -74,9 +74,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Shuah Khan <shuah@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         linux-kselftest@vger.kernel.org
-Subject: [RFC PATCH for 5.2 07/10] rseq/selftests: arm: use udf instruction for RSEQ_SIG
-Date:   Wed, 24 Apr 2019 11:24:59 -0400
-Message-Id: <20190424152502.14246-8-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH for 5.2 04/10] rseq/selftests: s390: use jg instruction for jumps outside of the asm
+Date:   Wed, 24 Apr 2019 11:24:56 -0400
+Message-Id: <20190424152502.14246-5-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190424152502.14246-1-mathieu.desnoyers@efficios.com>
 References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com>
@@ -85,31 +85,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use udf as the guard instruction for the restartable sequence abort
-handler.
+The branch target range of the "j" instruction is 64K, which is not
+enough for the general case.
 
-Previously, the chosen signature was not a valid instruction, based
-on the assumption that it could always sit in a literal pool. However,
-there are compilation environments in which literal pools are not
-availble, for instance execute-only code. Therefore, we need to
-choose a signature value that is also a valid instruction.
-
-Handle compiling with -mbig-endian on ARMv6+, which generates binaries
-with mixed code vs data endianness (little endian code, big endian
-data).
-
-Else mismatch between code endianness for the generated signatures and
-data endianness for the RSEQ_SIG parameter passed to the rseq
-registration will trigger application segmentation faults when the
-kernel try to abort rseq critical sections.
-
-Prior to ARMv6, -mbig-endian generates big-endian code and data, so
-endianness should not be reversed in that case.
-
+Suggested-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-CC: Peter Zijlstra <peterz@infradead.org>
 CC: Thomas Gleixner <tglx@linutronix.de>
 CC: Joel Fernandes <joelaf@google.com>
+CC: Peter Zijlstra <peterz@infradead.org>
 CC: Catalin Marinas <catalin.marinas@arm.com>
 CC: Dave Watson <davejwatson@fb.com>
 CC: Will Deacon <will.deacon@arm.com>
@@ -131,79 +114,30 @@ CC: Andy Lutomirski <luto@amacapital.net>
 CC: Andrew Morton <akpm@linux-foundation.org>
 CC: Linus Torvalds <torvalds@linux-foundation.org>
 ---
- tools/testing/selftests/rseq/rseq-arm.h | 52 +++++++++++++++++++++++++++++++--
- 1 file changed, 50 insertions(+), 2 deletions(-)
+ tools/testing/selftests/rseq/rseq-s390.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/rseq/rseq-arm.h b/tools/testing/selftests/rseq/rseq-arm.h
-index 5f262c54364f..e8ccfc37d685 100644
---- a/tools/testing/selftests/rseq/rseq-arm.h
-+++ b/tools/testing/selftests/rseq/rseq-arm.h
-@@ -5,7 +5,54 @@
-  * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-  */
- 
--#define RSEQ_SIG	0x53053053
-+/*
-+ * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
-+ * value 0x5de3. This traps if user-space reaches this instruction by mistake,
-+ * and the uncommon operand ensures the kernel does not move the instruction
-+ * pointer to attacker-controlled code on rseq abort.
-+ *
-+ * The instruction pattern in the A32 instruction set is:
-+ *
-+ * e7f5def3    udf    #24035    ; 0x5de3
-+ *
-+ * This translates to the following instruction pattern in the T16 instruction
-+ * set:
-+ *
-+ * little endian:
-+ * def3        udf    #243      ; 0xf3
-+ * e7f5        b.n    <7f5>
-+ *
-+ * pre-ARMv6 big endian code:
-+ * e7f5        b.n    <7f5>
-+ * def3        udf    #243      ; 0xf3
-+ *
-+ * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
-+ * code and big-endian data. Ensure the RSEQ_SIG data signature matches code
-+ * endianness. Prior to ARMv6, -mbig-endian generates big-endian code and data
-+ * (which match), so there is no need to reverse the endianness of the data
-+ * representation of the signature. However, the choice between BE32 and BE8
-+ * is done by the linker, so we cannot know whether code and data endianness
-+ * will be mixed before the linker is invoked.
-+ */
-+
-+#define RSEQ_SIG_CODE	0xe7f5def3
-+
-+#ifndef __ASSEMBLER__
-+
-+#define RSEQ_SIG_DATA							\
-+	({								\
-+		int sig;						\
-+		asm volatile (  "b 2f\n\t"				\
-+				"1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
-+				"2:\n\t"				\
-+				"ldr %[sig], 1b\n\t"			\
-+				: [sig] "=r" (sig));			\
-+		sig;							\
-+	})
-+
-+#define RSEQ_SIG	RSEQ_SIG_DATA
-+
-+#endif
- 
- #define rseq_smp_mb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
- #define rseq_smp_rmb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
-@@ -78,7 +125,8 @@ do {									\
- 		__rseq_str(table_label) ":\n\t"				\
- 		".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
- 		".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, " __rseq_str(abort_ip) ", 0x0\n\t" \
--		".word " __rseq_str(RSEQ_SIG) "\n\t"			\
-+		".arm\n\t"						\
-+		".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"		\
+diff --git a/tools/testing/selftests/rseq/rseq-s390.h b/tools/testing/selftests/rseq/rseq-s390.h
+index fbb97815d71c..7c4f3a70b6c7 100644
+--- a/tools/testing/selftests/rseq/rseq-s390.h
++++ b/tools/testing/selftests/rseq/rseq-s390.h
+@@ -117,14 +117,14 @@ do {									\
+ 		".long " __rseq_str(RSEQ_SIG) "\n\t"			\
  		__rseq_str(label) ":\n\t"				\
  		teardown						\
- 		"b %l[" __rseq_str(abort_label) "]\n\t"
+-		"j %l[" __rseq_str(abort_label) "]\n\t"			\
++		"jg %l[" __rseq_str(abort_label) "]\n\t"		\
+ 		".popsection\n\t"
+ 
+ #define RSEQ_ASM_DEFINE_CMPFAIL(label, teardown, cmpfail_label)		\
+ 		".pushsection __rseq_failure, \"ax\"\n\t"		\
+ 		__rseq_str(label) ":\n\t"				\
+ 		teardown						\
+-		"j %l[" __rseq_str(cmpfail_label) "]\n\t"		\
++		"jg %l[" __rseq_str(cmpfail_label) "]\n\t"		\
+ 		".popsection\n\t"
+ 
+ static inline __attribute__((always_inline))
 -- 
 2.11.0
 
