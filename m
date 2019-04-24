@@ -2,95 +2,89 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AC5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B4CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C97421773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F6021773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbfDXT7L convert rfc822-to-8bit (ORCPT
+        id S1730292AbfDXUA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:59:11 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:62009 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726394AbfDXT7L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:59:11 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16349911-1500050 
-        for multiple; Wed, 24 Apr 2019 20:58:54 +0100
-Content-Type: text/plain; charset="utf-8"
+        Wed, 24 Apr 2019 16:00:57 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35672 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730082AbfDXUA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 16:00:57 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 04D77B6C82414489A57F;
+        Thu, 25 Apr 2019 04:00:54 +0800 (CST)
+Received: from [127.0.0.1] (10.210.168.23) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 25 Apr 2019
+ 04:00:43 +0800
+Subject: Re: [PATCH 0/6] libsas: Some minor improvements and tidy-up
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+References: <1555059478-36224-1-git-send-email-john.garry@huawei.com>
+ <yq1v9zehmij.fsf@oracle.com>
+CC:     <jejb@linux.vnet.ibm.com>, <linuxarm@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <yanaijie@huawei.com>, <chenxiang66@hisilicon.com>,
+        <luojiaxing@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <4a597316-4d52-13bb-35ce-676350b19f5d@huawei.com>
+Date:   Wed, 24 Apr 2019 21:00:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <20190423092810.28359-1-jian-hong@endlessm.com>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Daniel Drake <drake@endlessm.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Paulo Zanoni <paulo.r.zanoni@intel.com>
-References: <20190423092810.28359-1-jian-hong@endlessm.com>
-Message-ID: <155613593248.25205.769591454199358982@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH] i915: disable framebuffer compression on GeminiLake
-Date:   Wed, 24 Apr 2019 20:58:52 +0100
+In-Reply-To: <yq1v9zehmij.fsf@oracle.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.168.23]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jian-Hong Pan (2019-04-23 10:28:10)
-> From: Daniel Drake <drake@endlessm.com>
-> 
-> On many (all?) the Gemini Lake systems we work with, there is frequent
-> momentary graphical corruption at the top of the screen, and it seems
-> that disabling framebuffer compression can avoid this.
-> 
-> The ticket was reported 6 months ago and has already affected a
-> multitude of users, without any real progress being made. So, lets
-> disable framebuffer compression on GeminiLake until a solution is found.
-> 
-> Buglink: https://bugs.freedesktop.org/show_bug.cgi?id=108085
-> Signed-off-by: Daniel Drake <drake@endlessm.com>
-> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+On 16/04/2019 00:33, Martin K. Petersen wrote:
+>
+> John,
+>
+>> This patchset introduces some minor improvements and tidy-up, including:
+>> - fix PHY info in sysfs for PHY events
+>> - min pathway rate programming improvement
+>> - some other tidy-up and neatening
+>
+> Applied to 5.2/scsi-queue, thanks!
+>
 
-Fixes: fd7d6c5c8f3e ("drm/i915: enable FBC on gen9+ too") ?
-Cc: Paulo Zanoni <paulo.r.zanoni@intel.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: <stable@vger.kernel.org> # v4.11+
+Hi Martin,
 
-glk landed 1 month before, so that seems the earliest broken point.
+Sorry for the slow response.
 
-> ---
->  drivers/gpu/drm/i915/intel_fbc.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/i915/intel_fbc.c b/drivers/gpu/drm/i915/intel_fbc.c
-> index 656e684e7c9a..fc018f3f53a1 100644
-> --- a/drivers/gpu/drm/i915/intel_fbc.c
-> +++ b/drivers/gpu/drm/i915/intel_fbc.c
-> @@ -1278,6 +1278,10 @@ static int intel_sanitize_fbc_option(struct drm_i915_private *dev_priv)
->         if (!HAS_FBC(dev_priv))
->                 return 0;
->  
-> +       /* https://bugs.freedesktop.org/show_bug.cgi?id=108085 */
-> +       if (IS_GEMINILAKE(dev_priv))
-> +               return 0;
-> +
->         if (IS_BROADWELL(dev_priv) || INTEL_GEN(dev_priv) >= 9)
->                 return 1;
->  
-> -- 
-> 2.21.0
-> 
+> One thing that always bugged me is the ambiguous "ex" prefix for many
+> libsas log messages.And in a way, your patch #3 makes things worse by
+> replacing the more descriptive "Expander" with "ex". It does make things
+> more consistent, though.
+
+OK, understood. Personally I prefer the brevity of "ex". However, apart 
+from this, adding the SAS address to the log does add value.
+
+>
+> I'd really like to see all the libsas messages be cleaned up with a
+> sensible prefix and a consistent format where possible.
+
+So all libsas messages do have the "sas: " prefix, but they still can be 
+vague/inconsistent at times.
+
+Anyway, I'll check what can be done here.
+
+Thanks,
+
+
+>
+
+
+
