@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A691BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71885C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7361D205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4076921907
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126434;
-	bh=xuliVB62vRPn6Pbv+iP+x6J3FoVNoO7colQC8fMP2HY=;
+	s=default; t=1556126437;
+	bh=LN2voPDActjR24xk3cI/yEzC16cZ+zLR9KKx6Rn8lWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YlyNeL92Dj6+05ibU+nT41SkGp4LhyX1Rvu2uQtZk01nYXIq/gLXO6p18bzfxWpmr
-	 8Fl4WfSnmAlk+nAQlGuDzqOfW3ZhiqGi3mGCkXoRIgF+k3ImHMQBlc0rpOXpxOmWj1
-	 0OeiQrayd9pozGJkgJc5Hh81BAE7VqMzvmvYcGsQ=
+	b=snAMfmnn+RU5P8OcbozxA/2Yhje3wOhpD7lGYOc5Rz8KJlBGt0XebIHBb1SWvRB40
+	 GKHV9woAqKmFE9cw7ybzeVUMZTxPURs1BEDXLAIsBCeDp3510sfG7RlrHw9P00EqwG
+	 FIT7KwCebcTTKZbNgRxbmDzGkGj05+gq3sNAm1Ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389187AbfDXRUd (ORCPT
+        id S2389199AbfDXRUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:20:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45826 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:20:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389168AbfDXRUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:20:31 -0400
+        id S2389168AbfDXRUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:20:33 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C819320675;
-        Wed, 24 Apr 2019 17:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF67420675;
+        Wed, 24 Apr 2019 17:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126430;
-        bh=xuliVB62vRPn6Pbv+iP+x6J3FoVNoO7colQC8fMP2HY=;
+        s=default; t=1556126433;
+        bh=LN2voPDActjR24xk3cI/yEzC16cZ+zLR9KKx6Rn8lWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yiWVWnRrtoh6+YHTnJ0XMFXsgrORblfq1GNUgsVcXlbv13APzv198BaDWLqRdjRaT
-         MSzlBYNY7OuwoF35lxZqrdUYpkPuFbAv0/rF9xYtAl2JdA4kO+MWkcwkHXwzO3vZG8
-         CyMAehH2NTiZqvnH0MetUt2SaESzB4qtucYQwhzA=
+        b=bf/nY+gmV4WG2wqrIihWY3H7LkUHyq3dLePCLGYfkYZRl5U4j5Gta6z4HGFy1HGNx
+         rF6N5j5Px5uVoakI0U7bKq+q+/BwpdYQRjMmePNCL0uQcFWMm41M4v/Zq0LcVE01FK
+         kLmc/246YQTYRMU7KxUVICmNo5jN4ONDLntzwbIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Arcari <darcari@redhat.com>,
-        Len Brown <len.brown@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 108/168] tools/power turbostat: return the exit status of a command
-Date:   Wed, 24 Apr 2019 19:09:12 +0200
-Message-Id: <20190424170929.942284106@linuxfoundation.org>
+Subject: [PATCH 4.4 109/168] perf top: Fix error handling in cmd_top()
+Date:   Wed, 24 Apr 2019 19:09:13 +0200
+Message-Id: <20190424170929.995955017@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,35 +66,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2a95496634a017c19641f26f00907af75b962f01 ]
+[ Upstream commit 70c819e4bf1c5f492768b399d898d458ccdad2b6 ]
 
-turbostat failed to return a non-zero exit status even though the
-supplied command (turbostat <command>) failed.  Currently when turbostat
-forks a command it returns zero instead of the actual exit status of the
-command.  Modify the code to return the exit status.
+We should go to the cleanup path, to avoid leaks, detected using gcc's
+ASan.
 
-Signed-off-by: David Arcari <darcari@redhat.com>
-Acked-by: Len Brown <len.brown@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20190316080556.3075-9-changbin.du@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/turbostat/turbostat.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/builtin-top.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 33c79e415075..532e7bf06868 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -3089,6 +3089,9 @@ int fork_it(char **argv)
- 		signal(SIGQUIT, SIG_IGN);
- 		if (waitpid(child_pid, &status, 0) == -1)
- 			err(status, "waitpid");
-+
-+		if (WIFEXITED(status))
-+			status = WEXITSTATUS(status);
- 	}
- 	/*
- 	 * n.b. fork_it() does not check for errors from for_all_cpus()
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 47719bde34c6..4e64ba8163bb 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1320,8 +1320,9 @@ int cmd_top(int argc, const char **argv, const char *prefix __maybe_unused)
+ 	symbol_conf.priv_size = sizeof(struct annotation);
+ 
+ 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
+-	if (symbol__init(NULL) < 0)
+-		return -1;
++	status = symbol__init(NULL);
++	if (status < 0)
++		goto out_delete_evlist;
+ 
+ 	sort__setup_elide(stdout);
+ 
 -- 
 2.19.1
 
