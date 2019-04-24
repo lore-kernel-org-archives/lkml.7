@@ -2,248 +2,495 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29C5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F184C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4552218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EA3218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Ca9w01da"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a27H8GMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbfDXFvz (ORCPT
+        id S1729640AbfDXFwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 01:51:55 -0400
-Received: from mail-eopbgr40040.outbound.protection.outlook.com ([40.107.4.40]:45282
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729244AbfDXFvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 01:51:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NyMnPcr6XyF21Z28ecs30tw7/PiqYoBk1XQPLGHX/qs=;
- b=Ca9w01daHqUTwIySKhTrjXHgNlLPRJLFol2RAJ90PxQyb/hPcadfIgvXZQy1hqhqGeIMBVW+1iVbgoRq5fw33PFf1dFDVJ28ZVL+5lyDnhbhU+eSW/4kv+OEMVc1YH9h9luvjQQsC5E9wFCzi8Ra3L6xqMRZ0njLSJTqUB5whJ0=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB5072.eurprd08.prod.outlook.com (20.179.29.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.17; Wed, 24 Apr 2019 05:51:45 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::6ca6:1d85:8903:90d7]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::6ca6:1d85:8903:90d7%5]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
- 05:51:45 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "sean@poorly.run" <sean@poorly.run>
-CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        nd <nd@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH] drm/komeda: Mark the local functions as static
-Thread-Topic: [PATCH] drm/komeda: Mark the local functions as static
-Thread-Index: AQHU+mHMyYOfGpzbx0SuyD5V70fYFg==
-Date:   Wed, 24 Apr 2019 05:51:45 +0000
-Message-ID: <20190424055108.19390-1-james.qian.wang@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR02CA0213.apcprd02.prod.outlook.com
- (2603:1096:201:20::25) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dc0b18d2-eaec-4bd9-f286-08d6c878ef08
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5072;
-x-ms-traffictypediagnostic: VE1PR08MB5072:
-x-ms-exchange-purlcount: 1
-nodisclaimer: True
-x-microsoft-antispam-prvs: <VE1PR08MB50721002676A22AC3D55CF74B33C0@VE1PR08MB5072.eurprd08.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(396003)(366004)(346002)(189003)(199004)(14444005)(1076003)(66946007)(26005)(14454004)(5660300002)(25786009)(71200400001)(71190400001)(52116002)(66446008)(64756008)(86362001)(966005)(486006)(66556008)(66476007)(2616005)(186003)(73956011)(476003)(97736004)(2501003)(2201001)(36756003)(102836004)(8936002)(99286004)(81166006)(3846002)(103116003)(81156014)(50226002)(6116002)(386003)(256004)(8676002)(2906002)(6436002)(4326008)(53936002)(305945005)(68736007)(6512007)(478600001)(6306002)(6486002)(54906003)(110136005)(316002)(55236004)(6506007)(66066001)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5072;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VuxuBhAlFXUvmym2xPQddd0f7bTAXZg6WFjW0iJ0dRwDDW8ktXqzhN+AVrI9CiJGz9syRM8GuEzGYb820JSg3ZawucbJ84ghdUEKr3EEge8NbHpiXsoGXc499HHkI3xwZkRdlN//5q+gDKF/f1C/mjgUyGw2r498LujbDcK0d05P7ceFaZBoJDZEXEVWdFpakB0zt4q/fBCzkG6AFn7nhZtYe+EKv8YQs/F0EOAv/n72p3C8R7H1mxr7X1JXIql0nDddpVykKVtHigh2TFvGSVD39lZx4maJyQW+tpdF5xQeojH7d9tDbzXwo5600vofdl+88csC4YTEi1UHgy7cqsHALaSFmIUqUxzJJaXmf7/Kla1VQjXyvEdjubQKAgyeHhEK//LUw4yBCXwUPuNjk55a2clhvnZKeTEJw2FDgt0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 01:52:13 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37852 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729396AbfDXFwM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 01:52:12 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w23so8713033ply.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 22:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=STIOYtESL/WNUmcd9KoT7I2xMC9Q81ixLxsXzArDi+Q=;
+        b=a27H8GMrtceUVLUAySm3OUNoE4cPnVAAnGEPsPYIox74e2PRN8/YSSZ2/KUNMcki/W
+         ozwZOvgbsORSjCD11v5y6+108jk9jk/KxNWNlnatqn8aVlA6IDz1b/nBnqTfCCiFoOQL
+         ylgr+To/GBiVf6Li4WoaWJT39kwOtEc4waZODR+WJ4Ch25rMD4+gZfGUlXI+kMl2SOTa
+         6XMh2LDl2yT70N+SaN5tsBm2O1nqdrg365oHVgouiu7Q2EWqltQp2vdheHnr4fwTGdMx
+         e0ghZqPEIc3pLHMEX6vRqIqh2RiPJ+j1luHw1F51+mVh5TrTD9pdqqj8GkxJU7QGH5Zh
+         RvgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=STIOYtESL/WNUmcd9KoT7I2xMC9Q81ixLxsXzArDi+Q=;
+        b=WPij+noLXEFOPvJca3qGKnIOgh8oe8084tSHEe6GXlkC1WpSlrNAjK5R/v0Tml/W8I
+         IVN/fYR6cPbx74Nn4ofFq7juedPQ+HzRQFoI+151qVGYjphk/ulCkE2LOvbFpPAdsLKO
+         d+19pySngLNQUHEFdl3lIvUPSLQbIn0tJDG1ValvMHYBjaRlpulG7M9JzoLn+M7mncBc
+         +p4uX2QCsoXueGlxCr7ARRbil9RIs6DEBAlb/ejj9f8/60SHlLPFa1OBUms+GkLZjLan
+         YlGrv1IV1RbME+nQRMxVmBGMbBRsIG0I/sYdQyi21zJclGXxbLzbhxGuV1pSFXzocpl4
+         wzug==
+X-Gm-Message-State: APjAAAW7y3YHJWw0W1cb4UETAt43IKpbJs+sZpTHyvX8Pl7ET5LUOisW
+        Wg0e7RDHUYxII7qv8WSr0eUlzQ==
+X-Google-Smtp-Source: APXvYqxQ6QsCbcvVzM4g033Fq8ZGoT2+FEaJ8yYraA9hrmSlJQJu7SD9xqhZyWM8FLJSEKJ1pNgK0w==
+X-Received: by 2002:a17:902:28ab:: with SMTP id f40mr13293312plb.297.1556085131558;
+        Tue, 23 Apr 2019 22:52:11 -0700 (PDT)
+Received: from localhost ([122.166.139.136])
+        by smtp.gmail.com with ESMTPSA id l10sm33998027pfc.46.2019.04.23.22.52.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 22:52:10 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 11:22:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
+        jcrouse@codeaurora.org, vincent.guittot@linaro.org,
+        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
+        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
+        evgreen@chromium.org, sibis@codeaurora.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] OPP: Add support for parsing the interconnect
+ bandwidth
+Message-ID: <20190424055208.kermzymve2foguhl@vireshk-i7>
+References: <20190423132823.7915-1-georgi.djakov@linaro.org>
+ <20190423132823.7915-4-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc0b18d2-eaec-4bd9-f286-08d6c878ef08
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 05:51:45.5018
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5072
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423132823.7915-4-georgi.djakov@linaro.org>
+User-Agent: NeoMutt/20180323-120-3dd1ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rml4IHRoZSBrYnVpbGQgdGVzdCByZWJvdCByZXBvcnRlZCB3YXJuaW5nczoNCi0gc3ltYm9sIHdh
-cyBub3QgZGVjbGFyZWQuIFNob3VsZCBpdCBiZSBzdGF0aWM/DQotIG1pc3NpbmcgYnJhY2VzIGFy
-b3VuZCBpbml0aWFsaXplcg0KDQpEZXBlbmRzIG9uOg0KLSBodHRwczovL3BhdGNod29yay5mcmVl
-ZGVza3RvcC5vcmcvc2VyaWVzLzU4OTc2Lw0KDQpSZXBvcnRlZC1ieToga2J1aWxkIHRlc3Qgcm9i
-b3QgPGxrcEBpbnRlbC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBKYW1lcyAoUWlhbikgV2FuZyA8amFt
-ZXMucWlhbi53YW5nQGFybS5jb20+DQotLS0NCiAuLi4vZ3B1L2RybS9hcm0vZGlzcGxheS9rb21l
-ZGEvZDcxL2Q3MV9jb21wb25lbnQuYyAgICB8ICA5ICsrKysrLS0tLQ0KIGRyaXZlcnMvZ3B1L2Ry
-bS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2NydGMuYyAgICAgIHwgIDQgKystLQ0KIGRyaXZl
-cnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rldi5jICAgICAgIHwgIDQgKysr
-LQ0KIGRyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rydi5jICAgICAg
-IHwgIDIgKy0NCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBl
-bGluZS5jICB8ICAyICstDQogLi4uL2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVs
-aW5lX3N0YXRlLmMgICAgfCAxMSArKysrKystLS0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9hcm0vZGlz
-cGxheS9rb21lZGEva29tZWRhX3BsYW5lLmMgICAgIHwgMTAgKysrKysrLS0tLQ0KIDcgZmlsZXMg
-Y2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKSwgMTggZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMg
-Yi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMN
-CmluZGV4IGM1NmNmYzJkZTE0Ny4uMDMxZTVmMzA1YTNjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcxX2NvbXBvbmVudC5jDQorKysgYi9kcml2
-ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMNCkBAIC0z
-OTEsNyArMzkxLDcgQEAgc3RhdGljIHZvaWQgZDcxX2NvbXBpel9kdW1wKHN0cnVjdCBrb21lZGFf
-Y29tcG9uZW50ICpjLCBzdHJ1Y3Qgc2VxX2ZpbGUgKnNmKQ0KIAlzZXFfcHJpbnRmKHNmLCAiQ1Vf
-VVNFUl9ISUdIOlx0XHQweCVYXG4iLCB2WzFdKTsNCiB9DQogDQotc3RydWN0IGtvbWVkYV9jb21w
-b25lbnRfZnVuY3MgZDcxX2NvbXBpel9mdW5jcyA9IHsNCitzdGF0aWMgc3RydWN0IGtvbWVkYV9j
-b21wb25lbnRfZnVuY3MgZDcxX2NvbXBpel9mdW5jcyA9IHsNCiAJLnVwZGF0ZQkJPSBkNzFfY29t
-cGl6X3VwZGF0ZSwNCiAJLmRpc2FibGUJPSBkNzFfY29tcG9uZW50X2Rpc2FibGUsDQogCS5kdW1w
-X3JlZ2lzdGVyCT0gZDcxX2NvbXBpel9kdW1wLA0KQEAgLTQ2Nyw3ICs0NjcsNyBAQCBzdGF0aWMg
-dm9pZCBkNzFfaW1wcm9jX2R1bXAoc3RydWN0IGtvbWVkYV9jb21wb25lbnQgKmMsIHN0cnVjdCBz
-ZXFfZmlsZSAqc2YpDQogCQlzZXFfcHJpbnRmKHNmLCAiSVBTX1JHQl9ZVVZfQ09FRkYldTpcdDB4
-JVhcbiIsIGksIHZbaV0pOw0KIH0NCiANCi1zdHJ1Y3Qga29tZWRhX2NvbXBvbmVudF9mdW5jcyBk
-NzFfaW1wcm9jX2Z1bmNzID0gew0KK3N0YXRpYyBzdHJ1Y3Qga29tZWRhX2NvbXBvbmVudF9mdW5j
-cyBkNzFfaW1wcm9jX2Z1bmNzID0gew0KIAkudXBkYXRlCQk9IGQ3MV9pbXByb2NfdXBkYXRlLA0K
-IAkuZGlzYWJsZQk9IGQ3MV9jb21wb25lbnRfZGlzYWJsZSwNCiAJLmR1bXBfcmVnaXN0ZXIJPSBk
-NzFfaW1wcm9jX2R1bXAsDQpAQCAtNTQzLDcgKzU0Myw4IEBAIHN0YXRpYyB2b2lkIGQ3MV90aW1p
-bmdfY3RybHJfdXBkYXRlKHN0cnVjdCBrb21lZGFfY29tcG9uZW50ICpjLA0KIAltYWxpZHBfd3Jp
-dGUzMihyZWcsIEJMS19DT05UUk9MLCB2YWx1ZSk7DQogfQ0KIA0KLXZvaWQgZDcxX3RpbWluZ19j
-dHJscl9kdW1wKHN0cnVjdCBrb21lZGFfY29tcG9uZW50ICpjLCBzdHJ1Y3Qgc2VxX2ZpbGUgKnNm
-KQ0KK3N0YXRpYyB2b2lkIGQ3MV90aW1pbmdfY3RybHJfZHVtcChzdHJ1Y3Qga29tZWRhX2NvbXBv
-bmVudCAqYywNCisJCQkJICBzdHJ1Y3Qgc2VxX2ZpbGUgKnNmKQ0KIHsNCiAJdTMyIHZbOF0sIGk7
-DQogDQpAQCAtNTc5LDcgKzU4MCw3IEBAIHZvaWQgZDcxX3RpbWluZ19jdHJscl9kdW1wKHN0cnVj
-dCBrb21lZGFfY29tcG9uZW50ICpjLCBzdHJ1Y3Qgc2VxX2ZpbGUgKnNmKQ0KIAlzZXFfcHJpbnRm
-KHNmLCAiQlNfVVNFUjpcdFx0MHglWFxuIiwgdls0XSk7DQogfQ0KIA0KLXN0cnVjdCBrb21lZGFf
-Y29tcG9uZW50X2Z1bmNzIGQ3MV90aW1pbmdfY3RybHJfZnVuY3MgPSB7DQorc3RhdGljIHN0cnVj
-dCBrb21lZGFfY29tcG9uZW50X2Z1bmNzIGQ3MV90aW1pbmdfY3RybHJfZnVuY3MgPSB7DQogCS51
-cGRhdGUJCT0gZDcxX3RpbWluZ19jdHJscl91cGRhdGUsDQogCS5kaXNhYmxlCT0gZDcxX3RpbWlu
-Z19jdHJscl9kaXNhYmxlLA0KIAkuZHVtcF9yZWdpc3Rlcgk9IGQ3MV90aW1pbmdfY3RybHJfZHVt
-cCwNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVk
-YV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9jcnRj
-LmMNCmluZGV4IGQzMzVmZWMxYjcyNy4uNjJmYWQ1OWY1YTZhIDEwMDY0NA0KLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfY3J0Yy5jDQorKysgYi9kcml2ZXJz
-L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9jcnRjLmMNCkBAIC01Miw3ICs1Miw3
-IEBAIGtvbWVkYV9jcnRjX2F0b21pY19jaGVjayhzdHJ1Y3QgZHJtX2NydGMgKmNydGMsDQogCXJl
-dHVybiAwOw0KIH0NCiANCi11MzIga29tZWRhX2NhbGNfbWNsayhzdHJ1Y3Qga29tZWRhX2NydGNf
-c3RhdGUgKmtjcnRjX3N0KQ0KK3N0YXRpYyB1MzIga29tZWRhX2NhbGNfbWNsayhzdHJ1Y3Qga29t
-ZWRhX2NydGNfc3RhdGUgKmtjcnRjX3N0KQ0KIHsNCiAJdW5zaWduZWQgbG9uZyBtY2xrID0ga2Ny
-dGNfc3QtPmJhc2UuYWRqdXN0ZWRfbW9kZS5jbG9jayAqIDEwMDA7DQogDQpAQCAtMzUwLDcgKzM1
-MCw3IEBAIHN0YXRpYyBib29sIGtvbWVkYV9jcnRjX21vZGVfZml4dXAoc3RydWN0IGRybV9jcnRj
-ICpjcnRjLA0KIAlyZXR1cm4gdHJ1ZTsNCiB9DQogDQotc3RydWN0IGRybV9jcnRjX2hlbHBlcl9m
-dW5jcyBrb21lZGFfY3J0Y19oZWxwZXJfZnVuY3MgPSB7DQorc3RhdGljIHN0cnVjdCBkcm1fY3J0
-Y19oZWxwZXJfZnVuY3Mga29tZWRhX2NydGNfaGVscGVyX2Z1bmNzID0gew0KIAkuYXRvbWljX2No
-ZWNrCT0ga29tZWRhX2NydGNfYXRvbWljX2NoZWNrLA0KIAkuYXRvbWljX2ZsdXNoCT0ga29tZWRh
-X2NydGNfYXRvbWljX2ZsdXNoLA0KIAkuYXRvbWljX2VuYWJsZQk9IGtvbWVkYV9jcnRjX2F0b21p
-Y19lbmFibGUsDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVk
-YS9rb21lZGFfZGV2LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVk
-YV9kZXYuYw0KaW5kZXggOWQ2YzMxY2NhODc1Li4yMDc1ZjRhYzcwNzggMTAwNjQ0DQotLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kZXYuYw0KKysrIGIvZHJp
-dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmMNCkBAIC03Myw5ICs3
-MywxMSBAQCBjb25maWdfaWRfc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2Vf
-YXR0cmlidXRlICphdHRyLCBjaGFyICpidWYpDQogew0KIAlzdHJ1Y3Qga29tZWRhX2RldiAqbWRl
-diA9IGRldl90b19tZGV2KGRldik7DQogCXN0cnVjdCBrb21lZGFfcGlwZWxpbmUgKnBpcGUgPSBt
-ZGV2LT5waXBlbGluZXNbMF07DQotCXVuaW9uIGtvbWVkYV9jb25maWdfaWQgY29uZmlnX2lkID0g
-ezAsfTsNCisJdW5pb24ga29tZWRhX2NvbmZpZ19pZCBjb25maWdfaWQ7DQogCWludCBpOw0KIA0K
-Kwljb25maWdfaWQudmFsdWUgPSAwOw0KKw0KIAljb25maWdfaWQubWF4X2xpbmVfc3ogPSBwaXBl
-LT5sYXllcnNbMF0tPmhzaXplX2luLmVuZDsNCiAJY29uZmlnX2lkLm5fcGlwZWxpbmVzID0gbWRl
-di0+bl9waXBlbGluZXM7DQogCWNvbmZpZ19pZC5uX3NjYWxlcnMgPSBwaXBlLT5uX3NjYWxlcnM7
-DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFf
-ZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kcnYuYw0K
-aW5kZXggMDI4NWZkMzdhMDE2Li5jZmE1MDY4ZDlkMWUgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9kcnYuYw0KKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZHJ2LmMNCkBAIC0xMjcsNyArMTI3LDcgQEAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBrb21lZGFfcHJvZHVjdF9kYXRhIGtvbWVkYV9wcm9kdWN0c1td
-ID0gew0KIAl9LA0KIH07DQogDQotY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBrb21lZGFfb2Zf
-bWF0Y2hbXSA9IHsNCitzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBrb21lZGFfb2Zf
-bWF0Y2hbXSA9IHsNCiAJeyAuY29tcGF0aWJsZSA9ICJhcm0sbWFsaS1kNzEiLCAuZGF0YSA9ICZr
-b21lZGFfcHJvZHVjdHNbTUFMSV9ENzFdLCB9LA0KIAl7fSwNCiB9Ow0KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmMgYi9kcml2
-ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5jDQppbmRleCAw
-NzM5OGVmYzQwZjUuLmMzNzk0MzljNjE5NCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9h
-cm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmMNCkBAIC02Miw3ICs2Miw3IEBA
-IHZvaWQga29tZWRhX3BpcGVsaW5lX2Rlc3Ryb3koc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYsDQog
-CWRldm1fa2ZyZWUobWRldi0+ZGV2LCBwaXBlKTsNCiB9DQogDQotc3RydWN0IGtvbWVkYV9jb21w
-b25lbnQgKioNCitzdGF0aWMgc3RydWN0IGtvbWVkYV9jb21wb25lbnQgKioNCiBrb21lZGFfcGlw
-ZWxpbmVfZ2V0X2NvbXBvbmVudF9wb3Moc3RydWN0IGtvbWVkYV9waXBlbGluZSAqcGlwZSwgaW50
-IGlkKQ0KIHsNCiAJc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYgPSBwaXBlLT5tZGV2Ow0KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5l
-X3N0YXRlLmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBl
-bGluZV9zdGF0ZS5jDQppbmRleCBhZTFjMzc3M2M0ZWYuLjM2NTcwZDdkYWQ2MSAxMDA2NDQNCi0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lX3N0
-YXRlLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3Bp
-cGVsaW5lX3N0YXRlLmMNCkBAIC0yMCw3ICsyMCw3IEBAIHN0YXRpYyBpbmxpbmUgYm9vbCBpc19z
-d2l0Y2hpbmdfdXNlcih2b2lkICpvbGQsIHZvaWQgKm5ldykNCiAJcmV0dXJuIG9sZCAhPSBuZXc7
-DQogfQ0KIA0KLXN0cnVjdCBrb21lZGFfcGlwZWxpbmVfc3RhdGUgKg0KK3N0YXRpYyBzdHJ1Y3Qg
-a29tZWRhX3BpcGVsaW5lX3N0YXRlICoNCiBrb21lZGFfcGlwZWxpbmVfZ2V0X3N0YXRlKHN0cnVj
-dCBrb21lZGFfcGlwZWxpbmUgKnBpcGUsDQogCQkJICBzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAq
-c3RhdGUpDQogew0KQEAgLTQ1LDcgKzQ1LDcgQEAga29tZWRhX3BpcGVsaW5lX2dldF9vbGRfc3Rh
-dGUoc3RydWN0IGtvbWVkYV9waXBlbGluZSAqcGlwZSwNCiAJcmV0dXJuIE5VTEw7DQogfQ0KIA0K
-LXN0cnVjdCBrb21lZGFfcGlwZWxpbmVfc3RhdGUgKg0KK3N0YXRpYyBzdHJ1Y3Qga29tZWRhX3Bp
-cGVsaW5lX3N0YXRlICoNCiBrb21lZGFfcGlwZWxpbmVfZ2V0X25ld19zdGF0ZShzdHJ1Y3Qga29t
-ZWRhX3BpcGVsaW5lICpwaXBlLA0KIAkJCSAgICAgIHN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpz
-dGF0ZSkNCiB7DQpAQCAtNTgsNyArNTgsNyBAQCBrb21lZGFfcGlwZWxpbmVfZ2V0X25ld19zdGF0
-ZShzdHJ1Y3Qga29tZWRhX3BpcGVsaW5lICpwaXBlLA0KIH0NCiANCiAvKiBBc3NpZ24gcGlwZWxp
-bmUgZm9yIGNydGMgKi8NCi1zdHJ1Y3Qga29tZWRhX3BpcGVsaW5lX3N0YXRlICoNCitzdGF0aWMg
-c3RydWN0IGtvbWVkYV9waXBlbGluZV9zdGF0ZSAqDQoga29tZWRhX3BpcGVsaW5lX2dldF9zdGF0
-ZV9hbmRfc2V0X2NydGMoc3RydWN0IGtvbWVkYV9waXBlbGluZSAqcGlwZSwNCiAJCQkJICAgICAg
-IHN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpzdGF0ZSwNCiAJCQkJICAgICAgIHN0cnVjdCBkcm1f
-Y3J0YyAqY3J0YykNCkBAIC01MDUsOCArNTA1LDkgQEAgaW50IGtvbWVkYV9idWlsZF9kaXNwbGF5
-X2RhdGFfZmxvdyhzdHJ1Y3Qga29tZWRhX2NydGMgKmtjcnRjLA0KIAlyZXR1cm4gMDsNCiB9DQog
-DQotdm9pZCBrb21lZGFfcGlwZWxpbmVfdW5ib3VuZF9jb21wb25lbnRzKHN0cnVjdCBrb21lZGFf
-cGlwZWxpbmUgKnBpcGUsDQotCQkJCQlzdHJ1Y3Qga29tZWRhX3BpcGVsaW5lX3N0YXRlICpuZXcp
-DQorc3RhdGljIHZvaWQNCitrb21lZGFfcGlwZWxpbmVfdW5ib3VuZF9jb21wb25lbnRzKHN0cnVj
-dCBrb21lZGFfcGlwZWxpbmUgKnBpcGUsDQorCQkJCSAgIHN0cnVjdCBrb21lZGFfcGlwZWxpbmVf
-c3RhdGUgKm5ldykNCiB7DQogCXN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpkcm1fc3QgPSBuZXct
-Pm9iai5zdGF0ZTsNCiAJc3RydWN0IGtvbWVkYV9waXBlbGluZV9zdGF0ZSAqb2xkID0gcHJpdl90
-b19waXBlX3N0KHBpcGUtPm9iai5zdGF0ZSk7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGxhbmUuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0v
-ZGlzcGxheS9rb21lZGEva29tZWRhX3BsYW5lLmMNCmluZGV4IDQ2NjU0ZjBiZTczZC4uMDdlZDBj
-YzFiYzQ0IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9r
-b21lZGFfcGxhbmUuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9r
-b21lZGFfcGxhbmUuYw0KQEAgLTQ3LDggKzQ3LDkgQEAga29tZWRhX3BsYW5lX2luaXRfZGF0YV9m
-bG93KHN0cnVjdCBkcm1fcGxhbmVfc3RhdGUgKnN0LA0KICAqIFJFVFVSTlM6DQogICogWmVybyBm
-b3Igc3VjY2VzcyBvciAtZXJybm8NCiAgKi8NCi1pbnQga29tZWRhX3BsYW5lX2F0b21pY19jaGVj
-ayhzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSwNCi0JCQkgICAgICBzdHJ1Y3QgZHJtX3BsYW5lX3N0
-YXRlICpzdGF0ZSkNCitzdGF0aWMgaW50DQora29tZWRhX3BsYW5lX2F0b21pY19jaGVjayhzdHJ1
-Y3QgZHJtX3BsYW5lICpwbGFuZSwNCisJCQkgIHN0cnVjdCBkcm1fcGxhbmVfc3RhdGUgKnN0YXRl
-KQ0KIHsNCiAJc3RydWN0IGtvbWVkYV9wbGFuZSAqa3BsYW5lID0gdG9fa3BsYW5lKHBsYW5lKTsN
-CiAJc3RydWN0IGtvbWVkYV9wbGFuZV9zdGF0ZSAqa3BsYW5lX3N0ID0gdG9fa3BsYW5lX3N0KHN0
-YXRlKTsNCkBAIC04Nyw4ICs4OCw5IEBAIGludCBrb21lZGFfcGxhbmVfYXRvbWljX2NoZWNrKHN0
-cnVjdCBkcm1fcGxhbmUgKnBsYW5lLA0KIC8qIHBsYW5lIGRvZXNuJ3QgcmVwcmVzZW50IGEgcmVh
-bCBIVywgc28gdGhlcmUgaXMgbm8gSFcgdXBkYXRlIGZvciBwbGFuZS4NCiAgKiBrb21lZGEgaGFu
-ZGxlcyBhbGwgdGhlIEhXIHVwZGF0ZSBpbiBjcnRjLT5hdG9taWNfZmx1c2gNCiAgKi8NCi12b2lk
-IGtvbWVkYV9wbGFuZV9hdG9taWNfdXBkYXRlKHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lLA0KLQkJ
-CQlzdHJ1Y3QgZHJtX3BsYW5lX3N0YXRlICpvbGRfc3RhdGUpDQorc3RhdGljIHZvaWQNCitrb21l
-ZGFfcGxhbmVfYXRvbWljX3VwZGF0ZShzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSwNCisJCQkgICBz
-dHJ1Y3QgZHJtX3BsYW5lX3N0YXRlICpvbGRfc3RhdGUpDQogew0KIH0NCiANCi0tIA0KMi4xNy4x
-DQoNCg==
+On 23-04-19, 16:28, Georgi Djakov wrote:
+> The OPP bindings now support bandwidth values, so add support to parse it
+> from device tree and store it into the new dev_pm_opp_icc_bw struct, which
+> is part of the dev_pm_opp.
+> 
+> Also add and export the dev_pm_opp_set_paths() and dev_pm_opp_put_paths()
+> helpers, to set (and release) an interconnect paths to a device. The
+> bandwidth of these paths will be updated when the OPPs are switched.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  drivers/opp/core.c     |  87 ++++++++++++++++++++++++++++++++++-
+>  drivers/opp/of.c       | 102 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/opp/opp.h      |   9 ++++
+>  include/linux/pm_opp.h |  14 ++++++
+>  4 files changed, 210 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 0420f7e8ad5b..97ee39ecdebd 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/device.h>
+>  #include <linux/export.h>
+> +#include <linux/interconnect.h>
+
+Just include this once in opp.h and the other .c files won't need it.
+
+>  #include <linux/pm_domain.h>
+>  #include <linux/regulator/consumer.h>
+>  
+> @@ -876,6 +877,8 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
+>  				ret);
+>  	}
+>  
+> +	_of_find_paths(opp_table, dev);
+> +
+>  	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
+>  	INIT_LIST_HEAD(&opp_table->opp_list);
+>  	kref_init(&opp_table->kref);
+> @@ -1129,11 +1132,12 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_remove_all_dynamic);
+>  struct dev_pm_opp *_opp_allocate(struct opp_table *table)
+>  {
+>  	struct dev_pm_opp *opp;
+> -	int count, supply_size;
+> +	int count, supply_size, icc_size;
+>  
+>  	/* Allocate space for at least one supply */
+>  	count = table->regulator_count > 0 ? table->regulator_count : 1;
+>  	supply_size = sizeof(*opp->supplies) * count;
+> +	icc_size = sizeof(*opp->bandwidth) * table->path_count;
+>  
+>  	/* allocate new OPP node and supplies structures */
+>  	opp = kzalloc(sizeof(*opp) + supply_size, GFP_KERNEL);
+
+You never updated this to include icc_size :(
+
+> @@ -1141,7 +1145,8 @@ struct dev_pm_opp *_opp_allocate(struct opp_table *table)
+>  		return NULL;
+>  
+>  	/* Put the supplies at the end of the OPP structure as an empty array */
+> -	opp->supplies = (struct dev_pm_opp_supply *)(opp + 1);
+> +	opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp + 1);
+
+Keep the order as supplies and then bandwidth.
+
+> +	opp->supplies = (struct dev_pm_opp_supply *)(opp + icc_size + 1);
+
+Did you check what address gets assigned here ? I think the pointer
+addition will screw things up for you.
+
+>  	INIT_LIST_HEAD(&opp->node);
+>  
+>  	return opp;
+> @@ -1637,6 +1642,84 @@ void dev_pm_opp_put_clkname(struct opp_table *opp_table)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_put_clkname);
+>  
+> +/**
+> + * dev_pm_opp_set_paths() - Set interconnect path for a device
+> + * @dev: Device for which interconnect path is being set.
+> + *
+> + * This must be called before any OPPs are initialized for the device.
+> + */
+> +struct opp_table *dev_pm_opp_set_paths(struct device *dev)
+
+I got a bit confused. Why is this routine required exactly as
+_of_find_paths() would have already done something similar ?
+
+> +{
+> +	struct opp_table *opp_table;
+> +	int ret, i;
+> +
+> +	opp_table = dev_pm_opp_get_opp_table(dev);
+> +	if (!opp_table)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	/* This should be called before OPPs are initialized */
+> +	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
+> +		ret = -EBUSY;
+> +		goto err;
+> +	}
+> +
+> +	/* Another CPU that shares the OPP table has set the path */
+> +	if (opp_table->paths)
+> +		return opp_table;
+> +
+> +	opp_table->paths = kmalloc_array(opp_table->path_count,
+> +					 sizeof(*opp_table->paths), GFP_KERNEL);
+> +
+> +	/* Find interconnect path(s) for the device */
+> +	for (i = 0; i < opp_table->path_count; i++) {
+> +		opp_table->paths[i] = of_icc_get_by_index(dev, i);
+> +		if (IS_ERR(opp_table->paths[i])) {
+> +			ret = PTR_ERR(opp_table->paths[i]);
+> +			if (ret != -EPROBE_DEFER)
+> +				dev_err(dev, "%s: Couldn't find path%d: %d\n",
+> +					__func__, i, ret);
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return opp_table;
+> +
+> +err:
+> +	dev_pm_opp_put_opp_table(opp_table);
+> +
+> +	return ERR_PTR(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_opp_set_paths);
+> +
+> +/**
+> + * dev_pm_opp_put_paths() - Release interconnect path resources
+> + * @opp_table: OPP table returned from dev_pm_opp_set_paths().
+> + */
+> +void dev_pm_opp_put_paths(struct opp_table *opp_table)
+> +{
+> +	int i;
+> +
+> +	if (!opp_table->paths) {
+> +		pr_err("%s: Doesn't have paths set\n", __func__);
+> +		return;
+> +	}
+> +
+> +	/* Make sure there are no concurrent readers while updating opp_table */
+> +	WARN_ON(!list_empty(&opp_table->opp_list));
+> +
+> +	for (i = opp_table->path_count - 1; i >= 0; i--)
+> +		icc_put(opp_table->paths[i]);
+> +
+> +	_free_set_opp_data(opp_table);
+> +
+> +	kfree(opp_table->paths);
+> +	opp_table->paths = NULL;
+> +	opp_table->path_count = 0;
+> +
+> +	dev_pm_opp_put_opp_table(opp_table);
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_opp_put_paths);
+> +
+>  /**
+>   * dev_pm_opp_register_set_opp_helper() - Register custom set OPP helper
+>   * @dev: Device for which the helper is getting registered.
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index c10c782d15aa..00af23280bc6 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/cpu.h>
+>  #include <linux/errno.h>
+>  #include <linux/device.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/of_device.h>
+>  #include <linux/pm_domain.h>
+>  #include <linux/slab.h>
+> @@ -363,6 +364,45 @@ static int _of_opp_alloc_required_opps(struct opp_table *opp_table,
+>  	return ret;
+>  }
+>  
+> +int _of_find_paths(struct opp_table *opp_table, struct device *dev)
+> +{
+> +	struct device_node *np;
+> +	int ret, i, count, num_paths;
+> +
+> +	np = of_node_get(dev->of_node);
+> +	if (np) {
+
+I would rather do:
+
+        if (!np)
+                return 0;
+
+That will kill unnecessary line breaks and indentation.
+
+> +		count = of_count_phandle_with_args(np, "interconnects",
+> +						   "#interconnect-cells");
+
+You can do of_node_put() right here as it isn't used afterwards.
+
+> +		if (count % 2) {
+
+Shouldn't this be 4 instead of 2 ? Each path is represented as:
+
+<&noc MASTER_CPU &noc SLAVE_DDR>
+
+which has 4 fields.
+
+> +			dev_err(dev, "%s: Invalid interconnects values\n",
+> +				__func__);
+> +			ret = -EINVAL;
+> +			goto put_of_node;
+> +		}
+> +
+> +		num_paths = count / 2;
+> +		opp_table->paths = kcalloc(num_paths, sizeof(*opp_table->paths),
+> +					   GFP_KERNEL);
+> +		if (!opp_table->paths) {
+> +			ret = -ENOMEM;
+> +			goto put_of_node;
+> +		}
+> +
+> +		for (i = 0; i < num_paths; i++)
+> +			opp_table->paths[i] = of_icc_get_by_index(dev, i);
+> +
+> +		opp_table->path_count = num_paths;
+> +		of_node_put(np);
+> +	}
+> +
+> +	return 0;
+> +
+> +put_of_node:
+> +	of_node_put(np);
+> +
+> +	return ret;
+> +}
+> +
+>  static bool _opp_is_supported(struct device *dev, struct opp_table *opp_table,
+>  			      struct device_node *np)
+>  {
+> @@ -539,6 +579,64 @@ static int opp_parse_supplies(struct dev_pm_opp *opp, struct device *dev,
+>  	return ret;
+>  }
+>  
+> +static int opp_parse_icc_bw(struct dev_pm_opp *opp, struct device *dev,
+> +			    struct opp_table *opp_table)
+> +{
+> +	struct property *prop = NULL;
+> +	u32 *bandwidth;
+> +	char name[] = "bandwidth-MBps";
+> +	int count, i, j, ret;
+> +
+> +	/* Search for "bandwidth-MBps" */
+> +	prop = of_find_property(opp->np, name, NULL);
+> +
+> +	/* Missing property is not a problem */
+> +	if (!prop) {
+> +		dev_dbg(dev, "%s: Missing %s property\n", __func__, name);
+> +		return 0;
+> +	}
+> +
+> +	if (!prop->value) {
+> +		dev_dbg(dev, "%s: Missing %s value\n", __func__, name);
+> +		return -ENODATA;
+> +	}
+> +
+> +	/*
+> +	 * Bandwidth consists of average and peak values like:
+> +	 * bandwidth-MBps = <avg-MBps peak-MBps>
+> +	 */
+> +	count = prop->length / sizeof(u32);
+> +	if (count % 2) {
+> +		dev_err(dev, "%s: Invalid %s values\n", __func__, name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (opp_table->path_count != count / 2) {
+> +		dev_err(dev, "%s Mismatch between values and paths (%d %d)\n",
+> +			__func__, opp_table->path_count, count / 2);
+> +		return -EINVAL;
+> +	}
+> +
+> +	bandwidth = kmalloc_array(count, sizeof(*bandwidth), GFP_KERNEL);
+> +	if (!bandwidth)
+> +		return -ENOMEM;
+> +
+> +	ret = of_property_read_u32_array(opp->np, name, bandwidth, count);
+> +	if (ret) {
+> +		dev_err(dev, "%s: Error parsing %s: %d\n", __func__, name, ret);
+> +		goto free_bandwidth;
+> +	}
+> +	for (i = 0, j = 0; i < count; i++) {
+> +		opp->bandwidth[i].avg = MBps_to_icc(bandwidth[j++]);
+> +		opp->bandwidth[i].peak = MBps_to_icc(bandwidth[j++]);
+> +	}
+> +
+> +free_bandwidth:
+> +	kfree(bandwidth);
+> +
+> +	return ret;
+> +}
+> +
+>  /**
+>   * dev_pm_opp_of_remove_table() - Free OPP table entries created from static DT
+>   *				  entries
+> @@ -635,6 +733,10 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+>  	if (opp_table->is_genpd)
+>  		new_opp->pstate = pm_genpd_opp_to_performance_state(dev, new_opp);
+>  
+> +	ret = opp_parse_icc_bw(new_opp, dev, opp_table);
+> +	if (ret)
+> +		goto free_opp;
+> +
+>  	ret = _opp_add(dev, new_opp, opp_table, rate_not_available);
+>  	if (ret) {
+>  		/* Don't return error for duplicate OPPs */
+> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+> index 569b3525aa67..70a537f2dbd3 100644
+> --- a/drivers/opp/opp.h
+> +++ b/drivers/opp/opp.h
+> @@ -24,6 +24,7 @@
+>  
+>  struct clk;
+>  struct regulator;
+> +struct icc_path;
+>  
+>  /* Lock to allow exclusive modification to the device and opp lists */
+>  extern struct mutex opp_table_lock;
+> @@ -62,6 +63,7 @@ extern struct list_head opp_tables;
+>   * @rate:	Frequency in hertz
+>   * @level:	Performance level
+>   * @supplies:	Power supplies voltage/current values
+> + * @bandwidth:	Interconnect bandwidth values
+>   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
+>   *		frequency from any other OPP's frequency.
+>   * @required_opps: List of OPPs that are required by this OPP.
+> @@ -84,6 +86,7 @@ struct dev_pm_opp {
+>  	unsigned int level;
+>  
+>  	struct dev_pm_opp_supply *supplies;
+> +	struct dev_pm_opp_icc_bw *bandwidth;
+>  
+>  	unsigned long clock_latency_ns;
+>  
+> @@ -150,6 +153,8 @@ enum opp_table_access {
+>   * @regulator_count: Number of power supply regulators. Its value can be -1
+>   * (uninitialized), 0 (no opp-microvolt property) or > 0 (has opp-microvolt
+>   * property).
+> + * @paths: Interconnect path handles
+> + * @path_count: Number of interconnect paths
+>   * @genpd_performance_state: Device's power domain support performance state.
+>   * @is_genpd: Marks if the OPP table belongs to a genpd.
+>   * @set_opp: Platform specific set_opp callback
+> @@ -194,6 +199,8 @@ struct opp_table {
+>  	struct clk *clk;
+>  	struct regulator **regulators;
+>  	int regulator_count;
+> +	struct icc_path **paths;
+> +	unsigned int path_count;
+>  	bool genpd_performance_state;
+>  	bool is_genpd;
+>  
+> @@ -228,12 +235,14 @@ void _of_clear_opp_table(struct opp_table *opp_table);
+>  struct opp_table *_managed_opp(struct device *dev, int index);
+>  void _of_opp_free_required_opps(struct opp_table *opp_table,
+>  				struct dev_pm_opp *opp);
+> +int _of_find_paths(struct opp_table *opp_table, struct device *dev);
+>  #else
+>  static inline void _of_init_opp_table(struct opp_table *opp_table, struct device *dev, int index) {}
+>  static inline void _of_clear_opp_table(struct opp_table *opp_table) {}
+>  static inline struct opp_table *_managed_opp(struct device *dev, int index) { return NULL; }
+>  static inline void _of_opp_free_required_opps(struct opp_table *opp_table,
+>  					      struct dev_pm_opp *opp) {}
+> +static inline int _of_find_paths(struct opp_table *opp_table, struct device *dev) { return 0; }
+>  #endif
+>  
+>  #ifdef CONFIG_DEBUG_FS
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index 24c757a32a7b..dabee09a92b8 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -43,6 +43,18 @@ struct dev_pm_opp_supply {
+>  	unsigned long u_amp;
+>  };
+>  
+> +/**
+> + * struct dev_pm_opp_icc_bw - Interconnect bandwidth values
+> + * @avg:	Average bandwidth corresponding to this OPP (in icc units)
+> + * @peak:	Peak bandwidth corresponding to this OPP (in icc units)
+> + *
+> + * This structure stores the bandwidth values for a single interconnect path.
+> + */
+> +struct dev_pm_opp_icc_bw {
+> +	u32 avg;
+> +	u32 peak;
+> +};
+> +
+>  /**
+>   * struct dev_pm_opp_info - OPP freq/voltage/current values
+>   * @rate:	Target clk rate in hz
+> @@ -127,6 +139,8 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev, const char * con
+>  void dev_pm_opp_put_regulators(struct opp_table *opp_table);
+>  struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const char * name);
+>  void dev_pm_opp_put_clkname(struct opp_table *opp_table);
+> +struct opp_table *dev_pm_opp_set_paths(struct device *dev);
+> +void dev_pm_opp_put_paths(struct opp_table *opp_table);
+>  struct opp_table *dev_pm_opp_register_set_opp_helper(struct device *dev, int (*set_opp)(struct dev_pm_set_opp_data *data));
+>  void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
+>  struct opp_table *dev_pm_opp_set_genpd_virt_dev(struct device *dev, struct device *virt_dev, int index);
+
+-- 
+viresh
