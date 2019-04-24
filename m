@@ -2,151 +2,143 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EE5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24094C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA3A20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9A520652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731311AbfDXTrw (ORCPT
+        id S1730515AbfDXTs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:47:52 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.212]:25961 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730667AbfDXTrw (ORCPT
+        Wed, 24 Apr 2019 15:48:58 -0400
+Received: from [13.77.154.182] ([13.77.154.182]:51878 "EHLO
+        linux.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfDXTs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:47:52 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 95347400DF0FE
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:47:50 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id JNryhKkb1dnCeJNryh69pg; Wed, 24 Apr 2019 14:47:50 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.223] (port=47392 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hJNry-000aHQ-01; Wed, 24 Apr 2019 14:47:50 -0500
-Subject: Re: [PATCH net-next] net: socket: Fix missing break in switch
- statement
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-References: <20190424153124.GA9475@embeddedor>
- <CAK8P3a0Ak95EUq6-6ASHKEKw=x+9_+MO5ZaFcctaS4esz__J3A@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <cde163bd-0104-9502-38df-29b504ebfbca@embeddedor.com>
-Date:   Wed, 24 Apr 2019 14:47:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 15:48:58 -0400
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 44FC330B26EE
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:48:57 -0700 (PDT)
+Received: by mail-ed1-f41.google.com with SMTP id g6so17018841edc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:48:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAW/wLn5+DwrzxSlF2tRHBPQnCHrWMrN68uTSnUfzf2sx24tG96I
+        kBpj+v4Fqmm6OIsq8YzkNRPmw1wH5AnkaeJ6LafVIg==
+X-Google-Smtp-Source: APXvYqzyoILpLCYiSs16/NACIvIjnxi+GIp5W7mO/tmVV9j0fAAJF3XeiFhH0NmOUBQZP2Pc8MRN3YR20FGmzk8BHI4=
+X-Received: by 2002:a17:906:b291:: with SMTP id q17mr17493373ejz.56.1556135335559;
+ Wed, 24 Apr 2019 12:48:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0Ak95EUq6-6ASHKEKw=x+9_+MO5ZaFcctaS4esz__J3A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.223
-X-Source-L: No
-X-Exim-ID: 1hJNry-000aHQ-01
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.250.127.223]:47392
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20190423203843.2898-1-pasha.tatashin@soleen.com> <7f7499bd-8d48-945b-6d69-60685a02c8da@arm.com>
+In-Reply-To: <7f7499bd-8d48-945b-6d69-60685a02c8da@arm.com>
+From:   Pavel Tatashin <patatash@linux.microsoft.com>
+Date:   Wed, 24 Apr 2019 15:48:44 -0400
+X-Gmail-Original-Message-ID: <CA+CK2bCD11x64pJj5gSnsu5jsUqJyU6o+=J4K8oYAsHqz9ULqQ@mail.gmail.com>
+Message-ID: <CA+CK2bCD11x64pJj5gSnsu5jsUqJyU6o+=J4K8oYAsHqz9ULqQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: configurable sparsemem section size
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>,
+        rppt@linux.vnet.ibm.com,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        andrew.murray@arm.com, james.morse@arm.com,
+        Marc Zyngier <marc.zyngier@arm.com>, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd,
+On Wed, Apr 24, 2019 at 5:07 AM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+> On 04/24/2019 02:08 AM, Pavel Tatashin wrote:
+> > sparsemem section size determines the maximum size and alignment that
+> > is allowed to offline/online memory block. The bigger the size the less
+> > the clutter in /sys/devices/system/memory/*. On the other hand, however,
+> > there is less flexability in what granules of memory can be added and
+> > removed.
+>
+> Is there any scenario where less than a 1GB needs to be added on arm64 ?
 
-On 4/24/19 1:45 PM, Arnd Bergmann wrote:
-> On Wed, Apr 24, 2019 at 5:33 PM Gustavo A. R. Silva
-> <gustavo@embeddedor.com> wrote:
->>
->> Add missing break statement in order to prevent the code from falling
->> through to cases SIOCGSTAMP_NEW and SIOCGSTAMPNS_NEW.
->>
->> This bug was found thanks to the ongoing efforts to enable
->> -Wimplicit-fallthrough.
->>
->> Fixes: 0768e17073dc ("net: socket: implement 64-bit timestamps")
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Yes, DAX hotplug loses 1G of memory without allowing smaller sections.
+Machines on which we are going to be using this functionality have 8G
+of System RAM, therefore losing 1G is a big problem.
 
-Just for clarification: Dan didn't report this to me. I found this
-bug while working on the last fall-through warnings in net.
+For details about using scenario see this cover letter:
+https://lore.kernel.org/lkml/20190421014429.31206-1-pasha.tatashin@soleen.com/
 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> I had just prepared the same patch after Dan told me about the issue today,
-> but you managed to submit it first.
-> 
-> Thanks for the fix!
-> 
+>
+> >
+> > Recently, it was enabled in Linux to hotadd persistent memory that
+> > can be either real NV device, or reserved from regular System RAM
+> > and has identity of devdax.
+>
+> devdax (even ZONE_DEVICE) support has not been enabled on arm64 yet.
 
-Glad to help. :)
+Correct, I use your patches to enable ZONE_DEVICE, and  thus devdax on ARM64:
+https://lore.kernel.org/lkml/1554265806-11501-1-git-send-email-anshuman.khandual@arm.com/
 
-Thanks
---
-Gustavo
+>
+> >
+> > The problem is that because ARM64's section size is 1G, and devdax must
+> > have 2M label section, the first 1G is always missed when device is
+> > attached, because it is not 1G aligned.
+>
+> devdax has to be 2M aligned ? Does Linux enforce that right now ?
+
+Unfortunately, there is no way around this. Part of the memory can be
+reserved as persistent memory via device tree.
+        memory@40000000 {
+                device_type = "memory";
+                reg = < 0x00000000 0x40000000
+                        0x00000002 0x00000000 >;
+        };
+
+        pmem@1c0000000 {
+                compatible = "pmem-region";
+                reg = <0x00000001 0xc0000000
+                       0x00000000 0x80000000>;
+                volatile;
+                numa-node-id = <0>;
+        };
+
+So, while pmem is section aligned, as it should be, the dax device is
+going to be pmem start address + label size, which is 2M. The actual
+DAX device starts at:
+0x1c0000000 + 2M.
+
+Because section size is 1G, the hotplug will able to add only memory
+starting from
+0x1c0000000 + 1G
+
+> 27 and 28 do not even compile for ARM64_64_PAGES because of MAX_ORDER and
+> SECTION_SIZE mismatch.
+
+Can you please elaborate what configs are you using? I have no
+problems compiling with 27 and 28 bit.
+
+Thank you,
+Pasha
