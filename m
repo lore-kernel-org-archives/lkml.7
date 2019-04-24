@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E9EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D6DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F289621905
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A1F21909
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116799;
-	bh=5VZ2L8mSmGIl6VXCipuMibLFLTQo9WZLpPfU5m9+Fj4=;
+	s=default; t=1556116802;
+	bh=v25UocYYHyNTLD+FpWbEBB7R5EXtof/JdlyjrkaVEXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V8xSwLxibMI0DTSVFrY1hZSwlq58uLmnERWO6v1a0XcXYQz9i2G96Hdi+/Z4ZV062
-	 ZVdjDw2ZcRfakrk8au22EyJPpOTWvzm62dltkF2jn0le0mEttlNVpRxjx+hzBeY+ZO
-	 A1ymlPKaod0N7uZwQCdGtN2rozGEev7GOt+jsUas=
+	b=OMoq5awVD4fKqN3vcyHnkiGlXM1kcHpf2EBXCwpEUTNw2oETvQkc31+CBZjDzWEh9
+	 +TTdX58kiF/X2KW8+92KeLMfDlmcLjuD5UNHOWsezkfV4wqW0kvFBvdQbmEKvL438h
+	 VLgKgWAluSr9hKu0nOwlIUpdx8KVnJSYWzC7vhSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731829AbfDXOj6 (ORCPT
+        id S1731847AbfDXOkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:39:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42350 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:40:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730816AbfDXOjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:39:55 -0400
+        id S1731825AbfDXOj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:39:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 609BE21900;
-        Wed, 24 Apr 2019 14:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81349218FD;
+        Wed, 24 Apr 2019 14:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116794;
-        bh=5VZ2L8mSmGIl6VXCipuMibLFLTQo9WZLpPfU5m9+Fj4=;
+        s=default; t=1556116797;
+        bh=v25UocYYHyNTLD+FpWbEBB7R5EXtof/JdlyjrkaVEXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CbhPBuehuYffEHlPzbaQpZeqV7w+ef9ruRa+dulqKuX8Z1qKdrwGOrHODkkxghqYD
-         OttmPv982XV2BhRDkty+CwB/jcwQdIKKPfoQqziCyjdNPaEbQFGJX+iXaroCTwQFha
-         9qt5hisEbq3sVhXmBOb4Fo5KobllUd/5UA+ymbUs=
+        b=izr+DQI5EwcdQgBBu3tehKocxtrEV9qxYaqRL0fO3u11gzYgAfD9BmD4kmfPMBK5w
+         rIMZrJkNC1SwNUH8OMV6tpnssLAPe70Ewd2tsYd8HB+YfWLRTSr3Xjta56HCDYjcaS
+         gMf6sjG7hVPclZXG+AZ+X53NGJFTlgh6S2CLQl+0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khorenko <khorenko@virtuozzo.com>,
+Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 18/52] bonding: show full hw address in sysfs for slave entries
-Date:   Wed, 24 Apr 2019 10:38:36 -0400
-Message-Id: <20190424143911.28890-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 19/52] net: stmmac: use correct DMA buffer size in the RX descriptor
+Date:   Wed, 24 Apr 2019 10:38:37 -0400
+Message-Id: <20190424143911.28890-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
 References: <20190424143911.28890-1-sashal@kernel.org>
@@ -59,43 +59,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khorenko <khorenko@virtuozzo.com>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-[ Upstream commit 18bebc6dd3281955240062655a4df35eef2c46b3 ]
+[ Upstream commit 583e6361414903c5206258a30e5bd88cb03c0254 ]
 
-Bond expects ethernet hwaddr for its slave, but it can be longer than 6
-bytes - infiniband interface for example.
+We always program the maximum DMA buffer size into the receive descriptor,
+although the allocated size may be less. E.g. with the default MTU size
+we allocate only 1536 bytes. If somebody sends us a bigger frame, then
+memory may get corrupted.
 
- # cat /sys/devices/<skipped>/net/ib0/address
- 80:00:02:08:fe:80:00:00:00:00:00:00:7c:fe:90:03:00:be:5d:e1
+Fix by using exact buffer sizes.
 
- # cat /sys/devices/<skipped>/net/ib0/bonding_slave/perm_hwaddr
- 80:00:02:08:fe:80
-
-So print full hwaddr in sysfs "bonding_slave/perm_hwaddr" as well.
-
-Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_sysfs_slave.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../net/ethernet/stmicro/stmmac/descs_com.h   | 22 ++++++++++++-------
+ .../ethernet/stmicro/stmmac/dwmac4_descs.c    |  2 +-
+ .../ethernet/stmicro/stmmac/dwxgmac2_descs.c  |  2 +-
+ .../net/ethernet/stmicro/stmmac/enh_desc.c    | 10 ++++++---
+ drivers/net/ethernet/stmicro/stmmac/hwif.h    |  2 +-
+ .../net/ethernet/stmicro/stmmac/norm_desc.c   | 10 ++++++---
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  6 +++--
+ 7 files changed, 35 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_sysfs_slave.c b/drivers/net/bonding/bond_sysfs_slave.c
-index 2f120b2ffef0..4985268e2273 100644
---- a/drivers/net/bonding/bond_sysfs_slave.c
-+++ b/drivers/net/bonding/bond_sysfs_slave.c
-@@ -55,7 +55,9 @@ static SLAVE_ATTR_RO(link_failure_count);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/descs_com.h b/drivers/net/ethernet/stmicro/stmmac/descs_com.h
+index 40d6356a7e73..3dfb07a78952 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/descs_com.h
++++ b/drivers/net/ethernet/stmicro/stmmac/descs_com.h
+@@ -29,11 +29,13 @@
+ /* Specific functions used for Ring mode */
  
- static ssize_t perm_hwaddr_show(struct slave *slave, char *buf)
+ /* Enhanced descriptors */
+-static inline void ehn_desc_rx_set_on_ring(struct dma_desc *p, int end)
++static inline void ehn_desc_rx_set_on_ring(struct dma_desc *p, int end,
++					   int bfsize)
  {
--	return sprintf(buf, "%pM\n", slave->perm_hwaddr);
-+	return sprintf(buf, "%*phC\n",
-+		       slave->dev->addr_len,
-+		       slave->perm_hwaddr);
- }
- static SLAVE_ATTR_RO(perm_hwaddr);
+-	p->des1 |= cpu_to_le32((BUF_SIZE_8KiB
+-			<< ERDES1_BUFFER2_SIZE_SHIFT)
+-		   & ERDES1_BUFFER2_SIZE_MASK);
++	if (bfsize == BUF_SIZE_16KiB)
++		p->des1 |= cpu_to_le32((BUF_SIZE_8KiB
++				<< ERDES1_BUFFER2_SIZE_SHIFT)
++			   & ERDES1_BUFFER2_SIZE_MASK);
  
+ 	if (end)
+ 		p->des1 |= cpu_to_le32(ERDES1_END_RING);
+@@ -59,11 +61,15 @@ static inline void enh_set_tx_desc_len_on_ring(struct dma_desc *p, int len)
+ }
+ 
+ /* Normal descriptors */
+-static inline void ndesc_rx_set_on_ring(struct dma_desc *p, int end)
++static inline void ndesc_rx_set_on_ring(struct dma_desc *p, int end, int bfsize)
+ {
+-	p->des1 |= cpu_to_le32(((BUF_SIZE_2KiB - 1)
+-				<< RDES1_BUFFER2_SIZE_SHIFT)
+-		    & RDES1_BUFFER2_SIZE_MASK);
++	if (bfsize >= BUF_SIZE_2KiB) {
++		int bfsize2;
++
++		bfsize2 = min(bfsize - BUF_SIZE_2KiB + 1, BUF_SIZE_2KiB - 1);
++		p->des1 |= cpu_to_le32((bfsize2 << RDES1_BUFFER2_SIZE_SHIFT)
++			    & RDES1_BUFFER2_SIZE_MASK);
++	}
+ 
+ 	if (end)
+ 		p->des1 |= cpu_to_le32(RDES1_END_RING);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
+index 736e29635b77..313a58b68fee 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c
+@@ -296,7 +296,7 @@ static int dwmac4_wrback_get_rx_timestamp_status(void *desc, void *next_desc,
+ }
+ 
+ static void dwmac4_rd_init_rx_desc(struct dma_desc *p, int disable_rx_ic,
+-				   int mode, int end)
++				   int mode, int end, int bfsize)
+ {
+ 	dwmac4_set_rx_owner(p, disable_rx_ic);
+ }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+index 1d858fdec997..98fa471da7c0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+@@ -123,7 +123,7 @@ static int dwxgmac2_get_rx_timestamp_status(void *desc, void *next_desc,
+ }
+ 
+ static void dwxgmac2_init_rx_desc(struct dma_desc *p, int disable_rx_ic,
+-				  int mode, int end)
++				  int mode, int end, int bfsize)
+ {
+ 	dwxgmac2_set_rx_owner(p, disable_rx_ic);
+ }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+index 5ef91a790f9d..e8855e6adb48 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+@@ -259,15 +259,19 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ }
+ 
+ static void enh_desc_init_rx_desc(struct dma_desc *p, int disable_rx_ic,
+-				  int mode, int end)
++				  int mode, int end, int bfsize)
+ {
++	int bfsize1;
++
+ 	p->des0 |= cpu_to_le32(RDES0_OWN);
+-	p->des1 |= cpu_to_le32(BUF_SIZE_8KiB & ERDES1_BUFFER1_SIZE_MASK);
++
++	bfsize1 = min(bfsize, BUF_SIZE_8KiB);
++	p->des1 |= cpu_to_le32(bfsize1 & ERDES1_BUFFER1_SIZE_MASK);
+ 
+ 	if (mode == STMMAC_CHAIN_MODE)
+ 		ehn_desc_rx_set_on_chain(p);
+ 	else
+-		ehn_desc_rx_set_on_ring(p, end);
++		ehn_desc_rx_set_on_ring(p, end, bfsize);
+ 
+ 	if (disable_rx_ic)
+ 		p->des1 |= cpu_to_le32(ERDES1_DISABLE_IC);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index 92b8944f26e3..5bb00234d961 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -33,7 +33,7 @@ struct dma_extended_desc;
+ struct stmmac_desc_ops {
+ 	/* DMA RX descriptor ring initialization */
+ 	void (*init_rx_desc)(struct dma_desc *p, int disable_rx_ic, int mode,
+-			int end);
++			int end, int bfsize);
+ 	/* DMA TX descriptor ring initialization */
+ 	void (*init_tx_desc)(struct dma_desc *p, int mode, int end);
+ 	/* Invoked by the xmit function to prepare the tx descriptor */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
+index de65bb29feba..c55a9815b394 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
+@@ -135,15 +135,19 @@ static int ndesc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ }
+ 
+ static void ndesc_init_rx_desc(struct dma_desc *p, int disable_rx_ic, int mode,
+-			       int end)
++			       int end, int bfsize)
+ {
++	int bfsize1;
++
+ 	p->des0 |= cpu_to_le32(RDES0_OWN);
+-	p->des1 |= cpu_to_le32((BUF_SIZE_2KiB - 1) & RDES1_BUFFER1_SIZE_MASK);
++
++	bfsize1 = min(bfsize, BUF_SIZE_2KiB - 1);
++	p->des1 |= cpu_to_le32(bfsize & RDES1_BUFFER1_SIZE_MASK);
+ 
+ 	if (mode == STMMAC_CHAIN_MODE)
+ 		ndesc_rx_set_on_chain(p, end);
+ 	else
+-		ndesc_rx_set_on_ring(p, end);
++		ndesc_rx_set_on_ring(p, end, bfsize);
+ 
+ 	if (disable_rx_ic)
+ 		p->des1 |= cpu_to_le32(RDES1_DISABLE_IC);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 886176be818e..9f766b74b1bc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -1111,11 +1111,13 @@ static void stmmac_clear_rx_descriptors(struct stmmac_priv *priv, u32 queue)
+ 		if (priv->extend_desc)
+ 			stmmac_init_rx_desc(priv, &rx_q->dma_erx[i].basic,
+ 					priv->use_riwt, priv->mode,
+-					(i == DMA_RX_SIZE - 1));
++					(i == DMA_RX_SIZE - 1),
++					priv->dma_buf_sz);
+ 		else
+ 			stmmac_init_rx_desc(priv, &rx_q->dma_rx[i],
+ 					priv->use_riwt, priv->mode,
+-					(i == DMA_RX_SIZE - 1));
++					(i == DMA_RX_SIZE - 1),
++					priv->dma_buf_sz);
+ }
+ 
+ /**
 -- 
 2.19.1
 
