@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67029C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1050DC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 331EE218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33F62077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127190;
-	bh=Z6PeYcYC9ZRi6YMHrIEHW26rZfHvdXYkip5E8n3YpPM=;
+	s=default; t=1556127193;
+	bh=NAsY/+oP7Q+lSObGdjFhj6iZQiYjj3w6JsoJDKmw+Gc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AYpeEYLNN3fbvWrvOthbiP/tHaCEqzH0dBrAvE+pS2hmWDsD15WZXHH/Twz35O+r8
-	 ntCFtDcIjT+mJPuSqwtim9uuucbjAOA4eijREla3wY0vrsDlnVyI6kIJUIGOvILWaR
-	 FcQNUQtS3icQtfLLL0b2xekR9YaA8sBY5YmMdRe8=
+	b=OOEQOCu0RIJzrhm5U5a6tYwC4dZkiYNk6ku1HkG/CTzbw1DhmXwSO7ODxpTeWLz4e
+	 HmsFoIYFE5HmLu29ySgIBzcW5PIS/WC/YMWYbAAyvH/6y1SOKoWg6fzbpU146yLjns
+	 Aml8eUSwh/dv9pfRi07lQBFqw+IAvRpCbQeY78ZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391402AbfDXRdJ (ORCPT
+        id S2390988AbfDXRdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:33:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59978 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:33:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391231AbfDXRdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:33:06 -0400
+        id S2391091AbfDXRdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:33:08 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E15C421906;
-        Wed, 24 Apr 2019 17:33:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F24A2077C;
+        Wed, 24 Apr 2019 17:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127185;
-        bh=Z6PeYcYC9ZRi6YMHrIEHW26rZfHvdXYkip5E8n3YpPM=;
+        s=default; t=1556127188;
+        bh=NAsY/+oP7Q+lSObGdjFhj6iZQiYjj3w6JsoJDKmw+Gc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bQktRK8PTNSxNZCjUl8b+qD/nwtqRYuC91mCeoL1ujnsIVCef5URIL1/A65MSspFZ
-         eaktUIBWiJM+2Pwt53UF8/xwjg/cyQrutuU81MkX6y/VRiPhGFmNG3xQ7NM7C72gNI
-         zehPsdCEB7m3yGNEKN5cC7QdPtf5KqTfDdTWaOf0=
+        b=yG5/CCJ4Xwa44wKrFcQ7vymz0tSiDOmERSJNX9y0v8s8PHyYurj7HKyOEyPWIqMPl
+         Tr2IVi6zBHggqRJEzQEmsnQ4Zh6Tn70ccbFAmEwdBjsUPSpBMEyIyjzKv9AlwaBPMl
+         KX8ZdTFOn39LSbZzqz4Ru+LMKCiF5ZbP/VW2X0DI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 92/96] ALSA: info: Fix racy addition/deletion of nodes
-Date:   Wed, 24 Apr 2019 19:10:37 +0200
-Message-Id: <20190424170926.040661163@linuxfoundation.org>
+        syzbot+cf4f2b6c24aff0a3edf6@syzkaller.appspotmail.com,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.19 50/96] staging: comedi: ni_usb6501: Fix use of uninitialized mutex
+Date:   Wed, 24 Apr 2019 19:09:55 +0200
+Message-Id: <20190424170923.205237552@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -60,59 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 8c2f870890fd28e023b0fcf49dcee333f2c8bad7 upstream.
+commit 660cf4ce9d0f3497cc7456eaa6d74c8b71d6282c upstream.
 
-The ALSA proc helper manages the child nodes in a linked list, but its
-addition and deletion is done without any lock.  This leads to a
-corruption if they are operated concurrently.  Usually this isn't a
-problem because the proc entries are added sequentially in the driver
-probe procedure itself.  But the card registrations are done often
-asynchronously, and the crash could be actually reproduced with
-syzkaller.
+If `ni6501_auto_attach()` returns an error, the core comedi module code
+will call `ni6501_detach()` to clean up.  If `ni6501_auto_attach()`
+successfully allocated the comedi device private data, `ni6501_detach()`
+assumes that a `struct mutex mut` contained in the private data has been
+initialized and uses it.  Unfortunately, there are a couple of places
+where `ni6501_auto_attach()` can return an error after allocating the
+device private data but before initializing the mutex, so this
+assumption is invalid.  Fix it by initializing the mutex just after
+allocating the private data in `ni6501_auto_attach()` before any other
+errors can be retturned.  Also move the call to `usb_set_intfdata()`
+just to keep the code a bit neater (either position for the call is
+fine).
 
-This patch papers over it by protecting the link addition and deletion
-with the parent's mutex.  There is "access" mutex that is used for the
-file access, and this can be reused for this purpose as well.
+I believe this was the cause of the following syzbot crash report
+<https://syzkaller.appspot.com/bug?extid=cf4f2b6c24aff0a3edf6>:
 
-Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+usb 1-1: string descriptor 0 read error: -71
+comedi comedi0: Wrong number of endpoints
+ni6501 1-1:0.233: driver 'ni6501' failed to auto-configure device.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 585 Comm: kworker/0:3 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xe8/0x16e lib/dump_stack.c:113
+ assign_lock_key kernel/locking/lockdep.c:786 [inline]
+ register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
+ __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
+ lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
+ __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+ __mutex_lock+0xfe/0x12b0 kernel/locking/mutex.c:1072
+ ni6501_detach+0x5b/0x110 drivers/staging/comedi/drivers/ni_usb6501.c:567
+ comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
+ comedi_device_cleanup.part.0+0x68/0x140 drivers/staging/comedi/comedi_fops.c:156
+ comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
+ comedi_free_board_dev.part.0+0x16/0x90 drivers/staging/comedi/comedi_fops.c:190
+ comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
+ comedi_release_hardware_device+0x111/0x140 drivers/staging/comedi/comedi_fops.c:2880
+ comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
+ usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+ really_probe+0x2da/0xb10 drivers/base/dd.c:509
+ driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+ __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+ bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+ __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+ bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+ device_add+0xad2/0x16e0 drivers/base/core.c:2106
+ usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+ generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+ usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+ really_probe+0x2da/0xb10 drivers/base/dd.c:509
+ driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+ __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+ bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+ __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+ bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+ device_add+0xad2/0x16e0 drivers/base/core.c:2106
+ usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+ hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+ port_event drivers/usb/core/hub.c:5350 [inline]
+ hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+ process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+ worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+ kthread+0x313/0x420 kernel/kthread.c:253
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Reported-by: syzbot+cf4f2b6c24aff0a3edf6@syzkaller.appspotmail.com
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/info.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/staging/comedi/drivers/ni_usb6501.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/core/info.c
-+++ b/sound/core/info.c
-@@ -722,8 +722,11 @@ snd_info_create_entry(const char *name,
- 	INIT_LIST_HEAD(&entry->children);
- 	INIT_LIST_HEAD(&entry->list);
- 	entry->parent = parent;
--	if (parent)
-+	if (parent) {
-+		mutex_lock(&parent->access);
- 		list_add_tail(&entry->list, &parent->children);
-+		mutex_unlock(&parent->access);
-+	}
- 	return entry;
- }
+--- a/drivers/staging/comedi/drivers/ni_usb6501.c
++++ b/drivers/staging/comedi/drivers/ni_usb6501.c
+@@ -518,6 +518,9 @@ static int ni6501_auto_attach(struct com
+ 	if (!devpriv)
+ 		return -ENOMEM;
  
-@@ -805,7 +808,12 @@ void snd_info_free_entry(struct snd_info
- 	list_for_each_entry_safe(p, n, &entry->children, list)
- 		snd_info_free_entry(p);
++	mutex_init(&devpriv->mut);
++	usb_set_intfdata(intf, devpriv);
++
+ 	ret = ni6501_find_endpoints(dev);
+ 	if (ret)
+ 		return ret;
+@@ -526,9 +529,6 @@ static int ni6501_auto_attach(struct com
+ 	if (ret)
+ 		return ret;
  
--	list_del(&entry->list);
-+	p = entry->parent;
-+	if (p) {
-+		mutex_lock(&p->access);
-+		list_del(&entry->list);
-+		mutex_unlock(&p->access);
-+	}
- 	kfree(entry->name);
- 	if (entry->private_free)
- 		entry->private_free(entry);
+-	mutex_init(&devpriv->mut);
+-	usb_set_intfdata(intf, devpriv);
+-
+ 	ret = comedi_alloc_subdevices(dev, 2);
+ 	if (ret)
+ 		return ret;
 
 
