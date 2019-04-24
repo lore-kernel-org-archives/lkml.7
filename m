@@ -2,201 +2,151 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB85CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827E5C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD47621900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:56:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="YyHb2jvd";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="VegFM5I0"
+	by mail.kernel.org (Postfix) with ESMTP id 5E08221901
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731978AbfDXP4i (ORCPT
+        id S1731988AbfDXP5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:56:38 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:52702 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731094AbfDXP4i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:56:38 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OFndmL019190;
-        Wed, 24 Apr 2019 08:56:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=Xa2dPiiwXMz1Gb0mDzME4bEaOTFZpcWKeHFwNIWtnc8=;
- b=YyHb2jvdn9QKo49grlG1SK2cE/mdiWl1KaaouK8boZnUoj9IwLdvkJ7ssYGK9Onimpvc
- zBJMAvhwJ9L07THef88H1SNtDT6Dcz/xJhG7CfDu4z3H+P9xcg7L5m8eVhmW9ozQiCW5
- UhroovSQ4+9twnS6FAYL9NbH8GrpU2ty1rZcoTjRWCrw8tXeNj9qchdqwVr8g4ZQxCsY
- Ul5kxn58DZBFfH07DBAO49iMR5o4BOKDoDODQ+Im0mdKFWlRH7UAslo/lKEJh+e4RKXh
- kSqgUTLiyB5lG3y6dURaTCxXjzWLZj4Thg9dsTRn5ESCrJ/ORiNSBP1RJYT5CMIU1VJy bQ== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2s2nnjh5x1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 24 Apr 2019 08:56:30 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 24 Apr
- 2019 08:56:28 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.52) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 24 Apr 2019 08:56:27 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xa2dPiiwXMz1Gb0mDzME4bEaOTFZpcWKeHFwNIWtnc8=;
- b=VegFM5I0W7hvWVY3R4mXqmvAbdYlv5Daw+VcDxvExPiVSoUPpJZs8rW3F9e3xxwmXyMbx5L5/jX5zZ5cBQ/fSdZc6NKSiC5YbjG445dgXMVsS4cjmxxCOm0gFBfy8HwYZFhcO8TqSmEAwz3didU0PMYRrtvO4+LzuHvxq+ksCYk=
-Received: from MN2PR18MB2527.namprd18.prod.outlook.com (20.179.82.202) by
- MN2PR18MB2573.namprd18.prod.outlook.com (20.179.84.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Wed, 24 Apr 2019 15:56:22 +0000
-Received: from MN2PR18MB2527.namprd18.prod.outlook.com
- ([fe80::1ca6:aae9:ec4a:d4e7]) by MN2PR18MB2527.namprd18.prod.outlook.com
- ([fe80::1ca6:aae9:ec4a:d4e7%3]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
- 15:56:22 +0000
-From:   Saurav Kashyap <skashyap@marvell.com>
-To:     Yue Haibing <yuehaibing@huawei.com>,
-        "QLogic-Storage-Upstream@cavium.com" 
-        <QLogic-Storage-Upstream@cavium.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH -next] scsi: qedf: remove set but not used variables
-Thread-Topic: [PATCH -next] scsi: qedf: remove set but not used variables
-Thread-Index: AQHU+eLLAYbZK12h3Uqr02S63kg9Z6ZL1OyA
-Date:   Wed, 24 Apr 2019 15:56:22 +0000
-Message-ID: <D8E684C7.18978%skashyap@marvell.com>
-References: <20190423144138.20428-1-yuehaibing@huawei.com>
-In-Reply-To: <20190423144138.20428-1-yuehaibing@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [114.143.185.87]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 755d7a05-8f2a-4dfb-7050-08d6c8cd6648
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR18MB2573;
-x-ms-traffictypediagnostic: MN2PR18MB2573:
-x-microsoft-antispam-prvs: <MN2PR18MB2573A57B069241B41BD39805D23C0@MN2PR18MB2573.namprd18.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(376002)(366004)(346002)(13464003)(189003)(199004)(53936002)(71200400001)(6512007)(316002)(54906003)(4326008)(110136005)(6246003)(256004)(14444005)(6436002)(71190400001)(97736004)(305945005)(81166006)(8936002)(68736007)(7736002)(81156014)(8676002)(6486002)(2501003)(14454004)(3846002)(6116002)(76176011)(2906002)(36756003)(478600001)(229853002)(446003)(6506007)(66066001)(73956011)(66946007)(5660300002)(66476007)(2616005)(99286004)(11346002)(91956017)(25786009)(476003)(66446008)(64756008)(66556008)(76116006)(486006)(86362001)(186003)(53546011)(26005)(102836004)(2201001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2573;H:MN2PR18MB2527.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: n1G73nBh5A3SYLl7KlQjeDlrrC2rMKHACPH1I9NOgp7p2SD1gy/SWZM8D3e/6Q74zcBZfjXlhZQgFocaP167LKEKH0VnOcvMJtJZjZM4zst9fyEa0LgBYl6QNVRIBmzXKCMS+xWTd5JvavDTOZGHilfceodijLyS/+pMQW3o6Efp3K6TEeQDV8WiOMn9mRuNZRWPf4xieSRSoutJ7cCZt8oJ1OEVA2ZzpZq4wiq0Nkts0yiKhhFx2U20qv3PmkuLJosOxXcDwcXZWghLEC3jMrxjnfa7PyvmjIHPSS/qWVYyBH6FfSsETvjam9B/bcRpaOuwbTyTBdwMLIr1PFXRTGVrdOPITDO0+kG7vDNqsq9/D41yTzJr6k3ZOp86XeyqVyylQC8F/h81nH6bEqHV61cipYcSlXyynrMgCYDpuA8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <688F04A98CCD0149A78E5273B6B00368@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 24 Apr 2019 11:57:00 -0400
+Received: from foss.arm.com ([217.140.101.70]:47682 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729027AbfDXP47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 11:56:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06188A78;
+        Wed, 24 Apr 2019 08:56:59 -0700 (PDT)
+Received: from [10.1.194.42] (e108754-lin.cambridge.arm.com [10.1.194.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 854B43F557;
+        Wed, 24 Apr 2019 08:56:56 -0700 (PDT)
+Subject: Re: [PATCH V3 3/3] thermal/cpu-cooling: Update thermal pressure in
+ case of a maximum frequency capping
+To:     Thara Gopinath <thara.gopinath@linaro.org>,
+        Quentin Perret <quentin.perret@arm.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        viresh.kumar@linaro.org, javi.merino@kernel.org,
+        edubezval@gmail.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
+        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
+References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+ <1555443521-579-4-git-send-email-thara.gopinath@linaro.org>
+ <20190418094833.owlobrx6x5gclvhy@queper01-lin> <5CBF93F6.8000109@linaro.org>
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+Message-ID: <84e64cb1-db2d-6519-e0c4-97779079d96d@arm.com>
+Date:   Wed, 24 Apr 2019 16:56:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 755d7a05-8f2a-4dfb-7050-08d6c8cd6648
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 15:56:22.4044
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2573
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_10:,,
- signatures=0
+In-Reply-To: <5CBF93F6.8000109@linaro.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi guys,
 
------Original Message-----
-From: <linux-scsi-owner@vger.kernel.org> on behalf of Yue Haibing
-<yuehaibing@huawei.com>
-Date: Tuesday, 23 April 2019 at 8:11 PM
-To: "QLogic-Storage-Upstream@cavium.com"
-<QLogic-Storage-Upstream@cavium.com>, "jejb@linux.ibm.com"
-<jejb@linux.ibm.com>, "martin.petersen@oracle.com"
-<martin.petersen@oracle.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, YueHaibing
-<yuehaibing@huawei.com>
-Subject: [PATCH -next] scsi: qedf: remove set but not used variables
-Resent-From: <Saurav.Kashyap@cavium.com>
-Resent-Date: Tuesday, 23 April 2019 at 8:12 PM
+On 23/04/2019 23:38, Thara Gopinath wrote:
+> On 04/18/2019 05:48 AM, Quentin Perret wrote:
+>> On Tuesday 16 Apr 2019 at 15:38:41 (-0400), Thara Gopinath wrote:
+>>> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+>>> @@ -177,6 +178,9 @@ static int cpufreq_thermal_notifier(struct notifier_block *nb,
+>>>  
+>>>  		if (policy->max > clipped_freq)
+>>>  			cpufreq_verify_within_limits(policy, 0, clipped_freq);
+>>> +
+>>> +		sched_update_thermal_pressure(policy->cpus,
+>>> +				policy->max, policy->cpuinfo.max_freq);
+>>
+>> Is this something we could do this CPUFreq ? Directly in
+>> cpufreq_verify_within_limits() perhaps ?
+>>
+>> That would re-define the 'thermal pressure' framework in a more abstract
+>> way and make the scheduler look at 'frequency capping' events,
+>> regardless of the reason for capping.
+>>
+>> That would reflect user-defined frequency constraint into cpu_capacity,
+>> in addition to the thermal stuff. I'm not sure if there is another use
+>> case for frequency capping ?
+> Hi Quentin,
+> Thanks for the review. Sorry for the delay in response as I was on
+> vacation for the past few days.
+> I think there is one major difference between user-defined frequency
+> constraints and frequency constraints due to thermal events in terms of
+> the time period the system spends in the the constraint state.
+> Typically, a user constraint lasts for seconds if not minutes and I
+> think in this case cpu_capacity_orig should reflect this constraint and
+> not cpu_capacity like this patch set. Also, in case of the user
+> constraint, there is possibly no need to accumulate and average the
+> capacity constraints and instantaneous values can be directly applied to
+> cpu_capacity_orig. On the other hand thermal pressure is more spiky and
+> sometimes in the order of ms and us requiring the accumulating and
+> averaging.
 
->From: YueHaibing <yuehaibing@huawei.com>
->
->Fixes gcc '-Wunused-but-set-variable' warnings:
->
->drivers/scsi/qedf/qedf_els.c: In function 'qedf_process_els_compl':
->drivers/scsi/qedf/qedf_els.c:149:20: warning: variable 'sc_cmd' set but
->not used [-Wunused-but-set-variable]
->drivers/scsi/qedf/qedf_els.c:148:28: warning: variable 'task_ctx' set but
->not used [-Wunused-but-set-variable]
->drivers/scsi/qedf/qedf_els.c: In function 'qedf_send_srr':
->drivers/scsi/qedf/qedf_els.c:612:6: warning: variable 'sid' set but not
->used [-Wunused-but-set-variable]
->
->They are never used since introduction.
->
->Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->---
-> drivers/scsi/qedf/qedf_els.c | 10 +---------
-> 1 file changed, 1 insertion(+), 9 deletions(-)
->
->diff --git a/drivers/scsi/qedf/qedf_els.c b/drivers/scsi/qedf/qedf_els.c
->index 1781e73..d900c89e 100644
->--- a/drivers/scsi/qedf/qedf_els.c
->+++ b/drivers/scsi/qedf/qedf_els.c
->@@ -145,9 +145,6 @@ static int qedf_initiate_els(struct qedf_rport
->*fcport, unsigned int op,
-> void qedf_process_els_compl(struct qedf_ctx *qedf, struct fcoe_cqe *cqe,
-> 	struct qedf_ioreq *els_req)
-> {
->-	struct fcoe_task_context *task_ctx;
->-	struct scsi_cmnd *sc_cmd;
->-	uint16_t xid;
-> 	struct fcoe_cqe_midpath_info *mp_info;
->=20
-> 	QEDF_INFO(&(qedf->dbg_ctx), QEDF_LOG_ELS, "Entered with xid =3D 0x%x"
->@@ -158,10 +155,6 @@ void qedf_process_els_compl(struct qedf_ctx *qedf,
->struct fcoe_cqe *cqe,
-> 	/* Kill the ELS timer */
-> 	cancel_delayed_work(&els_req->timeout_work);
->=20
->-	xid =3D els_req->xid;
->-	task_ctx =3D qedf_get_task_mem(&qedf->tasks, xid);
->-	sc_cmd =3D els_req->sc_cmd;
->-
-> 	/* Get ELS response length from CQE */
-> 	mp_info =3D &cqe->cqe_info.midpath_info;
-> 	els_req->mp_req.resp_len =3D mp_info->data_placement_size;
->@@ -609,7 +602,7 @@ static int qedf_send_srr(struct qedf_ioreq
->*orig_io_req, u32 offset, u8 r_ctl)
-> 	struct qedf_rport *fcport;
-> 	struct fc_lport *lport;
-> 	struct qedf_els_cb_arg *cb_arg =3D NULL;
->-	u32 sid, r_a_tov;
->+	u32 r_a_tov;
-> 	int rc;
->=20
-> 	if (!orig_io_req) {
->@@ -635,7 +628,6 @@ static int qedf_send_srr(struct qedf_ioreq
->*orig_io_req, u32 offset, u8 r_ctl)
->=20
-> 	qedf =3D fcport->qedf;
-> 	lport =3D qedf->lport;
->-	sid =3D fcport->sid;
-> 	r_a_tov =3D lport->r_a_tov;
->=20
-> 	QEDF_INFO(&(qedf->dbg_ctx), QEDF_LOG_ELS, "Sending SRR orig_io=3D%p, "
->--=20
->2.7.0
+I think we can't make any assumptions in regards to the intentions of
+the user when restricting the OPP range though the cpufreq interface,
+but it would still be nice to do something and reflecting it as thermal
+pressure would be a good start. It might not be due to thermal, but it
+is a capacity restriction that would have the same result. Also, if the
+user has the ability to tune the decay period he has the control over
+the behavior of the signal. Given that currently there isn't a smarter
+mechanism (modifying capacity orig, re-normalising the capacity range)
+for long-term capping, even treating it as short-term capping is a good
+start. But this is a bigger exercise and it needs thorough
+consideration, so it could be skipped, in my opinion, for now.. 
 
-Thanks,
-Acked-by: Saurav Kashyap <skashyap@marvell.com>
->
->
+Also, if we want to stick with the "definition", userspace would still
+be able to reflect thermal pressure though the thermal limits interface
+by setting the cooling device state, which will be reflected in this
+update as well. So userspace would have a mechanism to reflect thermal
+pressure.
+
+One addition.. I like that the thermal pressure framework is not tied to
+cpufreq. There are firmware solutions that do not bother informing
+cpufreq of limits being changed, and therefore all of this could be
+skipped. But any firmware driver could call sched_update_thermal_pressure
+on notifications for limits changing from firmware, which is an
+important feature.
+
+>>
+>> Perhaps the Intel boost stuff could be factored in there ? That is,
+>> at times when the boost freq is not reachable capacity_of() would appear
+>> smaller ... Unless this wants to be reflected instantaneously ?
+> Again, do you think intel boost is more applicable to be reflected in
+> cpu_capacity_orig and not cpu_capacity?
+>>
+>> Thoughts ?
+>> Quentin
+>>
+> 
+
+The changes here would happen even faster than thermal capping, same as
+other restrictions imposed by firmware, so it would not seem right to me
+to reflect it in capacity_orig. Reflecting it as thermal pressure is
+another matter, which I'd say it should be up to the client. The big
+disadvantage I'd see for this is coping with decisions made while being
+capped, when you're not capped any longer, and the other way around. I
+believe these changes would happen too often and they will not happen in
+a ramp-up/ramp-down behavior that we expect from thermal mitigation.
+That's why I believe averaging/regulation of the signal works well in
+this case, and it might not for power related fast restrictions.
+
+But given these three cases above, it might be that the ideal solution
+is for this framework to be made more generic and for each client to be
+able to obtain and configure a pressure signal to be reflected
+separately in the capacity of each CPU.
+
+My two pennies' worth,
+Ionela.
+
+
 
