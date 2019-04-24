@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A19FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298BEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E2A21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD4821773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:15:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="osxIzQcK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VvA2TxBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfDXXPP (ORCPT
+        id S1727900AbfDXXPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 19:15:15 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37841 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727711AbfDXXPM (ORCPT
+        Wed, 24 Apr 2019 19:15:39 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36604 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727743AbfDXXPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 19:15:12 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v13so5903218ljk.4;
-        Wed, 24 Apr 2019 16:15:10 -0700 (PDT)
+        Wed, 24 Apr 2019 19:15:14 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u17so16013477lfi.3;
+        Wed, 24 Apr 2019 16:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mjGcbPS9GbZBCmmz8x+BiFOIrBo2dU/k3TmS0p8J6hA=;
-        b=osxIzQcKOcnA1jszkl/XbrHO+ZTyDRhO7PXwLyfVJe9KXcmEvfBJzzF1D5INu9Ap8l
-         Oy8hrGKd+hCahKHb2Gz/7xDKNVSiv1sDUJ7fBXx+LJQwV3Jpmk3CaMByt7vBtKrU2NBQ
-         34RPiFsddzjFTTWpvMz0ojjZjBBVYgjIXi2qwzSCBhJn4YchZi+bV++UcDhCGe8ubTxR
-         PLqmm80lTXuZ80Ryuipknvl/HDzW2MdlzJ1gU8mtXL/HHsQlkTjEfBbGxmq+2rMHHElS
-         ErThbrBD5QlJ2/Rkki8VDRmg6ZtqEMDHRKycz/jaKxZfpfJxpCV0hrekM+ywdPw55Oij
-         FWsQ==
+        bh=yogvJdlcRlyk/Ntfpj1OZayRB/FKN7aLgT26Ew/zgfw=;
+        b=VvA2TxBbaeVQ8ePGe1gr9u5EP8N4rsRwrp4AwhEGNG9DOAUdZEucZLqwZymSl3/K7K
+         vaH+01yGOs+XcRRrlbBdhXwJIksauORmgzpyN9ZCvviMuGMD3UOdt55eblhP7ioYWbTn
+         Rmh2JY531kTIhocPk1zm3gyMzZHSnMGyQgmpgGOmbKDOyOtuwDblr2PdbhBHKsDlB5L2
+         sDd2hZ3BKSIyx3m0ckj1jg+MP0mPKtcW4kHZo8QTSzeaNkMyXhPd0mQZOqSMr+R5VO7U
+         AavD4/vAEbnEWPI16IfgfDCT/T2eiwjDXOfYkX6/klCsssjJVdivJZ+MgLHoLhPeY5pD
+         jkBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mjGcbPS9GbZBCmmz8x+BiFOIrBo2dU/k3TmS0p8J6hA=;
-        b=YIZUzmDMZ375uYgXe7GqNGRrzey2olDNvSlr3r5S422Ih4HqkVfTAnq9JKa6KB9jw4
-         lIKpxS+xWAMTw5SlvlV9JrTZhWCcyEno6ItUTHccHVgDIldv9ni1ego2t0QQQtfyjTii
-         nRE9RKgxo6Z+CwI/SSI/FJkbc0/DoWxQvSzOkNNLde1dH78kMPS/Fm+5Q+l1qgJfRsg/
-         x1C90ptLigt5jyCDB9+4L+tswVwk8cgUGD7/wPgixfEaF4bxtBPUT1ncjvtSJYQAne1i
-         yPWZgQDa4+BTWUdlOwhrw3gjeKNvpt2HlR68jdWQApCag80ao9VCu8EaYoB1PlHmdo2h
-         0YyQ==
-X-Gm-Message-State: APjAAAWAu3rW6q1ANb6S47Ey7Oyz3z1doJc+NRE3cFZelusMX8/4CoNA
-        ynzmFjsqeyXFlYRAdhmLOig=
-X-Google-Smtp-Source: APXvYqzVsurkeVg6PSf8QSINv3e9cDiR1CwnVXqvA72A71sQzQbmZoDINpRhdPvNYVS+LlLBAEak8g==
-X-Received: by 2002:a2e:a0c4:: with SMTP id f4mr1225684ljm.100.1556147710278;
-        Wed, 24 Apr 2019 16:15:10 -0700 (PDT)
+        bh=yogvJdlcRlyk/Ntfpj1OZayRB/FKN7aLgT26Ew/zgfw=;
+        b=iWcKdpuxQOawloze1K7xxuHheGniM/7rVV88Llf2HC8pAhXLX+bY/Su6scK8AZAmML
+         mSDNYcX9myWVTF7TJ6GSsZTGoIl0JF1klfkeUOs5VFMG9ioATFPD/8g3Nz4D7WgGf+lV
+         fZ0f67TQVZoDMzTGPdIEAYu3IYOm4j5rvhfmM5SGCGB998+8TloOmv0wQnOMNtEX2iWJ
+         GwhhqWUSD++2Mjt45WKPal/1O8X24ythZj0b9TsANseg9i5q8Y7y88A62IyiuDmgvWWQ
+         KOPHpZjR3P8GL6+d00zTP+OWYpV2eEGp6+Mbg3K8Ldq61s6R45dX9nxOvc5sk48l9Fbv
+         lwCQ==
+X-Gm-Message-State: APjAAAXdpAcojCI2LEr9KgFIGxyqx4i5imozFR9S8XYY/8vpIlMFuUfM
+        Zzl8TGqFb2elJck/pNuXwzc=
+X-Google-Smtp-Source: APXvYqzL8cxr3mOdqIuBmWhYJUhVd+UP0iF14LtVP2Xc9Je/1sKsrln4Uc35gLhQ+I9EeSsXSymkRQ==
+X-Received: by 2002:ac2:5203:: with SMTP id a3mr18675859lfl.111.1556147712634;
+        Wed, 24 Apr 2019 16:15:12 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id j13sm830192lfb.34.2019.04.24.16.15.09
+        by smtp.gmail.com with ESMTPSA id j13sm830192lfb.34.2019.04.24.16.15.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 16:15:09 -0700 (PDT)
+        Wed, 24 Apr 2019 16:15:12 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -63,9 +63,9 @@ To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/7] clocksource/drivers/tegra: Reset hardware state on init
-Date:   Thu, 25 Apr 2019 02:14:40 +0300
-Message-Id: <20190424231444.20876-4-digetx@gmail.com>
+Subject: [PATCH v1 5/7] clocksource/drivers/tegra: Release all IRQ's on request_irq() error
+Date:   Thu, 25 Apr 2019 02:14:42 +0300
+Message-Id: <20190424231444.20876-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424231444.20876-1-digetx@gmail.com>
 References: <20190424231444.20876-1-digetx@gmail.com>
@@ -76,28 +76,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reset timer's hardware state to ensure that initially it is in a
-predictable state.
+Release all requested IRQ's on the request error to properly clean up
+allocated resources.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/clocksource/timer-tegra20.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/clocksource/timer-tegra20.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/clocksource/timer-tegra20.c b/drivers/clocksource/timer-tegra20.c
-index 508ca4cdbc60..01d713f20a85 100644
+index d171a214f066..df3139ed7157 100644
 --- a/drivers/clocksource/timer-tegra20.c
 +++ b/drivers/clocksource/timer-tegra20.c
-@@ -145,6 +145,9 @@ static int tegra_timer_setup(unsigned int cpu)
- {
- 	struct timer_of *to = per_cpu_ptr(&tegra_to, cpu);
+@@ -316,7 +316,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20)
+ 			pr_err("%s: can't map IRQ for CPU%d\n",
+ 			       __func__, cpu);
+ 			ret = -EINVAL;
+-			goto out;
++			goto out_irq;
+ 		}
  
-+	writel(0, timer_of_base(to) + TIMER_PTV);
-+	writel(TIMER_PCR_INTR_CLR, timer_of_base(to) + TIMER_PCR);
-+
- 	irq_force_affinity(to->clkevt.irq, cpumask_of(cpu));
- 	enable_irq(to->clkevt.irq);
- 
+ 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
+@@ -326,7 +326,8 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20)
+ 		if (ret) {
+ 			pr_err("%s: cannot setup irq %d for CPU%d\n",
+ 				__func__, cpu_to->clkevt.irq, cpu);
+-			ret = -EINVAL;
++			irq_dispose_mapping(cpu_to->clkevt.irq);
++			cpu_to->clkevt.irq = 0;
+ 			goto out_irq;
+ 		}
+ 	}
 -- 
 2.21.0
 
