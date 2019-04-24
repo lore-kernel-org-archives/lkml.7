@@ -6,49 +6,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D839C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 475C9C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F84321900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A74218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116757;
-	bh=gy7xSnGlEeZFhACBoRymAyoLr5hNelFg28KSIuaSbXc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kEpc2hvtOZvj7fCICz6mBoYFUqj6N9PVkJ+J2+cLWh29Wze+O3XRd69LZdRpsWoWo
-	 3jgCbSeK26RTM6fpBre61jmVjmMOvI9UEoDO39zEcOFG5QJmgvJ3fAnhENgwogEyMT
-	 o7C/eFXcw/f0GyYP447NweylFQOr34EumnCZlt+s=
+	s=default; t=1556116763;
+	bh=4CR2co9QDeM2sqBObX24OTDizYn3UMzcVDWciRdYp7Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=f4RG1od7vV9bKeFkgaHRnIlosdud74K8xLmiOKtD6x4bacdIVdf5gN49NLfpVh9KR
+	 DigQ+diluLPEgv0VMy1a4xNHqjgnZTETTRjA2VW62y/36BBke268UHFHU4HcphdvXI
+	 snQyViakV/SJiknBU5nMDyXe3/qM1FymsrLMiiLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbfDXOjQ (ORCPT
+        id S1731124AbfDXOjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:39:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38864 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:39:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731250AbfDXOfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:35:02 -0400
+        id S1731484AbfDXOjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:39:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD4C72089F;
-        Wed, 24 Apr 2019 14:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6CE6218FE;
+        Wed, 24 Apr 2019 14:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116502;
-        bh=gy7xSnGlEeZFhACBoRymAyoLr5hNelFg28KSIuaSbXc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lNaMTaUn1lPDRRN6W5C9stvSF+lulCxrwU3xSHRByQFWT7xInZ+LObx/rJLdPqpaf
-         f2RfB8Z1kNPfaozSvtjBpr8A7ag4vVt10f7NhK+ETINCmnqx28YymgpNYfy/LtdoAb
-         WYOjAv+1k/lLmV++B2Ck3+L8wbTNaXUBZjrU+jGU=
+        s=default; t=1556116755;
+        bh=4CR2co9QDeM2sqBObX24OTDizYn3UMzcVDWciRdYp7Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Fqy9+QLf75atkVNo0nux+CqrBqCiQYz78nzFnpbQTVBg75r3lClv6xYAKED4kXvON
+         5n9a0BBt8UQRvJqbJhNd5340r6jGze1vnXvAX7gSqZBI4Gz7/zJ2JG2wOVZpVtvQou
+         Hso+3Gz/VUYQgvs794IPO6FqucplFCFHjNLGnJlA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 32/66] net: stmmac: don't log oversized frames
-Date:   Wed, 24 Apr 2019 10:33:06 -0400
-Message-Id: <20190424143341.27665-32-sashal@kernel.org>
+Cc:     "Leonidas P. Papadakos" <papadakospan@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 01/52] arm64: dts: rockchip: fix rk3328-roc-cc gmac2io tx/rx_delay
+Date:   Wed, 24 Apr 2019 10:38:19 -0400
+Message-Id: <20190424143911.28890-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
-References: <20190424143341.27665-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,33 +57,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
 
-[ Upstream commit 057a0c5642a2ff2db7c421cdcde34294a23bf37b ]
+[ Upstream commit 924726888f660b2a86382a5dd051ec9ca1b18190 ]
 
-This is log is harmful as it can trigger multiple times per packet. Delete
-it.
+The rk3328-roc-cc board exhibits tx stability issues with large packets,
+as does the rock64 board, which was fixed with this patch
+https://patchwork.kernel.org/patch/10178969/
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+A similar patch was merged for the rk3328-roc-cc here
+https://patchwork.kernel.org/patch/10804863/
+but it doesn't include the tx/rx_delay tweaks, and I find that they
+help with an issue where large transfers would bring the ethernet
+link down, causing a link reset regularly.
+
+Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/norm_desc.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-index c55a9815b394..b7dd4e3c760d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-@@ -91,8 +91,6 @@ static int ndesc_get_rx_status(void *data, struct stmmac_extra_stats *x,
- 		return dma_own;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index 246c317f6a68..91061d9cf78b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -94,8 +94,8 @@
+ 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+-	tx_delay = <0x25>;
+-	rx_delay = <0x11>;
++	tx_delay = <0x24>;
++	rx_delay = <0x18>;
+ 	status = "okay";
+ };
  
- 	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
--		pr_warn("%s: Oversized frame spanned multiple buffers\n",
--			__func__);
- 		stats->rx_length_errors++;
- 		return discard_frame;
- 	}
 -- 
 2.19.1
 
