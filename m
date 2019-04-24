@@ -2,143 +2,97 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10699C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68E4C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CCA208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C0B21900
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:11:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ty/fWLcM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GsxgiUJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732448AbfDXQLA (ORCPT
+        id S1732481AbfDXQLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:11:00 -0400
-Received: from mail-eopbgr780077.outbound.protection.outlook.com ([40.107.78.77]:3916
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731419AbfDXQKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:10:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p/pd/hLJYpa1XzMk9fT2x8xvMuPZix0TDj+IlVUX4r4=;
- b=ty/fWLcM7sO/fjZbThoUIZ4gENB6c+9f0kF+oxK98wpjHvE0g5106Dh8N5eASGKVCWcpYyD9LDLQTggNrUhvuKNLhbAzqJDNUm4Mvo2Ao+V5OCWnlxxaYPZg2QB5t8QVG4MfWlHJf+n2x/MC/QnsNUoTtmOhCrciMRkPdQEtZNg=
-Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.116.31) by
- DM6PR12MB2907.namprd12.prod.outlook.com (20.179.71.213) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Wed, 24 Apr 2019 16:10:02 +0000
-Received: from DM6PR12MB2682.namprd12.prod.outlook.com
- ([fe80::9183:846f:a93e:9a43]) by DM6PR12MB2682.namprd12.prod.outlook.com
- ([fe80::9183:846f:a93e:9a43%5]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
- 16:10:02 +0000
-From:   "Singh, Brijesh" <brijesh.singh@amd.com>
-To:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "Singh, Brijesh" <brijesh.singh@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v1 03/10] KVM: SVM: Add KVM_SEV_SEND_FINISH command
-Thread-Topic: [RFC PATCH v1 03/10] KVM: SVM: Add KVM_SEV_SEND_FINISH command
-Thread-Index: AQHU+rgsBTgokxjevkCpvGHOaKLVWA==
-Date:   Wed, 24 Apr 2019 16:10:02 +0000
-Message-ID: <20190424160942.13567-4-brijesh.singh@amd.com>
-References: <20190424160942.13567-1-brijesh.singh@amd.com>
-In-Reply-To: <20190424160942.13567-1-brijesh.singh@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0601CA0019.namprd06.prod.outlook.com
- (2603:10b6:803:2f::29) To DM6PR12MB2682.namprd12.prod.outlook.com
- (2603:10b6:5:4a::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=brijesh.singh@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d889db59-9568-4c94-ab42-08d6c8cf4eb9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB2907;
-x-ms-traffictypediagnostic: DM6PR12MB2907:
-x-microsoft-antispam-prvs: <DM6PR12MB2907270C1C9348A25BE81B71E53C0@DM6PR12MB2907.namprd12.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(366004)(396003)(376002)(346002)(189003)(199004)(1730700003)(99286004)(2501003)(73956011)(478600001)(11346002)(6506007)(76176011)(14454004)(6116002)(52116002)(386003)(476003)(25786009)(66946007)(486006)(4326008)(71200400001)(66446008)(66556008)(3846002)(66476007)(64756008)(1076003)(66574012)(71190400001)(446003)(186003)(2616005)(5660300002)(2351001)(102836004)(97736004)(26005)(14444005)(86362001)(6512007)(8676002)(66066001)(8936002)(68736007)(2906002)(50226002)(256004)(81156014)(305945005)(36756003)(316002)(6436002)(54906003)(7736002)(5640700003)(81166006)(53936002)(6916009)(6486002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2907;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BIKkIY9oikRrOvddm1UmKYzoOVbPMic2ghADFxW1pKeeIy5neREJ0rK8EE0tFr5PLs3EkhzWxDkzM/Z0ZdV8r9yeJGTnNb2mPijWEgqNanlmLD3R3hdyNNy+0E8W8WEyXydPs1CVjSBJcGCrMMM6MwdOUFywR6zCiMceP8G3m0GGGyO/8ruQYot3CWLpkGl0gjRLqQvh4QljT3ds0tAMVkvBBurwRmGXZ1l1CX+aGY5CUvbx4swYSr9PgCJhdifD+OnSm72TGHWf5y59m45yzFy+TVOx8o5Q4ev1acC0Kfgx/fkBd7hZWVsY0fxnLAciGiNa3B3GHM5TOWBm6YG/yXe7q6A5rNwFwewsN46BbAZsmdOCJgUMryYHhy+Z3XP1lrEEy5p+fyprcTm6J+BBpfZxVpttpRZ1E1DVCA5QuMA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6E30D6C83E5FE74AAAFBB44FC32F4EC4@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 12:11:13 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38148 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730858AbfDXQKF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:10:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aGRH97kvFpdAENunhndp8axPmE0n5u7e8fWS/q4nDsM=; b=GsxgiUJwrmsabjCkPrtiUVsPn
+        nLgqRus+XOFr3SgrrTWMGLKZ5NrSp1bM7/F9KS0mk5iiwgtpftVWBCfeUpWF1zlw12DnLHqo0t3yB
+        0TSuPZBoFvnECHN0c4AXuuOUcVgTS9sbFt/0UIE5WKXgFJd3PlfbXriJjLQ1QoT14fkL9w5Vgptc4
+        GR2MdAc2DJ5dzC/eI2rgez+KIG2ovtd0cVEXZyh5XI2aqhMeW0klX2Q3QroA8JLxq+E1abD3koYxY
+        0fYnwVQWSLfiMSgz+/eaCk7kk05YeuogBOaJgPMcs8sMAHjb4s9UvFNhgaNs2ErzsbrkAVpNLagGx
+        ub45Lj/sQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJKT5-0005NC-Jz; Wed, 24 Apr 2019 16:09:55 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3B64120D0A202; Wed, 24 Apr 2019 18:09:54 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 18:09:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH] futex: Consolidate duplicated timer setup code
+Message-ID: <20190424160954.GP11158@hirez.programming.kicks-ass.net>
+References: <20190424153651.15002-1-longman@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d889db59-9568-4c94-ab42-08d6c8cf4eb9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 16:10:02.7982
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2907
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424153651.15002-1-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIGNvbW1hbmQgaXMgdXNlZCB0byBmaW5haWxpemUgdGhlIGVuY3J5cHRpb24gY29udGV4dCBj
-cmVhdGVkIHdpdGgNCktWTV9TRVZfU0VORF9TVEFSVCBjb21tYW5kLg0KDQpDYzogVGhvbWFzIEds
-ZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+DQpDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhh
-dC5jb20+DQpDYzogIkguIFBldGVyIEFudmluIiA8aHBhQHp5dG9yLmNvbT4NCkNjOiBQYW9sbyBC
-b256aW5pIDxwYm9uemluaUByZWRoYXQuY29tPg0KQ2M6ICJSYWRpbSBLcsSNbcOhxZkiIDxya3Jj
-bWFyQHJlZGhhdC5jb20+DQpDYzogSm9lcmcgUm9lZGVsIDxqb3JvQDhieXRlcy5vcmc+DQpDYzog
-Qm9yaXNsYXYgUGV0a292IDxicEBzdXNlLmRlPg0KQ2M6IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxl
-bmRhY2t5QGFtZC5jb20+DQpDYzogeDg2QGtlcm5lbC5vcmcNCkNjOiBrdm1Admdlci5rZXJuZWwu
-b3JnDQpDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU2lnbmVkLW9mZi1ieTogQnJp
-amVzaCBTaW5naCA8YnJpamVzaC5zaW5naEBhbWQuY29tPg0KLS0tDQogLi4uL3ZpcnR1YWwva3Zt
-L2FtZC1tZW1vcnktZW5jcnlwdGlvbi5yc3QgICAgIHwgIDggKysrKysrKw0KIGFyY2gveDg2L2t2
-bS9zdm0uYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDIzICsrKysrKysrKysrKysrKysr
-KysNCiAyIGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vdmlydHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdCBiL0RvY3Vt
-ZW50YXRpb24vdmlydHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdA0KaW5kZXggYTAy
-MDhlMTcxNDg5Li4wMDY4MzIyNTZhZTMgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL3ZpcnR1
-YWwva3ZtL2FtZC1tZW1vcnktZW5jcnlwdGlvbi5yc3QNCisrKyBiL0RvY3VtZW50YXRpb24vdmly
-dHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdA0KQEAgLTI4NSw2ICsyODUsMTQgQEAg
-UmV0dXJuczogMCBvbiBzdWNjZXNzLCAtbmVnYXRpdmUgb24gZXJyb3INCiAgICAgICAgICAgICAg
-ICAgX191MzIgdHJhbnNfbGVuOw0KICAgICAgICAgfTsNCiANCisxMi4gS1ZNX1NFVl9TRU5EX0ZJ
-TklTSA0KKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KKw0KK0FmdGVyIGNvbXBsZXRpb24gb2Yg
-dGhlIG1pZ3JhdGlvbiBmbG93LCB0aGUgS1ZNX1NFVl9TRU5EX0ZJTklTSCBjb21tYW5kIGNhbiBi
-ZQ0KK2lzc3VlZCBieSB0aGUgaHlwZXJ2aXNvciB0byBkZWxldGUgdGhlIGVuY3J5cHRpb24gY29u
-dGV4dC4NCisNCitSZXR1cm5zOiAwIG9uIHN1Y2Nlc3MsIC1uZWdhdGl2ZSBvbiBlcnJvcg0KKw0K
-IFJlZmVyZW5jZXMNCiA9PT09PT09PT09DQogDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3N2
-bS5jIGIvYXJjaC94ODYva3ZtL3N2bS5jDQppbmRleCBhMWNmZDM2ZDYxOTUuLjI2M2YzYzdkZWFl
-NyAxMDA2NDQNCi0tLSBhL2FyY2gveDg2L2t2bS9zdm0uYw0KKysrIGIvYXJjaC94ODYva3ZtL3N2
-bS5jDQpAQCAtNzE3Miw2ICs3MTcyLDI2IEBAIHN0YXRpYyBpbnQgc2V2X3NlbmRfdXBkYXRlX2Rh
-dGEoc3RydWN0IGt2bSAqa3ZtLCBzdHJ1Y3Qga3ZtX3Nldl9jbWQgKmFyZ3ApDQogCXJldHVybiBy
-ZXQ7DQogfQ0KIA0KK3N0YXRpYyBpbnQgc2V2X3NlbmRfZmluaXNoKHN0cnVjdCBrdm0gKmt2bSwg
-c3RydWN0IGt2bV9zZXZfY21kICphcmdwKQ0KK3sNCisJc3RydWN0IGt2bV9zZXZfaW5mbyAqc2V2
-ID0gJnRvX2t2bV9zdm0oa3ZtKS0+c2V2X2luZm87DQorCXN0cnVjdCBzZXZfZGF0YV9zZW5kX2Zp
-bmlzaCAqZGF0YTsNCisJaW50IHJldDsNCisNCisJaWYgKCFzZXZfZ3Vlc3Qoa3ZtKSkNCisJCXJl
-dHVybiAtRU5PVFRZOw0KKw0KKwlkYXRhID0ga3phbGxvYyhzaXplb2YoKmRhdGEpLCBHRlBfS0VS
-TkVMKTsNCisJaWYgKCFkYXRhKQ0KKwkJcmV0dXJuIC1FTk9NRU07DQorDQorCWRhdGEtPmhhbmRs
-ZSA9IHNldi0+aGFuZGxlOw0KKwlyZXQgPSBzZXZfaXNzdWVfY21kKGt2bSwgU0VWX0NNRF9TRU5E
-X0ZJTklTSCwgZGF0YSwgJmFyZ3AtPmVycm9yKTsNCisNCisJa2ZyZWUoZGF0YSk7DQorCXJldHVy
-biByZXQ7DQorfQ0KKw0KIHN0YXRpYyBpbnQgc3ZtX21lbV9lbmNfb3Aoc3RydWN0IGt2bSAqa3Zt
-LCB2b2lkIF9fdXNlciAqYXJncCkNCiB7DQogCXN0cnVjdCBrdm1fc2V2X2NtZCBzZXZfY21kOw0K
-QEAgLTcyMTksNiArNzIzOSw5IEBAIHN0YXRpYyBpbnQgc3ZtX21lbV9lbmNfb3Aoc3RydWN0IGt2
-bSAqa3ZtLCB2b2lkIF9fdXNlciAqYXJncCkNCiAJY2FzZSBLVk1fU0VWX1NFTkRfVVBEQVRFX0RB
-VEE6DQogCQlyID0gc2V2X3NlbmRfdXBkYXRlX2RhdGEoa3ZtLCAmc2V2X2NtZCk7DQogCQlicmVh
-azsNCisJY2FzZSBLVk1fU0VWX1NFTkRfRklOSVNIOg0KKwkJciA9IHNldl9zZW5kX2ZpbmlzaChr
-dm0sICZzZXZfY21kKTsNCisJCWJyZWFrOw0KIAlkZWZhdWx0Og0KIAkJciA9IC1FSU5WQUw7DQog
-CQlnb3RvIG91dDsNCi0tIA0KMi4xNy4xDQoNCg==
+On Wed, Apr 24, 2019 at 11:36:51AM -0400, Waiman Long wrote:
+> +static inline struct hrtimer_sleeper *
+> +futex_setup_timer(ktime_t *time, struct hrtimer_sleeper *timeout,
+> +		  int flags, u64 range_ns)
+> +{
+> +	if (!time)
+> +		return NULL;
+> +
+> +	hrtimer_init_on_stack(&timeout->timer, (flags & FLAGS_CLOCKRT) ?
+> +			      CLOCK_REALTIME : CLOCK_MONOTONIC,
+> +			      HRTIMER_MODE_ABS);
+> +	hrtimer_init_sleeper(timeout, current);
+> +	if (range_ns)
+> +		hrtimer_set_expires_range_ns(&timeout->timer, *time, range_ns);
+> +	else
+> +		hrtimer_set_expires(&timeout->timer, *time);
+
+That can be an unconditinoal:
+
+	hrtimer_set_expires_range_ns(&timeout->timer, *time, range_ns);
+
+See how:
+
+  timer->node.expires = ktime_add_safe(time, ns_to_ktime(delta));
+
+is the same as:
+
+  timer->node.expires = time;
+
+when !delta.
+
+> +
+> +	return timeout;
+> +}
+
+Anyway, looks good otherwise.
