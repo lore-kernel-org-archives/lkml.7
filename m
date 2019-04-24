@@ -2,51 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B92C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991F9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DDF218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9D4218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116986;
-	bh=dygBLwUCM9vUqYIe0dHS0x/ZmtQAt/b/LjkowTuyAhA=;
+	s=default; t=1556116996;
+	bh=yaJjvoi84Hs7O+Cf19wpVcaxRjhWD83LgWXnvr+8C74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wC3OqKC6f+A4elIb7SckUNnrE7pKxxZ3oz80eEz7Ho/Dwg5ufWn1oRDSABsWy+c9m
-	 fxqci6fytWTsbQqnXvL/f2Mto5zRZnOe1bIYibaV/o90gd+4EZ32H7fP7RIABKaQHd
-	 AhH2YhJ9C7DJSKrQxtiWDPr88os8Te2aHJTL1N6Q=
+	b=Mufh1VlymAbMAqqQ9ku7dwhQ6aLWxRSbKOVpXBhR8yjNnpFuho+lEKKECsjwW+oNw
+	 9uTPBWAPOnt14ugXUIQLwjDxhHZW4Kee+LVvBr2ri8bzBOHP6817n2REJrgt9XHcut
+	 ek8hk5jqu3d01PkwYYzGGJXPDtR/rIb8TSp6PFpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731308AbfDXOnF (ORCPT
+        id S1731926AbfDXOnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731930AbfDXOkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:40:24 -0400
+        id S1731922AbfDXOkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:40:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65AE421901;
-        Wed, 24 Apr 2019 14:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A669C21915;
+        Wed, 24 Apr 2019 14:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116823;
-        bh=dygBLwUCM9vUqYIe0dHS0x/ZmtQAt/b/LjkowTuyAhA=;
+        s=default; t=1556116820;
+        bh=yaJjvoi84Hs7O+Cf19wpVcaxRjhWD83LgWXnvr+8C74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=axcWMtwvjVRhGj6Yu05YpLerEJxmN3I7KNa9ZTxP4Gof4wrCVGZVhbOC0aEgdqPDO
-         0STVVf68OXOBTCh+9FSIU4D71gTGn+aUX+mn52CpS2bVXiDak+aCbQE2PqTHWggiUc
-         VWYmuSmYH7hoSKJ98RYxb5rcpNCAWGHm48zR1LtY=
+        b=FQes5UV3UIzy8ge2nzxAv38mE2KIwtshKZTgq801ar8RWk+SeHxyBXoVTr4f7B+X3
+         BETJrU1PKdGQGxeFWQMEO7Vxk2cE0yhNvGncJklv0qko3dk8C1vFo/4uaER6a+s1d/
+         RypVw+AmUy7XLC9FUOUIPZ+XnmtSmmC2LIAlLsfU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Louis Taylor <louis@kragniz.eu>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 31/52] vfio/pci: use correct format characters
-Date:   Wed, 24 Apr 2019 10:38:49 -0400
-Message-Id: <20190424143911.28890-31-sashal@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 30/52] HID: input: add mapping for Assistant key
+Date:   Wed, 24 Apr 2019 10:38:48 -0400
+Message-Id: <20190424143911.28890-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
 References: <20190424143911.28890-1-sashal@kernel.org>
@@ -59,81 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Louis Taylor <louis@kragniz.eu>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit 426b046b748d1f47e096e05bdcc6fb4172791307 ]
+[ Upstream commit ce856634af8cda3490947df8ac1ef5843e6356af ]
 
-When compiling with -Wformat, clang emits the following warnings:
+According to HUTRR89 usage 0x1cb from the consumer page was assigned to
+allow launching desktop-aware assistant application, so let's add the
+mapping.
 
-drivers/vfio/pci/vfio_pci.c:1601:5: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                ^~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1601:13: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                        ^~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1601:21: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                ^~~~~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1601:32: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                           ^~~~~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:5: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                ^~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:13: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                        ^~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:21: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                ^~~~~~~~~
-
-drivers/vfio/pci/vfio_pci.c:1605:32: warning: format specifies type
-      'unsigned short' but the argument has type 'unsigned int' [-Wformat]
-                                vendor, device, subvendor, subdevice,
-                                                           ^~~~~~~~~
-The types of these arguments are unconditionally defined, so this patch
-updates the format character to the correct ones for unsigned ints.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/378
-Signed-off-by: Louis Taylor <louis@kragniz.eu>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/hid-input.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index cddb453a1ba5..6cf00d9f512b 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1443,11 +1443,11 @@ static void __init vfio_pci_fill_ids(void)
- 		rc = pci_add_dynid(&vfio_pci_driver, vendor, device,
- 				   subvendor, subdevice, class, class_mask, 0);
- 		if (rc)
--			pr_warn("failed to add dynamic id [%04hx:%04hx[%04hx:%04hx]] class %#08x/%08x (%d)\n",
-+			pr_warn("failed to add dynamic id [%04x:%04x[%04x:%04x]] class %#08x/%08x (%d)\n",
- 				vendor, device, subvendor, subdevice,
- 				class, class_mask, rc);
- 		else
--			pr_info("add [%04hx:%04hx[%04hx:%04hx]] class %#08x/%08x\n",
-+			pr_info("add [%04x:%04x[%04x:%04x]] class %#08x/%08x\n",
- 				vendor, device, subvendor, subdevice,
- 				class, class_mask);
- 	}
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index a3916e58dbf5..e649940e065d 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -982,6 +982,7 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x1b8: map_key_clear(KEY_VIDEO);		break;
+ 		case 0x1bc: map_key_clear(KEY_MESSENGER);	break;
+ 		case 0x1bd: map_key_clear(KEY_INFO);		break;
++		case 0x1cb: map_key_clear(KEY_ASSISTANT);	break;
+ 		case 0x201: map_key_clear(KEY_NEW);		break;
+ 		case 0x202: map_key_clear(KEY_OPEN);		break;
+ 		case 0x203: map_key_clear(KEY_CLOSE);		break;
 -- 
 2.19.1
 
