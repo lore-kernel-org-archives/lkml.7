@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ECCC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030B3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A997A218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D292077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127070;
-	bh=WLn64TCrCVn/CGDSAYr7J5qAkULDqliUSBcZirV7cNo=;
+	s=default; t=1556127074;
+	bh=vmolo6M6b5hE+qQcXbMvReie0eA82nGKGJ7gKd/8Zgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iM3GuoYBvtLGN4B0sYYyksqQx0xTABe2oOT0AsyviO6zXgVssS11fMaiXLX91qGJA
-	 84w1xIMvYlxyi6WbTNx3YUJ60AUx8/egMdhal2jKZ7PhDdMDHyLMrlJp/fumY96njE
-	 /kBjfugRfunedcvhJvkt0WZYiGkPbHTnuSXFrnDc=
+	b=iZrWoSD9KJocR8m5e7kysAsAe3o4aivX9AuUH+akWz+lJ3y+Cj7qLASoEKrgVkjOE
+	 GaS0NBVFl/Jo5vgsDcM7Mbr7KCj4c7VcI7WSpiIxghtdi1b7of2HKaxcjwqPinYBpO
+	 pkP/ydy9zZxZXL1BHw7GBtC3pyhyIU8jemMJLtjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391110AbfDXRbJ (ORCPT
+        id S2403774AbfDXRbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57390 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:31:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390506AbfDXRbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:31:00 -0400
+        id S2391108AbfDXRbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:31:08 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8135220811;
-        Wed, 24 Apr 2019 17:30:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BBA2218B0;
+        Wed, 24 Apr 2019 17:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127060;
-        bh=WLn64TCrCVn/CGDSAYr7J5qAkULDqliUSBcZirV7cNo=;
+        s=default; t=1556127068;
+        bh=vmolo6M6b5hE+qQcXbMvReie0eA82nGKGJ7gKd/8Zgs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h5LMk7Nbm5cQYKyYADXsnZMIpavb1OErowl28O0IvAf4RTFn2Q0b6EeGhfZlu9kRt
-         eaNVe0wfMcIk+eKB84NT2B9Uwxhg1CqaQAEZ9GFLxhvsA4nmFlj4veuc/RZwJe1MA3
-         mydG9ptSmSRUcwPEF5pw8MR/q0uAvtg2guAKXFjw=
+        b=phrJ5yfo3j3jJBTHFGI9S+jkfwDuGFrk8Yg85M4AnBVMSfCNM/z46EgDqsdHEMZYd
+         gJA/cSsADb4fhB0DWSZHm/mBnPvsX2YytD5iDP6zWSR8Nj/tcgLB04t3BRsZq9KWBM
+         W5FhDU0rvooGxkrjso0HR/4NIRF1sdyRsV21wgFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Georg Ottinger <g.ottinger@abatec.at>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 44/96] iio: adc: at91: disable adc channel interrupt in timeout case
-Date:   Wed, 24 Apr 2019 19:09:49 +0200
-Message-Id: <20190424170922.849633626@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 07/96] net: fou: do not use guehdr after iptunnel_pull_offloads in gue_udp_recv
+Date:   Wed, 24 Apr 2019 19:09:12 +0200
+Message-Id: <20190424170920.327112529@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -61,69 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georg Ottinger <g.ottinger@abatec.at>
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 
-commit 09c6bdee51183a575bf7546890c8c137a75a2b44 upstream.
+[ Upstream commit 988dc4a9a3b66be75b30405a5494faf0dc7cffb6 ]
 
-Having a brief look at at91_adc_read_raw() it is obvious that in the case
-of a timeout the setting of AT91_ADC_CHDR and AT91_ADC_IDR registers is
-omitted. If 2 different channels are queried we can end up with a
-situation where two interrupts are enabled, but only one interrupt is
-cleared in the interrupt handler. Resulting in a interrupt loop and a
-system hang.
+gue tunnels run iptunnel_pull_offloads on received skbs. This can
+determine a possible use-after-free accessing guehdr pointer since
+the packet will be 'uncloned' running pskb_expand_head if it is a
+cloned gso skb (e.g if the packet has been sent though a veth device)
 
-Signed-off-by: Georg Ottinger <g.ottinger@abatec.at>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: a09a4c8dd1ec ("tunnels: Remove encapsulation offloads on decap")
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/iio/adc/at91_adc.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ net/ipv4/fou.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/adc/at91_adc.c
-+++ b/drivers/iio/adc/at91_adc.c
-@@ -704,23 +704,29 @@ static int at91_adc_read_raw(struct iio_
- 		ret = wait_event_interruptible_timeout(st->wq_data_avail,
- 						       st->done,
- 						       msecs_to_jiffies(1000));
--		if (ret == 0)
--			ret = -ETIMEDOUT;
--		if (ret < 0) {
--			mutex_unlock(&st->lock);
--			return ret;
--		}
--
--		*val = st->last_value;
+--- a/net/ipv4/fou.c
++++ b/net/ipv4/fou.c
+@@ -120,6 +120,7 @@ static int gue_udp_recv(struct sock *sk,
+ 	struct guehdr *guehdr;
+ 	void *data;
+ 	u16 doffset = 0;
++	u8 proto_ctype;
  
-+		/* Disable interrupts, regardless if adc conversion was
-+		 * successful or not
-+		 */
- 		at91_adc_writel(st, AT91_ADC_CHDR,
- 				AT91_ADC_CH(chan->channel));
- 		at91_adc_writel(st, AT91_ADC_IDR, BIT(chan->channel));
+ 	if (!fou)
+ 		return 1;
+@@ -211,13 +212,14 @@ static int gue_udp_recv(struct sock *sk,
+ 	if (unlikely(guehdr->control))
+ 		return gue_control_message(skb, guehdr);
  
--		st->last_value = 0;
--		st->done = false;
-+		if (ret > 0) {
-+			/* a valid conversion took place */
-+			*val = st->last_value;
-+			st->last_value = 0;
-+			st->done = false;
-+			ret = IIO_VAL_INT;
-+		} else if (ret == 0) {
-+			/* conversion timeout */
-+			dev_err(&idev->dev, "ADC Channel %d timeout.\n",
-+				chan->channel);
-+			ret = -ETIMEDOUT;
-+		}
-+
- 		mutex_unlock(&st->lock);
--		return IIO_VAL_INT;
-+		return ret;
++	proto_ctype = guehdr->proto_ctype;
+ 	__skb_pull(skb, sizeof(struct udphdr) + hdrlen);
+ 	skb_reset_transport_header(skb);
  
- 	case IIO_CHAN_INFO_SCALE:
- 		*val = st->vref_mv;
+ 	if (iptunnel_pull_offloads(skb))
+ 		goto drop;
+ 
+-	return -guehdr->proto_ctype;
++	return -proto_ctype;
+ 
+ drop:
+ 	kfree_skb(skb);
 
 
