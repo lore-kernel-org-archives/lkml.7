@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991F9C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3FCC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9D4218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3D2218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116996;
-	bh=yaJjvoi84Hs7O+Cf19wpVcaxRjhWD83LgWXnvr+8C74=;
+	s=default; t=1556117008;
+	bh=7+B5qob+FgaiyQhMC1k51U3e1X0YwM2C2Vys23zN5HE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mufh1VlymAbMAqqQ9ku7dwhQ6aLWxRSbKOVpXBhR8yjNnpFuho+lEKKECsjwW+oNw
-	 9uTPBWAPOnt14ugXUIQLwjDxhHZW4Kee+LVvBr2ri8bzBOHP6817n2REJrgt9XHcut
-	 ek8hk5jqu3d01PkwYYzGGJXPDtR/rIb8TSp6PFpY=
+	b=ENlUiod8Q/qCHr+8pG5uS7B6dJTPp6jpv3ulwbI1qeeq8Wb2+PFLFHyt/DanaQKKk
+	 3k4EVHbDrPEg0DlMh4RrjCi1BopHS/l6VoRI7x+y4Kntc0dN4Wcg6PUOSSp3wExZ6W
+	 dk82E3Hza/Q2As9sLu4qAuPD8I2yxqkFWuTUlWZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731926AbfDXOnP (ORCPT
+        id S1731893AbfDXOkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:43:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42886 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:40:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731922AbfDXOkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:40:20 -0400
+        id S1731877AbfDXOkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:40:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A669C21915;
-        Wed, 24 Apr 2019 14:40:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A910821909;
+        Wed, 24 Apr 2019 14:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116820;
-        bh=yaJjvoi84Hs7O+Cf19wpVcaxRjhWD83LgWXnvr+8C74=;
+        s=default; t=1556116809;
+        bh=7+B5qob+FgaiyQhMC1k51U3e1X0YwM2C2Vys23zN5HE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FQes5UV3UIzy8ge2nzxAv38mE2KIwtshKZTgq801ar8RWk+SeHxyBXoVTr4f7B+X3
-         BETJrU1PKdGQGxeFWQMEO7Vxk2cE0yhNvGncJklv0qko3dk8C1vFo/4uaER6a+s1d/
-         RypVw+AmUy7XLC9FUOUIPZ+XnmtSmmC2LIAlLsfU=
+        b=oBjMxaqPURkKNmzDtoxJu3NWD/iJDvItnQQgiDZcrasXBQLJiTyd7reMettHzOy6u
+         Yf8Bvgrzx8JaeD37rp5/9fEgOssmqx2jHWo5UllpG/nCj4veZRGp7AxTrwQsS7XOYY
+         /ni2F3ymVSzzIx8kNSFGK7wm+icX3eXiFIuC/xy0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 30/52] HID: input: add mapping for Assistant key
-Date:   Wed, 24 Apr 2019 10:38:48 -0400
-Message-Id: <20190424143911.28890-30-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
+        linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 25/52] jffs2: fix use-after-free on symlink traversal
+Date:   Wed, 24 Apr 2019 10:38:43 -0400
+Message-Id: <20190424143911.28890-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
 References: <20190424143911.28890-1-sashal@kernel.org>
@@ -59,33 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit ce856634af8cda3490947df8ac1ef5843e6356af ]
+[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
 
-According to HUTRR89 usage 0x1cb from the consumer page was assigned to
-allow launching desktop-aware assistant application, so let's add the
-mapping.
+free the symlink body after the same RCU delay we have for freeing the
+struct inode itself, so that traversal during RCU pathwalk wouldn't step
+into freed memory.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/jffs2/readinode.c | 5 -----
+ fs/jffs2/super.c     | 5 ++++-
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index a3916e58dbf5..e649940e065d 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -982,6 +982,7 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x1b8: map_key_clear(KEY_VIDEO);		break;
- 		case 0x1bc: map_key_clear(KEY_MESSENGER);	break;
- 		case 0x1bd: map_key_clear(KEY_INFO);		break;
-+		case 0x1cb: map_key_clear(KEY_ASSISTANT);	break;
- 		case 0x201: map_key_clear(KEY_NEW);		break;
- 		case 0x202: map_key_clear(KEY_OPEN);		break;
- 		case 0x203: map_key_clear(KEY_CLOSE);		break;
+diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
+index 389ea53ea487..bccfc40b3a74 100644
+--- a/fs/jffs2/readinode.c
++++ b/fs/jffs2/readinode.c
+@@ -1414,11 +1414,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
+ 
+ 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
+ 
+-	if (f->target) {
+-		kfree(f->target);
+-		f->target = NULL;
+-	}
+-
+ 	fds = f->dents;
+ 	while(fds) {
+ 		fd = fds;
+diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
+index bb6ae387469f..05d892c79339 100644
+--- a/fs/jffs2/super.c
++++ b/fs/jffs2/super.c
+@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
+ static void jffs2_i_callback(struct rcu_head *head)
+ {
+ 	struct inode *inode = container_of(head, struct inode, i_rcu);
+-	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
++	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
++
++	kfree(f->target);
++	kmem_cache_free(jffs2_inode_cachep, f);
+ }
+ 
+ static void jffs2_destroy_inode(struct inode *inode)
 -- 
 2.19.1
 
