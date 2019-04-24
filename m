@@ -2,194 +2,142 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0FCC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD72C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE3C218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:35:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JSGflCjC"
+	by mail.kernel.org (Postfix) with ESMTP id 44E4321773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfDXNf1 (ORCPT
+        id S1728227AbfDXNhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:35:27 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37710 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726165AbfDXNf1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:35:27 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3ODU5Ht019761;
-        Wed, 24 Apr 2019 15:35:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=xOH1uezZYiVgXb4civrf+VPd+S3UtcRRe2DHQxQ7b9Q=;
- b=JSGflCjCEjM3sO+fYFYpGxz8wdlYs7FkwzMsHwVEwG9BY2WE1tzCWfOGmWfgJimVg7ve
- P2svm8ddjhXZuj8iV1v9JJKi8lvmkXqLWmMz75joggT7KS1xZI5ejwkrSXZjroAgcs7D
- yGs9Gvw8wPEAbgRw8lE3lLCEihThDj7bLS5Og0bI/to4v4QjpO/2konv+U8RMePQLtYr
- Ln8yoFj18X9ysl33g/HRoERM2sPowZ1VAtuXBKF7TfrzBFhOAk9auLAPjagU0kdbLnJB
- cAf8jycot7pz/CtlnAn/QAIc6tTP1hctbhL43s0nQc6dgOApO2mTLMXxxtNpVU/ykkyD Fw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rytad6ttk-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 24 Apr 2019 15:35:05 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2DD103F;
-        Wed, 24 Apr 2019 13:35:04 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E189626A8;
-        Wed, 24 Apr 2019 13:35:03 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 24 Apr
- 2019 15:35:04 +0200
-Received: from localhost (10.201.23.65) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 24 Apr 2019 15:35:03
- +0200
-From:   Lionel Debieve <lionel.debieve@st.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "Alexandre Torgue" <alexandre.torgue@st.com>,
-        <linux-crypto@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 2/3] crypto: stm32/cryp - remove request mutex protection
-Date:   Wed, 24 Apr 2019 15:34:52 +0200
-Message-ID: <1556112893-13116-2-git-send-email-lionel.debieve@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556112893-13116-1-git-send-email-lionel.debieve@st.com>
-References: <1556112893-13116-1-git-send-email-lionel.debieve@st.com>
+        Wed, 24 Apr 2019 09:37:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40372 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727369AbfDXNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:37:04 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2B4E930BCE5B;
+        Wed, 24 Apr 2019 13:36:59 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (ovpn-112-22.phx2.redhat.com [10.3.112.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 34E3D1001E71;
+        Wed, 24 Apr 2019 13:36:56 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 53E5C62CF; Wed, 24 Apr 2019 10:37:01 -0300 (BRT)
+Date:   Wed, 24 Apr 2019 10:37:01 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        "linux-trace-devel@vger.kernel.org" 
+        <linux-trace-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tools/lib/traceevent: Remove hardcoded install paths
+ from pkg-config file
+Message-ID: <20190424133701.GE4339@redhat.com>
+References: <20190418211556.5a12adc3@oasis.local.home>
+ <20190424084722.5b98212e@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.65]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_09:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424084722.5b98212e@gandalf.local.home>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 24 Apr 2019 13:37:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mutex is badly used between threaded irq and driver.
-This mutex must be removed as the framework must ensure
-that requests must be serialized to avoid issue. Rework
-req to avoid crash during finalize by fixing the NULL
-pointer issue.
+Em Wed, Apr 24, 2019 at 08:47:22AM -0400, Steven Rostedt escreveu:
+> 
+> Hi Arnaldo,
+> 
+> Just making sure this doesn't get lost in the noise ;-)
+> 
+> Can you pull this in?
 
-Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
----
- drivers/crypto/stm32/stm32-cryp.c | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
+Its already in my local repo, that I just pushed out, thanks!
 
-diff --git a/drivers/crypto/stm32/stm32-cryp.c b/drivers/crypto/stm32/stm32-cryp.c
-index cfcb640..eb525669 100644
---- a/drivers/crypto/stm32/stm32-cryp.c
-+++ b/drivers/crypto/stm32/stm32-cryp.c
-@@ -137,7 +137,6 @@ struct stm32_cryp {
- 
- 	struct crypto_engine    *engine;
- 
--	struct mutex            lock; /* protects req / areq */
- 	struct ablkcipher_request *req;
- 	struct aead_request     *areq;
- 
-@@ -645,18 +644,13 @@ static void stm32_cryp_finish_req(struct stm32_cryp *cryp, int err)
- 	pm_runtime_mark_last_busy(cryp->dev);
- 	pm_runtime_put_autosuspend(cryp->dev);
- 
--	if (is_gcm(cryp) || is_ccm(cryp)) {
-+	if (is_gcm(cryp) || is_ccm(cryp))
- 		crypto_finalize_aead_request(cryp->engine, cryp->areq, err);
--		cryp->areq = NULL;
--	} else {
-+	else
- 		crypto_finalize_ablkcipher_request(cryp->engine, cryp->req,
- 						   err);
--		cryp->req = NULL;
--	}
- 
- 	memset(cryp->ctx->key, 0, cryp->ctx->keylen);
--
--	mutex_unlock(&cryp->lock);
- }
- 
- static int stm32_cryp_cpu_start(struct stm32_cryp *cryp)
-@@ -933,8 +927,6 @@ static int stm32_cryp_prepare_req(struct ablkcipher_request *req,
- 	if (!cryp)
- 		return -ENODEV;
- 
--	mutex_lock(&cryp->lock);
--
- 	rctx = req ? ablkcipher_request_ctx(req) : aead_request_ctx(areq);
- 	rctx->mode &= FLG_MODE_MASK;
- 
-@@ -946,6 +938,7 @@ static int stm32_cryp_prepare_req(struct ablkcipher_request *req,
- 
- 	if (req) {
- 		cryp->req = req;
-+		cryp->areq = NULL;
- 		cryp->total_in = req->nbytes;
- 		cryp->total_out = cryp->total_in;
- 	} else {
-@@ -971,6 +964,7 @@ static int stm32_cryp_prepare_req(struct ablkcipher_request *req,
- 		 *          <---------- total_out ----------------->
- 		 */
- 		cryp->areq = areq;
-+		cryp->req = NULL;
- 		cryp->authsize = crypto_aead_authsize(crypto_aead_reqtfm(areq));
- 		cryp->total_in = areq->assoclen + areq->cryptlen;
- 		if (is_encrypt(cryp))
-@@ -992,19 +986,19 @@ static int stm32_cryp_prepare_req(struct ablkcipher_request *req,
- 	if (cryp->in_sg_len < 0) {
- 		dev_err(cryp->dev, "Cannot get in_sg_len\n");
- 		ret = cryp->in_sg_len;
--		goto out;
-+		return ret;
- 	}
- 
- 	cryp->out_sg_len = sg_nents_for_len(cryp->out_sg, cryp->total_out);
- 	if (cryp->out_sg_len < 0) {
- 		dev_err(cryp->dev, "Cannot get out_sg_len\n");
- 		ret = cryp->out_sg_len;
--		goto out;
-+		return ret;
- 	}
- 
- 	ret = stm32_cryp_copy_sgs(cryp);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	scatterwalk_start(&cryp->in_walk, cryp->in_sg);
- 	scatterwalk_start(&cryp->out_walk, cryp->out_sg);
-@@ -1016,10 +1010,6 @@ static int stm32_cryp_prepare_req(struct ablkcipher_request *req,
- 	}
- 
- 	ret = stm32_cryp_hw_init(cryp);
--out:
--	if (ret)
--		mutex_unlock(&cryp->lock);
--
- 	return ret;
- }
- 
-@@ -1959,8 +1949,6 @@ static int stm32_cryp_probe(struct platform_device *pdev)
- 
- 	cryp->dev = dev;
- 
--	mutex_init(&cryp->lock);
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	cryp->regs = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(cryp->regs))
--- 
-2.7.4
+- Arnaldo
 
+ 
+> -- Steve
+> 
+> 
+> On Thu, 18 Apr 2019 21:15:56 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+> > 
+> > Install directories of header and library files are hardcoded in pkg-config
+> > templete file. They must be configurable, the Makefile should set them on the
+> > compilation / install stage.
+> > 
+> > Link: http://lkml.kernel.org/r/20190329144546.5819-1-tstoyanov@vmware.com
+> > 
+> > Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---
+> >  tools/lib/traceevent/Makefile                  | 13 +++++++++----
+> >  tools/lib/traceevent/libtraceevent.pc.template |  4 ++--
+> >  2 files changed, 11 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+> > index 941761d9923d..34cf33a4f001 100644
+> > --- a/tools/lib/traceevent/Makefile
+> > +++ b/tools/lib/traceevent/Makefile
+> > @@ -50,6 +50,9 @@ man_dir = $(prefix)/share/man
+> >  man_dir_SQ = '$(subst ','\'',$(man_dir))'
+> >  pkgconfig_dir ?= $(word 1,$(shell $(PKG_CONFIG) 		\
+> >  			--variable pc_path pkg-config | tr ":" " "))
+> > +includedir_relative = traceevent
+> > +includedir = $(prefix)/include/$(includedir_relative)
+> > +includedir_SQ = '$(subst ','\'',$(includedir))'
+> >  
+> >  export man_dir man_dir_SQ INSTALL
+> >  export DESTDIR DESTDIR_SQ
+> > @@ -279,6 +282,8 @@ define do_install_pkgconfig_file
+> >  		cp -f ${PKG_CONFIG_FILE}.template ${PKG_CONFIG_FILE}; 		\
+> >  		sed -i "s|INSTALL_PREFIX|${1}|g" ${PKG_CONFIG_FILE}; 		\
+> >  		sed -i "s|LIB_VERSION|${EVENT_PARSE_VERSION}|g" ${PKG_CONFIG_FILE}; \
+> > +		sed -i "s|LIB_DIR|${libdir}|g" ${PKG_CONFIG_FILE}; \
+> > +		sed -i "s|HEADER_DIR|$(includedir)|g" ${PKG_CONFIG_FILE}; \
+> >  		$(call do_install,$(PKG_CONFIG_FILE),$(pkgconfig_dir),644); 	\
+> >  	else 									\
+> >  		(echo Failed to locate pkg-config directory) 1>&2;		\
+> > @@ -300,10 +305,10 @@ install_pkgconfig:
+> >  
+> >  install_headers:
+> >  	$(call QUIET_INSTALL, headers) \
+> > -		$(call do_install,event-parse.h,$(prefix)/include/traceevent,644); \
+> > -		$(call do_install,event-utils.h,$(prefix)/include/traceevent,644); \
+> > -		$(call do_install,trace-seq.h,$(prefix)/include/traceevent,644); \
+> > -		$(call do_install,kbuffer.h,$(prefix)/include/traceevent,644)
+> > +		$(call do_install,event-parse.h,$(DESTDIR)$(includedir_SQ),644); \
+> > +		$(call do_install,event-utils.h,$(DESTDIR)$(includedir_SQ),644); \
+> > +		$(call do_install,trace-seq.h,$(DESTDIR)$(includedir_SQ),644); \
+> > +		$(call do_install,kbuffer.h,$(DESTDIR)$(includedir_SQ),644)
+> >  
+> >  install: install_lib
+> >  
+> > diff --git a/tools/lib/traceevent/libtraceevent.pc.template b/tools/lib/traceevent/libtraceevent.pc.template
+> > index 42e4d6cb6b9e..86384fcd57f1 100644
+> > --- a/tools/lib/traceevent/libtraceevent.pc.template
+> > +++ b/tools/lib/traceevent/libtraceevent.pc.template
+> > @@ -1,6 +1,6 @@
+> >  prefix=INSTALL_PREFIX
+> > -libdir=${prefix}/lib64
+> > -includedir=${prefix}/include/traceevent
+> > +libdir=LIB_DIR
+> > +includedir=HEADER_DIR
+> >  
+> >  Name: libtraceevent
+> >  URL: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
