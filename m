@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A434C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EF5C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02456205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856A8205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126586;
-	bh=kq33SpP71H8pGLorVT3EbrhHtFjqjupFg4RONrTaoAk=;
+	s=default; t=1556126589;
+	bh=9te0W8xGI/3uSGQRPrlDCFXktis5KqMqZH5jGIjoBz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kg/oe15wo576UWsSjlYdDH9gX7/t98IVPGzu7NBSyFePBsVS9oirTIks0hPytQcie
-	 oxPQegwrNNeFFwR9EGtYrLxohfmwDyTG1lEXTe92JN4i81F5v+n5koQa6yCJUQcBfH
-	 3Fts6XIRDI0SVMseCXekck7+wz6tjRx85T3EGSso=
+	b=awcXE8hdxXrdaB3VKbiYnzogzpADpYvfz/KgCTk8FmcK+O5sVZnzDsB+EyLZo1wbi
+	 VG3uKVRIz6lEAkQVya3+1owBrViTf36MaeV/sx4VBsedWTyctX3X2VhvIVPKuJXVm9
+	 g+J2Pmc6AcxdHS1nislEO6FU/PVNpxOlyUbWHMxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389648AbfDXRXE (ORCPT
+        id S2389658AbfDXRXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48680 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389251AbfDXRXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:23:03 -0400
+        id S1733149AbfDXRXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:23:06 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EE9220675;
-        Wed, 24 Apr 2019 17:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 056EB20835;
+        Wed, 24 Apr 2019 17:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126582;
-        bh=kq33SpP71H8pGLorVT3EbrhHtFjqjupFg4RONrTaoAk=;
+        s=default; t=1556126585;
+        bh=9te0W8xGI/3uSGQRPrlDCFXktis5KqMqZH5jGIjoBz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VxMN3Ykuv86J+ezab9rczrU97gOoGb3u4N3SiBvNYiyafvOhlXgCG62lCbLvxziyb
-         JbIAQvCTE4bnSF9jdkguM0L6ZnRW7x8tSgPEXFj18DIh9dgkDEn60TLqf8pFPkH0Dg
-         lisWQkOcCqTqWbyVaIIlv3mwtRc8GQM87Gy1az6U=
+        b=SaopMF5SZJRE/ne1c/tkzn3l26+ehmtfBp9THujxFY6KAuGUwRr8alu2ON+T7kcm7
+         aTgcRZxx7Hibj8iN4OsR62bcOco2LqFLh4jLg47ZyP696Xt6wadmIEXrUNmyABRf8M
+         aLEhcfSRyJZAPZDFz/sFRtOiGO2/eB+4Bv0DxwiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.4 159/168] arm64: futex: Restore oldval initialization to work around buggy compilers
-Date:   Wed, 24 Apr 2019 19:10:03 +0200
-Message-Id: <20190424170932.533238683@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.4 160/168] x86/kprobes: Verify stack frame on kretprobe
+Date:   Wed, 24 Apr 2019 19:10:04 +0200
+Message-Id: <20190424170932.645330401@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -60,52 +65,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit ff8acf929014b7f87315588e0daf8597c8aa9d1c upstream.
+commit 3ff9c075cc767b3060bdac12da72fc94dd7da1b8 upstream.
 
-Commit 045afc24124d ("arm64: futex: Fix FUTEX_WAKE_OP atomic ops with
-non-zero result value") removed oldval's zero initialization in
-arch_futex_atomic_op_inuser because it is not necessary. Unfortunately,
-Android's arm64 GCC 4.9.4 [1] does not agree:
+Verify the stack frame pointer on kretprobe trampoline handler,
+If the stack frame pointer does not match, it skips the wrong
+entry and tries to find correct one.
 
-../kernel/futex.c: In function 'do_futex':
-../kernel/futex.c:1658:17: warning: 'oldval' may be used uninitialized
-in this function [-Wmaybe-uninitialized]
-   return oldval == cmparg;
-                 ^
-In file included from ../kernel/futex.c:73:0:
-../arch/arm64/include/asm/futex.h:53:6: note: 'oldval' was declared here
-  int oldval, ret, tmp;
-      ^
+This can happen if user puts the kretprobe on the function
+which can be used in the path of ftrace user-function call.
+Such functions should not be probed, so this adds a warning
+message that reports which function should be blacklisted.
 
-GCC fails to follow that when ret is non-zero, futex_atomic_op_inuser
-returns right away, avoiding the uninitialized use that it claims.
-Restoring the zero initialization works around this issue.
-
-[1]: https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/
-
+Tested-by: Andrea Righi <righi.andrea@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Fixes: 045afc24124d ("arm64: futex: Fix FUTEX_WAKE_OP atomic ops with non-zero result value")
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Link: http://lkml.kernel.org/r/155094059185.6137.15527904013362842072.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/futex.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/kprobes/core.c |   26 ++++++++++++++++++++++++++
+ include/linux/kprobes.h        |    1 +
+ 2 files changed, 27 insertions(+)
 
---- a/arch/arm64/include/asm/futex.h
-+++ b/arch/arm64/include/asm/futex.h
-@@ -55,7 +55,7 @@
- static inline int
- arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- {
--	int oldval, ret, tmp;
-+	int oldval = 0, ret, tmp;
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -541,6 +541,7 @@ void arch_prepare_kretprobe(struct kretp
+ 	unsigned long *sara = stack_addr(regs);
  
- 	pagefault_disable();
+ 	ri->ret_addr = (kprobe_opcode_t *) *sara;
++	ri->fp = sara;
+ 
+ 	/* Replace the return addr with trampoline addr */
+ 	*sara = (unsigned long) &kretprobe_trampoline;
+@@ -742,15 +743,21 @@ __visible __used void *trampoline_handle
+ 	unsigned long flags, orig_ret_address = 0;
+ 	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
+ 	kprobe_opcode_t *correct_ret_addr = NULL;
++	void *frame_pointer;
++	bool skipped = false;
+ 
+ 	INIT_HLIST_HEAD(&empty_rp);
+ 	kretprobe_hash_lock(current, &head, &flags);
+ 	/* fixup registers */
+ #ifdef CONFIG_X86_64
+ 	regs->cs = __KERNEL_CS;
++	/* On x86-64, we use pt_regs->sp for return address holder. */
++	frame_pointer = &regs->sp;
+ #else
+ 	regs->cs = __KERNEL_CS | get_kernel_rpl();
+ 	regs->gs = 0;
++	/* On x86-32, we use pt_regs->flags for return address holder. */
++	frame_pointer = &regs->flags;
+ #endif
+ 	regs->ip = trampoline_address;
+ 	regs->orig_ax = ~0UL;
+@@ -772,8 +779,25 @@ __visible __used void *trampoline_handle
+ 		if (ri->task != current)
+ 			/* another task is sharing our hash bucket */
+ 			continue;
++		/*
++		 * Return probes must be pushed on this hash list correct
++		 * order (same as return order) so that it can be poped
++		 * correctly. However, if we find it is pushed it incorrect
++		 * order, this means we find a function which should not be
++		 * probed, because the wrong order entry is pushed on the
++		 * path of processing other kretprobe itself.
++		 */
++		if (ri->fp != frame_pointer) {
++			if (!skipped)
++				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
++			skipped = true;
++			continue;
++		}
+ 
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
++		if (skipped)
++			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
++				ri->rp->kp.addr);
+ 
+ 		if (orig_ret_address != trampoline_address)
+ 			/*
+@@ -791,6 +815,8 @@ __visible __used void *trampoline_handle
+ 		if (ri->task != current)
+ 			/* another task is sharing our hash bucket */
+ 			continue;
++		if (ri->fp != frame_pointer)
++			continue;
+ 
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
+ 		if (ri->rp && ri->rp->handler) {
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -197,6 +197,7 @@ struct kretprobe_instance {
+ 	struct kretprobe *rp;
+ 	kprobe_opcode_t *ret_addr;
+ 	struct task_struct *task;
++	void *fp;
+ 	char data[0];
+ };
  
 
 
