@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057BEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 113B9C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6004206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF568218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126055;
-	bh=nI1ajxEB7wkS77/8ZM+TP+j9M/ZTzaUDKO2yvcje0JY=;
+	s=default; t=1556126060;
+	bh=lI9kc5cDms9hJ8BTMoC0tjOimcd+Pi92HoaaDLv/DMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eWVmzNa7wgCvkJn25cHMReYdwRtfHnVj5rDayKG1+FMS1cjJB3q9Bb5AYVNSiqbg9
-	 ZKmwCp+ymbiB8Kz3fe9PFY+Sn+2QREHvWCsBpE1IGLCFICbk3kC/8zzwFa1Lw5KHaU
-	 eB8+HZu6UnF8ftPQRpfX4pRHEercwVWYcQzgHHmc=
+	b=F05xsuRd0rdNj2ArEFTqbgqmQtXhvhPpC7KgRhVLZ7OQ6mPEgTRkguc0e2Ob3bHy2
+	 gPQ46s3DEbZJfIV5QJ601ZUWgZsCImrRkl2l8UfEKvUnRB0WiZbmzPCIUU2+U2jJ2u
+	 flJ9ta6JEO4gH6NU6shhVaD443+OV5o3NDK8M1JA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388038AbfDXROO (ORCPT
+        id S2388048AbfDXROT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:14:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38360 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:14:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388016AbfDXROL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:14:11 -0400
+        id S1733262AbfDXROQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:16 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7DDC218B0;
-        Wed, 24 Apr 2019 17:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 428A12054F;
+        Wed, 24 Apr 2019 17:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126050;
-        bh=nI1ajxEB7wkS77/8ZM+TP+j9M/ZTzaUDKO2yvcje0JY=;
+        s=default; t=1556126055;
+        bh=lI9kc5cDms9hJ8BTMoC0tjOimcd+Pi92HoaaDLv/DMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cX2PevNmb1thk7m4izrESNs6YqLoaJXXDTUglgzklMfirkmlWyPrLKnhP0BmPUxwC
-         HpFT+MogycY8X0r1j9yLfiMzA5zAeP5MelDMWH8g8XO3aVbtSz9DHLhXS7edJXFD1p
-         CsL1who/3vicbEFU8/dqhoQzNOMSVgzaEWpWOdjo=
+        b=11mFEJk6Eqf9zr2Ns87V7dNieEP/MbNqM/nPciYNg6e7w/No9iHb0YEJtXXB8PMSF
+         j/RBGIyUsGDtkK6R/EA2cqwZ5o6zVZIkx/JezgnmcAjreHpARUCJCUpauKsSed69wt
+         rcoAzQS5ZZ2EarHzCCgUgjCL4LggGLvFFPx79MIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        mark gross <mgross@intel.com>, Ashok Raj <ashok.raj@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 074/104] iommu/vt-d: Check capability before disabling protected memory
-Date:   Wed, 24 Apr 2019 19:09:31 +0200
-Message-Id: <20190424170906.218147775@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 076/104] rsi: improve kernel thread handling to fix kernel panic
+Date:   Wed, 24 Apr 2019 19:09:33 +0200
+Message-Id: <20190424170906.599273291@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -61,38 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5bb71fc790a88d063507dc5d445ab8b14e845591 ]
+[ Upstream commit 4c62764d0fc21a34ffc44eec1210038c3a2e4473 ]
 
-The spec states in 10.4.16 that the Protected Memory Enable
-Register should be treated as read-only for implementations
-not supporting protected memory regions (PLMR and PHMR fields
-reported as Clear in the Capability register).
+While running regressions, observed below kernel panic when sdio disconnect
+called. This is because of, kthread_stop() is taking care of
+wait_for_completion() by default. When wait_for_completion triggered
+in kthread_stop and as it was done already, giving kernel panic.
+Hence, removing redundant wait_for_completion() from rsi_kill_thread().
 
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: mark gross <mgross@intel.com>
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Fixes: f8bab73515ca5 ("intel-iommu: PMEN support")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+... skipping ...
+BUG: unable to handle kernel NULL pointer dereference at           (null)
+IP: [<ffffffff810a63df>] exit_creds+0x1f/0x50
+PGD 0
+Oops: 0002 [#1] SMP
+CPU: 0 PID: 6502 Comm: rmmod Tainted: G  OE   4.15.9-Generic #154-Ubuntu
+Hardware name: Dell Inc. Edge Gateway 3003/ , BIOS 01.00.00 04/17/2017
+Stack:
+ffff88007392e600 ffff880075847dc0 ffffffff8108160a 0000000000000000
+ffff88007392e600 ffff880075847de8 ffffffff810a484b ffff880076127000
+ffff88003cd3a800 ffff880074f12a00 ffff880075847e28 ffffffffc09bed15
+Call Trace:
+[<ffffffff8108160a>] __put_task_struct+0x5a/0x140
+[<ffffffff810a484b>] kthread_stop+0x10b/0x110
+[<ffffffffc09bed15>] rsi_disconnect+0x2f5/0x300 [ven_rsi_sdio]
+[<ffffffff81578bcb>] ? __pm_runtime_resume+0x5b/0x80
+[<ffffffff816f0918>] sdio_bus_remove+0x38/0x100
+[<ffffffff8156cc64>] __device_release_driver+0xa4/0x150
+[<ffffffff8156d7a5>] driver_detach+0xb5/0xc0
+[<ffffffff8156c6c5>] bus_remove_driver+0x55/0xd0
+[<ffffffff8156dfbc>] driver_unregister+0x2c/0x50
+[<ffffffff816f0b8a>] sdio_unregister_driver+0x1a/0x20
+[<ffffffffc09bf0f5>] rsi_module_exit+0x15/0x30 [ven_rsi_sdio]
+[<ffffffff8110cad8>] SyS_delete_module+0x1b8/0x210
+[<ffffffff81851dc8>] entry_SYSCALL_64_fastpath+0x1c/0xbb
+
+Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/rsi/rsi_common.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 2068cb59f7ed..b1966269f26a 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1402,6 +1402,9 @@ static void iommu_disable_protect_mem_regions(struct intel_iommu *iommu)
- 	u32 pmen;
- 	unsigned long flags;
+diff --git a/drivers/net/wireless/rsi/rsi_common.h b/drivers/net/wireless/rsi/rsi_common.h
+index d3fbe33d2324..a13f08fd8690 100644
+--- a/drivers/net/wireless/rsi/rsi_common.h
++++ b/drivers/net/wireless/rsi/rsi_common.h
+@@ -75,7 +75,6 @@ static inline int rsi_kill_thread(struct rsi_thread *handle)
+ 	atomic_inc(&handle->thread_done);
+ 	rsi_set_event(&handle->event);
  
-+	if (!cap_plmr(iommu->cap) && !cap_phmr(iommu->cap))
-+		return;
-+
- 	raw_spin_lock_irqsave(&iommu->register_lock, flags);
- 	pmen = readl(iommu->reg + DMAR_PMEN_REG);
- 	pmen &= ~DMA_PMEN_EPM;
+-	wait_for_completion(&handle->completion);
+ 	return kthread_stop(handle->task);
+ }
+ 
 -- 
 2.19.1
 
