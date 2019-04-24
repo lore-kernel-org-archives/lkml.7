@@ -2,172 +2,149 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6D5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B2FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DABF020674
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08272148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mendozajonas.com header.i=@mendozajonas.com header.b="DY3zWe4J";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="z8n6nZAY"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="I9flOMnK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbfDXDta (ORCPT
+        id S1729104AbfDXDvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 23:49:30 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:50295 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726920AbfDXDta (ORCPT
+        Tue, 23 Apr 2019 23:51:50 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:17750 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbfDXDvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 23:49:30 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.nyi.internal (Postfix) with ESMTP id 824E1205B8;
-        Tue, 23 Apr 2019 23:49:27 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Tue, 23 Apr 2019 23:49:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        mendozajonas.com; h=message-id:subject:from:to:date:in-reply-to
-        :references:content-type:mime-version:content-transfer-encoding;
-         s=fm2; bh=TMK4saVMes0u+ASfn2Ds/1ITfBfjKM5mlrv8N7Sg0M8=; b=DY3zW
-        e4JAoM2pHOihbCulxIzmOizA6AV6drKcrS6XRFVT8ps+cahyw4vPdiGCW+DXu1y8
-        jQ5jeC6pPVFX+AB3E+uYDXOp758r5Lf7ScQkT1tdowwdb7m6gwLU5nKbfBGkc2VA
-        N1JH4O3OJEPuZl+RjCU30ihWJ/4pFs/Si8mUgjIcyBC98T5LsflIaaSJk4dY5hpO
-        v+cguuCb/4oXnTFWlxIWxfSXUNMc71WzRbfSPx9ezX7Wqmd5cMEbNHdrQWiT4bgZ
-        Az8I3yxV5xgdQRIPz1ZFKk7XJle9yXLm64iIiZOHpZlnM/v/77k8r8VqqPk831yh
-        vxDwN5SmYnFeX6IxQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=TMK4saVMes0u+ASfn2Ds/1ITfBfjKM5mlrv8N7Sg0
-        M8=; b=z8n6nZAYEUUvQxCg9RtP3SU80RiE6IY2DsjeenGNz4xEJfUTByaSe3quh
-        F4gkgR27hV+WhbOJeVj59jEKfIIqVvSdBVCzK7+Armv9mNgHuohRpACIHjt8bt3/
-        2vyQpb/yEIpiVEDccDUbGPS6U6tpz4E/3RBYZsuuCSFMzjHQcxYL1nLZbTm8ZL6w
-        oM3KkuQIJuf70o2r1Tc5dFZt3qs38qcf4Gbf9QyqFlJJMMSeZ2MK5Z6xDF4x7Niu
-        woOiXdaaWMmaX5l14sXnNAqCEhmFecYmM3jKtUtnpsNDB9zIL2gZllE0INkn+P8i
-        AEvLdR80mkojrdHyHgHcjfpGaye5w==
-X-ME-Sender: <xms:xty_XJ_-LQyt29nJxYbb1VWVFEiaGjH6JHBC56BAiaOH8eGCeFmDSg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrgeelgdejhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefurghmuhgv
-    lhcuofgvnhguohiirgdqlfhonhgrshcuoehsrghmsehmvghnughoiigrjhhonhgrshdrtg
-    homheqnecukfhppeduvddvrdelledrkedvrddutdenucfrrghrrghmpehmrghilhhfrhho
-    mhepshgrmhesmhgvnhguohiirghjohhnrghsrdgtohhmnecuvehluhhsthgvrhfuihiivg
-    eptd
-X-ME-Proxy: <xmx:xty_XIJRhei6WxZhlzk4O03KyjdHNyboRN_acJQir7PR2DeLCmpHOw>
-    <xmx:xty_XOj-QPp2pljpjbyxfEGdduZHl2Y0-LmWlDaSXFKXhel0Ily9zA>
-    <xmx:xty_XE8agZ2fYNszyxmobeWvPpQQsnoHDOqgx-oOY-0T-KNTlx9suQ>
-    <xmx:x9y_XDHTCyWOaGmr9Mgcmlhd7OfH9B_4K6oYHz_qT_63Ix4tzBYWkA>
-Received: from v4 (unknown [122.99.82.10])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 03182E424F;
-        Tue, 23 Apr 2019 23:49:21 -0400 (EDT)
-Message-ID: <a0cc05541859e96dad21ebda67cd468aedfb893c.camel@mendozajonas.com>
-Subject: Re: [PATCH net v4] net/ncsi: handle overflow when incrementing mac
- address
-From:   Samuel Mendoza-Jonas <sam@mendozajonas.com>
-To:     Tao Ren <taoren@fb.com>, "David S . Miller" <davem@davemloft.net>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Date:   Wed, 24 Apr 2019 13:49:17 +1000
-In-Reply-To: <20190424014310.24253-1-taoren@fb.com>
-References: <20190424014310.24253-1-taoren@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+        Tue, 23 Apr 2019 23:51:50 -0400
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x3O3pdiE007519;
+        Wed, 24 Apr 2019 12:51:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x3O3pdiE007519
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556077900;
+        bh=+HJeyNjpRgp8bYTWk5WH+vdNtyBYFFKDuTqCkYj2rOQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=I9flOMnKO8pgKJJkcxBLsmLGmMCqAPSIu6sDfKL25hH/EH78HUDoo5MhpPNWGFtyv
+         tL77IXBxrZr26prgwiw+IeMlAUoxsFywNE+X/Im+8ZSl5o1pVXD5UvjiTCS2UJNgYJ
+         UMjqfsaJ6XZ5Z4DJV680zpKQQjvRW3Xc+Npi4EH/gLHEyxaEPE1xpEupqj40I2HfIZ
+         df9AnlCCMLHh+5G/z8XlRfCdXet1m9nWT2lv5oEB4Wh2+Nyi2ihd7WBxuGPI4GhskW
+         E8hgurkX1f6o7kpHbNqYlykTn+OU55iE8jlLo3gIYeCuMSylBeSJnRNtUTAoExzUdd
+         Nneo9ZICBHOqg==
+X-Nifty-SrcIP: [209.85.217.53]
+Received: by mail-vs1-f53.google.com with SMTP id s2so9580254vsi.5;
+        Tue, 23 Apr 2019 20:51:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAXnwWQXC9MXMWOGO4/Y4dXydQ8qFd2EdrpgxejYJLEAwRE7hXw3
+        I6GSRQdv/fKx/iQePNAe53EPizCLnZA0l5g5uFs=
+X-Google-Smtp-Source: APXvYqxsUTFBYv/TA0s3DojNe8ro2oiPdhhm/v2+YG0pTgOTFckcQuADD8qLwY2G50volvs+Fg4rSj1y8P6isyQVvWc=
+X-Received: by 2002:a67:7a43:: with SMTP id v64mr16408997vsc.54.1556077899016;
+ Tue, 23 Apr 2019 20:51:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190423212741.12219-1-ndesaulniers@google.com>
+In-Reply-To: <20190423212741.12219-1-ndesaulniers@google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 24 Apr 2019 12:51:03 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS9zy92MZQ7qj3xQtS+MeYr2cVsrekcBv8yVG6Qu0Fzkw@mail.gmail.com>
+Message-ID: <CAK7LNAS9zy92MZQ7qj3xQtS+MeYr2cVsrekcBv8yVG6Qu0Fzkw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: drop support for cc-ldoption
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        clang-built-linux@googlegroups.com,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-04-24 at 01:43 +0000, Tao Ren wrote:
-> Previously BMC's MAC address is calculated by simply adding 1 to the
-> last byte of network controller's MAC address, and it produces incorrect
-> result when network controller's MAC address ends with 0xFF.
-> 
-> The problem can be fixed by calling eth_addr_inc() function to increment
-> MAC address; besides, the MAC address is also validated before assigning
-> to BMC.
-> 
-> Fixes: cb10c7c0dfd9 ("net/ncsi: Add NCSI Broadcom OEM command")
-> Signed-off-by: Tao Ren <taoren@fb.com>
-
-Acked-by: Samuel Mendoza-Jonas <sam@mendozajonas.com>
-
+On Wed, Apr 24, 2019 at 6:27 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> If you want to see if your linker supports a certain flag, then ask the
+> linker directly with ld-option (not the compiler with cc-ldoption).
+> Checking for linker flag support is an antipattern that complicates the
+> usage of various linkers other than bfd via -fuse-ld={bfd|gold|lld}.
+>
+> Cc: clang-built-linux@googlegroups.com
+> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 > ---
->  include/linux/etherdevice.h | 12 ++++++++++++
->  net/ncsi/ncsi-rsp.c         |  6 +++++-
->  2 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> Changes in v4:
->  - revert the changes in eth_addr_dec() function comment.
-> Changes in v3:
->  - squash changes in "etherdevice.h" into this patch.
->  - fix format issue in function comment.
-> Changes in v2:
->  - increment MAC address by calling eth_addr_inc() function.
->  - validate MAC address before assigning to BMC.
-> 
-> diff --git a/include/linux/etherdevice.h b/include/linux/etherdevice.h
-> index e2f3b21cd72a..aa8bfd6f738c 100644
-> --- a/include/linux/etherdevice.h
-> +++ b/include/linux/etherdevice.h
-> @@ -448,6 +448,18 @@ static inline void eth_addr_dec(u8 *addr)
->  	u64_to_ether_addr(u, addr);
->  }
->  
-> +/**
-> + * eth_addr_inc() - Increment the given MAC address.
-> + * @addr: Pointer to a six-byte array containing Ethernet address to increment.
-> + */
-> +static inline void eth_addr_inc(u8 *addr)
-> +{
-> +	u64 u = ether_addr_to_u64(addr);
-> +
-> +	u++;
-> +	u64_to_ether_addr(u, addr);
-> +}
-> +
->  /**
->   * is_etherdev_addr - Tell if given Ethernet address belongs to the device.
->   * @dev: Pointer to a device structure
-> diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
-> index dc07fcc7938e..802db01e3075 100644
-> --- a/net/ncsi/ncsi-rsp.c
-> +++ b/net/ncsi/ncsi-rsp.c
-> @@ -11,6 +11,7 @@
->  #include <linux/kernel.h>
->  #include <linux/init.h>
->  #include <linux/netdevice.h>
-> +#include <linux/etherdevice.h>
->  #include <linux/skbuff.h>
->  
->  #include <net/ncsi.h>
-> @@ -667,7 +668,10 @@ static int ncsi_rsp_handler_oem_bcm_gma(struct ncsi_request *nr)
->  	ndev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
->  	memcpy(saddr.sa_data, &rsp->data[BCM_MAC_ADDR_OFFSET], ETH_ALEN);
->  	/* Increase mac address by 1 for BMC's address */
-> -	saddr.sa_data[ETH_ALEN - 1]++;
-> +	eth_addr_inc((u8 *)saddr.sa_data);
-> +	if (!is_valid_ether_addr((const u8 *)saddr.sa_data))
-> +		return -ENXIO;
-> +
->  	ret = ops->ndo_set_mac_address(ndev, &saddr);
->  	if (ret < 0)
->  		netdev_warn(ndev, "NCSI: 'Writing mac address to device failed\n");
-> -- 
-> 2.17.1
-> 
+> This should probably wait until all of the call sites have been cleaned
+> up.
+
+Indeed.
+Please remind me if I forget to apply this.
 
 
+> Masahiro sent them for arm and arm64, while I sent cleanups for all
+> the rest.
+
+Thanks. I did not even notice cc-ldoption were checking
+quite old flags.
+
+
+
+
+>
+>
+>  Documentation/kbuild/makefiles.txt | 14 --------------
+>  scripts/Kbuild.include             |  5 -----
+>  2 files changed, 19 deletions(-)
+>
+> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+> index 03c065855eaf..d65ad5746f94 100644
+> --- a/Documentation/kbuild/makefiles.txt
+> +++ b/Documentation/kbuild/makefiles.txt
+> @@ -437,20 +437,6 @@ more details, with real examples.
+>         The second argument is optional, and if supplied will be used
+>         if first argument is not supported.
+>
+> -    cc-ldoption
+> -       cc-ldoption is used to check if $(CC) when used to link object files
+> -       supports the given option.  An optional second option may be
+> -       specified if first option are not supported.
+> -
+> -       Example:
+> -               #arch/x86/kernel/Makefile
+> -               vsyscall-flags += $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
+> -
+> -       In the above example, vsyscall-flags will be assigned the option
+> -       -Wl$(comma)--hash-style=sysv if it is supported by $(CC).
+> -       The second argument is optional, and if supplied will be used
+> -       if first argument is not supported.
+> -
+>      as-instr
+>         as-instr checks if the assembler reports a specific instruction
+>         and then outputs either option1 or option2
+> diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+> index 7484b9d8272f..fbfb37d1bcc8 100644
+> --- a/scripts/Kbuild.include
+> +++ b/scripts/Kbuild.include
+> @@ -138,11 +138,6 @@ cc-disable-warning = $(call try-run,\
+>  # Usage:  EXTRA_CFLAGS += $(call cc-ifversion, -lt, 0402, -O1)
+>  cc-ifversion = $(shell [ $(CONFIG_GCC_VERSION)0 $(1) $(2)000 ] && echo $(3) || echo $(4))
+>
+> -# cc-ldoption
+> -# Usage: ldflags += $(call cc-ldoption, -Wl$(comma)--hash-style=both)
+> -cc-ldoption = $(call try-run,\
+> -       $(CC) $(1) $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
+> -
+>  # ld-option
+>  # Usage: KBUILD_LDFLAGS += $(call ld-option, -X, -Y)
+>  ld-option = $(call try-run, $(LD) $(KBUILD_LDFLAGS) $(1) -v,$(1),$(2),$(3))
+> --
+> 2.21.0.593.g511ec345e18-goog
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
