@@ -2,135 +2,168 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10443C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6113EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D11E120685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:18:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlHyh99j"
+	by mail.kernel.org (Postfix) with ESMTP id 3C5AA20685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733249AbfDXSSL (ORCPT
+        id S1733276AbfDXSTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:18:11 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43377 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733163AbfDXSSL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:18:11 -0400
-Received: by mail-lf1-f66.google.com with SMTP id i68so15426071lfi.10;
-        Wed, 24 Apr 2019 11:18:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BH/hnxfh/10Bg7IPT2muPqlO7cJy/jbY2turZVfwqow=;
-        b=nlHyh99jQvg4By9q8zfVMWoa+dpeJ+/3PorljQN5DdtnHkshOGFyVU8TtJR8tDh8yl
-         f+PrIrUN8IvOWsRpsWyc3fUki12GcdmVXZ5oLrlNUlGks2njQdYpJV0BJ+GDipeJJvfT
-         Y7FkYML5hrwB01L/8oOWq4KdjtVqj2iSjYsp76UqJD0TsdahznsRUiHplNcEe3X7HMg1
-         7R0RtwddLI2kp2hZXVWS4rSrwKm0TKE6UELVQUhjubJlXGocP8bd4RHIvvwD4O/F0/L3
-         ran1dvXEuIItrshnYtSAudguYC+4cX994Uh3Y+Zgrc9FSvjKOoc1anet1V8Nyxc0L7V8
-         T9MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BH/hnxfh/10Bg7IPT2muPqlO7cJy/jbY2turZVfwqow=;
-        b=fHopC5T0zQrsPtQJe4Os2bnZOAuxUbID/YzOvmVHqKZ63Ei/8jLR2exVINkKoDN4tt
-         72vRS1OGeIi8MTTVvqPxKjTEbl+kwH5O5bymCbizGK8/T3i8URHsTEPHOtH4YF66/Cj8
-         MlcL/RYhkne4801uJu7hLwchNUZS3Njpc1gGOvVhv/2aqZutnNH4DYsZamlpzjKOZE0Q
-         rp/61pQnC4Qzsg4UXix4UNnly6AIFw7te2IF3XMHoB16bEUc23JY9MbyhamUNQh4dB0i
-         FYQmJ7RPMizIWIPLrj7/8b2hYrcUFSU+nJbwbhs/gHuCfk+IVYMaCUjZTvtigTXTlI5u
-         x1cA==
-X-Gm-Message-State: APjAAAUyMJZs98OwNmI9FQlNwcts0gUlCHtRNeblkHd6Dxz/gSidH5ww
-        7otnRzYoPPmrbse2uRR4XU8=
-X-Google-Smtp-Source: APXvYqwirLQ3GlBgh+7yHYOBoxgISjSYf9rQmemhuDSmzMoedTRt3EKuGt73vIHguBK8MjNevsWhUA==
-X-Received: by 2002:ac2:4833:: with SMTP id 19mr18164418lft.87.1556129888927;
-        Wed, 24 Apr 2019 11:18:08 -0700 (PDT)
-Received: from [192.168.1.19] (bkw231.neoplus.adsl.tpnet.pl. [83.28.190.231])
-        by smtp.gmail.com with ESMTPSA id h21sm34631ljf.16.2019.04.24.11.18.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 11:18:08 -0700 (PDT)
-Subject: Re: [PATCH v4 22/26] leds: as3645a: Use generic support for composing
- LED names
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com,
-        linux@roeck-us.net, Sakari Ailus <sakari.ailus@linux.intel.com>
-References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
- <20190417205439.17685-23-jacek.anaszewski@gmail.com>
- <20190424140128.GD14360@amd>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <52b9725f-ac30-0b09-af6e-879396c37819@gmail.com>
-Date:   Wed, 24 Apr 2019 20:18:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 14:19:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51408 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731658AbfDXSTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:19:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 650A9AEA1;
+        Wed, 24 Apr 2019 18:19:08 +0000 (UTC)
+Date:   Wed, 24 Apr 2019 20:19:07 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Joao Moreira <jmoreira@suse.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michael Matz <matz@suse.de>, Nicolai Stange <nstange@suse.de>,
+        Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v3 0/9] klp-convert livepatch build tooling
+In-Reply-To: <20190417201316.GA690@redhat.com>
+Message-ID: <alpine.LSU.2.21.1904242013310.30239@pobox.suse.cz>
+References: <20190410155058.9437-1-joe.lawrence@redhat.com> <20190417201316.GA690@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190424140128.GD14360@amd>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel,
+[...]
 
-On 4/24/19 4:01 PM, Pavel Machek wrote:
-> Hi!
+> Result: a small tweak to sympos_sanity_check() to relax its symbol
+> uniqueness verification:  allow for duplicate <object, name, position>
+> instances.  Now it will only complain when a supplied symbol references
+> the same <object, name> but a different <position>.
 > 
->> Switch to using generic LED support for composing LED class
->> device name.
->>
->> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> diff --git a/scripts/livepatch/klp-convert.c b/scripts/livepatch/klp-convert.c
+> index 82c27d219372..713835dfc9ec 100644
+> --- a/scripts/livepatch/klp-convert.c
+> +++ b/scripts/livepatch/klp-convert.c
+> @@ -194,7 +194,10 @@ static void clear_sympos_annontations(struct elf *klp_elf)
+>  	}
+>  }
 > 
->> +static int as3645a_led_class_setup(struct as3645a *flash)
->>   {
->>   	struct led_classdev *fled_cdev = &flash->fled.led_cdev;
->>   	struct led_classdev *iled_cdev = &flash->iled_cdev;
->> +	struct led_init_data init_data;
-> 
-> Not initialized.
-> 
->>   	struct led_flash_setting *cfg;
->>   	int rval;
->>   
->> -	iled_cdev->name = names->indicator;
->>   	iled_cdev->brightness_set_blocking = as3645a_set_indicator_brightness;
->>   	iled_cdev->max_brightness =
->>   		flash->cfg.indicator_max_ua / AS_INDICATOR_INTENSITY_STEP;
->>   	iled_cdev->flags = LED_CORE_SUSPENDRESUME;
->>   
->> -	rval = led_classdev_register(&flash->client->dev, iled_cdev);
->> +	init_data.fwnode = flash->indicator_node;
->> +	init_data.devicename = AS_NAME;
->> +	init_data.default_label = "indicator";
-> 
-> And struct has one more field:
-> 
-> 	 +       /*
-> 	 +        * indicates if LED name should always comprise
->           devicename section;
-> 	 +        * only LEDs exposed by drivers of hot-pluggable
->           devices should
-> 	 +        * set it to true
-> 	 +        */
-> 	 +       bool devname_mandatory;
-> 	  };
-> 
-> I believe it would be cleaner to always initialize struct with zeros;
-> that way you can also expand it in future.
+> -/* Checks if two or more elements in usr_symbols have the same name */
+> +/*
+> + * Checks if two or more elements in usr_symbols have the same
+> + * object and name, but different symbol position
+> + */
+>  static bool sympos_sanity_check(void)
+>  {
+>  	bool sane = true;
+> @@ -203,7 +206,9 @@ static bool sympos_sanity_check(void)
+>  	list_for_each_entry(sp, &usr_symbols, list) {
+>  		aux = list_next_entry(sp, list);
+>  		list_for_each_entry_from(aux, &usr_symbols, list) {
+> -			if (strcmp(sp->symbol_name, aux->symbol_name) == 0) {
+> +			if (sp->pos != aux->pos &&
+> +			    strcmp(sp->object_name, aux->object_name) == 0 &&
+> +			    strcmp(sp->symbol_name, aux->symbol_name) == 0)
+>  				WARN("Conflicting KLP_SYMPOS definition: %s.%s,%d vs. %s.%s,%d.",
+>  				sp->object_name, sp->symbol_name, sp->pos,
+>  				aux->object_name, aux->symbol_name, aux->pos);
 
-Good point. Will fix that in v5.
+Looks good and I'd definitely include it in v4.
 
--- 
-Best regards,
-Jacek Anaszewski
+> Unique sympos
+> -------------
+> 
+> But even with the above workaround, specifying unique symbol positions
+> will (and should) result in a klp-convert complaint.
+> 
+> When modifying the test module with unique symbol position annotation
+> values (1 and 2 respectively):
+> 
+>   test_klp_convert_multi_objs_a.c:
+> 
+>     extern void *state_show;
+>     ...
+>     KLP_MODULE_RELOC(vmlinux) vmlinux_relocs_b[] = {
+>             KLP_SYMPOS(state_show, 1)
+>     };
+> 
+>   test_klp_convert_multi_objs_b.c:
+> 
+>     extern void *state_show;
+>     ...
+>     KLP_MODULE_RELOC(vmlinux) vmlinux_relocs_b[] = {
+>             KLP_SYMPOS(state_show, 2)
+>     };
+> 
+> 
+> Each object file's symbol table contains a "state_show" instance:
+> 
+>   % eu-readelf --symbols lib/livepatch/test_klp_convert_multi_objs_a.o | grep '\<state_show\>'
+>      30: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
+> 
+>   % eu-readelf --symbols lib/livepatch/test_klp_convert_multi_objs_b.o | grep '\<state_show\>'
+>      20: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
+> 
+> and the intermediate test_klp_convert_multi_objs.klp.o file contains a
+> combined .klp.module_relocs.vmlinux relocation section with two
+> KLP_SYMPOS structures, each with a unique <sympos> value:
+> 
+>   % objcopy -O binary --only-section=.klp.module_relocs.vmlinux \
+>       lib/livepatch/test_klp_convert_multi_objs.klp.o >(hexdump)
+> 
+>   0000000 0000 0000 0000 0000 0001 0000 0000 0000
+>   0000010 0000 0000 0002 0000
+> 
+> but the symbol tables were merged, sorted and non-unique symbols
+> removed, leaving a *single* unresolved "state_show" instance:
+> 
+>   % eu-readelf --symbols lib/livepatch/test_klp_convert_multi_objs.klp.o | grep '\<state_show\>'
+>      53: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
+> 
+> which means that even though we have separate relocations for each
+> "state_show" instance:
+> 
+>   Relocation section [ 6] '.rela.text.unlikely' for section [ 5] '.text.unlikely' at offset 0x44510 contains 11 entries:
+>     Offset              Type            Value               Addend Name
+>     0x0000000000000003  X86_64_32S      000000000000000000      +0 state_show
+>     ...
+>     0x0000000000000034  X86_64_32S      000000000000000000      +0 state_show
+>     ...
+> 
+> they share the same rela->sym and there is no way to distinguish which
+> one correlates to which KLP_SYMPOS structure.
+> 
+> 
+> Future Work
+> -----------
+>
+> I don't see an easy way to support multiple homonym <object, name>
+> symbols with unique <position> values in the current livepatch module
+> Elf format.  The only solutions that come to mind right now include
+> renaming homonym symbols somehow to retain the relocation->symbol
+> relationship when separate object files are combined.  Perhaps an
+> intermediate linker step could make annotated symbols unique in some way
+> to achieve this.  /thinking out loud
+
+I'd set this aside for now and we can return to it later. I think it could 
+be quite rare in practice.
+
+I was thinking about renaming the symbol too. We can extend the symbol 
+naming convention we have now and deal with it in klp_resolve_symbols(), 
+but maybe Josh will come up with something clever and cleaner.
+ 
+Miroslav
