@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0A3C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CC0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F54321905
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7999F21905
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126232;
-	bh=VDbp+VpByAQufCv8cW2nByeOzTJDL93EO/CjwDUX+iY=;
+	s=default; t=1556126234;
+	bh=zsTpsEuovZz6If4sMcNZfQeTixx+R/rqKdjbCVTDxdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hFmq0JCbHoZH5QUgchLKlhKlaVtVOeaW5s31+3mDO/VKUic5AnzQIz51KmY+wN2Pz
-	 4IgQQbE1FvlIUU8Es6BSwQum3z7udRTZMceOelVr7Q4bkRERdrs90R/qMHTJJm8fEi
-	 jRz8vw039yF+PFov5zMC/cc/ZexpUN79KOUnYt5s=
+	b=atW7pKqtooUYTlFNE4QvwR9xGKB9rti0MMyKQG4+hAl5Pl9o+ecyTlmvt0896+K23
+	 aANjYTpWg3zXVmg33FeyLu+kSTFzdS27GF1TkKZn/Q+e3SP7c2U6LomqQcLaFVvHzZ
+	 MWVFsWv/LgGDQjBOd83EVKev5mrblTUBcvUwUQTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388568AbfDXRRK (ORCPT
+        id S2388579AbfDXRRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:17:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41828 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:17:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388167AbfDXRRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:17:07 -0400
+        id S2388551AbfDXRRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:17:11 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F009218B0;
-        Wed, 24 Apr 2019 17:17:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 420252054F;
+        Wed, 24 Apr 2019 17:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126227;
-        bh=VDbp+VpByAQufCv8cW2nByeOzTJDL93EO/CjwDUX+iY=;
+        s=default; t=1556126229;
+        bh=zsTpsEuovZz6If4sMcNZfQeTixx+R/rqKdjbCVTDxdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AYZMjjYUkVqUCa6eEr8XVQ4xqTAdsKfdMxWzFlkXTPCDDL6f/Z5qx4jWNnnlNKfI/
-         V5u/6oIaP1i6X8ehitg8WYaujOwRo1UPDmc5z0h0oay4jxMlmks5Eb8s1Y3UKagpLz
-         iycw5Apb/Tw29pcSJrznY/4kE5EHxd7nAaF1d/oE=
+        b=vORa4GRz0B/+fEh+5fQDUWFqVtjhVIgrgdIISjWzXHeaEzELxth2Gqq8eYQEpGUSj
+         t1jvikamp9rTPYga1XzfCZh8gC+0ixQ5W56b0x1s2in/3RhZxcFSAcffJqzgWCjbSm
+         GeLru+he28WJvs5kIs8123+9SPgsG+hhIOyr9jG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Yan <yanaijie@huawei.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 035/168] scsi: megaraid_sas: return error when create DMA pool failed
-Date:   Wed, 24 Apr 2019 19:07:59 +0200
-Message-Id: <20190424170925.816802180@linuxfoundation.org>
+Subject: [PATCH 4.4 036/168] perf test: Fix failure of evsel-tp-sched test on s390
+Date:   Wed, 24 Apr 2019 19:08:00 +0200
+Message-Id: <20190424170925.888589144@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,77 +63,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bcf3b67d16a4c8ffae0aa79de5853435e683945c ]
+[ Upstream commit 03d309711d687460d1345de8a0363f45b1c8cd11 ]
 
-when create DMA pool for cmd frames failed, we should return -ENOMEM,
-instead of 0.
-In some case in:
+Commit 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
+causes test case 14 "Parse sched tracepoints fields" to fail on s390.
 
-    megasas_init_adapter_fusion()
+This test succeeds on x86.
 
-    -->megasas_alloc_cmds()
-       -->megasas_create_frame_pool
-          create DMA pool failed,
-        --> megasas_free_cmds() [1]
+In fact this test now fails on all architectures with type char treated
+as type unsigned char.
 
-    -->megasas_alloc_cmds_fusion()
-       failed, then goto fail_alloc_cmds.
-    -->megasas_free_cmds() [2]
+The root cause is the signed-ness of character arrays in the tracepoints
+sched_switch for structure members prev_comm and next_comm.
 
-we will call megasas_free_cmds twice, [1] will kfree cmd_list,
-[2] will use cmd_list.it will cause a problem:
+On s390 the output of:
 
-Unable to handle kernel NULL pointer dereference at virtual address
-00000000
-pgd = ffffffc000f70000
-[00000000] *pgd=0000001fbf893003, *pud=0000001fbf893003,
-*pmd=0000001fbf894003, *pte=006000006d000707
-Internal error: Oops: 96000005 [#1] SMP
- Modules linked in:
- CPU: 18 PID: 1 Comm: swapper/0 Not tainted
- task: ffffffdfb9290000 ti: ffffffdfb923c000 task.ti: ffffffdfb923c000
- PC is at megasas_free_cmds+0x30/0x70
- LR is at megasas_free_cmds+0x24/0x70
- ...
- Call trace:
- [<ffffffc0005b779c>] megasas_free_cmds+0x30/0x70
- [<ffffffc0005bca74>] megasas_init_adapter_fusion+0x2f4/0x4d8
- [<ffffffc0005b926c>] megasas_init_fw+0x2dc/0x760
- [<ffffffc0005b9ab0>] megasas_probe_one+0x3c0/0xcd8
- [<ffffffc0004a5abc>] local_pci_probe+0x4c/0xb4
- [<ffffffc0004a5c40>] pci_device_probe+0x11c/0x14c
- [<ffffffc00053a5e4>] driver_probe_device+0x1ec/0x430
- [<ffffffc00053a92c>] __driver_attach+0xa8/0xb0
- [<ffffffc000538178>] bus_for_each_dev+0x74/0xc8
-  [<ffffffc000539e88>] driver_attach+0x28/0x34
- [<ffffffc000539a18>] bus_add_driver+0x16c/0x248
- [<ffffffc00053b234>] driver_register+0x6c/0x138
- [<ffffffc0004a5350>] __pci_register_driver+0x5c/0x6c
- [<ffffffc000ce3868>] megasas_init+0xc0/0x1a8
- [<ffffffc000082a58>] do_one_initcall+0xe8/0x1ec
- [<ffffffc000ca7be8>] kernel_init_freeable+0x1c8/0x284
- [<ffffffc0008d90b8>] kernel_init+0x1c/0xe4
+ [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
+ name: sched_switch
+ ID: 287
+ format:
+   field:unsigned short common_type; offset:0; size:2;	signed:0;
+   ...
+   field:char prev_comm[16]; offset:8; size:16;	signed:0;
+   ...
+   field:char next_comm[16]; offset:40; size:16; signed:0;
 
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+reveals the character arrays prev_comm and next_comm are per
+default unsigned char and have values in the range of 0..255.
+
+On x86 both fields are signed as this output shows:
+ [root@f29]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
+ name: sched_switch
+ ID: 287
+ format:
+   field:unsigned short common_type; offset:0; size:2;	signed:0;
+   ...
+   field:char prev_comm[16]; offset:8; size:16;	signed:1;
+   ...
+   field:char next_comm[16]; offset:40; size:16; signed:1;
+
+and the character arrays prev_comm and next_comm are per default signed
+char and have values in the range of -1..127.  The implementation of
+type char is architecture specific.
+
+Since the character arrays in both tracepoints sched_switch and
+sched_wakeup should contain ascii characters, simply omit the check for
+signedness in the test case.
+
+Output before:
+
+  [root@m35lp76 perf]# ./perf test -F 14
+  14: Parse sched tracepoints fields                        :
+  --- start ---
+  sched:sched_switch: "prev_comm" signedness(0) is wrong, should be 1
+  sched:sched_switch: "next_comm" signedness(0) is wrong, should be 1
+  sched:sched_wakeup: "comm" signedness(0) is wrong, should be 1
+  ---- end ----
+  14: Parse sched tracepoints fields                        : FAILED!
+  [root@m35lp76 perf]#
+
+Output after:
+
+  [root@m35lp76 perf]# ./perf test -Fv 14
+  14: Parse sched tracepoints fields                        :
+  --- start ---
+  ---- end ----
+  Parse sched tracepoints fields: Ok
+  [root@m35lp76 perf]#
+
+Fixes: 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20190219153639.31267-1-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/tests/evsel-tp-sched.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index ac7acd257c99..2422094f1f15 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -3847,6 +3847,7 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
- 	if (megasas_create_frame_pool(instance)) {
- 		dev_printk(KERN_DEBUG, &instance->pdev->dev, "Error creating frame DMA pool\n");
- 		megasas_free_cmds(instance);
-+		return -ENOMEM;
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index da474d743b6a..1b832e54c04b 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -42,7 +42,7 @@ int test__perf_evsel__tp_sched_test(void)
+ 		return -1;
  	}
  
- 	return 0;
+-	if (perf_evsel__test_field(evsel, "prev_comm", 16, true))
++	if (perf_evsel__test_field(evsel, "prev_comm", 16, false))
+ 		ret = -1;
+ 
+ 	if (perf_evsel__test_field(evsel, "prev_pid", 4, true))
+@@ -54,7 +54,7 @@ int test__perf_evsel__tp_sched_test(void)
+ 	if (perf_evsel__test_field(evsel, "prev_state", sizeof(long), true))
+ 		ret = -1;
+ 
+-	if (perf_evsel__test_field(evsel, "next_comm", 16, true))
++	if (perf_evsel__test_field(evsel, "next_comm", 16, false))
+ 		ret = -1;
+ 
+ 	if (perf_evsel__test_field(evsel, "next_pid", 4, true))
+@@ -72,7 +72,7 @@ int test__perf_evsel__tp_sched_test(void)
+ 		return -1;
+ 	}
+ 
+-	if (perf_evsel__test_field(evsel, "comm", 16, true))
++	if (perf_evsel__test_field(evsel, "comm", 16, false))
+ 		ret = -1;
+ 
+ 	if (perf_evsel__test_field(evsel, "pid", 4, true))
 -- 
 2.19.1
 
