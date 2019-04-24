@@ -2,115 +2,203 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256EFC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCF0C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A6720684
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B3120835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:10:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PYO9LHzl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R4yWrQJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733057AbfDXVJW (ORCPT
+        id S1733075AbfDXVKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 17:09:22 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:42861 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729032AbfDXVJW (ORCPT
+        Wed, 24 Apr 2019 17:10:51 -0400
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:37881 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbfDXVKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 17:09:22 -0400
-Received: by mail-vs1-f66.google.com with SMTP id f15so11237387vsk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:09:21 -0700 (PDT)
+        Wed, 24 Apr 2019 17:10:51 -0400
+Received: by mail-ua1-f74.google.com with SMTP id w19so2534877uar.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:10:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=oO1cIU2AnZi6mcNUNwULvsUo8ImP+bDCeOEcV2C9dwE=;
-        b=PYO9LHzlXRD5KUnMQNr6V8Utry7fY4JCL+g6OTmgdecbZwKpTc+YCjo2//MFxOp4pe
-         3N1Rp2OZs+H67CFCcBA96oKzJLgclQd0L+qI2erR5pZFNsxEOf58b64p0+1LX1kCiKgb
-         ywd9i5S9p/oW/1qBiVdzA7gpjZfWsTeOoHVTk=
+        bh=EEx6KKB2U0RJZ21EFlDN1R7C1ruUVShWYlcQvFlcO3Y=;
+        b=R4yWrQJjCJ8Bn88/SOwrmAKIiYFKv2Ld/L1gosT676YETZR3g9s1zjAw+XfRBUFxUt
+         yYONprmgp2eEy+5GwASlKDn6gwSGZ0K3BrnVJoIFcb+QwADtHOu+KbAC7dIlloZXv2zF
+         InmrO+sJenQD3LDR7GFPk1TMvt2RpsFfAYIYGXpWrLIKvULclDqbRCFRJwtDNItMrOI8
+         ImsP/SuHDwn3Z/5R6WU3lbRAI/gTXNTev2yRr3j9qut3+t+F1PFYVIGFC7djLq6dqM3f
+         vkIjbcwDmU4DyBgpuufndPDpRyb2Mz6pZ85CKWVlgD6Y6JJtcYNhFX0c8qNlKKRe5Tbs
+         sshw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oO1cIU2AnZi6mcNUNwULvsUo8ImP+bDCeOEcV2C9dwE=;
-        b=Z2RVQKUQCS5PPYhFN8hVAWzkMPTyDio8zppQWIQZIyedYKz4595tb6VVNOlumZJo2o
-         sgbkNMAK3H0JbkOMi52kWW8nvVtEQ42mKWlmWSn0zSuMUjMTjC1SMUohvaLEhLpxB/Yh
-         IlB+fpRW/SuSjoe0s1hJIEISKLu9t7zNsyPb7mFyw6qe1vT6VBXNEnb73X7mRhwde9//
-         U7B4naMTwasvHwZMpK3FAw6cCLbasfuu4fhvxSH1aSYuh0b5NYWZ8xx9y5L4GjIZ5G1G
-         j2v/fHVDXQJU4P3qX4VSP3NBqA+2CRcZ+lbsCH9R7RrTMshlvmGmUqo5LGNJ6youbsni
-         722g==
-X-Gm-Message-State: APjAAAUBtRfSfH0BmlqDWByFWpXT6xxYctpNwzCVobv502hP5DLVYx/W
-        WMRlUoFIoD8AXjlTrDB4z6hxL9+jSQ4=
-X-Google-Smtp-Source: APXvYqzfZO4I6qNIQUjvR9c+SdmBnS1DKX0zK2vDlaIgeMyOMvbQylrtk73p1kIWTvFh8+oRLuC5ZA==
-X-Received: by 2002:a05:6102:206:: with SMTP id z6mr8026329vsp.186.1556140160820;
-        Wed, 24 Apr 2019 14:09:20 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id u6sm12832824vke.54.2019.04.24.14.09.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 14:09:20 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id g127so11261751vsd.6
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:09:20 -0700 (PDT)
-X-Received: by 2002:a67:f849:: with SMTP id b9mr18305831vsp.188.1556139733580;
- Wed, 24 Apr 2019 14:02:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190423194925.32151-1-keescook@chromium.org> <20190423194925.32151-3-keescook@chromium.org>
- <84ed0a4b-b1e5-ae86-56c1-40a212734667@linux.com>
-In-Reply-To: <84ed0a4b-b1e5-ae86-56c1-40a212734667@linux.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 24 Apr 2019 14:02:02 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jKkv2EvxZEO_V_0djDhaW-+WToZ2D477_PRnnMfAFDpTA@mail.gmail.com>
-Message-ID: <CAGXu5jKkv2EvxZEO_V_0djDhaW-+WToZ2D477_PRnnMfAFDpTA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] security: Move stackleak config to Kconfig.hardening
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        James Morris <jmorris@namei.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emese Revfy <re.emese@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=EEx6KKB2U0RJZ21EFlDN1R7C1ruUVShWYlcQvFlcO3Y=;
+        b=AK8JHjIwLk0cecNegoRS85uWJuDnKOK6TaXobYtLgp/8YwFXXp2jP+9nJtfE1FMWdQ
+         evPwMWJvL48UTB8vxcqW3bVXtbHsjhl3s9WTkPlUsA6hCeQi1UvNI8h1nmmm3jeeKa75
+         h7MhxNdG0yjsT8IMzyyH7anSYGivDyYG9HKCOlajebSgCjd9+mAGBdNIqVM9J/14vJ9W
+         LzHyzGW58COPLsiWe/vb28l9k6hEOoGU3uT8Fji61Y/YOCA6G9n5OwCS17CRTq81Emeo
+         zT5rAEo1bOUu1iXoQgpdCimaqYRjh9iA4f9wttsQ9IAVp995cfeDumswTTOcO9vNylpW
+         fnLQ==
+X-Gm-Message-State: APjAAAUiZhShPsB4z9fg0MtacA9z8nQTpUURpMk3EwgxZ3HHTlLHHsUB
+        lNF1uQJNI3A5EKuYghUNz1eUH3A0h/PYy51KphQHBA==
+X-Google-Smtp-Source: APXvYqw3/8N6LovTbNOp1ehALE5NeruleVVSOs7bs/5NswFdHy3I9YUuHyhfGtlNzfboNB550I7lH7TLlEGNraFjTGXpbQ==
+X-Received: by 2002:a67:c895:: with SMTP id v21mr855019vsk.5.1556140249661;
+ Wed, 24 Apr 2019 14:10:49 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 14:10:39 -0700
+In-Reply-To: <CACdnJuup-y1xAO93wr+nr6ARacxJ9YXgaceQK9TLktE7shab1w@mail.gmail.com>
+Message-Id: <20190424211038.204001-1-matthewgarrett@google.com>
+Mime-Version: 1.0
+References: <CACdnJuup-y1xAO93wr+nr6ARacxJ9YXgaceQK9TLktE7shab1w@mail.gmail.com>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+Subject: [PATCH V2] mm: Allow userland to request that the kernel clear memory
+ on release
+From:   Matthew Garrett <matthewgarrett@google.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, Matthew Garrett <mjg59@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 8:25 AM Alexander Popov <alex.popov@linux.com> wrote:
->
-> On 23.04.2019 22:49, Kees Cook wrote:
-> > This moves the stackleak plugin options to Kconfig.hardening's memory
-> > initialization menu.
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
->
-> Hello Kees,
->
-> I see the changes in STACKLEAK help, looks good to me.
-> For this patch -
->   Reviewed-by: Alexander Popov <alex.popov@linux.com>
+From: Matthew Garrett <mjg59@google.com>
 
-Thanks!
+Applications that hold secrets and wish to avoid them leaking can use
+mlock() to prevent the page from being pushed out to swap and
+MADV_DONTDUMP to prevent it from being included in core dumps. Applications
+can also use atexit() handlers to overwrite secrets on application exit.
+However, if an attacker can reboot the system into another OS, they can
+dump the contents of RAM and extract secrets. We can avoid this by setting
+CONFIG_RESET_ATTACK_MITIGATION on UEFI systems in order to request that the
+firmware wipe the contents of RAM before booting another OS, but this means
+rebooting takes a *long* time - the expected behaviour is for a clean
+shutdown to remove the request after scrubbing secrets from RAM in order to
+avoid this.
 
-> By the way, for your information, GCC_PLUGIN_STRUCTLEAK help is now unreachable
-> from 'make menuconfig'.
+Unfortunately, if an application exits uncleanly, its secrets may still be
+present in RAM. This can't be easily fixed in userland (eg, if the OOM
+killer decides to kill a process holding secrets, we're not going to be able
+to avoid that), so this patch adds a new flag to madvise() to allow userland
+to request that the kernel clear the covered pages whenever the page
+reference count hits zero. Since vm_flags is already full on 32-bit, it
+will only work on 64-bit systems.
 
-Good point. I'll see if I can find a sensible place to move this to.
-There isn't really a place for just the plugin details any more...
-hmm.
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+---
 
+Modified to wipe when the VMA is released rather than on page freeing
+
+ include/linux/mm.h                     |  6 ++++++
+ include/uapi/asm-generic/mman-common.h |  2 ++
+ mm/madvise.c                           | 21 +++++++++++++++++++++
+ mm/memory.c                            |  3 +++
+ 4 files changed, 32 insertions(+)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 6b10c21630f5..64bdab679275 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -257,6 +257,8 @@ extern unsigned int kobjsize(const void *objp);
+ #define VM_HIGH_ARCH_2	BIT(VM_HIGH_ARCH_BIT_2)
+ #define VM_HIGH_ARCH_3	BIT(VM_HIGH_ARCH_BIT_3)
+ #define VM_HIGH_ARCH_4	BIT(VM_HIGH_ARCH_BIT_4)
++
++#define VM_WIPEONRELEASE BIT(37)       /* Clear pages when releasing them */
+ #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
+ 
+ #ifdef CONFIG_ARCH_HAS_PKEYS
+@@ -298,6 +300,10 @@ extern unsigned int kobjsize(const void *objp);
+ # define VM_GROWSUP	VM_NONE
+ #endif
+ 
++#ifndef VM_WIPEONRELEASE
++# define VM_WIPEONRELEASE VM_NONE
++#endif
++
+ /* Bits set in the VMA until the stack is in its final location */
+ #define VM_STACK_INCOMPLETE_SETUP	(VM_RAND_READ | VM_SEQ_READ)
+ 
+diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+index abd238d0f7a4..82dfff4a8e3d 100644
+--- a/include/uapi/asm-generic/mman-common.h
++++ b/include/uapi/asm-generic/mman-common.h
+@@ -64,6 +64,8 @@
+ #define MADV_WIPEONFORK 18		/* Zero memory on fork, child only */
+ #define MADV_KEEPONFORK 19		/* Undo MADV_WIPEONFORK */
+ 
++#define MADV_WIPEONRELEASE 20
++#define MADV_DONTWIPEONRELEASE 21
+ /* compatibility flags */
+ #define MAP_FILE	0
+ 
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 21a7881a2db4..989c2fde15cf 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -92,6 +92,22 @@ static long madvise_behavior(struct vm_area_struct *vma,
+ 	case MADV_KEEPONFORK:
+ 		new_flags &= ~VM_WIPEONFORK;
+ 		break;
++	case MADV_WIPEONRELEASE:
++		/* MADV_WIPEONRELEASE is only supported on anonymous memory. */
++		if (VM_WIPEONRELEASE == 0 || vma->vm_file ||
++		    vma->vm_flags & VM_SHARED) {
++			error = -EINVAL;
++			goto out;
++		}
++		new_flags |= VM_WIPEONRELEASE;
++		break;
++	case MADV_DONTWIPEONRELEASE:
++		if (VM_WIPEONRELEASE == 0) {
++			error = -EINVAL;
++			goto out;
++		}
++		new_flags &= ~VM_WIPEONRELEASE;
++		break;
+ 	case MADV_DONTDUMP:
+ 		new_flags |= VM_DONTDUMP;
+ 		break;
+@@ -727,6 +743,8 @@ madvise_behavior_valid(int behavior)
+ 	case MADV_DODUMP:
+ 	case MADV_WIPEONFORK:
+ 	case MADV_KEEPONFORK:
++	case MADV_WIPEONRELEASE:
++	case MADV_DONTWIPEONRELEASE:
+ #ifdef CONFIG_MEMORY_FAILURE
+ 	case MADV_SOFT_OFFLINE:
+ 	case MADV_HWPOISON:
+@@ -785,6 +803,9 @@ madvise_behavior_valid(int behavior)
+  *  MADV_DONTDUMP - the application wants to prevent pages in the given range
+  *		from being included in its core dump.
+  *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
++ *  MADV_WIPEONRELEASE - clear the contents of the memory after the last
++ *		reference to it has been released
++ *  MADV_DONTWIPEONRELEASE - cancel MADV_WIPEONRELEASE
+  *
+  * return values:
+  *  zero    - success
+diff --git a/mm/memory.c b/mm/memory.c
+index ab650c21bccd..ff78b527660e 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1091,6 +1091,9 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
+ 			page_remove_rmap(page, false);
+ 			if (unlikely(page_mapcount(page) < 0))
+ 				print_bad_pte(vma, addr, ptent, page);
++			if (unlikely(vma->vm_flags & VM_WIPEONRELEASE) &&
++			    page_mapcount(page) == 0)
++				clear_highpage(page);
+ 			if (unlikely(__tlb_remove_page(tlb, page))) {
+ 				force_flush = 1;
+ 				addr += PAGE_SIZE;
 -- 
-Kees Cook
+2.21.0.593.g511ec345e18-goog
+
