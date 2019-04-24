@@ -2,111 +2,163 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38684C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68FDC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F3420811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:41:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="oO0jKCqA"
+	by mail.kernel.org (Postfix) with ESMTP id 7AFF0218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:42:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbfDXMls (ORCPT
+        id S1730219AbfDXMmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:41:48 -0400
-Received: from smtp121.ord1d.emailsrvr.com ([184.106.54.121]:54247 "EHLO
-        smtp121.ord1d.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726322AbfDXMls (ORCPT
+        Wed, 24 Apr 2019 08:42:53 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54120 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbfDXMmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:41:48 -0400
-X-Greylist: delayed 468 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Apr 2019 08:41:47 EDT
-Received: from smtp24.relay.ord1d.emailsrvr.com (localhost [127.0.0.1])
-        by smtp24.relay.ord1d.emailsrvr.com (SMTP Server) with ESMTP id C7D38A00E9;
-        Wed, 24 Apr 2019 08:33:58 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1556109238;
-        bh=vNn977CTQA2JGqXRjsZvDkpbkUdjgvPJF7Vp8G9ny+o=;
-        h=Subject:To:From:Date:From;
-        b=oO0jKCqAPY4mwZiTMEkl24CdaZcfPr69ywgAP4C61XeWAnRb3mDnQ/Ep53g2uodSo
-         5Pv3ZU4udPpElOXWl4KibyzP6QTtM2SOAymtkxhJ/YP6Nowwpcwa9884EusC4KKnls
-         1dTMYQCbV3u/GYCQmJ2FaSByG3EWXsslb6rU2Dfk=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp24.relay.ord1d.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 3713CA011C;
-        Wed, 24 Apr 2019 08:33:58 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.62] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Wed, 24 Apr 2019 08:33:58 -0400
-Subject: Re: [PATCH] fuse: Add ioctl flag for compat ioctl with 64-bit time_t
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190301170831.23612-1-abbotti@mev.co.uk>
- <CAJfpegsQvUGz-YRQVrfkTWuSFe==Hg_Y=VpV0ZagKe0qGfxQ7g@mail.gmail.com>
- <d2bab6ae-0c52-5a6a-78e4-72a5f298a85f@mev.co.uk>
- <CAJfpegvhvS2KEP3kFsSGXONVuBdSdpgy8OGqd79ehN0uGAy5VA@mail.gmail.com>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <4dba1140-be46-6c1b-d88a-4cdf4d69cdda@mev.co.uk>
-Date:   Wed, 24 Apr 2019 13:33:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 08:42:52 -0400
+Received: by mail-it1-f196.google.com with SMTP id z4so1798821itc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:42:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qH/I56NCmI+3may9AdNh6uFn3lE6ttyh9s1gBQhKvDQ=;
+        b=qq7ojNIhdRydTIowX7GuTeBGSz837WT1oQxJdnyF/b4dyUWHwxrCTf6//fbAuFoz9v
+         TMYmTfxFIh38Jl+wSYbuVfDcBuCsvHcXTik/kE+rSUyMIsj4ZWdoE0mRsMcL3R3OqJi0
+         ttuje8fHat0/LGyB8JKOS8pSLgMXsHLymMQoVfgelVUMxmQIxUcors4r1PpMl3MdMH5r
+         5HTP9a60IAUQrrMwq0jUnTe7318AWy7E1BtMMeZGuBBzt9/taj2T7g+IhnymbOi/DguU
+         1CXi5NuvgbGNKtsty/EGJfN8cy9qCuOcvSVGdcpeP8YpzmIyOUcNLbkojVX+ZQ/Lazxl
+         u/Hg==
+X-Gm-Message-State: APjAAAUQqyfX6kFxNG2rijJSElQfzbW0gQuVozNxkFUkrJmeavZsIZxE
+        rwGCMwGP84WXtUpMZsYZfOKzbpMTbnX1wwiKj7ZSMw==
+X-Google-Smtp-Source: APXvYqyUFghu0iQIiqb8pqbPxqXg+lnH3PW9fjXo1+rpNltWh5fHtBrvbWhCZFbiyelRPIp+UBBvfVpKX4UNxdjAk4w=
+X-Received: by 2002:a02:3342:: with SMTP id k2mr20225459jak.15.1556109771692;
+ Wed, 24 Apr 2019 05:42:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJfpegvhvS2KEP3kFsSGXONVuBdSdpgy8OGqd79ehN0uGAy5VA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190422162652.15483-1-kasong@redhat.com> <20190423113501.GN11158@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190423113501.GN11158@hirez.programming.kicks-ass.net>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Wed, 24 Apr 2019 08:42:40 -0400
+Message-ID: <CACPcB9f8JuALCw1i-V2N01GuTQRfjrCya6esOTM8dGwvf+oT7w@mail.gmail.com>
+Subject: Re: [RFC PATCH v4] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/04/2019 11:52, Miklos Szeredi wrote:
-> On Tue, Apr 23, 2019 at 5:14 PM Ian Abbott <abbotti@mev.co.uk> wrote:
->>
->> On 23/04/2019 13:55, Miklos Szeredi wrote:
->>> On Fri, Mar 1, 2019 at 6:08 PM Ian Abbott <abbotti@mev.co.uk> wrote:
->>>>
->>>> Currently, a CUSE server running on a 64-bit kernel can tell when an
->>>> ioctl request comes from a process running a 32-bit ABI, but cannot tell
->>>> whether the requesting process is using legacy IA32 emulation or x32
->>>> ABI, for example.  In particular, the server does not know the size of
->>>> the client process's `time_t` type.
->>>>
->>>> For 64-bit kernels, the `FUSE_IOCTL_COMPAT` and `FUSE_IOCTL_32BIT` flags
->>>> are currently set in the ioctl input request (`struct fuse_ioctl_in`
->>>> member `flags`) for a 32-bit requesting process.  This patch defines a
->>>> new flag `FUSE_IOCTL_COMPAT_64TIME` and sets it if the 32-bit requesting
->>>> process (running on a 64-bit kernel) uses a 64-bit `time_t` type.
->>>
->>> Hi,
->>>
->>> Thanks for the patch.
->>>
->>> I think it should rather use in_x32_syscall() helper and follow that
->>> naming because there's apparently at least one example in xfs of a
->>> non-time_t related ioctl that varies between the x32 vs ia32.
->>
->> Hi Miklos,
->>
->> It is conceivable that COMPAT_USE_64BIT_TIME could be true for some
->> other arch/ABI (although currently it is only ever set for x86/x32).
->> Should it have separate flags for "compat 64-bit time" and "compat x32"
->> (even though that is currently redundant)?
-> 
-> No, it should just be a single flag, something like
-> FUSE_IOCTL_COMPAT_X32 and the documentation should say that it implies
-> 64bit time values.
+On Tue, Apr 23, 2019 at 7:35 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Tue, Apr 23, 2019 at 12:26:52AM +0800, Kairui Song wrote:
+> > Currently perf callchain doesn't work well with ORC unwinder
+> > when sampling from trace point. We'll get useless in kernel callchain
+> > like this:
+> >
+> > perf  6429 [000]    22.498450:             kmem:mm_page_alloc: page=0x176a17 pfn=1534487 order=0 migratetype=0 gfp_flags=GFP_KERNEL
+> >     ffffffffbe23e32e __alloc_pages_nodemask+0x22e (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> >       7efdf7f7d3e8 __poll+0x18 (/usr/lib64/libc-2.28.so)
+> >       5651468729c1 [unknown] (/usr/bin/perf)
+> >       5651467ee82a main+0x69a (/usr/bin/perf)
+> >       7efdf7eaf413 __libc_start_main+0xf3 (/usr/lib64/libc-2.28.so)
+> >     5541f689495641d7 [unknown] ([unknown])
+> >
+> > The root cause is that, for trace point events, it doesn't provide a
+> > real snapshot of the hardware registers. Instead perf tries to get
+> > required caller's registers and compose a fake register snapshot
+> > which suppose to contain enough information for start a unwinding.
+> > However without CONFIG_FRAME_POINTER, if failed to get caller's BP as the
+> > frame pointer, so current frame pointer is returned instead. We get
+> > a invalid register combination which confuse the unwinder, and end the
+> > stacktrace early.
+> >
+> > So in such case just don't try dump BP, and let the unwinder start
+> > directly when the register is not a real snapshot. And Use SP
+> > as the skip mark, unwinder will skip all the frames until it meet
+> > the frame of the trace point caller.
+> >
+> > Tested with frame pointer unwinder and ORC unwinder, this make perf
+> > callchain get the full kernel space stacktrace again like this:
+> >
+> > perf  6503 [000]  1567.570191:             kmem:mm_page_alloc: page=0x16c904 pfn=1493252 order=0 migratetype=0 gfp_flags=GFP_KERNEL
+> >     ffffffffb523e2ae __alloc_pages_nodemask+0x22e (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> >     ffffffffb52383bd __get_free_pages+0xd (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> >     ffffffffb52fd28a __pollwait+0x8a (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> >     ffffffffb521426f perf_poll+0x2f (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> >     ffffffffb52fe3e2 do_sys_poll+0x252 (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> >     ffffffffb52ff027 __x64_sys_poll+0x37 (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> >     ffffffffb500418b do_syscall_64+0x5b (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> >     ffffffffb5a0008c entry_SYSCALL_64_after_hwframe+0x44 (/lib/modules/5.1.0-rc3+/build/vmlinux)
+> >       7f71e92d03e8 __poll+0x18 (/usr/lib64/libc-2.28.so)
+> >       55a22960d9c1 [unknown] (/usr/bin/perf)
+> >       55a22958982a main+0x69a (/usr/bin/perf)
+> >       7f71e9202413 __libc_start_main+0xf3 (/usr/lib64/libc-2.28.so)
+> >     5541f689495641d7 [unknown] ([unknown])
+> >
+> > Co-developed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Signed-off-by: Kairui Song <kasong@redhat.com>
+>
+> Thanks!
+>
+> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> > index e47ef764f613..ab135abe62e0 100644
+> > --- a/include/linux/perf_event.h
+> > +++ b/include/linux/perf_event.h
+> > @@ -1059,7 +1059,7 @@ static inline void perf_arch_fetch_caller_regs(struct pt_regs *regs, unsigned lo
+> >   * the nth caller. We only need a few of the regs:
+> >   * - ip for PERF_SAMPLE_IP
+> >   * - cs for user_mode() tests
+> > - * - bp for callchains
+> > + * - sp for callchains
+> >   * - eflags, for future purposes, just in case
+> >   */
+> >  static inline void perf_fetch_caller_regs(struct pt_regs *regs)
+>
+> I've extended that like so:
+>
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1058,12 +1058,18 @@ static inline void perf_arch_fetch_calle
+>  #endif
+>
+>  /*
+> - * Take a snapshot of the regs. Skip ip and frame pointer to
+> - * the nth caller. We only need a few of the regs:
+> + * When generating a perf sample in-line, instead of from an interrupt /
+> + * exception, we lack a pt_regs. This is typically used from software events
+> + * like: SW_CONTEXT_SWITCHES, SW_MIGRATIONS and the tie-in with tracepoints.
+> + *
+> + * We typically don't need a full set, but (for x86) do require:
+>   * - ip for PERF_SAMPLE_IP
+>   * - cs for user_mode() tests
+> - * - sp for callchains
+> - * - eflags, for future purposes, just in case
+> + * - sp for PERF_SAMPLE_CALLCHAIN
+> + * - eflags for MISC bits and CALLCHAIN (see: perf_hw_regs())
+> + *
+> + * NOTE: assumes @regs is otherwise already 0 filled; this is important for
+> + * things like PERF_SAMPLE_REGS_INTR.
+>   */
+>  static inline void perf_fetch_caller_regs(struct pt_regs *regs)
+>  {
 
-Okay, since the subject line, description and code will change, I'll 
-submit the new patch as a new patch, rather than a "v2".  (I'll mention 
-its history below the scissors line.)  Please drop this patch.
+Sure, the updated comments looks much better. Will the maintainer
+squash the comment update or should I send a V5?
 
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+--
+Best Regards,
+Kairui Song
