@@ -2,230 +2,104 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14BAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EAEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B98420878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99A320878
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:02:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K9YPDsvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbfDXHCa (ORCPT
+        id S1729960AbfDXHCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:02:30 -0400
-Received: from foss.arm.com ([217.140.101.70]:38584 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729900AbfDXHCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:02:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBB1115A2;
-        Wed, 24 Apr 2019 00:02:27 -0700 (PDT)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36F533F238;
-        Wed, 24 Apr 2019 00:02:24 -0700 (PDT)
-Subject: Re: [kvmtool PATCH v10 5/5] KVM: arm/arm64: Add a vcpu feature for
- pointer authentication
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
- <1555994558-26349-6-git-send-email-amit.kachhap@arm.com>
- <20190423154625.GP3567@e103592.cambridge.arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <3b7bafc9-5d6a-7845-ef1f-577ea59000e2@arm.com>
-Date:   Wed, 24 Apr 2019 12:32:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 24 Apr 2019 03:02:33 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:32839 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729900AbfDXHCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 03:02:32 -0400
+Received: by mail-ed1-f67.google.com with SMTP id d55so14922480ede.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 00:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pWTQt+8V2h5k1yhcV7X1k2JWjjnKPOv7sz6YyFgX/s8=;
+        b=K9YPDsvxd2uN/UwYjlT2cJVQYze6Ch0w+ZgkIzSWHhQPJXJ82E96z/i1KtLv4vXtyt
+         r+bradL48Uy+kWNhXyNJSHArfcBmRryFJwwfdIMhWNV3d9+XfxSOajk39NH/c9323FGO
+         SqlPdh+ypyXS0+QWrEPiMxjFPxDlQpeiBoB8O1w7xla5CyYj4NLlDuaQvb7uY5AXoU5s
+         VU/mBQ7ScVQTv/LFxm2pQdwgRL3kc4IfSlS5hlg1OmBsS3NejWan5HmytaeKq3yPO6hW
+         +snwNIZnenkVKbWGjbrb7dY9WxJSQQPcvkd4QMAm2urgbN6TUVgiMSPkr7DjiHsWkrJT
+         NNIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pWTQt+8V2h5k1yhcV7X1k2JWjjnKPOv7sz6YyFgX/s8=;
+        b=MvEEJUkwt/cWXnUZ7Tjidkbte6FdYK0WQtsCEYogfuCx//9DEsPh7B+O2shalkgrTH
+         mBDfm/lvbkn1M4j+eRu8AaXW0S9DezvyrQvydnuI0tKJeBuIU5E7JY5Dlaq4iXagJpmt
+         RNwm8MKI2lXHU4E/XTl06AH+ydl7GOBJukJUNKwRyCuEgGJFjCiPntoXWKXTBFXcC9bq
+         hKvGndPEtID10wcdqWwdCMpcAf9FVKS0lSli/4LEviutJFS3dlE5hHK5V64fFWioI1vi
+         /kL3wh1SY0Z1irc4nM7Meq8gTq+3XW0AlOnqCcQlo7ZIgIvU5O8DQ4sqLPFVquNDcYDp
+         LTMQ==
+X-Gm-Message-State: APjAAAVM9udCJqmVPpQ7tSJDaOyWzb74vAUAsqBPZLajvvGihMF2Sj6C
+        Lx1bA0M2oZzzltiwYBQOq0pOzZ5MRAq7kNeuF4A=
+X-Google-Smtp-Source: APXvYqyNK2ANouxm4aBwJr6VqC8Y25jlN5PhPRMR/eAufMKrnVoHh0NJZ5RpXe6gh1bJKKkSGoYT6jpzCquphd2kpYg=
+X-Received: by 2002:a17:906:641:: with SMTP id t1mr14937384ejb.158.1556089350540;
+ Wed, 24 Apr 2019 00:02:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190423154625.GP3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190418093856.17852-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190418093856.17852-1-yamada.masahiro@socionext.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Wed, 24 Apr 2019 15:01:53 +0800
+Message-ID: <CAEbi=3fCB8Gvu8L=D5ZJYmd9hrZZvjdB2rrHph--EHfgdoounA@mail.gmail.com>
+Subject: Re: [PATCH v2] nds32: remove unused generic-y += cmpxchg-local.h
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Vincent Chen <deanbo422@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Nickhu <nickhu@andestech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Masahiro Yamada <yamada.masahiro@socionext.com> =E6=96=BC 2019=E5=B9=B44=E6=
+=9C=8818=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=885:39=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+>
+> NDS32 is the only architecture that creates <asm/cmpxchg-local.h>,
+> which is not included by anyone.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+> Changes in v2:
+>   - Fix a typo in commit log
+>
+>  arch/nds32/include/asm/Kbuild | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/nds32/include/asm/Kbuild b/arch/nds32/include/asm/Kbuil=
+d
+> index 64ceff7ab99b..e8dbfbf8cc69 100644
+> --- a/arch/nds32/include/asm/Kbuild
+> +++ b/arch/nds32/include/asm/Kbuild
+> @@ -6,7 +6,6 @@ generic-y +=3D bugs.h
+>  generic-y +=3D checksum.h
+>  generic-y +=3D clkdev.h
+>  generic-y +=3D cmpxchg.h
+> -generic-y +=3D cmpxchg-local.h
+>  generic-y +=3D compat.h
+>  generic-y +=3D cputime.h
+>  generic-y +=3D device.h
+Hi Yamada,
 
-On 4/23/19 9:16 PM, Dave Martin wrote:
-> On Tue, Apr 23, 2019 at 10:12:38AM +0530, Amit Daniel Kachhap wrote:
->> This patch adds a runtime capabality for KVM tool to enable Arm64 8.3
->> Pointer Authentication in guest kernel. Two vcpu features
->> KVM_ARM_VCPU_PTRAUTH_[ADDRESS/GENERIC] are supplied together to enable
->> Pointer Authentication in KVM guest after checking the capability.
->>
->> Command line options --enable-ptrauth and --disable-ptrauth are added
->> to use this feature. However, if those options are not provided then
->> also this feature is enabled if host supports this capability.
->>
->> The macros defined in the headers are not in sync and should be replaced
->> from the upstream.
->>
->> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> ---
->>
->> Changes since v9:
->> * Added a error check for both enable-ptrauth and disable-ptrauth
->>    option.
->> * Make the error explicit when enable-ptrauth is provided [Dave Martin].
->>
->>   arm/aarch32/include/kvm/kvm-cpu-arch.h    |  1 +
->>   arm/aarch64/include/asm/kvm.h             |  2 ++
->>   arm/aarch64/include/kvm/kvm-config-arch.h |  6 +++++-
->>   arm/aarch64/include/kvm/kvm-cpu-arch.h    |  2 ++
->>   arm/include/arm-common/kvm-config-arch.h  |  2 ++
->>   arm/kvm-cpu.c                             | 20 ++++++++++++++++++--
->>   include/linux/kvm.h                       |  2 ++
->>   7 files changed, 32 insertions(+), 3 deletions(-)
->>
->> diff --git a/arm/aarch32/include/kvm/kvm-cpu-arch.h b/arm/aarch32/include/kvm/kvm-cpu-arch.h
->> index d28ea67..520ea76 100644
->> --- a/arm/aarch32/include/kvm/kvm-cpu-arch.h
->> +++ b/arm/aarch32/include/kvm/kvm-cpu-arch.h
->> @@ -13,4 +13,5 @@
->>   #define ARM_CPU_ID		0, 0, 0
->>   #define ARM_CPU_ID_MPIDR	5
->>   
->> +#define ARM_VCPU_PTRAUTH_FEATURE	0
->>   #endif /* KVM__KVM_CPU_ARCH_H */
->> diff --git a/arm/aarch64/include/asm/kvm.h b/arm/aarch64/include/asm/kvm.h
->> index 97c3478..a2546e6 100644
->> --- a/arm/aarch64/include/asm/kvm.h
->> +++ b/arm/aarch64/include/asm/kvm.h
->> @@ -102,6 +102,8 @@ struct kvm_regs {
->>   #define KVM_ARM_VCPU_EL1_32BIT		1 /* CPU running a 32bit VM */
->>   #define KVM_ARM_VCPU_PSCI_0_2		2 /* CPU uses PSCI v0.2 */
->>   #define KVM_ARM_VCPU_PMU_V3		3 /* Support guest PMUv3 */
->> +#define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* CPU uses address pointer authentication */
->> +#define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* CPU uses generic pointer authentication */
->>   
->>   struct kvm_vcpu_init {
->>   	__u32 target;
->> diff --git a/arm/aarch64/include/kvm/kvm-config-arch.h b/arm/aarch64/include/kvm/kvm-config-arch.h
->> index 04be43d..0279b13 100644
->> --- a/arm/aarch64/include/kvm/kvm-config-arch.h
->> +++ b/arm/aarch64/include/kvm/kvm-config-arch.h
->> @@ -8,7 +8,11 @@
->>   			"Create PMUv3 device"),				\
->>   	OPT_U64('\0', "kaslr-seed", &(cfg)->kaslr_seed,			\
->>   			"Specify random seed for Kernel Address Space "	\
->> -			"Layout Randomization (KASLR)"),
->> +			"Layout Randomization (KASLR)"),		\
->> +	OPT_BOOLEAN('\0', "enable-ptrauth", &(cfg)->enable_ptrauth,	\
->> +			"Enables pointer authentication"),		\
->> +	OPT_BOOLEAN('\0', "disable-ptrauth", &(cfg)->disable_ptrauth,	\
->> +			"Disables pointer authentication"),
->>   
->>   #include "arm-common/kvm-config-arch.h"
->>   
->> diff --git a/arm/aarch64/include/kvm/kvm-cpu-arch.h b/arm/aarch64/include/kvm/kvm-cpu-arch.h
->> index a9d8563..fcc2107 100644
->> --- a/arm/aarch64/include/kvm/kvm-cpu-arch.h
->> +++ b/arm/aarch64/include/kvm/kvm-cpu-arch.h
->> @@ -17,4 +17,6 @@
->>   #define ARM_CPU_CTRL		3, 0, 1, 0
->>   #define ARM_CPU_CTRL_SCTLR_EL1	0
->>   
->> +#define ARM_VCPU_PTRAUTH_FEATURE	((1UL << KVM_ARM_VCPU_PTRAUTH_ADDRESS) \
->> +					| (1UL << KVM_ARM_VCPU_PTRAUTH_GENERIC))
->>   #endif /* KVM__KVM_CPU_ARCH_H */
->> diff --git a/arm/include/arm-common/kvm-config-arch.h b/arm/include/arm-common/kvm-config-arch.h
->> index 5734c46..1b4287d 100644
->> --- a/arm/include/arm-common/kvm-config-arch.h
->> +++ b/arm/include/arm-common/kvm-config-arch.h
->> @@ -10,6 +10,8 @@ struct kvm_config_arch {
->>   	bool		aarch32_guest;
->>   	bool		has_pmuv3;
->>   	u64		kaslr_seed;
->> +	bool		enable_ptrauth;
->> +	bool		disable_ptrauth;
->>   	enum irqchip_type irqchip;
->>   	u64		fw_addr;
->>   };
->> diff --git a/arm/kvm-cpu.c b/arm/kvm-cpu.c
->> index 7780251..acd1d5f 100644
->> --- a/arm/kvm-cpu.c
->> +++ b/arm/kvm-cpu.c
->> @@ -68,6 +68,18 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
->>   		vcpu_init.features[0] |= (1UL << KVM_ARM_VCPU_PSCI_0_2);
->>   	}
->>   
->> +	/* Check Pointer Authentication command line arguments. */
->> +	if (kvm->cfg.arch.enable_ptrauth && kvm->cfg.arch.disable_ptrauth)
->> +		die("Both enable-ptrauth and disable-ptrauth option cannot be present");
-> 
-> Preferably, print the leading dashes, the same as the user would see
-> on the command line (e.g., --enable-ptrauth, --disable-ptrauth).
-> 
-> For brevity, we could write something like:
-> 
-> 		die("--enable-ptrauth conflicts with --disable-ptrauth");
-> 
->> +	/*
->> +	 * Always enable Pointer Authentication if system supports
->> +	 * this extension unless disable-ptrauth option is present.
->> +	 */
->> +	if (kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_ADDRESS) &&
->> +	    kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_GENERIC) &&
->> +	    !kvm->cfg.arch.disable_ptrauth)
->> +			vcpu_init.features[0] |= ARM_VCPU_PTRAUTH_FEATURE;
->> +
->>   	/*
->>   	 * If the preferred target ioctl is successful then
->>   	 * use preferred target else try each and every target type
->> @@ -106,8 +118,12 @@ struct kvm_cpu *kvm_cpu__arch_init(struct kvm *kvm, unsigned long cpu_id)
->>   			die("Unable to find matching target");
->>   	}
->>   
->> -	if (err || target->init(vcpu))
->> -		die("Unable to initialise vcpu");
->> +	if (err || target->init(vcpu)) {
->> +		if (kvm->cfg.arch.enable_ptrauth)
->> +			die("Unable to initialise vcpu with pointer authentication feature");
-> 
-> We don't special-case this error message for any other feature yet:
-> there are a variety of reasons why we might have failed, so suggesting
-> that the failure is something to do with ptrauth may be misleading to
-> the user.
-> 
-> If we want to be more informative, we could do something like the
-> following:
-> 
-> 	bool supported;
-> 
-> 	supported = kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_ADDRESS) &&
-> 		    kvm__supports_extension(kvm, KVM_CAP_ARM_PTRAUTH_GENERIC);
-> 
-> 	if (kvm->cfg.arch.enable_ptrauth && !supported)
-> 		die("--enable-ptrauth not supported on this host");
-> 
-> 	if (supported && !kvm->cfg.arch.disable_ptrauth)
-> 		vcpu_init.features[0] |= ARM_VCPU_PTRAUTH_FEATURE;
-> 
-> 	/* ... */
-> 
-> 	if (err || target->init(vcpu))
-> 		die("Unable to initialise vcpu");
-> 
-> We don't do this for any other feature today, but since it helps the
-> user to understand what went wrong it's probably a good idea.
-Yes this is more clear. As Mark has picked the core guest ptrauth 
-patches. I will post this changes as standalone.
-
-Thanks,
-Amit Daniel
-> 
-> [...]
-> 
-> Cheers
-> ---Dave
-> 
+Thank you.
+Acked-by: Greentime Hu <greentime@andestech.com>
