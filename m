@@ -2,52 +2,52 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C050BC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068F2C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D9520878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF73120878
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hllFuDT+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w+25MVGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388791AbfDXWZn (ORCPT
+        id S2387842AbfDXWYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 18:25:43 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50652 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387883AbfDXWYw (ORCPT
+        Wed, 24 Apr 2019 18:24:49 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41104 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727517AbfDXWYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 18:24:52 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3OMOj6N107929;
-        Wed, 24 Apr 2019 17:24:45 -0500
+        Wed, 24 Apr 2019 18:24:40 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3OMOVsC020818;
+        Wed, 24 Apr 2019 17:24:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556144685;
-        bh=U/TnHhV9dnGtYNXM8oO4bNDq70wwv6+l6yhw5NVZD1g=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=hllFuDT+MNb6uOag3Bqgsbc/vGe+isKZwg14wr4Cs/66c5x2q5ndGAzUrjItPW0cn
-         DoBPARCloigHDOqpYi1NjW8Uak0s3/8Sjgi5JJ0TL1MJeDFKxlXzykmrzK/RVcwbmt
-         FoOLNjqNfx1B9XS1eTMeLFmTkp66lmWtR9dUOpBY=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3OMOjOU087562
+        s=ti-com-17Q1; t=1556144671;
+        bh=P6vZmZAFETt4Q0b+EePKmb0qxtoqnt3HQMJIynOtemo=;
+        h=From:To:CC:Subject:Date;
+        b=w+25MVGMLx+UjE5iJe+dId9jpc/sRRJ79ttmvWvqJCMDBY58UIvvqzXmx18lsV1WT
+         hQMqUBsBimNIyh2Lopa/qaSk5++pZf+m2I9uQZcsmdqoTuCvbVOelZZPeN+t9a59/o
+         hzPprP4Ang4ZQkqoG73qJ4Evr+xXJLcQngfEn8Hs=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3OMOVPv110532
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Apr 2019 17:24:45 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 24 Apr 2019 17:24:31 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
- Apr 2019 17:24:44 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2019 17:24:31 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 24 Apr 2019 17:24:44 -0500
+ Frontend Transport; Wed, 24 Apr 2019 17:24:31 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3OMOhWW120891;
-        Wed, 24 Apr 2019 17:24:44 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3OMOUTs060129;
+        Wed, 24 Apr 2019 17:24:30 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     <netdev@vger.kernel.org>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
@@ -61,12 +61,10 @@ CC:     Florian Fainelli <f.fainelli@gmail.com>,
         Murali Karicheri <m-karicheri2@ti.com>,
         Ivan Vecera <ivecera@redhat.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RFC PATCH v3 net-next 06/11] dt-bindings: net: ti: add new cpsw switch driver bindings
-Date:   Thu, 25 Apr 2019 01:24:22 +0300
-Message-ID: <1556144667-27997-7-git-send-email-grygorii.strashko@ti.com>
+Subject: [RFC PATCH v3 net-next 00/11] net: ethernet: ti: introduce new cpsw switchdev based driver
+Date:   Thu, 25 Apr 2019 01:24:16 +0300
+Message-ID: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
-References: <1556144667-27997-1-git-send-email-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -75,147 +73,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add bindings for the new TI CPSW switch driver. Comparing to the legacy
-bindings (net/cpsw.txt):
-- ports definition follows DSA bindings (net/dsa/dsa.txt) and ports can be
-marked as "disabled" if not physically wired.
-- ports definition follows DSA bindings (net/dsa/dsa.txt) and ports can be
-marked as "disabled" if not physically wired.
-- all deprecated properties dropped;
-- all legacy propertiies dropped which represents constant HW cpapbilities
-(cpdma_channels, ale_entries, bd_ram_size, mac_control, slaves,
-active_slave)
-- cpts properties grouped in "cpts" sub-node
+Hi All,
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- .../bindings/net/ti,cpsw-switch.txt           | 117 ++++++++++++++++++
- 1 file changed, 117 insertions(+)
+This series based on work [1][2] done by Ilias Apalodimas <ilias.apalodimas@linaro.org>.
+
+This the RFC v3 which introduces new CPSW switchdev based driver which is 
+operating in dual-emac mode by default, thus working as 2 individual
+network interfaces. When both interfaces joined the bridge - CPSW driver
+will enter a switch mode and discard dual_mac configuration. The CPSW will
+be switched back to dual_mac mode if any port leaves the bridge. All
+configuration is going to be implemented via switchdev API.
+
+patches #1 - 2: preparation patcces which also moves common code to cpsw_priv.c
+patch #3: Adds functions to ALE for modifying VLANs/MDBs.
+patch #4: Adds support of force untagged VLAN traffic to Host P0 port which
+ required for proper support of default VLANs.
+patch #5: Prepares cpsw driver for switchdev mode, without changing any
+of the funtionality.
+patches #6-9: Introduce TI CPSW switch driver based on switchdev and new
+ DT bindings, resolve build dependencies
+patch #10: CPSW switchdev driver documentation (tbd)
+patch #11: DT nodes for new CPSW switchdev driver added for DRA7/am571x-idk as
+and example.
+
+Most of the contents of the previous cover-letter have been added in
+new driver documentation, so please refer to that for configuration,
+testing and future work.
+
+These patches can be found at:
+ git@git.ti.com:~gragst/ti-linux-kernel/gragsts-ti-linux-kernel.git
+ branch: lkml-5.1-switch-tbd
+
+[1] Dependencies:
+ This series depends on prerequisite series
+ https://lkml.org/lkml/2019/4/23/476
+
+[1] https://patchwork.ozlabs.org/cover/929367/
+[2] https://patches.linaro.org/cover/136709/
+
+Changes in v3:
+- alot of work done to split properly common code between legacy and switchdev
+  CPSW drivers and clean up code
+- CPSW switchdev interface updated to the current LKML switchdev interface
+- actually new CPSW switchdev based driver introduced
+- optimized dual_mac mode in new driver. Main change is that in promiscuous
+mode P0_UNI_FLOOD (both ports) is enabled in addition to ALLMULTI (current
+port) instead of ALE_BYPASS.  So, port in non promiscuous mode will keep
+possibility of mcast and vlan filtering.
+- changed bridge join sequnce: now switch mode will be enabled only when
+both ports joined the bridge. CPSW will be switched to dual_mac mode if any
+port leave bridge. ALE table is completly cleared and then refiled while
+switching to switch mode - this simplidies code a lot, but introduces some
+limitation to bridge setup sequence:
+ ip link add name br0 type bridge
+ ip link set dev br0 type bridge ageing_time 1000
+ ip link set dev br0 type bridge vlan_filtering 0 <- disable
+ echo 0 > /sys/class/net/br0/bridge/default_vlan
+
+ ip link set dev sw0p1 up <- add ports
+ ip link set dev sw0p2 up
+ ip link set dev sw0p1 master br0
+ ip link set dev sw0p2 master br0
+
+ echo 1 > /sys/class/net/br0/bridge/default_vlan <- enable
+ ip link set dev br0 type bridge vlan_filtering 1
+ bridge vlan add dev br0 vid 1 pvid untagged self
+- STP tested with vlan_filtering 1/0. To make STP work I've had to set
+  NO_SA_UPDATE for all slave ports (see comment in code). It also required to
+  statically register STP mcast address {0x01, 0x80, 0xc2, 0x0, 0x0, 0x0};
+- allowed build both TI_CPSW and TI_CPSW_SWITCHDEV drivers
+- PTP can be enabled on both ports in dual_mac mode
+
+- Future work:
+1. port QDISC_CBS and QDISC_MQPRIO support
+2. Add support for more Bridge flags and SWITCHDEV_ATTR
+3. Add support for ageing configuration
+4. More testing and documentation updates
+
+Issues:
+1. I've not found that configuring VLANs on Bridge port itself
+ bridge vlan add dev br0 vid 100 pvid untagged self
+ does not allow to set PVID on Host P0 port. The only way to set it is to
+ change default_vlan, introduces some mess in ALE table (also causes overwrite
+ of already configfured PVID).
+	bridge vlan add dev sw0p1 vid 100 pvid untagged master
+ 	ip link set dev br0 type bridge vlan_filtering 0
+ 	echo 2 > /sys/class/net/br0/bridge/default_vlan
+ 	ip link set dev br0 type bridge vlan_filtering 1
+ (but it could be our mess also:()
+2. Are there any way to identify Bridge default_vlan while processing
+  SWITCHDEV_OBJ_ID_PORT_VLAN??
+
+Grygorii Strashko (7):
+  net: ethernet: ti: cpts: use devm_get_clk_from_child
+  net: ethernet: ti: cpsw: move set of common functions in cpsw_priv
+  net: ethernet: ti: cpsw: allow untagged traffic on host port
+  dt-bindings: net: ti: add new cpsw switch driver bindings
+  net: ethernet: ti: cpsw: fix build of cpsw drivers
+  phy: ti: phy-gmii-sel: dependency from ti cpsw-switchdev driver
+  ARM: dts: am57xx-idk: add dt nodes for new cpsw switch dev driver
+
+Ilias Apalodimas (4):
+  net: ethernet: ti: cpsw: ale: add functions to modify VLANs/MDBs
+  net: ethernet: ti: cpsw: add switchdev API for cpsw driver
+  net: ethernet: ti: cpsw: introduce cpsw switch driver based on
+    switchdev
+  Documentation: networking: add cpsw switchdev based driver
+    documentation
+
+ .../bindings/net/ti,cpsw-switch.txt           |  117 +
+ .../device_drivers/ti/cpsw_switchdev.txt      |  159 ++
+ arch/arm/boot/dts/am571x-idk.dts              |   28 +
+ arch/arm/boot/dts/am57xx-idk-common.dtsi      |    2 +-
+ arch/arm/boot/dts/dra7-l4.dtsi                |   53 +
+ drivers/net/ethernet/ti/Kconfig               |   20 +-
+ drivers/net/ethernet/ti/Makefile              |    2 +
+ drivers/net/ethernet/ti/cpsw.c                |  596 +-----
+ drivers/net/ethernet/ti/cpsw_ale.c            |  199 +-
+ drivers/net/ethernet/ti/cpsw_ale.h            |   15 +
+ drivers/net/ethernet/ti/cpsw_new.c            | 1891 +++++++++++++++++
+ drivers/net/ethernet/ti/cpsw_priv.c           |  562 ++++-
+ drivers/net/ethernet/ti/cpsw_priv.h           |   51 +-
+ drivers/net/ethernet/ti/cpsw_switchdev.c      |  394 ++++
+ drivers/net/ethernet/ti/cpsw_switchdev.h      |   22 +
+ drivers/net/ethernet/ti/cpts.c                |    2 +-
+ drivers/phy/ti/Kconfig                        |    4 +-
+ 17 files changed, 3521 insertions(+), 596 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/net/ti,cpsw-switch.txt
+ create mode 100644 Documentation/networking/device_drivers/ti/cpsw_switchdev.txt
+ create mode 100644 drivers/net/ethernet/ti/cpsw_new.c
+ create mode 100644 drivers/net/ethernet/ti/cpsw_switchdev.c
+ create mode 100644 drivers/net/ethernet/ti/cpsw_switchdev.h
 
-diff --git a/Documentation/devicetree/bindings/net/ti,cpsw-switch.txt b/Documentation/devicetree/bindings/net/ti,cpsw-switch.txt
-new file mode 100644
-index 000000000000..d9c6480501b6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/ti,cpsw-switch.txt
-@@ -0,0 +1,117 @@
-+TI SoC Ethernet Switch Controller Device Tree Bindings (new)
-+------------------------------------------------------
-+
-+The 3-port switch gigabit ethernet subsystem provides ethernet packet
-+communication and can be configured as an ethernet switch. It provides the
-+gigabit media independent interface (GMII),reduced gigabit media
-+independent interface (RGMII), reduced media independent interface (RMII),
-+the management data input output (MDIO) for physical layer device (PHY)
-+management.
-+
-+Required properties:
-+- compatible : be one of the below:
-+	  "ti,cpsw-switch" for backward compatible
-+	  "ti,am335x-cpsw-switch" for AM335x controllers
-+	  "ti,am4372-cpsw-switch" for AM437x controllers
-+	  "ti,dra7-cpsw-switch" for DRA7x controllers
-+- reg : physical base address and size of the CPSW module IO range
-+- ranges : shall contain the CPSW module IO range available for child devices
-+- clocks : should contain the CPSW functional clock
-+- clock-names : should be "fck"
-+	See bindings/clock/clock-bindings.txt
-+- interrupts : should contain CPSW RX, TX, MISC, RX_THRESH interrupts
-+- interrupt-names : should contain "rx_thresh", "rx", "tx", "misc"
-+	See bindings/interrupt-controller/interrupts.txt
-+
-+Optional properties:
-+- syscon : phandle to the system control device node which provides access to
-+	efuse IO range with MAC addresses
-+
-+Required Sub-nodes:
-+- ports	: contains CPSW external ports descriptions
-+	Required properties:
-+	- #address-cells : Must be 1
-+	- #size-cells : Must be 0
-+	- reg : CPSW port number. Should be 1 or 2
-+	- phys : phandle on phy-gmii-sel PHY (see phy/ti-phy-gmii-sel.txt)
-+	- phy-mode : operation mode of the PHY interface [1]
-+	- phy-handle : phandle to a PHY on an MDIO bus [1]
-+
-+	Optional properties:
-+	- ti,label : Describes the label associated with this port
-+	- mac-address : array of 6 bytes, specifies the MAC address. Always
-+		accounted first if present [1]
-+	- local-mac-address : See [1]
-+
-+- mdio : CPSW MDIO bus block description
-+	- bus_freq : MDIO Bus frequency
-+	See bindings/net/mdio.txt and davinci-mdio.txt
-+
-+- cpts : The Common Platform Time Sync (CPTS) module description
-+	- clocks : should contain the CPTS reference clock
-+	- clock-names : should be "cpts"
-+	See bindings/clock/clock-bindings.txt
-+
-+	Optional properties - all ports:
-+	- cpts_clock_mult : Numerator to convert input clock ticks into ns
-+	- cpts_clock_shift : Denominator to convert input clock ticks into ns
-+			  Mult and shift will be calculated basing on CPTS
-+			  rftclk frequency if both cpts_clock_shift and
-+			  cpts_clock_mult properties are not provided.
-+
-+[1] See Documentation/devicetree/bindings/net/ethernet.txt
-+
-+Examples:
-+
-+mac_sw: ethernet_switch@0 {
-+	compatible = "ti,dra7-cpsw-switch","ti,cpsw-switch";
-+	reg = <0x0 0x4000>;
-+	ranges = <0 0 0x4000>;
-+	clocks = <&gmac_main_clk>;
-+	clock-names = "fck";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	syscon = <&scm_conf>;
-+	status = "disabled";
-+
-+	interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-names = "rx_thresh", "rx", "tx", "misc"
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpsw_port1: port@1 {
-+			reg = <1>;
-+			ti,label = "port1";
-+			/* Filled in by U-Boot */
-+			mac-address = [ 00 00 00 00 00 00 ];
-+			phys = <&phy_gmii_sel 1>;
-+		};
-+
-+		cpsw_port2: port@2 {
-+			reg = <2>;
-+			ti,label = "port2";
-+			/* Filled in by U-Boot */
-+			mac-address = [ 00 00 00 00 00 00 ];
-+			phys = <&phy_gmii_sel 2>;
-+		};
-+	};
-+
-+	davinci_mdio_sw: mdio@1000 {
-+		compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		ti,hwmods = "davinci_mdio";
-+		bus_freq = <1000000>;
-+		reg = <0x1000 0x100>;
-+	};
-+
-+	cpts {
-+		clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 25>;
-+		clock-names = "cpts";
-+	};
-+};
 -- 
 2.17.1
 
