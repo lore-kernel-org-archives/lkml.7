@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7477C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7E6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85572206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6B121900
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126092;
-	bh=CO+Fjam87g0jwVDOPDbtilyalx+JJlz9OvyNFOWDejw=;
+	s=default; t=1556126096;
+	bh=WGFNAksGMT5i7q47N55hbXo25H7f0jAICIvXDqeDNt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZpskE5ffacXg3o7Io2xQ5uUXyFxdZaHSbSn5jf4OEI6BJGtfDRzCI+vszKhef4lQu
-	 9bg/m28pyDb6a8Uwn9iHNSUVeilTyOM0M/ntNdYvP42xoDk5zsvjItolKPNH6Lb2zX
-	 TCMhSv9isYoIQD1V6HRJ7DcdDPQs37X9Yxrb1VwA=
+	b=qzzkIkeUvuARCsgr6mK1aQZJ2anuZTh+kRxTMMGzXDaH9sr6TrnIypcS+dbSr7f23
+	 Cb1Ecr4DW77SNDNxBYeegSDbqekT+AoMHohozg+Q30I3xwfCfB/s5IZegTwXk6mxV5
+	 v7E6JzM200loKYrs+sQJk/yl+EFfk5mrAfU0r1O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388135AbfDXROv (ORCPT
+        id S2388145AbfDXROz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:14:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:14:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388115AbfDXROr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:14:47 -0400
+        id S2388115AbfDXROw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:52 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D16CD21900;
-        Wed, 24 Apr 2019 17:14:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FB7D206BA;
+        Wed, 24 Apr 2019 17:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126086;
-        bh=CO+Fjam87g0jwVDOPDbtilyalx+JJlz9OvyNFOWDejw=;
+        s=default; t=1556126091;
+        bh=WGFNAksGMT5i7q47N55hbXo25H7f0jAICIvXDqeDNt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0O0vJOI9oP8V4CfizkDg+bSgQXx8rzTTGJPbfYhauhDe4/QBMiEQ13e5AnK3wMLJa
-         VWTE1HbAla40y364JXf5I29BfJpITg1/ls638zIgZe5AmyNgXSqJN5Z38uTNNz7dvl
-         cwpL8LeI3HlOgLo32/NonT4VOubO0mpNA2rPRq3c=
+        b=zPABoe5jPG3S5qn7TwqlT7ERv0q/qigC8FK3CJK1a89kqYNmkoqp64qGlXZYYWqih
+         9hGI0Z7Bo37pyLTH+mbI5q8V3+u9yjWjEj6c4sNoPFfyegCVsO2Fd2q426KwRUpBbm
+         8HH0DHbmLv5aLVCxnc/V3JMnDQBg57eBJbLiKZ9s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        stable@vger.kernel.org, Stephen Suryaputra <ssuryaextr@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 090/104] bonding: fix event handling for stacked bonds
-Date:   Wed, 24 Apr 2019 19:09:47 +0200
-Message-Id: <20190424170909.092548995@linuxfoundation.org>
+Subject: [PATCH 3.18 092/104] ipv4: recompile ip options in ipv4_link_failure
+Date:   Wed, 24 Apr 2019 19:09:49 +0200
+Message-Id: <20190424170909.382731707@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -59,47 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Stephen Suryaputra <ssuryaextr@gmail.com>
 
-[ Upstream commit 92480b3977fd3884649d404cbbaf839b70035699 ]
+[ Upstream commit ed0de45a1008991fdaa27a0152befcb74d126a8b ]
 
-When a bond is enslaved to another bond, bond_netdev_event() only
-handles the event as if the bond is a master, and skips treating the
-bond as a slave.
+Recompile IP options since IPCB may not be valid anymore when
+ipv4_link_failure is called from arp_error_report.
 
-This leads to a refcount leak on the slave, since we don't remove the
-adjacency to its master and the master holds a reference on the slave.
+Refer to the commit 3da1ed7ac398 ("net: avoid use IPCB in cipso_v4_error")
+and the commit before that (9ef6b42ad6fd) for a similar issue.
 
-Reproducer:
-  ip link add bondL type bond
-  ip link add bondU type bond
-  ip link set bondL master bondU
-  ip link del bondL
-
-No "Fixes:" tag, this code is older than git history.
-
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_main.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/ipv4/route.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2958,8 +2958,12 @@ static int bond_netdev_event(struct noti
- 		return NOTIFY_DONE;
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1151,8 +1151,16 @@ static struct dst_entry *ipv4_dst_check(
+ static void ipv4_link_failure(struct sk_buff *skb)
+ {
+ 	struct rtable *rt;
++	struct ip_options opt;
  
- 	if (event_dev->flags & IFF_MASTER) {
-+		int ret;
+-	icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0);
++	/* Recompile ip options since IPCB may not be valid anymore.
++	 */
++	memset(&opt, 0, sizeof(opt));
++	opt.optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
++	if (__ip_options_compile(dev_net(skb->dev), &opt, skb, NULL))
++		return;
 +
- 		netdev_dbg(event_dev, "IFF_MASTER\n");
--		return bond_master_netdev_event(event, event_dev);
-+		ret = bond_master_netdev_event(event, event_dev);
-+		if (ret != NOTIFY_DONE)
-+			return ret;
- 	}
++	__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt);
  
- 	if (event_dev->flags & IFF_SLAVE) {
+ 	rt = skb_rtable(skb);
+ 	if (rt)
 
 
