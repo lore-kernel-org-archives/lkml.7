@@ -2,117 +2,122 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960A4C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EE8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637D02175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2877920675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:29:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="YbkFofSF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BNTCCk+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbfDXXXG (ORCPT
+        id S1728178AbfDXX33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 19:23:06 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34373 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfDXXXE (ORCPT
+        Wed, 24 Apr 2019 19:29:29 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38607 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728155AbfDXX33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 19:23:04 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b3so10128272pfd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:23:04 -0700 (PDT)
+        Wed, 24 Apr 2019 19:29:29 -0400
+Received: by mail-pg1-f196.google.com with SMTP id j26so10169213pgl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:29:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=/z9H1bjGAN+NhWO4cJm4XUDJLQDERO7DpYsjfK91LLc=;
-        b=YbkFofSFfog0jO7FGGCcAlnOh/4CSJOMHqL6e3bBGVQjiJk/cCD/K5LCnXZobO7XRE
-         +8p7yjwtiMXTzJSk1f1kfhGLeDcmCrPBuFa3u84gyW/RbSK5hJudqYwsHX1J81Dl4FEd
-         coTbWdFPhAaDYKU8rBBJUkE6yy6rCjqX+uwtG8SLGdjtXWRaEwedGp+XmhLQyw3JtL4/
-         fSuZk6y7gx0Bnj6UEGF8NyReO6/g/jm+D02fBNIL4prq4ahdzYWJeCtTUxlOc06xKgcH
-         cBLj6qw5LmurioHtGKiLmbIr0oktn8kcSWSEezFdBPHAvEt2Neh0YIa8J27XfY7RHAG3
-         Wf4w==
+        bh=fXvBxbUR2vxcxzpDK9gRctRmbqQbx1zmvcONhNTtADI=;
+        b=BNTCCk+WGZM3jQTjod/XrLAxSzRhR2SdA8+bFwpgtkM6QlMgVHIlv/eVU1PzYYl86i
+         hjwcko/Uc8qwcZjnRtU/EZVht3Kr+HfSYqPtR4fAVzey2Fybp/uyNhIx/Oj7otlcu8W2
+         UL2h2n+utBb9qsGlcpaYqaXTWjBrRGCU9KDms=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=/z9H1bjGAN+NhWO4cJm4XUDJLQDERO7DpYsjfK91LLc=;
-        b=LnDAz9pObr/9SIEglZeRlzInEI0B2AIfAv/XuPejf7PG1eV8TJZEUei29mqLJPdOBt
-         P2lgXsBVNJt44F7qH7A9gKvKlmO6wJesCmG2rq/3gUjnWzEv2Iki028FEymF/kZOYPGV
-         aswnkL+yN0uOXZoi83ZgdHTD8en6h8phOLJU4dML2OnEr2xShfY5z7ON+RZbJMrGQLRl
-         uho7yX4JDzssAKdQUGgYZVXGRMDMyZj3oJKKmfqJjnB7Iolg0zoILf/vhCZHMWgv+SJx
-         Gw5H9Np1apATtClamG/hPHZyNhbazAasCx1toQPLvA9tYl4o5ctdnO/gzy0F1iRHuLST
-         J4IQ==
-X-Gm-Message-State: APjAAAW+x0NBTnEvyl0J1WTb5Hj0uVXIB2or5DCyWnXHIbA7xkxFg12v
-        iGjMHqRgVToi7fCay7Dn0HnDUZp63U0=
-X-Google-Smtp-Source: APXvYqzjjA3hX2DuVpPR/WNJ/pnpwN5twO7NMUKFHEU2IhtSQELT5m6yP8Joaoo/kvZ0eqUdXznVgQ==
-X-Received: by 2002:a62:2ad5:: with SMTP id q204mr35815462pfq.259.1556148183563;
-        Wed, 24 Apr 2019 16:23:03 -0700 (PDT)
-Received: from localhost ([134.134.139.92])
-        by smtp.gmail.com with ESMTPSA id q24sm27357806pgm.16.2019.04.24.16.23.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 16:23:01 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 16:23:01 -0700 (PDT)
-X-Google-Original-Date: Wed, 24 Apr 2019 15:49:08 PDT (-0700)
-Subject:     Re: [PATCH 0/7] RISC-V: Sparsmem, Memory Hotplug and pte_devmap for P2P
-In-Reply-To: <20190327213643.23789-1-logang@deltatee.com>
-CC:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        sbates@raithlin.com, Christoph Hellwig <hch@lst.de>,
-        aou@eecs.berkeley.edu, logang@deltatee.com
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     logang@deltatee.com
-Message-ID: <mhng-8e27a4f1-db30-46cf-b987-51bba8cd96c7@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fXvBxbUR2vxcxzpDK9gRctRmbqQbx1zmvcONhNTtADI=;
+        b=hNVCINmcA66XJMiOZUNjkL22I2nTHDIc01m54u3khP4jhKoD6ar+RWR7wZTVul3twL
+         +SBcPD0BUyU7Jcu7nri9vFwx39DYine8umpuyq6Eo3CAZaEYR8BGJBUiwSaQIigRJqgS
+         2UPpvK76oIjrIaTGPEzcXPt0Dp/20++qfdX688iobApXFlvKB4wiWcqTdvalcJ/a3Jc5
+         9R5vurQDgELiJP8FEkeriaEybBwOTpgOSaCc8IzgIY5+sFzReL+y2vcoQoeTe5CI2sSZ
+         bLOOH1CiTgW8tN6Bt/hQM5RAw96GFHrTQ6DA+EkoVVYVQHI7wPFr3ZcfDAf7CH889Sd9
+         1v6Q==
+X-Gm-Message-State: APjAAAWatN/mGwYgL7TfCHlgLSbVtQtVMQml/aJlFzYPb4e0oU/wy8KM
+        SoUIzbqk2yKZ9UweGpgNPgeEJA==
+X-Google-Smtp-Source: APXvYqzWhluK0mIVKXSrFZIGuZIRD1iRwV7qSIg8zkRtENd3UoCIexWujNfctxBcDbvZqEUSDNB41Q==
+X-Received: by 2002:a62:5fc7:: with SMTP id t190mr35928881pfb.191.1556148568327;
+        Wed, 24 Apr 2019 16:29:28 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
+        by smtp.gmail.com with ESMTPSA id b9sm24635845pfd.32.2019.04.24.16.29.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 16:29:27 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org,
+        groeck@chromium.org, lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH 00/30] Update cros_ec_commands.h
+Date:   Wed, 24 Apr 2019 16:28:48 -0700
+Message-Id: <20190424232918.243308-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Mar 2019 14:36:36 PDT (-0700), logang@deltatee.com wrote:
-> Hi,
->
-> This patchset enables P2P on the RISC-V architecture. To do this on the
-> current kernel, we only need to be able to back IO memory with struct
-> pages using devm_memremap_pages(). This requires ARCH_HAS_ZONE_DEVICE,
-> ARCH_ENABLE_MEMORY_HOTPLUG, and ARCH_ENABLE_MEMORY_HOTREMOVE; which in
-> turn requires ARCH_SPARSEMEM_ENABLE. We also need to ensure that the
-> IO memory regions in hardware can be covered by the linear region
-> so that there is a linear relation ship between the virtual address and
-> the struct page address in the vmemmap region.
->
-> While our reason to do this work is for P2P, these features are all
-> useful, more generally, and also enable other kernel features.
->
-> The first patch in the series implements sparse mem. It was already
-> submitted and reviewed last cycle, only forgotten. It has been rebased
-> onto v5.1-rc2.
->
-> Patches 2 through 4 rework the architecture's virtual address space
-> mapping trying to get as much of the IO regions covered by the linear
-> mapping. With Sv39, we do not have enough address space to cover all the
-> typical hardware regions but we can get the majority of it.
->
-> Patch 5 and 6 implement memory hotplug and remove. These are relatively
-> straight forward additions similar to other arches.
->
-> Patch 7 implements pte_devmap which allows us to set
-> ARCH_HAS_ZONE_DEVICE.
->
-> The patchset was tested in QEMU and on a HiFive Unleashed board.
-> However, we were unable to actually test P2P transactions with this
-> exact set because we have been unable to get PCI working with v5.1-rc2.
-> We were able to get it running on a 4.19 era kernel (with a bunch of
-> out-of-tree patches for PCI on a Microsemi PolarFire board).
->
-> This series is based on v5.1-rc2 and a git tree is available here:
->
-> https://github.com/sbates130272/linux-p2pmem riscv-p2p-v1
+The interface between CrosEC embedded controller and the host,
+described by cros_ec_commands.h, as diverged from what the embedded
+controller really support.
 
-Looks like these don't build on rv32 when applied on top of 5.1-rc6.  We now
-have rv32_defconfig, which should make it easier to tests these sorts of
-things.
+The source of thruth is at
+https://chromium.googlesource.com/chromiumos/platform/ec/+/master/include/ec_commands.h
+
+That include file is converted to remove ACPI and Embedded only code.
+
+From now on, cros_ec_commands.h will be automatically generated from
+the file above, do not modify directly.
+
+Fell free to squash the commits below.
+
+Gwendal Grignou (30):
+  mfd: cros_ec: Update license term
+  mfd: cros_ec: Zero BUILD_ macro
+  mfd: cros_ec: set comments properly
+  mfd: cros_ec: add ec_align macros
+  mfd: cros_ec: Define commands as 4-digit UPPER CASE hex values
+  mfd: cros_ec: use BIT macro
+  mfd: cros_ec: Update ACPI interface definition
+  mfd: cros_ec: move HDMI CEC API definition
+  mfd: cros_ec: Remove zero-size structs
+  mfd: cros_ec: Add Flash V2 commands API
+  mfd: cros_ec: Add PWM_SET_DUTY API
+  mfd: cros_ec: Add lightbar v2 API
+  mfd: cros_ec: Expand hash API
+  mfd: cros_ec: Add EC transport protocol v4
+  mfd: cros_ec: Complete MEMS sensor API
+  mfd: cros_ec: Fix event processing API
+  mfd: cros_ec: Add fingerprint API
+  mfd: cros_ec: Fix temperature API
+  mfd: cros_ec: Complete Power and USB PD API
+  mfd: cros_ec: Add API for keyboard testing
+  mfd: cros_ec: Add Hibernate API
+  mfd: cros_ec: Add Smart Battery Firmware update API
+  mfd: cros_ec: Add I2C passthru protection API
+  mfd: cros_ec: Update I2S API
+  mfd: cros_ec: Add API for EC-EC communication
+  mfd: cros_ec: Add API for Touchpad support
+  mfd: cros_ec: Add API for Fingerprint support
+  mfd: cros_ec: Add API for rwsig
+  mfd: cros_ec: Add SKU ID and Secure storage API
+  mfd: cros_ec: Add Management API entry points
+
+ include/linux/mfd/cros_ec_commands.h | 3735 +++++++++++++++++++++-----
+ 1 file changed, 2993 insertions(+), 742 deletions(-)
+
+-- 
+2.21.0.593.g511ec345e18-goog
+
