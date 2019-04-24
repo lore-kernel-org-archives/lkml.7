@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A759EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE899C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7697C21904
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C6F2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126829;
-	bh=fkrAo3CRXQJ5cpYWNgNdmKqKn5QfHn5vc3gBPPoj/1Q=;
+	s=default; t=1556126831;
+	bh=LupqdGEKvkxtPWLNBCqP6BnFQsYy1xR0cgrOa7hvzDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n3Vk6JqFVLJ6QLhXJNT+dw6OuT23xLD1h2Bsu1dNe1KDdz9XIslE+6YL+MK3t8YPe
-	 +VjcYTkIMlajULVJWDwU+DgVhXaUtSJPNQO1JznmFqydSBam2QxK7yYcptzXAwwB95
-	 tEwlrKDxEWqE2X7UxFcbxhKP5co5Lgdlo8i1/+p8=
+	b=qAUbrj+X9z1ZKblrQbPmw0k7l5LF76HFmfQmeqCU2V+VtErmSzic1A56Y8CyCgewy
+	 aZ4gTpFnTYmCNlt3i/YCefEin2eAKcWqAOqKQjQKJLz+5McDfy6grno01sxaCTznFn
+	 5UVPGQSB6jpppKuoFflJaNLH2zocl1gWztHp7rk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390384AbfDXR1I (ORCPT
+        id S2390395AbfDXR1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:27:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52942 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390244AbfDXR07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:26:59 -0400
+        id S2390380AbfDXR1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:27:07 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CC162054F;
-        Wed, 24 Apr 2019 17:26:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B3A72077C;
+        Wed, 24 Apr 2019 17:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126818;
-        bh=fkrAo3CRXQJ5cpYWNgNdmKqKn5QfHn5vc3gBPPoj/1Q=;
+        s=default; t=1556126826;
+        bh=LupqdGEKvkxtPWLNBCqP6BnFQsYy1xR0cgrOa7hvzDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ixZKLo5qLAR84vJH0jMYDLJjP3EhOJeM/2wO46+DadYinpuEvm+l9PTNzDLqnNOTH
-         Zc/STC9iKBfRYb7pdW3fDiO7cwoIsOq4baFMWYGRtfulGXSPbX+mIWzeWOmW62GrW+
-         QTLv0axfWZcFN9aZzpjEkG1B70iDQ/00a/ymI2y0=
+        b=d1fAyewIdYrBHDx506ZpqlLxnJiNrfLIDLPYkWsPAnjl5mJUDmZdTMP7lX98FM4JW
+         OoVj0vDFBFnEJP6L3R8AsgLuqLYjV7p0UbZbEmNGoLh2bV1ijgC+7LYz5S+0aGQkqg
+         EdqAMRlpqFQ3nJjZL013MEp0Q2UUi07jbXfPQGBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d21e6e297322a900c128@syzkaller.appspotmail.com,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 08/70] vhost: reject zero size iova range
-Date:   Wed, 24 Apr 2019 19:09:28 +0200
-Message-Id: <20190424170908.437752211@linuxfoundation.org>
+        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.14 23/70] iio: Fix scan mask selection
+Date:   Wed, 24 Apr 2019 19:09:43 +0200
+Message-Id: <20190424170910.578126068@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -62,38 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-[ Upstream commit 813dbeb656d6c90266f251d8bd2b02d445afa63f ]
+commit 20ea39ef9f2f911bd01c69519e7d69cfec79fde3 upstream.
 
-We used to accept zero size iova range which will lead a infinite loop
-in translate_desc(). Fixing this by failing the request in this case.
+The trialmask is expected to have all bits set to 0 after allocation.
+Currently kmalloc_array() is used which does not zero the memory and so
+random bits are set. This results in random channels being enabled when
+they shouldn't. Replace kmalloc_array() with kcalloc() which has the same
+interface but zeros the memory.
 
-Reported-by: syzbot+d21e6e297322a900c128@syzkaller.appspotmail.com
-Fixes: 6b1e6cc7 ("vhost: new device IOTLB API")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Note the fix is actually required earlier than the below fixes tag, but
+will require a manual backport due to move from kmalloc to kmalloc_array.
+
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Fixes commit 057ac1acdfc4 ("iio: Use kmalloc_array() in iio_scan_mask_set()").
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/vhost/vhost.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -918,8 +918,12 @@ static int vhost_new_umem_range(struct v
- 				u64 start, u64 size, u64 end,
- 				u64 userspace_addr, int perm)
- {
--	struct vhost_umem_node *tmp, *node = kmalloc(sizeof(*node), GFP_ATOMIC);
-+	struct vhost_umem_node *tmp, *node;
+---
+ drivers/iio/industrialio-buffer.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -320,9 +320,8 @@ static int iio_scan_mask_set(struct iio_
+ 	const unsigned long *mask;
+ 	unsigned long *trialmask;
  
-+	if (!size)
-+		return -EFAULT;
-+
-+	node = kmalloc(sizeof(*node), GFP_ATOMIC);
- 	if (!node)
+-	trialmask = kmalloc_array(BITS_TO_LONGS(indio_dev->masklength),
+-				  sizeof(*trialmask),
+-				  GFP_KERNEL);
++	trialmask = kcalloc(BITS_TO_LONGS(indio_dev->masklength),
++			    sizeof(*trialmask), GFP_KERNEL);
+ 	if (trialmask == NULL)
  		return -ENOMEM;
- 
+ 	if (!indio_dev->masklength) {
 
 
