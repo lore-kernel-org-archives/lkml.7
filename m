@@ -2,53 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFC4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37ECC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1465921905
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2AF21905
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126214;
-	bh=m5ST6p3HzZAzLfyAyK6h0UVxArB6OQ1zpGSw1iKseaA=;
+	s=default; t=1556126215;
+	bh=Iu5e9ZoxFnZXV9BoeD7yjWV/H+LrEQ7kmeRSaupRf2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SWKJoF00QDeNU7lCJDNbEj4OJWBtb8kd0sdrW8CCEGqn+/EYQljTc0lmWmn3sMuCE
-	 KeNNsEMtHUDIHVaOjV5iS4Zzkf7KucsC41z3a6Q5zvbuA0RWE/in/hjNJMpxzFEPBj
-	 BjKI8/3kFXBAARA4VQ3L77ZPbzkfOtYLq/+rz6rc=
+	b=TXPfncWXCYOpVarOFQDgOfWq5L5baj8+5Sn3BZ6EjimvhRHRn4PNnQ397EXL9//fK
+	 K20e81itb4UFC1NrsWBrt4Szd+pwhfJyscnSBq5X5dIOFbpp/fLdklUddsxCxu3ydb
+	 LNGfbC05lpPZ0vx8IUi2w4CtnJR0tkFTyeiUbOYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388509AbfDXRQw (ORCPT
+        id S2388129AbfDXRQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:16:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41492 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:16:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388495AbfDXRQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:16:49 -0400
+        id S2388081AbfDXRQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:16:52 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C95DE2190A;
-        Wed, 24 Apr 2019 17:16:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71CD92190C;
+        Wed, 24 Apr 2019 17:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126208;
-        bh=m5ST6p3HzZAzLfyAyK6h0UVxArB6OQ1zpGSw1iKseaA=;
+        s=default; t=1556126210;
+        bh=Iu5e9ZoxFnZXV9BoeD7yjWV/H+LrEQ7kmeRSaupRf2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VjDsbGJJhJEioERYecZKcrYKIg2G+lXTbJNgKgGovpG4u1aGhIP3vB4KHkdlyXDNH
-         Rn/eVsRSlRof5HqCG06e5GTnPZ3WR3uhh5zs+BeMnmYYwoL/Y8Ydycp02F5Mxo13NQ
-         1V3/migTljnwDkmbeIZCkCFYnbx8l11tnmNYRu6M=
+        b=pkRMlnDBWnU/bIqwsQHPOKkb83OXATHjlHmSqnewC1zdxmobsfwpFyNF6soWVwXgG
+         1B4KWe4RpGxO86wrJLKbGPVMaD78jzdi2O6w4vAxKzUQ3TDvhj3NgECqiwqWy4svFh
+         xI74ENIyHilwp/axUNlJ9LopsdUESi8/y4Ex7bps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 029/168] scsi: core: replace GFP_ATOMIC with GFP_KERNEL in scsi_scan.c
-Date:   Wed, 24 Apr 2019 19:07:53 +0200
-Message-Id: <20190424170925.413918019@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jari Ruusu <jari.ruusu@gmail.com>
+Subject: [PATCH 4.4 003/168] ext4: cleanup bh release code in ext4_ind_remove_space()
+Date:   Wed, 24 Apr 2019 19:07:27 +0200
+Message-Id: <20190424170923.651391223@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,114 +59,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1749ef00f7312679f76d5e9104c5d1e22a829038 ]
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-We had a test-report where, under memory pressure, adding LUNs to the
-systems would fail (the tests add LUNs strictly in sequence):
+commit 5e86bdda41534e17621d5a071b294943cae4376e upstream.
 
-[ 5525.853432] scsi 0:0:1:1088045124: Direct-Access     IBM      2107900          .148 PQ: 0 ANSI: 5
-[ 5525.853826] scsi 0:0:1:1088045124: alua: supports implicit TPGS
-[ 5525.853830] scsi 0:0:1:1088045124: alua: device naa.6005076303ffd32700000000000044da port group 0 rel port 43
-[ 5525.853931] sd 0:0:1:1088045124: Attached scsi generic sg10 type 0
-[ 5525.854075] sd 0:0:1:1088045124: [sdk] Disabling DIF Type 1 protection
-[ 5525.855495] sd 0:0:1:1088045124: [sdk] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
-[ 5525.855606] sd 0:0:1:1088045124: [sdk] Write Protect is off
-[ 5525.855609] sd 0:0:1:1088045124: [sdk] Mode Sense: ed 00 00 08
-[ 5525.855795] sd 0:0:1:1088045124: [sdk] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-[ 5525.857838]  sdk: sdk1
-[ 5525.859468] sd 0:0:1:1088045124: [sdk] Attached SCSI disk
-[ 5525.865073] sd 0:0:1:1088045124: alua: transition timeout set to 60 seconds
-[ 5525.865078] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015070] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.015213] sd 0:0:1:1088045124: alua: port group 00 state A preferred supports tolusnA
-[ 5526.587439] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
-[ 5526.588562] scsi_alloc_sdev: Allocation failure during SCSI scanning, some SCSI devices might not be configured
+Currently, we are releasing the indirect buffer where we are done with
+it in ext4_ind_remove_space(), so we can see the brelse() and
+BUFFER_TRACE() everywhere.  It seems fragile and hard to read, and we
+may probably forget to release the buffer some day.  This patch cleans
+up the code by putting of the code which releases the buffers to the
+end of the function.
 
-Looking at the code of scsi_alloc_sdev(), and all the calling contexts,
-there seems to be no reason to use GFP_ATMOIC here. All the different
-call-contexts use a mutex at some point, and nothing in between that
-requires no sleeping, as far as I could see. Additionally, the code that
-later allocates the block queue for the device (scsi_mq_alloc_queue())
-already uses GFP_KERNEL.
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Jari Ruusu <jari.ruusu@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-There are similar allocations in two other functions:
-scsi_probe_and_add_lun(), and scsi_add_lun(),; that can also be done with
-GFP_KERNEL.
-
-Here is the contexts for the three functions so far:
-
-    scsi_alloc_sdev()
-        scsi_probe_and_add_lun()
-            scsi_sequential_lun_scan()
-                __scsi_scan_target()
-                    scsi_scan_target()
-                        mutex_lock()
-                    scsi_scan_channel()
-                        scsi_scan_host_selected()
-                            mutex_lock()
-            scsi_report_lun_scan()
-                __scsi_scan_target()
-    	            ...
-            __scsi_add_device()
-                mutex_lock()
-            __scsi_scan_target()
-                ...
-        scsi_report_lun_scan()
-            ...
-        scsi_get_host_dev()
-            mutex_lock()
-
-    scsi_probe_and_add_lun()
-        ...
-
-    scsi_add_lun()
-        scsi_probe_and_add_lun()
-            ...
-
-So replace all these, and give them a bit of a better chance to succeed,
-with more chances of reclaim.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_scan.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/ext4/indirect.c |   47 ++++++++++++++++++++++-------------------------
+ 1 file changed, 22 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 850ddc5fac04..3e2288af56bc 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -217,7 +217,7 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	extern void scsi_requeue_run_queue(struct work_struct *work);
+--- a/fs/ext4/indirect.c
++++ b/fs/ext4/indirect.c
+@@ -1323,6 +1323,7 @@ int ext4_ind_remove_space(handle_t *hand
+ 	ext4_lblk_t offsets[4], offsets2[4];
+ 	Indirect chain[4], chain2[4];
+ 	Indirect *partial, *partial2;
++	Indirect *p = NULL, *p2 = NULL;
+ 	ext4_lblk_t max_block;
+ 	__le32 nr = 0, nr2 = 0;
+ 	int n = 0, n2 = 0;
+@@ -1364,7 +1365,7 @@ int ext4_ind_remove_space(handle_t *hand
+ 		}
  
- 	sdev = kzalloc(sizeof(*sdev) + shost->transportt->device_size,
--		       GFP_ATOMIC);
-+		       GFP_KERNEL);
- 	if (!sdev)
- 		goto out;
  
-@@ -791,7 +791,7 @@ static int scsi_add_lun(struct scsi_device *sdev, unsigned char *inq_result,
- 	 */
- 	sdev->inquiry = kmemdup(inq_result,
- 				max_t(size_t, sdev->inquiry_len, 36),
--				GFP_ATOMIC);
-+				GFP_KERNEL);
- 	if (sdev->inquiry == NULL)
- 		return SCSI_SCAN_NO_RESPONSE;
+-		partial = ext4_find_shared(inode, n, offsets, chain, &nr);
++		partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
+ 		if (nr) {
+ 			if (partial == chain) {
+ 				/* Shared branch grows from the inode */
+@@ -1389,13 +1390,11 @@ int ext4_ind_remove_space(handle_t *hand
+ 				partial->p + 1,
+ 				(__le32 *)partial->bh->b_data+addr_per_block,
+ 				(chain+n-1) - partial);
+-			BUFFER_TRACE(partial->bh, "call brelse");
+-			brelse(partial->bh);
+ 			partial--;
+ 		}
  
-@@ -1085,7 +1085,7 @@ static int scsi_probe_and_add_lun(struct scsi_target *starget,
- 	if (!sdev)
- 		goto out;
+ end_range:
+-		partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
++		partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
+ 		if (nr2) {
+ 			if (partial2 == chain2) {
+ 				/*
+@@ -1425,16 +1424,14 @@ end_range:
+ 					   (__le32 *)partial2->bh->b_data,
+ 					   partial2->p,
+ 					   (chain2+n2-1) - partial2);
+-			BUFFER_TRACE(partial2->bh, "call brelse");
+-			brelse(partial2->bh);
+ 			partial2--;
+ 		}
+ 		goto do_indirects;
+ 	}
  
--	result = kmalloc(result_len, GFP_ATOMIC |
-+	result = kmalloc(result_len, GFP_KERNEL |
- 			((shost->unchecked_isa_dma) ? __GFP_DMA : 0));
- 	if (!result)
- 		goto out_free_sdev;
--- 
-2.19.1
-
+ 	/* Punch happened within the same level (n == n2) */
+-	partial = ext4_find_shared(inode, n, offsets, chain, &nr);
+-	partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
++	partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
++	partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
+ 
+ 	/* Free top, but only if partial2 isn't its subtree. */
+ 	if (nr) {
+@@ -1491,15 +1488,7 @@ end_range:
+ 					   partial->p + 1,
+ 					   partial2->p,
+ 					   (chain+n-1) - partial);
+-			while (partial > chain) {
+-				BUFFER_TRACE(partial->bh, "call brelse");
+-				brelse(partial->bh);
+-			}
+-			while (partial2 > chain2) {
+-				BUFFER_TRACE(partial2->bh, "call brelse");
+-				brelse(partial2->bh);
+-			}
+-			return 0;
++			goto cleanup;
+ 		}
+ 
+ 		/*
+@@ -1514,8 +1503,6 @@ end_range:
+ 					   partial->p + 1,
+ 					   (__le32 *)partial->bh->b_data+addr_per_block,
+ 					   (chain+n-1) - partial);
+-			BUFFER_TRACE(partial->bh, "call brelse");
+-			brelse(partial->bh);
+ 			partial--;
+ 		}
+ 		if (partial2 > chain2 && depth2 <= depth) {
+@@ -1523,11 +1510,21 @@ end_range:
+ 					   (__le32 *)partial2->bh->b_data,
+ 					   partial2->p,
+ 					   (chain2+n2-1) - partial2);
+-			BUFFER_TRACE(partial2->bh, "call brelse");
+-			brelse(partial2->bh);
+ 			partial2--;
+ 		}
+ 	}
++
++cleanup:
++	while (p && p > chain) {
++		BUFFER_TRACE(p->bh, "call brelse");
++		brelse(p->bh);
++		p--;
++	}
++	while (p2 && p2 > chain2) {
++		BUFFER_TRACE(p2->bh, "call brelse");
++		brelse(p2->bh);
++		p2--;
++	}
+ 	return 0;
+ 
+ do_indirects:
+@@ -1535,7 +1532,7 @@ do_indirects:
+ 	switch (offsets[0]) {
+ 	default:
+ 		if (++n >= n2)
+-			return 0;
++			break;
+ 		nr = i_data[EXT4_IND_BLOCK];
+ 		if (nr) {
+ 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 1);
+@@ -1543,7 +1540,7 @@ do_indirects:
+ 		}
+ 	case EXT4_IND_BLOCK:
+ 		if (++n >= n2)
+-			return 0;
++			break;
+ 		nr = i_data[EXT4_DIND_BLOCK];
+ 		if (nr) {
+ 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 2);
+@@ -1551,7 +1548,7 @@ do_indirects:
+ 		}
+ 	case EXT4_DIND_BLOCK:
+ 		if (++n >= n2)
+-			return 0;
++			break;
+ 		nr = i_data[EXT4_TIND_BLOCK];
+ 		if (nr) {
+ 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 3);
+@@ -1560,5 +1557,5 @@ do_indirects:
+ 	case EXT4_TIND_BLOCK:
+ 		;
+ 	}
+-	return 0;
++	goto cleanup;
+ }
 
 
