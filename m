@@ -2,469 +2,1025 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F1AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224F1C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD56C21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C371C21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:16:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P2bcN0kN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfDXOPI (ORCPT
+        id S1728006AbfDXOQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:15:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59852 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbfDXOPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:15:08 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3B400C7CA3;
-        Wed, 24 Apr 2019 14:15:02 +0000 (UTC)
-Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 83D0A60C64;
-        Wed, 24 Apr 2019 14:14:50 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 08:14:50 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "dgilbert@redhat.com" <dgilbert@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [PATCH 1/2] vfio/mdev: add version field as mandatory attribute
- for mdev device
-Message-ID: <20190424081450.30de98e0@x1.home>
-In-Reply-To: <20190424033934.GD26247@joy-OptiPlex-7040>
-References: <20190419083258.19580-1-yan.y.zhao@intel.com>
-        <20190419083505.19654-1-yan.y.zhao@intel.com>
-        <20190422083950.25eb9e7c@x1.home>
-        <20190423010152.GC32217@joy-OptiPlex-7040>
-        <20190422192100.4d577e4b@x1.home>
-        <20190423054157.GA26190@joy-OptiPlex-7040>
-        <20190423090256.662d5907@x1.home>
-        <20190424033934.GD26247@joy-OptiPlex-7040>
-Organization: Red Hat
+        Wed, 24 Apr 2019 10:16:31 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44571 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726611AbfDXOQb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:16:31 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y12so6797456plk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 07:16:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0gA08GE841s14gw763uvbDBTBTVWPmPEi5GpE9n37Ik=;
+        b=P2bcN0kNm8RWhfW2ESVL6amLfH4+LcJtVR2pcNqt/hSnpMGwFVpigEVxwO+mO8avOw
+         EbCOtvYCuSHxX+XKM2ImWYkD7fqFumQxR+Nm3V5lVv7kbe54SylRxeIddKUkc1Zd1ivi
+         LvqgAePMA/Rx3WlH4nxFpYWtRvjh2dOeQjRXaHHyyVYjoo5IGg6NPbRM0OHSnhqo1QZF
+         ds6xy26b/yoDpNHR5hx54+YvnRW7mDhzcaiWn3R4HHpHBa34HThMKgc4gONdFn/cJdaj
+         g4GHJJBD7H3RGg7Cth32Uf38ACAkeg0eBu2MdunaPSXJLykdnU+lGWEhAQya/BHrUCy1
+         9YOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0gA08GE841s14gw763uvbDBTBTVWPmPEi5GpE9n37Ik=;
+        b=qmntlt0dKELxhs9kr38K+Jv78PgYNOjyvYMuBzs94qFnQCVwykokzHhA/PKlOvK5ls
+         PWS2MeFk3OLooKDvT+PpJrEr01F574A+FM1zSRU91gcDo1Ci52Lk+HLmrO1HNsacw2Ez
+         YBBw2AnHyAO3BJDjgkwnBqxFovrpYCq+sGiZD+KVd/EWaXDdr9+Z5XTY/FFT7Ye9WJ5g
+         QFZWQ+TBhbEXoWMJJ4rMjUoWveeywqwwqMmhGFVZSps+F3fJhkr0wMzT5CXqPdI4rfgI
+         xE524HHahgJnxC/oFq8ZvHd9m86EjRxkCzhLhVpJrBSw0PCYS8oxZNYcVlogf3KWYO7d
+         ayYA==
+X-Gm-Message-State: APjAAAVgvu7zLtv6N/RkdiCLWMsMxtfIgi+D+MdxNUg8fruHZass2k6W
+        n3DbNnZa/jErDBxS3kpw16Sjcj1pkSaMsk595v20G3pNsphdag==
+X-Google-Smtp-Source: APXvYqyTSxqEogmpOWM084BEF3UFS5Yy3XV3Ozam2zb7vwjPezrNBBs+LGyI5vSRTWn36hQdZNomliUr2yxse5qnVtE=
+X-Received: by 2002:a17:902:e183:: with SMTP id cd3mr32984097plb.233.1556115389221;
+ Wed, 24 Apr 2019 07:16:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 24 Apr 2019 14:15:07 +0000 (UTC)
+References: <1556108926-233682-1-git-send-email-pengms1@lenovo.com>
+In-Reply-To: <1556108926-233682-1-git-send-email-pengms1@lenovo.com>
+From:   Patrick Venture <venture@google.com>
+Date:   Wed, 24 Apr 2019 07:16:17 -0700
+Message-ID: <CAO=notw7qnRtZBmi-Ew7OCOjTSw5nz4kBRA+eeUB_KYyeAkHPQ@mail.gmail.com>
+Subject: Re: [PATCH v3] ARM: dts: aspeed: Adding Lenovo Hr630 BMC
+To:     Andrew Peng <pengms1@lenovo.com>
+Cc:     Benjamin Fair <benjaminfair@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-aspeed@lists.ozlabs.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lisa YJ19 Liu <liuyj19@lenovo.com>,
+        Duke KH Du <dukh@lenovo.com>,
+        Yonghui YH21 Liu <liuyh21@lenovo.com>,
+        Harry Sung1 <hsung1@lenovo.com>, Joel Stanley <joel@jms.id.au>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019 23:39:34 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
+On Wed, Apr 24, 2019 at 5:29 AM Andrew Peng <pengms1@lenovo.com> wrote:
+>
+> Initial introduction of Lenovo Hr630 family equipped with
+> Aspeed 2500 BMC SoC. Hr630 is a x86 server development kit
+> with a ASPEED ast2500 BMC manufactured by Lenovo.
+> Specifically, This adds the Hr630 platform device tree file
+> used by the Hr630 BMC machines.
+>
+> This also adds an entry of Hr630 device tree file in Makefile
+>
+> Signed-off-by: Andrew Peng <pengms1@lenovo.com>
+> Signed-off-by: Yonghui Liu <liuyh21@lenovo.com>
+> Signed-off-by: Lisa Liu <liuyj19@lenovo.com>
+> ---
+> Changes in v3:
+>  - revise i2c switch aliases name.
+> Changes in v2:
+>  - add i2c switch aliases name.
+>  - remove the unused eeprom device from DT file.
+>  - remove "Licensed under..." sentence.
+>
+>  arch/arm/boot/dts/Makefile                    |   3 +-
+>  arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts | 886 ++++++++++++++++++++++++++
+>  2 files changed, 888 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index f4f5aea..375e53b 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1261,4 +1261,5 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+>         aspeed-bmc-opp-witherspoon.dtb \
+>         aspeed-bmc-opp-zaius.dtb \
+>         aspeed-bmc-portwell-neptune.dtb \
+> -       aspeed-bmc-quanta-q71l.dtb
+> +       aspeed-bmc-quanta-q71l.dtb \
+> +       aspeed-bmc-lenovo-hr630.dtb
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+> new file mode 100644
+> index 0000000..5c45523
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed-bmc-lenovo-hr630.dts
+> @@ -0,0 +1,886 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Device Tree file for Lenovo Hr630 platform
+> + *
+> + * Copyright (C) 2019-present Lenovo
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "aspeed-g5.dtsi"
+> +#include <dt-bindings/gpio/aspeed-gpio.h>
+> +
+> +/ {
+> +       model = "HR630 BMC";
+> +       compatible = "lenovo,hr630-bmc", "aspeed,ast2500";
+> +
+> +       aliases {
+> +               pca9545_i2c0 = &i2c_rbp;
+> +               pca9545_i2c1 = &i2c_fbp1;
+> +               pca9545_i2c2 = &i2c_fbp2;
+> +               pca9545_i2c3 = &i2c_fbp3;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = &uart5;
+> +               bootargs = "console=tty0 console=ttyS4,115200 earlyprintk";
+> +       };
+> +
+> +       memory@80000000 {
+> +               device_type = "memory";
+> +               reg = <0x80000000 0x20000000>;
+> +       };
+> +
+> +       reserved-memory {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +
+> +               flash_memory: region@98000000 {
+> +                       no-map;
+> +                       reg = <0x98000000 0x00100000>; /* 1M */
+> +               };
+> +
+> +               gfx_memory: framebuffer {
+> +                       size = <0x01000000>;
+> +                       alignment = <0x01000000>;
+> +                       compatible = "shared-dma-pool";
+> +                       reusable;
+> +               };
+> +       };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               heartbeat {
+> +                       gpios = <&gpio ASPEED_GPIO(J, 1) GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               fault {
+> +                       gpios = <&gpio ASPEED_GPIO(J, 0) GPIO_ACTIVE_LOW>;
+> +               };
+> +       };
+> +
+> +       iio-hwmon {
+> +               compatible = "iio-hwmon";
+> +               io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
+> +               <&adc 4>, <&adc 5>, <&adc 6>, <&adc 7>,
+> +               <&adc 8>, <&adc 9>, <&adc 10>,
+> +               <&adc 12>, <&adc 13>, <&adc 14>;
+> +       };
+> +
+> +};
+> +
+> +&fmc {
+> +       status = "okay";
+> +       flash@0 {
+> +               status = "okay";
+> +               m25p,fast-read;
+> +               label = "bmc";
+> +               spi-max-frequency = <50000000>;
+> +#include "openbmc-flash-layout.dtsi"
+> +       };
+> +};
+> +
+> +&lpc_ctrl {
+> +       status = "okay";
+> +       memory-region = <&flash_memory>;
+> +       flash = <&spi1>;
+> +};
+> +
+> +&uart1 {
+> +       status = "okay";
+> +};
+> +
+> +&uart2 {
+> +       status = "okay";
+> +};
+> +
+> +&uart3 {
+> +       status = "okay";
+> +};
+> +
+> +&uart5 {
+> +       status = "okay";
+> +};
+> +
+> +&vuart {
+> +       status = "okay";
+> +};
+> +
+> +&ibt {
+> +       status = "okay";
+> +};
+> +
+> +&mac0 {
+> +       status = "okay";
+> +
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_rmii1_default>;
+> +       use-ncsi;
+> +};
+> +
+> +&mac1 {
+> +       status = "okay";
+> +
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
+> +};
+> +
+> +&adc {
+> +       status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +       status = "okay";
+> +       /* temp1 inlet */
+> +       tmp75@4e {
+> +               compatible = "national,lm75";
+> +               reg = <0x4e>;
+> +       };
+> +};
+> +
+> +&i2c1 {
+> +       status = "okay";
+> +       /* temp2 outlet */
+> +       tmp75@4d {
+> +               compatible = "national,lm75";
+> +               reg = <0x4d>;
+> +       };
+> +};
+> +
+> +&i2c2 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c4 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c5 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c6 {
+> +       status = "okay";
+> +       /*      Slot 0,
+> +        *      Slot 1,
+> +        *      Slot 2,
+> +        *      Slot 3
+> +        */
+> +
+> +       i2c-switch@70 {
+> +               compatible = "nxp,pca9545";
+> +               reg = <0x70>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               i2c-mux-idle-disconnect;        /* may use mux@70 next. */
 
-> On Tue, Apr 23, 2019 at 11:02:56PM +0800, Alex Williamson wrote:
-> > On Tue, 23 Apr 2019 01:41:57 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > On Tue, Apr 23, 2019 at 09:21:00AM +0800, Alex Williamson wrote:  
-> > > > On Mon, 22 Apr 2019 21:01:52 -0400
-> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > >  
-> > > > > On Mon, Apr 22, 2019 at 10:39:50PM +0800, Alex Williamson wrote:  
-> > > > > > On Fri, 19 Apr 2019 04:35:04 -0400
-> > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > > > >  
-> > > > > > > device version attribute in mdev sysfs is used by user space software
-> > > > > > > (e.g. libvirt) to query device compatibility for live migration of VFIO
-> > > > > > > mdev devices. This attribute is mandatory if a mdev device supports live
-> > > > > > > migration.  
-> > > > > >
-> > > > > > The Subject: doesn't quite match what's being proposed here.
-> > > > > >  
-> > > > > > > It consists of two parts: common part and vendor proprietary part.
-> > > > > > > common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
-> > > > > > >              identifies device type. e.g., for pci device, it is
-> > > > > > >              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).  
-> > > > > >
-> > > > > > What purpose does this serve?  If it's intended as some sort of
-> > > > > > namespace feature, shouldn't we first assume that we can only support
-> > > > > > migration to devices of the same type?  Therefore each type would
-> > > > > > already have its own namespace.  Also that would make the trailing bit
-> > > > > > of the version string listed below in the example redundant.  A vendor
-> > > > > > is still welcome to include this in their version string if they wish,
-> > > > > > but I think the string should be entirely vendor defined.
-> > > > > >  
-> > > > > hi Alex,
-> > > > > This common part is a kind of namespace.
-> > > > > Because if version string is entirely defined by vendors, I'm worried about
-> > > > > if there is a case that one vendor's version string happens to deceive and
-> > > > > interfere with another vendor's version checking?
-> > > > > e.g.
-> > > > > vendor A has a version string like: vendor id + device id + mdev type
-> > > > > vendor B has a version string like: device id + vendor id + mdev type
-> > > > > but vendor A's vendor id is 0x8086, device id is 0x1217
-> > > > > vendor B's vendor id is 0x1217, device id is 0x8086.
-> > > > >
-> > > > > In this corner case, the two vendors may regard the two device is
-> > > > > migratable but actually they are not.
-> > > > >
-> > > > > That's the reason for this common part that serve as a kind of namespace
-> > > > > that all vendors will comply with to avoid overlap.  
-> > > >
-> > > > If we assume that migration can only occur between matching mdev types,
-> > > > this is redundant, each type already has their own namespace.
-> > > >  
-> > > hi Alex,
-> > > do you mean user space software like libvirt needs to first check whether
-> > > mdev type is matching and then check whether version is matching?  
-> > 
-> > Yes.
-> >  
-> may I know the drawback of defining the this common part?
-> 	common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
->              identifies device type. e.g., for pci device, it is
->              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-> By doing so, user space software has no need to first check whether mdev type
-> is matching.  A confident vendor driver can even allow devices migrating
-> between different mdev types.
+It's fine to leave mux-idle-disconnect, however the two muxes you're
+worried about aren't competing under the same bus.  This one lives
+under i2c6 and the other i2c7, so they shouldn't interfere with each
+other.  Does that make sense?  I missed this before because the window
+only let me see part of a thing so I didn't see both in the same view
+until I opened the patch in patchworks.
 
+> +
+> +               i2c_rbp: i2c@0 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0>;
+> +               };
+> +
+> +               i2c_fbp1: i2c@1 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <1>;
+> +               };
+> +
+> +               i2c_fbp2: i2c@2 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <2>;
+> +               };
+> +
+> +               i2c_fbp3: i2c@3 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <3>;
+> +               };
+> +       };
+> +};
+> +
+> +&i2c7 {
+> +       status = "okay";
+> +
+> +       /*      Slot 0,
+> +        *      Slot 1,
+> +        *      Slot 2,
+> +        *      Slot 3
+> +        */
+> +       i2c-switch@76 {
+> +               compatible = "nxp,pca9546";
+> +               reg = <0x76>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               i2c-mux-idle-disconnect;  /* may use mux@76 next. */
+> +
+> +               i2c_riser2: i2c@0 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0>;
+> +               };
+> +
+> +               i2c_pcie4: i2c@1 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <1>;
+> +               };
+> +
+> +               i2c_riser1: i2c@2 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <2>;
+> +               };
+> +
+> +               i2c_ocp: i2c@3 {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <3>;
+> +               };
+> +       };
+> +};
+> +
+> +&i2c8 {
+> +       status = "okay";
+> +
+> +       eeprom@57 {
+> +               compatible = "atmel,24c256";
+> +               reg = <0x57>;
+> +               pagesize = <16>;
+> +       };
+> +};
+> +
+> +&i2c9 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c10 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c11 {
+> +       status = "okay";
+> +};
+> +
+> +&i2c12 {
+> +       status = "okay";
+> +};
+> +
+> +/*
+> + * Enable port A as device (via the virtual hub) and port B as
+> + * host by default on the eval board. This can be easily changed
+> + * by replacing the override below with &ehci0 { ... } to enable
+> + * host on both ports.
+> + */
+> +&vhub {
+> +       status = "okay";
+> +};
+> +
+> +&ehci1 {
+> +       status = "okay";
+> +};
+> +
+> +&uhci {
+> +       status = "okay";
+> +};
+> +
+> +&gfx {
+> +       status = "okay";
+> +       memory-region = <&gfx_memory>;
+> +};
+> +
+> +&pwm_tacho {
+> +       status = "okay";
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_pwm0_default
+> +       &pinctrl_pwm1_default
+> +       &pinctrl_pwm2_default
+> +       &pinctrl_pwm3_default
+> +       &pinctrl_pwm4_default
+> +       &pinctrl_pwm5_default
+> +       &pinctrl_pwm6_default>;
+> +
+> +       fan@0 {
+> +               reg = <0x00>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+> +       };
+> +
+> +       fan@1 {
+> +               reg = <0x00>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x01>;
+> +       };
+> +
+> +       fan@2 {
+> +               reg = <0x01>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x02>;
+> +       };
+> +
+> +       fan@3 {
+> +               reg = <0x01>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x03>;
+> +       };
+> +
+> +       fan@4 {
+> +               reg = <0x02>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x04>;
+> +       };
+> +
+> +       fan@5 {
+> +               reg = <0x02>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x05>;
+> +       };
+> +
+> +       fan@6 {
+> +               reg = <0x03>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x06>;
+> +       };
+> +
+> +       fan@7 {
+> +               reg = <0x03>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x07>;
+> +       };
+> +
+> +       fan@8 {
+> +               reg = <0x04>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x08>;
+> +       };
+> +
+> +       fan@9 {
+> +               reg = <0x04>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x09>;
+> +       };
+> +
+> +       fan@10 {
+> +               reg = <0x05>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
+> +       };
+> +
+> +       fan@11 {
+> +               reg = <0x05>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
+> +       };
+> +
+> +       fan@12 {
+> +               reg = <0x06>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x0c>;
+> +       };
+> +
+> +       fan@13 {
+> +               reg = <0x06>;
+> +               aspeed,fan-tach-ch = /bits/ 8 <0x0d>;
+> +       };
+> +};
+> +
+> +&gpio {
+> +
+> +       pin_gpio_a0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(A, 0) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "MAC1_INT_N";
+> +       };
+> +
+> +       pin_gpio_a1 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(A, 1) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "MEZZ_C_PRESENT_N";
+> +       };
+> +
+> +       pin_gpio_a2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(A, 2) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "PSU1_PRST";
+> +       };
+> +
+> +       pin_gpio_a3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "PSU2_PRST";
+> +       };
+> +
+> +       pin_gpio_b5 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(B, 5) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "IRQ_BMC_PCH_SMI_LPC_N";
+> +       };
+> +
+> +       pin_gpio_f0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(F, 0) GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +               line-name = "IRQ_BMC_PCH_NMI_R";
+> +       };
+> +
+> +       pin_gpio_f1 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(F, 1) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FM_CPU1_DISABLE_COD_N";
+> +       };
+> +
+> +       pin_gpio_f2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(F, 2) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "SMB_LAN_ALERT_N_MEZZ";
+> +       };
+> +
+> +       pin_gpio_f3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(F, 3) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "I2C_BUS0_RST_OUT_N";
+> +       };
+> +
+> +       pin_gpio_f4 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(F, 4) GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +               line-name = "FM_SKT0_FAULT_LED";
+> +       };
+> +
+> +       pin_gpio_f5 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(F, 5) GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +               line-name = "FM_SKT1_FAULT_LED";
+> +       };
+> +
+> +       pin_gpio_f6 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(F, 6) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "IRQ_BMC_CPLD_NMI";
+> +       };
+> +
+> +       pin_gpio_f7 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(F, 7) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "PSU2_ALERT_N";
+> +       };
+> +
+> +       pin_gpio_g0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(G, 0) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FM_CPU_ERR2_LVT3_N";
+> +       };
+> +
+> +       pin_gpio_g1 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(G, 1) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FM_CPU_MSMI_CATERR_LVT3_N";
+> +       };
+> +
+> +       pin_gpio_g2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(G, 2) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FM_PCH_BMC_THERMTRIP_N";
+> +       };
+> +
+> +       pin_gpio_g3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(G, 3) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "BMC_I2C_BUS7_INT_N";
+> +       };
+> +
+> +       pin_gpio_g4 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(G, 4) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "FAN_PWR_CTL_N";
+> +       };
+> +
+> +       pin_gpio_g5 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(G, 5) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "NFC_FD_N";
+> +       };
+> +
+> +       pin_gpio_g6 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(G, 6) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "IRQ_NMI_EVENT_N";
+> +       };
+> +
+> +       pin_gpio_g7 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(G, 7) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "RST_BMC_PCIE_I2CMUX_N";
+> +       };
+> +
+> +       pin_gpio_h0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(H, 0) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "PSU1_EPOW_N_R";
+> +       };
+> +
+> +       pin_gpio_h1 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(H, 1) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "PSU2_EPOW_N_R";
+> +       };
+> +
+> +       pin_gpio_h2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(H, 2) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "PSU1_FFS_N_R";
+> +       };
+> +
+> +       pin_gpio_h3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(H, 3) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "PSU2_FFS_N_R";
+> +       };
+> +
+> +       pin_gpio_h4 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(H, 4) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "PSU1_THROTTLE_N_R";
+> +       };
+> +
+> +       pin_gpio_h5 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(H, 5) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "PSU2_THROTTLE_N_R";
+> +       };
+> +
+> +       pin_gpio_h6 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(H, 6) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "PSU1_SMB_RESET_N";
+> +       };
+> +
+> +       pin_gpio_h7 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(H, 7) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "PSU2_SMB_RESET_N";
+> +       };
+> +
+> +       pin_gpio_i1 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(I, 1) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FP_PWR_BTN_N";
+> +       };
+> +
+> +       pin_gpio_i2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(I, 2) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "BIOS_RCVR_N";
+> +       };
+> +
+> +       pin_gpio_i3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(I, 3) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "BMC_INTRUDED_COVER";
+> +       };
+> +
+> +       pin_gpio_j2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(J, 2) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "BMC_BIOS_UPDATE_N";
+> +       };
+> +
+> +       pin_gpio_j3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(J, 3) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "RST_BMC_HDD_I2CMUX_N";
+> +       };
+> +
+> +       pin_gpio_q4 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Q, 4) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "MEZZ_A_PRESENT_N";
+> +       };
+> +
+> +       pin_gpio_q5 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Q, 5) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "VGA_FRONT_PRES_N";
+> +       };
+> +
+> +       pin_gpio_q6 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Q, 6) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "I2C_RISER1_INT_N";
+> +       };
+> +
+> +       pin_gpio_q7 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "NCSI_CABLE_DET_N";
+> +       };
+> +
+> +       pin_gpio_r0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(R, 0) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FP_RST_BTN_N";
+> +       };
+> +
+> +       pin_gpio_r2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(R, 2) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "HDDSIG1_DETECT_N";
+> +       };
+> +
+> +       pin_gpio_r3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(R, 3) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "HDDSIG2_DETECT_N";
+> +       };
+> +
+> +       pin_gpio_r4 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(R, 4) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "HDDSIG3_DETECT_N";
+> +       };
+> +
+> +       pin_gpio_r5 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(R, 5) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "VIDEO_CABLE_DETECT_N";
+> +       };
+> +
+> +       pin_gpio_s0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(S, 0) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "BMC_PS_RAPIDON_WAKE_R_N";
+> +       };
+> +
+> +       pin_gpio_s1 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(S, 1) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "HOST_TPM_PP_BUF";
+> +       };
+> +
+> +       pin_gpio_s2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(S, 2) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "BMC_VGA_SW";
+> +       };
+> +
+> +       pin_gpio_s3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(S, 3) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "IRQ_SML0_ALERT_MUX_N";
+> +       };
+> +
+> +       pin_gpio_s4 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(S, 4) GPIO_ACTIVE_HIGH>;
+> +               output;
+> +               line-name = "VBAT_EN_N";
+> +       };
+> +
+> +       pin_gpio_s5 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(S, 5) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "BMC_HW_STRAP_4";
+> +       };
+> +
+> +       pin_gpio_s6 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(S, 6) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "PU_BMC_GPIOS6";
+> +       };
+> +
+> +       pin_gpio_s7 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(S, 7) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "I2C_BUS7_RESET_N";
+> +       };
+> +
+> +       pin_gpio_y0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Y, 0) GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +               line-name = "BMC_NCSI_MUX_CTL_S0";
+> +       };
+> +
+> +       pin_gpio_y1 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Y, 1) GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +               line-name = "BMC_NCSI_MUX_CTL_S1";
+> +       };
+> +
+> +       pin_gpio_y2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Y, 2) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "UID_ALERT_N";
+> +       };
+> +
+> +       pin_gpio_z0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Z, 0) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "I2C_RISER2_INT_N";
+> +       };
+> +
+> +       pin_gpio_z2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "I2C_RISER2_RESET_N";
+> +       };
+> +
+> +       pin_gpio_z3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Z, 3) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "FM_BMC_PCH_SCI_LPC_N";
+> +       };
+> +
+> +       pin_gpio_z4 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Z, 4) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "BMC_HW_STRAP_17";
+> +       };
+> +
+> +       pin_gpio_z6 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Z, 6) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "BMC_HW_STRAP_20";
+> +       };
+> +
+> +       pin_gpio_z7 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(Z, 7) GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +               line-name = "BMC_POST_CMPLT_N";
+> +       };
+> +
+> +       pin_gpio_aa0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
+> +               output-low;
+> +               line-name = "HOST_BMC_USB_SEL";
+> +       };
+> +
+> +       pin_gpio_aa1 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AA, 1) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "PSU1_ALERT_N";
+> +       };
+> +
+> +       pin_gpio_aa2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FM_PVCCIN_CPU0_PWR_IN_ALERT_N";
+> +       };
+> +
+> +       pin_gpio_aa3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AA, 3) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FM_PVCCIN_CPU1_PWR_IN_ALERT_N";
+> +       };
+> +
+> +       pin_gpio_aa4 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AA, 4) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "USB_CABLE_DETECT_N";
+> +       };
+> +
+> +       pin_gpio_aa5 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AA, 5) GPIO_ACTIVE_HIGH>;
+> +               output-high;
+> +               line-name = "I2C_BUS1_RST_OUT_N";
+> +       };
+> +
+> +       pin_gpio_aa6 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AA, 6) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "IRQ_SMI_ACTIVE_N";
+> +       };
+> +
+> +       pin_gpio_aa7 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AA, 7) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FM_BIOS_POST_CMPLT_N";
+> +       };
+> +
+> +       pin_gpio_ab0 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AB, 0) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FM_TPM_MOD_PRES_N";
+> +       };
+> +
+> +       pin_gpio_ab1 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AB, 1) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "FORCE_NMI_SW_FPGA_N";
+> +       };
+> +
+> +       pin_gpio_ab2 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AB, 2) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "1U_2U_PCBA_SEL_R";
+> +       };
+> +
+> +       pin_gpio_ab3 {
+> +               gpio-hog;
+> +               gpios = <ASPEED_GPIO(AB, 3) GPIO_ACTIVE_HIGH>;
+> +               input;
+> +               line-name = "INTRUDED_PRES_N";
+> +       };
+> +};
 
-It's not practical to expect userspace to test the version of every
-mdev type in the system to determine a match, let alone across a data
-center.  Additionally, in order to be migration compatible the mdev
-types must be software compatible to the VM, which is the basic
-definition of the differences between mdev types.  Therefore let me
-flip the question around, why would a vendor driver choose to create a
-new mdev type for software compatible devices?  If the vendor wants to
-maintain compatibility, indicate basic compatibility using the same
-mdev type.  The original intention of the version attribute is to be
-entirely opaque to userspace, introducing "common" parts is unnecessary
-as above, degrades the original concept, and only defines a solution for
-PCI devices. Thanks,
+This is my last comment.
+Thanks,
+Patrick
 
-Alex
-
-> > > if user space software only checks version for migration, it means vendor
-> > > driver has to include mdev type in their vendor proprietary part string,
-> > > right?  
-> > 
-> > Userspace attempting to migrate an nvidia-64 to an i915-GVT_V5_4 would
-> > be a failure on the part of the user.
-> >   
-> > > Another thing is that could there be any future mdev parent driver that
-> > > applies to all mdev devices, just like vfio-pci? like Yi's vfio-pci-mdev
-> > > driver (https://lkml.org/lkml/2019/3/13/114)?  
-> > 
-> > For starters, this is just a sample driver from which vendor specific
-> > mdev drivers could be forked to support these features, but
-> > additionally, the type is defined by the vendor driver, so even a meta
-> > driver like vfio-pci-mdev could create types like
-> > "vfio-pci-mdev-8086_10c9_abcdef" if it wanted to provide that specific
-> > device.  The "vfio-pci-mdev-type1" is just a sample implementation to
-> > say "the native type of the thing bound to me" and it's going to have
-> > limited usefulness for any sort of persistence to userspace.  Thus,
-> > it's a sample driver.  Thanks,  
-> Thanks for this explanation:)
-> 
-> 
-> >   
-> > > > > > > vendor proprietary part: this part is varied in length. vendor driver can
-> > > > > > >              specify any string to identify a device.
-> > > > > > >
-> > > > > > > When reading this attribute, it should show device version string of the
-> > > > > > > device of type <type-id>. If a device does not support live migration, it
-> > > > > > > should return errno.
-> > > > > > > When writing a string to this attribute, it returns errno for
-> > > > > > > incompatibility or returns written string length in compatibility case.
-> > > > > > > If a device does not support live migration, it always returns errno.
-> > > > > > >
-> > > > > > > For user space software to use:
-> > > > > > > 1.
-> > > > > > > Before starting live migration, user space software first reads source side
-> > > > > > > mdev device's version. e.g.
-> > > > > > > "#cat \
-> > > > > > > /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type/version"
-> > > > > > > 00028086-193b-i915-GVTg_V5_4
-> > > > > > >
-> > > > > > > 2.
-> > > > > > > Then, user space software writes the source side returned version string
-> > > > > > > to device version attribute in target side, and checks the return value.
-> > > > > > > If a negative errno is returned in the target side, then mdev devices in
-> > > > > > > source and target sides are not compatible;
-> > > > > > > If a positive number is returned and it equals to the length of written
-> > > > > > > string, then the two mdev devices in source and target side are compatible.
-> > > > > > > e.g.
-> > > > > > > (a) compatibility case
-> > > > > > > "# echo 00028086-193b-i915-GVTg_V5_4 >
-> > > > > > > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
-> > > > > > >
-> > > > > > > (b) incompatibility case
-> > > > > > > "#echo 00028086-193b-i915-GVTg_V5_1 >
-> > > > > > > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
-> > > > > > > -bash: echo: write error: Invalid argument
-> > > > > > >
-> > > > > > > 3. if two mdev devices are compatible, user space software can start
-> > > > > > > live migration, and vice versa.
-> > > > > > >
-> > > > > > > Note: if a mdev device does not support live migration, it either does
-> > > > > > > not provide a version attribute, or always returns errno when its version
-> > > > > > > attribute is read/written.  
-> > > > > >
-> > > > > > I think it would be cleaner to do the former, not supply the
-> > > > > > attribute.  This seems to do the latter in the sample drivers.  Thanks,  
-> > > > > Ok. you are right!
-> > > > > what about just keep one sample driver to show how to do the latter,
-> > > > > and let the others do the former?  
-> > > >
-> > > > I'd rather that if a vendor driver doesn't support features requiring
-> > > > the version attribute that they don't implement it.  It's confusing to
-> > > > developers looking at the sample driver for guidance if we have
-> > > > different implementations.  Of course if you'd like to add migration
-> > > > support to one of the sample drivers, that'd be very welcome.  Thanks,
-> > > >  
-> > > Got it:)
-> > >
-> > > Thanks!
-> > > Yan
-> > >  
-> > > >  
-> > > > > > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > > > > > Cc: Erik Skultety <eskultet@redhat.com>
-> > > > > > > Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-> > > > > > > Cc: Cornelia Huck <cohuck@redhat.com>
-> > > > > > > Cc: "Tian, Kevin" <kevin.tian@intel.com>
-> > > > > > > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> > > > > > > Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-> > > > > > > Cc: Neo Jia <cjia@nvidia.com>
-> > > > > > > Cc: Kirti Wankhede <kwankhede@nvidia.com>
-> > > > > > >
-> > > > > > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > > > > > > ---
-> > > > > > >  Documentation/vfio-mediated-device.txt | 36 ++++++++++++++++++++++++++
-> > > > > > >  samples/vfio-mdev/mbochs.c             | 17 ++++++++++++
-> > > > > > >  samples/vfio-mdev/mdpy.c               | 16 ++++++++++++
-> > > > > > >  samples/vfio-mdev/mtty.c               | 16 ++++++++++++
-> > > > > > >  4 files changed, 85 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
-> > > > > > > index c3f69bcaf96e..bc28471c0667 100644
-> > > > > > > --- a/Documentation/vfio-mediated-device.txt
-> > > > > > > +++ b/Documentation/vfio-mediated-device.txt
-> > > > > > > @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
-> > > > > > >    |     |   |--- available_instances
-> > > > > > >    |     |   |--- device_api
-> > > > > > >    |     |   |--- description
-> > > > > > > +  |     |   |--- version
-> > > > > > >    |     |   |--- [devices]
-> > > > > > >    |     |--- [<type-id>]
-> > > > > > >    |     |   |--- create
-> > > > > > > @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
-> > > > > > >    |     |   |--- available_instances
-> > > > > > >    |     |   |--- device_api
-> > > > > > >    |     |   |--- description
-> > > > > > > +  |     |   |--- version
-> > > > > > >    |     |   |--- [devices]
-> > > > > > >    |     |--- [<type-id>]
-> > > > > > >    |          |--- create
-> > > > > > > @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
-> > > > > > >    |          |--- available_instances
-> > > > > > >    |          |--- device_api
-> > > > > > >    |          |--- description
-> > > > > > > +  |          |--- version
-> > > > > > >    |          |--- [devices]
-> > > > > > >
-> > > > > > >  * [mdev_supported_types]
-> > > > > > > @@ -225,6 +228,8 @@ Directories and files under the sysfs for Each Physical Device
-> > > > > > >    [<type-id>], device_api, and available_instances are mandatory attributes
-> > > > > > >    that should be provided by vendor driver.
-> > > > > > >
-> > > > > > > +  version is a mandatory attribute if a mdev device supports live migration.
-> > > > > > > +
-> > > > > > >  * [<type-id>]
-> > > > > > >
-> > > > > > >    The [<type-id>] name is created by adding the device driver string as a prefix
-> > > > > > > @@ -246,6 +251,35 @@ Directories and files under the sysfs for Each Physical Device
-> > > > > > >    This attribute should show the number of devices of type <type-id> that can be
-> > > > > > >    created.
-> > > > > > >
-> > > > > > > +* version
-> > > > > > > +
-> > > > > > > +  This attribute is rw. It is used to check whether two devices are compatible
-> > > > > > > +  for live migration. If this attribute is missing, then the corresponding mdev
-> > > > > > > +  device is regarded as not supporting live migration.
-> > > > > > > +
-> > > > > > > +  It consists of two parts: common part and vendor proprietary part.
-> > > > > > > +  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
-> > > > > > > +               device type. e.g., for pci device, it is
-> > > > > > > +               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-> > > > > > > +  vendor proprietary part: this part is varied in length. vendor driver can
-> > > > > > > +               specify any string to identify a device.
-> > > > > > > +
-> > > > > > > +  When reading this attribute, it should show device version string of the device
-> > > > > > > +  of type <type-id>. If a device does not support live migration, it should
-> > > > > > > +  return errno.
-> > > > > > > +  When writing a string to this attribute, it returns errno for incompatibility
-> > > > > > > +  or returns written string length in compatibility case. If a device does not
-> > > > > > > +  support live migration, it always returns errno.
-> > > > > > > +
-> > > > > > > +  for example.
-> > > > > > > +  # cat \
-> > > > > > > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_2/version
-> > > > > > > +  00028086-193b-i915-GVTg_V5_2
-> > > > > > > +
-> > > > > > > +  #echo 00028086-193b-i915-GVTg_V5_2 > \
-> > > > > > > + /sys/bus/pci/devices/0000\:00\:02.0/mdev_supported_types/i915-GVTg_V5_4/version
-> > > > > > > + -bash: echo: write error: Invalid argument
-> > > > > > > +
-> > > > > > >  * [device]
-> > > > > > >
-> > > > > > >    This directory contains links to the devices of type <type-id> that have been
-> > > > > > > @@ -327,12 +361,14 @@ card.
-> > > > > > >          |   |   |-- available_instances
-> > > > > > >          |   |   |-- create
-> > > > > > >          |   |   |-- device_api
-> > > > > > > +        |   |   |-- version
-> > > > > > >          |   |   |-- devices
-> > > > > > >          |   |   `-- name
-> > > > > > >          |   `-- mtty-2
-> > > > > > >          |       |-- available_instances
-> > > > > > >          |       |-- create
-> > > > > > >          |       |-- device_api
-> > > > > > > +        |       |-- version
-> > > > > > >          |       |-- devices
-> > > > > > >          |       `-- name
-> > > > > > >          |-- mtty_dev
-> > > > > > > diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-> > > > > > > index b038aa9f5a70..2f5ba96b91a2 100644
-> > > > > > > --- a/samples/vfio-mdev/mbochs.c
-> > > > > > > +++ b/samples/vfio-mdev/mbochs.c
-> > > > > > > @@ -1391,11 +1391,28 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
-> > > > > > >  }
-> > > > > > >  MDEV_TYPE_ATTR_RO(device_api);
-> > > > > > >
-> > > > > > > +static ssize_t version_show(struct kobject *kobj, struct device *dev,
-> > > > > > > +             char *buf)
-> > > > > > > +{
-> > > > > > > +     /* do not support live migration */
-> > > > > > > +     return -EINVAL;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static ssize_t version_store(struct kobject *kobj, struct device *dev,
-> > > > > > > +             const char *buf, size_t count)
-> > > > > > > +{
-> > > > > > > +     /* do not support live migration */
-> > > > > > > +     return -EINVAL;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static MDEV_TYPE_ATTR_RW(version);
-> > > > > > > +
-> > > > > > >  static struct attribute *mdev_types_attrs[] = {
-> > > > > > >       &mdev_type_attr_name.attr,
-> > > > > > >       &mdev_type_attr_description.attr,
-> > > > > > >       &mdev_type_attr_device_api.attr,
-> > > > > > >       &mdev_type_attr_available_instances.attr,
-> > > > > > > +     &mdev_type_attr_version.attr,
-> > > > > > >       NULL,
-> > > > > > >  };
-> > > > > > >
-> > > > > > > diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
-> > > > > > > index cc86bf6566e4..ff15fdfc7d46 100644
-> > > > > > > --- a/samples/vfio-mdev/mdpy.c
-> > > > > > > +++ b/samples/vfio-mdev/mdpy.c
-> > > > > > > @@ -695,11 +695,27 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
-> > > > > > >  }
-> > > > > > >  MDEV_TYPE_ATTR_RO(device_api);
-> > > > > > >
-> > > > > > > +static ssize_t version_show(struct kobject *kobj, struct device *dev,
-> > > > > > > +             char *buf)
-> > > > > > > +{
-> > > > > > > +     /* do not support live migration */
-> > > > > > > +     return -EINVAL;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static ssize_t version_store(struct kobject *kobj, struct device *dev,
-> > > > > > > +             const char *buf, size_t count)
-> > > > > > > +{
-> > > > > > > +     /* do not support live migration */
-> > > > > > > +     return -EINVAL;
-> > > > > > > +}
-> > > > > > > +static MDEV_TYPE_ATTR_RW(version);
-> > > > > > > +
-> > > > > > >  static struct attribute *mdev_types_attrs[] = {
-> > > > > > >       &mdev_type_attr_name.attr,
-> > > > > > >       &mdev_type_attr_description.attr,
-> > > > > > >       &mdev_type_attr_device_api.attr,
-> > > > > > >       &mdev_type_attr_available_instances.attr,
-> > > > > > > +     &mdev_type_attr_version.attr,
-> > > > > > >       NULL,
-> > > > > > >  };
-> > > > > > >
-> > > > > > > diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-> > > > > > > index 1c77c370c92f..4ae3aad3474d 100644
-> > > > > > > --- a/samples/vfio-mdev/mtty.c
-> > > > > > > +++ b/samples/vfio-mdev/mtty.c
-> > > > > > > @@ -1390,10 +1390,26 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
-> > > > > > >
-> > > > > > >  MDEV_TYPE_ATTR_RO(device_api);
-> > > > > > >
-> > > > > > > +static ssize_t version_show(struct kobject *kobj, struct device *dev,
-> > > > > > > +             char *buf)
-> > > > > > > +{
-> > > > > > > +     /* do not support live migration */
-> > > > > > > +     return -EINVAL;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static ssize_t version_store(struct kobject *kobj, struct device *dev,
-> > > > > > > +             const char *buf, size_t count)
-> > > > > > > +{
-> > > > > > > +     /* do not support live migration */
-> > > > > > > +     return -EINVAL;
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static MDEV_TYPE_ATTR_RW(version);
-> > > > > > >  static struct attribute *mdev_types_attrs[] = {
-> > > > > > >       &mdev_type_attr_name.attr,
-> > > > > > >       &mdev_type_attr_device_api.attr,
-> > > > > > >       &mdev_type_attr_available_instances.attr,
-> > > > > > > +     &mdev_type_attr_version.attr,
-> > > > > > >       NULL,
-> > > > > > >  };
-> > > > > > >  
-> > > > > >
-> > > > > > _______________________________________________
-> > > > > > intel-gvt-dev mailing list
-> > > > > > intel-gvt-dev@lists.freedesktop.org
-> > > > > > https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev  
-> > > >
-> > > > _______________________________________________
-> > > > intel-gvt-dev mailing list
-> > > > intel-gvt-dev@lists.freedesktop.org
-> > > > https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev  
-> > 
-> > _______________________________________________
-> > intel-gvt-dev mailing list
-> > intel-gvt-dev@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev  
-
+> --
+> 2.7.4
+>
