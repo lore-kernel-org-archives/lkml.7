@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEE3C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 619DEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 865052054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23995206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126136;
-	bh=YzwCjrczBdi04JSi9zk4lzBzlYRKTQtEoI68NnctzEA=;
+	s=default; t=1556126142;
+	bh=nZ7Zb29pV9Tt52Ysvog4Va2/37OUbwIKq+kS2B1WRBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6YlWt4GAI+4ABYbTqwnz+l4hszwQNytwDk2KK3N3g37p6zlei0FBQYwT/dVlpkv+
-	 Fnt5k5Y496tVu06OEillJf9Nb+yJtPS9HQwMbbzE4vwaZFyl57yqU0pK4oFV10yDSK
-	 1/6RYAsgEyyul7BB4E6cu/n5utkTDtG+s3DO68mA=
+	b=Gc+FkxcIYN59imwkxDkLPN8R4vQuAtknx5YC1ud1n2odhhhjkTP1+PdnBuQ7dOsk+
+	 qaF3vXmZqy0bVzB9nGMOLEzSUxvf98FiH/o6ymK29O3qq81FpLLZv3D5+L86rbtmrM
+	 DhT9cxPVkV2nxB87eTiPjF+NmBAhJkNLj6Kj6FS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388266AbfDXRPf (ORCPT
+        id S2387638AbfDXRPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:15:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40004 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388223AbfDXRPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:15:33 -0400
+        id S2387897AbfDXRPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:15:37 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 430C2206BA;
-        Wed, 24 Apr 2019 17:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12D6F206BA;
+        Wed, 24 Apr 2019 17:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126132;
-        bh=YzwCjrczBdi04JSi9zk4lzBzlYRKTQtEoI68NnctzEA=;
+        s=default; t=1556126135;
+        bh=nZ7Zb29pV9Tt52Ysvog4Va2/37OUbwIKq+kS2B1WRBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ykNFhnNrTbswdaR9Kjsgqlc323GVFZ8Sd84D5SD7NrlDS31W4HHtTACYkhu4FjyV3
-         b44MHKR9UGu6c/rCCKqQgntxERv7GbEZpWXM/QQaeCo4fW5CMk7eODz4w7B7jntub4
-         YNKmAglo7GNkRZFDcbtdR04TgDczgS53yBYPbSjY=
+        b=ZvTzIWTqYZUfrybk27gPtOoD1A45rmL6ETtT/V80EMnRbCpnuSxtsRdzrlP38Um34
+         vZUWxE4Hv1M/3A/HhBwyy4qTkpG8ofSfDfYgeWONicLUMsV5/kkCgVQwu8A2PkTEPU
+         nSmreLBdCzLPm2xhL0WClbQrvtdbpMuXrWfWBO2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Cartwright <julia@ni.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 082/104] iommu/dmar: Fix buffer overflow during PCI bus notification
-Date:   Wed, 24 Apr 2019 19:09:39 +0200
-Message-Id: <20190424170907.775612164@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 083/104] appletalk: Fix use-after-free in atalk_proc_exit
+Date:   Wed, 24 Apr 2019 19:09:40 +0200
+Message-Id: <20190424170907.873418117@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -59,85 +61,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cffaaf0c816238c45cd2d06913476c83eb50f682 ]
+[ Upstream commit 6377f787aeb945cae7abbb6474798de129e1f3ac ]
 
-Commit 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI
-device path") changed the type of the path data, however, the change in
-path type was not reflected in size calculations.  Update to use the
-correct type and prevent a buffer overflow.
+KASAN report this:
 
-This bug manifests in systems with deep PCI hierarchies, and can lead to
-an overflow of the static allocated buffer (dmar_pci_notify_info_buf),
-or can lead to overflow of slab-allocated data.
+BUG: KASAN: use-after-free in pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
+Read of size 8 at addr ffff8881f41fe5b0 by task syz-executor.0/2806
 
-   BUG: KASAN: global-out-of-bounds in dmar_alloc_pci_notify_info+0x1d5/0x2e0
-   Write of size 1 at addr ffffffff90445d80 by task swapper/0/1
-   CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W       4.14.87-rt49-02406-gd0a0e96 #1
-   Call Trace:
-    ? dump_stack+0x46/0x59
-    ? print_address_description+0x1df/0x290
-    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
-    ? kasan_report+0x256/0x340
-    ? dmar_alloc_pci_notify_info+0x1d5/0x2e0
-    ? e820__memblock_setup+0xb0/0xb0
-    ? dmar_dev_scope_init+0x424/0x48f
-    ? __down_write_common+0x1ec/0x230
-    ? dmar_dev_scope_init+0x48f/0x48f
-    ? dmar_free_unused_resources+0x109/0x109
-    ? cpumask_next+0x16/0x20
-    ? __kmem_cache_create+0x392/0x430
-    ? kmem_cache_create+0x135/0x2f0
-    ? e820__memblock_setup+0xb0/0xb0
-    ? intel_iommu_init+0x170/0x1848
-    ? _raw_spin_unlock_irqrestore+0x32/0x60
-    ? migrate_enable+0x27a/0x5b0
-    ? sched_setattr+0x20/0x20
-    ? migrate_disable+0x1fc/0x380
-    ? task_rq_lock+0x170/0x170
-    ? try_to_run_init_process+0x40/0x40
-    ? locks_remove_file+0x85/0x2f0
-    ? dev_prepare_static_identity_mapping+0x78/0x78
-    ? rt_spin_unlock+0x39/0x50
-    ? lockref_put_or_lock+0x2a/0x40
-    ? dput+0x128/0x2f0
-    ? __rcu_read_unlock+0x66/0x80
-    ? __fput+0x250/0x300
-    ? __rcu_read_lock+0x1b/0x30
-    ? mntput_no_expire+0x38/0x290
-    ? e820__memblock_setup+0xb0/0xb0
-    ? pci_iommu_init+0x25/0x63
-    ? pci_iommu_init+0x25/0x63
-    ? do_one_initcall+0x7e/0x1c0
-    ? initcall_blacklisted+0x120/0x120
-    ? kernel_init_freeable+0x27b/0x307
-    ? rest_init+0xd0/0xd0
-    ? kernel_init+0xf/0x120
-    ? rest_init+0xd0/0xd0
-    ? ret_from_fork+0x1f/0x40
-   The buggy address belongs to the variable:
-    dmar_pci_notify_info_buf+0x40/0x60
+CPU: 0 PID: 2806 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ pde_subdir_find+0x12d/0x150 fs/proc/generic.c:71
+ remove_proc_entry+0xe8/0x420 fs/proc/generic.c:667
+ atalk_proc_exit+0x18/0x820 [appletalk]
+ atalk_exit+0xf/0x5a [appletalk]
+ __do_sys_delete_module kernel/module.c:1018 [inline]
+ __se_sys_delete_module kernel/module.c:961 [inline]
+ __x64_sys_delete_module+0x3dc/0x5e0 kernel/module.c:961
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb2de6b9c58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000200001c0
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb2de6ba6bc
+R13: 00000000004bccaa R14: 00000000006f6bc8 R15: 00000000ffffffff
 
-Fixes: 57384592c433 ("iommu/vt-d: Store bus information in RMRR PCI device path")
-Signed-off-by: Julia Cartwright <julia@ni.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Allocated by task 2806:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
+ slab_post_alloc_hook mm/slab.h:444 [inline]
+ slab_alloc_node mm/slub.c:2739 [inline]
+ slab_alloc mm/slub.c:2747 [inline]
+ kmem_cache_alloc+0xcf/0x250 mm/slub.c:2752
+ kmem_cache_zalloc include/linux/slab.h:730 [inline]
+ __proc_create+0x30f/0xa20 fs/proc/generic.c:408
+ proc_mkdir_data+0x47/0x190 fs/proc/generic.c:469
+ 0xffffffffc10c01bb
+ 0xffffffffc10c0166
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 2806:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
+ slab_free_hook mm/slub.c:1409 [inline]
+ slab_free_freelist_hook mm/slub.c:1436 [inline]
+ slab_free mm/slub.c:2986 [inline]
+ kmem_cache_free+0xa6/0x2a0 mm/slub.c:3002
+ pde_put+0x6e/0x80 fs/proc/generic.c:647
+ remove_proc_entry+0x1d3/0x420 fs/proc/generic.c:684
+ 0xffffffffc10c031c
+ 0xffffffffc10c0166
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881f41fe500
+ which belongs to the cache proc_dir_entry of size 256
+The buggy address is located 176 bytes inside of
+ 256-byte region [ffff8881f41fe500, ffff8881f41fe600)
+The buggy address belongs to the page:
+page:ffffea0007d07f80 count:1 mapcount:0 mapping:ffff8881f6e69a00 index:0x0
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 dead000000000100 dead000000000200 ffff8881f6e69a00
+raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881f41fe480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8881f41fe500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881f41fe580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                     ^
+ ffff8881f41fe600: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+ ffff8881f41fe680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+It should check the return value of atalk_proc_init fails,
+otherwise atalk_exit will trgger use-after-free in pde_subdir_find
+while unload the module.This patch fix error cleanup path of atalk_init
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dmar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/atalk.h            |  2 +-
+ net/appletalk/atalk_proc.c       |  2 +-
+ net/appletalk/ddp.c              | 37 ++++++++++++++++++++++++++------
+ net/appletalk/sysctl_net_atalk.c |  5 ++++-
+ 4 files changed, 37 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 6b78e131f6dd..f6a42ea14ef1 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -134,7 +134,7 @@ dmar_alloc_pci_notify_info(struct pci_dev *dev, unsigned long event)
- 		for (tmp = dev; tmp; tmp = tmp->bus->self)
- 			level++;
+diff --git a/include/linux/atalk.h b/include/linux/atalk.h
+index 73fd8b7e9534..716d53799d1f 100644
+--- a/include/linux/atalk.h
++++ b/include/linux/atalk.h
+@@ -150,7 +150,7 @@ extern int sysctl_aarp_retransmit_limit;
+ extern int sysctl_aarp_resolve_time;
  
--	size = sizeof(*info) + level * sizeof(struct acpi_dmar_pci_path);
-+	size = sizeof(*info) + level * sizeof(info->path[0]);
- 	if (size <= sizeof(dmar_pci_notify_info_buf)) {
- 		info = (struct dmar_pci_notify_info *)dmar_pci_notify_info_buf;
- 	} else {
+ #ifdef CONFIG_SYSCTL
+-extern void atalk_register_sysctl(void);
++extern int atalk_register_sysctl(void);
+ extern void atalk_unregister_sysctl(void);
+ #else
+ #define atalk_register_sysctl()		do { } while(0)
+diff --git a/net/appletalk/atalk_proc.c b/net/appletalk/atalk_proc.c
+index af46bc49e1e9..b5f84f428aa6 100644
+--- a/net/appletalk/atalk_proc.c
++++ b/net/appletalk/atalk_proc.c
+@@ -293,7 +293,7 @@ int __init atalk_proc_init(void)
+ 	goto out;
+ }
+ 
+-void __exit atalk_proc_exit(void)
++void atalk_proc_exit(void)
+ {
+ 	remove_proc_entry("interface", atalk_proc_dir);
+ 	remove_proc_entry("route", atalk_proc_dir);
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index c00897f65a31..276a09d7c537 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1913,12 +1913,16 @@ static const char atalk_err_snap[] __initconst =
+ /* Called by proto.c on kernel start up */
+ static int __init atalk_init(void)
+ {
+-	int rc = proto_register(&ddp_proto, 0);
++	int rc;
+ 
+-	if (rc != 0)
++	rc = proto_register(&ddp_proto, 0);
++	if (rc)
+ 		goto out;
+ 
+-	(void)sock_register(&atalk_family_ops);
++	rc = sock_register(&atalk_family_ops);
++	if (rc)
++		goto out_proto;
++
+ 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+ 	if (!ddp_dl)
+ 		printk(atalk_err_snap);
+@@ -1926,12 +1930,33 @@ static int __init atalk_init(void)
+ 	dev_add_pack(&ltalk_packet_type);
+ 	dev_add_pack(&ppptalk_packet_type);
+ 
+-	register_netdevice_notifier(&ddp_notifier);
++	rc = register_netdevice_notifier(&ddp_notifier);
++	if (rc)
++		goto out_sock;
++
+ 	aarp_proto_init();
+-	atalk_proc_init();
+-	atalk_register_sysctl();
++	rc = atalk_proc_init();
++	if (rc)
++		goto out_aarp;
++
++	rc = atalk_register_sysctl();
++	if (rc)
++		goto out_proc;
+ out:
+ 	return rc;
++out_proc:
++	atalk_proc_exit();
++out_aarp:
++	aarp_cleanup_module();
++	unregister_netdevice_notifier(&ddp_notifier);
++out_sock:
++	dev_remove_pack(&ppptalk_packet_type);
++	dev_remove_pack(&ltalk_packet_type);
++	unregister_snap_client(ddp_dl);
++	sock_unregister(PF_APPLETALK);
++out_proto:
++	proto_unregister(&ddp_proto);
++	goto out;
+ }
+ module_init(atalk_init);
+ 
+diff --git a/net/appletalk/sysctl_net_atalk.c b/net/appletalk/sysctl_net_atalk.c
+index ebb864361f7a..4e6042e0fcac 100644
+--- a/net/appletalk/sysctl_net_atalk.c
++++ b/net/appletalk/sysctl_net_atalk.c
+@@ -44,9 +44,12 @@ static struct ctl_table atalk_table[] = {
+ 
+ static struct ctl_table_header *atalk_table_header;
+ 
+-void atalk_register_sysctl(void)
++int __init atalk_register_sysctl(void)
+ {
+ 	atalk_table_header = register_net_sysctl(&init_net, "net/appletalk", atalk_table);
++	if (!atalk_table_header)
++		return -ENOMEM;
++	return 0;
+ }
+ 
+ void atalk_unregister_sysctl(void)
 -- 
 2.19.1
 
