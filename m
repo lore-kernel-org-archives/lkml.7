@@ -2,129 +2,125 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB964C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E9DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C472089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:19:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kTNUJUb1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mc+sMI++"
+	by mail.kernel.org (Postfix) with ESMTP id D5146206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbfDXGTL (ORCPT
+        id S1729653AbfDXGUP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:19:11 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57800 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfDXGTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:19:10 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BF596604B4; Wed, 24 Apr 2019 06:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556086749;
-        bh=jeU9IxH3FAZ0KXhH8CGQ3BhzHo2QVEmwt3E/zlUZB8o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kTNUJUb17ubl+nY8uHcZM3iRs96L/mlCaX7OsEbpAnBWDTv2zcF2uLOvWFx2rV/ro
-         QLTxSJ+LxTdfQOU/gFK/kjnfbwk8JOcau50zBBM1PF/IKI1qdbkPuRyt6w4dDXQM4/
-         ukIeDTwvrtpr3aD6E1q00NHQIluN4Csh5oFij4as=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id AE85A60712;
-        Wed, 24 Apr 2019 06:19:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556086748;
-        bh=jeU9IxH3FAZ0KXhH8CGQ3BhzHo2QVEmwt3E/zlUZB8o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mc+sMI++KPhxUL2ihq+x9v/iu6KaDrAVw8I4gja5JS0gKc1cI7PpLCdEGDPla7f/N
-         CMU4+IC38eEglXkH+Merf1vLTJLgvFcYyZkbCNoszO8sGp0AHpZEvwN4jcjiO2otv3
-         fjaWDfrKio+tA/UkBp+Nq8FfDFtGVHz0fKxot8K8=
+        Wed, 24 Apr 2019 02:20:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42306 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726002AbfDXGUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 02:20:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ECBD4AF8F;
+        Wed, 24 Apr 2019 06:20:13 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Nicolai Stange <nstange@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>, live-patching@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>
+Subject: Re: [RFC PATCH 1/1] x86/ftrace: make ftrace_int3_handler() not to skip fops invocation
+References: <20180726104029.7736-1-nstange@suse.de>
+        <20180726104029.7736-2-nstange@suse.de>
+        <20190419160513.1faa01d2@gandalf.local.home> <87ef5sfuzu.fsf@suse.de>
+        <20190423195023.425902dc@gandalf.local.home>
+Date:   Wed, 24 Apr 2019 08:20:12 +0200
+In-Reply-To: <20190423195023.425902dc@gandalf.local.home> (Steven Rostedt's
+        message of "Tue, 23 Apr 2019 19:50:23 -0400")
+Message-ID: <87bm0vexgj.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 24 Apr 2019 14:19:08 +0800
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        thierry.escande@linaro.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device property
- firmware-name for QCA6174
-In-Reply-To: <A85D7982-E000-4A5F-9927-CA36E0BA60F2@holtmann.org>
-References: <1554368908-22017-2-git-send-email-rjliao@codeaurora.org>
- <1554888476-17560-1-git-send-email-rjliao@codeaurora.org>
- <A85D7982-E000-4A5F-9927-CA36E0BA60F2@holtmann.org>
-Message-ID: <7e0cf9ba98260309c43d9d6e63dead6c@codeaurora.org>
-X-Sender: rjliao@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-24 01:06, Marcel Holtmann wrote:
-> Hi Rocky,
-> 
->> This patch adds an optional device property "firmware-name" to allow 
->> the
->> driver to load customized nvm firmware file based on this property.
+Steven Rostedt <rostedt@goodmis.org> writes:
+> On Tue, 23 Apr 2019 20:15:49 +0200
+> Nicolai Stange <nstange@suse.de> wrote:
+>> Steven Rostedt <rostedt@goodmis.org> writes:
+>> > For 32 bit, we could add 4 variables on the thread_info and make 4
+>> > trampolines, one for each context (normal, softirq, irq and NMI), and
+>> > have them use the variable stored in the thread_info for that location:
+>> >
+>> > ftrace_int3_tramp_normal
+>> > 	push %eax # just for space
+>> > 	push %eax
+>> > 	mov whatever_to_get_thread_info, %eax
+>> > 	mov normal(%eax), %eax
+>> > 	mov %eax, 4(%esp)
+>> > 	pop %eax
+>> > 	jmp ftrace_caller
+>> >
+>> > ftrace_int3_tramp_softiqr
+>> > 	push %eax # just for space
+>> > 	push %eax
+>> > 	mov whatever_to_get_thread_info, %eax
+>> > 	mov softirq(%eax), %eax
+>> > 	mov %eax, 4(%esp)
+>> > 	pop %eax
+>> > 	jmp ftrace_caller
+>> >
+>> > etc..
+>> >
+>> >
+>> > A bit crazier for 32 bit but it can still be done. ;-)  
 >> 
->> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
->> ---
->> Changes in v3:
->>  * added firmware-name instead of nvm-postfix to specify full firmware 
->> name
->> ---
->> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 ++
->> 1 file changed, 2 insertions(+)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt 
->> b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> index 824c0e2..2bcea50 100644
->> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
->> @@ -16,6 +16,7 @@ Optional properties for compatible string 
->> qcom,qca6174-bt:
->> 
->>  - enable-gpios: gpio specifier used to enable chip
->>  - clocks: clock provided to the controller (SUSCLK_32KHZ)
->> + - firmware-name: specify the name of nvm firmware to load
->> 
->> Required properties for compatible string qcom,wcn3990-bt:
->> 
->> @@ -39,6 +40,7 @@ serial@7570000 {
->> 
->> 		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
->> 		clocks = <&divclk4>;
->> +		firmware-name = "nvm_00440302.bin";
->> 	};
-> 
-> and how is this a firmware-name property. Wouldn’t this be more like
-> nvm-file or something along these lines. This really needs to be
-> cleared with Rob to pick the right property name.
-> 
-> Regards
-> 
-> Marcel
+>> Ok, but currently CONFIG_HAVE_LIVEPATCH=n for x86 && !x86_64,
+>> so I'd rather not invest too much energy into screwing 32 bit up ;)
+>>
+>
+> Probably not something you care about, but something that I do. Which
+> means it will have to go on my TODO list. I care about missed functions
+> being called. This means, if you have something tracing a function, and
+> then enable something else to trace that same function, you might miss
+> the first one.
 
-Hi Rob,
+Alright, if there's a use case beyond live patching, I can try to handle
+32 bits alongside, of course.
 
-Are you OK to use a property name "nvm-file" or "firmware-nvm-file"? 
-Actually we have two firmware files, one is the patch file which is 
-common to all of the products, the other is the nvm file which is 
-customized. Using a "nvm-file" or "firmware-nvm-file" property name 
-would be more clear.
+However, some care will be needed when determining the actual context
+from ftrace_int3_handler(): tracing anything before the addition or
+after the subtraction of HARDIRQ_OFFSET to/from preempt_count in
+irq_enter() resp. irq_exit() could otherwise clobber the "normal" state
+in thread_info, correct?
+
+How about having a fixed size stack with three entries shared between
+"normal", "irq" and "softirq" in thread_info, as well as a dedicated
+slot for nmi context? (The stack would be modified/consumed only with
+irqs disabled).
+
+Which makes me wonder:
+- if we disabled preemption from ftrace_int3_handler() and reenabled it
+  again from the *_int3_tramp*s, these stacks could be made per-CPU,
+  AFAICS,
+- and why not use this strategy on x86_64, too? The advantages would be
+  a common implemention between 32 and 64 bit and more importantly, not
+  relying on that %r11 hack. When doing the initial RFC patch, it
+  wasn't clear to me that at most one stack slot per context would be
+  needed, i.e. only four in total...
+
+What do you think?
+
+Nicolai
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum,
-a Linux Foundation Collaborative Project
+SUSE Linux GmbH, GF: Felix Imendörffer, Jane Smithard, Graham Norton,
+HRB 21284 (AG Nürnberg)
