@@ -2,199 +2,103 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BBCC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D925C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8631D2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:41:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HSQGlCAB"
+	by mail.kernel.org (Postfix) with ESMTP id 048402190B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbfDXTlM (ORCPT
+        id S1729306AbfDXTll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:41:12 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:42517 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbfDXTlL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:41:11 -0400
-Received: by mail-yw1-f65.google.com with SMTP id y131so4788385ywa.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yniv5sy+5BQNRUjtlaSRpscFDyrU4/SisoLwlgAM2ng=;
-        b=HSQGlCABvRIZPxZA8AOq9czRV7ZfXLMVbzQJ3+KvICA6fAiq4fTXLdIW4I9pcAK5Ar
-         J+DJ/nbaXuY3mcsBwclwSQbl8CvBRvPVpIS3X80Q33eYOZKD7jYDyFucYjA3EpdqGupt
-         K2FB85/z9856MjrPeLO6FF0Jm97fu+CWhTWj1Vdn3CGKACt4d1cJFkbwKCIGLs/yOjCd
-         MngXQA1Gc0EtXw+FzBHSUypHSaaqwPOeSCyBaCn8Hus3JFZtQSJIdPAtrU1hGAOOuF+/
-         g1VzjfOuDMEfuueQgSzVFMoHMKMeE5PDBn3VG6Wr6EjzwrAJY4zJq+5zS72iouyIgmNg
-         XZwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yniv5sy+5BQNRUjtlaSRpscFDyrU4/SisoLwlgAM2ng=;
-        b=rndkl+EOVKg3RBZSi0v9dWrSHfuA5fClUVy72GWPqftMFnjRAobXX0feU5nlnLbUeZ
-         aWuwkdY4LXQ1NLHrFKfebVBJWfcC6sxEZane8sDWLLQw2pSpcGrNT/esGyOnZfi1fBG6
-         cfv0NcPNtb5p19Yl9M3GK9myzkihrPRefissraKpHRijP5i4+AceCNCrpSgg5KoAxkZS
-         dD5zxEjLVwVcsv099nAEGzvHfC/yNOlaB3esP7PWgz8yz4oqmkeLVzksGFQmCfrJvRJo
-         Xmm6zaC3gIhR6GB6S7c/nBkdECTGIZrmqyciSPzMvOaHMjtmaGoLITuKJmu+pYGH5ut9
-         xIhw==
-X-Gm-Message-State: APjAAAWB5ybSGDNIHULx/EhqsAlZDmeiBw3R7ouMJIX/ImwjxmNe5p7V
-        jm8rnkEjqan+bs4vHdsEuTgQpLfwrVe/P2f5MnzJVQ==
-X-Google-Smtp-Source: APXvYqxv1u3H9ygt4AZH9qpNsjBSq/NfXcClQxIBs/Dob2wUtNxoudJC/96BrFm+ew0Zx5DOFe/D9zIl/Nygshyc5hM=
-X-Received: by 2002:a0d:f804:: with SMTP id i4mr28081368ywf.345.1556134869972;
- Wed, 24 Apr 2019 12:41:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190423213133.3551969-1-guro@fb.com> <20190423213133.3551969-5-guro@fb.com>
- <CALvZod6A43nQgkYj38K4h_ZYLSmYp0xJwO7n44kGJx2Ut7-EVg@mail.gmail.com> <20190424191706.GA26707@tower.DHCP.thefacebook.com>
-In-Reply-To: <20190424191706.GA26707@tower.DHCP.thefacebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 24 Apr 2019 12:40:59 -0700
-Message-ID: <CALvZod7sG+sD76dQmMhXa92=zpXz=wdUcsR9ah7YRj13g=YT+g@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] mm: unify SLAB and SLUB page accounting
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Christoph Lameter <cl@linux.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Cgroups <cgroups@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 24 Apr 2019 15:41:41 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15194 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728001AbfDXTlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 15:41:40 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 12:41:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,390,1549958400"; 
+   d="scan'208";a="340454870"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Apr 2019 12:41:39 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Ashok Raj" <ashok.raj@intel.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>,
+        "Xiaoyao Li " <xiaoyao.li@intel.com>,
+        "Christopherson Sean J" <sean.j.christopherson@intel.com>,
+        "Kalle Valo" <kvalo@codeaurora.org>,
+        "Michael Chan" <michael.chan@broadcom.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v8 02/15] drivers/net/b44: Align pwol_mask to unsigned long for better performance
+Date:   Wed, 24 Apr 2019 12:32:49 -0700
+Message-Id: <1556134382-58814-3-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
+In-Reply-To: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
+References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:17 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Wed, Apr 24, 2019 at 10:23:45AM -0700, Shakeel Butt wrote:
-> > Hi Roman,
-> >
-> > On Tue, Apr 23, 2019 at 9:30 PM Roman Gushchin <guro@fb.com> wrote:
-> > >
-> > > Currently the page accounting code is duplicated in SLAB and SLUB
-> > > internals. Let's move it into new (un)charge_slab_page helpers
-> > > in the slab_common.c file. These helpers will be responsible
-> > > for statistics (global and memcg-aware) and memcg charging.
-> > > So they are replacing direct memcg_(un)charge_slab() calls.
-> > >
-> > > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > > ---
-> > >  mm/slab.c | 19 +++----------------
-> > >  mm/slab.h | 22 ++++++++++++++++++++++
-> > >  mm/slub.c | 14 ++------------
-> > >  3 files changed, 27 insertions(+), 28 deletions(-)
-> > >
-> > > diff --git a/mm/slab.c b/mm/slab.c
-> > > index 14466a73d057..53e6b2687102 100644
-> > > --- a/mm/slab.c
-> > > +++ b/mm/slab.c
-> > > @@ -1389,7 +1389,6 @@ static struct page *kmem_getpages(struct kmem_cache *cachep, gfp_t flags,
-> > >                                                                 int nodeid)
-> > >  {
-> > >         struct page *page;
-> > > -       int nr_pages;
-> > >
-> > >         flags |= cachep->allocflags;
-> > >
-> > > @@ -1399,17 +1398,11 @@ static struct page *kmem_getpages(struct kmem_cache *cachep, gfp_t flags,
-> > >                 return NULL;
-> > >         }
-> > >
-> > > -       if (memcg_charge_slab(page, flags, cachep->gfporder, cachep)) {
-> > > +       if (charge_slab_page(page, flags, cachep->gfporder, cachep)) {
-> > >                 __free_pages(page, cachep->gfporder);
-> > >                 return NULL;
-> > >         }
-> > >
-> > > -       nr_pages = (1 << cachep->gfporder);
-> > > -       if (cachep->flags & SLAB_RECLAIM_ACCOUNT)
-> > > -               mod_lruvec_page_state(page, NR_SLAB_RECLAIMABLE, nr_pages);
-> > > -       else
-> > > -               mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE, nr_pages);
-> > > -
-> > >         __SetPageSlab(page);
-> > >         /* Record if ALLOC_NO_WATERMARKS was set when allocating the slab */
-> > >         if (sk_memalloc_socks() && page_is_pfmemalloc(page))
-> > > @@ -1424,12 +1417,6 @@ static struct page *kmem_getpages(struct kmem_cache *cachep, gfp_t flags,
-> > >  static void kmem_freepages(struct kmem_cache *cachep, struct page *page)
-> > >  {
-> > >         int order = cachep->gfporder;
-> > > -       unsigned long nr_freed = (1 << order);
-> > > -
-> > > -       if (cachep->flags & SLAB_RECLAIM_ACCOUNT)
-> > > -               mod_lruvec_page_state(page, NR_SLAB_RECLAIMABLE, -nr_freed);
-> > > -       else
-> > > -               mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE, -nr_freed);
-> > >
-> > >         BUG_ON(!PageSlab(page));
-> > >         __ClearPageSlabPfmemalloc(page);
-> > > @@ -1438,8 +1425,8 @@ static void kmem_freepages(struct kmem_cache *cachep, struct page *page)
-> > >         page->mapping = NULL;
-> > >
-> > >         if (current->reclaim_state)
-> > > -               current->reclaim_state->reclaimed_slab += nr_freed;
-> > > -       memcg_uncharge_slab(page, order, cachep);
-> > > +               current->reclaim_state->reclaimed_slab += 1 << order;
-> > > +       uncharge_slab_page(page, order, cachep);
-> > >         __free_pages(page, order);
-> > >  }
-> > >
-> > > diff --git a/mm/slab.h b/mm/slab.h
-> > > index 4a261c97c138..0f5c5444acf1 100644
-> > > --- a/mm/slab.h
-> > > +++ b/mm/slab.h
-> > > @@ -205,6 +205,12 @@ ssize_t slabinfo_write(struct file *file, const char __user *buffer,
-> > >  void __kmem_cache_free_bulk(struct kmem_cache *, size_t, void **);
-> > >  int __kmem_cache_alloc_bulk(struct kmem_cache *, gfp_t, size_t, void **);
-> > >
-> > > +static inline int cache_vmstat_idx(struct kmem_cache *s)
-> > > +{
-> > > +       return (s->flags & SLAB_RECLAIM_ACCOUNT) ?
-> > > +               NR_SLAB_RECLAIMABLE : NR_SLAB_UNRECLAIMABLE;
-> > > +}
-> > > +
-> > >  #ifdef CONFIG_MEMCG_KMEM
-> > >
-> > >  /* List of all root caches. */
-> > > @@ -352,6 +358,22 @@ static inline void memcg_link_cache(struct kmem_cache *s,
-> > >
-> > >  #endif /* CONFIG_MEMCG_KMEM */
-> > >
-> > > +static __always_inline int charge_slab_page(struct page *page,
-> > > +                                           gfp_t gfp, int order,
-> > > +                                           struct kmem_cache *s)
-> > > +{
-> > > +       memcg_charge_slab(page, gfp, order, s);
-> >
-> > This does not seem right. Why the return of memcg_charge_slab is ignored?
->
-> Hi Shakeel!
->
-> Right, it's a bug. It's actually fixed later in the patchset
-> (in "mm: rework non-root kmem_cache lifecycle management"),
-> so the final result looks correct to me. Anyway, I'll fix it.
->
-> How does everything else look to you?
->
-> Thank you!
+From: Peter Zijlstra <peterz@infradead.org>
 
-I caught this during quick glance. Another high level issue I found is
-breakage of /proc/kpagecgroup for the slab pages which is easy to fix.
+A bit in pwol_mask is set in b44_magic_pattern() by atomic set_bit().
+But since pwol_mask is local and never exposed to concurrency, there is
+no need to set bit in pwol_mask atomically.
 
-At the moment I am kind of stuck on some other stuff but will get back
-to this in a week or so.
+set_bit() sets the bit in a single unsigned long location. Because
+pwol_mask may not be aligned to unsigned long, the location may cross two
+cache lines. On x86, accessing two cache lines in locked instruction in
+set_bit() is called split locked access and can cause overall performance
+degradation.
 
-Shakeel
+So use non atomic __set_bit() to set pwol_mask bits. __set_bit() won't hit
+split lock issue on x86.
+
+Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+---
+ drivers/net/ethernet/broadcom/b44.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
+index 97ab0dd25552..5738ab963dfb 100644
+--- a/drivers/net/ethernet/broadcom/b44.c
++++ b/drivers/net/ethernet/broadcom/b44.c
+@@ -1520,7 +1520,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+ 
+ 	memset(ppattern + offset, 0xff, magicsync);
+ 	for (j = 0; j < magicsync; j++)
+-		set_bit(len++, (unsigned long *) pmask);
++		__set_bit(len++, (unsigned long *)pmask);
+ 
+ 	for (j = 0; j < B44_MAX_PATTERNS; j++) {
+ 		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
+@@ -1532,7 +1532,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+ 		for (k = 0; k< ethaddr_bytes; k++) {
+ 			ppattern[offset + magicsync +
+ 				(j * ETH_ALEN) + k] = macaddr[k];
+-			set_bit(len++, (unsigned long *) pmask);
++			__set_bit(len++, (unsigned long *)pmask);
+ 		}
+ 	}
+ 	return len - 1;
+-- 
+2.19.1
+
