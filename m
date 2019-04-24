@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FA5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA69C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FC7218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:54:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7599D218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117684;
-	bh=hmYdW0izHINJYOBHn2L29UUICnSc1+fXNT5o+jFrU9s=;
+	s=default; t=1556117694;
+	bh=rKhkmeCYu11g0ypQg+okPbOOzQGi+oGZWUwiwhtDeWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bqHwoAfOzgGl685Jot79U/W1dKoSOGsgUYNm0KE+GJ2IHhtxTDxDjfeYsXZPY9goN
-	 LvAQR5ozH32O/M5KiMOTb3WUhlzPwcyLlCrwrx7a24z6Eil0gf7A3pkJP4NV01qDec
-	 Mxcmv909o8YRzIkippU83XEnCqMxF0PbvnKB1MmY=
+	b=fQcD7xJq9spqpvAABYx2jvnNnWT4oeGmdJDRGOSOxYOmXvn0XtirDnhT+//MyZxEJ
+	 frYheNMvbB66TJtTk1eJh1Xl/yiASOdBzpQfNDV/jlyA8oWm0qhJxZ7HRUNbsrIzkt
+	 ZMBVqfk6ry25hXyTqOg3H2onmU+vqQTqixPe2Lfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732889AbfDXOyn (ORCPT
+        id S1732862AbfDXOwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:54:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:52:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732365AbfDXOwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:52:07 -0400
+        id S1731026AbfDXOwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:52:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65201218FC;
-        Wed, 24 Apr 2019 14:52:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C432218FD;
+        Wed, 24 Apr 2019 14:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117526;
-        bh=hmYdW0izHINJYOBHn2L29UUICnSc1+fXNT5o+jFrU9s=;
+        s=default; t=1556117519;
+        bh=rKhkmeCYu11g0ypQg+okPbOOzQGi+oGZWUwiwhtDeWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O5E4WQ0oJBb7K0+XQQFeTv1pv74HEaomiFIK0I1Dr4ijUraFxhEkWoOMrGTm9UxEQ
-         p0zcUXrSSqzJvzE2394S9qRmUS+K2uWdyCmTTifs9JtcV2X4rwL10zzmXw+J9o0WYP
-         IW360PipLFRemvIOSMdxfJmrIwHUZaZAjWMiV0g8=
+        b=VX8x6JTMU2YM+n6ayqt9WgWjEX92Y39SRalzdazLr4vigrXWeJ5TLBJbDPlAKGhqJ
+         CXKvOAM9jIbxzGcBPdxg266G/XT4LYtENMQJBQXjGK3WP/Mq59h/Jw1W+3t4IqNNQ5
+         Rkx0O0JPVFlcHHdN0X7E5CsRga1BsXLYEzDpH2+A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 05/15] jffs2: fix use-after-free on symlink traversal
-Date:   Wed, 24 Apr 2019 10:51:42 -0400
-Message-Id: <20190424145152.31351-5-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/15] rtc: sh: Fix invalid alarm warning for non-enabled alarm
+Date:   Wed, 24 Apr 2019 10:51:39 -0400
+Message-Id: <20190424145152.31351-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424145152.31351-1-sashal@kernel.org>
 References: <20190424145152.31351-1-sashal@kernel.org>
@@ -58,53 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
+[ Upstream commit 15d82d22498784966df8e4696174a16b02cc1052 ]
 
-free the symlink body after the same RCU delay we have for freeing the
-struct inode itself, so that traversal during RCU pathwalk wouldn't step
-into freed memory.
+When no alarm has been programmed on RSK-RZA1, an error message is
+printed during boot:
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+    rtc rtc0: invalid alarm value: 2019-03-14T255:255:255
+
+sh_rtc_read_alarm_value() returns 0xff when querying a hardware alarm
+field that is not enabled.  __rtc_read_alarm() validates the received
+alarm values, and fills in missing fields when needed.
+While 0xff is handled fine for the year, month, and day fields, and
+corrected as considered being out-of-range, this is not the case for the
+hour, minute, and second fields, where -1 is expected for missing
+fields.
+
+Fix this by returning -1 instead, as this value is handled fine for all
+fields.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jffs2/readinode.c | 5 -----
- fs/jffs2/super.c     | 5 ++++-
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ drivers/rtc/rtc-sh.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
-index bfebbf13698c..5b52ea41b84f 100644
---- a/fs/jffs2/readinode.c
-+++ b/fs/jffs2/readinode.c
-@@ -1414,11 +1414,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
- 
- 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
- 
--	if (f->target) {
--		kfree(f->target);
--		f->target = NULL;
--	}
--
- 	fds = f->dents;
- 	while(fds) {
- 		fd = fds;
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index 023e7f32ee1b..9fc297df8c75 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
- static void jffs2_i_callback(struct rcu_head *head)
+diff --git a/drivers/rtc/rtc-sh.c b/drivers/rtc/rtc-sh.c
+index 2b81dd4baf17..104c854d6a8a 100644
+--- a/drivers/rtc/rtc-sh.c
++++ b/drivers/rtc/rtc-sh.c
+@@ -455,7 +455,7 @@ static int sh_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ static inline int sh_rtc_read_alarm_value(struct sh_rtc *rtc, int reg_off)
  {
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
--	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
-+	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
-+
-+	kfree(f->target);
-+	kmem_cache_free(jffs2_inode_cachep, f);
- }
+ 	unsigned int byte;
+-	int value = 0xff;	/* return 0xff for ignored values */
++	int value = -1;			/* return -1 for ignored values */
  
- static void jffs2_destroy_inode(struct inode *inode)
+ 	byte = readb(rtc->regbase + reg_off);
+ 	if (byte & AR_ENB) {
 -- 
 2.19.1
 
