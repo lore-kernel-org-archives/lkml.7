@@ -2,162 +2,145 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F399C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9836EC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0AEC208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5662C21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:43:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="HS5skURq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfDXWl6 (ORCPT
+        id S1726785AbfDXWnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 18:41:58 -0400
-Received: from gateway20.websitewelcome.com ([192.185.65.13]:22165 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726546AbfDXWl6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 18:41:58 -0400
-X-Greylist: delayed 1460 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Apr 2019 18:41:57 EDT
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 87DB2400C5549
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 17:17:37 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id JQCvh4VaS90onJQCvhEAJN; Wed, 24 Apr 2019 17:17:37 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.223] (port=51686 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hJQCn-001xg5-M8; Wed, 24 Apr 2019 17:17:37 -0500
-Subject: Re: [PATCH v2 wireless-drivers-next] rtlwifi: rtl8723ae: Fix missing
- break in switch statement
-To:     Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-References: <20190416151722.GA31598@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <6056eaca-5120-ec0f-6e72-2e1bfbde52a9@embeddedor.com>
-Date:   Wed, 24 Apr 2019 17:17:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190416151722.GA31598@embeddedor>
-Content-Type: text/plain; charset=utf-8
+        Wed, 24 Apr 2019 18:43:55 -0400
+Received: from mail-eopbgr780139.outbound.protection.outlook.com ([40.107.78.139]:52692
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726425AbfDXWnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 18:43:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=wavesemi.onmicrosoft.com; s=selector1-wavecomp-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kX3ChMlM5yboIQo3KtQkNAUMotgxjG6U43BH9cPshA4=;
+ b=HS5skURqt8N2LQUTE7V3A+VglBM5tAmwrBqKWDTOaiZU78YEoBBi9M9FSTgm7ipRIYXo9pYT/uZ5ph6M67gPc0FPAZYOjrHaRW7uZDJiAx+3apMj5LAcMzzY+RJ2oeA93zWvngOr7rMg89jrxOxjjNJgDZVGPDccozpgJQdm1wI=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.174.162.17) by
+ MWHPR2201MB1438.namprd22.prod.outlook.com (10.174.169.165) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.16; Wed, 24 Apr 2019 22:43:48 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b9d6:bf19:ec58:2765]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::b9d6:bf19:ec58:2765%7]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
+ 22:43:48 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/12] mips: Reserve memory for the kernel image resources
+Thread-Topic: [PATCH 04/12] mips: Reserve memory for the kernel image
+ resources
+Thread-Index: AQHU+ibQQIEJaXUkgEWNBapHcAUrdaZL6giA
+Date:   Wed, 24 Apr 2019 22:43:48 +0000
+Message-ID: <20190424224343.4skr727fszycwksq@pburton-laptop>
+References: <20190423224748.3765-1-fancer.lancer@gmail.com>
+ <20190423224748.3765-5-fancer.lancer@gmail.com>
+In-Reply-To: <20190423224748.3765-5-fancer.lancer@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.223
-X-Source-L: No
-X-Exim-ID: 1hJQCn-001xg5-M8
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.127.223]:51686
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR05CA0035.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::48) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:24::17)
+user-agent: NeoMutt/20180716
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [67.207.99.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ea70e2ad-7267-448a-93d4-08d6c90650de
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR2201MB1438;
+x-ms-traffictypediagnostic: MWHPR2201MB1438:
+x-microsoft-antispam-prvs: <MWHPR2201MB1438217D7689E0DADE3905C0C13C0@MWHPR2201MB1438.namprd22.prod.outlook.com>
+x-forefront-prvs: 00179089FD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(396003)(346002)(136003)(39850400004)(376002)(189003)(199004)(54906003)(1076003)(186003)(5660300002)(386003)(66476007)(478600001)(99286004)(102836004)(6916009)(66946007)(6506007)(66556008)(64756008)(66446008)(7416002)(26005)(8936002)(14454004)(66066001)(52116002)(81166006)(81156014)(25786009)(8676002)(73956011)(76176011)(71190400001)(58126008)(7736002)(6116002)(305945005)(4326008)(2906002)(3846002)(229853002)(6246003)(486006)(316002)(71200400001)(6486002)(97736004)(14444005)(11346002)(33716001)(68736007)(256004)(446003)(53936002)(44832011)(476003)(6512007)(9686003)(42882007)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1438;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Z+e5h7gjZSiXIEywpsHfuDVPj7/6k7V7ZtT1JaVSLgoSOYOhonLyLqcWDBTfpmcZ3oBF2wvJfnLz0d4Cgw6k71qcduHYFDNUo+bVfdTEnswGSzKfeGzMZuuchjVXAaNcWSIZvfsBZ2eiRFnzgovJiOWLn8XUuMcSAhg6CnRVOSS8pjdKomlCJwmhEgNIc0vi3U3Nfupj3LSA0cQCetQAt6cy548IpgcRpuWZxQfmKRvNZ4b6MLAyJAHIoeJHCrwTGPz26+T1Q+vHOGhChG5iQFKh9zvGRkERwWpjrxzyDpBTBdrNjQlq/4Aqy18RiBhr9i0aWrBQ0mJr9jD83gbHkVa6nJFpVL8xG44xEW1iJb93f1oxva2AaSS6Rj6S3ylx3E/+MCPQcFfG7X+A69sUJqXcokxaQqYcU9uFXEJNq1w=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <540AEEF9F0062F4A9ECB970A6E9C99EB@namprd22.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea70e2ad-7267-448a-93d4-08d6c90650de
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 22:43:48.5966
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1438
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Hi Serge,
 
-Friendly ping:
+On Wed, Apr 24, 2019 at 01:47:40AM +0300, Serge Semin wrote:
+> The reserved_end variable had been used by the bootmem_init() code
+> to find a lowest limit of memory available for memmap blob. The original
+> code just tried to find a free memory space higher than kernel was placed=
+.
+> This limitation seems justified for the memmap ragion search process, but
+> I can't see any obvious reason to reserve the unused space below kernel
+> seeing some platforms place it much higher than standard 1MB.
 
-Who can take this?
+There are 2 reasons I'm aware of:
 
-Thanks
---
-Gustavo
+ 1) Older systems generally had something like an ISA bus which used
+    addresses below the kernel, and bootloaders like YAMON left behind
+    functions that could be called right at the start of RAM. This sort
+    of thing should be accounted for by /memreserve/ in DT or similar
+    platform-specific reservations though rather than generically, and
+    at least Malta & SEAD-3 DTs already have /memreserve/ entries for
+    it. So this part I think is OK. Some other older platforms might
+    need updating, but that's fine.
 
+ 2) trap_init() only allocates memory for the exception vector if using
+    a vectored interrupt mode. In other cases it just uses CAC_BASE
+    which currently gets reserved as part of this region between
+    PHYS_OFFSET & _text.
 
-On 4/16/19 10:17 AM, Gustavo A. R. Silva wrote:
-> Add missing break statement in order to prevent the code from falling
-> through to case 0x1025, and erroneously setting rtlhal->oem_id to
-> RT_CID_819X_ACER when rtlefuse->eeprom_svid is equal to 0x10EC and
-> none of the cases in switch (rtlefuse->eeprom_smid) match.
-> 
-> This bug was found thanks to the ongoing efforts to enable
-> -Wimplicit-fallthrough.
-> 
-> Fixes: 238ad2ddf34b ("rtlwifi: rtl8723ae: Clean up the hardware info routine")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
-> Changes in v2:
->  - Update tag from wireless-drivers to wireless-drivers-next
-> 
->  drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
-> index 6bab162e1bb8..655460f61bbc 100644
-> --- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
-> +++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
-> @@ -1675,6 +1675,7 @@ static void _rtl8723e_read_adapter_info(struct ieee80211_hw *hw,
->  					rtlhal->oem_id = RT_CID_819X_LENOVO;
->  					break;
->  				}
-> +				break;
->  			case 0x1025:
->  				rtlhal->oem_id = RT_CID_819X_ACER;
->  				break;
-> 
+    I think this behavior is bogus, and we should instead:
+
+    - Allocate the exception vector memory using memblock_alloc() for
+      CPUs implementing MIPSr2 or higher (ie. CPUs with a programmable
+      EBase register). If we're not using vectored interrupts then
+      allocating one page will do, and we already have the size
+      calculation for if we are.
+
+    - Otherwise use CAC_BASE but call memblock_reserve() on the first
+      page.
+
+    I think we should make that change before this one goes in. I can
+    try to get to it tomorrow, but feel free to beat me to it.
+
+Thanks,
+    Paul
