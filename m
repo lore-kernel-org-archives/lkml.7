@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A931C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539B7C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACBA218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E09218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117786;
-	bh=4zbbrrVRwOay1q0G4qjkXYePPFl141ThuojlyueojYk=;
+	s=default; t=1556117796;
+	bh=WbfaLAkBYUzeajf0qs85pWhi/0RqkBG5Rn01nCQOC50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XAewwBIHOQnopLSj9qwPTap5VNHLBynLAXtL0tW33y7IIIz7+jKyl2Aam6mIk4JUp
-	 pJo1kwOIQuu1F4bxYHKVZlN/VQDldmk2T6G5gjYveyUCR2ZhfiIv03rkM15yEDxfbD
-	 Nadarj0+Xsb4D82eZtXV2b3vXiwXprvH0bKx4dCg=
+	b=cKUzClaeYqwWCDniIUxT92lEZLw3SHj0q1SCwlWZKkps/EwbwHnQOUtuahhU4ibRt
+	 GsEknfxMTrai13tqG77/IXTsAUcX9tKxi62BhDNQnSKxukbOZvqjVKZ4exqUjuVS93
+	 Vap4Yi+pahObQJ6c2U2HcKuQ/rkH5pbjupP58nzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732830AbfDXO4Z (ORCPT
+        id S1732592AbfDXOuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:56:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49784 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:50:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732595AbfDXOud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:50:33 -0400
+        id S1732554AbfDXOuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:50:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A3F218FE;
-        Wed, 24 Apr 2019 14:50:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 047FD218FD;
+        Wed, 24 Apr 2019 14:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117432;
-        bh=4zbbrrVRwOay1q0G4qjkXYePPFl141ThuojlyueojYk=;
+        s=default; t=1556117422;
+        bh=WbfaLAkBYUzeajf0qs85pWhi/0RqkBG5Rn01nCQOC50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jFKXhGfR/M+F+9AefLnF6Ac5x4ltWvIcXgNYIotyVWgwsGI09COo4okwdRkdeCKF7
-         20/Vtqf+5WRZ8VkguNLUIsQ8BQg4Y642t3+hsWta6pvmh9a5sF3QQV0uJ9/ayQmY3D
-         j+HhUlHTYrHoi9RjNuVg45Hc5bsHndLK+EJFSQOM=
+        b=AjTvkpRBgNEpPXJKUlRVkbiUN8Fy/8riw3ZJv0kAAbLApSeycBalvwZjF3I0ZS4jI
+         RGpiH8/wp+lM5q/Wjq3mxAeXJ3vL9ubGboHeXDoMrmW7rMyZWfghjJ3SZidOfsmkHY
+         /0U9KQ2Q96VmlapUTRszYhLwrkC5lIoKq+c/rjq8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yue Haibing <yuehaibing@huawei.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+Cc:     Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/28] fm10k: Fix a potential NULL pointer dereference
-Date:   Wed, 24 Apr 2019 10:49:52 -0400
-Message-Id: <20190424145012.30886-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 04/28] batman-adv: Reduce claim hash refcnt only for removed entry
+Date:   Wed, 24 Apr 2019 10:49:48 -0400
+Message-Id: <20190424145012.30886-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424145012.30886-1-sashal@kernel.org>
 References: <20190424145012.30886-1-sashal@kernel.org>
@@ -59,76 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Haibing <yuehaibing@huawei.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit 01ca667133d019edc9f0a1f70a272447c84ec41f ]
+[ Upstream commit 4ba104f468bbfc27362c393815d03aa18fb7a20f ]
 
-Syzkaller report this:
+The batadv_hash_remove is a function which searches the hashtable for an
+entry using a needle, a hashtable bucket selection function and a compare
+function. It will lock the bucket list and delete an entry when the compare
+function matches it with the needle. It returns the pointer to the
+hlist_node which matches or NULL when no entry matches the needle.
 
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 4378 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:__lock_acquire+0x95b/0x3200 kernel/locking/lockdep.c:3573
-Code: 00 0f 85 28 1e 00 00 48 81 c4 08 01 00 00 5b 5d 41 5c 41 5d 41 5e 41 5f c3 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 24 00 00 49 81 7d 00 e0 de 03 a6 41 bc 00 00
-RSP: 0018:ffff8881e3c07a40 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000010 RSI: 0000000000000000 RDI: 0000000000000080
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-R10: ffff8881e3c07d98 R11: ffff8881c7f21f80 R12: 0000000000000001
-R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007fce2252e700(0000) GS:ffff8881f2400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fffc7eb0228 CR3: 00000001e5bea002 CR4: 00000000007606f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- lock_acquire+0xff/0x2c0 kernel/locking/lockdep.c:4211
- __mutex_lock_common kernel/locking/mutex.c:925 [inline]
- __mutex_lock+0xdf/0x1050 kernel/locking/mutex.c:1072
- drain_workqueue+0x24/0x3f0 kernel/workqueue.c:2934
- destroy_workqueue+0x23/0x630 kernel/workqueue.c:4319
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x30c/0x480 kernel/module.c:961
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fce2252dc58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000140
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fce2252e6bc
-R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
+The batadv_bla_del_claim is not itself protected in anyway to avoid that
+any other function is modifying the hashtable between the search for the
+entry and the call to batadv_hash_remove. It can therefore happen that the
+entry either doesn't exist anymore or an entry was deleted which is not the
+same object as the needle. In such an situation, the reference counter (for
+the reference stored in the hashtable) must not be reduced for the needle.
+Instead the reference counter of the actually removed entry has to be
+reduced.
 
-If alloc_workqueue fails, it should return -ENOMEM, otherwise may
-trigger this NULL pointer dereference while unloading drivers.
+Otherwise the reference counter will underflow and the object might be
+freed before all its references were dropped. The kref helpers reported
+this problem as:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 0a38c17a21a0 ("fm10k: Remove create_workqueue")
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+  refcount_t: underflow; use-after-free.
+
+Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/fm10k/fm10k_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/batman-adv/bridge_loop_avoidance.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_main.c b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-index 2aae6f88dca0..a52663745051 100644
---- a/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-+++ b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-@@ -58,6 +58,8 @@ static int __init fm10k_init_module(void)
- 	/* create driver workqueue */
- 	fm10k_workqueue = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0,
- 					  fm10k_driver_name);
-+	if (!fm10k_workqueue)
-+		return -ENOMEM;
+diff --git a/net/batman-adv/bridge_loop_avoidance.c b/net/batman-adv/bridge_loop_avoidance.c
+index 8b6f654bc85d..00123064eb26 100644
+--- a/net/batman-adv/bridge_loop_avoidance.c
++++ b/net/batman-adv/bridge_loop_avoidance.c
+@@ -802,6 +802,8 @@ static void batadv_bla_del_claim(struct batadv_priv *bat_priv,
+ 				 const u8 *mac, const unsigned short vid)
+ {
+ 	struct batadv_bla_claim search_claim, *claim;
++	struct batadv_bla_claim *claim_removed_entry;
++	struct hlist_node *claim_removed_node;
  
- 	fm10k_dbg_init();
+ 	ether_addr_copy(search_claim.addr, mac);
+ 	search_claim.vid = vid;
+@@ -812,10 +814,18 @@ static void batadv_bla_del_claim(struct batadv_priv *bat_priv,
+ 	batadv_dbg(BATADV_DBG_BLA, bat_priv, "bla_del_claim(): %pM, vid %d\n",
+ 		   mac, BATADV_PRINT_VID(vid));
  
+-	batadv_hash_remove(bat_priv->bla.claim_hash, batadv_compare_claim,
+-			   batadv_choose_claim, claim);
+-	batadv_claim_put(claim); /* reference from the hash is gone */
++	claim_removed_node = batadv_hash_remove(bat_priv->bla.claim_hash,
++						batadv_compare_claim,
++						batadv_choose_claim, claim);
++	if (!claim_removed_node)
++		goto free_claim;
+ 
++	/* reference from the hash is gone */
++	claim_removed_entry = hlist_entry(claim_removed_node,
++					  struct batadv_bla_claim, hash_entry);
++	batadv_claim_put(claim_removed_entry);
++
++free_claim:
+ 	/* don't need the reference from hash_find() anymore */
+ 	batadv_claim_put(claim);
+ }
 -- 
 2.19.1
 
