@@ -2,112 +2,279 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E41EC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DD8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F4C218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FFD920878
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbfDXJcg (ORCPT
+        id S1728941AbfDXJdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:32:36 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:44023 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfDXJcf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:32:35 -0400
-Received: by mail-vk1-f193.google.com with SMTP id d30so2063231vkl.10;
-        Wed, 24 Apr 2019 02:32:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DYsocJ7uF78j1Uf7U89zOhsLlQNU46x1CcuW1tTWcpo=;
-        b=mLJO8RoPZ7HwClafimlvKYK+du+KEM2XAHa67tDtucHKsUtzwVWDZAbJmbYufRK/2A
-         PnruRJHW/3ALN7WWE/v4XFlTYCvETT/rtG0pcXnsAsJiCl6RhYYrSPZekTGObrgXzjeX
-         k1eD72ZyBzCs+8+WZoy76CFTLwCxqYExUTv/VHp7KhZFlU2Guf0BkDRpp41H1BxA2YKI
-         RXcVf018DGDN/Y5sgPQGGERB1BTiDnO2pShldkCmfhW/yvB5Ry9GS/gPAm9N638eLSep
-         iqyl5lSE9ldEF2ZuIFnBgdp8z4iM93CODNGYeWLIpIgtIMfrcYksuxGLfu7dcCdU5Rc8
-         yjeg==
-X-Gm-Message-State: APjAAAW9S87hkLbLzHDTeWzd8xqk6OYMYaRGrYJzsKep3rPheEP1uLh3
-        8+MUwFHYnwMCZosgMSg5odex7zihsfjvHg79Wbk=
-X-Google-Smtp-Source: APXvYqwp+5/74K+/HL9NnSrck8crG12GYqhgKWZQvw4ssq9zUHg8QF5tXh9RSNFciPnwWAbb6XGiqyy7Nioxn5ybWZ8=
-X-Received: by 2002:ac5:c383:: with SMTP id s3mr16505133vkk.65.1556098354362;
- Wed, 24 Apr 2019 02:32:34 -0700 (PDT)
+        Wed, 24 Apr 2019 05:33:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50012 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbfDXJdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 05:33:44 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 112D8C057F3C;
+        Wed, 24 Apr 2019 09:33:44 +0000 (UTC)
+Received: from localhost (ovpn-12-131.pek2.redhat.com [10.72.12.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C9165DC1B;
+        Wed, 24 Apr 2019 09:33:40 +0000 (UTC)
+Date:   Wed, 24 Apr 2019 17:33:32 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     bp@alien8.de, j-nomura@ce.jp.nec.com, kasong@redhat.com,
+        dyoung@redhat.com
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
+        kexec@lists.infradead.org, hpa@zytor.com,
+        Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH v5 2/2] x86/boot: Use efi_setup_data for searching RSDP
+ on kexec-ed kernels
+Message-ID: <20190424093332.GI3584@localhost.localdomain>
+References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424092944.30481-3-bhe@redhat.com>
 MIME-Version: 1.0
-References: <20190414110933.30529-1-wsa+renesas@sang-engineering.com>
- <VI1PR10MB23525523F623FFAC4126EBC9FE2B0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
- <20190415092853.GA1861@kunai> <VI1PR10MB23520D64B2120138FF64D0BBFE2B0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-In-Reply-To: <VI1PR10MB23520D64B2120138FF64D0BBFE2B0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 24 Apr 2019 11:32:23 +0200
-Message-ID: <CAMuHMdXX_OT9soypArNwqkVYTjiTM890qAvp8ZYHaOh9bW5wgg@mail.gmail.com>
-Subject: Re: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value, too
-To:     Steve Twiss <stwiss.opensource@diasemi.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        LINUX RENESAS SOC <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424092944.30481-3-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 24 Apr 2019 09:33:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+On 04/24/19 at 05:29pm, Baoquan He wrote:
+> From: Junichi Nomura <j-nomura@ce.jp.nec.com>
+> 
+> Commit
+> 
+>   3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+> 
+> broke kexec boot on EFI systems. efi_get_rsdp_addr() in the early
+> parsing code tries to search RSDP from the EFI tables but that will
+> crash because the table address is virtual when the kernel was booted by
+> kexec (set_virtual_address_map() has run in the first kernel and cannot
+> be run again in the second kernel).
+> 
+> In the case of kexec, the physical address of EFI tables is provided via
+> efi_setup_data in boot_params, which is set up by kexec(1).
+> 
+> Factor out the table parsing code and use different pointers depending
+> on whether the kernel is booted by kexec or not.
+> 
+>  [ bp: Massage. ]
+> 
+> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Dave Young <dyoung@redhat.com>
+> Link: https://lkml.kernel.org/r/20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-On Mon, Apr 15, 2019 at 12:10 PM Steve Twiss
-<stwiss.opensource@diasemi.com> wrote:
-> On 15 April 2019 10:29, Wolfram Sang wrote:
-> > Subject: Re: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value, too
-> > On Mon, Apr 15, 2019 at 08:11:16AM +0000, Steve Twiss wrote:
-> > > On 14 April 2019 12:10, Wolfram Sang wrote:
-> > >
-> > > > Tested with a Renesas Lager board (R-Car H2, DA9063AD)
-> > >
-> > > Can I please check there is no mistake in your description. I have been repeatedly
-> > > told by the hardware engineers here, (for the past 6 years) it is not possible.
-> > > But, you seem to have an R-Car H2 with the AD silicon version of DA9063?
-> >
-> > I am confused, what is not possible? That I have an AD version? Yes, we
-> > found that out when we worked on the RTC recently.
->
-> Sure, I know, people have been requesting continued support for DA9063 AD silicon
-> for years. The original DA9063 Linux driver was sent to LKML with AD support.
->
-> > It is an early version of the Lager development board. I have no numbers
-> > but my assumption is there are not too many out there.
->
-> Thanks, yes, there is interest from the hardware engineers here. Thanks for the
-> confirmation about your board. I will inform them about the DA9063 AD silicon on
-> the Renesas Lager board -- and I will let you know their response.
+Oops, forgot removing this line of Signed-off-by, it's auto generated by
+git format-patch.
 
-For the record, I see the following DA9063 variants on the Renesas boards I have
-access to:
-  - DA9063 AD: Lager (R-Car H2), Koelsch (R-Car M2-W),
-  - DA9063 BB: Gose (R-Car M2-N), Blanche (R-Car V2H), Alt (R-Car E2).
-
-I cannot check Porter (R-Car M2-W) and Silk (R-Car E2) right now, but
-from Marek's report, Porter has DA9063L CA.
-
-Marek: which variant does your Stout (R-Car H2) have?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>  arch/x86/boot/compressed/acpi.c | 143 ++++++++++++++++++++++++--------
+>  1 file changed, 107 insertions(+), 36 deletions(-)
+> 
+> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+> index 0ef4ad55b29b..8cecce1ac0cd 100644
+> --- a/arch/x86/boot/compressed/acpi.c
+> +++ b/arch/x86/boot/compressed/acpi.c
+> @@ -44,17 +44,109 @@ static acpi_physical_address get_acpi_rsdp(void)
+>  	return addr;
+>  }
+>  
+> -/* Search EFI system tables for RSDP. */
+> -static acpi_physical_address efi_get_rsdp_addr(void)
+> +/*
+> + * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
+> + * ACPI_TABLE_GUID are found, take the former, which has more features.
+> + */
+> +static acpi_physical_address
+> +__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
+> +		    bool efi_64)
+>  {
+>  	acpi_physical_address rsdp_addr = 0;
+>  
+>  #ifdef CONFIG_EFI
+> -	unsigned long systab, systab_tables, config_tables;
+> +	int i;
+> +
+> +	/* Get EFI tables from systab. */
+> +	for (i = 0; i < nr_tables; i++) {
+> +		acpi_physical_address table;
+> +		efi_guid_t guid;
+> +
+> +		if (efi_64) {
+> +			efi_config_table_64_t *tbl = (efi_config_table_64_t *) config_tables + i;
+> +
+> +			guid  = tbl->guid;
+> +			table = tbl->table;
+> +
+> +			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
+> +				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
+> +				return 0;
+> +			}
+> +		} else {
+> +			efi_config_table_32_t *tbl = (efi_config_table_32_t *) config_tables + i;
+> +
+> +			guid  = tbl->guid;
+> +			table = tbl->table;
+> +		}
+> +
+> +		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+> +			rsdp_addr = table;
+> +		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+> +			return table;
+> +	}
+> +#endif
+> +	return rsdp_addr;
+> +}
+> +
+> +/* EFI/kexec support is 64-bit only. */
+> +#ifdef CONFIG_X86_64
+> +static struct efi_setup_data *get_kexec_setup_data_addr(void)
+> +{
+> +	struct setup_data *data;
+> +	u64 pa_data;
+> +
+> +	pa_data = boot_params->hdr.setup_data;
+> +	while (pa_data) {
+> +		data = (struct setup_data *)pa_data;
+> +		if (data->type == SETUP_EFI)
+> +			return (struct efi_setup_data *)(pa_data + sizeof(struct setup_data));
+> +
+> +		pa_data = data->next;
+> +	}
+> +	return NULL;
+> +}
+> +
+> +static acpi_physical_address kexec_get_rsdp_addr(void)
+> +{
+> +	efi_system_table_64_t *systab;
+> +	struct efi_setup_data *esd;
+> +	struct efi_info *ei;
+> +	char *sig;
+> +
+> +	esd = (struct efi_setup_data *)get_kexec_setup_data_addr();
+> +	if (!esd)
+> +		return 0;
+> +
+> +	if (!esd->tables) {
+> +		debug_putstr("Wrong kexec SETUP_EFI data.\n");
+> +		return 0;
+> +	}
+> +
+> +	ei = &boot_params->efi_info;
+> +	sig = (char *)&ei->efi_loader_signature;
+> +	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
+> +		debug_putstr("Wrong kexec EFI loader signature.\n");
+> +		return 0;
+> +	}
+> +
+> +	/* Get systab from boot params. */
+> +	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
+> +	if (!systab)
+> +		error("EFI system table not found in kexec boot_params.");
+> +
+> +	return __efi_get_rsdp_addr((unsigned long)esd->tables, systab->nr_tables, true);
+> +}
+> +#else
+> +static acpi_physical_address kexec_get_rsdp_addr(void) { return 0; }
+> +#endif /* CONFIG_X86_64 */
+> +
+> +static acpi_physical_address efi_get_rsdp_addr(void)
+> +{
+> +#ifdef CONFIG_EFI
+> +	unsigned long systab, config_tables;
+>  	unsigned int nr_tables;
+>  	struct efi_info *ei;
+>  	bool efi_64;
+> -	int size, i;
+>  	char *sig;
+>  
+>  	ei = &boot_params->efi_info;
+> @@ -88,49 +180,20 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+>  
+>  		config_tables	= stbl->tables;
+>  		nr_tables	= stbl->nr_tables;
+> -		size		= sizeof(efi_config_table_64_t);
+>  	} else {
+>  		efi_system_table_32_t *stbl = (efi_system_table_32_t *)systab;
+>  
+>  		config_tables	= stbl->tables;
+>  		nr_tables	= stbl->nr_tables;
+> -		size		= sizeof(efi_config_table_32_t);
+>  	}
+>  
+>  	if (!config_tables)
+>  		error("EFI config tables not found.");
+>  
+> -	/* Get EFI tables from systab. */
+> -	for (i = 0; i < nr_tables; i++) {
+> -		acpi_physical_address table;
+> -		efi_guid_t guid;
+> -
+> -		config_tables += size;
+> -
+> -		if (efi_64) {
+> -			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
+> -
+> -			guid  = tbl->guid;
+> -			table = tbl->table;
+> -
+> -			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
+> -				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
+> -				return 0;
+> -			}
+> -		} else {
+> -			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
+> -
+> -			guid  = tbl->guid;
+> -			table = tbl->table;
+> -		}
+> -
+> -		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+> -			rsdp_addr = table;
+> -		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+> -			return table;
+> -	}
+> +	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
+> +#else
+> +	return 0;
+>  #endif
+> -	return rsdp_addr;
+>  }
+>  
+>  static u8 compute_checksum(u8 *buffer, u32 length)
+> @@ -220,6 +283,14 @@ acpi_physical_address get_rsdp_addr(void)
+>  	if (!pa)
+>  		pa = boot_params->acpi_rsdp_addr;
+>  
+> +	/*
+> +	 * Try to get EFI data from setup_data. This can happen when we're a
+> +	 * kexec'ed kernel and kexec(1) has passed all the required EFI info to
+> +	 * us.
+> +	 */
+> +	if (!pa)
+> +		pa = kexec_get_rsdp_addr();
+> +
+>  	if (!pa)
+>  		pa = efi_get_rsdp_addr();
+>  
+> -- 
+> 2.17.2
+> 
