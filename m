@@ -2,93 +2,80 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BE2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BF6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38F7218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rB2Bb6DL"
+	by mail.kernel.org (Postfix) with ESMTP id 12073218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbfDXOXR (ORCPT
+        id S1730464AbfDXOXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:23:17 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:52424 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfDXOXR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:23:17 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3OEJ0UN063607;
-        Wed, 24 Apr 2019 14:23:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=XPXSty4w7Wc4EobjrLPS91gpcP7tZLOQKaDzDjYzwdU=;
- b=rB2Bb6DLvvUl56b46OSx4GJz6Z6BZvq+Zk4K/rWnHGecb0FBhAWos3Jsz+CsmDhgFyLV
- jRKxDwL+hNeOOFvCtXr1FxCImxPShk/lxB/DaZw9ieASSptp6LR1DpB44NNNmrCilPJN
- bN283yxo8/uyvBldNL3M3AdY7rIbLecscekNKGDc4/Wgc9OBSpiuSYhHmUfKAcrOlLMh
- JkldnrHuCSCzR+A53/iPzJPMpGVkMTDaXhd/vWqSz+ByRpLOMk2U9n/fw/lf9NMxB/d5
- J+KWiYHzeheEQ65W7SDRtc42wHe9vCc0w5XhJ/wkWsHGA/DuJ88xZS+UENpn1QWZHCZk hA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2ryrxd2w53-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 14:23:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3OEMQPo008548;
-        Wed, 24 Apr 2019 14:23:09 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2s0f0w41fg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 14:23:08 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3OEN6PZ019190;
-        Wed, 24 Apr 2019 14:23:07 GMT
-Received: from kadam (/196.111.187.26)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Apr 2019 07:23:05 -0700
-Date:   Wed, 24 Apr 2019 17:22:48 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     MosesChristopher <moseschristopherb@gmail.com>
-Cc:     david.kershner@unisys.com, gregkh@linuxfoundation.org,
-        sparmaintainer@unisys.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: unisys: use help instead of ---help--- in
- Kconfig
-Message-ID: <20190424142248.GC14798@kadam>
-References: <20190420114646.28817-1-moseschristopherb@gmail.com>
+        Wed, 24 Apr 2019 10:23:25 -0400
+Received: from verein.lst.de ([213.95.11.211]:54144 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725921AbfDXOXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:23:24 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 1B95967358; Wed, 24 Apr 2019 16:23:07 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 16:23:06 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Gary Guo <gary@garyguo.net>
+Cc:     Guo Ren <guoren@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Andrew Waterman <andrew@sifive.com>,
+        Arnd Bergmann <arnd@arndb.de>, Anup Patel <anup.patel@wdc.com>,
+        Xiang Xiaoyan <xiaoyan_xiang@c-sky.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vincent Chen <vincentc@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Scott Wood <swood@redhat.com>,
+        "tech-privileged@lists.riscv.org" <tech-privileged@lists.riscv.org>
+Subject: Re: [PATCH] riscv: Support non-coherency memory model
+Message-ID: <20190424142306.GB20974@lst.de>
+References: <1555947870-23014-1-git-send-email-guoren@kernel.org> <20190422161814.GA30694@lst.de> <20190423001348.GA31639@guoren-Inspiron-7460> <20190423055548.GA12365@lst.de> <20190423154642.GA16001@guoren-Inspiron-7460> <d1988350-7da9-37bb-3d8b-93bedea0b732@garyguo.net> <20190424020803.GA27332@guoren-Inspiron-7460> <LO2P265MB0847C9F08481E25DABC77335D63C0@LO2P265MB0847.GBRP265.PROD.OUTLOOK.COM> <20190424055703.GA3417@guoren-Inspiron-7460> <4e6b0816-3fe9-8c0b-a749-f7f6ef7e5742@garyguo.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190420114646.28817-1-moseschristopherb@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9236 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=822
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904240112
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9236 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=848 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904240112
+In-Reply-To: <4e6b0816-3fe9-8c0b-a749-f7f6ef7e5742@garyguo.net>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 20, 2019 at 11:46:46AM +0000, MosesChristopher wrote:
-> From: Moses Christopher <moseschristopherb@gmail.com>
+On Wed, Apr 24, 2019 at 12:45:56PM +0000, Gary Guo wrote:
+> The RISC-V privileged spec is explicitly designed to allow the 
+> techniques described above (this is the sole purpose of MSTATUS.TVM). It 
+> might be as high performance as a hardware with H-extension, but is 
+> definitely a legit use case. In fact, it is vital for use cases like 
+> recursive virtualization.
 > 
+> Also, I believe the PTE format of RISC-V is already frozen -- therefore 
+> it is impossible now to merge GLOBAL and USER bit, nor to replace RSW 
+> bit with another bit.
 
-Could you Fix your email From header so this isn't required?
+Yes, I do not think we can just repurpose a bit.  Even using a currently
+unused one would require some gymnastics.
 
-regards,
-dan carpenter
+That being said IFF we want to support non-coherent DMA (and I think we
+do as people glue together their SOCs using shoestring and paper clips,
+as already demonstrated by Andes and C-SKY in RISC-V space, and most
+arm, mips and ppc SOCs) we need something like this flag.  The current
+RISC-V method that only allows M-mode to set up such attributes on
+a small number or PMP regions just doesn't work well with the way how
+Linux and most non-trivial OSes implement DMA memory allocations.
 
+Note that I said well - in theory we can have a firmware provided
+uncached pool - that is what Linux does on most nommu (that is without
+pagetables) ports, but the fixed sized pool really does suck and will
+make users very unhappy.
