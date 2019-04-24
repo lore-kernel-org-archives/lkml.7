@@ -2,188 +2,172 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E43C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6D5C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A9C32148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABF020674
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpglyMx+"
+	dkim=pass (2048-bit key) header.d=mendozajonas.com header.i=@mendozajonas.com header.b="DY3zWe4J";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="z8n6nZAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbfDXDm4 (ORCPT
+        id S1728983AbfDXDta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 23:42:56 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:35085 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbfDXDm4 (ORCPT
+        Tue, 23 Apr 2019 23:49:30 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:50295 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726920AbfDXDta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 23:42:56 -0400
-Received: by mail-it1-f195.google.com with SMTP id w15so3924525itc.0;
-        Tue, 23 Apr 2019 20:42:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U1f4bN/dTOspS8HdN/r49J+WORAZUSN60oP2hQdEZsk=;
-        b=jpglyMx+pc488+vcVFyRGymEX91n6hwgogEyLWz6mzihfzvF3/zJ32JeuYBVqx+Kkv
-         MRKzqOa81+VcAYDrS09+VoYGCz4vRDRmFLvU1y9G7A0CLVxPmgPQ8W1fuXSBbBBGXDBA
-         2ivCwdeBE9sk4AB0qaP/bWRm3cn1BmNJHLnh5gswXntUKVgi+OtOTJn1XNgDUnBpjugd
-         ExPPoa+cTJDQec1aXjCtADyOxi0O2uIiw5EV1Tm4mKuB17KrzLH9EXS32f2Nd4WDhAg9
-         +2mv2GRJ9q9VNTSJyR8CYXzjaZesfSmldN0mZTk/5Z8O8Dyyx+idP88yg6i8wxAtFpYr
-         obyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U1f4bN/dTOspS8HdN/r49J+WORAZUSN60oP2hQdEZsk=;
-        b=tUK4iCv0LAnyG/iYbqYRLismNj6ge5dzSlW0zCgVmzVj4q9W2YVS5WfxuSRciyr+0U
-         z2FtNdHI07Xd3lUrZCYvfJvlE2LIk+kRs9jkEL6QnJaz+RwX2z6jSVCmjNd+224RfZuI
-         OqBgs9F2l9jBh4eF3eSdO9QZ1GBIEr8n9PznQ3OpG5uOsujLUSfVoNvcL00y1KjEhWg0
-         oWnRWKzsIZ2Ipz4KDsVI4CUQPwfTqb1HaGps/TqXvk6Esb/2hz9/21cOZXbH63M01AE3
-         1BWvZtXKYhIgh52vIqCep8PQm5rh2LIWJIEbzI1cgBJcV8vOnUhfMll6ZX12qDZhzk5q
-         fudg==
-X-Gm-Message-State: APjAAAU+SD3PVDI/fDuqZqUs1BrzlJNZYLaCxr4IcjyeccRPzTerEsnB
-        9LBPzLBF9ULgEG7ajmh5NyZcg5cam5feDEMXw1c=
-X-Google-Smtp-Source: APXvYqzwvilzkIxRUFeIfxhSSNKbefy+TUu4IoYufc15Tqd7nqw/sokxjq0RaEPlm1cB6H+Lyh/eHMtxYhCFmVOky44=
-X-Received: by 2002:a24:d45:: with SMTP id 66mr5284343itx.9.1556077374803;
- Tue, 23 Apr 2019 20:42:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190423082730.370-1-vidyas@nvidia.com> <20190423082730.370-6-vidyas@nvidia.com>
- <20190423203244.GD14616@google.com> <22c7a99b-2d6c-e49b-43b0-219c60f7e5e9@nvidia.com>
-In-Reply-To: <22c7a99b-2d6c-e49b-43b0-219c60f7e5e9@nvidia.com>
-From:   Oliver <oohall@gmail.com>
-Date:   Wed, 24 Apr 2019 13:42:43 +1000
-Message-ID: <CAOSf1CF9oBwt+hy3Q=G2Bj0ku5iak=pnLYq4Hi7QgpBC5sBfPA@mail.gmail.com>
-Subject: Re: [PATCH V4 05/16] PCI: dwc: Move config space capability search API
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, lorenzo.pieralisi@arm.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org,
-        Device Tree <devicetree@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+        Tue, 23 Apr 2019 23:49:30 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 824E1205B8;
+        Tue, 23 Apr 2019 23:49:27 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 23 Apr 2019 23:49:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        mendozajonas.com; h=message-id:subject:from:to:date:in-reply-to
+        :references:content-type:mime-version:content-transfer-encoding;
+         s=fm2; bh=TMK4saVMes0u+ASfn2Ds/1ITfBfjKM5mlrv8N7Sg0M8=; b=DY3zW
+        e4JAoM2pHOihbCulxIzmOizA6AV6drKcrS6XRFVT8ps+cahyw4vPdiGCW+DXu1y8
+        jQ5jeC6pPVFX+AB3E+uYDXOp758r5Lf7ScQkT1tdowwdb7m6gwLU5nKbfBGkc2VA
+        N1JH4O3OJEPuZl+RjCU30ihWJ/4pFs/Si8mUgjIcyBC98T5LsflIaaSJk4dY5hpO
+        v+cguuCb/4oXnTFWlxIWxfSXUNMc71WzRbfSPx9ezX7Wqmd5cMEbNHdrQWiT4bgZ
+        Az8I3yxV5xgdQRIPz1ZFKk7XJle9yXLm64iIiZOHpZlnM/v/77k8r8VqqPk831yh
+        vxDwN5SmYnFeX6IxQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=TMK4saVMes0u+ASfn2Ds/1ITfBfjKM5mlrv8N7Sg0
+        M8=; b=z8n6nZAYEUUvQxCg9RtP3SU80RiE6IY2DsjeenGNz4xEJfUTByaSe3quh
+        F4gkgR27hV+WhbOJeVj59jEKfIIqVvSdBVCzK7+Armv9mNgHuohRpACIHjt8bt3/
+        2vyQpb/yEIpiVEDccDUbGPS6U6tpz4E/3RBYZsuuCSFMzjHQcxYL1nLZbTm8ZL6w
+        oM3KkuQIJuf70o2r1Tc5dFZt3qs38qcf4Gbf9QyqFlJJMMSeZ2MK5Z6xDF4x7Niu
+        woOiXdaaWMmaX5l14sXnNAqCEhmFecYmM3jKtUtnpsNDB9zIL2gZllE0INkn+P8i
+        AEvLdR80mkojrdHyHgHcjfpGaye5w==
+X-ME-Sender: <xms:xty_XJ_-LQyt29nJxYbb1VWVFEiaGjH6JHBC56BAiaOH8eGCeFmDSg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrgeelgdejhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefurghmuhgv
+    lhcuofgvnhguohiirgdqlfhonhgrshcuoehsrghmsehmvghnughoiigrjhhonhgrshdrtg
+    homheqnecukfhppeduvddvrdelledrkedvrddutdenucfrrghrrghmpehmrghilhhfrhho
+    mhepshgrmhesmhgvnhguohiirghjohhnrghsrdgtohhmnecuvehluhhsthgvrhfuihiivg
+    eptd
+X-ME-Proxy: <xmx:xty_XIJRhei6WxZhlzk4O03KyjdHNyboRN_acJQir7PR2DeLCmpHOw>
+    <xmx:xty_XOj-QPp2pljpjbyxfEGdduZHl2Y0-LmWlDaSXFKXhel0Ily9zA>
+    <xmx:xty_XE8agZ2fYNszyxmobeWvPpQQsnoHDOqgx-oOY-0T-KNTlx9suQ>
+    <xmx:x9y_XDHTCyWOaGmr9Mgcmlhd7OfH9B_4K6oYHz_qT_63Ix4tzBYWkA>
+Received: from v4 (unknown [122.99.82.10])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 03182E424F;
+        Tue, 23 Apr 2019 23:49:21 -0400 (EDT)
+Message-ID: <a0cc05541859e96dad21ebda67cd468aedfb893c.camel@mendozajonas.com>
+Subject: Re: [PATCH net v4] net/ncsi: handle overflow when incrementing mac
+ address
+From:   Samuel Mendoza-Jonas <sam@mendozajonas.com>
+To:     Tao Ren <taoren@fb.com>, "David S . Miller" <davem@davemloft.net>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Date:   Wed, 24 Apr 2019 13:49:17 +1000
+In-Reply-To: <20190424014310.24253-1-taoren@fb.com>
+References: <20190424014310.24253-1-taoren@fb.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 1:12 PM Vidya Sagar <vidyas@nvidia.com> wrote:
->
-> On 4/24/2019 2:02 AM, Bjorn Helgaas wrote:
-> > On Tue, Apr 23, 2019 at 01:57:19PM +0530, Vidya Sagar wrote:
-> >> Move PCIe config space capability search API to common DesignWare file
-> >> as this can be used by both host and ep mode codes.
-> >>
-> >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> >> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> >> ---
-> >> Changes from [v3]:
-> >> * Rebased to linux-next top of the tree
-> >>
-> >> Changes from [v2]:
-> >> * None
-> >>
-> >> Changes from [v1]:
-> >> * Removed dw_pcie_find_next_ext_capability() API from here and made a
-> >>    separate patch for that
-> >>
-> >>   drivers/pci/controller/dwc/pcie-designware.c | 33 ++++++++++++++++++++
-> >>   drivers/pci/controller/dwc/pcie-designware.h |  2 ++
-> >
-> > You claim this is a "move", but I only see adds.  Where did it move
-> > *from*?
-> These are supposed to be moved from pcie-designware-ep.c file. That was the case
-> with my old patches but when I rebased them onto ToT, I missed the change that
-> removes them from pcie-designware-ep.c file. Thanks for catching this. I'll
-> address it in the next patch.
->
-> >
-> > While you're at it, can you add a comment in the code about why we
-> > can't use the regular pci_find_capability() interface?  It's really a
-> > shame to have to reimplement that.
-> Regular pci_find_capability() uses 'struct pci_dev *dev' pointer and can be used
-> only after device enumeration is done. Whereas, these APIs are used particularly
-> before link up and use 'struct dw_pcie *pci' pointer.
+On Wed, 2019-04-24 at 01:43 +0000, Tao Ren wrote:
+> Previously BMC's MAC address is calculated by simply adding 1 to the
+> last byte of network controller's MAC address, and it produces incorrect
+> result when network controller's MAC address ends with 0xFF.
+> 
+> The problem can be fixed by calling eth_addr_inc() function to increment
+> MAC address; besides, the MAC address is also validated before assigning
+> to BMC.
+> 
+> Fixes: cb10c7c0dfd9 ("net/ncsi: Add NCSI Broadcom OEM command")
+> Signed-off-by: Tao Ren <taoren@fb.com>
 
-pci_bus_find_capability() can be used without enumerating the devices
-if you have a pci_bus. It's probably not worth using here though since
-you need this code anyway for endpoint mode.
+Acked-by: Samuel Mendoza-Jonas <sam@mendozajonas.com>
 
->
-> >
-> >>   2 files changed, 35 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> >> index 8e0081ccf83b..6a98135244d6 100644
-> >> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> >> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> >> @@ -20,6 +20,39 @@
-> >>   #define PCIE_PHY_DEBUG_R1_LINK_UP  (0x1 << 4)
-> >>   #define PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING (0x1 << 29)
-> >>
-> >> +static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
-> >> +                              u8 cap)
-> >> +{
-> >> +    u8 cap_id, next_cap_ptr;
-> >> +    u16 reg;
-> >> +
-> >> +    reg = dw_pcie_readw_dbi(pci, cap_ptr);
-> >> +    next_cap_ptr = (reg & 0xff00) >> 8;
-> >> +    cap_id = (reg & 0x00ff);
-> >> +
-> >> +    if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
-> >> +            return 0;
-> >> +
-> >> +    if (cap_id == cap)
-> >> +            return cap_ptr;
-> >> +
-> >> +    return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-> >> +}
-> >> +
-> >> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
-> >> +{
-> >> +    u8 next_cap_ptr;
-> >> +    u16 reg;
-> >> +
-> >> +    reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
-> >> +    next_cap_ptr = (reg & 0x00ff);
-> >> +
-> >> +    if (!next_cap_ptr)
-> >> +            return 0;
-> >> +
-> >> +    return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-> >> +}
-> >> +
-> >>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
-> >>   {
-> >>      if (!IS_ALIGNED((uintptr_t)addr, size)) {
-> >> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> >> index 9ee98ced1ef6..35160b4ce929 100644
-> >> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> >> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> >> @@ -248,6 +248,8 @@ struct dw_pcie {
-> >>   #define to_dw_pcie_from_ep(endpoint)   \
-> >>              container_of((endpoint), struct dw_pcie, ep)
-> >>
-> >> +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
-> >> +
-> >>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
-> >>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
-> >>
-> >> --
-> >> 2.17.1
-> >>
->
+> ---
+>  include/linux/etherdevice.h | 12 ++++++++++++
+>  net/ncsi/ncsi-rsp.c         |  6 +++++-
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> Changes in v4:
+>  - revert the changes in eth_addr_dec() function comment.
+> Changes in v3:
+>  - squash changes in "etherdevice.h" into this patch.
+>  - fix format issue in function comment.
+> Changes in v2:
+>  - increment MAC address by calling eth_addr_inc() function.
+>  - validate MAC address before assigning to BMC.
+> 
+> diff --git a/include/linux/etherdevice.h b/include/linux/etherdevice.h
+> index e2f3b21cd72a..aa8bfd6f738c 100644
+> --- a/include/linux/etherdevice.h
+> +++ b/include/linux/etherdevice.h
+> @@ -448,6 +448,18 @@ static inline void eth_addr_dec(u8 *addr)
+>  	u64_to_ether_addr(u, addr);
+>  }
+>  
+> +/**
+> + * eth_addr_inc() - Increment the given MAC address.
+> + * @addr: Pointer to a six-byte array containing Ethernet address to increment.
+> + */
+> +static inline void eth_addr_inc(u8 *addr)
+> +{
+> +	u64 u = ether_addr_to_u64(addr);
+> +
+> +	u++;
+> +	u64_to_ether_addr(u, addr);
+> +}
+> +
+>  /**
+>   * is_etherdev_addr - Tell if given Ethernet address belongs to the device.
+>   * @dev: Pointer to a device structure
+> diff --git a/net/ncsi/ncsi-rsp.c b/net/ncsi/ncsi-rsp.c
+> index dc07fcc7938e..802db01e3075 100644
+> --- a/net/ncsi/ncsi-rsp.c
+> +++ b/net/ncsi/ncsi-rsp.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+>  #include <linux/netdevice.h>
+> +#include <linux/etherdevice.h>
+>  #include <linux/skbuff.h>
+>  
+>  #include <net/ncsi.h>
+> @@ -667,7 +668,10 @@ static int ncsi_rsp_handler_oem_bcm_gma(struct ncsi_request *nr)
+>  	ndev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
+>  	memcpy(saddr.sa_data, &rsp->data[BCM_MAC_ADDR_OFFSET], ETH_ALEN);
+>  	/* Increase mac address by 1 for BMC's address */
+> -	saddr.sa_data[ETH_ALEN - 1]++;
+> +	eth_addr_inc((u8 *)saddr.sa_data);
+> +	if (!is_valid_ether_addr((const u8 *)saddr.sa_data))
+> +		return -ENXIO;
+> +
+>  	ret = ops->ndo_set_mac_address(ndev, &saddr);
+>  	if (ret < 0)
+>  		netdev_warn(ndev, "NCSI: 'Writing mac address to device failed\n");
+> -- 
+> 2.17.1
+> 
+
+
