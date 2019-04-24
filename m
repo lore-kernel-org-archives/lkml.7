@@ -2,154 +2,178 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F01C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B893C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF9E2148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195132148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:02:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="AILgxV9K";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UCD/kRLO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M2+pi3lS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbfDXBAZ (ORCPT
+        id S1729042AbfDXBCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:00:25 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:51158 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726844AbfDXBAZ (ORCPT
+        Tue, 23 Apr 2019 21:02:25 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:37095 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbfDXBCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:00:25 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O0wkUF000566;
-        Tue, 23 Apr 2019 17:59:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=dX8U2iZGvTQbQNS3Nk0vetiNbQ8DOkB8Mc95vHOeMu4=;
- b=AILgxV9KO5PUD2KgdXPoxnKNQiTCNW6giB3PSrR3awJhA0y80PgrVuYBf5If63vOmO89
- vH5MMpbFfOmPS6p+imDR2f/kXCN/yk2vfoEtldqDIrW6Sz8lB9bar7JjWmqUs66tXHic
- tlUlDXcsevp7ePCWpTAliFtQNSDEssK9CsI= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2s24kejgbk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 23 Apr 2019 17:59:55 -0700
-Received: from prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) by
- prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 23 Apr 2019 17:59:54 -0700
-Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
- prn-mbx03.TheFacebook.com (2620:10d:c081:6::17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 23 Apr 2019 17:59:53 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 23 Apr 2019 17:59:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dX8U2iZGvTQbQNS3Nk0vetiNbQ8DOkB8Mc95vHOeMu4=;
- b=UCD/kRLOIxWN5802SmuxNKnJYFkUSu8lluzqFT1DtfP7vsIuKgP8lB+RNn2zWhmPngrz+RZi1P2eGWh2+b2uvK/n8bOCNZY3bMBgQ1Ix2AG7v3aw+V/KU700K/s139HOh0ZFwCd/UwQXAcwWGZqbycFzmIgelZZ1RsmK3DyXaRQ=
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.146) by
- MWHPR15MB1213.namprd15.prod.outlook.com (10.175.2.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.16; Wed, 24 Apr 2019 00:59:52 +0000
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::9ccc:f6fa:40e2:f1cd]) by MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::9ccc:f6fa:40e2:f1cd%10]) with mapi id 15.20.1813.017; Wed, 24 Apr
- 2019 00:59:52 +0000
-From:   Tao Ren <taoren@fb.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Samuel Mendoza-Jonas" <sam@mendozajonas.com>,
-        Joel Stanley <joel@jms.id.au>,
-        "Andrew Jeffery" <andrew@aj.id.au>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH net 1/2] net: add eth_addr_inc in etherdevice.h
-Thread-Topic: [PATCH net 1/2] net: add eth_addr_inc in etherdevice.h
-Thread-Index: AQHU+iXBL3XM+2QubECFPb9Ujl9LnqZKYHYAgAAdRQA=
-Date:   Wed, 24 Apr 2019 00:59:52 +0000
-Message-ID: <2b3935f9-fbf9-6baa-570c-dcd6382518c4@fb.com>
-References: <20190423224138.1295-1-taoren@fb.com>
- <20190423161502.5d3e9c36@cakuba.netronome.com>
-In-Reply-To: <20190423161502.5d3e9c36@cakuba.netronome.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR14CA0060.namprd14.prod.outlook.com
- (2603:10b6:300:81::22) To MWHPR15MB1216.namprd15.prod.outlook.com
- (2603:10b6:320:23::18)
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::5189]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 411ba574-617c-43c0-79fb-08d6c8502830
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1213;
-x-ms-traffictypediagnostic: MWHPR15MB1213:
-x-microsoft-antispam-prvs: <MWHPR15MB121334524AE2A2A462BA0B84B23C0@MWHPR15MB1213.namprd15.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(396003)(366004)(39860400002)(376002)(199004)(189003)(46003)(81156014)(64126003)(8676002)(6916009)(5660300002)(31686004)(81166006)(65826007)(102836004)(6512007)(6116002)(6506007)(186003)(6436002)(53546011)(386003)(8936002)(58126008)(53936002)(476003)(305945005)(486006)(86362001)(68736007)(6486002)(36756003)(25786009)(76176011)(7736002)(52116002)(14454004)(6246003)(446003)(4326008)(2616005)(99286004)(316002)(11346002)(7416002)(97736004)(71190400001)(256004)(478600001)(65956001)(73956011)(65806001)(229853002)(66556008)(64756008)(66476007)(66946007)(54906003)(66446008)(31696002)(71200400001)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1213;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iJAN046ftr92Ob3TEixJT+/Aw5NEI2+OejOif3unKqd4HREzylOEIXcZ8Ekg3WaoDPt2alp0wnzQnwjZmVbXw3KdQe6PXf2aqPooVAZ3Sv4NPqz93BA2by5UvdiCU9AFIRQaEuzeS7vMCy6vIn7b3GWAhWy4RWix3LRX7ZIyV/i4G8FCqziO27YiZF7bZKy0bgq7dAeH+/6EXaqMpPcpRRpWF5jAQ4TBaw6A6Krj0lYCAGVaXNXDCRAXsTEvsVHSORS9wl4QZd83ft+rKWywTWLiHN5TTjMqgVA8bnuItCuSupQhyywMJWw/bj80Y448NIvj+kK41Sm7IoXDPO6vI30BagDS2yWIfVHi9yAUzPoxG9htJhwqhzeQNyT8yxl3z60bBAFUswC2cW5zgeO9aR2HmuQhI+gX+2Eb56AGAL8=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F12C2F2446EC054B9738BBB1AC363A9D@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 23 Apr 2019 21:02:25 -0400
+Received: by mail-ua1-f66.google.com with SMTP id l17so5464925uar.4
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:02:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mgGp/GRBCs0fDORPm8J9/AXYWRoFaNJ2A1fhxlIRTu8=;
+        b=M2+pi3lSxbTZmmC6p50m4pCOE5uptyL8RaaWF3gFDZ4tmq6RSCHrfDyW+SZvTlz9rG
+         tfGy7oWH3hpKPp/TJh4q1fhRNqJvMDWjazlt6t26yEnv2pL4Ym39TAX5OaITuECz4Sbg
+         U2O92RaZnQFtNFB0VzDryJG3BTuR0dOL58H84=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mgGp/GRBCs0fDORPm8J9/AXYWRoFaNJ2A1fhxlIRTu8=;
+        b=Q785Aa2IkAxxO/PoBV1f4/KdXsfeP90kfXhjeQh71YjiPnSsZhzJILMVM1O7+gqDis
+         Rp/wHR4ZMwFbGM/OtYa0G0FAhanUU5JBY2zjoMsPKwYJDlwxasaB4svEgrM2/rJmBLmB
+         UCb8wvkAuL7PQ/ZCSfzSUJ6Gh/bglurEW9EWaqXYHhdt4o8DD3lCGu+g/CdSYlle/zOV
+         NdX9xaqlbyBjHVJoI2QdbexPdAzkYPNOGHzhet5lK7FZdE5R41WJzF4ZXCmEk5etOW/B
+         2Fe7Wq2/UvY/Re83Hznd8w7tOjcbncdHvyPuwFG8bn8fAVrfdL18jp6lgv68GrGgO6+T
+         Uxhg==
+X-Gm-Message-State: APjAAAWBYqSX2juWuqiEVIrtsDVhD600UgTwL+QLWhgt58JTNsD9BY/R
+        ylb6RPrewhJZ6wjqMbPxFBC1Cj3vkeU=
+X-Google-Smtp-Source: APXvYqxIjlaGLIT+SPBCG+SZZVVz1pD+wb4G5808wqBJiUCZ7egXilhzkAatJRE6/v3fUJYnRnQnKA==
+X-Received: by 2002:ab0:6983:: with SMTP id t3mr877660uaq.142.1556067742955;
+        Tue, 23 Apr 2019 18:02:22 -0700 (PDT)
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
+        by smtp.gmail.com with ESMTPSA id m23sm26699286vsl.24.2019.04.23.18.02.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 18:02:22 -0700 (PDT)
+Received: by mail-vk1-f172.google.com with SMTP id 204so2318681vkv.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:02:21 -0700 (PDT)
+X-Received: by 2002:a1f:7d8e:: with SMTP id y136mr9345556vkc.40.1556067741281;
+ Tue, 23 Apr 2019 18:02:21 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 411ba574-617c-43c0-79fb-08d6c8502830
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 00:59:52.0711
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1213
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_01:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+References: <20190306201413.14153-1-tycho@tycho.ws> <20190306201413.14153-2-tycho@tycho.ws>
+ <CAGXu5jKaK-mTq=Qez7E_fYysz916_xEN7Houj-y8gdmNGkMMVw@mail.gmail.com>
+ <CAGXu5jKM1k0roNJEqtns2fe-yY_2G_qhvBHids-ZWimL-ddWsw@mail.gmail.com> <20190423233422.GK3758@cisco>
+In-Reply-To: <20190423233422.GK3758@cisco>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Tue, 23 Apr 2019 18:02:08 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jJFdyBGw8OQdWJ2NL54O0qHHkg0b3uyqm6Prg_ym7-p3g@mail.gmail.com>
+Message-ID: <CAGXu5jJFdyBGw8OQdWJ2NL54O0qHHkg0b3uyqm6Prg_ym7-p3g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] seccomp: disallow NEW_LISTENER and TSYNC flags
+To:     Tycho Andersen <tycho@tycho.ws>
+Cc:     James Morris <jmorris@namei.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8yMy8xOSA0OjE1IFBNLCBKYWt1YiBLaWNpbnNraSB3cm90ZToNCj4gT24gVHVlLCAyMyBB
-cHIgMjAxOSAyMjo0MTo1NiArMDAwMCwgVGFvIFJlbiB3cm90ZToNCj4+IEFkZCBldGhfYWRkcl9p
-bmMgZnVuY3Rpb24gaW4gZXRoZXJkZXZpY2UuaCB0byBpbmNyZW1lbnQgTUFDIGFkZHJlc3MuIE9u
-ZQ0KPj4gb2YgdGhlIHVzZSBjYXNlcyBpcyBpbiBuY3NpIHN0YWNrLCB3aGVyZSB0aGUgaG9zdCdz
-IE1BQyBhZGRyZXNzIG5lZWRzIHRvDQo+PiBiZSBpbmNyZW1lbnRlZCB0byBnZXQgQk1DJ3MgTUFD
-IGFkZHJlc3MuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogVGFvIFJlbiA8dGFvcmVuQGZiLmNvbT4N
-Cj4gDQo+IFBsZWFzZSBzcXVhc2ggdGhpcyBwYXRjaCB3aXRoIHRoZSBuZXh0IG9uZSwgSU1ITyB0
-aGV5IGZvcm0gYSBzaW5nbGUNCj4gbG9naWNhbCBjaGFuZ2UgdG9nZXRoZXIuDQoNClN1cmUuIFdp
-bGwgc2VuZCBvdXQgdXBkYXRlZCBwYXRjaCBzb29uLg0KDQo+PiAgaW5jbHVkZS9saW51eC9ldGhl
-cmRldmljZS5oIHwgMTMgKysrKysrKysrKysrKw0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNl
-cnRpb25zKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvZXRoZXJkZXZpY2Uu
-aCBiL2luY2x1ZGUvbGludXgvZXRoZXJkZXZpY2UuaA0KPj4gaW5kZXggZTJmM2IyMWNkNzJhLi5k
-NDhlM2E3MjRjNTQgMTAwNjQ0DQo+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L2V0aGVyZGV2aWNlLmgN
-Cj4+ICsrKyBiL2luY2x1ZGUvbGludXgvZXRoZXJkZXZpY2UuaA0KPj4gQEAgLTQ0OCw2ICs0NDgs
-MTkgQEAgc3RhdGljIGlubGluZSB2b2lkIGV0aF9hZGRyX2RlYyh1OCAqYWRkcikNCj4+ICAJdTY0
-X3RvX2V0aGVyX2FkZHIodSwgYWRkcik7DQo+PiAgfQ0KPj4gIA0KPj4gKy8qKg0KPj4gKyAqIGV0
-aF9hZGRyX2luYyAtIEluY3JlbWVudCB0aGUgZ2l2ZW4gTUFDIGFkZHJlc3MNCj4+ICsgKg0KPj4g
-KyAqIEBhZGRyOiBQb2ludGVyIHRvIGEgc2l4LWJ5dGUgYXJyYXkgY29udGFpbmluZyBFdGhlcm5l
-dCBhZGRyZXNzIHRvIGluY3JlbWVudA0KPiANCj4gUGxlYXNlIHNlZTogIERvY3VtZW50YXRpb24v
-ZG9jLWd1aWRlL2tlcm5lbC1kb2MucnN0DQo+IA0KPiBIZXJlIHdlIG5lZWQ6DQo+ICAtICIoKSIg
-YWZ0ZXIgZnVuY3Rpb24gbmFtZTsNCj4gIC0gbm8gZXh0cmEgbGluZSBiZXR3ZWVuIGZ1bmN0aW9u
-IG5hbWUgYW5kIGFyZ3VtZW50IGRlc2NyaXB0aW9uLg0KDQpUaGFuayB5b3UgZm9yIHBvaW50aW5n
-IGl0IG91dCAoSSBkaWRuJ3Qga25vdyB0aGUgZG9jLWd1aWRlKS4gR2l2ZW4gSSBjb3BpZWQgdGhl
-IGZ1bmN0aW9uIGNvbW1lbnQgZnJvbSBldGhfYWRkcl9kZWMoKSwgSSB3aWxsIGFsc28gZml4IHRo
-ZSBmb3JtYXQgZm9yIGV0aF9hZGRyX2V0aCgpIHRoZW4uDQoNCkJUVywgIigpIiBpcyBtaXNzaW5n
-IGZyb20gYWxsIHRoZSBvdGhlciBmdW5jdGlvbnMnIGNvbW1lbnQgaW4gZXRoZXJkZXZpY2UuaCwg
-c28gbWF5YmUgd2Ugc2hvdWxkIGZpeCB0aGF0IGluIGEgc2VwYXJhdGUgcGF0Y2g/DQoNCg0KVGhh
-bmtzLA0KDQotIFRhbw0K
+On Tue, Apr 23, 2019 at 4:34 PM Tycho Andersen <tycho@tycho.ws> wrote:
+>
+> On Tue, Apr 23, 2019 at 04:31:45PM -0700, Kees Cook wrote:
+> > On Tue, Apr 23, 2019 at 3:09 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Wed, Mar 6, 2019 at 12:14 PM Tycho Andersen <tycho@tycho.ws> wrote:
+> > > >
+> > > > As the comment notes, the return codes for TSYNC and NEW_LISTENER conflict,
+> > > > because they both return positive values, one in the case of success and
+> > > > one in the case of error. So, let's disallow both of these flags together.
+> > > >
+> > > > While this is technically a userspace break, all the users I know of are
+> > > > still waiting on me to land this feature in libseccomp, so I think it'll be
+> > > > safe. Also, at present my use case doesn't require TSYNC at all, so this
+> > > > isn't a big deal to disallow. If someone wanted to support this, a path
+> > > > forward would be to add a new flag like
+> > > > TSYNC_AND_LISTENER_YES_I_UNDERSTAND_THAT_TSYNC_WILL_JUST_RETURN_EAGAIN, but
+> > > > the use cases are so different I don't see it really happening.
+> > > >
+> > > > Finally, it's worth noting that this does actually fix a UAF issue: at the end
+> > > > of seccomp_set_mode_filter(), we have:
+> > > >
+> > > >         if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
+> > > >                 if (ret < 0) {
+> > > >                         listener_f->private_data = NULL;
+> > > >                         fput(listener_f);
+> > > >                         put_unused_fd(listener);
+> > > >                 } else {
+> > > >                         fd_install(listener, listener_f);
+> > > >                         ret = listener;
+> > > >                 }
+> > > >         }
+> > > > out_free:
+> > > >         seccomp_filter_free(prepared);
+> > > >
+> > > > But if ret > 0 because TSYNC raced, we'll install the listener fd and then free
+> > > > the filter out from underneath it, causing a UAF when the task closes it or
+> > > > dies. This patch also switches the condition to be simply if (ret), so that
+> > > > if someone does add the flag mentioned above, they won't have to remember
+> > > > to fix this too.
+> > > >
+> > > > Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+> > > > Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+> > > > CC: stable@vger.kernel.org # v5.0+
+> > >
+> > > Thanks! Sorry I missed this. James, can you take this for Linus's
+> > > fixes for v5.1? (Or should I send a pull request to you?)
+> > >
+> > > Acked-by: Kees Cook <keescook@chromium.org>
+> > >
+> > > Let's also add:
+> > >
+> > > Reported-by: syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com
+> > >
+> > > > ---
+> > > >  kernel/seccomp.c | 17 +++++++++++++++--
+> > > >  1 file changed, 15 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > > > index d0d355ded2f4..79bada51091b 100644
+> > > > --- a/kernel/seccomp.c
+> > > > +++ b/kernel/seccomp.c
+> > > > @@ -500,7 +500,10 @@ seccomp_prepare_user_filter(const char __user *user_filter)
+> > > >   *
+> > > >   * Caller must be holding current->sighand->siglock lock.
+> > > >   *
+> > > > - * Returns 0 on success, -ve on error.
+> > > > + * Returns 0 on success, -ve on error, or
+> > > > + *   - in TSYNC mode: the pid of a thread which was either not in the correct
+> > > > + *     seccomp mode or did not have an ancestral seccomp filter
+> > > > + *   - in NEW_LISTENER mode: the fd of the new listener
+> > > >   */
+> > > >  static long seccomp_attach_filter(unsigned int flags,
+> > > >                                   struct seccomp_filter *filter)
+> > > > @@ -1256,6 +1259,16 @@ static long seccomp_set_mode_filter(unsigned int flags,
+> > > >         if (flags & ~SECCOMP_FILTER_FLAG_MASK)
+> > > >                 return -EINVAL;
+> > > >
+> > > > +       /*
+> > > > +        * In the successful case, NEW_LISTENER returns the new listener fd.
+> > > > +        * But in the failure case, TSYNC returns the thread that died. If you
+> > > > +        * combine these two flags, there's no way to tell whether something
+> > > > +        * succeded or failed. So, let's disallow this combination.
+> > >
+> > > also a tiny typo: succeeded
+> > >
+> > > > +        */
+> > > > +       if ((flags & SECCOMP_FILTER_FLAG_TSYNC) &&
+> > > > +           (flags && SECCOMP_FILTER_FLAG_NEW_LISTENER))
+> >
+> > also a typo: && should be &
+>
+> Oh, yes. Do you want me to send another version?
+
+Nah, I fixed it up. :)
+
+
+-- 
+Kees Cook
