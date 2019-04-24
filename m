@@ -2,140 +2,72 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C367C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB19C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144252148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:03:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Z65Z2ecO"
+	by mail.kernel.org (Postfix) with ESMTP id 080A72148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556125463;
+	bh=/vkdn5dA/eWqsuteav4C/LbY8+Mi31lTVRe2W9G5TCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wDSPt7HPx3U/OvlliC3B8RePkndBu4cjjgcZuruQ7CtdY28U7Eau6+SaZpoUwKZCq
+	 LnsnCYCXZVWPbJmikfGW9XxDzd8+gIGvo4jA8gaormBjVaf/HJzL9vUX0zTi9soQ7/
+	 j2AaKFGsH9jvvZkrf24Yc0qqdNkdFLdQ0z/bFPbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733119AbfDXRDC (ORCPT
+        id S1733125AbfDXREV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:03:02 -0400
-Received: from mail.efficios.com ([167.114.142.138]:39754 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbfDXRDB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:03:01 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id CC7AB1DAAE6;
-        Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id yNASwfcFOYXs; Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 75F621DAADF;
-        Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 75F621DAADF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556125379;
-        bh=DPZxSR6wYKJnzekC6sgrLt8hlX9/r4//uloKdoG3rCc=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Z65Z2ecOVrs5AYVi+2oZhJCtp57WyBQsC1D3s1U5WPpHO39pLlAw2/R91pN8mFecy
-         XWPTMW34QEbvnQdhm+mJWud5p0GsFMI8a/gKUVgteJZZfBqKMjg487isP6iaYTwggr
-         hTfA1ZkgUgwQnBCLbKYMJCmbf+ps+v2PX6RyPkbh2TvgvX+uxsTcgJ3kAthDu+EvP6
-         Yxx4Fb9Dxo4b6AOMQ/JIVccnUpYYutZnCsehdnzbGc0wdd+jCHMjE7eL3bj6MqHiFU
-         eNcUvkWDxX8RhCQe+xRSopaMNjl1RhSRcaYafOI1NGE79mUJIS1INtZM+E7/eizsFG
-         4kvv5wIYOj77Q==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id L4OG3F3Nyf9m; Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 5860E1DAAD8;
-        Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
-Date:   Wed, 24 Apr 2019 13:02:59 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>
-Message-ID: <2087640779.608.1556125379269.JavaMail.zimbra@efficios.com>
-In-Reply-To: <697611694.604.1556125254852.JavaMail.zimbra@efficios.com>
-References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com> <20190424152502.14246-9-mathieu.desnoyers@efficios.com> <20190424164538.GC18611@fuggles.cambridge.arm.com> <20190424165150.GF21101@lakrids.cambridge.arm.com> <697611694.604.1556125254852.JavaMail.zimbra@efficios.com>
-Subject: Re: [RFC PATCH for 5.2 08/10] rseq/selftests: aarch64 code
- signature: handle big-endian environment
+        Wed, 24 Apr 2019 13:04:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731146AbfDXREV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:04:21 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 596F32148D;
+        Wed, 24 Apr 2019 17:04:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556125460;
+        bh=/vkdn5dA/eWqsuteav4C/LbY8+Mi31lTVRe2W9G5TCc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dzixtnA7M9TXxlJMvlG1xMg91+UZjl6Gd6CZdXBZUnMCNOtiorahYDiNc3PMlduTM
+         isUXVkz7zlwCTVtNpWjvi2vjH+s5+DT4fYRxa5ZatZUnF1ntLtpBfG9x/x9OhjpvuZ
+         oV3MlCqS4e55cgMZQ6rbQr6VBzMpj6/9xBT7CNPE=
+Date:   Wed, 24 Apr 2019 19:04:18 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     =?utf-8?Q?Ambro=C5=BE?= Bizjak <abizjak.pro@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Oops in current tree in i2c
+Message-ID: <20190424170418.GB4253@kroah.com>
+References: <CAJ4FQ9AczEXM27=Pn_5iaaAXZ=nA+6FQu7_TRdcC=5RHpDFx4g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/selftests: aarch64 code signature: handle big-endian environment
-Thread-Index: OBjeHUeE7gQ5xyWKTP757DExutwbEyS+nxVk
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ4FQ9AczEXM27=Pn_5iaaAXZ=nA+6FQu7_TRdcC=5RHpDFx4g@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 24, 2019, at 1:00 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
-
-> ----- On Apr 24, 2019, at 12:51 PM, Mark Rutland mark.rutland@arm.com wrote:
+On Wed, Apr 24, 2019 at 06:59:09PM +0200, Ambrož Bizjak wrote:
+> Hi everyone,
 > 
->> On Wed, Apr 24, 2019 at 05:45:38PM +0100, Will Deacon wrote:
->>> On Wed, Apr 24, 2019 at 11:25:00AM -0400, Mathieu Desnoyers wrote:
->>> > +/*
->>> > + * aarch64 -mbig-endian generates mixed endianness code vs data:
->>> > + * little-endian code and big-endian data. Ensure the RSEQ_SIG signature
->>> > + * matches code endianness.
->>> > + */
->>> > +#define RSEQ_SIG_CODE	0xd428bc00	/* BRK #0x45E0.  */
->>> > +
->>> > +#ifdef __AARCH64EB__
->>> > +#define RSEQ_SIG_DATA	0x00bc28d4	/* BRK #0x45E0.  */
->>> 
->>> It would be neater to implement swab32 and use that with RSEQ_SIG_CODE,
->> 
->> If possible, marginally neater than that would be using
->> le32_to_cpu(RSEQ_SIG_CODE), without any ifdeffery necessary.
->> 
->> It looks like that's defined in tools/include/linux/kernel.h, but I'm
->> not sure if that gets pulled into your include path.
-> 
-> Considering that those RSEQ_SIG* define will end up in public bits/rseq.h
-> headers within glibc, I'm tempted to keep the amount of dependencies on
-> external headers to a minimum, if it's OK with you.
+> This buggy i2c patch (see https://lkml.org/lkml/2018/10/27/248) has
+> just landed in stable 4.19.36 without the appropriate fix, causing
+> oops on boot on many machines. For example we're experiencing this
+> issue with the NixOS distribution
+> (https://github.com/NixOS/nixpkgs/issues/60126). I am currently trying
+> the fix (https://github.com/torvalds/linux/commit/b59dfdaef173677b0b7e10f375226c0a1114fd20)
+> and will report if fixes the crash.
 
-Also, I'm not sure the le32_to_cpu() approach would work in __ASSEMBLER__
-builds.
+Good catch, that fix is needed, will go queue that up now, thanks!
 
-Thanks,
-
-Mathieu
-
-> 
-> Thanks,
-> 
-> Mathieu
-> 
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+greg k-h
