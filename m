@@ -2,102 +2,100 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926BBC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB8BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566972077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61D582077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:20:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="ISAq0t3o"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OePZTCgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbfDXNTY (ORCPT
+        id S1730432AbfDXNUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:19:24 -0400
-Received: from mail-it1-f177.google.com ([209.85.166.177]:39341 "EHLO
-        mail-it1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730414AbfDXNTX (ORCPT
+        Wed, 24 Apr 2019 09:20:19 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34914 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729315AbfDXNUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:19:23 -0400
-Received: by mail-it1-f177.google.com with SMTP id e13so6092389itk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 06:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+9wtzOHTKfWwDFfAxyXSFblT57McAjnf3BBwlBkbcmk=;
-        b=ISAq0t3otNaY9rmihmNmYwm6lU3FIlCt0FIlpUpiIJsNKCvpsYUZ0LRiEqWsbI9wBl
-         Rf8iWUDOR1ZAMbHbd0f9qLR7/SOR8VfaskD5UlFhOklyUSgVEJpkpAj7qRwEiydNUbO2
-         K5XpbA3gZ2b8zg0pMP3ft3ArQQfb5oRO9IP8k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+9wtzOHTKfWwDFfAxyXSFblT57McAjnf3BBwlBkbcmk=;
-        b=Vknlw50fA9mdZrare7zzNSt81P/D/RVI9qji0F7e7E/0jH5ILewgVosbwgtX+qJnvS
-         i0f3WOZYB6LG4hywT/wEv5+wIhfvVZzc9pqeix0TQqBCPl0+LWHTmpoDKPSbAzIhbb4p
-         d7VuLF5T2ePKuud8GGXV1SHYL1O4qcQW7GtnQXue8K/KEmu4G1EaoKrJ8yYPBrnckvrV
-         dc97/VVnl9IINt+QNsZQufrioRj1uLD5Loud3qVk13+PjxvF1jvtH1pWtwgafkNNtbmz
-         rVbdnijB1uXTY2letHwKkApMxExBzJZuGOqOTxSD92/ebT6xPe6hAPK4yVVi+I/3JJCo
-         ISow==
-X-Gm-Message-State: APjAAAVtdwtFGn8Kwzcf9xHUQwVN3T+TPahrqxyBF2KS932R+Q8r2zVc
-        Rq3bvkzcHdMaay+pqi7YOPDwPJoMuPeUqt7crKhZew==
-X-Google-Smtp-Source: APXvYqyiD2KC7oQVYjMqP0FCpqgItbxd5QDgSy7sdqZ7xz83K4NkLsINvasjM6Nbdnv2021L/kM7wlOZB+jkVt9gfk8=
-X-Received: by 2002:a02:ca13:: with SMTP id i19mr768954jak.77.1556111962827;
- Wed, 24 Apr 2019 06:19:22 -0700 (PDT)
+        Wed, 24 Apr 2019 09:20:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ut/AT5NZIvtj4Y0/qt7/Ac2TRDj3IJ2+OkiJo7N7EIM=; b=OePZTCglximpG/ZiJ0hTxlF54
+        6/Z3ukz4p4TTpYMb99FexnNzEKTYpzELUZt9gTYt7NhgcyYif5sV5o+sUAsNK7vaMSddJLuQMOngG
+        fZ05H3HwtYrAXkpo6N6IJPI/Y+fhlkqAabD0adg6biG1fHZ531zz4/7MqD60yRu+/E6CjAg9R78hf
+        /AEEUzSF+5iMWJ1DniXZKcZ26Txyg3X89BkgB9z8QtZyKfD9T3+QLFjx+V6QgP242dqslIspy8UEh
+        C1fwDsy64UrJWmw3EJImP2Rvx5EhRlUNx3IFJhfgQm07q3qqcTOPEQHQOVHiJOGNF+uEIUagdjXRc
+        4+ezh6JNw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJHoa-0003Tq-4J; Wed, 24 Apr 2019 13:19:56 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 95BA029BD4886; Wed, 24 Apr 2019 15:19:54 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 15:19:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH] bpf: Fix preempt_enable_no_resched() abuse
+Message-ID: <20190424131954.GZ14281@hirez.programming.kicks-ass.net>
+References: <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
+ <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
+ <20190423141714.GO11158@hirez.programming.kicks-ass.net>
+ <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
+ <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
+ <20190423193435.GX4038@hirez.programming.kicks-ass.net>
+ <88ba7be0-9ec5-941e-1b3f-80fbe05fe3a0@redhat.com>
+ <20190423195559.GY4038@hirez.programming.kicks-ass.net>
+ <CAHk-=wgopkA+NiFCDOBcc24usK8hwL9CnQGzmv_4j8zJLGTrqA@mail.gmail.com>
+ <20190423203512.GB4038@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <cover.1553680185.git.kirr@nexedi.com> <12f7d0d98555ee0d174d04bb47644f65c07f035a.1553680185.git.kirr@nexedi.com>
- <CAJfpegv0NvcsD9gh3aN+ngzsLqbNWUc73ZPN1qHox_14eN9Pqg@mail.gmail.com>
- <20190424115620.GA2723@deco.navytux.spb.ru> <CAJfpegsiWuykUsfg=sO8sKo5h86U65q10=e=wYKXTQEHW8DFkw@mail.gmail.com>
- <20190424123107.GA32024@deco.navytux.spb.ru>
-In-Reply-To: <20190424123107.GA32024@deco.navytux.spb.ru>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 24 Apr 2019 15:19:11 +0200
-Message-ID: <CAJfpegupwNbVPenZdMX8F2Z3vKSJdfAsXuiF4YA+nbnj2Kp=sw@mail.gmail.com>
-Subject: Re: [RESEND4, PATCH 1/2] fuse: retrieve: cap requested size to
- negotiated max_write
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Jakob Unterwurzacher <jakobunt@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fuse-devel <fuse-devel@lists.sourceforge.net>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423203512.GB4038@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 2:31 PM Kirill Smelkov <kirr@nexedi.com> wrote:
+On Tue, Apr 23, 2019 at 10:35:12PM +0200, Peter Zijlstra wrote:
+> On Tue, Apr 23, 2019 at 01:27:29PM -0700, Linus Torvalds wrote:
+> > On Tue, Apr 23, 2019 at 12:56 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >
+> > > Unless the very next line is schedule(), or implies it, one must not use
+> > > preempt_enable_no_resched(). It can cause a preemption to go missing and
+> > > thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
+> > 
+> > That language may be a bit strong, or m,aybe the "implies it" might at
+> > least be extended on.
+> > 
+> > It doesn't need to be "schedule()" per se, it can be any of the things
+> > that check if we _need_ to be scheduled.
+> 
+> I'll try and word-smith that tomorrow, brain is fried. But yes,
+> something that ends up in schedule() 'soon'.
 
-> Thanks. Does it mean that the patch is ok? Do I need to rework
-> something?
+I've made that:
 
-Pushed to #for-next with all the rest.  Made some changes to the
-patches, so please verify.
+Unless there is a call into schedule() in the immediate
+(deterministic) future, one must not use preempt_enable_no_resched().
+It can cause a preemption to go missing and thereby cause arbitrary
+delays, breaking the PREEMPT=y invariant.
 
-> I see. Probably it is not "quoted-printable" as
->
->         Content-Type: text/plain; charset=3Dutf-8
->         Content-Transfer-Encoding: 8bit
-
-Well, google converts it to quoted-printable then:
-
-Content-Type: text/plain; charset=3Dutf-8
-Content-Transfer-Encoding: quoted-printable
-
-> suggests and it is maybe due to UTF-8 characters (I used "=C2=B7" several
-> times in patch description).
-
-Please refrain from gratuitous use of non-ascii.   That middle-dot is
-written as "*" in C (fixed the patch description).
-
-Thanks,
-Miklos
