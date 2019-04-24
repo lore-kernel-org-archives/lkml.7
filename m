@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81282C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96496C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D43F20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6428020675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126465;
-	bh=IubD04QLa48Yf/kJXtC8a+ljo4KCWrMVa/iTQBVBW7o=;
+	s=default; t=1556126468;
+	bh=Ds1oojnBGsQNQ+iYXmbmDvOhEzEojySNMj+ONeSRgME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GaRJwJXrYra1qp93VEiLtv8+7HoBXidRXDsra9Iyj9PdFunaT95ydLyiHxhEGpP/l
-	 E9/5ygFDM5+/BYbVbuiDb1J1eGN4knDk7UcRnkt/oit7dbzGqLIe1wqyrvR8i7iSt1
-	 hjIXLZqaYczfE3QXMKT+RZNLStZJFl93EZXb0J3k=
+	b=UWQrwXq94D8CAnb06gvR4L2Di6lHYVThgitSaAFzDnbYNGijBNFqgtnvsX0Iy/OAu
+	 hbkGWXo9f1avBfgwy4k1KkmTU2ljTxBUpRfhE5sk5/1/Iz5mTome6/PB+pdTOAWYWH
+	 9lKlh7nS5PHAoRnEwtX4+329TonBTFPcza0xw0nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389275AbfDXRVD (ORCPT
+        id S2389287AbfDXRVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:21:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46480 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:21:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389263AbfDXRVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:21:00 -0400
+        id S2389273AbfDXRVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:21:03 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E288921917;
-        Wed, 24 Apr 2019 17:20:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93DCD2190C;
+        Wed, 24 Apr 2019 17:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126460;
-        bh=IubD04QLa48Yf/kJXtC8a+ljo4KCWrMVa/iTQBVBW7o=;
+        s=default; t=1556126463;
+        bh=Ds1oojnBGsQNQ+iYXmbmDvOhEzEojySNMj+ONeSRgME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GUpJW8+Vjpu8WFg9al5pwlFrch8Z9zOK4Kmed8VRSMTWBwqIqwPX/WpHmEt9DwjL5
-         P/WxBpurKQ2ggdtzp5mvsl1Nq4JOjLp3D6pFvACz6LsTxUb/St+ai+e3LMy9+8TkwM
-         ZwN51V6Qym+8t4mYv1JotN4lZzSD/vldloMFUurw=
+        b=Z/nocBALQfhFREcj81zmIzDXi2e+Nb2qjyK6PqTqtJFpxZhRbTAULTxViVk38REso
+         mu1NP6wo37I9gNTSo6VPNyM9tj4s5tjjpjbh/ewdjHq/oOiM35X3Ob0VFB/RCvOOOk
+         VCu+Xj4+KR/W+PTQ/MYG52q0tnmyUx+02Y4b3LYA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 117/168] fix incorrect error code mapping for OBJECTID_NOT_FOUND
-Date:   Wed, 24 Apr 2019 19:09:21 +0200
-Message-Id: <20190424170930.372607167@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 118/168] ext4: prohibit fstrim in norecovery mode
+Date:   Wed, 24 Apr 2019 19:09:22 +0200
+Message-Id: <20190424170930.414015047@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -60,38 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 85f9987b236cf46e06ffdb5c225cf1f3c0acb789 ]
+[ Upstream commit 18915b5873f07e5030e6fb108a050fa7c71c59fb ]
 
-It was mapped to EIO which can be confusing when user space
-queries for an object GUID for an object for which the server
-file system doesn't support (or hasn't saved one).
+The ext4 fstrim implementation uses the block bitmaps to find free space
+that can be discarded.  If we haven't replayed the journal, the bitmaps
+will be stale and we absolutely *cannot* use stale metadata to zap the
+underlying storage.
 
-As Amir Goldstein suggested this is similar to ENOATTR
-(equivalently ENODATA in Linux errno definitions) so
-changing NT STATUS code mapping for OBJECTID_NOT_FOUND
-to ENODATA.
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2maperror.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ext4/ioctl.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/cifs/smb2maperror.c b/fs/cifs/smb2maperror.c
-index 98c25b969ab8..7e93d5706bf6 100644
---- a/fs/cifs/smb2maperror.c
-+++ b/fs/cifs/smb2maperror.c
-@@ -1034,7 +1034,8 @@ static const struct status_to_posix_error smb2_error_map_table[] = {
- 	{STATUS_UNFINISHED_CONTEXT_DELETED, -EIO,
- 	"STATUS_UNFINISHED_CONTEXT_DELETED"},
- 	{STATUS_NO_TGT_REPLY, -EIO, "STATUS_NO_TGT_REPLY"},
--	{STATUS_OBJECTID_NOT_FOUND, -EIO, "STATUS_OBJECTID_NOT_FOUND"},
-+	/* Note that ENOATTTR and ENODATA are the same errno */
-+	{STATUS_OBJECTID_NOT_FOUND, -ENODATA, "STATUS_OBJECTID_NOT_FOUND"},
- 	{STATUS_NO_IP_ADDRESSES, -EIO, "STATUS_NO_IP_ADDRESSES"},
- 	{STATUS_WRONG_CREDENTIAL_HANDLE, -EIO,
- 	"STATUS_WRONG_CREDENTIAL_HANDLE"},
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index bcd7c4788903..e44e3cd738b6 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -599,6 +599,13 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		if (!blk_queue_discard(q))
+ 			return -EOPNOTSUPP;
+ 
++		/*
++		 * We haven't replayed the journal, so we cannot use our
++		 * block-bitmap-guided storage zapping commands.
++		 */
++		if (test_opt(sb, NOLOAD) && ext4_has_feature_journal(sb))
++			return -EROFS;
++
+ 		if (copy_from_user(&range, (struct fstrim_range __user *)arg,
+ 		    sizeof(range)))
+ 			return -EFAULT;
 -- 
 2.19.1
 
