@@ -2,414 +2,350 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00E6C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67441C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D30021901
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C073208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:16:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRD4pERi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732649AbfDXQPL (ORCPT
+        id S1732065AbfDXQQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:15:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47522 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732229AbfDXQPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:15:09 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4CBF4306E5FB;
-        Wed, 24 Apr 2019 16:15:09 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4495519729;
-        Wed, 24 Apr 2019 16:15:01 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 11/11] keys: Pass the network namespace into request_key
- mechanism
-From:   David Howells <dhowells@redhat.com>
-To:     ebiederm@xmission.com
-Cc:     netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
-        keyrings@vger.kernel.org, dhowells@redhat.com,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwalsh@redhat.com, vgoyal@redhat.com
-Date:   Wed, 24 Apr 2019 17:15:00 +0100
-Message-ID: <155612250048.8564.4366853478854432104.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155612240208.8564.13865046977065545591.stgit@warthog.procyon.org.uk>
-References: <155612240208.8564.13865046977065545591.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Wed, 24 Apr 2019 12:16:00 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35969 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726611AbfDXQP7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:15:59 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 85so9631082pgc.3;
+        Wed, 24 Apr 2019 09:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GU2wNV4N+hDEDop+XExIyNq2YBi5nXdd8ZBs3Gv/eds=;
+        b=mRD4pERicTy709OjsPSqSrQ1I4qE1NbT/IhfOl/ujCOasJBqnGeAT/QGcmpuBxaSSK
+         peZtqScBmg+7JACy6ZA9wZgyRP9an6E2g8tXC1z0eBQjRW3HfZDmmpv0ua6h8xhPjgtD
+         H1soKAdWdaDdg1aQnb2jN0wZEO8DdrBWpxayE8jpT283/BmZanevd8Gym5g2lUh91qa5
+         uCXH4AYXEu8vUm9xG7R7vQMV3S0I5BO36fVZLgfrBc8G04wC72t/bZTbVBOuczQk3DVU
+         FhWCW4dqo4ndGM/oMsGpTU5z/WHVLXqCA1h8ClaFHAZTRrTUZxCL2k+P+5eSw51dWXsW
+         zcIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GU2wNV4N+hDEDop+XExIyNq2YBi5nXdd8ZBs3Gv/eds=;
+        b=On3GJwZJcAq+QgnwgzzvuAI6TsftPYAiib+hiFDyYfj8S6lUJrr3D+oppZvGXIKPld
+         gZKgnjebc2aEZE1S4r6ib92EtCkWx1V7OoZcdNPl634JaRE+TxufLeBl7F2q5Y1yQNKQ
+         BOqoEr1ufcuvM3PGFhyArvb0K0C6vUtEkpz2XD0WkfQdlcspQg+l5aiFciAUd2rFsk9o
+         GQsjTOWy+HbD1tUvcQTZPdkBDfvGvjw9nloncTgSVhWIV5AQTZ9nO0UaTUIQUXlQC8Wb
+         iMu15TCDF3Pm0r8HVVIj+HpixY4UTiJoC/Ijs6mNaVMvoFVuCSIAhZ+SL//eKh5Zwrm+
+         qjhQ==
+X-Gm-Message-State: APjAAAXVIlKsndmxK3c9U1Vmlh3gz//jrER/D39FG73eqm1BvTG+kMfn
+        9rJhSTpBTg0ivdZMA8aeBQg=
+X-Google-Smtp-Source: APXvYqzt4rLHmzLfttBeV0VMlFHGkZKbdi0qNRhFsgJX+MuaBjxfGEs3eeD1hMJMaLhafFcUp8ay7A==
+X-Received: by 2002:a62:ed10:: with SMTP id u16mr33905015pfh.187.1556122558246;
+        Wed, 24 Apr 2019 09:15:58 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id q80sm36349267pfa.66.2019.04.24.09.15.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 09:15:57 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 00:15:47 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 05/63] Documentation: ACPI: move linuxized-acpica.txt
+ to driver-api/acpi and convert to  reST
+Message-ID: <20190424161546.vkvaicqdmwdouc22@mail.google.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+ <20190423162932.21428-6-changbin.du@gmail.com>
+ <20190423175030.7d0cc624@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 24 Apr 2019 16:15:09 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423175030.7d0cc624@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create a request_key_net() function and use it to pass the network
-namespace domain tag into DNS revolver keys and rxrpc/AFS keys so that keys
-for different domains can coexist in the same keyring.
+On Tue, Apr 23, 2019 at 05:50:30PM -0300, Mauro Carvalho Chehab wrote:
+> Em Wed, 24 Apr 2019 00:28:34 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
+> 
+> > This converts the plain text documentation to reStructuredText format and
+> > add it to Sphinx TOC tree. No essential content change.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  Documentation/driver-api/acpi/index.rst       |   1 +
+> >  .../acpi/linuxized-acpica.rst}                | 115 ++++++++++--------
+> >  2 files changed, 66 insertions(+), 50 deletions(-)
+> >  rename Documentation/{acpi/linuxized-acpica.txt => driver-api/acpi/linuxized-acpica.rst} (78%)
+> > 
+> > diff --git a/Documentation/driver-api/acpi/index.rst b/Documentation/driver-api/acpi/index.rst
+> > index 898b0c60671a..12649947b19b 100644
+> > --- a/Documentation/driver-api/acpi/index.rst
+> > +++ b/Documentation/driver-api/acpi/index.rst
+> > @@ -5,3 +5,4 @@ ACPI Support
+> >  .. toctree::
+> >     :maxdepth: 2
+> >  
+> > +   linuxized-acpica
+> > diff --git a/Documentation/acpi/linuxized-acpica.txt b/Documentation/driver-api/acpi/linuxized-acpica.rst
+> > similarity index 78%
+> > rename from Documentation/acpi/linuxized-acpica.txt
+> > rename to Documentation/driver-api/acpi/linuxized-acpica.rst
+> > index 3ad7b0dfb083..f8aaea668e41 100644
+> > --- a/Documentation/acpi/linuxized-acpica.txt
+> > +++ b/Documentation/driver-api/acpi/linuxized-acpica.rst
+> > @@ -1,31 +1,35 @@
+> > -Linuxized ACPICA - Introduction to ACPICA Release Automation
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +.. include:: <isonum.txt>
+> >  
+> > -Copyright (C) 2013-2016, Intel Corporation
+> > -Author: Lv Zheng <lv.zheng@intel.com>
+> > +============================================================
+> > +Linuxized ACPICA - Introduction to ACPICA Release Automation
+> > +============================================================
+> >  
+> > +:Copyright: |copy| 2013-2016, Intel Corporation
+> >  
+> > -Abstract:
+> > +:Author: Lv Zheng <lv.zheng@intel.com>
+> >  
+> > -This document describes the ACPICA project and the relationship between
+> > -ACPICA and Linux.  It also describes how ACPICA code in drivers/acpi/acpica,
+> > -include/acpi and tools/power/acpi is automatically updated to follow the
+> > -upstream.
+> > +:Abstract: This document describes the ACPICA project and the relationship
+> > +           between ACPICA and Linux.  It also describes how ACPICA code in
+> > +           drivers/acpi/acpica, include/acpi and tools/power/acpi is
+> > +           automatically updated to follow the upstream.
+> >  
+> 
+> Same comment as on patch 02: I would keep the abstracts as a chapter,
+> in order to make them visible at the index, as this may help readers
+> to quickly look at the document's contents.
+>
+ok, done.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: netdev@vger.kernel.org
-cc: linux-nfs@vger.kernel.org
-cc: linux-cifs@vger.kernel.org
-cc: linux-afs@lists.infradead.org
----
+> I'm sure other APCI documents also have abstracts. So, please consider
+> this comment also for the other docs.
+> 
+For short description, I'd keep it. For long case, will make it as a chapter.
+Thanks.
 
- fs/afs/addr_list.c           |    4 +--
- fs/afs/dynroot.c             |    7 +++--
- fs/cifs/dns_resolve.c        |    3 +-
- fs/nfs/dns_resolve.c         |    2 +
- include/linux/dns_resolver.h |    3 +-
- include/linux/key.h          |    6 ++++
- net/ceph/messenger.c         |    3 +-
- net/dns_resolver/dns_query.c |    6 +++-
- net/rxrpc/key.c              |    4 +--
- security/keys/internal.h     |    1 +
- security/keys/keyctl.c       |    2 +
- security/keys/keyring.c      |   11 +++++---
- security/keys/request_key.c  |   58 ++++++++++++++++++++++++++++++++++++++----
- 13 files changed, 86 insertions(+), 24 deletions(-)
+> Anyway, this is just a suggestion. I'm also fine with the above.
+> Either way, for the conversion itself:
+> 
+> Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> 
+> >  
+> > -1. ACPICA Project
+> > +ACPICA Project
+> > +==============
+> >  
+> > -   The ACPI Component Architecture (ACPICA) project provides an operating
+> > -   system (OS)-independent reference implementation of the Advanced
+> > -   Configuration and Power Interface Specification (ACPI).  It has been
+> > -   adapted by various host OSes.  By directly integrating ACPICA, Linux can
+> > -   also benefit from the application experiences of ACPICA from other host
+> > -   OSes.
+> > +The ACPI Component Architecture (ACPICA) project provides an operating
+> > +system (OS)-independent reference implementation of the Advanced
+> > +Configuration and Power Interface Specification (ACPI).  It has been
+> > +adapted by various host OSes.  By directly integrating ACPICA, Linux can
+> > +also benefit from the application experiences of ACPICA from other host
+> > +OSes.
+> >  
+> > -   The homepage of ACPICA project is: www.acpica.org, it is maintained and
+> > -   supported by Intel Corporation.
+> > +The homepage of ACPICA project is: www.acpica.org, it is maintained and
+> > +supported by Intel Corporation.
+> >  
+> > -   The following figure depicts the Linux ACPI subsystem where the ACPICA
+> > -   adaptation is included:
+> > +The following figure depicts the Linux ACPI subsystem where the ACPICA
+> > +adaptation is included::
+> >  
+> >        +---------------------------------------------------------+
+> >        |                                                         |
+> > @@ -71,21 +75,27 @@ upstream.
+> >  
+> >                   Figure 1. Linux ACPI Software Components
+> >  
+> > -   NOTE:
+> > +.. note::
+> >      A. OS Service Layer - Provided by Linux to offer OS dependent
+> >         implementation of the predefined ACPICA interfaces (acpi_os_*).
+> > +       ::
+> > +
+> >           include/acpi/acpiosxf.h
+> >           drivers/acpi/osl.c
+> >           include/acpi/platform
+> >           include/asm/acenv.h
+> >      B. ACPICA Functionality - Released from ACPICA code base to offer
+> >         OS independent implementation of the ACPICA interfaces (acpi_*).
+> > +       ::
+> > +
+> >           drivers/acpi/acpica
+> >           include/acpi/ac*.h
+> >           tools/power/acpi
+> >      C. Linux/ACPI Functionality - Providing Linux specific ACPI
+> >         functionality to the other Linux kernel subsystems and user space
+> >         programs.
+> > +       ::
+> > +
+> >           drivers/acpi
+> >           include/linux/acpi.h
+> >           include/linux/acpi*.h
+> > @@ -95,24 +105,27 @@ upstream.
+> >         ACPI subsystem to offer architecture specific implementation of the
+> >         ACPI interfaces.  They are Linux specific components and are out of
+> >         the scope of this document.
+> > +       ::
+> > +
+> >           include/asm/acpi.h
+> >           include/asm/acpi*.h
+> >           arch/*/acpi
+> >  
+> > -2. ACPICA Release
+> > +ACPICA Release
+> > +==============
+> >  
+> > -   The ACPICA project maintains its code base at the following repository URL:
+> > -   https://github.com/acpica/acpica.git. As a rule, a release is made every
+> > -   month.
+> > +The ACPICA project maintains its code base at the following repository URL:
+> > +https://github.com/acpica/acpica.git. As a rule, a release is made every
+> > +month.
+> >  
+> > -   As the coding style adopted by the ACPICA project is not acceptable by
+> > -   Linux, there is a release process to convert the ACPICA git commits into
+> > -   Linux patches.  The patches generated by this process are referred to as
+> > -   "linuxized ACPICA patches".  The release process is carried out on a local
+> > -   copy the ACPICA git repository.  Each commit in the monthly release is
+> > -   converted into a linuxized ACPICA patch.  Together, they form the monthly
+> > -   ACPICA release patchset for the Linux ACPI community.  This process is
+> > -   illustrated in the following figure:
+> > +As the coding style adopted by the ACPICA project is not acceptable by
+> > +Linux, there is a release process to convert the ACPICA git commits into
+> > +Linux patches.  The patches generated by this process are referred to as
+> > +"linuxized ACPICA patches".  The release process is carried out on a local
+> > +copy the ACPICA git repository.  Each commit in the monthly release is
+> > +converted into a linuxized ACPICA patch.  Together, they form the monthly
+> > +ACPICA release patchset for the Linux ACPI community.  This process is
+> > +illustrated in the following figure::
+> >  
+> >      +-----------------------------+
+> >      | acpica / master (-) commits |
+> > @@ -153,7 +166,7 @@ upstream.
+> >  
+> >                  Figure 2. ACPICA -> Linux Upstream Process
+> >  
+> > -   NOTE:
+> > +.. note::
+> >      A. Linuxize Utilities - Provided by the ACPICA repository, including a
+> >         utility located in source/tools/acpisrc folder and a number of
+> >         scripts located in generate/linux folder.
+> > @@ -170,19 +183,20 @@ upstream.
+> >     following kernel configuration options:
+> >     CONFIG_ACPI/CONFIG_ACPI_DEBUG/CONFIG_ACPI_DEBUGGER
+> >  
+> > -3. ACPICA Divergences
+> > +ACPICA Divergences
+> > +==================
+> >  
+> > -   Ideally, all of the ACPICA commits should be converted into Linux patches
+> > -   automatically without manual modifications, the "linux / master" tree should
+> > -   contain the ACPICA code that exactly corresponds to the ACPICA code
+> > -   contained in "new linuxized acpica" tree and it should be possible to run
+> > -   the release process fully automatically.
+> > +Ideally, all of the ACPICA commits should be converted into Linux patches
+> > +automatically without manual modifications, the "linux / master" tree should
+> > +contain the ACPICA code that exactly corresponds to the ACPICA code
+> > +contained in "new linuxized acpica" tree and it should be possible to run
+> > +the release process fully automatically.
+> >  
+> > -   As a matter of fact, however, there are source code differences between
+> > -   the ACPICA code in Linux and the upstream ACPICA code, referred to as
+> > -   "ACPICA Divergences".
+> > +As a matter of fact, however, there are source code differences between
+> > +the ACPICA code in Linux and the upstream ACPICA code, referred to as
+> > +"ACPICA Divergences".
+> >  
+> > -   The various sources of ACPICA divergences include:
+> > +The various sources of ACPICA divergences include:
+> >     1. Legacy divergences - Before the current ACPICA release process was
+> >        established, there already had been divergences between Linux and
+> >        ACPICA. Over the past several years those divergences have been greatly
+> > @@ -213,11 +227,12 @@ upstream.
+> >        rebased on the ACPICA side in order to offer better solutions, new ACPICA
+> >        divergences are generated.
+> >  
+> > -4. ACPICA Development
+> > +ACPICA Development
+> > +==================
+> >  
+> > -   This paragraph guides Linux developers to use the ACPICA upstream release
+> > -   utilities to obtain Linux patches corresponding to upstream ACPICA commits
+> > -   before they become available from the ACPICA release process.
+> > +This paragraph guides Linux developers to use the ACPICA upstream release
+> > +utilities to obtain Linux patches corresponding to upstream ACPICA commits
+> > +before they become available from the ACPICA release process.
+> >  
+> >     1. Cherry-pick an ACPICA commit
+> >  
+> > @@ -225,7 +240,7 @@ upstream.
+> >     you want to cherry pick must be committed into the local repository.
+> >  
+> >     Then the gen-patch.sh command can help to cherry-pick an ACPICA commit
+> > -   from the ACPICA local repository:
+> > +   from the ACPICA local repository::
+> >  
+> >     $ git clone https://github.com/acpica/acpica
+> >     $ cd acpica
+> > @@ -240,7 +255,7 @@ upstream.
+> >     changes that haven't been applied to Linux yet.
+> >  
+> >     You can generate the ACPICA release series yourself and rebase your code on
+> > -   top of the generated ACPICA release patches:
+> > +   top of the generated ACPICA release patches::
+> >  
+> >     $ git clone https://github.com/acpica/acpica
+> >     $ cd acpica
+> > @@ -254,7 +269,7 @@ upstream.
+> >     3. Inspect the current divergences
+> >  
+> >     If you have local copies of both Linux and upstream ACPICA, you can generate
+> > -   a diff file indicating the state of the current divergences:
+> > +   a diff file indicating the state of the current divergences::
+> >  
+> >     # git clone https://github.com/acpica/acpica
+> >     # git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> 
+> 
+> 
+> Thanks,
+> Mauro
 
-diff --git a/fs/afs/addr_list.c b/fs/afs/addr_list.c
-index 967db336d11a..bf8ddac5f402 100644
---- a/fs/afs/addr_list.c
-+++ b/fs/afs/addr_list.c
-@@ -250,8 +250,8 @@ struct afs_vlserver_list *afs_dns_query(struct afs_cell *cell, time64_t *_expiry
- 
- 	_enter("%s", cell->name);
- 
--	ret = dns_query("afsdb", cell->name, cell->name_len, "srv=1",
--			&result, _expiry);
-+	ret = dns_query(cell->net->net, "afsdb", cell->name, cell->name_len,
-+			"srv=1", &result, _expiry);
- 	if (ret < 0) {
- 		_leave(" = %d [dns]", ret);
- 		return ERR_PTR(ret);
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index a9ba81ddf154..07d010cd28e2 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -28,6 +28,7 @@ const struct file_operations afs_dynroot_file_operations = {
- static int afs_probe_cell_name(struct dentry *dentry)
- {
- 	struct afs_cell *cell;
-+	struct afs_net *net = afs_d2net(dentry);
- 	const char *name = dentry->d_name.name;
- 	size_t len = dentry->d_name.len;
- 	int ret;
-@@ -40,13 +41,13 @@ static int afs_probe_cell_name(struct dentry *dentry)
- 		len--;
- 	}
- 
--	cell = afs_lookup_cell_rcu(afs_d2net(dentry), name, len);
-+	cell = afs_lookup_cell_rcu(net, name, len);
- 	if (!IS_ERR(cell)) {
--		afs_put_cell(afs_d2net(dentry), cell);
-+		afs_put_cell(net, cell);
- 		return 0;
- 	}
- 
--	ret = dns_query("afsdb", name, len, "srv=1", NULL, NULL);
-+	ret = dns_query(net->net, "afsdb", name, len, "srv=1", NULL, NULL);
- 	if (ret == -ENODATA)
- 		ret = -EDESTADDRREQ;
- 	return ret;
-diff --git a/fs/cifs/dns_resolve.c b/fs/cifs/dns_resolve.c
-index 7ede7306599f..1239aa1b5d27 100644
---- a/fs/cifs/dns_resolve.c
-+++ b/fs/cifs/dns_resolve.c
-@@ -77,7 +77,8 @@ dns_resolve_server_name_to_ip(const char *unc, char **ip_addr)
- 		goto name_is_IP_address;
- 
- 	/* Perform the upcall */
--	rc = dns_query(NULL, hostname, len, NULL, ip_addr, NULL);
-+	rc = dns_query(current->nsproxy->net_ns, NULL, hostname, len,
-+		       NULL, ip_addr, NULL);
- 	if (rc < 0)
- 		cifs_dbg(FYI, "%s: unable to resolve: %*.*s\n",
- 			 __func__, len, len, hostname);
-diff --git a/fs/nfs/dns_resolve.c b/fs/nfs/dns_resolve.c
-index a7d3df85736d..8611d4b81b0e 100644
---- a/fs/nfs/dns_resolve.c
-+++ b/fs/nfs/dns_resolve.c
-@@ -22,7 +22,7 @@ ssize_t nfs_dns_resolve_name(struct net *net, char *name, size_t namelen,
- 	char *ip_addr = NULL;
- 	int ip_len;
- 
--	ip_len = dns_query(NULL, name, namelen, NULL, &ip_addr, NULL);
-+	ip_len = dns_query(net, NULL, name, namelen, NULL, &ip_addr, NULL);
- 	if (ip_len > 0)
- 		ret = rpc_pton(net, ip_addr, ip_len, sa, salen);
- 	else
-diff --git a/include/linux/dns_resolver.h b/include/linux/dns_resolver.h
-index 34a744a1bafc..3855395fa3c0 100644
---- a/include/linux/dns_resolver.h
-+++ b/include/linux/dns_resolver.h
-@@ -26,7 +26,8 @@
- 
- #include <uapi/linux/dns_resolver.h>
- 
--extern int dns_query(const char *type, const char *name, size_t namelen,
-+struct net;
-+extern int dns_query(struct net *net, const char *type, const char *name, size_t namelen,
- 		     const char *options, char **_result, time64_t *_expiry);
- 
- #endif /* _LINUX_DNS_RESOLVER_H */
-diff --git a/include/linux/key.h b/include/linux/key.h
-index e79802d4c928..5cc4440ccb68 100644
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@ -36,6 +36,7 @@ typedef int32_t key_serial_t;
- typedef uint32_t key_perm_t;
- 
- struct key;
-+struct net;
- 
- #ifdef CONFIG_KEYS
- 
-@@ -306,6 +307,11 @@ extern struct key *request_key_with_auxdata(struct key_type *type,
- 					    size_t callout_len,
- 					    void *aux);
- 
-+extern struct key *request_key_net(struct key_type *type,
-+				   const char *description,
-+				   struct net *net,
-+				   const char *callout_info);
-+
- extern int wait_for_key_construction(struct key *key, bool intr);
- 
- extern int key_validate(const struct key *key);
-diff --git a/net/ceph/messenger.c b/net/ceph/messenger.c
-index 7e71b0df1fbc..d4549d42675b 100644
---- a/net/ceph/messenger.c
-+++ b/net/ceph/messenger.c
-@@ -1885,7 +1885,8 @@ static int ceph_dns_resolve_name(const char *name, size_t namelen,
- 		return -EINVAL;
- 
- 	/* do dns_resolve upcall */
--	ip_len = dns_query(NULL, name, end - name, NULL, &ip_addr, NULL);
-+	ip_len = dns_query(current->nsproxy->net_ns,
-+			   NULL, name, end - name, NULL, &ip_addr, NULL);
- 	if (ip_len > 0)
- 		ret = ceph_pton(ip_addr, ip_len, ss, -1, NULL);
- 	else
-diff --git a/net/dns_resolver/dns_query.c b/net/dns_resolver/dns_query.c
-index 76338c38738a..d88ea98da63e 100644
---- a/net/dns_resolver/dns_query.c
-+++ b/net/dns_resolver/dns_query.c
-@@ -48,6 +48,7 @@
- 
- /**
-  * dns_query - Query the DNS
-+ * @net: The network namespace to operate in.
-  * @type: Query type (or NULL for straight host->IP lookup)
-  * @name: Name to look up
-  * @namelen: Length of name
-@@ -68,7 +69,8 @@
-  *
-  * Returns the size of the result on success, -ve error code otherwise.
-  */
--int dns_query(const char *type, const char *name, size_t namelen,
-+int dns_query(struct net *net,
-+	      const char *type, const char *name, size_t namelen,
- 	      const char *options, char **_result, time64_t *_expiry)
- {
- 	struct key *rkey;
-@@ -122,7 +124,7 @@ int dns_query(const char *type, const char *name, size_t namelen,
- 	 * add_key() to preinstall malicious redirections
- 	 */
- 	saved_cred = override_creds(dns_resolver_cache);
--	rkey = request_key(&key_type_dns_resolver, desc, options);
-+	rkey = request_key_net(&key_type_dns_resolver, desc, net, options);
- 	revert_creds(saved_cred);
- 	kfree(desc);
- 	if (IS_ERR(rkey)) {
-diff --git a/net/rxrpc/key.c b/net/rxrpc/key.c
-index 2722189ec273..1cc6b0c6cc42 100644
---- a/net/rxrpc/key.c
-+++ b/net/rxrpc/key.c
-@@ -914,7 +914,7 @@ int rxrpc_request_key(struct rxrpc_sock *rx, char __user *optval, int optlen)
- 	if (IS_ERR(description))
- 		return PTR_ERR(description);
- 
--	key = request_key(&key_type_rxrpc, description, NULL);
-+	key = request_key_net(&key_type_rxrpc, description, sock_net(&rx->sk), NULL);
- 	if (IS_ERR(key)) {
- 		kfree(description);
- 		_leave(" = %ld", PTR_ERR(key));
-@@ -945,7 +945,7 @@ int rxrpc_server_keyring(struct rxrpc_sock *rx, char __user *optval,
- 	if (IS_ERR(description))
- 		return PTR_ERR(description);
- 
--	key = request_key(&key_type_keyring, description, NULL);
-+	key = request_key_net(&key_type_keyring, description, sock_net(&rx->sk), NULL);
- 	if (IS_ERR(key)) {
- 		kfree(description);
- 		_leave(" = %ld", PTR_ERR(key));
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index c07fcc756fdd..1fc8c283bdf4 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -152,6 +152,7 @@ extern int install_session_keyring_to_cred(struct cred *, struct key *);
- 
- extern struct key *request_key_and_link(struct key_type *type,
- 					const char *description,
-+					struct key_tag *domain_tag,
- 					const void *callout_info,
- 					size_t callout_len,
- 					void *aux,
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index d2023d550bd6..29c4fa71616b 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -210,7 +210,7 @@ SYSCALL_DEFINE4(request_key, const char __user *, _type,
- 	}
- 
- 	/* do the search */
--	key = request_key_and_link(ktype, description, callout_info,
-+	key = request_key_and_link(ktype, description, NULL, callout_info,
- 				   callout_len, NULL, key_ref_to_ptr(dest_ref),
- 				   KEY_ALLOC_IN_QUOTA);
- 	if (IS_ERR(key)) {
-diff --git a/security/keys/keyring.c b/security/keys/keyring.c
-index ffa368594a03..2597ae756191 100644
---- a/security/keys/keyring.c
-+++ b/security/keys/keyring.c
-@@ -222,10 +222,13 @@ void key_set_index_key(struct keyring_index_key *index_key)
- 
- 	memcpy(index_key->desc, index_key->description, n);
- 
--	if (index_key->type->flags & KEY_TYPE_NET_DOMAIN)
--		index_key->domain_tag = current->nsproxy->net_ns->key_domain;
--	else
--		index_key->domain_tag = &default_domain_tag;
-+	if (!index_key->domain_tag) {
-+		if (index_key->type->flags & KEY_TYPE_NET_DOMAIN)
-+			index_key->domain_tag = current->nsproxy->net_ns->key_domain;
-+		else
-+			index_key->domain_tag = &default_domain_tag;
-+	}
-+
- 	hash_key_type_and_desc(index_key);
- }
- 
-diff --git a/security/keys/request_key.c b/security/keys/request_key.c
-index d95627888f5a..4cc27eee9795 100644
---- a/security/keys/request_key.c
-+++ b/security/keys/request_key.c
-@@ -17,6 +17,7 @@
- #include <linux/err.h>
- #include <linux/keyctl.h>
- #include <linux/slab.h>
-+#include <net/net_namespace.h>
- #include "internal.h"
- #include <keys/request_key_auth-type.h>
- 
-@@ -502,16 +503,18 @@ static struct key *construct_key_and_link(struct keyring_search_context *ctx,
-  * request_key_and_link - Request a key and cache it in a keyring.
-  * @type: The type of key we want.
-  * @description: The searchable description of the key.
-+ * @domain_tag: The domain in which the key operates.
-  * @callout_info: The data to pass to the instantiation upcall (or NULL).
-  * @callout_len: The length of callout_info.
-  * @aux: Auxiliary data for the upcall.
-  * @dest_keyring: Where to cache the key.
-  * @flags: Flags to key_alloc().
-  *
-- * A key matching the specified criteria is searched for in the process's
-- * keyrings and returned with its usage count incremented if found.  Otherwise,
-- * if callout_info is not NULL, a key will be allocated and some service
-- * (probably in userspace) will be asked to instantiate it.
-+ * A key matching the specified criteria (type, description, domain_tag) is
-+ * searched for in the process's keyrings and returned with its usage count
-+ * incremented if found.  Otherwise, if callout_info is not NULL, a key will be
-+ * allocated and some service (probably in userspace) will be asked to
-+ * instantiate it.
-  *
-  * If successfully found or created, the key will be linked to the destination
-  * keyring if one is provided.
-@@ -527,6 +530,7 @@ static struct key *construct_key_and_link(struct keyring_search_context *ctx,
-  */
- struct key *request_key_and_link(struct key_type *type,
- 				 const char *description,
-+				 struct key_tag *domain_tag,
- 				 const void *callout_info,
- 				 size_t callout_len,
- 				 void *aux,
-@@ -645,7 +649,8 @@ struct key *request_key(struct key_type *type,
- 
- 	if (callout_info)
- 		callout_len = strlen(callout_info);
--	key = request_key_and_link(type, description, callout_info, callout_len,
-+	key = request_key_and_link(type, description, NULL,
-+				   callout_info, callout_len,
- 				   NULL, NULL, KEY_ALLOC_IN_QUOTA);
- 	if (!IS_ERR(key)) {
- 		ret = wait_for_key_construction(key, false);
-@@ -681,7 +686,8 @@ struct key *request_key_with_auxdata(struct key_type *type,
- 	struct key *key;
- 	int ret;
- 
--	key = request_key_and_link(type, description, callout_info, callout_len,
-+	key = request_key_and_link(type, description, NULL,
-+				   callout_info, callout_len,
- 				   aux, NULL, KEY_ALLOC_IN_QUOTA);
- 	if (!IS_ERR(key)) {
- 		ret = wait_for_key_construction(key, false);
-@@ -693,3 +699,43 @@ struct key *request_key_with_auxdata(struct key_type *type,
- 	return key;
- }
- EXPORT_SYMBOL(request_key_with_auxdata);
-+
-+/**
-+ * request_key_net - Request a key for a net namespace and wait for construction
-+ * @type: Type of key.
-+ * @description: The searchable description of the key.
-+ * @net: The network namespace that is the key's domain of operation.
-+ * @callout_info: The data to pass to the instantiation upcall (or NULL).
-+ *
-+ * As for request_key() except that it does not add the returned key to a
-+ * keyring if found, new keys are always allocated in the user's quota, the
-+ * callout_info must be a NUL-terminated string and no auxiliary data can be
-+ * passed.  Only keys that operate the specified network namespace are used.
-+ *
-+ * Furthermore, it then works as wait_for_key_construction() to wait for the
-+ * completion of keys undergoing construction with a non-interruptible wait.
-+ */
-+struct key *request_key_net(struct key_type *type,
-+			    const char *description,
-+			    struct net *net,
-+			    const char *callout_info)
-+{
-+	struct key *key;
-+	size_t callout_len = 0;
-+	int ret;
-+
-+	if (callout_info)
-+		callout_len = strlen(callout_info);
-+	key = request_key_and_link(type, description, net->key_domain,
-+				   callout_info, callout_len,
-+				   NULL, NULL, KEY_ALLOC_IN_QUOTA);
-+	if (!IS_ERR(key)) {
-+		ret = wait_for_key_construction(key, false);
-+		if (ret < 0) {
-+			key_put(key);
-+			return ERR_PTR(ret);
-+		}
-+	}
-+	return key;
-+}
-+EXPORT_SYMBOL(request_key_net);
-
+-- 
+Cheers,
+Changbin Du
