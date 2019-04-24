@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B653C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FC3C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E6D218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DAA218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117402;
-	bh=vXZl1tBqgZCBTtlHpOam6CTDmIbgK4mmylHJMbB3+zA=;
+	s=default; t=1556117418;
+	bh=36c5J1NUJyayWWZGO96M5LZ1zNpe1MyFscdHLgjE9sU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P06pvuPRGvx5APnzPgPyqHMZwVqZN5zYu4kHXSrll9Id5wktUDCaqzqtSjYPcMnEn
-	 nEJRDcyRZ0ZY9O29lQLky1NP7WCnMvwtQ2XwrsSH2yZtJw1it9Uw9ZvTmLPG9yqBZ7
-	 l4c2N7/Ho/0hyEnm+98TQnu5wssOQQQ1R3esc+es=
+	b=OXn9eL/QggirpnIf77QLbFVmiNM36pXtdV6y4feSmKtjiDOMKGTFZ0ohqt7fmvFte
+	 lbfV3r5ZKnCEQkMf0BhN0AoLblP70FGtX1yUoHsqZdcZCQdUS4ddxD/cbcYoIvCx5C
+	 ztsepnS2JLBjqlX1s/FGe/qFJt0BsMAhZnCssIjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732400AbfDXOsJ (ORCPT
+        id S1732528AbfDXOuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732369AbfDXOsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:48:04 -0400
+        id S1732364AbfDXOsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:48:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F18C0218FE;
-        Wed, 24 Apr 2019 14:48:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE23D218FD;
+        Wed, 24 Apr 2019 14:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117283;
-        bh=vXZl1tBqgZCBTtlHpOam6CTDmIbgK4mmylHJMbB3+zA=;
+        s=default; t=1556117281;
+        bh=36c5J1NUJyayWWZGO96M5LZ1zNpe1MyFscdHLgjE9sU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kB4QjUEcb77BIYSffN+cV3UORu/0mKUNs+XZOz3U66DYBzcrkOdrf8NjP3BgCu8+K
-         AtjSxBHQc1EErGyt8j0S2T9I/xFmNbVyV8AoXLKOx2380O4OeraQIoN+sQNoXtDwzn
-         8oFG94Q9x71G8HRMuoYv3jHxZPJ7/xujrSOIUFig=
+        b=WXdNgRMyjvm5RbPmeXC4Wd+3qNAaKsCo9bLsSdrOU2+HvbchapUG6dUfFdAex3RAG
+         Lz7R5eTHftwLjrVDqMD/wltPCtoFAZ8PgYsgmJewWoF8sHJGM5fJG4bvQeq7nBdaq1
+         rnbCsfGYaBnSgJFBopML1abvrq85qJ71FHZRtFLQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Kelley <mikelley@microsoft.com>,
+Cc:     Xose Vazquez Perez <xose.vazquez@gmail.com>,
+        Martin Wilck <mwilck@suse.com>, Hannes Reinecke <hare@suse.de>,
+        NetApp RDAC team <ng-eseries-upstream-maintainers@netapp.com>,
+        Christophe Varoqui <christophe.varoqui@opensvc.com>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 23/35] scsi: storvsc: Fix calculation of sub-channel count
-Date:   Wed, 24 Apr 2019 10:46:57 -0400
-Message-Id: <20190424144709.30215-23-sashal@kernel.org>
+        SCSI ML <linux-scsi@vger.kernel.org>,
+        DM ML <dm-devel@redhat.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 22/35] scsi: core: add new RDAC LENOVO/DE_Series device
+Date:   Wed, 24 Apr 2019 10:46:56 -0400
+Message-Id: <20190424144709.30215-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424144709.30215-1-sashal@kernel.org>
 References: <20190424144709.30215-1-sashal@kernel.org>
@@ -59,58 +64,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kelley <mikelley@microsoft.com>
+From: Xose Vazquez Perez <xose.vazquez@gmail.com>
 
-[ Upstream commit 382e06d11e075a40b4094b6ef809f8d4bcc7ab2a ]
+[ Upstream commit 1cb1d2c64e812928fe0a40b8f7e74523d0283dbe ]
 
-When the number of sub-channels offered by Hyper-V is >= the number of CPUs
-in the VM, calculate the correct number of sub-channels.  The current code
-produces one too many.
+Blacklist "Universal Xport" LUN. It's used for in-band storage array
+management.  Also add model to the rdac dh family.
 
-This scenario arises only when the number of CPUs is artificially
-restricted (for example, with maxcpus=<n> on the kernel boot line), because
-Hyper-V normally offers a sub-channel count < number of CPUs.  While the
-current code doesn't break, the extra sub-channel is unbalanced across the
-CPUs (for example, a total of 5 channels on a VM with 4 CPUs).
-
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Long Li <longli@microsoft.com>
+Cc: Martin Wilck <mwilck@suse.com>
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: NetApp RDAC team <ng-eseries-upstream-maintainers@netapp.com>
+Cc: Christophe Varoqui <christophe.varoqui@opensvc.com>
+Cc: James E.J. Bottomley <jejb@linux.vnet.ibm.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: SCSI ML <linux-scsi@vger.kernel.org>
+Cc: DM ML <dm-devel@redhat.com>
+Signed-off-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+Reviewed-by: Martin Wilck <mwilck@suse.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/storvsc_drv.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/scsi/scsi_devinfo.c | 1 +
+ drivers/scsi/scsi_dh.c      | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index beb585ddc07d..5adeb1e4b186 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -658,13 +658,22 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
- static void  handle_multichannel_storage(struct hv_device *device, int max_chns)
- {
- 	struct storvsc_device *stor_device;
--	int num_cpus = num_online_cpus();
- 	int num_sc;
- 	struct storvsc_cmd_request *request;
- 	struct vstor_packet *vstor_packet;
- 	int ret, t;
+diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+index 6b594bc7d94a..022fcd2e4702 100644
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -248,6 +248,7 @@ static struct {
+ 	{"NETAPP", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"LSI", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"ENGENIO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
++	{"LENOVO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"SMSC", "USB 2 HS-CF", NULL, BLIST_SPARSELUN | BLIST_INQUIRY_36},
+ 	{"SONY", "CD-ROM CDU-8001", NULL, BLIST_BORKEN},
+ 	{"SONY", "TSL", NULL, BLIST_FORCELUN},		/* DDS3 & DDS4 autoloaders */
+diff --git a/drivers/scsi/scsi_dh.c b/drivers/scsi/scsi_dh.c
+index 375cede0c534..c9bc6f058424 100644
+--- a/drivers/scsi/scsi_dh.c
++++ b/drivers/scsi/scsi_dh.c
+@@ -75,6 +75,7 @@ static const struct scsi_dh_blist scsi_dh_blist[] = {
+ 	{"NETAPP", "INF-01-00",		"rdac", },
+ 	{"LSI", "INF-01-00",		"rdac", },
+ 	{"ENGENIO", "INF-01-00",	"rdac", },
++	{"LENOVO", "DE_Series",		"rdac", },
+ 	{NULL, NULL,			NULL },
+ };
  
--	num_sc = ((max_chns > num_cpus) ? num_cpus : max_chns);
-+	/*
-+	 * If the number of CPUs is artificially restricted, such as
-+	 * with maxcpus=1 on the kernel boot line, Hyper-V could offer
-+	 * sub-channels >= the number of CPUs. These sub-channels
-+	 * should not be created. The primary channel is already created
-+	 * and assigned to one CPU, so check against # CPUs - 1.
-+	 */
-+	num_sc = min((int)(num_online_cpus() - 1), max_chns);
-+	if (!num_sc)
-+		return;
-+
- 	stor_device = get_out_stor_device(device);
- 	if (!stor_device)
- 		return;
 -- 
 2.19.1
 
