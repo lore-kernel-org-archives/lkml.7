@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D58B0C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B8EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A77206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8CF205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126704;
-	bh=h9WynXh8Rs2RNztMmt6HNb9xKHB406IajqeLajFO7+0=;
+	s=default; t=1556126709;
+	bh=WFSdFecXGDtv8zwEnf2sq5PJ5I75TjY3e90nD0aIn50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wvN7N9EITLPPwQrTZej2MmzOOWT/mXqpUVxzoTqdDfXv5KBXrbX75pVdiYrWnZtVX
-	 h5SPGZc9rOUV5Ffw+TCiIDPi+9hsZ9cVzKKAotuVUFcddOs6i74d121m95E/7td8YT
-	 kNM8D4I5FPzlzVHwoR7Oe81rf3xojB7kgTM5S7Z0=
+	b=s4+kEBd1E4buGNK459aGnzQ0Vo8otHSwivTdGlJG0ZrDYIHIoAb5J1PLYe25DauEZ
+	 vUeOfsjY4MZO4nZYyxTLYHKEWzZPLE0UYk0lwx9U0ogX4Q/raxdl2i7ZMYPwK55T2r
+	 amRZaMuEB8ea7zlh/GUd4GLybAG5zF6vc/qYhjKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389971AbfDXRZD (ORCPT
+        id S2389982AbfDXRZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:25:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50850 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389960AbfDXRZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:25:00 -0400
+        id S2389964AbfDXRZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:25:04 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D8B0205ED;
-        Wed, 24 Apr 2019 17:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 314CB205ED;
+        Wed, 24 Apr 2019 17:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126699;
-        bh=h9WynXh8Rs2RNztMmt6HNb9xKHB406IajqeLajFO7+0=;
+        s=default; t=1556126702;
+        bh=WFSdFecXGDtv8zwEnf2sq5PJ5I75TjY3e90nD0aIn50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RR3dDHp+bnwOCEW3KF9NSxNNQHYOlvglNr4bmsNRj16qyAU6huUwcXfbmZIq2xIQb
-         rqP/jlTwnHcv0FYLxVGVkhzgr7BWQTjvwb+nVtY2V8LSHrNZqB51vK0jW8pbry1K68
-         TXUInpmiAeJEmEs+hAsdVLLiWwx3Jqg4h/IGthQI=
+        b=ohv91miXbUegaIfSaOdOliMjza+gLQlgwnJX3TXxRuzVr2/I9pJzdOGY9elGofzGW
+         Q2FG0BHChUXrERnmBy3sVki0+2DoVjtiYZCzUpB7f8jtruYF9d/PAyGVTnyxT7IN18
+         ji96rgLeeque1MyVRdvpEvXIoNIfWlAjnhFy+hjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 03/44] net: bridge: fix per-port af_packet sockets
-Date:   Wed, 24 Apr 2019 19:09:41 +0200
-Message-Id: <20190424170842.862884137@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 30/44] crypto: x86/poly1305 - fix overflow during partial reduction
+Date:   Wed, 24 Apr 2019 19:10:08 +0200
+Message-Id: <20190424170858.497370141@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -59,77 +61,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 3b2e2904deb314cc77a2192f506f2fd44e3d10d0 ]
+commit 678cce4019d746da6c680c48ba9e6d417803e127 upstream.
 
-When the commit below was introduced it changed two visible things:
- - the skb was no longer passed through the protocol handlers with the
-   original device
- - the skb was passed up the stack with skb->dev = bridge
+The x86_64 implementation of Poly1305 produces the wrong result on some
+inputs because poly1305_4block_avx2() incorrectly assumes that when
+partially reducing the accumulator, the bits carried from limb 'd4' to
+limb 'h0' fit in a 32-bit integer.  This is true for poly1305-generic
+which processes only one block at a time.  However, it's not true for
+the AVX2 implementation, which processes 4 blocks at a time and
+therefore can produce intermediate limbs about 4x larger.
 
-The first change broke af_packet sockets on bridge ports. For example we
-use them for hostapd which listens for ETH_P_PAE packets on the ports.
-We discussed two possible fixes:
- - create a clone and pass it through NF_HOOK(), act on the original skb
-   based on the result
- - somehow signal to the caller from the okfn() that it was called,
-   meaning the skb is ok to be passed, which this patch is trying to
-   implement via returning 1 from the bridge link-local okfn()
+Fix it by making the relevant calculations use 64-bit arithmetic rather
+than 32-bit.  Note that most of the carries already used 64-bit
+arithmetic, but the d4 -> h0 carry was different for some reason.
 
-Note that we rely on the fact that NF_QUEUE/STOLEN would return 0 and
-drop/error would return < 0 thus the okfn() is called only when the
-return was 1, so we signal to the caller that it was called by preserving
-the return value from nf_hook().
+To be safe I also made the same change to the corresponding SSE2 code,
+though that only operates on 1 or 2 blocks at a time.  I don't think
+it's really needed for poly1305_block_sse2(), but it doesn't hurt
+because it's already x86_64 code.  It *might* be needed for
+poly1305_2block_sse2(), but overflows aren't easy to reproduce there.
 
-Fixes: 8626c56c8279 ("bridge: fix potential use-after-free when hook returns QUEUE or STOLEN verdict")
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This bug was originally detected by my patches that improve testmgr to
+fuzz algorithms against their generic implementation.  But also add a
+test vector which reproduces it directly (in the AVX2 case).
+
+Fixes: b1ccc8f4b631 ("crypto: poly1305 - Add a four block AVX2 variant for x86_64")
+Fixes: c70f4abef07a ("crypto: poly1305 - Add a SSE2 SIMD variant for x86_64")
+Cc: <stable@vger.kernel.org> # v4.3+
+Cc: Martin Willi <martin@strongswan.org>
+Cc: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Martin Willi <martin@strongswan.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/bridge/br_input.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/net/bridge/br_input.c
-+++ b/net/bridge/br_input.c
-@@ -231,13 +231,10 @@ static void __br_handle_local_finish(str
- /* note: already called with rcu_read_lock */
- static int br_handle_local_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
- {
--	struct net_bridge_port *p = br_port_get_rcu(skb->dev);
--
- 	__br_handle_local_finish(skb);
+---
+ arch/x86/crypto/poly1305-avx2-x86_64.S |   14 +++++++---
+ arch/x86/crypto/poly1305-sse2-x86_64.S |   22 ++++++++++------
+ crypto/testmgr.h                       |   44 ++++++++++++++++++++++++++++++++-
+ 3 files changed, 67 insertions(+), 13 deletions(-)
+
+--- a/arch/x86/crypto/poly1305-avx2-x86_64.S
++++ b/arch/x86/crypto/poly1305-avx2-x86_64.S
+@@ -321,6 +321,12 @@ ENTRY(poly1305_4block_avx2)
+ 	vpaddq		t2,t1,t1
+ 	vmovq		t1x,d4
  
--	BR_INPUT_SKB_CB(skb)->brdev = p->br->dev;
--	br_pass_frame_up(skb);
--	return 0;
-+	/* return 1 to signal the okfn() was called so it's ok to use the skb */
-+	return 1;
- }
++	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
++	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
++	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
++	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
++	# integers.  It's true in a single-block implementation, but not here.
++
+ 	# d1 += d0 >> 26
+ 	mov		d0,%rax
+ 	shr		$26,%rax
+@@ -359,16 +365,16 @@ ENTRY(poly1305_4block_avx2)
+ 	# h0 += (d4 >> 26) * 5
+ 	mov		d4,%rax
+ 	shr		$26,%rax
+-	lea		(%eax,%eax,4),%eax
+-	add		%eax,%ebx
++	lea		(%rax,%rax,4),%rax
++	add		%rax,%rbx
+ 	# h4 = d4 & 0x3ffffff
+ 	mov		d4,%rax
+ 	and		$0x3ffffff,%eax
+ 	mov		%eax,h4
+ 
+ 	# h1 += h0 >> 26
+-	mov		%ebx,%eax
+-	shr		$26,%eax
++	mov		%rbx,%rax
++	shr		$26,%rax
+ 	add		%eax,h1
+ 	# h0 = h0 & 0x3ffffff
+ 	andl		$0x3ffffff,%ebx
+--- a/arch/x86/crypto/poly1305-sse2-x86_64.S
++++ b/arch/x86/crypto/poly1305-sse2-x86_64.S
+@@ -251,16 +251,16 @@ ENTRY(poly1305_block_sse2)
+ 	# h0 += (d4 >> 26) * 5
+ 	mov		d4,%rax
+ 	shr		$26,%rax
+-	lea		(%eax,%eax,4),%eax
+-	add		%eax,%ebx
++	lea		(%rax,%rax,4),%rax
++	add		%rax,%rbx
+ 	# h4 = d4 & 0x3ffffff
+ 	mov		d4,%rax
+ 	and		$0x3ffffff,%eax
+ 	mov		%eax,h4
+ 
+ 	# h1 += h0 >> 26
+-	mov		%ebx,%eax
+-	shr		$26,%eax
++	mov		%rbx,%rax
++	shr		$26,%rax
+ 	add		%eax,h1
+ 	# h0 = h0 & 0x3ffffff
+ 	andl		$0x3ffffff,%ebx
+@@ -518,6 +518,12 @@ ENTRY(poly1305_2block_sse2)
+ 	paddq		t2,t1
+ 	movq		t1,d4
+ 
++	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
++	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
++	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
++	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
++	# integers.  It's true in a single-block implementation, but not here.
++
+ 	# d1 += d0 >> 26
+ 	mov		d0,%rax
+ 	shr		$26,%rax
+@@ -556,16 +562,16 @@ ENTRY(poly1305_2block_sse2)
+ 	# h0 += (d4 >> 26) * 5
+ 	mov		d4,%rax
+ 	shr		$26,%rax
+-	lea		(%eax,%eax,4),%eax
+-	add		%eax,%ebx
++	lea		(%rax,%rax,4),%rax
++	add		%rax,%rbx
+ 	# h4 = d4 & 0x3ffffff
+ 	mov		d4,%rax
+ 	and		$0x3ffffff,%eax
+ 	mov		%eax,h4
+ 
+ 	# h1 += h0 >> 26
+-	mov		%ebx,%eax
+-	shr		$26,%eax
++	mov		%rbx,%rax
++	shr		$26,%rax
+ 	add		%eax,h1
+ 	# h0 = h0 & 0x3ffffff
+ 	andl		$0x3ffffff,%ebx
+--- a/crypto/testmgr.h
++++ b/crypto/testmgr.h
+@@ -4527,7 +4527,49 @@ static struct hash_testvec poly1305_tv_t
+ 		.psize		= 80,
+ 		.digest		= "\x13\x00\x00\x00\x00\x00\x00\x00"
+ 				  "\x00\x00\x00\x00\x00\x00\x00\x00",
+-	},
++	}, { /* Regression test for overflow in AVX2 implementation */
++		.plaintext	= "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff",
++		.psize		= 300,
++		.digest		= "\xfb\x5e\x96\xd8\x61\xd5\xc7\xc8"
++				  "\x78\xe5\x87\xcc\x2d\x5a\x22\xe1",
++	}
+ };
  
  /*
-@@ -308,10 +305,18 @@ rx_handler_result_t br_handle_frame(stru
- 				goto forward;
- 		}
- 
--		/* Deliver packet to local host only */
--		NF_HOOK(NFPROTO_BRIDGE, NF_BR_LOCAL_IN, dev_net(skb->dev),
--			NULL, skb, skb->dev, NULL, br_handle_local_finish);
--		return RX_HANDLER_CONSUMED;
-+		/* The else clause should be hit when nf_hook():
-+		 *   - returns < 0 (drop/error)
-+		 *   - returns = 0 (stolen/nf_queue)
-+		 * Thus return 1 from the okfn() to signal the skb is ok to pass
-+		 */
-+		if (NF_HOOK(NFPROTO_BRIDGE, NF_BR_LOCAL_IN,
-+			    dev_net(skb->dev), NULL, skb, skb->dev, NULL,
-+			    br_handle_local_finish) == 1) {
-+			return RX_HANDLER_PASS;
-+		} else {
-+			return RX_HANDLER_CONSUMED;
-+		}
- 	}
- 
- forward:
 
 
