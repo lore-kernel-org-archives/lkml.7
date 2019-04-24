@@ -2,283 +2,83 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7BEC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E4EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69ECA218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:34:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556123660;
-	bh=mbmF2UNeBg2YhAYmNWVzwXIB3QlpJnoxZ8loJGe0BOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S8otkD1I2fUrn4vWdEyGR9kUNxYNs0uIAQ1DVhYM8gaYUS9xzB7EHeAdQFWOQ0kOA
-	 wdFN5Gxa6pLWdLmv3cZYT/xuypixjD6F7jfMjukvLvznjwbZawjkdtrDkOErt01VVE
-	 pv6GAr4mk3YKrOkcY9dezza8sROpe3X00wbNMCxQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6A6F1218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WBAubogc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732562AbfDXQeT (ORCPT
+        id S1732575AbfDXQec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbfDXQeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:34:19 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4CCC218B0;
-        Wed, 24 Apr 2019 16:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556123657;
-        bh=mbmF2UNeBg2YhAYmNWVzwXIB3QlpJnoxZ8loJGe0BOw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2Bvs5bBmep3Nd4ahisogZhFpyDOaY/jvTJAqmoED+FEIc2cY2Aofpf+v9H+vlvwYo
-         Qlj1S6KGAdj3mCYoKxMf30DjC//k+spCDAZeFkUxCRKPIZETNoZW3aHKXoxBQD8QzC
-         whHIg0vO5nqz7vQOS6BFzNZJ24JYv8AtdZbVtsgU=
-Date:   Wed, 24 Apr 2019 18:34:15 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Kirill Smelkov <kirr@nexedi.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Yongzhi Pan <panyongzhi@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Vrabel <david.vrabel@citrix.com>,
-        Juergen Gross <jgross@suse.com>,
-        Miklos Szeredi <miklos@szeredi.hu>, Tejun Heo <tj@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Nikolaus Rath <Nikolaus@rath.org>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.0 59/66] fs: stream_open - opener for
- stream-like files so that read and write can run simultaneously without
- deadlock
-Message-ID: <20190424163415.GB21413@kroah.com>
-References: <20190424143341.27665-1-sashal@kernel.org>
- <20190424143341.27665-59-sashal@kernel.org>
+        Wed, 24 Apr 2019 12:34:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36410 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbfDXQeb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:34:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lGoXnAtmE3EO0MnC+xYpo17v/B9z+0QHXX+aUz4EiK8=; b=WBAubogcs7WRqUGGuCKAMEwNT
+        T1ZYMrboK377H8DkOJFPpy7JIPp2SUQqRSpbP7Hh1PQdP7sWJmqnXVpSrchZvU/mURANmjDU9rumf
+        v9OyHMGgth5pZIQFnYChO5HYYHG0+bOju4ZSGLCqjdrCt9KrTkIHPdXpHqvTGj+wlwPWsFIWlWelF
+        +Lj1uh00G0kBl9mXFfs/J+/IqcWMPUEPOOB4auLNlcTEqOJfJtKWlNfjZ49IiX2GG2CAO4ZhCb3Pi
+        Fm2qAuwy+RUUZS68xGtZPfTSbSMBBJNVnUS8G/UoEAONIzqbIubfoB2TYoT6Atznrf+8MJnwQYssD
+        1vIWkF9rw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJKqo-0004sY-0S; Wed, 24 Apr 2019 16:34:26 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 80025203C0A58; Wed, 24 Apr 2019 18:34:24 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 18:34:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        rui.zhang@intel.com, linux-kernel@vger.kernel.org,
+        amit.kachhap@gmail.com, viresh.kumar@linaro.org,
+        javi.merino@kernel.org, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        nicolas.dechesne@linaro.org, bjorn.andersson@linaro.org,
+        dietmar.eggemann@arm.com, Quentin Perret <quentin.perret@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
+Message-ID: <20190424163424.GG4038@hirez.programming.kicks-ass.net>
+References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+ <20190417053626.GA47282@gmail.com>
+ <5CB75FD9.3070207@linaro.org>
+ <20190417182932.GB5140@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190424143341.27665-59-sashal@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190417182932.GB5140@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:33:33AM -0400, Sasha Levin wrote:
-> From: Kirill Smelkov <kirr@nexedi.com>
-> 
-> [ Upstream commit 10dce8af34226d90fa56746a934f8da5dcdba3df ]
-> 
-> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") added
-> locking for file.f_pos access and in particular made concurrent read and
-> write not possible - now both those functions take f_pos lock for the
-> whole run, and so if e.g. a read is blocked waiting for data, write will
-> deadlock waiting for that read to complete.
-> 
-> This caused regression for stream-like files where previously read and
-> write could run simultaneously, but after that patch could not do so
-> anymore. See e.g. commit 581d21a2d02a ("xenbus: fix deadlock on writes
-> to /proc/xen/xenbus") which fixes such regression for particular case of
-> /proc/xen/xenbus.
-> 
-> The patch that added f_pos lock in 2014 did so to guarantee POSIX thread
-> safety for read/write/lseek and added the locking to file descriptors of
-> all regular files. In 2014 that thread-safety problem was not new as it
-> was already discussed earlier in 2006.
-> 
-> However even though 2006'th version of Linus's patch was adding f_pos
-> locking "only for files that are marked seekable with FMODE_LSEEK (thus
-> avoiding the stream-like objects like pipes and sockets)", the 2014
-> version - the one that actually made it into the tree as 9c225f2655e3 -
-> is doing so irregardless of whether a file is seekable or not.
-> 
-> See
-> 
->     https://lore.kernel.org/lkml/53022DB1.4070805@gmail.com/
->     https://lwn.net/Articles/180387
->     https://lwn.net/Articles/180396
-> 
-> for historic context.
-> 
-> The reason that it did so is, probably, that there are many files that
-> are marked non-seekable, but e.g. their read implementation actually
-> depends on knowing current position to correctly handle the read. Some
-> examples:
-> 
-> 	kernel/power/user.c		snapshot_read
-> 	fs/debugfs/file.c		u32_array_read
-> 	fs/fuse/control.c		fuse_conn_waiting_read + ...
-> 	drivers/hwmon/asus_atk0110.c	atk_debugfs_ggrp_read
-> 	arch/s390/hypfs/inode.c		hypfs_read_iter
-> 	...
-> 
-> Despite that, many nonseekable_open users implement read and write with
-> pure stream semantics - they don't depend on passed ppos at all. And for
-> those cases where read could wait for something inside, it creates a
-> situation similar to xenbus - the write could be never made to go until
-> read is done, and read is waiting for some, potentially external, event,
-> for potentially unbounded time -> deadlock.
-> 
-> Besides xenbus, there are 14 such places in the kernel that I've found
-> with semantic patch (see below):
-> 
-> 	drivers/xen/evtchn.c:667:8-24: ERROR: evtchn_fops: .read() can deadlock .write()
-> 	drivers/isdn/capi/capi.c:963:8-24: ERROR: capi_fops: .read() can deadlock .write()
-> 	drivers/input/evdev.c:527:1-17: ERROR: evdev_fops: .read() can deadlock .write()
-> 	drivers/char/pcmcia/cm4000_cs.c:1685:7-23: ERROR: cm4000_fops: .read() can deadlock .write()
-> 	net/rfkill/core.c:1146:8-24: ERROR: rfkill_fops: .read() can deadlock .write()
-> 	drivers/s390/char/fs3270.c:488:1-17: ERROR: fs3270_fops: .read() can deadlock .write()
-> 	drivers/usb/misc/ldusb.c:310:1-17: ERROR: ld_usb_fops: .read() can deadlock .write()
-> 	drivers/hid/uhid.c:635:1-17: ERROR: uhid_fops: .read() can deadlock .write()
-> 	net/batman-adv/icmp_socket.c:80:1-17: ERROR: batadv_fops: .read() can deadlock .write()
-> 	drivers/media/rc/lirc_dev.c:198:1-17: ERROR: lirc_fops: .read() can deadlock .write()
-> 	drivers/leds/uleds.c:77:1-17: ERROR: uleds_fops: .read() can deadlock .write()
-> 	drivers/input/misc/uinput.c:400:1-17: ERROR: uinput_fops: .read() can deadlock .write()
-> 	drivers/infiniband/core/user_mad.c:985:7-23: ERROR: umad_fops: .read() can deadlock .write()
-> 	drivers/gnss/core.c:45:1-17: ERROR: gnss_fops: .read() can deadlock .write()
-> 
-> In addition to the cases above another regression caused by f_pos
-> locking is that now FUSE filesystems that implement open with
-> FOPEN_NONSEEKABLE flag, can no longer implement bidirectional
-> stream-like files - for the same reason as above e.g. read can deadlock
-> write locking on file.f_pos in the kernel.
-> 
-> FUSE's FOPEN_NONSEEKABLE was added in 2008 in a7c1b990f715 ("fuse:
-> implement nonseekable open") to support OSSPD. OSSPD implements /dev/dsp
-> in userspace with FOPEN_NONSEEKABLE flag, with corresponding read and
-> write routines not depending on current position at all, and with both
-> read and write being potentially blocking operations:
-> 
-> See
-> 
->     https://github.com/libfuse/osspd
->     https://lwn.net/Articles/308445
-> 
->     https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1406
->     https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1438-L1477
->     https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1479-L1510
-> 
-> Corresponding libfuse example/test also describes FOPEN_NONSEEKABLE as
-> "somewhat pipe-like files ..." with read handler not using offset.
-> However that test implements only read without write and cannot exercise
-> the deadlock scenario:
-> 
->     https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L124-L131
->     https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L146-L163
->     https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L209-L216
-> 
-> I've actually hit the read vs write deadlock for real while implementing
-> my FUSE filesystem where there is /head/watch file, for which open
-> creates separate bidirectional socket-like stream in between filesystem
-> and its user with both read and write being later performed
-> simultaneously. And there it is semantically not easy to split the
-> stream into two separate read-only and write-only channels:
-> 
->     https://lab.nexedi.com/kirr/wendelin.core/blob/f13aa600/wcfs/wcfs.go#L88-169
-> 
-> Let's fix this regression. The plan is:
-> 
-> 1. We can't change nonseekable_open to include &~FMODE_ATOMIC_POS -
->    doing so would break many in-kernel nonseekable_open users which
->    actually use ppos in read/write handlers.
-> 
-> 2. Add stream_open() to kernel to open stream-like non-seekable file
->    descriptors. Read and write on such file descriptors would never use
->    nor change ppos. And with that property on stream-like files read and
->    write will be running without taking f_pos lock - i.e. read and write
->    could be running simultaneously.
-> 
-> 3. With semantic patch search and convert to stream_open all in-kernel
->    nonseekable_open users for which read and write actually do not
->    depend on ppos and where there is no other methods in file_operations
->    which assume @offset access.
-> 
-> 4. Add FOPEN_STREAM to fs/fuse/ and open in-kernel file-descriptors via
->    steam_open if that bit is present in filesystem open reply.
-> 
->    It was tempting to change fs/fuse/ open handler to use stream_open
->    instead of nonseekable_open on just FOPEN_NONSEEKABLE flags, but
->    grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
->    and in particular GVFS which actually uses offset in its read and
->    write handlers
-> 
-> 	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
-> 	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
-> 	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
-> 	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
-> 
->    so if we would do such a change it will break a real user.
-> 
-> 5. Add stream_open and FOPEN_STREAM handling to stable kernels starting
->    from v3.14+ (the kernel where 9c225f2655 first appeared).
-> 
->    This will allow to patch OSSPD and other FUSE filesystems that
->    provide stream-like files to return FOPEN_STREAM | FOPEN_NONSEEKABLE
->    in their open handler and this way avoid the deadlock on all kernel
->    versions. This should work because fs/fuse/ ignores unknown open
->    flags returned from a filesystem and so passing FOPEN_STREAM to a
->    kernel that is not aware of this flag cannot hurt. In turn the kernel
->    that is not aware of FOPEN_STREAM will be < v3.14 where just
->    FOPEN_NONSEEKABLE is sufficient to implement streams without read vs
->    write deadlock.
-> 
-> This patch adds stream_open, converts /proc/xen/xenbus to it and adds
-> semantic patch to automatically locate in-kernel places that are either
-> required to be converted due to read vs write deadlock, or that are just
-> safe to be converted because read and write do not use ppos and there
-> are no other funky methods in file_operations.
-> 
-> Regarding semantic patch I've verified each generated change manually -
-> that it is correct to convert - and each other nonseekable_open instance
-> left - that it is either not correct to convert there, or that it is not
-> converted due to current stream_open.cocci limitations.
-> 
-> The script also does not convert files that should be valid to convert,
-> but that currently have .llseek = noop_llseek or generic_file_llseek for
-> unknown reason despite file being opened with nonseekable_open (e.g.
-> drivers/input/mousedev.c)
-> 
-> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
-> Cc: Yongzhi Pan <panyongzhi@gmail.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: David Vrabel <david.vrabel@citrix.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Miklos Szeredi <miklos@szeredi.hu>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-> Cc: Nikolaus Rath <Nikolaus@rath.org>
-> Cc: Han-Wen Nienhuys <hanwen@google.com>
-> Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
-> ---
->  drivers/xen/xenbus/xenbus_dev_frontend.c |   4 +-
->  fs/open.c                                |  18 ++
->  fs/read_write.c                          |   5 +-
->  include/linux/fs.h                       |   4 +
->  scripts/coccinelle/api/stream_open.cocci | 363 +++++++++++++++++++++++
->  5 files changed, 389 insertions(+), 5 deletions(-)
->  create mode 100644 scripts/coccinelle/api/stream_open.cocci
+On Wed, Apr 17, 2019 at 08:29:32PM +0200, Ingo Molnar wrote:
+> Assuming PeterZ & Rafael & Quentin doesn't hate the whole thermal load 
+> tracking approach. 
 
-I think there is a follow-on patch for this one as well, that adds the
-proper "stream open" logic to all of the individual locations.
+I seem to remember competing proposals, and have forgotten everything
+about them; the cover letter also didn't have references to them or
+mention them in any way.
 
-But even with that, I don't think this is stable material, it should
-just be for 5.1 and newer kernels.
+As to the averaging and period, I personally prefer a PELT signal with
+the windows lined up, if that really is too short a window, then a PELT
+like signal with a natural multiple of the PELT period would make sense,
+such that the windows still line up nicely.
 
-thanks,
+Mixing different averaging methods and non-aligned windows just makes me
+uncomfortable.
 
-greg k-h
