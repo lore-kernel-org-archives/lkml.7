@@ -2,221 +2,129 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C40FC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4D3C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26736218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2E12148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:09:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="HzduTBnG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fr50Z5vg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbfDXBEZ (ORCPT
+        id S1729026AbfDXBJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:04:25 -0400
-Received: from mail-eopbgr820097.outbound.protection.outlook.com ([40.107.82.97]:53878
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728730AbfDXBEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:04:25 -0400
+        Tue, 23 Apr 2019 21:09:36 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:46973 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbfDXBJe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 21:09:34 -0400
+Received: by mail-vs1-f65.google.com with SMTP id e2so9409375vsc.13
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:09:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fortanix.onmicrosoft.com; s=selector1-fortanix-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=utwkmlKQC8erdyBC6VJdRKPB2R3NS0VzavhXOCF/kfg=;
- b=HzduTBnG5JHlDinTMwwLAFAPQmQ5xFxywW1P9RhDPOp5NC5LfRmMnUTEj4tYgKNvJ/9Qha1Q3T556RtFrhtvA0/gT7jVSk1Mr3Cpkq7tCOlMrNrB2WEAfZohE53cczkTP4rxxbl9+P9WeZfUk2Rv/TfAFT91Psvd+AYMNjz/Mt4=
-Received: from SN6PR11MB3167.namprd11.prod.outlook.com (52.135.109.144) by
- SN6PR11MB3136.namprd11.prod.outlook.com (52.135.127.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.16; Wed, 24 Apr 2019 01:04:21 +0000
-Received: from SN6PR11MB3167.namprd11.prod.outlook.com
- ([fe80::11b:a687:cd42:570d]) by SN6PR11MB3167.namprd11.prod.outlook.com
- ([fe80::11b:a687:cd42:570d%3]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
- 01:04:21 +0000
-From:   Jethro Beekman <jethro@fortanix.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "serge.ayoun@intel.com" <serge.ayoun@intel.com>,
-        "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>,
-        "haitao.huang@intel.com" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kai.svahn@intel.com" <kai.svahn@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "kai.huang@intel.com" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>
-Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
-Thread-Topic: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
-Thread-Index: AQHU9Qombksy6NSZXkyI7LD5DH8ik6ZIwveAgAGrtoCAABATgIAACnGA
-Date:   Wed, 24 Apr 2019 01:04:21 +0000
-Message-ID: <77cface6-dcc4-7e26-9910-ea9d13152531@fortanix.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com>
- <20190422215831.GL1236@linux.intel.com>
- <6dd981a7-0e38-1273-45c1-b2c0d8bf6fed@fortanix.com>
- <20190424002653.GB14422@linux.intel.com>
-In-Reply-To: <20190424002653.GB14422@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR11CA0044.namprd11.prod.outlook.com
- (2603:10b6:a03:80::21) To SN6PR11MB3167.namprd11.prod.outlook.com
- (2603:10b6:805:c4::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jethro@fortanix.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [172.56.39.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 91e57949-4ca4-4dad-1cb0-08d6c850c8da
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(49563074)(7193020);SRVR:SN6PR11MB3136;
-x-ms-traffictypediagnostic: SN6PR11MB3136:
-x-microsoft-antispam-prvs: <SN6PR11MB31368DDA10D3FC6905DEFFCAAA3C0@SN6PR11MB3136.namprd11.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39850400004)(136003)(376002)(346002)(366004)(199004)(189003)(6436002)(36756003)(8936002)(66066001)(6916009)(81166006)(86362001)(31696002)(8676002)(64756008)(102836004)(2906002)(386003)(14454004)(66556008)(53546011)(66446008)(6506007)(81156014)(26005)(186003)(508600001)(7416002)(229853002)(5660300002)(66616009)(71190400001)(73956011)(71200400001)(316002)(93886005)(6486002)(54906003)(256004)(52116002)(76176011)(7736002)(4744005)(66946007)(25786009)(3846002)(6116002)(486006)(66476007)(99286004)(4326008)(476003)(6246003)(97736004)(446003)(2616005)(11346002)(53936002)(6512007)(99936001)(305945005)(68736007)(14444005)(31686004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR11MB3136;H:SN6PR11MB3167.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fortanix.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XTIM4eNwUMC5dsylZKNE+9OCfTLZr6nD+2MsjQB2IubxfG42PFrGkaJ4K+78QJyIc3uEjt2BMy4jcVd1VTs3jiyluLmlArLnHO0s4CmJjHYU8EoJWPnYvejvhhrX6LwsvvoOcrD7p4RtlYBbDFdq+QELc6da2nfBhZg8QDB2x9bmnsC4vw9cSI0NVz28TDYq06ACQ0po5DYgP5phrX39+FFFLaUUEBYPa2A6jDr6vPE2d1zqHoMO7ecrOpHdsHS2OdcMjyuDT4D7n5vLSpqzbMFJbqt8z7cxmzVQ6qvNbLl58fEKSYnWCD1gCZ7Yz+ap9Ax5+pGATURlfKA50xjVzivs4he9C41exan0mS2z9AhlLWG2RVMXZi9twbYpaQQIVk6ZNLyPdkCvWwCncS0i+PUIx5Ih6K5tK5aoRpiyhuc=
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms040101030608070300080909"
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2oqPjMyQseedgcBAwrPIUkhy4f51e0TPWLOI4MD8uyk=;
+        b=fr50Z5vg/i8u/My7dlGlG6B1BLTT67r8Bme8belsC4m2zyb1aH5hxRMEq4CKaj+7oS
+         jpDZjpArU829DDNj/kIYxTe80EE3NspkOMJ2Wr94sBAiIzt8ou6DS2nqmLLFIPyp26cL
+         wf/lZP+7japEB/m4DGZvJ66fmX1sEej3KNesI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2oqPjMyQseedgcBAwrPIUkhy4f51e0TPWLOI4MD8uyk=;
+        b=ezFAVAhnseCQzTxWjS3FflmwQimIFT/WA2eduYkRgmKT99cQWmjn3xZKwnEiOHydxe
+         Iu2RKu8fpZJQus4R56ry/lD0iEKlX+zkK6lNvedGJ5euGCqxDhyvktkPrXxaZiseqpoe
+         TcG6pJp1pz1FIVb1sJihPkrUJsWZK5/gaklvEJXUTyZW58M8/FF7rTB+K3Ubao+3gbmz
+         FzgZwf58F+UVHvVkOT/zaEprQHu1JQDH5/CH2JJVl1Z7Sd+LEutO7ifGxf4+wq5QylBl
+         EzjQOabxmih8niSofT7ayCYg/fEQEgEmwADbryXlrdLAqhNSL4yAOZsvhTmlBkP+2NLx
+         T4Lw==
+X-Gm-Message-State: APjAAAU2T4cFcx/4AKEx3YZfDTARkYq5JpV7BC6bix2nIisoDKoMD5B0
+        UwRk6nhkVyKAJQ6XPPUtyNRvJwZjwvM=
+X-Google-Smtp-Source: APXvYqw3J0M1qtVw2EkGNnJONC+jt1JKQsfG147heah+fQtKB9p2BQTHaQngDEJe+2YAOCbdn5h8Tw==
+X-Received: by 2002:a67:e9c3:: with SMTP id q3mr15520551vso.174.1556068172447;
+        Tue, 23 Apr 2019 18:09:32 -0700 (PDT)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id w69sm6338988vsc.8.2019.04.23.18.09.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 18:09:31 -0700 (PDT)
+Received: by mail-vs1-f41.google.com with SMTP id f15so9412174vsk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:09:31 -0700 (PDT)
+X-Received: by 2002:a67:e258:: with SMTP id w24mr15056333vse.20.1556068170633;
+ Tue, 23 Apr 2019 18:09:30 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: fortanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91e57949-4ca4-4dad-1cb0-08d6c850c8da
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 01:04:21.6052
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: de7becae-4883-43e8-82c7-7dbdbb988ae6
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3136
+References: <20190410221237.160856-1-dianders@chromium.org>
+ <CAD=FV=Wm+T+W=LWTSiwBT3UQWG7YKQdGuL2+BmAFQhk8CYY1mQ@mail.gmail.com> <6e5c9395-51b0-7f28-ec91-de95cb54f58d@rock-chips.com>
+In-Reply-To: <6e5c9395-51b0-7f28-ec91-de95cb54f58d@rock-chips.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 23 Apr 2019 18:09:19 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XuCrymazJDKBYqLezkYkikzGNiv6X0FdzNG0SaR8PuRw@mail.gmail.com>
+Message-ID: <CAD=FV=XuCrymazJDKBYqLezkYkikzGNiv6X0FdzNG0SaR8PuRw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: dw_mmc: Disable SDIO interrupts while suspended to
+ fix suspend/resume
+To:     Shawn Lin <shawn.lin@rock-chips.com>
+Cc:     Jaehoon Chung <jh80.chung@samsung.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>, stable@vger.kernel.org,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------ms040101030608070300080909
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On 2019-04-23 17:26, Sean Christopherson wrote:
-> On Tue, Apr 23, 2019 at 11:29:24PM +0000, Jethro Beekman wrote:
->> On 2019-04-22 14:58, Sean Christopherson wrote:
->>> Now that the core SGX code is approaching stability, I'd like to star=
-t
->>> sending RFCs for the EPC virtualization and KVM bits to hash out that=
- side
->>> of things.  The ACPI crud is the last chunk of code that would requir=
-e
->>> non-trivial changes to the core SGX code for the proposed virtualizat=
-ion
->>> implementation.  I'd strongly prefer to get it out of the way before
->>> sending the KVM RFCs.
->>
->> What kind of changes? Wouldn't KVM just be another consumer of the sam=
-e API
->> used by the driver?
->=20
-> Nope, userspace "only" needs to be able to mmap() arbitrary chunks of E=
-PC.
+On Tue, Apr 23, 2019 at 5:57 PM Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>
+> The intention seems reasonable to me, but just wonder if we need
+> mask/unmask SDIO interrupt when it's never used?
 
-I don't think this is sufficient. Don't you need enclave tracking in=20
-order to support paging?
+I don't think we do.
 
---
-Jethro Beekman | Fortanix
+Specifically "client_sdio_enb" starts out as false.  If nobody ever
+calls dw_mci_enable_sdio_irq() then "client_sdio_enb" will always
+continue to be false.
+
+Now at suspend time we'll call "__dw_mci_enable_sdio_irq".  Because
+"client_sdio_enb" is false then the local variable "enb" will always
+be false.  Sure we'll clear the "SDMMC_INT_SDIO" from the "INTMASK"
+register, but it should already have been cleared so this is a no-op.
+
+...at resume time we'll have a similar situation where
+"client_sdio_enb" is false and thus we'll (again) just clear the
+"SDMMC_INT_SDIO" from the "INTMASK".
+
+I could potentially optimize away the "mci_writel()" if we're not
+changing anything if you're worried about that?
 
 
---------------ms040101030608070300080909
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+> It's the same
+> situation for SDMMC_CLKEN_LOW_PWR that we couldn't stop providing
+> clock for SDIO cards, so I guess we need to check MMC_CAP_SDIO_IRQ
+> as well.
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-Cx8wggUxMIIEGaADAgECAhBdZC9mIseKJlmxx1xn+g00MA0GCSqGSIb3DQEBCwUAMIGXMQsw
-CQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxm
-b3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBD
-bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAeFw0xODA5MTUwMDAw
-MDBaFw0xOTA5MTUyMzU5NTlaMCQxIjAgBgkqhkiG9w0BCQEWE2pldGhyb0Bmb3J0YW5peC5j
-b20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDRQDOQsroKjy2xAQCXLyqryJt4
-Xwj8hcweJCzOnjILKHIoWlOQ0b9yIbFLIWBRt/9zdxlE5ZabDVHnkIyhcVgtU/BA73e78Wx2
-LOObdg0wfs9U2CVRYhz2EPHFjGvkYKihItt69ye91hj1w7RKCrYC8KZGSZ/+sbkJzQdXVy32
-lxmiNEt17GNRebpkJCaFnznd6C2a8tBAS2Fa/UNyFdEs4eoRoYSKswclRhbe81aVhqY2hjcd
-O6puyyaYp5hkmau2UPih6OpRSOhbe6Tuebceg1yvumoVX3OZtGPS1VdQ+p0bxB0RE6gNs140
-ZKUhrvAJDETuGaaQD4A2/6ksLunjAgMBAAGjggHpMIIB5TAfBgNVHSMEGDAWgBSCr2yM+MX+
-lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQUsFUcmGtaJBU7/52LyTYHC/M+LscwDgYDVR0PAQH/
-BAQDAgWgMAwGA1UdEwEB/wQCMAAwIAYDVR0lBBkwFwYIKwYBBQUHAwQGCysGAQQBsjEBAwUC
-MBEGCWCGSAGG+EIBAQQEAwIFIDBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEBATArMCkGCCsG
-AQUFBwIBFh1odHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBL
-hklodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlv
-bmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0
-dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5k
-U2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNv
-bTAeBgNVHREEFzAVgRNqZXRocm9AZm9ydGFuaXguY29tMA0GCSqGSIb3DQEBCwUAA4IBAQB6
-v3tFEUSGv9+yY4wUjvcMyz3126nJrX5LkfEvrnCEpEiImECuoYvxOYNLYYynell7BQGtTaZg
-shMfDvwpy2isoi3w1AWAfbn6npnSKLzu0BMRvcCPWY8VPmePPizTqXoPkLwgTJfSaWkxMP1u
-rfL9S5NeRdkjwjHklX5IWuwwDu1hsKVZrxSSY2unCtvq67UHWz+z6rG1JQrP2YDfb98xun3y
-eLBNe/LFBNnGISbkT5q6D+e5c0bgzoH9nH4bsw3t8aDqJTfT3BqQdWr4pF05ODzzeOmEqeYE
-qGlD9hIL2AbmTZLjunAnARr6Fv7Sfqt23ptsGkmoZ9ZQNjT3TlwvMIIF5jCCA86gAwIBAgIQ
-apvhODv/K2ufAdXZuKdSVjANBgkqhkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNV
-BAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09N
-T0RPIENBIExpbWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRo
-b3JpdHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMCR0Ix
-GzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UE
-ChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
-ggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYhUPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9
-NEjk6vW7rN/5sYFLIP1of3l0NKZ6fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+Ul
-NEQ1/5ErCsHq9x9aU/x1KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2
-qvGlnHJvijjI03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZ
-jrqck39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMBAAGj
-ggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNVHQ4EFgQUgq9s
-jPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1UdEwEB/wQIMAYBAf8CAQAw
-EQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9jcmwuY29tb2Rv
-Y2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEB
-BGUwYzA7BggrBgEFBQcwAoYvaHR0cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRk
-VHJ1c3RDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkq
-hkiG9w0BAQwFAAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+js
-QgwRGiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDcZoFD
-7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwpWZT89RY0wpJO
-+2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNmNppI4ZNMUH4Tam85S1j6
-E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade2022O/tUU1gb4jfWCcyvB8czm12F
-gX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztveBdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiO
-SEmIDsS5N5w/8IW1Hva5hEFy6fDAfd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz
-/W3JlHaeI5iKFn4UJu1/cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSa
-m9V1niiCfOBe2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpO
-UvxhcsjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIxggQ1MIIEMQIBATCB
-rDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
-BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9E
-TyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEF1kL2Yi
-x4omWbHHXGf6DTQwDQYJYIZIAWUDBAIBBQCgggJZMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
-BwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDQyNDAxMDQxNVowLwYJKoZIhvcNAQkEMSIEINQIbBBm
-/MAG5IWbROFIcBeavxP9nF30trk7Xbyc+A3SMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUD
-BAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcN
-AwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwgb0GCSsGAQQBgjcQBDGBrzCBrDCBlzEL
-MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
-Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0Eg
-Q2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEF1kL2Yix4omWbHH
-XGf6DTQwgb8GCyqGSIb3DQEJEAILMYGvoIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMS
-R3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8g
-Q0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24g
-YW5kIFNlY3VyZSBFbWFpbCBDQQIQXWQvZiLHiiZZscdcZ/oNNDANBgkqhkiG9w0BAQEFAASC
-AQCJcqGSDeINEkx5A1hqkr4URFbou2c3F2Dx7lDa1Byz35TEHL+3TVZbaXu4HAyKL+8AG2ex
-z5bulcRYnGYmAEM0DSb4IHPHSKekuD68QvEyJWas5Pk7nfmzvIKz9YHWqqAR8yTKjX+q1mww
-uAafTEMt2NBHQ/fSWWQGYrcg2K7qEHQosrgv4PRPDQ4VWzPKspxovLHvH39QW6hOHagDG/um
-LrNpzfQMbVkgR0s+w44zMOphx1i3JyKNzvuLzxftVuWzd6NPPt3uo+JJCIwcHzhqMr3SmNcM
-oSzMGqYIM/EjrKLaEGzjM+4PkzR8fCDN7Nn6/h/q95GA6nTudWqliBz/AAAAAAAA
+I think it might be a slightly different situation though.  In this
+case I believe it's not just a problem with clock stoppage.  I believe
+the problem is that the interrupt will be passed to the SDIO device
+driver right away and that'll call back into dw_mmc.  dw_mmc is just
+not in a state to handle it until we've more fully resumed things.
 
---------------ms040101030608070300080909--
+In any case with my patch the only way we'd ever end up unmasking the
+SDIO IRQ here would be if dw_mci_enable_sdio_irq() was called.  That
+will only happen if there's an SDIO card plugged in.
+
+
+-Doug
