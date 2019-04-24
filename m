@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131D7C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC96C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC673218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 690F8218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfDXDYA (ORCPT
+        id S1729572AbfDXDX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 23:24:00 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7246 "EHLO huawei.com"
+        Tue, 23 Apr 2019 23:23:59 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7244 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729201AbfDXDXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729219AbfDXDXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Apr 2019 23:23:30 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6F3BD881AA3FA3EF8DEF;
+        by Forcepoint Email with ESMTP id 738425A1615C32DD2932;
         Wed, 24 Apr 2019 11:23:25 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Apr 2019 11:23:16 +0800
+ 14.3.439.0; Wed, 24 Apr 2019 11:23:17 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <nhorman@redhat.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 02/12] net: hns3: fix for TX clean num when cleaning TX BD
-Date:   Wed, 24 Apr 2019 11:21:57 +0800
-Message-ID: <1556076127-61459-3-git-send-email-tanhuazhong@huawei.com>
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>
+Subject: [PATCH net-next 05/12] net: hns3: use atomic_t replace u32 for arq's count
+Date:   Wed, 24 Apr 2019 11:22:00 +0800
+Message-ID: <1556076127-61459-6-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556076127-61459-1-git-send-email-tanhuazhong@huawei.com>
 References: <1556076127-61459-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,50 +47,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+Since irq handler and mailbox task will both update arq's count,
+so arq's count should use atomic_t instead of u32, otherwise
+its value may go wrong finally.
 
-hns3_desc_unused() returns how many BD have been cleaned, but new
-buffer has not been attached to them. The register of
-HNS3_RING_RX_RING_FBDNUM_REG returns how many BD need allocating new
-buffer to or need to cleaned. So the remaining BD need to be clean
-is HNS3_RING_RX_RING_FBDNUM_REG - hns3_desc_unused().
-
-Also, new buffer can not attach to the pending BD when the last BD is
-not handled, because memcpy has not been done on the first pending BD.
-
-This patch fixes by subtracting the pending BD num from unused_count
-after 'HNS3_RING_RX_RING_FBDNUM_REG - unused_count' is used to calculate
-the BD bum need to be clean.
-
-Fixes: e55970950556 ("net: hns3: Add handling of GRO Pkts not fully RX'ed in NAPI poll")
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
+Fixes: 07a0556a3a73 ("net: hns3: Changes to support ARQ(Asynchronous Receive Queue)")
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 7 ++++---
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 9fdc87e..6695b94 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2874,7 +2874,7 @@ int hns3_clean_rx_ring(
- {
- #define RCB_NOF_ALLOC_RX_BUFF_ONCE 16
- 	int recv_pkts, recv_bds, clean_count, err;
--	int unused_count = hns3_desc_unused(ring) - ring->pending_buf;
-+	int unused_count = hns3_desc_unused(ring);
- 	struct sk_buff *skb = ring->skb;
- 	int num;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+index 360463a..8b6191f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+@@ -111,7 +111,7 @@ struct hclgevf_mbx_arq_ring {
+ 	struct hclgevf_dev *hdev;
+ 	u32 head;
+ 	u32 tail;
+-	u32 count;
++	atomic_t count;
+ 	u16 msg_q[HCLGE_MBX_MAX_ARQ_MSG_NUM][HCLGE_MBX_MAX_ARQ_MSG_SIZE];
+ };
  
-@@ -2883,6 +2883,7 @@ int hns3_clean_rx_ring(
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 1b428d4..71f356f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -340,7 +340,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	hdev->arq.hdev = hdev;
+ 	hdev->arq.head = 0;
+ 	hdev->arq.tail = 0;
+-	hdev->arq.count = 0;
++	atomic_set(&hdev->arq.count, 0);
+ 	hdev->hw.cmq.csq.next_to_clean = 0;
+ 	hdev->hw.cmq.csq.next_to_use = 0;
+ 	hdev->hw.cmq.crq.next_to_clean = 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+index eb56287..3c22639 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+@@ -212,7 +212,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			/* we will drop the async msg if we find ARQ as full
+ 			 * and continue with next message
+ 			 */
+-			if (hdev->arq.count >= HCLGE_MBX_MAX_ARQ_MSG_NUM) {
++			if (atomic_read(&hdev->arq.count) >=
++			    HCLGE_MBX_MAX_ARQ_MSG_NUM) {
+ 				dev_warn(&hdev->pdev->dev,
+ 					 "Async Q full, dropping msg(%d)\n",
+ 					 req->msg[1]);
+@@ -224,7 +225,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			memcpy(&msg_q[0], req->msg,
+ 			       HCLGE_MBX_MAX_ARQ_MSG_SIZE * sizeof(u16));
+ 			hclge_mbx_tail_ptr_move_arq(hdev->arq);
+-			hdev->arq.count++;
++			atomic_inc(&hdev->arq.count);
  
- 	recv_pkts = 0, recv_bds = 0, clean_count = 0;
- 	num -= unused_count;
-+	unused_count -= ring->pending_buf;
+ 			hclgevf_mbx_task_schedule(hdev);
  
- 	while (recv_pkts < budget && recv_bds < num) {
- 		/* Reuse or realloc buffers */
+@@ -317,7 +318,7 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 		}
+ 
+ 		hclge_mbx_head_ptr_move_arq(hdev->arq);
+-		hdev->arq.count--;
++		atomic_dec(&hdev->arq.count);
+ 		msg_q = hdev->arq.msg_q[hdev->arq.head];
+ 	}
+ }
 -- 
 2.7.4
 
