@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009E1C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B82C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B2F2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E63F2089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128262;
-	bh=RztbIozVo0PRzL2pERKy1Xxzfw+CJNXeJBMpxDAGFkc=;
+	s=default; t=1556128272;
+	bh=wQNxBriBnJEwg9qJRwGyb2kB0n3ar/kHJ1ovso8pRWw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zPxD7BbkRGMUswu9OAgUepdqhtrG2FZ0GumJRFLlQmEz/iDxOqojtxbsiMyHLsXyD
-	 MnqbswMiUBQcYJEeJqRFnmQXlNCXX25yyBmIoZcdWcdlgsa5OYWddTMGfSy7OnG8tk
-	 MLWkEZTKlGgwGkf509KtHru+YBLavzdr9gU6kJiQ=
+	b=yeGcTEkhJHw0oaQ6hmgauRmnM21xf8URpPK6T9n/QIJHECX1zGbFgOPzUEufhw0vc
+	 A5o+V31s/0xDzLaIgq1zYk9xEsRGsAfqRWnpD8CBQ7efkbzkFmDg2gHOAyDW51y1DA
+	 cffX/4FOPBSTnk+iizEL1Io1FpME0tegHLmvuwLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390328AbfDXR3E (ORCPT
+        id S2391058AbfDXRvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:29:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55324 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:51:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390324AbfDXR3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:29:02 -0400
+        id S2390307AbfDXR24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:28:56 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 379AF2054F;
-        Wed, 24 Apr 2019 17:29:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B04DC206BA;
+        Wed, 24 Apr 2019 17:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126940;
-        bh=RztbIozVo0PRzL2pERKy1Xxzfw+CJNXeJBMpxDAGFkc=;
+        s=default; t=1556126935;
+        bh=wQNxBriBnJEwg9qJRwGyb2kB0n3ar/kHJ1ovso8pRWw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a38Zd8kAOgydHxzzSwZ/C95sEoCzvQkTI+8q1WpOysZGvFIa92xOAUwVQhQbhswCz
-         6pocnwXvShALvLlaBswDE22LqAZPl2ben13Aa4eRFYB4RsReW/xBe7BSUf51xN0Pei
-         b000qsvdpl2DRvKYKkpwpuDkmj0SyEhH7VPMxXFw=
+        b=uVyUuQukXsATdjOCKrk0baL9Z3G9+QfzdhUBBR2kFBIJ2gqbw30PiC5AZpYiFsDdi
+         R1yvNq0oEb5bkrBY32VW30cTmSA2NYfi/y+DZztaIztsyFVWBH/Bf1Dpp90ASAk9Tp
+         oYKjh2TGLMPG8UyRXOMkpcDKlTGl4nM3+XBN5mUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+cf4f2b6c24aff0a3edf6@syzkaller.appspotmail.com,
+        syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com,
         Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.14 29/70] staging: comedi: ni_usb6501: Fix use of uninitialized mutex
-Date:   Wed, 24 Apr 2019 19:09:49 +0200
-Message-Id: <20190424170911.083861481@linuxfoundation.org>
+Subject: [PATCH 4.14 27/70] staging: comedi: vmk80xx: Fix use of uninitialized semaphore
+Date:   Wed, 24 Apr 2019 19:09:47 +0200
+Message-Id: <20190424170910.908365874@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -62,33 +62,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 660cf4ce9d0f3497cc7456eaa6d74c8b71d6282c upstream.
+commit 08b7c2f9208f0e2a32159e4e7a4831b7adb10a3e upstream.
 
-If `ni6501_auto_attach()` returns an error, the core comedi module code
-will call `ni6501_detach()` to clean up.  If `ni6501_auto_attach()`
-successfully allocated the comedi device private data, `ni6501_detach()`
-assumes that a `struct mutex mut` contained in the private data has been
-initialized and uses it.  Unfortunately, there are a couple of places
-where `ni6501_auto_attach()` can return an error after allocating the
-device private data but before initializing the mutex, so this
-assumption is invalid.  Fix it by initializing the mutex just after
-allocating the private data in `ni6501_auto_attach()` before any other
-errors can be retturned.  Also move the call to `usb_set_intfdata()`
-just to keep the code a bit neater (either position for the call is
-fine).
+If `vmk80xx_auto_attach()` returns an error, the core comedi module code
+will call `vmk80xx_detach()` to clean up.  If `vmk80xx_auto_attach()`
+successfully allocated the comedi device private data,
+`vmk80xx_detach()` assumes that a `struct semaphore limit_sem` contained
+in the private data has been initialized and uses it.  Unfortunately,
+there are a couple of places where `vmk80xx_auto_attach()` can return an
+error after allocating the device private data but before initializing
+the semaphore, so this assumption is invalid.  Fix it by initializing
+the semaphore just after allocating the private data in
+`vmk80xx_auto_attach()` before any other errors can be returned.
 
 I believe this was the cause of the following syzbot crash report
-<https://syzkaller.appspot.com/bug?extid=cf4f2b6c24aff0a3edf6>:
+<https://syzkaller.appspot.com/bug?extid=54c2f58f15fe6876b6ad>:
 
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=10cf, idProduct=8068, bcdDevice=e6.8d
 usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
 usb 1-1: config 0 descriptor??
-usb 1-1: string descriptor 0 read error: -71
-comedi comedi0: Wrong number of endpoints
-ni6501 1-1:0.233: driver 'ni6501' failed to auto-configure device.
+vmk80xx 1-1:0.117: driver 'vmk80xx' failed to auto-configure device.
 INFO: trying to register non-static key.
 the code is fine but needs lockdep annotation.
 turning off the locking correctness validator.
-CPU: 0 PID: 585 Comm: kworker/0:3 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Workqueue: usb_hub_wq hub_event
 Call Trace:
@@ -98,9 +96,10 @@ Call Trace:
  register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
  __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
  lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
- __mutex_lock_common kernel/locking/mutex.c:925 [inline]
- __mutex_lock+0xfe/0x12b0 kernel/locking/mutex.c:1072
- ni6501_detach+0x5b/0x110 drivers/staging/comedi/drivers/ni_usb6501.c:567
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
+ down+0x12/0x80 kernel/locking/semaphore.c:58
+ vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
  comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
  comedi_device_cleanup.part.0+0x68/0x140 drivers/staging/comedi/comedi_fops.c:156
  comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
@@ -136,36 +135,34 @@ Call Trace:
  kthread+0x313/0x420 kernel/kthread.c:253
  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-Reported-by: syzbot+cf4f2b6c24aff0a3edf6@syzkaller.appspotmail.com
+Reported-by: syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com
 Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/ni_usb6501.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/staging/comedi/drivers/vmk80xx.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/comedi/drivers/ni_usb6501.c
-+++ b/drivers/staging/comedi/drivers/ni_usb6501.c
-@@ -527,6 +527,9 @@ static int ni6501_auto_attach(struct com
- 	if (!devpriv)
- 		return -ENOMEM;
+--- a/drivers/staging/comedi/drivers/vmk80xx.c
++++ b/drivers/staging/comedi/drivers/vmk80xx.c
+@@ -809,6 +809,8 @@ static int vmk80xx_auto_attach(struct co
  
-+	mutex_init(&devpriv->mut);
-+	usb_set_intfdata(intf, devpriv);
+ 	devpriv->model = board->model;
+ 
++	sema_init(&devpriv->limit_sem, 8);
 +
- 	ret = ni6501_find_endpoints(dev);
+ 	ret = vmk80xx_find_usb_endpoints(dev);
  	if (ret)
  		return ret;
-@@ -535,9 +538,6 @@ static int ni6501_auto_attach(struct com
+@@ -817,8 +819,6 @@ static int vmk80xx_auto_attach(struct co
  	if (ret)
  		return ret;
  
--	mutex_init(&devpriv->mut);
--	usb_set_intfdata(intf, devpriv);
+-	sema_init(&devpriv->limit_sem, 8);
 -
- 	ret = comedi_alloc_subdevices(dev, 2);
- 	if (ret)
- 		return ret;
+ 	usb_set_intfdata(intf, devpriv);
+ 
+ 	if (devpriv->model == VMK8055_MODEL)
 
 
