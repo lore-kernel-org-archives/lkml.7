@@ -2,88 +2,155 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44043C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71938C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1189D2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:22:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HNx8m+hR"
+	by mail.kernel.org (Postfix) with ESMTP id 4731F218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfDXAW0 (ORCPT
+        id S1728947AbfDXAWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 20:22:26 -0400
-Received: from ozlabs.org ([203.11.71.1]:59889 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728470AbfDXAWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 20:22:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pgxV1N2yz9sMQ;
-        Wed, 24 Apr 2019 10:22:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1556065343;
-        bh=FYUxV9LLa82IDHDXai28iy34GpB20HFOrlNcpWqR7Gs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HNx8m+hRFHDhjizE4LX7CvLXghzP4Z/Wa8HeZ8Uo/dQioanuhD9xQb7S5p+wFfWq5
-         YGAZHKq57paP+isbd/swTX90Nb9itola3gxz+9499xe3aP0bSudtP+oU1bQRV3k1Gn
-         okEHlQxziRcOFqFTg5LtFWOqAmdPvUQZ1jw4qSI5XEXHa2MclvnF8gs9lKdVrLDAkF
-         E8pg5NkC9uWJyuBjVmv8CUQ9DjLMXR+bp/Hkoy5iglOIVPL827CUSSxbYr3RKIdLdI
-         sC89hnsaQpOnFpnvlVPVTdTOCpDDkDreO9Va4AOS9WTztc7yb2zFStxww/gOPQhzhg
-         UCuPRsQE551bA==
-Date:   Wed, 24 Apr 2019 10:22:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Deepak Rawat <drawat@vmware.com>
-Subject: linux-next: Signed-off-by missing for commit in the drm tree
-Message-ID: <20190424102219.48cfdfe2@canb.auug.org.au>
+        Tue, 23 Apr 2019 20:22:53 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:39771 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726339AbfDXAWx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 20:22:53 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R281e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TQ5BmiI_1556065358;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TQ5BmiI_1556065358)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 24 Apr 2019 08:22:48 +0800
+Subject: Re: [v2 PATCH] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     vbabka@suse.cz, rientjes@google.com, kirill@shutemov.name,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1556037781-57869-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190423175252.GP25106@dhcp22.suse.cz>
+ <6004f688-99d8-3f8c-a106-66ee52c1f0ee@linux.alibaba.com>
+Message-ID: <dace50e0-b72c-33db-5624-bf7449552ff8@linux.alibaba.com>
+Date:   Tue, 23 Apr 2019 17:22:36 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/g3GEeX/qXqHGhYmsJqu=kcG"; protocol="application/pgp-signature"
+In-Reply-To: <6004f688-99d8-3f8c-a106-66ee52c1f0ee@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/g3GEeX/qXqHGhYmsJqu=kcG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Commit
+On 4/23/19 11:34 AM, Yang Shi wrote:
+>
+>
+> On 4/23/19 10:52 AM, Michal Hocko wrote:
+>> On Wed 24-04-19 00:43:01, Yang Shi wrote:
+>>> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for 
+>>> each
+>>> vma") introduced THPeligible bit for processes' smaps. But, when 
+>>> checking
+>>> the eligibility for shmem vma, __transparent_hugepage_enabled() is
+>>> called to override the result from shmem_huge_enabled().  It may result
+>>> in the anonymous vma's THP flag override shmem's.  For example, 
+>>> running a
+>>> simple test which create THP for shmem, but with anonymous THP 
+>>> disabled,
+>>> when reading the process's smaps, it may show:
+>>>
+>>> 7fc92ec00000-7fc92f000000 rw-s 00000000 00:14 27764 /dev/shm/test
+>>> Size:               4096 kB
+>>> ...
+>>> [snip]
+>>> ...
+>>> ShmemPmdMapped:     4096 kB
+>>> ...
+>>> [snip]
+>>> ...
+>>> THPeligible:    0
+>>>
+>>> And, /proc/meminfo does show THP allocated and PMD mapped too:
+>>>
+>>> ShmemHugePages:     4096 kB
+>>> ShmemPmdMapped:     4096 kB
+>>>
+>>> This doesn't make too much sense.  The anonymous THP flag should not
+>>> intervene shmem THP.  Calling shmem_huge_enabled() with checking
+>>> MMF_DISABLE_THP sounds good enough.  And, we could skip stack and
+>>> dax vma check since we already checked if the vma is shmem already.
+>> Kirill, can we get a confirmation that this is really intended behavior
+>> rather than an omission please? Is this documented? What is a global
+>> knob to simply disable THP system wise?
+>>
+>> I have to say that the THP tuning API is one giant mess :/
+>>
+>> Btw. this patch also seem to fix khugepaged behavior because it 
+>> previously
+>> ignored both VM_NOHUGEPAGE and MMF_DISABLE_THP.
 
-  a9f58c456e9d ("drm/vmwgfx: Be more restrictive when dirtying resources")
+Second look shows this is not ignored. hugepage_vma_check() would check 
+this for both anonymous vma and shmem vma before scanning. It is called 
+before shmem_huge_enabled().
 
-is missing a Signed-off-by from its committer.
+>
+> Aha, I didn't notice this. It looks we need separate the patch to fix 
+> that khugepaged problem for both 5.1-rc and LTS.
+>
+>>
+>>> Fixes: 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each 
+>>> vma")
+>>> Cc: Michal Hocko <mhocko@suse.com>
+>>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>>> Cc: David Rientjes <rientjes@google.com>
+>>> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>> ---
+>>> v2: Check VM_NOHUGEPAGE per Michal Hocko
+>>>
+>>>   mm/huge_memory.c | 4 ++--
+>>>   mm/shmem.c       | 3 +++
+>>>   2 files changed, 5 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>> index 165ea46..5881e82 100644
+>>> --- a/mm/huge_memory.c
+>>> +++ b/mm/huge_memory.c
+>>> @@ -67,8 +67,8 @@ bool transparent_hugepage_enabled(struct 
+>>> vm_area_struct *vma)
+>>>   {
+>>>       if (vma_is_anonymous(vma))
+>>>           return __transparent_hugepage_enabled(vma);
+>>> -    if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
+>>> -        return __transparent_hugepage_enabled(vma);
+>>> +    if (vma_is_shmem(vma))
+>>> +        return shmem_huge_enabled(vma);
+>>>         return false;
+>>>   }
+>>> diff --git a/mm/shmem.c b/mm/shmem.c
+>>> index 2275a0f..6f09a31 100644
+>>> --- a/mm/shmem.c
+>>> +++ b/mm/shmem.c
+>>> @@ -3873,6 +3873,9 @@ bool shmem_huge_enabled(struct vm_area_struct 
+>>> *vma)
+>>>       loff_t i_size;
+>>>       pgoff_t off;
+>>>   +    if ((vma->vm_flags & VM_NOHUGEPAGE) ||
+>>> +        test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
+>>> +        return false;
+>>>       if (shmem_huge == SHMEM_HUGE_FORCE)
+>>>           return true;
+>>>       if (shmem_huge == SHMEM_HUGE_DENY)
+>>> -- 
+>>> 1.8.3.1
+>>>
+>
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/g3GEeX/qXqHGhYmsJqu=kcG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/rDsACgkQAVBC80lX
-0GzuPwf/WGX6T5ueRjKbZwlz5mla7w6r7UgwAaZKnzJQvnLU4mud4CCMg3cL2txY
-e3uPutpytd6xUGe9Id+dyJ9H4MwgNqLuttpdXenK/dfhIi4ng4PfJKQstXD9Vvtu
-EL0ZeKTA+M+oddlg3X2Fme3ul9aAYAU7KI1LST332HK8fqYfvC2dNRNa3CxjQclI
-hwnRFVxeawpOQj2beGCDZTdKTSTTqMOkrWEUUkAkORlorf8ONcDcPjNhh8W63kmn
-hWei6mVQXUinemmtInq7k1hY2s6Ve0Vhq5Qekm55vuUQXMKyrv71fB/cOx73ipkY
-pBkZatOAkFuQ9U5qCCARznPONU/btA==
-=swKr
------END PGP SIGNATURE-----
-
---Sig_/g3GEeX/qXqHGhYmsJqu=kcG--
