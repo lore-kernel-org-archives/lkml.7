@@ -2,55 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ED8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522FEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801192190A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032A321904
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126606;
-	bh=Vx3vSiKIRIkOOkxy5gNdBUTJe6pwOfL+aAMDiZtyvIw=;
+	s=default; t=1556126611;
+	bh=2SErRLCqs0eCxuxqFUVpnt/ed7rfWF9J62ePGQWR4as=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RqFGHQhqsDVfTsQpNdY6qmcP4n9zJTEc2QYqKBzmdTBRhKCN3D8zM/G1N63oJGyJp
-	 GBGoiMGFYE75y8Y8mBj0Q5hC51bf1CIDtet3/ZK0ZpVuvcZXfUV7MqeAPFRezhZNn4
-	 mj7291R3gVHNGosl+zeTnyHKeUk8epjElCQognZk=
+	b=U2CAAxv0qyonpMT+zESULZfdjsE4y7/WP1Yv+gL6AQOkfMUuh1JKvjA153LSZ4hQX
+	 vUZQ8iCVPuBllbnELwyr/RtNFbFmv4ev3EdpCk/n0zBC91EzZspo1a5kGquIx2t5yo
+	 CDGH5PdzHSENLrpcPT0UEf3pVT8gqikCpPY3DMVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389694AbfDXRXZ (ORCPT
+        id S2389706AbfDXRX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49030 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:23:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389682AbfDXRXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:23:21 -0400
+        id S2389682AbfDXRX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:23:26 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBCA7205ED;
-        Wed, 24 Apr 2019 17:23:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CEA5205ED;
+        Wed, 24 Apr 2019 17:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126600;
-        bh=Vx3vSiKIRIkOOkxy5gNdBUTJe6pwOfL+aAMDiZtyvIw=;
+        s=default; t=1556126606;
+        bh=2SErRLCqs0eCxuxqFUVpnt/ed7rfWF9J62ePGQWR4as=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mhwdlrFxrhI5l5sm7invU1XZ450b/YgVBWbfFYS8VhZjILWin34wSLC/6YuFaKw/i
-         K0e6TFv4JayZtBmUqlBvV5o/NAx7+QGb2s7H8EJwWef2LdVQV6ENEoRv698wvepUed
-         wUmyjznzqr9N0n5Nw12kAPQDKjxUm52l/nbpGnlI=
+        b=hwrNJ8nUNg4p6tCT6tGDiae7dIBNZYjMRLbkEP+BNac/t72g1POVXmZAp4km2qFAF
+         WB2BDE0D7cPP3E5LU4e/iERgbVJI3P/BQf1zJruWVkcU1GjpcejTm0xn5cMioUUqIG
+         yd4a3t7ugy1e28wq7LXW0+cQP1NB0e5B+aD/d53w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 164/168] Revert "kbuild: use -Oz instead of -Os when using clang"
-Date:   Wed, 24 Apr 2019 19:10:08 +0200
-Message-Id: <20190424170933.006766948@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.4 166/168] device_cgroup: fix RCU imbalance in error case
+Date:   Wed, 24 Apr 2019 19:10:10 +0200
+Message-Id: <20190424170933.101609252@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -63,40 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit a75bb4eb9e565b9f5115e2e8c07377ce32cbe69a upstream.
+From: Jann Horn <jannh@google.com>
 
-The clang option -Oz enables *aggressive* optimization for size,
-which doesn't necessarily result in smaller images, but can have
-negative impact on performance. Switch back to the less aggressive
--Os.
+commit 0fcc4c8c044e117ac126ab6df4138ea9a67fa2a9 upstream.
 
-This reverts commit 6748cb3c299de1ffbe56733647b01dbcc398c419.
+When dev_exception_add() returns an error (due to a failed memory
+allocation), make sure that we move the RCU preemption count back to where
+it was before we were called. We dropped the RCU read lock inside the loop
+body, so we can't just "break".
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+sparse complains about this, too:
+
+$ make -s C=2 security/device_cgroup.o
+./include/linux/rcupdate.h:647:9: warning: context imbalance in
+'propagate_exception' - unexpected unlock
+
+Fixes: d591fb56618f ("device_cgroup: simplify cgroup tree walk in propagate_exception()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jann Horn <jannh@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- Makefile | 2 +-
+ security/device_cgroup.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 7bf3fb717921..cc621fbe6c62 100644
---- a/Makefile
-+++ b/Makefile
-@@ -639,7 +639,7 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, int-in-bool-context)
- KBUILD_CFLAGS	+= $(call cc-disable-warning, attribute-alias)
- 
- ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
--KBUILD_CFLAGS	+= $(call cc-option,-Oz,-Os)
-+KBUILD_CFLAGS	+= -Os
- else
- ifdef CONFIG_PROFILE_ALL_BRANCHES
- KBUILD_CFLAGS	+= -O2
--- 
-2.19.1
-
+--- a/security/device_cgroup.c
++++ b/security/device_cgroup.c
+@@ -568,7 +568,7 @@ static int propagate_exception(struct de
+ 		    devcg->behavior == DEVCG_DEFAULT_ALLOW) {
+ 			rc = dev_exception_add(devcg, ex);
+ 			if (rc)
+-				break;
++				return rc;
+ 		} else {
+ 			/*
+ 			 * in the other possible cases:
 
 
