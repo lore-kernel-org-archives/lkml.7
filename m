@@ -2,129 +2,138 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2A0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C49C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0431C21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C061A20811
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="MtnKvHTC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ss4ONKJ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbfDXNH5 (ORCPT
+        id S1730267AbfDXNNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:07:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35260 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729107AbfDXNH4 (ORCPT
+        Wed, 24 Apr 2019 09:13:23 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41307 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728842AbfDXNNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:07:56 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y197so5007598wmd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 06:07:55 -0700 (PDT)
+        Wed, 24 Apr 2019 09:13:23 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t30so14632823lfd.8
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 06:13:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=efC0d41bcdCEPg2sED1pE6Lj8uSJvrJgvXmS3cUlyUg=;
-        b=MtnKvHTCfXNM6o0Xisy931EBHm/M5lxAMjgBSsm5QneZzWcgqB/9ei5sPkiCPbMsdI
-         jabCrvWJrE5dEPorzVRRGf7e1aYoHOUXWu62s+tjlbmmt9YfM9Ys8fJQY5C1nhcsPYh8
-         9pQLXTJTEhNvnXimRrd/cUCHm5zqU1v6KRycWpgXMVgLo/YBspuuIweQLfep+nGvu4Q9
-         GANyJakFdPpSIJz7KWJZ4E+CiLfdB9AbQ8O0RHDtjdNk/aaLCPpcCIrqd64yQvEhFiXU
-         a0YBzEMlkHreYotLSrTCZEvL8uICSxUhWbAK7zbhlps0BNjag9ccxOkJoLwmwLLuOtO5
-         t/kg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ARgXNmSzkKlmq4ccihD4uxhUoE7bnpwP+o6PZbdz4R0=;
+        b=ss4ONKJ79o3GzVKbigUF93RJvnKdaG491YqDeMvXVGw/UkrtWyALvJ6F6xOWikFL+R
+         Y+acTn9EtArMjWKysAhCHgnioWVlcq3Vsci7vxU61o+l+wiEXPMEYFO6qaLazINPyrBY
+         U3nynF35GrshzIyjv07nILyDhbidMc+8ggR2+5RQFLMEfafIP6x6YKkphPH48WxGsvp7
+         Y69nXi3TsNyNhYpSbHlp10JEx1ToBAGR7WxcyPnjyIQ6cYbUlpwM4oy6YutA/SJl9etg
+         PTAT8YlaDi7NVPsis9STYT8alJAg5GFbnS/8Bpox3VEvkPSswnActSSXhvJWbEsVaynz
+         Lkeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=efC0d41bcdCEPg2sED1pE6Lj8uSJvrJgvXmS3cUlyUg=;
-        b=sTSLYiM6QWAu1V4irkwW7ODkXNp0PENLTUiygLkM++Dsvv7Phmd/8NOWjRr7uSWKQZ
-         FSeMk3FGAEGBad5/rZfD5H4t2/cx3iV9lSt/m/ehPaZJi4Ld76zOQNXELxYBra/V+N8L
-         EuI0L+mIqJ3MPiOWIiKwbcN9ha4WaXbBlBLDUNE4ITJRZgDbnlGd4aKvJoRQZN9PvUTY
-         zlttfld5blXKelt2+/VKvDEaC6aM7HTNEt9YpfhWAxnK2q2k/ZJi3FZVIYAfedY/3Ux8
-         w1gvAUcyOlFGFFFt+HbcDzUorilzKgb+oWujXReu2KKp5Ui/9/C4VddjVh2Md+yb9VBi
-         KUvg==
-X-Gm-Message-State: APjAAAX1RHMxt/gdPvWYgvmUc9vqZ1jP6PYvfRR34qKZYZx0D1gHxYm7
-        TJzHF2kv+VYYzRSnfWxZcg4X1g==
-X-Google-Smtp-Source: APXvYqxSqhzZdQM+LkndxvGGQ5P9BUBal4exkleRgtWHfaGFuiHITNNwUKpWwWm0uV4rDDv07rePUA==
-X-Received: by 2002:a1c:cc15:: with SMTP id h21mr6534078wmb.85.1556111274838;
-        Wed, 24 Apr 2019 06:07:54 -0700 (PDT)
-Received: from brauner.io (p4FC0A32E.dip0.t-ipconnect.de. [79.192.163.46])
-        by smtp.gmail.com with ESMTPSA id n1sm14163522wmc.19.2019.04.24.06.07.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Apr 2019 06:07:54 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 15:07:52 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Zhenliang Wei <weizhenliang@huawei.com>
-Cc:     ebiederm@xmission.com, oleg@redhat.com, colona@arista.com,
-        akpm@linux-foundation.org, arnd@arndb.de, tglx@linutronix.de,
-        deepa.kernel@gmail.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v4] signal: trace_signal_deliver when signal_group_exit
-Message-ID: <20190424130751.jckvq535ipfx5cq6@brauner.io>
-References: <20190424125238.83264-1-weizhenliang@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ARgXNmSzkKlmq4ccihD4uxhUoE7bnpwP+o6PZbdz4R0=;
+        b=luqhOsJ/iO7tgSniQGK05UIUlkTK25vr8/LGkBTtPjOO/IrVzwVXIm+BZnCoQTOW1A
+         ffHnDHmn1oVERfAmj1hDtxm8ufZJ7CVPV4HQoUgYoC4I99a48A6Q9xglOaJruweaEr/C
+         mCNfyiXhWXnRWlm3d+vdjpv+tsb/+Tca63NNmiZXZ2gxrkRz8omr/I9bmZO0DVk48zPi
+         TO6YnoyAqSqBpQyLU6HD0v5rD4FikDXiFcCJM9hWDTNygTEMswUS9RS0EsI7tHS/RoFR
+         EdipUZP0IUJ8t5q2EvWNXLtTO07xyQE4PHj8Pk+lup1Lb2toYh49Za5Xr7/ZmMB3Vp80
+         5Yew==
+X-Gm-Message-State: APjAAAU/h22V+b7Q1XU6NgZNN7yye9NybZ5TB+E+1KnvIFYRGBiGmbCH
+        KCnRRI9nXVtQ9oFifK8f3U1cvNnSgVlPeMATMXQ=
+X-Google-Smtp-Source: APXvYqyp2hScGrJxAIZY7V6qxJNn/KmP4i4O5eg8gPsb0lsDKeaQvOImncy2k3lRQUBWmk5QPzG/bM0Z4DJhyXIV72c=
+X-Received: by 2002:a19:f013:: with SMTP id p19mr16986859lfc.49.1556111601406;
+ Wed, 24 Apr 2019 06:13:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190424125238.83264-1-weizhenliang@huawei.com>
-User-Agent: NeoMutt/20180716
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+In-Reply-To: <cover.1556025155.git.vpillai@digitalocean.com>
+From:   Aubrey Li <aubrey.intel@gmail.com>
+Date:   Wed, 24 Apr 2019 21:13:10 +0800
+Message-ID: <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 08:52:38PM +0800, Zhenliang Wei wrote:
-> In the fixes commit, removing SIGKILL from each thread signal mask
-> and executing "goto fatal" directly will skip the call to
-> "trace_signal_deliver". At this point, the delivery tracking of the SIGKILL
-> signal will be inaccurate.
-> 
-> Therefore, we need to add trace_signal_deliver before "goto fatal"
-> after executing sigdelset.
-> 
-> Note: SEND_SIG_NOINFO matches the fact that SIGKILL doesn't have any info.
-> 
-> Acked-by: Christian Brauner <christian@brauner.io>
+On Wed, Apr 24, 2019 at 12:18 AM Vineeth Remanan Pillai
+<vpillai@digitalocean.com> wrote:
+>
+> Second iteration of the core-scheduling feature.
+>
+> This version fixes apparent bugs and performance issues in v1. This
+> doesn't fully address the issue of core sharing between processes
+> with different tags. Core sharing still happens 1% to 5% of the time
+> based on the nature of workload and timing of the runnable processes.
+>
+> Changes in v2
+> -------------
+> - rebased on mainline commit: 6d906f99817951e2257d577656899da02bb33105
 
-I think we're supposed to use more Reviewed-bys so feel free (or Andrew)
-to change this to:
+Thanks to post v2, based on this version, here is my benchmarks result.
 
-Reviewed-by: Christian Brauner <christian@brauner.io>
+Environment setup
+--------------------------
+Skylake server, 2 numa nodes, 104 CPUs (HT on)
+cgroup1 workload, sysbench (CPU intensive non AVX workload)
+cgroup2 workload, gemmbench (AVX512 workload)
 
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> Cc: <stable@vger.kernel.org>
-> Fixes: cf43a757fd4944 ("signal: Restore the stop PTRACE_EVENT_EXIT")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Zhenliang Wei <weizhenliang@huawei.com>
-> ---
->  kernel/signal.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 227ba170298e..3edf526db7c6 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -2441,6 +2441,8 @@ bool get_signal(struct ksignal *ksig)
->  	if (signal_group_exit(signal)) {
->  		ksig->info.si_signo = signr = SIGKILL;
->  		sigdelset(&current->pending.signal, SIGKILL);
-> +		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
-> +			&sighand->action[signr - 1]);
+Case 1: task number < CPU num
+--------------------------------------------
+36 sysbench threads in cgroup1
+36 gemmbench threads in cgroup2
 
-Hm, sorry for being the really nitpicky person here. Just for the sake
-of consistency how about we do either:
+core sched off:
+- sysbench 95th percentile latency(ms): avg = 4.952, stddev = 0.55342
+core sched on:
+- sysbench 95th percentile latency(ms): avg = 3.549, stddev = 0.04449
 
-+		trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
-+			&sighand->action[SIGKILL - 1]);
+Due to core cookie matching, sysbench tasks won't be affect by AVX512
+tasks, latency has ~28% improvement!!!
 
-or
+Case 2: task number > CPU number
+-------------------------------------------------
+72 sysbench threads in cgroup1
+72 gemmbench threads in cgroup2
 
-+		trace_signal_deliver(signr, SEND_SIG_NOINFO,
-+			&sighand->action[signr - 1]);
+core sched off:
+- sysbench 95th percentile latency(ms): avg = 11.914, stddev = 3.259
+core sched on:
+- sysbench 95th percentile latency(ms): avg = 13.289, stddev = 4.863
 
-I'm not going to argue about this though. Can just also leave it as is.
+So not only power, now security and performance is a pair of contradictions.
+Due to core cookie not matching and forced idle introduced, latency has ~12%
+regression.
 
-Christian
+Any comments?
+
+Thanks,
+-Aubrey
