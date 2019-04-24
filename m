@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78014C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CC7C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474B2218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6963218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127914;
-	bh=17UlZXxf8UUS6yaEhvezelVge69t+0V+9R1NjKVqIKs=;
+	s=default; t=1556127918;
+	bh=rFU2YsDTCR+g4ae+SbfDAKzw8zKAomNbMWmv4WKsv5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SFi6SwDYYZfbqGL3Q/cECw3lVKHuJeVQrZorSOmkZD2F4+JLvzrXxC/eqHZKuH9rJ
-	 WhznbccO8D43IfVUhfLzX7vr2gqYPAZOt/r9o6yELQeRxsYNFD3elaUgaX0fMf0pTC
-	 MwONPY2TP9zyMiqcHkmPhjFhQUm1GkGg+OD1F7iE=
+	b=qszMuZgzIfswZd2SVqLQkzKyLVonAaEh8S2DZcoA2euXgKV4apm+MZoYFwZDW3Qkt
+	 b5+ddC+jkkqDHxy5h8BB5JBS6+GAlO5cw1DNdBb8y99AckY1WMIsCPfTv2dFJ4F5WU
+	 vDfrWH7ekviEdVYEw9crMngiD8ySnDcpuYn9vC6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391544AbfDXRdm (ORCPT
+        id S2391524AbfDXRdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:33:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60628 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:33:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390909AbfDXRdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:33:37 -0400
+        id S2391500AbfDXRd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:33:29 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36A662077C;
-        Wed, 24 Apr 2019 17:33:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 659682054F;
+        Wed, 24 Apr 2019 17:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127216;
-        bh=17UlZXxf8UUS6yaEhvezelVge69t+0V+9R1NjKVqIKs=;
+        s=default; t=1556127208;
+        bh=rFU2YsDTCR+g4ae+SbfDAKzw8zKAomNbMWmv4WKsv5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/590sturmXuWgz3IHf6bbBEtvLiQvP5VbwWuUA7T1fEg5aRT9D7expb6gzTWPs13
-         Mtpl4AXBXY86JfellOPu4uZ9DHs88Sc5Y05Tjk6iQVDdW0eGlds37whjBjKjk9d9ey
-         f1oRqRpipzBar/O+saVVnRp8XJzMKagRyTkcg/Z8=
+        b=VKIYs26fiA2iiWU9nVMYfs81fH9dcBYU0sHzH1vLC5r3MxpRrzGlrKL5HHNeo3rJn
+         OUtfboOkuvGMi8VIB3SbK+SLp9v6QDnTuFFJ2YR3KuZ73tNNfg66J6sP7snZwewDOM
+         J5u9uviYsLhSanuHa29jGueXR3YrPz8hHaHbe7ZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 010/115] team: set slave to promisc if team is already in promisc mode
-Date:   Wed, 24 Apr 2019 19:09:06 +0200
-Message-Id: <20190424170925.576011522@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Sax <jsbc@gmx.de>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?q?Ambro=C5=BE=20Bizjak?= <abizjak.pro@gmail.com>
+Subject: [PATCH 4.19 96/96] i2c-hid: properly terminate i2c_hid_dmi_desc_override_table[] array
+Date:   Wed, 24 Apr 2019 19:10:41 +0200
+Message-Id: <20190424170926.294205271@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
-References: <20190424170924.797924502@linuxfoundation.org>
+In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
+References: <20190424170919.829037226@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,73 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 43c2adb9df7ddd6560fd3546d925b42cef92daa0 ]
+commit b59dfdaef173677b0b7e10f375226c0a1114fd20 upstream.
 
-After adding a team interface to bridge, the team interface will enter
-promisc mode. Then if we add a new slave to team0, the slave will keep
-promisc off. Fix it by setting slave to promisc on if team master is
-already in promisc mode, also do the same for allmulti.
+Commit 9ee3e06610fd ("HID: i2c-hid: override HID descriptors for certain
+devices") added a new dmi_system_id quirk table to override certain HID
+report descriptors for some systems that lack them.
 
-v2: add promisc and allmulti checking when delete ports
+But the table wasn't properly terminated, causing the dmi matching to
+walk off into la-la-land, and starting to treat random data as dmi
+descriptor pointers, causing boot-time oopses if you were at all
+unlucky.
 
-Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Terminate the array.
+
+We really should have some way to just statically check that arrays that
+should be terminated by an empty entry actually are so.  But the HID
+people really should have caught this themselves, rather than have me
+deal with an oops during the merge window.  Tssk, tssk.
+
+Cc: Julian Sax <jsbc@gmx.de>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ambrož Bizjak <abizjak.pro@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/team/team.c |   26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
 
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -1247,6 +1247,23 @@ static int team_port_add(struct team *te
- 		goto err_option_port_add;
- 	}
+---
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -337,7 +337,8 @@ static const struct dmi_system_id i2c_hi
+ 			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+-	}
++	},
++	{ }	/* Terminate list */
+ };
  
-+	/* set promiscuity level to new slave */
-+	if (dev->flags & IFF_PROMISC) {
-+		err = dev_set_promiscuity(port_dev, 1);
-+		if (err)
-+			goto err_set_slave_promisc;
-+	}
-+
-+	/* set allmulti level to new slave */
-+	if (dev->flags & IFF_ALLMULTI) {
-+		err = dev_set_allmulti(port_dev, 1);
-+		if (err) {
-+			if (dev->flags & IFF_PROMISC)
-+				dev_set_promiscuity(port_dev, -1);
-+			goto err_set_slave_promisc;
-+		}
-+	}
-+
- 	netif_addr_lock_bh(dev);
- 	dev_uc_sync_multiple(port_dev, dev);
- 	dev_mc_sync_multiple(port_dev, dev);
-@@ -1263,6 +1280,9 @@ static int team_port_add(struct team *te
  
- 	return 0;
- 
-+err_set_slave_promisc:
-+	__team_option_inst_del_port(team, port);
-+
- err_option_port_add:
- 	team_upper_dev_unlink(team, port);
- 
-@@ -1308,6 +1328,12 @@ static int team_port_del(struct team *te
- 
- 	team_port_disable(team, port);
- 	list_del_rcu(&port->list);
-+
-+	if (dev->flags & IFF_PROMISC)
-+		dev_set_promiscuity(port_dev, -1);
-+	if (dev->flags & IFF_ALLMULTI)
-+		dev_set_allmulti(port_dev, -1);
-+
- 	team_upper_dev_unlink(team, port);
- 	netdev_rx_handler_unregister(port_dev);
- 	team_port_disable_netpoll(port);
 
 
