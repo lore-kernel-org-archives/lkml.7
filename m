@@ -2,128 +2,138 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596E1C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE865C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F9520835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB3520835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IlO/27Bi"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ViqkAqCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388616AbfDXTGK (ORCPT
+        id S2388971AbfDXTH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:06:10 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:43155 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbfDXTGJ (ORCPT
+        Wed, 24 Apr 2019 15:07:57 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:36960 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730531AbfDXTH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:06:09 -0400
-Received: by mail-vs1-f65.google.com with SMTP id t23so11042572vso.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:06:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BYlYZIp9lVnO/LNggOaWNdZ4LmpCU45Xr9GtlfTw+Ig=;
-        b=IlO/27Bi20zcbrxsGvdgGo/fRy3nfNfBe0ISD3MwMQI/5k+Hgc0336YP0WN9cVlC4h
-         LPsefUpAgeUnh5I1oREBOpqsvdcyzcnsRteVn8YdE1BquO2SadyY+SeKCTq9+IYHdQ73
-         27nhRDP+rPwW7brWevnpQRWY2N5bVOUk8mKKs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BYlYZIp9lVnO/LNggOaWNdZ4LmpCU45Xr9GtlfTw+Ig=;
-        b=flvENPOSquiTazxB3CI5psWr6nwraiKg+XhLnWBTbrbPNAYzTFMYtjyLowngofbq0D
-         gm4qlLgF6lrGGN0DRpQVUAjhfoO7jKrJEW9KZBgx1qH/iUSnLrhbiXT1qH9/nNr1pRmj
-         o3EuO/4BEACLK6fDgz1qQH5djYhaV+ccSXleRn2G0dH7v9DBuWbzYoqq56yOFbih2o7t
-         1MlI5ZiuNwKDWb0RYgoVVXprss+hacfoFmxUSqYqJ9yWZvDn/7MHv6V0ov9PtsGY2ml2
-         wMbMckiHihdutKTNaiFQxPFXBZFuPXN4h2r3LYnXcPrv1LwfjPalv2N5StY13DwDloZd
-         YXRQ==
-X-Gm-Message-State: APjAAAVJXFvNwa53rrpcqO05i6zR9yL3YVlYTk04Xd9XYyoYxTe4ns6G
-        qrJUrJ5J5NbcYP5w3tzTBtR+EI6By1Q=
-X-Google-Smtp-Source: APXvYqyUcasQnS8XsAgCdQOmxUz0dZ2gsNUJdrtl7pa80eVicOTU3No4QHNuvhf7Xzek9RLS0G98AQ==
-X-Received: by 2002:a05:6102:398:: with SMTP id m24mr18526851vsq.23.1556132768014;
-        Wed, 24 Apr 2019 12:06:08 -0700 (PDT)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id r3sm14977651vkr.18.2019.04.24.12.06.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 12:06:07 -0700 (PDT)
-Received: by mail-vs1-f50.google.com with SMTP id f22so11054438vso.7
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:06:06 -0700 (PDT)
-X-Received: by 2002:a67:eecb:: with SMTP id o11mr18354214vsp.66.1556132766437;
- Wed, 24 Apr 2019 12:06:06 -0700 (PDT)
+        Wed, 24 Apr 2019 15:07:57 -0400
+Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
+        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OJ3O4V018909;
+        Wed, 24 Apr 2019 12:07:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=facebook;
+ bh=yAtvfpbreo1+TQY+KrNZG9h3fZsfDQzNvha7lc7f0tg=;
+ b=ViqkAqCnwtAAmeWqpQ06th31RtukqC/1gdWj87zEUGBgdiMgjnUe7keCJdrugGvgfeJZ
+ u+v/EINijhckJE8SKCsCjIjJNSFGE2+LKnh1qZ+VhRxa/vevge/YfSjtNd8GiNMsNICJ
+ Q2byitxj4WrjfF76JX7Co47PBEgWJ2TCCEs= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0b-00082601.pphosted.com with ESMTP id 2s27u3w3kk-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 24 Apr 2019 12:07:37 -0700
+Received: from mmullins-1.thefacebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server id
+ 15.1.1713.5; Wed, 24 Apr 2019 12:07:30 -0700
+From:   Matt Mullins <mmullins@fb.com>
+To:     <hall@fb.com>, <mmullins@fb.com>, <ast@kernel.org>,
+        <bpf@vger.kernel.org>, <netdev@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, "Yonghong Song" <yhs@fb.com>
+Subject: [PATCH bpf-next v4 0/5] writable contexts for bpf raw tracepoints
+Date:   Wed, 24 Apr 2019 12:07:16 -0700
+Message-ID: <20190424190721.24453-1-mmullins@fb.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190320222831.8243-1-mcgrof@kernel.org> <CAGXu5jK1oaEXYEKM45Ai3bPELTEF=aO0-OSSnpcnOdWtQf2+cw@mail.gmail.com>
- <a57954c3-d343-aae3-69a8-7166df8d5042@sandeen.net>
-In-Reply-To: <a57954c3-d343-aae3-69a8-7166df8d5042@sandeen.net>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 24 Apr 2019 12:05:54 -0700
-X-Gmail-Original-Message-ID: <CAGXu5j+rkR3DsKUVdm+-tTqjoQ38tNMe1bGdxiDRgrcKX3j9HA@mail.gmail.com>
-Message-ID: <CAGXu5j+rkR3DsKUVdm+-tTqjoQ38tNMe1bGdxiDRgrcKX3j9HA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] sysctl: add pending proc_do_large_bitmap fix
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Eric Sandeen <sandeen@redhat.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [2620:10d:c081:10::13]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_12:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:42 AM Eric Sandeen <sandeen@sandeen.net> wrote:
->
-> On 3/21/19 11:42 AM, Kees Cook wrote:
-> > On Wed, Mar 20, 2019 at 3:28 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
-> >>
-> >> Andrew, Kees,
-> >>
-> >> Eric sent a fix out for proc_do_large_bitmap() last month for when
-> >> using a large input buffer. After patch review a test case for the issue
-> >> was built and submitted. I noticed there were a few issues with the
-> >> tests, but instead of just asking Eric to address them I've taken
-> >> care of them and ammended the commit where necessary. There's a
-> >> few issues he reported which I also address and fix in this series.
-> >>
-> >> Since we *do* expect users of these scripts to also use them on older
-> >> kernels, I've also addressed not breaking calling the script for them,
-> >> and gives us an easy way to easily extend our tests cases for future
-> >> kernels as well.
-> >>
-> >> Before anyone considers these for stable as minor fixes, I'd recommend
-> >> we also address the discrepancy on the read side of things: modify the
-> >> test script to use diff against the target file instead of using the
-> >> temp file.
-> >>
-> >> Eric Sandeen (2):
-> >>   test_sysctl: add proc_do_large_bitmap() test case
-> >>   sysctl: Fix proc_do_large_bitmap for large input buffers
-> >>
-> >> Luis Chamberlain (4):
-> >>   test_sysctl: remove superfluous test_reqs()
-> >>   test_sysctl: load module before testing for it
-> >>   test_sysctl: ignore diff output on verify_diff_w()
-> >>   test_sysctl: allow graceful use on older kernels
-> >
-> > Thanks for collecting and updating these!
-> >
-> > Acked-by: Kees Cook <keescook@chromium.org>
-> >
-> > Andrew, can you carry these?
->
-> Ping?  This seems to have never made it off the list into anybody's
-> tree.
+This adds an opt-in interface for tracepoints to expose a writable context to
+BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE programs that are attached, while
+supporting read-only access from existing BPF_PROG_TYPE_RAW_TRACEPOINT
+programs, as well as from non-BPF-based tracepoints.
 
-Andrew, do you want me to send this to you again, or carry separately?
+The initial motivation is to support tracing that can be observed from the
+remote end of an NBD socket, e.g. by adding flags to the struct nbd_request
+header.  Earlier attempts included adding an NBD-specific tracepoint fd, but in
+code review, I was recommended to implement it more generically -- as a result,
+this patchset is far simpler than my initial try.
 
--Kees
+v3->v4:
+  * fixed a silly copy/paste typo in include/trace/events/bpf_test_run.h
+    (_TRACE_NBD_H -> _TRACE_BPF_TEST_RUN_H)
+  * fixed incorrect/misleading wording in patch 1's commit message,
+    since the pointer cannot be directly dereferenced in a
+    BPF_PROG_TYPE_RAW_TRACEPOINT
+  * cleaned up the error message wording if the prog_tests fail
+  * Addressed feedback from Yonghong
+    * reject non-pointer-sized accesses to the buffer pointer
+    * use sizeof(struct nbd_request) as one-byte-past-the-end in
+      raw_tp_writable_reject_nbd_invalid.c
+    * use BPF_MOV64_IMM instead of BPF_LD_IMM64
+
+v2->v3:
+  * Andrew addressed Josef's comments:
+    * C-style commenting in nbd.c
+    * Collapsed identical events into a single DECLARE_EVENT_CLASS.
+      This saves about 2kB of kernel text
+
+v1->v2:
+  * add selftests
+    * sync tools/include/uapi/linux/bpf.h
+  * reject variable offset into the buffer
+  * add string representation of PTR_TO_TP_BUFFER to reg_type_str
+
+Andrew Hall (1):
+  nbd: add tracepoints for send/receive timing
+
+Matt Mullins (4):
+  bpf: add writable context for raw tracepoints
+  nbd: trace sending nbd requests
+  tools: sync bpf.h
+  selftests: bpf: test writable buffers in raw tps
+
+ MAINTAINERS                                   |   1 +
+ drivers/block/nbd.c                           |  13 +++
+ include/linux/bpf.h                           |   2 +
+ include/linux/bpf_types.h                     |   1 +
+ include/linux/tracepoint-defs.h               |   1 +
+ include/trace/bpf_probe.h                     |  27 ++++-
+ include/trace/events/bpf_test_run.h           |  50 ++++++++
+ include/trace/events/nbd.h                    | 107 ++++++++++++++++++
+ include/uapi/linux/bpf.h                      |   1 +
+ kernel/bpf/syscall.c                          |   8 +-
+ kernel/bpf/verifier.c                         |  31 +++++
+ kernel/trace/bpf_trace.c                      |  24 ++++
+ net/bpf/test_run.c                            |   4 +
+ tools/include/uapi/linux/bpf.h                |   1 +
+ tools/lib/bpf/libbpf.c                        |   1 +
+ tools/lib/bpf/libbpf_probes.c                 |   1 +
+ .../raw_tp_writable_reject_nbd_invalid.c      |  42 +++++++
+ .../bpf/prog_tests/raw_tp_writable_test_run.c |  80 +++++++++++++
+ .../selftests/bpf/verifier/raw_tp_writable.c  |  34 ++++++
+ 19 files changed, 425 insertions(+), 4 deletions(-)
+ create mode 100644 include/trace/events/bpf_test_run.h
+ create mode 100644 include/trace/events/nbd.h
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/raw_tp_writable_reject_nbd_invalid.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/raw_tp_writable_test_run.c
+ create mode 100644 tools/testing/selftests/bpf/verifier/raw_tp_writable.c
 
 -- 
-Kees Cook
+2.17.1
+
