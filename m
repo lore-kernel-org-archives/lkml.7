@@ -2,131 +2,146 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281DBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEA5C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA96220656
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:51:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="PEknDINQ"
+	by mail.kernel.org (Postfix) with ESMTP id B297420656
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:54:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbfDXGvq (ORCPT
+        id S1729857AbfDXGya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:51:46 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37133 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfDXGvq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:51:46 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h126so3080701lfh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 23:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Y5k8Zl0aW5C267C4j/HBp5q69Gzp36YYg8rvv3NnlIo=;
-        b=PEknDINQJpTKcxr0/R3I3nmMCQyoBfZ/VBea+uvb0fqIBZ7YTFhEl+648C8mWnGL3t
-         CLVkuvIYKX3Be+Ebqu8zF3qcsLTuIVmWPGbin5acRFkugLbtTQElBu5+1IgQLVPBcpho
-         OBGdSOW+qOeIuJg7rikCabQoc4EORnETlrCzVtfL4XAMBaOb4KeFJZepez6qaV21zZL9
-         ntTMuWib1AeANgkEmY4MfEj7WNiGhF2Uk9LCe1PaDy4KQU6kyF29Xz6jabRFLkOtxO1O
-         POJ0SjMIV8yR2Fe5VOR6SKliKFBbOsdjszy8Bkcog+045LR0EQbZ8ParWOb3m3BwAjYS
-         WQDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Y5k8Zl0aW5C267C4j/HBp5q69Gzp36YYg8rvv3NnlIo=;
-        b=f4n9wRlEhSkZbPZjIfiJ/Xs0saAfKdSQjh1C2kuWFKpcplbGvAP6IuktZe1/IQDaUe
-         Hk3BHL/gW+pKE87Myy7E/DJEqv3RAbiD/TEP1pc3kaGOCKRIm74jDJaEp1bYp0Bbpukc
-         XamivtQwdFXcMToi6dvJ7hb1cRslVl6j22fPY5Gi5yWCBVFHf0I0AOgmziqlOm59KaKR
-         fOA2zugbAPlzAdbqzHDErvEBU5WaAQyGDjNHWmV3NSqITScgmYRMTxbzDXGj5vlkNiO+
-         nW/JEYAlt4J7PTYhvcqnpDzqPuMe7+R+2B5wqmQaQK4z6tJmEkeAj4dPHg+TP8sk6kA1
-         FYSg==
-X-Gm-Message-State: APjAAAUZYR2n3fpFNOTMD0DEFzvPSjuvZdD3U809q7OZsvyHcj2jmnkr
-        krY9wm72zgnKR4fDtfrxG9WJcTS/tUOAPA==
-X-Google-Smtp-Source: APXvYqwTWGHFt0Z9hzIOoW5N3cDb4IokKrcHceoGe4bD/GincDKNG9kFWy3rhhtW5zGfjidqhZzw4g==
-X-Received: by 2002:ac2:43cf:: with SMTP id u15mr16190801lfl.67.1556088703925;
-        Tue, 23 Apr 2019 23:51:43 -0700 (PDT)
-Received: from localhost (89-233-230-99.cust.bredband2.com. [89.233.230.99])
-        by smtp.gmail.com with ESMTPSA id e17sm3828721ljj.20.2019.04.23.23.51.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 23:51:43 -0700 (PDT)
-From:   "Niklas =?iso-8859-1?Q?S=F6derlund?=" <niklas.soderlund@ragnatech.se>
-X-Google-Original-From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Date:   Wed, 24 Apr 2019 08:51:42 +0200
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, horms+renesas@verge.net.au,
-        geert+renesas@glider.be, sergei.shtylyov@cogentembedded.com,
-        marek.vasut+renesas@gmail.com, kuninori.morimoto.gx@renesas.com,
-        hien.dang.eb@renesas.com, fabrizio.castro@bp.renesas.com,
-        dien.pham.ry@renesas.com, biju.das@bp.renesas.com,
-        erosca@de.adit-jv.com, george_davis@mentor.com,
-        joshua_frkuska@mentor.com
-Subject: Re: [PATCH v4 0/2] thermal: rcar_gen3_thermal: fix IRQ issues
-Message-ID: <20190424065142.GD16573@bigcity.dyn.berto.se>
-References: <20190424051145.23072-1-jiada_wang@mentor.com>
+        Wed, 24 Apr 2019 02:54:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48784 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbfDXGya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 02:54:30 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C64D230A8199;
+        Wed, 24 Apr 2019 06:54:29 +0000 (UTC)
+Received: from [10.36.116.45] (ovpn-116-45.ams2.redhat.com [10.36.116.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A217648D9;
+        Wed, 24 Apr 2019 06:54:27 +0000 (UTC)
+Subject: Re: [PATCH v1 3/4] mm/memory_hotplug: Make __remove_section() never
+ fail
+To:     Oscar Salvador <osalvador@suse.de>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Wei Yang <richard.weiyang@gmail.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+References: <20190409100148.24703-1-david@redhat.com>
+ <20190409100148.24703-4-david@redhat.com> <1555509378.3139.35.camel@suse.de>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <bfa88494-6e4b-9139-21a1-e80546d2dac9@redhat.com>
+Date:   Wed, 24 Apr 2019 08:54:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190424051145.23072-1-jiada_wang@mentor.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1555509378.3139.35.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 24 Apr 2019 06:54:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiada,
+On 17.04.19 15:56, Oscar Salvador wrote:
+> On Tue, 2019-04-09 at 12:01 +0200, David Hildenbrand wrote:
+>> Let's just warn in case a section is not valid instead of failing to
+>> remove somewhere in the middle of the process, returning an error
+>> that
+>> will be mostly ignored by callers.
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Oscar Salvador <osalvador@suse.de>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>> Cc: Qian Cai <cai@lca.pw>
+>> Cc: Wei Yang <richard.weiyang@gmail.com>
+>> Cc: Arun KS <arunks@codeaurora.org>
+>> Cc: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> Just a nit:
+> 
+> I think this could be combined with patch#2.
+> The only reason to fail in here is 1) !valid_section 2)
+> !present_section.
+> As I stated in patch#2, one cannot be without the other, so makes sense
+> to rip present_section check from unregister_mem_section() as well.
+> Then, you could combine both changelogs explaining the whole thing, and
+> why we do not need the present_section check either.
+> 
 
-I think this series looks good. Unfortunately I'm out of office for the 
-next week and are thus unable to test it. Please don't let this block 
-this series but if it's still on the ML when I'm back I will do a proper 
-review and test of it.
+If I have to resend the whole thing, I might do that. Otherwise we can
+drop the present_section() based on your explanation later.
 
-On 2019-04-24 14:11:43 +0900, Jiada Wang wrote:
-> There are issues with interrupt handling in rcar_gen3_thermal driver.
+Thanks!
+
+> But the change looks good to me:
 > 
-> Currently IRQ is remain enabled after .remove, later if device is probed,
-> IRQ is requested before .thermal_init, this may cause IRQ function be
-> triggered but not able to clear IRQ status, thus cause system to hang.
-> 
-> Since the irq line isn't shared between different devices,
-> so the proper interrupt type flag should be IRQF_ONESHOT.
-> 
-> This patch-set fix these interrupt handling retated issues.
-> 
-> ---
-> v4: remove 'spinlock_t lock'
->     add Fixes tag in ("thermal: rcar_gen3_thermal: fix interrupt type")
->     fix typos in ("thermal: rcar_gen3_thermal: disable interrupt in .remove")
-> 
-> v3: fix to use correct code base
->     remove unused "flag" variable in rcar_gen3_thermal_irq
-> 
-> v2: use irq type IRQF_ONESHOT instead of IRQF_SHARED
->     disable interrupt in .remove
-> 
-> v1: initial version
-> 
-> Jiada Wang (2):
->   thermal: rcar_gen3_thermal: fix interrupt type
->   thermal: rcar_gen3_thermal: disable interrupt in .remove
-> 
->  drivers/thermal/rcar_gen3_thermal.c | 41 +++++++----------------------
->  1 file changed, 9 insertions(+), 32 deletions(-)
-> 
-> -- 
-> 2.19.2
-> 
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+
 
 -- 
-Regards,
-Niklas Söderlund
+
+Thanks,
+
+David / dhildenb
