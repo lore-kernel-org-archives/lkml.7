@@ -2,89 +2,109 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4128C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9433C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A913520685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="KaEB7XxZ"
+	by mail.kernel.org (Postfix) with ESMTP id AB4E020685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556129665;
+	bh=FQY4rwugQ+ia4BHeILRTlhGVBKL1ZN0fYBIxLvHGXa4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZIZUXbE3snMhQrdRodExf47bf8yIKtF8nF1KEh7eVodZ7ONCaMve7+Db6r7I9mAT1
+	 1EEWK8hpREwplVEQ3bu3K0YUgVAUsUPnwbq9yW6385PCuja3cqBnai8o0YfXBIzIzS
+	 CFR6qsByW+IVlRjRaZdm1lAemumJWg44TdtZCE+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387779AbfDXSOQ (ORCPT
+        id S1733254AbfDXRLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:14:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39477 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733281AbfDXRLa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:11:30 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i17so9633018pfo.6
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 10:11:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MN5yriTLCqLM4B/l2zakQLWVdZUNj3azdHHd9ghurIU=;
-        b=KaEB7XxZUxTXZ7CfIiMYwPOQmzDFDwj9ICa0iBL99FFuwaawBwOQsMt2eFZZkpxcJM
-         ilaRZByDmr7kgU8sh6akKcSAp1Kaq7j6N1pMMVsS0LJP5ih9W8MUX0VMQPN+9Eicqy14
-         OuU6InC70DT+Z7Hn+JaCtToSEEIRW0MligxpERgxr3Gf3Ju+RnZpFWUK2iR2my1peIKs
-         9NyWGm2ScEGfOejKq8W+LZU1EEtA/YRGsSq9JQV+SCCvsIIjowWQs8Ebi2POQa29TT9x
-         2GAw5KNmCYcG7d0sG6SZM6jwDsEv82YV12bfFRbYoD1epvsYlWSeZ7jeRXpl1/3a4rKY
-         RUFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MN5yriTLCqLM4B/l2zakQLWVdZUNj3azdHHd9ghurIU=;
-        b=J7n6scMLoCQPDpXv+m14egIysHfoK9TqXsqUXefEtdBNnydE0lnwWjx2JvKMQsjQpA
-         J+MpXyKL2wZ7nUxzomfI0GAYanXZRLFtjtZEm4WHvrwG1YdETYhNn6kFaszSvkMrbtDW
-         tJdzg1hksQxoPBiRaBw528zbwl3oHoQJLD7fgNd20T1/VAFKSCeoTMaKMhtBdniRnNls
-         22DeI9fCBD09ShXddLOM41JEvmKLU7jupF0+Q6VUIUF00AFOQAVwgBDGyIvet0d9kgIc
-         i2xr6x3sa4YtwvyJB7IthEJRAosbXmKUL9twt5HrC+4nulhcDrq1v+rvF+3t9FY/Wt1G
-         kpNg==
-X-Gm-Message-State: APjAAAXauy34fH5XpEsQpWEEbo0iSFluEshMqbY+nPSqlJFz1YqbJAGN
-        mGN/t/vTNnv8jjCAzxDtpHiRlQ==
-X-Google-Smtp-Source: APXvYqzyA2NJYpAEaaT+USTkjcSH91+Ksktq84P+rydR/ZcJqbbZbZEK1QdwWQxWSyxp17zorxbIoQ==
-X-Received: by 2002:a63:2015:: with SMTP id g21mr31179600pgg.226.1556125888875;
-        Wed, 24 Apr 2019 10:11:28 -0700 (PDT)
-Received: from cisco ([2601:282:901:dd7b:7136:cebf:c0d3:8091])
-        by smtp.gmail.com with ESMTPSA id o7sm13153777pgv.63.2019.04.24.10.11.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 10:11:28 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 11:11:26 -0600
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     stable@vger.kernel.org, James Morris <jmorris@namei.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] selftests/seccomp: Prepare for exclusive seccomp
- flags
-Message-ID: <20190424171126.GM3758@cisco>
-References: <20190424163756.40001-1-keescook@chromium.org>
- <20190424163756.40001-2-keescook@chromium.org>
+        Wed, 24 Apr 2019 13:11:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733240AbfDXRLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:11:20 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94E1D218FE;
+        Wed, 24 Apr 2019 17:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556125880;
+        bh=FQY4rwugQ+ia4BHeILRTlhGVBKL1ZN0fYBIxLvHGXa4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S2PzKOqPDbleWFAP33GqAZ0hyT6XgM5UelRdAK0fkQYP4lTvCULqDsmxNYOK4eX9V
+         RrgHl/V+ZfJCuK6LFF7nqm5XAE52QgB+/GzJiAK+Qhk97vuNLc9bjxsXaqAvgXbOaU
+         qRWqeWEo2Afql2+CiJeiLjnC/D1HQEaKiWMz18Ik=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 016/104] mmc: omap: fix the maximum timeout setting
+Date:   Wed, 24 Apr 2019 19:08:33 +0200
+Message-Id: <20190424170849.710364279@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
+References: <20190424170839.996641496@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424163756.40001-2-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 09:37:55AM -0700, Kees Cook wrote:
-> Some seccomp flags will become exclusive, so the selftest needs to
-> be adjusted to mask those out and test them individually for the "all
-> flags" tests.
-> 
-> Cc: stable@vger.kernel.org # v5.0+
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+[ Upstream commit a6327b5e57fdc679c842588c3be046c0b39cc127 ]
 
-Whoops, thanks for this too.
+When running OMAP1 kernel on QEMU, MMC access is annoyingly noisy:
 
-Reviewed-by: Tycho Andersen <tycho@tycho.ws>
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	MMC: CTO of 0xff and 0xfe cannot be used!
+	[ad inf.]
+
+Emulator warnings appear to be valid. The TI document SPRU680 [1]
+("OMAP5910 Dual-Core Processor MultiMedia Card/Secure Data Memory Card
+(MMC/SD) Reference Guide") page 36 states that the maximum timeout is 253
+cycles and "0xff and 0xfe cannot be used".
+
+Fix by using 0xfd as the maximum timeout.
+
+Tested using QEMU 2.5 (Siemens SX1 machine, OMAP310), and also checked on
+real hardware using Palm TE (OMAP310), Nokia 770 (OMAP1710) and Nokia N810
+(OMAP2420) that MMC works as before.
+
+[1] http://www.ti.com/lit/ug/spru680/spru680.pdf
+
+Fixes: 730c9b7e6630f ("[MMC] Add OMAP MMC host driver")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mmc/host/omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
+index 11e5bfedab70..b9f4f39f9359 100644
+--- a/drivers/mmc/host/omap.c
++++ b/drivers/mmc/host/omap.c
+@@ -921,7 +921,7 @@ static inline void set_cmd_timeout(struct mmc_omap_host *host, struct mmc_reques
+ 	reg &= ~(1 << 5);
+ 	OMAP_MMC_WRITE(host, SDIO, reg);
+ 	/* Set maximum timeout */
+-	OMAP_MMC_WRITE(host, CTO, 0xff);
++	OMAP_MMC_WRITE(host, CTO, 0xfd);
+ }
+ 
+ static inline void set_data_timeout(struct mmc_omap_host *host, struct mmc_request *req)
+-- 
+2.19.1
+
+
+
