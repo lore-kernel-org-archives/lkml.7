@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86C6C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E208C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 977F321773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0A8218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:26:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l4AFDOlC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eg2pNjdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbfDXMZx (ORCPT
+        id S1729870AbfDXM0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:25:53 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37384 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbfDXMZx (ORCPT
+        Wed, 24 Apr 2019 08:26:16 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38767 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727270AbfDXM0P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:25:53 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c1so10678207qkk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:25:52 -0700 (PDT)
+        Wed, 24 Apr 2019 08:26:15 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d13so19958803qth.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:26:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=clPB49k5bUNWi1l9QLb30EX4SpuEGDe/C4dN/7k8mBs=;
-        b=l4AFDOlCisAsBDJKMyKqJkIulWY5JOkKmxfzXD6I1tcgfe2nUxJ4JuS4bu+lIVMgk4
-         tF7arAKFnlTKSShbrbOju7vRQzJZVylYT/dc9yo7JDSIORgD2EcqjgxnDij0vASxQk6k
-         JUF9Le0nqTfLemixWBLl8rfxPF8lREjEGyL4SUvcCrplDcqYyw1BSuMS/AOn4HOUh6oi
-         xbN2As/9VpO331UXOhh9X/S8pNFVP7reu0e+OnK/Setf1vN5GdKJOt9sZ7KNuCDuWmWX
-         v5O/RvhekPiMOFeXoaP9RoZT5mo3teJNj5JhlQ7qTSIWabZPYdtOtkAht2M/VI3xp/sw
-         682w==
+        bh=k/G53At6GpO9p20H7pGhrT8FvlHyaW2wBtqlzxG9UpA=;
+        b=eg2pNjdcN3TTp0Zz+anyu2txkD2KAV89Qi6LLwLSVeAy3gZiIBVCqOc4Ghm8sFs+yv
+         riM6B01w+KmJpFNJWCSxgoX6JNaLwnfmrpHRGgDPeH6wGzSceNeQ44Bgr5U3z1e8qnFL
+         prFr9nw+Cv4vrTter875x1+2fL0FJGu0/t5fjkthVxu0t1g66eJm/cR/OrNCyg6BpLzY
+         P8wktdg7gdWhIRCe5RLC0NPJB1vwjT5CNNt0Ejk6V8aQDBPODh/QEqBS9icMHMeLFS1l
+         ch/jt/p3libNRcsJn4ilA5QqS/b/kN1fa4U/Rzo2PLBnd135cH4jflQQEVPKMPeujBNJ
+         GxWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=clPB49k5bUNWi1l9QLb30EX4SpuEGDe/C4dN/7k8mBs=;
-        b=KZ2Tq+en8QiAlghg+llfPs5Ifm51FNXxCBp4nl6OX6cNeH0QGZ7Nr2JJBIcUc4HMYh
-         ATu1aGPoiEn3KeNwZ6gEiZQUuo8HUXiy4ESjH0XWMi6mCx5rCuyY7jqxLXi/2W9/KAIx
-         aVXzpHEkNzrpV7Hc0sHMGK1rw/rE8s7mcpigvJ+RExkN1OdDIIg/9OvHa1VukYTw4528
-         0ORec+SgvSFowEFWHBm4oPfUNRl/UL3VPvTb8QviUdx2ZlhKP0lzgyYt7ICy3koERXWP
-         7udnea9pIctYTafDphyYigWFp7qJq4YMEGpwfczA16xT2R9rb4ynkSoD9V1drmCkYsx4
-         2itA==
-X-Gm-Message-State: APjAAAVEPp/CeDQ6j2+CWRH20vZmGUQGc1lfrdvp9zk7SqyJK4XTbGcB
-        NMvHPBtkEyO+lKPJgbfhot4GeBOZUHkXprhqXpdSbQ==
-X-Google-Smtp-Source: APXvYqy7Uewn6zAItC+GMZ2f+WVeC8UEfgRobvwYN8v4AOXUExQH05Z60wiC5OEIaOPaPKeaii445bccQwSUS+J5gW8=
-X-Received: by 2002:a37:274a:: with SMTP id n71mr19416460qkn.228.1556108752170;
- Wed, 24 Apr 2019 05:25:52 -0700 (PDT)
+        bh=k/G53At6GpO9p20H7pGhrT8FvlHyaW2wBtqlzxG9UpA=;
+        b=WyN0rVhZootkP0cl6HKc9AaitO8kwP3B4ufEhmM0g1LkiKhm24+UHe03A3svv5SYm6
+         wvC5epjykFCeriMf9G9b+BkZSPYpfJSgM/7WFskNOKSth8RIXmXGNuCP9jBUg1BLcmv/
+         dw2HSmVkap3mWRcmX7vCxuuSUar/6id+UfVwDbX4FMMxS0ld75OOJzX4PSF3v1rQpZCR
+         EDisgpr/2wNaxyYeN5qvzbEraZl16yBHgYLhLgtm8gf2o582/pLJtFxfChsih/Z6/xhB
+         SJG3NthNdqyIoNt5DVcBrJBWweImPd5Mdr3F3heaGIpgDsBj5RFFqtS/fCpqyBHV8m/q
+         JSIg==
+X-Gm-Message-State: APjAAAUDgmCrOfKn4G2HEWIi1BQMiaJ7qtwKfF91feXHhrqsuKYpzKMy
+        ShtXRgFDPJ9RrCDpyBdV2XqFrVxP5ZRlPd3+CsTKIw==
+X-Google-Smtp-Source: APXvYqx57ALUlPRQ49wlbfJdiVS8H6Riwho98PXRJ3tNyuCbQIKmc3Jthjn7pTxcyjeVjbTyu2FFM7S0W3XeN9CZwQY=
+X-Received: by 2002:ad4:52e3:: with SMTP id p3mr1176233qvu.98.1556108774534;
+ Wed, 24 Apr 2019 05:26:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <1554103457-29595-1-git-send-email-yannick.fertre@st.com> <7ff86999-02e5-ef48-221c-a5e0e61eb2fd@st.com>
-In-Reply-To: <7ff86999-02e5-ef48-221c-a5e0e61eb2fd@st.com>
+References: <1553874548-31366-1-git-send-email-yannick.fertre@st.com> <ef8aa4e8-ebf9-ea01-d8db-fbf7740bc765@st.com>
+In-Reply-To: <ef8aa4e8-ebf9-ea01-d8db-fbf7740bc765@st.com>
 From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Wed, 24 Apr 2019 14:25:41 +0200
-Message-ID: <CA+M3ks5M1NXWj1dew9DcNfOhYeFbWZ6iVYDcvQr6auVAKUnVyA@mail.gmail.com>
-Subject: Re: [PATCH] drm/stm: ltdc: update planes at next vblank to avoid
- partial refresh
+Date:   Wed, 24 Apr 2019 14:26:03 +0200
+Message-ID: <CA+M3ks6RZmXjCh_r5MBLGeNb4vY4g8nOCX=cSbCe8GW4rHc4gQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/stm: ltdc: use DRM_WARN for fifo & transfer error messages
 To:     Philippe CORNU <philippe.cornu@st.com>
 Cc:     Yannick FERTRE <yannick.fertre@st.com>,
         Vincent ABRIOU <vincent.abriou@st.com>,
@@ -80,46 +79,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lun. 1 avr. 2019 =C3=A0 11:22, Philippe CORNU <philippe.cornu@st.com> a =
+Le lun. 1 avr. 2019 =C3=A0 11:20, Philippe CORNU <philippe.cornu@st.com> a =
 =C3=A9crit :
 >
 > Dear Yannick,
-> Thank you for your patch, works fine,
+> Fully agree with this approach,
 >
 > Acked-by: Philippe Cornu <philippe.cornu@st.com>
 >
+
 Applied on drm-misc-next,
 Thanks,
 Benjamin
 
 > Philippe :-)
 >
-> On 4/1/19 9:24 AM, Yannick Fertr=C3=A9 wrote:
-> > Plane updates must be synchronized on vblank with the shadow register m=
-echanism
-> > to avoid partial refresh on screen.
+> On 3/29/19 4:49 PM, Yannick Fertr=C3=A9 wrote:
+> > From: Philippe Cornu <philippe.cornu@st.com>
 > >
-> > Signed-off-by: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
+> > Use DRM_WARN() instead of DRM_DEBUG_DRIVER() to better
+> > inform the user in case of fifo underruns or
+> > transfer errors.
+> >
+> > Signed-off-by: Philippe Cornu <philippe.cornu@st.com>
 > > ---
 > >   drivers/gpu/drm/stm/ltdc.c | 4 ++--
 > >   1 file changed, 2 insertions(+), 2 deletions(-)
 > >
 > > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> > index b1741a9..c2d0800 100644
+> > index b1741a9..15d8a02 100644
 > > --- a/drivers/gpu/drm/stm/ltdc.c
 > > +++ b/drivers/gpu/drm/stm/ltdc.c
-> > @@ -426,8 +426,8 @@ static void ltdc_crtc_atomic_enable(struct drm_crtc=
- *crtc,
-> >       /* Enable IRQ */
-> >       reg_set(ldev->regs, LTDC_IER, IER_RRIE | IER_FUIE | IER_TERRIE);
+> > @@ -822,11 +822,11 @@ static void ltdc_plane_atomic_update(struct drm_p=
+lane *plane,
 > >
-> > -     /* Immediately commit the planes */
-> > -     reg_set(ldev->regs, LTDC_SRCR, SRCR_IMR);
-> > +     /* Commit shadow registers =3D update planes at next vblank */
-> > +     reg_set(ldev->regs, LTDC_SRCR, SRCR_VBR);
-> >
-> >       /* Enable LTDC */
-> >       reg_set(ldev->regs, LTDC_GCR, GCR_LTDCEN);
+> >       mutex_lock(&ldev->err_lock);
+> >       if (ldev->error_status & ISR_FUIF) {
+> > -             DRM_DEBUG_DRIVER("Fifo underrun\n");
+> > +             DRM_WARN("ltdc fifo underrun: please verify display mode\=
+n");
+> >               ldev->error_status &=3D ~ISR_FUIF;
+> >       }
+> >       if (ldev->error_status & ISR_TERRIF) {
+> > -             DRM_DEBUG_DRIVER("Transfer error\n");
+> > +             DRM_WARN("ltdc transfer error\n");
+> >               ldev->error_status &=3D ~ISR_TERRIF;
+> >       }
+> >       mutex_unlock(&ldev->err_lock);
 > >
 > _______________________________________________
 > dri-devel mailing list
