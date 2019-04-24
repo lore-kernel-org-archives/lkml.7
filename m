@@ -2,168 +2,103 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7129C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA83C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A15D218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC50C218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:19:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eHQCBwjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731066AbfDXPR0 (ORCPT
+        id S1730647AbfDXPTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:17:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54850 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730808AbfDXPRO (ORCPT
+        Wed, 24 Apr 2019 11:19:17 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:41758 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725941AbfDXPTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:17:14 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OF0nFM049499
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:17:12 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s2rmcnqad-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:17:10 -0400
-Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
-        Wed, 24 Apr 2019 16:17:09 +0100
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 24 Apr 2019 16:17:05 +0100
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3OFH4qg58785868
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 15:17:04 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85FA6BE053;
-        Wed, 24 Apr 2019 15:17:04 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EAED4BE04F;
-        Wed, 24 Apr 2019 15:17:03 +0000 (GMT)
-Received: from talon7.ibm.com (unknown [9.41.179.222])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 24 Apr 2019 15:17:03 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au,
-        robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org,
-        hverkuil@xs4all.nl, Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH v2 1/4] media: platform: Aspeed: Remove use of reset line
-Date:   Wed, 24 Apr 2019 10:16:57 -0500
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
-References: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19042415-0004-0000-0000-00001503563C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010987; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01193747; UDB=6.00625813; IPR=6.00974571;
- MB=3.00026577; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-24 15:17:08
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042415-0005-0000-0000-00008B635C06
-Message-Id: <1556119020-7609-2-git-send-email-eajames@linux.ibm.com>
+        Wed, 24 Apr 2019 11:19:16 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OFG4bg017755;
+        Wed, 24 Apr 2019 17:19:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=KmHj9BJNTsMjihCbz69dy7mwpmwsOJzd/iH+JvmR26E=;
+ b=eHQCBwjpnyB+zKEZzHlzscC6ukPdjAR3OEoorh10R5dSFdvoNT8Gk+6t6iul559F6eli
+ gpBxmT60bezD+vBAqc6ZamQwvygil3zluOCwWnnvn6OJ8aCkv+cADI4sLUAzoPdFHQvN
+ 4B3gqgUsyj91R2eLMuf14de+Bm0w5g7GOSCqVXzTqYMPkNwSukmEpaDl1SCIPa3v0fA7
+ i6GFzNuLgx8ixU6AlmNa5aQ1K0hI+Etqq/lwcL2ufsdYfk3yp8vGiFQaZWuyzksCulZN
+ aRGr6D/2aT//8xSCAaKtWC6uFFvxBLjrYotomP2Duub/CMzFDSFooladjQRDyAEIwpcj dA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2ryrvxea79-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 24 Apr 2019 17:19:06 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2941831;
+        Wed, 24 Apr 2019 15:19:06 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0A3F128FC;
+        Wed, 24 Apr 2019 15:19:06 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 24 Apr
+ 2019 17:19:05 +0200
+Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr 2019 17:19:05
+ +0200
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Christophe KERELLO <christophe.kerello@st.com>,
+        <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH] spi: stm32-qspi: manage the get_irq error case
+Date:   Wed, 24 Apr 2019 17:19:00 +0200
+Message-ID: <1556119140-3319-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.25]
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_09:,,
  signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=912 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904240117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reset line is toggled by enabling the clocks, so it's not necessary
-to manually toggle the reset as well.
+During probe, check the "get_irq" error value.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- drivers/media/platform/aspeed-video.c | 27 +++++----------------------
- 1 file changed, 5 insertions(+), 22 deletions(-)
+ drivers/spi/spi-stm32-qspi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
-index 692e08e..55c55a6 100644
---- a/drivers/media/platform/aspeed-video.c
-+++ b/drivers/media/platform/aspeed-video.c
-@@ -14,7 +14,6 @@
- #include <linux/of_irq.h>
- #include <linux/of_reserved_mem.h>
- #include <linux/platform_device.h>
--#include <linux/reset.h>
- #include <linux/sched.h>
- #include <linux/spinlock.h>
- #include <linux/string.h>
-@@ -208,7 +207,6 @@ struct aspeed_video {
- 	void __iomem *base;
- 	struct clk *eclk;
- 	struct clk *vclk;
--	struct reset_control *rst;
- 
- 	struct device *dev;
- 	struct v4l2_ctrl_handler ctrl_handler;
-@@ -483,19 +481,10 @@ static void aspeed_video_enable_mode_detect(struct aspeed_video *video)
- 	aspeed_video_update(video, VE_SEQ_CTRL, 0, VE_SEQ_CTRL_TRIG_MODE_DET);
- }
- 
--static void aspeed_video_reset(struct aspeed_video *video)
--{
--	/* Reset the engine */
--	reset_control_assert(video->rst);
--
--	/* Don't usleep here; function may be called in interrupt context */
--	udelay(100);
--	reset_control_deassert(video->rst);
--}
--
- static void aspeed_video_off(struct aspeed_video *video)
- {
--	aspeed_video_reset(video);
-+	/* Disable interrupts */
-+	aspeed_video_write(video, VE_INTERRUPT_CTRL, 0);
- 
- 	/* Turn off the relevant clocks */
- 	clk_disable_unprepare(video->vclk);
-@@ -507,8 +496,6 @@ static void aspeed_video_on(struct aspeed_video *video)
- 	/* Turn on the relevant clocks */
- 	clk_prepare_enable(video->eclk);
- 	clk_prepare_enable(video->vclk);
--
--	aspeed_video_reset(video);
- }
- 
- static void aspeed_video_bufs_done(struct aspeed_video *video,
-@@ -1464,7 +1451,9 @@ static void aspeed_video_stop_streaming(struct vb2_queue *q)
- 		 * Need to force stop any DMA and try and get HW into a good
- 		 * state for future calls to start streaming again.
- 		 */
--		aspeed_video_reset(video);
-+		aspeed_video_off(video);
-+		aspeed_video_on(video);
-+
- 		aspeed_video_init_regs(video);
- 
- 		aspeed_video_get_resolution(video);
-@@ -1619,12 +1608,6 @@ static int aspeed_video_init(struct aspeed_video *video)
- 		return PTR_ERR(video->vclk);
+diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
+index 11a89aa..42f8e3c 100644
+--- a/drivers/spi/spi-stm32-qspi.c
++++ b/drivers/spi/spi-stm32-qspi.c
+@@ -574,6 +574,12 @@ static int stm32_qspi_probe(struct platform_device *pdev)
  	}
  
--	video->rst = devm_reset_control_get_exclusive(dev, NULL);
--	if (IS_ERR(video->rst)) {
--		dev_err(dev, "Unable to get VE reset\n");
--		return PTR_ERR(video->rst);
--	}
--
- 	rc = of_reserved_mem_device_init(dev);
- 	if (rc) {
- 		dev_err(dev, "Unable to reserve memory\n");
+ 	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		if (irq != -EPROBE_DEFER)
++			dev_err(dev, "IRQ error missing or invalid\n");
++		return irq;
++	}
++
+ 	ret = devm_request_irq(dev, irq, stm32_qspi_irq, 0,
+ 			       dev_name(dev), qspi);
+ 	if (ret) {
 -- 
-1.8.3.1
+2.7.4
 
