@@ -2,85 +2,137 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B83C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FF2C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD6C220835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97DC7206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TtWGV6qx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGiL76ru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388813AbfDXTCV (ORCPT
+        id S2388865AbfDXTCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:02:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42491 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbfDXTCV (ORCPT
+        Wed, 24 Apr 2019 15:02:25 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43539 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388764AbfDXTCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:02:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id p6so9830461pgh.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:02:20 -0700 (PDT)
+        Wed, 24 Apr 2019 15:02:23 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k2so3677079lje.10;
+        Wed, 24 Apr 2019 12:02:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OhwSMH0wxuQpV1X/4MkvHMgeY7b/3Sp0UK9Vj8kRMhk=;
-        b=TtWGV6qxmQAKhL3dCiXTEpzlw8cZXqYLY0E6nclcXoeXFELpXJ6DlRVHd8cT94gvYP
-         OsXAFi6Qf7Ko9YNLLg4Y1gX9wDVv0sp90PkQvVbNAGxzEiUMReWH9QsxN8BjPoPnUVQI
-         /bCsEeBsLnQiyU3Cj4i+dMloQ16qHEt/7PwiFMB8+W3BzXW4GwheN9XNiHE6DSbCh1RU
-         Xf9EMcQWGEMgmrfhsCkMdVhPbSgmZTe+TuaPnTIKimOVIfsr0BpAIoDj+jCDbhKPqvI8
-         7VtNzGH8gKUUriI5e1Cb0WMcWcGwgbV15Tshj9VhyEyaWi1NKmoAtW/3QScICx742L9N
-         qVdg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JPrwuJhkdYeHAqLyFpVkfWP1Dx55YA7CrC/VCy+lwu8=;
+        b=iGiL76ru6oOl0hC2SJO7IvLTv/46ZWrtfd3jYmq6x6BD/2AyMboYVV2EZ5ZbiVhkv6
+         8vdNW8Z212zrV70gUh4J5EHDzy0fKuk13EbFrcnKV3Q4t4bbYob5YtYgBrBFiMcbwyTd
+         rIw8XMIW5Leq9Tb2XPMUhCq4ijEnRgQuiiaQEmxgvF2Yodh1BIX4BB5qiWlforQ3F3hF
+         odiaAV0YcAY2FUicF8H+dGPvYfXSlNowJX2ICCNUsfCVXo5FpE6dobA5r1d74je5ycqI
+         vuOjiGFwO2918KTUyVWXTWz+fAlP9AdL9hvINyaI1pqD5veZxMmEGSoZF0eEaC08s7jx
+         U8qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OhwSMH0wxuQpV1X/4MkvHMgeY7b/3Sp0UK9Vj8kRMhk=;
-        b=Q9c//5hScxmuwBDMNaMUzBZj4uQ0GCVHZ1P0XbnqfVWhGiMsTb9VdOxayD+Q5k8AOz
-         43BkN9ZWW09ycgHMXO2NfgZvQzlZfqXYXe00mByzFFt5f8coi+I92lGvcdzgHDwQlohC
-         oCNmcZZKLTLvWTNbCrjnIQ9rRZVvZ75HEiAPtFvC2ilW0CWo6H6Qe5lWm+FB/ZZus+fo
-         HLxguKgEorFLYGu+zigrG8JVP/TErhJ0fK66VQKu+7+MchCdgNIQGaYD3aw1Evr/OZp+
-         np8l7vIYw5iL/RM0W6ttaSqmjvR3uTEE9eSrlDuiwYnrIadE30bW/JeEqCebD1kHTvxi
-         Rprg==
-X-Gm-Message-State: APjAAAUxmTi6eep6mgTnMfblGOM+8oHtOm+1IpylOvqH8t81knRThr7R
-        KQ0Mvhbr2La3S6LrMHpiT8ST4JRjG6EaBcsqFgDgpTuFaQU=
-X-Google-Smtp-Source: APXvYqzfNT2FeRRiF7g9fDxXsL7cpmN91xeCv08Jbz7fuCpp/C+sTQ7sDZpd/aUfTyP6uTrkuO+P5ggH9Yg2wGNpV3k=
-X-Received: by 2002:a63:d713:: with SMTP id d19mr32673978pgg.145.1556132540133;
- Wed, 24 Apr 2019 12:02:20 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JPrwuJhkdYeHAqLyFpVkfWP1Dx55YA7CrC/VCy+lwu8=;
+        b=DW6wktM01sS6I3QB/2DN2Ssx6rTW8g5HRiqmL/optNzgbGw+CK2wsAA5Jgkxzej0nr
+         SWymKrt/DWiZiYHpEfYQhGQXVMWwIzC9VKwuH6JxFO64ABIuW0IuNFWSsYB5EoQXZ6wx
+         bpUDQOLpwLYNS8xoE1rtx4fcm2cp/E0oEQThdJ3oC8S/4S1J5lnh19ci8Qv61sNFbn4v
+         hVluVdKTo51o80Y+X7AgMZU1o4TEOjdNRElImb7S7hAufOWu7r+7hv2DDx/IzQVKQBjU
+         pbb1vsvha1rkpkjH8/jEC82hQaPJ2v2kt7Hbg9mifz3DrRSMek+8GnVdiAZ4uf/i8J3E
+         JRqA==
+X-Gm-Message-State: APjAAAUKgFCMViAkaPp4vTjViVl0a9/Jg0K4CbdAq/+QKAmecGB0zoBS
+        B2eNg3pWhTl2Zv+RQWSfD/8=
+X-Google-Smtp-Source: APXvYqxyLMnc0SyNpc79RyGS2EqZaY8qkB86xLIu5A7thLc7vZjtGw/0Xb+70KBrUa6VoQHhwf+vVg==
+X-Received: by 2002:a2e:390c:: with SMTP id g12mr19595763lja.174.1556132541092;
+        Wed, 24 Apr 2019 12:02:21 -0700 (PDT)
+Received: from [192.168.1.19] (bkw231.neoplus.adsl.tpnet.pl. [83.28.190.231])
+        by smtp.gmail.com with ESMTPSA id k73sm660402ljb.6.2019.04.24.12.02.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 12:02:20 -0700 (PDT)
+Subject: Re: [PATCH v4 24/26] leds: gpio: Use generic support for composing
+ LED names
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com,
+        linux@roeck-us.net, Linus Walleij <linus.walleij@linaro.org>
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+ <20190417205439.17685-25-jacek.anaszewski@gmail.com>
+ <20190424140417.GE14360@amd>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <100da86d-44ff-a39c-0d7c-715a286083f6@gmail.com>
+Date:   Wed, 24 Apr 2019 21:02:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190424183413.13854-1-natechancellor@gmail.com>
- <CAKwvOdkHiBhFsgEvLrr6oD84GKetDFV2b=n1DYDewCUyHWf7oA@mail.gmail.com> <20190424190005.GA9406@archlinux-i9>
-In-Reply-To: <20190424190005.GA9406@archlinux-i9>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 24 Apr 2019 12:02:09 -0700
-Message-ID: <CAKwvOd=xDJCzf0sgQKLvQH0Vh_jM=70LJ40wmp9qeyXGqa_cTA@mail.gmail.com>
-Subject: Re: [PATCH] thunderbolt: Make priority unsigned in struct tb_path
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190424140417.GE14360@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:00 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
-> > > Furthmore, that value is only assigned to an unsigned integer in
->
-> Although apparently I can't spell... should be "Furthermore".
+Pavel,
 
-:set spell
+Thanks for the review.
 
-there's probably a way to autoset this for commit messages.
+On 4/24/19 4:04 PM, Pavel Machek wrote:
+> On Wed 2019-04-17 22:54:37, Jacek Anaszewski wrote:
+>> Switch to using generic LED support for composing LED class
+>> device name.
+>>
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> ---
+>>   drivers/leds/leds-gpio.c | 23 ++++++++++-------------
+>>   1 file changed, 10 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+>> index b26cf78993d1..60fb3c85cf05 100644
+>> --- a/drivers/leds/leds-gpio.c
+>> +++ b/drivers/leds/leds-gpio.c
+>> @@ -77,11 +77,11 @@ static int gpio_blink_set(struct led_classdev *led_cdev,
+>>   
+>>   static int create_gpio_led(const struct gpio_led *template,
+>>   	struct gpio_led_data *led_dat, struct device *parent,
+>> -	struct device_node *np, gpio_blink_set_t blink_set)
+>> +	struct fwnode_handle *fwnode, gpio_blink_set_t blink_set)
+>>   {
+>> +	struct led_init_data init_data = {};
+>>   	int ret, state;
+>>   
+>> -	led_dat->cdev.name = template->name;
+>>   	led_dat->cdev.default_trigger = template->default_trigger;
+>>   	led_dat->can_sleep = gpiod_cansleep(led_dat->gpiod);
+>>   	if (!led_dat->can_sleep)
+>> @@ -112,7 +112,13 @@ static int create_gpio_led(const struct gpio_led *template,
+>>   	if (ret < 0)
+>>   		return ret;
+>>   
+>> -	return devm_led_classdev_register(parent, &led_dat->cdev);
+>> +	if (template->name)
+>> +		led_dat->cdev.name = template->name;
+>> +	else
+>> +		init_data.fwnode = fwnode;
+>> +
+>> +	return devm_led_classdev_register_ext(parent, &led_dat->cdev,
+>> +					      &init_data);
+> 
+> Won't register_ext() overwrite template->name?
+
+Ah, right. I will need to tweak led_classdev_register_ext() to properly
+handle the case when init_data is not NULL, but struct led_classdev's
+"name" property is initialized.
+
 -- 
-Thanks,
-~Nick Desaulniers
+Best regards,
+Jacek Anaszewski
