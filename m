@@ -6,54 +6,53 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4CFC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D90C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C591218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4A7218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbfDXBeA (ORCPT
+        id S1729366AbfDXBeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:34:00 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:47458 "EHLO
+        Tue, 23 Apr 2019 21:34:06 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:47466 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfDXBd7 (ORCPT
+        with ESMTP id S1726840AbfDXBeF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:33:59 -0400
+        Tue, 23 Apr 2019 21:34:05 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3720414013FD4;
-        Tue, 23 Apr 2019 18:33:59 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 18:33:56 -0700 (PDT)
-Message-Id: <20190423.183356.286519993392180464.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 378B214013FD5;
+        Tue, 23 Apr 2019 18:34:05 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 18:34:04 -0700 (PDT)
+Message-Id: <20190423.183404.989691820513976369.davem@davemloft.net>
 To:     huangfq.daxian@gmail.com
 Cc:     isdn@linux-pingi.de, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] isdn: hisax: Fix misuse of %x in config.c
+Subject: Re: [PATCH] isdn:mISDN: fix misuse of %x in hfcpci.c
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190423022528.3595-1-huangfq.daxian@gmail.com>
-References: <20190423022528.3595-1-huangfq.daxian@gmail.com>
+In-Reply-To: <20190423025623.17419-1-huangfq.daxian@gmail.com>
+References: <20190423025623.17419-1-huangfq.daxian@gmail.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Apr 2019 18:33:59 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Apr 2019 18:34:05 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Fuqian Huang <huangfq.daxian@gmail.com>
-Date: Tue, 23 Apr 2019 10:25:28 +0800
+Date: Tue, 23 Apr 2019 10:56:23 +0800
 
 > Pointers should be printed with %p or %px rather than
-> cast to (u_long) type and printed with %lX.
-> As the function seems to be for debug purpose.
-> Change %lX to %px to print the pointer value.
+> cast to (u_long) and printed with %lx.
+> Change %lx to %p to print the pointer.
+> Change %lx to %pad to print the dma_addr_t.
 > 
 > Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 
-I agree with Stephen that we should probably remove this stuff entirely
-but I'll apply this for now.
+Applied.
