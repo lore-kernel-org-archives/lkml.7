@@ -4,118 +4,173 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F67C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCA6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38519206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D49218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732860AbfDXQuK (ORCPT
+        id S1732861AbfDXQuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:50:10 -0400
-Received: from foss.arm.com ([217.140.101.70]:48974 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732828AbfDXQuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:50:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2289D374;
-        Wed, 24 Apr 2019 09:50:09 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B15243F557;
-        Wed, 24 Apr 2019 09:50:07 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 17:50:02 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH] pci: aardvark: Wait for endpoint to be ready before
- training link
-Message-ID: <20190424165002.GA26089@e121166-lin.cambridge.arm.com>
-References: <20190313213752.1246-1-repk@triplefau.lt>
- <20190423163215.GB26523@red-moon>
- <20190423222917.GN2754@voidbox.localdomain>
+        Wed, 24 Apr 2019 12:50:55 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:60443 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732242AbfDXQuy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:50:54 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 19C18200B5;
+        Wed, 24 Apr 2019 18:50:51 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 18:50:49 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>
+Subject: Re: [PATCH 11/25] drm: kirin: Move kirin_crtc, kirin_plane,
+ kirin_format to kirin_drm_drv.h
+Message-ID: <20190424165049.GD20110@ravnborg.org>
+References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
+ <1556061656-1733-12-git-send-email-john.stultz@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190423222917.GN2754@voidbox.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1556061656-1733-12-git-send-email-john.stultz@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=BTeA3XvPAAAA:8
+        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=KKAkSRfTAAAA:8 a=6BsCes5lsf5TXTDByRIA:9
+        a=CjuIK1q_8ugA:10 a=tafbbOV3vt1XuEhzTjGK:22 a=Vxmtnl_E_bksehYqCbjh:22
+        a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:29:18AM +0200, Remi Pommarel wrote:
-> Hi,
+Hi John.
+
+On Tue, Apr 23, 2019 at 04:20:42PM -0700, John Stultz wrote:
+> From: Xu YiPing <xuyiping@hisilicon.com>
 > 
-> On Tue, Apr 23, 2019 at 05:32:15PM +0100, Lorenzo Pieralisi wrote:
-> > On Wed, Mar 13, 2019 at 10:37:52PM +0100, Remi Pommarel wrote:
-> > > When configuring pcie reset pin from gpio (e.g. initially set by
-> > > u-boot) to pcie function this pin goes low for a brief moment
-> > > asserting the PERST# signal. Thus connected device enters fundamental
-> > > reset process and link configuration can only begin after a minimal
-> > > 100ms delay (see [1]).
-> > > 
-> > > This makes sure that link is configured after at least 100ms from
-> > > beginning of probe() callback (shortly after the reset pin function
-> > > configuration switch through pinctrl subsytem).
-
-I am a bit lost, what's the connection between the probe() callback
-and the reset pin function configuration ?
-
-Please elaborate.
-
-> > > 
-> > > [1] "PCI Express Base Specification", REV. 2.1
-> > >         PCI Express, March 4 2009, 6.6.1 Conventional Reset
-> > > 
-> > > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > > ---
-> > >  drivers/pci/controller/pci-aardvark.c | 17 ++++++++++++++---
-> > >  1 file changed, 14 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > index a30ae7cf8e7e..70a1023d0ef1 100644
-> > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > @@ -177,6 +177,9 @@
-> > >  
-> > >  #define PIO_TIMEOUT_MS			1
-> > >  
-> > > +/* Endpoint can take up to 100ms to be ready after a reset */
-> > > +#define ENDPOINT_RST_MS			100
-> > > +
-> > >  #define LINK_WAIT_MAX_RETRIES		10
-> > >  #define LINK_WAIT_USLEEP_MIN		90000
-> > >  #define LINK_WAIT_USLEEP_MAX		100000
-> > > @@ -242,8 +245,10 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
-> > >  	return -ETIMEDOUT;
-> > >  }
-> > >  
-> > > -static void advk_pcie_setup_hw(struct advk_pcie *pcie)
-> > > +static void
-> > > +advk_pcie_setup_hw(struct advk_pcie *pcie, unsigned long ep_rdy_time)
-> > 
-> > Nit: I prefer the prototype to be in one line, I wrap it for you.
-> > 
-> > I am wondering why you need to pass in ep_rdy_time parameter when you
-> > can easily compute it in the function itself.
-> > 
+> As part of refactoring the kirin driver to better support
+> different hardware revisions, this patch moves some shared
+> structures and helpers to the common kirin_drm_drv.h
 > 
-> The only reason for that is because the sooner I get the jiffies the
-> lower the delay has to be. I was trying to reduce the impact of this
-> delay to a minimum, but maybe the improvement is not worth it.
+> These structures will later used by both kirin620 and
+> future kirin960 driver
+> 
+> Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
+> Cc: Rongrong Zou <zourongrong@gmail.com>
+> Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> Cc: Chen Feng <puck.chen@hisilicon.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: dri-devel <dri-devel@lists.freedesktop.org>
+> Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
+> [jstultz: reworded commit message]
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 27 ++-----------------------
+>  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h | 24 ++++++++++++++++++++++
+>  2 files changed, 26 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+> index f54cf99..69604ad 100644
+> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+> @@ -38,12 +38,6 @@
+>  #define OUT_OVLY	ADE_OVLY2 /* output overlay compositor */
+>  #define ADE_DEBUG	1
+>  
+> -#define to_kirin_crtc(crtc) \
+> -	container_of(crtc, struct kirin_crtc, base)
+> -
+> -#define to_kirin_plane(plane) \
+> -	container_of(plane, struct kirin_plane, base)
+> -
+>  
+>  struct ade_hw_ctx {
+>  	void __iomem  *base;
+> @@ -59,18 +53,6 @@ struct ade_hw_ctx {
+>  	struct drm_crtc *crtc;
+>  };
+>  
+> -struct kirin_crtc {
+> -	struct drm_crtc base;
+> -	void *hw_ctx;
+> -	bool enable;
+> -};
+> -
+> -struct kirin_plane {
+> -	struct drm_plane base;
+> -	void *hw_ctx;
+> -	u32 ch;
+> -};
+> -
+>  struct ade_data {
+>  	struct kirin_crtc crtc;
+>  	struct kirin_plane planes[ADE_CH_NUM];
+> @@ -78,12 +60,7 @@ struct ade_data {
+>  };
 
-That should just be (roughly) some microseconds unless there is
-something I am missing. Try to measure it :)
 
-More importantly, I would ask you to elaborate a bit more
-about the logic behind this patch, see above because I need
-to understand the logic behind pinctrl reset and the probe()
-hook execution ordering.
+This struct: 
+>  /* ade-format info: */
+> -struct ade_format {
+> -	u32 pixel_format;
+> -	enum ade_fb_format ade_format;
+> -};
+> -
+> -static const struct ade_format ade_formats[] = {
+> +static const struct kirin_format ade_formats[] = {
+>  	/* 16bpp RGB: */
+>  	{ DRM_FORMAT_RGB565, ADE_RGB_565 },
+>  	{ DRM_FORMAT_BGR565, ADE_BGR_565 },
+> @@ -127,7 +104,7 @@ static u32 ade_get_format(u32 pixel_format)
+>  
+>  	for (i = 0; i < ARRAY_SIZE(ade_formats); i++)
+>  		if (ade_formats[i].pixel_format == pixel_format)
+> -			return ade_formats[i].ade_format;
+> +			return ade_formats[i].hw_format;
+>  
+>  	/* not found */
+>  	DRM_ERROR("Not found pixel format!!fourcc_format= %d\n",
+> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+> index ad027d1..b6626f5 100644
+> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+> @@ -13,6 +13,30 @@
+>  
+>  #define MAX_CRTC	2
+>  
+> +#define to_kirin_crtc(crtc) \
+> +	container_of(crtc, struct kirin_crtc, base)
+> +
+> +#define to_kirin_plane(plane) \
+> +	container_of(plane, struct kirin_plane, base)
+> +
+> +/* kirin-format translate table */
+> +struct kirin_format {
+> +	u32 pixel_format;
+> +	u32 hw_format;
+> +};
+Is renamed.
+The member hw_format is renamed and no longer uses an enum.
+(The sole user of this enum type).
 
-Thanks,
-Lorenzo
+These changes are not included in the changelog - should they be part of
+this patch?
+And also the change from enum to u32 is not understood.
+
+	Sam
