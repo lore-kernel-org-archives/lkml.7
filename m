@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA33C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0CAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD27F218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44172054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127308;
-	bh=B9iZMpWju9Y9ei2xE33LIsTj7fYgP4CcfWfUNxBJBhc=;
+	s=default; t=1556127313;
+	bh=FQu9e4xh6AtdMPjsq3qBzhgmI3DlrWHtE9FOX/VPGtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ml5qcRSSouWoccsvpGg1t7z3MUHVXa/ROduFpPW2P22xJirfDXkr8/9Wtnx504d7I
-	 8DMRYd/wErdtWjMTxUchKzmfOaNEHmr+08XuY3wq1d98w0TFxYP5iA1gbHKT1F0OOY
-	 pHOerqc6GzSgPiGAlSy8b33CKBk55e5IlmP5MmeI=
+	b=tp6fCOo3wVkoQcdnby07LQSsTIpJAShSXTEg80O5ux7SKP1WXWM0JwSzF/xcum2L4
+	 0G1+0a/uhqGL0iksl2YfNtbdhgaXLA3NnAtvmNASI539OXmQiUdPcmHJapsx04gcuq
+	 yL+HRrpJLGwZbcynhLjq5rBZyVHcH+mACZaIen3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391829AbfDXRfH (ORCPT
+        id S2391837AbfDXRfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:35:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:35:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391190AbfDXRfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:35:01 -0400
+        id S2391806AbfDXRfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:35:04 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8518820675;
-        Wed, 24 Apr 2019 17:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21DD92054F;
+        Wed, 24 Apr 2019 17:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127301;
-        bh=B9iZMpWju9Y9ei2xE33LIsTj7fYgP4CcfWfUNxBJBhc=;
+        s=default; t=1556127303;
+        bh=FQu9e4xh6AtdMPjsq3qBzhgmI3DlrWHtE9FOX/VPGtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=egSmT1E3wOnNlW+mlUL03+qOQLH7XGY4z3+Rp51Wc+npUvlbid3zr309D0FSPqbFZ
-         takqx7KLz1IeN0z/71jFy57qWOZZ/oAvwsECPHWdvcgTschg8gb6zxQvQK9zfAxs5O
-         CDuK9fC/T209jFyU/iB4Bs0ySO6YI/mGpg0CiLSA=
+        b=Sr1pEW7Htj2UDcW5HUAVtq96oCAuiMa3uGNSNiX7MAN7lkhySvaeo/4r7uu31dYrf
+         wkdMWzlN2NmAXAanA8g4R5m+06q6rLCoxGW+JCk857SydKgZ8XaMRjZlmOR4ti7rLG
+         QLv1JFaGpJiOcw48mOGAvmuKxVXj5HYGxh8X09jI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kevin Darbyshire-Bryant <kevin@darbyshire-bryant.me.uk>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-Subject: [PATCH 5.0 040/115] sch_cake: Make sure we can write the IP header before changing DSCP bits
-Date:   Wed, 24 Apr 2019 19:09:36 +0200
-Message-Id: <20190424170927.393636942@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 5.0 041/115] NFC: nci: Add some bounds checking in nci_hci_cmd_received()
+Date:   Wed, 24 Apr 2019 19:09:37 +0200
+Message-Id: <20190424170927.445586466@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -60,50 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit c87b4ecdbe8db27867a7b7f840291cd843406bd7 ]
+[ Upstream commit d7ee81ad09f072eab1681877fc71ec05f9c1ae92 ]
 
-There is not actually any guarantee that the IP headers are valid before we
-access the DSCP bits of the packets. Fix this using the same approach taken
-in sch_dsmark.
+This is similar to commit 674d9de02aa7 ("NFC: Fix possible memory
+corruption when handling SHDLC I-Frame commands").
 
-Reported-by: Kevin Darbyshire-Bryant <kevin@darbyshire-bryant.me.uk>
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+I'm not totally sure, but I think that commit description may have
+overstated the danger.  I was under the impression that this data came
+from the firmware?  If you can't trust your networking firmware, then
+you're already in trouble.
+
+Anyway, these days we add bounds checking where ever we can and we call
+it kernel hardening.  Better safe than sorry.
+
+Fixes: 11f54f228643 ("NFC: nci: Add HCI over NCI protocol support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_cake.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ net/nfc/nci/hci.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/net/sched/sch_cake.c
-+++ b/net/sched/sch_cake.c
-@@ -1524,16 +1524,27 @@ static void cake_wash_diffserv(struct sk
+--- a/net/nfc/nci/hci.c
++++ b/net/nfc/nci/hci.c
+@@ -312,6 +312,10 @@ static void nci_hci_cmd_received(struct
+ 		create_info = (struct nci_hci_create_pipe_resp *)skb->data;
+ 		dest_gate = create_info->dest_gate;
+ 		new_pipe = create_info->pipe;
++		if (new_pipe >= NCI_HCI_MAX_PIPES) {
++			status = NCI_HCI_ANY_E_NOK;
++			goto exit;
++		}
  
- static u8 cake_handle_diffserv(struct sk_buff *skb, u16 wash)
- {
-+	int wlen = skb_network_offset(skb);
- 	u8 dscp;
+ 		/* Save the new created pipe and bind with local gate,
+ 		 * the description for skb->data[3] is destination gate id
+@@ -336,6 +340,10 @@ static void nci_hci_cmd_received(struct
+ 			goto exit;
+ 		}
+ 		delete_info = (struct nci_hci_delete_pipe_noti *)skb->data;
++		if (delete_info->pipe >= NCI_HCI_MAX_PIPES) {
++			status = NCI_HCI_ANY_E_NOK;
++			goto exit;
++		}
  
- 	switch (tc_skb_protocol(skb)) {
- 	case htons(ETH_P_IP):
-+		wlen += sizeof(struct iphdr);
-+		if (!pskb_may_pull(skb, wlen) ||
-+		    skb_try_make_writable(skb, wlen))
-+			return 0;
-+
- 		dscp = ipv4_get_dsfield(ip_hdr(skb)) >> 2;
- 		if (wash && dscp)
- 			ipv4_change_dsfield(ip_hdr(skb), INET_ECN_MASK, 0);
- 		return dscp;
- 
- 	case htons(ETH_P_IPV6):
-+		wlen += sizeof(struct ipv6hdr);
-+		if (!pskb_may_pull(skb, wlen) ||
-+		    skb_try_make_writable(skb, wlen))
-+			return 0;
-+
- 		dscp = ipv6_get_dsfield(ipv6_hdr(skb)) >> 2;
- 		if (wash && dscp)
- 			ipv6_change_dsfield(ipv6_hdr(skb), INET_ECN_MASK, 0);
+ 		ndev->hci_dev->pipes[delete_info->pipe].gate =
+ 						NCI_HCI_INVALID_GATE;
 
 
