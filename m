@@ -7,57 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A30DBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A99C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7224320652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26C520652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129141;
-	bh=bySmKbJyZYv1G4DXWoUlswKjTYNmxuBGSqjU9uLxfxQ=;
+	s=default; t=1556129146;
+	bh=n8iI53Gw4QIIUCoRu3zzHQbqa6o7rzyUyasSVFimEg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vy8V+Os/rnim+v6rt0XBTOAIaTYwEo9a7uzw693YAGWccB+Z0kEEcuzXTU7vI/cY4
-	 2priH+XKJAdMqoNsq7+HlKfPN3Io2iGP4pXDSDJj8917fXdM6sAaZyWK8zAYYroTp6
-	 nIkd4KDFIoZcI0+8juojynpUONt8h5LCwOc6P2k8=
+	b=j6gKgf01Gu6J6/AFJKMzNZ/koa2GcwU199Fj9VbmEDVllhyBtezqAWDpUTLnnPyyH
+	 FdzeuNwzfesZxhslUyxyWLfmXVkqqrYLzdZxblfFq3f3u/cb2MWF2fQ5lUlqiTajgI
+	 yURWh4FWuafer4lMuM6OzS9ybMRzsZNC19a/D4B8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389150AbfDXSFj (ORCPT
+        id S2388826AbfDXRSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:05:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43516 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388837AbfDXRS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:18:28 -0400
+        id S2388811AbfDXRSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:18:18 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C6DD218B0;
-        Wed, 24 Apr 2019 17:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE64821909;
+        Wed, 24 Apr 2019 17:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126307;
-        bh=bySmKbJyZYv1G4DXWoUlswKjTYNmxuBGSqjU9uLxfxQ=;
+        s=default; t=1556126297;
+        bh=n8iI53Gw4QIIUCoRu3zzHQbqa6o7rzyUyasSVFimEg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YpRzC0JEvYqhWSNUJybVrwYZ5FDYya94fiPsVmuVc+RieoRO1PBx/LFMMs7r51Viu
-         oAidJQX9wci2KCXNUpPjbGIvtcJm+fljd65Gbgh+6o3LKw5g3Im7Nq12Gosip9rPpu
-         6V3L6V21CeQQ5OKJ+EWvUrEmyb8qeMOk1gPUz4+Q=
+        b=BkJyIdvRHHptCQGSY0i2ybjf96D7wXcBBsoCoCBPtzCWXyqnfSvxPyF2JUVewrwET
+         edeqHaqDl1NIAGMypiGvho4Fie8mCnIhJpZhbr8WwKwwAVLmUmmht1J0k0c+AToXSt
+         IjqVD6vKEP8E3/1t1FoOPraSae863QuadEYsi4Ms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
-        =?UTF-8?q?Rafael=20=C3=81vila=20de=20Esp=C3=ADndola?= 
-        <rafael@espindo.la>, Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Cao Jin <caoj.fnst@cn.fujitsu.com>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tri Vo <trong@android.com>, morbo@google.com,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 066/168] x86/build: Mark per-CPU symbols as absolute explicitly for LLD
-Date:   Wed, 24 Apr 2019 19:08:30 +0200
-Message-Id: <20190424170927.666520353@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 063/168] media: s5p-jpeg: Check for fmt_ver_flag when doing fmt enumeration
+Date:   Wed, 24 Apr 2019 19:08:27 +0200
+Message-Id: <20190424170927.510822680@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -70,74 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d071ae09a4a1414c1433d5ae9908959a7325b0ad ]
+[ Upstream commit 49710c32cd9d6626a77c9f5f978a5f58cb536b35 ]
 
-Accessing per-CPU variables is done by finding the offset of the
-variable in the per-CPU block and adding it to the address of the
-respective CPU's block.
+Previously when doing format enumeration, it was returning all
+ formats supported by driver, even if they're not supported by hw.
+Add missing check for fmt_ver_flag, so it'll be fixed and only those
+ supported by hw will be returned. Similar thing is already done
+ in s5p_jpeg_find_format.
 
-Section 3.10.8 of ld.bfd's documentation states:
+It was found by using v4l2-compliance tool and checking result
+ of VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS test
+and using v4l2-ctl to get list of all supported formats.
 
-  For expressions involving numbers, relative addresses and absolute
-  addresses, ld follows these rules to evaluate terms:
+Tested on s5pv210-galaxys (Samsung i9000 phone).
 
-  Other binary operations, that is, between two relative addresses
-  not in the same section, or between a relative address and an
-  absolute address, first convert any non-absolute term to an
-  absolute address before applying the operator."
+Fixes: bb677f3ac434 ("[media] Exynos4 JPEG codec v4l2 driver")
 
-Note that LLVM's linker does not adhere to the GNU ld's implementation
-and as such requires implicitly-absolute terms to be explicitly marked
-as absolute in the linker script. If not, it fails currently with:
-
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:153: at least one side of the expression must be absolute
-  ld.lld: error: ./arch/x86/kernel/vmlinux.lds:154: at least one side of the expression must be absolute
-  Makefile:1040: recipe for target 'vmlinux' failed
-
-This is not a functional change for ld.bfd which converts the term to an
-absolute symbol anyways as specified above.
-
-Based on a previous submission by Tri Vo <trong@android.com>.
-
-Reported-by: Dmitry Golovin <dima@golovin.in>
-Signed-off-by: Rafael Ávila de Espíndola <rafael@espindo.la>
-[ Update commit message per Boris' and Michael's suggestions. ]
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-[ Massage commit message more, fix typos. ]
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Dmitry Golovin <dima@golovin.in>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Cc: Cao Jin <caoj.fnst@cn.fujitsu.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tri Vo <trong@android.com>
-Cc: dima@golovin.in
-Cc: morbo@google.com
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181219190145.252035-1-ndesaulniers@google.com
+Signed-off-by: Pawe? Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+[hverkuil-cisco@xs4all.nl: fix a few alignment issues]
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/s5p-jpeg/jpeg-core.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index a703842b54de..17e1e60b6b40 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -365,7 +365,7 @@ SECTIONS
-  * Per-cpu symbols which need to be offset from __per_cpu_load
-  * for the boot processor.
-  */
--#define INIT_PER_CPU(x) init_per_cpu__##x = x + __per_cpu_load
-+#define INIT_PER_CPU(x) init_per_cpu__##x = ABSOLUTE(x) + __per_cpu_load
- INIT_PER_CPU(gdt_page);
- INIT_PER_CPU(irq_stack_union);
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index 80c83bba7af3..0d981bbf38bc 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -1262,13 +1262,16 @@ static int s5p_jpeg_querycap(struct file *file, void *priv,
+ 	return 0;
+ }
  
+-static int enum_fmt(struct s5p_jpeg_fmt *sjpeg_formats, int n,
++static int enum_fmt(struct s5p_jpeg_ctx *ctx,
++		    struct s5p_jpeg_fmt *sjpeg_formats, int n,
+ 		    struct v4l2_fmtdesc *f, u32 type)
+ {
+ 	int i, num = 0;
++	unsigned int fmt_ver_flag = ctx->jpeg->variant->fmt_ver_flag;
+ 
+ 	for (i = 0; i < n; ++i) {
+-		if (sjpeg_formats[i].flags & type) {
++		if (sjpeg_formats[i].flags & type &&
++		    sjpeg_formats[i].flags & fmt_ver_flag) {
+ 			/* index-th format of type type found ? */
+ 			if (num == f->index)
+ 				break;
+@@ -1294,11 +1297,11 @@ static int s5p_jpeg_enum_fmt_vid_cap(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_CAPTURE);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_CAPTURE);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_CAPTURE);
+ }
+ 
+ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+@@ -1307,11 +1310,11 @@ static int s5p_jpeg_enum_fmt_vid_out(struct file *file, void *priv,
+ 	struct s5p_jpeg_ctx *ctx = fh_to_ctx(priv);
+ 
+ 	if (ctx->mode == S5P_JPEG_ENCODE)
+-		return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
++		return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
+ 				SJPEG_FMT_FLAG_ENC_OUTPUT);
+ 
+-	return enum_fmt(sjpeg_formats, SJPEG_NUM_FORMATS, f,
+-					SJPEG_FMT_FLAG_DEC_OUTPUT);
++	return enum_fmt(ctx, sjpeg_formats, SJPEG_NUM_FORMATS, f,
++			SJPEG_FMT_FLAG_DEC_OUTPUT);
+ }
+ 
+ static struct s5p_jpeg_q_data *get_q_data(struct s5p_jpeg_ctx *ctx,
 -- 
 2.19.1
 
