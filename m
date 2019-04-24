@@ -2,99 +2,112 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C61C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B46C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1FF218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AA020685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yj7p1f7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbfDXHQo (ORCPT
+        id S1730097AbfDXHTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:16:44 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42165 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729244AbfDXHQo (ORCPT
+        Wed, 24 Apr 2019 03:19:23 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42571 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbfDXHTW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:16:44 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c190so6448481qke.9;
-        Wed, 24 Apr 2019 00:16:43 -0700 (PDT)
+        Wed, 24 Apr 2019 03:19:22 -0400
+Received: by mail-ed1-f68.google.com with SMTP id u23so14616431eds.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 00:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Lgf5HoTsHrFGKIuVDTaWuBV3TYN/tmdm9uPDCDh5ZgM=;
+        b=Yj7p1f7EY1WDTR8JbAAkWxXZ4YlaIiwgza8hYzOwMnHhJKC4C7MuOpamuAaaAFgsyl
+         jS02U1cKwoOk0eZBWLN0PvX79+IYY5w0i9eLbJYp8bwmiRO0vIOslvoCUJWrK9Ydn48j
+         4js1CEDPeVwtgWMQ8/doO+tRqZe/gxfegk8F2UfRX4JR17FpN+NXvoo/ncNYZfQok58O
+         5VAEquWio+0ZCXoFmapXHZ7AMRXWoTdpy/KY1UtCxSb2SUvOaMmwFM/rNOtXXfwNFvUi
+         32DsEolE24zgh6cNa1nQFDHVjMv5x7+iWUW7BiYRUiO4gixKxF9rywRfVTei1/IfMIkD
+         Kp3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5vtoRdJNYOO5XXJgUqn92NRO5AXTQ17kbZcTRcpqM5M=;
-        b=tY62NZtKmJr69adUJDrNMkv5dMxsNdBHTea1h1IhurKSXN8nzKh6MCavEM1smE/3W4
-         IHX8vp2vaY2D31r4Gi3Ei7ljaH0eH7iWcnYch0UTwf1I7EdWCfRqlsYusHftLu0PaptY
-         XcpJQsUvjD2tQCU/oMvyCLnWAqSOdJ2KnlETLttpKnAFyCspZyyMihMsxaNjRYq/VHV9
-         ggTgPyvHLEZkRaNiEgXmyJhuWy4Zdgdx5FrZ76T9zHqWtN9Zir/UtUVKbn9wqcfIi56X
-         ss+Repxl6t3qVXudJ/hSxdX31xYrT6vFt0IKRtx9XMehna1YfbYFVO1gUYUAjsrRG/yc
-         YMnw==
-X-Gm-Message-State: APjAAAWehSoYHo0QYCE2f1WxVhMYIXjIJpw6rtA9WYGeU0CmLlE/ILHm
-        DqUWtP7NeLlG0N/C1dGNpU635D80YN2zW2NoFpdDJZxB
-X-Google-Smtp-Source: APXvYqyz+NpH/AN9CzMV4SIRQakedWs/eckqDJWHCSHjXUnkX+aEwJkhFYXtiUOU87Bk7DWCP+u0NPXZT5DefWTm1Z4=
-X-Received: by 2002:a37:c402:: with SMTP id d2mr11455272qki.291.1556090202785;
- Wed, 24 Apr 2019 00:16:42 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Lgf5HoTsHrFGKIuVDTaWuBV3TYN/tmdm9uPDCDh5ZgM=;
+        b=Fm64Q6dPtXx9MLSoIRGN0BoZUgLiDhGyKcH7Mt6G4rB367gyyM1XrpBuYSjxBqr9/H
+         OTbE6lmm4d6ItcODHz/Op64rYTLf1li1rOWz7qXGa6rSQvsxRIaFeT0sjLshphLlLT7w
+         e03ZScMsTQzUzAEdZI+RGEfPXskytQMmLnski/Qh4gOprYRSW/OuqKfC9qgQpc3yilRx
+         m4gTiS8pbztbEkjkuc9ebmA6fJ3Tw2Rqe6Jq1uWCHnL9+lP5xrIWxfgg9GPnwMESGzz7
+         kHEXyPb0x078/ApWva3QxJG7wWpQUvQ0q3t/LgZvtJBZrxU0os431tqu99J6rOWZ13fb
+         zKow==
+X-Gm-Message-State: APjAAAXsjFFXHpo6d2qUSQNZxuaPsxh0G2cG71UU+hBIUKL1WJs8Z4w/
+        y2VQ/SWNoH3nD5+zRArDv1YmuMnHupfhNR6kaDS/WFbIjsQ=
+X-Google-Smtp-Source: APXvYqxa1VLKXX5hqNgTeuYWt46r09laLknpYhGsvDUayLLC6oTRNjJ7h4aXzL0GK5BJwKVJRuitGxUK50/Lroaa/vg=
+X-Received: by 2002:a50:be01:: with SMTP id a1mr19473760edi.12.1556090361056;
+ Wed, 24 Apr 2019 00:19:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAK8P3a3bT=HO=YQ7PY7wOEsJTzf0jS4PkqNHSqYX4JjwmbhY+g@mail.gmail.com>
- <20190424004131.GA19764@altlinux.org>
-In-Reply-To: <20190424004131.GA19764@altlinux.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 24 Apr 2019 09:16:26 +0200
-Message-ID: <CAK8P3a2vmEkqN2FLu6C5TPGyDZ4F=tUENJXz_E_oeqdN1RDqQA@mail.gmail.com>
-Subject: Re: [GIT PULL] arch: add pidfd and io_uring syscalls everywhere
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
+References: <20190311224752.8337-1-valentin.schneider@arm.com> <20190311224752.8337-8-valentin.schneider@arm.com>
+In-Reply-To: <20190311224752.8337-8-valentin.schneider@arm.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Wed, 24 Apr 2019 15:18:44 +0800
+Message-ID: <CAEbi=3fPnEsF6hUK-p7de=+hyJ5UTF+uhb65QzNgmvNoh2TVPA@mail.gmail.com>
+Subject: Re: [PATCH 07/14] nds32: ex-exit: Remove unneeded need_resched() loop
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vincent Chen <deanbo422@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 2:41 AM Dmitry V. Levin <ldv@altlinux.org> wrote:
-> On Tue, Apr 23, 2019 at 09:28:48PM +0200, Arnd Bergmann wrote:
-> > The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
-> >
-> >   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
-> > syscalls-5.1
-> >
-> > for you to fetch changes up to 39036cd2727395c3369b1051005da74059a85317:
-> >
-> >   arch: add pidfd and io_uring syscalls everywhere (2019-04-15 16:31:17 +0200)
-> >
-> > ----------------------------------------------------------------
-> > arch: add pidfd and io_uring syscalls everywhere
-> >
-> > This comes a bit late, but should be in 5.1 anyway: we want the newly
-> > added system calls to be synchronized across all architectures in
-> > the release.
-> >
-> > I hope that in the future, any newly added system calls can be added
-> > to all architectures at the same time, and tested there while they
-> > are in linux-next, avoiding dependencies between the architecture
-> > maintainer trees and the tree that contains the new system call.
+Hi Valentin,
+
+Valentin Schneider <valentin.schneider@arm.com> =E6=96=BC 2019=E5=B9=B43=E6=
+=9C=8812=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=886:48=E5=AF=AB=E9=81=
+=93=EF=BC=9A
 >
-> Is "everywhere" really means everywhere?
-> The reason I'm asking this question is that sh64 seems to be excluded:
-> arch/sh/kernel/syscalls_64.S hasn't got any syscall entries since commit
-> v4.8-rc1~15^2~3.  Is sh64 supported in any way at all?
+> Since the enabling and disabling of IRQs within preempt_schedule_irq()
+> is contained in a need_resched() loop, we don't need the outer arch
+> code loop.
+>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Greentime Hu <green.hu@gmail.com>
+> Cc: Vincent Chen <deanbo422@gmail.com>
+> ---
+>  arch/nds32/kernel/ex-exit.S | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/nds32/kernel/ex-exit.S b/arch/nds32/kernel/ex-exit.S
+> index 97ba15cd4180..1df02a793364 100644
+> --- a/arch/nds32/kernel/ex-exit.S
+> +++ b/arch/nds32/kernel/ex-exit.S
+> @@ -163,7 +163,7 @@ resume_kernel:
+>         gie_disable
+>         lwi     $t0, [tsk+#TSK_TI_PREEMPT]
+>         bnez    $t0, no_work_pending
+> -need_resched:
+> +
+>         lwi     $t0, [tsk+#TSK_TI_FLAGS]
+>         andi    $p1, $t0, #_TIF_NEED_RESCHED
+>         beqz    $p1, no_work_pending
+> @@ -173,7 +173,7 @@ need_resched:
+>         beqz    $t0, no_work_pending
+>
+>         jal     preempt_schedule_irq
+> -       b       need_resched
+> +       b       no_work_pending
+>  #endif
+>
+>  /*
 
-sh64 is dead, the only reason those files are still there is because nobody
-has bothered to create the patch to remove them.
-
-It has not been possible to even build an sh64 kernel for many years,
-and I'm sure none of the prototypes have been turned on for even longer
-if they are still in someone's board pile.
-
-     Arnd
+Thank you. :)
+Acked-by: Greentime Hu <greentime@andestech.com>
