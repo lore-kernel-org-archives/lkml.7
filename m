@@ -2,153 +2,201 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2A9C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0358AC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDE8218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A03218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="IWH+bDS4"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="p5InsUef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbfDXMBL (ORCPT
+        id S1729793AbfDXMBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:01:11 -0400
-Received: from mail-eopbgr710074.outbound.protection.outlook.com ([40.107.71.74]:43387
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729281AbfDXMAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:00:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Qm1ZQB1XZgElabykY/zxs8xcJHay1dvkcWJQ2J0Lc8=;
- b=IWH+bDS4yKXlw1NkOok5DW0SxY3ODLeignxGHjXjRyrxvnk+HMeUmA4RhRRGlejT8amuOaBF9UHU1lEM2s4m7NeKIP/SktzZtMAKXVSpZk4ExrK2RwKOtJulCK0eao0e5LA2T4ZrsqYN9S4BuFm4mtOVrBfWB7ji2NbKK6M54GQ=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6687.namprd05.prod.outlook.com (20.178.249.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.7; Wed, 24 Apr 2019 12:00:21 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::441b:ef64:e316:b294]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::441b:ef64:e316:b294%5]) with mapi id 15.20.1835.010; Wed, 24 Apr 2019
- 12:00:21 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     Pv-drivers <Pv-drivers@vmware.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        =?utf-8?B?Q2hyaXN0aWFuIEvDtm5pZw==?= <christian.koenig@amd.com>
-Subject: [PATCH 4/9] drm/ttm: Allow the driver to provide the ttm struct
- vm_operations_struct
-Thread-Topic: [PATCH 4/9] drm/ttm: Allow the driver to provide the ttm struct
- vm_operations_struct
-Thread-Index: AQHU+pVKHjTn6xj4L0+rY3D5lHMzKw==
-Date:   Wed, 24 Apr 2019 12:00:21 +0000
-Message-ID: <20190424115918.3380-5-thellstrom@vmware.com>
-References: <20190424115918.3380-1-thellstrom@vmware.com>
-In-Reply-To: <20190424115918.3380-1-thellstrom@vmware.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR07CA0208.eurprd07.prod.outlook.com
- (2603:10a6:802:3f::32) To MN2PR05MB6141.namprd05.prod.outlook.com
- (2603:10b6:208:c7::25)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9b921eab-e017-4f31-513a-08d6c8ac6d12
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR05MB6687;
-x-ms-traffictypediagnostic: MN2PR05MB6687:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR05MB66870BBDD2C0A335CB950DA0A13C0@MN2PR05MB6687.namprd05.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(346002)(396003)(366004)(189003)(199004)(8676002)(81156014)(64756008)(66946007)(66556008)(52116002)(6506007)(53936002)(66476007)(68736007)(102836004)(8936002)(6116002)(66446008)(6512007)(36756003)(186003)(81166006)(26005)(73956011)(7736002)(305945005)(316002)(66066001)(2501003)(66574012)(50226002)(97736004)(3846002)(86362001)(1076003)(110136005)(5660300002)(2616005)(14454004)(11346002)(25786009)(486006)(2906002)(76176011)(71200400001)(71190400001)(99286004)(476003)(386003)(256004)(4326008)(446003)(14444005)(6486002)(6436002)(54906003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6687;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: kczG9PNhuaZTmA07GYBh/M2A9lIMqklM1+CYR6iv2u8eXwiSPkozpK46iYj1mNxXgfWhote5n/f62u4BjjviCPW/KtO21jtyXr+/NVwW+G0a2X0LNqoyJwdbBK04OR1aXC5YZisnf6mS+EYY9cdBVa94zJYom2gEADRo18LMV0YMzSJ9lRmdM0UPJ0wPJaupRd7+MLLJbSpWh2NCKcUm6bVV5gtfeuu3sh54TKXc4ultM0iZljp88Ys09CYUYYDnhmbRvVjCz5ofVwCPgoRrwkbMU+iKwj4i/pm7kTDs5yG2F02y0GnFiwvq9xEkDCPrh3kDkFx/1vNyy5QFktEqR0Qs/3Ek8D8e9oI75qvWngNAvY3MZoFNRLUNeHTgvhXfxmLh5sZESljYaIYc/z8eoUWe+ybgllg+C5AZXE1XreU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E213542893D9B94A8D16C724C95875FA@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 08:01:35 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40372 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728845AbfDXMBf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 08:01:35 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y49so1152343qta.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:01:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=03rf8AKBlZ5h5mWz0thDPCfLgWMzgoNv8XVPYbEvK3A=;
+        b=p5InsUefI3wayoh9XdXMnXKZNUBlmSSS9ZzyIUIbn/Wu7VtmN5NDPkcqSZxaqYO3P8
+         0kWyCR/3eKGZ1n9a1ZCHhCFBKTkVPiyRMelCrDQroNCVepfQcXlM0ki52awsFP3gd2CS
+         5kltw55r7ZSAK720RbTIrbo0oKft4J4qwIlkwWrAXZWle7HXCCMFl2c3+Ub8j5jcZwlU
+         qakfwSeftM7sa+8WOFFVBeLUwGZ0kKDd7Pm8ZRVRS2VkQpt9hfzvakvCbUdofffz224p
+         N9V01hWpziYXCwwUzcivby3G2+lvSoOmVO3mic8ocitCJWiZUTydV65iEMQ1y4o58ceC
+         JyoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=03rf8AKBlZ5h5mWz0thDPCfLgWMzgoNv8XVPYbEvK3A=;
+        b=oUHm4nifr8ZAYDEJyEQLyBXiHR9GAyr81aTKKUfKATD0Uz5z9nDofIAHP6nDWdZIvo
+         OTkB9C7XXW79o5UZ9terjFYETRFiOxTVMBmRR9oShrUXlculV1Ug2FWc243PWCkrWXQq
+         GqiYp/Tk8y7l/V9mxgDXW4X12LlR6XUyLAps6q3Xh+N0dOaYtNOZQPLo3/1HxjjplFf4
+         UmjTsm0fp96S0Cc2m9Smv0X8uPGK30AyBeRKvqs8t8lhpkVktVqj2pxSB+5OKirBgiyr
+         Rhe77RIJ8+8Qup8mbZqpoAaaDOZzb2TTw0oy5IziJHED9U6CI4SM3pXxnk5DL95tSuEP
+         H2kg==
+X-Gm-Message-State: APjAAAVA7noQ35wIXjrTSC3hcTS6Ffyt+f+OTsiMzmV2kP/ZTg3/BGJG
+        vHHb3ugIsv+57I+ioezd5nNMsQ==
+X-Google-Smtp-Source: APXvYqzaBnwLjfHOUgrj9toWyGIx7ttF9Q0m7YBjXOAVcQ0Vup7egsO9Haga5UpF7us5c9K29HMQvA==
+X-Received: by 2002:ad4:5406:: with SMTP id f6mr9459416qvt.102.1556107294282;
+        Wed, 24 Apr 2019 05:01:34 -0700 (PDT)
+Received: from skullcanyon ([2002:c0de:c115:0:481e:e17e:2f68:43f8])
+        by smtp.gmail.com with ESMTPSA id d34sm13098121qta.18.2019.04.24.05.01.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 05:01:32 -0700 (PDT)
+Message-ID: <7479b8df108c66b1711eb89efbfeb4a16480533d.camel@ndufresne.ca>
+Subject: Re: Support for 2D engines/blitters in V4L2 and DRM
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Michel =?ISO-8859-1?Q?D=E4nzer?= <michel@daenzer.net>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Alexandre Courbot <acourbot@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Date:   Wed, 24 Apr 2019 08:01:30 -0400
+In-Reply-To: <1d6fb659-0516-41db-257b-258e6116a4f2@daenzer.net>
+References: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
+         <20190418081816.GO13337@phenom.ffwll.local>
+         <8265f098722d0cd5aae606d7ee6d955f168ac8f3.camel@ndufresne.ca>
+         <987372acff18f4c66191ee52fa69dc2917e4a605.camel@bootlin.com>
+         <1d6fb659-0516-41db-257b-258e6116a4f2@daenzer.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 (3.32.0-1.fc30) 
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b921eab-e017-4f31-513a-08d6c8ac6d12
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 12:00:21.4484
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6687
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGEgcG9pbnRlciB0byB0aGUgc3RydWN0IHZtX29wZXJhdGlvbnNfc3RydWN0IGluIHRoZSBi
-b19kZXZpY2UsIGFuZA0KYXNzaWduIHRoYXQgcG9pbnRlciB0byB0aGUgZGVmYXVsdCB2YWx1ZSBj
-dXJyZW50bHkgdXNlZC4NCg0KVGhlIGRyaXZlciBjYW4gdGhlbiBvcHRpb25hbGx5IG1vZGlmeSB0
-aGF0IHBvaW50ZXIgYW5kIHRoZSBuZXcgdmFsdWUNCmNhbiBiZSB1c2VkIGZvciBlYWNoIG5ldyB2
-bWEgY3JlYXRlZC4NCg0KQ2M6ICJDaHJpc3RpYW4gS8O2bmlnIiA8Y2hyaXN0aWFuLmtvZW5pZ0Bh
-bWQuY29tPg0KDQpTaWduZWQtb2ZmLWJ5OiBUaG9tYXMgSGVsbHN0cm9tIDx0aGVsbHN0cm9tQHZt
-d2FyZS5jb20+DQpSZXZpZXdlZC1ieTogQ2hyaXN0aWFuIEvDtm5pZyA8Y2hyaXN0aWFuLmtvZW5p
-Z0BhbWQuY29tPg0KLS0tDQogZHJpdmVycy9ncHUvZHJtL3R0bS90dG1fYm8uYyAgICB8IDEgKw0K
-IGRyaXZlcnMvZ3B1L2RybS90dG0vdHRtX2JvX3ZtLmMgfCA2ICsrKy0tLQ0KIGluY2x1ZGUvZHJt
-L3R0bS90dG1fYm9fZHJpdmVyLmggfCA2ICsrKysrKw0KIDMgZmlsZXMgY2hhbmdlZCwgMTAgaW5z
-ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS90dG0vdHRtX2JvLmMgYi9kcml2ZXJzL2dwdS9kcm0vdHRtL3R0bV9iby5jDQppbmRleCAzZjU2
-NjQ3Y2RiMzUuLjFjODViZWMwMDQ3MiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS90dG0v
-dHRtX2JvLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX2JvLmMNCkBAIC0xNjU2LDYg
-KzE2NTYsNyBAQCBpbnQgdHRtX2JvX2RldmljZV9pbml0KHN0cnVjdCB0dG1fYm9fZGV2aWNlICpi
-ZGV2LA0KIAltdXRleF9sb2NrKCZ0dG1fZ2xvYmFsX211dGV4KTsNCiAJbGlzdF9hZGRfdGFpbCgm
-YmRldi0+ZGV2aWNlX2xpc3QsICZnbG9iLT5kZXZpY2VfbGlzdCk7DQogCW11dGV4X3VubG9jaygm
-dHRtX2dsb2JhbF9tdXRleCk7DQorCWJkZXYtPnZtX29wcyA9ICZ0dG1fYm9fdm1fb3BzOw0KIA0K
-IAlyZXR1cm4gMDsNCiBvdXRfbm9fc3lzOg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90
-dG0vdHRtX2JvX3ZtLmMgYi9kcml2ZXJzL2dwdS9kcm0vdHRtL3R0bV9ib192bS5jDQppbmRleCBl
-ODZhMjlhMWU1MWYuLmJmYjI1YjgxZmVkNyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS90
-dG0vdHRtX2JvX3ZtLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX2JvX3ZtLmMNCkBA
-IC0zOTUsNyArMzk1LDcgQEAgc3RhdGljIGludCB0dG1fYm9fdm1fYWNjZXNzKHN0cnVjdCB2bV9h
-cmVhX3N0cnVjdCAqdm1hLCB1bnNpZ25lZCBsb25nIGFkZHIsDQogCXJldHVybiByZXQ7DQogfQ0K
-IA0KLXN0YXRpYyBjb25zdCBzdHJ1Y3Qgdm1fb3BlcmF0aW9uc19zdHJ1Y3QgdHRtX2JvX3ZtX29w
-cyA9IHsNCitjb25zdCBzdHJ1Y3Qgdm1fb3BlcmF0aW9uc19zdHJ1Y3QgdHRtX2JvX3ZtX29wcyA9
-IHsNCiAJLmZhdWx0ID0gdHRtX2JvX3ZtX2ZhdWx0LA0KIAkub3BlbiA9IHR0bV9ib192bV9vcGVu
-LA0KIAkuY2xvc2UgPSB0dG1fYm9fdm1fY2xvc2UsDQpAQCAtNDQ1LDcgKzQ0NSw3IEBAIGludCB0
-dG1fYm9fbW1hcChzdHJ1Y3QgZmlsZSAqZmlscCwgc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEs
-DQogCWlmICh1bmxpa2VseShyZXQgIT0gMCkpDQogCQlnb3RvIG91dF91bnJlZjsNCiANCi0Jdm1h
-LT52bV9vcHMgPSAmdHRtX2JvX3ZtX29wczsNCisJdm1hLT52bV9vcHMgPSBiZGV2LT52bV9vcHM7
-DQogDQogCS8qDQogCSAqIE5vdGU6IFdlJ3JlIHRyYW5zZmVycmluZyB0aGUgYm8gcmVmZXJlbmNl
-IHRvDQpAQCAtNDc3LDcgKzQ3Nyw3IEBAIGludCB0dG1fZmJkZXZfbW1hcChzdHJ1Y3Qgdm1fYXJl
-YV9zdHJ1Y3QgKnZtYSwgc3RydWN0IHR0bV9idWZmZXJfb2JqZWN0ICpibykNCiANCiAJdHRtX2Jv
-X2dldChibyk7DQogDQotCXZtYS0+dm1fb3BzID0gJnR0bV9ib192bV9vcHM7DQorCXZtYS0+dm1f
-b3BzID0gYm8tPmJkZXYtPnZtX29wczsNCiAJdm1hLT52bV9wcml2YXRlX2RhdGEgPSBibzsNCiAJ
-dm1hLT52bV9mbGFncyB8PSBWTV9NSVhFRE1BUDsNCiAJdm1hLT52bV9mbGFncyB8PSBWTV9JTyB8
-IFZNX0RPTlRFWFBBTkQ7DQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vdHRtL3R0bV9ib19kcml2
-ZXIuaCBiL2luY2x1ZGUvZHJtL3R0bS90dG1fYm9fZHJpdmVyLmgNCmluZGV4IGNiZjMxODBjYjYx
-Mi4uY2ZlYWZmNWQ5NzA2IDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9kcm0vdHRtL3R0bV9ib19kcml2
-ZXIuaA0KKysrIGIvaW5jbHVkZS9kcm0vdHRtL3R0bV9ib19kcml2ZXIuaA0KQEAgLTQ0Myw2ICs0
-NDMsOSBAQCBleHRlcm4gc3RydWN0IHR0bV9ib19nbG9iYWwgew0KICAqIEBkcml2ZXI6IFBvaW50
-ZXIgdG8gYSBzdHJ1Y3QgdHRtX2JvX2RyaXZlciBzdHJ1Y3Qgc2V0dXAgYnkgdGhlIGRyaXZlci4N
-CiAgKiBAbWFuOiBBbiBhcnJheSBvZiBtZW1fdHlwZV9tYW5hZ2Vycy4NCiAgKiBAdm1hX21hbmFn
-ZXI6IEFkZHJlc3Mgc3BhY2UgbWFuYWdlcg0KKyAqIEB2bV9vcHM6IFBvaW50ZXIgdG8gdGhlIHN0
-cnVjdCB2bV9vcGVyYXRpb25zX3N0cnVjdCB1c2VkIGZvciB0aGlzDQorICogZGV2aWNlJ3MgVk0g
-b3BlcmF0aW9ucy4gVGhlIGRyaXZlciBtYXkgb3ZlcnJpZGUgdGhpcyBiZWZvcmUgdGhlIGZpcnN0
-DQorICogbW1hcCgpIGNhbGwuDQogICogbHJ1X2xvY2s6IFNwaW5sb2NrIHRoYXQgcHJvdGVjdHMg
-dGhlIGJ1ZmZlcitkZXZpY2UgbHJ1IGxpc3RzIGFuZA0KICAqIGRkZXN0cm95IGxpc3RzLg0KICAq
-IEBkZXZfbWFwcGluZzogQSBwb2ludGVyIHRvIHRoZSBzdHJ1Y3QgYWRkcmVzc19zcGFjZSByZXBy
-ZXNlbnRpbmcgdGhlDQpAQCAtNDYxLDYgKzQ2NCw3IEBAIHN0cnVjdCB0dG1fYm9fZGV2aWNlIHsN
-CiAJc3RydWN0IHR0bV9ib19nbG9iYWwgKmdsb2I7DQogCXN0cnVjdCB0dG1fYm9fZHJpdmVyICpk
-cml2ZXI7DQogCXN0cnVjdCB0dG1fbWVtX3R5cGVfbWFuYWdlciBtYW5bVFRNX05VTV9NRU1fVFlQ
-RVNdOw0KKwljb25zdCBzdHJ1Y3Qgdm1fb3BlcmF0aW9uc19zdHJ1Y3QgKnZtX29wczsNCiANCiAJ
-LyoNCiAJICogUHJvdGVjdGVkIGJ5IGludGVybmFsIGxvY2tzLg0KQEAgLTQ4OSw2ICs0OTMsOCBA
-QCBzdHJ1Y3QgdHRtX2JvX2RldmljZSB7DQogCWJvb2wgbm9fcmV0cnk7DQogfTsNCiANCitleHRl
-cm4gY29uc3Qgc3RydWN0IHZtX29wZXJhdGlvbnNfc3RydWN0IHR0bV9ib192bV9vcHM7DQorDQog
-LyoqDQogICogc3RydWN0IHR0bV9scnVfYnVsa19tb3ZlX3Bvcw0KICAqDQotLSANCjIuMjAuMQ0K
-DQo=
+Le mercredi 24 avril 2019 à 10:31 +0200, Michel Dänzer a écrit :
+> On 2019-04-19 10:38 a.m., Paul Kocialkowski wrote:
+> > On Thu, 2019-04-18 at 20:30 -0400, Nicolas Dufresne wrote:
+> > > Le jeudi 18 avril 2019 à 10:18 +0200, Daniel Vetter a écrit :
+> > > > > It would be cool if both could be used concurrently and not just return
+> > > > > -EBUSY when the device is used with the other subsystem.
+> > > > 
+> > > > We live in this world already :-) I think there's even patches (or merged
+> > > > already) to add fences to v4l, for Android.
+> > > 
+> > > This work is currently suspended. It will require some feature on DRM
+> > > display to really make this useful, but there is also a lot of
+> > > challanges in V4L2. In GFX space, most of the use case are about
+> > > rendering as soon as possible. Though, in multimedia we have two
+> > > problems, we need to synchronize the frame rendering with the audio,
+> > > and output buffers may comes out of order due to how video CODECs are
+> > > made.
+> > 
+> > Definitely, it feels like the DRM display side is currently a good fit
+> > for render use cases, but not so much for precise display cases where
+> > we want to try and display a buffer at a given vblank target instead of
+> > "as soon as possible".
+> > 
+> > I have a userspace project where I've implemented a page flip queue,
+> > which only schedules the next flip when relevant and keeps ready
+> > buffers in the queue until then. This requires explicit vblank
+> > syncronisation (which DRM offsers, but pretty much all other display
+> > APIs, that are higher-level don't, so I'm just using a refresh-rate
+> > timer for them) and flip done notification.
+> > 
+> > I haven't looked too much at how to flip with a target vblank with DRM
+> > directly but maybe the atomic API already has the bits in for that (but
+> > I haven't heard of such a thing as a buffer queue, so that makes me
+> > doubt it).
+> 
+> Not directly. What's available is that if userspace waits for vblank n
+> and then submits a flip, the flip will complete in vblank n+1 (or a
+> later vblank, depending on when the flip is submitted and when the
+> fences the flip depends on signal).
+> 
+> There is reluctance allowing more than one flip to be queued in the
+> kernel, as it would considerably increase complexity in the kernel. It
+> would probably only be considered if there was a compelling use-case
+> which was outright impossible otherwise.
+> 
+> 
+> > Well, I need to handle stuff like SDL in my userspace project, so I have
+> > to have all that queuing stuff in software anyway, but it would be good
+> > if each project didn't have to implement that. Worst case, it could be
+> > in libdrm too.
+> 
+> Usually, this kind of queuing will be handled in a display server such
+> as Xorg or a Wayland compositor, not by the application such as a video
+> player itself, or any library in the latter's address space. I'm not
+> sure there's much potential for sharing code between display servers for
+> this.
+> 
+> 
+> > > In the first, we'd need a mechanism where we can schedule a render at a
+> > > specific time or vblank. We can of course already implement this in
+> > > software, but with fences, the scheduling would need to be done in the
+> > > driver. Then if the fence is signalled earlier, the driver should hold
+> > > on until the delay is met. If the fence got signalled late, we also
+> > > need to think of a workflow. As we can't schedule more then one render
+> > > in DRM at one time, I don't really see yet how to make that work.
+> > 
+> > Indeed, that's also one of the main issues I've spotted. Before using
+> > an implicit fence, we basically have to make sure the frame is due for
+> > display at the next vblank. Otherwise, we need to refrain from using
+> > the fence and schedule the flip later, which is kind of counter-
+> > productive.
+> 
+> Fences are about signalling that the contents of a frame are "done" and
+> ready to be presented. They're not about specifying which frame is to be
+> presented when.
+> 
+> 
+> > I feel like specifying a target vblank would be a good unit for that,
+> 
+> The mechanism described above works for that.
+> 
+> > since it's our native granularity after all (while a timestamp is not).
+> 
+> Note that variable refresh rate (Adaptive Sync / FreeSync / G-Sync)
+> changes things in this regard. It makes the vblank length variable, and
+> if you wait for multiple vblanks between flips, you get the maximum
+> vblank length corresponding to the minimum refresh rate / timing
+> granularity. Thus, it would be useful to allow userspace to specify a
+> timestamp corresponding to the earliest time when the flip is to
+> complete. The kernel could then try to hit that as closely as possible.
+
+Rendering a video stream is more complex then what you describe here.
+Whenever there is a unexpected delay (late delivery of a frame as an
+example) you may endup in situation where one frame is ready after the
+targeted vblank. If there is another frame that targets the following
+vblank that gets ready on-time, the previous frame should be replaced
+by the most recent one.
+
+With fences, what happens is that even if you received the next frame
+on time, naively replacing it is not possible, because we don't know
+when the fence for the next frame will be signalled. If you simply
+always replace the current frame, you may endup skipping a lot more
+vblank then what you expect, and that results in jumpy playback.
+
+Render queues with timestamp are used to smooth rendering and handle
+rendering collision so that the latency is kept low (like when you have
+a 100fps video over a 60Hz display). This is normally done in
+userspace, but with fences, you ask the kernel to render something in
+an unpredictable future, so we loose the ability to make the final
+decision.
+
+> 
+> 
+
