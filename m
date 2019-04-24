@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177CBC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0906C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB43421901
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7196421902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116784;
-	bh=WMNVDXzpn+6lxaPP1ekxy9uOVhuvF1XinqCtdO8GgC8=;
+	s=default; t=1556116787;
+	bh=ffuS2YlLGfWKuSDBqz0cTSvblLPLqxxwnPU2mc8t5+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wcrl+RVnd0Y3pnNhdAXhuDCvg8Gz9+nSI2jyL6Tu64jNfEhHRoETYhP8RWjjyIxK+
-	 7KFVRU+8aOklmuWqf9bwgXgR7UJVwB8Sjainp9+EYxeI8A4dkkCdCBO+gUQgciz2xM
-	 ospKhUf2GDijs1QCSQv7ycJ1i3On8mNfHdk0gvds=
+	b=Tb9RMazw8Uc56uD1WXGED4wjbO/Em4Kq77X+D+ILIicMeYfQJLS+Pn/ixNlI6RBV5
+	 BirKaOnPMhp8Ocdc6Rs2vf0qSHoFLr6aNnLe9UP4yzVl9nPWvu4toVTcCEPB5Cbjkl
+	 yRW24pNydm37HoVUwHG3E3yGpi2JqrFI8osykDII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731768AbfDXOjo (ORCPT
+        id S1731777AbfDXOjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:39:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:39:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731745AbfDXOjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:39:41 -0400
+        id S1731076AbfDXOjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:39:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55C3F218FD;
-        Wed, 24 Apr 2019 14:39:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55E5121902;
+        Wed, 24 Apr 2019 14:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116780;
-        bh=WMNVDXzpn+6lxaPP1ekxy9uOVhuvF1XinqCtdO8GgC8=;
+        s=default; t=1556116784;
+        bh=ffuS2YlLGfWKuSDBqz0cTSvblLPLqxxwnPU2mc8t5+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=merllouVhn4YUfGnjPhj/0VQDoxu3dY1JA1UmYzIB9uRNQxBjiHwbvzlPKhv3vZjN
-         QFlhE3impXLDhAC8zGU2Ze4Ysn3eFvLstaOKBDWcRxK0Ddu+VsuhOi1QITb3DPur/T
-         zmXo0toUbui7QBEjFMcxEnKMsxaSDdGI3jojHPdg=
+        b=2FcrqC6MdKcO/7hG8GHez7DCoyAbzlsd6u062MBTEDraD+2r7V7hJnZtwWUfHoVvz
+         iYluZiXVzO0/BW68WjRCkvQZ8DMGSWhDxMEXnFZlUzZ61L9lplfhV1vqBI8Gyfvlpo
+         9aduns880N0iTXpZINKYJx3ARpN3+OBQjA9L4DfI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yue Haibing <yuehaibing@huawei.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 13/52] fm10k: Fix a potential NULL pointer dereference
-Date:   Wed, 24 Apr 2019 10:38:31 -0400
-Message-Id: <20190424143911.28890-13-sashal@kernel.org>
+Cc:     Alan Kao <alankao@andestech.com>,
+        Greentime Hu <greentime@andestech.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 14/52] riscv: fix accessing 8-byte variable from RV32
+Date:   Wed, 24 Apr 2019 10:38:32 -0400
+Message-Id: <20190424143911.28890-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
 References: <20190424143911.28890-1-sashal@kernel.org>
@@ -59,76 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yue Haibing <yuehaibing@huawei.com>
+From: Alan Kao <alankao@andestech.com>
 
-[ Upstream commit 01ca667133d019edc9f0a1f70a272447c84ec41f ]
+[ Upstream commit dbee9c9c45846f003ec2f819710c2f4835630a6a ]
 
-Syzkaller report this:
+A memory save operation to 8-byte variable in RV32 is divided into
+two sw instructions in the put_user macro.  The current fixup returns
+execution flow to the second sw instead of the one after it.
 
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-CPU: 0 PID: 4378 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-RIP: 0010:__lock_acquire+0x95b/0x3200 kernel/locking/lockdep.c:3573
-Code: 00 0f 85 28 1e 00 00 48 81 c4 08 01 00 00 5b 5d 41 5c 41 5d 41 5e 41 5f c3 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 24 00 00 49 81 7d 00 e0 de 03 a6 41 bc 00 00
-RSP: 0018:ffff8881e3c07a40 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000010 RSI: 0000000000000000 RDI: 0000000000000080
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-R10: ffff8881e3c07d98 R11: ffff8881c7f21f80 R12: 0000000000000001
-R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007fce2252e700(0000) GS:ffff8881f2400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fffc7eb0228 CR3: 00000001e5bea002 CR4: 00000000007606f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- lock_acquire+0xff/0x2c0 kernel/locking/lockdep.c:4211
- __mutex_lock_common kernel/locking/mutex.c:925 [inline]
- __mutex_lock+0xdf/0x1050 kernel/locking/mutex.c:1072
- drain_workqueue+0x24/0x3f0 kernel/workqueue.c:2934
- destroy_workqueue+0x23/0x630 kernel/workqueue.c:4319
- __do_sys_delete_module kernel/module.c:1018 [inline]
- __se_sys_delete_module kernel/module.c:961 [inline]
- __x64_sys_delete_module+0x30c/0x480 kernel/module.c:961
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fce2252dc58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000140
-RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fce2252e6bc
-R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
+This patch fixes this fixup code according to the load access part.
 
-If alloc_workqueue fails, it should return -ENOMEM, otherwise may
-trigger this NULL pointer dereference while unloading drivers.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 0a38c17a21a0 ("fm10k: Remove create_workqueue")
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Alan Kao<alankao@andestech.com>
+Cc: Greentime Hu <greentime@andestech.com>
+Cc: Vincent Chen <deanbo422@gmail.com>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/fm10k/fm10k_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/riscv/include/asm/uaccess.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_main.c b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-index 3f536541f45f..78a43d688cb1 100644
---- a/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-+++ b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
-@@ -41,6 +41,8 @@ static int __init fm10k_init_module(void)
- 	/* create driver workqueue */
- 	fm10k_workqueue = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0,
- 					  fm10k_driver_name);
-+	if (!fm10k_workqueue)
-+		return -ENOMEM;
- 
- 	fm10k_dbg_init();
- 
+diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+index 8c3e3e3c8be1..f0ea3156192d 100644
+--- a/arch/riscv/include/asm/uaccess.h
++++ b/arch/riscv/include/asm/uaccess.h
+@@ -307,7 +307,7 @@ do {								\
+ 		"	.balign 4\n"				\
+ 		"4:\n"						\
+ 		"	li %0, %6\n"				\
+-		"	jump 2b, %1\n"				\
++		"	jump 3b, %1\n"				\
+ 		"	.previous\n"				\
+ 		"	.section __ex_table,\"a\"\n"		\
+ 		"	.balign " RISCV_SZPTR "\n"			\
 -- 
 2.19.1
 
