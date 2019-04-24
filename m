@@ -2,121 +2,131 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28428C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F17C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92FB218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:21:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cgqgGm9j"
+	by mail.kernel.org (Postfix) with ESMTP id 3F989218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729569AbfDXFVh (ORCPT
+        id S1729601AbfDXFVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 01:21:37 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:18395 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfDXFVh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 01:21:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cbff25d0001>; Tue, 23 Apr 2019 22:21:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Apr 2019 22:21:36 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Apr 2019 22:21:36 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Apr
- 2019 05:21:36 +0000
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Apr
- 2019 05:21:36 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 24 Apr 2019 05:21:36 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cbff25a0002>; Tue, 23 Apr 2019 22:21:35 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V5 07/16] dt-bindings: PCI: designware: Add binding for CDM register check
-Date:   Wed, 24 Apr 2019 10:49:55 +0530
-Message-ID: <20190424052004.6270-8-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190424052004.6270-1-vidyas@nvidia.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 24 Apr 2019 01:21:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33256 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726184AbfDXFVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 01:21:45 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EE0839D51C;
+        Wed, 24 Apr 2019 05:21:44 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D21345D719;
+        Wed, 24 Apr 2019 05:21:44 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7A2163FB10;
+        Wed, 24 Apr 2019 05:21:44 +0000 (UTC)
+Date:   Wed, 24 Apr 2019 01:21:44 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     cohuck@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
+        jasowang@redhat.com, david@fromorbit.com, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org,
+        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
+        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
+        linux-nvdimm@lists.01.org,
+        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
+        willy@infradead.org, hch@infradead.org, linux-acpi@vger.kernel.org,
+        jmoyer@redhat.com, linux-ext4@vger.kernel.org, lenb@kernel.org,
+        kilobyte@angband.pl, riel@surriel.com,
+        yuval shaia <yuval.shaia@oracle.com>, stefanha@redhat.com,
+        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
+        lcapitulino@redhat.com, kwolf@redhat.com, nilal@redhat.com,
+        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        darrick wong <darrick.wong@oracle.com>, rjw@rjwysocki.net,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, imammedo@redhat.com
+Message-ID: <1325148804.23168491.1556083304080.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190423142748.GE9910@quack2.suse.cz>
+References: <20190423080612.15361-1-pagupta@redhat.com> <20190423080612.15361-6-pagupta@redhat.com> <20190423142748.GE9910@quack2.suse.cz>
+Subject: Re: [Qemu-devel] [PATCH v6 5/6] ext4: disable map_sync for async
+ flush
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556083293; bh=qEESwm3w2beXiu73bUpD3d4vWKYqBYXCeSo2q4bEgPg=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=cgqgGm9jroTL/K9doM6vofRLOG2iw8KkispFzmwlpetTG1kvYdu0Pkax6xKXMHi4M
-         ubIym2RoPl9QnBwvjB2yl3fvWh992r8njLff3sLCry7Mw23CqdxV09E6aBzmyRpDw9
-         lcEsTjqn+DdIbrG6dTqWdlOfq32dTCuy74B+UgAzP+tAEk1u8FFeshF3XIlk7e6uN1
-         7Sijdc6BuI4ZIK54M9n7ls31ivKGzIivGx87UoELixQ3f5M1QrzuXWv7Sc46sf+sar
-         12WFUSKc+pmeiPfp6c2ngXBWB68vGPXTzHeE7TQ8E59fkRwCVHKiSGLjHKAgVVEvRY
-         hzWbfgbElnYBQ==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.16.97, 10.4.195.9]
+Thread-Topic: ext4: disable map_sync for async flush
+Thread-Index: I6R5hXfMlzDnCoWVf4J0x3p7zay/cA==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 24 Apr 2019 05:21:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to enable CDM (Configuration Dependent Module) registers check
-for any data corruption. CDM registers include standard PCIe configuration
-space registers, Port Logic registers and iATU and DMA registers.
-Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
-Version 4.90a
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-Changes since [v4]:
-* None
+> 
+> On Tue 23-04-19 13:36:11, Pankaj Gupta wrote:
+> > Dont support 'MAP_SYNC' with non-DAX files and DAX files
+> > with asynchronous dax_device. Virtio pmem provides
+> > asynchronous host page cache flush mechanism. We don't
+> > support 'MAP_SYNC' with virtio pmem and ext4.
+> > 
+> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> 
+> The patch looks good to me. You can add:
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
 
-Changes since [v3]:
-* None
+Thank you. Will add this.
 
-Changes since [v2]:
-* Changed flag name from 'cdm-check' to 'enable-cdm-check'
-* Added info about Port Logic and DMA registers being part of CDM
+Best regards,
+Pankaj
 
-Changes since [v1]:
-* This is a new patch in v2 series
-
- Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-index 5561a1c060d0..85b872c42a9f 100644
---- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-@@ -34,6 +34,11 @@ Optional properties:
- - clock-names: Must include the following entries:
- 	- "pcie"
- 	- "pcie_bus"
-+- enable-cdm-check: This is a boolean property and if present enables
-+   automatic checking of CDM (Configuration Dependent Module) registers
-+   for data corruption. CDM registers include standard PCIe configuration
-+   space registers, Port Logic registers, DMA and iATU (internal Address
-+   Translation Unit) registers.
- RC mode:
- - num-viewport: number of view ports configured in hardware. If a platform
-   does not specify it, the driver assumes 2.
--- 
-2.17.1
-
+> 
+> 								Honza
+> 
+> 
+> > ---
+> >  fs/ext4/file.c | 11 ++++++-----
+> >  1 file changed, 6 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+> > index 69d65d49837b..4b2ccaf1932e 100644
+> > --- a/fs/ext4/file.c
+> > +++ b/fs/ext4/file.c
+> > @@ -360,15 +360,16 @@ static const struct vm_operations_struct
+> > ext4_file_vm_ops = {
+> >  static int ext4_file_mmap(struct file *file, struct vm_area_struct *vma)
+> >  {
+> >  	struct inode *inode = file->f_mapping->host;
+> > +	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+> > +	struct dax_device *dax_dev = sbi->s_daxdev;
+> >  
+> > -	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb))))
+> > +	if (unlikely(ext4_forced_shutdown(sbi)))
+> >  		return -EIO;
+> >  
+> > -	/*
+> > -	 * We don't support synchronous mappings for non-DAX files. At least
+> > -	 * until someone comes with a sensible use case.
+> > +	/* We don't support synchronous mappings for non-DAX files and
+> > +	 * for DAX files if underneath dax_device is not synchronous.
+> >  	 */
+> > -	if (!IS_DAX(file_inode(file)) && (vma->vm_flags & VM_SYNC))
+> > +	if (!daxdev_mapping_supported(vma, dax_dev))
+> >  		return -EOPNOTSUPP;
+> >  
+> >  	file_accessed(file);
+> > --
+> > 2.20.1
+> > 
+> --
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+> 
+> 
