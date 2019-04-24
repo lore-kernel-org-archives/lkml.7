@@ -2,52 +2,54 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D49EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC5EC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E5CB20685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AEBF20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128753;
-	bh=X24OnzlI9tkRjZTZkzSoiqWyq6vPOPNeBSIj+qpEvyo=;
+	s=default; t=1556128764;
+	bh=YQN2ZKmS+ojBTiSll3vH9+TfzPVM7nny1HEs3+PydVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TdUZPgE1TjKK6jKGsYXk1l9d1dKdT6Q1drxuxOcQ6qOQHI+e38O6rcfnobPGF640q
-	 n6rxHzaOBULHa3hzXCeZPW3Ddr5RzRdFxxM2oqWO8VcM5Xdmv6J/0tqJSR3zUvJ13+
-	 Yh9cXcFy6hYGCR5UEv+cArcRlh/SaVDr0+WG9Q/I=
+	b=aGjZbK2lGL8kN++Va8zJ9IhKRCYPxyAyJVuitFOx2chLOlzvdyLlrISfNQMtiCwNc
+	 2aElE8rkeGutBblwkUQ9I6Z+OKgeJI+Mij1tuV4HrhAp74dK1UvCjORKG9KWoxIZQU
+	 rLu0agzGs48evppKm42PKe7mWviGNAEMzBiVFE8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388540AbfDXRYd (ORCPT
+        id S2390313AbfDXR7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:24:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50394 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731465AbfDXRY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:24:29 -0400
+        id S2389829AbfDXRYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:24:15 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B89521903;
-        Wed, 24 Apr 2019 17:24:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21462206BA;
+        Wed, 24 Apr 2019 17:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126669;
-        bh=X24OnzlI9tkRjZTZkzSoiqWyq6vPOPNeBSIj+qpEvyo=;
+        s=default; t=1556126654;
+        bh=YQN2ZKmS+ojBTiSll3vH9+TfzPVM7nny1HEs3+PydVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r4xyEjHo7nUPt1sggCfouAjgUAYFRlVi1Kg7oYTnvNg2Drps/W8p1wNosXgFQQG26
-         M/V23Ksho5Nqt8Ihx8Y4VQ6oxl+3uUrw6tclhZ7/qqAjumS2Yk1tOo6FoU0CJ9Xx1x
-         0fYQeJmpJwH1mGtO7zKu3MxC8H7LsRGqJ9Kst328=
+        b=qvI31gUcz5CMzinoPSn3w1tQ2xL3vCNDNUiL3n2aVJ/qB25N6EoH7iR7nY+hRclcK
+         EMqTC8Joe2Onni54svXodU/8U/gTEFGPnsOrdpaOf0e3Rq0mVBRp5HSAff4Luzc+3q
+         qdHNS5lvm0LmscLjUEEXkpS2Xy5Q1nbOvenjyEF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 02/44] net: atm: Fix potential Spectre v1 vulnerabilities
-Date:   Wed, 24 Apr 2019 19:09:40 +0200
-Message-Id: <20190424170841.168956648@linuxfoundation.org>
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 15/44] tpm/tpm_i2c_atmel: Return -E2BIG when the transfer is incomplete
+Date:   Wed, 24 Apr 2019 19:09:53 +0200
+Message-Id: <20190424170851.197513507@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -60,53 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+commit 442601e87a4769a8daba4976ec3afa5222ca211d upstream
 
-[ Upstream commit 899537b73557aafbdd11050b501cf54b4f5c45af ]
+Return -E2BIG when the transfer is incomplete. The upper layer does
+not retry, so not doing that is incorrect behaviour.
 
-arg is controlled by user-space, hence leading to a potential
-exploitation of the Spectre variant 1 vulnerability.
-
-This issue was detected with the help of Smatch:
-
-net/atm/lec.c:715 lec_mcast_attach() warn: potential spectre issue 'dev_lec' [r] (local cap)
-
-Fix this by sanitizing arg before using it to index dev_lec.
-
-Notice that given that speculation windows are large, the policy is
-to kill the speculation on the first load and not worry if it can be
-completed with a dependent load/store [1].
-
-[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
+Fixes: a2871c62e186 ("tpm: Add support for Atmel I2C TPMs")
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/atm/lec.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/char/tpm/tpm_i2c_atmel.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/net/atm/lec.c
-+++ b/net/atm/lec.c
-@@ -721,7 +721,10 @@ static int lec_vcc_attach(struct atm_vcc
+diff --git a/drivers/char/tpm/tpm_i2c_atmel.c b/drivers/char/tpm/tpm_i2c_atmel.c
+index 95ce2e9ccdc6..cc4e642d3180 100644
+--- a/drivers/char/tpm/tpm_i2c_atmel.c
++++ b/drivers/char/tpm/tpm_i2c_atmel.c
+@@ -65,7 +65,15 @@ static int i2c_atmel_send(struct tpm_chip *chip, u8 *buf, size_t len)
+ 	dev_dbg(&chip->dev,
+ 		"%s(buf=%*ph len=%0zx) -> sts=%d\n", __func__,
+ 		(int)min_t(size_t, 64, len), buf, len, status);
+-	return status;
++
++	if (status < 0)
++		return status;
++
++	/* The upper layer does not support incomplete sends. */
++	if (status != len)
++		return -E2BIG;
++
++	return 0;
+ }
  
- static int lec_mcast_attach(struct atm_vcc *vcc, int arg)
- {
--	if (arg < 0 || arg >= MAX_LEC_ITF || !dev_lec[arg])
-+	if (arg < 0 || arg >= MAX_LEC_ITF)
-+		return -EINVAL;
-+	arg = array_index_nospec(arg, MAX_LEC_ITF);
-+	if (!dev_lec[arg])
- 		return -EINVAL;
- 	vcc->proto_data = dev_lec[arg];
- 	return lec_mcast_make(netdev_priv(dev_lec[arg]), vcc);
-@@ -739,6 +742,7 @@ static int lecd_attach(struct atm_vcc *v
- 		i = arg;
- 	if (arg >= MAX_LEC_ITF)
- 		return -EINVAL;
-+	i = array_index_nospec(arg, MAX_LEC_ITF);
- 	if (!dev_lec[i]) {
- 		int size;
- 
+ static int i2c_atmel_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+-- 
+2.19.1
+
 
 
