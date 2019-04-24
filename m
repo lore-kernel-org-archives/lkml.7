@@ -4,50 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFC8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C63C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EF0205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C6A2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126940;
-	bh=wKFla7yfuzeonqVhJY20KD/ieqPybzxw7oy6gpPOwLk=;
+	s=default; t=1556126942;
+	bh=zlSrufzuaXOczUBNBYQFfiRAX2PT8Y0rKQZWUuYf7zo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G3EjsTYzxImzsNa6cPu7VkDIVkVlBj9NzV0PnswfrxCEAVFS8EWOm/06ZAM/oyzkm
-	 RNUK3H5qQ1pY4jfktlkw39mwhc1VLyx5j6qOc8zy2WDHHoVPINupBHNV0kyqWHF968
-	 NnMj4tQszux2tA653nNhB5KQ8tnbZv8LioREvBJo=
+	b=Q3GyHCYUHVUKTDkmZFf3FcTYW2WOaVM8IyTs48SFOPstMZcv/oX9vEWo08b3wVpY5
+	 ze3S2Q0QNaXz+s+tiOI8H0TYfX3/eJiURhw4AO4RrxSxrwwuo20stp8okGMTzAk1y4
+	 xJu9J+1yisEAqMHcq3vle1WzV/m+gAx/XsjyZ4Wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390292AbfDXR27 (ORCPT
+        id S2389691AbfDXR3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55198 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:29:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390739AbfDXR2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:28:53 -0400
+        id S2390315AbfDXR26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:28:58 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB9C42054F;
-        Wed, 24 Apr 2019 17:28:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 644542054F;
+        Wed, 24 Apr 2019 17:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126932;
-        bh=wKFla7yfuzeonqVhJY20KD/ieqPybzxw7oy6gpPOwLk=;
+        s=default; t=1556126937;
+        bh=zlSrufzuaXOczUBNBYQFfiRAX2PT8Y0rKQZWUuYf7zo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R3ZPB9rzXB1F7pOkWrzJ2g/82hJ5bV0kngSEP4+gI0InfuzTDwGbKEh2WuBQ1R9wY
-         C7IHUu1fCtu18ZwbqC1xRJ1uMjqdC1L2niuEkeqOQ/0UvLugauoyzRZ5hikSk6ABk4
-         EKp4uV2ExISiIniAEwylz7fGJTi1oVsW0d3wi35E=
+        b=Gjul6EaFuX3aaMzo2gMszh1Ow3y5t6zBDsv9O8RBQ18QgzGZ02qu/sGCSQVpCa52+
+         eo9a5p1Mv5jm/AEQ/50IMXFebDMF0ezx87HGa3apzDnTFHkNlZ4+g1kQHJ+3vVZoU+
+         j10GWciU6+BTSBQgoHK07gC23bVK22ywGBzg8+ZA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Liu Bo <bo.li.liu@oracle.com>, Zubin Mithra <zsm@chromium.org>
-Subject: [PATCH 4.14 67/70] iomap: report collisions between directio and buffered writes to userspace
-Date:   Wed, 24 Apr 2019 19:10:27 +0200
-Message-Id: <20190424170919.032089132@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.14 28/70] staging: comedi: vmk80xx: Fix possible double-free of ->usb_rx_buf
+Date:   Wed, 24 Apr 2019 19:09:48 +0200
+Message-Id: <20190424170910.993742415@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -60,113 +57,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 5a9d929d6e13278df62bd9e3d3ceae8c87ad1eea upstream.
+commit 663d294b4768bfd89e529e069bffa544a830b5bf upstream.
 
-If two programs simultaneously try to write to the same part of a file
-via direct IO and buffered IO, there's a chance that the post-diowrite
-pagecache invalidation will fail on the dirty page.  When this happens,
-the dio write succeeded, which means that the page cache is no longer
-coherent with the disk!
+`vmk80xx_alloc_usb_buffers()` is called from `vmk80xx_auto_attach()` to
+allocate RX and TX buffers for USB transfers.  It allocates
+`devpriv->usb_rx_buf` followed by `devpriv->usb_tx_buf`.  If the
+allocation of `devpriv->usb_tx_buf` fails, it frees
+`devpriv->usb_rx_buf`,  leaving the pointer set dangling, and returns an
+error.  Later, `vmk80xx_detach()` will be called from the core comedi
+module code to clean up.  `vmk80xx_detach()` also frees both
+`devpriv->usb_rx_buf` and `devpriv->usb_tx_buf`, but
+`devpriv->usb_rx_buf` may have already been freed, leading to a
+double-free error.  Fix it by removing the call to
+`kfree(devpriv->usb_rx_buf)` from `vmk80xx_alloc_usb_buffers()`, relying
+on `vmk80xx_detach()` to free the memory.
 
-Programs are not supposed to mix IO types and this is a clear case of
-data corruption, so store an EIO which will be reflected to userspace
-during the next fsync.  Replace the WARN_ON with a ratelimited pr_crit
-so that the developers have /some/ kind of breadcrumb to track down the
-offending program(s) and file(s) involved.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Liu Bo <bo.li.liu@oracle.com>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Zubin Mithra <zsm@chromium.org>
-
 
 ---
- fs/direct-io.c     |   24 +++++++++++++++++++++++-
- fs/iomap.c         |   12 ++++++++++--
- include/linux/fs.h |    1 +
- 3 files changed, 34 insertions(+), 3 deletions(-)
+ drivers/staging/comedi/drivers/vmk80xx.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/fs/direct-io.c
-+++ b/fs/direct-io.c
-@@ -219,6 +219,27 @@ static inline struct page *dio_get_page(
- 	return dio->pages[sdio->head];
+--- a/drivers/staging/comedi/drivers/vmk80xx.c
++++ b/drivers/staging/comedi/drivers/vmk80xx.c
+@@ -691,10 +691,8 @@ static int vmk80xx_alloc_usb_buffers(str
+ 
+ 	size = usb_endpoint_maxp(devpriv->ep_tx);
+ 	devpriv->usb_tx_buf = kzalloc(size, GFP_KERNEL);
+-	if (!devpriv->usb_tx_buf) {
+-		kfree(devpriv->usb_rx_buf);
++	if (!devpriv->usb_tx_buf)
+ 		return -ENOMEM;
+-	}
+ 
+ 	return 0;
  }
- 
-+/*
-+ * Warn about a page cache invalidation failure during a direct io write.
-+ */
-+void dio_warn_stale_pagecache(struct file *filp)
-+{
-+	static DEFINE_RATELIMIT_STATE(_rs, 86400 * HZ, DEFAULT_RATELIMIT_BURST);
-+	char pathname[128];
-+	struct inode *inode = file_inode(filp);
-+	char *path;
-+
-+	errseq_set(&inode->i_mapping->wb_err, -EIO);
-+	if (__ratelimit(&_rs)) {
-+		path = file_path(filp, pathname, sizeof(pathname));
-+		if (IS_ERR(path))
-+			path = "(unknown)";
-+		pr_crit("Page cache invalidation failure on direct I/O.  Possible data corruption due to collision with buffered I/O!\n");
-+		pr_crit("File: %s PID: %d Comm: %.20s\n", path, current->pid,
-+			current->comm);
-+	}
-+}
-+
- /**
-  * dio_complete() - called when all DIO BIO I/O has been completed
-  * @offset: the byte offset in the file of the completed operation
-@@ -290,7 +311,8 @@ static ssize_t dio_complete(struct dio *
- 		err = invalidate_inode_pages2_range(dio->inode->i_mapping,
- 					offset >> PAGE_SHIFT,
- 					(offset + ret - 1) >> PAGE_SHIFT);
--		WARN_ON_ONCE(err);
-+		if (err)
-+			dio_warn_stale_pagecache(dio->iocb->ki_filp);
- 	}
- 
- 	if (!(dio->flags & DIO_SKIP_DIO_COUNT))
---- a/fs/iomap.c
-+++ b/fs/iomap.c
-@@ -753,7 +753,8 @@ static ssize_t iomap_dio_complete(struct
- 		err = invalidate_inode_pages2_range(inode->i_mapping,
- 				offset >> PAGE_SHIFT,
- 				(offset + dio->size - 1) >> PAGE_SHIFT);
--		WARN_ON_ONCE(err);
-+		if (err)
-+			dio_warn_stale_pagecache(iocb->ki_filp);
- 	}
- 
- 	inode_dio_end(file_inode(iocb->ki_filp));
-@@ -1010,9 +1011,16 @@ iomap_dio_rw(struct kiocb *iocb, struct
- 	if (ret)
- 		goto out_free_dio;
- 
-+	/*
-+	 * Try to invalidate cache pages for the range we're direct
-+	 * writing.  If this invalidation fails, tough, the write will
-+	 * still work, but racing two incompatible write paths is a
-+	 * pretty crazy thing to do, so we don't support it 100%.
-+	 */
- 	ret = invalidate_inode_pages2_range(mapping,
- 			start >> PAGE_SHIFT, end >> PAGE_SHIFT);
--	WARN_ON_ONCE(ret);
-+	if (ret)
-+		dio_warn_stale_pagecache(iocb->ki_filp);
- 	ret = 0;
- 
- 	if (iov_iter_rw(iter) == WRITE && !dio->wait_for_completion &&
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2965,6 +2965,7 @@ enum {
- };
- 
- void dio_end_io(struct bio *bio);
-+void dio_warn_stale_pagecache(struct file *filp);
- 
- ssize_t __blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
- 			     struct block_device *bdev, struct iov_iter *iter,
 
 
