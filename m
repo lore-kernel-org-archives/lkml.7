@@ -2,55 +2,52 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAAEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFC8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B5E21904
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98EF0205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126935;
-	bh=F6bOSTbjCj3eyuTAIIj9qJbHVhJPzNbbu3nPZ8GKJ8c=;
+	s=default; t=1556126940;
+	bh=wKFla7yfuzeonqVhJY20KD/ieqPybzxw7oy6gpPOwLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=piAKKY+w/yfhwDzkziByE7b742imGsk8DxCCRulNufR18NWje1z2c10OIsIm9O8ve
-	 o73xAZuJasS0nsOy0Qjxn7/HbH8bqHLfxY+Oq2Xfmbi6icVH7W8PCzioHy0Bbl2pb7
-	 ZRu9alsswZlQawQUB6fYtjbiaPsKqrR8eS18niTw=
+	b=G3EjsTYzxImzsNa6cPu7VkDIVkVlBj9NzV0PnswfrxCEAVFS8EWOm/06ZAM/oyzkm
+	 RNUK3H5qQ1pY4jfktlkw39mwhc1VLyx5j6qOc8zy2WDHHoVPINupBHNV0kyqWHF968
+	 NnMj4tQszux2tA653nNhB5KQ8tnbZv8LioREvBJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390743AbfDXR2x (ORCPT
+        id S2390292AbfDXR27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:28:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55144 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:28:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390039AbfDXR2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:28:51 -0400
+        id S2390739AbfDXR2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:28:53 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06A5121903;
-        Wed, 24 Apr 2019 17:28:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB9C42054F;
+        Wed, 24 Apr 2019 17:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126929;
-        bh=F6bOSTbjCj3eyuTAIIj9qJbHVhJPzNbbu3nPZ8GKJ8c=;
+        s=default; t=1556126932;
+        bh=wKFla7yfuzeonqVhJY20KD/ieqPybzxw7oy6gpPOwLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SSYTgpCMjibCsEvX3i/Hw55y8Jd6cQ4tsH5bYI4UDtdDzY7sem02CbtBJsokVownk
-         mFMxfiJmr1pXI3HzOC5h3m5bld64wf8DsUUD57c1Z/a0jvFc/9vZbSnea2YIFVlRW3
-         Lm8J8rbEfBQMIbPuhEXxsLxFXXuuhlpUxWZC4A8c=
+        b=R3ZPB9rzXB1F7pOkWrzJ2g/82hJ5bV0kngSEP4+gI0InfuzTDwGbKEh2WuBQ1R9wY
+         C7IHUu1fCtu18ZwbqC1xRJ1uMjqdC1L2niuEkeqOQ/0UvLugauoyzRZ5hikSk6ABk4
+         EKp4uV2ExISiIniAEwylz7fGJTi1oVsW0d3wi35E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Wang Nan <wangnan0@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.14 66/70] tools include: Adopt linux/bits.h
-Date:   Wed, 24 Apr 2019 19:10:26 +0200
-Message-Id: <20190424170918.968804948@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Liu Bo <bo.li.liu@oracle.com>, Zubin Mithra <zsm@chromium.org>
+Subject: [PATCH 4.14 67/70] iomap: report collisions between directio and buffered writes to userspace
+Date:   Wed, 24 Apr 2019 19:10:27 +0200
+Message-Id: <20190424170919.032089132@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -63,98 +60,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-commit ba4aa02b417f08a0bee5e7b8ed70cac788a7c854 upstream.
+commit 5a9d929d6e13278df62bd9e3d3ceae8c87ad1eea upstream.
 
-So that we reduce the difference of tools/include/linux/bitops.h to the
-original kernel file, include/linux/bitops.h, trying to remove the need
-to define BITS_PER_LONG, to avoid clashes with asm/bitsperlong.h.
+If two programs simultaneously try to write to the same part of a file
+via direct IO and buffered IO, there's a chance that the post-diowrite
+pagecache invalidation will fail on the dirty page.  When this happens,
+the dio write succeeded, which means that the page cache is no longer
+coherent with the disk!
 
-And the things removed from tools/include/linux/bitops.h are really in
-linux/bits.h, so that we can have a copy and then
-tools/perf/check_headers.sh will tell us when new stuff gets added to
-linux/bits.h so that we can check if it is useful and if any adjustment
-needs to be done to the tools/{include,arch}/ copies.
+Programs are not supposed to mix IO types and this is a clear case of
+data corruption, so store an EIO which will be reflected to userspace
+during the next fsync.  Replace the WARN_ON with a ratelimited pr_crit
+so that the developers have /some/ kind of breadcrumb to track down the
+offending program(s) and file(s) involved.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-y1sqyydvfzo0bjjoj4zsl562@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Liu Bo <bo.li.liu@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Zubin Mithra <zsm@chromium.org>
+
 
 ---
- tools/include/linux/bitops.h |    7 ++-----
- tools/include/linux/bits.h   |   26 ++++++++++++++++++++++++++
- tools/perf/check-headers.sh  |    1 +
- 3 files changed, 29 insertions(+), 5 deletions(-)
+ fs/direct-io.c     |   24 +++++++++++++++++++++++-
+ fs/iomap.c         |   12 ++++++++++--
+ include/linux/fs.h |    1 +
+ 3 files changed, 34 insertions(+), 3 deletions(-)
 
---- a/tools/include/linux/bitops.h
-+++ b/tools/include/linux/bitops.h
-@@ -3,8 +3,6 @@
- #define _TOOLS_LINUX_BITOPS_H_
+--- a/fs/direct-io.c
++++ b/fs/direct-io.c
+@@ -219,6 +219,27 @@ static inline struct page *dio_get_page(
+ 	return dio->pages[sdio->head];
+ }
  
- #include <asm/types.h>
--#include <linux/compiler.h>
--
- #ifndef __WORDSIZE
- #define __WORDSIZE (__SIZEOF_LONG__ * 8)
- #endif
-@@ -12,10 +10,9 @@
- #ifndef BITS_PER_LONG
- # define BITS_PER_LONG __WORDSIZE
- #endif
-+#include <linux/bits.h>
-+#include <linux/compiler.h>
- 
--#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
--#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
--#define BITS_PER_BYTE		8
- #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(long))
- #define BITS_TO_U64(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u64))
- #define BITS_TO_U32(nr)		DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(u32))
---- /dev/null
-+++ b/tools/include/linux/bits.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_BITS_H
-+#define __LINUX_BITS_H
-+#include <asm/bitsperlong.h>
-+
-+#define BIT(nr)			(1UL << (nr))
-+#define BIT_ULL(nr)		(1ULL << (nr))
-+#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
-+#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
-+#define BIT_ULL_MASK(nr)	(1ULL << ((nr) % BITS_PER_LONG_LONG))
-+#define BIT_ULL_WORD(nr)	((nr) / BITS_PER_LONG_LONG)
-+#define BITS_PER_BYTE		8
-+
 +/*
-+ * Create a contiguous bitmask starting at bit position @l and ending at
-+ * position @h. For example
-+ * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
++ * Warn about a page cache invalidation failure during a direct io write.
 + */
-+#define GENMASK(h, l) \
-+	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
++void dio_warn_stale_pagecache(struct file *filp)
++{
++	static DEFINE_RATELIMIT_STATE(_rs, 86400 * HZ, DEFAULT_RATELIMIT_BURST);
++	char pathname[128];
++	struct inode *inode = file_inode(filp);
++	char *path;
 +
-+#define GENMASK_ULL(h, l) \
-+	(((~0ULL) - (1ULL << (l)) + 1) & \
-+	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
++	errseq_set(&inode->i_mapping->wb_err, -EIO);
++	if (__ratelimit(&_rs)) {
++		path = file_path(filp, pathname, sizeof(pathname));
++		if (IS_ERR(path))
++			path = "(unknown)";
++		pr_crit("Page cache invalidation failure on direct I/O.  Possible data corruption due to collision with buffered I/O!\n");
++		pr_crit("File: %s PID: %d Comm: %.20s\n", path, current->pid,
++			current->comm);
++	}
++}
 +
-+#endif	/* __LINUX_BITS_H */
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -11,6 +11,7 @@ include/uapi/linux/sched.h
- include/uapi/linux/stat.h
- include/uapi/linux/vhost.h
- include/uapi/sound/asound.h
-+include/linux/bits.h
- include/linux/hash.h
- include/uapi/linux/hw_breakpoint.h
- arch/x86/include/asm/disabled-features.h
+ /**
+  * dio_complete() - called when all DIO BIO I/O has been completed
+  * @offset: the byte offset in the file of the completed operation
+@@ -290,7 +311,8 @@ static ssize_t dio_complete(struct dio *
+ 		err = invalidate_inode_pages2_range(dio->inode->i_mapping,
+ 					offset >> PAGE_SHIFT,
+ 					(offset + ret - 1) >> PAGE_SHIFT);
+-		WARN_ON_ONCE(err);
++		if (err)
++			dio_warn_stale_pagecache(dio->iocb->ki_filp);
+ 	}
+ 
+ 	if (!(dio->flags & DIO_SKIP_DIO_COUNT))
+--- a/fs/iomap.c
++++ b/fs/iomap.c
+@@ -753,7 +753,8 @@ static ssize_t iomap_dio_complete(struct
+ 		err = invalidate_inode_pages2_range(inode->i_mapping,
+ 				offset >> PAGE_SHIFT,
+ 				(offset + dio->size - 1) >> PAGE_SHIFT);
+-		WARN_ON_ONCE(err);
++		if (err)
++			dio_warn_stale_pagecache(iocb->ki_filp);
+ 	}
+ 
+ 	inode_dio_end(file_inode(iocb->ki_filp));
+@@ -1010,9 +1011,16 @@ iomap_dio_rw(struct kiocb *iocb, struct
+ 	if (ret)
+ 		goto out_free_dio;
+ 
++	/*
++	 * Try to invalidate cache pages for the range we're direct
++	 * writing.  If this invalidation fails, tough, the write will
++	 * still work, but racing two incompatible write paths is a
++	 * pretty crazy thing to do, so we don't support it 100%.
++	 */
+ 	ret = invalidate_inode_pages2_range(mapping,
+ 			start >> PAGE_SHIFT, end >> PAGE_SHIFT);
+-	WARN_ON_ONCE(ret);
++	if (ret)
++		dio_warn_stale_pagecache(iocb->ki_filp);
+ 	ret = 0;
+ 
+ 	if (iov_iter_rw(iter) == WRITE && !dio->wait_for_completion &&
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2965,6 +2965,7 @@ enum {
+ };
+ 
+ void dio_end_io(struct bio *bio);
++void dio_warn_stale_pagecache(struct file *filp);
+ 
+ ssize_t __blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
+ 			     struct block_device *bdev, struct iov_iter *iter,
 
 
