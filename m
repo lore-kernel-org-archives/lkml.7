@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE899C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A46FAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C6F2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 748402190A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126831;
-	bh=LupqdGEKvkxtPWLNBCqP6BnFQsYy1xR0cgrOa7hvzDM=;
+	s=default; t=1556126834;
+	bh=e+hc7MTEciYpiwdn9M4/ztAcugxgLtvgdIlQgW4t0HI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qAUbrj+X9z1ZKblrQbPmw0k7l5LF76HFmfQmeqCU2V+VtErmSzic1A56Y8CyCgewy
-	 aZ4gTpFnTYmCNlt3i/YCefEin2eAKcWqAOqKQjQKJLz+5McDfy6grno01sxaCTznFn
-	 5UVPGQSB6jpppKuoFflJaNLH2zocl1gWztHp7rk4=
+	b=F7hSmZXNmG+MdKJrpFGfhe8GXEx6lJDzfxb71b/VN26sLCLiJVd+LJMgMmnBJWm0A
+	 sSwryZasMmIJAMNwQZKWeB7tF873ILnrSyjtp1xM1Sx7gxRjkf7RA0mIyfk3aoDk5k
+	 brZQY909o8zQCwYYCK1I5oeu62HYp/odbT34YwIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390395AbfDXR1K (ORCPT
+        id S2390406AbfDXR1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:27:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53100 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:27:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390380AbfDXR1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:27:07 -0400
+        id S2390386AbfDXR1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:27:10 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B3A72077C;
-        Wed, 24 Apr 2019 17:27:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2841B2054F;
+        Wed, 24 Apr 2019 17:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126826;
-        bh=LupqdGEKvkxtPWLNBCqP6BnFQsYy1xR0cgrOa7hvzDM=;
+        s=default; t=1556126829;
+        bh=e+hc7MTEciYpiwdn9M4/ztAcugxgLtvgdIlQgW4t0HI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1fAyewIdYrBHDx506ZpqlLxnJiNrfLIDLPYkWsPAnjl5mJUDmZdTMP7lX98FM4JW
-         OoVj0vDFBFnEJP6L3R8AsgLuqLYjV7p0UbZbEmNGoLh2bV1ijgC+7LYz5S+0aGQkqg
-         EdqAMRlpqFQ3nJjZL013MEp0Q2UUi07jbXfPQGBs=
+        b=e3kZKxAPu+ja52tCVNQMTOnmRkikL0cGp74Y2o/tcku1SR6G+S+15wDWCRyPR+AfI
+         FLfiax4dZ1f+75yHCHb/cdYVqfAECoDOD11i1Knj7kvjuGwnIyyAlPilCpPCtbRV0T
+         TodP2Mj9ClmG9zPjR1XNShK5+HNwkjZGNb2OOfZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 23/70] iio: Fix scan mask selection
-Date:   Wed, 24 Apr 2019 19:09:43 +0200
-Message-Id: <20190424170910.578126068@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 32/70] ALSA: core: Fix card races between register and disconnect
+Date:   Wed, 24 Apr 2019 19:09:52 +0200
+Message-Id: <20190424170911.344621117@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -61,43 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 20ea39ef9f2f911bd01c69519e7d69cfec79fde3 upstream.
+commit 2a3f7221acddfe1caa9ff09b3a8158c39b2fdeac upstream.
 
-The trialmask is expected to have all bits set to 0 after allocation.
-Currently kmalloc_array() is used which does not zero the memory and so
-random bits are set. This results in random channels being enabled when
-they shouldn't. Replace kmalloc_array() with kcalloc() which has the same
-interface but zeros the memory.
+There is a small race window in the card disconnection code that
+allows the registration of another card with the very same card id.
+This leads to a warning in procfs creation as caught by syzkaller.
 
-Note the fix is actually required earlier than the below fixes tag, but
-will require a manual backport due to move from kmalloc to kmalloc_array.
+The problem is that we delete snd_cards and snd_cards_lock entries at
+the very beginning of the disconnection procedure.  This makes the
+slot available to be assigned for another card object while the
+disconnection procedure is being processed.  Then it becomes possible
+to issue a procfs registration with the existing file name although we
+check the conflict beforehand.
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Fixes commit 057ac1acdfc4 ("iio: Use kmalloc_array() in iio_scan_mask_set()").
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+The fix is simply to move the snd_cards and snd_cards_lock clearances
+at the end of the disconnection procedure.  The references to these
+entries are merely either from the global proc files like
+/proc/asound/cards or from the card registration / disconnection, so
+it should be fine to shift at the very end.
+
+Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/industrialio-buffer.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ sound/core/init.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -320,9 +320,8 @@ static int iio_scan_mask_set(struct iio_
- 	const unsigned long *mask;
- 	unsigned long *trialmask;
+--- a/sound/core/init.c
++++ b/sound/core/init.c
+@@ -406,14 +406,7 @@ int snd_card_disconnect(struct snd_card
+ 	card->shutdown = 1;
+ 	spin_unlock(&card->files_lock);
  
--	trialmask = kmalloc_array(BITS_TO_LONGS(indio_dev->masklength),
--				  sizeof(*trialmask),
--				  GFP_KERNEL);
-+	trialmask = kcalloc(BITS_TO_LONGS(indio_dev->masklength),
-+			    sizeof(*trialmask), GFP_KERNEL);
- 	if (trialmask == NULL)
- 		return -ENOMEM;
- 	if (!indio_dev->masklength) {
+-	/* phase 1: disable fops (user space) operations for ALSA API */
+-	mutex_lock(&snd_card_mutex);
+-	snd_cards[card->number] = NULL;
+-	clear_bit(card->number, snd_cards_lock);
+-	mutex_unlock(&snd_card_mutex);
+-	
+-	/* phase 2: replace file->f_op with special dummy operations */
+-	
++	/* replace file->f_op with special dummy operations */
+ 	spin_lock(&card->files_lock);
+ 	list_for_each_entry(mfile, &card->files_list, list) {
+ 		/* it's critical part, use endless loop */
+@@ -429,7 +422,7 @@ int snd_card_disconnect(struct snd_card
+ 	}
+ 	spin_unlock(&card->files_lock);	
+ 
+-	/* phase 3: notify all connected devices about disconnection */
++	/* notify all connected devices about disconnection */
+ 	/* at this point, they cannot respond to any calls except release() */
+ 
+ #if IS_ENABLED(CONFIG_SND_MIXER_OSS)
+@@ -445,6 +438,13 @@ int snd_card_disconnect(struct snd_card
+ 		device_del(&card->card_dev);
+ 		card->registered = false;
+ 	}
++
++	/* disable fops (user space) operations for ALSA API */
++	mutex_lock(&snd_card_mutex);
++	snd_cards[card->number] = NULL;
++	clear_bit(card->number, snd_cards_lock);
++	mutex_unlock(&snd_card_mutex);
++
+ #ifdef CONFIG_PM
+ 	wake_up(&card->power_sleep);
+ #endif
 
 
