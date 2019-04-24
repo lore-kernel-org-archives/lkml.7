@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6AAC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABF3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728E7218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78EF1218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbfDXDXc (ORCPT
+        id S1729481AbfDXDXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 23:23:32 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7240 "EHLO huawei.com"
+        Tue, 23 Apr 2019 23:23:35 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59152 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728333AbfDXDX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 23:23:28 -0400
+        id S1729393AbfDXDXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 23:23:32 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5903FD9FC120D7713225;
-        Wed, 24 Apr 2019 11:23:25 +0800 (CST)
+        by Forcepoint Email with ESMTP id 4DA631C92CE525AF47B9;
+        Wed, 24 Apr 2019 11:23:30 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Apr 2019 11:23:16 +0800
+ 14.3.439.0; Wed, 24 Apr 2019 11:23:19 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <nhorman@redhat.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 03/12] net: hns3: handle the BD info on the last BD of the packet
-Date:   Wed, 24 Apr 2019 11:21:58 +0800
-Message-ID: <1556076127-61459-4-git-send-email-tanhuazhong@huawei.com>
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>
+Subject: [PATCH net-next 11/12] net: hns3: prevent double free in hns3_put_ring_config()
+Date:   Wed, 24 Apr 2019 11:22:06 +0800
+Message-ID: <1556076127-61459-12-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556076127-61459-1-git-send-email-tanhuazhong@huawei.com>
 References: <1556076127-61459-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,111 +47,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+This patch adds a check for the hns3_put_ring_config() to prevent
+double free, and for more readable, move the NULL assignment of
+priv->ring_data into the hns3_put_ring_config().
 
-The bdinfo handled in hns3_handle_bdinfo is only valid on the
-last BD of the current packet, currently the bd info may be handled
-based on the first BD if the packet has more than two BDs, which
-may cause rx error.
-
-This patch fixes it by using the last BD of the current packet in
-hns3_handle_bdinfo.
-
-Also, hns3_set_rx_skb_rss_type has used RSS hash value from the last
-BD of the current packet, so remove the same last BD calculation in
-hns3_set_rx_skb_rss_type and call it from hns3_handle_bdinfo.
-
-Fixes: e55970950556 ("net: hns3: Add handling of GRO Pkts not fully RX'ed in NAPI poll")
-
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 38 +++++++++++++------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 6695b94..7dc281c 100644
+index 7dc281c..b0f31eb 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2697,36 +2697,37 @@ static int hns3_set_gro_and_checksum(struct hns3_enet_ring *ring,
+@@ -3487,6 +3487,7 @@ static int hns3_get_ring_config(struct hns3_nic_priv *priv)
+ 	}
+ 
+ 	devm_kfree(&pdev->dev, priv->ring_data);
++	priv->ring_data = NULL;
+ 	return ret;
  }
  
- static void hns3_set_rx_skb_rss_type(struct hns3_enet_ring *ring,
--				     struct sk_buff *skb)
-+				     struct sk_buff *skb, u32 rss_hash)
- {
- 	struct hnae3_handle *handle = ring->tqp->handle;
- 	enum pkt_hash_types rss_type;
--	struct hns3_desc *desc;
--	int last_bd;
+@@ -3495,12 +3496,16 @@ static void hns3_put_ring_config(struct hns3_nic_priv *priv)
+ 	struct hnae3_handle *h = priv->ae_handle;
+ 	int i;
+ 
++	if (!priv->ring_data)
++		return;
++
+ 	for (i = 0; i < h->kinfo.num_tqps; i++) {
+ 		devm_kfree(priv->dev, priv->ring_data[i].ring);
+ 		devm_kfree(priv->dev,
+ 			   priv->ring_data[i + h->kinfo.num_tqps].ring);
+ 	}
+ 	devm_kfree(priv->dev, priv->ring_data);
++	priv->ring_data = NULL;
+ }
+ 
+ static int hns3_alloc_ring_memory(struct hns3_enet_ring *ring)
+@@ -3920,8 +3925,6 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
+ 
+ 	hns3_dbg_uninit(handle);
+ 
+-	priv->ring_data = NULL;
 -
--	/* When driver handle the rss type, ring->next_to_clean indicates the
--	 * first descriptor of next packet, need -1 here.
--	 */
--	last_bd = (ring->next_to_clean - 1 + ring->desc_num) % ring->desc_num;
--	desc = &ring->desc[last_bd];
- 
--	if (le32_to_cpu(desc->rx.rss_hash))
-+	if (rss_hash)
- 		rss_type = handle->kinfo.rss_type;
- 	else
- 		rss_type = PKT_HASH_TYPE_NONE;
- 
--	skb_set_hash(skb, le32_to_cpu(desc->rx.rss_hash), rss_type);
-+	skb_set_hash(skb, rss_hash, rss_type);
+ out_netdev_free:
+ 	free_netdev(netdev);
  }
+@@ -4268,12 +4271,10 @@ static int hns3_reset_notify_init_enet(struct hnae3_handle *handle)
+ 	hns3_uninit_all_ring(priv);
+ err_uninit_vector:
+ 	hns3_nic_uninit_vector_data(priv);
+-	priv->ring_data = NULL;
+ err_dealloc_vector:
+ 	hns3_nic_dealloc_vector_data(priv);
+ err_put_ring:
+ 	hns3_put_ring_config(priv);
+-	priv->ring_data = NULL;
  
--static int hns3_handle_bdinfo(struct hns3_enet_ring *ring, struct sk_buff *skb,
--			      struct hns3_desc *desc)
-+static int hns3_handle_bdinfo(struct hns3_enet_ring *ring, struct sk_buff *skb)
- {
- 	struct net_device *netdev = ring->tqp->handle->kinfo.netdev;
--	u32 bd_base_info = le32_to_cpu(desc->rx.bd_base_info);
--	u32 l234info = le32_to_cpu(desc->rx.l234_info);
- 	enum hns3_pkt_l2t_type l2_frame_type;
-+	u32 bd_base_info, l234info;
-+	struct hns3_desc *desc;
- 	unsigned int len;
--	int ret;
-+	int pre_ntc, ret;
-+
-+	/* bdinfo handled below is only valid on the last BD of the
-+	 * current packet, and ring->next_to_clean indicates the first
-+	 * descriptor of next packet, so need - 1 below.
-+	 */
-+	pre_ntc = ring->next_to_clean ? (ring->next_to_clean - 1) :
-+					(ring->desc_num - 1);
-+	desc = &ring->desc[pre_ntc];
-+	bd_base_info = le32_to_cpu(desc->rx.bd_base_info);
-+	l234info = le32_to_cpu(desc->rx.l234_info);
- 
- 	/* Based on hw strategy, the tag offloaded will be stored at
- 	 * ot_vlan_tag in two layer tag case, and stored at vlan_tag
-@@ -2787,6 +2788,8 @@ static int hns3_handle_bdinfo(struct hns3_enet_ring *ring, struct sk_buff *skb,
- 	u64_stats_update_end(&ring->syncp);
- 
- 	ring->tqp_vector->rx_group.total_bytes += len;
-+
-+	hns3_set_rx_skb_rss_type(ring, skb, le32_to_cpu(desc->rx.rss_hash));
- 	return 0;
+ 	return ret;
  }
+@@ -4335,7 +4336,6 @@ static int hns3_reset_notify_uninit_enet(struct hnae3_handle *handle)
+ 		netdev_err(netdev, "uninit ring error\n");
  
-@@ -2856,14 +2859,13 @@ static int hns3_handle_rx_bd(struct hns3_enet_ring *ring,
- 		       ALIGN(ring->pull_len, sizeof(long)));
- 	}
+ 	hns3_put_ring_config(priv);
+-	priv->ring_data = NULL;
  
--	ret = hns3_handle_bdinfo(ring, skb, desc);
-+	ret = hns3_handle_bdinfo(ring, skb);
- 	if (unlikely(ret)) {
- 		dev_kfree_skb_any(skb);
- 		return ret;
- 	}
- 
- 	*out_skb = skb;
--	hns3_set_rx_skb_rss_type(ring, skb);
- 
- 	return 0;
+ 	return ret;
  }
 -- 
 2.7.4
