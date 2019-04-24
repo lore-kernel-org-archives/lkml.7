@@ -2,101 +2,129 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BBFC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC91C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE2921904
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:02:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FCJq6arG"
+	by mail.kernel.org (Postfix) with ESMTP id A00FA218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfDXMCi (ORCPT
+        id S1728513AbfDXMDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:02:38 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41876 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfDXMCi (ORCPT
+        Wed, 24 Apr 2019 08:03:04 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45492 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726135AbfDXMDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:02:38 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f6so9273521pgs.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=MQpbaIZ4jJPf5F2sHt9NkO9ybLST1usylGMUyiBWYMQ=;
-        b=FCJq6arGgHlm4eQU5CtWGScB9D/pUJtD9rufZPQ3Kx3DbOGVDr4xriOJNThRYTgjJL
-         YbG8JbwuBd9YopOOUWgIyK0nEZOuP4S+GlXtvlFM7iDddJCRd2iAtJOi1y9lj5fc7ZEZ
-         N11jMGOS8/oiHPA/plHbBBNC6+ODcvm1HRdPbvOFCweUbj9307U/SkzIi2BEExsFpyGU
-         nLCXbyk7uW+Gb69Am84HyiQ50OvqtEbCcjFUuAyH4Ontgq7alkREEVWtbcTXHorW7Gt+
-         B2VSRcobqUekjorG8UmEtBOQy2Yb++gnbeyOHd6rRZ5i8GraVm962Az2Bcc3Wp9UKu9i
-         rgSw==
+        Wed, 24 Apr 2019 08:03:04 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t11so14433037lfl.12;
+        Wed, 24 Apr 2019 05:03:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MQpbaIZ4jJPf5F2sHt9NkO9ybLST1usylGMUyiBWYMQ=;
-        b=OT61EjRx0GWlyT4ZNLh1O2aCZzfNqfW45ZcyIkPQHpQqq3HfuV1uumzneFoNPuz5NQ
-         gbAIfUSzAP2kMlLikIdoqNf3/Wl3jCpk1YD4G8ClKa4H0o8ScQYQi1wGNYnLLnwTMz8u
-         dUsz/kBd6+/o351FDalIuk9CbwnnesoHhHt3eoq6nCKWJanoleGpImzKFcqszhKc70uo
-         OTh7zagjDTHuNIuI3sYIQyJRe9oZadeYCoyWdRt1lKhVpvorH9ABUcJDBA6WeBIKJss/
-         JzWFqzScQqz5ldVrokPZFYJX2UhPdIQNuzrfIW3nZfhTZd2ZUIqycSB6AY63/eP/UgGm
-         5JjA==
-X-Gm-Message-State: APjAAAXfI2+lr02BvbKfY4TyG1I8h3GhqrPgFewC0klCCfMbTkEMuXpO
-        PlBBBXCgCVNg4mKRKglryYlS
-X-Google-Smtp-Source: APXvYqxyiH1ZQebrAOODmiIRy8zCRQUeEk1Wl3+YAhYZwNub5s36bayGcVwZCjedEtfXon68Ctypvg==
-X-Received: by 2002:a65:50c2:: with SMTP id s2mr30624466pgp.112.1556107357474;
-        Wed, 24 Apr 2019 05:02:37 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:711:bac8:7d48:1fca:4d86:743])
-        by smtp.gmail.com with ESMTPSA id j22sm25870840pfn.129.2019.04.24.05.02.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 05:02:36 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     linus.walleij@linaro.org, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        linux-gpio@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/5] Add pinctrl support for BM1880 SoC
-Date:   Wed, 24 Apr 2019 17:32:19 +0530
-Message-Id: <20190424120224.22660-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=1wmjcio481D8mlO0QqPUrXZVauN7FfOlIK4AbaVKz9U=;
+        b=L6kpjape0DCn2FGPxvUag+fw5tAe7W9gDQ5jizqNyIrTo6I7uDRTHV4QOvbiVzUcmg
+         zZ2UVcznj1KDpsm3wATTCYAKc88hgrMUa/SSjOp9qR/W9xxXyaJ8xXUWD6fMFg9w45b3
+         ieNJBfRUCnY4QtEuBP3P99l8A+TF9sPin9Z+iYIOLNaQT/N2OJ1SGuhgkOjn8RnJVREi
+         9jW3APeT5Ci08vMxDwy9/CtsLl4eCmV/yOE6IzNQ/0/msr4yXvNafvIJb716YUkYphdR
+         Be/Ki5K8OKZZKlbUGHkWo/RiQPUjApdMOhTj+p/MxlkzUeRUth7XSeeQdtXOfm4aj07q
+         btbA==
+X-Gm-Message-State: APjAAAXrabqwkdop+kwKd1TKOcu3c9lzkE5vtNjSonRqPndtyXB6Hpwh
+        MBmbmkjOj4QwVX3zKGleta2n+NCF
+X-Google-Smtp-Source: APXvYqxRrp1/1O04z7cQcxbZROdkBopUpww+f9o9VZJHxTT921JxknnMPC+xmxbgnQdIJSrtrHAyRg==
+X-Received: by 2002:ac2:4a86:: with SMTP id l6mr16784482lfp.51.1556107381822;
+        Wed, 24 Apr 2019 05:03:01 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.153.202])
+        by smtp.gmail.com with ESMTPSA id 125sm642200lfl.60.2019.04.24.05.02.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 24 Apr 2019 05:03:00 -0700 (PDT)
+From:   Alexander Popov <alex.popov@linux.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Popov <alex.popov@linux.com>
+Subject: [v2 1/1] kconfig: Terminate menu blocks with a comment in the generated config
+Date:   Wed, 24 Apr 2019 15:02:49 +0300
+Message-Id: <1556107369-7655-1-git-send-email-alex.popov@linux.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Currently menu blocks start with a pretty header but end with nothing in
+the generated config. So next config options stick together with the
+options from the menu block.
 
-This patchset adds pinctrl support for Bitmain BM1880 SoC and
-Sophon Edge board. BM1880 SoC can only handle pinmux functionality,
-hence the driver has no pinconf support.
+Let's terminate menu blocks in the generated config with a comment and
+a newline if needed. Example:
 
-This patchset has been tested on 96Boards Sophon Edge board.
+...
+CONFIG_BPF_STREAM_PARSER=y
+CONFIG_NET_FLOW_LIMIT=y
 
-Thanks,
-Mani
+#
+# Network testing
+#
+CONFIG_NET_PKTGEN=y
+CONFIG_NET_DROP_MONITOR=y
+# end of Network testing
+# end of Networking options
 
-Manivannan Sadhasivam (5):
-  dt-bindings: pinctrl: Add BM1880 pinctrl binding
-  arm64: dts: bitmain: Add pinctrl support for BM1880 SoC
-  arm64: dts: bitmain: Add UART pinctrl support for Sophon Edge
-  pinctrl: Add pinctrl support for BM1880 SoC
-  MAINTAINERS: Add entry for BM1880 pinctrl
+CONFIG_HAMRADIO=y
+...
 
- .../pinctrl/bitmain,bm1880-pinctrl.txt        |  98 ++
- MAINTAINERS                                   |   2 +
- .../boot/dts/bitmain/bm1880-sophon-edge.dts   |  29 +
- arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  14 +
- drivers/pinctrl/Kconfig                       |   7 +
- drivers/pinctrl/Makefile                      |   1 +
- drivers/pinctrl/pinctrl-bm1880.c              | 965 ++++++++++++++++++
- 7 files changed, 1116 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
- create mode 100644 drivers/pinctrl/pinctrl-bm1880.c
+Signed-off-by: Alexander Popov <alex.popov@linux.com>
+---
+ scripts/kconfig/confdata.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 08ba146..486b4c7 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -819,6 +819,7 @@ int conf_write(const char *name)
+ 	struct menu *menu;
+ 	const char *basename;
+ 	const char *str;
++	bool need_newline = false;
+ 	char dirname[PATH_MAX+1], tmpname[PATH_MAX+22], newname[PATH_MAX+8];
+ 	char *env;
+ 
+@@ -871,12 +872,16 @@ int conf_write(const char *name)
+ 				     "#\n"
+ 				     "# %s\n"
+ 				     "#\n", str);
++			need_newline = false;
+ 		} else if (!(sym->flags & SYMBOL_CHOICE)) {
+ 			sym_calc_value(sym);
+ 			if (!(sym->flags & SYMBOL_WRITE))
+ 				goto next;
++			if (need_newline) {
++				fprintf(out, "\n");
++				need_newline = false;
++			}
+ 			sym->flags &= ~SYMBOL_WRITE;
+-
+ 			conf_write_symbol(out, sym, &kconfig_printer_cb, NULL);
+ 		}
+ 
+@@ -888,6 +893,11 @@ int conf_write(const char *name)
+ 		if (menu->next)
+ 			menu = menu->next;
+ 		else while ((menu = menu->parent)) {
++			if (!menu->sym && menu_is_visible(menu)) {
++				str = menu_get_prompt(menu);
++				fprintf(out, "# end of %s\n", str);
++				need_newline = true;
++			}
+ 			if (menu->next) {
+ 				menu = menu->next;
+ 				break;
 -- 
-2.17.1
+2.7.4
 
