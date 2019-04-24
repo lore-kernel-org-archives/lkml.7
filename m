@@ -2,74 +2,79 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9884EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB61AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B746218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93253206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LUNHYUT2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z0KgvU/9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbfDXGWR (ORCPT
+        id S1729763AbfDXGXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:22:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47746 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727039AbfDXGWQ (ORCPT
+        Wed, 24 Apr 2019 02:23:12 -0400
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:41940 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfDXGXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:22:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wNY84OSRffDR8TBCC4h4Uk9tLamjDKJpnS1779gx7b4=; b=LUNHYUT2BlXyedocIbng7lSTm
-        BEwbTx59D2PwBdaMExFuPtnAT+fZWyaKiGpcWLSsrY2uF0wQuoQn8OOlVLtffjTbYgEQCqCT36fl9
-        2ALQKk38M17KCKZLfnZP+sYcHa8xeLPK67fT49lNpQEIsXDMO4yL7DewyvffRxroAyobgHCSm2npW
-        u/BbG551P1rxkUuq+IK2Z9OZzJ3xtN8gosk26UEe94fhQYwc8O1eByNL01lRedCjg5AmJAYDQ2FK8
-        xk3ho7Op+NAqgnn3x4ogjZ1qlLD0H01/Loe6+dc0cD0ibQ4ZvWRTwh7il1TwA7mJRfGXmK7F2hZTY
-        Hu1B5GBaw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJBIO-0002Wl-8t; Wed, 24 Apr 2019 06:22:16 +0000
-Date:   Tue, 23 Apr 2019 23:22:16 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
-        Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Johan Hovold <johan@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Andreas Schwab <schwab@suse.de>,
-        linux-riscv@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3 3/3] RISC-V: Support nr_cpus command line option.
-Message-ID: <20190424062216.GD3902@infradead.org>
-References: <20190424000227.3085-1-atish.patra@wdc.com>
- <20190424000227.3085-4-atish.patra@wdc.com>
+        Wed, 24 Apr 2019 02:23:11 -0400
+Received: by mail-ot1-f48.google.com with SMTP id g8so1164455otk.8
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 23:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=UHamIRZSkMrLHIXV4yMiufS4Z6cDXoVYV/L1btDQtKg=;
+        b=z0KgvU/9kiPxp9UuSFx1gugPwbi9hrOPBAQPuCHu5/Qz+uAh90J1nj4HhrVN8VV+I1
+         eejxlQmnPJIRgP4YwfL3A7R3QhKi3GSZoysC5xXD7LimIG17VAnhMeiVt+A7/qvrKnVu
+         L8l85P2tHEaxLy854pR6su0q3FVXdAvABdtDtiCg8lrGLvQ7uy9HFa5sb/rETXKenh0+
+         b4dX2oWkuOJYJ71ZQJq5cM2tSWrS4C5V24qU/rjk/Z7vqslMpbqYXQcbO80Wf9074h1U
+         v/S7i/DxcvXCyUDQ/fjz8lPkEd/F86wq3l3j1Q/Jv6HJMQjyqTffDfpN5btxCDJdzMyx
+         lcpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=UHamIRZSkMrLHIXV4yMiufS4Z6cDXoVYV/L1btDQtKg=;
+        b=cmtrg9FLPDKytolVzCgEUOkFmZMxne2dPWuN7pSkFrzf3j/zt6pFU7Y6r6ocgOGPDc
+         50rZYsNRuB4uuwu9kY6uGcw7UNGNGrsLZ7b4goQuLKLhLAQak7XsQCAF+y2n92Y3EYlF
+         EVaniKoCgZ/Rtczs2kJi46wX9ikPo8i/Wvk62ZPaCyciI74iE1dhJ34fJ2J1Pru7t9C6
+         xBNHgRjoBJqUeE3Hm+0LSnnF8KHXKOB/voKb4sVJLcv/VGRTuUvSPF7pFjvtfRoVUyNY
+         mU6jWk9C2Vj3WgLjHBHT63umUykxIkDcNOXnfEGwDtALa589YPgne58jVN8HHe26QcBV
+         /UGA==
+X-Gm-Message-State: APjAAAUkJNN9hXUS8uovNyBqLA4d1ztTkPDC0KwjfXMX5xZrLSES+/8z
+        C1YK9Siqx0ACUh4oD+aI6M7tQ9f+RBQhF0NwBh5dlA==
+X-Google-Smtp-Source: APXvYqw6FE2GxL7MksnXGJk3GpH9T6+LZdFCbQ0JUOkYT74D0YfUGe4CB/PwF8OZV3ll3rPgIZuU41ufVoVTbPMf56c=
+X-Received: by 2002:a9d:6191:: with SMTP id g17mr18369148otk.291.1556086991165;
+ Tue, 23 Apr 2019 23:23:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424000227.3085-4-atish.patra@wdc.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Wed, 24 Apr 2019 09:23:00 +0300
+Message-ID: <CAD8XO3atijveUR0irCM2z3hsr8Rm9piwTbBp0NTwvzJt9+MHdw@mail.gmail.com>
+Subject: RFC: zero copy recv()
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 05:02:27PM -0700, Atish Patra wrote:
-> If nr_cpus command line option is set, maximum possible cpu should be
-> set to that value.
-> 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Hello,
 
-Looks good,
+On different conferences I see that people are trying to accelerate
+network with putting packet processing with protocol level completely
+to user space. It might be DPDK, ODP or AF_XDP  plus some network
+stack on top of it. Then people are trying to test this solution with
+some existence applications. And in better way do not modify
+application binaries and just LD_PRELOAD sockets syscalls (recv(),
+sendto() and etc). Current recv() expects that application allocates
+memory and call will "copy" packet to that memory. Copy per packet is
+slow.  Can we consider about implementing zero copy API calls
+friendly? Can this change be accepted to kernel?
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+What are your thoughts?
+
+Thank you,
+Maxim.
