@@ -2,248 +2,161 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEC6C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9CBC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266D8208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:12:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="X15aWIlF"
+	by mail.kernel.org (Postfix) with ESMTP id A79B2208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732171AbfDXQMH (ORCPT
+        id S1732216AbfDXQMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:12:07 -0400
-Received: from mail-eopbgr60056.outbound.protection.outlook.com ([40.107.6.56]:8718
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730600AbfDXQMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:12:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NAiln1tEJcfFzNuUzflGKhNPgwXd03BpvOz4EFHzZv8=;
- b=X15aWIlFpk9jhp2XsDzu1gGkp0O3Po71kDWDOnKN+y/3zobTgk0jrMHZWpGFsJjNnuwUvI7MQPB+lbG9iMvBNpYP/InMOXulhzP2b9A4c9ZdemStm8rU+/RuiD0DbWspn+68XmjNhebM65thYIhpNVtGb1xKNGmGodZpTutih4k=
-Received: from DB7PR08MB3865.eurprd08.prod.outlook.com (20.178.84.149) by
- DB7PR08MB3642.eurprd08.prod.outlook.com (20.177.120.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Wed, 24 Apr 2019 16:11:57 +0000
-Received: from DB7PR08MB3865.eurprd08.prod.outlook.com
- ([fe80::fdd5:e065:ed96:45da]) by DB7PR08MB3865.eurprd08.prod.outlook.com
- ([fe80::fdd5:e065:ed96:45da%3]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
- 16:11:57 +0000
-From:   Raphael Gault <Raphael.Gault@arm.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Julien Thierry <Julien.Thierry@arm.com>
-Subject: Re: [RFC 1/6] objtool: Refactor code to make it more suitable for
- multiple architecture support
-Thread-Topic: [RFC 1/6] objtool: Refactor code to make it more suitable for
- multiple architecture support
-Thread-Index: AQHU7tuhq8UbABTxO0yopkZmunYIDaZKRDUAgAFO8wA=
-Date:   Wed, 24 Apr 2019 16:11:57 +0000
-Message-ID: <13212ab1-20fe-88c6-f121-acd8ea623757@arm.com>
-References: <20190409135243.12424-1-raphael.gault@arm.com>
- <20190409135243.12424-2-raphael.gault@arm.com>
- <20190423201306.wyb57hz7xrvqbn75@treble>
-In-Reply-To: <20190423201306.wyb57hz7xrvqbn75@treble>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0051.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:60::15) To DB7PR08MB3865.eurprd08.prod.outlook.com
- (2603:10a6:10:32::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Raphael.Gault@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [217.140.106.53]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e80e045-fa98-45b3-c14e-08d6c8cf9328
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB7PR08MB3642;
-x-ms-traffictypediagnostic: DB7PR08MB3642:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DB7PR08MB364283488553C4D806ED1B26ED3C0@DB7PR08MB3642.eurprd08.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(366004)(39860400002)(376002)(40434004)(189003)(199004)(26005)(186003)(6246003)(3846002)(386003)(53546011)(478600001)(53936002)(6506007)(72206003)(8676002)(76176011)(4326008)(11346002)(6306002)(476003)(256004)(486006)(102836004)(14444005)(5024004)(6512007)(2616005)(446003)(6116002)(52116002)(73956011)(5660300002)(66476007)(66556008)(31686004)(68736007)(64756008)(25786009)(6916009)(316002)(66446008)(66946007)(36756003)(31696002)(97736004)(66066001)(7736002)(71190400001)(71200400001)(6436002)(8936002)(2906002)(305945005)(14454004)(99286004)(54906003)(86362001)(44832011)(229853002)(81156014)(81166006)(6486002)(2004002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3642;H:DB7PR08MB3865.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7Lg8LNfRE0WpQTylWNw8xKLLJCaFlhZgYFlqJnntQLihkfmEiIZLpHtWH97kMeoW8SQ3/dSCx/2Pm2b7uXHmABL2RbCXNMpcn3Msj8i72eOUfI3uGw9y1LIY92QDJgf8LLBLpNU0xZU/YzEvCp0Z7D5BDguBFPlvCB3YcuEVaHHk1sn06mwbTpEByA7b3xCJu1tVUub8j7nCJmT5P8KtiwKeY9nqTsOyVtXAE9nivaqsRezrwGhr3PzHFdJrWkpcHs07LQrghi54nyKycoa840FgsyXTbbbcB/7C+1FMCMY39kbNxNpA/fakmev2qTx3EOFAPzudLu/apaYb1h0EGYMg9Dyvcl7xNjG94z4fUUks4oIfPBv3vfYZO5G6Y4pZCZ2umflarz5LNDAR2/zaHLTHfi/TCVmkCHN6GnNX18w=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0EA28727FFF1044D9EE015B333866894@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 12:12:32 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.168]:46590 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730818AbfDXQMb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:12:31 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 8A40E228DE
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:08:55 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id JKS7hGEA3dnCeJKS7h1fAD; Wed, 24 Apr 2019 11:08:55 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.223] (port=39548 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hJKS6-002xV7-Hb; Wed, 24 Apr 2019 11:08:54 -0500
+Date:   Wed, 24 Apr 2019 11:08:24 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH net-next] amd-xgbe: Mark expected switch fall-throughs
+Message-ID: <20190424160823.GA20314@embeddedor>
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e80e045-fa98-45b3-c14e-08d6c8cf9328
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 16:11:57.4792
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3642
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.223
+X-Source-L: No
+X-Exim-ID: 1hJKS6-002xV7-Hb
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.127.223]:39548
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8yMy8xOSA5OjEzIFBNLCBKb3NoIFBvaW1ib2V1ZiB3cm90ZToNCj4gT24gVHVlLCBBcHIg
-MDksIDIwMTkgYXQgMDI6NTI6MzhQTSArMDEwMCwgUmFwaGFlbCBHYXVsdCB3cm90ZToNCj4+IFRo
-ZSBqdW1wIGRlc3RpbmF0aW9uIGFuZCByZWxvY2F0aW9uIG9mZnNldCB1c2VkIHByZXZpb3VzbHkg
-YXJlIG9ubHkgcmVsaWFibGUNCj4+IG9uIHg4Nl82NCBhcmNoaXRlY3R1cmUuIFdlIGFic3RyYWN0
-IHRoZXNlIGNvbXB1dGF0aW9ucyBieSBjYWxsaW5nIGFyY2gtZGVwZW5kYW50DQo+DQo+ICJkZXBl
-bmRlbnQiDQo+DQo+PiBpbXBsZW1lbnRhdGlvbi4NCj4+DQo+PiBUaGUgY29udHJvbCBmbG93IGlu
-Zm9ybWF0aW9uIGFuZCByZWdpc3RlciBtYWNybyBkZWZpbml0aW9ucyB3ZXJlIGJhc2VkIG9uDQo+
-PiB0aGUgeDg2XzY0IGFyY2hpdGVjdHVyZSBidXQgc2hvdWxkIGJlIGFic3RyYWN0IHNvIHRoYXQg
-ZWFjaCBhcmNoaXRlY3R1cmUNCj4+IGNhbiBkZWZpbmUgdGhlIGNvcnJlY3QgdmFsdWVzIGZvciB0
-aGUgcmVnaXN0ZXJzLCBlc3BlY2lhbGx5IHRoZSByZWdpc3RlcnMNCj4+IHJlbGF0ZWQgdG8gdGhl
-IHN0YWNrIGZyYW1lIChGcmFtZSBQb2ludGVyLCBTdGFjayBQb2ludGVyIGFuZCBwb3NzaWJseQ0K
-Pj4gUmV0dXJuIEFkZHJlc3MpLg0KPj4NCj4+IFRoZSBPUkMgdW53aW5kZXIgaXMgb25seSBzdXBw
-b3J0ZWQgb24geDg2IGF0IHRoZSBtb21lbnQgYW5kIHNob3VsZCB0aHVzIGJlDQo+PiBpbiB0aGUg
-eDg2IGFyY2hpdGVjdHVyZSBjb2RlLiBJbiBvcmRlciBub3QgdG8gYnJlYWsgdGhlIHdob2xlIHN0
-cnVjdHVyZSBpbg0KPj4gY2FzZSBhbm90aGVyIGFyY2hpdGVjdHVyZSBkZWNpZGVzIHRvIHN1cHBv
-cnQgdGhlIE9SQyB1bndpbmRlciB2aWEgb2JqdG9vbA0KPj4gd2UgY2hvb3NlIHRvIGxldCB0aGUg
-aW1wbGVtZW50YXRpb24gYmUgZG9uZSBpbiB0aGUgYXJjaGl0ZWN0dXJlIGRlcGVuZGFudA0KPj4g
-Y29kZS4NCj4NCj4gSXQncyBnb29kIHByYWN0aWNlIHRvIHB1dCBlYWNoIGxvZ2ljYWwgY2hhbmdl
-IGludG8gYSBzZXBhcmF0ZSBwYXRjaC4NCj4gVGhhdCB3aWxsIGFsc28gbWFrZSB0aGUgcGF0Y2hl
-cyBlYXNpZXIgdG8gcmV2aWV3Lg0KPg0KDQpJbmRlZWQgdGhpcyB3aWxsIGJlIGJldHRlci4NCg0K
-PiBGb3IgZXhhbXBsZSwgZWFjaCBvZiB0aGUgYWJvdmUgdGhyZWUgcGFyYWdyYXBocyBzaG91bGQg
-YmUgYSBzZXBhcmF0ZQ0KPiBjb21taXQuDQo+DQo+IEFsc28gaXQncyBhIGdvb2QgaWRlYSB0byBy
-dW4gdGhlIHBhdGNoZXMgdGhyb3VnaCBjaGVja3BhdGNoLnBsICh0aG91Z2gNCj4gaXRzIHdhcm5p
-bmdzIHNob3VsZCBiZSB0YWtlbiB3aXRoIGEgZ3JhaW4gb2Ygc2FsdCkuDQo+DQoNClllcywgSSBy
-ZWFsaXNlZCBhZnRlciB0aGUgY29tbWVudCBmcm9tIFBldGVyIHRoYXQgSSBuZWVkZWQgdG8gY29y
-cmVjdA0KcXVpdGUgYSBmZXcgdGhpbmdzLCB0aGFuayB5b3UuDQoNCj4+IFNpZ25lZC1vZmYtYnk6
-IFJhcGhhZWwgR2F1bHQgPHJhcGhhZWwuZ2F1bHRAYXJtLmNvbT4NCj4+IC0tLQ0KPj4gICB0b29s
-cy9vYmp0b29sL0J1aWxkICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgLQ0KPj4gICB0
-b29scy9vYmp0b29sL2FyY2guaCAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKysNCj4+
-ICAgdG9vbHMvb2JqdG9vbC9hcmNoL3g4Ni9CdWlsZCAgICAgICAgICAgICAgICAgIHwgICAxICsN
-Cj4+ICAgdG9vbHMvb2JqdG9vbC9hcmNoL3g4Ni9kZWNvZGUuYyAgICAgICAgICAgICAgIHwgMTA2
-ICsrKysrKysrKysrKysrKysNCj4+ICAgdG9vbHMvb2JqdG9vbC9hcmNoL3g4Ni9pbmNsdWRlL2Fy
-Y2hfc3BlY2lhbC5oIHwgIDM1ICsrKysrKw0KPj4gICB0b29scy9vYmp0b29sL3sgPT4gYXJjaC94
-ODYvaW5jbHVkZX0vY2ZpLmggICAgfCAgIDANCj4+ICAgdG9vbHMvb2JqdG9vbC97ID0+IGFyY2gv
-eDg2fS9vcmNfZ2VuLmMgICAgICAgIHwgIDEwICstDQo+PiAgIHRvb2xzL29ianRvb2wvY2hlY2su
-YyAgICAgICAgICAgICAgICAgICAgICAgICB8IDExNCArKy0tLS0tLS0tLS0tLS0tLS0NCj4+ICAg
-dG9vbHMvb2JqdG9vbC9jaGVjay5oICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4+
-ICAgdG9vbHMvb2JqdG9vbC9vcmMuaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA0ICst
-DQo+PiAgIHRvb2xzL29ianRvb2wvc3BlY2lhbC5jICAgICAgICAgICAgICAgICAgICAgICB8ICAx
-OCArLS0NCj4+ICAgMTEgZmlsZXMgY2hhbmdlZCwgMTczIGluc2VydGlvbnMoKyksIDEyNiBkZWxl
-dGlvbnMoLSkNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xzL29ianRvb2wvYXJjaC94ODYv
-aW5jbHVkZS9hcmNoX3NwZWNpYWwuaA0KPj4gICByZW5hbWUgdG9vbHMvb2JqdG9vbC97ID0+IGFy
-Y2gveDg2L2luY2x1ZGV9L2NmaS5oICgxMDAlKQ0KPj4gICByZW5hbWUgdG9vbHMvb2JqdG9vbC97
-ID0+IGFyY2gveDg2fS9vcmNfZ2VuLmMgKDk2JSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvdG9vbHMv
-b2JqdG9vbC9CdWlsZCBiL3Rvb2xzL29ianRvb2wvQnVpbGQNCj4+IGluZGV4IDc0OWJlY2RmNWI5
-MC4uZWM5MjVkNDk1NjVhIDEwMDY0NA0KPj4gLS0tIGEvdG9vbHMvb2JqdG9vbC9CdWlsZA0KPj4g
-KysrIGIvdG9vbHMvb2JqdG9vbC9CdWlsZA0KPj4gQEAgLTIsNyArMiw2IEBAIG9ianRvb2wteSAr
-PSBhcmNoLyQoU1JDQVJDSCkvDQo+PiAgIG9ianRvb2wteSArPSBidWlsdGluLWNoZWNrLm8NCj4+
-ICAgb2JqdG9vbC15ICs9IGJ1aWx0aW4tb3JjLm8NCj4+ICAgb2JqdG9vbC15ICs9IGNoZWNrLm8N
-Cj4+IC1vYmp0b29sLXkgKz0gb3JjX2dlbi5vDQo+DQo+IEknbSBub3Qgc3VyZSB3aGV0aGVyIG1v
-dmluZyBPUkMgb3V0IHRvIHRoZSBhcmNoLXNwZWNpZmljIGNvZGUgaXMgdGhlDQo+IGJlc3Qgb3B0
-aW9uLiAgSSBleHBlY3QgYSBsb3Qgb2YgdGhlIE9SQyBjb2RlIHRvIGJlIGdlbmVyaWMuICBCdXQg
-dGhpcw0KPiBtaWdodCBiZSBvayBmb3Igbm93LCB1bnRpbCB3ZSBnZXQgYW5vdGhlciBPUkMgaW1w
-bGVtZW50YXRpb24uDQo+DQo+IEFub3RoZXIgcG9zc2liaWxpdHkgd291bGQgYmUgdG8gbWFrZSB3
-ZWFrIHZlcnNpb25zIG9mIHRoZSBvcmMgZnVuY3Rpb25zDQo+IHNvbWV3aGVyZSAoY2hlY2suYz8p
-IGFuZCBvbmx5IGNvbXBpbGUgdGhlIGdlbmVyaWMgb3JjX2dlbi5jIG9uIGFyY2hlcw0KPiB3aGlj
-aCBzdXBwb3J0IGl0LiAgVGhlbiB3ZSBjb3VsZCBhYnN0cmFjdCBvdXQgdGhlIGFyY2gtc3BlY2lm
-aWMgT1JDIGJpdHMNCj4gbGF0ZXIuDQo+DQo+PiAgIG9ianRvb2wteSArPSBvcmNfZHVtcC5vDQo+
-DQo+IG9yY19kdW1wLm8gZG9lc24ndCBuZWVkIHRvIGJlIGJ1aWx0IG9uIGFybTY0LiAgVGhlICJv
-cmMgZHVtcCIgb3B0aW9uDQo+IHNob3VsZCBmYWlsIGFjY29yZGluZ2x5Lg0KPg0KPj4gICBvYmp0
-b29sLXkgKz0gZWxmLm8NCj4+ICAgb2JqdG9vbC15ICs9IHNwZWNpYWwubw0KPj4gZGlmZiAtLWdp
-dCBhL3Rvb2xzL29ianRvb2wvYXJjaC5oIGIvdG9vbHMvb2JqdG9vbC9hcmNoLmgNCj4+IGluZGV4
-IGIwZDdkYzNkNzFiNS4uMGVmZjE2NmNhNjEzIDEwMDY0NA0KPj4gLS0tIGEvdG9vbHMvb2JqdG9v
-bC9hcmNoLmgNCj4+ICsrKyBiL3Rvb2xzL29ianRvb2wvYXJjaC5oDQo+PiBAQCAtMjIsNiArMjIs
-NyBAQA0KPj4gICAjaW5jbHVkZSA8bGludXgvbGlzdC5oPg0KPj4gICAjaW5jbHVkZSAiZWxmLmgi
-DQo+PiAgICNpbmNsdWRlICJjZmkuaCINCj4+ICsjaW5jbHVkZSAib3JjLmgiDQo+Pg0KPj4gICAj
-ZGVmaW5lIElOU05fSlVNUF9DT05ESVRJT05BTDENCj4+ICAgI2RlZmluZSBJTlNOX0pVTVBfVU5D
-T05ESVRJT05BTDINCj4+IEBAIC03MCw2ICs3MSw4IEBAIHN0cnVjdCBzdGFja19vcCB7DQo+PiAg
-IHN0cnVjdCBvcF9zcmMgc3JjOw0KPj4gICB9Ow0KPj4NCj4+ICtzdHJ1Y3QgaW5zdHJ1Y3Rpb247
-DQo+PiArDQo+PiAgIHZvaWQgYXJjaF9pbml0aWFsX2Z1bmNfY2ZpX3N0YXRlKHN0cnVjdCBjZmlf
-c3RhdGUgKnN0YXRlKTsNCj4+DQo+PiAgIGludCBhcmNoX2RlY29kZV9pbnN0cnVjdGlvbihzdHJ1
-Y3QgZWxmICplbGYsIHN0cnVjdCBzZWN0aW9uICpzZWMsDQo+PiBAQCAtNzksNCArODIsMTAgQEAg
-aW50IGFyY2hfZGVjb2RlX2luc3RydWN0aW9uKHN0cnVjdCBlbGYgKmVsZiwgc3RydWN0IHNlY3Rp
-b24gKnNlYywNCj4+DQo+PiAgIGJvb2wgYXJjaF9jYWxsZWVfc2F2ZWRfcmVnKHVuc2lnbmVkIGNo
-YXIgcmVnKTsNCj4+DQo+PiAraW50IGFyY2hfb3JjX3JlYWRfdW53aW5kX2hpbnRzKHN0cnVjdCBv
-Ymp0b29sX2ZpbGUgKmZpbGUpOw0KPj4gKw0KPj4gK3Vuc2lnbmVkIGxvbmcgYXJjaF9jb21wdXRl
-X2p1bXBfZGVzdGluYXRpb24oc3RydWN0IGluc3RydWN0aW9uICppbnNuKTsNCj4+ICsNCj4+ICt1
-bnNpZ25lZCBsb25nIGFyY2hfY29tcHV0ZV9yZWxhX3N5bV9vZmZzZXQoaW50IGFkZGVuZCk7DQo+
-DQo+IGFyY2hfZGVzdF9yZWxhX2FkZGVuZF9vZmZzZXQoKSBtaWdodCBiZSBhIG1vcmUgZGVzY3Jp
-cHRpdmUgbmFtZS4gIEFsc28NCj4gaXQgbWlnaHQgYmUgc2ltcGxlciB0byBqdXN0IG1ha2UgaXQg
-YW4gYXJjaC1zcGVjaWZpYyBtYWNybyB3aGljaCBpcyAwIG9uDQo+IGFybTY0IGFuZCA0IG9uIHg4
-Ni4NCj4NCj4gImNvbXB1dGUiIGlzIGltcGxpZWQsIGl0IGNhbiBwcm9iYWJseSBiZSByZW1vdmVk
-IGZyb20gdGhlIG5hbWVzIHRvIG1ha2UNCj4gdGhlbSBhIGxpdHRsZSBtb3JlIGNvbmNpc2UuDQo+
-DQoNCkkgYW0gbW9yZSBpbiBmYXZvciBvZiB0aGUgZnVuY3Rpb25zLCBJIGhhdmUgdG8gYWRtaXQg
-SSBkb24ndCBrbm93IHdoaWNoDQppcyByZWFsbHkgYmV0dGVyIGJ1dCBpbiBhbnkgZXZlbnQgSSB3
-aWxsIHJlbmFtZSB0aGVtLg0KDQo+PiArDQo+PiAgICNlbmRpZiAvKiBfQVJDSF9IICovDQo+PiBk
-aWZmIC0tZ2l0IGEvdG9vbHMvb2JqdG9vbC9hcmNoL3g4Ni9CdWlsZCBiL3Rvb2xzL29ianRvb2wv
-YXJjaC94ODYvQnVpbGQNCj4+IGluZGV4IGI5OTg0MTJjMDE3ZC4uNzQwMTViZTUzZWYwIDEwMDY0
-NA0KPj4gLS0tIGEvdG9vbHMvb2JqdG9vbC9hcmNoL3g4Ni9CdWlsZA0KPj4gKysrIGIvdG9vbHMv
-b2JqdG9vbC9hcmNoL3g4Ni9CdWlsZA0KPj4gQEAgLTEsNCArMSw1IEBADQo+PiAgIG9ianRvb2wt
-eSArPSBkZWNvZGUubw0KPj4gK29ianRvb2wteSArPSBvcmNfZ2VuLm8NCj4+DQo+PiAgIGluYXRf
-dGFibGVzX3NjcmlwdCA9IGFyY2gveDg2L3Rvb2xzL2dlbi1pbnNuLWF0dHIteDg2LmF3aw0KPj4g
-ICBpbmF0X3RhYmxlc19tYXBzID0gYXJjaC94ODYvbGliL3g4Ni1vcGNvZGUtbWFwLnR4dA0KPj4g
-ZGlmZiAtLWdpdCBhL3Rvb2xzL29ianRvb2wvYXJjaC94ODYvZGVjb2RlLmMgYi90b29scy9vYmp0
-b29sL2FyY2gveDg2L2RlY29kZS5jDQo+PiBpbmRleCA1NDBhMjA5Yjc4YWIuLjFhZjdiNDk5NjMw
-NyAxMDA2NDQNCj4+IC0tLSBhL3Rvb2xzL29ianRvb2wvYXJjaC94ODYvZGVjb2RlLmMNCj4+ICsr
-KyBiL3Rvb2xzL29ianRvb2wvYXJjaC94ODYvZGVjb2RlLmMNCj4+IEBAIC0yMyw2ICsyMyw4IEBA
-DQo+PiAgICNpbmNsdWRlICJsaWIvaW5hdC5jIg0KPj4gICAjaW5jbHVkZSAibGliL2luc24uYyIN
-Cj4+DQo+PiArDQo+PiArI2luY2x1ZGUgIi4uLy4uL2NoZWNrLmgiDQo+PiAgICNpbmNsdWRlICIu
-Li8uLi9lbGYuaCINCj4+ICAgI2luY2x1ZGUgIi4uLy4uL2FyY2guaCINCj4+ICAgI2luY2x1ZGUg
-Ii4uLy4uL3dhcm4uaCINCj4+IEBAIC03OCw2ICs4MCwxMDUgQEAgYm9vbCBhcmNoX2NhbGxlZV9z
-YXZlZF9yZWcodW5zaWduZWQgY2hhciByZWcpDQo+PiAgIH0NCj4+ICAgfQ0KPj4NCj4+ICt1bnNp
-Z25lZCBsb25nIGFyY2hfY29tcHV0ZV9yZWxhX3N5bV9vZmZzZXQoaW50IGFkZGVuZCkNCj4+ICt7
-DQo+PiArcmV0dXJuIGFkZGVuZCArIDQ7DQo+PiArfQ0KPj4gKw0KPj4gK2ludCBhcmNoX29yY19y
-ZWFkX3Vud2luZF9oaW50cyhzdHJ1Y3Qgb2JqdG9vbF9maWxlICpmaWxlKQ0KPg0KPiBJIHRoaW5r
-IHRoaXMgZnVuY3Rpb24gd291bGQgYmUgYmV0dGVyIHN1aXRlZCBmb3Igb3JjX2dlbi5jICh3aGlj
-aCBjb3VsZA0KPiBiZSByZW5hbWVkIHRvIGp1c3Qgb3JjLmMpLg0KPg0KDQpUaGF0IGlzIGluZGVl
-ZCB0cnVlLiBJIGRpZCB0aGF0IGZvciB0aGUgYXJtNjQgc2lkZSBzbyBmb3IgY29uc2lzdGVuY3kg
-aXQNCnNob3VsZCBiZSB0aGUgc2FtZSBoZXJlLg0KDQo+PiBkaWZmIC0tZ2l0IGEvdG9vbHMvb2Jq
-dG9vbC9hcmNoL3g4Ni9pbmNsdWRlL2FyY2hfc3BlY2lhbC5oIGIvdG9vbHMvb2JqdG9vbC9hcmNo
-L3g4Ni9pbmNsdWRlL2FyY2hfc3BlY2lhbC5oDQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4g
-aW5kZXggMDAwMDAwMDAwMDAwLi5iZDkxYjEwOTYzNTkNCj4+IC0tLSAvZGV2L251bGwNCj4+ICsr
-KyBiL3Rvb2xzL29ianRvb2wvYXJjaC94ODYvaW5jbHVkZS9hcmNoX3NwZWNpYWwuaA0KPj4gQEAg
-LTAsMCArMSwzNSBAQA0KPj4gKy8qDQo+PiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdh
-cmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcg0KPj4gKyAqIG1vZGlmeSBpdCB1bmRl
-ciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlDQo+PiArICogYXMg
-cHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247IGVpdGhlciB2ZXJzaW9u
-IDINCj4+ICsgKiBvZiB0aGUgTGljZW5zZSwgb3IgKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIg
-dmVyc2lvbi4NCj4+ICsgKg0KPj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0
-aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVsLA0KPj4gKyAqIGJ1dCBXSVRIT1VUIEFOWSBX
-QVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mDQo+PiArICogTUVS
-Q0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRo
-ZQ0KPj4gKyAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGZvciBtb3JlIGRldGFpbHMuDQo+
-PiArICoNCj4+ICsgKiBZb3Ugc2hvdWxkIGhhdmUgcmVjZWl2ZWQgYSBjb3B5IG9mIHRoZSBHTlUg
-R2VuZXJhbCBQdWJsaWMgTGljZW5zZQ0KPj4gKyAqIGFsb25nIHdpdGggdGhpcyBwcm9ncmFtOyBp
-ZiBub3QsIHNlZSA8aHR0cDovL3d3dy5nbnUub3JnL2xpY2Vuc2VzLz4uDQo+PiArICovDQo+DQo+
-IFRoaXMgbmVlZHMgdGhlIHN0YW5kYXJkIGhlYWRlciBtYWNybyBndWFyZHMsIGUuZy4NCj4NCj4g
-I2lmbmRlZiBfWDg2X0FSQ0hfU1BFQ0lBTF9IDQo+ICNkZWZpbmUgX1g4Nl9BUkNIX1NQRUNJQUxf
-SA0KPg0KDQpJIHdpbGwgY29ycmVjdCB0aGlzISBUaGFuayB5b3UuDQo+PiArDQo+PiArI2RlZmlu
-ZSBFWF9FTlRSWV9TSVpFMTINCj4+ICsjZGVmaW5lIEVYX09SSUdfT0ZGU0VUMA0KPj4gKyNkZWZp
-bmUgRVhfTkVXX09GRlNFVDQNCj4+ICsNCj4+ICsjZGVmaW5lIEpVTVBfRU5UUllfU0laRTE2DQo+
-PiArI2RlZmluZSBKVU1QX09SSUdfT0ZGU0VUMA0KPj4gKyNkZWZpbmUgSlVNUF9ORVdfT0ZGU0VU
-NA0KPj4gKw0KPj4gKyNkZWZpbmUgQUxUX0VOVFJZX1NJWkUxMw0KPj4gKyNkZWZpbmUgQUxUX09S
-SUdfT0ZGU0VUMA0KPj4gKyNkZWZpbmUgQUxUX05FV19PRkZTRVQ0DQo+PiArI2RlZmluZSBBTFRf
-RkVBVFVSRV9PRkZTRVQ4DQo+PiArI2RlZmluZSBBTFRfT1JJR19MRU5fT0ZGU0VUMTANCj4+ICsj
-ZGVmaW5lIEFMVF9ORVdfTEVOX09GRlNFVDExDQo+PiArDQo+PiArI2RlZmluZSBJR05PUkVfU0hG
-X0VYRUNfRkxBRzANCj4+ICsNCj4+ICsjZGVmaW5lIEpVTVBfRFlOQU1JQ19JU19TV0lUQ0hfVEFC
-TEUwDQo+DQo+IFRoZXNlIGZsYWdzIHNob3VsZCBiZSBhZGRlZCB3aXRoIHRoZSBjb21taXQgd2hp
-Y2ggYWN0dWFsbHkgdXNlcyB0aGVtLg0KPg0KPiBBbHNvICJhcmNoX3NwZWNpYWwuaCIgaXMgc3Bl
-Y2lmaWMgdG8gc3BlY2lhbCBzZWN0aW9uIHBhcnNpbmcsIHNvIEknbQ0KPiB0aGlua2luZyB0aGVz
-ZSB0d28gbWFjcm9zIGRvbid0IHJlYWxseSBiZWxvbmcgaGVyZS4gIE9yIG1heWJlIHRoZSBoZWFk
-ZXINCj4gZmlsZSBjb3VsZCBiZSByZW5hbWVkIHRvIHNvbWV0aGluZyBtb3JlIGdlbmVyaWMuDQo+
-DQoNCk15IGFwcHJvYWNoIHdhcyBpbmRlZWQgd3JvbmcuIEluIHRoZSBuZXh0IHZlcnNpb24gSSds
-bCBnZXQgcmlkIG9mIHRob3NlDQptYWNyb3Mgd2hpY2ggYXJlIGluZWxlZ2FudCBhbmQgdW5yZWxh
-dGVkIHRvIHg4Ni4NCg0KVGhhbmtzLA0KDQotLQ0KUmFwaGFlbCBHYXVsdA0KSU1QT1JUQU5UIE5P
-VElDRTogVGhlIGNvbnRlbnRzIG9mIHRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUg
-Y29uZmlkZW50aWFsIGFuZCBtYXkgYWxzbyBiZSBwcml2aWxlZ2VkLiBJZiB5b3UgYXJlIG5vdCB0
-aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgaW1tZWRpYXRl
-bHkgYW5kIGRvIG5vdCBkaXNjbG9zZSB0aGUgY29udGVudHMgdG8gYW55IG90aGVyIHBlcnNvbiwg
-dXNlIGl0IGZvciBhbnkgcHVycG9zZSwgb3Igc3RvcmUgb3IgY29weSB0aGUgaW5mb3JtYXRpb24g
-aW4gYW55IG1lZGl1bS4gVGhhbmsgeW91Lg0K
+In preparation to enabling -Wimplicit-fallthrough, mark switch
+cases where we are expecting to fall through.
+
+This patch fixes the following warnings:
+
+In file included from drivers/net/ethernet/amd/xgbe/xgbe-drv.c:129:
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c: In function ‘xgbe_set_hwtstamp_settings’:
+drivers/net/ethernet/amd/xgbe/xgbe-common.h:1392:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  (_var) |= (((_val) & ((0x1 << (_width)) - 1)) << (_index)); \
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-common.h:1419:2: note: in expansion of macro ‘SET_BITS’
+  SET_BITS((_var),      \
+  ^~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1614:3: note: in expansion of macro ‘XGMAC_SET_BITS’
+   XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
+   ^~~~~~~~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1616:2: note: here
+  case HWTSTAMP_FILTER_PTP_V1_L4_EVENT:
+  ^~~~
+In file included from drivers/net/ethernet/amd/xgbe/xgbe-drv.c:129:
+drivers/net/ethernet/amd/xgbe/xgbe-common.h:1392:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  (_var) |= (((_val) & ((0x1 << (_width)) - 1)) << (_index)); \
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-common.h:1419:2: note: in expansion of macro ‘SET_BITS’
+  SET_BITS((_var),      \
+  ^~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1625:3: note: in expansion of macro ‘XGMAC_SET_BITS’
+   XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
+   ^~~~~~~~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1627:2: note: here
+  case HWTSTAMP_FILTER_PTP_V1_L4_SYNC:
+  ^~~~
+In file included from drivers/net/ethernet/amd/xgbe/xgbe-drv.c:129:
+drivers/net/ethernet/amd/xgbe/xgbe-common.h:1392:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  (_var) |= (((_val) & ((0x1 << (_width)) - 1)) << (_index)); \
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-common.h:1419:2: note: in expansion of macro ‘SET_BITS’
+  SET_BITS((_var),      \
+  ^~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1636:3: note: in expansion of macro ‘XGMAC_SET_BITS’
+   XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
+   ^~~~~~~~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1638:2: note: here
+  case HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ:
+  ^~~~
+
+Warning level 3 was used: -Wimplicit-fallthrough=3
+
+Notice that, in this particular case, the code comments are modified
+in accordance with what GCC is expecting to find.
+
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/net/ethernet/amd/xgbe/xgbe-drv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+index 0cc911f928b1..3dd0cecddba8 100644
+--- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
++++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
+@@ -1612,7 +1612,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
+ 	/* PTP v2, UDP, any kind of event packet */
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
+-	/* PTP v1, UDP, any kind of event packet */
++		/* Fall through - to PTP v1, UDP, any kind of event packet */
+ 	case HWTSTAMP_FILTER_PTP_V1_L4_EVENT:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
+@@ -1623,7 +1623,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
+ 	/* PTP v2, UDP, Sync packet */
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
+-	/* PTP v1, UDP, Sync packet */
++		/* Fall through - to PTP v1, UDP, Sync packet */
+ 	case HWTSTAMP_FILTER_PTP_V1_L4_SYNC:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
+@@ -1634,7 +1634,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
+ 	/* PTP v2, UDP, Delay_req packet */
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
+-	/* PTP v1, UDP, Delay_req packet */
++		/* Fall through - to PTP v1, UDP, Delay_req packet */
+ 	case HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ:
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
+ 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
+-- 
+2.21.0
+
