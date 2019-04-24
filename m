@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2DAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CFAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 286CA21902
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD199218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:55:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730899AbfDXNzo (ORCPT
+        id S1730889AbfDXNzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:55:44 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:34212 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730826AbfDXNzY (ORCPT
+        Wed, 24 Apr 2019 09:55:42 -0400
+Received: from michel.telenet-ops.be ([195.130.137.88]:57938 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730828AbfDXNzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Apr 2019 09:55:24 -0400
 Received: from ramsan ([84.194.111.163])
-        by albert.telenet-ops.be with bizsmtp
-        id 4DvM2000Q3XaVaC06DvMpc; Wed, 24 Apr 2019 15:55:22 +0200
+        by michel.telenet-ops.be with bizsmtp
+        id 4DvM2000z3XaVaC06DvMJB; Wed, 24 Apr 2019 15:55:22 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hJIMr-000888-O4; Wed, 24 Apr 2019 15:55:21 +0200
+        id 1hJIMr-00088D-QA; Wed, 24 Apr 2019 15:55:21 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hJIMr-0006Ye-Me; Wed, 24 Apr 2019 15:55:21 +0200
+        id 1hJIMr-0006Yk-Oi; Wed, 24 Apr 2019 15:55:21 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Joerg Roedel <joro@8bytes.org>,
         Magnus Damm <damm+renesas@opensource.se>
@@ -37,9 +37,9 @@ Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
         iommu@lists.linux-foundation.org,
         linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 4/6] iommu/ipmmu-vmsa: Move num_utlbs to SoC-specific features
-Date:   Wed, 24 Apr 2019 15:55:16 +0200
-Message-Id: <20190424135518.25150-5-geert+renesas@glider.be>
+Subject: [PATCH v3 6/6] iommu/ipmmu-vmsa: Add suspend/resume support
+Date:   Wed, 24 Apr 2019 15:55:18 +0200
+Message-Id: <20190424135518.25150-7-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190424135518.25150-1-geert+renesas@glider.be>
 References: <20190424135518.25150-1-geert+renesas@glider.be>
@@ -48,70 +48,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The maximum number of micro-TLBs per IPMMU instance is not fixed, but
-depends on the SoC type.  Hence move it from struct ipmmu_vmsa_device to
-struct ipmmu_features, and set up the correct value for both R-Car Gen2
-and Gen3 SoCs.
+During PSCI system suspend, R-Car Gen3 SoCs are powered down, and all
+IPMMU state is lost.  Hence after s2ram, devices wired behind an IPMMU,
+and configured to use it, will see their DMA operations hang.
 
-Note that currently no code uses this value.
+To fix this, restore all IPMMU contexts, and re-enable all active
+micro-TLBs during system resume.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 ---
+This patch takes a different approach than the BSP, which implements a
+bulk save/restore of all registers during system suspend/resume.
+
 v3:
-  - Add Reviewed-by,
+  - No changes,
 
 v2:
-  - Add Reviewed-by.
+  - Drop PSCI checks.
 ---
- drivers/iommu/ipmmu-vmsa.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/iommu/ipmmu-vmsa.c | 47 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-index 87acf86f295fac0d..3fa57627b1e35562 100644
+index 56e84bcc9532e1ce..408ad0b2591925e0 100644
 --- a/drivers/iommu/ipmmu-vmsa.c
 +++ b/drivers/iommu/ipmmu-vmsa.c
-@@ -42,6 +42,7 @@ struct ipmmu_features {
+@@ -36,7 +36,10 @@
+ #define arm_iommu_detach_device(...)	do {} while (0)
+ #endif
+ 
+-#define IPMMU_CTX_MAX 8U
++#define IPMMU_CTX_MAX		8U
++#define IPMMU_CTX_INVALID	-1
++
++#define IPMMU_UTLB_MAX		48U
+ 
+ struct ipmmu_features {
  	bool use_ns_alias_offset;
- 	bool has_cache_leaf_nodes;
- 	unsigned int number_of_contexts;
-+	unsigned int num_utlbs;
- 	bool setup_imbuscr;
- 	bool twobit_imttbcr_sl0;
- 	bool reserved_context;
-@@ -53,7 +54,6 @@ struct ipmmu_vmsa_device {
- 	struct iommu_device iommu;
- 	struct ipmmu_vmsa_device *root;
- 	const struct ipmmu_features *features;
--	unsigned int num_utlbs;
- 	unsigned int num_ctx;
+@@ -58,6 +61,7 @@ struct ipmmu_vmsa_device {
  	spinlock_t lock;			/* Protects ctx and domains[] */
  	DECLARE_BITMAP(ctx, IPMMU_CTX_MAX);
-@@ -972,6 +972,7 @@ static const struct ipmmu_features ipmmu_features_default = {
- 	.use_ns_alias_offset = true,
- 	.has_cache_leaf_nodes = false,
- 	.number_of_contexts = 1, /* software only tested with one context */
-+	.num_utlbs = 32,
- 	.setup_imbuscr = true,
- 	.twobit_imttbcr_sl0 = false,
- 	.reserved_context = false,
-@@ -981,6 +982,7 @@ static const struct ipmmu_features ipmmu_features_rcar_gen3 = {
- 	.use_ns_alias_offset = false,
- 	.has_cache_leaf_nodes = true,
- 	.number_of_contexts = 8,
-+	.num_utlbs = 48,
- 	.setup_imbuscr = false,
- 	.twobit_imttbcr_sl0 = true,
- 	.reserved_context = true,
-@@ -1033,7 +1035,6 @@ static int ipmmu_probe(struct platform_device *pdev)
- 	}
+ 	struct ipmmu_vmsa_domain *domains[IPMMU_CTX_MAX];
++	s8 utlb_ctx[IPMMU_UTLB_MAX];
  
- 	mmu->dev = &pdev->dev;
--	mmu->num_utlbs = 48;
+ 	struct iommu_group *group;
+ 	struct dma_iommu_mapping *mapping;
+@@ -335,6 +339,7 @@ static void ipmmu_utlb_enable(struct ipmmu_vmsa_domain *domain,
+ 	ipmmu_write(mmu, IMUCTR(utlb),
+ 		    IMUCTR_TTSEL_MMU(domain->context_id) | IMUCTR_FLUSH |
+ 		    IMUCTR_MMUEN);
++	mmu->utlb_ctx[utlb] = domain->context_id;
+ }
+ 
+ /*
+@@ -346,6 +351,7 @@ static void ipmmu_utlb_disable(struct ipmmu_vmsa_domain *domain,
+ 	struct ipmmu_vmsa_device *mmu = domain->mmu;
+ 
+ 	ipmmu_write(mmu, IMUCTR(utlb), 0);
++	mmu->utlb_ctx[utlb] = IPMMU_CTX_INVALID;
+ }
+ 
+ static void ipmmu_tlb_flush_all(void *cookie)
+@@ -1043,6 +1049,7 @@ static int ipmmu_probe(struct platform_device *pdev)
  	spin_lock_init(&mmu->lock);
  	bitmap_zero(mmu->ctx, IPMMU_CTX_MAX);
  	mmu->features = of_device_get_match_data(&pdev->dev);
++	memset(mmu->utlb_ctx, IPMMU_CTX_INVALID, mmu->features->num_utlbs);
+ 	dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(40));
+ 
+ 	/* Map I/O memory and request IRQ. */
+@@ -1158,10 +1165,48 @@ static int ipmmu_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static int ipmmu_resume_noirq(struct device *dev)
++{
++	struct ipmmu_vmsa_device *mmu = dev_get_drvdata(dev);
++	unsigned int i;
++
++	/* Reset root MMU and restore contexts */
++	if (ipmmu_is_root(mmu)) {
++		ipmmu_device_reset(mmu);
++
++		for (i = 0; i < mmu->num_ctx; i++) {
++			if (!mmu->domains[i])
++				continue;
++
++			ipmmu_domain_setup_context(mmu->domains[i]);
++		}
++	}
++
++	/* Re-enable active micro-TLBs */
++	for (i = 0; i < mmu->features->num_utlbs; i++) {
++		if (mmu->utlb_ctx[i] == IPMMU_CTX_INVALID)
++			continue;
++
++		ipmmu_utlb_enable(mmu->root->domains[mmu->utlb_ctx[i]], i);
++	}
++
++	return 0;
++}
++
++static const struct dev_pm_ops ipmmu_pm  = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(NULL, ipmmu_resume_noirq)
++};
++#define DEV_PM_OPS	&ipmmu_pm
++#else
++#define DEV_PM_OPS	NULL
++#endif /* CONFIG_PM_SLEEP */
++
+ static struct platform_driver ipmmu_driver = {
+ 	.driver = {
+ 		.name = "ipmmu-vmsa",
+ 		.of_match_table = of_match_ptr(ipmmu_of_ids),
++		.pm = DEV_PM_OPS,
+ 	},
+ 	.probe = ipmmu_probe,
+ 	.remove	= ipmmu_remove,
 -- 
 2.17.1
 
