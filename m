@@ -2,118 +2,103 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4D7C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6291C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D9520685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556090443;
-	bh=rni+V//AQhwJI60hOiEBtbHqeDGaouyP06UShjZshgs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ISMab77qs6mhAQ5yvfvJ+txAmBhYXNXV3Js+WzchCr6M9Gd9PFpZh6p16JhPs93NF
-	 5XFa2T8dMBY3fRJGI8YT/HTwGFaNqzKZgDeR6DS4uIXwRXNqpfYx9GwkrFxciKqufs
-	 +uN+BiaINl6beBcFhSsHio54pJwm/LQLOCy9oWQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 9FB6220685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:22:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="htc8vYEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbfDXHUm (ORCPT
+        id S1730120AbfDXHWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:20:42 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45440 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728904AbfDXHUm (ORCPT
+        Wed, 24 Apr 2019 03:22:31 -0400
+Received: from mail-qk1-f178.google.com ([209.85.222.178]:46298 "EHLO
+        mail-qk1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfDXHWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:20:42 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y84so13416959oia.12;
-        Wed, 24 Apr 2019 00:20:42 -0700 (PDT)
+        Wed, 24 Apr 2019 03:22:31 -0400
+Received: by mail-qk1-f178.google.com with SMTP id w73so8058433qkb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 00:22:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=QPj3RrJhF0a00h3VE9qVOc+yEBckW0c77016N9YAvt0=;
+        b=htc8vYEryCUyzFy11pcvpYMKyTe/di+s5c1jIdni7ygAIGmGYaX/PxV+UtK60l88JY
+         5ZW6wTPNEPD6PKJ/ZVX277DSHUd1DnB6Fpd2xFpxjy7+yIbduMbS8butVK8U8gUfRfxS
+         ZlepyKsnjymXVk/lL+u1PZLdRp5HqwpEqZ9briTJhHMQvnLwm3HYSLfVGVgIlwU2CuyZ
+         t/r6IY5Xg03B+i8iGPtVjc9GOOCfoapwWcxFbOIrCDtpQft3nQMxSVb70mHub7EUpUWb
+         3y6CikmQjTb8KXFXf8N9cCZEJlYyEYrVNqydn7VIMxqVEAC8qXeIM6ypcW4DjFNSiKNk
+         P0CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qlz/jTFbB35TazHt6RURpEdEs+qLpXbIqgsneSLwibs=;
-        b=VwO+toLqNpbRqXu3VtCvM+P3dwS4HB0jO3h69CZ2Ij5tQ15A+i4mBHewjSaxLPuP2S
-         if3wJr5tj/7mPt3GujufjYZBB1u7g/DSn5Q/FP97AXFrpPDsOyY3W4PTzeNLvHUCjNMo
-         aBh1Q3vFrUZJgJ6C0DZh1OXL1emw4sGx3Zmh1TpDZg2NRv0xkNGRmMwAse0mqVkCFwsj
-         13LYJJ65sG5S+I0P0Gj/y2nGKLG/NvyE37BnvBs49vIIB9+sgVn0+J9IoNBRI5camlU+
-         xuN8AE4NaGZU5eQCKKk9gCfhArE5UojfOCyT+IT3WXUupFsmoIUQePu76IAjNVOoZiEX
-         J47Q==
-X-Gm-Message-State: APjAAAVU5tJpM7k1x56R4zFtib354605cppO7ZqznYaBfPeTyCA/nwhi
-        qjghOR0IziE5+AyO0935ES9AFm0d8IYCeClFUfI=
-X-Google-Smtp-Source: APXvYqybS7c6y+CMjsK6KfZdX0AjHN7GPWCDQkmNbWb7gjc0hpRXuytL6tBsi4NHFhKo0TFX9ZfnC1xrT+GGi+7cdZE=
-X-Received: by 2002:aca:6c47:: with SMTP id h68mr4966666oic.57.1556090441401;
- Wed, 24 Apr 2019 00:20:41 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=QPj3RrJhF0a00h3VE9qVOc+yEBckW0c77016N9YAvt0=;
+        b=ORxq/6bHvZHKjEKHvLqB8xTe9jp6AQZaOi1P9Db2snLismE+QzfwEtW5NXEaSsOoMB
+         AUbMASdT9GfXwlZyRNhwpuzx6dmPbCDy0v0oHrWOTK1MUCvo1BCbxj2AOY50Lbizq/5S
+         dEEGAkzL3AG36ESuHclt/WFV2BBGdJJLHNz7TJ7s55ybHWqLLbJ85HMRYtnKfu2hUPWJ
+         2UsWBW4BcKMYgDsJQjwkkqibqKUGWdmbrAqRywKErlTSd6H+rwrglTOyksYjKdTL0gkA
+         d18YFe+tzYSfZNd+k/76SFBEDunyDMrsBulrLY74ARKwhR7BlKlMaxUaW9mHDHSL83Fn
+         V1Yw==
+X-Gm-Message-State: APjAAAWSoJYJVmbtwTe80Zg6sxOg4j+YoDe+0QhvSBvMs+2EBJJ/iCGt
+        gmMywAtj7joiNjx5ack+RjvnDWcDVlTV9t1gUqK1ydo58Yw=
+X-Google-Smtp-Source: APXvYqzZGPijU0HNtEavhlsB7B0Y0/Yhy2YCNQY9VlZwNt5txtoqZ9AcB66DKjLvIdjeNL6DBqw1H6aKpQnWUgQ83Sw=
+X-Received: by 2002:a05:620a:12bc:: with SMTP id x28mr22764175qki.329.1556090550012;
+ Wed, 24 Apr 2019 00:22:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190403054352.30120-1-kai.heng.feng@canonical.com>
- <eb1462c9-ebef-7bd6-c263-3f4f2e8ba63d@redhat.com> <b6cd67d7-a4de-0fab-4512-25d732190d17@uwyo.edu>
- <feb1808d-542c-83c2-5c70-9228473bb8d0@redhat.com> <0a770539-dfe9-2eb6-a90a-82f065a23a3f@uwyo.edu>
- <f6db39bc-b8d1-fda8-ad37-a8b050ef0027@redhat.com> <37aee883-1253-adad-82b4-4a578cc72825@uwyo.edu>
- <CAJZ5v0j9U20cFbRx6QKeQv6wyDg6nL71L0U_Rec5+W1JoD8-=w@mail.gmail.com> <144b56d4-54e6-bccd-4652-22303bcd9168@uwyo.edu>
-In-Reply-To: <144b56d4-54e6-bccd-4652-22303bcd9168@uwyo.edu>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 24 Apr 2019 09:20:28 +0200
-Message-ID: <CAJZ5v0jJEovXXiqs-tzPC7FsGjGL+qxfXCxbTrQZqAxSCv1oyQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate
- on BYT/CHT
-To:     "Robert R. Howell" <RHowell@uwyo.edu>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Wed, 24 Apr 2019 15:22:18 +0800
+Message-ID: <CAD8Lp47JYdZzbV9F+asNwvSfLF_po_J7ir6R_Vb-Dab21_=Krw@mail.gmail.com>
+Subject: sg_dma_page_iter offset & length considerations
+To:     jgg@mellanox.com, imre.deak@intel.com,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-mmc@vger.kernel.org
+Cc:     Oleksij Rempel <linux@rempel-privat.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 10:03 PM Robert R. Howell <RHowell@uwyo.edu> wrote:
->
-> On 4/23/19 2:07 AM, Rafael J. Wysocki wrote:
-> >
-> > On Sat, Apr 20, 2019 at 12:44 AM Robert R. Howell <RHowell@uwyo.edu> wrote:
-> >>
-> >> On 4/18/19 5:42 AM, Hans de Goede wrote:
-> >>
-> >>>> On 4/8/19 2:16 AM, Hans de Goede wrote:>
-> >>>>>
-> >>>>> Hmm, interesting so you have hibernation working on a T100TA
-> >>>>> (with 5.0 + 02e45646d53b reverted), right ?
-> >>>>>
-> >>
-> >>
-> >> I've managed to find a way around the i2c_designware timeout issues
-> >> on the T100TA's.  The key is to NOT set DPM_FLAG_SMART_SUSPEND,
-> >> which was added in the 02e45646d53b commit.
-> >>
-> >> To test that I've started with a 5.1-rc5 kernel, applied your recent patch
-> >> to acpi_lpss.c, then apply the following patch of mine, removing
-> >> DPM_FLAG_SMART_SUSPEND.  (For the T100 hardware I need to apply some
-> >> other patches as well but those are not related to the i2c-designware or
-> >> acpi issues addressed here.)
-> >>
-> >> On a resume from hibernation I still see one error:
-> >>   "i2c_designware 80860F41:00: Error i2c_dw_xfer called while suspended"
-> >> but I no longer get the i2c_designware timeouts, and audio does now work
-> >> after the resume.
-> >>
-> >> Removing DPM_FLAG_SMART_SUSPEND may not be what you want for other
-> >> hardware, but perhaps this will give you a clue as to what is going
-> >> wrong with hibernate/resume on the T100TA's.
-> >
-> > What if you drop DPM_FLAG_LEAVE_SUSPENDED alone instead?
-> >
->
-> I did try dropping just DPM_FLAG_LEAVE_SUSPENDED, dropping just
-> DPM_FLAG_SMART_SUSPEND, and dropping both flags.  When I just drop
-> DPM_FLAG_LEAVE_SUSPENDED I still get the i2c_designware timeouts
-> after the resume.  If I drop just DPM_FLAG_SMART_SUSPEND or drop both,
-> then the timeouts go away.
+Hi,
 
-OK, thanks!
+In drivers/mmc/alcor.c we're working with a MMC controller which
+supports DMA transfers split up into page-sized chunks. A DMA transfer
+consists of multiple pages, after each page is transferred there is an
+interrupt so that the driver can program the DMA address of the next
+page in the sequence. All pages must be complete in length, only the
+last one can be a partial transfer.
 
-Is non-hibernation system suspend affected too?
+I thought that the sg_dma_page_iter API looked like a great fit here:
+the driver can accept any old sglist, and then use this new API to
+collapse it into a list of pages that can be easily iterated over, and
+fed to the hardware one at a time.
+
+But looking closer I think I may have made some bad assumptions, and
+I'm left with some fundamental questions about this API.
+
+Specifically I can see userspace generates requests which present a
+sglist such as:
+ - first entry with offset=1536 length=2560
+ - 7 entries with offset=0 length=4096
+ - last entry with offset=0 length=1536
+
+I gather that dma_map_sg() will take care off the offsets, i.e. any
+physical address I get with sg_page_iter_dma_address() will already
+have the offset applied, so I don't have to worry about tracking that.
+
+But what about the length? For every page returned by the iterator, I
+can't assume that I am being asked to work with the full page, right?
+Such as the first and last page in the above example. I need to go
+back to the sglist to check the corresponding length variable, and
+having to go back to check the sglist seems to defeat the convenience
+of having the sglist collapsed into a list of pages by the iterator.
+
+Any comments?
+
+Thanks
+Daniel
