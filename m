@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7E2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2421AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC1D218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B2821902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117480;
-	bh=dJhuujFVeyTEUEmT+pPMiAV3gA09JNjEV9WXOGTsB5E=;
+	s=default; t=1556117485;
+	bh=6s3CoRLg2hAIGnKT+z68rksYwBQieVdBEFC3tjBfAX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iSK66bJAGhxHJCSTiwBFZRhSM6Kg2gWtKK3LbX9kyKuzL2NpviG0EoyB3IYQ7zJMM
-	 +ih8F9UBDvMg+NJYLSi5a9buPqDxKK6iMFIxdA6HPumxvNkh/F/RtquMY1kwf+BN4G
-	 2soT64LxKKtEc2PQ9ciaYcLmnWKM+4oniZvwR0qA=
+	b=kd4f34vpQP5YvABn5fuymdJRrBKQbiUqPue6j1mKR4olJeb8Eu25o8WxkIdrjxDtg
+	 T7ON7dC5KOB3rcV1JSL1JvSv9UNWKIzq95EwhNvrYHAL6P+MLgL/jGZ+zM771YUAFc
+	 5e6R+FZVp12sL9nC6tUEVkrKlxVciZCLoaPT9aQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732794AbfDXOvT (ORCPT
+        id S1732804AbfDXOvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:51:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50406 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:51:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732773AbfDXOvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:51:15 -0400
+        id S1732474AbfDXOvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:51:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C6BA218FC;
-        Wed, 24 Apr 2019 14:51:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C20721904;
+        Wed, 24 Apr 2019 14:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117474;
-        bh=dJhuujFVeyTEUEmT+pPMiAV3gA09JNjEV9WXOGTsB5E=;
+        s=default; t=1556117481;
+        bh=6s3CoRLg2hAIGnKT+z68rksYwBQieVdBEFC3tjBfAX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MKeeUs/cLN8dDi4Kr0KjLFgZwB3qv3pBahELMcLON+sccn47WG2OhDAoveAxutN3u
-         Oh09j9KnXCcT4MIcOL3VI5PoS0F3gvdLR8EP60CDZI9iw60+rusPJSKYCiMhpWlTLz
-         QSehfucdVIeLlC1rlNGRmDzU2/oEyt8Az/UCoJRY=
+        b=fY2VBQx3+jtr+fXebUSqYkp45cS949JlOjIizYOkXsaLmxZ0IQMhzaYgt0+ROg2v2
+         l030dVRAupbYYGu+4GW7WwNwZyVTbViKj8EJ5Lzo5Doj9m6kSgAylq/5oMyp182dh2
+         LeI/mvOMEW7pZM+9v/nJ2v72UE/G7qzal6YSdUKA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 22/28] net: hns: Fix WARNING when remove HNS driver with SMMU enabled
-Date:   Wed, 24 Apr 2019 10:50:06 -0400
-Message-Id: <20190424145012.30886-22-sashal@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Takashi Iwai <tiwai@suse.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 24/28] sh: fix multiple function definition build errors
+Date:   Wed, 24 Apr 2019 10:50:08 -0400
+Message-Id: <20190424145012.30886-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424145012.30886-1-sashal@kernel.org>
 References: <20190424145012.30886-1-sashal@kernel.org>
@@ -60,101 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 8601a99d7c0256b7a7fdd1ab14cf6c1f1dfcadc6 ]
+[ Upstream commit acaf892ecbf5be7710ae05a61fd43c668f68ad95 ]
 
-When enable SMMU, remove HNS driver will cause a WARNING:
+Many of the sh CPU-types have their own plat_irq_setup() and
+arch_init_clk_ops() functions, so these same (empty) functions in
+arch/sh/boards/of-generic.c are not needed and cause build errors.
 
-[  141.924177] WARNING: CPU: 36 PID: 2708 at drivers/iommu/dma-iommu.c:443 __iommu_dma_unmap+0xc0/0xc8
-[  141.954673] Modules linked in: hns_enet_drv(-)
-[  141.963615] CPU: 36 PID: 2708 Comm: rmmod Tainted: G        W         5.0.0-rc1-28723-gb729c57de95c-dirty #32
-[  141.983593] Hardware name: Huawei D05/D05, BIOS Hisilicon D05 UEFI Nemo 1.8 RC0 08/31/2017
-[  142.000244] pstate: 60000005 (nZCv daif -PAN -UAO)
-[  142.009886] pc : __iommu_dma_unmap+0xc0/0xc8
-[  142.018476] lr : __iommu_dma_unmap+0xc0/0xc8
-[  142.027066] sp : ffff000013533b90
-[  142.033728] x29: ffff000013533b90 x28: ffff8013e6983600
-[  142.044420] x27: 0000000000000000 x26: 0000000000000000
-[  142.055113] x25: 0000000056000000 x24: 0000000000000015
-[  142.065806] x23: 0000000000000028 x22: ffff8013e66eee68
-[  142.076499] x21: ffff8013db919800 x20: 0000ffffefbff000
-[  142.087192] x19: 0000000000001000 x18: 0000000000000007
-[  142.097885] x17: 000000000000000e x16: 0000000000000001
-[  142.108578] x15: 0000000000000019 x14: 363139343a70616d
-[  142.119270] x13: 6e75656761705f67 x12: 0000000000000000
-[  142.129963] x11: 00000000ffffffff x10: 0000000000000006
-[  142.140656] x9 : 1346c1aa88093500 x8 : ffff0000114de4e0
-[  142.151349] x7 : 6662666578303d72 x6 : ffff0000105ffec8
-[  142.162042] x5 : 0000000000000000 x4 : 0000000000000000
-[  142.172734] x3 : 00000000ffffffff x2 : ffff0000114de500
-[  142.183427] x1 : 0000000000000000 x0 : 0000000000000035
-[  142.194120] Call trace:
-[  142.199030]  __iommu_dma_unmap+0xc0/0xc8
-[  142.206920]  iommu_dma_unmap_page+0x20/0x28
-[  142.215335]  __iommu_unmap_page+0x40/0x60
-[  142.223399]  hnae_unmap_buffer+0x110/0x134
-[  142.231639]  hnae_free_desc+0x6c/0x10c
-[  142.239177]  hnae_fini_ring+0x14/0x34
-[  142.246540]  hnae_fini_queue+0x2c/0x40
-[  142.254080]  hnae_put_handle+0x38/0xcc
-[  142.261619]  hns_nic_dev_remove+0x54/0xfc [hns_enet_drv]
-[  142.272312]  platform_drv_remove+0x24/0x64
-[  142.280552]  device_release_driver_internal+0x17c/0x20c
-[  142.291070]  driver_detach+0x4c/0x90
-[  142.298259]  bus_remove_driver+0x5c/0xd8
-[  142.306148]  driver_unregister+0x2c/0x54
-[  142.314037]  platform_driver_unregister+0x10/0x18
-[  142.323505]  hns_nic_dev_driver_exit+0x14/0xf0c [hns_enet_drv]
-[  142.335248]  __arm64_sys_delete_module+0x214/0x25c
-[  142.344891]  el0_svc_common+0xb0/0x10c
-[  142.352430]  el0_svc_handler+0x24/0x80
-[  142.359968]  el0_svc+0x8/0x7c0
-[  142.366104] ---[ end trace 60ad1cd58e63c407 ]---
+If there is some case where these empty functions are needed, they can
+be retained by marking them as "__weak" while at the same time making
+builds that do not need them succeed.
 
-The tx ring buffer map when xmit and unmap when xmit done. So in
-hnae_init_ring() did not map tx ring buffer, but in hnae_fini_ring()
-have a unmap operation for tx ring buffer, which is already unmapped
-when xmit done, than cause this WARNING.
+Fixes these build errors:
 
-The hnae_alloc_buffers() is called in hnae_init_ring(),
-so the hnae_free_buffers() should be in hnae_fini_ring(), not in
-hnae_free_desc().
+arch/sh/boards/of-generic.o: In function `plat_irq_setup':
+(.init.text+0x134): multiple definition of `plat_irq_setup'
+arch/sh/kernel/cpu/sh2/setup-sh7619.o:(.init.text+0x30): first defined here
+arch/sh/boards/of-generic.o: In function `arch_init_clk_ops':
+(.init.text+0x118): multiple definition of `arch_init_clk_ops'
+arch/sh/kernel/cpu/sh2/clock-sh7619.o:(.init.text+0x0): first defined here
 
-In hnae_fini_ring(), adds a check is_rx_ring() as in hnae_init_ring().
-When the ring buffer is tx ring, adds a piece of code to ensure that
-the tx ring is unmap.
-
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/9ee4e0c5-f100-86a2-bd4d-1d3287ceab31@infradead.org
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hnae.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/sh/boards/of-generic.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
-index 06bc8638501e..66e7a5fd4249 100644
---- a/drivers/net/ethernet/hisilicon/hns/hnae.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
-@@ -146,7 +146,6 @@ static int hnae_alloc_buffers(struct hnae_ring *ring)
- /* free desc along with its attached buffer */
- static void hnae_free_desc(struct hnae_ring *ring)
+diff --git a/arch/sh/boards/of-generic.c b/arch/sh/boards/of-generic.c
+index 1fb6d5714bae..fd00566677c9 100644
+--- a/arch/sh/boards/of-generic.c
++++ b/arch/sh/boards/of-generic.c
+@@ -180,10 +180,10 @@ static struct sh_machine_vector __initmv sh_of_generic_mv = {
+ 
+ struct sh_clk_ops;
+ 
+-void __init arch_init_clk_ops(struct sh_clk_ops **ops, int idx)
++void __init __weak arch_init_clk_ops(struct sh_clk_ops **ops, int idx)
  {
--	hnae_free_buffers(ring);
- 	dma_unmap_single(ring_to_dev(ring), ring->desc_dma_addr,
- 			 ring->desc_num * sizeof(ring->desc[0]),
- 			 ring_to_dma_dir(ring));
-@@ -179,6 +178,9 @@ static int hnae_alloc_desc(struct hnae_ring *ring)
- /* fini ring, also free the buffer for the ring */
- static void hnae_fini_ring(struct hnae_ring *ring)
+ }
+ 
+-void __init plat_irq_setup(void)
++void __init __weak plat_irq_setup(void)
  {
-+	if (is_rx_ring(ring))
-+		hnae_free_buffers(ring);
-+
- 	hnae_free_desc(ring);
- 	kfree(ring->desc_cb);
- 	ring->desc_cb = NULL;
+ }
 -- 
 2.19.1
 
