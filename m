@@ -2,109 +2,140 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC1DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D591C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57742183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:47:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oVkon3wy"
+	by mail.kernel.org (Postfix) with ESMTP id 537EB2183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732038AbfDXUrC (ORCPT
+        id S1732262AbfDXUsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 16:47:02 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:42348 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfDXUrB (ORCPT
+        Wed, 24 Apr 2019 16:48:37 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33250 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731341AbfDXUsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 16:47:01 -0400
-Received: by mail-ua1-f66.google.com with SMTP id h4so6501785uaj.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 13:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XGnnbGnoa1Ix9iDFS5f9uTubbVrTmmHzn9+oJ3ixh0c=;
-        b=oVkon3wy+COciLYDZ4nDPAO2zQt5Oms9wubxc1BY5yKNnUX2itOfL6QmKXd1M5S2Xr
-         ijcKmWCpwAodDcke4IUkB9T8iocXZX5fAG5ezjB51JJN6PnkxG1Wp2crzGt4gvghlMGW
-         lUIXU7kX9iyPYXfyzisUjvTuJJ1GAHn4/lcbU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XGnnbGnoa1Ix9iDFS5f9uTubbVrTmmHzn9+oJ3ixh0c=;
-        b=oGxIqSiE3+m+Phj7MerbqaNHs85NxeCNsRIVmKDmqnavA85wH+qfxi54h41NXH/zNa
-         FX13ochwsAcHB+V7W8xtAiQy+bg9FoXs1FaW5+lgFXTx9VIjmazsEevjVAx1FnvtyNRW
-         FYnW8wt5Cz6nuXX1arEE7BKaOqL9K0ixh96/02BJPF/MTfaoBHummsTQk8tb+Dld8u7c
-         qHlevk4CIK3rpAkuyrvl7EivRxwnvcy9UD1KUnqtv71YCOZKXII0trO1nJ2R2oQhtQbY
-         5+SCKwhxy5NM4nWT7bDGrLM4B1b8n0nCiTeTKUGKfxHWoK3+ZcSP6cSUtPqmoWj31hbX
-         UZdg==
-X-Gm-Message-State: APjAAAWT1S4SsfwQEdJSsU/716jDxMjSQ+d2A/2wX7KnLmPTpiJcuzAR
-        Tl8EPDk7LMcLKCu64wX6XN2JiADthho=
-X-Google-Smtp-Source: APXvYqzx3/pssG1Jm9EDkGKye0pAp0eMxEyCgRZsDBaUA7C2KwarMELtY2nEa1N6LjbLRM6vZCS5Bw==
-X-Received: by 2002:ab0:7008:: with SMTP id k8mr17883077ual.40.1556138818714;
-        Wed, 24 Apr 2019 13:46:58 -0700 (PDT)
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
-        by smtp.gmail.com with ESMTPSA id z192sm10569699vkd.45.2019.04.24.13.46.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 13:46:57 -0700 (PDT)
-Received: by mail-vk1-f172.google.com with SMTP id x84so4357959vkd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 13:46:57 -0700 (PDT)
-X-Received: by 2002:a1f:a4d:: with SMTP id 74mr18565549vkk.13.1556138816641;
- Wed, 24 Apr 2019 13:46:56 -0700 (PDT)
+        Wed, 24 Apr 2019 16:48:36 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 65B4480692; Wed, 24 Apr 2019 22:48:24 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 22:48:32 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jens Axboe <axboe@kernel.dk>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, lduncan@suse.com, hare@suse.com,
+        mcgrof@kernel.org, jthumshirn@suse.de, hch@lst.de,
+        gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        bvanassche@acm.org
+Cc:     kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
+        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org, hdegoede@redhat.com,
+        linux-ide@vger.kernel.org
+Subject: regression -next -- scsi: sd: Rely on the driver core for
+ asynchronous probing was Re: next-20190408..0418: Suspend/resume problems on
+ Thinkpad X60
+Message-ID: <20190424204832.GA3111@amd>
+References: <20190408173928.GB13260@amd>
+ <20190412102812.GA24977@amd>
+ <20190423102239.GA15531@amd>
+ <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
+ <20190424095431.GA32457@amd>
+ <20190424104850.GC32457@amd>
+ <20190424202119.GA26357@amd>
 MIME-Version: 1.0
-References: <20190423194925.32151-1-keescook@chromium.org> <CAK7LNARuX8XfO=YRX9dYpipyBTCtMbQqLJfuk6iMLfLdZe1-KQ@mail.gmail.com>
-In-Reply-To: <CAK7LNARuX8XfO=YRX9dYpipyBTCtMbQqLJfuk6iMLfLdZe1-KQ@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 24 Apr 2019 13:46:45 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jJfYBTt836K7-SNdwZcHf9RhXKxRj+xefn_hhogt2UEnA@mail.gmail.com>
-Message-ID: <CAGXu5jJfYBTt836K7-SNdwZcHf9RhXKxRj+xefn_hhogt2UEnA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Refactor memory initialization hardening
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        James Morris <jmorris@namei.org>,
-        Alexander Popov <alex.popov@linux.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emese Revfy <re.emese@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="GRPZ8SYKNexpdSJ7"
+Content-Disposition: inline
+In-Reply-To: <20190424202119.GA26357@amd>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 9:07 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Wed, Apr 24, 2019 at 4:49 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > This refactors the stack memory initialization configs in order to
-> > keep things together when adding Clang stack initialization, and in
-> > preparation for future heap memory initialization configs.
-> >
-> > I intend to carry this in the gcc-plugins tree, but I'd really like
-> > to get Acks from Masahiro (Kconfig changes, Makefile change), and
-> > from James (adding the new Kconfig.hardening to security/Kconfig).
->
-> If needed,
-> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Great; thanks! :)
+--GRPZ8SYKNexpdSJ7
+Content-Type: multipart/mixed; boundary="Qxx1br4bt0+wmkIi"
+Content-Disposition: inline
 
--- 
-Kees Cook
+
+--Qxx1br4bt0+wmkIi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> Not block, but it seems scsi subsystem is:
+
+commit 21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3
+Author: Bart Van Assche <bvanassche@acm.org>
+Date:   Wed Mar 20 13:09:19 2019 -0700
+
+    scsi: sd: Rely on the driver core for asynchronous probing
+
+    As explained during the 2018 LSF/MM session about increasing SCSI
+    disk
+        probing concurrency, the problems with the current probing
+    approach are as
+
+Seems to be responsible. Full log attached.
+
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Qxx1br4bt0+wmkIi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=delme
+
+# bad: [76c938fcaa4b4a5d8f05fa907925d5043834964e] Add linux-next specific files for 20190423
+# good: [7142eaa58b49d9de492ccc16d48df7c488a5fbb6] Merge tag 'mips_fixes_5.1_3' of git://git.kernel.org/pub/scm/linux/kernel/git/mips/linux
+git bisect start 'next-20190423' '7142eaa58b49d9de492ccc16d48df7c488a5fbb6'
+# good: [ed04f675fa2c22316d7b57bea1258a18a47537ea] Merge remote-tracking branch 'crypto/master'
+git bisect good ed04f675fa2c22316d7b57bea1258a18a47537ea
+# good: [4a99e5b3463f5c936540958914bff57ec50ac1e0] Merge remote-tracking branch 'spi/for-next'
+git bisect good 4a99e5b3463f5c936540958914bff57ec50ac1e0
+# good: [61cabbda2a7e966b689a6791050ad675e6dff274] Merge remote-tracking branch 'staging/staging-next'
+git bisect good 61cabbda2a7e966b689a6791050ad675e6dff274
+# bad: [c8f0c2453f64529035e25fbfb9de9d24e98baff7] Merge remote-tracking branch 'coresight/next'
+git bisect bad c8f0c2453f64529035e25fbfb9de9d24e98baff7
+# bad: [6fb251c6f174d3cc571391baa9f6e57fff505446] Merge branch 'misc' into for-next
+git bisect bad 6fb251c6f174d3cc571391baa9f6e57fff505446
+# bad: [78a8ab3cc0f95a66c8fb2429030289103de173e7] scsi: qedf: fixup bit operations
+git bisect bad 78a8ab3cc0f95a66c8fb2429030289103de173e7
+# good: [c0327e67ecd86e88f5bc5fd54bfdf9b422a1c93f] scsi: core: remove the scsi_ioctl_reset export
+git bisect good c0327e67ecd86e88f5bc5fd54bfdf9b422a1c93f
+# good: [cbb24e26735f6142ba994b4d44fc2dcd54c3fe1f] scsi: ufs-mediatek: Make some symbols static
+git bisect good cbb24e26735f6142ba994b4d44fc2dcd54c3fe1f
+# bad: [21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3] scsi: sd: Rely on the driver core for asynchronous probing
+git bisect bad 21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3
+# good: [e7f7b6f38a44697428f5a2e7c606de028df2b0e3] scsi: lpfc: change snprintf to scnprintf for possible overflow
+git bisect good e7f7b6f38a44697428f5a2e7c606de028df2b0e3
+# good: [3e14592da654d53d87987aa09753d5a26e45446f] scsi: gdth: Only call dma_free_coherent when buf is not NULL in ioc_general
+git bisect good 3e14592da654d53d87987aa09753d5a26e45446f
+# good: [8378573353728a02602d6f956a3df48db0505c65] scsi: libcxgbi: remove uninitialized variable len
+git bisect good 8378573353728a02602d6f956a3df48db0505c65
+# good: [ea9006dfda65b7dc369aaa2359b3dedfc1bb08b6] scsi: mpt3sas: fix indentation issue
+git bisect good ea9006dfda65b7dc369aaa2359b3dedfc1bb08b6
+# first bad commit: [21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3] scsi: sd: Rely on the driver core for asynchronous probing
+
+--Qxx1br4bt0+wmkIi--
+
+--GRPZ8SYKNexpdSJ7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzAy6AACgkQMOfwapXb+vIRIwCglgb39piVMku5Vq/sKRL2Qt6k
+s7AAn2Utp1UzwRboUpz63y6yQXF2hodv
+=RW0l
+-----END PGP SIGNATURE-----
+
+--GRPZ8SYKNexpdSJ7--
