@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EF2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE74C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77890218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4256E2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128245;
-	bh=jjc4nlS43+SDDCbP9YdXP23XiLc1LXmvXpMh1zpjsE4=;
+	s=default; t=1556128250;
+	bh=aGRFe0HcIB613C85TNsgjSBUr6KvgpVTIziqUNaqMg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TpYW5JbA/qKEhvGbruLNawcOWtwqIj/EtBPWmZUKEbJpMPvb/ozsNCrNAxs6Ffuob
-	 Ya5GDbf5ErGmjZzPGWC6GIoDvyDVBOEjp6OuYBfcKlEd0MR+KBMr0+h6lMornP1Zwb
-	 Ew4BskD391vQN19akUje9GUmft8yILH8JhvU6KO8=
+	b=RyXwaMq2iB5GopSBGj8tYosg13QBLi+AbxzenlmzoPMOPrBZZd4RqlNh91prNwrnK
+	 pVmXWzgQtBpBb/sdPYlcuoGqplfQUkqQYIBDqOwh8stybJGrzPq5vF6xfRAX0HGW1p
+	 Xd8vOj4JYqKRx1xfYVi3eEYrj5M3GJRSjpLQv8AU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391179AbfDXRuo (ORCPT
+        id S2390793AbfDXR3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:50:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390795AbfDXR3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Apr 2019 13:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390050AbfDXR3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:29:20 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D24382054F;
-        Wed, 24 Apr 2019 17:29:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FF3A2054F;
+        Wed, 24 Apr 2019 17:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126965;
-        bh=jjc4nlS43+SDDCbP9YdXP23XiLc1LXmvXpMh1zpjsE4=;
+        s=default; t=1556126960;
+        bh=aGRFe0HcIB613C85TNsgjSBUr6KvgpVTIziqUNaqMg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XzoSJFj8U68Le6xW3uLtuIdqvHZkriwRg8P39pVCtfjAaKz5AQMFrk+Xhz4mnhbyg
-         QavppKNCUL70EtDCrtNSBmV+yY/ZKuqtypm4VAmrwyJ6Uv17bK3RiO81AhDLPe7J+F
-         R2JFnvMAO+DQ974WQyOzumtnuwZMAtUVcdeMnW2k=
+        b=qFVHgFrXXdgnJSS7RRdRdFySeWZPW8KT7Kt+7VwKgNvNHSQ/zGQ9p62tm62kGC3Uc
+         i+BNfsrcvauea4lLdWVlaqJhxAbO1KB0YuINnM+efbc2FBeZVBfIranQ0dizE/mVRb
+         TnljEFwBnBa/BWQTHQcrMs3MzPff1AABnBwRpbg0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d21e6e297322a900c128@syzkaller.appspotmail.com,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 11/96] vhost: reject zero size iova range
-Date:   Wed, 24 Apr 2019 19:09:16 +0200
-Message-Id: <20190424170920.568299150@linuxfoundation.org>
+Subject: [PATCH 4.19 01/96] bonding: fix event handling for stacked bonds
+Date:   Wed, 24 Apr 2019 19:09:06 +0200
+Message-Id: <20190424170919.926231805@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,38 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 813dbeb656d6c90266f251d8bd2b02d445afa63f ]
+[ Upstream commit 92480b3977fd3884649d404cbbaf839b70035699 ]
 
-We used to accept zero size iova range which will lead a infinite loop
-in translate_desc(). Fixing this by failing the request in this case.
+When a bond is enslaved to another bond, bond_netdev_event() only
+handles the event as if the bond is a master, and skips treating the
+bond as a slave.
 
-Reported-by: syzbot+d21e6e297322a900c128@syzkaller.appspotmail.com
-Fixes: 6b1e6cc7 ("vhost: new device IOTLB API")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+This leads to a refcount leak on the slave, since we don't remove the
+adjacency to its master and the master holds a reference on the slave.
+
+Reproducer:
+  ip link add bondL type bond
+  ip link add bondU type bond
+  ip link set bondL master bondU
+  ip link del bondL
+
+No "Fixes:" tag, this code is older than git history.
+
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/vhost/vhost.c |    6 +++++-
+ drivers/net/bonding/bond_main.c |    6 +++++-
  1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -911,8 +911,12 @@ static int vhost_new_umem_range(struct v
- 				u64 start, u64 size, u64 end,
- 				u64 userspace_addr, int perm)
- {
--	struct vhost_umem_node *tmp, *node = kmalloc(sizeof(*node), GFP_ATOMIC);
-+	struct vhost_umem_node *tmp, *node;
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3198,8 +3198,12 @@ static int bond_netdev_event(struct noti
+ 		return NOTIFY_DONE;
  
-+	if (!size)
-+		return -EFAULT;
+ 	if (event_dev->flags & IFF_MASTER) {
++		int ret;
 +
-+	node = kmalloc(sizeof(*node), GFP_ATOMIC);
- 	if (!node)
- 		return -ENOMEM;
+ 		netdev_dbg(event_dev, "IFF_MASTER\n");
+-		return bond_master_netdev_event(event, event_dev);
++		ret = bond_master_netdev_event(event, event_dev);
++		if (ret != NOTIFY_DONE)
++			return ret;
+ 	}
  
+ 	if (event_dev->flags & IFF_SLAVE) {
 
 
