@@ -2,80 +2,63 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9AAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E343C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6BB21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:36:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="souTxhFT"
+	by mail.kernel.org (Postfix) with ESMTP id 79878208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:45:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388074AbfDXSgi (ORCPT
+        id S1729836AbfDXSpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:36:38 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:29491 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388083AbfDXSgh (ORCPT
+        Wed, 24 Apr 2019 14:45:49 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:32888 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727258AbfDXSpt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:36:37 -0400
-X-Greylist: delayed 355 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Apr 2019 14:36:37 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1556130996;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=ztRZ8SZCmF9XNLy1UHtfoSMUUhjMciaT/ucfRjdlQGc=;
-        b=souTxhFTGM/nRkA+3xbl+lV57YwlZe8ik5mwA1HjMveaSfSkh7jR4B1usNbAvL7sQ+
-        mILnkHolPtjFEn+AXJzdU88iWeQ/U9caM5WlPgB86GNAtHfQBx7ur2e7kn3rEc0VrypH
-        KJ3P2Lf0UY73OW1tUEkQpUwXD3WMx9o/kWdo00p6GfsCv3CQy/J4IR/xcC2m3ZHD491P
-        tzMzGY8o1Lp2vz28NvONhzGu5K/hCRxF9GBSE+kUqlR9blpjyEq7Os+XdEHltvm2NwU5
-        iiK3aat8KFdv/5iAeHzOumpN3OYvZoX7ZPtNRILdwZWhhxsiIVdpmDcNG8FR+dl9Yma8
-        aQpQ==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9x2cdNU9qrVA3/I2bquZ6"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
-        with ESMTPSA id R0373fv3OIUZ6mS
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 24 Apr 2019 20:30:35 +0200 (CEST)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Kalyani Akula <kalyania@xilinx.com>
-Cc:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 4/5] crypto: Adds user space interface for ALG_SET_KEY_TYPE
-Date:   Wed, 24 Apr 2019 20:30:35 +0200
-Message-ID: <18759853.IUaQuE38eh@tauon.chronox.de>
-In-Reply-To: <BN7PR02MB5124AC0C75B15E5FB66DF2B6AF220@BN7PR02MB5124.namprd02.prod.outlook.com>
-References: <1547708541-23730-1-git-send-email-kalyani.akula@xilinx.com> <4735882.YQOrfzxm5S@tauon.chronox.de> <BN7PR02MB5124AC0C75B15E5FB66DF2B6AF220@BN7PR02MB5124.namprd02.prod.outlook.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Wed, 24 Apr 2019 14:45:49 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3ECA614882B90;
+        Wed, 24 Apr 2019 11:45:48 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 11:45:45 -0700 (PDT)
+Message-Id: <20190424.114545.1491189947661702492.davem@davemloft.net>
+To:     linmiaohe@huawei.com
+Cc:     dsa@cumulusnetworks.com, shrijeet@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingfangsen@huawei.com
+Subject: Re: [PATCH] net: vrf: Fix operation not supported when set vrf mac
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <4e8a50df-bf96-3ef7-2977-71495d80643c@huawei.com>
+References: <4e8a50df-bf96-3ef7-2977-71495d80643c@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 24 Apr 2019 11:45:48 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 22. April 2019, 11:17:55 CEST schrieb Kalyani Akula:
+From: linmiaohe <linmiaohe@huawei.com>
+Date: Sat, 20 Apr 2019 12:09:39 +0800
 
-Hi Kalyani,
-
-> > Besides, seem to be more a key handling issue. Wouldn't it make sense to
-> > rather have such issue solved with key rings than in the kernel crypto
-> > API?
+> From: Miaohe Lin <linmiaohe@huawei.com>
 > 
-> [kalyani] Can you please elaborate on this further ?
+> Vrf device is not able to change mac address now because lack of
+> ndo_set_mac_address. Complete this in case some apps need to do
+> this.
+> 
+> Reported-by: Hui Wang <wanghui104@huawei.com>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 
-The kernel has a keyring support in security/keys which has a user space 
-interface with keyutils. That interface is commonly used for any sort of key 
-manipulation.
+It seems useless, but this change is pretty much harmless so I'll
+apply it.
 
-Ciao
-Stephan
-
-
+Thanks.
