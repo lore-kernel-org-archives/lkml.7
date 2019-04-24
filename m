@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33F5C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F02C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F469218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901CB218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbfDXLID (ORCPT
+        id S1729662AbfDXLIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:08:03 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37396 "EHLO huawei.com"
+        Wed, 24 Apr 2019 07:08:11 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37400 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727916AbfDXLGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 07:06:55 -0400
+        id S1727895AbfDXLGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 07:06:54 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7B50FD69F3629BE9F522;
+        by Forcepoint Email with ESMTP id 8505C14859F437C5B5DB;
         Wed, 24 Apr 2019 19:06:51 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Apr 2019 19:06:43 +0800
+ 14.3.439.0; Wed, 24 Apr 2019 19:06:41 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linuxarm@huawei.com>, <nhorman@redhat.com>,
         Huazhong Tan <tanhuazhong@huawei.com>,
         Peng Li <lipeng321@huawei.com>
-Subject: [PATCH V2 net-next 11/12] net: hns3: prevent double free in hns3_put_ring_config()
-Date:   Wed, 24 Apr 2019 19:05:30 +0800
-Message-ID: <1556103931-64031-12-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 05/12] net: hns3: use atomic_t replace u32 for arq's count
+Date:   Wed, 24 Apr 2019 19:05:24 +0800
+Message-ID: <1556103931-64031-6-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556103931-64031-1-git-send-email-tanhuazhong@huawei.com>
 References: <1556103931-64031-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,74 +47,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a check for the hns3_put_ring_config() to prevent
-double free, and for more readable, move the NULL assignment of
-priv->ring_data into the hns3_put_ring_config().
+Since irq handler and mailbox task will both update arq's count,
+so arq's count should use atomic_t instead of u32, otherwise
+its value may go wrong finally.
 
+Fixes: 07a0556a3a73 ("net: hns3: Changes to support ARQ(Asynchronous Receive Queue)")
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 7 ++++---
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 7dc281c..b0f31eb 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -3487,6 +3487,7 @@ static int hns3_get_ring_config(struct hns3_nic_priv *priv)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+index 360463a..8b6191f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
+@@ -111,7 +111,7 @@ struct hclgevf_mbx_arq_ring {
+ 	struct hclgevf_dev *hdev;
+ 	u32 head;
+ 	u32 tail;
+-	u32 count;
++	atomic_t count;
+ 	u16 msg_q[HCLGE_MBX_MAX_ARQ_MSG_NUM][HCLGE_MBX_MAX_ARQ_MSG_SIZE];
+ };
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+index 1b428d4..71f356f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
+@@ -340,7 +340,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
+ 	hdev->arq.hdev = hdev;
+ 	hdev->arq.head = 0;
+ 	hdev->arq.tail = 0;
+-	hdev->arq.count = 0;
++	atomic_set(&hdev->arq.count, 0);
+ 	hdev->hw.cmq.csq.next_to_clean = 0;
+ 	hdev->hw.cmq.csq.next_to_use = 0;
+ 	hdev->hw.cmq.crq.next_to_clean = 0;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+index eb56287..3c22639 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
+@@ -212,7 +212,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			/* we will drop the async msg if we find ARQ as full
+ 			 * and continue with next message
+ 			 */
+-			if (hdev->arq.count >= HCLGE_MBX_MAX_ARQ_MSG_NUM) {
++			if (atomic_read(&hdev->arq.count) >=
++			    HCLGE_MBX_MAX_ARQ_MSG_NUM) {
+ 				dev_warn(&hdev->pdev->dev,
+ 					 "Async Q full, dropping msg(%d)\n",
+ 					 req->msg[1]);
+@@ -224,7 +225,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
+ 			memcpy(&msg_q[0], req->msg,
+ 			       HCLGE_MBX_MAX_ARQ_MSG_SIZE * sizeof(u16));
+ 			hclge_mbx_tail_ptr_move_arq(hdev->arq);
+-			hdev->arq.count++;
++			atomic_inc(&hdev->arq.count);
+ 
+ 			hclgevf_mbx_task_schedule(hdev);
+ 
+@@ -317,7 +318,7 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
+ 		}
+ 
+ 		hclge_mbx_head_ptr_move_arq(hdev->arq);
+-		hdev->arq.count--;
++		atomic_dec(&hdev->arq.count);
+ 		msg_q = hdev->arq.msg_q[hdev->arq.head];
  	}
- 
- 	devm_kfree(&pdev->dev, priv->ring_data);
-+	priv->ring_data = NULL;
- 	return ret;
- }
- 
-@@ -3495,12 +3496,16 @@ static void hns3_put_ring_config(struct hns3_nic_priv *priv)
- 	struct hnae3_handle *h = priv->ae_handle;
- 	int i;
- 
-+	if (!priv->ring_data)
-+		return;
-+
- 	for (i = 0; i < h->kinfo.num_tqps; i++) {
- 		devm_kfree(priv->dev, priv->ring_data[i].ring);
- 		devm_kfree(priv->dev,
- 			   priv->ring_data[i + h->kinfo.num_tqps].ring);
- 	}
- 	devm_kfree(priv->dev, priv->ring_data);
-+	priv->ring_data = NULL;
- }
- 
- static int hns3_alloc_ring_memory(struct hns3_enet_ring *ring)
-@@ -3920,8 +3925,6 @@ static void hns3_client_uninit(struct hnae3_handle *handle, bool reset)
- 
- 	hns3_dbg_uninit(handle);
- 
--	priv->ring_data = NULL;
--
- out_netdev_free:
- 	free_netdev(netdev);
- }
-@@ -4268,12 +4271,10 @@ static int hns3_reset_notify_init_enet(struct hnae3_handle *handle)
- 	hns3_uninit_all_ring(priv);
- err_uninit_vector:
- 	hns3_nic_uninit_vector_data(priv);
--	priv->ring_data = NULL;
- err_dealloc_vector:
- 	hns3_nic_dealloc_vector_data(priv);
- err_put_ring:
- 	hns3_put_ring_config(priv);
--	priv->ring_data = NULL;
- 
- 	return ret;
- }
-@@ -4335,7 +4336,6 @@ static int hns3_reset_notify_uninit_enet(struct hnae3_handle *handle)
- 		netdev_err(netdev, "uninit ring error\n");
- 
- 	hns3_put_ring_config(priv);
--	priv->ring_data = NULL;
- 
- 	return ret;
  }
 -- 
 2.7.4
