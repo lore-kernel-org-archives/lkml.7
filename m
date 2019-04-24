@@ -2,108 +2,89 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E236C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4128C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C81D20685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:13:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129639;
-	bh=0tUTPvqP0a2t8MKMt5Jfg3gDx+a0gEWJ9njEoAvvJWk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EsqAmR75WXn/i5jtJqW6TaioJoeYf3ftNgQRr3922fW7WMXrWOk1XjdLSiZs9jjFQ
-	 v79wQb4oRVEMiHXm5JkP8lrW6G5WNDJwcsVNXZpX6lss/RfTblBII483WZcWNwDB48
-	 hsm5uoeWJeNo4EUjRyejfDCxElK29uFMZWC7AxiM=
+	by mail.kernel.org (Postfix) with ESMTP id A913520685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:14:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="KaEB7XxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387995AbfDXSN5 (ORCPT
+        id S2387779AbfDXSOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:13:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387445AbfDXRLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:11:44 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B40021900;
-        Wed, 24 Apr 2019 17:11:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125903;
-        bh=0tUTPvqP0a2t8MKMt5Jfg3gDx+a0gEWJ9njEoAvvJWk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dETI9046vadTkszYABU5fJi+1tOSB1JRrQKI7bYolfaT7mIYR0o0bwv6O7QzHOwh3
-         vvWh/ozygAepHqZqCXbbvFDLZ8vsOObxXNvjy1VOmaOlKfkcRmLh8Jd+W7z2Vu2Pih
-         +j0nDDNy3DlogGg9MKq+k7gY7T/eOf3ud3z3Hi98=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 024/104] ALSA: PCM: check if ops are defined before suspending PCM
-Date:   Wed, 24 Apr 2019 19:08:41 +0200
-Message-Id: <20190424170854.401138101@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
-References: <20190424170839.996641496@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 14:14:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39477 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733281AbfDXRLa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:11:30 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i17so9633018pfo.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 10:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MN5yriTLCqLM4B/l2zakQLWVdZUNj3azdHHd9ghurIU=;
+        b=KaEB7XxZUxTXZ7CfIiMYwPOQmzDFDwj9ICa0iBL99FFuwaawBwOQsMt2eFZZkpxcJM
+         ilaRZByDmr7kgU8sh6akKcSAp1Kaq7j6N1pMMVsS0LJP5ih9W8MUX0VMQPN+9Eicqy14
+         OuU6InC70DT+Z7Hn+JaCtToSEEIRW0MligxpERgxr3Gf3Ju+RnZpFWUK2iR2my1peIKs
+         9NyWGm2ScEGfOejKq8W+LZU1EEtA/YRGsSq9JQV+SCCvsIIjowWQs8Ebi2POQa29TT9x
+         2GAw5KNmCYcG7d0sG6SZM6jwDsEv82YV12bfFRbYoD1epvsYlWSeZ7jeRXpl1/3a4rKY
+         RUFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MN5yriTLCqLM4B/l2zakQLWVdZUNj3azdHHd9ghurIU=;
+        b=J7n6scMLoCQPDpXv+m14egIysHfoK9TqXsqUXefEtdBNnydE0lnwWjx2JvKMQsjQpA
+         J+MpXyKL2wZ7nUxzomfI0GAYanXZRLFtjtZEm4WHvrwG1YdETYhNn6kFaszSvkMrbtDW
+         tJdzg1hksQxoPBiRaBw528zbwl3oHoQJLD7fgNd20T1/VAFKSCeoTMaKMhtBdniRnNls
+         22DeI9fCBD09ShXddLOM41JEvmKLU7jupF0+Q6VUIUF00AFOQAVwgBDGyIvet0d9kgIc
+         i2xr6x3sa4YtwvyJB7IthEJRAosbXmKUL9twt5HrC+4nulhcDrq1v+rvF+3t9FY/Wt1G
+         kpNg==
+X-Gm-Message-State: APjAAAXauy34fH5XpEsQpWEEbo0iSFluEshMqbY+nPSqlJFz1YqbJAGN
+        mGN/t/vTNnv8jjCAzxDtpHiRlQ==
+X-Google-Smtp-Source: APXvYqzyA2NJYpAEaaT+USTkjcSH91+Ksktq84P+rydR/ZcJqbbZbZEK1QdwWQxWSyxp17zorxbIoQ==
+X-Received: by 2002:a63:2015:: with SMTP id g21mr31179600pgg.226.1556125888875;
+        Wed, 24 Apr 2019 10:11:28 -0700 (PDT)
+Received: from cisco ([2601:282:901:dd7b:7136:cebf:c0d3:8091])
+        by smtp.gmail.com with ESMTPSA id o7sm13153777pgv.63.2019.04.24.10.11.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 10:11:28 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 11:11:26 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     stable@vger.kernel.org, James Morris <jmorris@namei.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] selftests/seccomp: Prepare for exclusive seccomp
+ flags
+Message-ID: <20190424171126.GM3758@cisco>
+References: <20190424163756.40001-1-keescook@chromium.org>
+ <20190424163756.40001-2-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424163756.40001-2-keescook@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d9c0b2afe820fa3b3f8258a659daee2cc71ca3ef ]
+On Wed, Apr 24, 2019 at 09:37:55AM -0700, Kees Cook wrote:
+> Some seccomp flags will become exclusive, so the selftest needs to
+> be adjusted to mask those out and test them individually for the "all
+> flags" tests.
+> 
+> Cc: stable@vger.kernel.org # v5.0+
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-BE dai links only have internal PCM's and their substream ops may
-not be set. Suspending these PCM's will result in their
- ops->trigger() being invoked and cause a kernel oops.
-So skip suspending PCM's if their ops are NULL.
+Whoops, thanks for this too.
 
-[ NOTE: this change is required now for following the recent PCM core
-  change to get rid of snd_pcm_suspend() call.  Since DPCM BE takes
-  the runtime carried from FE while keeping NULL ops, it can hit this
-  bug.  See details at:
-     https://github.com/thesofproject/linux/pull/582
-  -- tiwai ]
-
-Signed-off-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/core/pcm_native.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index a79edb3e8284..29a088e03657 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -1315,6 +1315,14 @@ int snd_pcm_suspend_all(struct snd_pcm *pcm)
- 			/* FIXME: the open/close code should lock this as well */
- 			if (substream->runtime == NULL)
- 				continue;
-+
-+			/*
-+			 * Skip BE dai link PCM's that are internal and may
-+			 * not have their substream ops set.
-+			 */
-+			if (!substream->ops)
-+				continue;
-+
- 			err = snd_pcm_suspend(substream);
- 			if (err < 0 && err != -EBUSY)
- 				return err;
--- 
-2.19.1
-
-
-
+Reviewed-by: Tycho Andersen <tycho@tycho.ws>
