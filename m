@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A2CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E30C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93A121903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BF320835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126746;
-	bh=2mEUnRzk58PMTO6CqQBf2vBTtPb3td6HQO5/vSFE0A0=;
+	s=default; t=1556126750;
+	bh=5WzlTRktrRaShqcaO4SfF+sSiVO/bHHiUUPKeTTP1Qs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwZ5WL11mOlUYnBc/3TeGlhxX3g06Qe5LCV+pKzcPqegahwdvdtXnJx1b5rdz/Cdt
-	 yVPBAyUGSpYjBC83Ak04k2Nh6MyV2qTbgm+mOE2svLQ+5M5vM3qbdwTBzcnsofy9Kg
-	 qwKnqlAxkRpDu19NfCYI+x5B/vEZPJbt4Aw1v3oE=
+	b=yF2zn+2I149jmKNPTJ28JAx3vuCShE3r9o5W3zX5JzhvHcZbWeHCgbSePShvY33xo
+	 vdbtbMdXxtGARvxQEtX3M1QbQEOTZvruQEf9T+TwGuocK12nLX7iJXUybe1XGwpRxb
+	 /SsDKTOcAqkLN8oGkVOHhQLQYHfvreCkAvh1soXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390094AbfDXRZp (ORCPT
+        id S2389235AbfDXRZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51728 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389736AbfDXRZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:25:44 -0400
+        id S2389384AbfDXRZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:25:47 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB0762190A;
-        Wed, 24 Apr 2019 17:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B63C520835;
+        Wed, 24 Apr 2019 17:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126743;
-        bh=2mEUnRzk58PMTO6CqQBf2vBTtPb3td6HQO5/vSFE0A0=;
+        s=default; t=1556126746;
+        bh=5WzlTRktrRaShqcaO4SfF+sSiVO/bHHiUUPKeTTP1Qs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZsiZeus/JohvNQha8M8m1ZL8wA17xK+cp9Z9w9UU1iyGdFORMbYTKl5lsxdZFsf2x
-         h9h+aJcVF+QPLuCZ2Ub1Kw2jqZtI/ITufXjBc/vkAhCw1bBzouD4G90ZPG/WbBnghh
-         +EFVHQ7ifAIKvef3sB/u5J2TGQ4D1+3wONRRseg0=
+        b=C/7cxgmJ0VAeYbZMfMXJOUpl8wVlKW+0WIrwSv76Een+MtlF/i8yNhc4EUgDz7I8s
+         ANrp7zGpVpKniH22F96l6IGvt5Krb9X93qzdIuQFtYZtfocCxkeDCQvePT9YjSjlyV
+         jAK5/GPE2zrIAk2UNyzA7bDIAg5PRmW1/pb9twa4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Wei Wang <weiwan@google.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 06/44] tcp: tcp_grow_window() needs to respect tcp_space()
-Date:   Wed, 24 Apr 2019 19:09:44 +0200
-Message-Id: <20190424170844.368846445@linuxfoundation.org>
+Subject: [PATCH 4.9 07/44] team: set slave to promisc if team is already in promisc mode
+Date:   Wed, 24 Apr 2019 19:09:45 +0200
+Message-Id: <20190424170845.902376125@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -62,63 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 50ce163a72d817a99e8974222dcf2886d5deb1ae ]
+[ Upstream commit 43c2adb9df7ddd6560fd3546d925b42cef92daa0 ]
 
-For some reason, tcp_grow_window() correctly tests if enough room
-is present before attempting to increase tp->rcv_ssthresh,
-but does not prevent it to grow past tcp_space()
+After adding a team interface to bridge, the team interface will enter
+promisc mode. Then if we add a new slave to team0, the slave will keep
+promisc off. Fix it by setting slave to promisc on if team master is
+already in promisc mode, also do the same for allmulti.
 
-This is causing hard to debug issues, like failing
-the (__tcp_select_window(sk) >= tp->rcv_wnd) test
-in __tcp_ack_snd_check(), causing ACK delays and possibly
-slow flows.
+v2: add promisc and allmulti checking when delete ports
 
-Depending on tcp_rmem[2], MTU, skb->len/skb->truesize ratio,
-we can see the problem happening on "netperf -t TCP_RR -- -r 2000,2000"
-after about 60 round trips, when the active side no longer sends
-immediate acks.
-
-This bug predates git history.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Wei Wang <weiwan@google.com>
+Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_input.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/team/team.c |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -389,11 +389,12 @@ static int __tcp_grow_window(const struc
- static void tcp_grow_window(struct sock *sk, const struct sk_buff *skb)
- {
- 	struct tcp_sock *tp = tcp_sk(sk);
-+	int room;
-+
-+	room = min_t(int, tp->window_clamp, tcp_space(sk)) - tp->rcv_ssthresh;
- 
- 	/* Check #1 */
--	if (tp->rcv_ssthresh < tp->window_clamp &&
--	    (int)tp->rcv_ssthresh < tcp_space(sk) &&
--	    !tcp_under_memory_pressure(sk)) {
-+	if (room > 0 && !tcp_under_memory_pressure(sk)) {
- 		int incr;
- 
- 		/* Check #2. Increase window, if skb with such overhead
-@@ -406,8 +407,7 @@ static void tcp_grow_window(struct sock
- 
- 		if (incr) {
- 			incr = max_t(int, incr, 2 * skb->len);
--			tp->rcv_ssthresh = min(tp->rcv_ssthresh + incr,
--					       tp->window_clamp);
-+			tp->rcv_ssthresh += min(room, incr);
- 			inet_csk(sk)->icsk_ack.quick |= 1;
- 		}
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -1251,6 +1251,23 @@ static int team_port_add(struct team *te
+ 		goto err_option_port_add;
  	}
+ 
++	/* set promiscuity level to new slave */
++	if (dev->flags & IFF_PROMISC) {
++		err = dev_set_promiscuity(port_dev, 1);
++		if (err)
++			goto err_set_slave_promisc;
++	}
++
++	/* set allmulti level to new slave */
++	if (dev->flags & IFF_ALLMULTI) {
++		err = dev_set_allmulti(port_dev, 1);
++		if (err) {
++			if (dev->flags & IFF_PROMISC)
++				dev_set_promiscuity(port_dev, -1);
++			goto err_set_slave_promisc;
++		}
++	}
++
+ 	netif_addr_lock_bh(dev);
+ 	dev_uc_sync_multiple(port_dev, dev);
+ 	dev_mc_sync_multiple(port_dev, dev);
+@@ -1267,6 +1284,9 @@ static int team_port_add(struct team *te
+ 
+ 	return 0;
+ 
++err_set_slave_promisc:
++	__team_option_inst_del_port(team, port);
++
+ err_option_port_add:
+ 	team_upper_dev_unlink(team, port);
+ 
+@@ -1312,6 +1332,12 @@ static int team_port_del(struct team *te
+ 
+ 	team_port_disable(team, port);
+ 	list_del_rcu(&port->list);
++
++	if (dev->flags & IFF_PROMISC)
++		dev_set_promiscuity(port_dev, -1);
++	if (dev->flags & IFF_ALLMULTI)
++		dev_set_allmulti(port_dev, -1);
++
+ 	team_upper_dev_unlink(team, port);
+ 	netdev_rx_handler_unregister(port_dev);
+ 	team_port_disable_netpoll(port);
 
 
