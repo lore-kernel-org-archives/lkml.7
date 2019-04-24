@@ -3,80 +3,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C564AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AE5C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C325218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9548218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:02:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbfDXIAc (ORCPT
+        id S1729756AbfDXICc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:00:32 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:35234 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727030AbfDXIAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:00:31 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EA8A81AB1E0836BDAFDA;
-        Wed, 24 Apr 2019 16:00:29 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Apr 2019
- 16:00:23 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
-        <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
-        <l.stach@pengutronix.de>, <aisheng.dong@nxp.com>,
-        <leonard.crestez@nxp.com>, <abel.vesa@nxp.com>,
-        <Anson.Huang@nxp.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] soc: imx: Fix build error without CONFIG_SOC_BUS
-Date:   Wed, 24 Apr 2019 15:59:46 +0800
-Message-ID: <20190424075946.23124-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 24 Apr 2019 04:02:32 -0400
+Received: from Chamillionaire.breakpoint.cc ([146.0.238.67]:33560 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726031AbfDXICb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 04:02:31 -0400
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.89)
+        (envelope-from <fw@strlen.de>)
+        id 1hJCr8-0007Ga-1T; Wed, 24 Apr 2019 10:02:14 +0200
+Date:   Wed, 24 Apr 2019 10:02:14 +0200
+From:   Florian Westphal <fw@strlen.de>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     pablo@netfilter.org, kadlec@blackhole.kfki.hu, dsahern@gmail.com,
+        davem@davemloft.net, yoshfuji@linux-ipv6.org,
+        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mingfangsen <mingfangsen@huawei.com>
+Subject: Re: [PATCH] net: netfilter: Fix ipv6 rp_filter dropping vrf packets
+ by mistake
+Message-ID: <20190424080214.vadrfiufcv6xa3cm@breakpoint.cc>
+References: <094b7376-f796-71b6-7a81-28866b0f882b@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <094b7376-f796-71b6-7a81-28866b0f882b@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+linmiaohe <linmiaohe@huawei.com> wrote:
 
-During randconfig builds, I occasionally run into an invalid configuration
+[ CC dsa, dropped some CCs ]
 
-drivers/soc/imx/soc-imx8.o: In function `imx8_soc_init':
-soc-imx8.c:(.init.text+0x144): undefined reference to `soc_device_register'
+> When firewall is enabled with rp_filter, vrf ipv6 packets
+> will be dropped because in device is vrf but out device
+> is an enslaved device. So rt->rt6i_idev->dev != dev and
+> maybe return false in func rpfilter_lookup_reverse6.
+> 
+> Here is the out message when I ping the peer:
+> ip vrf exec vrf1 ping 2013::2 -c 1
+> 1 packets transmitted, 0 received, 100% packet loss, time 0ms
+> 
+> The drop info in /var/log/message:
+> Apr 24 14:59:45 localhost kernel: [81316.158259] rpfilter_DROP: IN=vrf1
+> OUT= MAC=52:54:00:9e:dd:c1:52:54:00:4f:81:38:86:dd
+> SRC=2013:0000:0000:0000:0000:0000:0000:0002
+> DST=2013:0000:0000:0000:0000:0000:0000:0001 LEN=104 TC=0 HOPLIMIT=64
+> FLOWLBL=1032942 PROTO=ICMPv6 TYPE=129 CODE=0 ID=14943 SEQ=1
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  net/ipv6/netfilter/ip6t_rpfilter.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
+> index c3c6b09acdc4..5cbc91f53736 100644
+> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
+> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
+> @@ -73,6 +73,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+>  		goto out;
+>  	}
+> 
+> +	if (netif_is_l3_master(dev)) {
+> +		dev = __dev_get_by_index(dev_net(dev), IP6CB(skb)->iif);
+> +		if (!dev)
+> +			goto out;
 
-while CONFIG_SOC_BUS is not set, the building failed like this. This patch
-selects SOC_BUS to fix it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: a7e26f356ca1 ("soc: imx: Add generic i.MX8 SoC driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/soc/imx/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
-index d80f899..2fb4e47 100644
---- a/drivers/soc/imx/Kconfig
-+++ b/drivers/soc/imx/Kconfig
-@@ -5,6 +5,7 @@ config IMX_GPCV2_PM_DOMAINS
- 	depends on ARCH_MXC || (COMPILE_TEST && OF)
- 	depends on PM
- 	select PM_GENERIC_DOMAINS
-+	select SOC_BUS
- 	default y if SOC_IMX7D
- 
- endmenu
--- 
-2.7.4
-
-
+I suspect this should be 'dev_get_by_index_rcu'.
