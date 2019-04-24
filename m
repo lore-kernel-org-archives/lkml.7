@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E530C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9024C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C5421903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7788021902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117574;
-	bh=AOHhTXH/VHChFcxPI6sZVGOefm8FsZ4hK99Ha0idd9g=;
+	s=default; t=1556117582;
+	bh=HUdHo3J9BCDfV6o4EOB0r6oGZt3+aBvAAtgAudEswSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=weG7ZZ7XBqMS92Aa8e9SX6hqS0v6TrsdwoBxVktygCzvxMYGgMPuGkvmc0Iq6+Hlz
-	 /nQq54szLbhUPiiNG8GVbnJdViUZUnKAzTDwi2tteoOKM4uYFHyXFgZ+KuB0/0QkzY
-	 itB91zUEw5WKBYytIa1YWg5fW65bfNtAKdjMEHH4=
+	b=Af2fe6jZFD0qTtDQ1EammtYIAWR6AheRGmkRP1bNiQVeewgtFMY4WZoGttfoKgoRx
+	 tBZ9KQZDaAkTnmoT03r0bUa7yxbMo3USMNzG2pktvYaKqIdYhSmMGEfsyt8Nu4DfLG
+	 6U81kg4iN9lIC4xR6kiOgugwQxD28Y/s+1+WzmiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733002AbfDXOww (ORCPT
+        id S1733007AbfDXOxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:52:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52288 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:53:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731001AbfDXOwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:52:43 -0400
+        id S1732965AbfDXOwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:52:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E2CE218FC;
-        Wed, 24 Apr 2019 14:52:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 699C2218FE;
+        Wed, 24 Apr 2019 14:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117561;
-        bh=AOHhTXH/VHChFcxPI6sZVGOefm8FsZ4hK99Ha0idd9g=;
+        s=default; t=1556117549;
+        bh=HUdHo3J9BCDfV6o4EOB0r6oGZt3+aBvAAtgAudEswSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eeGqV5ePX/upIa/vRjRXaZqNE3Eym+Syz7uZwDbWvvpya65huTE8twjEghWitY+V6
-         hqivxvg8MSmsD1D3V2h+VZvMUjCUurcQu8eJkTux1kOubxBMBs0KnaVBYb8z9eA+Ht
-         GT7q2YNSVC5FqZwFXMIY/0v0kHPRNcYcoovpIycM=
+        b=p7SbhMCYh7+PDCUolyL3jDoLvEuvzDgRB2iZqa7fUMQoSr5v9mfB3mervjvEDhv5D
+         31e1kVQTSQ15fCGcNUNLVBibhikaGzIU+eyOplqd5EfyQDx1TCV6Q8iB/jFz4wArnY
+         NaYHlrzM82oKjO6UMqTETcgx6XVsOfEHb0oxOftE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 15/15] ARM: iop: don't use using 64-bit DMA masks
-Date:   Wed, 24 Apr 2019 10:51:52 -0400
-Message-Id: <20190424145152.31351-15-sashal@kernel.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.4 12/15] hugetlbfs: fix memory leak for resv_map
+Date:   Wed, 24 Apr 2019 10:51:49 -0400
+Message-Id: <20190424145152.31351-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424145152.31351-1-sashal@kernel.org>
 References: <20190424145152.31351-1-sashal@kernel.org>
@@ -58,152 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-[ Upstream commit 2125801ccce19249708ca3245d48998e70569ab8 ]
+[ Upstream commit 58b6e5e8f1addd44583d61b0a03c0f5519527e35 ]
 
-clang warns about statically defined DMA masks from the DMA_BIT_MASK
-macro with length 64:
+When mknod is used to create a block special file in hugetlbfs, it will
+allocate an inode and kmalloc a 'struct resv_map' via resv_map_alloc().
+inode->i_mapping->private_data will point the newly allocated resv_map.
+However, when the device special file is opened bd_acquire() will set
+inode->i_mapping to bd_inode->i_mapping.  Thus the pointer to the
+allocated resv_map is lost and the structure is leaked.
 
- arch/arm/mach-iop13xx/setup.c:303:35: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
- static u64 iop13xx_adma_dmamask = DMA_BIT_MASK(64);
-                                  ^~~~~~~~~~~~~~~~
- include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
- #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-                                                      ^ ~~~
+Programs to reproduce:
+        mount -t hugetlbfs nodev hugetlbfs
+        mknod hugetlbfs/dev b 0 0
+        exec 30<> hugetlbfs/dev
+        umount hugetlbfs/
 
-The ones in iop shouldn't really be 64 bit masks, so changing them
-to what the driver can support avoids the warning.
+resv_map structures are only needed for inodes which can have associated
+page allocations.  To fix the leak, only allocate resv_map for those
+inodes which could possibly be associated with page allocations.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Link: http://lkml.kernel.org/r/20190401213101.16476-1-mike.kravetz@oracle.com
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Suggested-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-iop13xx/setup.c |  8 ++++----
- arch/arm/mach-iop13xx/tpmi.c  | 10 +++++-----
- arch/arm/plat-iop/adma.c      |  6 +++---
- 3 files changed, 12 insertions(+), 12 deletions(-)
+ fs/hugetlbfs/inode.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/mach-iop13xx/setup.c b/arch/arm/mach-iop13xx/setup.c
-index 53c316f7301e..fe4932fda01d 100644
---- a/arch/arm/mach-iop13xx/setup.c
-+++ b/arch/arm/mach-iop13xx/setup.c
-@@ -300,7 +300,7 @@ static struct resource iop13xx_adma_2_resources[] = {
- 	}
- };
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index cefae2350da5..27c4e2ac39a9 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -745,11 +745,17 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 					umode_t mode, dev_t dev)
+ {
+ 	struct inode *inode;
+-	struct resv_map *resv_map;
++	struct resv_map *resv_map = NULL;
  
--static u64 iop13xx_adma_dmamask = DMA_BIT_MASK(64);
-+static u64 iop13xx_adma_dmamask = DMA_BIT_MASK(32);
- static struct iop_adma_platform_data iop13xx_adma_0_data = {
- 	.hw_id = 0,
- 	.pool_size = PAGE_SIZE,
-@@ -324,7 +324,7 @@ static struct platform_device iop13xx_adma_0_channel = {
- 	.resource = iop13xx_adma_0_resources,
- 	.dev = {
- 		.dma_mask = &iop13xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop13xx_adma_0_data,
- 	},
- };
-@@ -336,7 +336,7 @@ static struct platform_device iop13xx_adma_1_channel = {
- 	.resource = iop13xx_adma_1_resources,
- 	.dev = {
- 		.dma_mask = &iop13xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop13xx_adma_1_data,
- 	},
- };
-@@ -348,7 +348,7 @@ static struct platform_device iop13xx_adma_2_channel = {
- 	.resource = iop13xx_adma_2_resources,
- 	.dev = {
- 		.dma_mask = &iop13xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop13xx_adma_2_data,
- 	},
- };
-diff --git a/arch/arm/mach-iop13xx/tpmi.c b/arch/arm/mach-iop13xx/tpmi.c
-index db511ec2b1df..116feb6b261e 100644
---- a/arch/arm/mach-iop13xx/tpmi.c
-+++ b/arch/arm/mach-iop13xx/tpmi.c
-@@ -152,7 +152,7 @@ static struct resource iop13xx_tpmi_3_resources[] = {
- 	}
- };
+-	resv_map = resv_map_alloc();
+-	if (!resv_map)
+-		return NULL;
++	/*
++	 * Reserve maps are only needed for inodes that can have associated
++	 * page allocations.
++	 */
++	if (S_ISREG(mode) || S_ISLNK(mode)) {
++		resv_map = resv_map_alloc();
++		if (!resv_map)
++			return NULL;
++	}
  
--u64 iop13xx_tpmi_mask = DMA_BIT_MASK(64);
-+u64 iop13xx_tpmi_mask = DMA_BIT_MASK(32);
- static struct platform_device iop13xx_tpmi_0_device = {
- 	.name = "iop-tpmi",
- 	.id = 0,
-@@ -160,7 +160,7 @@ static struct platform_device iop13xx_tpmi_0_device = {
- 	.resource = iop13xx_tpmi_0_resources,
- 	.dev = {
- 		.dma_mask          = &iop13xx_tpmi_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 	},
- };
+ 	inode = new_inode(sb);
+ 	if (inode) {
+@@ -790,8 +796,10 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 			break;
+ 		}
+ 		lockdep_annotate_inode_mutex_key(inode);
+-	} else
+-		kref_put(&resv_map->refs, resv_map_release);
++	} else {
++		if (resv_map)
++			kref_put(&resv_map->refs, resv_map_release);
++	}
  
-@@ -171,7 +171,7 @@ static struct platform_device iop13xx_tpmi_1_device = {
- 	.resource = iop13xx_tpmi_1_resources,
- 	.dev = {
- 		.dma_mask          = &iop13xx_tpmi_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 	},
- };
- 
-@@ -182,7 +182,7 @@ static struct platform_device iop13xx_tpmi_2_device = {
- 	.resource = iop13xx_tpmi_2_resources,
- 	.dev = {
- 		.dma_mask          = &iop13xx_tpmi_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 	},
- };
- 
-@@ -193,7 +193,7 @@ static struct platform_device iop13xx_tpmi_3_device = {
- 	.resource = iop13xx_tpmi_3_resources,
- 	.dev = {
- 		.dma_mask          = &iop13xx_tpmi_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 	},
- };
- 
-diff --git a/arch/arm/plat-iop/adma.c b/arch/arm/plat-iop/adma.c
-index a4d1f8de3b5b..d9612221e484 100644
---- a/arch/arm/plat-iop/adma.c
-+++ b/arch/arm/plat-iop/adma.c
-@@ -143,7 +143,7 @@ struct platform_device iop3xx_dma_0_channel = {
- 	.resource = iop3xx_dma_0_resources,
- 	.dev = {
- 		.dma_mask = &iop3xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop3xx_dma_0_data,
- 	},
- };
-@@ -155,7 +155,7 @@ struct platform_device iop3xx_dma_1_channel = {
- 	.resource = iop3xx_dma_1_resources,
- 	.dev = {
- 		.dma_mask = &iop3xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop3xx_dma_1_data,
- 	},
- };
-@@ -167,7 +167,7 @@ struct platform_device iop3xx_aau_channel = {
- 	.resource = iop3xx_aau_resources,
- 	.dev = {
- 		.dma_mask = &iop3xx_adma_dmamask,
--		.coherent_dma_mask = DMA_BIT_MASK(64),
-+		.coherent_dma_mask = DMA_BIT_MASK(32),
- 		.platform_data = (void *) &iop3xx_aau_data,
- 	},
- };
+ 	return inode;
+ }
 -- 
 2.19.1
 
