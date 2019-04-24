@@ -2,126 +2,135 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638A5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA12C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305BF2148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5992148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfDXHqB (ORCPT
+        id S1729877AbfDXHqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:46:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:63312 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfDXHqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:46:00 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 539DEC130701;
-        Wed, 24 Apr 2019 07:46:00 +0000 (UTC)
-Received: from localhost (ovpn-12-131.pek2.redhat.com [10.72.12.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AA7905D9C8;
-        Wed, 24 Apr 2019 07:45:56 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 15:45:53 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Dave Young <dyoung@redhat.com>, Kairui Song <kasong@redhat.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: Re: [PATCH] x86/kexec: always ensure EFI systab region is mapped
-Message-ID: <20190424074553.GH3584@localhost.localdomain>
-References: <20190422092804.15534-1-kasong@redhat.com>
- <965f770a-b103-72fb-eaef-cb337ebe8290@ce.jp.nec.com>
- <CACPcB9d-oNvp1Kag1J8X+QBdgqfU0ps1OztjOk8n=Pw2G6ONWA@mail.gmail.com>
- <24f1dc7c-1dea-79b0-d364-0dc7d605ce01@ce.jp.nec.com>
- <20190424054135.GG3584@localhost.localdomain>
- <20190424061831.GA9059@dhcp-128-65.nay.redhat.com>
+        Wed, 24 Apr 2019 03:46:48 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39126 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726707AbfDXHqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 03:46:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C5F680D;
+        Wed, 24 Apr 2019 00:46:47 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCDF93F238;
+        Wed, 24 Apr 2019 00:46:41 -0700 (PDT)
+Subject: Re: [PATCH] KVM: arm/arm64: inject an async abort to host if SEA
+ handling failed
+To:     Dongjiu Geng <gengdongjiu@huawei.com>, christoffer.dall@arm.com,
+        james.morse@arm.com, julien.thierry@arm.com,
+        suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        zhengxiang9@huawei.com
+References: <1556080907-25158-1-git-send-email-gengdongjiu@huawei.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <06e33e9a-9c77-09bf-d53f-94496cffe8ef@arm.com>
+Date:   Wed, 24 Apr 2019 08:46:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424061831.GA9059@dhcp-128-65.nay.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 24 Apr 2019 07:46:00 +0000 (UTC)
+In-Reply-To: <1556080907-25158-1-git-send-email-gengdongjiu@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/24/19 at 02:18pm, Dave Young wrote:
-> On 04/24/19 at 01:41pm, Baoquan He wrote:
-> > On 04/24/19 at 02:47am, Junichi Nomura wrote:
-> > > On 4/24/19 2:15 AM, Kairui Song wrote:
-> > > > On Mon, Apr 22, 2019 at 11:21 PM Junichi Nomura <j-nomura@ce.jp.nec.com> wrote:
-> > > >> Is the mapping of ACPI tables just by luck, too?
-> > > > 
-> > > > Good question, they should have same issue with systab, I ignored this one.
-> > > > Then in first kernel when doing kexec it should ensure both ACPI
-> > > > tables and the EFI systab are mapped, that should cover everything and
-> > > > make it work.
-> > > 
-> > > Right.
-> > > 
-> > > > Is there anything else missing?
-> > > No, as far as I looked around get_rsdp_addr().
-> > 
-> > Have made a draft patch to build ident mapping for ACPI tables too, it's
-> > based on Kairui's patch. Dave has tested on his t400s laptop, and
-> > passed. Please check if this adding is OK.
-> > 
-> > Kairui, you can add this into your patch to make a new one and resend.
-> > Or I can combine them and send for you today.
- 
+On 24/04/2019 05:41, Dongjiu Geng wrote:
+> If host failed to handle the SEA, KVM should inject an async abort
+> to guest for both SEA data and instruction abort, but it currently
+> only handles the data abort, so correct it.
 > 
-> Since I can not reproduce the acpi table accessing fault with Kairui's patch,
-> the test is just sanity testing on same hardware. But the patch looks
-> good.
-
-Yes, usually vendor will put these efi systab, ACPI tables together. See
-the regions you listed on your t420 laptop in another mail:
-da99f000 - dae9efff Reserved (efi systab fall in this region)
-daf9f000 - daffefff ACPI tables
-
-We build 1:1 mapping for kexec kernel down to PMD level. Means for a
-region, it will align starting address down to PMD size, and align end
-address up to PMD size. So the end of efi systab, 0xdae9efff, will cause
-mapping built for the 2MB area, 0xdae00000-0xdaf00000. Clearly ACPI
-tables are covered by that PMD entry. That's why only efi systab
-mapping is built, accessing ACPI tables doesn't cause error.
-
-But we can't assume they will be put together always, so need map ACPI
-tables too.
-
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Xiang Zheng <zhengxiang9@huawei.com>
+> Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
+> ---
+>  virt/kvm/arm/mmu.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 > 
-> With Kairui's fix+ this acpi fix and Junichi's patch everything works.
-> Can anyone send them for example patch 1/2: kexec early mapping for
-> efi/acpi,  patch 2/2: Junichi's previous patch.
+> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+> index 27c9583..5882516 100644
+> --- a/virt/kvm/arm/mmu.c
+> +++ b/virt/kvm/arm/mmu.c
+> @@ -1924,14 +1924,13 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  		/*
+>  		 * For RAS the host kernel may handle this abort.
+>  		 * There is no need to pass the error into the guest.
+> +		 * If host failed to handle it, inject an async abort
+> +		 * to guest.
+>  		 */
+> -		if (!kvm_handle_guest_sea(fault_ipa, kvm_vcpu_get_hsr(vcpu)))
+> -			return 1;
+> -
+> -		if (unlikely(!is_iabt)) {
+> +		if (kvm_handle_guest_sea(fault_ipa, kvm_vcpu_get_hsr(vcpu)))
 
-Kairui is having a workshop in the US, I can make a patchset to
-include these two patches.
+We've so far excluded instruction aborts from the delivery of a virtual
+SError. You now decide to inject an SError in all cases, but your commit
+message doesn't explain *why* this is a sensible thing to do.
 
-For patch 1/2, I will combine the patch Kairui posted and my draft patch,
-Kairui is the author certainly, since he debugged and found out the root
-cause, and posted v1 when I was on vacation last week.
+I'm not saying that this patch is wrong (the IABT handling predates RAS
+by several years and was  designed to deal with with badly behaved guest
+rather than flaky HW), but I'd like to understand why you think it is right.
 
-For patch 2/2, I think the version Boris organized is good. 
-http://lkml.kernel.org/r/20190416095209.GG27892@zn.tnic
+Thanks,
 
-> 
-> With these fixes I think kexec will just work.  Maybe we can go with
-> these fixes and leave other issues like the loader type flag etc as 
-> future issue.
-
-Yes, agree.
-
-Thanks
-Baoquan
+	M.
+-- 
+Jazz is not dead. It just smells funny...
