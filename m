@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233C1C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4552AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91AE2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6962175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128399;
-	bh=uCM7MkY79AreVR5t2l46WdCzt/RacwzFSWQJ/fU8xZY=;
+	s=default; t=1556128403;
+	bh=xB+qP7V/VUd42RU+T8vSy3iDM0C12FwHZkY1o0icspE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ed6/fdGmXExx+bCMvZwVH/yFQLCnRUF4kMjQO/YIo1bITUlhRgaBkQ63pyT0qe+IM
-	 v8aNUWbAESwwRLs2F0jgK4t4YxH+EacZ+Y1qWGfEPp1DO1oSEcF4cMUwViiCDw8uXn
-	 juK5stGD3fC2hyZeekSeD1c4nesIvkj7212saS/A=
+	b=VVR04YHc2HAUqDvLI+QIhZqRnGrFtuuYE/1tzLzV3EHF2kxaffHeDD1xamr08MjFR
+	 6a8duOT76Tj4lnTVWcz2n5qUOrubIpJbN/BSYuAIEIi8h9h179TOBuXtQVSaU0/2zS
+	 Dv80vkuEQuxcjDJX3+2NhhGG7VCveJBhv6ngqEN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390462AbfDXR11 (ORCPT
+        id S2390450AbfDXR10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53350 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:27:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390432AbfDXR1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:27:21 -0400
+        id S2389599AbfDXR1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:27:24 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C32F1205ED;
-        Wed, 24 Apr 2019 17:27:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BA74205ED;
+        Wed, 24 Apr 2019 17:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126840;
-        bh=uCM7MkY79AreVR5t2l46WdCzt/RacwzFSWQJ/fU8xZY=;
+        s=default; t=1556126843;
+        bh=xB+qP7V/VUd42RU+T8vSy3iDM0C12FwHZkY1o0icspE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NfhXFTHl8iLbhSQ9jl+zjrHi+yhjKrUy/NUVyBfVM6b6Z6CykhC8llvJTDZv0fTDQ
-         Wmtw6EG/PKvSanKeAGWaN6+DIeg20YxZYZmpWs+VqC7r0SJQyOMBJ3PperE5f67Y1P
-         mDp0quq8TSMBFo8vnlOeecpATTvnMAdl6a/DiO70=
+        b=MwZ3PXmTbXqentpVla4bA+aFeKQ1nr3K+Z9gYTznkD2y+NacxE4rcFrUHZXU1vnI/
+         9oOHD/ajg6OnzHathwyI+WgG35dYuB7BupcLcI2kpUf7ZzNzPOqZFIlfyVV+svGiPn
+         W3rLimmAsJPZSsv2vspSQ0nW2likbpUwSBOZ98vI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 36/70] coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping
-Date:   Wed, 24 Apr 2019 19:09:56 +0200
-Message-Id: <20190424170912.073514947@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 37/70] crypto: x86/poly1305 - fix overflow during partial reduction
+Date:   Wed, 24 Apr 2019 19:09:57 +0200
+Message-Id: <20190424170912.235330391@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -65,215 +61,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 04f5866e41fb70690e28397487d8bd8eea7d712a upstream.
+commit 678cce4019d746da6c680c48ba9e6d417803e127 upstream.
 
-The core dumping code has always run without holding the mmap_sem for
-writing, despite that is the only way to ensure that the entire vma
-layout will not change from under it.  Only using some signal
-serialization on the processes belonging to the mm is not nearly enough.
-This was pointed out earlier.  For example in Hugh's post from Jul 2017:
+The x86_64 implementation of Poly1305 produces the wrong result on some
+inputs because poly1305_4block_avx2() incorrectly assumes that when
+partially reducing the accumulator, the bits carried from limb 'd4' to
+limb 'h0' fit in a 32-bit integer.  This is true for poly1305-generic
+which processes only one block at a time.  However, it's not true for
+the AVX2 implementation, which processes 4 blocks at a time and
+therefore can produce intermediate limbs about 4x larger.
 
-  https://lkml.kernel.org/r/alpine.LSU.2.11.1707191716030.2055@eggly.anvils
+Fix it by making the relevant calculations use 64-bit arithmetic rather
+than 32-bit.  Note that most of the carries already used 64-bit
+arithmetic, but the d4 -> h0 carry was different for some reason.
 
-  "Not strictly relevant here, but a related note: I was very surprised
-   to discover, only quite recently, how handle_mm_fault() may be called
-   without down_read(mmap_sem) - when core dumping. That seems a
-   misguided optimization to me, which would also be nice to correct"
+To be safe I also made the same change to the corresponding SSE2 code,
+though that only operates on 1 or 2 blocks at a time.  I don't think
+it's really needed for poly1305_block_sse2(), but it doesn't hurt
+because it's already x86_64 code.  It *might* be needed for
+poly1305_2block_sse2(), but overflows aren't easy to reproduce there.
 
-In particular because the growsdown and growsup can move the
-vm_start/vm_end the various loops the core dump does around the vma will
-not be consistent if page faults can happen concurrently.
+This bug was originally detected by my patches that improve testmgr to
+fuzz algorithms against their generic implementation.  But also add a
+test vector which reproduces it directly (in the AVX2 case).
 
-Pretty much all users calling mmget_not_zero()/get_task_mm() and then
-taking the mmap_sem had the potential to introduce unexpected side
-effects in the core dumping code.
-
-Adding mmap_sem for writing around the ->core_dump invocation is a
-viable long term fix, but it requires removing all copy user and page
-faults and to replace them with get_dump_page() for all binary formats
-which is not suitable as a short term fix.
-
-For the time being this solution manually covers the places that can
-confuse the core dump either by altering the vma layout or the vma flags
-while it runs.  Once ->core_dump runs under mmap_sem for writing the
-function mmget_still_valid() can be dropped.
-
-Allowing mmap_sem protected sections to run in parallel with the
-coredump provides some minor parallelism advantage to the swapoff code
-(which seems to be safe enough by never mangling any vma field and can
-keep doing swapins in parallel to the core dumping) and to some other
-corner case.
-
-In order to facilitate the backporting I added "Fixes: 86039bd3b4e6"
-however the side effect of this same race condition in /proc/pid/mem
-should be reproducible since before 2.6.12-rc2 so I couldn't add any
-other "Fixes:" because there's no hash beyond the git genesis commit.
-
-Because find_extend_vma() is the only location outside of the process
-context that could modify the "mm" structures under mmap_sem for
-reading, by adding the mmget_still_valid() check to it, all other cases
-that take the mmap_sem for reading don't need the new check after
-mmget_not_zero()/get_task_mm().  The expand_stack() in page fault
-context also doesn't need the new check, because all tasks under core
-dumping are frozen.
-
-Link: http://lkml.kernel.org/r/20190325224949.11068-1-aarcange@redhat.com
-Fixes: 86039bd3b4e6 ("userfaultfd: add new syscall to provide memory externalization")
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-Reported-by: Jann Horn <jannh@google.com>
-Suggested-by: Oleg Nesterov <oleg@redhat.com>
-Acked-by: Peter Xu <peterx@redhat.com>
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Reviewed-by: Jann Horn <jannh@google.com>
-Acked-by: Jason Gunthorpe <jgg@mellanox.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: b1ccc8f4b631 ("crypto: poly1305 - Add a four block AVX2 variant for x86_64")
+Fixes: c70f4abef07a ("crypto: poly1305 - Add a SSE2 SIMD variant for x86_64")
+Cc: <stable@vger.kernel.org> # v4.3+
+Cc: Martin Willi <martin@strongswan.org>
+Cc: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Martin Willi <martin@strongswan.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/proc/task_mmu.c       |   18 ++++++++++++++++++
- fs/userfaultfd.c         |    9 +++++++++
- include/linux/sched/mm.h |   21 +++++++++++++++++++++
- mm/mmap.c                |    7 ++++++-
- 4 files changed, 54 insertions(+), 1 deletion(-)
+ arch/x86/crypto/poly1305-avx2-x86_64.S |   14 +++++++---
+ arch/x86/crypto/poly1305-sse2-x86_64.S |   22 ++++++++++------
+ crypto/testmgr.h                       |   44 ++++++++++++++++++++++++++++++++-
+ 3 files changed, 67 insertions(+), 13 deletions(-)
 
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -1160,6 +1160,24 @@ static ssize_t clear_refs_write(struct f
- 					count = -EINTR;
- 					goto out_mm;
- 				}
-+				/*
-+				 * Avoid to modify vma->vm_flags
-+				 * without locked ops while the
-+				 * coredump reads the vm_flags.
-+				 */
-+				if (!mmget_still_valid(mm)) {
-+					/*
-+					 * Silently return "count"
-+					 * like if get_task_mm()
-+					 * failed. FIXME: should this
-+					 * function have returned
-+					 * -ESRCH if get_task_mm()
-+					 * failed like if
-+					 * get_proc_task() fails?
-+					 */
-+					up_write(&mm->mmap_sem);
-+					goto out_mm;
-+				}
- 				for (vma = mm->mmap; vma; vma = vma->vm_next) {
- 					vma->vm_flags &= ~VM_SOFTDIRTY;
- 					vma_set_page_prot(vma);
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -627,6 +627,8 @@ static void userfaultfd_event_wait_compl
+--- a/arch/x86/crypto/poly1305-avx2-x86_64.S
++++ b/arch/x86/crypto/poly1305-avx2-x86_64.S
+@@ -323,6 +323,12 @@ ENTRY(poly1305_4block_avx2)
+ 	vpaddq		t2,t1,t1
+ 	vmovq		t1x,d4
  
- 		/* the various vma->vm_userfaultfd_ctx still points to it */
- 		down_write(&mm->mmap_sem);
-+		/* no task can run (and in turn coredump) yet */
-+		VM_WARN_ON(!mmget_still_valid(mm));
- 		for (vma = mm->mmap; vma; vma = vma->vm_next)
- 			if (vma->vm_userfaultfd_ctx.ctx == release_new_ctx) {
- 				vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
-@@ -867,6 +869,8 @@ static int userfaultfd_release(struct in
- 	 * taking the mmap_sem for writing.
- 	 */
- 	down_write(&mm->mmap_sem);
-+	if (!mmget_still_valid(mm))
-+		goto skip_mm;
- 	prev = NULL;
- 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
- 		cond_resched();
-@@ -889,6 +893,7 @@ static int userfaultfd_release(struct in
- 		vma->vm_flags = new_flags;
- 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
- 	}
-+skip_mm:
- 	up_write(&mm->mmap_sem);
- 	mmput(mm);
- wakeup:
-@@ -1327,6 +1332,8 @@ static int userfaultfd_register(struct u
- 		goto out;
- 
- 	down_write(&mm->mmap_sem);
-+	if (!mmget_still_valid(mm))
-+		goto out_unlock;
- 	vma = find_vma_prev(mm, start, &prev);
- 	if (!vma)
- 		goto out_unlock;
-@@ -1514,6 +1521,8 @@ static int userfaultfd_unregister(struct
- 		goto out;
- 
- 	down_write(&mm->mmap_sem);
-+	if (!mmget_still_valid(mm))
-+		goto out_unlock;
- 	vma = find_vma_prev(mm, start, &prev);
- 	if (!vma)
- 		goto out_unlock;
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -57,6 +57,27 @@ static inline void mmdrop_async(struct m
- 	}
- }
- 
-+/*
-+ * This has to be called after a get_task_mm()/mmget_not_zero()
-+ * followed by taking the mmap_sem for writing before modifying the
-+ * vmas or anything the coredump pretends not to change from under it.
-+ *
-+ * NOTE: find_extend_vma() called from GUP context is the only place
-+ * that can modify the "mm" (notably the vm_start/end) under mmap_sem
-+ * for reading and outside the context of the process, so it is also
-+ * the only case that holds the mmap_sem for reading that must call
-+ * this function. Generally if the mmap_sem is hold for reading
-+ * there's no need of this check after get_task_mm()/mmget_not_zero().
-+ *
-+ * This function can be obsoleted and the check can be removed, after
-+ * the coredump code will hold the mmap_sem for writing before
-+ * invoking the ->core_dump methods.
-+ */
-+static inline bool mmget_still_valid(struct mm_struct *mm)
-+{
-+	return likely(!mm->core_state);
-+}
++	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
++	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
++	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
++	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
++	# integers.  It's true in a single-block implementation, but not here.
 +
- /**
-  * mmget() - Pin the address space associated with a &struct mm_struct.
-  * @mm: The address space to pin.
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -45,6 +45,7 @@
- #include <linux/moduleparam.h>
- #include <linux/pkeys.h>
- #include <linux/oom.h>
-+#include <linux/sched/mm.h>
+ 	# d1 += d0 >> 26
+ 	mov		d0,%rax
+ 	shr		$26,%rax
+@@ -361,16 +367,16 @@ ENTRY(poly1305_4block_avx2)
+ 	# h0 += (d4 >> 26) * 5
+ 	mov		d4,%rax
+ 	shr		$26,%rax
+-	lea		(%eax,%eax,4),%eax
+-	add		%eax,%ebx
++	lea		(%rax,%rax,4),%rax
++	add		%rax,%rbx
+ 	# h4 = d4 & 0x3ffffff
+ 	mov		d4,%rax
+ 	and		$0x3ffffff,%eax
+ 	mov		%eax,h4
  
- #include <linux/uaccess.h>
- #include <asm/cacheflush.h>
-@@ -2448,7 +2449,8 @@ find_extend_vma(struct mm_struct *mm, un
- 	vma = find_vma_prev(mm, addr, &prev);
- 	if (vma && (vma->vm_start <= addr))
- 		return vma;
--	if (!prev || expand_stack(prev, addr))
-+	/* don't alter vm_end if the coredump is running */
-+	if (!prev || !mmget_still_valid(mm) || expand_stack(prev, addr))
- 		return NULL;
- 	if (prev->vm_flags & VM_LOCKED)
- 		populate_vma_page_range(prev, addr, prev->vm_end, NULL);
-@@ -2474,6 +2476,9 @@ find_extend_vma(struct mm_struct *mm, un
- 		return vma;
- 	if (!(vma->vm_flags & VM_GROWSDOWN))
- 		return NULL;
-+	/* don't alter vm_start if the coredump is running */
-+	if (!mmget_still_valid(mm))
-+		return NULL;
- 	start = vma->vm_start;
- 	if (expand_stack(vma, addr))
- 		return NULL;
+ 	# h1 += h0 >> 26
+-	mov		%ebx,%eax
+-	shr		$26,%eax
++	mov		%rbx,%rax
++	shr		$26,%rax
+ 	add		%eax,h1
+ 	# h0 = h0 & 0x3ffffff
+ 	andl		$0x3ffffff,%ebx
+--- a/arch/x86/crypto/poly1305-sse2-x86_64.S
++++ b/arch/x86/crypto/poly1305-sse2-x86_64.S
+@@ -253,16 +253,16 @@ ENTRY(poly1305_block_sse2)
+ 	# h0 += (d4 >> 26) * 5
+ 	mov		d4,%rax
+ 	shr		$26,%rax
+-	lea		(%eax,%eax,4),%eax
+-	add		%eax,%ebx
++	lea		(%rax,%rax,4),%rax
++	add		%rax,%rbx
+ 	# h4 = d4 & 0x3ffffff
+ 	mov		d4,%rax
+ 	and		$0x3ffffff,%eax
+ 	mov		%eax,h4
+ 
+ 	# h1 += h0 >> 26
+-	mov		%ebx,%eax
+-	shr		$26,%eax
++	mov		%rbx,%rax
++	shr		$26,%rax
+ 	add		%eax,h1
+ 	# h0 = h0 & 0x3ffffff
+ 	andl		$0x3ffffff,%ebx
+@@ -520,6 +520,12 @@ ENTRY(poly1305_2block_sse2)
+ 	paddq		t2,t1
+ 	movq		t1,d4
+ 
++	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
++	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
++	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
++	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
++	# integers.  It's true in a single-block implementation, but not here.
++
+ 	# d1 += d0 >> 26
+ 	mov		d0,%rax
+ 	shr		$26,%rax
+@@ -558,16 +564,16 @@ ENTRY(poly1305_2block_sse2)
+ 	# h0 += (d4 >> 26) * 5
+ 	mov		d4,%rax
+ 	shr		$26,%rax
+-	lea		(%eax,%eax,4),%eax
+-	add		%eax,%ebx
++	lea		(%rax,%rax,4),%rax
++	add		%rax,%rbx
+ 	# h4 = d4 & 0x3ffffff
+ 	mov		d4,%rax
+ 	and		$0x3ffffff,%eax
+ 	mov		%eax,h4
+ 
+ 	# h1 += h0 >> 26
+-	mov		%ebx,%eax
+-	shr		$26,%eax
++	mov		%rbx,%rax
++	shr		$26,%rax
+ 	add		%eax,h1
+ 	# h0 = h0 & 0x3ffffff
+ 	andl		$0x3ffffff,%ebx
+--- a/crypto/testmgr.h
++++ b/crypto/testmgr.h
+@@ -4660,7 +4660,49 @@ static const struct hash_testvec poly130
+ 		.psize		= 80,
+ 		.digest		= "\x13\x00\x00\x00\x00\x00\x00\x00"
+ 				  "\x00\x00\x00\x00\x00\x00\x00\x00",
+-	},
++	}, { /* Regression test for overflow in AVX2 implementation */
++		.plaintext	= "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff\xff\xff\xff\xff"
++				  "\xff\xff\xff\xff",
++		.psize		= 300,
++		.digest		= "\xfb\x5e\x96\xd8\x61\xd5\xc7\xc8"
++				  "\x78\xe5\x87\xcc\x2d\x5a\x22\xe1",
++	}
+ };
+ 
+ /*
 
 
