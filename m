@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB924C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCF1C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86CB021773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48CA32175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CiW8G5O3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETNqxi47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbfDXKVV (ORCPT
+        id S1729666AbfDXKVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:21:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41422 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728513AbfDXKVO (ORCPT
+        Wed, 24 Apr 2019 06:21:24 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40104 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728530AbfDXKVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:21:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f6so9152802pgs.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:21:14 -0700 (PDT)
+        Wed, 24 Apr 2019 06:21:17 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d31so9165473pgl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:21:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TTSJeJChcHNZMTBu1HF95U4ErzrozbTOn8A0dkI+M1k=;
-        b=CiW8G5O3fZy7IFTCBdCPcs+Y/sstsAe0Cv7e939CYl70R2NsN7k91Lz/CEeloQePPC
-         GE1zm/Lm3s80fxAsbIfZeeJmyZ8+6EgmnrEkpjJc0H78pf1O7TZA/3/Uwr9+YTD34+8R
-         u2It7Bi5qHsgN4/T/6nJPiAzHwoJz/Pis/Ra+arOKP8ba7VlfIFxVUd2dE4NLRwRdgE+
-         1HaOJBYFBQ4AkELhWzGCmn+D2s2RmIAEA6TSQgMrXnqT672WgSdyWNZxr09KzTB3BoTs
-         U4Gjx5HkK7CJfM9Dfdyd8wF9mubyuXbFa5tdx/D+dQ0hi3O70a9XVu+MSza3NEovc6Ya
-         I4fg==
+        bh=jdQQqD+D5SVNRXrIoNn1Xj9jq/lMLPa5FtY9TZa9L2k=;
+        b=ETNqxi47ZUZmJRnKK9t6vb+3QWKME4t1iuVeal4DrxOcREiT6dcFbs0+2XtHF0Kik3
+         Y+diHWzsUuHsk5407qHFFhbsQWiHGAJsr/k8aY0ZG5CgLamOmCpk9+U9BDvKUs1trHqK
+         f74RXqf4z6Hmr9Kd9K+U4StyL9eejJZ5iwR/tMzwaU6qbwHjZeozggexUwnujeo6QLAY
+         3A1TbB1pHPV3q+2+w8gfEIDmbojmPSpDHMTFvgrAUxZYBN/jOubXExp8DDFCE30j3Oux
+         XgdOMK9Q9coYjU/zBoaGvxZRVtb05x0Anuz53/vmCaXJ4WKFzZUWabV2oi18X9Q9YljB
+         nq+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TTSJeJChcHNZMTBu1HF95U4ErzrozbTOn8A0dkI+M1k=;
-        b=oFnFq2rQlvGBOqUQI/sOBpEt3ujWM+ohs1+R8bPBE0hSF/Wh9q8fAPQI6EvtgNt2f9
-         4Am9mtN6sXZwtBX4ixc33psz2uSBsxuWGhhSYVNhi10Vs4qUPBXDJHwfDCJjvmKrIc0T
-         bqx81Og+lOHE2TiU6qhr+vXWra6r8JOHzkng9Mg6Iifn64hazZSyZThFq+YaVM4cFf6+
-         8oVdT56QAKOef+GQLk1hjtY3zRqRc9oi7HVR8QJbbJ+gLdQwaElc552vPW/QBZXBfK9F
-         jWB2oq8CcH04hQaKLsbSyco2Yb7FouQePGr2YyMvnrU+aaLZulJYHpY69pe1+fKHCjC+
-         Qhhw==
-X-Gm-Message-State: APjAAAVt8PD+tSjt3Xa4PdnS2CqZxn/qkQd8CLBDLQklhgubEiyE9VoL
-        vyY/Z2LLK7VjWAIE36B1RZo=
-X-Google-Smtp-Source: APXvYqy8ky5feQD5Ff775omZnMk42zV1ljjcYHuH8IKC7EeH7ohLND2MZxit7JvVijJpgFbO/R0QHQ==
-X-Received: by 2002:a63:ee15:: with SMTP id e21mr774463pgi.180.1556101273774;
-        Wed, 24 Apr 2019 03:21:13 -0700 (PDT)
+        bh=jdQQqD+D5SVNRXrIoNn1Xj9jq/lMLPa5FtY9TZa9L2k=;
+        b=GtusQZRZMHm6ankBB7xvBtrXKzXCriG4bEVtUjgIhgvl3NBU5275GLLTipiMB8KGCq
+         IJvA9HGQCdEahslaFY+QZGF8ii9PieXZ6hWvl+FAK1J5kaGaelIvPn3/QaVVuE4/hVij
+         pFL1YzyLMrt4X43mbF1XPL6zU1Tb9JSBgzR2MiZgKIHdLS99PaGd0lR1l1YLBn8+ZKDR
+         ErVrkK8lRt6jmzHsCeKftSU42WZXzlAxkiGNXqrXi9Aj24RZyBC5CmoUb6122Lg94nKX
+         QgHc7hEQ/gp1/Pxr76jkV3OjVRjk3WdxAb4Fwfu2JQERkBjvNLz0FGKOv2vfndF9plDk
+         abLQ==
+X-Gm-Message-State: APjAAAV11q1ISxx/r9N6dNdTHw7PJ2tSGWcl2IQSHqh+x3m3+zCZ2pqh
+        Kx2wSzM41G/6oBE3QoQZqghyAh/fdhc6gg==
+X-Google-Smtp-Source: APXvYqx1SlcW0YrIqO6GOmG9alzcLu0o2wlNytDUhDhGFHqwJt9YuOEoS0vCzPnCfF4VDJH5Ypqx5A==
+X-Received: by 2002:a65:6546:: with SMTP id a6mr6049907pgw.5.1556101276860;
+        Wed, 24 Apr 2019 03:21:16 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v19sm25051604pfn.62.2019.04.24.03.21.10
+        by smtp.gmail.com with ESMTPSA id v19sm25051604pfn.62.2019.04.24.03.21.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 03:21:13 -0700 (PDT)
+        Wed, 24 Apr 2019 03:21:16 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 15/28] locking/lockdep: Update comments on dependency search
-Date:   Wed, 24 Apr 2019 18:19:21 +0800
-Message-Id: <20190424101934.51535-16-duyuyang@gmail.com>
+Subject: [PATCH 16/28] locking/lockdep: Add explanation to lock usage rules in lockdep design doc
+Date:   Wed, 24 Apr 2019 18:19:22 +0800
+Message-Id: <20190424101934.51535-17-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190424101934.51535-1-duyuyang@gmail.com>
 References: <20190424101934.51535-1-duyuyang@gmail.com>
@@ -74,69 +74,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The breadth-first search is implemented as flat-out non-recursive now, but
-the comments are still describing it as recursive, update the comments in
-that regard.
+The irq usage and lock dependency rules that if violated a deacklock may
+happen are explained in more detail.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ Documentation/locking/lockdep-design.txt | 33 ++++++++++++++++++++++----------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 16f524c..d153b97 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1375,6 +1375,10 @@ static inline struct list_head *get_dep_list(struct lock_list *lock, int offset)
- 	return lock_class + offset;
- }
+diff --git a/Documentation/locking/lockdep-design.txt b/Documentation/locking/lockdep-design.txt
+index d5062fc..e1187d8 100644
+--- a/Documentation/locking/lockdep-design.txt
++++ b/Documentation/locking/lockdep-design.txt
+@@ -103,14 +103,24 @@ Unused locks (e.g., mutexes) cannot be part of the cause of an error.
+ Single-lock state rules:
+ ------------------------
  
-+/*
-+ * Forward- or backward-dependency search, used for both circular dependency
-+ * checking and hardirq-unsafe/softirq-unsafe checking.
-+ */
- static int __bfs(struct lock_list *source_entry,
- 		 void *data,
- 		 int (*match)(struct lock_list *entry, void *data),
-@@ -1455,12 +1459,6 @@ static inline int __bfs_backwards(struct lock_list *src_entry,
++A lock is irq-safe means it was ever used in an irq context, while a lock
++is irq-unsafe means it was ever acquired with irq enabled.
++
+ A softirq-unsafe lock-class is automatically hardirq-unsafe as well. The
+-following states are exclusive, and only one of them is allowed to be
+-set for any lock-class:
++following states must be exclusive: only one of them is allowed to be set
++for any lock-class based on its usage:
++
++ <hardirq-safe> or <hardirq-unsafe>
++ <softirq-safe> or <softirq-unsafe>
  
- }
+- <hardirq-safe> and <hardirq-unsafe>
+- <softirq-safe> and <softirq-unsafe>
++This is because if a lock can be used in irq context (irq-safe) then it
++cannot be ever acquired with irq enabled (irq-unsafe). Otherwise, a
++deadlock may happen. For example, in the scenario that after this lock
++was acquired but before released, if the context is interrupted this
++lock will be attempted to acquire twice, which creates a deadlock,
++referred to as lock recursion deadlock.
  
--/*
-- * Recursive, forwards-direction lock-dependency checking, used for
-- * both noncyclic checking and for hardirq-unsafe/softirq-unsafe
-- * checking.
-- */
--
- static void print_lock_trace(struct lock_trace *trace, unsigned int spaces)
- {
- 	unsigned long *entries = stack_trace + trace->offset;
-@@ -2182,7 +2180,7 @@ static inline void inc_chains(void)
+-The validator detects and reports lock usage that violate these
++The validator detects and reports lock usage that violates these
+ single-lock state rules.
  
- /*
-  * There was a chain-cache miss, and we are about to add a new dependency
-- * to a previous lock. We recursively validate the following rules:
-+ * to a previous lock. We validate the following rules:
-  *
-  *  - would the adding of the <prev> -> <next> dependency create a
-  *    circular dependency in the graph? [== circular deadlock]
-@@ -2233,11 +2231,12 @@ static inline void inc_chains(void)
- 	/*
- 	 * Prove that the new <prev> -> <next> dependency would not
- 	 * create a circular dependency in the graph. (We do this by
--	 * forward-recursing into the graph starting at <next>, and
--	 * checking whether we can reach <prev>.)
-+	 * a breadth-first search into the graph starting at <next>,
-+	 * which checks whether we can reach <prev>.)
- 	 *
--	 * We are using global variables to control the recursion, to
--	 * keep the stackframe size of the recursive functions low:
-+	 * The search is limited by the size of the circular queue (i.e.,
-+	 * MAX_CIRCULAR_QUEUE_SIZE) which keeps track of a breadth of nodes
-+	 * in the graph whose neighbours are to be checked.
- 	 */
- 	this.class = hlock_class(next);
- 	this.parent = NULL;
+ Multi-lock dependency rules:
+@@ -119,15 +129,18 @@ Multi-lock dependency rules:
+ The same lock-class must not be acquired twice, because this could lead
+ to lock recursion deadlocks.
+ 
+-Furthermore, two locks may not be taken in different order:
++Furthermore, two locks can not be taken in inverse order:
+ 
+  <L1> -> <L2>
+  <L2> -> <L1>
+ 
+-because this could lead to lock inversion deadlocks. (The validator
+-finds such dependencies in arbitrary complexity, i.e. there can be any
+-other locking sequence between the acquire-lock operations, the
+-validator will still track all dependencies between locks.)
++because this could lead to a deadlock - referred to as lock inversion
++deadlock - as attempts to acquire the two locks form a circle which
++could lead to the two contexts waiting for each other permanently.  The
++validator will find such dependency circle in arbitrary complexity,
++i.e., there can be any other locking sequence between the acquire-lock
++operations; the validator will still find whether these locks can be
++acquired in a circular fashion.
+ 
+ Furthermore, the following usage based lock dependencies are not allowed
+ between any two lock-classes:
 -- 
 1.8.3.1
 
