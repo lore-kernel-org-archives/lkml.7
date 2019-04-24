@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8820EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71165C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7D421902
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B27921902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125917;
-	bh=EWe8M8hvLyUBpyhIGhjmksfqK98LSI5ywUbOVWJCwN4=;
+	s=default; t=1556125919;
+	bh=7A8aLgpe/AiMTyLVXR2e5pLsMz6ePp+bOn33afXoUSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=roHkmUmyN9pqbOgtjWtpB7W5imCUEd3zeWH6egCiSH6Pf+QsMs5KVHrVcBKYOxxh9
-	 YSd8pGNlE4DABS4EX8LI24409soaRfsZBs17s7habCuML9ihEvBVKQak+Dm7LyySUI
-	 WNwTXsrv2pkFzLJnTdVtjCmb4JqevgCFomvc11LI=
+	b=MzZywjc15YTKw/ftdU+xm0Qx2SxbqR5ZNcC9oR/lU5a4rztWqip7SRBEAQgnkknxb
+	 ZOyhdjXQ7rQYzYuclFdmK37gOMGMrO7r9aJyNmEWXZJ+q+YYWZxkk7YXB47Po2TByo
+	 Zj7tydEBdhVBHjkhq/niDJmLuI/+Mf4g5HqtZps0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387500AbfDXRL4 (ORCPT
+        id S2387511AbfDXRL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35448 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:11:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387466AbfDXRLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:11:49 -0400
+        id S2387424AbfDXRLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:11:55 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3498218FE;
-        Wed, 24 Apr 2019 17:11:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BD4C218FE;
+        Wed, 24 Apr 2019 17:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125909;
-        bh=EWe8M8hvLyUBpyhIGhjmksfqK98LSI5ywUbOVWJCwN4=;
+        s=default; t=1556125914;
+        bh=7A8aLgpe/AiMTyLVXR2e5pLsMz6ePp+bOn33afXoUSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W08Yb8iRaW+qtPM+tY+cgSClT9Q9OyrNTGv1J/PXxU9lN3LwFsOFQwnBe50XaiDye
-         VPc+g6E4MRsmuI1Ktu5r9lG3bt+K14Deb4ArrCedJgscXnVnM8GP3bM8jRBX6a8ZJW
-         fUPfFzZJHNxbLq+ieB6Kx+n+5q9U2hXc0aRxDkf4=
+        b=QvAzvhKxGE+TIZr1BVuFdIipk6qLXjH4bKH+eGXaXEV3yW7hWgJp5Qfz4ITAkoKtl
+         BwlAZZ7u+0ACEN21H9zUmutFAyLGL7fR6lkDXku4DwAgl8TPGEU93YiCxpowx+ZNQg
+         NBvXVZri8dsn6/EPTwr/WInUP0LasfW3Ze/+HgBg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 026/104] bcache: fix input overflow to sequential_cutoff
-Date:   Wed, 24 Apr 2019 19:08:43 +0200
-Message-Id: <20190424170855.604664394@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
+        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 028/104] fbdev: fbmem: fix memory access if logo is bigger than the screen
+Date:   Wed, 24 Apr 2019 19:08:45 +0200
+Message-Id: <20190424170855.970777891@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -59,40 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8c27a3953e92eb0b22dbb03d599f543a05f9574e ]
+[ Upstream commit a5399db139cb3ad9b8502d8b1bd02da9ce0b9df0 ]
 
-People may set sequential_cutoff of a cached device via sysfs file,
-but current code does not check input value overflow. E.g. if value
-4294967295 (UINT_MAX) is written to file sequential_cutoff, its value
-is 4GB, but if 4294967296 (UINT_MAX + 1) is written into, its value
-will be 0. This is an unexpected behavior.
+There is no clipping on the x or y axis for logos larger that the framebuffer
+size. Therefore: a logo bigger than screen size leads to invalid memory access:
 
-This patch replaces d_strtoi_h() by sysfs_strtoul_clamp() to convert
-input string to unsigned integer value, and limit its range in
-[0, UINT_MAX]. Then the input overflow can be fixed.
+[    1.254664] Backtrace:
+[    1.254728] [<c02714e0>] (cfb_imageblit) from [<c026184c>] (fb_show_logo+0x620/0x684)
+[    1.254763]  r10:00000003 r9:00027fd8 r8:c6a40000 r7:c6a36e50 r6:00000000 r5:c06b81e4
+[    1.254774]  r4:c6a3e800
+[    1.254810] [<c026122c>] (fb_show_logo) from [<c026c1e4>] (fbcon_switch+0x3fc/0x46c)
+[    1.254842]  r10:c6a3e824 r9:c6a3e800 r8:00000000 r7:c6a0c000 r6:c070b014 r5:c6a3e800
+[    1.254852]  r4:c6808c00
+[    1.254889] [<c026bde8>] (fbcon_switch) from [<c029c8f8>] (redraw_screen+0xf0/0x1e8)
+[    1.254918]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:c070d5a0 r5:00000080
+[    1.254928]  r4:c6808c00
+[    1.254961] [<c029c808>] (redraw_screen) from [<c029d264>] (do_bind_con_driver+0x194/0x2e4)
+[    1.254991]  r9:00000000 r8:00000000 r7:00000014 r6:c070d5a0 r5:c070d5a0 r4:c070d5a0
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+So prevent displaying a logo bigger than screen size and avoid invalid
+memory access.
+
+Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/sysfs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/video/fbdev/core/fbmem.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index 87daccbbc61b..463ce6757338 100644
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -215,7 +215,9 @@ STORE(__cached_dev)
- 	d_strtoul(writeback_rate_d_term);
- 	d_strtoul_nonzero(writeback_rate_p_term_inverse);
+diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+index ea2bd6208a2f..9eae191728d2 100644
+--- a/drivers/video/fbdev/core/fbmem.c
++++ b/drivers/video/fbdev/core/fbmem.c
+@@ -425,6 +425,9 @@ static void fb_do_show_logo(struct fb_info *info, struct fb_image *image,
+ {
+ 	unsigned int x;
  
--	d_strtoi_h(sequential_cutoff);
-+	sysfs_strtoul_clamp(sequential_cutoff,
-+			    dc->sequential_cutoff,
-+			    0, UINT_MAX);
- 	d_strtoi_h(readahead);
- 
- 	if (attr == &sysfs_clear_stats)
++	if (image->width > info->var.xres || image->height > info->var.yres)
++		return;
++
+ 	if (rotate == FB_ROTATE_UR) {
+ 		for (x = 0;
+ 		     x < num && image->dx + image->width <= info->var.xres;
 -- 
 2.19.1
 
