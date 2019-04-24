@@ -2,142 +2,134 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D238DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F37C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D727218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC318218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="U/UXHT/w"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OBtuE2z/";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="qcua6fLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbfDXLuH (ORCPT
+        id S1728192AbfDXLvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:50:07 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:36092 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfDXLuH (ORCPT
+        Wed, 24 Apr 2019 07:51:05 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:38144 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725978AbfDXLvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 07:50:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1556106604;
-        l=28; s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=GXXVnf+OEgyp2Gp9YmU5G49I6goIXenY3HYTxH7tAh4=;
-        b=U/UXHT/w0te7O6AE8BXndFd/S/4z1AkRXXH385l+XAlUebd236at+z975jKYCTGqTd
-        rxsmbLFHj4vSJkLJr45o7C1aZagVGrUgtM8nYwA/2wn9J/zzZm6gsE5NPcmWHi3mZta5
-        nKlywVyBgD00z77L1eQj26QLDlkdZl06RM0jwNgxLE7PF6YJwzJmH1kyMCAJtq8j6kWE
-        1GpPhfV0PtRHO4mHF6g/V/TQKCyHWGJ+HLMpF0CaLS7GTocd2X2+VEbgs6Ppjxr4o0O+
-        iMuZT9WOVr7kI7QRIV36DNoBsR8M83jLSxumN/3QOVqgmHJ8aAodoqidZwx34+0cAPVu
-        u+MQ==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJV8h5kkxQ"
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.40.202]
-        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
-        with ESMTPSA id q0b361v3OBmWmoX
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 24 Apr 2019 13:48:32 +0200 (CEST)
-Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet
- card
-To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>,
-        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-References: <20190409144250.7237-1-TheSven73@gmail.com>
- <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
- <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
- <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
- <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
- <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
- <CAGngYiVJwRh_ESLfSYWak4RU60T2D1HW0-3Hg1CZbRjWhaSN5Q@mail.gmail.com>
- <7ceaeb70-f937-bd84-95e5-d7a6baeb5d87@metux.net>
- <CAGngYiUPZ+g4eXJKvgA9GSJXgOFAAf6Q3qqAheiqNSnJ+Dbx+w@mail.gmail.com>
- <e07f7575-2617-a11a-fd78-d068b10a8171@metux.net>
- <06024a8a-ad00-8062-215b-01b2f95a6e24@hartkopp.net>
- <c1b783b0-9773-17f5-d043-35e28f7797f0@suse.de>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <d54b294e-d641-bb14-84ed-39d9a9079dc7@hartkopp.net>
-Date:   Wed, 24 Apr 2019 13:48:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <c1b783b0-9773-17f5-d043-35e28f7797f0@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 24 Apr 2019 07:51:05 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OBngE8009296;
+        Wed, 24 Apr 2019 04:50:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=pfpt0818; bh=LBnehm9twTqRkNe+oVerrAN55sKpcIJFOEg2UQFRvjE=;
+ b=OBtuE2z/cWrqe/666qltzJr0FLlYnVcWbiR+8OH9hRH53Ls3acFnGudxoWA9hYsYvRuW
+ XDpblkxW5qymPQA4ZK+uO9a3c920qSW8JFHQQtxJqMrszt5Wk9hcHfZVQLs/jjdUImDG
+ 09SfNQnrzkl7q7+Ec3sFzFAiN/vJSx2R+F4NaB+RcetjG495Xt308/cfCEDLfNPZjyR7
+ UKQ+7aZQaz7kicJVR62/6nFXxaz+sGKkqnYaLsMRfSCSbCwVSX6lGAj/fGsgttTP7Mri
+ VpaU3HQwE9NSgmdVMV8lJ9js3bjtOZC3aed6tEYD9GGCr2mJ3660/ZVN+lhvPZf7cwGZ JQ== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2s2nnjg9ka-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 24 Apr 2019 04:50:46 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 24 Apr
+ 2019 04:50:45 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.53) by
+ SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 24 Apr 2019 04:50:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LBnehm9twTqRkNe+oVerrAN55sKpcIJFOEg2UQFRvjE=;
+ b=qcua6fLl8QUvcnKHJtXK14CpNr2OiLaWUNhtcHHb6hcsJXkR/cpwF/4T+cbHX7s1Fiklq6/tOB8GNKejyBq2GgygEx6HCJx4C4phC35QOYhNnVSKUu/epGSTSkakC95DgDNIZFl7Z1swJm7U8z/lhitLwEX5K/yTVgOcqY5Q6T4=
+Received: from BN8PR18MB2948.namprd18.prod.outlook.com (20.179.76.22) by
+ BN8PR18MB2402.namprd18.prod.outlook.com (20.179.64.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Wed, 24 Apr 2019 11:50:44 +0000
+Received: from BN8PR18MB2948.namprd18.prod.outlook.com
+ ([fe80::350b:658b:405c:2bf5]) by BN8PR18MB2948.namprd18.prod.outlook.com
+ ([fe80::350b:658b:405c:2bf5%4]) with mapi id 15.20.1835.010; Wed, 24 Apr 2019
+ 11:50:44 +0000
+From:   Kamlakant Patel <kamlakantp@marvell.com>
+To:     Corey Minyard <minyard@acm.org>
+CC:     Kamlakant Patel <kamlakantp@marvell.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        "openipmi-developer@lists.sourceforge.net" 
+        <openipmi-developer@lists.sourceforge.net>
+Subject: [PATCH] ipmi:ssif: compare block number correctly for multi-part
+ return messages
+Thread-Topic: [PATCH] ipmi:ssif: compare block number correctly for multi-part
+ return messages
+Thread-Index: AQHU+pPy99dQ2rrV3EmqJwCk6stY1A==
+Date:   Wed, 24 Apr 2019 11:50:43 +0000
+Message-ID: <1556106615-18722-1-git-send-email-kamlakantp@marvell.com>
+Accept-Language: en-IN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR02CA0063.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::40) To BN8PR18MB2948.namprd18.prod.outlook.com
+ (2603:10b6:408:a8::22)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [199.233.59.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e7d3d8a5-973b-4700-9852-08d6c8ab14e0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BN8PR18MB2402;
+x-ms-traffictypediagnostic: BN8PR18MB2402:
+x-microsoft-antispam-prvs: <BN8PR18MB240254EE0458E139E2D4EC9CD23C0@BN8PR18MB2402.namprd18.prod.outlook.com>
+x-forefront-prvs: 00179089FD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(136003)(39850400004)(189003)(199004)(52116002)(316002)(2616005)(102836004)(186003)(86362001)(26005)(6506007)(386003)(54906003)(476003)(25786009)(486006)(97736004)(6486002)(4326008)(478600001)(36756003)(99286004)(14454004)(15650500001)(6436002)(7736002)(66446008)(53936002)(71200400001)(3846002)(6116002)(66066001)(81166006)(8676002)(73956011)(66556008)(64756008)(66476007)(4720700003)(6916009)(71190400001)(68736007)(66946007)(2906002)(8936002)(50226002)(6512007)(305945005)(256004)(14444005)(5660300002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR18MB2402;H:BN8PR18MB2948.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JIbWkGMEFGy6F79eu63IQJ5cdZWHHeW3kuo2UfAMWDHwIikzD7pfcUZ76Z9K78p8ZX5EnXOHNX6pT/bscDLeYzFjfSCdEJN/SogySmNcksMj1U/mCPviI2YuP3qHIJE0Gjt0/IuEFHLFWLDW7Oid3ghY8HfcY9lZakyHiHOZowIPMeR/n/TgFxMkKo22U8ChSC/RctKw0H7K2OW8h7qVOrKnVGlh00s/QZZNb97XgY0SbIYohUYMKlyjqHWDOrui5UDZj5X7cJG3/+Cz38LM4hwJAPETB3tkhMMUFNuEXAmRH8cr3/sTDxFlhA/R8uixeaNQUDY4nyOXGlPmIOLkyqFTPRBG3K+T8dzv6A9IxNubQjy/GgjdWGwTNvzK+hRA4wObHBcDPbGz4SaesLk5LO0WxxrDVetZCBiyVC/uS9c=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7d3d8a5-973b-4700-9852-08d6c8ab14e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 11:50:43.8612
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR18MB2402
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.04.19 13:00, Andreas Färber wrote:
-> Am 24.04.19 um 12:26 schrieb Oliver Hartkopp:
-
->> The Controller Area Network also belongs to the class of field busses
->> and has its own networking subsystem in linux/net/can.
->>
->> So using a 'class' of communication protocols as naming scheme doesn't
->> fit IMHO.
-> 
-> And - again - NACK. Calling a subsystem just iec61158 is going to hide
-> what it is and stand in the way of development of this niche system. I
-> asked Enrico to come up with a better naming proposal such as having
-> iec61158 as subfolder to human-readable fieldbus, but I did not see him
-> coming up with any such new proposals apart from repeating this name.
-> 
-> Also please read Sven's comment again: It you don't like the current
-> naming you'll need to post follow-up patches, as v11 of this subsystem
-> has been merged into staging. No complaint about piggy-backing on v10 is
-> going to change that fact now!
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/tree/drivers/staging/fieldbus?h=staging-next
-> 
-> And since we're at it, Enrico's response to me just threw around a bunch
-> of acronyms instead of explaining which ones have an _actual_ conflict
-> with this subsystem - my point precisely was that if they use sockets or
-> ttys then there's no real conflict apart from lots of things classifying
-> as "fieldbus".
-
-Ok, I either tried to get through the fieldbus code and the 
-documentation from above.
-
-I hopefully got it right by: You implemented a standardized chardev ABI 
-that enables a data exchange between userspace and kernel, where other 
-drivers can register 'from inside the kernel', that feel like being a 
-fieldbus controller?!?
-
-When checking out the Anybus website the first hit for serial fieldbus 
-is https://www.anybus.com/technologies/fieldbus-serial/can-canopen .
-
-CANopen is CAN based - and the CAN network drivers and CAN controllers 
-definitely do not expose sysfs entries like
-
-	/sys/class/fieldbus_dev/fieldbus_devX/write_area_size
-
-How can this fit together for me and what would be the plan to cover 
-CANopen or EtherCAT in the fieldbus subsystem? Does it need some kind of 
-CANopen protocol driver that registers to your ABI and speaks to CAN 
-interfaces on the other side?
-
-If this would have been outlined more clearly I wouldn't have stumbled 
-over the fieldbus naming scheme.
-
-Regards,
-Oliver
+QWNjb3JkaW5nIHRvIGlwbWkgc3BlYywgYmxvY2sgbnVtYmVyIGlzIGEgbnVtYmVyIHRoYXQgaXMg
+aW5jcmVtZW50ZWQsDQpzdGFydGluZyB3aXRoIDAsIGZvciBlYWNoIG5ldyBibG9jayBvZiBtZXNz
+YWdlIGRhdGEgcmV0dXJuZWQgdXNpbmcgdGhlDQpNaWRkbGUgdHJhbnNhY3Rpb24uDQoNCkhlcmUs
+IHRoZSAnYmxvY2tudW0nIGlzIGRhdGFbMF0gd2hpY2ggYWx3YXlzIHN0YXJ0cyBmcm9tIHplcm8o
+MCkgYW5kDQonc3NpZl9pbmZvLT5tdWx0aV9wb3MnIHN0YXJ0cyBmcm9tIDEuDQpTbywgd2UgbmVl
+ZCB0byBhZGQgKzEgdG8gYmxvY2tudW0gd2hpbGUgY29tcGFyaW5nIHdpdGggbXVsdGlfcG9zLg0K
+DQpUaGlzIGNoYW5nZSBmaXhlcyAoImlwbWk6c3NpZjogRml4IGhhbmRsaW5nIG9mIG11bHRpLXBh
+cnQgcmV0dXJuDQptZXNzYWdlcyIpLg0KDQpSZXBvcnRlZC1ieTogS2lyYW4gS29sdWt1bHVydSA8
+a2lyYW5rQGFtaS5jb20+DQpTaWduZWQtb2ZmLWJ5OiBLYW1sYWthbnQgUGF0ZWwgPGthbWxha2Fu
+dHBAbWFydmVsbC5jb20+DQotLS0NCiBkcml2ZXJzL2NoYXIvaXBtaS9pcG1pX3NzaWYuYyB8IDIg
+Ky0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvY2hhci9pcG1pL2lwbWlfc3NpZi5jIGIvZHJpdmVycy9jaGFyL2lw
+bWkvaXBtaV9zc2lmLmMNCmluZGV4IDhiNWFlYzUuLjJiMDM4NDUgMTAwNjQ0DQotLS0gYS9kcml2
+ZXJzL2NoYXIvaXBtaS9pcG1pX3NzaWYuYw0KKysrIGIvZHJpdmVycy9jaGFyL2lwbWkvaXBtaV9z
+c2lmLmMNCkBAIC03MjcsNyArNzI3LDcgQEAgc3RhdGljIHZvaWQgbXNnX2RvbmVfaGFuZGxlcihz
+dHJ1Y3Qgc3NpZl9pbmZvICpzc2lmX2luZm8sIGludCByZXN1bHQsDQogCQkJLyogRW5kIG9mIHJl
+YWQgKi8NCiAJCQlsZW4gPSBzc2lmX2luZm8tPm11bHRpX2xlbjsNCiAJCQlkYXRhID0gc3NpZl9p
+bmZvLT5kYXRhOw0KLQkJfSBlbHNlIGlmIChibG9ja251bSAhPSBzc2lmX2luZm8tPm11bHRpX3Bv
+cykgew0KKwkJfSBlbHNlIGlmIChibG9ja251bSArIDEgIT0gc3NpZl9pbmZvLT5tdWx0aV9wb3Mp
+IHsNCiAJCQkvKg0KIAkJCSAqIE91dCBvZiBzZXF1ZW5jZSBibG9jaywganVzdCBhYm9ydC4gIEJs
+b2NrDQogCQkJICogbnVtYmVycyBzdGFydCBhdCB6ZXJvIGZvciB0aGUgc2Vjb25kIGJsb2NrLA0K
+LS0gDQoxLjguMy4xDQoNCg==
