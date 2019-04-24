@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E56AC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFCEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26FD2218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D36A218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117194;
-	bh=6DehphqxxPwARWBE5ME3ZUahnLAKINS4KsfVTVCj/FM=;
+	s=default; t=1556117211;
+	bh=2akaqfKQ7Bee6kJKY3f2zAEaS7gaY4Ug/ftuDeaskv8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJCzfWjK/Z4L0q2O2IpVTZHJha29HsSjMTOcnKLaodZRJpaJcKTNLNC24qKq5ytS5
-	 bn/zWVDY9ldZjn5Uz060IL1745n9VBHuie+RahIc9dOWwN1+fgpBbFTt0znZedmRr1
-	 zutbIpiMOOXaXLDby3dHjeURtdYTiilDXQ1/JXSs=
+	b=CUZ6PRBvw3FHeTcKhavNS0XwaQ1kGFHhJHAq0+m9jODHko9/bskBPdOzp+sFEkkmj
+	 NpJekbi5sgpbdnsW1zVz2aP6PbgYKRATwV9J+IURfWIsq/35FM+8Dv0it3Ukni2oGJ
+	 7SpelIMCoOOHiMzJAI884S9BH4KDXrjyt81nkKCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731048AbfDXOe2 (ORCPT
+        id S1731880AbfDXOqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:46:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730968AbfDXOeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:34:25 -0400
+        id S1731007AbfDXOeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:34:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3F5F218FE;
-        Wed, 24 Apr 2019 14:34:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F4AB21900;
+        Wed, 24 Apr 2019 14:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116464;
-        bh=6DehphqxxPwARWBE5ME3ZUahnLAKINS4KsfVTVCj/FM=;
+        s=default; t=1556116460;
+        bh=2akaqfKQ7Bee6kJKY3f2zAEaS7gaY4Ug/ftuDeaskv8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rA4YtURVoLh8tU8+MQnOPDe/RMCOiTq7dCTU0iKq1pRs+3P0wAGrwtRuu/bJw0wZg
-         4AieL2fiS2NpMOBOWPhRLbwrF/aEOLMPzCyo+X30noTza4oT/u+B4RtmhILWIT0t1a
-         w/W6u/nYmzHVP94sQ+JxpntSU67nHHXz5UUTuHa8=
+        b=uFNzaii3PwOMVAKwtG4kPTXly3mZjOOlnCoOmiwGCn21eW/883qBMgwZRqwe0RJL9
+         d9Dg/da1+yp3NN4CG8gr9i2TaRoRWGsDW3c3vN4s84vEuJx1ryn7pjBBy17Mkel+Yt
+         vqfUJUlwmj6e/g7qJNbh8f3ebmr+FqUjb9D+YpBA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Assmann <sassmann@kpanic.de>,
+Cc:     Arvind Sankar <niveditas98@gmail.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 18/66] i40e: fix WoL support check
-Date:   Wed, 24 Apr 2019 10:32:52 -0400
-Message-Id: <20190424143341.27665-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 16/66] igb: Fix WARN_ONCE on runtime suspend
+Date:   Wed, 24 Apr 2019 10:32:50 -0400
+Message-Id: <20190424143341.27665-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -59,36 +59,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Assmann <sassmann@kpanic.de>
+From: Arvind Sankar <niveditas98@gmail.com>
 
-[ Upstream commit f669d24f3dd00beab452c0fc9257f6a942ffca9b ]
+[ Upstream commit dabb8338be533c18f50255cf39ff4f66d4dabdbe ]
 
-The current check for WoL on i40e is broken. Code comment says only
-magic packet is supported, so only check for that.
+The runtime_suspend device callbacks are not supposed to save
+configuration state or change the power state. Commit fb29f76cc566
+("igb: Fix an issue that PME is not enabled during runtime suspend")
+changed the driver to not save configuration state during runtime
+suspend, however the driver callback still put the device into a
+low-power state. This causes a warning in the pci pm core and results in
+pci_pm_runtime_suspend not calling pci_save_state or pci_finish_runtime_suspend.
 
-Fixes: 540a152da762 (i40e/ixgbe/igb: fail on new WoL flag setting WAKE_MAGICSECURE)
+Fix this by not changing the power state either, leaving that to pci pm
+core, and make the same change for suspend callback as well.
 
-Signed-off-by: Stefan Assmann <sassmann@kpanic.de>
+Also move a couple of defines into the appropriate header file instead
+of inline in the .c file.
+
+Fixes: fb29f76cc566 ("igb: Fix an issue that PME is not enabled during runtime suspend")
+Signed-off-by: Arvind Sankar <niveditas98@gmail.com>
+Reviewed-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_ethtool.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ .../net/ethernet/intel/igb/e1000_defines.h    |  2 +
+ drivers/net/ethernet/intel/igb/igb_main.c     | 57 +++----------------
+ 2 files changed, 10 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-index a6bc7847346b..5d544e661445 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-@@ -2378,8 +2378,7 @@ static int i40e_set_wol(struct net_device *netdev, struct ethtool_wolinfo *wol)
- 		return -EOPNOTSUPP;
+diff --git a/drivers/net/ethernet/intel/igb/e1000_defines.h b/drivers/net/ethernet/intel/igb/e1000_defines.h
+index 01fcfc6f3415..d2e2c50ce257 100644
+--- a/drivers/net/ethernet/intel/igb/e1000_defines.h
++++ b/drivers/net/ethernet/intel/igb/e1000_defines.h
+@@ -194,6 +194,8 @@
+ /* enable link status from external LINK_0 and LINK_1 pins */
+ #define E1000_CTRL_SWDPIN0  0x00040000  /* SWDPIN 0 value */
+ #define E1000_CTRL_SWDPIN1  0x00080000  /* SWDPIN 1 value */
++#define E1000_CTRL_ADVD3WUC 0x00100000  /* D3 WUC */
++#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000 /* PHY PM enable */
+ #define E1000_CTRL_SDP0_DIR 0x00400000  /* SDP0 Data direction */
+ #define E1000_CTRL_SDP1_DIR 0x00800000  /* SDP1 Data direction */
+ #define E1000_CTRL_RST      0x04000000  /* Global reset */
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 7137e7f9c7f3..21ccadb720d1 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -8755,9 +8755,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 	struct e1000_hw *hw = &adapter->hw;
+ 	u32 ctrl, rctl, status;
+ 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
+-#ifdef CONFIG_PM
+-	int retval = 0;
+-#endif
++	bool wake;
  
- 	/* only magic packet is supported */
--	if (wol->wolopts && (wol->wolopts != WAKE_MAGIC)
--			  | (wol->wolopts != WAKE_FILTER))
-+	if (wol->wolopts & ~WAKE_MAGIC)
- 		return -EOPNOTSUPP;
+ 	rtnl_lock();
+ 	netif_device_detach(netdev);
+@@ -8770,14 +8768,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 	igb_clear_interrupt_scheme(adapter);
+ 	rtnl_unlock();
  
- 	/* is this a new value? */
+-#ifdef CONFIG_PM
+-	if (!runtime) {
+-		retval = pci_save_state(pdev);
+-		if (retval)
+-			return retval;
+-	}
+-#endif
+-
+ 	status = rd32(E1000_STATUS);
+ 	if (status & E1000_STATUS_LU)
+ 		wufc &= ~E1000_WUFC_LNKC;
+@@ -8794,10 +8784,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 		}
+ 
+ 		ctrl = rd32(E1000_CTRL);
+-		/* advertise wake from D3Cold */
+-		#define E1000_CTRL_ADVD3WUC 0x00100000
+-		/* phy power management enable */
+-		#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000
+ 		ctrl |= E1000_CTRL_ADVD3WUC;
+ 		wr32(E1000_CTRL, ctrl);
+ 
+@@ -8811,12 +8797,15 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 		wr32(E1000_WUFC, 0);
+ 	}
+ 
+-	*enable_wake = wufc || adapter->en_mng_pt;
+-	if (!*enable_wake)
++	wake = wufc || adapter->en_mng_pt;
++	if (!wake)
+ 		igb_power_down_link(adapter);
+ 	else
+ 		igb_power_up_link(adapter);
+ 
++	if (enable_wake)
++		*enable_wake = wake;
++
+ 	/* Release control of h/w to f/w.  If f/w is AMT enabled, this
+ 	 * would have already happened in close and is redundant.
+ 	 */
+@@ -8859,22 +8848,7 @@ static void igb_deliver_wake_packet(struct net_device *netdev)
+ 
+ static int __maybe_unused igb_suspend(struct device *dev)
+ {
+-	int retval;
+-	bool wake;
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-
+-	retval = __igb_shutdown(pdev, &wake, 0);
+-	if (retval)
+-		return retval;
+-
+-	if (wake) {
+-		pci_prepare_to_sleep(pdev);
+-	} else {
+-		pci_wake_from_d3(pdev, false);
+-		pci_set_power_state(pdev, PCI_D3hot);
+-	}
+-
+-	return 0;
++	return __igb_shutdown(to_pci_dev(dev), NULL, 0);
+ }
+ 
+ static int __maybe_unused igb_resume(struct device *dev)
+@@ -8945,22 +8919,7 @@ static int __maybe_unused igb_runtime_idle(struct device *dev)
+ 
+ static int __maybe_unused igb_runtime_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	int retval;
+-	bool wake;
+-
+-	retval = __igb_shutdown(pdev, &wake, 1);
+-	if (retval)
+-		return retval;
+-
+-	if (wake) {
+-		pci_prepare_to_sleep(pdev);
+-	} else {
+-		pci_wake_from_d3(pdev, false);
+-		pci_set_power_state(pdev, PCI_D3hot);
+-	}
+-
+-	return 0;
++	return __igb_shutdown(to_pci_dev(dev), NULL, 1);
+ }
+ 
+ static int __maybe_unused igb_runtime_resume(struct device *dev)
 -- 
 2.19.1
 
