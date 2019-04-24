@@ -2,143 +2,236 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433EEC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886C4C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067B821773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="PD/RlD2l";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="ZEnYug7t"
+	by mail.kernel.org (Postfix) with ESMTP id 563D121773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbfDXNBS (ORCPT
+        id S1730375AbfDXNCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:01:18 -0400
-Received: from mail133-30.atl131.mandrillapp.com ([198.2.133.30]:32732 "EHLO
-        mail133-30.atl131.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728842AbfDXNBR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:01:17 -0400
-X-Greylist: delayed 1802 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Apr 2019 09:01:16 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=meBFEY5ggbjVcToDIenTK6mDefScwokuA5qfAcGfUUY=;
- b=PD/RlD2ljQ/xV95Ckx0J8gMLpRYg4Hh8h2rJ1lVgEpyM6pWSA1dIGiDHMaBvFkhhY/AqwQrrMtYp
-   IWHR5DzjPBukq22JifMU2VMrkEVzWJzjtwrPJZMkN41hMUFBo1LUlaDWBZ3Nl9KbPz1+vgCWEyy/
-   gZc2RmYwbKXlsMmKre8=
-Received: from pmta02.mandrill.prod.atl01.rsglab.com (127.0.0.1) by mail133-30.atl131.mandrillapp.com id ho1f1o1sar8q for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:31:14 +0000 (envelope-from <bounce-md_31050260.5cc05712.v1-86baa58cb2be4fbcb1652ad452d7ce99@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1556109074; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=meBFEY5ggbjVcToDIenTK6mDefScwokuA5qfAcGfUUY=; 
- b=ZEnYug7tD8j6bE4lkDHlw4/mfENzgqhNcvU21JG/WfHn7rMBIBE23USgPMw+ynvREm9IrA
- Nmlh3jrwrCPi/j6zde+uKzO2WV3m2BFTNn8tC5IXrOfhzms8ae4OPCAZZNgUlQy8mx3LSbEW
- 8Ri1oSG4S0HxVr+/4BZCQFU0z7gYQ=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [RESEND4, PATCH 1/2] fuse: retrieve: cap requested size to negotiated max_write
-Received: from [87.98.221.171] by mandrillapp.com id 86baa58cb2be4fbcb1652ad452d7ce99; Wed, 24 Apr 2019 12:31:14 +0000
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Jakob Unterwurzacher <jakobunt@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Wed, 24 Apr 2019 09:02:15 -0400
+Received: from mga11.intel.com ([192.55.52.93]:41910 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726322AbfDXNCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:02:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 06:02:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,389,1549958400"; 
+   d="scan'208";a="136979691"
+Received: from nzhao1-mobl.ccr.corp.intel.com ([10.249.168.79])
+  by orsmga008.jf.intel.com with ESMTP; 24 Apr 2019 06:02:07 -0700
+Message-ID: <1556110926.2390.13.camel@intel.com>
+Subject: Re: [PATCH 1/7] thermal/drivers/core: Remove the module Kconfig's
+ option
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, Guan Xuetao <gxt@pku.edu.cn>,
         Andrew Morton <akpm@linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        fuse-devel <fuse-devel@lists.sourceforge.net>,
-        stable <stable@vger.kernel.org>
-Message-Id: <20190424123107.GA32024@deco.navytux.spb.ru>
-References: <cover.1553680185.git.kirr@nexedi.com> <12f7d0d98555ee0d174d04bb47644f65c07f035a.1553680185.git.kirr@nexedi.com> <CAJfpegv0NvcsD9gh3aN+ngzsLqbNWUc73ZPN1qHox_14eN9Pqg@mail.gmail.com> <20190424115620.GA2723@deco.navytux.spb.ru> <CAJfpegsiWuykUsfg=sO8sKo5h86U65q10=e=wYKXTQEHW8DFkw@mail.gmail.com>
-In-Reply-To: <CAJfpegsiWuykUsfg=sO8sKo5h86U65q10=e=wYKXTQEHW8DFkw@mail.gmail.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.86baa58cb2be4fbcb1652ad452d7ce99
-X-Mandrill-User: md_31050260
-Date:   Wed, 24 Apr 2019 12:31:14 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Mack <daniel@zonque.org>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
+Date:   Wed, 24 Apr 2019 21:02:06 +0800
+In-Reply-To: <20190423155208.GC16014@localhost.localdomain>
+References: <20190402161256.11044-1-daniel.lezcano@linaro.org>
+         <20190423155208.GC16014@localhost.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.18.5.2-0ubuntu3.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 02:17:27PM +0200, Miklos Szeredi wrote:
-> On Wed, Apr 24, 2019 at 1:56 PM Kirill Smelkov <kirr@nexedi.com> wrote:
+On 二, 2019-04-23 at 08:52 -0700, Eduardo Valentin wrote:
+> Hello,
 > 
-> > I assume you are meaning this:
-> >
-> >         --- a/fs/fuse/dev.c
-> >         +++ b/fs/fuse/dev.c
-> >         @@ -1745,15 +1745,15 @@ static int fuse_retrieve(struct fuse_co=
-nn *fc, struct inode *inode,
-> >                 unsigned int offset;
-> >                 size_t total_len =3D 0;
-> >                 unsigned int num_pages;
-> >
-> >                 offset =3D outarg->offset & ~PAGE_MASK;
-> >                 file_size =3D i_size_read(inode);
-> >
-> >         -       num =3D outarg->size;
-> >         +       num =3D min(outarg->size, fc->max_write);
-> >                 if (outarg->offset > file_size)
-> >                         num =3D 0;
-> >                 else if (outarg->offset + num > file_size)
-> >                         num =3D file_size - outarg->offset;            =
-   <-- THIS
-> >
-> >                 num_pages =3D (num + offset + PAGE_SIZE - 1) >> PAGE_SH=
-IFT;
-> >                 num_pages =3D min(num_pages, fc->max_pages);
-> >
-> > and then in this case (offset + num > file_size) num overwrite
-> >
-> >         num =3D file_size - offset
-> >
-> > can make num only smaller, right? And then the patch is not wrong becau=
-se there
-> > is no other num overwriting in this function except when num is being f=
-urther
-> > decremented in loop that prepares pages to retrieve.
+> On Tue, Apr 02, 2019 at 06:12:44PM +0200, Daniel Lezcano wrote:
+> > 
+> > The module support for the thermal subsystem makes little sense:
+> >  - some subsystems relying on it are not modules, thus forcing the
+> >    framework to be compiled in
+> >  - it is compiled in for almost every configs, the remaining ones
+> >    are a few platforms where I don't see why we can not switch the
+> > thermal
+> >    to 'y'. The drivers can stay in tristate.
+> >  - platforms need the thermal to be ready as soon as possible at
+> > boot time
+> >    in order to mitigate
+> > 
+> > Usually the subsystems framework are compiled-in and the plugs are
+> > as module.
+> > 
+> > Remove the module option. The removal of the module related dead
+> > code will
+> > come after this patch gets in or is acked.
 > 
-> You're right, of course.
-
-Thanks. Does it mean that the patch is ok? Do I need to rework
-something?
-
-
-> > > Also the patch is whitespace damaged.
-> >
-> > I've tried to do the following in my mutt on "RESEND4, PATCH 1/2"
-> > message:
-> >
-> >         |(cd ~/src/linux/linux && git am -)
-> >
-> > and the patch applied successfully. So could you please clarify what
-> > "whitespace damaged" means?
+> I remember some buzilla entry around this some time back.
 > 
-> Hmm, apparently this (and only this) message is "quoted-printable"
-> encoded.  git-am seems to handle it fine, but my script doesn't.
-> Anyway, I'll do it manually.
+> Rui, do you remember why you made this to be module?
+> 
+> I dont have strong opinion here, but I would like to see
+> a better description why we are going this direction rather
+> than "most people dont use it as module". Was there any particular
+> specific technical motivation?
+> 
+I checked the change log, it seems that we make CONFIG_THERMAL from
+bool to tristate long time ago.
 
-I see. Probably it is not "quoted-printable" as
+commit 63c4ec905d63834a97ec7dbbf0a2ec89ef5872be
+Author:     Zhang Rui <rui.zhang@intel.com>
+AuthorDate: Mon Apr 21 16:07:13 2008 +0800
+Commit:     Len Brown <len.brown@intel.com>
+CommitDate: Tue Apr 29 02:44:00 2008 -0400
 
-=09Content-Type: text/plain; charset=3Dutf-8
-=09Content-Transfer-Encoding: 8bit
+    thermal: add the support for building the generic thermal as a
+module
+    
+    Build the generic thermal driver as module "thermal_sys".
+    
+    Make ACPI thermal, video, processor and fan SELECT the generic
+    thermal driver, as these drivers rely on it to build the sysfs I/F.
+    
+    Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+    Acked-by: Jean Delvare <khali@linux-fr.org>
+    Signed-off-by: Len Brown <len.brown@intel.com>
 
-suggests and it is maybe due to UTF-8 characters (I used "=C2=B7" several
-times in patch description). Anyway if it helps you can pull the patch
-from here
+But the things described in the changelog does not seem to be a solid
+reason why we need thermal to be a module.
 
-=09https://lab.nexedi.com/kirr/linux.git=09y/fuse-retrieve-cap-max_write
-=09
-and then cherry-pick it (git cherry-pick fd482f96537a) to where needed.
+Anyway, let's try bool instead of tristate and see if everything still
+works well.
 
-Thanks again for feedback,
-
-Kirill
-
+thanks,
+rui
+> 
+> > 
+> > 
+> > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Acked-by: Guenter Roeck <groeck@chromium.org>
+> > For mini2440:
+> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  arch/arm/configs/mini2440_defconfig        | 2 +-
+> >  arch/arm/configs/pxa_defconfig             | 2 +-
+> >  arch/mips/configs/ip22_defconfig           | 2 +-
+> >  arch/mips/configs/ip27_defconfig           | 2 +-
+> >  arch/unicore32/configs/unicore32_defconfig | 2 +-
+> >  drivers/thermal/Kconfig                    | 4 ++--
+> >  6 files changed, 7 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/arch/arm/configs/mini2440_defconfig
+> > b/arch/arm/configs/mini2440_defconfig
+> > index d95a8059d30b..0cf1c120c4bb 100644
+> > --- a/arch/arm/configs/mini2440_defconfig
+> > +++ b/arch/arm/configs/mini2440_defconfig
+> > @@ -152,7 +152,7 @@ CONFIG_SPI_S3C24XX=y
+> >  CONFIG_SPI_SPIDEV=y
+> >  CONFIG_GPIO_SYSFS=y
+> >  CONFIG_SENSORS_LM75=y
+> > -CONFIG_THERMAL=m
+> > +CONFIG_THERMAL=y
+> >  CONFIG_WATCHDOG=y
+> >  CONFIG_S3C2410_WATCHDOG=y
+> >  CONFIG_FB=y
+> > diff --git a/arch/arm/configs/pxa_defconfig
+> > b/arch/arm/configs/pxa_defconfig
+> > index d4654755b09c..d4f9dda3a52f 100644
+> > --- a/arch/arm/configs/pxa_defconfig
+> > +++ b/arch/arm/configs/pxa_defconfig
+> > @@ -387,7 +387,7 @@ CONFIG_SENSORS_LM75=m
+> >  CONFIG_SENSORS_LM90=m
+> >  CONFIG_SENSORS_LM95245=m
+> >  CONFIG_SENSORS_NTC_THERMISTOR=m
+> > -CONFIG_THERMAL=m
+> > +CONFIG_THERMAL=y
+> >  CONFIG_WATCHDOG=y
+> >  CONFIG_XILINX_WATCHDOG=m
+> >  CONFIG_SA1100_WATCHDOG=m
+> > diff --git a/arch/mips/configs/ip22_defconfig
+> > b/arch/mips/configs/ip22_defconfig
+> > index ff40fbc2f439..21a1168ae301 100644
+> > --- a/arch/mips/configs/ip22_defconfig
+> > +++ b/arch/mips/configs/ip22_defconfig
+> > @@ -228,7 +228,7 @@ CONFIG_SERIAL_IP22_ZILOG=m
+> >  # CONFIG_HW_RANDOM is not set
+> >  CONFIG_RAW_DRIVER=m
+> >  # CONFIG_HWMON is not set
+> > -CONFIG_THERMAL=m
+> > +CONFIG_THERMAL=y
+> >  CONFIG_WATCHDOG=y
+> >  CONFIG_INDYDOG=m
+> >  # CONFIG_VGA_CONSOLE is not set
+> > diff --git a/arch/mips/configs/ip27_defconfig
+> > b/arch/mips/configs/ip27_defconfig
+> > index 81c47e18131b..54db5dedf776 100644
+> > --- a/arch/mips/configs/ip27_defconfig
+> > +++ b/arch/mips/configs/ip27_defconfig
+> > @@ -271,7 +271,7 @@ CONFIG_I2C_PARPORT_LIGHT=m
+> >  CONFIG_I2C_TAOS_EVM=m
+> >  CONFIG_I2C_STUB=m
+> >  # CONFIG_HWMON is not set
+> > -CONFIG_THERMAL=m
+> > +CONFIG_THERMAL=y
+> >  CONFIG_MFD_PCF50633=m
+> >  CONFIG_PCF50633_ADC=m
+> >  CONFIG_PCF50633_GPIO=m
+> > diff --git a/arch/unicore32/configs/unicore32_defconfig
+> > b/arch/unicore32/configs/unicore32_defconfig
+> > index aebd01fc28e5..360cc9abcdb0 100644
+> > --- a/arch/unicore32/configs/unicore32_defconfig
+> > +++ b/arch/unicore32/configs/unicore32_defconfig
+> > @@ -119,7 +119,7 @@ CONFIG_I2C_PUV3=y
+> >  #	Hardware Monitoring support
+> >  #CONFIG_SENSORS_LM75=m
+> >  #	Generic Thermal sysfs driver
+> > -#CONFIG_THERMAL=m
+> > +#CONFIG_THERMAL=y
+> >  #CONFIG_THERMAL_HWMON=y
+> >  
+> >  #	Multimedia support
+> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> > index 653aa27a25a4..ccf5b9408d7a 100644
+> > --- a/drivers/thermal/Kconfig
+> > +++ b/drivers/thermal/Kconfig
+> > @@ -3,7 +3,7 @@
+> >  #
+> >  
+> >  menuconfig THERMAL
+> > -	tristate "Generic Thermal sysfs driver"
+> > +	bool "Generic Thermal sysfs driver"
+> >  	help
+> >  	  Generic Thermal Sysfs driver offers a generic mechanism
+> > for
+> >  	  thermal management. Usually it's made up of one or more
+> > thermal
+> > @@ -11,7 +11,7 @@ menuconfig THERMAL
+> >  	  Each thermal zone contains its own temperature, trip
+> > points,
+> >  	  cooling devices.
+> >  	  All platforms with ACPI thermal support can use this
+> > driver.
+> > -	  If you want this support, you should say Y or M here.
+> > +	  If you want this support, you should say Y here.
+> >  
+> >  if THERMAL
+> >  
