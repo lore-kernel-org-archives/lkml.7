@@ -2,160 +2,94 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B404C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D0DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19B4220656
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556090825;
-	bh=KaDBoJJjYnObOploCwYXMgY0kxZJHH/0nJJXTWbCmsc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dZH9TyOWAPWGxtHbPzl+R1nAPkFfcJRk/5GNXkSzZ/reCWfewI/iwtTMk+eQtNxs1
-	 3YDSFIRBnc1PG6+djFmp3Dt6vVG0hgMfozVB71xHFTxOV/j8cpjb1YSBZgSdjS5PlK
-	 RcWrtPbvMKPVTUG4usW2LegJqxModRw1rSX7PPow=
+	by mail.kernel.org (Postfix) with ESMTP id 9618F218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbfDXH1E (ORCPT
+        id S1730177AbfDXH1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:27:04 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39876 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbfDXH1D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:27:03 -0400
-Received: by mail-ot1-f66.google.com with SMTP id o39so2148100ota.6;
-        Wed, 24 Apr 2019 00:27:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uLNO+ALEpjn7XZDs/HjjZU+KRBu1qko3HM25uVzxfDc=;
-        b=JeU2jpjdH39HRV65RHPbmDfp+dSthy++iJVk9q+eBh/E9V2cLNQoCtQzWeZAxdWbYI
-         5aJD3fvbdBaSrjKu2ptCCBXDsgnfrZS7sGrFGgXKofM3Z5qNnKUQepiv7fPGnaoIddKK
-         hoBsPS3AfEXkQDCCa8lo+R1kmHPMcQC80odliONjzpFHGH3GubRwTW3rb6Aiqpkoac4k
-         HaTP8N5FNqYM1pv7idT6hw9hMrf9MWBaLYaoplzXKgjomf7ZLcmxzNRnAqbSnublWgjw
-         Rnox7H7aoWflwARusVRTva0WA3qsj7KbhgHeVtn/e9Y6XExi4iTSTef4Q1iH38Xpsa3q
-         FDSA==
-X-Gm-Message-State: APjAAAWHnwDB5VaBYQVU5aURJmoW8d1/AVMwoX2CwuMCN0YmYdv/NQZ+
-        hLAjtrAGU1lod4LldLVJzkwh1IRmvTBewVEOFVwmqQ==
-X-Google-Smtp-Source: APXvYqxyJrPNyV1aF82bL58Ait5kA70e7vPVXRilnf06niz6tAVSDHy39L3jZG3x8lr63UeZyYjasO/vFmrE+ISSHf4=
-X-Received: by 2002:a9d:7a50:: with SMTP id z16mr17331301otm.363.1556090822516;
- Wed, 24 Apr 2019 00:27:02 -0700 (PDT)
+        Wed, 24 Apr 2019 03:27:45 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58600 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727054AbfDXH1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 03:27:44 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0045E9AB8D0764E22B91;
+        Wed, 24 Apr 2019 15:27:39 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.20) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Apr 2019
+ 15:27:33 +0800
+To:     <pablo@netfilter.org>, <kadlec@blackhole.kfki.hu>, <fw@strlen.de>,
+        <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <netfilter-devel@vger.kernel.org>,
+        <coreteam@netfilter.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Mingfangsen <mingfangsen@huawei.com>
+From:   linmiaohe <linmiaohe@huawei.com>
+Subject: [PATCH] net: netfilter: Fix ipv6 rp_filter dropping vrf packets by
+ mistake
+Message-ID: <094b7376-f796-71b6-7a81-28866b0f882b@huawei.com>
+Date:   Wed, 24 Apr 2019 15:27:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1eb27e3bbcbb2c67e6eadc0893c9b41e5d76894b.1553057341.git.viresh.kumar@linaro.org>
- <20190321114535.GM6058@hirez.programming.kicks-ass.net> <20190322061957.hzhnlbmnkpuqviiv@vireshk-i7>
- <20190424064753.lwfsdeodncaai5oz@vireshk-i7>
-In-Reply-To: <20190424064753.lwfsdeodncaai5oz@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 24 Apr 2019 09:26:50 +0200
-Message-ID: <CAJZ5v0jGofnUFKaM5-pRsZAiiQFumGGij8TE=SyX8DT8CUatQg@mail.gmail.com>
-Subject: Re: [PATCH V3] cpufreq: Call transition notifier only once for each policy
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        sparclinux@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.20]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 8:48 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 22-03-19, 11:49, Viresh Kumar wrote:
-> > On 21-03-19, 12:45, Peter Zijlstra wrote:
-> > > On Wed, Mar 20, 2019 at 10:22:23AM +0530, Viresh Kumar wrote:
->
-> > > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > > index 65e4559eef2f..1ac8c710cccc 100644
-> > > > --- a/arch/x86/kvm/x86.c
-> > > > +++ b/arch/x86/kvm/x86.c
-> > > > @@ -6649,10 +6649,8 @@ static void kvm_hyperv_tsc_notifier(void)
-> > > >  }
-> > > >  #endif
-> > > >
-> > > > -static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
-> > > > -                              void *data)
-> > > > +static void __kvmclock_cpufreq_notifier(struct cpufreq_freqs *freq, int cpu)
-> > > >  {
-> > > > - struct cpufreq_freqs *freq = data;
-> > > >   struct kvm *kvm;
-> > > >   struct kvm_vcpu *vcpu;
-> > > >   int i, send_ipi = 0;
-> > > > @@ -6696,17 +6694,12 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
-> > > >    *
-> > > >    */
-> > > >
-> > > > - if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
-> > > > -         return 0;
-> > > > - if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
-> > > > -         return 0;
-> > > > -
-> > > > - smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
-> > > > + smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
-> > > >
-> > > >   spin_lock(&kvm_lock);
-> > > >   list_for_each_entry(kvm, &vm_list, vm_list) {
-> > > >           kvm_for_each_vcpu(i, vcpu, kvm) {
-> > > > -                 if (vcpu->cpu != freq->cpu)
-> > > > +                 if (vcpu->cpu != cpu)
-> > > >                           continue;
-> > > >                   kvm_make_request(KVM_REQ_CLOCK_UPDATE, vcpu);
-> > > >                   if (vcpu->cpu != smp_processor_id())
-> > > > @@ -6728,8 +6721,24 @@ static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long va
-> > > >            * guest context is entered kvmclock will be updated,
-> > > >            * so the guest will not see stale values.
-> > > >            */
-> > > > -         smp_call_function_single(freq->cpu, tsc_khz_changed, freq, 1);
-> > > > +         smp_call_function_single(cpu, tsc_khz_changed, freq, 1);
-> > > >   }
-> > > > +}
-> > > > +
-> > > > +static int kvmclock_cpufreq_notifier(struct notifier_block *nb, unsigned long val,
-> > > > +                              void *data)
-> > > > +{
-> > > > + struct cpufreq_freqs *freq = data;
-> > > > + int cpu;
-> > > > +
-> > > > + if (val == CPUFREQ_PRECHANGE && freq->old > freq->new)
-> > > > +         return 0;
-> > > > + if (val == CPUFREQ_POSTCHANGE && freq->old < freq->new)
-> > > > +         return 0;
-> > > > +
-> > > > + for_each_cpu(cpu, freq->policy->cpus)
-> > > > +         __kvmclock_cpufreq_notifier(freq, cpu);
-> > > > +
-> > > >   return 0;
-> > > >  }
-> > > >
-> > >
-> > > Then why to we pretend otherwise here?
-> >
-> > My intention was to not add any bug here because of lack of my
-> > knowledge of the architecture in question and so I tried to be safe.
-> >
-> > If you guys think the behavior should be same here as of the tsc, then
-> > we can add similar checks here.
->
-> I am rebasing this patch over Rafael's patch [1] and wondering if I
-> should change anything here.
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-I guess please repost when my patch makes it into linux-next.
+When firewall is enabled with rp_filter, vrf ipv6 packets
+will be dropped because in device is vrf but out device
+is an enslaved device. So rt->rt6i_idev->dev != dev and
+maybe return false in func rpfilter_lookup_reverse6.
 
-> [1] https://lore.kernel.org/lkml/38900622.ao2n2t5aPS@kreacher/
+Here is the out message when I ping the peer:
+ip vrf exec vrf1 ping 2013::2 -c 1
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+The drop info in /var/log/message:
+Apr 24 14:59:45 localhost kernel: [81316.158259] rpfilter_DROP: IN=vrf1
+OUT= MAC=52:54:00:9e:dd:c1:52:54:00:4f:81:38:86:dd
+SRC=2013:0000:0000:0000:0000:0000:0000:0002
+DST=2013:0000:0000:0000:0000:0000:0000:0001 LEN=104 TC=0 HOPLIMIT=64
+FLOWLBL=1032942 PROTO=ICMPv6 TYPE=129 CODE=0 ID=14943 SEQ=1
+
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ net/ipv6/netfilter/ip6t_rpfilter.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
+index c3c6b09acdc4..5cbc91f53736 100644
+--- a/net/ipv6/netfilter/ip6t_rpfilter.c
++++ b/net/ipv6/netfilter/ip6t_rpfilter.c
+@@ -73,6 +73,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+ 		goto out;
+ 	}
+
++	if (netif_is_l3_master(dev)) {
++		dev = __dev_get_by_index(dev_net(dev), IP6CB(skb)->iif);
++		if (!dev)
++			goto out;
++	}
++
+ 	if (rt->rt6i_idev->dev == dev || (flags & XT_RPFILTER_LOOSE))
+ 		ret = true;
+  out:
+-- 
+2.19.1
+
+
