@@ -2,159 +2,162 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92131C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C080C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63DEB20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C14120656
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJ948rqB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1VF/2wV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbfDXGts (ORCPT
+        id S1729981AbfDXGtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:49:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36135 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730041AbfDXGtq (ORCPT
+        Wed, 24 Apr 2019 02:49:22 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37669 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729962AbfDXGtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:49:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 85so8898654pgc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 23:49:45 -0700 (PDT)
+        Wed, 24 Apr 2019 02:49:18 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w23so8792337ply.4;
+        Tue, 23 Apr 2019 23:49:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GPwJ+Dv6Yye/GYCQu2DK/IFt2gkz+D0Qa9x7sKSg3nI=;
-        b=dJ948rqBPaZUvCFKrcFhohdvlVX+94B52yZpDc1e32ZAQF/qVhzuZZ4jPUd8xVAgai
-         8tuQb8/MbuZzo+qVuDRVQBNbmriA7n+3nYm42BEyxr+JhfubavBmV5YVS1w6zOd29Do/
-         B2e3QKb1dRAEUfk6fq0lkaY37McCPfFS9K7WivszZl37/A1ZPl3NbbONHppdWXIevzfQ
-         o0a72GLVsFV3QycR8O338TBhGnEauxITlydfPW9unppA6Mhn/e057kyBQZyrnXMypzcx
-         ipknOmaPzQJUzz1a6jzbkNsSgumZwYIY5im6HLJGwQDNilkSSaOwvvSaPCgaZKA5Ov4u
-         Dmhw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/jj7xWSCu2Jvjzo3iEjqtPAm50x1l724NJndLXKBO4U=;
+        b=e1VF/2wV2sS+0wFTgirKUMj8faG2UC7kXbI2dSsc8Wglit8rvKTgNVM1CejJNT05pa
+         gEt5iEqYoLCiPSEO7xDAJpc5UWBCtWBFqXyD+gIQb2DYAEPxl2dz48yRSE2lsTZfVgkJ
+         bD9BOtuIK117DWpx65qQQdW5n0cP1GRt/Zeqp9UMJqa6PuWSTzvTKGYhEQGjHUFeMkmx
+         56cengUfcBIGJOdkS68cChJGUcPhPEqD4F72Y/78T7TzNBYbI4Yk3VJSNEY1Nnpe/qsr
+         8RY3OWGiJSZy5qUf2KgHC6R48OnQ8bPXG0ZXc5ZzehE2Ek3BFFNcvXW0OodI/Gk3YZ/y
+         0Ftg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GPwJ+Dv6Yye/GYCQu2DK/IFt2gkz+D0Qa9x7sKSg3nI=;
-        b=qkLB4rAf2A+Cimo1s2Q26ka/fBAkwU6rkzmjK7wu6//DOwrAx9FdyPhJkIzNuSUnlK
-         aHIIon/4P3SdiIixyGDPXYGFkX7DNs41QpZeCI3VeiPVWxupVYC/netiVdAU3QYTXTz8
-         zCcDkW5joHqlYDfszgw3pxIkjYlwNILVsULbLF2ZB2ETTcW1MqKTTSBeJHm080etsDQL
-         ijHVssCQuXiVsMqEqbqH7A7PdJ9vvgFsQmn7y3aEeffN+WFK/DubE2gGYGvEg2n9JQGK
-         uCgG2COz/9hpNP4O1K5kMHwLwO3hdd9P1Ec6+kBQl41K0c4plls0LDegb6Ju60KFTcXO
-         DNUg==
-X-Gm-Message-State: APjAAAUGfNlaZDwhFAUIbY5W+Yp9MSjpQlt5dlKw432a7uS2iMzvtLzI
-        hcIZPNBYgoCLktZ3sp/OWScGtg==
-X-Google-Smtp-Source: APXvYqw+WSq9sgNEIwrX+TiZ8BQ9M/YjqXdpRJROPCJOsnNN9blig2LfSbou3/Jv+yLLJeNyFCzz2w==
-X-Received: by 2002:a62:4554:: with SMTP id s81mr32218642pfa.66.1556088585455;
-        Tue, 23 Apr 2019 23:49:45 -0700 (PDT)
-Received: from localhost ([122.166.139.136])
-        by smtp.gmail.com with ESMTPSA id b13sm24443639pfd.12.2019.04.23.23.49.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 23:49:44 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 12:19:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>, vireshk@kernel.org,
-        sboyd@kernel.org, nm@ti.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, rjw@rjwysocki.net, jcrouse@codeaurora.org,
-        vincent.guittot@linaro.org, bjorn.andersson@linaro.org,
-        amit.kucheria@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, evgreen@chromium.org,
-        sibis@codeaurora.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: opp: Introduce bandwidth-MBps
- bindings
-Message-ID: <20190424064942.v5g6jr5l3xy5z3xv@vireshk-i7>
-References: <20190423132823.7915-1-georgi.djakov@linaro.org>
- <20190423132823.7915-2-georgi.djakov@linaro.org>
- <e35223d0-80ac-5236-2b8d-7f46cd3a1581@codeaurora.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/jj7xWSCu2Jvjzo3iEjqtPAm50x1l724NJndLXKBO4U=;
+        b=Torv9jasNAa6F/PR7E0EmKQBL76Cm/KfNRxxr5SKbJ9jfDr9y02GNP2oIvPD9j1xrP
+         9VZqGQ2wn8mtq1pZB7ZPGUiq7C/svKlYw2SMg+HtQ5LrX2y1zhn+RG5WJ984K0+NbEqw
+         irghqnOaJdI+3ViDeEDYmNjqcXbXdCOJ2OI1E2tPNH9nWboBtCAMJReOezriXNdjAWNw
+         ek5ZsUP4Pb6Ut04SSZmq+k3Cil3afR81cUZgXByjMfM0DnTQMmXLdJPUIhTchjpH6Kkx
+         SAMGNlFO4x7hJsGxEGyKyTWg2lPaJsfwccwiWYbRI072aQMZMIcyHiz8lHr/Lw0w4Z5v
+         aG1Q==
+X-Gm-Message-State: APjAAAXETLZuYDF6ZpttvADjLZ85M8coWq534QXsJdjURjRbxjK+q3Nh
+        bCHJ4MubIBEGunz9g9E5rC9g9rdkqrY=
+X-Google-Smtp-Source: APXvYqz44S4ts5ZAZvjah058KnwXd4auOAzS8js0AdTIjoZ0LclKHCDe4lnyFfqEVuBPHsAzjqyStw==
+X-Received: by 2002:a17:902:a582:: with SMTP id az2mr31258983plb.315.1556088557553;
+        Tue, 23 Apr 2019 23:49:17 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id e13sm26332457pgb.37.2019.04.23.23.49.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 23 Apr 2019 23:49:16 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 07/12] thermal: qoriq: Convert driver to use devm_ioremap()
+Date:   Tue, 23 Apr 2019 23:48:25 -0700
+Message-Id: <20190424064830.18179-8-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190424064830.18179-1-andrew.smirnov@gmail.com>
+References: <20190424064830.18179-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e35223d0-80ac-5236-2b8d-7f46cd3a1581@codeaurora.org>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-04-19, 12:16, Rajendra Nayak wrote:
-> 
-> 
-> On 4/23/2019 6:58 PM, Georgi Djakov wrote:
-> > In addition to frequency and voltage, some devices may have bandwidth
-> > requirements for their interconnect throughput - for example a CPU
-> > or GPU may also need to increase or decrease their bandwidth to DDR
-> > memory based on the current operating performance point.
-> > 
-> > Extend the OPP tables with additional property to describe the bandwidth
-> > needs of a device. The average and peak bandwidth values depend on the
-> > hardware and its properties.
-> > 
-> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> > ---
-> >   Documentation/devicetree/bindings/opp/opp.txt | 38 +++++++++++++++++++
-> >   .../devicetree/bindings/property-units.txt    |  4 ++
-> >   2 files changed, 42 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> > index 76b6c79604a5..830f0206aea7 100644
-> > --- a/Documentation/devicetree/bindings/opp/opp.txt
-> > +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> > @@ -132,6 +132,9 @@ Optional properties:
-> >   - opp-level: A value representing the performance level of the device,
-> >     expressed as a 32-bit integer.
-> > +- bandwidth-MBps: The interconnect bandwidth is specified with an array containing
-> > +  the two integer values for average and peak bandwidth in megabytes per second.
-> > +
-> >   - clock-latency-ns: Specifies the maximum possible transition latency (in
-> >     nanoseconds) for switching to this OPP from any other OPP.
-> > @@ -546,3 +549,38 @@ Example 6: opp-microvolt-<name>, opp-microamp-<name>:
-> >   		};
-> >   	};
-> >   };
-> > +
-> > +Example 7: bandwidth-MBps:
-> > +Average and peak bandwidth values for the interconnects between CPU and DDR
-> > +memory and also between CPU and L3 are defined per each OPP. Bandwidth of both
-> > +interconnects is scaled together with CPU frequency.
-> > +
-> > +/ {
-> > +	cpus {
-> > +		CPU0: cpu@0 {
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			...
-> > +			operating-points-v2 = <&cpu_opp_table>;
-> > +			/* path between CPU and DDR memory and CPU and L3 */
-> > +			interconnects = <&noc MASTER_CPU &noc SLAVE_DDR>,
-> > +					<&noc MASTER_CPU &noc SLAVE_L3>;
-> > +		};
-> > +	};
-> > +
-> > +	cpu_opp_table: cpu_opp_table {
-> > +		compatible = "operating-points-v2";
-> > +		opp-shared;
-> > +
-> > +		opp-200000000 {
-> > +			opp-hz = /bits/ 64 <200000000>;
-> > +			/* CPU<->DDR bandwidth: 457 MB/s average, 1525 MB/s peak */
-> > +			 * CPU<->L3 bandwidth: 914 MB/s average, 3050 MB/s peak */
-> > +			bandwidth-MBps = <457 1525>, <914 3050>;
-> 
-> Should this also have a bandwidth-MBps-name perhaps? Without that I guess we assume
-> the order in which we specify the interconnects is the same as the order here?
+Convert driver to use devm_ioremap() to simplify memory deallocation
+and error handling code. No functional change intended.
 
-Right, so I suggested not to add the -name property and to rely on the
-order. Though I missed that he hasn't mentioned the order thing here.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Tested-by: Lucas Stach <l.stach@pengutronix.de>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+Cc: linux-imx@nxp.com
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/thermal/qoriq_thermal.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-@Georgi: Please mention above in the binding that the order is same as
-interconnects binding.
-
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index 0b6937bbc7d0..64cad6d4c1d7 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -175,6 +175,7 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+ 	struct qoriq_tmu_data *data;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
++	struct resource *io;
+ 
+ 	data = devm_kzalloc(dev, sizeof(struct qoriq_tmu_data),
+ 			    GFP_KERNEL);
+@@ -183,7 +184,13 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+ 
+ 	data->little_endian = of_property_read_bool(np, "little-endian");
+ 
+-	data->regs = of_iomap(np, 0);
++	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!io) {
++		dev_err(dev, "Failed to get memory region\n");
++		return -ENODEV;
++	}
++
++	data->regs = devm_ioremap(dev, io->start, resource_size(io));
+ 	if (!data->regs) {
+ 		dev_err(dev, "Failed to get memory region\n");
+ 		return -ENODEV;
+@@ -193,23 +200,17 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+ 
+ 	ret = qoriq_tmu_calibration(dev, data);	/* TMU calibration */
+ 	if (ret < 0)
+-		goto err_tmu;
++		return ret;
+ 
+ 	ret = qoriq_tmu_register_tmu_zone(dev, data);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to register sensors\n");
+-		ret = -ENODEV;
+-		goto err_tmu;
++		return -ENODEV;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, data);
+ 
+ 	return 0;
+-
+-err_tmu:
+-	iounmap(data->regs);
+-
+-	return ret;
+ }
+ 
+ static int qoriq_tmu_remove(struct platform_device *pdev)
+@@ -219,7 +220,6 @@ static int qoriq_tmu_remove(struct platform_device *pdev)
+ 	/* Disable monitoring */
+ 	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
+ 
+-	iounmap(data->regs);
+ 	platform_set_drvdata(pdev, NULL);
+ 
+ 	return 0;
 -- 
-viresh
+2.20.1
+
