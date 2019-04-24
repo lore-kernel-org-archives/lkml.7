@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56885C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61907C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26FDB20811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F09F2077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126962;
-	bh=2HcbwD+O5K15CsZF8Ax3I9HHz8yC7NZM8pGTcJlsKKg=;
+	s=default; t=1556126968;
+	bh=ZQzptpyj1E//+xO0yoURopM15v6ItdW6MgfVlmygSSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ca3zSUga06dEVhxndwVL3+MFzBn6W7+5988kHGjDV478Kvzgvu8LmwnZS2mlbUXlk
-	 ukziG2BOL3HGc452uHfL1Z/bM+dHujYJiWnLzIUDh7kbf8MiHMm1KRRltiwe5mNrnO
-	 UO+maBGRiRy+ITwyGN1NL2qs5q85K2ORzLIf8aaQ=
+	b=RcFH78Edaift8hCWQ7KQUz5iqVrz0oyGfMCNU4rSNZQ9kfgYgdjyGpW8CRn+h3TZZ
+	 FvyBk6iefNvL76XAxXd8hfEjnV0R4YCcNNUaYZvr+mYbfgvXhRzb5nUA4WMj2RpqBB
+	 Hh7ssSjtS8OpibWgt2nL28o5Y8ztlmlHO59amBFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390777AbfDXR3Q (ORCPT
+        id S2390804AbfDXR31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55498 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:29:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390764AbfDXR3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:29:12 -0400
+        id S2390267AbfDXR3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:29:18 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3306F206BA;
-        Wed, 24 Apr 2019 17:29:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5F20206BA;
+        Wed, 24 Apr 2019 17:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126951;
-        bh=2HcbwD+O5K15CsZF8Ax3I9HHz8yC7NZM8pGTcJlsKKg=;
+        s=default; t=1556126957;
+        bh=ZQzptpyj1E//+xO0yoURopM15v6ItdW6MgfVlmygSSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Te3dlEm6AI2SlYa79bQ+SeYbBmBNkA9pNh4G8edZCXwlgcCvuDKis9X0Ww28Lsndn
-         jqIW0Yhb/FRyRJuw6APUU684QjwDr76dROQIoQEM6YM+hRzDe5YbUF4+v7Yr4JjNsD
-         VsPPBR3VXt0cOorkCFeywaHK8Va0Z9a7q5UI1UIE=
+        b=j9SKq0kbf2OB9w5SB9FHpIVD3+RW2nKnciBI4YHts1DYn0RacVEP0IQqRQla10FYN
+         fHxhmuTa5C9gbBvHmpzWT4yDJd8VGTnhbi09AHOIjpp/blCDRauunDmOw01tYVat++
+         20FVOWnfsyWIJfOQhpo2hrLrytcnaiaay3fUmQEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Lyakas <alex@zadarastorage.com>,
+        stable@vger.kernel.org,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         Christoph Hellwig <hch@lst.de>, Alex Lyakas <alex@zadara.com>
-Subject: [PATCH 4.14 69/70] xfs: hold xfs_buf locked between shortform->leaf conversion and the addition of an attribute
-Date:   Wed, 24 Apr 2019 19:10:29 +0200
-Message-Id: <20190424170919.181138726@linuxfoundation.org>
+Subject: [PATCH 4.14 68/70] xfs: add the ability to join a held buffer to a defer_ops
+Date:   Wed, 24 Apr 2019 19:10:28 +0200
+Message-Id: <20190424170919.112617827@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -62,128 +62,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-commit 6e643cd094de3bd0f97edcc1db0089afa24d909f upstream.
+commit b7b2846fe26f2c0d7f317c874a13d3ecf22670ff upstream.
 
-The new attribute leaf buffer is not held locked across the transaction
-roll between the shortform->leaf modification and the addition of the
-new entry.  As a result, the attribute buffer modification being made is
-not atomic from an operational perspective.  Hence the AIL push can grab
-it in the transient state of "just created" after the initial
-transaction is rolled, because the buffer has been released.  This leads
-to xfs_attr3_leaf_verify() asserting that hdr.count is zero, treating
-this as in-memory corruption, and shutting down the filesystem.
+In certain cases, defer_ops callers will lock a buffer and want to hold
+the lock across transaction rolls.  Similar to ijoined inodes, we want
+to dirty & join the buffer with each transaction roll in defer_finish so
+that afterwards the caller still owns the buffer lock and we haven't
+inadvertently pinned the log.
 
-Darrick ported the original patch to 4.15 and reworked it use the
-xfs_defer_bjoin helper and hold/join the buffer correctly across the
-second transaction roll.
-
-Signed-off-by: Alex Lyakas <alex@zadarastorage.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Alex Lyakas <alex@zadara.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/xfs/libxfs/xfs_attr.c      |   20 +++++++++++++++-----
- fs/xfs/libxfs/xfs_attr_leaf.c |    9 ++++++---
- fs/xfs/libxfs/xfs_attr_leaf.h |    3 ++-
- 3 files changed, 23 insertions(+), 9 deletions(-)
+ fs/xfs/libxfs/xfs_defer.c |   39 ++++++++++++++++++++++++++++++++++++---
+ fs/xfs/libxfs/xfs_defer.h |    5 ++++-
+ 2 files changed, 40 insertions(+), 4 deletions(-)
 
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -212,6 +212,7 @@ xfs_attr_set(
- 	int			flags)
- {
- 	struct xfs_mount	*mp = dp->i_mount;
-+	struct xfs_buf		*leaf_bp = NULL;
- 	struct xfs_da_args	args;
- 	struct xfs_defer_ops	dfops;
- 	struct xfs_trans_res	tres;
-@@ -327,9 +328,16 @@ xfs_attr_set(
- 		 * GROT: another possible req'mt for a double-split btree op.
- 		 */
- 		xfs_defer_init(args.dfops, args.firstblock);
--		error = xfs_attr_shortform_to_leaf(&args);
-+		error = xfs_attr_shortform_to_leaf(&args, &leaf_bp);
- 		if (error)
- 			goto out_defer_cancel;
-+		/*
-+		 * Prevent the leaf buffer from being unlocked so that a
-+		 * concurrent AIL push cannot grab the half-baked leaf
-+		 * buffer and run into problems with the write verifier.
-+		 */
-+		xfs_trans_bhold(args.trans, leaf_bp);
-+		xfs_defer_bjoin(args.dfops, leaf_bp);
- 		xfs_defer_ijoin(args.dfops, dp);
- 		error = xfs_defer_finish(&args.trans, args.dfops);
- 		if (error)
-@@ -337,13 +345,14 @@ xfs_attr_set(
+--- a/fs/xfs/libxfs/xfs_defer.c
++++ b/fs/xfs/libxfs/xfs_defer.c
+@@ -249,6 +249,10 @@ xfs_defer_trans_roll(
+ 	for (i = 0; i < XFS_DEFER_OPS_NR_INODES && dop->dop_inodes[i]; i++)
+ 		xfs_trans_log_inode(*tp, dop->dop_inodes[i], XFS_ILOG_CORE);
  
- 		/*
- 		 * Commit the leaf transformation.  We'll need another (linked)
--		 * transaction to add the new attribute to the leaf.
-+		 * transaction to add the new attribute to the leaf, which
-+		 * means that we have to hold & join the leaf buffer here too.
- 		 */
--
- 		error = xfs_trans_roll_inode(&args.trans, dp);
- 		if (error)
- 			goto out;
--
-+		xfs_trans_bjoin(args.trans, leaf_bp);
-+		leaf_bp = NULL;
- 	}
++	/* Hold the (previously bjoin'd) buffer locked across the roll. */
++	for (i = 0; i < XFS_DEFER_OPS_NR_BUFS && dop->dop_bufs[i]; i++)
++		xfs_trans_dirty_buf(*tp, dop->dop_bufs[i]);
++
+ 	trace_xfs_defer_trans_roll((*tp)->t_mountp, dop);
  
- 	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK))
-@@ -374,8 +383,9 @@ xfs_attr_set(
+ 	/* Roll the transaction. */
+@@ -264,6 +268,12 @@ xfs_defer_trans_roll(
+ 	for (i = 0; i < XFS_DEFER_OPS_NR_INODES && dop->dop_inodes[i]; i++)
+ 		xfs_trans_ijoin(*tp, dop->dop_inodes[i], 0);
  
- out_defer_cancel:
- 	xfs_defer_cancel(&dfops);
--	args.trans = NULL;
- out:
-+	if (leaf_bp)
-+		xfs_trans_brelse(args.trans, leaf_bp);
- 	if (args.trans)
- 		xfs_trans_cancel(args.trans);
- 	xfs_iunlock(dp, XFS_ILOCK_EXCL);
---- a/fs/xfs/libxfs/xfs_attr_leaf.c
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -739,10 +739,13 @@ xfs_attr_shortform_getvalue(xfs_da_args_
++	/* Rejoin the buffers and dirty them so the log moves forward. */
++	for (i = 0; i < XFS_DEFER_OPS_NR_BUFS && dop->dop_bufs[i]; i++) {
++		xfs_trans_bjoin(*tp, dop->dop_bufs[i]);
++		xfs_trans_bhold(*tp, dop->dop_bufs[i]);
++	}
++
+ 	return error;
  }
  
- /*
-- * Convert from using the shortform to the leaf.
-+ * Convert from using the shortform to the leaf.  On success, return the
-+ * buffer so that we can keep it locked until we're totally done with it.
-  */
- int
--xfs_attr_shortform_to_leaf(xfs_da_args_t *args)
-+xfs_attr_shortform_to_leaf(
-+	struct xfs_da_args	*args,
-+	struct xfs_buf		**leaf_bp)
- {
- 	xfs_inode_t *dp;
- 	xfs_attr_shortform_t *sf;
-@@ -821,7 +824,7 @@ xfs_attr_shortform_to_leaf(xfs_da_args_t
- 		sfe = XFS_ATTR_SF_NEXTENTRY(sfe);
+@@ -295,6 +305,31 @@ xfs_defer_ijoin(
+ 		}
  	}
- 	error = 0;
--
-+	*leaf_bp = bp;
- out:
- 	kmem_free(tmpbuffer);
- 	return error;
---- a/fs/xfs/libxfs/xfs_attr_leaf.h
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.h
-@@ -48,7 +48,8 @@ void	xfs_attr_shortform_create(struct xf
- void	xfs_attr_shortform_add(struct xfs_da_args *args, int forkoff);
- int	xfs_attr_shortform_lookup(struct xfs_da_args *args);
- int	xfs_attr_shortform_getvalue(struct xfs_da_args *args);
--int	xfs_attr_shortform_to_leaf(struct xfs_da_args *args);
-+int	xfs_attr_shortform_to_leaf(struct xfs_da_args *args,
-+			struct xfs_buf **leaf_bp);
- int	xfs_attr_shortform_remove(struct xfs_da_args *args);
- int	xfs_attr_shortform_allfit(struct xfs_buf *bp, struct xfs_inode *dp);
- int	xfs_attr_shortform_bytesfit(struct xfs_inode *dp, int bytes);
+ 
++	ASSERT(0);
++	return -EFSCORRUPTED;
++}
++
++/*
++ * Add this buffer to the deferred op.  Each joined buffer is relogged
++ * each time we roll the transaction.
++ */
++int
++xfs_defer_bjoin(
++	struct xfs_defer_ops		*dop,
++	struct xfs_buf			*bp)
++{
++	int				i;
++
++	for (i = 0; i < XFS_DEFER_OPS_NR_BUFS; i++) {
++		if (dop->dop_bufs[i] == bp)
++			return 0;
++		else if (dop->dop_bufs[i] == NULL) {
++			dop->dop_bufs[i] = bp;
++			return 0;
++		}
++	}
++
++	ASSERT(0);
+ 	return -EFSCORRUPTED;
+ }
+ 
+@@ -493,9 +528,7 @@ xfs_defer_init(
+ 	struct xfs_defer_ops		*dop,
+ 	xfs_fsblock_t			*fbp)
+ {
+-	dop->dop_committed = false;
+-	dop->dop_low = false;
+-	memset(&dop->dop_inodes, 0, sizeof(dop->dop_inodes));
++	memset(dop, 0, sizeof(struct xfs_defer_ops));
+ 	*fbp = NULLFSBLOCK;
+ 	INIT_LIST_HEAD(&dop->dop_intake);
+ 	INIT_LIST_HEAD(&dop->dop_pending);
+--- a/fs/xfs/libxfs/xfs_defer.h
++++ b/fs/xfs/libxfs/xfs_defer.h
+@@ -59,6 +59,7 @@ enum xfs_defer_ops_type {
+ };
+ 
+ #define XFS_DEFER_OPS_NR_INODES	2	/* join up to two inodes */
++#define XFS_DEFER_OPS_NR_BUFS	2	/* join up to two buffers */
+ 
+ struct xfs_defer_ops {
+ 	bool			dop_committed;	/* did any trans commit? */
+@@ -66,8 +67,9 @@ struct xfs_defer_ops {
+ 	struct list_head	dop_intake;	/* unlogged pending work */
+ 	struct list_head	dop_pending;	/* logged pending work */
+ 
+-	/* relog these inodes with each roll */
++	/* relog these with each roll */
+ 	struct xfs_inode	*dop_inodes[XFS_DEFER_OPS_NR_INODES];
++	struct xfs_buf		*dop_bufs[XFS_DEFER_OPS_NR_BUFS];
+ };
+ 
+ void xfs_defer_add(struct xfs_defer_ops *dop, enum xfs_defer_ops_type type,
+@@ -77,6 +79,7 @@ void xfs_defer_cancel(struct xfs_defer_o
+ void xfs_defer_init(struct xfs_defer_ops *dop, xfs_fsblock_t *fbp);
+ bool xfs_defer_has_unfinished_work(struct xfs_defer_ops *dop);
+ int xfs_defer_ijoin(struct xfs_defer_ops *dop, struct xfs_inode *ip);
++int xfs_defer_bjoin(struct xfs_defer_ops *dop, struct xfs_buf *bp);
+ 
+ /* Description of a deferred type. */
+ struct xfs_defer_op_type {
 
 
