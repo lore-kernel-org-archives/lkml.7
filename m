@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E40C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9208FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB2021773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BF721773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127938;
-	bh=7vjUuDlUcCQCwlemiD2s1qDlkmQL9XYoMN1NACwxtQM=;
+	s=default; t=1556127942;
+	bh=CRdJ3pd3VirtgKj+DY5akZXhB2PtyGjOh3T0rDq6gP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ngA/AFdkT9uJEPp98ipUNT9wLIViKGtdL1/sqdZCnk7cQPqE8gv5FptQ4n6EjLnUq
-	 qJ2BmQ3vn2cDkvoOwmU4FPv7Rc583bAJURILcQ9lNyl9N376uykOD+BpJSdWjgBM6v
-	 A1ET85lmQPzNAlKWYW+/GPobOnwSwkcVAXiwPTV4=
+	b=OQ4/0IEMeMDdXw4/Zs0lasHtrMhVqG1mU7JBqncuLUdYvXTs/QSYYpES05uNvJ44u
+	 X7u4sxdc2Op2kifp3dEwmx/5zPO06xOd53cbDgLch6kbf5guL9khy/lf6YoaGyw7Cx
+	 2tMEAplgBl0dpBlblsaX085TCNMKQOKIWeRitEfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391457AbfDXRdQ (ORCPT
+        id S2392078AbfDXRpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:33:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60088 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390734AbfDXRdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:33:11 -0400
+        id S2390294AbfDXRdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:33:17 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AC7B2077C;
-        Wed, 24 Apr 2019 17:33:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A69B2077C;
+        Wed, 24 Apr 2019 17:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127190;
-        bh=7vjUuDlUcCQCwlemiD2s1qDlkmQL9XYoMN1NACwxtQM=;
+        s=default; t=1556127195;
+        bh=CRdJ3pd3VirtgKj+DY5akZXhB2PtyGjOh3T0rDq6gP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MAN6/5jXqqKF8Wa3aYQmJy6F41ypQel1C3CEvA+/EXoFHVMmLKzaVvt4VhD62pDlC
-         gKiZje2sKMxKjoR6p/xUI2zAoaMxkzDSPwprdOfFayfytBwcK6JjqFNMUk9Ze+T3YS
-         XOFyNCHW+k7hKXeDFI4WNcBhOUHOB4MlOVLYpqs0=
+        b=C5JZptDhunGbdMkZaNY4qBmVsbzK4YUuG37itFgw+ZBoaUzHJL9ZQ+DnfRVy87l84
+         YGKg2j+YmS8+x33R+wfKmig3vRvqfHzGJjNtKlamPhQcukD14RzgKhFsHDzXDBMFf3
+         x/pyA9LZDZJ2Zr/NbVm4mA6n4IP9BGGeFRZLmCPY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.19 51/96] staging: comedi: ni_usb6501: Fix possible double-free of ->usb_rx_buf
-Date:   Wed, 24 Apr 2019 19:09:56 +0200
-Message-Id: <20190424170923.262311468@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 53/96] ALSA: core: Fix card races between register and disconnect
+Date:   Wed, 24 Apr 2019 19:09:58 +0200
+Message-Id: <20190424170923.375236980@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -58,44 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit af4b54a2e5ba18259ff9aac445bf546dd60d037e upstream.
+commit 2a3f7221acddfe1caa9ff09b3a8158c39b2fdeac upstream.
 
-`ni6501_alloc_usb_buffers()` is called from `ni6501_auto_attach()` to
-allocate RX and TX buffers for USB transfers.  It allocates
-`devpriv->usb_rx_buf` followed by `devpriv->usb_tx_buf`.  If the
-allocation of `devpriv->usb_tx_buf` fails, it frees
-`devpriv->usb_rx_buf`, leaving the pointer set dangling, and returns an
-error.  Later, `ni6501_detach()` will be called from the core comedi
-module code to clean up.  `ni6501_detach()` also frees both
-`devpriv->usb_rx_buf` and `devpriv->usb_tx_buf`, but
-`devpriv->usb_rx_buf` may have already beed freed, leading to a
-double-free error.  Fix it bu removing the call to
-`kfree(devpriv->usb_rx_buf)` from `ni6501_alloc_usb_buffers()`, relying
-on `ni6501_detach()` to free the memory.
+There is a small race window in the card disconnection code that
+allows the registration of another card with the very same card id.
+This leads to a warning in procfs creation as caught by syzkaller.
 
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: stable <stable@vger.kernel.org>
+The problem is that we delete snd_cards and snd_cards_lock entries at
+the very beginning of the disconnection procedure.  This makes the
+slot available to be assigned for another card object while the
+disconnection procedure is being processed.  Then it becomes possible
+to issue a procfs registration with the existing file name although we
+check the conflict beforehand.
+
+The fix is simply to move the snd_cards and snd_cards_lock clearances
+at the end of the disconnection procedure.  The references to these
+entries are merely either from the global proc files like
+/proc/asound/cards or from the card registration / disconnection, so
+it should be fine to shift at the very end.
+
+Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/ni_usb6501.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ sound/core/init.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/drivers/staging/comedi/drivers/ni_usb6501.c
-+++ b/drivers/staging/comedi/drivers/ni_usb6501.c
-@@ -463,10 +463,8 @@ static int ni6501_alloc_usb_buffers(stru
+--- a/sound/core/init.c
++++ b/sound/core/init.c
+@@ -407,14 +407,7 @@ int snd_card_disconnect(struct snd_card
+ 	card->shutdown = 1;
+ 	spin_unlock(&card->files_lock);
  
- 	size = usb_endpoint_maxp(devpriv->ep_tx);
- 	devpriv->usb_tx_buf = kzalloc(size, GFP_KERNEL);
--	if (!devpriv->usb_tx_buf) {
--		kfree(devpriv->usb_rx_buf);
-+	if (!devpriv->usb_tx_buf)
- 		return -ENOMEM;
--	}
+-	/* phase 1: disable fops (user space) operations for ALSA API */
+-	mutex_lock(&snd_card_mutex);
+-	snd_cards[card->number] = NULL;
+-	clear_bit(card->number, snd_cards_lock);
+-	mutex_unlock(&snd_card_mutex);
+-	
+-	/* phase 2: replace file->f_op with special dummy operations */
+-	
++	/* replace file->f_op with special dummy operations */
+ 	spin_lock(&card->files_lock);
+ 	list_for_each_entry(mfile, &card->files_list, list) {
+ 		/* it's critical part, use endless loop */
+@@ -430,7 +423,7 @@ int snd_card_disconnect(struct snd_card
+ 	}
+ 	spin_unlock(&card->files_lock);	
  
- 	return 0;
- }
+-	/* phase 3: notify all connected devices about disconnection */
++	/* notify all connected devices about disconnection */
+ 	/* at this point, they cannot respond to any calls except release() */
+ 
+ #if IS_ENABLED(CONFIG_SND_MIXER_OSS)
+@@ -446,6 +439,13 @@ int snd_card_disconnect(struct snd_card
+ 		device_del(&card->card_dev);
+ 		card->registered = false;
+ 	}
++
++	/* disable fops (user space) operations for ALSA API */
++	mutex_lock(&snd_card_mutex);
++	snd_cards[card->number] = NULL;
++	clear_bit(card->number, snd_cards_lock);
++	mutex_unlock(&snd_card_mutex);
++
+ #ifdef CONFIG_PM
+ 	wake_up(&card->power_sleep);
+ #endif
 
 
