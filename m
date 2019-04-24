@@ -2,183 +2,100 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B55C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DEDC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C30218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264C72077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbfDXNz5 (ORCPT
+        id S1729791AbfDXN5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:55:57 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:57932 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730830AbfDXNzY (ORCPT
+        Wed, 24 Apr 2019 09:57:23 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:56334 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbfDXN5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:55:24 -0400
-Received: from ramsan ([84.194.111.163])
-        by michel.telenet-ops.be with bizsmtp
-        id 4DvM2000w3XaVaC06DvMJA; Wed, 24 Apr 2019 15:55:22 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hJIMr-00088A-P2; Wed, 24 Apr 2019 15:55:21 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hJIMr-0006Yh-Nf; Wed, 24 Apr 2019 15:55:21 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Magnus Damm <damm+renesas@opensource.se>
-Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        iommu@lists.linux-foundation.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 5/6] iommu/ipmmu-vmsa: Extract hardware context initialization
-Date:   Wed, 24 Apr 2019 15:55:17 +0200
-Message-Id: <20190424135518.25150-6-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190424135518.25150-1-geert+renesas@glider.be>
-References: <20190424135518.25150-1-geert+renesas@glider.be>
+        Wed, 24 Apr 2019 09:57:22 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id E51CF80432; Wed, 24 Apr 2019 15:57:11 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 15:57:20 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com,
+        linux@roeck-us.net
+Subject: Re: [PATCH v4 20/26] leds: aat1290: Use generic support for
+ composing LED names
+Message-ID: <20190424135719.GC14360@amd>
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+ <20190417205439.17685-21-jacek.anaszewski@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="1SQmhf2mF2YjsYvc"
+Content-Disposition: inline
+In-Reply-To: <20190417205439.17685-21-jacek.anaszewski@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ipmmu_domain_init_context() takes care of (1) initializing the software
-domain, and (2) initializing the hardware context for the domain.
 
-Extract the code to initialize the hardware context into a new subroutine
-ipmmu_domain_setup_context(), to prepare for later reuse.
+--1SQmhf2mF2YjsYvc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
----
-v3:
-  - Add Reviewed-by,
+Hi!
 
-v2:
-  - s/ipmmu_context_init/ipmmu_domain_setup_context/.
----
- drivers/iommu/ipmmu-vmsa.c | 91 ++++++++++++++++++++------------------
- 1 file changed, 48 insertions(+), 43 deletions(-)
+> Switch to using generic LED support for composing LED class
+> device name.
+>=20
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 
-diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-index 3fa57627b1e35562..56e84bcc9532e1ce 100644
---- a/drivers/iommu/ipmmu-vmsa.c
-+++ b/drivers/iommu/ipmmu-vmsa.c
-@@ -404,52 +404,10 @@ static void ipmmu_domain_free_context(struct ipmmu_vmsa_device *mmu,
- 	spin_unlock_irqrestore(&mmu->lock, flags);
- }
- 
--static int ipmmu_domain_init_context(struct ipmmu_vmsa_domain *domain)
-+static void ipmmu_domain_setup_context(struct ipmmu_vmsa_domain *domain)
- {
- 	u64 ttbr;
- 	u32 tmp;
--	int ret;
--
--	/*
--	 * Allocate the page table operations.
--	 *
--	 * VMSA states in section B3.6.3 "Control of Secure or Non-secure memory
--	 * access, Long-descriptor format" that the NStable bit being set in a
--	 * table descriptor will result in the NStable and NS bits of all child
--	 * entries being ignored and considered as being set. The IPMMU seems
--	 * not to comply with this, as it generates a secure access page fault
--	 * if any of the NStable and NS bits isn't set when running in
--	 * non-secure mode.
--	 */
--	domain->cfg.quirks = IO_PGTABLE_QUIRK_ARM_NS;
--	domain->cfg.pgsize_bitmap = SZ_1G | SZ_2M | SZ_4K;
--	domain->cfg.ias = 32;
--	domain->cfg.oas = 40;
--	domain->cfg.tlb = &ipmmu_gather_ops;
--	domain->io_domain.geometry.aperture_end = DMA_BIT_MASK(32);
--	domain->io_domain.geometry.force_aperture = true;
--	/*
--	 * TODO: Add support for coherent walk through CCI with DVM and remove
--	 * cache handling. For now, delegate it to the io-pgtable code.
--	 */
--	domain->cfg.iommu_dev = domain->mmu->root->dev;
--
--	/*
--	 * Find an unused context.
--	 */
--	ret = ipmmu_domain_allocate_context(domain->mmu->root, domain);
--	if (ret < 0)
--		return ret;
--
--	domain->context_id = ret;
--
--	domain->iop = alloc_io_pgtable_ops(ARM_32_LPAE_S1, &domain->cfg,
--					   domain);
--	if (!domain->iop) {
--		ipmmu_domain_free_context(domain->mmu->root,
--					  domain->context_id);
--		return -EINVAL;
--	}
- 
- 	/* TTBR0 */
- 	ttbr = domain->cfg.arm_lpae_s1_cfg.ttbr[0];
-@@ -495,7 +453,54 @@ static int ipmmu_domain_init_context(struct ipmmu_vmsa_domain *domain)
- 	 */
- 	ipmmu_ctx_write_all(domain, IMCTR,
- 			    IMCTR_INTEN | IMCTR_FLUSH | IMCTR_MMUEN);
-+}
-+
-+static int ipmmu_domain_init_context(struct ipmmu_vmsa_domain *domain)
-+{
-+	int ret;
-+
-+	/*
-+	 * Allocate the page table operations.
-+	 *
-+	 * VMSA states in section B3.6.3 "Control of Secure or Non-secure memory
-+	 * access, Long-descriptor format" that the NStable bit being set in a
-+	 * table descriptor will result in the NStable and NS bits of all child
-+	 * entries being ignored and considered as being set. The IPMMU seems
-+	 * not to comply with this, as it generates a secure access page fault
-+	 * if any of the NStable and NS bits isn't set when running in
-+	 * non-secure mode.
-+	 */
-+	domain->cfg.quirks = IO_PGTABLE_QUIRK_ARM_NS;
-+	domain->cfg.pgsize_bitmap = SZ_1G | SZ_2M | SZ_4K;
-+	domain->cfg.ias = 32;
-+	domain->cfg.oas = 40;
-+	domain->cfg.tlb = &ipmmu_gather_ops;
-+	domain->io_domain.geometry.aperture_end = DMA_BIT_MASK(32);
-+	domain->io_domain.geometry.force_aperture = true;
-+	/*
-+	 * TODO: Add support for coherent walk through CCI with DVM and remove
-+	 * cache handling. For now, delegate it to the io-pgtable code.
-+	 */
-+	domain->cfg.iommu_dev = domain->mmu->root->dev;
-+
-+	/*
-+	 * Find an unused context.
-+	 */
-+	ret = ipmmu_domain_allocate_context(domain->mmu->root, domain);
-+	if (ret < 0)
-+		return ret;
-+
-+	domain->context_id = ret;
-+
-+	domain->iop = alloc_io_pgtable_ops(ARM_32_LPAE_S1, &domain->cfg,
-+					   domain);
-+	if (!domain->iop) {
-+		ipmmu_domain_free_context(domain->mmu->root,
-+					  domain->context_id);
-+		return -EINVAL;
-+	}
- 
-+	ipmmu_domain_setup_context(domain);
- 	return 0;
- }
- 
--- 
-2.17.1
+> @@ -257,9 +257,6 @@ static int aat1290_led_parse_dt(struct aat1290_led *l=
+ed,
+>  		return -EINVAL;
+>  	}
+> =20
+> -	led_cdev->name =3D of_get_property(child_node, "label", NULL) ? :
+> -						child_node->name;
+> -
+>  	ret =3D of_property_read_u32(child_node, "led-max-microamp",
+>  				&cfg->max_mm_current);
+>  	/*
+> @@ -469,6 +466,7 @@ static int aat1290_led_probe(struct platform_device *=
+pdev)
+>  	struct aat1290_led *led;
+>  	struct led_classdev *led_cdev;
+>  	struct led_classdev_flash *fled_cdev;
+> +	struct led_init_data init_data =3D {};
 
+You can do directly =3D { .devicename =3D ...; }, at least for the name.
+
+Anyway, that's a detail.
+
+8, 10, 12, 14, 16, 18, 20: Acked-by: Pavel Machek <pavel@ucw.cz>
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--1SQmhf2mF2YjsYvc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzAaz8ACgkQMOfwapXb+vKriQCcDwk6UeJr46HCVI+yRgKifC9c
+4SQAnjIJmctKjqadfYavYRdvrDx2Llk9
+=jlY7
+-----END PGP SIGNATURE-----
+
+--1SQmhf2mF2YjsYvc--
