@@ -2,124 +2,102 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6927EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E1AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 388852175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881BA2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="nId/+JzE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJgLC5S4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbfDXTbi (ORCPT
+        id S1731626AbfDXTcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:31:38 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45461 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfDXTbh (ORCPT
+        Wed, 24 Apr 2019 15:32:52 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33127 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730980AbfDXTcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:31:37 -0400
-Received: by mail-pl1-f195.google.com with SMTP id o5so5451290pls.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:31:37 -0700 (PDT)
+        Wed, 24 Apr 2019 15:32:51 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z6so157729wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:32:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8JlwrEln20s9/aOucPUHK+u3UqPbgF8b6t88h882nM4=;
-        b=nId/+JzE4bt4YU2hNBj8kFhmTRHl3qvAr81qDvsdscuXJ28cdOi7jSM8qp8FeEGl7M
-         lu16fmXyjh2CbngAfP4d3Q7z8F9ygsVqGqpjG7+zppTJUWILFNwsjakzo1If+Rdw+bIA
-         ts1JjQqaroNuam7nwtWJRT5ocQJGbe+8baiysmZSLh46avcQgcnlFVOgYu9jqbs7o/7n
-         O9Rcv7AqJvZTX48mr9U/sZ2L+vL2E99bAq82zZeHcMJwaXwNFERnrG3adLVU18v4Hn4h
-         W5au4JQb3J0vEiarKg5UnJVkiOnRm/QVhBXPyPMwXaRLHQOgYLK3PGL4/baDf+gtwlcC
-         GsmA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BM0o59w29LzTOtXYJkT+N2fBAMozkK2J2RQoo1XWQdg=;
+        b=zJgLC5S4jeK7p8VX3r8/2P49VBXIrNhjElVmFgl48faRKOwa9N9Eu7F3KERsx7eE8X
+         TL3cxg90a8Cm8nnsL8aOHDieoRWVIVrP7W0tyvfi7LCZCnq4qDc7bQM+7XA2mVzMMRSJ
+         UJPpY3uecsoGrg97QIg77CV7JqvGuUfxKik6a8vT68LmS0UU1WPscDSgO6DyEzN/C4ct
+         Fsg2SFB+DsyHOzO0ap5NMCRL1VxBMJgV2heu1L7LHkQzyLPYPan9wMFgz1MRTpnHyiOd
+         ILgTOURNZiNPMRSs5+QKRh3Sf/2oSJtEbpH57AI5G1JRPiBmJIG0iXPGRkHpO3QGwMYW
+         6PXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8JlwrEln20s9/aOucPUHK+u3UqPbgF8b6t88h882nM4=;
-        b=hStTec7w6PD7AvkqIcsgKUd9PEniqGAecKkoDfCVEX0lVkAxMliXMVTAoZlrMNA4mi
-         OShkZHFq0Eg/NWtOvr9eA0ZTyD3kzRqE3kJgTYXF0aObXREvCnaUpwkwe2WE2EzAFVXS
-         4xncFJWGikVEoGgQitRCkNP4I1oMNeyBTkASI2RNN0Jz5xBgOOrrtu08isv97tK2CskJ
-         P0xGGqoTRpBzQbeDEVg5IRWiEamQ2uMstk+EOyKam32VNHS5gOepPbZCj1zhWPS9DvXd
-         2ys5YeKMdvatQiFkpk3YoXDGxiCuBbngKhpJs3iKV9jtLAXWbMSmqWCZvHwpgtiLVQ6F
-         wmFA==
-X-Gm-Message-State: APjAAAXH6FrQ7ZJozvYEVrKGmuO5hSVhXB3DxnY/gGb1BA0wKTu9PsSN
-        sDN3nI6GFvwJlqg6kb5G4O6VRw==
-X-Google-Smtp-Source: APXvYqyhMplWmiupzeKAhnd683ePbVnUq9bbVkfFpOcWopG8Hor86LspXRFTt8Ho9+6fNXPiC1zHHw==
-X-Received: by 2002:a17:902:b948:: with SMTP id h8mr34476270pls.39.1556134297060;
-        Wed, 24 Apr 2019 12:31:37 -0700 (PDT)
-Received: from ava-linux2.mtv.corp.google.com ([2620:0:1000:1601:6cc0:d41d:b970:fd7])
-        by smtp.googlemail.com with ESMTPSA id g2sm33331313pfd.134.2019.04.24.12.31.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 12:31:36 -0700 (PDT)
-From:   Todd Kjos <tkjos@android.com>
-X-Google-Original-From: Todd Kjos <tkjos@google.com>
-To:     tkjos@google.com, gregkh@linuxfoundation.org, arve@android.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        maco@google.com
-Cc:     joel@joelfernandes.org, kernel-team@android.com
-Subject: [PATCH] binder: check for overflow when alloc for security context
-Date:   Wed, 24 Apr 2019 12:31:18 -0700
-Message-Id: <20190424193118.207428-1-tkjos@google.com>
-X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BM0o59w29LzTOtXYJkT+N2fBAMozkK2J2RQoo1XWQdg=;
+        b=pUd0u9wa7EwZREwZQpcWP2QKVoTjX8xDXbR6UmSPXijgCdge8YuX0dxpgd298mBD6o
+         iHtaoa9PLoomPMV42Vq77DBmyWItFa0x0TLptLGwBLT7Q+VRItCIAx1duEuoTzuK2UqG
+         s7vSnmaRus+xNLvn0nGdkxdI7lqh1K1aIEBU8i3BZwTz7dM/YxkiNZz9QukJtwkJWXGC
+         Dhf2s1iwDbTorXm5G+OtTHgB4B38rCQHRBhp5ZSop6QbqfzU+nHVH9NEO+Vcgpfg6Rw7
+         TcJ970eAZ3lIagKXpcU8jPl1U2LZjFbtlVRtIknFfSb7U5glkiKatzd6XHR8tURc+4H8
+         JG2A==
+X-Gm-Message-State: APjAAAW3ujqbZns1k1taOUA/CjNTR4XTyn/JxG5VKlh7mJTsB3/s/5xr
+        7gHdjjeIpE3Du+2u9sUF0YdpSWoJfrRIKOgu7Gt5ng==
+X-Google-Smtp-Source: APXvYqx2mYf77kZByumpYyncTnogPY+3TP9zTFTzgDGqBf5npj96JwGDwpDksc237hOmqDfrRi1RjIIAa3AGm3a17f8=
+X-Received: by 2002:a7b:c115:: with SMTP id w21mr504911wmi.55.1556134369539;
+ Wed, 24 Apr 2019 12:32:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
+ <1556061656-1733-25-git-send-email-john.stultz@linaro.org> <20190424170910.GC21067@ravnborg.org>
+In-Reply-To: <20190424170910.GC21067@ravnborg.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 24 Apr 2019 12:32:38 -0700
+Message-ID: <CALAqxLWmrabPxnpN7T_9KCLNrpzj0dnzbNs8vLhz+GBGyRxp_Q@mail.gmail.com>
+Subject: Re: [PATCH 24/25] drm: kirin: Pass driver data to crtc init and plane init
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When allocating space in the target buffer for the security context,
-make sure the extra_buffers_size doesn't overflow. This can only
-happen if the given size is invalid, but an overflow can turn it
-into a valid size. Fail the transaction if an overflow is detected.
+On Wed, Apr 24, 2019 at 10:09 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> On Tue, Apr 23, 2019 at 04:20:55PM -0700, John Stultz wrote:
+> >  static int kirin_drm_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
+> > -                      struct drm_plane *plane)
+> > +                             struct drm_plane *plane,
+> > +                             const struct kirin_drm_data *driver_data)
+>
+> Indent looks wrong here.
+>
+..
+> >       ret = drm_universal_plane_init(dev, &kplane->base, 1,
+> > +                             driver_data->plane_funcs,
+> > +                             driver_data->channel_formats,
+> > +                             driver_data->channel_formats_cnt,
+> > +                             NULL, type, NULL);
+> Indent looks wrong here.
 
-Signed-off-by: Todd Kjos <tkjos@google.com>
----
- drivers/android/binder.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Thanks! I've now fixed those up.
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 4b9c7ca492e6d..6f0712f0767c5 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -3121,6 +3121,7 @@ static void binder_transaction(struct binder_proc *proc,
- 
- 	if (target_node && target_node->txn_security_ctx) {
- 		u32 secid;
-+		size_t added_size;
- 
- 		security_task_getsecid(proc->tsk, &secid);
- 		ret = security_secid_to_secctx(secid, &secctx, &secctx_sz);
-@@ -3130,7 +3131,15 @@ static void binder_transaction(struct binder_proc *proc,
- 			return_error_line = __LINE__;
- 			goto err_get_secctx_failed;
- 		}
--		extra_buffers_size += ALIGN(secctx_sz, sizeof(u64));
-+		added_size = ALIGN(secctx_sz, sizeof(u64));
-+		extra_buffers_size += added_size;
-+		if (extra_buffers_size < added_size) {
-+			/* integer overflow of extra_buffers_size */
-+			return_error = BR_FAILED_REPLY;
-+			return_error_param = EINVAL;
-+			return_error_line = __LINE__;
-+			goto err_bad_extra_size;
-+		}
- 	}
- 
- 	trace_binder_transaction(reply, t, target_node);
-@@ -3480,6 +3489,7 @@ static void binder_transaction(struct binder_proc *proc,
- 	t->buffer->transaction = NULL;
- 	binder_alloc_free_buf(&target_proc->alloc, t->buffer);
- err_binder_alloc_buf_failed:
-+err_bad_extra_size:
- 	if (secctx)
- 		security_release_secctx(secctx, secctx_sz);
- err_get_secctx_failed:
--- 
-2.21.0.593.g511ec345e18-goog
+> I missed where ade_driver_data came from.
+> This looks an extra patch to intoduce driver_data,
+> that maybe should be merged with an earlier version?
 
+I'm not sure I'm following you here. Can you clarify a bit more?
+
+thanks
+-john
