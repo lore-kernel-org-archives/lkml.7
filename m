@@ -2,252 +2,273 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4547FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA696C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B44D20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128834;
-	bh=Z6bdcJeXnq+wPjZeu4uo/RjgYuBS0+l4P85alcJCDs4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CVF+ZeHeiC2tZxzSfpy3Cugkdfki3gb0Ty3532HUIT4r4D5zonx5I4cHSrJgURzX9
-	 W5RRJXNd64EAITSEaiF1ROET2O0rwUjGNVZcHd9VYiH8fC1JeN7Nz2LuvHvste6I7N
-	 UbdTR40mOLTsitSmlJQG35jxqk/DBGVSY3IC3PFQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7BEBE20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:00:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGVjJDZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389637AbfDXRXE (ORCPT
+        id S2390572AbfDXSAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389616AbfDXRXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:23:01 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0395205ED;
-        Wed, 24 Apr 2019 17:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126579;
-        bh=Z6bdcJeXnq+wPjZeu4uo/RjgYuBS0+l4P85alcJCDs4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vwcKO4xUoFGrf9AucsX5ZM5rnq/QIGIoZaRxq1daAgpo0PtZIcnpR+7DD8aiax8zW
-         E/wgwT0xsDZbWa0srRVAa0HoDaPuA2HWM1NhWYVmAZEHhdFQ+GeRvaS4i5xEbqsqyZ
-         PAanDSLGoL+SOt/z1m9eLbCRNGDqIpUNqp5CUu/Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.4 158/168] crypto: x86/poly1305 - fix overflow during partial reduction
-Date:   Wed, 24 Apr 2019 19:10:02 +0200
-Message-Id: <20190424170932.473622866@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
-References: <20190424170923.452349382@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 14:00:48 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40859 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388988AbfDXRWu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:22:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d31so9702860pgl.7;
+        Wed, 24 Apr 2019 10:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eoZsO429e0b+dEVgO5JVsEp5EuD0o0GJNOTorofbhd0=;
+        b=IGVjJDZlidZsAbiJUsDRZQzrGzGEcQwGdZDVp5GgTF8izs4Vfi6ynWeO+Pdqcyi+/N
+         C7/9w3RS5D3LT9p5Bd3/Gms2bf7xmwBF95Tak2vcxsJgUeHVyljIAu5lhZInoKy20Tfi
+         tfv10j13D5Fl+eADMH/7ndD940/cTKSs4Btehx3aLQ61iMG7ja8ULyTgmz72zYj0la51
+         wiSuVuegknSR+8upONyWx+hfrWEK+XqlYEEpGDN1y5ZrbQiaLJhuG9d6NghjuVP4iO7J
+         uTuS6Zm2zpu1Ft9ivA/7L+6EMmHpGo/FiRodlzxadw31ea2yqgUnbbVEeFQemGI7dnYN
+         r28Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eoZsO429e0b+dEVgO5JVsEp5EuD0o0GJNOTorofbhd0=;
+        b=MnVbQ0s4xxbQbetAV9e9s4qQE/Bg8lmqx2g8ZA1vKOoC9HmsM9HCRRI6hiJilHPYTc
+         Mkk7ssLpRYLwjwZ8iGis6vwIIpytkK9e2BlNODNqBfHoqAksxML3Uhn9onpeeVub44Y6
+         ajU4hPs8EcaT1EHTDPerOgDDdw3pC7b8YEQ8QduBwcc0fulPqDTZzdLYfABEDBSA+yhS
+         GdZYLrJ4sI/8Yc/VFI8JYNJV2xBa70PCp6Wf7mr/9UOOmKz+xZ5cT/Voil6XImVnLveX
+         dHDD6Ss+xGOOUVO3BQXGVK2acZPklhe2UtIVpiRaGfLm9hxIStoFm8a/CLqDHe0KxA/R
+         tUSQ==
+X-Gm-Message-State: APjAAAUDmAJkJiO0JnWcQnXrb8crS1aflbB+reGa89CBrd9cq6Ih4jUW
+        FW9xE+wesj3XBBmvO7eRifU=
+X-Google-Smtp-Source: APXvYqxnpPk8YPTttYq6iD6geRJxmT/PnYrWdlm9nnsCYFTFBiRuuLfHN3ESOhDwzhPiAzWPNf7byQ==
+X-Received: by 2002:a65:4302:: with SMTP id j2mr31468636pgq.291.1556126569766;
+        Wed, 24 Apr 2019 10:22:49 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id w190sm2410231pfb.101.2019.04.24.10.22.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 10:22:49 -0700 (PDT)
+Date:   Thu, 25 Apr 2019 01:22:34 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 21/63] Documentation: ACPI: move cppc_sysfs.txt to
+ admin-guide/acpi and convert to reST
+Message-ID: <20190424172232.qtzogm6sweaa4gva@mail.google.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+ <20190423162932.21428-22-changbin.du@gmail.com>
+ <20190424114844.5de4cfa5@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424114844.5de4cfa5@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Wed, Apr 24, 2019 at 11:48:44AM -0300, Mauro Carvalho Chehab wrote:
+> Em Wed, 24 Apr 2019 00:28:50 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
+> 
+> > This converts the plain text documentation to reStructuredText format and
+> > add it to Sphinx TOC tree. No essential content change.
+> > 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  .../acpi/cppc_sysfs.rst}                      | 71 ++++++++++---------
+> >  Documentation/admin-guide/acpi/index.rst      |  1 +
+> >  2 files changed, 40 insertions(+), 32 deletions(-)
+> >  rename Documentation/{acpi/cppc_sysfs.txt => admin-guide/acpi/cppc_sysfs.rst} (51%)
+> > 
+> > diff --git a/Documentation/acpi/cppc_sysfs.txt b/Documentation/admin-guide/acpi/cppc_sysfs.rst
+> > similarity index 51%
+> > rename from Documentation/acpi/cppc_sysfs.txt
+> > rename to Documentation/admin-guide/acpi/cppc_sysfs.rst
+> > index f20fb445135d..a4b99afbe331 100644
+> > --- a/Documentation/acpi/cppc_sysfs.txt
+> > +++ b/Documentation/admin-guide/acpi/cppc_sysfs.rst
+> > @@ -1,5 +1,11 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> >  
+> > -	Collaborative Processor Performance Control (CPPC)
+> > +==================================================
+> > +Collaborative Processor Performance Control (CPPC)
+> > +==================================================
+> > +
+> > +CPPC
+> > +====
+> >  
+> >  CPPC defined in the ACPI spec describes a mechanism for the OS to manage the
+> >  performance of a logical processor on a contigious and abstract performance
+> > @@ -10,31 +16,28 @@ For more details on CPPC please refer to the ACPI specification at:
+> >  
+> >  http://uefi.org/specifications
+> >  
+> > -Some of the CPPC registers are exposed via sysfs under:
+> > -
+> > -/sys/devices/system/cpu/cpuX/acpi_cppc/
+> > -
+> 
+> 
+> > -for each cpu X
+> 
+> Hmm... removed by mistake?
+>
+I comfirmed that no content removed.
 
-commit 678cce4019d746da6c680c48ba9e6d417803e127 upstream.
+> > +Some of the CPPC registers are exposed via sysfs under::
+> >  
+> > ---------------------------------------------------------------------------------
+> > +  /sys/devices/system/cpu/cpuX/acpi_cppc/
+> 
+> Did you parse this with Sphinx? It doesn't sound a valid ReST construction
+> to my eyes, as:
+> 
+> 1) I've seen some versions of Sphinx to abort with severe errors when 
+>    there's no blank line after the horizontal bar markup;
+> 
+> 2) It will very likely ignore the "::" (I didn't test it myself), as you're
+>    not indenting the horizontal bar. End of indentation will mean the end
+>    of an (empty) literal block.
+> 
+> So, I would stick with:
+> 
+> 
+> 	Some of the CPPC registers are exposed via sysfs under:
+> 
+> 	  /sys/devices/system/cpu/cpuX/acpi_cppc/
+> 
+> 	---------------------------------------------------------------------------------
+> 
+> 	for each cpu X::
+> 
+> 
+> or:
+> 
+> 	Some of the CPPC registers are exposed via sysfs under:
+> 
+> 		/sys/devices/system/cpu/cpuX/acpi_cppc/
+> 
+> 	for each cpu X
+> 
+> 	--------------------------------------------------------------------------------
+> 
+> 	::
+> 
+> (with is closer to the original author's intent)
+> 
+> Same applies to the other similar changes on this document.
+>
+I didn't seen any warning here and the generated html is good. So I think it is
+ok.
 
-The x86_64 implementation of Poly1305 produces the wrong result on some
-inputs because poly1305_4block_avx2() incorrectly assumes that when
-partially reducing the accumulator, the bits carried from limb 'd4' to
-limb 'h0' fit in a 32-bit integer.  This is true for poly1305-generic
-which processes only one block at a time.  However, it's not true for
-the AVX2 implementation, which processes 4 blocks at a time and
-therefore can produce intermediate limbs about 4x larger.
+> >  
+> > -$ ls -lR  /sys/devices/system/cpu/cpu0/acpi_cppc/
+> > -/sys/devices/system/cpu/cpu0/acpi_cppc/:
+> > -total 0
+> > --r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
+> > --r--r--r-- 1 root root 65536 Mar  5 19:38 highest_perf
+> > --r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_freq
+> > --r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_nonlinear_perf
+> > --r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_perf
+> > --r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_freq
+> > --r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_perf
+> > --r--r--r-- 1 root root 65536 Mar  5 19:38 reference_perf
+> > --r--r--r-- 1 root root 65536 Mar  5 19:38 wraparound_time
+> > +for each cpu X::
+> >  
+> > ---------------------------------------------------------------------------------
+> > +  $ ls -lR  /sys/devices/system/cpu/cpu0/acpi_cppc/
+> > +  /sys/devices/system/cpu/cpu0/acpi_cppc/:
+> > +  total 0
+> > +  -r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
+> > +  -r--r--r-- 1 root root 65536 Mar  5 19:38 highest_perf
+> > +  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_freq
+> > +  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_nonlinear_perf
+> > +  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_perf
+> > +  -r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_freq
+> > +  -r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_perf
+> > +  -r--r--r-- 1 root root 65536 Mar  5 19:38 reference_perf
+> > +  -r--r--r-- 1 root root 65536 Mar  5 19:38 wraparound_time
+> >  
+> >  * highest_perf : Highest performance of this processor (abstract scale).
+> > -* nominal_perf : Highest sustained performance of this processor (abstract scale).
+> > +* nominal_perf : Highest sustained performance of this processor
+> > +  (abstract scale).
+> >  * lowest_nonlinear_perf : Lowest performance of this processor with nonlinear
+> >    power savings (abstract scale).
+> >  * lowest_perf : Lowest performance of this processor (abstract scale).
+> > @@ -48,22 +51,26 @@ total 0
+> >  * feedback_ctrs : Includes both Reference and delivered performance counter.
+> >    Reference counter ticks up proportional to processor's reference performance.
+> >    Delivered counter ticks up proportional to processor's delivered performance.
+> > -* wraparound_time: Minimum time for the feedback counters to wraparound (seconds).
+> > +* wraparound_time: Minimum time for the feedback counters to wraparound
+> > +  (seconds).
+> >  * reference_perf : Performance level at which reference performance counter
+> >    accumulates (abstract scale).
+> >  
+> > ---------------------------------------------------------------------------------
+> >  
+> > -		Computing Average Delivered Performance
+> > +Computing Average Delivered Performance
+> > +=======================================
+> > +
+> > +Below describes the steps to compute the average performance delivered by
+> > +taking two different snapshots of feedback counters at time T1 and T2.
+> > +
+> > +  T1: Read feedback_ctrs as fbc_t1
+> > +      Wait or run some workload
+> >  
+> > -Below describes the steps to compute the average performance delivered by taking
+> > -two different snapshots of feedback counters at time T1 and T2.
+> > +  T2: Read feedback_ctrs as fbc_t2
+> >  
+> > -T1: Read feedback_ctrs as fbc_t1
+> > -    Wait or run some workload
+> > -T2: Read feedback_ctrs as fbc_t2
+> > +::
+> >  
+> > -delivered_counter_delta = fbc_t2[del] - fbc_t1[del]
+> > -reference_counter_delta = fbc_t2[ref] - fbc_t1[ref]
+> > +  delivered_counter_delta = fbc_t2[del] - fbc_t1[del]
+> > +  reference_counter_delta = fbc_t2[ref] - fbc_t1[ref]
+> >  
+> > -delivered_perf = (refernce_perf x delivered_counter_delta) / reference_counter_delta
+> > +  delivered_perf = (refernce_perf x delivered_counter_delta) / reference_counter_delta
+> > diff --git a/Documentation/admin-guide/acpi/index.rst b/Documentation/admin-guide/acpi/index.rst
+> > index d68e9914c5ff..9049a7b9f065 100644
+> > --- a/Documentation/admin-guide/acpi/index.rst
+> > +++ b/Documentation/admin-guide/acpi/index.rst
+> > @@ -10,3 +10,4 @@ the Linux ACPI support.
+> >  
+> >     initrd_table_override
+> >     dsdt-override
+> > +   cppc_sysfs
+> 
+> 
+> 
+> Thanks,
+> Mauro
 
-Fix it by making the relevant calculations use 64-bit arithmetic rather
-than 32-bit.  Note that most of the carries already used 64-bit
-arithmetic, but the d4 -> h0 carry was different for some reason.
-
-To be safe I also made the same change to the corresponding SSE2 code,
-though that only operates on 1 or 2 blocks at a time.  I don't think
-it's really needed for poly1305_block_sse2(), but it doesn't hurt
-because it's already x86_64 code.  It *might* be needed for
-poly1305_2block_sse2(), but overflows aren't easy to reproduce there.
-
-This bug was originally detected by my patches that improve testmgr to
-fuzz algorithms against their generic implementation.  But also add a
-test vector which reproduces it directly (in the AVX2 case).
-
-Fixes: b1ccc8f4b631 ("crypto: poly1305 - Add a four block AVX2 variant for x86_64")
-Fixes: c70f4abef07a ("crypto: poly1305 - Add a SSE2 SIMD variant for x86_64")
-Cc: <stable@vger.kernel.org> # v4.3+
-Cc: Martin Willi <martin@strongswan.org>
-Cc: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Martin Willi <martin@strongswan.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/crypto/poly1305-avx2-x86_64.S |   14 +++++++---
- arch/x86/crypto/poly1305-sse2-x86_64.S |   22 ++++++++++------
- crypto/testmgr.h                       |   44 ++++++++++++++++++++++++++++++++-
- 3 files changed, 67 insertions(+), 13 deletions(-)
-
---- a/arch/x86/crypto/poly1305-avx2-x86_64.S
-+++ b/arch/x86/crypto/poly1305-avx2-x86_64.S
-@@ -321,6 +321,12 @@ ENTRY(poly1305_4block_avx2)
- 	vpaddq		t2,t1,t1
- 	vmovq		t1x,d4
- 
-+	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
-+	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
-+	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
-+	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
-+	# integers.  It's true in a single-block implementation, but not here.
-+
- 	# d1 += d0 >> 26
- 	mov		d0,%rax
- 	shr		$26,%rax
-@@ -359,16 +365,16 @@ ENTRY(poly1305_4block_avx2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
- 
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
---- a/arch/x86/crypto/poly1305-sse2-x86_64.S
-+++ b/arch/x86/crypto/poly1305-sse2-x86_64.S
-@@ -251,16 +251,16 @@ ENTRY(poly1305_block_sse2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
- 
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
-@@ -518,6 +518,12 @@ ENTRY(poly1305_2block_sse2)
- 	paddq		t2,t1
- 	movq		t1,d4
- 
-+	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
-+	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
-+	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
-+	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
-+	# integers.  It's true in a single-block implementation, but not here.
-+
- 	# d1 += d0 >> 26
- 	mov		d0,%rax
- 	shr		$26,%rax
-@@ -556,16 +562,16 @@ ENTRY(poly1305_2block_sse2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
- 
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -3494,7 +3494,49 @@ static struct hash_testvec poly1305_tv_t
- 		.psize		= 80,
- 		.digest		= "\x13\x00\x00\x00\x00\x00\x00\x00"
- 				  "\x00\x00\x00\x00\x00\x00\x00\x00",
--	},
-+	}, { /* Regression test for overflow in AVX2 implementation */
-+		.plaintext	= "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff",
-+		.psize		= 300,
-+		.digest		= "\xfb\x5e\x96\xd8\x61\xd5\xc7\xc8"
-+				  "\x78\xe5\x87\xcc\x2d\x5a\x22\xe1",
-+	}
- };
- 
- /*
-
-
+-- 
+Cheers,
+Changbin Du
