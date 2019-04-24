@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0FAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D791C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10BE021904
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C59521907
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126407;
-	bh=Bzqwd+fiYm3g2w0M2zdbPG6VLat1oy6yfZzNF4NLhfs=;
+	s=default; t=1556126415;
+	bh=mTJrMbc6Gv05gm2p9P/9C6siabrpryr8zrGHqRBAy3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czQp8vuoWtnKF6HU0nOmlojq1fPbFJshDx6Pi26WqxIZWY1aQ9HHynC6yhzcfzLPN
-	 DKNRPhDqQyrW6mybpqQ8zuDKF/1ueHhjiY/9QG+R8R2mTtSEZBjsSNaXV9rMKDE7W4
-	 mLdV0rx/JZSulDfi56rqRXipi7MoC5qSnuNKw3GM=
+	b=nCH08kaoOisgJQ7OT31vSUmiYShk1AF10r5sfMWPvUUgGCy8wrghA2GtGho0pQUIi
+	 OgFTvXAZOjU+j/uHF0vOQcuanQojpD/JB2BiNWnshghZi5YlOMpegTtPo67F4phdPU
+	 upqbyzqOSUtE2h6H30TtK2BsbBRgjYt7hKjvuR0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388407AbfDXRUB (ORCPT
+        id S2387998AbfDXRUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:20:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45350 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388705AbfDXRT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:19:56 -0400
+        id S2388488AbfDXRUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:20:07 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF94321907;
-        Wed, 24 Apr 2019 17:19:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 894B7205ED;
+        Wed, 24 Apr 2019 17:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126396;
-        bh=Bzqwd+fiYm3g2w0M2zdbPG6VLat1oy6yfZzNF4NLhfs=;
+        s=default; t=1556126403;
+        bh=mTJrMbc6Gv05gm2p9P/9C6siabrpryr8zrGHqRBAy3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RhxFO52kepA41kNHbTbH4pSRtllOTZwik6Chs4FtjhjPrFsjGIOXIM9n6fC0gEmyK
-         tvXC5XQkFIkKtwRhmhnJ2mLiaEBlr1nvTPvs66voubz6iLH34oftnLOaWGHIbN6sKh
-         DXXs9kSyGobsBEDKyPxIFqMbyOmiT5mv72zNR8kA=
+        b=fHH5l+3lrjZyeokQ31X5WBAkjNBnzDLsZMqyqC47SePhrtK39YgeDi7ZAjwl8WNLQ
+         Iam+qb18NPdPIAXtwRFPI+hhpcXyNBJYrfP9lGRbSVNbRKIg0PEXmm8rh1zfe4C/HR
+         THXaq5aQhFxXpq6o4aqBEeebEBmx43nGvaV3e1fg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
-        Jakub Kicinski <kubakici@wp.pl>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, Michael <ZeroBeat@gmx.de>
-Subject: [PATCH 4.4 054/168] mt7601u: bump supported EEPROM version
-Date:   Wed, 24 Apr 2019 19:08:18 +0200
-Message-Id: <20190424170926.983502521@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 046/168] bcache: fix input overflow to cache set sysfs file io_error_halflife
+Date:   Wed, 24 Apr 2019 19:08:10 +0200
+Message-Id: <20190424170926.522591722@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,59 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3bd1505fed71d834f45e87b32ff07157fdda47e0 ]
+[ Upstream commit a91fbda49f746119828f7e8ad0f0aa2ab0578f65 ]
 
-As reported by Michael eeprom 0d is supported and work with the driver.
+Cache set sysfs entry io_error_halflife is used to set c->error_decay.
+c->error_decay is in type unsigned int, and it is converted by
+strtoul_or_return(), therefore overflow to c->error_decay is possible
+for a large input value.
 
-Dump of /sys/kernel/debug/ieee80211/phy1/mt7601u/eeprom_param
-with 0d EEPORM looks like this:
+This patch fixes the overflow by using strtoul_safe_clamp() to convert
+input string to an unsigned long value in range [0, UINT_MAX], then
+divides by 88 and set it to c->error_decay.
 
-RSSI offset: 0 0
-Reference temp: f9
-LNA gain: 8
-Reg channels: 1-14
-Per rate power:
-	 raw:05 bw20:05 bw40:05
-	 raw:05 bw20:05 bw40:05
-	 raw:03 bw20:03 bw40:03
-	 raw:03 bw20:03 bw40:03
-	 raw:04 bw20:04 bw40:04
-	 raw:00 bw20:00 bw40:00
-	 raw:00 bw20:00 bw40:00
-	 raw:00 bw20:00 bw40:00
-	 raw:02 bw20:02 bw40:02
-	 raw:00 bw20:00 bw40:00
-Per channel power:
-	 tx_power  ch1:09 ch2:09
-	 tx_power  ch3:0a ch4:0a
-	 tx_power  ch5:0a ch6:0a
-	 tx_power  ch7:0b ch8:0b
-	 tx_power  ch9:0b ch10:0b
-	 tx_power  ch11:0b ch12:0b
-	 tx_power  ch13:0b ch14:0b
-
-Reported-and-tested-by: Michael <ZeroBeat@gmx.de>
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Acked-by: Jakub Kicinski <kubakici@wp.pl>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt7601u/eeprom.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/sysfs.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt7601u/eeprom.h b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-index 662d12703b69..57b503ae63f1 100644
---- a/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-+++ b/drivers/net/wireless/mediatek/mt7601u/eeprom.h
-@@ -17,7 +17,7 @@
+diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+index 5a5c1f1bd8a5..87daccbbc61b 100644
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -645,8 +645,17 @@ STORE(__bch_cache_set)
+ 		c->error_limit = strtoul_or_return(buf) << IO_ERROR_SHIFT;
  
- struct mt7601u_dev;
+ 	/* See count_io_errors() for why 88 */
+-	if (attr == &sysfs_io_error_halflife)
+-		c->error_decay = strtoul_or_return(buf) / 88;
++	if (attr == &sysfs_io_error_halflife) {
++		unsigned long v = 0;
++		ssize_t ret;
++
++		ret = strtoul_safe_clamp(buf, v, 0, UINT_MAX);
++		if (!ret) {
++			c->error_decay = v / 88;
++			return size;
++		}
++		return ret;
++	}
  
--#define MT7601U_EE_MAX_VER			0x0c
-+#define MT7601U_EE_MAX_VER			0x0d
- #define MT7601U_EEPROM_SIZE			256
- 
- #define MT7601U_DEFAULT_TX_POWER		6
+ 	sysfs_strtoul(journal_delay_ms,		c->journal_delay_ms);
+ 	sysfs_strtoul(verify,			c->verify);
 -- 
 2.19.1
 
