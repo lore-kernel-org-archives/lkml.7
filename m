@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BADBC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FF7C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0399321773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8F621773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127872;
-	bh=xVPnCDpvjq+4f8yvQyjOEVXBiQ/TucphsaCudmWFGGw=;
+	s=default; t=1556127876;
+	bh=Q6MyuLoZd0mv0U4KnqSmPfYVA87m/drM+F4W0DEtc3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vqlnsvnkD0LFPKY0bUq5j7AamtOvRgqQBgsosUwP1h3cfYpC5nLG7BtJzYHJoTrQm
-	 zgP0QrMB29PVMh2g4PTpC3jW316vMicXl2a7k9FYoG4ZjRTriVM1368la78LzxCl2/
-	 UlubCJgbs+hA42xPA3CwZQl5/pYJ+rNr7RZ4lu3s=
+	b=svlfHSlFsPXO7pDk8q8eQsO/+9eHJAdyFYQnDDjp/1Q9hDrh/81kXauvza7Uyluji
+	 BsHjke4nCP6Ybf/E8SfhQn6xKTkMMWBafM+h76O2N5z0YLSUJL2Js8o9rJuv2gmd8r
+	 t2qbSA8AIUZae7M86QeZ9VDunjBZ87iV8hpfP+20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391676AbfDXReQ (ORCPT
+        id S2392043AbfDXRoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:34:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33034 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:44:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391656AbfDXReL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:34:11 -0400
+        id S2391673AbfDXReQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:34:16 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F20252054F;
-        Wed, 24 Apr 2019 17:34:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E58720675;
+        Wed, 24 Apr 2019 17:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127250;
-        bh=xVPnCDpvjq+4f8yvQyjOEVXBiQ/TucphsaCudmWFGGw=;
+        s=default; t=1556127255;
+        bh=Q6MyuLoZd0mv0U4KnqSmPfYVA87m/drM+F4W0DEtc3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uKidOHsijiIfRbNulFSA6Ld5u2Mm54a62y7OGMZDHXdxMZ5JgPgtCg2CIpmvdx/+c
-         xiEvwlrhlteUfZB6I+w9Vqewi9UZA9H62MNRIv9YFwX2bb/l3Bi5ykqMxfk0NRjvIE
-         LyZeiaL8SlK6wbYvIEXy/TLsGhYRs9OA3Ct8dyf0=
+        b=vYkArVLUzLOizrpsXM2T7IYCNGnPgJBxlJun7aXtElHYMzJbyBMYGttp6JrW2OZPB
+         aN0wc2K3ZiEiZIQc9v4nDPOW74Ycd9rZCTnfPeMpsjfeGYSWa16IWvPaj6Pk+05omN
+         d2JIkv8Mr9B0rij+MzPsQb0gIN0zPFGxtOB/t/XU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 003/115] net: atm: Fix potential Spectre v1 vulnerabilities
-Date:   Wed, 24 Apr 2019 19:08:59 +0200
-Message-Id: <20190424170925.112729845@linuxfoundation.org>
+Subject: [PATCH 5.0 005/115] net: bridge: multicast: use rcu to access port list from br_multicast_start_querier
+Date:   Wed, 24 Apr 2019 19:09:01 +0200
+Message-Id: <20190424170925.238949916@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -60,53 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit 899537b73557aafbdd11050b501cf54b4f5c45af ]
+[ Upstream commit c5b493ce192bd7a4e7bd073b5685aad121eeef82 ]
 
-arg is controlled by user-space, hence leading to a potential
-exploitation of the Spectre variant 1 vulnerability.
+br_multicast_start_querier() walks over the port list but it can be
+called from a timer with only multicast_lock held which doesn't protect
+the port list, so use RCU to walk over it.
 
-This issue was detected with the help of Smatch:
-
-net/atm/lec.c:715 lec_mcast_attach() warn: potential spectre issue 'dev_lec' [r] (local cap)
-
-Fix this by sanitizing arg before using it to index dev_lec.
-
-Notice that given that speculation windows are large, the policy is
-to kill the speculation on the first load and not worry if it can be
-completed with a dependent load/store [1].
-
-[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Fixes: c83b8fab06fc ("bridge: Restart queries when last querier expires")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/atm/lec.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/bridge/br_multicast.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/atm/lec.c
-+++ b/net/atm/lec.c
-@@ -710,7 +710,10 @@ static int lec_vcc_attach(struct atm_vcc
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -1916,7 +1916,8 @@ static void br_multicast_start_querier(s
  
- static int lec_mcast_attach(struct atm_vcc *vcc, int arg)
- {
--	if (arg < 0 || arg >= MAX_LEC_ITF || !dev_lec[arg])
-+	if (arg < 0 || arg >= MAX_LEC_ITF)
-+		return -EINVAL;
-+	arg = array_index_nospec(arg, MAX_LEC_ITF);
-+	if (!dev_lec[arg])
- 		return -EINVAL;
- 	vcc->proto_data = dev_lec[arg];
- 	return lec_mcast_make(netdev_priv(dev_lec[arg]), vcc);
-@@ -728,6 +731,7 @@ static int lecd_attach(struct atm_vcc *v
- 		i = arg;
- 	if (arg >= MAX_LEC_ITF)
- 		return -EINVAL;
-+	i = array_index_nospec(arg, MAX_LEC_ITF);
- 	if (!dev_lec[i]) {
- 		int size;
+ 	__br_multicast_open(br, query);
  
+-	list_for_each_entry(port, &br->port_list, list) {
++	rcu_read_lock();
++	list_for_each_entry_rcu(port, &br->port_list, list) {
+ 		if (port->state == BR_STATE_DISABLED ||
+ 		    port->state == BR_STATE_BLOCKING)
+ 			continue;
+@@ -1928,6 +1929,7 @@ static void br_multicast_start_querier(s
+ 			br_multicast_enable(&port->ip6_own_query);
+ #endif
+ 	}
++	rcu_read_unlock();
+ }
+ 
+ int br_multicast_toggle(struct net_bridge *br, unsigned long val)
 
 
