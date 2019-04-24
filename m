@@ -2,203 +2,116 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C0EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8643AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850FC218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:35:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5Tj96r/"
+	by mail.kernel.org (Postfix) with ESMTP id 54FD62089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556116529;
+	bh=Cm3EfxrJ9Grh8si1LkQ/eFTYGDrguNamUvyCD341NAM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Vof28kGgvfSTo//rkeLB7qqpc8FxsMVwMZFDGEPdU6Ab8HeQ+M7ZUTWezlGPOPaJr
+	 uCub04fiqQiJBH/Z30pLvCYlVhMY/QCf0rgyBeo2cq7x5l8MDfAKfQNHh/hn1aIoRJ
+	 jGlysn24m7EB9F3/Nj0U2DUViv1dyHpXEJI3q5RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731367AbfDXOfY (ORCPT
+        id S1731384AbfDXOf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 24 Apr 2019 10:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731362AbfDXOfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Apr 2019 10:35:24 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45841 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731322AbfDXOfR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:35:17 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y6so17079372ljd.12;
-        Wed, 24 Apr 2019 07:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Dg0jS/e6KyZQfSlGUUgaQ9gBLRxQL95NBWNKL/lRFIQ=;
-        b=Z5Tj96r/vtMbuAq0GpwwChB4HPVtU9C2E+BY6DZEtTSlxrGzQmHCLgN5XqCsQ5n1sm
-         ued5wfSpySFJPN2UckkJLRwUIHQSBdkECYVoNNwmHowgOMctFRGzCHDwLSIcrn0mjAVh
-         apQ62RuB6tm+yq8KODPVlEDBb/bQE1nZhI14pwzrCaYK9aKb6W2wbOCiTVQMcuTe+ckt
-         Qo74QfhLhOQzuAsuGhDyOwb0envbiEhSCc0Nv6owgIG/NC7ID0KyxsWSfx1baH/jsAmY
-         Qn6W86v2Tlm4i4ISuDZE/Xcao2PCtfk2pq0cNWg5SH3qqCAPibD147ntzbPxgJiYdAGM
-         ljYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Dg0jS/e6KyZQfSlGUUgaQ9gBLRxQL95NBWNKL/lRFIQ=;
-        b=tT9TAUcNsqQhQFrOKX1vUHKNdjczR4coVGDDABcMqbnDMnX3nudWPvdSgq1rYhbcZg
-         nHrGDKoZO+GcSh8gZcaFpKHrZFNzOns0H3+1cSmWFeLzjcws9VAXNJ9QXcXSBZqetUbc
-         q/+n8oOTHTTzOxbAoPJBEEulQeWNDygUyIoXdRmUKzeojcKJURyAaHBpUyPfI8Hw9beR
-         dU5ZuydUkJhy2PP3OmUU75YFHHf6XM/2iRWpsF26XS/LTh2+LkjBFGfg2zdJYMqgdV5O
-         NwSZV0k7S0Ywc7eQ158BIXBnthNvaFIwkFCOnR/aGDJnAH5j7CKuvS+txpDGhc1G/xNk
-         dB0A==
-X-Gm-Message-State: APjAAAUhDp5qMkRM4SPmFaHJnlWeqMCbSoozeeh+5mxnfi6XRAl+aZfI
-        5bN/iuVWfCSnmwkK7qINiWU=
-X-Google-Smtp-Source: APXvYqzs8a5zlHbh9398lzVKt6Z5xMctYUwPuqtayYy0lMkrwGairYdrpDUIUr5fqklnQcFZxTeW3w==
-X-Received: by 2002:a2e:89da:: with SMTP id c26mr17341237ljk.186.1556116514540;
-        Wed, 24 Apr 2019 07:35:14 -0700 (PDT)
-Received: from mobilestation ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id j13sm591869lfb.34.2019.04.24.07.35.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Apr 2019 07:35:13 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 17:35:11 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Juergen Gross <jgross@suse.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/12] mips: Print the kernel virtual mem layout on
- debugging
-Message-ID: <20190424143510.ahzq2hpdje7iddzm@mobilestation>
-References: <20190423224748.3765-1-fancer.lancer@gmail.com>
- <20190423224748.3765-11-fancer.lancer@gmail.com>
- <20190424134711.GE6278@rapoport-lnx>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18979218FE;
+        Wed, 24 Apr 2019 14:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556116523;
+        bh=Cm3EfxrJ9Grh8si1LkQ/eFTYGDrguNamUvyCD341NAM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1hZHgysDw0CeP0KJDQX6A+g2We77VaxMqC5VPHXlZDo5WVDHjAxZBg6XYUJy8vLUM
+         JRAPJZCZxp5YwbZUQECaInYxjpMdJHzR8UHU8LOMylRM8IYbjnLHW9M3U59oEAkhPp
+         zX44TaNmNSS1VnMgFf9FFoPzG9G361i1q7kV7L5E=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xose Vazquez Perez <xose.vazquez@gmail.com>,
+        Martin Wilck <mwilck@suse.com>, Hannes Reinecke <hare@suse.de>,
+        NetApp RDAC team <ng-eseries-upstream-maintainers@netapp.com>,
+        Christophe Varoqui <christophe.varoqui@opensvc.com>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        SCSI ML <linux-scsi@vger.kernel.org>,
+        DM ML <dm-devel@redhat.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 41/66] scsi: core: add new RDAC LENOVO/DE_Series device
+Date:   Wed, 24 Apr 2019 10:33:15 -0400
+Message-Id: <20190424143341.27665-41-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
+References: <20190424143341.27665-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424134711.GE6278@rapoport-lnx>
-User-Agent: NeoMutt/20180716
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 04:47:11PM +0300, Mike Rapoport wrote:
-> On Wed, Apr 24, 2019 at 01:47:46AM +0300, Serge Semin wrote:
-> > It is useful at least for debugging to have the kernel virtual
-> > memory layout printed at boot time so to have the full information
-> > about the booted kernel. Make the printing optional and available
-> > only when DEBUG_KERNEL config is enabled so not to leak a sensitive
-> > kernel information.
-> > 
-> > Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-> > ---
-> >  arch/mips/mm/init.c | 49 +++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> > 
-> > diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
-> > index bbb196ad5f26..c338bbd03b2a 100644
-> > --- a/arch/mips/mm/init.c
-> > +++ b/arch/mips/mm/init.c
-> > @@ -31,6 +31,7 @@
-> >  #include <linux/gfp.h>
-> >  #include <linux/kcore.h>
-> >  #include <linux/initrd.h>
-> > +#include <linux/sizes.h>
-> >  
-> >  #include <asm/bootinfo.h>
-> >  #include <asm/cachectl.h>
-> > @@ -56,6 +57,53 @@ unsigned long empty_zero_page, zero_page_mask;
-> >  EXPORT_SYMBOL_GPL(empty_zero_page);
-> >  EXPORT_SYMBOL(zero_page_mask);
-> >  
-> > +/*
-> > + * Print out the kernel virtual memory layout
-> > + */
-> > +#define MLK(b, t) (void *)b, (void *)t, ((t) - (b)) >> 10
-> > +#define MLM(b, t) (void *)b, (void *)t, ((t) - (b)) >> 20
-> > +#define MLK_ROUNDUP(b, t) (void *)b, (void *)t, DIV_ROUND_UP(((t) - (b)), SZ_1K)
-> > +static void __init mem_print_kmap_info(void)
-> > +{
-> > +#ifdef CONFIG_DEBUG_KERNEL
-> 
-> Maybe CONFIG_DEBUG_VM?
-> 
+From: Xose Vazquez Perez <xose.vazquez@gmail.com>
 
-Last time I posted this patch Matt suggested to use CONFIG_DEBUG_KERNEL [1].
-On the other hand arm platform prints this table unconditionally, but uses %lx
-format for low-memory ranges and %p for kernel segments. I even more inclined
-in the arm solution. But if selecting between DEBUG_KERNEL and DEBUG_VM I'd
-stick with DEBUG_KERNEL, since VM-debug config help text states it is
-intended for special performance checks: "Enable this to turn on extended
-checks in the virtual-memory system that may impact performance," and
-not for memory layout.
+[ Upstream commit 1cb1d2c64e812928fe0a40b8f7e74523d0283dbe ]
 
--Sergey
+Blacklist "Universal Xport" LUN. It's used for in-band storage array
+management.  Also add model to the rdac dh family.
 
-[1] https://lkml.org/lkml/2018/2/13/494
+Cc: Martin Wilck <mwilck@suse.com>
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: NetApp RDAC team <ng-eseries-upstream-maintainers@netapp.com>
+Cc: Christophe Varoqui <christophe.varoqui@opensvc.com>
+Cc: James E.J. Bottomley <jejb@linux.vnet.ibm.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: SCSI ML <linux-scsi@vger.kernel.org>
+Cc: DM ML <dm-devel@redhat.com>
+Signed-off-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+Reviewed-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ drivers/scsi/scsi_devinfo.c | 1 +
+ drivers/scsi/scsi_dh.c      | 1 +
+ 2 files changed, 2 insertions(+)
 
-> > +	pr_notice("Kernel virtual memory layout:\n"
-> > +		  "    lowmem  : 0x%px - 0x%px  (%4ld MB)\n"
-> > +		  "      .text : 0x%px - 0x%px  (%4td kB)\n"
-> > +		  "      .data : 0x%px - 0x%px  (%4td kB)\n"
-> > +		  "      .init : 0x%px - 0x%px  (%4td kB)\n"
-> > +		  "      .bss  : 0x%px - 0x%px  (%4td kB)\n"
-> > +		  "    vmalloc : 0x%px - 0x%px  (%4ld MB)\n"
-> > +#ifdef CONFIG_HIGHMEM
-> > +		  "    pkmap   : 0x%px - 0x%px  (%4ld MB)\n"
-> > +#endif
-> > +		  "    fixmap  : 0x%px - 0x%px  (%4ld kB)\n",
-> > +		  MLM(PAGE_OFFSET, (unsigned long)high_memory),
-> > +		  MLK_ROUNDUP(_text, _etext),
-> > +		  MLK_ROUNDUP(_sdata, _edata),
-> > +		  MLK_ROUNDUP(__init_begin, __init_end),
-> > +		  MLK_ROUNDUP(__bss_start, __bss_stop),
-> > +		  MLM(VMALLOC_START, VMALLOC_END),
-> > +#ifdef CONFIG_HIGHMEM
-> > +		  MLM(PKMAP_BASE, (PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE)),
-> > +#endif
-> > +		  MLK(FIXADDR_START, FIXADDR_TOP));
-> > +
-> > +	/* Check some fundamental inconsistencies. May add something else? */
-> > +#ifdef CONFIG_HIGHMEM
-> > +	BUILD_BUG_ON(VMALLOC_END < PAGE_OFFSET);
-> > +	BUG_ON(VMALLOC_END < (unsigned long)high_memory);
-> > +	BUILD_BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) < PAGE_OFFSET);
-> > +	BUG_ON((PKMAP_BASE) + (LAST_PKMAP)*(PAGE_SIZE) <
-> > +		(unsigned long)high_memory);
-> > +#endif
-> > +	BUILD_BUG_ON(FIXADDR_TOP < PAGE_OFFSET);
-> > +	BUG_ON(FIXADDR_TOP < (unsigned long)high_memory);
-> > +#endif /* CONFIG_DEBUG_KERNEL */
-> > +}
-> > +#undef MLK
-> > +#undef MLM
-> > +#undef MLK_ROUNDUP
-> > +
-> >  /*
-> >   * Not static inline because used by IP27 special magic initialization code
-> >   */
-> > @@ -479,6 +527,7 @@ void __init mem_init(void)
-> >  	setup_zero_pages();	/* Setup zeroed pages.  */
-> >  	mem_init_free_highmem();
-> >  	mem_init_print_info(NULL);
-> > +	mem_print_kmap_info();
-> >  
-> >  #ifdef CONFIG_64BIT
-> >  	if ((unsigned long) &_text > (unsigned long) CKSEG0)
-> > -- 
-> > 2.21.0
-> > 
-> 
-> -- 
-> Sincerely yours,
-> Mike.
-> 
+diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
+index c4cbfd07b916..a08ff3bd6310 100644
+--- a/drivers/scsi/scsi_devinfo.c
++++ b/drivers/scsi/scsi_devinfo.c
+@@ -238,6 +238,7 @@ static struct {
+ 	{"NETAPP", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"LSI", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"ENGENIO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
++	{"LENOVO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
+ 	{"SMSC", "USB 2 HS-CF", NULL, BLIST_SPARSELUN | BLIST_INQUIRY_36},
+ 	{"SONY", "CD-ROM CDU-8001", NULL, BLIST_BORKEN},
+ 	{"SONY", "TSL", NULL, BLIST_FORCELUN},		/* DDS3 & DDS4 autoloaders */
+diff --git a/drivers/scsi/scsi_dh.c b/drivers/scsi/scsi_dh.c
+index 5a58cbf3a75d..c14006ac98f9 100644
+--- a/drivers/scsi/scsi_dh.c
++++ b/drivers/scsi/scsi_dh.c
+@@ -75,6 +75,7 @@ static const struct scsi_dh_blist scsi_dh_blist[] = {
+ 	{"NETAPP", "INF-01-00",		"rdac", },
+ 	{"LSI", "INF-01-00",		"rdac", },
+ 	{"ENGENIO", "INF-01-00",	"rdac", },
++	{"LENOVO", "DE_Series",		"rdac", },
+ 	{NULL, NULL,			NULL },
+ };
+ 
+-- 
+2.19.1
+
