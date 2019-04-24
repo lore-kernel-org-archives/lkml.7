@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB828C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C515C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9C621903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AE42054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127237;
-	bh=+684G1eZOtnhpZivnpohq4hv5DP7GMPYHm7gUiyyVrg=;
+	s=default; t=1556127241;
+	bh=Otwzvv2D8iNykGi25XCLUdEnCSt1exJxL5WROFmRgEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1jV9hr0cT3Au+4D+ai2VGrJKrf6XYN4SKTrD8JvjxFGqsQ2ut4WsamZXVDT28kI2j
-	 wCcWlwNR6bV+SLrobcB714XjhpS32p0f6DcHqMiQe9rF1jP+v0iRBnS/GJ2bsvQYVn
-	 bcJcM0N7xbSnmuTqetDbvQkjVnUfM0rXfJMa5lqc=
+	b=oU4gbrcm+Oqqn7KcxJtgYcbgn7t8dTKitMtWAMz2wzm6NjR9Mp8nWYUIaBKNsSRyA
+	 Ok0eVzTAs+nhWn7HS+wNjl//WgLn3mPErFhWWiseZe8ozKHVctJJqiCnLG66z6giPN
+	 J+0LBO6rYMyCrO03z8JFFDGdAl6lWQl99kMXNunU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391605AbfDXRd4 (ORCPT
+        id S2391620AbfDXReA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:33:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60984 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391585AbfDXRdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:33:52 -0400
+        id S2391607AbfDXRd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:33:58 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D45382077C;
-        Wed, 24 Apr 2019 17:33:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 295BF2054F;
+        Wed, 24 Apr 2019 17:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127232;
-        bh=+684G1eZOtnhpZivnpohq4hv5DP7GMPYHm7gUiyyVrg=;
+        s=default; t=1556127237;
+        bh=Otwzvv2D8iNykGi25XCLUdEnCSt1exJxL5WROFmRgEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mh3pHloMFMNbFgei8l/XUs5YpZAyzWFVX6w5t0o/21YWPgf3Jl7jiccXGeM/Fkq8b
-         vjV6fcYxJ/Vaftj2vNmNBuQ+HpgGGJoHG5cLvh2Di4x7yyxx507YSUKTFwHGfN+++7
-         SaJaEXJAL0ouWyHBtGbtzGc5JB+RT9kz5Znqkbv4=
+        b=KCKGRRpcwEDaYdUp53kUZS2pHov4brC8GT2fXHxrr3a/qRInyPUChWRYXL84ZxaCO
+         j0F6e7wON9sSmRMLYijcWh2JGoxSWD177QYhY869cxApWyO7DcAqyHKrkuE+Nrt99w
+         gfeVsXPdnnhsCm8ap/Koh+IbnrGPw3FkOlYSZ/W4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
         Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 016/115] mlxsw: core: Do not use WQ_MEM_RECLAIM for EMAD workqueue
-Date:   Wed, 24 Apr 2019 19:09:12 +0200
-Message-Id: <20190424170925.986534185@linuxfoundation.org>
+Subject: [PATCH 5.0 018/115] mlxsw: core: Do not use WQ_MEM_RECLAIM for mlxsw workqueue
+Date:   Wed, 24 Apr 2019 19:09:14 +0200
+Message-Id: <20190424170926.117180031@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -62,16 +62,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit a8c133b06183c529c51cd0d54eb57d6b7078370c ]
+[ Upstream commit b442fed1b724af0de087912a5718ddde1b87acbb ]
 
-The EMAD workqueue is used to handle retransmission of EMAD packets that
-contain configuration data for the device's firmware.
+The workqueue is used to periodically update the networking stack about
+activity / statistics of various objects such as neighbours and TC
+actions.
 
-Given the workers need to allocate these packets and that the code is
-not called as part of memory reclaim path, remove the WQ_MEM_RECLAIM
-flag.
+It should not be called as part of memory reclaim path, so remove the
+WQ_MEM_RECLAIM flag.
 
-Fixes: d965465b60ba ("mlxsw: core: Fix possible deadlock")
+Fixes: 3d5479e92087 ("mlxsw: core: Remove deprecated create_workqueue")
 Signed-off-by: Ido Schimmel <idosch@mellanox.com>
 Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
@@ -82,14 +82,14 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/net/ethernet/mellanox/mlxsw/core.c
 +++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -568,7 +568,7 @@ static int mlxsw_emad_init(struct mlxsw_
- 	if (!(mlxsw_core->bus->features & MLXSW_BUS_F_TXRX))
- 		return 0;
+@@ -1912,7 +1912,7 @@ static int __init mlxsw_core_module_init
+ {
+ 	int err;
  
--	emad_wq = alloc_workqueue("mlxsw_core_emad", WQ_MEM_RECLAIM, 0);
-+	emad_wq = alloc_workqueue("mlxsw_core_emad", 0, 0);
- 	if (!emad_wq)
+-	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, WQ_MEM_RECLAIM, 0);
++	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, 0, 0);
+ 	if (!mlxsw_wq)
  		return -ENOMEM;
- 	mlxsw_core->emad_wq = emad_wq;
+ 	mlxsw_owq = alloc_ordered_workqueue("%s_ordered", 0,
 
 
