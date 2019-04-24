@@ -2,452 +2,164 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F3BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A10C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83FA20878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556120720;
-	bh=mDggMsftZ3pBsSgMKo2FD7wKYkF2mD+z0TwdO6Wb1YA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VFtdiCPQm3+5zT+ucRm2OYe4apJW8mzpRsoQyRLJsMLnu4jn5KxKUcpAVP17luz8D
-	 HK6dbvSJtaUSihOVcm1e+zVEFZ7Di5C8Bx8cCpm8xuG8u8fFcucEuF12cqfvNSFJQg
-	 cJkfqL05RnTPlRSx8iG1PY1F1cIputu8VDkL6TXY=
+	by mail.kernel.org (Postfix) with ESMTP id 9FDD821773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731653AbfDXPpS (ORCPT
+        id S1731674AbfDXPqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:45:18 -0400
-Received: from casper.infradead.org ([85.118.1.10]:57242 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727327AbfDXPpS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:45:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=t5EAbn6+CZXfW3k+VBVmNDagQCoKUrMo7WrTzWw6h10=; b=ER0SfdqN9jfQ6Ifo/4IvmIeIyj
-        52+fFw/s1mxSLsXrlRPVowlDAk0A8lc0h8NSc0FsjMOo9sXQkrL77bV02nCsG4/bEvV5fy/TZBctA
-        lUzjni5W9NybXccidM2s+JBxbdZsSExazhYwbMfXunQg4Hn9k5a6BwiiFJeC6EHucuE3ZepIj20lI
-        Kvskq4/CDfAWK6mc8R/j+/l84iodpOYS8OBujGrLxPia/dJElp2nXXlpriWHKEXkoPLolH4OF+/0s
-        x+01CC9Z17BDfbGQttwLUNeX56qBrBjJdNKxUIWhMOaXH9BDh+6X/tJmyqWfndxajdHDhzV1mtf2j
-        rmcuR7zQ==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJK59-00036U-Ei; Wed, 24 Apr 2019 15:45:11 +0000
-Date:   Wed, 24 Apr 2019 12:45:05 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 31/63] Documentation: PCI: convert
- pci-error-recovery.txt to reST
-Message-ID: <20190424124505.0efbc466@coco.lan>
-In-Reply-To: <20190423162932.21428-32-changbin.du@gmail.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
-        <20190423162932.21428-32-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 24 Apr 2019 11:46:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58044 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727327AbfDXPqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 11:46:22 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3BD79308FEDE;
+        Wed, 24 Apr 2019 15:46:22 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
+        by smtp.corp.redhat.com (Postfix) with SMTP id E5A725D9CD;
+        Wed, 24 Apr 2019 15:46:20 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 24 Apr 2019 17:46:21 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 17:46:19 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Roman Gushchin <guroan@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 4/9] cgroup: cgroup v2 freezer
+Message-ID: <20190424154619.GG16167@redhat.com>
+References: <20190405174708.1010-1-guro@fb.com>
+ <20190405174708.1010-5-guro@fb.com>
+ <20190419151912.GA12152@redhat.com>
+ <20190419161118.GA23357@tower.DHCP.thefacebook.com>
+ <20190419162600.GC12228@redhat.com>
+ <20190419165600.GC23357@tower.DHCP.thefacebook.com>
+ <20190420105838.GA17468@redhat.com>
+ <20190422221116.GA10341@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190422221116.GA10341@tower.DHCP.thefacebook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 24 Apr 2019 15:46:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 24 Apr 2019 00:29:00 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+On 04/22, Roman Gushchin wrote:
+>
+> > > Hm, it might work too, but I'm not sure I like it more. IMO, the best option
+> > > is to have a single cgroup_leave_frozen(true) in signal.c, it's just simpler.
+> > > If a user changed the desired state of cgroup twice, there is no need to avoid
+> > > state transitions. Or maybe I don't see it yet.
+> >
+> > Then why do we need cgroup_leave_frozen(false) in wait_for_vfork_done() ? How
+> > does it differ from get_signal() ?
+>
+> We need it because sleeping in vfork is a special state which we want to
+> account as frozen. And if the parent process wakes up while the cgroup is frozen
+> (because of the child death, for example), we want to push it into the "proper"
+> frozen state without changing the state of the cgroup.
 
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  Documentation/PCI/index.rst                   |   1 +
->  ...or-recovery.txt => pci-error-recovery.rst} | 178 +++++++++---------
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 94 insertions(+), 87 deletions(-)
->  rename Documentation/PCI/{pci-error-recovery.txt => pci-error-recovery.rst} (80%)
-> 
-> diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
-> index c877a369481d..5ee4dba07116 100644
-> --- a/Documentation/PCI/index.rst
-> +++ b/Documentation/PCI/index.rst
-> @@ -13,3 +13,4 @@ Linux PCI Bus Subsystem
->     pci-iov-howto
->     MSI-HOWTO
->     acpi-info
-> +   pci-error-recovery
-> diff --git a/Documentation/PCI/pci-error-recovery.txt b/Documentation/PCI/pci-error-recovery.rst
-> similarity index 80%
-> rename from Documentation/PCI/pci-error-recovery.txt
-> rename to Documentation/PCI/pci-error-recovery.rst
-> index 0b6bb3ef449e..533ec4035bf5 100644
-> --- a/Documentation/PCI/pci-error-recovery.txt
-> +++ b/Documentation/PCI/pci-error-recovery.rst
-> @@ -1,12 +1,13 @@
-> +.. SPDX-License-Identifier: GPL-2.0
->  
-> -                       PCI Error Recovery
-> -                       ------------------
-> -                        February 2, 2006
-> +==================
-> +PCI Error Recovery
-> +==================
->  
-> -                 Current document maintainer:
-> -             Linas Vepstas <linasvepstas@gmail.com>
-> -          updated by Richard Lary <rlary@us.ibm.com>
-> -       and Mike Mason <mmlnx@us.ibm.com> on 27-Jul-2009
+Again, I do not see how vfork() differs from get_signal() in this respect.
 
-Just wondering: wouldn't be good to preserve the date here?
+Let me provide another example. A TASK_STOPPED task reacts to SIGCONT and
+returns to get_signal(), current->frozen is true.
 
-> +
-> +:Authors: - Linas Vepstas <linasvepstas@gmail.com>
-> +          - Richard Lary <rlary@us.ibm.com>
-> +          - Mike Mason <mmlnx@us.ibm.com>
->  
->  
->  Many PCI bus controllers are able to detect a variety of hardware
-> @@ -63,7 +64,8 @@ mechanisms for dealing with SCSI bus errors and SCSI bus resets.
->  
->  
->  Detailed Design
-> ----------------
-> +===============
-> +
->  Design and implementation details below, based on a chain of
->  public email discussions with Ben Herrenschmidt, circa 5 April 2005.
->  
-> @@ -73,30 +75,33 @@ pci_driver. A driver that fails to provide the structure is "non-aware",
->  and the actual recovery steps taken are platform dependent.  The
->  arch/powerpc implementation will simulate a PCI hotplug remove/add.
->  
-> -This structure has the form:
-> -struct pci_error_handlers
-> -{
-> -	int (*error_detected)(struct pci_dev *dev, enum pci_channel_state);
-> -	int (*mmio_enabled)(struct pci_dev *dev);
-> -	int (*slot_reset)(struct pci_dev *dev);
-> -	void (*resume)(struct pci_dev *dev);
-> -};
-> -
-> -The possible channel states are:
-> -enum pci_channel_state {
-> -	pci_channel_io_normal,  /* I/O channel is in normal state */
-> -	pci_channel_io_frozen,  /* I/O to channel is blocked */
-> -	pci_channel_io_perm_failure, /* PCI card is dead */
-> -};
-> -
-> -Possible return values are:
-> -enum pci_ers_result {
-> -	PCI_ERS_RESULT_NONE,        /* no result/none/not supported in device driver */
-> -	PCI_ERS_RESULT_CAN_RECOVER, /* Device driver can recover without slot reset */
-> -	PCI_ERS_RESULT_NEED_RESET,  /* Device driver wants slot to be reset. */
-> -	PCI_ERS_RESULT_DISCONNECT,  /* Device has completely failed, is unrecoverable */
-> -	PCI_ERS_RESULT_RECOVERED,   /* Device driver is fully recovered and operational */
-> -};
-> +This structure has the form::
-> +
-> +	struct pci_error_handlers
-> +	{
-> +		int (*error_detected)(struct pci_dev *dev, enum pci_channel_state);
-> +		int (*mmio_enabled)(struct pci_dev *dev);
-> +		int (*slot_reset)(struct pci_dev *dev);
-> +		void (*resume)(struct pci_dev *dev);
-> +	};
-> +
-> +The possible channel states are::
-> +
-> +	enum pci_channel_state {
-> +		pci_channel_io_normal,  /* I/O channel is in normal state */
-> +		pci_channel_io_frozen,  /* I/O to channel is blocked */
-> +		pci_channel_io_perm_failure, /* PCI card is dead */
-> +	};
-> +
-> +Possible return values are::
-> +
-> +	enum pci_ers_result {
-> +		PCI_ERS_RESULT_NONE,        /* no result/none/not supported in device driver */
-> +		PCI_ERS_RESULT_CAN_RECOVER, /* Device driver can recover without slot reset */
-> +		PCI_ERS_RESULT_NEED_RESET,  /* Device driver wants slot to be reset. */
-> +		PCI_ERS_RESULT_DISCONNECT,  /* Device has completely failed, is unrecoverable */
-> +		PCI_ERS_RESULT_RECOVERED,   /* Device driver is fully recovered and operational */
-> +	};
->  
->  A driver does not have to implement all of these callbacks; however,
->  if it implements any, it must implement error_detected(). If a callback
-> @@ -134,16 +139,17 @@ shouldn't do any new IOs. Called in task context. This is sort of a
->  
->  All drivers participating in this system must implement this call.
->  The driver must return one of the following result codes:
-> -		- PCI_ERS_RESULT_CAN_RECOVER:
-> -		  Driver returns this if it thinks it might be able to recover
-> -		  the HW by just banging IOs or if it wants to be given
-> -		  a chance to extract some diagnostic information (see
-> -		  mmio_enable, below).
-> -		- PCI_ERS_RESULT_NEED_RESET:
-> -		  Driver returns this if it can't recover without a
-> -		  slot reset.
-> -		- PCI_ERS_RESULT_DISCONNECT:
-> -		  Driver returns this if it doesn't want to recover at all.
-> +
-> +  - PCI_ERS_RESULT_CAN_RECOVER:
-> +    Driver returns this if it thinks it might be able to recover
-> +    the HW by just banging IOs or if it wants to be given
-> +    a chance to extract some diagnostic information (see
-> +    mmio_enable, below).
-> +  - PCI_ERS_RESULT_NEED_RESET:
-> +    Driver returns this if it can't recover without a
-> +    slot reset.
-> +  - PCI_ERS_RESULT_DISCONNECT:
-> +    Driver returns this if it doesn't want to recover at all.
+If this races with CGRP_FREEZE, the task should not return to user-space,
+just like vfork(). I see no difference.
 
-This would look better on both text and html if you format it as:
+They differ in that wait_for_vfork_done() should guarentee TIF_SIGPENDING
+in this case, but this is another story...
 
-       - PCI_ERS_RESULT_CAN_RECOVER:
-                  Driver returns this if it thinks it might be able to recover
-                  the HW by just banging IOs or if it wants to be given
-                  a chance to extract some diagnostic information (see
-                  mmio_enable, below).
-       - PCI_ERS_RESULT_NEED_RESET:
-                  Driver returns this if it can't recover without a
-                  slot reset.
-       - PCI_ERS_RESULT_DISCONNECT:
-                  Driver returns this if it doesn't want to recover at all.
+>
+> > If nothing else. Suppose that wait_for_vfork_done() calls leave(false) and this
+> > races with freezer, CGRP_FREEZE is already set but JOBCTL_TRAP_FREEZE is not.
+> >
+> > This sets TIF_SIGPENDING to ensure the task won't return to user mode, thus it
+> > calls get_signal().
+> >
+> > get_signal() doesn't see JOBCTL_TRAP_FREEZE, it notices ->frozen == T and does
+> > cgroup_leave_frozen(true) which clears ->frozen.
+> >
+> > Then the task calls dequeue_signal(), clears TIF_SIGPENDING and returns to user
+> > mode?
+>
+> Got it, a good catch! So if the freezer races with vfork() completion, we might
+> have a spurious frozen->unfrozen->frozen transition of the cgroup state.
+>
+> Switching to cgroup_leave_frozen(false) seems to solve it, but I'm slightly
+> concerned that we're basically putting the task in a busy loop between
+> the setting CGRP_FREEZE and setting TRAP_FREEZE.
+
+Yes, yes. Didn't I say I dislike the new ->frozen check in recalc() ? ;)
+
+OK, how about the ABSOLUTELY UNTESTED patch below? For the start.
+
+Oleg.
+
+diff --git a/kernel/cgroup/freezer.c b/kernel/cgroup/freezer.c
+index 3bfbb3c..b5ccc87 100644
+--- a/kernel/cgroup/freezer.c
++++ b/kernel/cgroup/freezer.c
+@@ -132,26 +132,21 @@ void cgroup_leave_frozen(bool always_leave)
+ {
+ 	struct cgroup *cgrp;
+ 
++	WARN_ON_ONCE(!current->frozen);
++
+ 	spin_lock_irq(&css_set_lock);
+ 	cgrp = task_dfl_cgroup(current);
+ 	if (always_leave || !test_bit(CGRP_FREEZE, &cgrp->flags)) {
+ 		cgroup_dec_frozen_cnt(cgrp);
+ 		cgroup_update_frozen(cgrp);
+-		WARN_ON_ONCE(!current->frozen);
+ 		current->frozen = false;
++	} else if (!(current->jobctl & JOBCTL_TRAP_FREEZE)) {
++		spin_lock(&current->sighand->siglock);
++		current->jobctl |= JOBCTL_TRAP_FREEZE;
++		set_thread_flag(TIF_SIGPENDING);
++		spin_unlock(&current->sighand->siglock);
+ 	}
+ 	spin_unlock_irq(&css_set_lock);
+-
+-	if (unlikely(current->frozen)) {
+-		/*
+-		 * If the task remained in the frozen state,
+-		 * make sure it won't reach userspace without
+-		 * entering the signal handling loop.
+-		 */
+-		spin_lock_irq(&current->sighand->siglock);
+-		recalc_sigpending();
+-		spin_unlock_irq(&current->sighand->siglock);
+-	}
+ }
+ 
+ /*
+diff --git a/kernel/signal.c b/kernel/signal.c
+index e46d527..155b273 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2515,7 +2515,7 @@ bool get_signal(struct ksignal *ksig)
+ 		 */
+ 		if (unlikely(cgroup_task_frozen(current))) {
+ 			spin_unlock_irq(&sighand->siglock);
+-			cgroup_leave_frozen(true);
++			cgroup_leave_frozen(false);
+ 			goto relock;
+ 		}
+ 
 
 
->  
->  The next step taken will depend on the result codes returned by the
->  drivers.
-> @@ -177,7 +183,7 @@ is STEP 6 (Permanent Failure).
->  >>> get the device working again.  
->  
->  STEP 2: MMIO Enabled
-> --------------------
-> +--------------------
->  The platform re-enables MMIO to the device (but typically not the
->  DMA), and then calls the mmio_enabled() callback on all affected
->  device drivers.
-> @@ -203,23 +209,23 @@ instead will have gone directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
->  >>> into one of the next states, that is, link reset or slot reset.  
-
-
-It sounds you forgot to reformat the note with ">>>", e. g.
-something like:
-
-.. note::
-
-    The current powerpc implementation assumes that a device driver will
-    *not* schedule or semaphore in this routine; the current powerpc
-    implementation uses one kernel thread to notify all devices;
-    thus, if one device sleeps/schedules, all devices are affected.
-    Doing better requires complex multi-threaded logic in the error
-    recovery implementation (e.g. waiting for all notification threads
-    to "join" before proceeding with recovery.)  This seems excessively
-    complex and not worth implementing.
-
-    The current powerpc implementation doesn't much care if the device
-    attempts I/O at this point, or not.  I/O's will fail, returning
-    a value of 0xff on read, and writes will be dropped. If more than
-    EEH_MAX_FAILS I/O's are attempted to a frozen adapter, EEH
-    assumes that the device driver has gone into an infinite loop
-    and prints an error to syslog.  A reboot is then required to
-    get the device working again.
-
-
->  
->  The driver should return one of the following result codes:
-> -		- PCI_ERS_RESULT_RECOVERED
-> -		  Driver returns this if it thinks the device is fully
-> -		  functional and thinks it is ready to start
-> -		  normal driver operations again. There is no
-> -		  guarantee that the driver will actually be
-> -		  allowed to proceed, as another driver on the
-> -		  same segment might have failed and thus triggered a
-> -		  slot reset on platforms that support it.
-> -
-> -		- PCI_ERS_RESULT_NEED_RESET
-> -		  Driver returns this if it thinks the device is not
-> -		  recoverable in its current state and it needs a slot
-> -		  reset to proceed.
-> -
-> -		- PCI_ERS_RESULT_DISCONNECT
-> -		  Same as above. Total failure, no recovery even after
-> -		  reset driver dead. (To be defined more precisely)
-> +  - PCI_ERS_RESULT_RECOVERED
-> +    Driver returns this if it thinks the device is fully
-> +    functional and thinks it is ready to start
-> +    normal driver operations again. There is no
-> +    guarantee that the driver will actually be
-> +    allowed to proceed, as another driver on the
-> +    same segment might have failed and thus triggered a
-> +    slot reset on platforms that support it.
-> +
-> +  - PCI_ERS_RESULT_NEED_RESET
-> +    Driver returns this if it thinks the device is not
-> +    recoverable in its current state and it needs a slot
-> +    reset to proceed.
-> +
-> +  - PCI_ERS_RESULT_DISCONNECT
-> +    Same as above. Total failure, no recovery even after
-> +    reset driver dead. (To be defined more precisely)
-
-Same as above, this would look a way better if you format it as:
-
-	- PCI_ERS_RESULT_RECOVERED
-		  Driver returns this if it thinks the device is fully
-		  functional and thinks it is ready to start
-		  normal driver operations again. There is no
-		  guarantee that the driver will actually be
-		  allowed to proceed, as another driver on the
-		  same segment might have failed and thus triggered a
-		  slot reset on platforms that support it.
-
-	- PCI_ERS_RESULT_NEED_RESET
-		  Driver returns this if it thinks the device is not
-		  recoverable in its current state and it needs a slot
-		  reset to proceed.
-
-	- PCI_ERS_RESULT_DISCONNECT
-		  Same as above. Total failure, no recovery even after
-		  reset driver dead. (To be defined more precisely)
-
->  The next step taken depends on the results returned by the drivers.
->  If all drivers returned PCI_ERS_RESULT_RECOVERED, then the platform
-> @@ -293,24 +299,24 @@ device will be considered "dead" in this case.
->  Drivers for multi-function cards will need to coordinate among
->  themselves as to which driver instance will perform any "one-shot"
->  or global device initialization. For example, the Symbios sym53cxx2
-> -driver performs device init only from PCI function 0:
-> +driver performs device init only from PCI function 0::
->  
-> -+       if (PCI_FUNC(pdev->devfn) == 0)
-> -+               sym_reset_scsi_bus(np, 0);
-> +	+       if (PCI_FUNC(pdev->devfn) == 0)
-> +	+               sym_reset_scsi_bus(np, 0);
->  
-> -	Result codes:
-> -		- PCI_ERS_RESULT_DISCONNECT
-> -		Same as above.
-> +Result codes:
-> +	- PCI_ERS_RESULT_DISCONNECT
-> +	  Same as above.
->  
->  Drivers for PCI Express cards that require a fundamental reset must
->  set the needs_freset bit in the pci_dev structure in their probe function.
->  For example, the QLogic qla2xxx driver sets the needs_freset bit for certain
-> -PCI card types:
-> +PCI card types::
->  
-> -+	/* Set EEH reset type to fundamental if required by hba  */
-> -+	if (IS_QLA24XX(ha) || IS_QLA25XX(ha) || IS_QLA81XX(ha))
-> -+		pdev->needs_freset = 1;
-> -+
-> +	+	/* Set EEH reset type to fundamental if required by hba  */
-> +	+	if (IS_QLA24XX(ha) || IS_QLA25XX(ha) || IS_QLA81XX(ha))
-> +	+		pdev->needs_freset = 1;
-> +	+
->  
->  Platform proceeds either to STEP 5 (Resume Operations) or STEP 6 (Permanent
->  Failure).
-
-Again, you forgot to convert one note there, just after the above
-lines:
-
-.. note::
-
-    The current powerpc implementation does not try a power-cycle
-    reset if the driver returned PCI_ERS_RESULT_DISCONNECT.
-    However, it probably should.
-
-
-> @@ -370,23 +376,23 @@ The current policy is to turn this into a platform policy.
->  That is, the recovery API only requires that:
->  
->   - There is no guarantee that interrupt delivery can proceed from any
-> -device on the segment starting from the error detection and until the
-> -slot_reset callback is called, at which point interrupts are expected
-> -to be fully operational.
-> +   device on the segment starting from the error detection and until the
-> +   slot_reset callback is called, at which point interrupts are expected
-> +   to be fully operational.
->  
->   - There is no guarantee that interrupt delivery is stopped, that is,
-> -a driver that gets an interrupt after detecting an error, or that detects
-> -an error within the interrupt handler such that it prevents proper
-> -ack'ing of the interrupt (and thus removal of the source) should just
-> -return IRQ_NOTHANDLED. It's up to the platform to deal with that
-> -condition, typically by masking the IRQ source during the duration of
-> -the error handling. It is expected that the platform "knows" which
-> -interrupts are routed to error-management capable slots and can deal
-> -with temporarily disabling that IRQ number during error processing (this
-> -isn't terribly complex). That means some IRQ latency for other devices
-> -sharing the interrupt, but there is simply no other way. High end
-> -platforms aren't supposed to share interrupts between many devices
-> -anyway :)
-> +   a driver that gets an interrupt after detecting an error, or that detects
-> +   an error within the interrupt handler such that it prevents proper
-> +   ack'ing of the interrupt (and thus removal of the source) should just
-> +   return IRQ_NOTHANDLED. It's up to the platform to deal with that
-> +   condition, typically by masking the IRQ source during the duration of
-> +   the error handling. It is expected that the platform "knows" which
-> +   interrupts are routed to error-management capable slots and can deal
-> +   with temporarily disabling that IRQ number during error processing (this
-> +   isn't terribly complex). That means some IRQ latency for other devices
-> +   sharing the interrupt, but there is simply no other way. High end
-> +   platforms aren't supposed to share interrupts between many devices
-> +   anyway :)
->  
->  >>> Implementation details for the powerpc platform are discussed in
->  >>> the file Documentation/powerpc/eeh-pci-error-recovery.txt  
-
-Another note to be converted:
-
-.. note::
-
-    Implementation details for the powerpc platform are discussed in
-    the file Documentation/powerpc/eeh-pci-error-recovery.txt  
-
-    As of this writing, there is a growing list of device drivers with
-    patches implementing error recovery. Not all of these patches are in
-    mainline yet. These may be used as "examples"::
-
-      drivers/scsi/ipr
-      drivers/scsi/sym53c8xx_2
-...
-      drivers/net/qlge
-
-
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 87f930bf32ad..403178958b05 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11965,7 +11965,7 @@ M:	Sam Bobroff <sbobroff@linux.ibm.com>
->  M:	Oliver O'Halloran <oohall@gmail.com>
->  L:	linuxppc-dev@lists.ozlabs.org
->  S:	Supported
-> -F:	Documentation/PCI/pci-error-recovery.txt
-> +F:	Documentation/PCI/pci-error-recovery.rst
->  F:	drivers/pci/pcie/aer.c
->  F:	drivers/pci/pcie/dpc.c
->  F:	drivers/pci/pcie/err.c
-
-
-
-Thanks,
-Mauro
