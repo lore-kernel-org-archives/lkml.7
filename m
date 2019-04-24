@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC979C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE297C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC80621904
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817C1218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117587;
-	bh=q2zoJkEt8vTzoc+i3x6vrx4AOwbKtdMeSrkc42fDn/k=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=s/qJUTQWsSJy6FKkFvWVdCeeVdXVyijFxf7pOJeH8uFWddtB2bNUv4NUAi7XtoYQo
-	 v3/ousQwsHl3uNms4OkAI8L+11hxTgpNc5K+BKdZV5boi/wHrRNk57T8jguRG83S3O
-	 azPt1TnIVsnRk8iLbfDj0nmFBbz5pA47ZrUONEUY=
+	s=default; t=1556117590;
+	bh=j3zqp7WzoD1FVBeS5IQznFaC03BDtOC35ofbxC2Tq1o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hjTc5xrN6hwGUQQRtP52mBdl5aCmgMz0OQ17zhzY4vmFMSvRID2bIlQdf7zo1VH/e
+	 TOrMxrxWEQ7F5Zuse8VFODgMSbkfYgkig75K6lEtc00YnrpyLA8oEcdgHy0QyJ5C32
+	 VSgCyPzTSO/xqWM4lyNBZgJaJPoJGoCXVp/mE4Kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbfDXOxG (ORCPT
+        id S1733025AbfDXOxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52660 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:53:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732464AbfDXOxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:53:04 -0400
+        id S1732464AbfDXOxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:53:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0FAC218FC;
-        Wed, 24 Apr 2019 14:53:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F0D321902;
+        Wed, 24 Apr 2019 14:53:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117583;
-        bh=q2zoJkEt8vTzoc+i3x6vrx4AOwbKtdMeSrkc42fDn/k=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oRGIJIv0jqZoNhN3Baen/CftRVbwe62KUOkb4b++Z2NlZw47EO2myj0Cr5penlD8h
-         Sh26jkjHlkHPDsRNpFPK5bXien5de9o943t76unVDZrY3Gy1fk1P8TKxVuuqJG3i+D
-         MuTGrcEG2LEwOzKzRgv6dFV1nKrjAbebKBBqc5sI=
+        s=default; t=1556117586;
+        bh=j3zqp7WzoD1FVBeS5IQznFaC03BDtOC35ofbxC2Tq1o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dRGyixELCMlueBzUl7lv2YEdHG7uBUGmX9JXHGa/fiJCHSSrS3ormAptulGBjj8dA
+         QA0iqbpakXW7o8NMqOUNqbfmu723BY+QGRxaiJisTZmmYeN7ZOcfW+dYt0DrO5ewU1
+         GL8aeHuU7nRY1GSHpW/3tN2EPteFTPk7hP4hMCgE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "He, Bo" <bo.he@intel.com>, "Zhang, Jun" <jun.zhang@intel.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 01/10] HID: debug: fix race condition with between rdesc_show() and device removal
-Date:   Wed, 24 Apr 2019 10:52:50 -0400
-Message-Id: <20190424145259.31639-1-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 02/10] rtc: sh: Fix invalid alarm warning for non-enabled alarm
+Date:   Wed, 24 Apr 2019 10:52:51 -0400
+Message-Id: <20190424145259.31639-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190424145259.31639-1-sashal@kernel.org>
+References: <20190424145259.31639-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,60 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "He, Bo" <bo.he@intel.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit cef0d4948cb0a02db37ebfdc320e127c77ab1637 ]
+[ Upstream commit 15d82d22498784966df8e4696174a16b02cc1052 ]
 
-There is a race condition that could happen if hid_debug_rdesc_show()
-is running while hdev is in the process of going away (device removal,
-system suspend, etc) which could result in NULL pointer dereference:
+When no alarm has been programmed on RSK-RZA1, an error message is
+printed during boot:
 
-	 BUG: unable to handle kernel paging request at 0000000783316040
-	 CPU: 1 PID: 1512 Comm: getevent Tainted: G     U     O 4.19.20-quilt-2e5dc0ac-00029-gc455a447dd55 #1
-	 RIP: 0010:hid_dump_device+0x9b/0x160
-	 Call Trace:
-	  hid_debug_rdesc_show+0x72/0x1d0
-	  seq_read+0xe0/0x410
-	  full_proxy_read+0x5f/0x90
-	  __vfs_read+0x3a/0x170
-	  vfs_read+0xa0/0x150
-	  ksys_read+0x58/0xc0
-	  __x64_sys_read+0x1a/0x20
-	  do_syscall_64+0x55/0x110
-	  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    rtc rtc0: invalid alarm value: 2019-03-14T255:255:255
 
-Grab driver_input_lock to make sure the input device exists throughout the
-whole process of dumping the rdesc.
+sh_rtc_read_alarm_value() returns 0xff when querying a hardware alarm
+field that is not enabled.  __rtc_read_alarm() validates the received
+alarm values, and fills in missing fields when needed.
+While 0xff is handled fine for the year, month, and day fields, and
+corrected as considered being out-of-range, this is not the case for the
+hour, minute, and second fields, where -1 is expected for missing
+fields.
 
-[jkosina@suse.cz: update changelog a bit]
-Signed-off-by: "he, bo" <bo.he@intel.com>
-Signed-off-by: "Zhang, Jun" <jun.zhang@intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fix this by returning -1 instead, as this value is handled fine for all
+fields.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-debug.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/rtc/rtc-sh.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
-index e930627d0c76..71b069bd2a24 100644
---- a/drivers/hid/hid-debug.c
-+++ b/drivers/hid/hid-debug.c
-@@ -1057,10 +1057,15 @@ static int hid_debug_rdesc_show(struct seq_file *f, void *p)
- 	seq_printf(f, "\n\n");
+diff --git a/drivers/rtc/rtc-sh.c b/drivers/rtc/rtc-sh.c
+index d0d2b047658b..dcd5dcae7b3c 100644
+--- a/drivers/rtc/rtc-sh.c
++++ b/drivers/rtc/rtc-sh.c
+@@ -455,7 +455,7 @@ static int sh_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ static inline int sh_rtc_read_alarm_value(struct sh_rtc *rtc, int reg_off)
+ {
+ 	unsigned int byte;
+-	int value = 0xff;	/* return 0xff for ignored values */
++	int value = -1;			/* return -1 for ignored values */
  
- 	/* dump parsed data and input mappings */
-+	if (down_interruptible(&hdev->driver_input_lock))
-+		return 0;
-+
- 	hid_dump_device(hdev, f);
- 	seq_printf(f, "\n");
- 	hid_dump_input_mapping(hdev, f);
- 
-+	up(&hdev->driver_input_lock);
-+
- 	return 0;
- }
- 
+ 	byte = readb(rtc->regbase + reg_off);
+ 	if (byte & AR_ENB) {
 -- 
 2.19.1
 
