@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD887C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC18C282E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E03D20811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3F520811
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127087;
-	bh=JXrIYMk1HEm5HgsJ5WYaBiGjp44leD+iI1UzFa86uAk=;
+	s=default; t=1556127089;
+	bh=WTFo0w6bOd6tgdW3iGcOXVW9Ghv3oBKHIqjkAWYOcRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q8l6DOKyMInFEDA6nzAqPigYJ5AeaJbsyvxtNm4/hv0xh9kpSId6LzL0yhq8DRd3y
-	 dALMgVOtYJqe/+ttLeiAEGKVeVnJHYE1I9eqerYbiBFesBbwPgvRlWMYQ5pe0xs0Kc
-	 T26UBE2DtLe7+L/xZY8QtROJ274cujD1rusdB5Y4=
+	b=N9OkdblrcRmdNXpo6xDyYYeINhAOtWbKQIXl0N7wp/U/RUKQhipFQ1zw5iYKBqRCW
+	 SuBMimVw6pmKNkToyoq6up/3fHKz6hfCt/EYLLBS02KrhdWSvxlYHul/hbr7kmr74B
+	 /iaDLta3UWMjPtUqFQN5iyf/KlH7Zh3pxv3jcYvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403801AbfDXRb0 (ORCPT
+        id S2403813AbfDXRb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57880 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:31:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403789AbfDXRbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:31:24 -0400
+        id S2403800AbfDXRb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:31:26 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D454D20811;
-        Wed, 24 Apr 2019 17:31:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86C4A2054F;
+        Wed, 24 Apr 2019 17:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127083;
-        bh=JXrIYMk1HEm5HgsJ5WYaBiGjp44leD+iI1UzFa86uAk=;
+        s=default; t=1556127086;
+        bh=WTFo0w6bOd6tgdW3iGcOXVW9Ghv3oBKHIqjkAWYOcRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eMC78qt4o2LAQKIFHbIZpCOKo4S9u6S4l3HePREv/iOmWhkx3aebTHOILD6N3/WLl
-         Oh5YdcmpUtbtvy8izS0LsjoRserJPPfqREjQPgWJm9/oRaiyzpQOUVJfh8PkgFUOMd
-         PgT5igUMJfcENwpDlj+WHxA9IpyYVAYiV9WnKomQ=
+        b=VCqxz4E4FahrN4A0OjcnlMX20Akvobi87oG7qiubgwAWP5O+TVDrCW9l/EZD69YHY
+         YnXKgxD997bbNi5XtbxwgZSuisxNI2iFBaQ6PcLKe7Q6O6WzT4j+AEibO7hLWDsspt
+         7R+puzMoxYiLhmGoJffwGKJOZq23QmBg1bjUrS+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Ulrich Hecht <uli+renesas@fpond.eu>
-Subject: [PATCH 4.19 56/96] serial: sh-sci: Fix HSCIF RX sampling point calculation
-Date:   Wed, 24 Apr 2019 19:10:01 +0200
-Message-Id: <20190424170923.545229462@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Nicolas Pitre <nico@fluxnic.net>
+Subject: [PATCH 4.19 57/96] vt: fix cursor when clearing the screen
+Date:   Wed, 24 Apr 2019 19:10:02 +0200
+Message-Id: <20190424170923.599911313@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -61,45 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit ace965696da2611af759f0284e26342b7b6cec89 upstream.
+commit b2ecf00631362a83744e5ec249947620db5e240c upstream.
 
-There are several issues with the formula used for calculating the
-deviation from the intended rate:
-  1. While min_err and last_stop are signed, srr and baud are unsigned.
-     Hence the signed values are promoted to unsigned, which will lead
-     to a bogus value of deviation if min_err is negative,
-  2. Srr is the register field value, which is one less than the actual
-     sampling rate factor,
-  3. The divisions do not use rounding.
+The patch a6dbe4427559 ("vt: perform safe console erase in the right
+order") introduced a bug. The conditional do_update_region() was
+replaced by a call to update_region() that does contain the conditional
+already, but with unwanted extra side effects such as restoring the cursor
+drawing.
 
-Fix this by casting unsigned variables to int, adding one to srr, and
-using a single DIV_ROUND_CLOSEST().
+In order to reproduce the bug:
+- use framebuffer console with the AMDGPU driver
+- type "links" to start the console www browser
+- press 'q' and space to exit links
 
-Fixes: 63ba1e00f178a448 ("serial: sh-sci: Support for HSCIF RX sampling point adjustment")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Now the cursor will be permanently visible in the center of the
+screen. It will stay there until something overwrites it.
+
+The bug goes away if we change update_region() back to the conditional
+do_update_region().
+
+[ nico: reworded changelog ]
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
+Cc: stable@vger.kernel.org
+Fixes: a6dbe4427559 ("vt: perform safe console erase in the right order")
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sh-sci.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/vt/vt.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -2497,7 +2497,9 @@ done:
- 			 * center of the last stop bit in sampling clocks.
- 			 */
- 			int last_stop = bits * 2 - 1;
--			int deviation = min_err * srr * last_stop / 2 / baud;
-+			int deviation = DIV_ROUND_CLOSEST(min_err * last_stop *
-+							  (int)(srr + 1),
-+							  2 * (int)baud);
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1521,7 +1521,8 @@ static void csi_J(struct vc_data *vc, in
+ 			return;
+ 	}
+ 	scr_memsetw(start, vc->vc_video_erase_char, 2 * count);
+-	update_region(vc, (unsigned long) start, count);
++	if (con_should_update(vc))
++		do_update_region(vc, (unsigned long) start, count);
+ 	vc->vc_need_wrap = 0;
+ }
  
- 			if (abs(deviation) >= 2) {
- 				/* At least two sampling clocks off at the
 
 
