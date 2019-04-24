@@ -7,20 +7,20 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05410C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C01CC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7497218EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE99B218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="hcmVvLXz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="qoYes3MD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728908AbfDXAC2 (ORCPT
+        id S1728944AbfDXACf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 20:02:28 -0400
+        Tue, 23 Apr 2019 20:02:35 -0400
 Received: from esa4.hgst.iphmx.com ([216.71.154.42]:53963 "EHLO
         esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfDXACY (ORCPT
+        with ESMTP id S1726075AbfDXACY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Apr 2019 20:02:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
@@ -28,30 +28,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   t=1556064144; x=1587600144;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=TsI1Vv+BQuc7zHn+F6+ygwuhtzAPsWvsEfC04f75S54=;
-  b=hcmVvLXzmR6/KC91OqV4N5a0ojf09mjIXH4OZVvZjaRkaWSFvU/0W3Vr
-   mK1tHo2bskjB//pnl4Vv5e0eS7D3OSnQqe2wUBo/mhnODchzz/34i6Fw0
-   p8ueP5Wx1nQnWYBKf+P4VPyApCzQk9mTGqKaA5j/viSNp5jgWGTUYjnEX
-   mrFE272/EiIjJZUQ/YGSfu2RMXK1Hyzkit+9fSLeKxuL5CLpshrEuIc9u
-   m2AGGEvLbgc4LnvHirZoZm5d/haU6NkSeBXJyJ+folJsVe0StTr5oRvA6
-   bZsuMNdfTSAF3sa/su9l/cIYDBcrUZIGqJNNkmyctciZU+HgnAngw8UT6
-   w==;
+  bh=K0mjdmCfdkrn3w/zT4aJMYOdZrUml3L58iZRwDuQ/Lw=;
+  b=qoYes3MDCcBL86j+090gF/Dukiu7wvAH3tvcq4jYAtbYUoFSRMM5pv76
+   MJah2xrkFREb+lKMwiikZjsOrsMt4EAH1JENNLtPPenlRhAzCYjr83M/X
+   DoTIFyxVcgdvHpeyChD9dCqNVYbzGJKgdLsLMm2P2JcmolZJ4u0igFUI0
+   eHZNkaw9T74hL4N+dox7BJb2ENy0Ys+iCGf4/+twpXxPggq/UDbHKF8oe
+   SLQrO5uz2G5yPdW7RW1Di15eyg/6ADlzgMjTi67+IdpgnvdOQI1sdouBG
+   uWjb4Zczej7zHRoMXN1xVdGygtoaxfxbaGreXLd6j9s2+HCIU6bEuhTu7
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.60,387,1549900800"; 
-   d="scan'208";a="106649531"
+   d="scan'208";a="106649535"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 24 Apr 2019 08:02:23 +0800
-IronPort-SDR: g053JX2sCYNsumIA9nDPNaBqWwsYAhjOWcrIWbma3vlaxY0frpZ3DbpMS4L0HDSLW1uybrPVi7
- wDChiAOwM/Yx6oaHLyF9GQ1h8tMZHr7wS/0f52bnE3Zx3Q4TOngHUITvQOuB6r3BMPeWEOlsS5
- a5oF6HROgjiFuNu1HG+8gnvLzTvwbqefoDSMsid78IFbszYnM9Cgnopy8+DRoNtmScUQFCky5D
- PQV7GNNUmOB1/HMgn+pOYETF6ub4jzMDz5HQD+8E96OIZ6OHo8lqpwQLO3+MITucS9LIy0zCzs
- HYgKoR36rLLJ5cT75UzfEyh3
+  by ob1.hgst.iphmx.com with ESMTP; 24 Apr 2019 08:02:24 +0800
+IronPort-SDR: 4aZ5Fwwe9CEy90fFpkWNfR/gq/Y7iQUdOnzKK1vVw90UUkcsfby2aE0PxOCBQy+IMAz8WLdECA
+ LNVUDskRSCXwmhT2wUY7YZr9O04wGIEXwrz3qoWa2SUP1b0V/hCoyJd6jkkSwAQAtjKeaOLEO+
+ 5M/ESp7th6SxHn/TJ6Eid09Fe6IBcUvkJx88aPWLH31SnUSBxe3Bs3NXMSxx4i0dzbfIvkVOm+
+ oaNqeoXO2h/BK3A+m3GflMlnIZFNvXihjTXXqK8he7dGf3uLuhaN1C5pPIou9cvlTDYOcBExYW
+ P2BO56xgr4vq4W8AOV8uZV0p
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP; 23 Apr 2019 16:41:03 -0700
-IronPort-SDR: 8ArrhRcNMCh7vFl00ASwZSp12erSVVdrGP6n/aHcpXoKHZtU/T5W2OuihEo8qL7IL/sR7DAv+m
- MYNs19kwKsXUGXf9q/W+N+aKrK+nWIDLWENFZiX2A6jCUDCwzqnPoC7QD4w3WLbM04CEzl16mh
- Q2EzSHZoikUIXA4VjiBbCp7SIh5I5Ssh0/XLZrmvXFrrvP3pi/X8NuTjjVO0WH7dBNV/5ZkGUv
- oyAU4MrGda9tYZ1yrmHAq/cqy8rFt8k0Z0jlMqbMaGn8UiDY7T2+l8Gm0PtWa8ErXb5mJDKYQY
- 0hc=
+  by uls-op-cesaep02.wdc.com with ESMTP; 23 Apr 2019 16:41:04 -0700
+IronPort-SDR: vLxFqYKRUEO2Hyzjha/t/tSa7wtu+8Bjtkknn7qkd7Pfg7hK26rXSp/pUuMj332f7QCLldAZCL
+ bMZ+M8zqf/osPxKB2CaFEk+UaU5/QIBrQet2r8+IxGXh4f4xRcfJ1EOfwo+Vn1u7/tYcnKK/PH
+ OQ9fU/MA3ldp175wqdWGT3ZxJFPMrCo+1loyho64iijURyU37AcvZnG3DzK3LBuswcgQnPfvp2
+ cY6d17rnQqtblP0Od3oiZRatNJynbfa9EG/sIg3MzedQxPgvtiFmOJA3rb2JpTD9yg0wylIJ2P
+ yd0=
 Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
   by uls-op-cesaip02.wdc.com with ESMTP; 23 Apr 2019 17:02:23 -0700
 From:   Atish Patra <atish.patra@wdc.com>
@@ -67,9 +67,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH v3 1/3] RISC-V: Add RISC-V specific arch_match_cpu_phys_id
-Date:   Tue, 23 Apr 2019 17:02:25 -0700
-Message-Id: <20190424000227.3085-2-atish.patra@wdc.com>
+Subject: [PATCH v3 3/3] RISC-V: Support nr_cpus command line option.
+Date:   Tue, 23 Apr 2019 17:02:27 -0700
+Message-Id: <20190424000227.3085-4-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424000227.3085-1-atish.patra@wdc.com>
 References: <20190424000227.3085-1-atish.patra@wdc.com>
@@ -80,49 +80,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OF/DT core has a hook for architecture specific logical cpuid to hartid
-mapping. By implementing this, we can pass the logical cpu id to cpu
-node parsing functions.
-
-Fix the instances where logical cpuid is expected as an argument in
-of_get_cpu_node.
+If nr_cpus command line option is set, maximum possible cpu should be
+set to that value.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/riscv/kernel/cpu.c | 3 +--
- arch/riscv/kernel/smp.c | 5 +++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/riscv/kernel/smpboot.c | 10 +++++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/kernel/smpboot.
 
-diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-index cf2fca12414a..c8d2a3223099 100644
---- a/arch/riscv/kernel/cpu.c
-+++ b/arch/riscv/kernel/cpu.c
-@@ -136,8 +136,7 @@ static void c_stop(struct seq_file *m, void *v)
- static int c_show(struct seq_file *m, void *v)
- {
- 	unsigned long cpu_id = (unsigned long)v - 1;
--	struct device_node *node = of_get_cpu_node(cpuid_to_hartid_map(cpu_id),
--						   NULL);
-+	struct device_node *node = of_get_cpu_node(cpu_id, NULL);
- 	const char *compat, *isa, *mmu;
+diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+index a8ad200581aa..7a0b62252524 100644
+--- a/arch/riscv/kernel/smpboot.c
++++ b/arch/riscv/kernel/smpboot.c
+@@ -84,11 +84,19 @@ void __init setup_smp(void)
+ 		}
  
- 	seq_printf(m, "processor\t: %lu\n", cpu_id);
-diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-index 0c41d07ec281..94db72662f60 100644
---- a/arch/riscv/kernel/smp.c
-+++ b/arch/riscv/kernel/smp.c
-@@ -70,6 +70,11 @@ void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out)
- 	for_each_cpu(cpu, in)
- 		cpumask_set_cpu(cpuid_to_hartid_map(cpu), out);
- }
+ 		cpuid_to_hartid_map(cpuid) = hart;
+-		set_cpu_possible(cpuid, true);
+ 		cpuid++;
+ 	}
+ 
+ 	BUG_ON(!found_boot_cpu);
 +
-+bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
-+{
-+	return phys_id == cpuid_to_hartid_map(cpu);
-+}
- /* Unsupported */
- int setup_profiling_timer(unsigned int multiplier)
- {
++	if (cpuid > nr_cpu_ids)
++		pr_warn("Total number of cpus [%d] is greater than nr_cpus option value [%d]\n",
++			cpuid, nr_cpu_ids);
++
++	for (cpuid = 1; cpuid < nr_cpu_ids; cpuid++) {
++		if (cpuid_to_hartid_map(cpuid) != INVALID_HARTID)
++			set_cpu_possible(cpuid, true);
++	}
+ }
+ 
+ int __cpu_up(unsigned int cpu, struct task_struct *tidle)
 -- 
 2.21.0
 
