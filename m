@@ -2,167 +2,165 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD687C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CAEEC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA4220878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30364218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:30:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FAaJNQW3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bVoE2GyT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729147AbfDXJaQ (ORCPT
+        id S1729478AbfDXJaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:30:16 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23692 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726176AbfDXJaP (ORCPT
+        Wed, 24 Apr 2019 05:30:21 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36372 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726176AbfDXJaU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:30:15 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O9S2xl016196;
-        Wed, 24 Apr 2019 11:29:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
- : from : message-id : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=2o5IGPIQ5p1cWC32IDoQF85xBOwkYPMDHu6k/f7altE=;
- b=FAaJNQW32HeoS4ZvT3oGug14CS4FmZMpfdnCFjhMPEh8nIy3sOj32YHDvja4H4R37lWU
- BmMmv+VnVofzrdK3HRsO97u2TYC5MBKp82GX514qcLaRuGzdbT+4NJXdqhN/Jr3Zazd0
- l89Vz3yMguA4lbKl3/3qhe95hdNR3gvbc5Yh9Lf8X0Y4PQWoMkJdCgLb3oOhOSEPaKtE
- x39y79eN3XT8kwdcv8rcU4eFV7Bv29MnYf/8QTGNVWECO2Fwd8OiGY2RSpj3Kd6kR0Pl
- xCKmi6kiv4JgxnzGNerJcGnpNqEyRu71LeCMCNhO1SReKz23+MJ4x912U1JUsRygA9FE bQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2ryrj65yrq-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 24 Apr 2019 11:29:50 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 19A323A;
-        Wed, 24 Apr 2019 09:29:50 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E89E7157D;
-        Wed, 24 Apr 2019 09:29:49 +0000 (GMT)
-Received: from [10.48.0.204] (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 24 Apr
- 2019 11:29:49 +0200
-Subject: Re: [PATCH] pinctrl: stm32: check irq controller availability at
- probe
-To:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1556093324-1008-1-git-send-email-fabien.dessenne@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <8d65f99f-0874-8012-5e44-3e579cb1f878@st.com>
-Date:   Wed, 24 Apr 2019 11:29:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 05:30:20 -0400
+Received: by mail-pl1-f195.google.com with SMTP id ck15so9012259plb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 02:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jS8sA5wVvAstEMBPfxsjXr3lvFTcs0TzZqWL7gM79Nw=;
+        b=bVoE2GyTwPZO7/bsB1UtAykhVesT02vmZE7yOcPQYEvY2yKhHMsjFiKyA5CABbiYkH
+         3s6swu7SZSM8VrzmdeMqXYi+6MwxdyIF2b53WHv7/5oZg3XibbxWZkr2tznB3EI4nP9t
+         7JYAQnBNdZBDJV/IhJ+KpevyqetCOUyrurL3tXgh8pi7uJ7SeUrqvVDHAtxA3D49UmA/
+         ofd6csttFFZDzTLrcYQn+QAtvJ5uSuhczjxgN4YMIoG+VTTQQFPmXJ1isDlflWK6gAU2
+         hRaTUXak13JtonP4AH0vR1DOoWi5yCk0PTCuS2EWspp9Ugn9NTJZS7qAXtc8LrQ2EfX4
+         xJnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jS8sA5wVvAstEMBPfxsjXr3lvFTcs0TzZqWL7gM79Nw=;
+        b=tIVpfVqaC8hBZP12Fil9iOknWtwC4aUFkDhwpnTtRQO7ewkY90wzoh+K8/lMY5FwRX
+         W9i4ZKvrMSXk3wVPp+lN6Q0oeqhp4HKsZJjadsA0wc8+upOjZjjpgJuoLw4eg1N659zQ
+         zGSJJNgGjGvBUzzRXHIfST8FbmvyaOarjM5arYgDIpyLXDO28b52cKaXcbOkqUMXEKVT
+         LeGm2CpN51G2j7HvVGDSktCutiP4UzdcH8Iremqaq4Zd+O7VTkkIhw1H1dCnfIh7D3Kj
+         xQQAtmb80BDRsMeXEtg8rOY+mo4wgE52NMhExXuIuktVfwYkqc4NUyo4SgmoUbtznUT+
+         H2Cg==
+X-Gm-Message-State: APjAAAXZddUpOwJ6RjItl4zD/k2c51bchTN2WXDfVtkF+AEEvDaGPzfl
+        ip6ARhJ/TTDI8aHyEc7CfkFwOw==
+X-Google-Smtp-Source: APXvYqyvJbo01zmJtkIrttWV5J+5l51q8sH4KWYsVBjaJbuocJCDqsEwJfUW759839TNhvJEt02FQw==
+X-Received: by 2002:a17:902:2e01:: with SMTP id q1mr30844272plb.221.1556098218762;
+        Wed, 24 Apr 2019 02:30:18 -0700 (PDT)
+Received: from localhost ([122.166.139.136])
+        by smtp.gmail.com with ESMTPSA id j12sm22427245pgg.79.2019.04.24.02.30.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 02:30:17 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 15:00:15 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc:     Christian Neubert <christian.neubert.86@gmail.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] clk: mvebu: armada-37xx-periph: Fix initialization for
+ cpu clocks
+Message-ID: <20190424093015.rcr5auamfccxf6ei@vireshk-i7>
+References: <20190313163558.6705-1-gregory.clement@bootlin.com>
+ <20190314121541.GB19385@apalos>
+ <CAC5LXJcCs4nr-qFOWzUJpUBAJ9ngG-cgeTCVCFBKFc1SPzHMuQ@mail.gmail.com>
+ <20190314134428.GA24768@apalos>
+ <874l85v8p6.fsf@FE-laptop>
+ <20190318112844.GA1708@apalos>
+ <87h8c0s955.fsf@FE-laptop>
+ <20190318122113.GA4834@apalos>
 MIME-Version: 1.0
-In-Reply-To: <1556093324-1008-1-git-send-email-fabien.dessenne@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_02:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190318122113.GA4834@apalos>
+User-Agent: NeoMutt/20180323-120-3dd1ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 4/24/19 10:08 AM, Fabien Dessenne wrote:
-> It is not guaranteed that the IRQ controller driver is probed before
-> the pin controller driver gets probed.
-> Considering this, check for the irq domain availability during probe
-> and return EPROBE_DEFER if needed.
+On 18-03-19, 14:21, Ilias Apalodimas wrote:
+> Hi Gregory, 
 > 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-> ---
-
-
-Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
-
->   drivers/pinctrl/stm32/pinctrl-stm32.c | 37 +++++++++++++++++++++++++----------
->   1 file changed, 27 insertions(+), 10 deletions(-)
+> > >> 
+> > > [   14.909524] clk_pm_cpu_set_parent old=28004840 -> val=0x6000000 load_level=0
+> > > [   14.916424] clk_pm_cpu_set_parent old=2E004840 -> val=0x600 load_level=1
+> > > [   14.923315] clk_pm_cpu_set_parent old=8880A8C0 -> val=0x6000000 load_level=2
+> > > [   14.930572] clk_pm_cpu_set_parent old=8E80A8C0 -> val=0x600 load_level=3
+> > >
+> > >
+> > > Let me know if you need anything else
+> > 
+> > Could you show me the output of "cat /sys/kernel/debug/clk/clk_summary"
+> > 
+> root@localhost ~ # cat /sys/kernel/debug/clk/clk_summary
+>                                  enable  prepare  protect                                duty
+>    clock                          count    count    count        rate   accuracy phase  cycle
+> ---------------------------------------------------------------------------------------------
+>  xtal                                 2        3        0    25000000          0     0  50000
+>     i2c_1                             0        0        0    25000000          0     0  50000
+>     i2c_2                             0        0        0    25000000          0     0  50000
+>     avs                               0        0        0    25000000          0     0  50000
+>     TBG-B-S                           2        2        0  1000000000          0     0  50000
+>        cpu                            0        0        0   200000000          0     0  50000
+>        usb32_ss_sys                   1        1        0   125000000          0     0  50000
+>        usb32_usb2_sys                 0        0        0   100000000          0     0  50000
+>        gbe_125                        0        0        0   125000000          0     0  50000
+>           gbe0_125                    0        0        0   125000000          0     0  50000
+>           gbe1_125                    0        0        0   125000000          0     0  50000
+>        gbe_core                       1        1        0   250000000          0     0  50000
+>           gbe_bm                      0        0        0   250000000          0     0  50000
+>           gbe0_core                   1        1        0   250000000          0     0  50000
+>           gbe1_core                   0        0        0   250000000          0     0  50000
+>        eip97                          0        0        0   500000000          0     0  50000
+>        trace                          0        0        0  1000000000          0     0  50000
+>        ddr_fclk                       0        0        0   125000000          0     0  50000
+>        pwm                            0        0        0    50000000          0     0  50000
+>        tscem_tmx                      0        0        0  1000000000          0     0  50000
+>        sec_dap                        0        0        0   100000000          0     0  50000
+>        sec_at                         0        0        0   200000000          0     0  50000
+>     TBG-A-S                           0        0        0  1600000000          0     0  50000
+>        sdio                           0        0        0   400000000          0     0  50000
+>        ddr_phy                        0        0        0   400000000          0     0  50000
+>        mmc                            0        0        0   400000000          0     0  50000
+>     TBG-B-P                           0        0        0   500000000          0     0  50000
+>        gbe_50                         0        0        0    50000000          0     0  50000
+>           gbe0_50                     0        0        0    50000000          0     0  50000
+>           gbe1_50                     0        0        0    50000000          0     0  50000
+>     TBG-A-P                           0        1        0   800000000          0     0  50000
+>        counter                        0        0        0   160000000          0     0  50000
+>        sqf                            0        1        0   200000000          0     0  50000
+>        tscem                          0        0        0   200000000          0     0  50000
+>        sata_host                      0        0        0   200000000          0     0  50000
+> root@localhost ~ # 
 > 
-> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> index 0aebc31..2317ccf 100644
-> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> @@ -1122,23 +1122,35 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl,
->   	return 0;
->   }
->   
-> +static struct irq_domain *stm32_pctrl_get_irq_domain(struct device_node *np)
-> +{
-> +	struct device_node *parent;
-> +	struct irq_domain *domain;
-> +
-> +	if (!of_find_property(np, "interrupt-parent", NULL))
-> +		return NULL;
-> +
-> +	parent = of_irq_find_parent(np);
-> +	if (!parent)
-> +		return ERR_PTR(-ENXIO);
-> +
-> +	domain = irq_find_host(parent);
-> +	if (!domain)
-> +		/* domain not registered yet */
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	return domain;
-> +}
-> +
->   static int stm32_pctrl_dt_setup_irq(struct platform_device *pdev,
->   			   struct stm32_pinctrl *pctl)
->   {
-> -	struct device_node *np = pdev->dev.of_node, *parent;
-> +	struct device_node *np = pdev->dev.of_node;
->   	struct device *dev = &pdev->dev;
->   	struct regmap *rm;
->   	int offset, ret, i;
->   	int mask, mask_width;
->   
-> -	parent = of_irq_find_parent(np);
-> -	if (!parent)
-> -		return -ENXIO;
-> -
-> -	pctl->domain = irq_find_host(parent);
-> -	if (!pctl->domain)
-> -		return -ENXIO;
-> -
->   	pctl->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
->   	if (IS_ERR(pctl->regmap))
->   		return PTR_ERR(pctl->regmap);
-> @@ -1264,6 +1276,11 @@ int stm32_pctl_probe(struct platform_device *pdev)
->   
->   	platform_set_drvdata(pdev, pctl);
->   
-> +	/* check for IRQ controller (may require deferred probe) */
-> +	pctl->domain = stm32_pctrl_get_irq_domain(np);
-> +	if (IS_ERR(pctl->domain))
-> +		return PTR_ERR(pctl->domain);
-> +
->   	/* hwspinlock is optional */
->   	hwlock_id = of_hwspin_lock_get_id(pdev->dev.of_node, 0);
->   	if (hwlock_id < 0) {
-> @@ -1294,7 +1311,7 @@ int stm32_pctl_probe(struct platform_device *pdev)
->   		return -EINVAL;
->   	}
->   
-> -	if (of_find_property(np, "interrupt-parent", NULL)) {
-> +	if (pctl->domain) {
->   		ret = stm32_pctrl_dt_setup_irq(pdev, pctl);
->   		if (ret)
->   			return ret;
-> 
+> > Also, during this week-end, Christian suggested that the issue might
+> > come from the AVS support.
+> > 
+> > Could you disable it and check you still have the issue?
+> > 
+> > For this, you just have to remove the avs node in
+> > arch/arm64/boot/dts/marvell/armada-37xx.dtsi and rebuild the dtb.
+> Sure. You'll have to wait for a week though. Currently on a trip. I'll run that
+>  once i return
+
+@Ilias: Can you please try this now and confirm to Gregory ?
+
+-- 
+viresh
