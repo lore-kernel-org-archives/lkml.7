@@ -2,137 +2,133 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9928EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511BEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64231218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205BE206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:50:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KIHOFrVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732756AbfDXQtI (ORCPT
+        id S1732824AbfDXQuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:49:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55106 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732574AbfDXQtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:49:06 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 89640307D861;
-        Wed, 24 Apr 2019 16:49:06 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8FAD660C9C;
-        Wed, 24 Apr 2019 16:49:05 +0000 (UTC)
-Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
- negative
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <4cbd3c18-c9c0-56eb-4e01-ee355a69057a@redhat.com>
- <20190419102647.GP7905@worktop.programming.kicks-ass.net>
- <20190419120207.GO4038@hirez.programming.kicks-ass.net>
- <20190419130304.GV14281@hirez.programming.kicks-ass.net>
- <20190419131522.GW14281@hirez.programming.kicks-ass.net>
- <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
- <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
- <20190423141714.GO11158@hirez.programming.kicks-ass.net>
- <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
- <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
- <20190424070959.GE4038@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <51589ac0-3e1f-040e-02bf-b6de77cbda1d@redhat.com>
-Date:   Wed, 24 Apr 2019 12:49:05 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 12:50:03 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46260 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730534AbfDXQuD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:50:03 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t17so26069931wrw.13
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 09:50:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gd5ss9wUd+sHecdwwrDARY92RM22a/6uha5UkmKmo9s=;
+        b=KIHOFrVEzmZxLxuk2z2O/mEoB6cfpcsGR1iF9qYXi5qYO+ul/rKNPLV/4zZiEllirW
+         66E3uT96cCOHTpBla4xFr4BsPb/lBNbNS/yi46uV4tFJMF2BErzLK+r1b6XeIexb6ZfN
+         bfZw3wo+CaNDFdrFTuc6Y931DFf5P9HGzTA/qpqp5yDpbpvJtWMyCMJCASQ14l8eLsQW
+         aMlrzGtNSw+mQ+vgFzbRCyj4q2LDf0qZiAEpRHrxYwVF7znh5NDVdJX20cQNu59V8Ly2
+         7qbx/DtOz8pN8EIC9Mf/ouK+b1JVZNTcyLhOz3OMOpWtOj+suuCC2SAIGCq9+ewSe8P4
+         RFRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gd5ss9wUd+sHecdwwrDARY92RM22a/6uha5UkmKmo9s=;
+        b=XbHnUxyD5a8SvAdnASBFQscN6IctqxR2u9rmX2acfr+s8/KIj+zEekIsnK2D1czTvy
+         DPxegHBys2aNOHgm/3ioH/aAYyW32WrLH9U1YKlBxDLxWJUWN3rBu8njNH2jEn37UJJM
+         BQu5XTcnuLvCYE1NyAZleZXhPtslOFtZdTGTvc730vFxlSRRmfrJbCXZOOIM4wK7faxk
+         2ZXsUqmuHAtvI07wW/TfqFx06O8oiZ3rbVYK3DiKHWfiAhEl26VK+VGqpl64LAxqd0Sa
+         Mfmh/Bfe94liDKMrOpVV8AnOftkbw12TcrtcTosAXG00u1wKgAQ3HlOfK9FFEOTV+dtj
+         8hyw==
+X-Gm-Message-State: APjAAAUWtjzQEqwMPIceYcbkR5o68mvK2G7HXegSEgeUNL0Ef0+gBsr2
+        xXv7JWf0td2q/8nUKFPSEhdQrT4R5/EovD4jxjz40w==
+X-Google-Smtp-Source: APXvYqwUR/KxNHWf1l1ucsn/smycF/X7bSTMDTHzRCZ4d/Ne9tjd4x3ovMdfKIne6O+13Eo29oP9dP20aWWApk5ZTI0=
+X-Received: by 2002:adf:ba81:: with SMTP id p1mr21319802wrg.192.1556124601648;
+ Wed, 24 Apr 2019 09:50:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190424070959.GE4038@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 24 Apr 2019 16:49:06 +0000 (UTC)
+References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
+ <1556061656-1733-3-git-send-email-john.stultz@linaro.org> <20190424163908.GB20110@ravnborg.org>
+In-Reply-To: <20190424163908.GB20110@ravnborg.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 24 Apr 2019 09:49:49 -0700
+Message-ID: <CALAqxLXeU7skJiy2J4ZYOFtym6pDUuzY3QT+e3F1D8jE4pYC0w@mail.gmail.com>
+Subject: Re: [PATCH 02/25] drm: kirin: Remove HISI_KIRIN_DW_DSI config option
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/19 3:09 AM, Peter Zijlstra wrote:
-> On Tue, Apr 23, 2019 at 03:12:16PM -0400, Waiman Long wrote:
->> That is true in general, but doing preempt_disable/enable across
->> function boundary is ugly and prone to further problems down the road.
-> We do worse things in this code, and the thing Linus proposes is
-> actually quite simple, something like so:
+On Wed, Apr 24, 2019 at 9:39 AM Sam Ravnborg <sam@ravnborg.org> wrote:
 >
-> ---
-> --- a/kernel/locking/rwsem.c
-> +++ b/kernel/locking/rwsem.c
-> @@ -912,7 +904,7 @@ rwsem_down_read_slowpath(struct rw_semap
->  			raw_spin_unlock_irq(&sem->wait_lock);
->  			break;
->  		}
-> -		schedule();
-> +		schedule_preempt_disabled();
->  		lockevent_inc(rwsem_sleep_reader);
->  	}
->  
-> @@ -1121,6 +1113,7 @@ static struct rw_semaphore *rwsem_downgr
->   */
->  inline void __down_read(struct rw_semaphore *sem)
->  {
-> +	preempt_disable();
->  	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
->  			&sem->count) & RWSEM_READ_FAILED_MASK)) {
->  		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE);
-> @@ -1129,10 +1122,12 @@ inline void __down_read(struct rw_semaph
->  	} else {
->  		rwsem_set_reader_owned(sem);
->  	}
-> +	preempt_enable();
->  }
->  
->  static inline int __down_read_killable(struct rw_semaphore *sem)
->  {
-> +	preempt_disable();
->  	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
->  			&sem->count) & RWSEM_READ_FAILED_MASK)) {
->  		if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE)))
-> @@ -1142,6 +1137,7 @@ static inline int __down_read_killable(s
->  	} else {
->  		rwsem_set_reader_owned(sem);
->  	}
-> +	preempt_enable();
->  	return 0;
->  }
->  
+> Hi John.
+>
+> On Tue, Apr 23, 2019 at 04:20:33PM -0700, John Stultz wrote:
+> > The CONFIG_HISI_KIRIN_DW_DSI option is only used w/ kirin
+> > driver, so cut out the middleman and condense the config
+> > logic down.
+> >
+> > Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
+> > Cc: Rongrong Zou <zourongrong@gmail.com>
+> > Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> > Cc: Chen Feng <puck.chen@hisilicon.com>
+> > Cc: David Airlie <airlied@linux.ie>
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: dri-devel <dri-devel@lists.freedesktop.org>
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> >  drivers/gpu/drm/hisilicon/kirin/Kconfig  | 10 +---------
+> >  drivers/gpu/drm/hisilicon/kirin/Makefile |  4 ++--
+> >  2 files changed, 3 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/hisilicon/kirin/Kconfig b/drivers/gpu/drm/hisilicon/kirin/Kconfig
+> > index 499f644..6ef7906 100644
+> > --- a/drivers/gpu/drm/hisilicon/kirin/Kconfig
+> > +++ b/drivers/gpu/drm/hisilicon/kirin/Kconfig
+> > @@ -4,16 +4,8 @@ config DRM_HISI_KIRIN
+> >       select DRM_KMS_HELPER
+> >       select DRM_GEM_CMA_HELPER
+> >       select DRM_KMS_CMA_HELPER
+> > -     select HISI_KIRIN_DW_DSI
+> > +     select DRM_MIPI_DSI
+> >       help
+> >         Choose this option if you have a hisilicon Kirin chipsets(hi6220).
+> >         If M is selected the module will be called kirin-drm.
+> >
+> > -config HISI_KIRIN_DW_DSI
+> > -     tristate "HiSilicon Kirin specific extensions for Synopsys DW MIPI DSI"
+> > -     depends on DRM_HISI_KIRIN
+> > -     select DRM_MIPI_DSI
+> > -     help
+> > -      This selects support for HiSilicon Kirin SoC specific extensions for
+> > -      the Synopsys DesignWare DSI driver. If you want to enable MIPI DSI on
+> > -      hi6220 based SoC, you should selet this option.
+>
+> Nice simplification. We are now down to two very small Kconfig files.
+> Consider to merge them into one Kconfig file in the top-level dir.
+>
 
-Making that change will help the slowpath to has less preemption points.
-For an uncontended rwsem, this offers no real benefit. Adding
-preempt_disable() is more complicated than I originally thought.
+Part of this cleanup is so that we can add another device option in a
+later commit (though not in this series), so unless folks are
+generally wanting to consolidate Kconfigs into the top level, it may
+be premature to do so now only to later undo it when there are more
+kirin specific options. I'm fine with whichever, I just want to make
+sure that's clear.
 
-Maybe we are too paranoid about the possibility of a large number of
-preemptions happening just at the right moment. If p is the probably of
-a preemption in the middle of the inc-check-dec sequence, which I have
-already moved as close to each other as possible. We are talking a
-probability of p^32768. Since p will be really small, the compound
-probability will be infinitesimally small.
-
-So I would like to not do preemption now for the current patchset. We
-can restart the discussion later on if there is a real concern that it
-may actually happen. Please let me know if you still want to add
-preempt_disable() for the read lock.
-
-Cheers,
-Longman
-
-
+thanks
+-john
