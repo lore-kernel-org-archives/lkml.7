@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B66CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCAAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA93205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E102205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126682;
-	bh=IASd3gSWCDgjayk0ZsiIUhaT0OJmpZBbweknvPcdViM=;
+	s=default; t=1556126685;
+	bh=WLn64TCrCVn/CGDSAYr7J5qAkULDqliUSBcZirV7cNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wmi8NqtvGBnm4C1OPL5AJ5LIhEXISb5JMQOye7y16aNQwstY8q2RmeCtOsLiToA8j
-	 v28OlVck5Cvf5PWQedgHqobn2Sg8D0/cKud6iSFbrtmB7+J+/5t0nNShl3CI/XZ2E2
-	 Vp3G9RF8+m2MLcvma6dr53t89P+JnTVjEahk4f2c=
+	b=XKWhGHUI6AHxcAijXWSKTr2jm/ez9QqiPLYETs5nJFuAKPYSX4ShiMV7Hi5kf1beW
+	 ClI0jBVbUMz1E2OcV4gq9mHY6jf93tIpAKNRzkFyvl5Gx4/abpAT4jZHfBz9PhG9+v
+	 LDkSLLdZ2a2KoP0RjA6T36z/JXVMxdj1w2X74734=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389892AbfDXRYf (ORCPT
+        id S2389911AbfDXRYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50336 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:24:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389867AbfDXRY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:24:27 -0400
+        id S2389893AbfDXRYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:24:35 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E103F205ED;
-        Wed, 24 Apr 2019 17:24:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84B03205ED;
+        Wed, 24 Apr 2019 17:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126666;
-        bh=IASd3gSWCDgjayk0ZsiIUhaT0OJmpZBbweknvPcdViM=;
+        s=default; t=1556126675;
+        bh=WLn64TCrCVn/CGDSAYr7J5qAkULDqliUSBcZirV7cNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2hQvcbHJlo95Q13uwnqQWUFUr/NmOAfMsIuXAOdXzRmVfASDfuCslY+GTLniZriAD
-         OTKX3N+1GhjzcT8kdvyjHJy4YtH5kM6geyWwoAXqyv/76BNDiWmC3XibNFiYDG2lfa
-         IZN8PEpaut0diNvyGGK8K1yqnsl/kxNPq3Lmsd/Y=
+        b=hx4vzKu57vbjkRR63vmq87zP9mZ8S4u68oi4jvxdg7OfsXALy6o0AJ4oRKGng1LqX
+         0aV8emhizl8p6YbBoM4XURkhcZepISNTLrgSlbxwK5y1xV6zaObL4cfPQizBs+n2gr
+         7uzLv+sfyMGEBtcBdL0bTPBM3Cmo9Wjbgh985UuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>,
+        stable@vger.kernel.org, Georg Ottinger <g.ottinger@abatec.at>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.9 19/44] iio/gyro/bmg160: Use millidegrees for temperature scale
-Date:   Wed, 24 Apr 2019 19:09:57 +0200
-Message-Id: <20190424170853.787978908@linuxfoundation.org>
+Subject: [PATCH 4.9 21/44] iio: adc: at91: disable adc channel interrupt in timeout case
+Date:   Wed, 24 Apr 2019 19:09:59 +0200
+Message-Id: <20190424170855.555849600@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -60,45 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Looijmans <mike.looijmans@topic.nl>
+From: Georg Ottinger <g.ottinger@abatec.at>
 
-commit 40a7198a4a01037003c7ca714f0d048a61e729ac upstream.
+commit 09c6bdee51183a575bf7546890c8c137a75a2b44 upstream.
 
-Standard unit for temperature is millidegrees Celcius, whereas this driver
-was reporting in degrees. Fix the scale factor in the driver.
+Having a brief look at at91_adc_read_raw() it is obvious that in the case
+of a timeout the setting of AT91_ADC_CHDR and AT91_ADC_IDR registers is
+omitted. If 2 different channels are queried we can end up with a
+situation where two interrupts are enabled, but only one interrupt is
+cleared in the interrupt handler. Resulting in a interrupt loop and a
+system hang.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+Signed-off-by: Georg Ottinger <g.ottinger@abatec.at>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/gyro/bmg160_core.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/iio/adc/at91_adc.c |   28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
---- a/drivers/iio/gyro/bmg160_core.c
-+++ b/drivers/iio/gyro/bmg160_core.c
-@@ -583,11 +583,10 @@ static int bmg160_read_raw(struct iio_de
- 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
- 		return bmg160_get_filter(data, val);
+--- a/drivers/iio/adc/at91_adc.c
++++ b/drivers/iio/adc/at91_adc.c
+@@ -704,23 +704,29 @@ static int at91_adc_read_raw(struct iio_
+ 		ret = wait_event_interruptible_timeout(st->wq_data_avail,
+ 						       st->done,
+ 						       msecs_to_jiffies(1000));
+-		if (ret == 0)
+-			ret = -ETIMEDOUT;
+-		if (ret < 0) {
+-			mutex_unlock(&st->lock);
+-			return ret;
+-		}
+-
+-		*val = st->last_value;
+ 
++		/* Disable interrupts, regardless if adc conversion was
++		 * successful or not
++		 */
+ 		at91_adc_writel(st, AT91_ADC_CHDR,
+ 				AT91_ADC_CH(chan->channel));
+ 		at91_adc_writel(st, AT91_ADC_IDR, BIT(chan->channel));
+ 
+-		st->last_value = 0;
+-		st->done = false;
++		if (ret > 0) {
++			/* a valid conversion took place */
++			*val = st->last_value;
++			st->last_value = 0;
++			st->done = false;
++			ret = IIO_VAL_INT;
++		} else if (ret == 0) {
++			/* conversion timeout */
++			dev_err(&idev->dev, "ADC Channel %d timeout.\n",
++				chan->channel);
++			ret = -ETIMEDOUT;
++		}
++
+ 		mutex_unlock(&st->lock);
+-		return IIO_VAL_INT;
++		return ret;
+ 
  	case IIO_CHAN_INFO_SCALE:
--		*val = 0;
- 		switch (chan->type) {
- 		case IIO_TEMP:
--			*val2 = 500000;
--			return IIO_VAL_INT_PLUS_MICRO;
-+			*val = 500;
-+			return IIO_VAL_INT;
- 		case IIO_ANGL_VEL:
- 		{
- 			int i;
-@@ -595,6 +594,7 @@ static int bmg160_read_raw(struct iio_de
- 			for (i = 0; i < ARRAY_SIZE(bmg160_scale_table); ++i) {
- 				if (bmg160_scale_table[i].dps_range ==
- 							data->dps_range) {
-+					*val = 0;
- 					*val2 = bmg160_scale_table[i].scale;
- 					return IIO_VAL_INT_PLUS_MICRO;
- 				}
+ 		*val = st->vref_mv;
 
 
