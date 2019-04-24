@@ -2,161 +2,162 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9CBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826B5C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A79B2208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59BCD208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732216AbfDXQMc (ORCPT
+        id S1732247AbfDXQN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:12:32 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.168]:46590 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730818AbfDXQMb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:12:31 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 8A40E228DE
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:08:55 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id JKS7hGEA3dnCeJKS7h1fAD; Wed, 24 Apr 2019 11:08:55 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.223] (port=39548 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hJKS6-002xV7-Hb; Wed, 24 Apr 2019 11:08:54 -0500
-Date:   Wed, 24 Apr 2019 11:08:24 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH net-next] amd-xgbe: Mark expected switch fall-throughs
-Message-ID: <20190424160823.GA20314@embeddedor>
+        Wed, 24 Apr 2019 12:13:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40408 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730818AbfDXQN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:13:26 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E602F13823A;
+        Wed, 24 Apr 2019 16:13:25 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A474272DA;
+        Wed, 24 Apr 2019 16:13:22 +0000 (UTC)
+Subject: [PATCH 00/11] keys: Namespacing
+From:   David Howells <dhowells@redhat.com>
+To:     ebiederm@xmission.com
+Cc:     linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-afs@lists.infradead.org,
+        Jann Horn <jannh@google.com>, keyrings@vger.kernel.org,
+        dhowells@redhat.com, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwalsh@redhat.com, vgoyal@redhat.com
+Date:   Wed, 24 Apr 2019 17:13:22 +0100
+Message-ID: <155612240208.8564.13865046977065545591.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.223
-X-Source-L: No
-X-Exim-ID: 1hJKS6-002xV7-Hb
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.223]:39548
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 24 Apr 2019 16:13:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
 
-This patch fixes the following warnings:
+Here are some patches to make keys and keyrings more namespace aware.  Note
+that the branch is dependent on security/next-general.
 
-In file included from drivers/net/ethernet/amd/xgbe/xgbe-drv.c:129:
-drivers/net/ethernet/amd/xgbe/xgbe-drv.c: In function ‘xgbe_set_hwtstamp_settings’:
-drivers/net/ethernet/amd/xgbe/xgbe-common.h:1392:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  (_var) |= (((_val) & ((0x1 << (_width)) - 1)) << (_index)); \
-  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/amd/xgbe/xgbe-common.h:1419:2: note: in expansion of macro ‘SET_BITS’
-  SET_BITS((_var),      \
-  ^~~~~~~~
-drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1614:3: note: in expansion of macro ‘XGMAC_SET_BITS’
-   XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
-   ^~~~~~~~~~~~~~
-drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1616:2: note: here
-  case HWTSTAMP_FILTER_PTP_V1_L4_EVENT:
-  ^~~~
-In file included from drivers/net/ethernet/amd/xgbe/xgbe-drv.c:129:
-drivers/net/ethernet/amd/xgbe/xgbe-common.h:1392:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  (_var) |= (((_val) & ((0x1 << (_width)) - 1)) << (_index)); \
-  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/amd/xgbe/xgbe-common.h:1419:2: note: in expansion of macro ‘SET_BITS’
-  SET_BITS((_var),      \
-  ^~~~~~~~
-drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1625:3: note: in expansion of macro ‘XGMAC_SET_BITS’
-   XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
-   ^~~~~~~~~~~~~~
-drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1627:2: note: here
-  case HWTSTAMP_FILTER_PTP_V1_L4_SYNC:
-  ^~~~
-In file included from drivers/net/ethernet/amd/xgbe/xgbe-drv.c:129:
-drivers/net/ethernet/amd/xgbe/xgbe-common.h:1392:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  (_var) |= (((_val) & ((0x1 << (_width)) - 1)) << (_index)); \
-  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/net/ethernet/amd/xgbe/xgbe-common.h:1419:2: note: in expansion of macro ‘SET_BITS’
-  SET_BITS((_var),      \
-  ^~~~~~~~
-drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1636:3: note: in expansion of macro ‘XGMAC_SET_BITS’
-   XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
-   ^~~~~~~~~~~~~~
-drivers/net/ethernet/amd/xgbe/xgbe-drv.c:1638:2: note: here
-  case HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ:
-  ^~~~
+Firstly some miscellaneous patches to make the process easier:
 
-Warning level 3 was used: -Wimplicit-fallthrough=3
+ (1) Invalidate rather than revoke request_key() authentication keys to
+     recycle them more quickly.
 
-Notice that, in this particular case, the code comments are modified
-in accordance with what GCC is expecting to find.
+ (2) Remove request_key_async*() as they aren't used and would have to be
+     namespaced.
 
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
+ (3) Simplify key index_key handling so that the word-sized chunks
+     assoc_array requires don't have to be shifted about, making it easier
+     to add more bits into the key.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+ (4) Cache the hash value so that we don't have to calculate on every key
+     we examine during a search (it involves a bunch of multiplications).
+
+ (5) Allow keying_search() to search non-recursively.
+
+Then the main patches:
+
+ (6) Make it so that keyring names are per-user_namespace from the point of
+     view of KEYCTL_JOIN_SESSION_KEYRING so that they're not accessible
+     cross-user_namespace.
+
+ (7) Move the user and user-session keyrings to the user_namespace rather
+     than the user_struct.  This prevents them propagating directly across
+     user_namespaces boundaries (ie. the KEY_SPEC_* flags will only pick
+     from the current user_namespace).
+
+ (8) Make it possible to include the target namespace in which the key shall
+     operate in the index_key.  This will allow the possibility of multiple
+     keys with the same description, but different target domains to be held
+     in the same keyring.
+
+ (9) Make it so that keys are implicitly invalidated by removal of a domain
+     tag, causing them to be garbage collected.
+
+(10) Institute a network namespace domain tag that allows keys to be
+     differentiated by the network namespace in which they operate.  New keys
+     that are of a type marked 'KEY_TYPE_NET_DOMAIN' are assigned the network
+     domain in force when they are created.
+
+(11) Make it so that the desired network namespace can be handed down into the
+     request_key() mechanism.  This allows AFS, NFS, etc. to request keys
+     specific to the network namespace of the superblock.
+
+     This also means that the keys in the DNS record cache are thenceforth
+     namespaced, provided network filesystems pass the appropriate network
+     namespace down into dns_query().
+
+     For DNS, AFS and NFS are good; CIFS and Ceph are not.  Other cache
+     keyrings, such as idmapper keyrings, also need to set the domain tag.
+
+
+The patches can be found on the following branch:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-namespace
+
+David
 ---
- drivers/net/ethernet/amd/xgbe/xgbe-drv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+David Howells (11):
+      keys: Invalidate used request_key authentication keys
+      keys: Kill off request_key_async{,_with_auxdata}
+      keys: Simplify key description management
+      keys: Cache the hash value to avoid lots of recalculation
+      keys: Add a 'recurse' flag for keyring searches
+      keys: Namespace keyring names
+      keys: Move the user and user-session keyrings to the user_namespace
+      keys: Include target namespace in match criteria
+      keys: Garbage collect keys for which the domain has been removed
+      keys: Network namespace domain tag
+      keys: Pass the network namespace into request_key mechanism
 
-diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
-index 0cc911f928b1..3dd0cecddba8 100644
---- a/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
-+++ b/drivers/net/ethernet/amd/xgbe/xgbe-drv.c
-@@ -1612,7 +1612,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
- 	/* PTP v2, UDP, any kind of event packet */
- 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
- 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
--	/* PTP v1, UDP, any kind of event packet */
-+		/* Fall through - to PTP v1, UDP, any kind of event packet */
- 	case HWTSTAMP_FILTER_PTP_V1_L4_EVENT:
- 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
- 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
-@@ -1623,7 +1623,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
- 	/* PTP v2, UDP, Sync packet */
- 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
- 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
--	/* PTP v1, UDP, Sync packet */
-+		/* Fall through - to PTP v1, UDP, Sync packet */
- 	case HWTSTAMP_FILTER_PTP_V1_L4_SYNC:
- 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
- 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
-@@ -1634,7 +1634,7 @@ static int xgbe_set_hwtstamp_settings(struct xgbe_prv_data *pdata,
- 	/* PTP v2, UDP, Delay_req packet */
- 	case HWTSTAMP_FILTER_PTP_V2_L4_DELAY_REQ:
- 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSVER2ENA, 1);
--	/* PTP v1, UDP, Delay_req packet */
-+		/* Fall through - to PTP v1, UDP, Delay_req packet */
- 	case HWTSTAMP_FILTER_PTP_V1_L4_DELAY_REQ:
- 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV4ENA, 1);
- 		XGMAC_SET_BITS(mac_tscr, MAC_TSCR, TSIPV6ENA, 1);
--- 
-2.21.0
+
+ Documentation/security/keys/core.rst     |   10 +
+ certs/blacklist.c                        |    2 
+ crypto/asymmetric_keys/asymmetric_type.c |    2 
+ fs/afs/addr_list.c                       |    4 
+ fs/afs/dynroot.c                         |    7 -
+ fs/cifs/dns_resolve.c                    |    3 
+ fs/nfs/dns_resolve.c                     |    2 
+ include/linux/dns_resolver.h             |    3 
+ include/linux/key-type.h                 |    3 
+ include/linux/key.h                      |   49 ++++--
+ include/linux/sched/user.h               |   14 --
+ include/linux/user_namespace.h           |    8 +
+ include/net/net_namespace.h              |    4 
+ kernel/user.c                            |   10 -
+ kernel/user_namespace.c                  |    9 -
+ lib/digsig.c                             |    2 
+ net/ceph/messenger.c                     |    3 
+ net/core/net_namespace.c                 |   18 ++
+ net/dns_resolver/dns_key.c               |    1 
+ net/dns_resolver/dns_query.c             |    6 -
+ net/rxrpc/key.c                          |    6 -
+ net/rxrpc/security.c                     |    2 
+ security/integrity/digsig_asymmetric.c   |    4 
+ security/keys/gc.c                       |    2 
+ security/keys/internal.h                 |   10 +
+ security/keys/key.c                      |    9 +
+ security/keys/keyctl.c                   |    4 
+ security/keys/keyring.c                  |  263 +++++++++++++++++-------------
+ security/keys/persistent.c               |   10 +
+ security/keys/proc.c                     |    3 
+ security/keys/process_keys.c             |  252 ++++++++++++++++++-----------
+ security/keys/request_key.c              |  114 +++++++------
+ security/keys/request_key_auth.c         |    3 
+ 33 files changed, 502 insertions(+), 340 deletions(-)
 
