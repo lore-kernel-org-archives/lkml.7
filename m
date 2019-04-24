@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6557DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32309C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3694F20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04F420652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128878;
-	bh=YBsGI+jK1m8zn5HxLLjhFnIZK4KvNwTYHqOVt/W3Rng=;
+	s=default; t=1556128885;
+	bh=X24OnzlI9tkRjZTZkzSoiqWyq6vPOPNeBSIj+qpEvyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GLUXb8gUNRwJxZWXDkxBvZqTkFfXXi1zgUk9dW5LMJuA5fL7m2whMEy2e0caUNSCh
-	 OQz9CGZwU1siqzkscrG7OX6Mf7bfL764GPEzHDXpeXBK42Bd/+OYCXcnani6980Nwq
-	 8j+BMIoVwpH7vX0HPo9I2NoppFNHGy6j4vrWiqV8=
+	b=bE3sALi5tQ9OLhjBTvfAwbOZEigjZTa6nDqbyhOC8CCrw80es40VK4qCh8ypEs71t
+	 4y/2ILUHDGtd7JdaY9tsik2vI9a1A1LtWQnv1w0IeVvkXM9tEshvm68tf1G453n6DD
+	 mvvYyJZShLZxQn19D6M7U842S1agwobzzDA/k3Yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389548AbfDXRWW (ORCPT
+        id S2389515AbfDXRWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47860 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:22:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389533AbfDXRWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:22:18 -0400
+        id S2389498AbfDXRWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:22:09 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66D2321905;
-        Wed, 24 Apr 2019 17:22:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1644920835;
+        Wed, 24 Apr 2019 17:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126537;
-        bh=YBsGI+jK1m8zn5HxLLjhFnIZK4KvNwTYHqOVt/W3Rng=;
+        s=default; t=1556126529;
+        bh=X24OnzlI9tkRjZTZkzSoiqWyq6vPOPNeBSIj+qpEvyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DwhJIT0O/rb38cUeCFtEyepykoFtiTBNqTh+7lACgBUnoNl8H9v8ldBB+7bicpt4t
-         8QArBDs4DdQNoY10uN1tIThAqcLZw1LB0CDmQYlIDaqB4lg9Bz2UUfIuqUuRFQkD3b
-         C4lAF3iw30KU54hGJAlwKrPmGZzW8O0b+GH9Zuho=
+        b=HcKG35GT4YGxO6Ao0PBmniFOr0hrRkI8YWQIN1wSkqOKZh/9EJ+Hu/r72PhJ5E9a4
+         bwd/UYkvuk3T9vDsWojg1BBpdfAoY4OTrNDQ45X8tDHintAvKa+vGAJfoRbUn07nRJ
+         jCat4Ox/ev7r2JT0uKbF9kiQTR9HOJvPVs66Ea6E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Wei Wang <weiwan@google.com>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 141/168] tcp: tcp_grow_window() needs to respect tcp_space()
-Date:   Wed, 24 Apr 2019 19:09:45 +0200
-Message-Id: <20190424170931.586435307@linuxfoundation.org>
+Subject: [PATCH 4.4 138/168] net: atm: Fix potential Spectre v1 vulnerabilities
+Date:   Wed, 24 Apr 2019 19:09:42 +0200
+Message-Id: <20190424170931.435240086@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -62,63 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-[ Upstream commit 50ce163a72d817a99e8974222dcf2886d5deb1ae ]
+[ Upstream commit 899537b73557aafbdd11050b501cf54b4f5c45af ]
 
-For some reason, tcp_grow_window() correctly tests if enough room
-is present before attempting to increase tp->rcv_ssthresh,
-but does not prevent it to grow past tcp_space()
+arg is controlled by user-space, hence leading to a potential
+exploitation of the Spectre variant 1 vulnerability.
 
-This is causing hard to debug issues, like failing
-the (__tcp_select_window(sk) >= tp->rcv_wnd) test
-in __tcp_ack_snd_check(), causing ACK delays and possibly
-slow flows.
+This issue was detected with the help of Smatch:
 
-Depending on tcp_rmem[2], MTU, skb->len/skb->truesize ratio,
-we can see the problem happening on "netperf -t TCP_RR -- -r 2000,2000"
-after about 60 round trips, when the active side no longer sends
-immediate acks.
+net/atm/lec.c:715 lec_mcast_attach() warn: potential spectre issue 'dev_lec' [r] (local cap)
 
-This bug predates git history.
+Fix this by sanitizing arg before using it to index dev_lec.
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Wei Wang <weiwan@google.com>
+Notice that given that speculation windows are large, the policy is
+to kill the speculation on the first load and not worry if it can be
+completed with a dependent load/store [1].
+
+[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_input.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ net/atm/lec.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -365,11 +365,12 @@ static int __tcp_grow_window(const struc
- static void tcp_grow_window(struct sock *sk, const struct sk_buff *skb)
+--- a/net/atm/lec.c
++++ b/net/atm/lec.c
+@@ -721,7 +721,10 @@ static int lec_vcc_attach(struct atm_vcc
+ 
+ static int lec_mcast_attach(struct atm_vcc *vcc, int arg)
  {
- 	struct tcp_sock *tp = tcp_sk(sk);
-+	int room;
-+
-+	room = min_t(int, tp->window_clamp, tcp_space(sk)) - tp->rcv_ssthresh;
+-	if (arg < 0 || arg >= MAX_LEC_ITF || !dev_lec[arg])
++	if (arg < 0 || arg >= MAX_LEC_ITF)
++		return -EINVAL;
++	arg = array_index_nospec(arg, MAX_LEC_ITF);
++	if (!dev_lec[arg])
+ 		return -EINVAL;
+ 	vcc->proto_data = dev_lec[arg];
+ 	return lec_mcast_make(netdev_priv(dev_lec[arg]), vcc);
+@@ -739,6 +742,7 @@ static int lecd_attach(struct atm_vcc *v
+ 		i = arg;
+ 	if (arg >= MAX_LEC_ITF)
+ 		return -EINVAL;
++	i = array_index_nospec(arg, MAX_LEC_ITF);
+ 	if (!dev_lec[i]) {
+ 		int size;
  
- 	/* Check #1 */
--	if (tp->rcv_ssthresh < tp->window_clamp &&
--	    (int)tp->rcv_ssthresh < tcp_space(sk) &&
--	    !tcp_under_memory_pressure(sk)) {
-+	if (room > 0 && !tcp_under_memory_pressure(sk)) {
- 		int incr;
- 
- 		/* Check #2. Increase window, if skb with such overhead
-@@ -382,8 +383,7 @@ static void tcp_grow_window(struct sock
- 
- 		if (incr) {
- 			incr = max_t(int, incr, 2 * skb->len);
--			tp->rcv_ssthresh = min(tp->rcv_ssthresh + incr,
--					       tp->window_clamp);
-+			tp->rcv_ssthresh += min(room, incr);
- 			inet_csk(sk)->icsk_ack.quick |= 1;
- 		}
- 	}
 
 
