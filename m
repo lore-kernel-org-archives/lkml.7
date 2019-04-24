@@ -2,130 +2,122 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9450DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52162C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6374021773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215C021773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128106;
-	bh=lM2I0fF0UTnnQiUp3n0aAd2BPMCU9MxajSLXptVMUl4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DbIBW9pf/JzeLJFydZuKETbqr4GGHlFzQkhYqT5skr4XnFIbkf02qHj/S/ZLb/Mzt
-	 RoIQLN0Qnbs93VnI1mPpoThIR4VojhmsrgnojXsWanx3aL6ulV7nQXXm5eTVPYcPPX
-	 mygDiAOyC0L5CS7McYS1Dqa3zyPvgxqXf9cbLsiQ=
+	s=default; t=1556128127;
+	bh=ZoHvGVSFVuNaTJA1IG6BYbipl8kk0rjoziuacBSlSi8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OquuQRIvoBYctbvevbtxesDoayFAprYV5ohXaA+O4z0Vqys1I6FF8CQQ9qjNMSDKS
+	 mfgBYNKTaDEhuqmxi7li9M78sZnCD3JY4mv9JNzQRL3JlPG/dogPjEehD5iq0rY32x
+	 IQ+7Z4RunDXz2SFBPeD89wEtumebrRbmPfQFSePU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391844AbfDXRsZ (ORCPT
+        id S2391848AbfDXRsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:48:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403775AbfDXRbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:31:14 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7F6320811;
-        Wed, 24 Apr 2019 17:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127073;
-        bh=lM2I0fF0UTnnQiUp3n0aAd2BPMCU9MxajSLXptVMUl4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Krp739MLxRpj21ZSPNVu3A3TnWVfM8cXMDrkW57Vs3NsWJqoC1PFealsgJh+tJyb
-         /hYcaQ1Jx4b9ac5decjPw/vpq0cOiduJuCgvfhtGhl5ZwaBDoizULK4zFBpVR0f1tL
-         iLZzsFM0DaIrduyS+MZxyG1GnwjubulT0bnVB1BY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 09/96] team: set slave to promisc if team is already in promisc mode
-Date:   Wed, 24 Apr 2019 19:09:14 +0200
-Message-Id: <20190424170920.453276983@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
-References: <20190424170919.829037226@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 13:48:45 -0400
+Received: from casper.infradead.org ([85.118.1.10]:45360 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390660AbfDXRsl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:48:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=C+jH5MB5a2swmKkEdfeQTYpVl5aRBU1fzkhBf76AiTM=; b=SPdkI3i9xCTD0C8C2HRlxJ8DA3
+        JcezKeaj8JAP8fVRdaJDeDKK6RloQJbb2BuU60+tFeE+UcWTi3KN495/SKkSEmK6o7cBGYmc92V5x
+        PS8zILU/LaafDfuxLVLUPv5FSILDR6mIvL43565SCPSLnLL6LLWHSl8PKlnVoJOl0Vom5bsBe3yYZ
+        pwoy2EiUJKa+UumDtWbeWLGKyY8rT2SXc50+0g54tUYaCfaJgVjPDrhqj9/VsBCLoM+nNuVjx94pV
+        50qmTl+wEPN4xduztx1gI1Obywoh/vh1cgjUSRM857lTM4O0Rq2E9pFGBojPJnHI8CuJ1Vg1iU2c7
+        y9GU4zyQ==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJM0a-0000B8-TV; Wed, 24 Apr 2019 17:48:37 +0000
+Date:   Wed, 24 Apr 2019 14:48:30 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 00/63] Include linux ACPI/PCI/X86 docs into Sphinx
+ TOC tree
+Message-ID: <20190424144830.3fe92640@coco.lan>
+In-Reply-To: <20190424154617.kowr5aamjkeceltr@mail.google.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <CAJZ5v0jPyaGQcDfpW5b7A-_3bvkfL78MxFmPtjwCGZ4-=KwUwg@mail.gmail.com>
+        <20190423173644.GA14616@google.com>
+        <20190424154617.kowr5aamjkeceltr@mail.google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+Em Wed, 24 Apr 2019 23:46:18 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-[ Upstream commit 43c2adb9df7ddd6560fd3546d925b42cef92daa0 ]
+> On Tue, Apr 23, 2019 at 12:36:44PM -0500, Bjorn Helgaas wrote:
+> > On Tue, Apr 23, 2019 at 06:39:47PM +0200, Rafael J. Wysocki wrote:
+> > > On Tue, Apr 23, 2019 at 6:30 PM Changbin Du <changbin.du@gmail.com> wrote:
+> > > > Hi Corbet and All,
+> > > > The kernel now uses Sphinx to generate intelligent and beautiful
+> > > > documentation from reStructuredText files. I converted all of the Linux
+> > > > ACPI/PCI/X86 docs to reST format in this serias.
+> > > >
+> > > > In this version I combined ACPI and PCI docs, and added new x86 docs
+> > > > conversion.
+> > > 
+> > > I'm not sure if combining all three into one big patch series has been
+> > > a good idea, honestly.
+> > 
+> > Yeah, if you post this again, I would find it easier to deal with if
+> > linux-pci only got the PCI-related things.  63 patches is a little too
+> > much for one series.
+> >
+> sure, so I will resend them respectively.
 
-After adding a team interface to bridge, the team interface will enter
-promisc mode. Then if we add a new slave to team0, the slave will keep
-promisc off. Fix it by setting slave to promisc on if team master is
-already in promisc mode, also do the same for allmulti.
+I reviewed up to patch 39. There are too many files on x86 that seems
+to be mangled by some tab->whitespace conversion, with caused
+very big diffs and lots of broken ascii artwork.
 
-v2: add promisc and allmulti checking when delete ports
+Please ensure that the diffs will contain the minimal amount of stuff
+that would be required for them to be properly formatted as ReST
+files there.
 
-Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/team/team.c |   26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Ah, perhaps next time you could format the patches with a lower
+merge similarity logic (using, for example, the parameter -M10).
 
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -1250,6 +1250,23 @@ static int team_port_add(struct team *te
- 		goto err_option_port_add;
- 	}
- 
-+	/* set promiscuity level to new slave */
-+	if (dev->flags & IFF_PROMISC) {
-+		err = dev_set_promiscuity(port_dev, 1);
-+		if (err)
-+			goto err_set_slave_promisc;
-+	}
-+
-+	/* set allmulti level to new slave */
-+	if (dev->flags & IFF_ALLMULTI) {
-+		err = dev_set_allmulti(port_dev, 1);
-+		if (err) {
-+			if (dev->flags & IFF_PROMISC)
-+				dev_set_promiscuity(port_dev, -1);
-+			goto err_set_slave_promisc;
-+		}
-+	}
-+
- 	netif_addr_lock_bh(dev);
- 	dev_uc_sync_multiple(port_dev, dev);
- 	dev_mc_sync_multiple(port_dev, dev);
-@@ -1266,6 +1283,9 @@ static int team_port_add(struct team *te
- 
- 	return 0;
- 
-+err_set_slave_promisc:
-+	__team_option_inst_del_port(team, port);
-+
- err_option_port_add:
- 	team_upper_dev_unlink(team, port);
- 
-@@ -1311,6 +1331,12 @@ static int team_port_del(struct team *te
- 
- 	team_port_disable(team, port);
- 	list_del_rcu(&port->list);
-+
-+	if (dev->flags & IFF_PROMISC)
-+		dev_set_promiscuity(port_dev, -1);
-+	if (dev->flags & IFF_ALLMULTI)
-+		dev_set_allmulti(port_dev, -1);
-+
- 	team_upper_dev_unlink(team, port);
- 	netdev_rx_handler_unregister(port_dev);
- 	team_port_disable_netpoll(port);
+Regards,
+Mauro
+
+> 
+> > Bjorn
+> 
 
 
+
+Thanks,
+Mauro
