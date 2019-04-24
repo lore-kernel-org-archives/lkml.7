@@ -2,125 +2,69 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E9DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4FFC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5146206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76755206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:20:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tZPEhtNb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbfDXGUP convert rfc822-to-8bit (ORCPT
+        id S1729778AbfDXGUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:20:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42306 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726002AbfDXGUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:20:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id ECBD4AF8F;
-        Wed, 24 Apr 2019 06:20:13 +0000 (UTC)
-From:   Nicolai Stange <nstange@suse.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Nicolai Stange <nstange@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>, live-patching@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [RFC PATCH 1/1] x86/ftrace: make ftrace_int3_handler() not to skip fops invocation
-References: <20180726104029.7736-1-nstange@suse.de>
-        <20180726104029.7736-2-nstange@suse.de>
-        <20190419160513.1faa01d2@gandalf.local.home> <87ef5sfuzu.fsf@suse.de>
-        <20190423195023.425902dc@gandalf.local.home>
-Date:   Wed, 24 Apr 2019 08:20:12 +0200
-In-Reply-To: <20190423195023.425902dc@gandalf.local.home> (Steven Rostedt's
-        message of "Tue, 23 Apr 2019 19:50:23 -0400")
-Message-ID: <87bm0vexgj.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 24 Apr 2019 02:20:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47010 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfDXGUY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 02:20:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AZYvIvzwpu1jsgX20cUu89IdJc8KumO2IG1It1Q5bmQ=; b=tZPEhtNblm5F9Re4Y1WuHWbA7
+        IvENlC0w46yjIpaLGPqzViNLAeg8C3G8pqiPTg4v7PJa3dVAAPBozMr67gpJ23eRs5Rquom9Q5P11
+        P+dICzcNXWq3dm+8UHKUganQ0YkaCrpmXksMHiA62+MDbKNNN5Hn9Vx9L3jl0TxxVOvTYEMewYTvD
+        4e2U5K+k4L7iplN6khkkGUCQfBT+ILJTfh42YRtv3THACPWdZtSCvDaVTjcu6Jgyu/NTHGXYqzxFQ
+        BCHz97vTfYQR6pa4FosZ5fHTv45kxB7NEOR5yIQb6uUs+kT8W57RIMSrG4LOeSXUnnYzerawSF9QV
+        WMeV4bqKQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJBGW-0002E0-TA; Wed, 24 Apr 2019 06:20:20 +0000
+Date:   Tue, 23 Apr 2019 23:20:20 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     palmer@sifive.com, aou@eecs.berkeley.edu,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-riscv@lists.infradead.org,
+        Aurelien Jarno <aurelien@aurel32.net>
+Subject: Re: [PATCH] riscv: vdso: drop unnecessary cc-ldoption
+Message-ID: <20190424062020.GA3902@infradead.org>
+References: <20190423212254.9504-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423212254.9504-1-ndesaulniers@google.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Rostedt <rostedt@goodmis.org> writes:
-> On Tue, 23 Apr 2019 20:15:49 +0200
-> Nicolai Stange <nstange@suse.de> wrote:
->> Steven Rostedt <rostedt@goodmis.org> writes:
->> > For 32 bit, we could add 4 variables on the thread_info and make 4
->> > trampolines, one for each context (normal, softirq, irq and NMI), and
->> > have them use the variable stored in the thread_info for that location:
->> >
->> > ftrace_int3_tramp_normal
->> > 	push %eax # just for space
->> > 	push %eax
->> > 	mov whatever_to_get_thread_info, %eax
->> > 	mov normal(%eax), %eax
->> > 	mov %eax, 4(%esp)
->> > 	pop %eax
->> > 	jmp ftrace_caller
->> >
->> > ftrace_int3_tramp_softiqr
->> > 	push %eax # just for space
->> > 	push %eax
->> > 	mov whatever_to_get_thread_info, %eax
->> > 	mov softirq(%eax), %eax
->> > 	mov %eax, 4(%esp)
->> > 	pop %eax
->> > 	jmp ftrace_caller
->> >
->> > etc..
->> >
->> >
->> > A bit crazier for 32 bit but it can still be done. ;-)  
->> 
->> Ok, but currently CONFIG_HAVE_LIVEPATCH=n for x86 && !x86_64,
->> so I'd rather not invest too much energy into screwing 32 bit up ;)
->>
->
-> Probably not something you care about, but something that I do. Which
-> means it will have to go on my TODO list. I care about missed functions
-> being called. This means, if you have something tracing a function, and
-> then enable something else to trace that same function, you might miss
-> the first one.
+On Tue, Apr 23, 2019 at 02:22:53PM -0700, Nick Desaulniers wrote:
+> Towards the goal of removing cc-ldoption, it seems that --hash-style=
+> was added to binutils 2.17.50.0.2 in 2006. The minimal required version
+> of binutils for the kernel according to
+> Documentation/process/changes.rst is 2.20.
 
-Alright, if there's a use case beyond live patching, I can try to handle
-32 bits alongside, of course.
+Looks good,
 
-However, some care will be needed when determining the actual context
-from ftrace_int3_handler(): tracing anything before the addition or
-after the subtraction of HARDIRQ_OFFSET to/from preempt_count in
-irq_enter() resp. irq_exit() could otherwise clobber the "normal" state
-in thread_info, correct?
-
-How about having a fixed size stack with three entries shared between
-"normal", "irq" and "softirq" in thread_info, as well as a dedicated
-slot for nmi context? (The stack would be modified/consumed only with
-irqs disabled).
-
-Which makes me wonder:
-- if we disabled preemption from ftrace_int3_handler() and reenabled it
-  again from the *_int3_tramp*s, these stacks could be made per-CPU,
-  AFAICS,
-- and why not use this strategy on x86_64, too? The advantages would be
-  a common implemention between 32 and 64 bit and more importantly, not
-  relying on that %r11 hack. When doing the initial RFC patch, it
-  wasn't clear to me that at most one stack slot per context would be
-  needed, i.e. only four in total...
-
-What do you think?
-
-Nicolai
-
--- 
-SUSE Linux GmbH, GF: Felix Imendörffer, Jane Smithard, Graham Norton,
-HRB 21284 (AG Nürnberg)
+Reviewed-by: Christoph Hellwig <hch@lst.de>
