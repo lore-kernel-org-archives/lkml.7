@@ -1,119 +1,99 @@
 Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F22C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B6EC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A9D218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:12:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Zv8p6ZIt"
+	by mail.kernel.org (Postfix) with ESMTP id BCECD218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556104366;
+	bh=6SczV3J26SgKz5Chft/TaqeJuQhMvIXUL4P9CNUwETI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fPJ9bsuEyBgn95R9d9iiz3BV054O6UpJpevmoUGm7YInLhBby6/KPldoVZmCAVhng
+	 cW2Kmpjjv1diratTfgwRTL4BtmA4xs8HOEXkyzgD1+Pb1410zx1BUIZiveXpcbw0df
+	 CognFUN9CL3R/oEZVvxZl5zFdYtsAFA8XjHBAO84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbfDXLMd (ORCPT
+        id S1728656AbfDXLMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:12:33 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48113 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfDXLMd (ORCPT
+        Wed, 24 Apr 2019 07:12:45 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44276 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfDXLMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 07:12:33 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3OBCBFS2549590
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 24 Apr 2019 04:12:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3OBCBFS2549590
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1556104332;
-        bh=0t2YRjSZFOi88v9CSLMha2C7ajjbdo7pkJT+II5/xp4=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Zv8p6ZItKDcaSfPb76gAyZg0YOxvKxwcgwy00yLVvMN+JYx6GwujmiX8NxboIEjFM
-         ZrZlbviwsxXPHOUvSGDrYgF5IhpiM9RkJYQCQrrQ8y+2JPJkdwdeS6FuLBPKMC4oRK
-         DLgD2BWMuyqHqbyXK4lNKLX6K+0pr5EOvIlyh5YiqAhSs0J+mFPL3Fxvuvf2IPIg95
-         AJegufCryQmBcuf5D3jqg2BzGnE7H1LYRsxg5KpiQoIQzGZo+EPHkyt92xAjWQdcAL
-         Xa/7dmo/vkiR7hoUcOit1/yD0opC2luIy7NPMB4p7QD71/3c01FTjhbj52sn5AhaCW
-         cZtKV6k8nd5cA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3OBCBtA2549587;
-        Wed, 24 Apr 2019 04:12:11 -0700
-Date:   Wed, 24 Apr 2019 04:12:11 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nick Desaulniers <tipbot@zytor.com>
-Message-ID: <tip-3855f11d54a07256cc4a6fb85c692000208a73a7@git.kernel.org>
-Cc:     tglx@linutronix.de, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com,
-        yamada.masahiro@socionext.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, bp@alien8.de,
-        ndesaulniers@google.com
-Reply-To: tglx@linutronix.de, ndesaulniers@google.com, bp@alien8.de,
-          mingo@kernel.org, torvalds@linux-foundation.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com,
-          yamada.masahiro@socionext.com, peterz@infradead.org
-In-Reply-To: <20190423211554.1594-1-ndesaulniers@google.com>
-References: <20190423211554.1594-1-ndesaulniers@google.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/asm] x86/um/vdso: Drop unnecessary cc-ldoption
-Git-Commit-ID: 3855f11d54a07256cc4a6fb85c692000208a73a7
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 24 Apr 2019 07:12:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c5so15688075wrs.11;
+        Wed, 24 Apr 2019 04:12:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jsnkTCn3YR6sKqzaA2z1fVyvthO5dOiyjShuxgSE03Q=;
+        b=na7F1JMRVgatNhwECvNERBeuRij/6w7hH26Ie04Wncqe3beGoJqYXrmuW254o6HRly
+         4vlAMTRgb54wXkABrbGD5N2iWisV4L8tRU65Z0IroK5D7N+eoNxf4srrayuHjrDYh6GB
+         WB0IDYYJ1rei6qiOY9SMtxjWKcrbEoG+WYVF4r7WKwMGiGNIAQZTbwzIJI8IsEZ6B1ws
+         X/BT/o9plzJKVRDbFi6z3iI3KP1DuVOSuOiDaugfh3vRKI+yUZ46xWl3hUsMF6Q/u1qM
+         0zyyDpTN8xDHINDPSK2Pr55h43eTJyUxxk9mqXdff2Sc439OBB4exiTPtAcjlLOAO3aY
+         H8GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jsnkTCn3YR6sKqzaA2z1fVyvthO5dOiyjShuxgSE03Q=;
+        b=NpK6J0NjVUp4yu0EFfAdJFkbMaFAgwMITI9JlB+Ed29ddSNxRhr8RmWOx3T9DTuoYS
+         0syCvUd60If3QtALQCHXZs3aXIzDitqy1w7oX3pL1ct91yMnOm7YcHI1IfJg6dytcANJ
+         5rFCipYFP0NFH1wIAeEKw3zv1CR8ak5jaAZqerMHIfkqmUVgl8MzTbL0fgOpV3ADKcuU
+         BMPs1h9GL1RuaCww5HB8KDA8hMxJ6d0O6HuidFnIaRBQDRNXYnRYDKKyQjXxzLa7jB1P
+         ggLlr7IruB0xOPASjVpkyUvDU8NSqcf9OqVLj6pCUoAuQGmg28l69vURyuNhnTce1b54
+         DGtA==
+X-Gm-Message-State: APjAAAXlVon8k3jEZHoUbi2dZG0/vPcNdRA4TrQn4Xpg+m/JTzHEjute
+        4lQfoE404KTBoXVYLpEADh6V7671
+X-Google-Smtp-Source: APXvYqyAXX8yuVSFGEsaPAAir+Dw/WedxklSITKOlI8rOQweUMniC6OBMcloXIo2PWsGAdoyjkvIjQ==
+X-Received: by 2002:adf:ba49:: with SMTP id t9mr21557598wrg.146.1556104363617;
+        Wed, 24 Apr 2019 04:12:43 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id e7sm15715054wme.37.2019.04.24.04.12.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 04:12:42 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 13:12:40 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>
+Subject: Re: [PATCH 2/2] x86/pci: Clean up usage of X86_DEV_DMA_OPS
+Message-ID: <20190424111240.GA104443@gmail.com>
+References: <20190410080220.21705-1-hch@lst.de>
+ <20190410080220.21705-3-hch@lst.de>
+ <20190410081617.GA54229@gmail.com>
+ <20190410214500.GK256045@google.com>
+ <20190411051849.GA26205@lst.de>
+ <20190411133543.GO256045@google.com>
+ <20190424053806.GA12136@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190424053806.GA12136@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3855f11d54a07256cc4a6fb85c692000208a73a7
-Gitweb:     https://git.kernel.org/tip/3855f11d54a07256cc4a6fb85c692000208a73a7
-Author:     Nick Desaulniers <ndesaulniers@google.com>
-AuthorDate: Tue, 23 Apr 2019 14:15:53 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 24 Apr 2019 12:22:33 +0200
 
-x86/um/vdso: Drop unnecessary cc-ldoption
+* Christoph Hellwig <hch@lst.de> wrote:
 
-Towards the goal of removing cc-ldoption, it seems that --hash-style=
-was added to binutils 2.17.50.0.2 in 2006. The minimal required version
-of binutils for the kernel according to
-Documentation/process/changes.rst is 2.20.
+> Is anyone going to pick this patch up?
 
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: anton.ivanov@cambridgegreys.com
-Cc: clang-built-linux@googlegroups.com
-Cc: jdike@addtoit.com
-Cc: linux-um@lists.infradead.org
-Cc: richard@nod.at
-Link: http://lkml.kernel.org/r/20190423211554.1594-1-ndesaulniers@google.com
-Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/um/vdso/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sure, I've picked it up with Bjorn's Acked-by and will push it out after 
+a bit of testing.
 
-diff --git a/arch/x86/um/vdso/Makefile b/arch/x86/um/vdso/Makefile
-index bf94060fc06f..0caddd6acb22 100644
---- a/arch/x86/um/vdso/Makefile
-+++ b/arch/x86/um/vdso/Makefile
-@@ -62,7 +62,7 @@ quiet_cmd_vdso = VDSO    $@
- 		       -Wl,-T,$(filter %.lds,$^) $(filter %.o,$^) && \
- 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
- 
--VDSO_LDFLAGS = -fPIC -shared $(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
-+VDSO_LDFLAGS = -fPIC -shared -Wl,--hash-style=sysv
- GCOV_PROFILE := n
- 
- #
+Thanks,
+
+	Ingo
