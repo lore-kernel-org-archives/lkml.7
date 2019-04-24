@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4DFC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397ACC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED4721902
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 071C721900
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556114272;
-	bh=TdWE5BTDUGaxS5tgwoFDV4kBVKs/HU08nk+1lrddLv0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=02vMIXd6B2PrVTFLjJPex0DxCc2MBXH5hHISquIjlffHzilQ1kOIllxECWIO0w/QP
-	 zm9KxA3UbroAqLjNCnKm4B4IG+sWoLGNfcYaNDG9ym4zbABEMShQmHkeWB85CFtQMs
-	 ubkPdI6as22CpLEsvHTKFUK30EklShxHhx6CQHxE=
+	s=default; t=1556114277;
+	bh=uCby67JLHpu/Em2Ve4gpxb/keNXhbegp/ApeEr97MFo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZuRLC1GoVdo1XbH/7cZIKSQwEywlo2a+qxvbw9dyzl2d4V6P8R6DgoaVxbMuyD8Zd
+	 IYzAYh4OwBLK+rEruPFUe7ACmAGUuynB6Zh25q3nzu+0SGvPabChwgt68+J8BDTahL
+	 SUiuUNdvHJGXf4/qx1u+SvMV2tA+2R7QqZCkN27U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730194AbfDXN5v (ORCPT
+        id S1730400AbfDXN5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 09:57:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbfDXN5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:57:50 -0400
+        id S1730195AbfDXN5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:57:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 710F02077C;
-        Wed, 24 Apr 2019 13:57:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB88F21903;
+        Wed, 24 Apr 2019 13:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556114270;
-        bh=TdWE5BTDUGaxS5tgwoFDV4kBVKs/HU08nk+1lrddLv0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=g8F5njuVWPzp1+8PQsDjklzRJUcN4hBK4KxUp4xue1ZgrhpUZLLDEwMha3UsVFtmq
-         knwfpHwrF8bMfHrAH9bUghChr9z40gV88b16NMTDqxgllaQ4FHgxXZ/zt9TOD3+7Xk
-         H3bm46CaDRp415pLOoFz19z1EbLZFLh5toVM0//w=
+        s=default; t=1556114273;
+        bh=uCby67JLHpu/Em2Ve4gpxb/keNXhbegp/ApeEr97MFo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LQuxctZIWEUCn3yaP6X33bDH/kSYWskMTWRzbLwfzsiR5RP1a4QmAe9MCibxhQcDr
+         1SGfuutqRihZbrwOEryYvpo7BoiROyyR0Z3gNW70xCUEgi1PnUK3BOdva725j+6Dol
+         4ETu22V3E4/nuJZ9w4QRrQJC41K/08jTRnsSckpA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Leonidas P. Papadakos" <papadakospan@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 01/66] arm64: dts: rockchip: fix rk3328-roc-cc gmac2io tx/rx_delay
-Date:   Wed, 24 Apr 2019 09:56:39 -0400
-Message-Id: <20190424135746.22655-1-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 02/66] HID: Increase maximum report size allowed by hid_field_extract()
+Date:   Wed, 24 Apr 2019 09:56:40 -0400
+Message-Id: <20190424135746.22655-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190424135746.22655-1-sashal@kernel.org>
+References: <20190424135746.22655-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,42 +58,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 924726888f660b2a86382a5dd051ec9ca1b18190 ]
+[ Upstream commit 94a9992f7dbdfb28976b565af220e0c4a117144a ]
 
-The rk3328-roc-cc board exhibits tx stability issues with large packets,
-as does the rock64 board, which was fixed with this patch
-https://patchwork.kernel.org/patch/10178969/
+Commit 71f6fa90a353 ("HID: increase maximum global item tag report size
+to 256") increases the max report size from 128 to 256.
 
-A similar patch was merged for the rk3328-roc-cc here
-https://patchwork.kernel.org/patch/10804863/
-but it doesn't include the tx/rx_delay tweaks, and I find that they
-help with an issue where large transfers would bring the ethernet
-link down, causing a link reset regularly.
+We also need to update the report size in hid_field_extract() otherwise
+it complains and truncates now valid report size:
+[ 406.165461] hid-sensor-hub 001F:8086:22D8.0002: hid_field_extract() called with n (192) > 32! (kworker/5:1)
 
-Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+BugLink: https://bugs.launchpad.net/bugs/1818547
+Fixes: 71f6fa90a353 ("HID: increase maximum global item tag report size to 256")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/hid-core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 99d0d9912950..a91f87df662e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-@@ -107,8 +107,8 @@
- 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
- 	snps,reset-active-low;
- 	snps,reset-delays-us = <0 10000 50000>;
--	tx_delay = <0x25>;
--	rx_delay = <0x11>;
-+	tx_delay = <0x24>;
-+	rx_delay = <0x18>;
- 	status = "okay";
- };
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 9993b692598f..860e21ec6a49 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -1301,10 +1301,10 @@ static u32 __extract(u8 *report, unsigned offset, int n)
+ u32 hid_field_extract(const struct hid_device *hid, u8 *report,
+ 			unsigned offset, unsigned n)
+ {
+-	if (n > 32) {
+-		hid_warn(hid, "hid_field_extract() called with n (%d) > 32! (%s)\n",
++	if (n > 256) {
++		hid_warn(hid, "hid_field_extract() called with n (%d) > 256! (%s)\n",
+ 			 n, current->comm);
+-		n = 32;
++		n = 256;
+ 	}
  
+ 	return __extract(report, offset, n);
 -- 
 2.19.1
 
