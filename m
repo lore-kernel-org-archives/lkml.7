@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D05C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DDAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1119521903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF99121903
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127034;
-	bh=k8kZ/rdabEIaL6X3zj89Im8ZfKHj1V0Jp9gUE0tRMgU=;
+	s=default; t=1556127038;
+	bh=7rVw9ZJFXF0WuoNp6q4vq4Mvp3lZnTGxCUyzIgj0bKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O2/jV0ZQxlEnRoV7a6/oAx8XxMbtJ9dTb50VVAuTzXYCDp4VoOCXlDPbjlZUMMq8B
-	 usSc7Zdj+mE9JoZT387cu8DQymkI+GuCt6QbcT1GYEMh4ys18ENLCTNcF0Thb9+4pL
-	 H9y/C5gyl3GbSySQICQq/o9+3FXQm1Ng5OkG7FIc=
+	b=Zg13W+3TnO0fkQWzel0l8kLKJeuVJNLu0fU1Lj5veOITn+GnMxmn0ivknvfiOdV9V
+	 DNOWjS7Ax5DQTKAHDTorFdDKCCpjV9SxZs0ioYQYLLfxBzp8XQOTb7IX2myQDheRL1
+	 Fd7fS3kbbPHX/lK0cRUQo9JGzrWjT7FasjH/9sX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391009AbfDXRac (ORCPT
+        id S2391018AbfDXRah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:30:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390646AbfDXRa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:30:26 -0400
+        id S2391002AbfDXRab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:30:31 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57CAA21905;
-        Wed, 24 Apr 2019 17:30:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8616E2054F;
+        Wed, 24 Apr 2019 17:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127025;
-        bh=k8kZ/rdabEIaL6X3zj89Im8ZfKHj1V0Jp9gUE0tRMgU=;
+        s=default; t=1556127031;
+        bh=7rVw9ZJFXF0WuoNp6q4vq4Mvp3lZnTGxCUyzIgj0bKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JWKUTgUQY0kva8tGTrV44VUf7VRogkoLuCgDHQ8cD1kLxDMTv5HNCX+K1SPpj2Oy6
-         +3VlpF5/ElWihgQSz70MHj8epJM/IeJs6/Hv+kFIS2v/THtmAk4ul2lrG/avVOe2jp
-         GsbqxGWg0YQXYr1FoEkxg+NNrT6Inqp1DbLQ4t5Y=
+        b=Ks70JSghs4juBXi27uIQg10rJEKdgiOIhvOJ7jq9Z1MTgoxrQscqyJS8Ti9k7L14W
+         WkGH+vTWQP0cFH1MJvfvI7Abiw/1e9oE69FEqC/3LjN2tbzbqvxivPBr83PV0LByUN
+         H+Iki8+meQNG0Ij/yR0GWNozmvv0+hTG2INtvtLc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 32/96] KVM: x86: Dont clear EFER during SMM transitions for 32-bit vCPU
-Date:   Wed, 24 Apr 2019 19:09:37 +0200
-Message-Id: <20190424170922.061765861@linuxfoundation.org>
+        stable@vger.kernel.org, Leonard Pollak <leonardp@tr-host.de>,
+        Stable@vger.kernel.org,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 34/96] Staging: iio: meter: fixed typo
+Date:   Wed, 24 Apr 2019 19:09:39 +0200
+Message-Id: <20190424170922.203686257@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -59,80 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Leonard Pollak <leonardp@tr-host.de>
 
-commit 8f4dc2e77cdfaf7e644ef29693fa229db29ee1de upstream.
+commit 0a8a29be499cbb67df79370aaf5109085509feb8 upstream.
 
-Neither AMD nor Intel CPUs have an EFER field in the legacy SMRAM save
-state area, i.e. don't save/restore EFER across SMM transitions.  KVM
-somewhat models this, e.g. doesn't clear EFER on entry to SMM if the
-guest doesn't support long mode.  But during RSM, KVM unconditionally
-clears EFER so that it can get back to pure 32-bit mode in order to
-start loading CRs with their actual non-SMM values.
+This patch fixes an obvious typo, which will cause erroneously returning the Peak
+Voltage instead of the Peak Current.
 
-Clear EFER only when it will be written when loading the non-SMM state
-so as to preserve bits that can theoretically be set on 32-bit vCPUs,
-e.g. KVM always emulates EFER_SCE.
-
-And because CR4.PAE is cleared only to play nice with EFER, wrap that
-code in the long mode check as well.  Note, this may result in a
-compiler warning about cr4 being consumed uninitialized.  Re-read CR4
-even though it's technically unnecessary, as doing so allows for more
-readable code and RSM emulation is not a performance critical path.
-
-Fixes: 660a5d517aaab ("KVM: x86: save/load state on SMM switch")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Leonard Pollak <leonardp@tr-host.de>
+Cc: <Stable@vger.kernel.org>
+Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/emulate.c |   23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+ drivers/staging/iio/meter/ade7854.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -2575,15 +2575,13 @@ static int em_rsm(struct x86_emulate_ctx
- 	 * CR0/CR3/CR4/EFER.  It's all a bit more complicated if the vCPU
- 	 * supports long mode.
- 	 */
--	cr4 = ctxt->ops->get_cr(ctxt, 4);
- 	if (emulator_has_longmode(ctxt)) {
- 		struct desc_struct cs_desc;
- 
- 		/* Zero CR4.PCIDE before CR0.PG.  */
--		if (cr4 & X86_CR4_PCIDE) {
-+		cr4 = ctxt->ops->get_cr(ctxt, 4);
-+		if (cr4 & X86_CR4_PCIDE)
- 			ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PCIDE);
--			cr4 &= ~X86_CR4_PCIDE;
--		}
- 
- 		/* A 32-bit code segment is required to clear EFER.LMA.  */
- 		memset(&cs_desc, 0, sizeof(cs_desc));
-@@ -2597,13 +2595,16 @@ static int em_rsm(struct x86_emulate_ctx
- 	if (cr0 & X86_CR0_PE)
- 		ctxt->ops->set_cr(ctxt, 0, cr0 & ~(X86_CR0_PG | X86_CR0_PE));
- 
--	/* Now clear CR4.PAE (which must be done before clearing EFER.LME).  */
--	if (cr4 & X86_CR4_PAE)
--		ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PAE);
--
--	/* And finally go back to 32-bit mode.  */
--	efer = 0;
--	ctxt->ops->set_msr(ctxt, MSR_EFER, efer);
-+	if (emulator_has_longmode(ctxt)) {
-+		/* Clear CR4.PAE before clearing EFER.LME. */
-+		cr4 = ctxt->ops->get_cr(ctxt, 4);
-+		if (cr4 & X86_CR4_PAE)
-+			ctxt->ops->set_cr(ctxt, 4, cr4 & ~X86_CR4_PAE);
-+
-+		/* And finally go back to 32-bit mode.  */
-+		efer = 0;
-+		ctxt->ops->set_msr(ctxt, MSR_EFER, efer);
-+	}
- 
- 	smbase = ctxt->ops->get_smbase(ctxt);
- 
+--- a/drivers/staging/iio/meter/ade7854.c
++++ b/drivers/staging/iio/meter/ade7854.c
+@@ -269,7 +269,7 @@ static IIO_DEV_ATTR_VPEAK(0644,
+ static IIO_DEV_ATTR_IPEAK(0644,
+ 		ade7854_read_32bit,
+ 		ade7854_write_32bit,
+-		ADE7854_VPEAK);
++		ADE7854_IPEAK);
+ static IIO_DEV_ATTR_APHCAL(0644,
+ 		ade7854_read_16bit,
+ 		ade7854_write_16bit,
 
 
