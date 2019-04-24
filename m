@@ -2,158 +2,139 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCB5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BA8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E41E218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30389206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:10:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ySogtWNZ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Zve1s9ek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfDXIJL (ORCPT
+        id S1728454AbfDXIK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:09:11 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:34070 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726443AbfDXIJK (ORCPT
+        Wed, 24 Apr 2019 04:10:26 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37904 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbfDXIK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:09:10 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O86etE026280;
-        Wed, 24 Apr 2019 10:08:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=gWhmMJfG4KCKGsbfm55+Bl3jiOH6AJEwnEp7zdS68zg=;
- b=ySogtWNZxpSiI9dOW7zUhAeM7zDWryiHYdNdwu0Sg/C9C9UFYLh5nVaQofDwjeN3j/Zi
- GC8s4RbNGyyzXb9jlaGpM2JVKuU4EMT1D/jblDj1TuDmY+8V8Ov0dDEVxOBHGmNhbhWf
- C7x14fTtBAauN3q6tblKgq+d3aeeV/+ALCObQNHlPNRLe2/MmGZtRzuAF7jhDgF57pNA
- cX+6J3tMgurBn09nzqQsBUtz7YKudLkcvCl+N/PdJEb5dIWamE+UNgM1Zyvc7i1/UbEj
- uj6dmwB5Xo39537kD/iyUZLX8kfL4kHFUXxs/vvFyrP4oHYKLNT/2G88hd75CfQQlbvl UQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ryrvxc55a-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 24 Apr 2019 10:08:57 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C4F0B31;
-        Wed, 24 Apr 2019 08:08:55 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 997211409;
-        Wed, 24 Apr 2019 08:08:55 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 24 Apr
- 2019 10:08:55 +0200
-Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr 2019 10:08:54
- +0200
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH] pinctrl: stm32: check irq controller availability at probe
-Date:   Wed, 24 Apr 2019 10:08:44 +0200
-Message-ID: <1556093324-1008-1-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 24 Apr 2019 04:10:26 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190424081023euoutp01ff7bc3f2af3b2710faddafff2004ecad~YWrl5oY8U1810718107euoutp01m
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:10:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190424081023euoutp01ff7bc3f2af3b2710faddafff2004ecad~YWrl5oY8U1810718107euoutp01m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1556093423;
+        bh=GEsqOXMrECh6cwyp8/WLytlYTmzJJXGufR01sxb+3XA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Zve1s9ekDmXDZaOBrFP049o58y44tNE6DHGFPV7T8XjLMnZ34P5anBtodw/7bzAQt
+         RC+OQrHm4PViP+mV02TEDcJGu/4WwYEymORiGd3hBx7vCUc1Bxw9pNQP1opv8thTxH
+         z6Rg0ZIuEt8xY2trA0W3VCmAEY5cmt/GtBXL/E8Y=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190424081023eucas1p2f6f7bce38eca4e6175488c6cb8ffa6f9~YWrlLfhE42717827178eucas1p2X;
+        Wed, 24 Apr 2019 08:10:23 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 8A.B3.04377.EE910CC5; Wed, 24
+        Apr 2019 09:10:22 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190424081022eucas1p144890137465baf0d4169054b68e2983e~YWrkZJyKg2554125541eucas1p1F;
+        Wed, 24 Apr 2019 08:10:22 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190424081022eusmtrp1489ce7813bb6fbaf7d3a9cf1f6d52ed8~YWrkLBy6T0345603456eusmtrp1c;
+        Wed, 24 Apr 2019 08:10:22 +0000 (GMT)
+X-AuditID: cbfec7f4-5632c9c000001119-01-5cc019eefdb3
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 1B.2D.04140.DE910CC5; Wed, 24
+        Apr 2019 09:10:21 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190424081021eusmtip1ed3800c41567f07d9192d605727dcdc1~YWrjjAJQt0594005940eusmtip1P;
+        Wed, 24 Apr 2019 08:10:21 +0000 (GMT)
+Subject: Re: [PATCH RFC 4/8] soc: samsung: Add Exynos Adaptive Supply
+ Voltage driver
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, myungjoo.ham@samsung.com,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        pankaj.dubey@samsung.com,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <1d2238be-1758-2413-42f1-d571706de766@samsung.com>
+Date:   Wed, 24 Apr 2019 10:11:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.25]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_05:,,
- signatures=0
+In-Reply-To: <CAJKOXPc9v8bcQs9HmiDWECCkfQCh-Ktzk9Vqq01ccUm7UG54uQ@mail.gmail.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTut3vvdhWv/JzFTvaikURGDy3kRmEFChMK9Z+wMuyWF3u4OXbV
+        tILsMZuPzAx1LjU1K5sr09LVwoqlzlq4JMpSbMIGYaEQDaJ3btfK/77zne9853xwaEI+QEXQ
+        BzU5vE7DZSmlwWR3/1fXqqn5j9PWdhlj2Q5jO8UO+95T7OXeQYo97/lIsC7XbRnb6XlNsS9t
+        dVLW6HooYW/2jsnYq8NDEnb0ZKuUbe7yyVh9T69sC6OyNFiQqtNcLFXdaTmhKr9rRqrPnYuT
+        qV3BmzL4rIN5vG5N3N7gA57CJkL7kMp/XThBFSIzWYKCaMDroWO4gSpBwbQctyJoq29FYuFD
+        cKavZabzGUF168C/Eb2+lBAb1xGcP/tsRjWJ4MVEm8yvCsc74N6rfsKP5+IVMPzzS0BEYCcB
+        1lpDwEqKo+FcX/n0QppmcBw8P5Xjp0kcCeXuqoDPPJwK7v7blB8zOAye1noDo0E4BSq9EwGe
+        wAo45bsxg5eAdbIucB3gdzK41XxN4vcHHA8nPZFignD44LgrE/FCcF4sI0X9aQRlD0ZlYlGB
+        wO1oRKJqIzxxDFF+I2I6TbttjUhvhQFzERL9Q+HNZJh4QyhUdtcQIs2AoUguqpfBd3ONRMQR
+        UOr9TVYgpWlWMtOsNKZZaUz/9zYi0owUfK6gzuSFGA1/ZLXAqYVcTebq/dnqTjT9X85fDt89
+        ZPuxz44wjZQhTHLIozQ5xeUJBWo7AppQzmXWW6cpJoMrOMrrstN1uVm8YEcLaFKpYI7NGd8t
+        x5lcDn+Y57W87m9XQgdFFKKlCbUddGwSY9eMJ1KLdoZbG+uX96gNIx3eWMtI1NvRIsOxVO2G
+        saaGmGrL0MpvxeopF52IB48PVH2K/4o+LN5msBQ75Z7NtqS4kEzFngStY1yROuUY9B5Kvx+a
+        dcm4rmhR3ubtiXO0F1J05ZM9Cb/k3KMrSW67T280ufNPdytJ4QAXHUXoBO4PhumRrlsDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJIsWRmVeSWpSXmKPExsVy+t/xu7pvJQ/EGCy4ZmmxccZ6VovrX56z
+        Wsw/co7Vov/xa2aL8+c3sFtsenyN1eLyrjlsFjPO72OyWHvkLrvF0usXmSxuN65gs1i09Qu7
+        ReveI+wOvB5r5q1h9Ni0qpPNY/OSeo++LasYPT5vkgtgjdKzKcovLUlVyMgvLrFVija0MNIz
+        tLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DLeNywkLlgH2vFtYaXrA2Mq1i6GDk5JARM
+        JFpbu5lBbCGBpYwSv88IdjFyAMWlJOa3KEGUCEv8udbF1sXIBVTymlFi6vQ/YL3CAmESV/e0
+        sYPYIgKaEtf/fmcFKWIWOM0ssfrNNhaIjg4miRcdC8E2sAkYSvQe7WME2cArYCdxpqkEJMwi
+        oCrRd38q2CBRgQiJM+9XgC3gFRCUODnzCZjNKRAoMenJS1YQm1lAXeLPvEvMELa4RNOXlVBx
+        eYntb+cwT2AUmoWkfRaSlllIWmYhaVnAyLKKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMFq3
+        Hfu5ZQdj17vgQ4wCHIxKPLwBPPtjhFgTy4orcw8xSnAwK4nwmmwHCvGmJFZWpRblxxeV5qQW
+        H2I0BXpuIrOUaHI+MJHklcQbmhqaW1gamhubG5tZKInznjeojBISSE8sSc1OTS1ILYLpY+Lg
+        lGpgVHSW54h5sKHp9UGHuO6lh7fsYf7WVrViVYDF3QXZIWWLDt7bGVltt3SjwPbnTO8STvgr
+        J5asWmlxdMGeJvtLoj67vnQsYZ7buV30TvRylcTCwn67rzYb7yV6/qh/FZ8yQ0LQbb1t95xJ
+        xacSlaX6fKKX6a+sl2u/x8axIi3XTXlrPNtq23kJSizFGYmGWsxFxYkAslKD3ewCAAA=
+X-CMS-MailID: 20190424081022eucas1p144890137465baf0d4169054b68e2983e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190404172238epcas2p21ef28f46b728127dcd6e8ee72752a1b8
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190404172238epcas2p21ef28f46b728127dcd6e8ee72752a1b8
+References: <CGME20190404172238epcas2p21ef28f46b728127dcd6e8ee72752a1b8@epcas2p2.samsung.com>
+        <20190404171735.12815-1-s.nawrocki@samsung.com>
+        <20190404171735.12815-5-s.nawrocki@samsung.com>
+        <CAJKOXPc9v8bcQs9HmiDWECCkfQCh-Ktzk9Vqq01ccUm7UG54uQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not guaranteed that the IRQ controller driver is probed before
-the pin controller driver gets probed.
-Considering this, check for the irq domain availability during probe
-and return EPROBE_DEFER if needed.
+On 4/23/19 12:50, Krzysztof Kozlowski wrote:
+>> +static int exynos5422_asv_get_table(void)
+>> +{
+>> +       unsigned int reg = exynos_chipid_read(EXYNOS_CHIPID_REG_PKG_ID);
+>
+> One more thought: you read this register multiple times in the same
+> function. I think it is not needed - just read once, store the value
+> and use the helpers to parse it.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- drivers/pinctrl/stm32/pinctrl-stm32.c | 37 +++++++++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 10 deletions(-)
+Yes, I have noticed that as well. I'm not sure though if it is worth 
+to additionally cache registers manually like this when we use the 
+regmap.  I have already converted that code to use the regmap API for 
+v2.  And these are barely few registers reads at the driver 
+initialization time, not any hot path.
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 0aebc31..2317ccf 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -1122,23 +1122,35 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl,
- 	return 0;
- }
- 
-+static struct irq_domain *stm32_pctrl_get_irq_domain(struct device_node *np)
-+{
-+	struct device_node *parent;
-+	struct irq_domain *domain;
-+
-+	if (!of_find_property(np, "interrupt-parent", NULL))
-+		return NULL;
-+
-+	parent = of_irq_find_parent(np);
-+	if (!parent)
-+		return ERR_PTR(-ENXIO);
-+
-+	domain = irq_find_host(parent);
-+	if (!domain)
-+		/* domain not registered yet */
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	return domain;
-+}
-+
- static int stm32_pctrl_dt_setup_irq(struct platform_device *pdev,
- 			   struct stm32_pinctrl *pctl)
- {
--	struct device_node *np = pdev->dev.of_node, *parent;
-+	struct device_node *np = pdev->dev.of_node;
- 	struct device *dev = &pdev->dev;
- 	struct regmap *rm;
- 	int offset, ret, i;
- 	int mask, mask_width;
- 
--	parent = of_irq_find_parent(np);
--	if (!parent)
--		return -ENXIO;
--
--	pctl->domain = irq_find_host(parent);
--	if (!pctl->domain)
--		return -ENXIO;
--
- 	pctl->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
- 	if (IS_ERR(pctl->regmap))
- 		return PTR_ERR(pctl->regmap);
-@@ -1264,6 +1276,11 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, pctl);
- 
-+	/* check for IRQ controller (may require deferred probe) */
-+	pctl->domain = stm32_pctrl_get_irq_domain(np);
-+	if (IS_ERR(pctl->domain))
-+		return PTR_ERR(pctl->domain);
-+
- 	/* hwspinlock is optional */
- 	hwlock_id = of_hwspin_lock_get_id(pdev->dev.of_node, 0);
- 	if (hwlock_id < 0) {
-@@ -1294,7 +1311,7 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	if (of_find_property(np, "interrupt-parent", NULL)) {
-+	if (pctl->domain) {
- 		ret = stm32_pctrl_dt_setup_irq(pdev, pctl);
- 		if (ret)
- 			return ret;
 -- 
-2.7.4
-
+Thanks,
+Sylwester
