@@ -2,108 +2,91 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBC5C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAC5C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383292084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:19:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Q+2rooZf"
+	by mail.kernel.org (Postfix) with ESMTP id B769C218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbfDXQTk (ORCPT
+        id S1731176AbfDXQUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:19:40 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43862 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730035AbfDXQTj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:19:39 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k2so3205032lje.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 09:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SErjt3k8dJrgmkQ7SzuxzkPDnc28XAvYQh9MmP9g7vs=;
-        b=Q+2rooZf6ZEfzYXrsnRG2kZRRWMmc2zlDfkjckmohzR7oOkLWtnwN86qNlK/jx1e9g
-         31Q+vXkrVIoe8Lkh5UuAamqL9BwUUTVJIsvsn7XdjMEgYuyeOagKlbNJFADUR/46LG76
-         WnfZrevOc/gp4C1UJ9CJ7MXuzetayNMspDAt8vra56D2cbXGVcY2rFUSX8kB0eZoEeeT
-         y4Omv4fEkMO23T7/LeBP9BMzKiBHOh1qbVfGFfObzulxsQeZMn8MQm3gsOlJzxDDCi9Z
-         ytoEcdn117WoKWJw2FCaM8Sm7Q5N0gaRfEXXfImQcxp0K7UpfNymclUS6Zg8YGWC2ZEZ
-         t6pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SErjt3k8dJrgmkQ7SzuxzkPDnc28XAvYQh9MmP9g7vs=;
-        b=NumTuELMDx70/qSy8bizKJmzo8bbYtPSl7O5cXBibTqfxkAmIQjLV4Q2jRYIMtFKa8
-         6Xk8II8Wz1GXTNHKZ7Dra+zwkexgs51QLcb8aKSfCw+mwqVAmYbwzArFygI8L9o2irqw
-         3VBXDLz/Y50qN3rFVC2XzWuz87H9aBjgmTr6Euq8ggeKF74LCclNeq+vZVbCzaea8FoI
-         BRyZoxmO9DoWvtDAlTI/jBOlbyFd3tsXyuk3aPI3Don0IzmuMAn2CE8Rv1e+agAjRp6x
-         bmzj8CMBY8pyuwD+cng8usfPxgzNWARaSkyqkLSoobq/YVMbZEmZXb0RlvTVmT/O9fjw
-         wNPQ==
-X-Gm-Message-State: APjAAAVzIarj/xkhJXZIlwEwNCSQu2AEQCorYV+o2BZWJ7njVsGRqYI3
-        zAqchdWyhOuth2zwN0kgEMQaaN+o0CASKH2CV6aSPQ==
-X-Google-Smtp-Source: APXvYqysfNVgCilGS11UsHDZ4ZAiwet4rq3Jn/UKA3xzQsOa7q3f/h4kHhffzX8qKzkvqA2oO8h1ROsNYc1ePsN+R6A=
-X-Received: by 2002:a2e:380c:: with SMTP id f12mr17326046lja.116.1556122776886;
- Wed, 24 Apr 2019 09:19:36 -0700 (PDT)
+        Wed, 24 Apr 2019 12:20:40 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48182 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726611AbfDXQUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:20:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2ED4A78;
+        Wed, 24 Apr 2019 09:20:39 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 33E3E3F557;
+        Wed, 24 Apr 2019 09:20:38 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/3] Enable kprobe to monitor sdei event handler
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     huawei.libin@huawei.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1555070699-3685-1-git-send-email-wangxiongfeng2@huawei.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <d197785a-9e3b-2c88-d882-b59075a38264@arm.com>
+Date:   Wed, 24 Apr 2019 17:20:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <AF4D908CC0E2A24EB308A26962C8C3BDEB1A2B@DGGEMI530-MBX.china.huawei.com>
- <20190424161641.GI16167@redhat.com>
-In-Reply-To: <20190424161641.GI16167@redhat.com>
-From:   Christian Brauner <christian@brauner.io>
-Date:   Wed, 24 Apr 2019 18:19:25 +0200
-Message-ID: <CAHrFyr6rR=TMepEpFK0hQRQ-qMF8m4izf+WxdzGXEO7S_TVnQg@mail.gmail.com>
-Subject: Re: Re: [PATCH v4] signal: trace_signal_deliver when signal_group_exit
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     weizhenliang <weizhenliang@huawei.com>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "colona@arista.com" <colona@arista.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1555070699-3685-1-git-send-email-wangxiongfeng2@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 6:16 PM Oleg Nesterov <oleg@redhat.com> wrote:
->
-> On 04/24, weizhenliang wrote:
-> >
-> > On 04/24, Oleg wrote:
-> > >On 04/24, Christian Brauner wrote:
-> > >>
-> > >> On Wed, Apr 24, 2019 at 08:52:38PM +0800, Zhenliang Wei wrote:
-> > >>
-> > >> > Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> > >
-> > >Yes, but ...
-> > >
-> > >> > Reported-by: kbuild test robot <lkp@intel.com>
-> > >
-> > >Hmm, really?
-> >
-> > Yes, the kbuild test robot says that if I fix the problem with the third parameter type,
-> > I should add this tag. What is wrong or missing?
->
-> But this patch does not fix the problem reported by robot, your patch
-> (which introduced that problem) was dropped, the problem has gone.
->
-> With this "Reported-by: kbuild test robot <lkp@intel.com>" tag it looks
-> as if test-robot has found the problem you are trying to fix: the lack of
-> trace_signal_deliver(SIGKILL).
+Hi Xiongfeng Wang,
 
-Yeah, Oleg's absolutely right. That tag should just go.
-The Fixes line is all that we want, I think.
+On 12/04/2019 13:04, Xiongfeng Wang wrote:
+> When I use kprobe to monitor a sdei event handler,
 
-Christian
+Don't do this! SDEI is like an NMI, it isn't safe to kprobe it as it can interrupt the
+kprobe code, causing it become re-entrant.
+
+
+> the CPU will hang. It's
+> because when I probe the event handler, the instruction will be replaced with 
+> brk instruction and brk exception is unmaskable. But 'vbar_el1' contains 
+> 'tramp_vectors' in '_sdei_handler' when SDEI events interrupt userspace, so
+> we will go to the wrong place if brk exception happens.
+
+This was lucky! Its even more fun if the SDEI event interrupted a guest: the kvm vectors
+will give you a hyp-panic.
+
+The __kprobes and NOKPROBE_SYMBOL() litter should stop you doing this.
+
+
+> I notice that 'ghes_sdei_normal_callback' call several funtions that are not
+> marked as 'nokprobe'.
+
+Bother. We should probably blacklist those too, its not safe.
+
+
+> So I was wondering if we can enable kprobe in '_sdei_handler'.
+
+I don't think this can be done safely.
+
+
+If you need to monitor your SDEI event handler you can just use printk(). Once nmi_enter()
+has been called these are safe as they stash data in a per-cpu buffer. The SDEI handler
+will exit via the IRQ vector if it can, which will cause this buffer to be flushed to the
+console in a timely manner.
+
+
+Why do you need to kprobe an NMI handler?
+
+
+
+Thanks!
+
+James
