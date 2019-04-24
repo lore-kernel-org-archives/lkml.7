@@ -6,35 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC96C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A65C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690F8218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0EA9218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbfDXDX7 (ORCPT
+        id S1729517AbfDXDX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 23:23:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7244 "EHLO huawei.com"
+        Tue, 23 Apr 2019 23:23:56 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7241 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729219AbfDXDXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729238AbfDXDXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 23 Apr 2019 23:23:30 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 738425A1615C32DD2932;
+        by Forcepoint Email with ESMTP id 670111C91465009F0132;
         Wed, 24 Apr 2019 11:23:25 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Apr 2019 11:23:17 +0800
+ 14.3.439.0; Wed, 24 Apr 2019 11:23:19 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <nhorman@redhat.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>
-Subject: [PATCH net-next 05/12] net: hns3: use atomic_t replace u32 for arq's count
-Date:   Wed, 24 Apr 2019 11:22:00 +0800
-Message-ID: <1556076127-61459-6-git-send-email-tanhuazhong@huawei.com>
+        liuzhongzhu <liuzhongzhu@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 10/12] net: hns3: extend the loopback state acquisition time
+Date:   Wed, 24 Apr 2019 11:22:05 +0800
+Message-ID: <1556076127-61459-11-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1556076127-61459-1-git-send-email-tanhuazhong@huawei.com>
 References: <1556076127-61459-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,77 +48,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since irq handler and mailbox task will both update arq's count,
-so arq's count should use atomic_t instead of u32, otherwise
-its value may go wrong finally.
+From: liuzhongzhu <liuzhongzhu@huawei.com>
 
-Fixes: 07a0556a3a73 ("net: hns3: Changes to support ARQ(Asynchronous Receive Queue)")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+The test results show that the maximum time of hardware return
+to mac link state is 500MS.The software needs to set twice the
+maximum time of hardware return state (1000MS).
+
+If not modified, the loopback test returns probability failure.
+
+Signed-off-by: liuzhongzhu <liuzhongzhu@huawei.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 7 ++++---
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-index 360463a..8b6191f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-@@ -111,7 +111,7 @@ struct hclgevf_mbx_arq_ring {
- 	struct hclgevf_dev *hdev;
- 	u32 head;
- 	u32 tail;
--	u32 count;
-+	atomic_t count;
- 	u16 msg_q[HCLGE_MBX_MAX_ARQ_MSG_NUM][HCLGE_MBX_MAX_ARQ_MSG_SIZE];
- };
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index ead8308..22afd75 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -5338,8 +5338,8 @@ static int hclge_set_serdes_loopback(struct hclge_dev *hdev, bool en,
+ #define HCLGE_SERDES_RETRY_MS	10
+ #define HCLGE_SERDES_RETRY_NUM	100
  
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-index 1b428d4..71f356f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c
-@@ -340,7 +340,7 @@ int hclgevf_cmd_init(struct hclgevf_dev *hdev)
- 	hdev->arq.hdev = hdev;
- 	hdev->arq.head = 0;
- 	hdev->arq.tail = 0;
--	hdev->arq.count = 0;
-+	atomic_set(&hdev->arq.count, 0);
- 	hdev->hw.cmq.csq.next_to_clean = 0;
- 	hdev->hw.cmq.csq.next_to_use = 0;
- 	hdev->hw.cmq.crq.next_to_clean = 0;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-index eb56287..3c22639 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-@@ -212,7 +212,8 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
- 			/* we will drop the async msg if we find ARQ as full
- 			 * and continue with next message
- 			 */
--			if (hdev->arq.count >= HCLGE_MBX_MAX_ARQ_MSG_NUM) {
-+			if (atomic_read(&hdev->arq.count) >=
-+			    HCLGE_MBX_MAX_ARQ_MSG_NUM) {
- 				dev_warn(&hdev->pdev->dev,
- 					 "Async Q full, dropping msg(%d)\n",
- 					 req->msg[1]);
-@@ -224,7 +225,7 @@ void hclgevf_mbx_handler(struct hclgevf_dev *hdev)
- 			memcpy(&msg_q[0], req->msg,
- 			       HCLGE_MBX_MAX_ARQ_MSG_SIZE * sizeof(u16));
- 			hclge_mbx_tail_ptr_move_arq(hdev->arq);
--			hdev->arq.count++;
-+			atomic_inc(&hdev->arq.count);
+-#define HCLGE_MAC_LINK_STATUS_MS   20
+-#define HCLGE_MAC_LINK_STATUS_NUM  10
++#define HCLGE_MAC_LINK_STATUS_MS   10
++#define HCLGE_MAC_LINK_STATUS_NUM  100
+ #define HCLGE_MAC_LINK_STATUS_DOWN 0
+ #define HCLGE_MAC_LINK_STATUS_UP   1
  
- 			hclgevf_mbx_task_schedule(hdev);
- 
-@@ -317,7 +318,7 @@ void hclgevf_mbx_async_handler(struct hclgevf_dev *hdev)
- 		}
- 
- 		hclge_mbx_head_ptr_move_arq(hdev->arq);
--		hdev->arq.count--;
-+		atomic_dec(&hdev->arq.count);
- 		msg_q = hdev->arq.msg_q[hdev->arq.head];
- 	}
- }
 -- 
 2.7.4
 
