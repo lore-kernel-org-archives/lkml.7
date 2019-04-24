@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AD7C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EE1C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5414D21903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0D721903
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127206;
-	bh=F9dKgoC6fKxA8fR+H/jiUkscnN/0FMd4x7aMQN5aGZA=;
+	s=default; t=1556127210;
+	bh=mMswdJhpUvFDECDF3a5eyU/gytAb3J5JNWXb0aTDIk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYV+05Dj2qyas2ZyCehcwkVsd3rXG0ljGBYSaOHeC2hgOzsa8uKxMsQ9JBaGVAzVZ
-	 2YsobXGcJEMwfY5Ewbvl+yx7k1/XDOO0rDswy3ZtVDBAewofQwet2WFvLV2KxpH96y
-	 d6F6mdMEeBoYT3pjHgA34+5S+CO7MrteX9H5qrOA=
+	b=cbUNKwGOceTGc9p/MdIPR1zePdCv+iRe4wkfqSMDSYAjB/xThCf2vFgl6LXdEKXoM
+	 1ByrOl4g49N/Af8pEC1B7WdExQdNRvBZfTumRrYx4DJxX81sIWzXJU4BFgSx4pTR/f
+	 A8+11fsf8vJImklugnP659U1skxDIq6k/qx+T0ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391489AbfDXRdZ (ORCPT
+        id S2391502AbfDXRd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:33:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60314 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:33:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391119AbfDXRdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:33:21 -0400
+        id S2391134AbfDXRd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:33:27 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 854FF2054F;
-        Wed, 24 Apr 2019 17:33:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C064C2054F;
+        Wed, 24 Apr 2019 17:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127201;
-        bh=F9dKgoC6fKxA8fR+H/jiUkscnN/0FMd4x7aMQN5aGZA=;
+        s=default; t=1556127206;
+        bh=mMswdJhpUvFDECDF3a5eyU/gytAb3J5JNWXb0aTDIk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gvDrYVUVZZcg1C2QwypF2qFaj/bvDYrvVDLVa+IUM/aYh/GCIbVzU4OpcLYgoc72h
-         3mtlkO0G9mRdaBsF1hMG42bj3PF5zBJA3I2+8wfCsv0Q+f5I/IRweZOjX9q5ApCP9/
-         ZeMFQwKclp54kyc7dludsn2sco62w8DT8CP3E8Xg=
+        b=Nmho5FtmnPLMSgr1U1jqUqO3YL3zQmYi3uxPjQatI1dgviba3ClSykYO8ysnJVyOQ
+         cJiKp9KCeRPBls6RkKogSpWNE+t+gTvL09I4cfB35i0AcltA8qPzoUQYBDbrcRwDvB
+         1sfbNC+hSGbsEce3RICo8TQMfRIApp1onoa4WyPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 45/96] iio: core: fix a possible circular locking dependency
-Date:   Wed, 24 Apr 2019 19:09:50 +0200
-Message-Id: <20190424170922.909409220@linuxfoundation.org>
+        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 95/96] ASoC: rockchip: add missing INTERLEAVED PCM attribute
+Date:   Wed, 24 Apr 2019 19:10:40 +0200
+Message-Id: <20190424170926.226795906@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -59,151 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-commit 7f75591fc5a123929a29636834d1bcb8b5c9fee3 upstream.
+commit 24d6638302b48328a58c13439276d4531af4ca7d upstream.
 
-This fixes a possible circular locking dependency detected warning seen
-with:
-- CONFIG_PROVE_LOCKING=y
-- consumer/provider IIO devices (ex: "voltage-divider" consumer of "adc")
+This patch adds SNDRV_PCM_INFO_INTERLEAVED into PCM hardware info.
 
-When using the IIO consumer interface, e.g. iio_channel_get(), the consumer
-device will likely call iio_read_channel_raw() or similar that rely on
-'info_exist_lock' mutex.
-
-typically:
-...
-	mutex_lock(&chan->indio_dev->info_exist_lock);
-	if (chan->indio_dev->info == NULL) {
-		ret = -ENODEV;
-		goto err_unlock;
-	}
-	ret = do_some_ops()
-err_unlock:
-	mutex_unlock(&chan->indio_dev->info_exist_lock);
-	return ret;
-...
-
-Same mutex is also hold in iio_device_unregister().
-
-The following deadlock warning happens when:
-- the consumer device has called an API like iio_read_channel_raw()
-  at least once.
-- the consumer driver is unregistered, removed (unbind from sysfs)
-
-======================================================
-WARNING: possible circular locking dependency detected
-4.19.24 #577 Not tainted
-------------------------------------------------------
-sh/372 is trying to acquire lock:
-(kn->count#30){++++}, at: kernfs_remove_by_name_ns+0x3c/0x84
-
-but task is already holding lock:
-(&dev->info_exist_lock){+.+.}, at: iio_device_unregister+0x18/0x60
-
-which lock already depends on the new lock.
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&dev->info_exist_lock){+.+.}:
-       __mutex_lock+0x70/0xa3c
-       mutex_lock_nested+0x1c/0x24
-       iio_read_channel_raw+0x1c/0x60
-       iio_read_channel_info+0xa8/0xb0
-       dev_attr_show+0x1c/0x48
-       sysfs_kf_seq_show+0x84/0xec
-       seq_read+0x154/0x528
-       __vfs_read+0x2c/0x15c
-       vfs_read+0x8c/0x110
-       ksys_read+0x4c/0xac
-       ret_fast_syscall+0x0/0x28
-       0xbedefb60
-
--> #0 (kn->count#30){++++}:
-       lock_acquire+0xd8/0x268
-       __kernfs_remove+0x288/0x374
-       kernfs_remove_by_name_ns+0x3c/0x84
-       remove_files+0x34/0x78
-       sysfs_remove_group+0x40/0x9c
-       sysfs_remove_groups+0x24/0x34
-       device_remove_attrs+0x38/0x64
-       device_del+0x11c/0x360
-       cdev_device_del+0x14/0x2c
-       iio_device_unregister+0x24/0x60
-       release_nodes+0x1bc/0x200
-       device_release_driver_internal+0x1a0/0x230
-       unbind_store+0x80/0x130
-       kernfs_fop_write+0x100/0x1e4
-       __vfs_write+0x2c/0x160
-       vfs_write+0xa4/0x17c
-       ksys_write+0x4c/0xac
-       ret_fast_syscall+0x0/0x28
-       0xbe906840
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&dev->info_exist_lock);
-                               lock(kn->count#30);
-                               lock(&dev->info_exist_lock);
-  lock(kn->count#30);
-
- *** DEADLOCK ***
-...
-
-cdev_device_del() can be called without holding the lock. It should be safe
-as info_exist_lock prevents kernelspace consumers to use the exported
-routines during/after provider removal. cdev_device_del() is for userspace.
-
-Help to reproduce:
-See example: Documentation/devicetree/bindings/iio/afe/voltage-divider.txt
-sysv {
-	compatible = "voltage-divider";
-	io-channels = <&adc 0>;
-	output-ohms = <22>;
-	full-ohms = <222>;
-};
-
-First, go to iio:deviceX for the "voltage-divider", do one read:
-$ cd /sys/bus/iio/devices/iio:deviceX
-$ cat in_voltage0_raw
-
-Then, unbind the consumer driver. It triggers above deadlock warning.
-$ cd /sys/bus/platform/drivers/iio-rescale/
-$ echo sysv > unbind
-
-Note I don't actually expect stable will pick this up all the
-way back into IIO being in staging, but if's probably valid that
-far back.
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Fixes: ac917a81117c ("staging:iio:core set the iio_dev.info pointer to null on unregister")
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/industrialio-core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/rockchip/rockchip_pcm.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1735,10 +1735,10 @@ EXPORT_SYMBOL(__iio_device_register);
-  **/
- void iio_device_unregister(struct iio_dev *indio_dev)
- {
--	mutex_lock(&indio_dev->info_exist_lock);
--
- 	cdev_device_del(&indio_dev->chrdev, &indio_dev->dev);
- 
-+	mutex_lock(&indio_dev->info_exist_lock);
-+
- 	iio_device_unregister_debugfs(indio_dev);
- 
- 	iio_disable_all_buffers(indio_dev);
+--- a/sound/soc/rockchip/rockchip_pcm.c
++++ b/sound/soc/rockchip/rockchip_pcm.c
+@@ -21,7 +21,8 @@ static const struct snd_pcm_hardware snd
+ 	.info			= SNDRV_PCM_INFO_MMAP |
+ 				  SNDRV_PCM_INFO_MMAP_VALID |
+ 				  SNDRV_PCM_INFO_PAUSE |
+-				  SNDRV_PCM_INFO_RESUME,
++				  SNDRV_PCM_INFO_RESUME |
++				  SNDRV_PCM_INFO_INTERLEAVED,
+ 	.period_bytes_min	= 32,
+ 	.period_bytes_max	= 8192,
+ 	.periods_min		= 1,
 
 
