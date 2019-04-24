@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F03C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52215C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6943E2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218492064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127720;
-	bh=XXiYrON0C4xHGI6RqUGq+OUixt+Nb+T11hfDrSwNsY8=;
+	s=default; t=1556127727;
+	bh=WLn64TCrCVn/CGDSAYr7J5qAkULDqliUSBcZirV7cNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gwr1dTXC6Ot5PGjhG4Zeg6V3IwZorjY665wkA82MqRBIz9WHbyD9LsGlCDDWxwjJ5
-	 sIiKVwjEYGE5q2bG/WmJI/X1qvpEWR1ghe0XYQn/z6Cf5g54OWAidGECkUn0CYLwA+
-	 lsKYS18jDD4AuhN+Vg+DZ42qfuNl6NoAsVNSRjKw=
+	b=C6/H7y2cnbbVC/Gh7hNtSy7UBa5IQthxFvaaSnDHf5/zkwnhOi25aQcfh6hcqo7mN
+	 zQx6lPMGV7JaeP/SIkT/j2WnId2qFV8uAtz+ejV108wx8YRAeirNQDvah3UMdbcMUh
+	 DoUKQz8rUeowzGAtnD85cYTzQkMT1c/PCStjn4ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392321AbfDXRl7 (ORCPT
+        id S2403831AbfDXRgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:41:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35232 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403879AbfDXRgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:36:20 -0400
+        id S2392023AbfDXRgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:36:07 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9117E21903;
-        Wed, 24 Apr 2019 17:36:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0857121903;
+        Wed, 24 Apr 2019 17:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127379;
-        bh=XXiYrON0C4xHGI6RqUGq+OUixt+Nb+T11hfDrSwNsY8=;
+        s=default; t=1556127366;
+        bh=WLn64TCrCVn/CGDSAYr7J5qAkULDqliUSBcZirV7cNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ix9GN9VwrieTNAJbKK/dnX/kimbrdBwnXKD6gyytxMqJm5UJ+2aPHnwAwq2EDoRUf
-         WeaoS/VZW32QTDLhyFAh6GvdbYCClq4i+adm9rTQnlh+WyH0N45Fabrvx3WIps/WId
-         k9ru95l1dSrW0TMpYSj0paFZPpIam7rfzW1IKW5E=
+        b=nltHB/1mlhO3NyI9wwAfNX1yLC5Os48VpD4Q1sa9Tl2BvMv3S37SvGLkS6MeUbRZZ
+         bEnP/MZukytz9wzZoXFLfkxhB9IWfgeE1Nd8Fp2vXd6Tg8E+A+Sb2V1g1AEPO43v/c
+         viPGb2PIStSa+tNcKI5WZ0XmS1bSUjytlD65/Te4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.0 067/115] staging: comedi: vmk80xx: Fix possible double-free of ->usb_rx_buf
-Date:   Wed, 24 Apr 2019 19:10:03 +0200
-Message-Id: <20190424170929.005589673@linuxfoundation.org>
+        stable@vger.kernel.org, Georg Ottinger <g.ottinger@abatec.at>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.0 062/115] iio: adc: at91: disable adc channel interrupt in timeout case
+Date:   Wed, 24 Apr 2019 19:09:58 +0200
+Message-Id: <20190424170928.754942817@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -58,44 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Georg Ottinger <g.ottinger@abatec.at>
 
-commit 663d294b4768bfd89e529e069bffa544a830b5bf upstream.
+commit 09c6bdee51183a575bf7546890c8c137a75a2b44 upstream.
 
-`vmk80xx_alloc_usb_buffers()` is called from `vmk80xx_auto_attach()` to
-allocate RX and TX buffers for USB transfers.  It allocates
-`devpriv->usb_rx_buf` followed by `devpriv->usb_tx_buf`.  If the
-allocation of `devpriv->usb_tx_buf` fails, it frees
-`devpriv->usb_rx_buf`,  leaving the pointer set dangling, and returns an
-error.  Later, `vmk80xx_detach()` will be called from the core comedi
-module code to clean up.  `vmk80xx_detach()` also frees both
-`devpriv->usb_rx_buf` and `devpriv->usb_tx_buf`, but
-`devpriv->usb_rx_buf` may have already been freed, leading to a
-double-free error.  Fix it by removing the call to
-`kfree(devpriv->usb_rx_buf)` from `vmk80xx_alloc_usb_buffers()`, relying
-on `vmk80xx_detach()` to free the memory.
+Having a brief look at at91_adc_read_raw() it is obvious that in the case
+of a timeout the setting of AT91_ADC_CHDR and AT91_ADC_IDR registers is
+omitted. If 2 different channels are queried we can end up with a
+situation where two interrupts are enabled, but only one interrupt is
+cleared in the interrupt handler. Resulting in a interrupt loop and a
+system hang.
 
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Georg Ottinger <g.ottinger@abatec.at>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/vmk80xx.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/iio/adc/at91_adc.c |   28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
---- a/drivers/staging/comedi/drivers/vmk80xx.c
-+++ b/drivers/staging/comedi/drivers/vmk80xx.c
-@@ -682,10 +682,8 @@ static int vmk80xx_alloc_usb_buffers(str
+--- a/drivers/iio/adc/at91_adc.c
++++ b/drivers/iio/adc/at91_adc.c
+@@ -704,23 +704,29 @@ static int at91_adc_read_raw(struct iio_
+ 		ret = wait_event_interruptible_timeout(st->wq_data_avail,
+ 						       st->done,
+ 						       msecs_to_jiffies(1000));
+-		if (ret == 0)
+-			ret = -ETIMEDOUT;
+-		if (ret < 0) {
+-			mutex_unlock(&st->lock);
+-			return ret;
+-		}
+-
+-		*val = st->last_value;
  
- 	size = usb_endpoint_maxp(devpriv->ep_tx);
- 	devpriv->usb_tx_buf = kzalloc(size, GFP_KERNEL);
--	if (!devpriv->usb_tx_buf) {
--		kfree(devpriv->usb_rx_buf);
-+	if (!devpriv->usb_tx_buf)
- 		return -ENOMEM;
--	}
++		/* Disable interrupts, regardless if adc conversion was
++		 * successful or not
++		 */
+ 		at91_adc_writel(st, AT91_ADC_CHDR,
+ 				AT91_ADC_CH(chan->channel));
+ 		at91_adc_writel(st, AT91_ADC_IDR, BIT(chan->channel));
  
- 	return 0;
- }
+-		st->last_value = 0;
+-		st->done = false;
++		if (ret > 0) {
++			/* a valid conversion took place */
++			*val = st->last_value;
++			st->last_value = 0;
++			st->done = false;
++			ret = IIO_VAL_INT;
++		} else if (ret == 0) {
++			/* conversion timeout */
++			dev_err(&idev->dev, "ADC Channel %d timeout.\n",
++				chan->channel);
++			ret = -ETIMEDOUT;
++		}
++
+ 		mutex_unlock(&st->lock);
+-		return IIO_VAL_INT;
++		return ret;
+ 
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = st->vref_mv;
 
 
