@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C72C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABBCC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E031D206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C31206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126105;
-	bh=0pH6giZBP5EWcjVy6UHsSs54vJYzgd7pl1/aNWcWw6U=;
+	s=default; t=1556126109;
+	bh=XkHuJhJrwL980hOgbzOWFFRw5BU9HvgwAjvW2ZPWmLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gXY6FSWrPReNtjPePARXc8c2YhlVZeOeZbp5o5RflLjf+O20pfp5Y7yX7oxhJjaej
-	 9raB4jVXlfoFqr5PnVmb8Epu9T2uKAJSXCKeW+MoofdjoD9gjCsjhJr9nHrf4YS934
-	 Bm6e6A0N4aujHJU5S8uMIU2Q2Ow3w3x9CMB87z30=
+	b=yAwDW7EX0yz2nhtpazyEWd2yxNsSvG+Ri+PA83l3oTUcxgQgvyquLjnvqlk4G/pAW
+	 qu69cB0wxjsoxzJla+YdWXy/0EH7g2ZauUx07DD6DfeX9KiIZiUmxG6tkTWa/UdKO3
+	 XOWexGa3x1LMkiDEzZ6ZZWetA22QlZpPPS986dXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388171AbfDXRPE (ORCPT
+        id S2388183AbfDXRPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:15:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39316 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:15:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387432AbfDXRPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:15:00 -0400
+        id S2387794AbfDXRPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:15:03 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6575721900;
-        Wed, 24 Apr 2019 17:14:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37E1821907;
+        Wed, 24 Apr 2019 17:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126099;
-        bh=0pH6giZBP5EWcjVy6UHsSs54vJYzgd7pl1/aNWcWw6U=;
+        s=default; t=1556126102;
+        bh=XkHuJhJrwL980hOgbzOWFFRw5BU9HvgwAjvW2ZPWmLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AqvrsEdCh6RYBAqmJk016+w6Lp0VAYy+Jd7VX/BfrG5ccnmk9PgiOl5rXty4Z9IkM
-         Y20eF7wATwe+6KHrB9drkX4YwQAAF87fXdJMqeRkmAF9BuoT3Umeoxxbkf4qV+8xgT
-         FL0GV3GwY1F87mTOd+BHW0+GSczfomEGznIl3Abc=
+        b=aVPF3Dk/yGpO4DRWwz0oYzpxUKTrnTBKGNXA+Zee0yQWacp8rIqfF6Gkp6eMgH+LA
+         Ws12apxlffDT6pTh4E4yaCwrWoxAzQtU09GD3EbKcdsNFXLKO+FkLxNK87T1sBtKp9
+         tLSagYzB/d679wqR6IvD9QWHMEfr0B8QP9qCyg+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        stable@vger.kernel.org, Georg Ottinger <g.ottinger@abatec.at>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 3.18 095/104] iio: ad_sigma_delta: select channel when reading register
-Date:   Wed, 24 Apr 2019 19:09:52 +0200
-Message-Id: <20190424170909.856821568@linuxfoundation.org>
+Subject: [PATCH 3.18 096/104] iio: adc: at91: disable adc channel interrupt in timeout case
+Date:   Wed, 24 Apr 2019 19:09:53 +0200
+Message-Id: <20190424170909.956519090@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -61,35 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Bogdan <dragos.bogdan@analog.com>
+From: Georg Ottinger <g.ottinger@abatec.at>
 
-commit fccfb9ce70ed4ea7a145f77b86de62e38178517f upstream.
+commit 09c6bdee51183a575bf7546890c8c137a75a2b44 upstream.
 
-The desired channel has to be selected in order to correctly fill the
-buffer with the corresponding data.
-The `ad_sd_write_reg()` already does this, but for the
-`ad_sd_read_reg_raw()` this was omitted.
+Having a brief look at at91_adc_read_raw() it is obvious that in the case
+of a timeout the setting of AT91_ADC_CHDR and AT91_ADC_IDR registers is
+omitted. If 2 different channels are queried we can end up with a
+situation where two interrupts are enabled, but only one interrupt is
+cleared in the interrupt handler. Resulting in a interrupt loop and a
+system hang.
 
-Fixes: af3008485ea03 ("iio:adc: Add common code for ADI Sigma Delta devices")
-Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Georg Ottinger <g.ottinger@abatec.at>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/ad_sigma_delta.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/adc/at91_adc.c |   28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
---- a/drivers/iio/adc/ad_sigma_delta.c
-+++ b/drivers/iio/adc/ad_sigma_delta.c
-@@ -121,6 +121,7 @@ static int ad_sd_read_reg_raw(struct ad_
- 	if (sigma_delta->info->has_registers) {
- 		data[0] = reg << sigma_delta->info->addr_shift;
- 		data[0] |= sigma_delta->info->read_mask;
-+		data[0] |= sigma_delta->comm;
- 		spi_message_add_tail(&t[0], &m);
- 	}
- 	spi_message_add_tail(&t[1], &m);
+--- a/drivers/iio/adc/at91_adc.c
++++ b/drivers/iio/adc/at91_adc.c
+@@ -703,23 +703,29 @@ static int at91_adc_read_raw(struct iio_
+ 		ret = wait_event_interruptible_timeout(st->wq_data_avail,
+ 						       st->done,
+ 						       msecs_to_jiffies(1000));
+-		if (ret == 0)
+-			ret = -ETIMEDOUT;
+-		if (ret < 0) {
+-			mutex_unlock(&st->lock);
+-			return ret;
+-		}
+-
+-		*val = st->last_value;
+ 
++		/* Disable interrupts, regardless if adc conversion was
++		 * successful or not
++		 */
+ 		at91_adc_writel(st, AT91_ADC_CHDR,
+ 				AT91_ADC_CH(chan->channel));
+ 		at91_adc_writel(st, AT91_ADC_IDR, BIT(chan->channel));
+ 
+-		st->last_value = 0;
+-		st->done = false;
++		if (ret > 0) {
++			/* a valid conversion took place */
++			*val = st->last_value;
++			st->last_value = 0;
++			st->done = false;
++			ret = IIO_VAL_INT;
++		} else if (ret == 0) {
++			/* conversion timeout */
++			dev_err(&idev->dev, "ADC Channel %d timeout.\n",
++				chan->channel);
++			ret = -ETIMEDOUT;
++		}
++
+ 		mutex_unlock(&st->lock);
+-		return IIO_VAL_INT;
++		return ret;
+ 
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = st->vref_mv;
 
 
