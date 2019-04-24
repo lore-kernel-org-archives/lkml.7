@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758AEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0169FC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4501321906
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF0C221906
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116855;
-	bh=MrXE3tab9J0ETfEoX0HV9dMhl+SwBqGJbsEAejPv7nI=;
+	s=default; t=1556116861;
+	bh=UnoN/QC+FyyemvDjF8bNbJ+J182l3LiGwuccFdpoeME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=viGaKD3LZKHh4yu9H5AbArn2WBujONF0sZz8Y2ooC8vMtZmX8Om1YlKzmcF8jRQD/
-	 KaJV6kfoUTWcLbYbnjMyurmzXzPWmvwKo5SsCjv29qix9x1hnrCPujhWMGnCz/MEQx
-	 ViFp9x14C3IKupH7q/PF/l4h2KFocOh8D/nmkl9Y=
+	b=tE/EgTGtTeEGWYDbWonUEGpDm5TUe48FeJ/8/bUtNBtnoUox6tKIBh2VviFli5A/k
+	 KdW0svuzO/9Ayd1mMLJC/2c2CzrOm4SqP1Ie2B/TkB6nWKf+WYyuGGGSLRnZBNLcz0
+	 LM5KTh1vaF270Yi9SkbYHBJEa1fIDZ3QYu6fuU0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732037AbfDXOkx (ORCPT
+        id S1732052AbfDXOlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43210 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732019AbfDXOks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:40:48 -0400
+        id S1732030AbfDXOkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:40:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1141E21901;
-        Wed, 24 Apr 2019 14:40:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB4FD21904;
+        Wed, 24 Apr 2019 14:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116846;
-        bh=MrXE3tab9J0ETfEoX0HV9dMhl+SwBqGJbsEAejPv7nI=;
+        s=default; t=1556116850;
+        bh=UnoN/QC+FyyemvDjF8bNbJ+J182l3LiGwuccFdpoeME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pcJmsJx8vMhuA5Q/m5CbDK6k8xFugl7qABkbFNT/A6An6lP4bNWOVgidHg3imxaOI
-         m8y5aGtE2QlbEQS5+ACWQUlEI5pnvHRENmC81LPgUD+0YyNGtz7XijR8t7R85rWHNC
-         g2qOoi+GZhmPkFe/1TRZ8et4T1MoZI99vgo9mxng=
+        b=ufYiGgIORysYX1+wegPG53Ca/MDU4mmc2EgmD1/QKTkJsGQTOGlofX5JmdlD2yHky
+         UwXIBI9trb19GeEPPcDM9trLil9NHYTk0t/2TetqMuh5edjmxFpWZPzdUDNP9KkQTz
+         kFfSjM7VAo44sC6qcV4quYh+nrT5GARAvEhylOhE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yonglong Liu <liuyonglong@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 39/52] net: hns: Fix probabilistic memory overwrite when HNS driver initialized
-Date:   Wed, 24 Apr 2019 10:38:57 -0400
-Message-Id: <20190424143911.28890-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 40/52] net: hns: fix ICMP6 neighbor solicitation messages discard problem
+Date:   Wed, 24 Apr 2019 10:38:58 -0400
+Message-Id: <20190424143911.28890-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
 References: <20190424143911.28890-1-sashal@kernel.org>
@@ -61,90 +61,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit c0b0984426814f3a9251873b689e67d34d8ccd84 ]
+[ Upstream commit f058e46855dcbc28edb2ed4736f38a71fd19cadb ]
 
-When reboot the system again and again, may cause a memory
-overwrite.
+ICMP6 neighbor solicitation messages will be discard by the Hip06
+chips, because of not setting forwarding pool. Enable promisc mode
+has the same problem.
 
-[   15.638922] systemd[1]: Reached target Swap.
-[   15.667561] tun: Universal TUN/TAP device driver, 1.6
-[   15.676756] Bridge firewalling registered
-[   17.344135] Unable to handle kernel paging request at virtual address 0000000200000040
-[   17.352179] Mem abort info:
-[   17.355007]   ESR = 0x96000004
-[   17.358105]   Exception class = DABT (current EL), IL = 32 bits
-[   17.364112]   SET = 0, FnV = 0
-[   17.367209]   EA = 0, S1PTW = 0
-[   17.370393] Data abort info:
-[   17.373315]   ISV = 0, ISS = 0x00000004
-[   17.377206]   CM = 0, WnR = 0
-[   17.380214] user pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
-[   17.386926] [0000000200000040] pgd=0000000000000000
-[   17.391878] Internal error: Oops: 96000004 [#1] SMP
-[   17.396824] CPU: 23 PID: 95 Comm: kworker/u130:0 Tainted: G            E     4.19.25-1.2.78.aarch64 #1
-[   17.414175] Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.54 08/16/2018
-[   17.425615] Workqueue: events_unbound async_run_entry_fn
-[   17.435151] pstate: 00000005 (nzcv daif -PAN -UAO)
-[   17.444139] pc : __mutex_lock.isra.1+0x74/0x540
-[   17.453002] lr : __mutex_lock.isra.1+0x3c/0x540
-[   17.461701] sp : ffff000100d9bb60
-[   17.469146] x29: ffff000100d9bb60 x28: 0000000000000000
-[   17.478547] x27: 0000000000000000 x26: ffff802fb8945000
-[   17.488063] x25: 0000000000000000 x24: ffff802fa32081a8
-[   17.497381] x23: 0000000000000002 x22: ffff801fa2b15220
-[   17.506701] x21: ffff000009809000 x20: ffff802fa23a0888
-[   17.515980] x19: ffff801fa2b15220 x18: 0000000000000000
-[   17.525272] x17: 0000000200000000 x16: 0000000200000000
-[   17.534511] x15: 0000000000000000 x14: 0000000000000000
-[   17.543652] x13: ffff000008d95db8 x12: 000000000000000d
-[   17.552780] x11: ffff000008d95d90 x10: 0000000000000b00
-[   17.561819] x9 : ffff000100d9bb90 x8 : ffff802fb89d6560
-[   17.570829] x7 : 0000000000000004 x6 : 00000004a1801d05
-[   17.579839] x5 : 0000000000000000 x4 : 0000000000000000
-[   17.588852] x3 : ffff802fb89d5a00 x2 : 0000000000000000
-[   17.597734] x1 : 0000000200000000 x0 : 0000000200000000
-[   17.606631] Process kworker/u130:0 (pid: 95, stack limit = 0x(____ptrval____))
-[   17.617438] Call trace:
-[   17.623349]  __mutex_lock.isra.1+0x74/0x540
-[   17.630927]  __mutex_lock_slowpath+0x24/0x30
-[   17.638602]  mutex_lock+0x50/0x60
-[   17.645295]  drain_workqueue+0x34/0x198
-[   17.652623]  __sas_drain_work+0x7c/0x168
-[   17.659903]  sas_drain_work+0x60/0x68
-[   17.666947]  hisi_sas_scan_finished+0x30/0x40 [hisi_sas_main]
-[   17.676129]  do_scsi_scan_host+0x70/0xb0
-[   17.683534]  do_scan_async+0x20/0x228
-[   17.690586]  async_run_entry_fn+0x4c/0x1d0
-[   17.697997]  process_one_work+0x1b4/0x3f8
-[   17.705296]  worker_thread+0x54/0x470
-
-Every time the call trace is not the same, but the overwrite address
-is always the same:
-Unable to handle kernel paging request at virtual address 0000000200000040
-
-The root cause is, when write the reg XGMAC_MAC_TX_LF_RF_CONTROL_REG,
-didn't use the io_base offset.
+This patch fix the wrong forwarding table configs for the multicast
+vague matching when enable promisc mode, and add forwarding pool
+for the forwarding table.
 
 Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../ethernet/hisilicon/hns/hns_dsaf_main.c    | 33 +++++++++++++++----
+ 1 file changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
-index ba4316910dea..a60f207768fc 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_xgmac.c
-@@ -129,7 +129,7 @@ static void hns_xgmac_lf_rf_control_init(struct mac_driver *mac_drv)
- 	dsaf_set_bit(val, XGMAC_UNIDIR_EN_B, 0);
- 	dsaf_set_bit(val, XGMAC_RF_TX_EN_B, 1);
- 	dsaf_set_field(val, XGMAC_LF_RF_INSERT_M, XGMAC_LF_RF_INSERT_S, 0);
--	dsaf_write_reg(mac_drv, XGMAC_MAC_TX_LF_RF_CONTROL_REG, val);
-+	dsaf_write_dev(mac_drv, XGMAC_MAC_TX_LF_RF_CONTROL_REG, val);
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+index b8155f5e71b4..fdff5526d2e8 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+@@ -2750,6 +2750,17 @@ int hns_dsaf_get_regs_count(void)
+ 	return DSAF_DUMP_REGS_NUM;
  }
  
- /**
++static int hns_dsaf_get_port_id(u8 port)
++{
++	if (port < DSAF_SERVICE_NW_NUM)
++		return port;
++
++	if (port >= DSAF_BASE_INNER_PORT_NUM)
++		return port - DSAF_BASE_INNER_PORT_NUM + DSAF_SERVICE_NW_NUM;
++
++	return -EINVAL;
++}
++
+ static void set_promisc_tcam_enable(struct dsaf_device *dsaf_dev, u32 port)
+ {
+ 	struct dsaf_tbl_tcam_ucast_cfg tbl_tcam_ucast = {0, 1, 0, 0, 0x80};
+@@ -2815,23 +2826,33 @@ static void set_promisc_tcam_enable(struct dsaf_device *dsaf_dev, u32 port)
+ 	memset(&temp_key, 0x0, sizeof(temp_key));
+ 	mask_entry.addr[0] = 0x01;
+ 	hns_dsaf_set_mac_key(dsaf_dev, &mask_key, mask_entry.in_vlan_id,
+-			     port, mask_entry.addr);
++			     0xf, mask_entry.addr);
+ 	tbl_tcam_mcast.tbl_mcast_item_vld = 1;
+ 	tbl_tcam_mcast.tbl_mcast_old_en = 0;
+ 
+-	if (port < DSAF_SERVICE_NW_NUM) {
+-		mskid = port;
+-	} else if (port >= DSAF_BASE_INNER_PORT_NUM) {
+-		mskid = port - DSAF_BASE_INNER_PORT_NUM + DSAF_SERVICE_NW_NUM;
+-	} else {
++	/* set MAC port to handle multicast */
++	mskid = hns_dsaf_get_port_id(port);
++	if (mskid == -EINVAL) {
+ 		dev_err(dsaf_dev->dev, "%s,pnum(%d)error,key(%#x:%#x)\n",
+ 			dsaf_dev->ae_dev.name, port,
+ 			mask_key.high.val, mask_key.low.val);
+ 		return;
+ 	}
++	dsaf_set_bit(tbl_tcam_mcast.tbl_mcast_port_msk[mskid / 32],
++		     mskid % 32, 1);
+ 
++	/* set pool bit map to handle multicast */
++	mskid = hns_dsaf_get_port_id(port_num);
++	if (mskid == -EINVAL) {
++		dev_err(dsaf_dev->dev,
++			"%s, pool bit map pnum(%d)error,key(%#x:%#x)\n",
++			dsaf_dev->ae_dev.name, port_num,
++			mask_key.high.val, mask_key.low.val);
++		return;
++	}
+ 	dsaf_set_bit(tbl_tcam_mcast.tbl_mcast_port_msk[mskid / 32],
+ 		     mskid % 32, 1);
++
+ 	memcpy(&temp_key, &mask_key, sizeof(mask_key));
+ 	hns_dsaf_tcam_mc_cfg_vague(dsaf_dev, entry_index, &tbl_tcam_data_mc,
+ 				   (struct dsaf_tbl_tcam_data *)(&mask_key),
 -- 
 2.19.1
 
