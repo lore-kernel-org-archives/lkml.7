@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5640C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5FCC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6723321907
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A7D218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125975;
-	bh=5tiR3tiecIhYUMuD+5s/Dm/dHUxdxqZgXjJSPuMDl0c=;
+	s=default; t=1556125982;
+	bh=t7rpxoBKrWheMC0pUuOqCb+HqqWBs0Xd9ZYY+72GMqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YDoCHu79QikD+k7Ua2AOPlUHdH76D9ZqSG4XoE1THxJcBu8lW0bJe/1/YKEHhjrhG
-	 dpQzG+NI07UP0zAjjnrMN1Bci0N91v7X6U3RYooHgS8uLz3sK4DVcnJyHZs7BsR8BD
-	 Mf1MvtRt0iVX0bOfxFVZVsYPSBkhvexrY3YyU2o0=
+	b=jh2srzPU2bW3osvcvtRpWBKb+i3jvQSdzsoEO2q3lTgx16UA8QXSkSJAYnFXOm/v3
+	 u82Tw6bKPyiaRfXN7L6cc3QnyULeAdKghiv1ro3gEcLhejb6oc3wQV1U67qliusj6f
+	 ByvJBWgOpGSEhviPXRpR61WsddUKzLHmnWZGXsgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733219AbfDXRMy (ORCPT
+        id S2387785AbfDXRNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:12:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36766 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387733AbfDXRMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:12:50 -0400
+        id S2387766AbfDXRM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:12:59 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B02592148D;
-        Wed, 24 Apr 2019 17:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2F2B218FE;
+        Wed, 24 Apr 2019 17:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125970;
-        bh=5tiR3tiecIhYUMuD+5s/Dm/dHUxdxqZgXjJSPuMDl0c=;
+        s=default; t=1556125978;
+        bh=t7rpxoBKrWheMC0pUuOqCb+HqqWBs0Xd9ZYY+72GMqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ie8cZoyV9wemXMJkZXBdlZV/QUu2t/nR/MWf/L/A9Be9uOgIm4GX5FS4IpovsbmRd
-         CGOvSKm5IZ/Xc+zfw0Nb2+/eJPNq5hYXJUibmupHxvcaxuTm8l6QBcmsn95NyMqOKv
-         j39fa0Wynwphhw6pYcDlZ304YgVhB36totEz2D1Y=
+        b=A4oQG5IVMHBdVC2+EXmpmngzOpIdPvkp8nIJfVIOQ2VV/qfOe33yBWy/u5y3MTKKj
+         RkXljX6+4e6c3VV05+nph3UiOFcccsk6YZv8sb8QpfJUEMytpuy9Yx9EZ+ftyqEZrw
+         Gwnqk9pIdQjgBaC1FfjYmnsjhFsgswBil1MFLn8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Wang Li <wangli39@baidu.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 048/104] sctp: initialize _pad of sockaddr_in before copying to user memory
-Date:   Wed, 24 Apr 2019 19:09:05 +0200
-Message-Id: <20190424170901.129315576@linuxfoundation.org>
+Subject: [PATCH 3.18 050/104] net: ethtool: not call vzalloc for zero sized memory request
+Date:   Wed, 24 Apr 2019 19:09:07 +0200
+Message-Id: <20190424170901.472691221@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -63,55 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 09279e615c81ce55e04835970601ae286e3facbe ]
+[ Upstream commit 3d8830266ffc28c16032b859e38a0252e014b631 ]
 
-Syzbot report a kernel-infoleak:
+NULL or ZERO_SIZE_PTR will be returned for zero sized memory
+request, and derefencing them will lead to a segfault
 
-  BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-  Call Trace:
-    _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-    copy_to_user include/linux/uaccess.h:174 [inline]
-    sctp_getsockopt_peer_addrs net/sctp/socket.c:5911 [inline]
-    sctp_getsockopt+0x1668e/0x17f70 net/sctp/socket.c:7562
-    ...
-  Uninit was stored to memory at:
-    sctp_transport_init net/sctp/transport.c:61 [inline]
-    sctp_transport_new+0x16d/0x9a0 net/sctp/transport.c:115
-    sctp_assoc_add_peer+0x532/0x1f70 net/sctp/associola.c:637
-    sctp_process_param net/sctp/sm_make_chunk.c:2548 [inline]
-    sctp_process_init+0x1a1b/0x3ed0 net/sctp/sm_make_chunk.c:2361
-    ...
-  Bytes 8-15 of 16 are uninitialized
+so it is unnecessory to call vzalloc for zero sized memory
+request and not call functions which maybe derefence the
+NULL allocated memory
 
-It was caused by that th _pad field (the 8-15 bytes) of a v4 addr (saved in
-struct sockaddr_in) wasn't initialized, but directly copied to user memory
-in sctp_getsockopt_peer_addrs().
+this also fixes a possible memory leak if phy_ethtool_get_stats
+returns error, memory should be freed before exit
 
-So fix it by calling memset(addr->v4.sin_zero, 0, 8) to initialize _pad of
-sockaddr_in before copying it to user memory in sctp_v4_addr_to_user(), as
-sctp_v6_addr_to_user() does.
-
-Reported-by: syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Tested-by: Alexander Potapenko <glider@google.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Reviewed-by: Wang Li <wangli39@baidu.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/protocol.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/core/ethtool.c |   29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
---- a/net/sctp/protocol.c
-+++ b/net/sctp/protocol.c
-@@ -578,6 +578,7 @@ out:
- static int sctp_v4_addr_to_user(struct sctp_sock *sp, union sctp_addr *addr)
- {
- 	/* No address mapping for V4 sockets */
-+	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
- 	return sizeof(struct sockaddr_in);
- }
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -1257,17 +1257,22 @@ static int ethtool_get_strings(struct ne
+ 
+ 	gstrings.len = ret;
+ 
+-	data = kcalloc(gstrings.len, ETH_GSTRING_LEN, GFP_USER);
+-	if (!data)
+-		return -ENOMEM;
++	if (gstrings.len) {
++		data = kcalloc(gstrings.len, ETH_GSTRING_LEN, GFP_USER);
++		if (!data)
++			return -ENOMEM;
+ 
+-	__ethtool_get_strings(dev, gstrings.string_set, data);
++		__ethtool_get_strings(dev, gstrings.string_set, data);
++	} else {
++		data = NULL;
++	}
+ 
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &gstrings, sizeof(gstrings)))
+ 		goto out;
+ 	useraddr += sizeof(gstrings);
+-	if (copy_to_user(useraddr, data, gstrings.len * ETH_GSTRING_LEN))
++	if (gstrings.len &&
++	    copy_to_user(useraddr, data, gstrings.len * ETH_GSTRING_LEN))
+ 		goto out;
+ 	ret = 0;
+ 
+@@ -1355,17 +1360,21 @@ static int ethtool_get_stats(struct net_
+ 		return -EFAULT;
+ 
+ 	stats.n_stats = n_stats;
+-	data = kmalloc(n_stats * sizeof(u64), GFP_USER);
+-	if (!data)
+-		return -ENOMEM;
++	if (n_stats) {
++		data = kmalloc(n_stats * sizeof(u64), GFP_USER);
++		if (!data)
++			return -ENOMEM;
+ 
+-	ops->get_ethtool_stats(dev, &stats, data);
++		ops->get_ethtool_stats(dev, &stats, data);
++	} else {
++		data = NULL;
++	}
+ 
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &stats, sizeof(stats)))
+ 		goto out;
+ 	useraddr += sizeof(stats);
+-	if (copy_to_user(useraddr, data, stats.n_stats * sizeof(u64)))
++	if (n_stats && copy_to_user(useraddr, data, n_stats * sizeof(u64)))
+ 		goto out;
+ 	ret = 0;
  
 
 
