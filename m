@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F456C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632A0C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E802183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA9E20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389790AbfDXTlq (ORCPT
+        id S2389705AbfDXTlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:41:46 -0400
-Received: from mga18.intel.com ([134.134.136.126]:44995 "EHLO mga18.intel.com"
+        Wed, 24 Apr 2019 15:41:44 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15196 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729378AbfDXTln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:41:43 -0400
+        id S1728001AbfDXTll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 15:41:41 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 12:41:41 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 12:41:39 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,390,1549958400"; 
-   d="scan'208";a="340454908"
+   d="scan'208";a="340454873"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Apr 2019 12:41:41 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 24 Apr 2019 12:41:39 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -45,9 +45,9 @@ Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, kvm@vger.kernel.org,
         netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v8 14/15] x86/split_lock: Disable split lock detection by kernel parameter "nosplit_lock_detect"
-Date:   Wed, 24 Apr 2019 12:33:01 -0700
-Message-Id: <1556134382-58814-15-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v8 03/15] wlcore: simplify/fix/optimize reg_ch_conf_pending operations
+Date:   Wed, 24 Apr 2019 12:32:50 -0700
+Message-Id: <1556134382-58814-4-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
 References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
@@ -56,86 +56,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To work around or debug split lock issues, the kernel parameter
-"nosplit_lock_detect" is introduced to disable the feature during boot
-time.
+From: Paolo Bonzini <pbonzini@redhat.com>
 
+Bitmaps are defined on unsigned longs, so the usage of u32[2] in the
+wlcore driver is incorrect.  As noted by Peter Zijlstra, casting arrays
+to a bitmap is incorrect for big-endian architectures.
+
+When looking at it I observed that:
+
+- operations on reg_ch_conf_pending is always under the wl_lock mutex,
+so set_bit is overkill
+
+- the only case where reg_ch_conf_pending is accessed a u32 at a time is
+unnecessary too.
+
+This patch cleans up everything in this area, and changes tmp_ch_bitmap
+to have the proper alignment.
+
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  2 ++
- arch/x86/kernel/cpu/intel.c                   | 25 ++++++++++++++++---
- 2 files changed, 23 insertions(+), 4 deletions(-)
+ drivers/net/wireless/ti/wlcore/cmd.c    | 15 ++++++---------
+ drivers/net/wireless/ti/wlcore/wlcore.h |  4 ++--
+ 2 files changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 2b8ee90bb644..623a5f223ff1 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3019,6 +3019,8 @@
+diff --git a/drivers/net/wireless/ti/wlcore/cmd.c b/drivers/net/wireless/ti/wlcore/cmd.c
+index 348be0aed97e..0415a064f6e2 100644
+--- a/drivers/net/wireless/ti/wlcore/cmd.c
++++ b/drivers/net/wireless/ti/wlcore/cmd.c
+@@ -1700,14 +1700,14 @@ void wlcore_set_pending_regdomain_ch(struct wl1271 *wl, u16 channel,
+ 	ch_bit_idx = wlcore_get_reg_conf_ch_idx(band, channel);
  
- 	nosoftlockup	[KNL] Disable the soft-lockup detector.
- 
-+	nosplit_lock_detect	[X86] Disable split lock detection
-+
- 	nosync		[HW,M68K] Disables sync negotiation for all devices.
- 
- 	nowatchdog	[KNL] Disable both lockup detectors, i.e.
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 28cc6891ba48..959ebf25beda 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -19,6 +19,7 @@
- #include <asm/microcode_intel.h>
- #include <asm/hwcap2.h>
- #include <asm/elf.h>
-+#include <asm/cmdline.h>
- 
- #ifdef CONFIG_X86_64
- #include <linux/topology.h>
-@@ -34,6 +35,8 @@
- DEFINE_PER_CPU(u64, msr_test_ctl_cache);
- EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctl_cache);
- 
-+static bool split_lock_detect_enable;
-+
- /*
-  * Just in case our CPU detection goes bad, or you have a weird system,
-  * allow a way to override the automatic disabling of MPX.
-@@ -659,9 +662,15 @@ static void init_intel_misc_features(struct cpuinfo_x86 *c)
- 
- static void split_lock_update_msr(void)
- {
--	/* Enable split lock detection */
--	msr_set_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
--	this_cpu_or(msr_test_ctl_cache, TEST_CTL_SPLIT_LOCK_DETECT);
-+	if (split_lock_detect_enable) {
-+		/* Enable split lock detection */
-+		msr_set_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
-+		this_cpu_or(msr_test_ctl_cache, TEST_CTL_SPLIT_LOCK_DETECT);
-+	} else {
-+		/* Disable split lock detection */
-+		msr_clear_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
-+		this_cpu_and(msr_test_ctl_cache, ~TEST_CTL_SPLIT_LOCK_DETECT);
-+	}
+ 	if (ch_bit_idx >= 0 && ch_bit_idx <= WL1271_MAX_CHANNELS)
+-		set_bit(ch_bit_idx, (long *)wl->reg_ch_conf_pending);
++		__set_bit_le(ch_bit_idx, (long *)wl->reg_ch_conf_pending);
  }
  
- static void init_split_lock_detect(struct cpuinfo_x86 *c)
-@@ -1060,7 +1069,15 @@ cpu_dev_register(intel_cpu_dev);
- static void __init set_split_lock_detect(void)
+ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
  {
- 	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
--	pr_info("enabled\n");
-+
-+	if (cmdline_find_option_bool(boot_command_line,
-+				     "nosplit_lock_detect")) {
-+		split_lock_detect_enable = false;
-+		pr_info("disabled\n");
-+	} else {
-+		split_lock_detect_enable = true;
-+		pr_info("enabled\n");
-+	}
- }
+ 	struct wl12xx_cmd_regdomain_dfs_config *cmd = NULL;
+ 	int ret = 0, i, b, ch_bit_idx;
+-	u32 tmp_ch_bitmap[2];
++	__le32 tmp_ch_bitmap[2] __aligned(sizeof(unsigned long));
+ 	struct wiphy *wiphy = wl->hw->wiphy;
+ 	struct ieee80211_supported_band *band;
+ 	bool timeout = false;
+@@ -1717,7 +1717,7 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
  
- void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
+ 	wl1271_debug(DEBUG_CMD, "cmd reg domain config");
+ 
+-	memset(tmp_ch_bitmap, 0, sizeof(tmp_ch_bitmap));
++	memcpy(tmp_ch_bitmap, wl->reg_ch_conf_pending, sizeof(tmp_ch_bitmap));
+ 
+ 	for (b = NL80211_BAND_2GHZ; b <= NL80211_BAND_5GHZ; b++) {
+ 		band = wiphy->bands[b];
+@@ -1738,13 +1738,10 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
+ 			if (ch_bit_idx < 0)
+ 				continue;
+ 
+-			set_bit(ch_bit_idx, (long *)tmp_ch_bitmap);
++			__set_bit_le(ch_bit_idx, (long *)tmp_ch_bitmap);
+ 		}
+ 	}
+ 
+-	tmp_ch_bitmap[0] |= wl->reg_ch_conf_pending[0];
+-	tmp_ch_bitmap[1] |= wl->reg_ch_conf_pending[1];
+-
+ 	if (!memcmp(tmp_ch_bitmap, wl->reg_ch_conf_last, sizeof(tmp_ch_bitmap)))
+ 		goto out;
+ 
+@@ -1754,8 +1751,8 @@ int wlcore_cmd_regdomain_config_locked(struct wl1271 *wl)
+ 		goto out;
+ 	}
+ 
+-	cmd->ch_bit_map1 = cpu_to_le32(tmp_ch_bitmap[0]);
+-	cmd->ch_bit_map2 = cpu_to_le32(tmp_ch_bitmap[1]);
++	cmd->ch_bit_map1 = tmp_ch_bitmap[0];
++	cmd->ch_bit_map2 = tmp_ch_bitmap[1];
+ 	cmd->dfs_region = wl->dfs_region;
+ 
+ 	wl1271_debug(DEBUG_CMD,
+diff --git a/drivers/net/wireless/ti/wlcore/wlcore.h b/drivers/net/wireless/ti/wlcore/wlcore.h
+index dd14850b0603..870eea3e7a27 100644
+--- a/drivers/net/wireless/ti/wlcore/wlcore.h
++++ b/drivers/net/wireless/ti/wlcore/wlcore.h
+@@ -320,9 +320,9 @@ struct wl1271 {
+ 	bool watchdog_recovery;
+ 
+ 	/* Reg domain last configuration */
+-	u32 reg_ch_conf_last[2]  __aligned(8);
++	DECLARE_BITMAP(reg_ch_conf_last, 64);
+ 	/* Reg domain pending configuration */
+-	u32 reg_ch_conf_pending[2];
++	DECLARE_BITMAP(reg_ch_conf_pending, 64);
+ 
+ 	/* Pointer that holds DMA-friendly block for the mailbox */
+ 	void *mbox;
 -- 
 2.19.1
 
