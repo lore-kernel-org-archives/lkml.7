@@ -2,1010 +2,129 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16C4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA1BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94909218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA6CE2089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbfDXOaz (ORCPT
+        id S1730442AbfDXOcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:30:55 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:50818 "EHLO ns.iliad.fr"
+        Wed, 24 Apr 2019 10:32:39 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15660 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728429AbfDXOax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:30:53 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 3333D20C53;
-        Wed, 24 Apr 2019 16:30:50 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 253E2206B9;
-        Wed, 24 Apr 2019 16:30:50 +0200 (CEST)
-Subject: Re: [PATCH v2 00/13] qcom: dts: thermal cleanups
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-References: <cover.1553853990.git.amit.kucheria@linaro.org>
- <5583cae1-8fea-724a-24a4-59b38a205ac3@free.fr>
- <CAP245DUNo02QUkGDPFfzow9535GKO9x6ZusETRjEgTmnHL4D2g@mail.gmail.com>
- <842b06c6-15b2-7ba6-702e-c8b043d390a6@free.fr>
- <CAP245DVqGQ6MEfcYjr2PYnD=BR86vC=BsRMpZe0jsgbAc6jFGg@mail.gmail.com>
- <903fa0a6-5c40-97b4-1c01-fd84f3e51c62@free.fr>
-Message-ID: <8e53ea22-d248-8c63-bcda-15b502eb9699@free.fr>
-Date:   Wed, 24 Apr 2019 16:30:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726165AbfDXOcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:32:39 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 07:32:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,390,1549958400"; 
+   d="scan'208";a="167504859"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga001.fm.intel.com with ESMTP; 24 Apr 2019 07:32:38 -0700
+Date:   Wed, 24 Apr 2019 07:32:38 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Like Xu <like.xu@linux.intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
+Message-ID: <20190424143238.GB18442@linux.intel.com>
+References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <903fa0a6-5c40-97b4-1c01-fd84f3e51c62@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Apr 24 16:30:50 2019 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/04/2019 15:10, Marc Gonzalez wrote:
+Now that I understand how min() works...
 
-> Sure. I can give you a Tested-by once everything works on the MEDIABOX I have.
+On Mon, Apr 22, 2019 at 02:40:34PM +0800, Like Xu wrote:
+> Expose Intel V2 Extended Topology Enumeration Leaf to guest only when
+> host system has multiple software-visible die within each package.
 > 
-> You mention the 4 thermal_zone*/temp failures.
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> What about the cluster0-mhm-thermal and cluster1-mhm-thermal failures?
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index fd39516..9fc14f2 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
+>  	return xcr0;
+>  }
+>  
+> +/* We need to check if the host cpu has multi-chip packaging technology. */
+> +static bool kvm_supported_intel_mcp(void)
+> +{
+> +	u32 eax, ignored;
+> +
+> +	cpuid_count(0x1f, 0, &eax, &ignored, &ignored, &ignored);
 
-I have synced up with today's linux-next.
+This is broken because of how CPUID works for unsupported input leafs:
 
-# dmesg | grep thermal
-Failed to build cluster0-mhm-thermal zone -22
-Failed to build cluster1-mhm-thermal zone -22
+  If a value entered for CPUID.EAX is higher than the maximum input value
+  for basic or extended function for that processor then the data for the
+  highest basic information leaf is returned. 
 
-# for F in $(find /sys/class/thermal/thermal_zone?/ /sys/class/thermal/thermal_zone??/ -type f); do echo $F; cat $F; done
-/sys/class/thermal/thermal_zone0/uevent
-/sys/class/thermal/thermal_zone0/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone0/mode
-enabled
-/sys/class/thermal/thermal_zone0/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone0/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone0/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone0/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone0/power/control
-auto
-/sys/class/thermal/thermal_zone0/available_policies
-step_wise
-/sys/class/thermal/thermal_zone0/policy
-step_wise
-/sys/class/thermal/thermal_zone0/trip_point_1_type
-critical
-/sys/class/thermal/thermal_zone0/k_d
-0
-/sys/class/thermal/thermal_zone0/sustainable_power
-0
-/sys/class/thermal/thermal_zone0/type
-cpu0-thermal
-/sys/class/thermal/thermal_zone0/offset
-0
-/sys/class/thermal/thermal_zone0/slope
-1
-/sys/class/thermal/thermal_zone0/trip_point_0_type
-passive
-/sys/class/thermal/thermal_zone0/k_po
-0
-/sys/class/thermal/thermal_zone0/integral_cutoff
-0
-/sys/class/thermal/thermal_zone0/k_i
-0
-/sys/class/thermal/thermal_zone0/trip_point_1_temp
-110000
-/sys/class/thermal/thermal_zone0/k_pu
-0
-/sys/class/thermal/thermal_zone0/temp
-34900
-/sys/class/thermal/thermal_zone0/trip_point_1_hyst
-2000
-/sys/class/thermal/thermal_zone0/trip_point_0_temp
-75000
-/sys/class/thermal/thermal_zone1/uevent
-/sys/class/thermal/thermal_zone1/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone1/mode
-enabled
-/sys/class/thermal/thermal_zone1/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone1/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone1/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone1/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone1/power/control
-auto
-/sys/class/thermal/thermal_zone1/available_policies
-step_wise
-/sys/class/thermal/thermal_zone1/policy
-step_wise
-/sys/class/thermal/thermal_zone1/trip_point_1_type
-critical
-/sys/class/thermal/thermal_zone1/k_d
-0
-/sys/class/thermal/thermal_zone1/sustainable_power
-0
-/sys/class/thermal/thermal_zone1/type
-cpu1-thermal
-/sys/class/thermal/thermal_zone1/offset
-0
-/sys/class/thermal/thermal_zone1/slope
-1
-/sys/class/thermal/thermal_zone1/trip_point_0_type
-passive
-/sys/class/thermal/thermal_zone1/k_po
-0
-/sys/class/thermal/thermal_zone1/integral_cutoff
-0
-/sys/class/thermal/thermal_zone1/k_i
-0
-/sys/class/thermal/thermal_zone1/trip_point_1_temp
-110000
-/sys/class/thermal/thermal_zone1/k_pu
-0
-/sys/class/thermal/thermal_zone1/temp
-33900
-/sys/class/thermal/thermal_zone1/trip_point_1_hyst
-2000
-/sys/class/thermal/thermal_zone1/trip_point_0_temp
-75000
-/sys/class/thermal/thermal_zone2/uevent
-/sys/class/thermal/thermal_zone2/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone2/mode
-enabled
-/sys/class/thermal/thermal_zone2/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone2/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone2/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone2/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone2/power/control
-auto
-/sys/class/thermal/thermal_zone2/available_policies
-step_wise
-/sys/class/thermal/thermal_zone2/policy
-step_wise
-/sys/class/thermal/thermal_zone2/trip_point_1_type
-critical
-/sys/class/thermal/thermal_zone2/k_d
-0
-/sys/class/thermal/thermal_zone2/sustainable_power
-0
-/sys/class/thermal/thermal_zone2/type
-cpu2-thermal
-/sys/class/thermal/thermal_zone2/offset
-0
-/sys/class/thermal/thermal_zone2/slope
-1
-/sys/class/thermal/thermal_zone2/trip_point_0_type
-passive
-/sys/class/thermal/thermal_zone2/k_po
-0
-/sys/class/thermal/thermal_zone2/integral_cutoff
-0
-/sys/class/thermal/thermal_zone2/k_i
-0
-/sys/class/thermal/thermal_zone2/trip_point_1_temp
-110000
-/sys/class/thermal/thermal_zone2/k_pu
-0
-/sys/class/thermal/thermal_zone2/temp
-34200
-/sys/class/thermal/thermal_zone2/trip_point_1_hyst
-2000
-/sys/class/thermal/thermal_zone2/trip_point_0_temp
-75000
-/sys/class/thermal/thermal_zone3/uevent
-/sys/class/thermal/thermal_zone3/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone3/mode
-enabled
-/sys/class/thermal/thermal_zone3/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone3/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone3/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone3/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone3/power/control
-auto
-/sys/class/thermal/thermal_zone3/available_policies
-step_wise
-/sys/class/thermal/thermal_zone3/policy
-step_wise
-/sys/class/thermal/thermal_zone3/trip_point_1_type
-critical
-/sys/class/thermal/thermal_zone3/k_d
-0
-/sys/class/thermal/thermal_zone3/sustainable_power
-0
-/sys/class/thermal/thermal_zone3/type
-cpu3-thermal
-/sys/class/thermal/thermal_zone3/offset
-0
-/sys/class/thermal/thermal_zone3/slope
-1
-/sys/class/thermal/thermal_zone3/trip_point_0_type
-passive
-/sys/class/thermal/thermal_zone3/k_po
-0
-/sys/class/thermal/thermal_zone3/integral_cutoff
-0
-/sys/class/thermal/thermal_zone3/k_i
-0
-/sys/class/thermal/thermal_zone3/trip_point_1_temp
-110000
-/sys/class/thermal/thermal_zone3/k_pu
-0
-/sys/class/thermal/thermal_zone3/temp
-34200
-/sys/class/thermal/thermal_zone3/trip_point_1_hyst
-2000
-/sys/class/thermal/thermal_zone3/trip_point_0_temp
-75000
-/sys/class/thermal/thermal_zone4/uevent
-/sys/class/thermal/thermal_zone4/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone4/mode
-enabled
-/sys/class/thermal/thermal_zone4/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone4/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone4/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone4/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone4/power/control
-auto
-/sys/class/thermal/thermal_zone4/available_policies
-step_wise
-/sys/class/thermal/thermal_zone4/policy
-step_wise
-/sys/class/thermal/thermal_zone4/trip_point_1_type
-critical
-/sys/class/thermal/thermal_zone4/k_d
-0
-/sys/class/thermal/thermal_zone4/sustainable_power
-0
-/sys/class/thermal/thermal_zone4/type
-cpu4-thermal
-/sys/class/thermal/thermal_zone4/offset
-0
-/sys/class/thermal/thermal_zone4/slope
-1
-/sys/class/thermal/thermal_zone4/trip_point_0_type
-passive
-/sys/class/thermal/thermal_zone4/k_po
-0
-/sys/class/thermal/thermal_zone4/integral_cutoff
-0
-/sys/class/thermal/thermal_zone4/k_i
-0
-/sys/class/thermal/thermal_zone4/trip_point_1_temp
-110000
-/sys/class/thermal/thermal_zone4/k_pu
-0
-/sys/class/thermal/thermal_zone4/temp
-34200
-/sys/class/thermal/thermal_zone4/trip_point_1_hyst
-2000
-/sys/class/thermal/thermal_zone4/trip_point_0_temp
-75000
-/sys/class/thermal/thermal_zone5/uevent
-/sys/class/thermal/thermal_zone5/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone5/mode
-enabled
-/sys/class/thermal/thermal_zone5/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone5/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone5/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone5/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone5/power/control
-auto
-/sys/class/thermal/thermal_zone5/available_policies
-step_wise
-/sys/class/thermal/thermal_zone5/policy
-step_wise
-/sys/class/thermal/thermal_zone5/trip_point_1_type
-critical
-/sys/class/thermal/thermal_zone5/k_d
-0
-/sys/class/thermal/thermal_zone5/sustainable_power
-0
-/sys/class/thermal/thermal_zone5/type
-cpu5-thermal
-/sys/class/thermal/thermal_zone5/offset
-0
-/sys/class/thermal/thermal_zone5/slope
-1
-/sys/class/thermal/thermal_zone5/trip_point_0_type
-passive
-/sys/class/thermal/thermal_zone5/k_po
-0
-/sys/class/thermal/thermal_zone5/integral_cutoff
-0
-/sys/class/thermal/thermal_zone5/k_i
-0
-/sys/class/thermal/thermal_zone5/trip_point_1_temp
-110000
-/sys/class/thermal/thermal_zone5/k_pu
-0
-/sys/class/thermal/thermal_zone5/temp
-32900
-/sys/class/thermal/thermal_zone5/trip_point_1_hyst
-2000
-/sys/class/thermal/thermal_zone5/trip_point_0_temp
-75000
-/sys/class/thermal/thermal_zone6/uevent
-/sys/class/thermal/thermal_zone6/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone6/mode
-enabled
-/sys/class/thermal/thermal_zone6/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone6/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone6/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone6/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone6/power/control
-auto
-/sys/class/thermal/thermal_zone6/available_policies
-step_wise
-/sys/class/thermal/thermal_zone6/policy
-step_wise
-/sys/class/thermal/thermal_zone6/trip_point_1_type
-critical
-/sys/class/thermal/thermal_zone6/k_d
-0
-/sys/class/thermal/thermal_zone6/sustainable_power
-0
-/sys/class/thermal/thermal_zone6/type
-cpu6-thermal
-/sys/class/thermal/thermal_zone6/offset
-0
-/sys/class/thermal/thermal_zone6/slope
-1
-/sys/class/thermal/thermal_zone6/trip_point_0_type
-passive
-/sys/class/thermal/thermal_zone6/k_po
-0
-/sys/class/thermal/thermal_zone6/integral_cutoff
-0
-/sys/class/thermal/thermal_zone6/k_i
-0
-/sys/class/thermal/thermal_zone6/trip_point_1_temp
-110000
-/sys/class/thermal/thermal_zone6/k_pu
-0
-/sys/class/thermal/thermal_zone6/temp
-33300
-/sys/class/thermal/thermal_zone6/trip_point_1_hyst
-2000
-/sys/class/thermal/thermal_zone6/trip_point_0_temp
-75000
-/sys/class/thermal/thermal_zone7/uevent
-/sys/class/thermal/thermal_zone7/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone7/mode
-enabled
-/sys/class/thermal/thermal_zone7/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone7/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone7/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone7/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone7/power/control
-auto
-/sys/class/thermal/thermal_zone7/available_policies
-step_wise
-/sys/class/thermal/thermal_zone7/policy
-step_wise
-/sys/class/thermal/thermal_zone7/trip_point_1_type
-critical
-/sys/class/thermal/thermal_zone7/k_d
-0
-/sys/class/thermal/thermal_zone7/sustainable_power
-0
-/sys/class/thermal/thermal_zone7/type
-cpu7-thermal
-/sys/class/thermal/thermal_zone7/offset
-0
-/sys/class/thermal/thermal_zone7/slope
-1
-/sys/class/thermal/thermal_zone7/trip_point_0_type
-passive
-/sys/class/thermal/thermal_zone7/k_po
-0
-/sys/class/thermal/thermal_zone7/integral_cutoff
-0
-/sys/class/thermal/thermal_zone7/k_i
-0
-/sys/class/thermal/thermal_zone7/trip_point_1_temp
-110000
-/sys/class/thermal/thermal_zone7/k_pu
-0
-/sys/class/thermal/thermal_zone7/temp
-34200
-/sys/class/thermal/thermal_zone7/trip_point_1_hyst
-2000
-/sys/class/thermal/thermal_zone7/trip_point_0_temp
-75000
-/sys/class/thermal/thermal_zone8/uevent
-/sys/class/thermal/thermal_zone8/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone8/passive
-0
-/sys/class/thermal/thermal_zone8/mode
-disabled
-/sys/class/thermal/thermal_zone8/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone8/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone8/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone8/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone8/power/control
-auto
-/sys/class/thermal/thermal_zone8/available_policies
-step_wise
-/sys/class/thermal/thermal_zone8/policy
-step_wise
-/sys/class/thermal/thermal_zone8/k_d
-0
-/sys/class/thermal/thermal_zone8/sustainable_power
-0
-/sys/class/thermal/thermal_zone8/type
-gpu-thermal-bottom
-/sys/class/thermal/thermal_zone8/offset
-0
-/sys/class/thermal/thermal_zone8/slope
-1
-/sys/class/thermal/thermal_zone8/trip_point_0_type
-hot
-/sys/class/thermal/thermal_zone8/k_po
-0
-/sys/class/thermal/thermal_zone8/integral_cutoff
-0
-/sys/class/thermal/thermal_zone8/k_i
-0
-/sys/class/thermal/thermal_zone8/k_pu
-0
-/sys/class/thermal/thermal_zone8/temp
-cat: read error: Invalid argument
-/sys/class/thermal/thermal_zone8/trip_point_0_temp
-90000
-/sys/class/thermal/thermal_zone9/uevent
-/sys/class/thermal/thermal_zone9/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone9/passive
-0
-/sys/class/thermal/thermal_zone9/mode
-disabled
-/sys/class/thermal/thermal_zone9/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone9/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone9/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone9/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone9/power/control
-auto
-/sys/class/thermal/thermal_zone9/available_policies
-step_wise
-/sys/class/thermal/thermal_zone9/policy
-step_wise
-/sys/class/thermal/thermal_zone9/k_d
-0
-/sys/class/thermal/thermal_zone9/sustainable_power
-0
-/sys/class/thermal/thermal_zone9/type
-gpu-thermal-top
-/sys/class/thermal/thermal_zone9/offset
-0
-/sys/class/thermal/thermal_zone9/slope
-1
-/sys/class/thermal/thermal_zone9/trip_point_0_type
-hot
-/sys/class/thermal/thermal_zone9/k_po
-0
-/sys/class/thermal/thermal_zone9/integral_cutoff
-0
-/sys/class/thermal/thermal_zone9/k_i
-0
-/sys/class/thermal/thermal_zone9/k_pu
-0
-/sys/class/thermal/thermal_zone9/temp
-cat: read error: Invalid argument
-/sys/class/thermal/thermal_zone9/trip_point_0_temp
-90000
-/sys/class/thermal/thermal_zone10/uevent
-/sys/class/thermal/thermal_zone10/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone10/passive
-0
-/sys/class/thermal/thermal_zone10/mode
-enabled
-/sys/class/thermal/thermal_zone10/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone10/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone10/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone10/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone10/power/control
-auto
-/sys/class/thermal/thermal_zone10/available_policies
-step_wise
-/sys/class/thermal/thermal_zone10/policy
-step_wise
-/sys/class/thermal/thermal_zone10/k_d
-0
-/sys/class/thermal/thermal_zone10/sustainable_power
-0
-/sys/class/thermal/thermal_zone10/type
-cluster1-l2-thermal
-/sys/class/thermal/thermal_zone10/offset
-0
-/sys/class/thermal/thermal_zone10/slope
-1
-/sys/class/thermal/thermal_zone10/trip_point_0_type
-hot
-/sys/class/thermal/thermal_zone10/k_po
-0
-/sys/class/thermal/thermal_zone10/integral_cutoff
-0
-/sys/class/thermal/thermal_zone10/k_i
-0
-/sys/class/thermal/thermal_zone10/k_pu
-0
-/sys/class/thermal/thermal_zone10/temp
-32900
-/sys/class/thermal/thermal_zone10/trip_point_0_temp
-90000
-/sys/class/thermal/thermal_zone11/uevent
-/sys/class/thermal/thermal_zone11/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone11/passive
-0
-/sys/class/thermal/thermal_zone11/mode
-enabled
-/sys/class/thermal/thermal_zone11/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone11/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone11/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone11/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone11/power/control
-auto
-/sys/class/thermal/thermal_zone11/available_policies
-step_wise
-/sys/class/thermal/thermal_zone11/policy
-step_wise
-/sys/class/thermal/thermal_zone11/k_d
-0
-/sys/class/thermal/thermal_zone11/sustainable_power
-0
-/sys/class/thermal/thermal_zone11/type
-modem-thermal
-/sys/class/thermal/thermal_zone11/offset
-0
-/sys/class/thermal/thermal_zone11/slope
-1
-/sys/class/thermal/thermal_zone11/trip_point_0_type
-hot
-/sys/class/thermal/thermal_zone11/k_po
-0
-/sys/class/thermal/thermal_zone11/integral_cutoff
-0
-/sys/class/thermal/thermal_zone11/k_i
-0
-/sys/class/thermal/thermal_zone11/k_pu
-0
-/sys/class/thermal/thermal_zone11/temp
-33200
-/sys/class/thermal/thermal_zone11/trip_point_0_temp
-90000
-/sys/class/thermal/thermal_zone12/uevent
-/sys/class/thermal/thermal_zone12/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone12/passive
-0
-/sys/class/thermal/thermal_zone12/mode
-enabled
-/sys/class/thermal/thermal_zone12/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone12/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone12/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone12/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone12/power/control
-auto
-/sys/class/thermal/thermal_zone12/available_policies
-step_wise
-/sys/class/thermal/thermal_zone12/policy
-step_wise
-/sys/class/thermal/thermal_zone12/k_d
-0
-/sys/class/thermal/thermal_zone12/sustainable_power
-0
-/sys/class/thermal/thermal_zone12/type
-mem-thermal
-/sys/class/thermal/thermal_zone12/offset
-0
-/sys/class/thermal/thermal_zone12/slope
-1
-/sys/class/thermal/thermal_zone12/trip_point_0_type
-hot
-/sys/class/thermal/thermal_zone12/k_po
-0
-/sys/class/thermal/thermal_zone12/integral_cutoff
-0
-/sys/class/thermal/thermal_zone12/k_i
-0
-/sys/class/thermal/thermal_zone12/k_pu
-0
-/sys/class/thermal/thermal_zone12/temp
-32900
-/sys/class/thermal/thermal_zone12/trip_point_0_temp
-90000
-/sys/class/thermal/thermal_zone13/uevent
-/sys/class/thermal/thermal_zone13/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone13/passive
-0
-/sys/class/thermal/thermal_zone13/mode
-enabled
-/sys/class/thermal/thermal_zone13/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone13/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone13/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone13/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone13/power/control
-auto
-/sys/class/thermal/thermal_zone13/available_policies
-step_wise
-/sys/class/thermal/thermal_zone13/policy
-step_wise
-/sys/class/thermal/thermal_zone13/k_d
-0
-/sys/class/thermal/thermal_zone13/sustainable_power
-0
-/sys/class/thermal/thermal_zone13/type
-wlan-thermal
-/sys/class/thermal/thermal_zone13/offset
-0
-/sys/class/thermal/thermal_zone13/slope
-1
-/sys/class/thermal/thermal_zone13/trip_point_0_type
-hot
-/sys/class/thermal/thermal_zone13/k_po
-0
-/sys/class/thermal/thermal_zone13/integral_cutoff
-0
-/sys/class/thermal/thermal_zone13/k_i
-0
-/sys/class/thermal/thermal_zone13/k_pu
-0
-/sys/class/thermal/thermal_zone13/temp
-33200
-/sys/class/thermal/thermal_zone13/trip_point_0_temp
-90000
-/sys/class/thermal/thermal_zone14/uevent
-/sys/class/thermal/thermal_zone14/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone14/passive
-0
-/sys/class/thermal/thermal_zone14/mode
-enabled
-/sys/class/thermal/thermal_zone14/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone14/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone14/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone14/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone14/power/control
-auto
-/sys/class/thermal/thermal_zone14/available_policies
-step_wise
-/sys/class/thermal/thermal_zone14/policy
-step_wise
-/sys/class/thermal/thermal_zone14/k_d
-0
-/sys/class/thermal/thermal_zone14/sustainable_power
-0
-/sys/class/thermal/thermal_zone14/type
-q6-dsp-thermal
-/sys/class/thermal/thermal_zone14/offset
-0
-/sys/class/thermal/thermal_zone14/slope
-1
-/sys/class/thermal/thermal_zone14/trip_point_0_type
-hot
-/sys/class/thermal/thermal_zone14/k_po
-0
-/sys/class/thermal/thermal_zone14/integral_cutoff
-0
-/sys/class/thermal/thermal_zone14/k_i
-0
-/sys/class/thermal/thermal_zone14/k_pu
-0
-/sys/class/thermal/thermal_zone14/temp
-32900
-/sys/class/thermal/thermal_zone14/trip_point_0_temp
-90000
-/sys/class/thermal/thermal_zone15/uevent
-/sys/class/thermal/thermal_zone15/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone15/passive
-0
-/sys/class/thermal/thermal_zone15/mode
-enabled
-/sys/class/thermal/thermal_zone15/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone15/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone15/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone15/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone15/power/control
-auto
-/sys/class/thermal/thermal_zone15/available_policies
-step_wise
-/sys/class/thermal/thermal_zone15/policy
-step_wise
-/sys/class/thermal/thermal_zone15/k_d
-0
-/sys/class/thermal/thermal_zone15/sustainable_power
-0
-/sys/class/thermal/thermal_zone15/type
-camera-thermal
-/sys/class/thermal/thermal_zone15/offset
-0
-/sys/class/thermal/thermal_zone15/slope
-1
-/sys/class/thermal/thermal_zone15/trip_point_0_type
-hot
-/sys/class/thermal/thermal_zone15/k_po
-0
-/sys/class/thermal/thermal_zone15/integral_cutoff
-0
-/sys/class/thermal/thermal_zone15/k_i
-0
-/sys/class/thermal/thermal_zone15/k_pu
-0
-/sys/class/thermal/thermal_zone15/temp
-32200
-/sys/class/thermal/thermal_zone15/trip_point_0_temp
-90000
-/sys/class/thermal/thermal_zone16/uevent
-/sys/class/thermal/thermal_zone16/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone16/passive
-0
-/sys/class/thermal/thermal_zone16/mode
-enabled
-/sys/class/thermal/thermal_zone16/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone16/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone16/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone16/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone16/power/control
-auto
-/sys/class/thermal/thermal_zone16/available_policies
-step_wise
-/sys/class/thermal/thermal_zone16/policy
-step_wise
-/sys/class/thermal/thermal_zone16/k_d
-0
-/sys/class/thermal/thermal_zone16/sustainable_power
-0
-/sys/class/thermal/thermal_zone16/type
-multimedia-thermal
-/sys/class/thermal/thermal_zone16/offset
-0
-/sys/class/thermal/thermal_zone16/slope
-1
-/sys/class/thermal/thermal_zone16/trip_point_0_type
-hot
-/sys/class/thermal/thermal_zone16/k_po
-0
-/sys/class/thermal/thermal_zone16/integral_cutoff
-0
-/sys/class/thermal/thermal_zone16/k_i
-0
-/sys/class/thermal/thermal_zone16/k_pu
-0
-/sys/class/thermal/thermal_zone16/temp
-32900
-/sys/class/thermal/thermal_zone16/trip_point_0_temp
-90000
-/sys/class/thermal/thermal_zone17/uevent
-/sys/class/thermal/thermal_zone17/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone17/mode
-disabled
-/sys/class/thermal/thermal_zone17/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone17/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone17/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone17/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone17/power/control
-auto
-/sys/class/thermal/thermal_zone17/available_policies
-step_wise
-/sys/class/thermal/thermal_zone17/policy
-step_wise
-/sys/class/thermal/thermal_zone17/trip_point_1_type
-critical
-/sys/class/thermal/thermal_zone17/k_d
-0
-/sys/class/thermal/thermal_zone17/sustainable_power
-0
-/sys/class/thermal/thermal_zone17/type
-pm8998
-/sys/class/thermal/thermal_zone17/offset
-0
-/sys/class/thermal/thermal_zone17/slope
-1
-/sys/class/thermal/thermal_zone17/trip_point_0_type
-passive
-/sys/class/thermal/thermal_zone17/k_po
-0
-/sys/class/thermal/thermal_zone17/integral_cutoff
-0
-/sys/class/thermal/thermal_zone17/k_i
-0
-/sys/class/thermal/thermal_zone17/trip_point_1_temp
-125000
-/sys/class/thermal/thermal_zone17/k_pu
-0
-/sys/class/thermal/thermal_zone17/temp
-cat: read error: Invalid argument
-/sys/class/thermal/thermal_zone17/trip_point_1_hyst
-2000
-/sys/class/thermal/thermal_zone17/trip_point_0_temp
-105000
-/sys/class/thermal/thermal_zone18/uevent
-/sys/class/thermal/thermal_zone18/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone18/passive
-0
-/sys/class/thermal/thermal_zone18/mode
-enabled
-/sys/class/thermal/thermal_zone18/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone18/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone18/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone18/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone18/power/control
-auto
-/sys/class/thermal/thermal_zone18/available_policies
-step_wise
-/sys/class/thermal/thermal_zone18/policy
-step_wise
-/sys/class/thermal/thermal_zone18/k_d
-0
-/sys/class/thermal/thermal_zone18/sustainable_power
-0
-/sys/class/thermal/thermal_zone18/type
-battery-thermal
-/sys/class/thermal/thermal_zone18/offset
-0
-/sys/class/thermal/thermal_zone18/slope
-1
-/sys/class/thermal/thermal_zone18/trip_point_0_type
-critical
-/sys/class/thermal/thermal_zone18/k_po
-0
-/sys/class/thermal/thermal_zone18/integral_cutoff
-0
-/sys/class/thermal/thermal_zone18/k_i
-0
-/sys/class/thermal/thermal_zone18/k_pu
-0
-/sys/class/thermal/thermal_zone18/temp
-34900
-/sys/class/thermal/thermal_zone18/trip_point_0_temp
-60000
-/sys/class/thermal/thermal_zone19/uevent
-/sys/class/thermal/thermal_zone19/trip_point_0_hyst
-2000
-/sys/class/thermal/thermal_zone19/mode
-disabled
-/sys/class/thermal/thermal_zone19/power/runtime_active_time
-0
-/sys/class/thermal/thermal_zone19/power/runtime_status
-unsupported
-/sys/class/thermal/thermal_zone19/power/autosuspend_delay_ms
-cat: read error: Input/output error
-/sys/class/thermal/thermal_zone19/power/runtime_suspended_time
-0
-/sys/class/thermal/thermal_zone19/power/control
-auto
-/sys/class/thermal/thermal_zone19/available_policies
-step_wise
-/sys/class/thermal/thermal_zone19/policy
-step_wise
-/sys/class/thermal/thermal_zone19/trip_point_1_type
-critical
-/sys/class/thermal/thermal_zone19/k_d
-0
-/sys/class/thermal/thermal_zone19/sustainable_power
-0
-/sys/class/thermal/thermal_zone19/type
-skin-thermal
-/sys/class/thermal/thermal_zone19/offset
-0
-/sys/class/thermal/thermal_zone19/slope
-1
-/sys/class/thermal/thermal_zone19/trip_point_0_type
-passive
-/sys/class/thermal/thermal_zone19/k_po
-0
-/sys/class/thermal/thermal_zone19/integral_cutoff
-0
-/sys/class/thermal/thermal_zone19/k_i
-0
-/sys/class/thermal/thermal_zone19/trip_point_1_temp
-70000
-/sys/class/thermal/thermal_zone19/k_pu
-0
-/sys/class/thermal/thermal_zone19/temp
-cat: read error: Invalid argument
-/sys/class/thermal/thermal_zone19/trip_point_1_hyst
-2000
-/sys/class/thermal/thermal_zone19/trip_point_0_temp
-44000
+For example, my system with a max basic leaf of 0x16 returns 0x00000e74
+for CPUID.1F.EAX.
+
+> +
+> +	return boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && (eax != 0);
+
+Checking 'eax != 0' is broken as it will be '0' when SMT is disabled.  ecx
+is the obvious choice since bits 15:8 are guaranteed to be non-zero when
+the leaf is valid.
+
+I think we can skip the vendor check.  AFAIK, CPUID.1F isn't used by AMD,
+and since AMD and Intel try to maintain a semblance of CPUID compatibility
+it seems more likely that AMD/Hygon would implement CPUID.1F as-is rather
+than repurpose it to mean something else entirely.
+
+> +}
+> +
+>  #define F(x) bit(X86_FEATURE_##x)
+>  
+>  int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+> @@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+>  	switch (function) {
+>  	case 0:
+>  		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
+> +		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry->eax;
+
+If we put everything together, I think the code can be reduced to:
+
+		/* comment about multi-chip leaf... */
+		if (entry->eax >= 0x1f && cpuid_ecx(0x1f))
+			entry->eax = 0x1f;
+		else
+			entry->eax = min(entry->eax,
+					 (u32)(f_intel_pt ? 0x14 : 0xd));
+>  		break;
+>  	case 1:
+>  		entry->edx &= kvm_cpuid_1_edx_x86_features;
+> @@ -544,6 +555,8 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
+>  		entry->edx = edx.full;
+>  		break;
+>  	}
+> +	/* function 0x1f has additional index. */
+> +	case 0x1f:
+>  	/* function 0xb has additional index. */
+>  	case 0xb: {
+>  		int i, level_type;
+> -- 
+> 1.8.3.1
+> 
