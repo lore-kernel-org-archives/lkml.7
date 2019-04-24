@@ -2,279 +2,101 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DD8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B45AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFD920878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD56C218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="KmlRDeTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfDXJdp (ORCPT
+        id S1728208AbfDXJgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:33:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50012 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726480AbfDXJdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:33:44 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 112D8C057F3C;
-        Wed, 24 Apr 2019 09:33:44 +0000 (UTC)
-Received: from localhost (ovpn-12-131.pek2.redhat.com [10.72.12.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C9165DC1B;
-        Wed, 24 Apr 2019 09:33:40 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 17:33:32 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     bp@alien8.de, j-nomura@ce.jp.nec.com, kasong@redhat.com,
-        dyoung@redhat.com
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
-        kexec@lists.infradead.org, hpa@zytor.com,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v5 2/2] x86/boot: Use efi_setup_data for searching RSDP
- on kexec-ed kernels
-Message-ID: <20190424093332.GI3584@localhost.localdomain>
-References: <20190424092944.30481-1-bhe@redhat.com>
- <20190424092944.30481-3-bhe@redhat.com>
+        Wed, 24 Apr 2019 05:36:14 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:44518 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726480AbfDXJgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 05:36:14 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O9WKkc009571;
+        Wed, 24 Apr 2019 11:36:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=hK5t7y+11Q/jBOjgXpZKT6Kzk/a5+Fki4gzrmRWBWus=;
+ b=KmlRDeTOQrhw4ziBx+keBfZ83Jz1TeCeu6VKfinPWH54nkhmu+n4XgyYHtChNmqmAnfP
+ yiuphLTJ8iq6PD4FQdDzYPP+mPcto6uB0MmUg7JU2ybQ8OCfmIjA3MbQmxcZS/X0Vd5f
+ yVcnfyD7c2Fm/sQm8Topoq+LVL3l2/bdWIXDBDrsdXA2IHVC0WZoVsFI9ZYUY7iggzPz
+ Jj/EbzVStiv6tnQdR+T0PN/++YCc2u+nfOSWVOBweFIsEBa48D5yXOmZAysANomr2lgA
+ 6C0S9BMM7rVv3BoWZtvTNAg8HgxXMhY+GqyvqdX2RvjaStmZbHa3eaOhJo9XLQkq+TUI hA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rytad5m1p-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 24 Apr 2019 11:36:01 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 88DEC31;
+        Wed, 24 Apr 2019 09:36:00 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2D59915AF;
+        Wed, 24 Apr 2019 09:36:00 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr
+ 2019 11:36:00 +0200
+Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr 2019 11:35:59
+ +0200
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Christophe Roullier <christophe.roullier@st.com>,
+        <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH] net: ethernet: stmmac: manage the get_irq probe defer case
+Date:   Wed, 24 Apr 2019 11:35:49 +0200
+Message-ID: <1556098549-18385-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424092944.30481-3-bhe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 24 Apr 2019 09:33:44 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.25]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/24/19 at 05:29pm, Baoquan He wrote:
-> From: Junichi Nomura <j-nomura@ce.jp.nec.com>
-> 
-> Commit
-> 
->   3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
-> 
-> broke kexec boot on EFI systems. efi_get_rsdp_addr() in the early
-> parsing code tries to search RSDP from the EFI tables but that will
-> crash because the table address is virtual when the kernel was booted by
-> kexec (set_virtual_address_map() has run in the first kernel and cannot
-> be run again in the second kernel).
-> 
-> In the case of kexec, the physical address of EFI tables is provided via
-> efi_setup_data in boot_params, which is set up by kexec(1).
-> 
-> Factor out the table parsing code and use different pointers depending
-> on whether the kernel is booted by kexec or not.
-> 
->  [ bp: Massage. ]
-> 
-> Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
-> Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Dave Young <dyoung@redhat.com>
-> Link: https://lkml.kernel.org/r/20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp
-> Signed-off-by: Baoquan He <bhe@redhat.com>
+Manage the -EPROBE_DEFER error case for "stm32_pwr_wakeup"  IRQ.
 
-Oops, forgot removing this line of Signed-off-by, it's auto generated by
-git format-patch.
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> ---
->  arch/x86/boot/compressed/acpi.c | 143 ++++++++++++++++++++++++--------
->  1 file changed, 107 insertions(+), 36 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-> index 0ef4ad55b29b..8cecce1ac0cd 100644
-> --- a/arch/x86/boot/compressed/acpi.c
-> +++ b/arch/x86/boot/compressed/acpi.c
-> @@ -44,17 +44,109 @@ static acpi_physical_address get_acpi_rsdp(void)
->  	return addr;
->  }
->  
-> -/* Search EFI system tables for RSDP. */
-> -static acpi_physical_address efi_get_rsdp_addr(void)
-> +/*
-> + * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
-> + * ACPI_TABLE_GUID are found, take the former, which has more features.
-> + */
-> +static acpi_physical_address
-> +__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
-> +		    bool efi_64)
->  {
->  	acpi_physical_address rsdp_addr = 0;
->  
->  #ifdef CONFIG_EFI
-> -	unsigned long systab, systab_tables, config_tables;
-> +	int i;
-> +
-> +	/* Get EFI tables from systab. */
-> +	for (i = 0; i < nr_tables; i++) {
-> +		acpi_physical_address table;
-> +		efi_guid_t guid;
-> +
-> +		if (efi_64) {
-> +			efi_config_table_64_t *tbl = (efi_config_table_64_t *) config_tables + i;
-> +
-> +			guid  = tbl->guid;
-> +			table = tbl->table;
-> +
-> +			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
-> +				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
-> +				return 0;
-> +			}
-> +		} else {
-> +			efi_config_table_32_t *tbl = (efi_config_table_32_t *) config_tables + i;
-> +
-> +			guid  = tbl->guid;
-> +			table = tbl->table;
-> +		}
-> +
-> +		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
-> +			rsdp_addr = table;
-> +		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
-> +			return table;
-> +	}
-> +#endif
-> +	return rsdp_addr;
-> +}
-> +
-> +/* EFI/kexec support is 64-bit only. */
-> +#ifdef CONFIG_X86_64
-> +static struct efi_setup_data *get_kexec_setup_data_addr(void)
-> +{
-> +	struct setup_data *data;
-> +	u64 pa_data;
-> +
-> +	pa_data = boot_params->hdr.setup_data;
-> +	while (pa_data) {
-> +		data = (struct setup_data *)pa_data;
-> +		if (data->type == SETUP_EFI)
-> +			return (struct efi_setup_data *)(pa_data + sizeof(struct setup_data));
-> +
-> +		pa_data = data->next;
-> +	}
-> +	return NULL;
-> +}
-> +
-> +static acpi_physical_address kexec_get_rsdp_addr(void)
-> +{
-> +	efi_system_table_64_t *systab;
-> +	struct efi_setup_data *esd;
-> +	struct efi_info *ei;
-> +	char *sig;
-> +
-> +	esd = (struct efi_setup_data *)get_kexec_setup_data_addr();
-> +	if (!esd)
-> +		return 0;
-> +
-> +	if (!esd->tables) {
-> +		debug_putstr("Wrong kexec SETUP_EFI data.\n");
-> +		return 0;
-> +	}
-> +
-> +	ei = &boot_params->efi_info;
-> +	sig = (char *)&ei->efi_loader_signature;
-> +	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
-> +		debug_putstr("Wrong kexec EFI loader signature.\n");
-> +		return 0;
-> +	}
-> +
-> +	/* Get systab from boot params. */
-> +	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
-> +	if (!systab)
-> +		error("EFI system table not found in kexec boot_params.");
-> +
-> +	return __efi_get_rsdp_addr((unsigned long)esd->tables, systab->nr_tables, true);
-> +}
-> +#else
-> +static acpi_physical_address kexec_get_rsdp_addr(void) { return 0; }
-> +#endif /* CONFIG_X86_64 */
-> +
-> +static acpi_physical_address efi_get_rsdp_addr(void)
-> +{
-> +#ifdef CONFIG_EFI
-> +	unsigned long systab, config_tables;
->  	unsigned int nr_tables;
->  	struct efi_info *ei;
->  	bool efi_64;
-> -	int size, i;
->  	char *sig;
->  
->  	ei = &boot_params->efi_info;
-> @@ -88,49 +180,20 @@ static acpi_physical_address efi_get_rsdp_addr(void)
->  
->  		config_tables	= stbl->tables;
->  		nr_tables	= stbl->nr_tables;
-> -		size		= sizeof(efi_config_table_64_t);
->  	} else {
->  		efi_system_table_32_t *stbl = (efi_system_table_32_t *)systab;
->  
->  		config_tables	= stbl->tables;
->  		nr_tables	= stbl->nr_tables;
-> -		size		= sizeof(efi_config_table_32_t);
->  	}
->  
->  	if (!config_tables)
->  		error("EFI config tables not found.");
->  
-> -	/* Get EFI tables from systab. */
-> -	for (i = 0; i < nr_tables; i++) {
-> -		acpi_physical_address table;
-> -		efi_guid_t guid;
-> -
-> -		config_tables += size;
-> -
-> -		if (efi_64) {
-> -			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
-> -
-> -			guid  = tbl->guid;
-> -			table = tbl->table;
-> -
-> -			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
-> -				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
-> -				return 0;
-> -			}
-> -		} else {
-> -			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
-> -
-> -			guid  = tbl->guid;
-> -			table = tbl->table;
-> -		}
-> -
-> -		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
-> -			rsdp_addr = table;
-> -		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
-> -			return table;
-> -	}
-> +	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
-> +#else
-> +	return 0;
->  #endif
-> -	return rsdp_addr;
->  }
->  
->  static u8 compute_checksum(u8 *buffer, u32 length)
-> @@ -220,6 +283,14 @@ acpi_physical_address get_rsdp_addr(void)
->  	if (!pa)
->  		pa = boot_params->acpi_rsdp_addr;
->  
-> +	/*
-> +	 * Try to get EFI data from setup_data. This can happen when we're a
-> +	 * kexec'ed kernel and kexec(1) has passed all the required EFI info to
-> +	 * us.
-> +	 */
-> +	if (!pa)
-> +		pa = kexec_get_rsdp_addr();
-> +
->  	if (!pa)
->  		pa = efi_get_rsdp_addr();
->  
-> -- 
-> 2.17.2
-> 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 062a600f..2142853 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -333,6 +333,9 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+ 	 */
+ 	dwmac->irq_pwr_wakeup = platform_get_irq_byname(pdev,
+ 							"stm32_pwr_wakeup");
++	if (dwmac->irq_pwr_wakeup == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
++
+ 	if (!dwmac->clk_eth_ck && dwmac->irq_pwr_wakeup >= 0) {
+ 		err = device_init_wakeup(&pdev->dev, true);
+ 		if (err) {
+-- 
+2.7.4
+
