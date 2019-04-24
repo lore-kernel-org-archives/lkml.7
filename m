@@ -2,399 +2,247 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882C0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF9AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0A3218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556109904;
-	bh=zZ6vmOirLx48ku8W7mIjPOHjyn5ThyAl1YJUO+UsVbU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vkSApaIBCDpO45zcRrj17pVcZciSSJsw+eHIu/CbJe095FthrGjCq1Kct7UoMHj8u
-	 6OI785vcfKcXurfXpCaDNxBsIfwFA2d+P63sQrB6+KZj+kAtuuV0B0975CXwkxsdak
-	 IdDr00USi02fmKUxInvUMPOcjlFINUvtKEeGY0dw=
+	by mail.kernel.org (Postfix) with ESMTP id 9D368218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbfDXMpD (ORCPT
+        id S1730285AbfDXMpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:45:03 -0400
-Received: from casper.infradead.org ([85.118.1.10]:34228 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfDXMpD (ORCPT
+        Wed, 24 Apr 2019 08:45:12 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:59691 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730253AbfDXMpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:45:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=R5SiLqa2L2lElHSYH0cIVkCF0zE6ll1IFGpxCMe6jcI=; b=AyNobqD4Lf5TYGyT9rTtDfxyQn
-        NgIhWDm7I17BKD/hEefWZCIw3XzlsutVPS6Kvpd6SlL4lzIfs+NWgYWoJdhEoRawdmm0wQLgOI5O4
-        Q4hOT8hXfMKa1SXxAigQIKZka6bx9ofnZpb+nfilqlHg6bBm2OiW7XcCUaQ2bpeREXStTBIhOn40C
-        DzFYKq5X6lubCGr0J0segcdXnsYVjQjndtrASQOpZwtL3+oU8CC5kah+/gFT2C6coOka2tBU3QZ4A
-        R9ILdvoIc7OBpb5zWx/ng/h1HdIbKJoQSh+TS3C115bg9StTHtd8LJzb1OA5rQ9kNdI/Dn0QbYrrn
-        hAQq8DvQ==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJHGj-0003DA-Kx; Wed, 24 Apr 2019 12:44:58 +0000
-Date:   Wed, 24 Apr 2019 09:44:50 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v2 31/79] docs: s390: convert docs to ReST and rename to
- *.rst
-Message-ID: <20190424094450.1e3da646@coco.lan>
-In-Reply-To: <20190424134109.2891a7cc.cohuck@redhat.com>
-References: <cover.1555938375.git.mchehab+samsung@kernel.org>
-        <fb86b676b3b426732f1f11378868a9bd3b580b46.1555938376.git.mchehab+samsung@kernel.org>
-        <20190424134109.2891a7cc.cohuck@redhat.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 24 Apr 2019 08:45:11 -0400
+Received: from [IPv6:2001:420:44c1:2579:8575:c0e0:a08:6676] ([IPv6:2001:420:44c1:2579:8575:c0e0:a08:6676])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id JHGph9yFhNExlJHGthR1s1; Wed, 24 Apr 2019 14:45:08 +0200
+Subject: Re: [PATCH v9 2/4] [media] cxusb: implement Medion MD95700 digital /
+ analog coexistence
+To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Cc:     Michael Krufky <mkrufky@linuxtv.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andy Walls <awalls@md.metrocast.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org
+References: <cover.1553903063.git.mail@maciej.szmigiero.name>
+ <07fc8594c942ab527275b29121869ffe77bc1d83.1553903063.git.mail@maciej.szmigiero.name>
+ <9ee14d2c-e8ea-5c3f-1194-f20f25678735@xs4all.nl>
+ <75f07882-1553-b7d8-c15e-9e7cbc19996f@maciej.szmigiero.name>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <fb8a5994-4eb7-11b0-d617-52ebecfe4ec0@xs4all.nl>
+Date:   Wed, 24 Apr 2019 14:45:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <75f07882-1553-b7d8-c15e-9e7cbc19996f@maciej.szmigiero.name>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfErZcLucoJGWftH7m3x1xXTfBqm74eqbh3U1ohfzk8lXj9PwFsHJKHYZjdjB96cfkzvfJpzaUXJsyLfb3Ck2d0QiMn+zc0MxVatUTZ/bozy3VErDReDQ
+ Gzq5jSigB/d1TWjWmdR1ndinVswGM/wzNcX+OnSnL2e+qIvCRZpoORxGtUU2t0N/F0EWbkgmASEcuiLSEkY4oUurLgYZEDJ48lLoIeYmsszgyAwhW3JQnNCV
+ 2sszpOerLddbpEdDmAi54Fs9NQqoQJKTjWf8N5hTzq9/N2cunN+Y09MmdRsUaz9bIWiUMN+i/nJh9hITGx1xb8dWSBfozIUsJ18XsLHZCh/1gOLVv7nSFl/n
+ MTI2HQPw5vh0KEByCiBB4SE56qdX8OJw0n/YO83BKh6hofKEX8XvCLxsEnbw301vWCrWcJN/QuHqOtOOFl189rE/q2Te9K6U+tX2t9JBahZJlFzwF/M=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 24 Apr 2019 13:41:09 +0200
-Cornelia Huck <cohuck@redhat.com> escreveu:
+On 4/16/19 1:38 AM, Maciej S. Szmigiero wrote:
+> On 12.04.2019 10:56, Hans Verkuil wrote:
+>> On 3/30/19 12:51 AM, Maciej S. Szmigiero wrote:
+>>> This patch prepares cxusb driver for supporting the analog part of
+>>> Medion 95700 (previously only the digital - DVB - mode was supported).
+>>>
+>>> Specifically, it adds support for:
+>>> * switching the device between analog and digital modes of operation,
+>>> * enforcing that only one mode is active at the same time due to hardware
+>>> limitations.
+>>>
+>>> Actual implementation of the analog mode will be provided by the next
+>>> commit.
+>>>
+>>> Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+>>> ---
+> (..)
+>>> @@ -259,7 +293,7 @@ static int cxusb_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
+>>>  
+>>>  static u32 cxusb_i2c_func(struct i2c_adapter *adapter)
+>>>  {
+>>> -	return I2C_FUNC_I2C;
+>>> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+>>
+>> Was this change needed for the medion? While it is probably right, I am hesitant to
+>> apply such a change in case it will break existing boards.
+> 
+> The cx25840 driver checks for these I2C functions at the probe time and
+> returns -EIO if its i2c host doesn't support them.
+> 
+> The early version of this patch actually removed this SMBus check from
+> the cx25840 driver, however it was decided that adding such extra
+> capability to the cxusb driver is actually safer, see the end of this
+> message:
+> https://www.mail-archive.com/linux-media@vger.kernel.org/msg37363.html
+> 
+>>> index 8056053c9ab0..01987ec5e0c5 100644
+>>> --- a/drivers/media/usb/dvb-usb/dvb-usb-dvb.c
+>>> +++ b/drivers/media/usb/dvb-usb/dvb-usb-dvb.c
+>>> @@ -15,6 +15,7 @@ static int dvb_usb_ctrl_feed(struct dvb_demux_feed *dvbdmxfeed, int onoff)
+>>>  {
+>>>  	struct dvb_usb_adapter *adap = dvbdmxfeed->demux->priv;
+>>>  	int newfeedcount, ret;
+>>> +	bool streaming_ctrl_no_urb;
+>>>  
+>>>  	if (adap == NULL)
+>>>  		return -ENODEV;
+>>> @@ -24,12 +25,16 @@ static int dvb_usb_ctrl_feed(struct dvb_demux_feed *dvbdmxfeed, int onoff)
+>>>  		return -EINVAL;
+>>>  	}
+>>>  
+>>> +	streaming_ctrl_no_urb = adap->props.fe[adap->active_fe].caps &
+>>> +		DVB_USB_ADAP_STREAMING_CTRL_NO_URB;
+>>>  	newfeedcount = adap->feedcount + (onoff ? 1 : -1);
+>>>  
+>>>  	/* stop feed before setting a new pid if there will be no pid anymore */
+>>>  	if (newfeedcount == 0) {
+>>>  		deb_ts("stop feeding\n");
+>>> -		usb_urb_kill(&adap->fe_adap[adap->active_fe].stream);
+>>> +
+>>> +		if (streaming_ctrl_no_urb)
+>>
+>> Is this test right? Shouldn't it be !streaming_ctrl_no_urb in order to keep the
+>> current (non-medion) behavior?
+>>
+>>> +			usb_urb_kill(&adap->fe_adap[adap->active_fe].stream);
+>>>  
+>>>  		if (adap->props.fe[adap->active_fe].streaming_ctrl != NULL) {
+>>>  			ret = adap->props.fe[adap->active_fe].streaming_ctrl(adap, 0);
+>>> @@ -38,6 +43,9 @@ static int dvb_usb_ctrl_feed(struct dvb_demux_feed *dvbdmxfeed, int onoff)
+>>>  				return ret;
+>>>  			}
+>>>  		}
+>>> +
+>>> +		if (!streaming_ctrl_no_urb)
+>>
+>> And then this would have to be inverted as well.
+> 
+> The newly added flag "DVB_USB_ADAP_STREAMING_CTRL_NO_URB" has the
+> following meaning:
+> If it is set the order of operations in dvb_usb_ctrl_feed() looks like
+> this:
+> 1) Call the driver streaming_ctrl(1) callback to enable streaming,
+> 2) Submit DVB data URBs,
+> (streaming happens)
+> 3) Kill DVB data URBs,
+> 4) Call the driver streaming_ctrl(0) callback to disable streaming.
+> 
+> This is needed for Medion because:
+> a) The device could already be open in the analog mode when
+> streaming_ctrl(1) tries to acquire it in the digital mode.
+> In this case it is important that no DVB URBs are scheduled before
+> giving the callback chance to report an error,
+> 
+> b) The device could get open in the analog mode as soon as
+> streaming_ctrl(0) drops the last digital mode reference to it so all
+> DVB data URB must have already been terminated at this point.
+> 
+> If the aforementioned flag is unset, however, the order of operations in
+> dvb_usb_ctrl_feed() looks like this:
+> 1) Submit DVB data URBs,
+> 2) Call the driver streaming_ctrl(1) callback to enable streaming,
+> (streaming happens)
+> 3) Call the driver streaming_ctrl(0) callback to disable streaming,
+> 4) Kill DVB data URBs.
+> 
+> Previously, the order was always like this:
+> 1) Submit DVB data URBs,
+> 2) Call the driver streaming_ctrl(1) callback to enable streaming,
+> (streaming happens)
+> 3) Kill DVB data URBs,
+> 4) Call the driver streaming_ctrl(0) callback to disable streaming.
+> 
+> You can see that this was asymmetric - streaming_ctrl(1) is called with
+> data URBs already active but they are killed before streaming_ctrl(0)
+> gets called, so switching only the submit part on "STREAMING_CTRL_NO_URB"
+> would make this flag operation only half-correct.
+> 
+> I have audited existing drivers that use dvb-usb framework and none of
+> them do anything besides a synchronous USB control transfer or a
+> synchronous USB bulk transfer to an endpoint different from the one that
+> DVB data uses in streaming_ctrl(0) callback.
+> Additionally, streaming_ctrl(1) and streaming_ctrl(0) paths are usually
+> very similar in the driver code, so if streaming_ctrl(1) runs fine with
+> data URBs being already active there is no reason to think
+> streaming_ctrl(0) will have a problem with this.
 
-> On Mon, 22 Apr 2019 10:27:20 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> 
-> > Convert all text files with s390 documentation to ReST format.
-> > 
-> > Tried to preserve as much as possible the original document
-> > format. Still, some of the files required some work in order
-> > for it to be visible on both plain text and after converted
-> > to html.
-> > 
-> > The conversion is actually:
-> >   - add blank lines and identation in order to identify paragraphs;
-> >   - fix tables markups;
-> >   - add some lists markups;
-> >   - mark literal blocks;
-> >   - adjust title markups.
-> > 
-> > At its new index.rst, let's add a :orphan: while this is not linked to
-> > the main index.rst file, in order to avoid build warnings.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > ---
-> >  .../admin-guide/kernel-parameters.txt         |    4 +-
-> >  Documentation/driver-api/s390-drivers.rst     |    4 +-
-> >  Documentation/s390/{3270.txt => 3270.rst}     |   85 +-
-> >  Documentation/s390/{cds.txt => cds.rst}       |  354 ++-
-> >  .../s390/{CommonIO => common_io.rst}          |   49 +-
-> >  Documentation/s390/{DASD => dasd.rst}         |   33 +-
-> >  .../{Debugging390.txt => debugging390.rst}    | 2389 ++++++++++-------
-> >  .../{driver-model.txt => driver-model.rst}    |  179 +-
-> >  Documentation/s390/index.rst                  |   30 +
-> >  .../s390/{monreader.txt => monreader.rst}     |   85 +-
-> >  Documentation/s390/{qeth.txt => qeth.rst}     |   36 +-
-> >  Documentation/s390/s390dbf.rst                |  803 ++++++
-> >  Documentation/s390/s390dbf.txt                |  667 -----
-> >  Documentation/s390/text_files.rst             |   11 +
-> >  .../s390/{vfio-ap.txt => vfio-ap.rst}         |  487 ++--
-> >  .../s390/{vfio-ccw.txt => vfio-ccw.rst}       |   90 +-
-> >  .../s390/{zfcpdump.txt => zfcpdump.rst}       |    2 +
-> >  MAINTAINERS                                   |    4 +-
-> >  arch/s390/Kconfig                             |    4 +-
-> >  arch/s390/include/asm/debug.h                 |    4 +-
-> >  drivers/s390/char/zcore.c                     |    2 +-
-> >  21 files changed, 3089 insertions(+), 2233 deletions(-)
-> >  rename Documentation/s390/{3270.txt => 3270.rst} (90%)
-> >  rename Documentation/s390/{cds.txt => cds.rst} (64%)
-> >  rename Documentation/s390/{CommonIO => common_io.rst} (87%)
-> >  rename Documentation/s390/{DASD => dasd.rst} (92%)
-> >  rename Documentation/s390/{Debugging390.txt => debugging390.rst} (53%)
-> >  rename Documentation/s390/{driver-model.txt => driver-model.rst} (73%)
-> >  create mode 100644 Documentation/s390/index.rst
-> >  rename Documentation/s390/{monreader.txt => monreader.rst} (81%)
-> >  rename Documentation/s390/{qeth.txt => qeth.rst} (62%)
-> >  create mode 100644 Documentation/s390/s390dbf.rst
-> >  delete mode 100644 Documentation/s390/s390dbf.txt
-> >  create mode 100644 Documentation/s390/text_files.rst
-> >  rename Documentation/s390/{vfio-ap.txt => vfio-ap.rst} (72%)
-> >  rename Documentation/s390/{vfio-ccw.txt => vfio-ccw.rst} (89%)
-> >  rename Documentation/s390/{zfcpdump.txt => zfcpdump.rst} (97%)
-> >   
-> 
-> (...)
-> 
-> > diff --git a/Documentation/s390/3270.txt b/Documentation/s390/3270.rst
-> > similarity index 90%
-> > rename from Documentation/s390/3270.txt
-> > rename to Documentation/s390/3270.rst
-> > index 7c715de99774..e09e77954238 100644
-> > --- a/Documentation/s390/3270.txt
-> > +++ b/Documentation/s390/3270.rst  
-> 
-> (...)
-> 
-> > @@ -17,12 +21,12 @@ twenty and thirty years ago.
-> >  You may have 3270s in-house and not know it.  If you're using the
-> >  VM-ESA operating system, define a 3270 to your virtual machine by using
-> >  the command "DEF GRAF <hex-address>"  This paper presumes you will be
-> > -defining four 3270s with the CP/CMS commands
-> > +defining four 3270s with the CP/CMS commands:
-> >  
-> > -	DEF GRAF 620
-> > -	DEF GRAF 621
-> > -	DEF GRAF 622
-> > -	DEF GRAF 623
-> > +	- DEF GRAF 620
-> > +	- DEF GRAF 621
-> > +	- DEF GRAF 622
-> > +	- DEF GRAF 623  
-> 
-> IIUC, this makes this into a bulleted list... but the user is supposed
-> to enter these commands (similar to the shell commands further down in
-> this file).
+Is there anything wrong with always doing:
 
-Ah, OK! I'll change it to use a literal block (::).
+1) Call the driver streaming_ctrl(1) callback to enable streaming,
+2) Submit DVB data URBs,
+(streaming happens)
+3) Kill DVB data URBs,
+4) Call the driver streaming_ctrl(0) callback to disable streaming.
 
-> 
-> >  
-> >  Your network connection from VM-ESA allows you to use x3270, tn3270, or
-> >  another 3270 emulator, started from an xterm window on your PC or  
-> 
-> (...)
-> 
-> > @@ -84,20 +92,22 @@ Here are the installation steps in detail:
-> >  		make modules_install
-> >  
-> >  	2. (Perform this step only if you have configured tub3270 as a
-> > -	module.)  Add a line to a file /etc/modprobe.d/*.conf to automatically
-> > +	module.)  Add a line to a file `/etc/modprobe.d/*.conf` to automatically
-> >  	load the driver when it's needed.  With this line added, you will see
-> >  	login prompts appear on your 3270s as soon as boot is complete (or
-> >  	with emulated 3270s, as soon as you dial into your vm guest using the
-> >  	command "DIAL <vmguestname>").  Since the line-mode major number is
-> > -	227, the line to add should be:
-> > +	227, the line to add should be::
-> > +
-> >  		alias char-major-227 tub3270
-> >  
-> >  	3. Define graphic devices to your vm guest machine, if you
-> >  	haven't already.  Define them before you reboot (reipl):
-> > -		DEFINE GRAF 620
-> > -		DEFINE GRAF 621
-> > -		DEFINE GRAF 622
-> > -		DEFINE GRAF 623
-> > +
-> > +		- DEFINE GRAF 620
-> > +		- DEFINE GRAF 621
-> > +		- DEFINE GRAF 622
-> > +		- DEFINE GRAF 623  
-> 
-> Same here.
+Regards,
 
-Ok.
-
-> 
-> >  
-> >  	4. Reboot.  The reboot process scans hardware devices, including
-> >  	3270s, and this enables the tub3270 driver once loaded to respond  
-> 
-> (...)
-> 
-> 
-> > diff --git a/Documentation/s390/CommonIO b/Documentation/s390/common_io.rst
-> > similarity index 87%
-> > rename from Documentation/s390/CommonIO
-> > rename to Documentation/s390/common_io.rst
-> > index 6e0f63f343b4..846485681ce7 100644
-> > --- a/Documentation/s390/CommonIO
-> > +++ b/Documentation/s390/common_io.rst
-> > @@ -1,5 +1,9 @@
-> > -S/390 common I/O-Layer - command line parameters, procfs and debugfs entries
-> > -============================================================================
-> > +======================
-> > +S/390 common I/O-Layer
-> > +======================
-> > +
-> > +command line parameters, procfs and debugfs entries
-> > +===================================================  
-> 
-> I don't see why this should be split into two lines? If anything needs
-> to be changed, I'd drop the hyphen.
-
-No real need for html output. I suspect that a big title like the
-above would cause troubles for pdf output. That's basically why I opted
-to break it.
-
-Yet, if you prefer, I'll keep it as-is.
+	Hans
 
 > 
-> >  
-> >  Command line parameters
-> >  -----------------------
-> > @@ -13,7 +17,7 @@ Command line parameters
-> >  	device := {all | [!]ipldev | [!]condev | [!]<devno> | [!]<devno>-<devno>}
-> >  
-> >    The given devices will be ignored by the common I/O-layer; no detection
-> > -  and device sensing will be done on any of those devices. The subchannel to 
-> > +  and device sensing will be done on any of those devices. The subchannel to
-> >    which the device in question is attached will be treated as if no device was
-> >    attached.
-> >  
-> > @@ -28,14 +32,20 @@ Command line parameters
-> >    keywords can be used to refer to the CCW based boot device and CCW console
-> >    device respectively (these are probably useful only when combined with the '!'
-> >    operator). The '!' operator will cause the I/O-layer to _not_ ignore a device.
-> > -  The command line is parsed from left to right.
-> > +  The command line
-> > +  is parsed from left to right.  
+> Note that DVB data URBs are handled fully inside the dvb-usb framework
+> and individual drivers don't access them.
 > 
-> Why this change?
+> Furthermore, in case the streaming_ctrl(1) callback fails the
+> dvb_usb_ctrl_feed() function returns an error to its caller while
+> leaving the already-submited URBs still active.
+> They will then endlessly resubmit themselves in their completion
+> callback.
+> This further points out that streaming_ctrl() callback is not considered
+> of need to be strongly ordered with respect to the DVB data URBs
+> submission or cancellation.
+> 
+>>> +			usb_urb_kill(&adap->fe_adap[adap->active_fe].stream);
+>>>  	}
+>>>  
+>>>  	adap->feedcount = newfeedcount;
+>>> @@ -56,8 +64,10 @@ static int dvb_usb_ctrl_feed(struct dvb_demux_feed *dvbdmxfeed, int onoff)
+>>>  	 * for reception.
+>>>  	 */
+>>>  	if (adap->feedcount == onoff && adap->feedcount > 0) {
+>>> -		deb_ts("submitting all URBs\n");
+>>> -		usb_urb_submit(&adap->fe_adap[adap->active_fe].stream);
+>>> +		if (!streaming_ctrl_no_urb) {
+>>> +			deb_ts("submitting all URBs early\n");
+>>> +			usb_urb_submit(&adap->fe_adap[adap->active_fe].stream);
+>>> +		}
+>>>  
+>>>  		deb_ts("controlling pid parser\n");
+>>>  		if (adap->props.fe[adap->active_fe].caps & DVB_USB_ADAP_HAS_PID_FILTER &&
+>>> @@ -80,6 +90,10 @@ static int dvb_usb_ctrl_feed(struct dvb_demux_feed *dvbdmxfeed, int onoff)
+>>>  			}
+>>>  		}
+>>>  
+>>> +		if (streaming_ctrl_no_urb) {
+>>> +			deb_ts("submitting all URBs late\n");
+>>> +			usb_urb_submit(&adap->fe_adap[adap->active_fe].stream);
+>>> +		}
+>>>  	}
+>>>  	return 0;
+>>>  }
+> 
+> 
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+> 
+> Thanks and best regards,
+> Maciej
+> 
 
-This was unintentional. I probably hit <enter> by mistake on that line.
-
-I'll revert.
-
-> 
-> > +
-> > +  For example::
-> >  
-> > -  For example, 
-> >  	cio_ignore=0.0.0023-0.0.0042,0.0.4711
-> > +
-> >    will ignore all devices ranging from 0.0.0023 to 0.0.0042 and the device
-> >    0.0.4711, if detected.
-> > -  As another example,
-> > +
-> > +  As another example::
-> > +
-> >  	cio_ignore=all,!0.0.4711,!0.0.fd00-0.0.fd02
-> > +
-> >    will ignore all devices but 0.0.4711, 0.0.fd00, 0.0.fd01, 0.0.fd02.
-> >  
-> >    By default, no devices are ignored.  
-> 
-> (...)
-> 
-> > diff --git a/Documentation/s390/Debugging390.txt b/Documentation/s390/debugging390.rst
-> > similarity index 53%
-> > rename from Documentation/s390/Debugging390.txt
-> > rename to Documentation/s390/debugging390.rst
-> > index c35804c238ad..d49305fd5e1a 100644
-> > --- a/Documentation/s390/Debugging390.txt
-> > +++ b/Documentation/s390/debugging390.rst  
-> 
-> I'll skip this one...
-> 
-> (Question for the s390 arch maintainers: I remember that there was some
-> interesting stuff in there, but I'm not sure how much of it is still
-> accurate/useful... is it worth spending time on trying to update this?)
-> 
-> (...)
-> 
-> 
-> > diff --git a/Documentation/s390/s390dbf.rst b/Documentation/s390/s390dbf.rst
-> > new file mode 100644
-> > index 000000000000..ec2a1faa414b
-> > --- /dev/null
-> > +++ b/Documentation/s390/s390dbf.rst  
-> 
-> (...)
-> 
-> > diff --git a/Documentation/s390/s390dbf.txt b/Documentation/s390/s390dbf.txt
-> > deleted file mode 100644
-> > index 61329fd62e89..000000000000
-> > --- a/Documentation/s390/s390dbf.txt
-> > +++ /dev/null  
-> 
-> I wonder why this does not show up as a rename?
-
-Probably because the number of changes were bigger than 50%. The algo
-there seems to be dumb. I suspect that adding whitespace/tabs on lines
-makes it to consider the entire line as different. 
-
-git log -M10 would change the threshold to 10% similarity and will
-likely show it as a rename. I'll use -M on the next version for this
-patch.
-
-> 
-> (...)
-> 
-> > diff --git a/Documentation/s390/text_files.rst b/Documentation/s390/text_files.rst
-> > new file mode 100644
-> > index 000000000000..c94d05d4fa17
-> > --- /dev/null
-> > +++ b/Documentation/s390/text_files.rst
-> > @@ -0,0 +1,11 @@
-> > +ibm 3270 changelog
-> > +------------------
-> > +
-> > +.. include:: 3270.ChangeLog
-> > +    :literal:
-> > +
-> > +ibm 3270 config3270.sh
-> > +----------------------
-> > +
-> > +.. literalinclude:: config3270.sh
-> > +    :language: shell  
-> 
-> 
-> Another question for the s390 arch maintainers: How valuable is this still?
-> 
-> (...)
-> 
-> > diff --git a/Documentation/s390/vfio-ccw.txt b/Documentation/s390/vfio-ccw.rst
-> > similarity index 89%
-> > rename from Documentation/s390/vfio-ccw.txt
-> > rename to Documentation/s390/vfio-ccw.rst
-> > index 2be11ad864ff..1f6d0b56d53e 100644
-> > --- a/Documentation/s390/vfio-ccw.txt
-> > +++ b/Documentation/s390/vfio-ccw.rst  
-> 
-> (...)
-> 
-> > @@ -295,6 +321,6 @@ Reference
-> >  1. ESA/s390 Principles of Operation manual (IBM Form. No. SA22-7832)
-> >  2. ESA/390 Common I/O Device Commands manual (IBM Form. No. SA22-7204)
-> >  3. https://en.wikipedia.org/wiki/Channel_I/O
-> > -4. Documentation/s390/cds.txt
-> > +4. Documentation/s390/cds.rst
-
-> >  5. Documentation/vfio.txt
-> >  6. Documentation/vfio-mediated-device.txt  
-> 
-> Are these two renamed in a later patch?
-
-Yes. Patch 56 renames almost all Documentation/*.txt to .rst. Those files
-are already parsed properly by Sphinx, so no changes there are needed.
-
-I'm working on followup patches (not submitted yet), with moves all
-ReST files under Documentation to some place.
-
-In the specific case of those files, on the series I'm working,
-I moved them to be part of the driver-api:
-
-	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=convert_rst_renames&id=3387ab063cf43f91d5c0f79d741244e7dbcdec05
-
-The results, when parsed, are at:
-
-	https://www.infradead.org/~mchehab/rst_conversion/driver-api/vfio.html
-	https://www.infradead.org/~mchehab/rst_conversion/driver-api/vfio-mediated-device.html
-
-Thanks,
-Mauro
