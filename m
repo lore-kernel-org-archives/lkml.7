@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0258EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20ACC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C588220652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB8E420652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129308;
-	bh=jppdBaj1GdT/cWL8QwqapJqdZ8m0suDqJ2qVXcbx0m4=;
+	s=default; t=1556129315;
+	bh=qgoz+9bDnnp72Mu8bQxUaeceHgfkqDxI0+HkCQEY8cc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jTJcSpm1gpHpzeZWnZXL2d3DqSIuLM+dVDVBgE9xd1BCaWrVXfN/tHtYUrRIi+dA5
-	 uh80xLwhmv7NZbZ03Fs3HsMFLLAdOYZMcq1DqB7GXtRPzdhPKIZyWX0CMSyVxvWBM/
-	 kl4r4cInpq+gUXphRCDmHxF05iPot0bt3+Qa9mmQ=
+	b=kHOs5YBId3jJJEkxPkzOTfKxwMOUbt/+TTFjd8/Qh76Z8EnSDSnHBtJb/yMSmN4qw
+	 T8YgJ7maPY5ayFL2gX8KJB/Jw10aNpFSGPFkOVJd+3jz5Kjl7yazztn01fD73LPXLM
+	 nT8OQO9rDCIiP4WXxcjF2wDkg1W+nOswCI4UO+aE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389032AbfDXSI2 (ORCPT
+        id S2388339AbfDXRQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:08:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40520 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387960AbfDXRQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:16:04 -0400
+        id S2388293AbfDXRP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:15:56 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A16D021900;
-        Wed, 24 Apr 2019 17:16:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 611D421903;
+        Wed, 24 Apr 2019 17:15:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126163;
-        bh=jppdBaj1GdT/cWL8QwqapJqdZ8m0suDqJ2qVXcbx0m4=;
+        s=default; t=1556126154;
+        bh=qgoz+9bDnnp72Mu8bQxUaeceHgfkqDxI0+HkCQEY8cc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YkAQz2BvuMSDNXexJA2J3/ZM/ouKr/puRQjhRjsj/JeiIC+XBv8dLx4woCDbrq0w8
-         t9nFJi4HcorKA6ExkjoYyJgT+pC9XcR6uXLg/Y6rUwZi01U2xaWwnqUPLaR0BJsccB
-         HMK6nxs7RpL/LR9dG6lyxm07RYShDoMHcGdq5F4k=
+        b=IJ56YOUBndRpoT6HZa3aNE7537Ka2Fpww2KN9wW0G67gC3od++xOO1KM+bG3W7kjm
+         duiVEztNTempLDu/GNZTYoDcbsx+2IDbPQSDtFcFlRJYtV7/Yrg+BxjzbAIFg/NgnZ
+         3WadtsdbWz7P9/qRmeGuAsFzv9CN4PzCPuWUY/5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Keerthy <j-keerthy@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
+        NeilBrown <neil@brown.name>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 013/168] gpio: gpio-omap: fix level interrupt idling
-Date:   Wed, 24 Apr 2019 19:07:37 +0200
-Message-Id: <20190424170924.317926137@linuxfoundation.org>
+Subject: [PATCH 4.4 010/168] CIFS: fix POSIX lock leak and invalid ptr deref
+Date:   Wed, 24 Apr 2019 19:07:34 +0200
+Message-Id: <20190424170924.110361718@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -65,83 +62,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d01849f7deba81f4959fd9e51bf20dbf46987d1c ]
+[ Upstream commit bc31d0cdcfbadb6258b45db97e93b1c83822ba33 ]
 
-Tony notes that the GPIO module does not idle when level interrupts are
-in use, as the wakeup appears to get stuck.
+We have a customer reporting crashes in lock_get_status() with many
+"Leaked POSIX lock" messages preceeding the crash.
 
-After extensive investigation, it appears that the wakeup will only be
-cleared if the interrupt status register is cleared while the interrupt
-is enabled. However, we are currently clearing it with the interrupt
-disabled for level-based interrupts.
+ Leaked POSIX lock on dev=0x0:0x56 ...
+ Leaked POSIX lock on dev=0x0:0x56 ...
+ Leaked POSIX lock on dev=0x0:0x56 ...
+ Leaked POSIX lock on dev=0x0:0x53 ...
+ Leaked POSIX lock on dev=0x0:0x53 ...
+ Leaked POSIX lock on dev=0x0:0x53 ...
+ Leaked POSIX lock on dev=0x0:0x53 ...
+ POSIX: fl_owner=ffff8900e7b79380 fl_flags=0x1 fl_type=0x1 fl_pid=20709
+ Leaked POSIX lock on dev=0x0:0x4b ino...
+ Leaked locks on dev=0x0:0x4b ino=0xf911400000029:
+ POSIX: fl_owner=ffff89f41c870e00 fl_flags=0x1 fl_type=0x1 fl_pid=19592
+ stack segment: 0000 [#1] SMP
+ Modules linked in: binfmt_misc msr tcp_diag udp_diag inet_diag unix_diag af_packet_diag netlink_diag rpcsec_gss_krb5 arc4 ecb auth_rpcgss nfsv4 md4 nfs nls_utf8 lockd grace cifs sunrpc ccm dns_resolver fscache af_packet iscsi_ibft iscsi_boot_sysfs vmw_vsock_vmci_transport vsock xfs libcrc32c sb_edac edac_core crct10dif_pclmul crc32_pclmul ghash_clmulni_intel drbg ansi_cprng vmw_balloon aesni_intel aes_x86_64 lrw gf128mul glue_helper ablk_helper cryptd joydev pcspkr vmxnet3 i2c_piix4 vmw_vmci shpchp fjes processor button ac btrfs xor raid6_pq sr_mod cdrom ata_generic sd_mod ata_piix vmwgfx crc32c_intel drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops ttm serio_raw ahci libahci drm libata vmw_pvscsi sg dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua scsi_mod autofs4
 
-It is acknowledged that this observed behaviour conflicts with a
-statement in the TRM:
+ Supported: Yes
+ CPU: 6 PID: 28250 Comm: lsof Not tainted 4.4.156-94.64-default #1
+ Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 04/05/2016
+ task: ffff88a345f28740 ti: ffff88c74005c000 task.ti: ffff88c74005c000
+ RIP: 0010:[<ffffffff8125dcab>]  [<ffffffff8125dcab>] lock_get_status+0x9b/0x3b0
+ RSP: 0018:ffff88c74005fd90  EFLAGS: 00010202
+ RAX: ffff89bde83e20ae RBX: ffff89e870003d18 RCX: 0000000049534f50
+ RDX: ffffffff81a3541f RSI: ffffffff81a3544e RDI: ffff89bde83e20ae
+ RBP: 0026252423222120 R08: 0000000020584953 R09: 000000000000ffff
+ R10: 0000000000000000 R11: ffff88c74005fc70 R12: ffff89e5ca7b1340
+ R13: 00000000000050e5 R14: ffff89e870003d30 R15: ffff89e5ca7b1340
+ FS:  00007fafd64be800(0000) GS:ffff89f41fd00000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000001c80018 CR3: 000000a522048000 CR4: 0000000000360670
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Stack:
+  0000000000000208 ffffffff81a3d6b6 ffff89e870003d30 ffff89e870003d18
+  ffff89e5ca7b1340 ffff89f41738d7c0 ffff89e870003d30 ffff89e5ca7b1340
+  ffffffff8125e08f 0000000000000000 ffff89bc22b67d00 ffff88c74005ff28
+ Call Trace:
+  [<ffffffff8125e08f>] locks_show+0x2f/0x70
+  [<ffffffff81230ad1>] seq_read+0x251/0x3a0
+  [<ffffffff81275bbc>] proc_reg_read+0x3c/0x70
+  [<ffffffff8120e456>] __vfs_read+0x26/0x140
+  [<ffffffff8120e9da>] vfs_read+0x7a/0x120
+  [<ffffffff8120faf2>] SyS_read+0x42/0xa0
+  [<ffffffff8161cbc3>] entry_SYSCALL_64_fastpath+0x1e/0xb7
 
-CAUTION
-  After servicing the interrupt, the status bit in the interrupt status
-  register (GPIOi.GPIO_IRQSTATUS_0 or GPIOi.GPIO_IRQSTATUS_1) must be
-  reset and the interrupt line released (by setting the corresponding
-  bit of the interrupt status register to 1) before enabling an
-  interrupt for the GPIO channel in the interrupt-enable register
-  (GPIOi.GPIO_IRQSTATUS_SET_0 or GPIOi.GPIO_IRQSTATUS_SET_1) to prevent
-  the occurrence of unexpected interrupts when enabling an interrupt
-  for the GPIO channel.
+When Linux closes a FD (close(), close-on-exec, dup2(), ...) it calls
+filp_close() which also removes all posix locks.
 
-However, this does not appear to be a practical problem.
+The lock struct is initialized like so in filp_close() and passed
+down to cifs
 
-Further, as reported by Grygorii Strashko <grygorii.strashko@ti.com>,
-the TI Android kernel tree has an earlier similar patch as "GPIO: OMAP:
-Fix the sequence to clear the IRQ status" saying:
+	...
+        lock.fl_type = F_UNLCK;
+        lock.fl_flags = FL_POSIX | FL_CLOSE;
+        lock.fl_start = 0;
+        lock.fl_end = OFFSET_MAX;
+	...
 
- if the status is cleared after disabling the IRQ then sWAKEUP will not
- be cleared and gates the module transition
+Note the FL_CLOSE flag, which hints the VFS code that this unlocking
+is done for closing the fd.
 
-When we unmask the level interrupt after the interrupt has been handled,
-enable the interrupt and only then clear the interrupt. If the interrupt
-is still pending, the hardware will re-assert the interrupt status.
+filp_close()
+  locks_remove_posix(filp, id);
+    vfs_lock_file(filp, F_SETLK, &lock, NULL);
+      return filp->f_op->lock(filp, cmd, fl) => cifs_lock()
+        rc = cifs_setlk(file, flock, type, wait_flag, posix_lck, lock, unlock, xid);
+          rc = server->ops->mand_unlock_range(cfile, flock, xid);
+          if (flock->fl_flags & FL_POSIX && !rc)
+                  rc = locks_lock_file_wait(file, flock)
 
-Should the caution note in the TRM prove to be a problem, we could
-use a clear-enable-clear sequence instead.
+Notice how we don't call locks_lock_file_wait() which does the
+generic VFS lock/unlock/wait work on the inode if rc != 0.
 
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-[tony@atomide.com: updated comments based on an earlier TI patch]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+If we are closing the handle, the SMB server is supposed to remove any
+locks associated with it. Similarly, cifs.ko frees and wakes up any
+lock and lock waiter when closing the file:
+
+cifs_close()
+  cifsFileInfo_put(file->private_data)
+	/*
+	 * Delete any outstanding lock records. We'll lose them when the file
+	 * is closed anyway.
+	 */
+	down_write(&cifsi->lock_sem);
+	list_for_each_entry_safe(li, tmp, &cifs_file->llist->locks, llist) {
+		list_del(&li->llist);
+		cifs_del_lock_waiters(li);
+		kfree(li);
+	}
+	list_del(&cifs_file->llist->llist);
+	kfree(cifs_file->llist);
+	up_write(&cifsi->lock_sem);
+
+So we can safely ignore unlocking failures in cifs_lock() if they
+happen with the FL_CLOSE flag hint set as both the server and the
+client take care of it during the actual closing.
+
+This is not a proper fix for the unlocking failure but it's safe and
+it seems to prevent the lock leakages and crashes the customer
+experiences.
+
+Signed-off-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: NeilBrown <neil@brown.name>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-omap.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ fs/cifs/file.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index f7fbb46d5d79..9943273ec981 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -872,14 +872,16 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
- 	if (trigger)
- 		omap_set_gpio_triggering(bank, offset, trigger);
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 0305e3866216..23a8374fa97f 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -1574,8 +1574,20 @@ cifs_setlk(struct file *file, struct file_lock *flock, __u32 type,
+ 		rc = server->ops->mand_unlock_range(cfile, flock, xid);
  
--	/* For level-triggered GPIOs, the clearing must be done after
--	 * the HW source is cleared, thus after the handler has run */
--	if (bank->level_mask & BIT(offset)) {
--		omap_set_gpio_irqenable(bank, offset, 0);
-+	omap_set_gpio_irqenable(bank, offset, 1);
-+
-+	/*
-+	 * For level-triggered GPIOs, clearing must be done after the source
-+	 * is cleared, thus after the handler has run. OMAP4 needs this done
-+	 * after enabing the interrupt to clear the wakeup status.
-+	 */
-+	if (bank->level_mask & BIT(offset))
- 		omap_clear_gpio_irqstatus(bank, offset);
--	}
- 
--	omap_set_gpio_irqenable(bank, offset, 1);
- 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ out:
+-	if (flock->fl_flags & FL_POSIX && !rc)
++	if (flock->fl_flags & FL_POSIX) {
++		/*
++		 * If this is a request to remove all locks because we
++		 * are closing the file, it doesn't matter if the
++		 * unlocking failed as both cifs.ko and the SMB server
++		 * remove the lock on file close
++		 */
++		if (rc) {
++			cifs_dbg(VFS, "%s failed rc=%d\n", __func__, rc);
++			if (!(flock->fl_flags & FL_CLOSE))
++				return rc;
++		}
+ 		rc = locks_lock_file_wait(file, flock);
++	}
+ 	return rc;
  }
  
 -- 
