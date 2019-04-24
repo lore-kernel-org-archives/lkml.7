@@ -2,384 +2,283 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B44C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7BEC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9C3218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:33:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KyX0wpWg"
+	by mail.kernel.org (Postfix) with ESMTP id 69ECA218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556123660;
+	bh=mbmF2UNeBg2YhAYmNWVzwXIB3QlpJnoxZ8loJGe0BOw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S8otkD1I2fUrn4vWdEyGR9kUNxYNs0uIAQ1DVhYM8gaYUS9xzB7EHeAdQFWOQ0kOA
+	 wdFN5Gxa6pLWdLmv3cZYT/xuypixjD6F7jfMjukvLvznjwbZawjkdtrDkOErt01VVE
+	 pv6GAr4mk3YKrOkcY9dezza8sROpe3X00wbNMCxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732517AbfDXQdl (ORCPT
+        id S1732562AbfDXQeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:33:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33439 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730794AbfDXQdk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:33:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id h5so9588429pfo.0;
-        Wed, 24 Apr 2019 09:33:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EpxqYT7wciSenKfeU0lmEAJRB6rmerWPGABXSsTD67w=;
-        b=KyX0wpWg65wYoFUwCF+P0oatuciLbjwH7f42SsGWsAcFtilsLffB//SHd2XOSewIcu
-         mDszDn9VoaN0cOl7CXkPUUFgrV76NyCEgighSWD6aFI61Ulq4zzPhneg6gY8fEy+WFAs
-         eodeHiqtMgrqUb2Z9smPUSKCxifbhO1ZuTWMZhxPvE9SzhkBj3n9Uga50nj1eFbWq5nG
-         2s3/6YZ18b3YqXqsL/mEIiKqnhu+/GsspMMOIRC8gnUdDq8gGlNNmSbokfdlFJ9SJP7p
-         LDVmBFgKfrMvuIwryqIjCeGUTV1DGA3WpQ2jvlnPeUoFtgtPmOdBCUrTPtPSMwIE/zTy
-         h+wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EpxqYT7wciSenKfeU0lmEAJRB6rmerWPGABXSsTD67w=;
-        b=AMn6FqjeZsTNH/C57t24Yc1mcuPoRfIskNC/5Gvm7E/DGATpjI4tXOhbFj1GraH5db
-         BgsvJKMWzw/AaeTnRg8D6umIIaEDV4q7EPSMWs53/1x1K5wvwp+MoUIIgz+cJC9/kFN9
-         b6LCxrQ1Pd8SHteoC8f5X9xGk/amIn9agp547GfADsc63ws04V2R+CoaTt/NCWO+UcBi
-         kSmLciHpa/FZUPBYHQ+zQR8ZJTgziMZVaDe/QlJD8zg1GAdsWhDY4Cr3b3b/et4+st9b
-         +UL3XmnaeaS9065wDeEMlBsnVivvszUEcI00mcv2+un6Rl7oZ7BqSU7/O/wzE67ZKf+A
-         4V5w==
-X-Gm-Message-State: APjAAAXH6Elt4v+kNx+YgkIQZbDv+rn0hRevjSKcqr7vBnzkcPM/QadQ
-        volOPtMiHlNn3/wOHZVitDk=
-X-Google-Smtp-Source: APXvYqwUJ75HKkQcvVkM3hB21BPKyW+V3p5o+fnEnZSrzAMd3/IvY/55EGS89wYpE0mu0rh+FVTlxw==
-X-Received: by 2002:a65:648f:: with SMTP id e15mr31788910pgv.414.1556123619539;
-        Wed, 24 Apr 2019 09:33:39 -0700 (PDT)
-Received: from mail.google.com ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id q128sm32292731pga.60.2019.04.24.09.33.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 09:33:38 -0700 (PDT)
-Date:   Thu, 25 Apr 2019 00:33:29 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
+        Wed, 24 Apr 2019 12:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727913AbfDXQeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:34:19 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4CCC218B0;
+        Wed, 24 Apr 2019 16:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556123657;
+        bh=mbmF2UNeBg2YhAYmNWVzwXIB3QlpJnoxZ8loJGe0BOw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2Bvs5bBmep3Nd4ahisogZhFpyDOaY/jvTJAqmoED+FEIc2cY2Aofpf+v9H+vlvwYo
+         Qlj1S6KGAdj3mCYoKxMf30DjC//k+spCDAZeFkUxCRKPIZETNoZW3aHKXoxBQD8QzC
+         whHIg0vO5nqz7vQOS6BFzNZJ24JYv8AtdZbVtsgU=
+Date:   Wed, 24 Apr 2019 18:34:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Kirill Smelkov <kirr@nexedi.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yongzhi Pan <panyongzhi@gmail.com>,
         Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 10/63] Documentation: ACPI: move
- initrd_table_override.txt to admin-guide/acpi and convert to reST
-Message-ID: <20190424163328.e3ux6opmr47d5ixg@mail.google.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
- <20190423162932.21428-11-changbin.du@gmail.com>
- <20190423180734.67c6f470@coco.lan>
+        David Vrabel <david.vrabel@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Miklos Szeredi <miklos@szeredi.hu>, Tejun Heo <tj@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Nikolaus Rath <Nikolaus@rath.org>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.0 59/66] fs: stream_open - opener for
+ stream-like files so that read and write can run simultaneously without
+ deadlock
+Message-ID: <20190424163415.GB21413@kroah.com>
+References: <20190424143341.27665-1-sashal@kernel.org>
+ <20190424143341.27665-59-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190423180734.67c6f470@coco.lan>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190424143341.27665-59-sashal@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 06:07:34PM -0300, Mauro Carvalho Chehab wrote:
-> Em Wed, 24 Apr 2019 00:28:39 +0800
-> Changbin Du <changbin.du@gmail.com> escreveu:
+On Wed, Apr 24, 2019 at 10:33:33AM -0400, Sasha Levin wrote:
+> From: Kirill Smelkov <kirr@nexedi.com>
 > 
-> > This converts the plain text documentation to reStructuredText format and
-> > add it to Sphinx TOC tree. No essential content change.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > ---
-> >  Documentation/acpi/initrd_table_override.txt  | 111 ----------------
-> >  Documentation/admin-guide/acpi/index.rst      |   1 +
-> >  .../acpi/initrd_table_override.rst            | 120 ++++++++++++++++++
-> >  3 files changed, 121 insertions(+), 111 deletions(-)
-> >  delete mode 100644 Documentation/acpi/initrd_table_override.txt
-> >  create mode 100644 Documentation/admin-guide/acpi/initrd_table_override.rst
-> > 
-> > diff --git a/Documentation/acpi/initrd_table_override.txt b/Documentation/acpi/initrd_table_override.txt
-> > deleted file mode 100644
-> > index 30437a6db373..000000000000
-> > --- a/Documentation/acpi/initrd_table_override.txt
-> > +++ /dev/null
-> > @@ -1,111 +0,0 @@
-> > -Upgrading ACPI tables via initrd
-> > -================================
-> > -
-> > -1) Introduction (What is this about)
-> > -2) What is this for
-> > -3) How does it work
-> > -4) References (Where to retrieve userspace tools)
-> > -
-> > -1) What is this about
-> > ----------------------
-> > -
-> > -If the ACPI_TABLE_UPGRADE compile option is true, it is possible to
-> > -upgrade the ACPI execution environment that is defined by the ACPI tables
-> > -via upgrading the ACPI tables provided by the BIOS with an instrumented,
-> > -modified, more recent version one, or installing brand new ACPI tables.
-> > -
-> > -When building initrd with kernel in a single image, option
-> > -ACPI_TABLE_OVERRIDE_VIA_BUILTIN_INITRD should also be true for this
-> > -feature to work.
-> > -
-> > -For a full list of ACPI tables that can be upgraded/installed, take a look
-> > -at the char *table_sigs[MAX_ACPI_SIGNATURE]; definition in
-> > -drivers/acpi/tables.c.
-> > -All ACPI tables iasl (Intel's ACPI compiler and disassembler) knows should
-> > -be overridable, except:
-> > -   - ACPI_SIG_RSDP (has a signature of 6 bytes)
-> > -   - ACPI_SIG_FACS (does not have an ordinary ACPI table header)
-> > -Both could get implemented as well.
-> > -
-> > -
-> > -2) What is this for
-> > --------------------
-> > -
-> > -Complain to your platform/BIOS vendor if you find a bug which is so severe
-> > -that a workaround is not accepted in the Linux kernel. And this facility
-> > -allows you to upgrade the buggy tables before your platform/BIOS vendor
-> > -releases an upgraded BIOS binary.
-> > -
-> > -This facility can be used by platform/BIOS vendors to provide a Linux
-> > -compatible environment without modifying the underlying platform firmware.
-> > -
-> > -This facility also provides a powerful feature to easily debug and test
-> > -ACPI BIOS table compatibility with the Linux kernel by modifying old
-> > -platform provided ACPI tables or inserting new ACPI tables.
-> > -
-> > -It can and should be enabled in any kernel because there is no functional
-> > -change with not instrumented initrds.
-> > -
-> > -
-> > -3) How does it work
-> > --------------------
-> > -
-> > -# Extract the machine's ACPI tables:
-> > -cd /tmp
-> > -acpidump >acpidump
-> > -acpixtract -a acpidump
-> > -# Disassemble, modify and recompile them:
-> > -iasl -d *.dat
-> > -# For example add this statement into a _PRT (PCI Routing Table) function
-> > -# of the DSDT:
-> > -Store("HELLO WORLD", debug)
-> > -# And increase the OEM Revision. For example, before modification:
-> > -DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000000)
-> > -# After modification:
-> > -DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000001)
-> > -iasl -sa dsdt.dsl
-> > -# Add the raw ACPI tables to an uncompressed cpio archive.
-> > -# They must be put into a /kernel/firmware/acpi directory inside the cpio
-> > -# archive. Note that if the table put here matches a platform table
-> > -# (similar Table Signature, and similar OEMID, and similar OEM Table ID)
-> > -# with a more recent OEM Revision, the platform table will be upgraded by
-> > -# this table. If the table put here doesn't match a platform table
-> > -# (dissimilar Table Signature, or dissimilar OEMID, or dissimilar OEM Table
-> > -# ID), this table will be appended.
-> > -mkdir -p kernel/firmware/acpi
-> > -cp dsdt.aml kernel/firmware/acpi
-> > -# A maximum of "NR_ACPI_INITRD_TABLES (64)" tables are currently allowed
-> > -# (see osl.c):
-> > -iasl -sa facp.dsl
-> > -iasl -sa ssdt1.dsl
-> > -cp facp.aml kernel/firmware/acpi
-> > -cp ssdt1.aml kernel/firmware/acpi
-> > -# The uncompressed cpio archive must be the first. Other, typically
-> > -# compressed cpio archives, must be concatenated on top of the uncompressed
-> > -# one. Following command creates the uncompressed cpio archive and
-> > -# concatenates the original initrd on top:
-> > -find kernel | cpio -H newc --create > /boot/instrumented_initrd
-> > -cat /boot/initrd >>/boot/instrumented_initrd
-> > -# reboot with increased acpi debug level, e.g. boot params:
-> > -acpi.debug_level=0x2 acpi.debug_layer=0xFFFFFFFF
-> > -# and check your syslog:
-> > -[    1.268089] ACPI: PCI Interrupt Routing Table [\_SB_.PCI0._PRT]
-> > -[    1.272091] [ACPI Debug]  String [0x0B] "HELLO WORLD"
-> > -
-> > -iasl is able to disassemble and recompile quite a lot different,
-> > -also static ACPI tables.
-> > -
-> > -
-> > -4) Where to retrieve userspace tools
-> > -------------------------------------
-> > -
-> > -iasl and acpixtract are part of Intel's ACPICA project:
-> > -http://acpica.org/
-> > -and should be packaged by distributions (for example in the acpica package
-> > -on SUSE).
-> > -
-> > -acpidump can be found in Len Browns pmtools:
-> > -ftp://kernel.org/pub/linux/kernel/people/lenb/acpi/utils/pmtools/acpidump
-> > -This tool is also part of the acpica package on SUSE.
-> > -Alternatively, used ACPI tables can be retrieved via sysfs in latest kernels:
-> > -/sys/firmware/acpi/tables
-> > diff --git a/Documentation/admin-guide/acpi/index.rst b/Documentation/admin-guide/acpi/index.rst
-> > index 3e041206089d..09e4e81e4fb7 100644
-> > --- a/Documentation/admin-guide/acpi/index.rst
-> > +++ b/Documentation/admin-guide/acpi/index.rst
-> > @@ -8,3 +8,4 @@ the Linux ACPI support.
-> >  .. toctree::
-> >     :maxdepth: 1
-> >  
-> > +   initrd_table_override
-> > diff --git a/Documentation/admin-guide/acpi/initrd_table_override.rst b/Documentation/admin-guide/acpi/initrd_table_override.rst
-> > new file mode 100644
-> > index 000000000000..0787b2b91ded
-> > --- /dev/null
-> > +++ b/Documentation/admin-guide/acpi/initrd_table_override.rst
-> > @@ -0,0 +1,120 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +================================
-> > +Upgrading ACPI tables via initrd
-> > +================================
-> > +
-> > +1) Introduction (What is this about)
-> > +2) What is this for
-> > +3) How does it work
-> > +4) References (Where to retrieve userspace tools)
+> [ Upstream commit 10dce8af34226d90fa56746a934f8da5dcdba3df ]
 > 
-> Hmm... I did the same on my conversion, but IMO, the best would be to
-> hide (or remove, if ACPI maintainers agree) the contents, as this may
-> conflict with the body as people may add new stuff and forget to
-> update it.
+> Commit 9c225f2655e3 ("vfs: atomic f_pos accesses as per POSIX") added
+> locking for file.f_pos access and in particular made concurrent read and
+> write not possible - now both those functions take f_pos lock for the
+> whole run, and so if e.g. a read is blocked waiting for data, write will
+> deadlock waiting for that read to complete.
 > 
-> So, if ACPI maintainers insist on keeping it, I would code this as:
+> This caused regression for stream-like files where previously read and
+> write could run simultaneously, but after that patch could not do so
+> anymore. See e.g. commit 581d21a2d02a ("xenbus: fix deadlock on writes
+> to /proc/xen/xenbus") which fixes such regression for particular case of
+> /proc/xen/xenbus.
 > 
-> .. Contents
+> The patch that added f_pos lock in 2014 did so to guarantee POSIX thread
+> safety for read/write/lseek and added the locking to file descriptors of
+> all regular files. In 2014 that thread-safety problem was not new as it
+> was already discussed earlier in 2006.
 > 
->    1) Introduction (What is this about)
->    2) What is this for
->    3) How does it work
->    4) References (Where to retrieve userspace tools)
+> However even though 2006'th version of Linus's patch was adding f_pos
+> locking "only for files that are marked seekable with FMODE_LSEEK (thus
+> avoiding the stream-like objects like pipes and sockets)", the 2014
+> version - the one that actually made it into the tree as 9c225f2655e3 -
+> is doing so irregardless of whether a file is seekable or not.
 > 
-> as this will make this invisible on html/pdf/epub output.
->
-I just removed it. If anyone wants it back, please comment. Thanks.
+> See
+> 
+>     https://lore.kernel.org/lkml/53022DB1.4070805@gmail.com/
+>     https://lwn.net/Articles/180387
+>     https://lwn.net/Articles/180396
+> 
+> for historic context.
+> 
+> The reason that it did so is, probably, that there are many files that
+> are marked non-seekable, but e.g. their read implementation actually
+> depends on knowing current position to correctly handle the read. Some
+> examples:
+> 
+> 	kernel/power/user.c		snapshot_read
+> 	fs/debugfs/file.c		u32_array_read
+> 	fs/fuse/control.c		fuse_conn_waiting_read + ...
+> 	drivers/hwmon/asus_atk0110.c	atk_debugfs_ggrp_read
+> 	arch/s390/hypfs/inode.c		hypfs_read_iter
+> 	...
+> 
+> Despite that, many nonseekable_open users implement read and write with
+> pure stream semantics - they don't depend on passed ppos at all. And for
+> those cases where read could wait for something inside, it creates a
+> situation similar to xenbus - the write could be never made to go until
+> read is done, and read is waiting for some, potentially external, event,
+> for potentially unbounded time -> deadlock.
+> 
+> Besides xenbus, there are 14 such places in the kernel that I've found
+> with semantic patch (see below):
+> 
+> 	drivers/xen/evtchn.c:667:8-24: ERROR: evtchn_fops: .read() can deadlock .write()
+> 	drivers/isdn/capi/capi.c:963:8-24: ERROR: capi_fops: .read() can deadlock .write()
+> 	drivers/input/evdev.c:527:1-17: ERROR: evdev_fops: .read() can deadlock .write()
+> 	drivers/char/pcmcia/cm4000_cs.c:1685:7-23: ERROR: cm4000_fops: .read() can deadlock .write()
+> 	net/rfkill/core.c:1146:8-24: ERROR: rfkill_fops: .read() can deadlock .write()
+> 	drivers/s390/char/fs3270.c:488:1-17: ERROR: fs3270_fops: .read() can deadlock .write()
+> 	drivers/usb/misc/ldusb.c:310:1-17: ERROR: ld_usb_fops: .read() can deadlock .write()
+> 	drivers/hid/uhid.c:635:1-17: ERROR: uhid_fops: .read() can deadlock .write()
+> 	net/batman-adv/icmp_socket.c:80:1-17: ERROR: batadv_fops: .read() can deadlock .write()
+> 	drivers/media/rc/lirc_dev.c:198:1-17: ERROR: lirc_fops: .read() can deadlock .write()
+> 	drivers/leds/uleds.c:77:1-17: ERROR: uleds_fops: .read() can deadlock .write()
+> 	drivers/input/misc/uinput.c:400:1-17: ERROR: uinput_fops: .read() can deadlock .write()
+> 	drivers/infiniband/core/user_mad.c:985:7-23: ERROR: umad_fops: .read() can deadlock .write()
+> 	drivers/gnss/core.c:45:1-17: ERROR: gnss_fops: .read() can deadlock .write()
+> 
+> In addition to the cases above another regression caused by f_pos
+> locking is that now FUSE filesystems that implement open with
+> FOPEN_NONSEEKABLE flag, can no longer implement bidirectional
+> stream-like files - for the same reason as above e.g. read can deadlock
+> write locking on file.f_pos in the kernel.
+> 
+> FUSE's FOPEN_NONSEEKABLE was added in 2008 in a7c1b990f715 ("fuse:
+> implement nonseekable open") to support OSSPD. OSSPD implements /dev/dsp
+> in userspace with FOPEN_NONSEEKABLE flag, with corresponding read and
+> write routines not depending on current position at all, and with both
+> read and write being potentially blocking operations:
+> 
+> See
+> 
+>     https://github.com/libfuse/osspd
+>     https://lwn.net/Articles/308445
+> 
+>     https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1406
+>     https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1438-L1477
+>     https://github.com/libfuse/osspd/blob/14a9cff0/osspd.c#L1479-L1510
+> 
+> Corresponding libfuse example/test also describes FOPEN_NONSEEKABLE as
+> "somewhat pipe-like files ..." with read handler not using offset.
+> However that test implements only read without write and cannot exercise
+> the deadlock scenario:
+> 
+>     https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L124-L131
+>     https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L146-L163
+>     https://github.com/libfuse/libfuse/blob/fuse-3.4.2-3-ga1bff7d/example/poll.c#L209-L216
+> 
+> I've actually hit the read vs write deadlock for real while implementing
+> my FUSE filesystem where there is /head/watch file, for which open
+> creates separate bidirectional socket-like stream in between filesystem
+> and its user with both read and write being later performed
+> simultaneously. And there it is semantically not easy to split the
+> stream into two separate read-only and write-only channels:
+> 
+>     https://lab.nexedi.com/kirr/wendelin.core/blob/f13aa600/wcfs/wcfs.go#L88-169
+> 
+> Let's fix this regression. The plan is:
+> 
+> 1. We can't change nonseekable_open to include &~FMODE_ATOMIC_POS -
+>    doing so would break many in-kernel nonseekable_open users which
+>    actually use ppos in read/write handlers.
+> 
+> 2. Add stream_open() to kernel to open stream-like non-seekable file
+>    descriptors. Read and write on such file descriptors would never use
+>    nor change ppos. And with that property on stream-like files read and
+>    write will be running without taking f_pos lock - i.e. read and write
+>    could be running simultaneously.
+> 
+> 3. With semantic patch search and convert to stream_open all in-kernel
+>    nonseekable_open users for which read and write actually do not
+>    depend on ppos and where there is no other methods in file_operations
+>    which assume @offset access.
+> 
+> 4. Add FOPEN_STREAM to fs/fuse/ and open in-kernel file-descriptors via
+>    steam_open if that bit is present in filesystem open reply.
+> 
+>    It was tempting to change fs/fuse/ open handler to use stream_open
+>    instead of nonseekable_open on just FOPEN_NONSEEKABLE flags, but
+>    grepping through Debian codesearch shows users of FOPEN_NONSEEKABLE,
+>    and in particular GVFS which actually uses offset in its read and
+>    write handlers
+> 
+> 	https://codesearch.debian.net/search?q=-%3Enonseekable+%3D
+> 	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1080
+> 	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1247-1346
+> 	https://gitlab.gnome.org/GNOME/gvfs/blob/1.40.0-6-gcbc54396/client/gvfsfusedaemon.c#L1399-1481
+> 
+>    so if we would do such a change it will break a real user.
+> 
+> 5. Add stream_open and FOPEN_STREAM handling to stable kernels starting
+>    from v3.14+ (the kernel where 9c225f2655 first appeared).
+> 
+>    This will allow to patch OSSPD and other FUSE filesystems that
+>    provide stream-like files to return FOPEN_STREAM | FOPEN_NONSEEKABLE
+>    in their open handler and this way avoid the deadlock on all kernel
+>    versions. This should work because fs/fuse/ ignores unknown open
+>    flags returned from a filesystem and so passing FOPEN_STREAM to a
+>    kernel that is not aware of this flag cannot hurt. In turn the kernel
+>    that is not aware of FOPEN_STREAM will be < v3.14 where just
+>    FOPEN_NONSEEKABLE is sufficient to implement streams without read vs
+>    write deadlock.
+> 
+> This patch adds stream_open, converts /proc/xen/xenbus to it and adds
+> semantic patch to automatically locate in-kernel places that are either
+> required to be converted due to read vs write deadlock, or that are just
+> safe to be converted because read and write do not use ppos and there
+> are no other funky methods in file_operations.
+> 
+> Regarding semantic patch I've verified each generated change manually -
+> that it is correct to convert - and each other nonseekable_open instance
+> left - that it is either not correct to convert there, or that it is not
+> converted due to current stream_open.cocci limitations.
+> 
+> The script also does not convert files that should be valid to convert,
+> but that currently have .llseek = noop_llseek or generic_file_llseek for
+> unknown reason despite file being opened with nonseekable_open (e.g.
+> drivers/input/mousedev.c)
+> 
+> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
+> Cc: Yongzhi Pan <panyongzhi@gmail.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: David Vrabel <david.vrabel@citrix.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Miklos Szeredi <miklos@szeredi.hu>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+> Cc: Nikolaus Rath <Nikolaus@rath.org>
+> Cc: Han-Wen Nienhuys <hanwen@google.com>
+> Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+> ---
+>  drivers/xen/xenbus/xenbus_dev_frontend.c |   4 +-
+>  fs/open.c                                |  18 ++
+>  fs/read_write.c                          |   5 +-
+>  include/linux/fs.h                       |   4 +
+>  scripts/coccinelle/api/stream_open.cocci | 363 +++++++++++++++++++++++
+>  5 files changed, 389 insertions(+), 5 deletions(-)
+>  create mode 100644 scripts/coccinelle/api/stream_open.cocci
 
-> Anyway, with or without the above change:
-> 
-> Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> 
-> > +
-> > +1) What is this about
-> > +=====================
-> > +
-> > +If the ACPI_TABLE_UPGRADE compile option is true, it is possible to
-> > +upgrade the ACPI execution environment that is defined by the ACPI tables
-> > +via upgrading the ACPI tables provided by the BIOS with an instrumented,
-> > +modified, more recent version one, or installing brand new ACPI tables.
-> > +
-> > +When building initrd with kernel in a single image, option
-> > +ACPI_TABLE_OVERRIDE_VIA_BUILTIN_INITRD should also be true for this
-> > +feature to work.
-> > +
-> > +For a full list of ACPI tables that can be upgraded/installed, take a look
-> > +at the char `*table_sigs[MAX_ACPI_SIGNATURE];` definition in
-> > +drivers/acpi/tables.c.
-> > +
-> > +All ACPI tables iasl (Intel's ACPI compiler and disassembler) knows should
-> > +be overridable, except:
-> > +
-> > +  - ACPI_SIG_RSDP (has a signature of 6 bytes)
-> > +  - ACPI_SIG_FACS (does not have an ordinary ACPI table header)
-> > +
-> > +Both could get implemented as well.
-> > +
-> > +
-> > +2) What is this for
-> > +===================
-> > +
-> > +Complain to your platform/BIOS vendor if you find a bug which is so severe
-> > +that a workaround is not accepted in the Linux kernel. And this facility
-> > +allows you to upgrade the buggy tables before your platform/BIOS vendor
-> > +releases an upgraded BIOS binary.
-> > +
-> > +This facility can be used by platform/BIOS vendors to provide a Linux
-> > +compatible environment without modifying the underlying platform firmware.
-> > +
-> > +This facility also provides a powerful feature to easily debug and test
-> > +ACPI BIOS table compatibility with the Linux kernel by modifying old
-> > +platform provided ACPI tables or inserting new ACPI tables.
-> > +
-> > +It can and should be enabled in any kernel because there is no functional
-> > +change with not instrumented initrds.
-> > +
-> > +
-> > +3) How does it work
-> > +===================
-> > +::
-> > +
-> > +  # Extract the machine's ACPI tables:
-> > +  cd /tmp
-> > +  acpidump >acpidump
-> > +  acpixtract -a acpidump
-> > +  # Disassemble, modify and recompile them:
-> > +  iasl -d *.dat
-> > +  # For example add this statement into a _PRT (PCI Routing Table) function
-> > +  # of the DSDT:
-> > +  Store("HELLO WORLD", debug)
-> > +  # And increase the OEM Revision. For example, before modification:
-> > +  DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000000)
-> > +  # After modification:
-> > +  DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000001)
-> > +  iasl -sa dsdt.dsl
-> > +  # Add the raw ACPI tables to an uncompressed cpio archive.
-> > +  # They must be put into a /kernel/firmware/acpi directory inside the cpio
-> > +  # archive. Note that if the table put here matches a platform table
-> > +  # (similar Table Signature, and similar OEMID, and similar OEM Table ID)
-> > +  # with a more recent OEM Revision, the platform table will be upgraded by
-> > +  # this table. If the table put here doesn't match a platform table
-> > +  # (dissimilar Table Signature, or dissimilar OEMID, or dissimilar OEM Table
-> > +  # ID), this table will be appended.
-> > +  mkdir -p kernel/firmware/acpi
-> > +  cp dsdt.aml kernel/firmware/acpi
-> > +  # A maximum of "NR_ACPI_INITRD_TABLES (64)" tables are currently allowed
-> > +  # (see osl.c):
-> > +  iasl -sa facp.dsl
-> > +  iasl -sa ssdt1.dsl
-> > +  cp facp.aml kernel/firmware/acpi
-> > +  cp ssdt1.aml kernel/firmware/acpi
-> > +  # The uncompressed cpio archive must be the first. Other, typically
-> > +  # compressed cpio archives, must be concatenated on top of the uncompressed
-> > +  # one. Following command creates the uncompressed cpio archive and
-> > +  # concatenates the original initrd on top:
-> > +  find kernel | cpio -H newc --create > /boot/instrumented_initrd
-> > +  cat /boot/initrd >>/boot/instrumented_initrd
-> > +  # reboot with increased acpi debug level, e.g. boot params:
-> > +  acpi.debug_level=0x2 acpi.debug_layer=0xFFFFFFFF
-> > +  # and check your syslog:
-> > +  [    1.268089] ACPI: PCI Interrupt Routing Table [\_SB_.PCI0._PRT]
-> > +  [    1.272091] [ACPI Debug]  String [0x0B] "HELLO WORLD"
-> > +
-> > +iasl is able to disassemble and recompile quite a lot different,
-> > +also static ACPI tables.
-> > +
-> > +
-> > +4) Where to retrieve userspace tools
-> > +====================================
-> > +
-> > +iasl and acpixtract are part of Intel's ACPICA project:
-> > +http://acpica.org/
-> > +
-> > +and should be packaged by distributions (for example in the acpica package
-> > +on SUSE).
-> > +
-> > +acpidump can be found in Len Browns pmtools:
-> > +ftp://kernel.org/pub/linux/kernel/people/lenb/acpi/utils/pmtools/acpidump
-> > +
-> > +This tool is also part of the acpica package on SUSE.
-> > +Alternatively, used ACPI tables can be retrieved via sysfs in latest kernels:
-> > +/sys/firmware/acpi/tables
-> 
-> 
-> 
-> Thanks,
-> Mauro
+I think there is a follow-on patch for this one as well, that adds the
+proper "stream open" logic to all of the individual locations.
 
--- 
-Cheers,
-Changbin Du
+But even with that, I don't think this is stable material, it should
+just be for 5.1 and newer kernels.
+
+thanks,
+
+greg k-h
