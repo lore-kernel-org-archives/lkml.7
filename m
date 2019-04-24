@@ -7,66 +7,63 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F120EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD7FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92EA2183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B43E217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGTn/dHy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBJUkxIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388585AbfDXVNq (ORCPT
+        id S2388501AbfDXVNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 24 Apr 2019 17:13:46 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41147 "EHLO
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33196 "EHLO
         mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733089AbfDXVNh (ORCPT
+        with ESMTP id S2388319AbfDXVNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 17:13:37 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t30so15803226lfd.8;
-        Wed, 24 Apr 2019 14:13:35 -0700 (PDT)
+        Wed, 24 Apr 2019 17:13:40 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j11so15811166lfm.0;
+        Wed, 24 Apr 2019 14:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5KhsaICucBSzIi6pewqFTD0VbH13k2SXqO4xc5eabvQ=;
-        b=ZGTn/dHyWO9Gx2gdgM7KVXB0ZSwP+cwl9ETPZMYpSdbQIB1/8NHjcF64SpIP8CvAWV
-         2L19ZIKjafS/Ho6ZMLeTU8cx4XhBf25l0AxjgjY63sq2VBPlnlkGUixOzG8BXYDCuoW3
-         cVWQAniDFtABn0nybUfTG6AW82YgjGzMAF6fEgNSY5E/CajJhUNNp80FSlKbb3nWWNvK
-         LqpW3fdn6JTzAPIRjBVqN5zQId2TqBteh2xYVMW+osABZqherxIUlm30tl9V28bhz5yU
-         1q/M4Rs4lo1CNIzKu0hGvq8rRg08oC5DQN/+hbK8pezPmljsnKI6pnywmboeyCRXOuOu
-         FgCQ==
+        bh=afMEzm9g2f2iOhKZFts1vKHdZwClQlHwJYLx/Eicp00=;
+        b=XBJUkxIHMgCWX1pMikm0wxhDuE4+cNnyDvrVdGAdwvgU2asmdkZue9/0PFr3rTf84J
+         Vqn3CJn6Yn6xb+3L/3sI2B17RHdKo7fBacJs9RORtXyKy7NR2wCd0p8YRPwuSKDDd5P/
+         HJqfi4NaLYzlBOSVs8MjoPgUTf5enF3tyHUuWauTVNwrUaRTo/0CC+ZlqvvjyXctZkNt
+         A6KJlOYRLOiiZ0A0qFz4hUuRj4lTj1HhhipXEmkS4q44rAXHqCzPb7rcC2PFsOQSVdZi
+         CS69HYJu69jBcrY1QEWqeICDqUynIF2/KFqCrG4nCpiL7fJLaHq/y1YSy1onUgtpsOdP
+         kdlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5KhsaICucBSzIi6pewqFTD0VbH13k2SXqO4xc5eabvQ=;
-        b=jY053dcsBwoF8nn8ZbyfIf34tVukJzYpAAoqrP2D9Tp4K4MN9K7mEP/tggDGeT1Z+g
-         H59BbDFqKr2w1p8LO8OrZgeRlDpFIRu9z4m4hE/H9R23Z+E1KLFh/SLlYmDuvO//45b6
-         /5FiZnmHaxNSGYX7GkigGD2n8H1LmmvO3/Ss/HbOhLsR3vEbEt5+NF3XJMVzXCk2L4LR
-         c8PlJT32ROq2Ir6QdCtd6ns9g/4QM9eWV1ahodRUz46UQOxcWfT4zJYtfzoQNQEaLn7a
-         Hdy6b8yYjsWhJz/Sa7UNjtrqNvHFszjQ5lIBQvS6AbtEtTbAwJj0M5ediWcWFEaeGFP8
-         TaAw==
-X-Gm-Message-State: APjAAAXp/Frin2IlN85AocXAvZm9Y1If0LW5r7d/jOplik9nIhbHVXRy
-        2IERgPQLm8hhlM7PxbCB08A=
-X-Google-Smtp-Source: APXvYqz3jkwKHMkN+3DBn3mIqQAkYt0FNl1kCkLC+6au9GLE2u46bh2FX0DM89GvtAaYleliKEMUYg==
-X-Received: by 2002:ac2:598b:: with SMTP id w11mr19531195lfn.62.1556140414975;
-        Wed, 24 Apr 2019 14:13:34 -0700 (PDT)
+        bh=afMEzm9g2f2iOhKZFts1vKHdZwClQlHwJYLx/Eicp00=;
+        b=tURWdH3MM4FWanOkh2Ux0dE2MmGF6uHIBYvKGJm5N90Y0w2vux2WuapknebC7E50yB
+         GDOtttTpWVG+4oO077G5glWZiM7UYVMaVqBp5jXy+g66RfSWN/lyOcPpm8k2oaarlUOf
+         HqKW6MsAZU86PRJIXWk9JmJXjnT/JuSFQ1a35vGODuQ4cxx6OfsKcS9/52LZX3+Jkl89
+         Paq1MVqAG9wr3SU5nJY9RthgCNelIIvvCoERc2t9YcKf/hnoer5EeL0XdeyYzf9NdXpe
+         N/twNOo9sUMvCLtFGDmgqmj1TVryCoyKwfVlSBnMBz7FwPKagabiwErHWNcfV3vIo/t+
+         OkoA==
+X-Gm-Message-State: APjAAAWOqEzzgMSRFooetHMQMQ7lygBQ7mh0PZ6t/4idC5FSNVIA/0bC
+        KxYZcFP/j+8hDjTgeZgcLWcWRgje6b0=
+X-Google-Smtp-Source: APXvYqyeUx74hqZinRcRS8umt56ljPomaVmYowHfvoJcah210H/zTwGWZBu7sNeTeu2VmNRj4JMmHw==
+X-Received: by 2002:ac2:53b2:: with SMTP id j18mr6553646lfh.78.1556140418416;
+        Wed, 24 Apr 2019 14:13:38 -0700 (PDT)
 Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id m3sm4540248lfh.94.2019.04.24.14.13.33
+        by smtp.gmail.com with ESMTPSA id m3sm4540248lfh.94.2019.04.24.14.13.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 14:13:34 -0700 (PDT)
+        Wed, 24 Apr 2019 14:13:37 -0700 (PDT)
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Richard Leitner <richard.leitner@skidata.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] usb: usb251xb: Add US lanes inversion dts-bindings
-Date:   Thu, 25 Apr 2019 00:12:05 +0300
-Message-Id: <20190424211208.17499-2-fancer.lancer@gmail.com>
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] usb: usb251xb: Add US port lanes inversion property
+Date:   Thu, 25 Apr 2019 00:12:07 +0300
+Message-Id: <20190424211208.17499-4-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424211208.17499-1-fancer.lancer@gmail.com>
 References: <20190424211208.17499-1-fancer.lancer@gmail.com>
@@ -77,32 +74,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since a separate US ports lanes polarity inversion property is going to
-be available the bindings doc-file should be updated with information
-about swap-us-lanes bool property, which will be responsible for it.
+The driver bindings already declare the "swap-dx-lanes" property to
+invert the downstream ports lanes polarity. The similar config
+can be defined for a single upstream port - "swap-us-lanes". It's
+going to be boolean since there is only one upstream port
+on the hub.
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- Documentation/devicetree/bindings/usb/usb251xb.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/misc/usb251xb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
-index 17915f64b8ee..bc7945e9dbfe 100644
---- a/Documentation/devicetree/bindings/usb/usb251xb.txt
-+++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
-@@ -64,8 +64,10 @@ Optional properties :
-  - power-on-time-ms : Specifies the time it takes from the time the host
- 	initiates the power-on sequence to a port until the port has adequate
- 	power. The value is given in ms in a 0 - 510 range (default is 100ms).
-- - swap-dx-lanes : Specifies the ports which will swap the differential-pair
--	(D+/D-), default is not-swapped.
-+ - swap-dx-lanes : Specifies the downstream ports which will swap the
-+	differential-pair (D+/D-), default is not-swapped.
-+ - swap-us-lanes : Selects the upstream port differential-pair (D+/D-)
-+	swapping (boolean, default is not-swapped)
+diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+index 4ef34df948ad..56f0a10633fc 100644
+--- a/drivers/usb/misc/usb251xb.c
++++ b/drivers/usb/misc/usb251xb.c
+@@ -531,6 +531,8 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 	hub->port_swap = USB251XB_DEF_PORT_SWAP;
+ 	usb251xb_get_ports_field(hub, "swap-dx-lanes", data->port_cnt,
+ 				 &hub->port_swap);
++	if (of_get_property(np, "swap-us-lanes", NULL))
++		hub->port_swap |= BIT(0);
  
- Examples:
- 	usb2512b@2c {
+ 	/* The following parameters are currently not exposed to devicetree, but
+ 	 * may be as soon as needed.
 -- 
 2.21.0
 
