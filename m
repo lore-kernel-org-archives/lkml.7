@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49B0C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131A8C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A423520835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8B7E20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129135;
-	bh=9eRShUYR5yadJs5e5s0yTcDTOdNe1UqYKYluOKNEnWk=;
+	s=default; t=1556129137;
+	bh=QDs5go/hlvu9iel66GaY5ivyu2/BcUShEPhMeQnZEqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kXHlLSnmQ03Mob24H006hhBLbSF7FpSLLDoa521P8g3CIafwtQvC6UTI0xouBXyqi
-	 aE16myWJhGcGy2KoRLaIyBJZElp3wvUiFyp0ckKREUiHU8NtaCLRiR22GSzu7zDBuJ
-	 jIQtSHR+Fj8NYgrHqh/L+Z5EVWODVCbLIhp3SFrY=
+	b=p2J53kRZ66ueUwYEZ9Div73fgylwywI+tdHXOEQTC2fcPEHFoWMJgSf/zxzISe2X/
+	 APEHdJXz2ZltK2CPj1pLOAOUMNO72IdAxH0IB9q5yOscs++ctyhINS6MyeWATxOuH7
+	 Mzd2GB80JCZdqegVp2o1lifm4+3OxSX7HkxubXy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388844AbfDXRSb (ORCPT
+        id S2388836AbfDXRS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43486 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:18:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387929AbfDXRSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:18:25 -0400
+        id S2388825AbfDXRSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:18:23 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B16952054F;
-        Wed, 24 Apr 2019 17:18:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10DB82054F;
+        Wed, 24 Apr 2019 17:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126305;
-        bh=9eRShUYR5yadJs5e5s0yTcDTOdNe1UqYKYluOKNEnWk=;
+        s=default; t=1556126302;
+        bh=QDs5go/hlvu9iel66GaY5ivyu2/BcUShEPhMeQnZEqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Spg9nHtAIRPOsUsXTyJXs5NZYB/9dQ7tonNsMwR8L/8u5DbehLy90vmIDehXHh2Rn
-         ++jJvbQPSvlbBIZQ7xyKywaLWEPIohtSM1mYpTM8ii0Z7+bdOa1AVaHBKDK0Rpc8le
-         Rry2Q0dwBOW1vyhZuBk2iEwABvM0rG90aKgrg+Do=
+        b=z4VFiZX5+5EF1PY9A9fiZceVzzBnN7xWnMiyFT9CQMxr+seZp/lohcjt3H0rRq4dw
+         2WxRZIPDwmKjEOPlcjPgU87J2XvYESDqqy1VSSpqb3znQw3pNxeDMqlYQzSKlwc529
+         GdhRj3RbJddtISNx8BOkCQDSOcqSnhMyjZx3hLaQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 048/168] bcache: improve sysfs_strtoul_clamp()
-Date:   Wed, 24 Apr 2019 19:08:12 +0200
-Message-Id: <20190424170926.641232146@linuxfoundation.org>
+        stable@vger.kernel.org, Zumeng Chen <zumeng.chen@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 065/168] wlcore: Fix memory leak in case wl12xx_fetch_firmware failure
+Date:   Wed, 24 Apr 2019 19:08:29 +0200
+Message-Id: <20190424170927.613525941@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -59,62 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 596b5a5dd1bc2fa019fdaaae522ef331deef927f ]
+[ Upstream commit ba2ffc96321c8433606ceeb85c9e722b8113e5a7 ]
 
-Currently sysfs_strtoul_clamp() is defined as,
- 82 #define sysfs_strtoul_clamp(file, var, min, max)                   \
- 83 do {                                                               \
- 84         if (attr == &sysfs_ ## file)                               \
- 85                 return strtoul_safe_clamp(buf, var, min, max)      \
- 86                         ?: (ssize_t) size;                         \
- 87 } while (0)
+Release fw_status, raw_fw_status, and tx_res_if when wl12xx_fetch_firmware
+failed instead of meaningless goto out to avoid the following memory leak
+reports(Only the last one listed):
 
-The problem is, if bit width of var is less then unsigned long, min and
-max may not protect var from integer overflow, because overflow happens
-in strtoul_safe_clamp() before checking min and max.
+unreferenced object 0xc28a9a00 (size 512):
+  comm "kworker/0:4", pid 31298, jiffies 2783204 (age 203.290s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+  backtrace:
+    [<6624adab>] kmemleak_alloc+0x40/0x74
+    [<500ddb31>] kmem_cache_alloc_trace+0x1ac/0x270
+    [<db4d731d>] wl12xx_chip_wakeup+0xc4/0x1fc [wlcore]
+    [<76c5db53>] wl1271_op_add_interface+0x4a4/0x8f4 [wlcore]
+    [<cbf30777>] drv_add_interface+0xa4/0x1a0 [mac80211]
+    [<65bac325>] ieee80211_reconfig+0x9c0/0x1644 [mac80211]
+    [<2817c80e>] ieee80211_restart_work+0x90/0xc8 [mac80211]
+    [<7e1d425a>] process_one_work+0x284/0x42c
+    [<55f9432e>] worker_thread+0x2fc/0x48c
+    [<abb582c6>] kthread+0x148/0x160
+    [<63144b13>] ret_from_fork+0x14/0x2c
+    [< (null)>] (null)
+    [<1f6e7715>] 0xffffffff
 
-To fix such overflow in sysfs_strtoul_clamp(), to make min and max take
-effect, this patch adds an unsigned long variable, and uses it to macro
-strtoul_safe_clamp() to convert an unsigned long value in range defined
-by [min, max]. Then assign this value to var. By this method, if bit
-width of var is less than unsigned long, integer overflow won't happen
-before min and max are checking.
-
-Now sysfs_strtoul_clamp() can properly handle smaller data type like
-unsigned int, of cause min and max should be defined in range of
-unsigned int too.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Zumeng Chen <zumeng.chen@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/sysfs.h | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ti/wlcore/main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/bcache/sysfs.h b/drivers/md/bcache/sysfs.h
-index 0526fe92a683..e7a3c12aa66f 100644
---- a/drivers/md/bcache/sysfs.h
-+++ b/drivers/md/bcache/sysfs.h
-@@ -80,9 +80,16 @@ do {									\
+diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
+index 7b27c7e23af2..cc10b72607c6 100644
+--- a/drivers/net/wireless/ti/wlcore/main.c
++++ b/drivers/net/wireless/ti/wlcore/main.c
+@@ -1123,8 +1123,11 @@ static int wl12xx_chip_wakeup(struct wl1271 *wl, bool plt)
+ 		goto out;
  
- #define sysfs_strtoul_clamp(file, var, min, max)			\
- do {									\
--	if (attr == &sysfs_ ## file)					\
--		return strtoul_safe_clamp(buf, var, min, max)		\
--			?: (ssize_t) size;				\
-+	if (attr == &sysfs_ ## file) {					\
-+		unsigned long v = 0;					\
-+		ssize_t ret;						\
-+		ret = strtoul_safe_clamp(buf, v, min, max);		\
-+		if (!ret) {						\
-+			var = v;					\
-+			return size;					\
-+		}							\
-+		return ret;						\
-+	}								\
- } while (0)
+ 	ret = wl12xx_fetch_firmware(wl, plt);
+-	if (ret < 0)
+-		goto out;
++	if (ret < 0) {
++		kfree(wl->fw_status);
++		kfree(wl->raw_fw_status);
++		kfree(wl->tx_res_if);
++	}
  
- #define strtoul_or_return(cp)						\
+ out:
+ 	return ret;
 -- 
 2.19.1
 
