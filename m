@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1728CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B862C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE50120835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AE620685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556130229;
-	bh=QDIMaILAQNUni/Q3ucBHjT/0GlHlrtqYFFv8ZVrR8zw=;
+	s=default; t=1556130233;
+	bh=3ti89KW7EcM2GB3p0YKi1HZFJLu4j7vvvFSkfEQ8eQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jyjrPbqipa24fWUc6KXgDGUgsykLt87AVUfaGlYFO4oBXbYPTrRFldJxn43AJZ3Jm
-	 +ladoU80AkROnA+IuWwaWh/yaq8GAqHhDjhPak2VXwLiwnxXMHf4vU5FA0MsYKvYOX
-	 fK7AnrIbDpKTBbiYpK2Cqytf6OWhb6TWY8kheuB4=
+	b=a5XfGQ/v1+U18torvHn5cms5xyblxGAqWXT7JI/d4sZJyxpftrA1FNR6n2jThodgy
+	 V+JqXS2CvXwZ0Y6bHAuhCkN0XZnwBwSxVZiboSyN7P18HgDVROfKp/1+yDh5VLKVRO
+	 3P7lKX632R2iWwyyy/CyxptaYCOiFTewiLlVNiOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387660AbfDXSXs (ORCPT
+        id S2387698AbfDXSXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:23:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36028 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 14:23:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387590AbfDXSXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:23:45 -0400
+        id S2387649AbfDXSXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:23:48 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A8A02183E;
-        Wed, 24 Apr 2019 18:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D8FA20685;
+        Wed, 24 Apr 2019 18:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556130225;
-        bh=QDIMaILAQNUni/Q3ucBHjT/0GlHlrtqYFFv8ZVrR8zw=;
+        s=default; t=1556130228;
+        bh=3ti89KW7EcM2GB3p0YKi1HZFJLu4j7vvvFSkfEQ8eQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZChwzh4r7hL502mpLIUJh/esEkNabfOToR6oVe4wT7lXxr/a6dJ9hzpeh1TzVL3Hu
-         4H+l2OO/NCZ5inoDabpl8TxeUCTaRPXMcU5zmMtD2xC7UONfOn/ZMuHqBGUHRNvA8v
-         Dk7d9Pfno4gJ3SBfXPU/PXac2tBCRHc28wYTx/tQ=
+        b=sZU95L0xq4sI3IVdR283EHPdq7xstKC7gg0ZRI/2sWoKveJNmpAxOOuL9g46TMr7n
+         xaSZqMRcUeEN9ailc2TjdEsE49cVkWg2aKgEmX7YazsBwMc16fyqQpSzTL3Gy1q8aY
+         +jpruM34hNZqktFp17qGamDy4GC3PGhngXzJ0oHU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "he, bo" <bo.he@intel.com>,
-        "Chen, Hu" <hu1.chen@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.0 064/115] io: accel: kxcjk1013: restore the range after resume.
-Date:   Wed, 24 Apr 2019 19:10:00 +0200
-Message-Id: <20190424170928.852501516@linuxfoundation.org>
+        stable@vger.kernel.org, Saurav Kashyap <skashyap@marvell.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.0 077/115] Revert "scsi: fcoe: clear FC_RP_STARTED flags when receiving a LOGO"
+Date:   Wed, 24 Apr 2019 19:10:13 +0200
+Message-Id: <20190424170929.517285552@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -61,35 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: he, bo <bo.he@intel.com>
+From: Saurav Kashyap <skashyap@marvell.com>
 
-commit fe2d3df639a7940a125a33d6460529b9689c5406 upstream.
+commit 0228034d8e5915b98c33db35a98f5e909e848ae9 upstream.
 
-On some laptops, kxcjk1013 is powered off when system enters S3. We need
-restore the range regiter during resume. Otherwise, the sensor doesn't
-work properly after S3.
+This patch clears FC_RP_STARTED flag during logoff, because of this
+re-login(flogi) didn't happen to the switch.
 
-Signed-off-by: he, bo <bo.he@intel.com>
-Signed-off-by: Chen, Hu <hu1.chen@intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+This reverts commit 1550ec458e0cf1a40a170ab1f4c46e3f52860f65.
+
+Fixes: 1550ec458e0c ("scsi: fcoe: clear FC_RP_STARTED flags when receiving a LOGO")
+Cc: <stable@vger.kernel.org> # v4.18+
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Reviewed-by: Hannes Reinecke <hare@#suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/accel/kxcjk-1013.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/libfc/fc_rport.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/iio/accel/kxcjk-1013.c
-+++ b/drivers/iio/accel/kxcjk-1013.c
-@@ -1437,6 +1437,8 @@ static int kxcjk1013_resume(struct devic
+--- a/drivers/scsi/libfc/fc_rport.c
++++ b/drivers/scsi/libfc/fc_rport.c
+@@ -2162,7 +2162,6 @@ static void fc_rport_recv_logo_req(struc
+ 		FC_RPORT_DBG(rdata, "Received LOGO request while in state %s\n",
+ 			     fc_rport_state(rdata));
  
- 	mutex_lock(&data->mutex);
- 	ret = kxcjk1013_set_mode(data, OPERATION);
-+	if (ret == 0)
-+		ret = kxcjk1013_set_range(data, data->range);
- 	mutex_unlock(&data->mutex);
- 
- 	return ret;
+-		rdata->flags &= ~FC_RP_STARTED;
+ 		fc_rport_enter_delete(rdata, RPORT_EV_STOP);
+ 		mutex_unlock(&rdata->rp_mutex);
+ 		kref_put(&rdata->kref, fc_rport_destroy);
 
 
