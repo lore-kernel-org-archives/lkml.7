@@ -2,125 +2,167 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A23EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD025C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF74820811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:34:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sivt99Ft"
+	by mail.kernel.org (Postfix) with ESMTP id 98B8F20811
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbfDXMey (ORCPT
+        id S1730274AbfDXMfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:34:54 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43832 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729980AbfDXMeb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:34:31 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k2so2454549lje.10;
-        Wed, 24 Apr 2019 05:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+6jZN0Vl+RAhZC6JCcbsfReiinM9CSI7nwA9921XKbc=;
-        b=Sivt99FtZ99ucSadBRT7+jKo6PgRiDrIdIKM0xeRsSIYW/nyie0pdUBsvctRCNeRKD
-         BdIsG3m6AZ14SyyPu+wcDSQv5eslrWcYVnmjM8GLQqCZnfXFyABunMOx46ZZEMBRNn5T
-         +v6u3uW3so/LFGe9u/K9rGKklt1etx+znyhLwrBVvudo1TN5g2SoEvbWF+OZybrIdihc
-         AOwgOZKwpcPOHCv4wfL/+2q5ewDl1xUArMvhR3ttB/1IbBxn7dd7RhXLdEch9B63BlEt
-         sdVjrqvilxql6CyamolZaOdLJYREmqcKylkAqUpCPPK5Ewk1/9XH1Ah+ciBHl9tEBj2L
-         1k2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+6jZN0Vl+RAhZC6JCcbsfReiinM9CSI7nwA9921XKbc=;
-        b=hAagbGuaBcMoxZW6N/JsSpNbJWu6wcX8xVMgvKMn5NIb+WRokdaz0xSfZ2P3vUNiM3
-         rBFtLUP4XGIDSLGFieT1JpWFx2TAX/3kwP0tjhlVh7Kq/zvm6pl5UN6jxUZqOUFUNend
-         zivZZn1RpBtzNlGSrnPrptQI/aIfHlGydloR0CWkZH3a1mZAUyqX0hs63tZ2JyfWWavE
-         2NkCoVi3I/V/NNZYcHgbpn3NAI8a91Uf6RF4Q5TL6MJ5xbFlMtyRbP0JUahnljmNcSBv
-         J+h9D7nXvhyMwx3J7z9wRQ3nibT6mSmS60B5+TkRwhVne8ZQgmGE/TWoHTSRSA0xzY8j
-         Vjjw==
-X-Gm-Message-State: APjAAAV0Ryv1wbQWRsPNAY5EW3viIVLHcTqCh26tiG6FURk+84j8PhS0
-        iLdzjiMte+yrgeel7iB68D0=
-X-Google-Smtp-Source: APXvYqxVoKFpn7RTcP5ZMITNPRVJKuo+skfqYWzaaAff9L8EQ6XAYTdO9V4ba83QxyiXOrbdHBWkDg==
-X-Received: by 2002:a2e:8347:: with SMTP id l7mr17260574ljh.17.1556109269170;
-        Wed, 24 Apr 2019 05:34:29 -0700 (PDT)
-Received: from localhost.localdomain ([5.164.240.123])
-        by smtp.gmail.com with ESMTPSA id t14sm3765962lji.33.2019.04.24.05.34.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 05:34:28 -0700 (PDT)
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Peter Korsgaard <peter.korsgaard@barco.com>,
-        Peter Rosin <peda@axentia.se>
-Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] i2c-mux-gpio: Return an error if no config data found
-Date:   Wed, 24 Apr 2019 15:34:11 +0300
-Message-Id: <20190424123414.25311-3-fancer.lancer@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424123414.25311-1-fancer.lancer@gmail.com>
-References: <20190424123414.25311-1-fancer.lancer@gmail.com>
+        Wed, 24 Apr 2019 08:35:14 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6688 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726167AbfDXMfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 08:35:13 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C9DDA6A2E55615EA1F56;
+        Wed, 24 Apr 2019 20:35:11 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Apr 2019
+ 20:35:07 +0800
+Date:   Wed, 24 Apr 2019 13:34:55 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>
+Subject: Re: [PATCH 1/2] lib: add __sysfs_match_string_with_gaps() helper
+Message-ID: <20190424133455.00002909@huawei.com>
+In-Reply-To: <86ea407aaa891e50a3bdaf2c3653636a365076ee.camel@analog.com>
+References: <20190422083257.21805-1-alexandru.ardelean@analog.com>
+        <20190422210606.GA8805@kroah.com>
+        <86ea407aaa891e50a3bdaf2c3653636a365076ee.camel@analog.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's pointless and might be even errors prone to proceed with further
-initialization if neither of- no platform-based settings were discovered.
-Just return an error in this case.
+On Tue, 23 Apr 2019 06:38:44 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
----
- drivers/i2c/muxes/i2c-mux-gpio.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+> On Mon, 2019-04-22 at 23:06 +0200, Greg KH wrote:
+> > 
+> > 
+> > On Mon, Apr 22, 2019 at 11:32:56AM +0300, Alexandru Ardelean wrote:  
+> > > This helper is similar to __sysfs_match_string() with the exception
+> > > that it
+> > > ignores NULL elements within the array.  
+> > 
+> > sysfs is "one value per file", why are you trying to write multiple
+> > things on a single line to a single sysfs file?
+> > 
+> > Is IIO really that messy?  :)
+> >   
+> 
+> Hmm, I don't think I understood the comment/question, or maybe I did not
+> formulate the comment properly.
+> 
+> Maybe Jonathan can pitch-in here if I'm saying something wrong.
+> 
+> So, in IIO there is `struct iio_enum` which is essentially a sysfs wrapper
+> for exposing an "enum" type to userspace via sysfs (which takes only one
+> value). This iio_enum type is basically a string-to-int mapping.
 
-diff --git a/drivers/i2c/muxes/i2c-mux-gpio.c b/drivers/i2c/muxes/i2c-mux-gpio.c
-index 24cf6ec02e75..a14fe132b0c3 100644
---- a/drivers/i2c/muxes/i2c-mux-gpio.c
-+++ b/drivers/i2c/muxes/i2c-mux-gpio.c
-@@ -132,7 +132,7 @@ static int i2c_mux_gpio_probe_dt(struct gpiomux *mux,
- static int i2c_mux_gpio_probe_dt(struct gpiomux *mux,
- 					struct platform_device *pdev)
- {
--	return 0;
-+	return -EINVAL;
- }
- #endif
- 
-@@ -142,6 +142,9 @@ static int i2c_mux_gpio_probe_plat(struct gpiomux *mux,
- 	struct i2c_mux_gpio_platform_data *data = dev_get_platdata(&pdev->dev);
- 	struct gpio_chip *gpio;
- 
-+	if (!data)
-+		return -EINVAL;
-+
- 	/*
- 	 * If a GPIO chip name is provided, the GPIO pin numbers provided are
- 	 * relative to its base GPIO number. Otherwise they are absolute.
-@@ -175,11 +178,10 @@ static int i2c_mux_gpio_probe(struct platform_device *pdev)
- 	if (!mux)
- 		return -ENOMEM;
- 
--	if (!dev_get_platdata(&pdev->dev))
-+	ret = i2c_mux_gpio_probe_plat(mux, pdev);
-+	if (ret)
- 		ret = i2c_mux_gpio_probe_dt(mux, pdev);
--	else
--		ret = i2c_mux_gpio_probe_plat(mux, pdev);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	parent = i2c_get_adapter(mux->data.parent);
--- 
-2.21.0
+> 
+> Some example in C:
+> 
+> enum {
+>     ENUM0,
+>     ENUM1,
+>     ENUM5 = 5,
+>     ENUM6,
+>     ENUM7
+> };
+> 
+> 
+> /* Notice the gaps in the elements */
+> static const char * const item_strings[] = {
+>         [ENUM0] = "mode0",
+>         [ENUM1] = "mode1",
+>         [ENUM5] = "mode5",
+>         [ENUM6] = "mode6", 
+>         [ENUM7] = "mode7",
+> };
+>                          
+> static const struct iio_enum iio_enum1 = {
+>         .items = item_strings,
+>         .num_items = ARRAY_SIZE(item_strings),
+>         .set = iio_enum1_set,
+>         .get = iio_enum1_get,
+> };
+> 
+> 
+> The signature of the iio_enum1_set / iio_enum1_get is below:
+> 
+> static int iio_enum1_set(struct iio_dev *indio_dev,
+>         const struct iio_chan_spec *chan, unsigned int val);
+> 
+> static int iio_enum1_get(struct iio_dev *indio_dev,
+>         const struct iio_chan_spec *chan)
+> 
+> 
+> IIO core resolves the string-to-int mapping.
+> It uses __sysfs_match_string() to do that, but it requires that the list of
+> strings (and C enums) be contiguous.
+> This change [and V2 of this patch] introduces a
+> __sysfs_match_string_with_gaps() helper that ignores gaps (represented as
+> NULLs).
+> 
+> For reference, __sysfs_match_string() returns -EINVAL on the first NULL in
+> the array of strings (regardless of the given array size).
+> 
+> __sysfs_match_string_with_gaps() is typically helpful when C enums refer to
+> bitfields, or have some equivalence in HW.
+> 
+
+You have described it well.
+Perhaps the issue is in the naming? Or more description is needed for the original
+patch.
+
+It's worth highlighting that the current help text for
+__sysfs_match_string has a description that says:
+
+/**
+ * __sysfs_match_string - matches given string in an array
+ * @array: array of strings
+ * @n: number of strings in the array or -1 for NULL terminated arrays
+ * @str: string to match with
+ *
+ * Returns index of @str in the @array or -EINVAL, just like match_string().
+ * Uses sysfs_streq instead of strcmp for matching.
+ */
+
+so one could argue that if you pass a value of n which is not -1 the function
+should not assume that any NULL terminates the array...
+
+So basically this new function is implementing what I would have assumed
+__sysfs_match_string would do, but doesn't.
+
+Jonathan
+
+
+
+> Thanks
+> Alex
+> 
+> > thanks,
+> > 
+> > greg k-h  
+
 
