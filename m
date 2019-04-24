@@ -2,76 +2,238 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3876C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC55C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71830218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:52:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CCYcxtrb"
+	by mail.kernel.org (Postfix) with ESMTP id 48AAD218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbfDXMwV (ORCPT
+        id S1730374AbfDXMw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:52:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49456 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729107AbfDXMwU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:52:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nFdnTVYAcbMJaGQ2loaGa8ia9MP+KgbDIAKGKeFfms0=; b=CCYcxtrb468ZR3mCrUSKzylGy
-        STj8PvCJl74UmSQta188gvkeKgzEw76p6GKSPj6pqD65Nc/2UluDjObZZHFi07H/U+T4dOCRpAtVH
-        /o6uBf8AlWzc0lApEUk4CL3Mu1keffDN25PuV2EK7SWZFL6+mCzd82LBDuC51W6k5DOsAjqE0pDQs
-        QhwPd6w8j51YUYGgS0FA9swXn7sAgWwCcyw9El6AKsoOVVcw6tLzGNTy7MmBD01QNUWAO/TES1uXf
-        w6OpOLyffnbHgjVPlQ0D7VQgnDlQ98Mrhb6XCrrvuldE49p5dkZpuZFLaZYEK/9361LgdxR0hpBkx
-        oHllqvA9A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJHNm-0008So-9X; Wed, 24 Apr 2019 12:52:14 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B5BFF29B8FCEF; Wed, 24 Apr 2019 14:52:12 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 14:52:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC PATCH v4] perf/x86: make perf callchain work without
- CONFIG_FRAME_POINTER
-Message-ID: <20190424125212.GN12232@hirez.programming.kicks-ass.net>
-References: <20190422162652.15483-1-kasong@redhat.com>
- <20190423113501.GN11158@hirez.programming.kicks-ass.net>
- <CACPcB9f8JuALCw1i-V2N01GuTQRfjrCya6esOTM8dGwvf+oT7w@mail.gmail.com>
+        Wed, 24 Apr 2019 08:52:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:20118 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727518AbfDXMw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 08:52:56 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6130730B94E6;
+        Wed, 24 Apr 2019 12:52:56 +0000 (UTC)
+Received: from gondolin (dhcp-192-187.str.redhat.com [10.33.192.187])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E7930648A4;
+        Wed, 24 Apr 2019 12:52:53 +0000 (UTC)
+Date:   Wed, 24 Apr 2019 14:52:51 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v2 31/79] docs: s390: convert docs to ReST and rename to
+ *.rst
+Message-ID: <20190424145251.18e0b3af.cohuck@redhat.com>
+In-Reply-To: <20190424094450.1e3da646@coco.lan>
+References: <cover.1555938375.git.mchehab+samsung@kernel.org>
+        <fb86b676b3b426732f1f11378868a9bd3b580b46.1555938376.git.mchehab+samsung@kernel.org>
+        <20190424134109.2891a7cc.cohuck@redhat.com>
+        <20190424094450.1e3da646@coco.lan>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACPcB9f8JuALCw1i-V2N01GuTQRfjrCya6esOTM8dGwvf+oT7w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 24 Apr 2019 12:52:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 08:42:40AM -0400, Kairui Song wrote:
+On Wed, 24 Apr 2019 09:44:50 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 
-> Sure, the updated comments looks much better. Will the maintainer
-> squash the comment update or should I send a V5?
+> Em Wed, 24 Apr 2019 13:41:09 +0200
+> Cornelia Huck <cohuck@redhat.com> escreveu:
+> 
+> > On Mon, 22 Apr 2019 10:27:20 -0300
+> > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> >   
+> > > Convert all text files with s390 documentation to ReST format.
+> > > 
+> > > Tried to preserve as much as possible the original document
+> > > format. Still, some of the files required some work in order
+> > > for it to be visible on both plain text and after converted
+> > > to html.
+> > > 
+> > > The conversion is actually:
+> > >   - add blank lines and identation in order to identify paragraphs;
+> > >   - fix tables markups;
+> > >   - add some lists markups;
+> > >   - mark literal blocks;
+> > >   - adjust title markups.
+> > > 
+> > > At its new index.rst, let's add a :orphan: while this is not linked to
+> > > the main index.rst file, in order to avoid build warnings.
+> > > 
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > > ---
+> > >  .../admin-guide/kernel-parameters.txt         |    4 +-
+> > >  Documentation/driver-api/s390-drivers.rst     |    4 +-
+> > >  Documentation/s390/{3270.txt => 3270.rst}     |   85 +-
+> > >  Documentation/s390/{cds.txt => cds.rst}       |  354 ++-
+> > >  .../s390/{CommonIO => common_io.rst}          |   49 +-
+> > >  Documentation/s390/{DASD => dasd.rst}         |   33 +-
+> > >  .../{Debugging390.txt => debugging390.rst}    | 2389 ++++++++++-------
+> > >  .../{driver-model.txt => driver-model.rst}    |  179 +-
+> > >  Documentation/s390/index.rst                  |   30 +
+> > >  .../s390/{monreader.txt => monreader.rst}     |   85 +-
+> > >  Documentation/s390/{qeth.txt => qeth.rst}     |   36 +-
+> > >  Documentation/s390/s390dbf.rst                |  803 ++++++
+> > >  Documentation/s390/s390dbf.txt                |  667 -----
+> > >  Documentation/s390/text_files.rst             |   11 +
+> > >  .../s390/{vfio-ap.txt => vfio-ap.rst}         |  487 ++--
+> > >  .../s390/{vfio-ccw.txt => vfio-ccw.rst}       |   90 +-
+> > >  .../s390/{zfcpdump.txt => zfcpdump.rst}       |    2 +
+> > >  MAINTAINERS                                   |    4 +-
+> > >  arch/s390/Kconfig                             |    4 +-
+> > >  arch/s390/include/asm/debug.h                 |    4 +-
+> > >  drivers/s390/char/zcore.c                     |    2 +-
+> > >  21 files changed, 3089 insertions(+), 2233 deletions(-)
+> > >  rename Documentation/s390/{3270.txt => 3270.rst} (90%)
+> > >  rename Documentation/s390/{cds.txt => cds.rst} (64%)
+> > >  rename Documentation/s390/{CommonIO => common_io.rst} (87%)
+> > >  rename Documentation/s390/{DASD => dasd.rst} (92%)
+> > >  rename Documentation/s390/{Debugging390.txt => debugging390.rst} (53%)
+> > >  rename Documentation/s390/{driver-model.txt => driver-model.rst} (73%)
+> > >  create mode 100644 Documentation/s390/index.rst
+> > >  rename Documentation/s390/{monreader.txt => monreader.rst} (81%)
+> > >  rename Documentation/s390/{qeth.txt => qeth.rst} (62%)
+> > >  create mode 100644 Documentation/s390/s390dbf.rst
+> > >  delete mode 100644 Documentation/s390/s390dbf.txt
+> > >  create mode 100644 Documentation/s390/text_files.rst
+> > >  rename Documentation/s390/{vfio-ap.txt => vfio-ap.rst} (72%)
+> > >  rename Documentation/s390/{vfio-ccw.txt => vfio-ccw.rst} (89%)
+> > >  rename Documentation/s390/{zfcpdump.txt => zfcpdump.rst} (97%)
+> > >     
+> > 
+> > (...)
+> >   
+> > > diff --git a/Documentation/s390/3270.txt b/Documentation/s390/3270.rst
+> > > similarity index 90%
+> > > rename from Documentation/s390/3270.txt
+> > > rename to Documentation/s390/3270.rst
+> > > index 7c715de99774..e09e77954238 100644
+> > > --- a/Documentation/s390/3270.txt
+> > > +++ b/Documentation/s390/3270.rst    
+> > 
+> > (...)
+> >   
+> > > @@ -17,12 +21,12 @@ twenty and thirty years ago.
+> > >  You may have 3270s in-house and not know it.  If you're using the
+> > >  VM-ESA operating system, define a 3270 to your virtual machine by using
+> > >  the command "DEF GRAF <hex-address>"  This paper presumes you will be
+> > > -defining four 3270s with the CP/CMS commands
+> > > +defining four 3270s with the CP/CMS commands:
+> > >  
+> > > -	DEF GRAF 620
+> > > -	DEF GRAF 621
+> > > -	DEF GRAF 622
+> > > -	DEF GRAF 623
+> > > +	- DEF GRAF 620
+> > > +	- DEF GRAF 621
+> > > +	- DEF GRAF 622
+> > > +	- DEF GRAF 623    
+> > 
+> > IIUC, this makes this into a bulleted list... but the user is supposed
+> > to enter these commands (similar to the shell commands further down in
+> > this file).  
+> 
+> Ah, OK! I'll change it to use a literal block (::).
 
-I've squashed it, I've just not gotten around to stuffing it a git tree
-yet. Should happen 'soon'.
+Sounds good.
+
+
+> > > diff --git a/Documentation/s390/CommonIO b/Documentation/s390/common_io.rst
+> > > similarity index 87%
+> > > rename from Documentation/s390/CommonIO
+> > > rename to Documentation/s390/common_io.rst
+> > > index 6e0f63f343b4..846485681ce7 100644
+> > > --- a/Documentation/s390/CommonIO
+> > > +++ b/Documentation/s390/common_io.rst
+> > > @@ -1,5 +1,9 @@
+> > > -S/390 common I/O-Layer - command line parameters, procfs and debugfs entries
+> > > -============================================================================
+> > > +======================
+> > > +S/390 common I/O-Layer
+> > > +======================
+> > > +
+> > > +command line parameters, procfs and debugfs entries
+> > > +===================================================    
+> > 
+> > I don't see why this should be split into two lines? If anything needs
+> > to be changed, I'd drop the hyphen.  
+> 
+> No real need for html output. I suspect that a big title like the
+> above would cause troubles for pdf output. That's basically why I opted
+> to break it.
+> 
+> Yet, if you prefer, I'll keep it as-is.
+
+I basically find the short title confusing (the file is not about the
+common I/O layer as a whole, but only about parameters etc.)
+
+Maybe "S/390 common I/O layer user interface"?
+
+But I don't care about this deeply :)
+
+> > > diff --git a/Documentation/s390/vfio-ccw.txt b/Documentation/s390/vfio-ccw.rst
+> > > similarity index 89%
+> > > rename from Documentation/s390/vfio-ccw.txt
+> > > rename to Documentation/s390/vfio-ccw.rst
+> > > index 2be11ad864ff..1f6d0b56d53e 100644
+> > > --- a/Documentation/s390/vfio-ccw.txt
+> > > +++ b/Documentation/s390/vfio-ccw.rst    
+> > 
+> > (...)
+> >   
+> > > @@ -295,6 +321,6 @@ Reference
+> > >  1. ESA/s390 Principles of Operation manual (IBM Form. No. SA22-7832)
+> > >  2. ESA/390 Common I/O Device Commands manual (IBM Form. No. SA22-7204)
+> > >  3. https://en.wikipedia.org/wiki/Channel_I/O
+> > > -4. Documentation/s390/cds.txt
+> > > +4. Documentation/s390/cds.rst  
+> 
+> > >  5. Documentation/vfio.txt
+> > >  6. Documentation/vfio-mediated-device.txt    
+> > 
+> > Are these two renamed in a later patch?  
+> 
+> Yes. Patch 56 renames almost all Documentation/*.txt to .rst. Those files
+> are already parsed properly by Sphinx, so no changes there are needed.
+> 
+> I'm working on followup patches (not submitted yet), with moves all
+> ReST files under Documentation to some place.
+> 
+> In the specific case of those files, on the series I'm working,
+> I moved them to be part of the driver-api:
+> 
+> 	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=convert_rst_renames&id=3387ab063cf43f91d5c0f79d741244e7dbcdec05
+> 
+> The results, when parsed, are at:
+> 
+> 	https://www.infradead.org/~mchehab/rst_conversion/driver-api/vfio.html
+> 	https://www.infradead.org/~mchehab/rst_conversion/driver-api/vfio-mediated-device.html
+
+Sounds good!
