@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048B5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B09C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E87206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA0120835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126763;
-	bh=+sWUvqFRKhNJy+oZneOs9XU3BPS3lE2uJw2vX64Zzak=;
+	s=default; t=1556126766;
+	bh=YoMf8MXUdVRAhakUKjCUZERg4lak23Jtcb5RKtOF4HM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jNOeV2IhiloNrH8uFU1mh1brLxorELbe5pAMV+j1JOiQBb39MjLghUEKxunJeVHg4
-	 mBIEdwS9ooffSCMl8ifjBSyoXuSZwpeYpLqqcg1IWam95weepoyxdl/JOJnXFEtHkf
-	 B1RgYdBouZZGgldHHZb7F9DRGSEBrGLVlhAClh/g=
+	b=FJ8/tascd9HDtdRHNqAb96ofd590VJ032T7PnJPSwae84CEyQtV0nfdg7HOSgvVqN
+	 pPXUICcs4Bq6jzpJmNAoSHrBZgvhkhed/PAyGtWZypZCmdUFBTPhSaGaXV/UYj4Dwr
+	 dtFDrGqHFV/4GI4/8XtX/qCx554OERoLs4tjrN5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390146AbfDXR0C (ORCPT
+        id S2390158AbfDXR0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:26:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51936 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390131AbfDXRZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:25:58 -0400
+        id S2390131AbfDXR0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:26:03 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D2BE20835;
-        Wed, 24 Apr 2019 17:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C20B221903;
+        Wed, 24 Apr 2019 17:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126757;
-        bh=+sWUvqFRKhNJy+oZneOs9XU3BPS3lE2uJw2vX64Zzak=;
+        s=default; t=1556126763;
+        bh=YoMf8MXUdVRAhakUKjCUZERg4lak23Jtcb5RKtOF4HM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f7GtIScM8s19e4dRvZiobT9JkH83s5XMJ9NP+gMeDXH8UltIEom7DNABVTcRfZN2Q
-         4LLGBMODUgPJGLUDM1hFLT35iyE6pSSDzVzvNz/noMTHqUk7o0Q6JBmf1EKZAR5kqf
-         vjaKRaTrX/TGOcneGItqx/Etdb+/bCrv6ZxKKyo0=
+        b=BLpi66kLnqaaODIw1wiViJ1inuDt64igClEHA5K679cngfBej8gPkBbhk4m2Q63yC
+         I1BfOBwM6Chc0yD5C9O3yig/vbq08JW+XcmdWygJKhCwPkrkcNrwA73au0aYT9l/3e
+         4cl4/QUAs7Rg90IbSkHza0uXQNm4r4+6/JHTmPYw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>
-Subject: [PATCH 4.9 43/44] percpu: stop printing kernel addresses
-Date:   Wed, 24 Apr 2019 19:10:21 +0200
-Message-Id: <20190424170901.854871656@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 42/44] ALSA: info: Fix racy addition/deletion of nodes
+Date:   Wed, 24 Apr 2019 19:10:20 +0200
+Message-Id: <20190424170901.662158897@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -58,50 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 00206a69ee32f03e6f40837684dcbe475ea02266 upstream.
+commit 8c2f870890fd28e023b0fcf49dcee333f2c8bad7 upstream.
 
-Since commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
-at boot "____ptrval____" is printed instead of actual addresses:
+The ALSA proc helper manages the child nodes in a linked list, but its
+addition and deletion is done without any lock.  This leads to a
+corruption if they are operated concurrently.  Usually this isn't a
+problem because the proc entries are added sequentially in the driver
+probe procedure itself.  But the card registrations are done often
+asynchronously, and the crash could be actually reproduced with
+syzkaller.
 
-    percpu: Embedded 38 pages/cpu @(____ptrval____) s124376 r0 d31272 u524288
+This patch papers over it by protecting the link addition and deletion
+with the parent's mutex.  There is "access" mutex that is used for the
+file access, and this can be reused for this purpose as well.
 
-Instead of changing the print to "%px", and leaking kernel addresses,
-just remove the print completely, cfr. e.g. commit 071929dbdd865f77
-("arm64: Stop printing the virtual memory layout").
-
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
+Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/percpu.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/core/info.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -2048,8 +2048,8 @@ int __init pcpu_embed_first_chunk(size_t
- 		ai->groups[group].base_offset = areas[group] - base;
- 	}
+--- a/sound/core/info.c
++++ b/sound/core/info.c
+@@ -724,8 +724,11 @@ snd_info_create_entry(const char *name,
+ 	INIT_LIST_HEAD(&entry->children);
+ 	INIT_LIST_HEAD(&entry->list);
+ 	entry->parent = parent;
+-	if (parent)
++	if (parent) {
++		mutex_lock(&parent->access);
+ 		list_add_tail(&entry->list, &parent->children);
++		mutex_unlock(&parent->access);
++	}
+ 	return entry;
+ }
  
--	pr_info("Embedded %zu pages/cpu @%p s%zu r%zu d%zu u%zu\n",
--		PFN_DOWN(size_sum), base, ai->static_size, ai->reserved_size,
-+	pr_info("Embedded %zu pages/cpu s%zu r%zu d%zu u%zu\n",
-+		PFN_DOWN(size_sum), ai->static_size, ai->reserved_size,
- 		ai->dyn_size, ai->unit_size);
+@@ -809,7 +812,12 @@ void snd_info_free_entry(struct snd_info
+ 	list_for_each_entry_safe(p, n, &entry->children, list)
+ 		snd_info_free_entry(p);
  
- 	rc = pcpu_setup_first_chunk(ai, base);
-@@ -2162,8 +2162,8 @@ int __init pcpu_page_first_chunk(size_t
- 	}
- 
- 	/* we're ready, commit */
--	pr_info("%d %s pages/cpu @%p s%zu r%zu d%zu\n",
--		unit_pages, psize_str, vm.addr, ai->static_size,
-+	pr_info("%d %s pages/cpu s%zu r%zu d%zu\n",
-+		unit_pages, psize_str, ai->static_size,
- 		ai->reserved_size, ai->dyn_size);
- 
- 	rc = pcpu_setup_first_chunk(ai, vm.addr);
+-	list_del(&entry->list);
++	p = entry->parent;
++	if (p) {
++		mutex_lock(&p->access);
++		list_del(&entry->list);
++		mutex_unlock(&p->access);
++	}
+ 	kfree(entry->name);
+ 	if (entry->private_free)
+ 		entry->private_free(entry);
 
 
