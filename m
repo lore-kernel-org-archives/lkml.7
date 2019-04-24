@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8BDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18EFC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3153C218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52B121904
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127283;
-	bh=cLZ7lztzulA87sf+3wEBoKC8pACp6BZjerJWJI7YXaI=;
+	s=default; t=1556127286;
+	bh=9YyNmXdL+K5Hjf73e7LqoccMK22hsKc0hgo/nNom030=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QSYc5qiVdeQAjBJgSSib21hpKYA2tmHbeYvzT/tvBwuyqJe/TwZJ/fiyCzhrtRSSS
-	 OPNF8gQIvRUht19Za/p5+UzFqYYAA8XhRQkDL4TDg4vw8uIuMDFFyWZMtw/X/rhJpH
-	 2oSdG1RoU5dqLWyDLelbc/9h/cmLehh2BV4hD1Gc=
+	b=oSXh4VIFX23E8gpp+uHY38FoNrsHQI15LMKvwk6/ZTM8H7ZjjIu4WggXZbTBPGRxS
+	 x6L8y5RigKl8NrHdHDs3h/Wz7zwtciHNOIGwhZtqFUdqFiTfMyhWOfButffTNhRiHj
+	 B5iR6Gt4I7PKBCrMKKiC35xrWNUFW8YJC/svT38A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391764AbfDXRel (ORCPT
+        id S2391776AbfDXRep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:34:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33446 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:34:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391737AbfDXReh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:34:37 -0400
+        id S2391737AbfDXRen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:34:43 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34715218B0;
-        Wed, 24 Apr 2019 17:34:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 644462054F;
+        Wed, 24 Apr 2019 17:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127276;
-        bh=cLZ7lztzulA87sf+3wEBoKC8pACp6BZjerJWJI7YXaI=;
+        s=default; t=1556127281;
+        bh=9YyNmXdL+K5Hjf73e7LqoccMK22hsKc0hgo/nNom030=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZMROf+n2UtBJY+y+vDh5QrL8sKnyzCNdQN7mFhY4wBkXODgG2O+KBLIMb0DaRwq7X
-         jP8xwJd0l4uATdiAFUabcwgf/o+NTbIy1ItKr0GNXYBN8N7GCgTHan7k5j69fPYP6S
-         j/ekGWVVpa58GceVxOxw9EYk69eoL7i7n2xePW+M=
+        b=waYovNY7fzQFl4X7Uqniiwgmc3yrpPZvgO6CmbzidOPaXI/xmFTF4RboJrMwWPwT+
+         6DXDLD5/x4O2SEt9Tz5h8JFBW56+ZWGDNG9MnamM8CIuu71Y1hs2SRq3fAXUvUFqE/
+         vTKJ6yVbIHgv8sprqLvKoquyOYP/5FfmcAUHwgu4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.0 033/115] net/mlx5: FPGA, tls, hold rcu read lock a bit longer
-Date:   Wed, 24 Apr 2019 19:09:29 +0200
-Message-Id: <20190424170926.991315576@linuxfoundation.org>
+        stable@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.0 035/115] net/mlx5: FPGA, tls, idr remove on flow delete
+Date:   Wed, 24 Apr 2019 19:09:31 +0200
+Message-Id: <20190424170927.108915460@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -60,52 +60,137 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Saeed Mahameed <saeedm@mellanox.com>
 
-[ Upstream commit 31634bf5dcc418b5b2cacd954394c0c4620db6a2 ]
+[ Upstream commit df3a8344d404a810b4aadbf19b08c8232fbaa715 ]
 
-To avoid use-after-free, hold the rcu read lock until we are done copying
-flow data into the command buffer.
+Flow is kfreed on mlx5_fpga_tls_del_flow but kept in the idr data
+structure, this is risky and can cause use-after-free, since the
+idr_remove is delayed until tls_send_teardown_cmd completion.
+
+Instead of delaying idr_remove, in this patch we do it on
+mlx5_fpga_tls_del_flow, before actually kfree(flow).
+
+Added synchronize_rcu before kfree(flow)
 
 Fixes: ab412e1dd7db ("net/mlx5: Accel, add TLS rx offload routines")
-Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c |   43 +++++++--------------
+ 1 file changed, 15 insertions(+), 28 deletions(-)
 
 --- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
 +++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
-@@ -217,22 +217,22 @@ int mlx5_fpga_tls_resync_rx(struct mlx5_
+@@ -148,14 +148,16 @@ static int mlx5_fpga_tls_alloc_swid(stru
+ 	return ret;
+ }
+ 
+-static void mlx5_fpga_tls_release_swid(struct idr *idr,
+-				       spinlock_t *idr_spinlock, u32 swid)
++static void *mlx5_fpga_tls_release_swid(struct idr *idr,
++					spinlock_t *idr_spinlock, u32 swid)
+ {
+ 	unsigned long flags;
++	void *ptr;
+ 
+ 	spin_lock_irqsave(idr_spinlock, flags);
+-	idr_remove(idr, swid);
++	ptr = idr_remove(idr, swid);
+ 	spin_unlock_irqrestore(idr_spinlock, flags);
++	return ptr;
+ }
+ 
+ static void mlx_tls_kfree_complete(struct mlx5_fpga_conn *conn,
+@@ -165,20 +167,12 @@ static void mlx_tls_kfree_complete(struc
+ 	kfree(buf);
+ }
+ 
+-struct mlx5_teardown_stream_context {
+-	struct mlx5_fpga_tls_command_context cmd;
+-	u32 swid;
+-};
+-
+ static void
+ mlx5_fpga_tls_teardown_completion(struct mlx5_fpga_conn *conn,
+ 				  struct mlx5_fpga_device *fdev,
+ 				  struct mlx5_fpga_tls_command_context *cmd,
+ 				  struct mlx5_fpga_dma_buf *resp)
+ {
+-	struct mlx5_teardown_stream_context *ctx =
+-		    container_of(cmd, struct mlx5_teardown_stream_context, cmd);
+-
+ 	if (resp) {
+ 		u32 syndrome = MLX5_GET(tls_resp, resp->sg[0].data, syndrome);
+ 
+@@ -186,14 +180,6 @@ mlx5_fpga_tls_teardown_completion(struct
+ 			mlx5_fpga_err(fdev,
+ 				      "Teardown stream failed with syndrome = %d",
+ 				      syndrome);
+-		else if (MLX5_GET(tls_cmd, cmd->buf.sg[0].data, direction_sx))
+-			mlx5_fpga_tls_release_swid(&fdev->tls->tx_idr,
+-						   &fdev->tls->tx_idr_spinlock,
+-						   ctx->swid);
+-		else
+-			mlx5_fpga_tls_release_swid(&fdev->tls->rx_idr,
+-						   &fdev->tls->rx_idr_spinlock,
+-						   ctx->swid);
+ 	}
+ 	mlx5_fpga_tls_put_command_ctx(cmd);
+ }
+@@ -253,7 +239,7 @@ int mlx5_fpga_tls_resync_rx(struct mlx5_
+ static void mlx5_fpga_tls_send_teardown_cmd(struct mlx5_core_dev *mdev,
+ 					    void *flow, u32 swid, gfp_t flags)
+ {
+-	struct mlx5_teardown_stream_context *ctx;
++	struct mlx5_fpga_tls_command_context *ctx;
+ 	struct mlx5_fpga_dma_buf *buf;
  	void *cmd;
- 	int ret;
+ 
+@@ -261,7 +247,7 @@ static void mlx5_fpga_tls_send_teardown_
+ 	if (!ctx)
+ 		return;
+ 
+-	buf = &ctx->cmd.buf;
++	buf = &ctx->buf;
+ 	cmd = (ctx + 1);
+ 	MLX5_SET(tls_cmd, cmd, command_type, CMD_TEARDOWN_STREAM);
+ 	MLX5_SET(tls_cmd, cmd, swid, swid);
+@@ -272,8 +258,7 @@ static void mlx5_fpga_tls_send_teardown_
+ 	buf->sg[0].data = cmd;
+ 	buf->sg[0].size = MLX5_TLS_COMMAND_SIZE;
+ 
+-	ctx->swid = swid;
+-	mlx5_fpga_tls_cmd_send(mdev->fpga, &ctx->cmd,
++	mlx5_fpga_tls_cmd_send(mdev->fpga, ctx,
+ 			       mlx5_fpga_tls_teardown_completion);
+ }
+ 
+@@ -283,13 +268,14 @@ void mlx5_fpga_tls_del_flow(struct mlx5_
+ 	struct mlx5_fpga_tls *tls = mdev->fpga->tls;
+ 	void *flow;
  
 -	rcu_read_lock();
--	flow = idr_find(&mdev->fpga->tls->rx_idr, ntohl(handle));
+ 	if (direction_sx)
+-		flow = idr_find(&tls->tx_idr, swid);
++		flow = mlx5_fpga_tls_release_swid(&tls->tx_idr,
++						  &tls->tx_idr_spinlock,
++						  swid);
+ 	else
+-		flow = idr_find(&tls->rx_idr, swid);
+-
 -	rcu_read_unlock();
--
--	if (!flow) {
--		WARN_ONCE(1, "Received NULL pointer for handle\n");
--		return -EINVAL;
--	}
--
- 	buf = kzalloc(size, GFP_ATOMIC);
- 	if (!buf)
- 		return -ENOMEM;
++		flow = mlx5_fpga_tls_release_swid(&tls->rx_idr,
++						  &tls->rx_idr_spinlock,
++						  swid);
  
- 	cmd = (buf + 1);
+ 	if (!flow) {
+ 		mlx5_fpga_err(mdev->fpga, "No flow information for swid %u\n",
+@@ -297,6 +283,7 @@ void mlx5_fpga_tls_del_flow(struct mlx5_
+ 		return;
+ 	}
  
-+	rcu_read_lock();
-+	flow = idr_find(&mdev->fpga->tls->rx_idr, ntohl(handle));
-+	if (unlikely(!flow)) {
-+		rcu_read_unlock();
-+		WARN_ONCE(1, "Received NULL pointer for handle\n");
-+		kfree(buf);
-+		return -EINVAL;
-+	}
- 	mlx5_fpga_tls_flow_to_cmd(flow, cmd);
-+	rcu_read_unlock();
++	synchronize_rcu(); /* before kfree(flow) */
+ 	mlx5_fpga_tls_send_teardown_cmd(mdev, flow, swid, flags);
+ }
  
- 	MLX5_SET(tls_cmd, cmd, swid, ntohl(handle));
- 	MLX5_SET64(tls_cmd, cmd, tls_rcd_sn, be64_to_cpu(rcd_sn));
 
 
