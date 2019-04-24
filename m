@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F31EAC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FB0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C162021773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E718C214C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 22:49:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdBasy6w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HggUdC6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbfDXWtv (ORCPT
+        id S1727177AbfDXWtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 24 Apr 2019 18:49:51 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38037 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbfDXWtt (ORCPT
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39287 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbfDXWts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 18:49:49 -0400
-Received: by mail-lj1-f194.google.com with SMTP id p14so18419668ljg.5;
-        Wed, 24 Apr 2019 15:49:47 -0700 (PDT)
+        Wed, 24 Apr 2019 18:49:48 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l7so18438910ljg.6;
+        Wed, 24 Apr 2019 15:49:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2hdevTv8hliL5DYcFCHwzS6rx3GtVPRahkeQ1sd86fQ=;
-        b=XdBasy6wmfSS2Xm5o0yjQPIXPjlr3zkPpTw7viZLdH+LJiFXfm8oRDg5/VRU1HZEPU
-         PnaZvMRcSNFYAuO/c/nav7u/EKNgC/k8xWTGAMwz4gyp28YSx74nRJ0gYg6Yp+iwZgnM
-         Qn/quCrumIVc8uQSO95A0F2Yk8uFrpFfXyP/jCvLb/gp4P1SUp9l0HMDPhBlpUVKtkks
-         q9BC/Y71wC3+kt31FfdebOcOQFL+jVuRkzpxQNXafn07Wxw/RX5e+4YrUEME/t0PdQ5M
-         Ji3xfw29PmYGwfnDuv3q712osaYRtqS8K4g57Frd99LQoRGShX4yoKfsWdM5bfwSlrUZ
-         mLpQ==
+        bh=/z49LJ/T8Zar3+evR8ZrGril6xWv/cqi+vT7q6ZMxfU=;
+        b=HggUdC6Gbjq4ECMzMoy3BX5+Iy/ZZIy6giPk1gq3wBex2+Kz0caH9i48kh+WgmCqv2
+         glsWZbv3RAnbRcLb7Vumsc14N4RRwV/ykX3FW3Q3vKF5eNENVxYLCDAtebgodlUCVM5t
+         DK2XcInts4WxB3cA5q3DfThN9HglqgzC9MHYRieEs/uERXWv6sIfxiMb7FGS7wD81MkJ
+         MNs6ueYiTdsHvAkiRhHlHuqV9Ah3zTo00XKJJlHOdlFjT26tRwbqu5ajD1tzZ9BXH21v
+         jQa1ZpGMvyqmow7C1nrwXcX0gHHvDgY4MJPQ2SHA4eMPTq8jHTz6gccz4oEMLB1Owcsg
+         ehIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2hdevTv8hliL5DYcFCHwzS6rx3GtVPRahkeQ1sd86fQ=;
-        b=JbqqPZOPl1h/JsmTS63i93VJEHvTLZtM8qK7n9/8aybqtfJ/KhPeadY4oHB6RtJERQ
-         1VVdlZY2c03DAgLYKYolRpLe8a9KwJn6g2IdwLdLcSYjbulkf1VdzwOey8+GpIHqaZw8
-         iHg7KVFBlGr8RmrD5zPimnlb4TEvE/eBbYVZETV4sGifjyzVp2Y7oO2/tc1p/WDWIer/
-         dPY5MPTIf8DuV0uVzDzzgNIgDDM7w+FojTqnG4M3oMDXH1zgvTv7WasGDnN4jmTvfuhw
-         UGSeHf3jaaaMxYL/kJ2FBjVKE9+OL0xqxzFt2FK9ZKkYlbzGe5tI5BLi5eDZVidXmzB+
-         RWYw==
-X-Gm-Message-State: APjAAAXOJOd/frLows0CsIsAC8isOE5aSaR2paR7pwXlJoUk6vLEYJU/
-        ZoOG2Y2P6n6rz/52tcVp5lg=
-X-Google-Smtp-Source: APXvYqwgHtygc+azQGe/TgEh/hDntEj+q2a2n0tTGHYuN8PUZLZH0oQSUIMFyt5gIhqz7BuambIkyA==
-X-Received: by 2002:a2e:4ca:: with SMTP id a71mr16861241ljf.39.1556146187113;
-        Wed, 24 Apr 2019 15:49:47 -0700 (PDT)
+        bh=/z49LJ/T8Zar3+evR8ZrGril6xWv/cqi+vT7q6ZMxfU=;
+        b=bazg45zgDwZoVhLFljfNcMlTNW4zpedCLGVRBNSj+eOKglUsL+1xeCiCV+HOlTGXTH
+         DwHQkNQpswle/TbOHVrSm1M27vsgB27JR3qs/EmbvSAMWUqEoSZfeZPwbWJhz2OTAaW1
+         vq+fGc88GDZQ7OqHMQH47WUSRl7pvWFMZxTiynsEEyVfbNZRTWu9LWKJ2y87cha4ujpV
+         kHoI7Sq8TcSgQv9T4DTzBih0yLbfLIuQvyv8eCkHFsdpq9sT1wyYtbJKRU/LFUb7pnb0
+         e340C1LX5Vvo6/W3Ux0ykpOlbOX1N10KI9CE0p1X+lBLzMgtVlxAV8M74gNzASFwU5cJ
+         bN3w==
+X-Gm-Message-State: APjAAAXOXYhXz+DxNCFnFGUf+oWHBNgJzDGtQbB5cBCXGLdmDAq/MHva
+        D++DKXxFC7mHfsPDhQ8Y3l/YrMjB
+X-Google-Smtp-Source: APXvYqzKWCPnAOKrrD03MAvrhsS86Tddtc9nkp1yY0cjghThE1hvFZMlcawjyexCM7hvvUeCQQ+FtQ==
+X-Received: by 2002:a2e:9a02:: with SMTP id o2mr18714473lji.179.1556146185906;
+        Wed, 24 Apr 2019 15:49:45 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id s24sm4219879ljs.30.2019.04.24.15.49.45
+        by smtp.gmail.com with ESMTPSA id s24sm4219879ljs.30.2019.04.24.15.49.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 15:49:46 -0700 (PDT)
+        Wed, 24 Apr 2019 15:49:45 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -67,9 +67,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/6] mfd: max77620: Provide system power-off functionality
-Date:   Thu, 25 Apr 2019 01:49:00 +0300
-Message-Id: <20190424224900.8018-7-digetx@gmail.com>
+Subject: [PATCH v3 5/6] dt-bindings: mfd: max77620: Add maxim,system-power-controller property
+Date:   Thu, 25 Apr 2019 01:48:59 +0300
+Message-Id: <20190424224900.8018-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424224900.8018-1-digetx@gmail.com>
 References: <20190424224900.8018-1-digetx@gmail.com>
@@ -80,64 +80,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide system power-off functionality that allows to turn off machine
-gracefully.
+Add new property that designates the PMIC as the system's power
+controller.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/mfd/max77620.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ Documentation/devicetree/bindings/mfd/max77620.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mfd/max77620.c b/drivers/mfd/max77620.c
-index 9b0009c29610..e56223bde568 100644
---- a/drivers/mfd/max77620.c
-+++ b/drivers/mfd/max77620.c
-@@ -37,6 +37,8 @@
- #include <linux/regmap.h>
- #include <linux/slab.h>
+diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+index 9058499051e0..dda6d158b170 100644
+--- a/Documentation/devicetree/bindings/mfd/max77620.txt
++++ b/Documentation/devicetree/bindings/mfd/max77620.txt
+@@ -18,6 +18,9 @@ Optional properties:
+ 			IRQ numbers for different interrupt source of MAX77620
+ 			are defined at dt-bindings/mfd/max77620.h.
  
-+static struct max77620_chip *max77620_scratch;
++- maxim,system-power-controller: Indicates that this PMIC is controlling the
++				 system power.
 +
- static const struct resource gpio_resources[] = {
- 	DEFINE_RES_IRQ(MAX77620_IRQ_TOP_GPIO),
- };
-@@ -481,6 +483,15 @@ static int max77620_read_es_version(struct max77620_chip *chip)
- 	return ret;
- }
- 
-+static void max77620_pm_power_off(void)
-+{
-+	struct max77620_chip *chip = max77620_scratch;
-+
-+	regmap_update_bits(chip->rmap, MAX77620_REG_ONOFFCNFG1,
-+			   MAX77620_ONOFFCNFG1_SFT_RST,
-+			   MAX77620_ONOFFCNFG1_SFT_RST);
-+}
-+
- static int max77620_probe(struct i2c_client *client,
- 			  const struct i2c_device_id *id)
- {
-@@ -488,6 +499,7 @@ static int max77620_probe(struct i2c_client *client,
- 	struct max77620_chip *chip;
- 	const struct mfd_cell *mfd_cells;
- 	int n_mfd_cells;
-+	bool pm_off;
- 	int ret;
- 
- 	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-@@ -554,6 +566,13 @@ static int max77620_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
-+	pm_off = of_property_read_bool(client->dev.of_node,
-+				       "maxim,system-power-controller");
-+	if (pm_off && !pm_power_off) {
-+		max77620_scratch = chip;
-+		pm_power_off = max77620_pm_power_off;
-+	}
-+
- 	return 0;
- }
+ Optional subnodes and their properties:
+ =======================================
  
 -- 
 2.21.0
