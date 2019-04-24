@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C16C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8789EC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFD020835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B654206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126652;
-	bh=nBRto1v1Ad1PwVXtbYwSYib4L3Np4CQa7r/3+nOt2/o=;
+	s=default; t=1556126657;
+	bh=AUdMUW2T78+SgRqVJISmcl32hSkchf780SKgdnXrYPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Sqx5QiIQXMpOQEICwAf9RmlefUk95v8aYAvgSEHqdj6T9dxkIc9FNACv0JLsQXym
-	 cGR76xKDSCZJmCzuXXYynTbA/KePB/RMaqi5M4Z0Fv9+fSQVmy3UaC45kwyfybE06p
-	 4eNn7fTHHCwR3wRCLowHLizephs6I+uydIGk5wLE=
+	b=PNGSPI5jmjLRsmR79bmnsN7ZeGRfUR8DSTcoblLIYo0AxQQRn47F1zkUC7dETr5Fd
+	 1diKoID7HFYWttu/7ekBjsYxXdhZw0/I69rVXkaGyRcN48OZLlBaOYlmfQYQRF725K
+	 v8DILXvVOmZvx/MODfcng42J/HIZxsMW40DH2SXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389828AbfDXRYL (ORCPT
+        id S2389842AbfDXRYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49926 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:24:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389486AbfDXRYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:24:06 -0400
+        id S2389113AbfDXRYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:24:10 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 167D721909;
-        Wed, 24 Apr 2019 17:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12E23205ED;
+        Wed, 24 Apr 2019 17:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126645;
-        bh=nBRto1v1Ad1PwVXtbYwSYib4L3Np4CQa7r/3+nOt2/o=;
+        s=default; t=1556126648;
+        bh=AUdMUW2T78+SgRqVJISmcl32hSkchf780SKgdnXrYPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NX7pBkwuymRpIg292emVAetOG2+56ZxGPEFWVA0wbHZrkfqZKHSE7jJtdCVmjtQAP
-         HR0wWMHiMYGQ0e2gIbHhFjKmqFadSds0upJ4GDDAmK7wrR6ITPpB346SQFgdqn1Hnu
-         T6uns1uKfofQwXDcInCA8ZlnAtrJLJ51zlE3Rh5g=
+        b=t3U9RDf+zqdcGKk1Spqon2DE1LzPQ1hHYkBy3If+Ix7eAzke193EwhwkBoQPY0U3p
+         gAL2fBxY+bxGjqo4L+2jGeAJD2OHUdBWNrYND3uN0Li7KLYQu7Ltr9b0q+BOKGkKGf
+         6exK6R/MJ1GXVTPco8CowRc+rZL/gBVbjHCUCH04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 12/44] mmc: sdhci: Fix data command CRC error handling
-Date:   Wed, 24 Apr 2019 19:09:50 +0200
-Message-Id: <20190424170849.185730063@linuxfoundation.org>
+Subject: [PATCH 4.9 13/44] modpost: file2alias: go back to simple devtable lookup
+Date:   Wed, 24 Apr 2019 19:09:51 +0200
+Message-Id: <20190424170850.629904303@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -60,113 +62,441 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4bf780996669280171c9cd58196512849b93434e ]
+commit ec91e78d378cc5d4b43805a1227d8e04e5dfa17d upstream.
 
-Existing data command CRC error handling is non-standard and does not work
-with some Intel host controllers. Specifically, the assumption that the host
-controller will continue operating normally after the error interrupt,
-is not valid. Change the driver to handle the error in the same manner
-as a data CRC error, taking care to ensure that the data line reset is
-done for single or multi-block transfers, and it is done before
-unmapping DMA.
+Commit e49ce14150c6 ("modpost: use linker section to generate table.")
+was not so cool as we had expected first; it ended up with ugly section
+hacks when commit dd2a3acaecd7 ("mod/file2alias: make modpost compile
+on darwin again") came in.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Given a certain degree of unknowledge about the link stage of host
+programs, I really want to see simple, stupid table lookup so that
+this works in the same way regardless of the underlying executable
+format.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Acked-by: Mathieu Malaterre <malat@debian.org>
+[nc: Omit rpmsg, sdw, tbsvc, and typec as they don't exist here]
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci.c | 40 +++++++++++++++-------------------------
- 1 file changed, 15 insertions(+), 25 deletions(-)
+ scripts/mod/file2alias.c | 136 +++++++++++++--------------------------
+ 1 file changed, 45 insertions(+), 91 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 6bf58d27b6fc..df306caba296 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -944,8 +944,7 @@ static bool sdhci_needs_reset(struct sdhci_host *host, struct mmc_request *mrq)
- 	return (!(host->flags & SDHCI_DEVICE_DEAD) &&
- 		((mrq->cmd && mrq->cmd->error) ||
- 		 (mrq->sbc && mrq->sbc->error) ||
--		 (mrq->data && ((mrq->data->error && !mrq->data->stop) ||
--				(mrq->data->stop && mrq->data->stop->error))) ||
-+		 (mrq->data && mrq->data->stop && mrq->data->stop->error) ||
- 		 (host->quirks & SDHCI_QUIRK_RESET_AFTER_REQUEST)));
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index 29d6699d5a06..6e3ae94cf123 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -50,46 +50,6 @@ struct devtable {
+ 	void *function;
+ };
+ 
+-#define ___cat(a,b) a ## b
+-#define __cat(a,b) ___cat(a,b)
+-
+-/* we need some special handling for this host tool running eventually on
+- * Darwin. The Mach-O section handling is a bit different than ELF section
+- * handling. The differnces in detail are:
+- *  a) we have segments which have sections
+- *  b) we need a API call to get the respective section symbols */
+-#if defined(__MACH__)
+-#include <mach-o/getsect.h>
+-
+-#define INIT_SECTION(name)  do {					\
+-		unsigned long name ## _len;				\
+-		char *__cat(pstart_,name) = getsectdata("__TEXT",	\
+-			#name, &__cat(name,_len));			\
+-		char *__cat(pstop_,name) = __cat(pstart_,name) +	\
+-			__cat(name, _len);				\
+-		__cat(__start_,name) = (void *)__cat(pstart_,name);	\
+-		__cat(__stop_,name) = (void *)__cat(pstop_,name);	\
+-	} while (0)
+-#define SECTION(name)   __attribute__((section("__TEXT, " #name)))
+-
+-struct devtable **__start___devtable, **__stop___devtable;
+-#else
+-#define INIT_SECTION(name) /* no-op for ELF */
+-#define SECTION(name)   __attribute__((section(#name)))
+-
+-/* We construct a table of pointers in an ELF section (pointers generally
+- * go unpadded by gcc).  ld creates boundary syms for us. */
+-extern struct devtable *__start___devtable[], *__stop___devtable[];
+-#endif /* __MACH__ */
+-
+-#if !defined(__used)
+-# if __GNUC__ == 3 && __GNUC_MINOR__ < 3
+-#  define __used			__attribute__((__unused__))
+-# else
+-#  define __used			__attribute__((__used__))
+-# endif
+-#endif
+-
+ /* Define a variable f that holds the value of field f of struct devid
+  * based at address m.
+  */
+@@ -102,16 +62,6 @@ extern struct devtable *__start___devtable[], *__stop___devtable[];
+ #define DEF_FIELD_ADDR(m, devid, f) \
+ 	typeof(((struct devid *)0)->f) *f = ((m) + OFF_##devid##_##f)
+ 
+-/* Add a table entry.  We test function type matches while we're here. */
+-#define ADD_TO_DEVTABLE(device_id, type, function) \
+-	static struct devtable __cat(devtable,__LINE__) = {	\
+-		device_id + 0*sizeof((function)((const char *)NULL,	\
+-						(void *)NULL,		\
+-						(char *)NULL)),		\
+-		SIZE_##type, (function) };				\
+-	static struct devtable *SECTION(__devtable) __used \
+-		__cat(devtable_ptr,__LINE__) = &__cat(devtable,__LINE__)
+-
+ #define ADD(str, sep, cond, field)                              \
+ do {                                                            \
+         strcat(str, sep);                                       \
+@@ -431,7 +381,6 @@ static int do_hid_entry(const char *filename,
+ 
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("hid", hid_device_id, do_hid_entry);
+ 
+ /* Looks like: ieee1394:venNmoNspNverN */
+ static int do_ieee1394_entry(const char *filename,
+@@ -456,7 +405,6 @@ static int do_ieee1394_entry(const char *filename,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("ieee1394", ieee1394_device_id, do_ieee1394_entry);
+ 
+ /* Looks like: pci:vNdNsvNsdNbcNscNiN. */
+ static int do_pci_entry(const char *filename,
+@@ -500,7 +448,6 @@ static int do_pci_entry(const char *filename,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("pci", pci_device_id, do_pci_entry);
+ 
+ /* looks like: "ccw:tNmNdtNdmN" */
+ static int do_ccw_entry(const char *filename,
+@@ -524,7 +471,6 @@ static int do_ccw_entry(const char *filename,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("ccw", ccw_device_id, do_ccw_entry);
+ 
+ /* looks like: "ap:tN" */
+ static int do_ap_entry(const char *filename,
+@@ -535,7 +481,6 @@ static int do_ap_entry(const char *filename,
+ 	sprintf(alias, "ap:t%02X*", dev_type);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("ap", ap_device_id, do_ap_entry);
+ 
+ /* looks like: "css:tN" */
+ static int do_css_entry(const char *filename,
+@@ -546,7 +491,6 @@ static int do_css_entry(const char *filename,
+ 	sprintf(alias, "css:t%01X", type);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("css", css_device_id, do_css_entry);
+ 
+ /* Looks like: "serio:tyNprNidNexN" */
+ static int do_serio_entry(const char *filename,
+@@ -566,7 +510,6 @@ static int do_serio_entry(const char *filename,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("serio", serio_device_id, do_serio_entry);
+ 
+ /* looks like: "acpi:ACPI0003" or "acpi:PNP0C0B" or "acpi:LNXVIDEO" or
+  *             "acpi:bbsspp" (bb=base-class, ss=sub-class, pp=prog-if)
+@@ -604,7 +547,6 @@ static int do_acpi_entry(const char *filename,
+ 	}
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("acpi", acpi_device_id, do_acpi_entry);
+ 
+ /* looks like: "pnp:dD" */
+ static void do_pnp_device_entry(void *symval, unsigned long size,
+@@ -725,7 +667,6 @@ static int do_pcmcia_entry(const char *filename,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("pcmcia", pcmcia_device_id, do_pcmcia_entry);
+ 
+ static int do_vio_entry(const char *filename, void *symval,
+ 		char *alias)
+@@ -745,7 +686,6 @@ static int do_vio_entry(const char *filename, void *symval,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("vio", vio_device_id, do_vio_entry);
+ 
+ #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+ 
+@@ -818,7 +758,6 @@ static int do_input_entry(const char *filename, void *symval,
+ 		do_input(alias, *swbit, 0, INPUT_DEVICE_ID_SW_MAX);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("input", input_device_id, do_input_entry);
+ 
+ static int do_eisa_entry(const char *filename, void *symval,
+ 		char *alias)
+@@ -830,7 +769,6 @@ static int do_eisa_entry(const char *filename, void *symval,
+ 		strcat(alias, "*");
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("eisa", eisa_device_id, do_eisa_entry);
+ 
+ /* Looks like: parisc:tNhvNrevNsvN */
+ static int do_parisc_entry(const char *filename, void *symval,
+@@ -850,7 +788,6 @@ static int do_parisc_entry(const char *filename, void *symval,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("parisc", parisc_device_id, do_parisc_entry);
+ 
+ /* Looks like: sdio:cNvNdN. */
+ static int do_sdio_entry(const char *filename,
+@@ -867,7 +804,6 @@ static int do_sdio_entry(const char *filename,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("sdio", sdio_device_id, do_sdio_entry);
+ 
+ /* Looks like: ssb:vNidNrevN. */
+ static int do_ssb_entry(const char *filename,
+@@ -884,7 +820,6 @@ static int do_ssb_entry(const char *filename,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("ssb", ssb_device_id, do_ssb_entry);
+ 
+ /* Looks like: bcma:mNidNrevNclN. */
+ static int do_bcma_entry(const char *filename,
+@@ -903,7 +838,6 @@ static int do_bcma_entry(const char *filename,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("bcma", bcma_device_id, do_bcma_entry);
+ 
+ /* Looks like: virtio:dNvN */
+ static int do_virtio_entry(const char *filename, void *symval,
+@@ -919,7 +853,6 @@ static int do_virtio_entry(const char *filename, void *symval,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("virtio", virtio_device_id, do_virtio_entry);
+ 
+ /*
+  * Looks like: vmbus:guid
+@@ -942,7 +875,6 @@ static int do_vmbus_entry(const char *filename, void *symval,
+ 
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("vmbus", hv_vmbus_device_id, do_vmbus_entry);
+ 
+ /* Looks like: i2c:S */
+ static int do_i2c_entry(const char *filename, void *symval,
+@@ -953,7 +885,6 @@ static int do_i2c_entry(const char *filename, void *symval,
+ 
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("i2c", i2c_device_id, do_i2c_entry);
+ 
+ /* Looks like: spi:S */
+ static int do_spi_entry(const char *filename, void *symval,
+@@ -964,7 +895,6 @@ static int do_spi_entry(const char *filename, void *symval,
+ 
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("spi", spi_device_id, do_spi_entry);
+ 
+ static const struct dmifield {
+ 	const char *prefix;
+@@ -1019,7 +949,6 @@ static int do_dmi_entry(const char *filename, void *symval,
+ 	strcat(alias, ":");
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("dmi", dmi_system_id, do_dmi_entry);
+ 
+ static int do_platform_entry(const char *filename,
+ 			     void *symval, char *alias)
+@@ -1028,7 +957,6 @@ static int do_platform_entry(const char *filename,
+ 	sprintf(alias, PLATFORM_MODULE_PREFIX "%s", *name);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("platform", platform_device_id, do_platform_entry);
+ 
+ static int do_mdio_entry(const char *filename,
+ 			 void *symval, char *alias)
+@@ -1053,7 +981,6 @@ static int do_mdio_entry(const char *filename,
+ 
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("mdio", mdio_device_id, do_mdio_entry);
+ 
+ /* Looks like: zorro:iN. */
+ static int do_zorro_entry(const char *filename, void *symval,
+@@ -1064,7 +991,6 @@ static int do_zorro_entry(const char *filename, void *symval,
+ 	ADD(alias, "i", id != ZORRO_WILDCARD, id);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("zorro", zorro_device_id, do_zorro_entry);
+ 
+ /* looks like: "pnp:dD" */
+ static int do_isapnp_entry(const char *filename,
+@@ -1080,7 +1006,6 @@ static int do_isapnp_entry(const char *filename,
+ 		(function >> 12) & 0x0f, (function >> 8) & 0x0f);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("isapnp", isapnp_device_id, do_isapnp_entry);
+ 
+ /* Looks like: "ipack:fNvNdN". */
+ static int do_ipack_entry(const char *filename,
+@@ -1096,7 +1021,6 @@ static int do_ipack_entry(const char *filename,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("ipack", ipack_device_id, do_ipack_entry);
+ 
+ /*
+  * Append a match expression for a single masked hex digit.
+@@ -1167,7 +1091,6 @@ static int do_amba_entry(const char *filename,
+ 
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("amba", amba_id, do_amba_entry);
+ 
+ /*
+  * looks like: "mipscdmm:tN"
+@@ -1183,7 +1106,6 @@ static int do_mips_cdmm_entry(const char *filename,
+ 	sprintf(alias, "mipscdmm:t%02X*", type);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("mipscdmm", mips_cdmm_device_id, do_mips_cdmm_entry);
+ 
+ /* LOOKS like cpu:type:x86,venVVVVfamFFFFmodMMMM:feature:*,FEAT,*
+  * All fields are numbers. It would be nicer to use strings for vendor
+@@ -1208,7 +1130,6 @@ static int do_x86cpu_entry(const char *filename, void *symval,
+ 		sprintf(alias + strlen(alias), "%04X*", feature);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("x86cpu", x86_cpu_id, do_x86cpu_entry);
+ 
+ /* LOOKS like cpu:type:*:feature:*FEAT* */
+ static int do_cpu_entry(const char *filename, void *symval, char *alias)
+@@ -1218,7 +1139,6 @@ static int do_cpu_entry(const char *filename, void *symval, char *alias)
+ 	sprintf(alias, "cpu:type:*:feature:*%04X*", feature);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("cpu", cpu_feature, do_cpu_entry);
+ 
+ /* Looks like: mei:S:uuid:N:* */
+ static int do_mei_entry(const char *filename, void *symval,
+@@ -1237,7 +1157,6 @@ static int do_mei_entry(const char *filename, void *symval,
+ 
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("mei", mei_cl_device_id, do_mei_entry);
+ 
+ /* Looks like: rapidio:vNdNavNadN */
+ static int do_rio_entry(const char *filename,
+@@ -1257,7 +1176,6 @@ static int do_rio_entry(const char *filename,
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("rapidio", rio_device_id, do_rio_entry);
+ 
+ /* Looks like: ulpi:vNpN */
+ static int do_ulpi_entry(const char *filename, void *symval,
+@@ -1270,7 +1188,6 @@ static int do_ulpi_entry(const char *filename, void *symval,
+ 
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("ulpi", ulpi_device_id, do_ulpi_entry);
+ 
+ /* Looks like: hdaudio:vNrNaN */
+ static int do_hda_entry(const char *filename, void *symval, char *alias)
+@@ -1287,7 +1204,6 @@ static int do_hda_entry(const char *filename, void *symval, char *alias)
+ 	add_wildcard(alias);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("hdaudio", hda_device_id, do_hda_entry);
+ 
+ /* Looks like: fsl-mc:vNdN */
+ static int do_fsl_mc_entry(const char *filename, void *symval,
+@@ -1299,7 +1215,6 @@ static int do_fsl_mc_entry(const char *filename, void *symval,
+ 	sprintf(alias, "fsl-mc:v%08Xd%s", vendor, *obj_type);
+ 	return 1;
+ }
+-ADD_TO_DEVTABLE("fslmc", fsl_mc_device_id, do_fsl_mc_entry);
+ 
+ /* Does namelen bytes of name exactly match the symbol? */
+ static bool sym_is(const char *name, unsigned namelen, const char *symbol)
+@@ -1332,6 +1247,44 @@ static void do_table(void *symval, unsigned long size,
+ 	}
  }
  
-@@ -997,6 +996,16 @@ static void sdhci_finish_data(struct sdhci_host *host)
- 	host->data = NULL;
- 	host->data_cmd = NULL;
- 
-+	/*
-+	 * The controller needs a reset of internal state machines upon error
-+	 * conditions.
-+	 */
-+	if (data->error) {
-+		if (!host->cmd || host->cmd == data_cmd)
-+			sdhci_do_reset(host, SDHCI_RESET_CMD);
-+		sdhci_do_reset(host, SDHCI_RESET_DATA);
-+	}
++static const struct devtable devtable[] = {
++	{"hid", SIZE_hid_device_id, do_hid_entry},
++	{"ieee1394", SIZE_ieee1394_device_id, do_ieee1394_entry},
++	{"pci", SIZE_pci_device_id, do_pci_entry},
++	{"ccw", SIZE_ccw_device_id, do_ccw_entry},
++	{"ap", SIZE_ap_device_id, do_ap_entry},
++	{"css", SIZE_css_device_id, do_css_entry},
++	{"serio", SIZE_serio_device_id, do_serio_entry},
++	{"acpi", SIZE_acpi_device_id, do_acpi_entry},
++	{"pcmcia", SIZE_pcmcia_device_id, do_pcmcia_entry},
++	{"vio", SIZE_vio_device_id, do_vio_entry},
++	{"input", SIZE_input_device_id, do_input_entry},
++	{"eisa", SIZE_eisa_device_id, do_eisa_entry},
++	{"parisc", SIZE_parisc_device_id, do_parisc_entry},
++	{"sdio", SIZE_sdio_device_id, do_sdio_entry},
++	{"ssb", SIZE_ssb_device_id, do_ssb_entry},
++	{"bcma", SIZE_bcma_device_id, do_bcma_entry},
++	{"virtio", SIZE_virtio_device_id, do_virtio_entry},
++	{"vmbus", SIZE_hv_vmbus_device_id, do_vmbus_entry},
++	{"i2c", SIZE_i2c_device_id, do_i2c_entry},
++	{"spi", SIZE_spi_device_id, do_spi_entry},
++	{"dmi", SIZE_dmi_system_id, do_dmi_entry},
++	{"platform", SIZE_platform_device_id, do_platform_entry},
++	{"mdio", SIZE_mdio_device_id, do_mdio_entry},
++	{"zorro", SIZE_zorro_device_id, do_zorro_entry},
++	{"isapnp", SIZE_isapnp_device_id, do_isapnp_entry},
++	{"ipack", SIZE_ipack_device_id, do_ipack_entry},
++	{"amba", SIZE_amba_id, do_amba_entry},
++	{"mipscdmm", SIZE_mips_cdmm_device_id, do_mips_cdmm_entry},
++	{"x86cpu", SIZE_x86_cpu_id, do_x86cpu_entry},
++	{"cpu", SIZE_cpu_feature, do_cpu_entry},
++	{"mei", SIZE_mei_cl_device_id, do_mei_entry},
++	{"rapidio", SIZE_rio_device_id, do_rio_entry},
++	{"ulpi", SIZE_ulpi_device_id, do_ulpi_entry},
++	{"hdaudio", SIZE_hda_device_id, do_hda_entry},
++	{"fslmc", SIZE_fsl_mc_device_id, do_fsl_mc_entry},
++};
 +
- 	if ((host->flags & (SDHCI_REQ_USE_DMA | SDHCI_USE_ADMA)) ==
- 	    (SDHCI_REQ_USE_DMA | SDHCI_USE_ADMA))
- 		sdhci_adma_table_post(host, data);
-@@ -1021,17 +1030,6 @@ static void sdhci_finish_data(struct sdhci_host *host)
- 	if (data->stop &&
- 	    (data->error ||
- 	     !data->mrq->sbc)) {
--
--		/*
--		 * The controller needs a reset of internal state machines
--		 * upon error conditions.
--		 */
--		if (data->error) {
--			if (!host->cmd || host->cmd == data_cmd)
--				sdhci_do_reset(host, SDHCI_RESET_CMD);
--			sdhci_do_reset(host, SDHCI_RESET_DATA);
--		}
--
- 		/*
- 		 * 'cap_cmd_during_tfr' request must not use the command line
- 		 * after mmc_command_done() has been called. It is upper layer's
-@@ -2457,7 +2455,7 @@ static void sdhci_timeout_data_timer(unsigned long data)
-  *                                                                           *
- \*****************************************************************************/
+ /* Create MODULE_ALIAS() statements.
+  * At this time, we cannot write the actual output C source yet,
+  * so we write into the mod->dev_table_buf buffer. */
+@@ -1386,13 +1339,14 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
+ 	else if (sym_is(name, namelen, "pnp_card"))
+ 		do_pnp_card_entries(symval, sym->st_size, mod);
+ 	else {
+-		struct devtable **p;
+-		INIT_SECTION(__devtable);
++		int i;
++
++		for (i = 0; i < ARRAY_SIZE(devtable); i++) {
++			const struct devtable *p = &devtable[i];
  
--static void sdhci_cmd_irq(struct sdhci_host *host, u32 intmask)
-+static void sdhci_cmd_irq(struct sdhci_host *host, u32 intmask, u32 *intmask_p)
- {
- 	if (!host->cmd) {
- 		/*
-@@ -2480,20 +2478,12 @@ static void sdhci_cmd_irq(struct sdhci_host *host, u32 intmask)
- 		else
- 			host->cmd->error = -EILSEQ;
- 
--		/*
--		 * If this command initiates a data phase and a response
--		 * CRC error is signalled, the card can start transferring
--		 * data - the card may have received the command without
--		 * error.  We must not terminate the mmc_request early.
--		 *
--		 * If the card did not receive the command or returned an
--		 * error which prevented it sending data, the data phase
--		 * will time out.
--		 */
-+		/* Treat data command CRC error the same as data CRC error */
- 		if (host->cmd->data &&
- 		    (intmask & (SDHCI_INT_CRC | SDHCI_INT_TIMEOUT)) ==
- 		     SDHCI_INT_CRC) {
- 			host->cmd = NULL;
-+			*intmask_p |= SDHCI_INT_DATA_CRC;
- 			return;
+-		for (p = __start___devtable; p < __stop___devtable; p++) {
+-			if (sym_is(name, namelen, (*p)->device_id)) {
+-				do_table(symval, sym->st_size, (*p)->id_size,
+-					 (*p)->device_id, (*p)->function, mod);
++			if (sym_is(name, namelen, p->device_id)) {
++				do_table(symval, sym->st_size, p->id_size,
++					 p->device_id, p->function, mod);
+ 				break;
+ 			}
  		}
- 
-@@ -2722,7 +2712,7 @@ static irqreturn_t sdhci_irq(int irq, void *dev_id)
- 		}
- 
- 		if (intmask & SDHCI_INT_CMD_MASK)
--			sdhci_cmd_irq(host, intmask & SDHCI_INT_CMD_MASK);
-+			sdhci_cmd_irq(host, intmask & SDHCI_INT_CMD_MASK, &intmask);
- 
- 		if (intmask & SDHCI_INT_DATA_MASK)
- 			sdhci_data_irq(host, intmask & SDHCI_INT_DATA_MASK);
 -- 
 2.19.1
 
