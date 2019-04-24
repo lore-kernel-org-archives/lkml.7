@@ -7,103 +7,92 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884C2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8C2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 553982175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987722175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i4/rFMz4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qhZXQcYk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbfDXKWc (ORCPT
+        id S1729930AbfDXKWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:22:32 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42943 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729652AbfDXKVX (ORCPT
+        Wed, 24 Apr 2019 06:22:40 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44747 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727277AbfDXKVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:21:23 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x15so4712717pln.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:21:23 -0700 (PDT)
+        Wed, 24 Apr 2019 06:21:19 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y12so6499327plk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6HDIg6ROZRC2jfQ3nCG9gUelBX+LREsHvgd1/Lztul0=;
-        b=i4/rFMz4p1i8vXbatI/palG8YptRmoo1LHUDBGR8Ay5DruCATulff09VlWu5Tosmlr
-         UtntX8RYUw7NTBXwxNXRYFlJKPwcYBd6vqqMuleUFcbXJiHq09XaMf204+r0Mkewexgc
-         i2VnnVBfDEVIjW1oCSUE74vbrD7D8yol2BamSkMNUdzwqLHN2D7FnDHdiEsxPqkCRme3
-         Lw87IGgzwK6AvnTSc62V8CA7poN+cNjOaYYluOxemK2MO9zoK37PP+so4qDQX+ay5oAV
-         AzaDIqDR8K4PbcBCDPIw1MtPRb8WYsAK5zCcdlrcDIVccLqlnFlyvb5ZAZSnKPl8WNh4
-         nL/g==
+        h=from:to:cc:subject:date:message-id;
+        bh=ETa+dFWNCZnNxwVqcCbdkTQv/b5T4kuYZin0xotChMQ=;
+        b=qhZXQcYkMNsv8xuOtmo9utP8unEhA51+NsHInSOsCQIazmTUFnYncd5lPryfHab8w9
+         fCBuUGfXB57kWC3kySqpZWWkGp5RJz5CWTRcxzBEYP37PuavbPv6gbhFvtFirshJompx
+         mw9PcYQQWppU5X7dI5dpi91yEL1+8MaYaUHJQoh5pZX/qJdb1FYjYlvKRcgUPH6IL6qh
+         DSwMzQXRsN42SKxSktXIuiAZtXONFAB4Q2CdwVcsQUn0g/KSqKJi0jAFfmwVCNaazUf8
+         r/IZyRsPjcsXckYHXuplKMk8WhKRSzy0daCrRsGFliaMqkNlu8Chlv46HTwq41JoUj0k
+         FVaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6HDIg6ROZRC2jfQ3nCG9gUelBX+LREsHvgd1/Lztul0=;
-        b=GhbxFv2X8gfpkzmhoT1cUsZEEzThAmjgA/yZOJPFN+9Uq+hfr4YF5yvtEpr0bprBqy
-         ESPJqaT30cs9bEd8FWUmMgR6/Dgt3IKvSCTV0ZktKcedHEs6BBNmF/n1oyBANHVRGKjm
-         Ob/nYo+evofhSOUBHztFeXZLsioNgHfbQ3G+aV2362lQuwMC+AYfsGPiN59WbAogqUdZ
-         /7YU1hKyXru2HUtcm9Jw4/tOAK/wr5FXQlAseuhSISMimSFpMC+uYgHHgeMbXydgQRxC
-         w7AQFpVl2fGAJ51lTHQqKWxVn61nKjOnXBaMNB0/6AU5GHpWoM6NRE/TLOfp29fxwiYx
-         TRZw==
-X-Gm-Message-State: APjAAAVzaXFlPkTiES8tbTa1ERzDdqMZ1c66cY7FTvbo7hX0tdsYfeFy
-        MXK3bUYBmgGneUaWXZGQO0Q=
-X-Google-Smtp-Source: APXvYqyZjsMd1Z5gM5SAuGjYtpVb2bRlxmrAZ+Bp9Gba+Q2kMUbOMeu2GpY0RjMLJD4CtKVHV5l/0g==
-X-Received: by 2002:a17:902:121:: with SMTP id 30mr30487952plb.174.1556101282880;
-        Wed, 24 Apr 2019 03:21:22 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v19sm25051604pfn.62.2019.04.24.03.21.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ETa+dFWNCZnNxwVqcCbdkTQv/b5T4kuYZin0xotChMQ=;
+        b=I7zvHA+cv4030PDnvYUw6C08YMyq+v7LLkeCpke3fYrk3xFWDo2NuHBlWbYfuMrqiI
+         O49dcGl9G/4IwWXWBVX0bGLbBd7kk3i4YC46kHMw2lzJzk+xWSDVhEsuJfzqYtAbRwKS
+         7bC3M5Gz7RIgDLuiMy1ejFtSCPVmm1ajen53e1rIFMKEB7yX3UeoIJ6qhhqRSG/m4Dxp
+         TRaa9POUGDguvahF3Fsu0cMItOTG+2X7bgEmk+UKDsJyCrKvoxof+Sm7LPZn5hVqXU9h
+         ygjxuF2U1Y1SfYzuO5PCgMTQGqnft91WWNljE+7THvsTpxhCM/reZLETTkfaCVXksCUn
+         Ytpw==
+X-Gm-Message-State: APjAAAWvERL5PDHgGHsKhit4sem8j/+HlMX/XWvpLlxYNyY0keccCH9O
+        9hQzs5YemMdN6lSlNBKQUV8=
+X-Google-Smtp-Source: APXvYqzffDOgwNO5iSsDnJMt9zWfm0cdr+5eSTYXdh599961qACbqpK76Zh5o5wAySyEA4zpYIR3KA==
+X-Received: by 2002:a17:902:2ba6:: with SMTP id l35mr27019443plb.56.1556101278435;
+        Wed, 24 Apr 2019 03:21:18 -0700 (PDT)
+Received: from localhost.localdomain (ch.ptr162.ptrcloud.net. [153.122.97.60])
+        by smtp.gmail.com with ESMTPSA id k9sm23310185pga.22.2019.04.24.03.21.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 03:21:22 -0700 (PDT)
-From:   Yuyang Du <duyuyang@gmail.com>
-To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 18/28] locking/lockdep: Remove unused argument in __lock_release
-Date:   Wed, 24 Apr 2019 18:19:24 +0800
-Message-Id: <20190424101934.51535-19-duyuyang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20190424101934.51535-1-duyuyang@gmail.com>
-References: <20190424101934.51535-1-duyuyang@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 24 Apr 2019 03:21:17 -0700 (PDT)
+From:   Weikang shi <swkhack@gmail.com>
+To:     keescook@chromium.org
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, swkhack <swkhack@gmail.com>
+Subject: [PATCH] lkdtm: fix potential use after free
+Date:   Wed, 24 Apr 2019 18:21:03 +0800
+Message-Id: <20190424102103.11816-1-swkhack@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The @nested is not used in __release_lock so remove it despite that it
-is not used in lock_release in the first place.
+From: swkhack <swkhack@gmail.com>
 
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+The function lkdtm_WRITE_AFTER_FREE calls kfree(base) to free the memory
+of base. However, following kfree(base),
+it write the memory which base point to via base[offset] = 0x0abcdef0. This may result in a
+use-after-free bug. This patch moves kfree(base) after the write.
+
+Signed-off-by: swkhack <swkhack@gmail.com>
 ---
- kernel/locking/lockdep.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/lkdtm/heap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index eb85183..6e79bd6 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3988,7 +3988,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
-  * @nested is an hysterical artifact, needs a tree wide cleanup.
-  */
- static int
--__lock_release(struct lockdep_map *lock, int nested, unsigned long ip)
-+__lock_release(struct lockdep_map *lock, unsigned long ip)
- {
- 	struct task_struct *curr = current;
- 	struct held_lock *hlock;
-@@ -4276,7 +4276,7 @@ void lock_release(struct lockdep_map *lock, int nested,
- 	check_flags(flags);
- 	current->lockdep_recursion = 1;
- 	trace_lock_release(lock, ip);
--	if (__lock_release(lock, nested, ip))
-+	if (__lock_release(lock, ip))
- 		check_chain_key(current);
- 	current->lockdep_recursion = 0;
- 	raw_local_irq_restore(flags);
+diff --git a/drivers/misc/lkdtm/heap.c b/drivers/misc/lkdtm/heap.c
+index 65026d7de..0b9141525 100644
+--- a/drivers/misc/lkdtm/heap.c
++++ b/drivers/misc/lkdtm/heap.c
+@@ -40,8 +40,8 @@ void lkdtm_WRITE_AFTER_FREE(void)
+ 	pr_info("Allocated memory %p-%p\n", base, &base[offset * 2]);
+ 	pr_info("Attempting bad write to freed memory at %p\n",
+ 		&base[offset]);
+-	kfree(base);
+ 	base[offset] = 0x0abcdef0;
++	kfree(base);
+ 	/* Attempt to notice the overwrite. */
+ 	again = kmalloc(len, GFP_KERNEL);
+ 	kfree(again);
 -- 
-1.8.3.1
+2.17.1
 
