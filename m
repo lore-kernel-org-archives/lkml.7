@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CC7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8EFC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6963218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CEE21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127918;
-	bh=rFU2YsDTCR+g4ae+SbfDAKzw8zKAomNbMWmv4WKsv5E=;
+	s=default; t=1556127922;
+	bh=nwvbiVZH5kS4HxXVX8OS5u+d4I6uHw15UCBqenIF13c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qszMuZgzIfswZd2SVqLQkzKyLVonAaEh8S2DZcoA2euXgKV4apm+MZoYFwZDW3Qkt
-	 b5+ddC+jkkqDHxy5h8BB5JBS6+GAlO5cw1DNdBb8y99AckY1WMIsCPfTv2dFJ4F5WU
-	 vDfrWH7ekviEdVYEw9crMngiD8ySnDcpuYn9vC6A=
+	b=qgKbSTEuLSM20s1xxUFb0l5vf1YnDBQaJj5rjafVODZXeHyQDWCkNBm6T8HK7CttR
+	 qG4HDutag4lqeB5WJsiHVpdqUjQO4zkFHFqWb80+VQIjJaoblCobyc9XhWEbCeqv6y
+	 yzvJXfYGNjgy6lDD8H6Nie/I/kqn6mJw5yDM6Ipg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391524AbfDXRdf (ORCPT
+        id S2392045AbfDXRpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:33:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60490 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:45:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391500AbfDXRd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:33:29 -0400
+        id S2391044AbfDXRdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:33:35 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 659682054F;
-        Wed, 24 Apr 2019 17:33:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A0CD2054F;
+        Wed, 24 Apr 2019 17:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127208;
-        bh=rFU2YsDTCR+g4ae+SbfDAKzw8zKAomNbMWmv4WKsv5E=;
+        s=default; t=1556127214;
+        bh=nwvbiVZH5kS4HxXVX8OS5u+d4I6uHw15UCBqenIF13c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VKIYs26fiA2iiWU9nVMYfs81fH9dcBYU0sHzH1vLC5r3MxpRrzGlrKL5HHNeo3rJn
-         OUtfboOkuvGMi8VIB3SbK+SLp9v6QDnTuFFJ2YR3KuZ73tNNfg66J6sP7snZwewDOM
-         J5u9uviYsLhSanuHa29jGueXR3YrPz8hHaHbe7ZM=
+        b=PcmiJvhzAVe0N4yGEb/CZGnkU2MZTb6PttwoVaMZMCGsAb8yIoMvOYP+tcY2UUT/U
+         X/CdK3AbKC4YLNO9FQE0f2LWq3yQkxKl3oh1SqWfS0K0FzDOTskRbw4qZF0PxiSdMI
+         ZLQjoBkppx0v+sNmRKhze+YBLZC6ZPQDJThAO4rw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Sax <jsbc@gmx.de>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?q?Ambro=C5=BE=20Bizjak?= <abizjak.pro@gmail.com>
-Subject: [PATCH 4.19 96/96] i2c-hid: properly terminate i2c_hid_dmi_desc_override_table[] array
-Date:   Wed, 24 Apr 2019 19:10:41 +0200
-Message-Id: <20190424170926.294205271@linuxfoundation.org>
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 001/115] bonding: fix event handling for stacked bonds
+Date:   Wed, 24 Apr 2019 19:08:57 +0200
+Message-Id: <20190424170924.965996081@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
-References: <20190424170919.829037226@linuxfoundation.org>
+In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
+References: <20190424170924.797924502@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,48 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-commit b59dfdaef173677b0b7e10f375226c0a1114fd20 upstream.
+[ Upstream commit 92480b3977fd3884649d404cbbaf839b70035699 ]
 
-Commit 9ee3e06610fd ("HID: i2c-hid: override HID descriptors for certain
-devices") added a new dmi_system_id quirk table to override certain HID
-report descriptors for some systems that lack them.
+When a bond is enslaved to another bond, bond_netdev_event() only
+handles the event as if the bond is a master, and skips treating the
+bond as a slave.
 
-But the table wasn't properly terminated, causing the dmi matching to
-walk off into la-la-land, and starting to treat random data as dmi
-descriptor pointers, causing boot-time oopses if you were at all
-unlucky.
+This leads to a refcount leak on the slave, since we don't remove the
+adjacency to its master and the master holds a reference on the slave.
 
-Terminate the array.
+Reproducer:
+  ip link add bondL type bond
+  ip link add bondU type bond
+  ip link set bondL master bondU
+  ip link del bondL
 
-We really should have some way to just statically check that arrays that
-should be terminated by an empty entry actually are so.  But the HID
-people really should have caught this themselves, rather than have me
-deal with an oops during the merge window.  Tssk, tssk.
+No "Fixes:" tag, this code is older than git history.
 
-Cc: Julian Sax <jsbc@gmx.de>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ambrož Bizjak <abizjak.pro@gmail.com>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/bonding/bond_main.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -337,7 +337,8 @@ static const struct dmi_system_id i2c_hi
- 			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
- 		},
- 		.driver_data = (void *)&sipodev_desc
--	}
-+	},
-+	{ }	/* Terminate list */
- };
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3214,8 +3214,12 @@ static int bond_netdev_event(struct noti
+ 		return NOTIFY_DONE;
  
+ 	if (event_dev->flags & IFF_MASTER) {
++		int ret;
++
+ 		netdev_dbg(event_dev, "IFF_MASTER\n");
+-		return bond_master_netdev_event(event, event_dev);
++		ret = bond_master_netdev_event(event, event_dev);
++		if (ret != NOTIFY_DONE)
++			return ret;
+ 	}
  
+ 	if (event_dev->flags & IFF_SLAVE) {
 
 
