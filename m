@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DACC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DDEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB37921909
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22CB021909
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126362;
-	bh=P5dZ97Wkndm53pR8GiD58w5qRLknd4jsP/Hjyvvo74s=;
+	s=default; t=1556126366;
+	bh=XBnV7yUkTta6EYtZvwVDzOoXMmsyTzKA37ZvjCVQq48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Efi20UsqOrYy3hKTtuMpku9ujeUPLZESpCxfiTNqP2LrM2FjfnmU472bCEuZR6Hwn
-	 OYr/hREy05oRiLuQB/CDZF9bsL1KQ2yheX48OKw/eXLH3FyPBqmxgz2IawLgyM5SFN
-	 5GNCvxC8iA3vLeRtn8LVNmyLCIwARcXIVKuqITeM=
+	b=G7P+Nn0LtyBuZPtFtUjd/BAbn70+mt8oROwV0iQWY90ECdgfa1wQvYDktgKGDC2kw
+	 zziRCu3zPyk5vjBzGUf0ztQz6Wt44xAqqLUcvVyZM30DKJbsY6O49zO8hysHQEhxvt
+	 wm3fxsdlJFAsvOEZvUqKQrtL/WnsDuziECUCGJLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388984AbfDXRTV (ORCPT
+        id S2388993AbfDXRTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:19:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44516 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388538AbfDXRTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:19:19 -0400
+        id S2388985AbfDXRTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:19:22 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D0BD21904;
-        Wed, 24 Apr 2019 17:19:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C68EC20835;
+        Wed, 24 Apr 2019 17:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126358;
-        bh=P5dZ97Wkndm53pR8GiD58w5qRLknd4jsP/Hjyvvo74s=;
+        s=default; t=1556126361;
+        bh=XBnV7yUkTta6EYtZvwVDzOoXMmsyTzKA37ZvjCVQq48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nsBqNEiJCe6rXDXhzIormjRtG/JHojvJ9jgbpPmiYYaC05neIXimexQZFZuwNMe0b
-         tdukw9TkqrHGvllhVQdwVArjFryBQnRDxsvs+HlgemEI85bpu5uG0n/p1zyToQMOeI
-         FCwxXApvkFQv7kRrRq09oUHbtlzQ46gfBda1uRQI=
+        b=eyUo0Dgq+5Lu3OxaO2BiIIT6Ed8F6J8uR2qXxrMB/L1H1OFyYsPjgzcANww4QvpMX
+         OEZ7YRLivm2oh+WkRNiLPRwyruERoixR997dgz6hUyxmQyQD1pcPAjGJs9aIzsyvIc
+         HmPIfcrhVYOePZzdHym241gIveYpOf2wNr/Il1UE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Amit Klein <aksecurity@gmail.com>,
-        Benny Pinkas <benny@pinkas.net>,
-        Pavel Emelyanov <xemul@openvz.org>,
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Wang Li <wangli39@baidu.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 084/168] netns: provide pure entropy for net_hash_mix()
-Date:   Wed, 24 Apr 2019 19:08:48 +0200
-Message-Id: <20190424170928.781084159@linuxfoundation.org>
+Subject: [PATCH 4.4 085/168] net: ethtool: not call vzalloc for zero sized memory request
+Date:   Wed, 24 Apr 2019 19:08:49 +0200
+Message-Id: <20190424170928.830672805@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -62,79 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit 355b98553789b646ed97ad801a619ff898471b92 ]
+[ Upstream commit 3d8830266ffc28c16032b859e38a0252e014b631 ]
 
-net_hash_mix() currently uses kernel address of a struct net,
-and is used in many places that could be used to reveal this
-address to a patient attacker, thus defeating KASLR, for
-the typical case (initial net namespace, &init_net is
-not dynamically allocated)
+NULL or ZERO_SIZE_PTR will be returned for zero sized memory
+request, and derefencing them will lead to a segfault
 
-I believe the original implementation tried to avoid spending
-too many cycles in this function, but security comes first.
+so it is unnecessory to call vzalloc for zero sized memory
+request and not call functions which maybe derefence the
+NULL allocated memory
 
-Also provide entropy regardless of CONFIG_NET_NS.
+this also fixes a possible memory leak if phy_ethtool_get_stats
+returns error, memory should be freed before exit
 
-Fixes: 0b4419162aa6 ("netns: introduce the net_hash_mix "salt" for hashes")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Amit Klein <aksecurity@gmail.com>
-Reported-by: Benny Pinkas <benny@pinkas.net>
-Cc: Pavel Emelyanov <xemul@openvz.org>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Reviewed-by: Wang Li <wangli39@baidu.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/net_namespace.h |    1 +
- include/net/netns/hash.h    |   15 ++-------------
- net/core/net_namespace.c    |    1 +
- 3 files changed, 4 insertions(+), 13 deletions(-)
+ net/core/ethtool.c |   29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
---- a/include/net/net_namespace.h
-+++ b/include/net/net_namespace.h
-@@ -53,6 +53,7 @@ struct net {
- 						 */
- 	spinlock_t		rules_mod_lock;
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -1287,17 +1287,22 @@ static int ethtool_get_strings(struct ne
  
-+	u32			hash_mix;
- 	atomic64_t		cookie_gen;
+ 	gstrings.len = ret;
  
- 	struct list_head	list;		/* list of network namespaces */
---- a/include/net/netns/hash.h
-+++ b/include/net/netns/hash.h
-@@ -1,21 +1,10 @@
- #ifndef __NET_NS_HASH_H__
- #define __NET_NS_HASH_H__
+-	data = kcalloc(gstrings.len, ETH_GSTRING_LEN, GFP_USER);
+-	if (!data)
+-		return -ENOMEM;
++	if (gstrings.len) {
++		data = kcalloc(gstrings.len, ETH_GSTRING_LEN, GFP_USER);
++		if (!data)
++			return -ENOMEM;
  
--#include <asm/cache.h>
--
--struct net;
-+#include <net/net_namespace.h>
+-	__ethtool_get_strings(dev, gstrings.string_set, data);
++		__ethtool_get_strings(dev, gstrings.string_set, data);
++	} else {
++		data = NULL;
++	}
  
- static inline u32 net_hash_mix(const struct net *net)
- {
--#ifdef CONFIG_NET_NS
--	/*
--	 * shift this right to eliminate bits, that are
--	 * always zeroed
--	 */
--
--	return (u32)(((unsigned long)net) >> L1_CACHE_SHIFT);
--#else
--	return 0;
--#endif
-+	return net->hash_mix;
- }
- #endif
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -280,6 +280,7 @@ static __net_init int setup_net(struct n
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &gstrings, sizeof(gstrings)))
+ 		goto out;
+ 	useraddr += sizeof(gstrings);
+-	if (copy_to_user(useraddr, data, gstrings.len * ETH_GSTRING_LEN))
++	if (gstrings.len &&
++	    copy_to_user(useraddr, data, gstrings.len * ETH_GSTRING_LEN))
+ 		goto out;
+ 	ret = 0;
  
- 	atomic_set(&net->count, 1);
- 	atomic_set(&net->passive, 1);
-+	get_random_bytes(&net->hash_mix, sizeof(u32));
- 	net->dev_base_seq = 1;
- 	net->user_ns = user_ns;
- 	idr_init(&net->netns_ids);
+@@ -1385,17 +1390,21 @@ static int ethtool_get_stats(struct net_
+ 		return -EFAULT;
+ 
+ 	stats.n_stats = n_stats;
+-	data = kmalloc(n_stats * sizeof(u64), GFP_USER);
+-	if (!data)
+-		return -ENOMEM;
++	if (n_stats) {
++		data = kmalloc(n_stats * sizeof(u64), GFP_USER);
++		if (!data)
++			return -ENOMEM;
+ 
+-	ops->get_ethtool_stats(dev, &stats, data);
++		ops->get_ethtool_stats(dev, &stats, data);
++	} else {
++		data = NULL;
++	}
+ 
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &stats, sizeof(stats)))
+ 		goto out;
+ 	useraddr += sizeof(stats);
+-	if (copy_to_user(useraddr, data, stats.n_stats * sizeof(u64)))
++	if (n_stats && copy_to_user(useraddr, data, n_stats * sizeof(u64)))
+ 		goto out;
+ 	ret = 0;
+ 
 
 
