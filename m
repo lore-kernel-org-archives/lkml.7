@@ -2,169 +2,128 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAEDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A883BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8141A208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7551121773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:12:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Eu0s3SZO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qz+quXRC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfDXXMH (ORCPT
+        id S1727421AbfDXXMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 19:12:07 -0400
-Received: from mail.efficios.com ([167.114.142.138]:54090 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfDXXMH (ORCPT
+        Wed, 24 Apr 2019 19:12:43 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39184 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfDXXMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 19:12:07 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id D43861DAE14;
-        Wed, 24 Apr 2019 19:12:04 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id Db0msJWL9guo; Wed, 24 Apr 2019 19:12:03 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id C07111DAE0C;
-        Wed, 24 Apr 2019 19:12:03 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C07111DAE0C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556147523;
-        bh=ZCAFmQCt+L92Y7DrxcXfkE0fr9qPjiRYrC7qrBqSrVI=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Eu0s3SZOxJE4RgG0LkOiCoF0fOUsguzFdvC59flW3N9lz9kRlvawf0HQk3Kx28ztm
-         APxqmk3rSIsB/mb4QWTtntAS7cvVxDZCk15uwBv+p8g9a4CAQPxu5u+u21kLm3mZLB
-         cTv+hH8F0zJUMIGiKjToOdIAlS7b5OwMy7F1FAyOazoIcbk42nf5nzH2+FYs6eFdSV
-         LnbVbjvIfjUTydq2/UqMpi7VvMmLAFk6+H4qalbJgjhjOrXgFf/icZD9RYTosM3y0N
-         2/MdQ2SA14udmBMjlU3GXP9Jz1xbazZSOnQ02ksB+l3cfA1nZ2uFGIRnQ62cr0+MMf
-         NvTQo5BRFvySw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id NyOzT61RHnRg; Wed, 24 Apr 2019 19:12:03 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 984791DAE03;
-        Wed, 24 Apr 2019 19:12:03 -0400 (EDT)
-Date:   Wed, 24 Apr 2019 19:12:03 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
+        Wed, 24 Apr 2019 19:12:42 -0400
+Received: by mail-pl1-f193.google.com with SMTP id e92so8272330plb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:12:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=XNY7yvILZ/mReUfkQVV13kVtI29W9jkvFr1lkWc9JCQ=;
+        b=Qz+quXRCJ5OD2ub/SSRZDu4LRm/DXnzA7t898qR6yeul7uWOamJCOroVor8XzbDmxQ
+         aHBgg4fMXmjRY6Q9M5c80JX2Fe7V+z8wPv1ZaXqmUksQKcvq+ZNOfBeQIKUoE0RZSXsV
+         S/6zTvJuR7oZlciZ0edI0P8IAKKVhpPB96Eck=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XNY7yvILZ/mReUfkQVV13kVtI29W9jkvFr1lkWc9JCQ=;
+        b=Co+LgHr1N77pkWhqfijZqjOhTFpzWnoH+6xlixJ7Cgll30cSPzW6SkQAGTvi25pKAg
+         SpuPAYXxR2ypyRrFt3sJjN9OWIcOJfW13HKYVSAdRkMqd7tHp8+6L2UkS3sxYl2HfEHn
+         GaSM6IMVN3hiVnvJkmKcCKoGxW9APcsOY833V4ASYE63yK8fc2m+od7VKPnrMchX+iQ1
+         4GfKsvVj+Wp3IuTMqtuGsAJpyXJ9M0dKGI4btlcZFDdhywxxyFHpXyZqria4E3VB9CDT
+         TOiG+vYe+rLxzhfG/eJWw/U1zHeeMM/R5Y10M88sx/tyzxCUnyOWSZLZ/tz3C0xm0NdX
+         INVA==
+X-Gm-Message-State: APjAAAUt50fsRRk/cN5L+EZYpZUDFWv1++g0gO6pxVe3JGV3ihQLely0
+        LPZ2zXwQ6Ro165ZNLH6Yyjfv/A==
+X-Google-Smtp-Source: APXvYqxqoOaKPTkuqPgHtqPhK+b1KxOySirLcm8Amno3smwiQ/9zyATGUaXnExsY6t0pS1YQA2JOLA==
+X-Received: by 2002:a17:902:a50d:: with SMTP id s13mr35193645plq.58.1556147561953;
+        Wed, 24 Apr 2019 16:12:41 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id t21sm26664028pfe.22.2019.04.24.16.12.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 16:12:40 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
         Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-mips <linux-mips@linux-mips.org>
-Message-ID: <2114325810.1301.1556147523476.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190424220609.4kryfcgsv46iu3ds@pburton-laptop>
-References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com> <20190424152502.14246-11-mathieu.desnoyers@efficios.com> <20190424220609.4kryfcgsv46iu3ds@pburton-laptop>
-Subject: Re: [RFC PATCH for 5.2 10/10] rseq/selftests: mips: use break
- instruction for RSEQ_SIG
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/selftests: mips: use break instruction for RSEQ_SIG
-Thread-Index: AQHU+rH+AJnCxtNxUESFNInzrhwEUaZL3nOAYM0M9XY=
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Serge Hallyn <serge@hallyn.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/8] selftests: Move test output to diagnostic lines
+Date:   Wed, 24 Apr 2019 16:12:29 -0700
+Message-Id: <20190424231237.14776-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 24, 2019, at 6:06 PM, Paul Burton paul.burton@mips.com wrote:
+This refactors the selftest Makefiles to extract the test running logic
+to be reused between "run_tests" and "emit_tests", while also fixing
+up the test output to be TAP version 13 compliant:
+- added "plan" line
+- fixed result line syntax
+- moved all test output to be "# "-prefixed as TAP "diagnostic" lines
 
-> Hi Mathieu,
-> 
-> On Wed, Apr 24, 2019 at 11:25:02AM -0400, Mathieu Desnoyers wrote:
->> diff --git a/tools/testing/selftests/rseq/rseq-mips.h
->> b/tools/testing/selftests/rseq/rseq-mips.h
->> index fe3eabcdcbe5..eb53a6adfbbb 100644
->> --- a/tools/testing/selftests/rseq/rseq-mips.h
->> +++ b/tools/testing/selftests/rseq/rseq-mips.h
->> @@ -7,7 +7,11 @@
->>   * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->>   */
->>  
->> -#define RSEQ_SIG	0x53053053
->> +/*
->> + * RSEQ_SIG uses the break instruction. The instruction pattern is
->> + *	0350000d        break    0x350
->> + */
->> +#define RSEQ_SIG	0x0350000d
-> 
-> My apologies for taking a while to get back to you on the various ISAs &
-> endian issues here, but I think we'll want this to be something like:
-> 
-> #if defined(__nanomips__)
-> # ifdef __MIPSEL__
-> #  define RSEQ_SIG	0x03500010
-> # else
-> #  define RSEQ_SIG	0x00100350
-> # endif
-> #elif defined(__mips_micromips)
-> # ifdef __MIPSEL__
-> #  define RSEQ_SIG	0xd4070000
-> # else
-> #  define RSEQ_SIG	0x0000d407
-> # endif
-> #else
-> # define RSEQ_SIG	0x0350000d
-> #endif
-> 
-> For plain old MIPS the .word directive will be fine endian-wise, but for
-> microMIPS & nanoMIPS we need to take into account that the instruction
-> stream is encoded as 16b halfwords & swap those accordingly for little
-> endian.
+The prefixing code includes a fallback mode for limited execution
+environments.
 
-Hi Paul,
+Additionally, the plan lines are fixed for all callers of kselftest.h.
 
-Thanks for looking into it!
+-Kees
 
-Does the following comment above the forest of #ifdef work for you ?
+v2:
+- fix external make variable "summary=1" through-out series (shuah)
+- fix plan line output for all kselftest.h users
 
-/*
- * RSEQ_SIG uses the break instruction. The instruction pattern is:
- *
- * On MIPS:
- *      0350000d        break     0x350
- *
- * On nanoMIPS32:
- *      00100350        break     0x350
- *
- * On microMIPS:
- *      0000d407        break     0x350
- *
- * For nanoMIPS32 and microMIPS, the instruction stream is encoded as 16-bit
- * halfwords, so the signature halfwords need to be swapped accordingly for
- * little-endian.
- */
+Kees Cook (8):
+  selftests: Extract single-test shell logic from lib.mk
+  selftests: Use runner.sh for emit targets
+  selftests: Extract logic for multiple test runs
+  selftests: Add plan line and fix result line syntax
+  selftests: Distinguish between missing and non-executable
+  selftests: Move test output to diagnostic lines
+  selftests: Remove KSFT_TAP_LEVEL
+  selftests: Add test plan API to kselftest.h and adjust callers
 
-Thanks,
-
-Mathieu
+ tools/testing/selftests/.gitignore            |  1 -
+ tools/testing/selftests/Makefile              | 24 ++----
+ .../selftests/breakpoints/breakpoint_test.c   | 15 +++-
+ .../breakpoints/breakpoint_test_arm64.c       |  3 +-
+ .../breakpoints/step_after_suspend_test.c     |  8 ++
+ .../selftests/capabilities/test_execve.c      |  6 +-
+ .../futex/functional/futex_requeue_pi.c       |  1 +
+ .../futex_requeue_pi_mismatched_ops.c         |  1 +
+ .../futex_requeue_pi_signal_restart.c         |  1 +
+ .../futex_wait_private_mapped_file.c          |  1 +
+ .../futex/functional/futex_wait_timeout.c     |  1 +
+ .../futex_wait_uninitialized_heap.c           |  1 +
+ .../futex/functional/futex_wait_wouldblock.c  |  1 +
+ tools/testing/selftests/kselftest.h           | 17 +++-
+ tools/testing/selftests/kselftest/prefix.pl   | 23 +++++
+ tools/testing/selftests/kselftest/runner.sh   | 86 +++++++++++++++++++
+ tools/testing/selftests/lib.mk                | 64 +++-----------
+ .../selftests/membarrier/membarrier_test.c    |  1 +
+ tools/testing/selftests/pidfd/pidfd_test.c    |  1 +
+ tools/testing/selftests/sigaltstack/sas.c     |  1 +
+ tools/testing/selftests/sync/sync_test.c      |  1 +
+ 21 files changed, 178 insertions(+), 80 deletions(-)
+ create mode 100755 tools/testing/selftests/kselftest/prefix.pl
+ create mode 100644 tools/testing/selftests/kselftest/runner.sh
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.17.1
+
