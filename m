@@ -2,142 +2,126 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD72C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D8FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E4321773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B87FD21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:37:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ddRU2uuG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfDXNhF (ORCPT
+        id S1729539AbfDXNhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:37:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40372 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727369AbfDXNhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:37:04 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2B4E930BCE5B;
-        Wed, 24 Apr 2019 13:36:59 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-22.phx2.redhat.com [10.3.112.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 34E3D1001E71;
-        Wed, 24 Apr 2019 13:36:56 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 53E5C62CF; Wed, 24 Apr 2019 10:37:01 -0300 (BRT)
-Date:   Wed, 24 Apr 2019 10:37:01 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        "linux-trace-devel@vger.kernel.org" 
-        <linux-trace-devel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tools/lib/traceevent: Remove hardcoded install paths
- from pkg-config file
-Message-ID: <20190424133701.GE4339@redhat.com>
-References: <20190418211556.5a12adc3@oasis.local.home>
- <20190424084722.5b98212e@gandalf.local.home>
+        Wed, 24 Apr 2019 09:37:21 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:38238 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727369AbfDXNhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:37:20 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3ODU5mq019752;
+        Wed, 24 Apr 2019 15:35:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=9d9FjDMPYFvQCTzlRmg0uybrmhlVz6nU0nj2RYqkkTk=;
+ b=ddRU2uuG1Fx61Uj34/n7dogCSdRIewzJpk4y29NdpaLf0DsEsTPH5B0xasUzy/yfFlPw
+ 6+yzE2LF3qonph7YsjmK/fqs/FnQjH0xfgLJ0hzCL3xvUkV1dt496M8gzKrYL4LWdJD/
+ eUQ6D8zXOyq9FGo4+Xqz4mzfs4nXTP6Kha/0WsHHzfLuGgKvlwgt2VUN6/1hW29w8eRc
+ ZwxSSlc/YdWLGFUlk2FI9mElUnIHFnCosy3rkfW4R10wltqJxTpp94S9VM9jiRCmppFA
+ pvwo6ePiIHQfSDaHvob0c3YE9F/MpRM7m0Pqhkybbyjyoroe7/TUlOYlwGUjSPXqn93D eA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rytad6ttg-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 24 Apr 2019 15:35:04 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 27EB741;
+        Wed, 24 Apr 2019 13:35:02 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C504526A4;
+        Wed, 24 Apr 2019 13:35:02 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr
+ 2019 15:35:02 +0200
+Received: from localhost (10.201.23.65) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 24 Apr 2019 15:35:02
+ +0200
+From:   Lionel Debieve <lionel.debieve@st.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        <linux-crypto@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH 1/3] crypto: stm32/cryp - add weak key check for DES
+Date:   Wed, 24 Apr 2019 15:34:51 +0200
+Message-ID: <1556112893-13116-1-git-send-email-lionel.debieve@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424084722.5b98212e@gandalf.local.home>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 24 Apr 2019 13:37:04 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.65]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Apr 24, 2019 at 08:47:22AM -0400, Steven Rostedt escreveu:
-> 
-> Hi Arnaldo,
-> 
-> Just making sure this doesn't get lost in the noise ;-)
-> 
-> Can you pull this in?
+Add weak key test for des functions calling the generic
+des_ekey.
 
-Its already in my local repo, that I just pushed out, thanks!
+Signed-off-by: Lionel Debieve <lionel.debieve@st.com>
+---
+ drivers/crypto/stm32/Kconfig      |  1 +
+ drivers/crypto/stm32/stm32-cryp.c | 13 +++++++++++--
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-- Arnaldo
-
+diff --git a/drivers/crypto/stm32/Kconfig b/drivers/crypto/stm32/Kconfig
+index 63aa78c..4491e21 100644
+--- a/drivers/crypto/stm32/Kconfig
++++ b/drivers/crypto/stm32/Kconfig
+@@ -24,6 +24,7 @@ config CRYPTO_DEV_STM32_CRYP
+ 	depends on ARCH_STM32
+ 	select CRYPTO_HASH
+ 	select CRYPTO_ENGINE
++	select CRYPTO_DES
+ 	help
+           This enables support for the CRYP (AES/DES/TDES) hw accelerator which
+ 	  can be found on STMicroelectronics STM32 SOC.
+diff --git a/drivers/crypto/stm32/stm32-cryp.c b/drivers/crypto/stm32/stm32-cryp.c
+index 5785f3e..cfcb640 100644
+--- a/drivers/crypto/stm32/stm32-cryp.c
++++ b/drivers/crypto/stm32/stm32-cryp.c
+@@ -753,10 +753,19 @@ static int stm32_cryp_aes_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
+ static int stm32_cryp_des_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
+ 				 unsigned int keylen)
+ {
++	u32 tmp[DES_EXPKEY_WORDS];
++
+ 	if (keylen != DES_KEY_SIZE)
+ 		return -EINVAL;
+-	else
+-		return stm32_cryp_setkey(tfm, key, keylen);
++
++	if ((crypto_ablkcipher_get_flags(tfm) &
++	     CRYPTO_TFM_REQ_FORBID_WEAK_KEYS) &&
++	    unlikely(!des_ekey(tmp, key))) {
++		crypto_ablkcipher_set_flags(tfm, CRYPTO_TFM_RES_WEAK_KEY);
++		return -EINVAL;
++	}
++
++	return stm32_cryp_setkey(tfm, key, keylen);
+ }
  
-> -- Steve
-> 
-> 
-> On Thu, 18 Apr 2019 21:15:56 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> > 
-> > Install directories of header and library files are hardcoded in pkg-config
-> > templete file. They must be configurable, the Makefile should set them on the
-> > compilation / install stage.
-> > 
-> > Link: http://lkml.kernel.org/r/20190329144546.5819-1-tstoyanov@vmware.com
-> > 
-> > Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > ---
-> >  tools/lib/traceevent/Makefile                  | 13 +++++++++----
-> >  tools/lib/traceevent/libtraceevent.pc.template |  4 ++--
-> >  2 files changed, 11 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-> > index 941761d9923d..34cf33a4f001 100644
-> > --- a/tools/lib/traceevent/Makefile
-> > +++ b/tools/lib/traceevent/Makefile
-> > @@ -50,6 +50,9 @@ man_dir = $(prefix)/share/man
-> >  man_dir_SQ = '$(subst ','\'',$(man_dir))'
-> >  pkgconfig_dir ?= $(word 1,$(shell $(PKG_CONFIG) 		\
-> >  			--variable pc_path pkg-config | tr ":" " "))
-> > +includedir_relative = traceevent
-> > +includedir = $(prefix)/include/$(includedir_relative)
-> > +includedir_SQ = '$(subst ','\'',$(includedir))'
-> >  
-> >  export man_dir man_dir_SQ INSTALL
-> >  export DESTDIR DESTDIR_SQ
-> > @@ -279,6 +282,8 @@ define do_install_pkgconfig_file
-> >  		cp -f ${PKG_CONFIG_FILE}.template ${PKG_CONFIG_FILE}; 		\
-> >  		sed -i "s|INSTALL_PREFIX|${1}|g" ${PKG_CONFIG_FILE}; 		\
-> >  		sed -i "s|LIB_VERSION|${EVENT_PARSE_VERSION}|g" ${PKG_CONFIG_FILE}; \
-> > +		sed -i "s|LIB_DIR|${libdir}|g" ${PKG_CONFIG_FILE}; \
-> > +		sed -i "s|HEADER_DIR|$(includedir)|g" ${PKG_CONFIG_FILE}; \
-> >  		$(call do_install,$(PKG_CONFIG_FILE),$(pkgconfig_dir),644); 	\
-> >  	else 									\
-> >  		(echo Failed to locate pkg-config directory) 1>&2;		\
-> > @@ -300,10 +305,10 @@ install_pkgconfig:
-> >  
-> >  install_headers:
-> >  	$(call QUIET_INSTALL, headers) \
-> > -		$(call do_install,event-parse.h,$(prefix)/include/traceevent,644); \
-> > -		$(call do_install,event-utils.h,$(prefix)/include/traceevent,644); \
-> > -		$(call do_install,trace-seq.h,$(prefix)/include/traceevent,644); \
-> > -		$(call do_install,kbuffer.h,$(prefix)/include/traceevent,644)
-> > +		$(call do_install,event-parse.h,$(DESTDIR)$(includedir_SQ),644); \
-> > +		$(call do_install,event-utils.h,$(DESTDIR)$(includedir_SQ),644); \
-> > +		$(call do_install,trace-seq.h,$(DESTDIR)$(includedir_SQ),644); \
-> > +		$(call do_install,kbuffer.h,$(DESTDIR)$(includedir_SQ),644)
-> >  
-> >  install: install_lib
-> >  
-> > diff --git a/tools/lib/traceevent/libtraceevent.pc.template b/tools/lib/traceevent/libtraceevent.pc.template
-> > index 42e4d6cb6b9e..86384fcd57f1 100644
-> > --- a/tools/lib/traceevent/libtraceevent.pc.template
-> > +++ b/tools/lib/traceevent/libtraceevent.pc.template
-> > @@ -1,6 +1,6 @@
-> >  prefix=INSTALL_PREFIX
-> > -libdir=${prefix}/lib64
-> > -includedir=${prefix}/include/traceevent
-> > +libdir=LIB_DIR
-> > +includedir=HEADER_DIR
-> >  
-> >  Name: libtraceevent
-> >  URL: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ static int stm32_cryp_tdes_setkey(struct crypto_ablkcipher *tfm, const u8 *key,
+-- 
+2.7.4
+
