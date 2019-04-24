@@ -2,52 +2,54 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE45C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660C7C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDC820675
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335FC20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126617;
-	bh=YoMf8MXUdVRAhakUKjCUZERg4lak23Jtcb5RKtOF4HM=;
+	s=default; t=1556126621;
+	bh=RtmBPvo27gjkmmkMUDnGgBEJNLs/w7S0CYR6f8VdT1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f8NpESsdc3bwJwhpJMHhSTNvms4iHK5Uir3JUxe2/Wjp6KBTp4LHO3u5BC1Tdsj+d
-	 ZKALFJDmrseLywQ2Y8N/HzQlEA3DHbKBtXazA8XbR/6ZEj8mEIhzpupM0fdicHeaLz
-	 Xzrs+JSZzpageZutZljKd7eAtLwXytYI7fdV9fmQ=
+	b=F83oF+lLAzTWWEL4wGS1uzvD7465q829ISriEhi4bYpS+pehWprq4bEjfXSzzlapT
+	 /RmbWhKUlnugSXkKlPueUox7sCGLyz4TUUSw97jNy6Y18HydwTB5g86ba/3s6l4P6h
+	 v91bVbk6LVSGGydwMj7WOMhrzIA9/goYm3NY+REc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389729AbfDXRXg (ORCPT
+        id S2389375AbfDXRXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:23:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49266 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:23:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389327AbfDXRXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:23:32 -0400
+        id S2389011AbfDXRXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:23:35 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1502E2190C;
-        Wed, 24 Apr 2019 17:23:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2222F20835;
+        Wed, 24 Apr 2019 17:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126611;
-        bh=YoMf8MXUdVRAhakUKjCUZERg4lak23Jtcb5RKtOF4HM=;
+        s=default; t=1556126614;
+        bh=RtmBPvo27gjkmmkMUDnGgBEJNLs/w7S0CYR6f8VdT1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gpmhQ7lWpef5IVguqq9BlXFQn3a8uSUPMM4wC5acmevKMSxrSVzordefBj+F5Zstl
-         GUFwWBWRSdbk3mr/TAZ0oquLR1OxI4nNOPLZFqyMhgjyhhnpB70qNfvpPgumJJgZkr
-         zet4L8/N5rdVpo2NoMMCALl5Rw1M1f0XwxmKnm3Q=
+        b=Yxhz4JNIiY0ujQgfzV4wRDSgl7IQ7b5DFNVEicZuY1qZ0WXUzw3NSfnpN4+bsIvJ5
+         DtLtcjhnmMCIbLkTI3WF9TW+swJQjwIN7rlAbRL81782+t3VO6S8GbvZ4l3D+oInMl
+         /cn1ApHvpXdiCAehrbmRkuR0w139PrRcyZNEEMlY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 168/168] ALSA: info: Fix racy addition/deletion of nodes
-Date:   Wed, 24 Apr 2019 19:10:12 +0200
-Message-Id: <20190424170933.179251406@linuxfoundation.org>
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 146/168] modpost: file2alias: check prototype of handler
+Date:   Wed, 24 Apr 2019 19:09:50 +0200
+Message-Id: <20190424170931.846891168@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -60,59 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+commit f880eea68fe593342fa6e09be9bb661f3c297aec upstream.
 
-commit 8c2f870890fd28e023b0fcf49dcee333f2c8bad7 upstream.
+Use specific prototype instead of an opaque pointer so that the
+compiler can catch function prototype mismatch.
 
-The ALSA proc helper manages the child nodes in a linked list, but its
-addition and deletion is done without any lock.  This leads to a
-corruption if they are operated concurrently.  Usually this isn't a
-problem because the proc entries are added sequentially in the driver
-probe procedure itself.  But the card registrations are done often
-asynchronously, and the crash could be actually reproduced with
-syzkaller.
-
-This patch papers over it by protecting the link addition and deletion
-with the parent's mutex.  There is "access" mutex that is used for the
-file access, and this can be reused for this purpose as well.
-
-Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/info.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ scripts/mod/file2alias.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/sound/core/info.c
-+++ b/sound/core/info.c
-@@ -724,8 +724,11 @@ snd_info_create_entry(const char *name,
- 	INIT_LIST_HEAD(&entry->children);
- 	INIT_LIST_HEAD(&entry->list);
- 	entry->parent = parent;
--	if (parent)
-+	if (parent) {
-+		mutex_lock(&parent->access);
- 		list_add_tail(&entry->list, &parent->children);
-+		mutex_unlock(&parent->access);
-+	}
- 	return entry;
- }
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index d0b164084225..4250d3d6f391 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -47,7 +47,7 @@ typedef struct {
+ struct devtable {
+ 	const char *device_id; /* name of table, __mod_<name>__*_device_table. */
+ 	unsigned long id_size;
+-	void *function;
++	int (*do_entry)(const char *filename, void *symval, char *alias);
+ };
  
-@@ -809,7 +812,12 @@ void snd_info_free_entry(struct snd_info
- 	list_for_each_entry_safe(p, n, &entry->children, list)
- 		snd_info_free_entry(p);
+ /* Define a variable f that holds the value of field f of struct devid
+@@ -1198,12 +1198,11 @@ static bool sym_is(const char *name, unsigned namelen, const char *symbol)
+ static void do_table(void *symval, unsigned long size,
+ 		     unsigned long id_size,
+ 		     const char *device_id,
+-		     void *function,
++		     int (*do_entry)(const char *filename, void *symval, char *alias),
+ 		     struct module *mod)
+ {
+ 	unsigned int i;
+ 	char alias[500];
+-	int (*do_entry)(const char *, void *entry, char *alias) = function;
  
--	list_del(&entry->list);
-+	p = entry->parent;
-+	if (p) {
-+		mutex_lock(&p->access);
-+		list_del(&entry->list);
-+		mutex_unlock(&p->access);
-+	}
- 	kfree(entry->name);
- 	if (entry->private_free)
- 		entry->private_free(entry);
+ 	device_id_check(mod->name, device_id, size, id_size, symval);
+ 	/* Leave last one: it's the terminator. */
+@@ -1314,7 +1313,7 @@ void handle_moddevtable(struct module *mod, struct elf_info *info,
+ 
+ 			if (sym_is(name, namelen, p->device_id)) {
+ 				do_table(symval, sym->st_size, p->id_size,
+-					 p->device_id, p->function, mod);
++					 p->device_id, p->do_entry, mod);
+ 				break;
+ 			}
+ 		}
+-- 
+2.19.1
+
 
 
