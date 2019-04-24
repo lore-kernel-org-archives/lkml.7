@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ADFC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6664C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6E221903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CFD21900
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116461;
-	bh=L50Kr5Utnwybg3XlDiwpvuQhxCAdzQwhVAh+JvLVwQM=;
+	s=default; t=1556116463;
+	bh=6OpNUAveQKDh3nSZHa/hX/8uG0ZJFPO3QgSRO+xpBI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RQ1JSLlWYeCLyAclc4oXFlmpEKIE/DLTOUxN0+8+5xF5ttbK2KU/bc6ls/ceXYU0C
-	 SLl28f+X7rQDWaSWCNPkZRxMHeg9j6vnZer29tEeNa/nq99LWjf4aKC7btyhgDwKSn
-	 h7+v3Xejj8Hr6pKf+RGuIex3uIDW6jElA8ZxazBs=
+	b=SYAvHaYrHpB/elgFewTYrItVKChauuwH7UIS3ERM1LQl1hChS3KfHks59kHWr+r8H
+	 DhcoSVizcj868QIVFrbW2RDJSBZIMPFdv2OprQY+H0Ye0MtLfTRRP3aGZ+4GkR/ROW
+	 o7TDLv5+/q26GahhV8VOLNgmINscognaVYtHHwUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbfDXOeU (ORCPT
+        id S1731019AbfDXOeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:34:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38130 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:34:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730952AbfDXOeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:34:13 -0400
+        id S1730939AbfDXOeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:34:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA2712089F;
-        Wed, 24 Apr 2019 14:34:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E2E5218FD;
+        Wed, 24 Apr 2019 14:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116453;
-        bh=L50Kr5Utnwybg3XlDiwpvuQhxCAdzQwhVAh+JvLVwQM=;
+        s=default; t=1556116451;
+        bh=6OpNUAveQKDh3nSZHa/hX/8uG0ZJFPO3QgSRO+xpBI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rDhT2H//Os8kiUbpASAiNc9RfIpai1USRbXYD7mrRyNTD78Kf8G/RdwW3oYYHYHBS
-         AngOgxmev6+qbDQ3oxJ62qxVUGOiv3pyNlpiMLWlT1RAxMzhyVAJGy3qdJK+zKOVBV
-         biDMsNOnc7/y/xZ8uCD1jIq1n5z32/y5SCsYAOWM=
+        b=ofoatJAXeYBkkxTN/cyd16E6tf1RFMdTLf7HeJTHyqfBsT/A5Y6T2KVEWpT7B8OlY
+         wJgZt7M4pG9f0827HLkCDUuka9IwroRoBSFjVKEnl8tcn3/FwC+WhHko/U4qKSWf0J
+         BhuRvaSDBlE1G/NM/w0/zSJvUjIf6Uz4OTAxBdYg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Axel Lin <axel.lin@ingics.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 13/66] reset: meson-audio-arb: Fix missing .owner setting of reset_controller_dev
-Date:   Wed, 24 Apr 2019 10:32:47 -0400
-Message-Id: <20190424143341.27665-13-sashal@kernel.org>
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 12/66] ARM: dts: rockchip: Fix gpu opp node names for rk3288
+Date:   Wed, 24 Apr 2019 10:32:46 -0400
+Message-Id: <20190424143341.27665-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -60,32 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit 13e8a05b922457761ddef39cfff6231bd4ed9eef ]
+[ Upstream commit d040e4e8deeaa8257d6aa260e29ad69832b5d630 ]
 
-Set .owner to prevent module unloading while being used.
+The device tree compiler yells like this:
+  Warning (unit_address_vs_reg):
+  /gpu-opp-table/opp@100000000:
+  node has a unit name, but no reg property
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Fixes: d903779b58be ("reset: meson: add meson audio arb driver")
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Let's match the cpu opp node names and use a dash.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/reset/reset-meson-audio-arb.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/rk3288.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/reset/reset-meson-audio-arb.c b/drivers/reset/reset-meson-audio-arb.c
-index 91751617b37a..c53a2185a039 100644
---- a/drivers/reset/reset-meson-audio-arb.c
-+++ b/drivers/reset/reset-meson-audio-arb.c
-@@ -130,6 +130,7 @@ static int meson_audio_arb_probe(struct platform_device *pdev)
- 	arb->rstc.nr_resets = ARRAY_SIZE(axg_audio_arb_reset_bits);
- 	arb->rstc.ops = &meson_audio_arb_rstc_ops;
- 	arb->rstc.of_node = dev->of_node;
-+	arb->rstc.owner = THIS_MODULE;
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 09868dcee34b..df0c5456c94f 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -1282,27 +1282,27 @@
+ 	gpu_opp_table: gpu-opp-table {
+ 		compatible = "operating-points-v2";
  
- 	/*
- 	 * Enable general :
+-		opp@100000000 {
++		opp-100000000 {
+ 			opp-hz = /bits/ 64 <100000000>;
+ 			opp-microvolt = <950000>;
+ 		};
+-		opp@200000000 {
++		opp-200000000 {
+ 			opp-hz = /bits/ 64 <200000000>;
+ 			opp-microvolt = <950000>;
+ 		};
+-		opp@300000000 {
++		opp-300000000 {
+ 			opp-hz = /bits/ 64 <300000000>;
+ 			opp-microvolt = <1000000>;
+ 		};
+-		opp@400000000 {
++		opp-400000000 {
+ 			opp-hz = /bits/ 64 <400000000>;
+ 			opp-microvolt = <1100000>;
+ 		};
+-		opp@500000000 {
++		opp-500000000 {
+ 			opp-hz = /bits/ 64 <500000000>;
+ 			opp-microvolt = <1200000>;
+ 		};
+-		opp@600000000 {
++		opp-600000000 {
+ 			opp-hz = /bits/ 64 <600000000>;
+ 			opp-microvolt = <1250000>;
+ 		};
 -- 
 2.19.1
 
