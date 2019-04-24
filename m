@@ -2,161 +2,72 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F6DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DFAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B1B20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:22:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="BqJuFkrn"
+	by mail.kernel.org (Postfix) with ESMTP id A23D620684
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfDXJWv (ORCPT
+        id S1728273AbfDXJXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:22:51 -0400
-Received: from onstation.org ([52.200.56.107]:38204 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbfDXJWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:22:46 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 5852B44712;
-        Wed, 24 Apr 2019 09:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1556097765;
-        bh=pX7e5bQjHIQyDMEUniVF45vctpknbuAnjJ7y5xQOkX0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BqJuFkrnCPl2qlk1OiWUpBr4y02OpIM7AmPlXn5T7FB2zAsKOWhtV1SOeT0aaEC4y
-         iDsHcl00FtrtNYzbXGWbSUcourDp/iCZYD9ueysVk4zmKBXr9AXSo2HNc8N17od9av
-         iahpPuNTgFhKKGcJmyCYbzUMYWB+6C/Fz4R19xRU=
-From:   Brian Masney <masneyb@onstation.org>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] dt-bindings: iio: tsl2583: convert bindings to YAML format
-Date:   Wed, 24 Apr 2019 05:22:38 -0400
-Message-Id: <20190424092238.6381-2-masneyb@onstation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190424092238.6381-1-masneyb@onstation.org>
-References: <20190424092238.6381-1-masneyb@onstation.org>
+        Wed, 24 Apr 2019 05:23:34 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:34402 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbfDXJXe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 05:23:34 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 2037A25AE99;
+        Wed, 24 Apr 2019 19:23:32 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 1885B94041B; Wed, 24 Apr 2019 11:23:30 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 11:23:30 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Jiada Wang <jiada_wang@mentor.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        niklas.soderlund+renesas@ragnatech.se, geert+renesas@glider.be,
+        sergei.shtylyov@cogentembedded.com, marek.vasut+renesas@gmail.com,
+        kuninori.morimoto.gx@renesas.com, hien.dang.eb@renesas.com,
+        fabrizio.castro@bp.renesas.com, dien.pham.ry@renesas.com,
+        biju.das@bp.renesas.com, erosca@de.adit-jv.com,
+        george_davis@mentor.com, joshua_frkuska@mentor.com
+Subject: Re: [PATCH v4 1/2] thermal: rcar_gen3_thermal: fix interrupt type
+Message-ID: <20190424092329.bfohle5relhof4v7@verge.net.au>
+References: <20190424051145.23072-1-jiada_wang@mentor.com>
+ <20190424051145.23072-2-jiada_wang@mentor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190424051145.23072-2-jiada_wang@mentor.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the tsl2583 device tree bindings to the new YAML format.
+On Wed, Apr 24, 2019 at 02:11:44PM +0900, Jiada Wang wrote:
+> Currently IRQF_SHARED type interrupt line is allocated, but it
+> is not appropriate, as the interrupt line isn't shared between
+> different devices, instead IRQF_ONESHOT is the proper type.
+> 
+> By changing interrupt type to IRQF_ONESHOT, now irq handler is
+> no longer needed, as clear of interrupt status can be done in
+> threaded interrupt context.
+> 
+> Because IRQF_ONESHOT type interrupt line is kept disabled until
+> the threaded handler has been run, so there is no need to protect
+> read/write of REG_GEN3_IRQSTR with lock.
+> 
+> Fixes: 7d4b269776ec6 ("enable hardware interrupts for trip points")
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
-Changes since v1:
-- Dropped description from reg and interrupts properties.
-- Dropped $ref from vcc-supply property.
-- Changed 'tsl2581@29' in example to 'als-sensor@29'
 
-I can no longer find the data sheet for this device linked on AMS's
-site. The datasheet is still on Digikey [1], however I didn't include it
-in the binding document since I assume that we should only link to the
-manufacturer's website.
-https://media.digikey.com/pdf/Data%20Sheets/Austriamicrosystems%20PDFs/TSL2581,83.pdf
-
- .../devicetree/bindings/iio/light/tsl2583.txt | 25 ----------
- .../bindings/iio/light/tsl2583.yaml           | 46 +++++++++++++++++++
- 2 files changed, 46 insertions(+), 25 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2583.txt
- create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2583.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/light/tsl2583.txt b/Documentation/devicetree/bindings/iio/light/tsl2583.txt
-deleted file mode 100644
-index 059dffa1829a..000000000000
---- a/Documentation/devicetree/bindings/iio/light/tsl2583.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--* TAOS TSL 2580/2581/2583 ALS sensor
--
--Required properties:
--
--  - compatible: Should be one of
--		"amstaos,tsl2580"
--		"amstaos,tsl2581"
--		"amstaos,tsl2583"
--  - reg: the I2C address of the device
--
--Optional properties:
--
--  - interrupts: the sole interrupt generated by the device
--
--  Refer to interrupt-controller/interrupts.txt for generic interrupt client
--  node bindings.
--
--  - vcc-supply: phandle to the regulator that provides power to the sensor.
--
--Example:
--
--tsl2581@29 {
--	compatible = "amstaos,tsl2581";
--	reg = <0x29>;
--};
-diff --git a/Documentation/devicetree/bindings/iio/light/tsl2583.yaml b/Documentation/devicetree/bindings/iio/light/tsl2583.yaml
-new file mode 100644
-index 000000000000..6989a8a54c5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/tsl2583.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/tsl2583.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: AMS/TAOS Ambient Light Sensor (ALS)
-+
-+maintainers:
-+  - Brian Masney <masneyb@onstation.org>
-+
-+description: |
-+  Ambient light sensing with an i2c interface.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amstaos,tsl2580
-+      - amstaos,tsl2581
-+      - amstaos,tsl2583
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vcc-supply:
-+    description: Regulator that provides power to the sensor
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        als-sensor@29 {
-+                compatible = "amstaos,tsl2581";
-+                reg = <0x29>;
-+        };
-+    };
-+...
--- 
-2.20.1
-
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Tested-by: Simon Horman <horms+renesas@verge.net.au>
