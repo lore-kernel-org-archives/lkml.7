@@ -2,95 +2,122 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096CFC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6B0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FC220652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C6020652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:25:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hqyhgSpi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbfDXTZD (ORCPT
+        id S1731350AbfDXTZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:25:03 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:36736 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731054AbfDXTZD (ORCPT
+        Wed, 24 Apr 2019 15:25:50 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42982 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfDXTZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:25:03 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 090583C00D1;
-        Wed, 24 Apr 2019 21:25:01 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id c08LAztIh0ZG; Wed, 24 Apr 2019 21:24:53 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id ECE203C0034;
-        Wed, 24 Apr 2019 21:24:52 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr
- 2019 21:24:52 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Christian Gromm <christian.gromm@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>
-CC:     Andrey Shvetsov <andrey.shvetsov@k2l.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>,
-        Marcin Ciupak <marcin.s.ciupak@gmail.com>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: [PATCH] staging: most: cdev: fix chrdev_region leak in mod_exit
-Date:   Wed, 24 Apr 2019 21:23:43 +0200
-Message-ID: <20190424192343.15418-1-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 24 Apr 2019 15:25:49 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g3so26708765wrx.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:25:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a2LfF+54lAYEDIYuh1kcXf6iTBYgfOjqWNYwzXwMRmQ=;
+        b=hqyhgSpiAgUsPyz1ZyX9vXULHY8xwUjMTz5sjXsLXWiTFjQZj8y92RAVojJzWtXWUE
+         gYUSJA+0XOeJ39h+OCP2QmKRDzn1BUvETUor3WX47WOOMExHlO6l/sXIGQHkGXvN8dSE
+         Vtw8/nN465q10/sQBDyTosM6c8EMMGwe0hWWrg660R1B7+vxcREKYIkC2wBUhY1yz/XI
+         Uqcbgc98QyHz/EEb+SwbqXxw3MPF2nc6OUU7nZueGYiOGcxnfTjB31GFfAcXZozLqIDZ
+         fZN1048AYtRiX2/uFlqrBs5kSxBGIUDslTeHxqNIuHXqtJ7jj7chPYGydgR/X5AbRTIe
+         mSpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a2LfF+54lAYEDIYuh1kcXf6iTBYgfOjqWNYwzXwMRmQ=;
+        b=gbA7qmW3uPlFVruTOCGsie0GoajGKCS56nb0Sz1NEVRZqEbdx/j5ZKTyuRW56//6Y8
+         9uN8YJu7IYu0VXqpijRzcVPf5PjHYS56l7GEAwgzGHJjnnMk/ZCBz0O1qRuWPuRzcfN8
+         mhGpf2kfTAhmAXSSx+C9k9Y+u7A3FQ4/rqHDsCqIEQbsG7SbmetYOl8S6OcK6iqlVbs1
+         gGt3PyClk7Z874dDs1UjQiCFgiqhfOGS1MU0m48AQpx+2tvog9YfffVK96OJwCscUglD
+         x5B8g3rxpGTJgc5dH7b/kDVlDfun03zktqOaaEuckpfapre8VwDUrFgb3M8fWtTHIPM7
+         zbdw==
+X-Gm-Message-State: APjAAAW0q77E+jT0f6T/DfuaVlVgk7TKxmR65dKDaf+OhdI0t5caWSaI
+        gabZFK7furnB0Oq20YOsRqmlGEDc/si/Uhr4KKYTiQ==
+X-Google-Smtp-Source: APXvYqznbn3Slfia7rEN0K5uBFs1V9XeBBnlQpsghjBILJBDXc3J38DuhwUiDRoHSzh8t7jrC+AGF8yT6O1FQ897eec=
+X-Received: by 2002:adf:cd90:: with SMTP id q16mr1316301wrj.75.1556133947827;
+ Wed, 24 Apr 2019 12:25:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.72.93.184]
+References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
+ <1556061656-1733-12-git-send-email-john.stultz@linaro.org> <20190424165049.GD20110@ravnborg.org>
+In-Reply-To: <20190424165049.GD20110@ravnborg.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 24 Apr 2019 12:25:36 -0700
+Message-ID: <CALAqxLWoXT5wQeiMYV8PQAHgvf7inp11WfKgGktz-UHL0Yt0hA@mail.gmail.com>
+Subject: Re: [PATCH 11/25] drm: kirin: Move kirin_crtc, kirin_plane,
+ kirin_format to kirin_drm_drv.h
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suresh Udipi <sudipi@jp.adit-jv.com>
+On Wed, Apr 24, 2019 at 9:50 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> On Tue, Apr 23, 2019 at 04:20:42PM -0700, John Stultz wrote:
+>
+> This struct:
+> >  /* ade-format info: */
+> > -struct ade_format {
+> > -     u32 pixel_format;
+> > -     enum ade_fb_format ade_format;
+> > -};
+> > -
+> > -static const struct ade_format ade_formats[] = {
+> > +static const struct kirin_format ade_formats[] = {
+> >       /* 16bpp RGB: */
+> >       { DRM_FORMAT_RGB565, ADE_RGB_565 },
+> >       { DRM_FORMAT_BGR565, ADE_BGR_565 },
+...
+> > +
+> > +/* kirin-format translate table */
+> > +struct kirin_format {
+> > +     u32 pixel_format;
+> > +     u32 hw_format;
+> > +};
+> Is renamed.
+> The member hw_format is renamed and no longer uses an enum.
+> (The sole user of this enum type).
 
-It looks like v4.18-rc1 commit [0] which upstreams mld-1.8.0
-commit [1] missed to fix the memory leak in mod_exit function.
+So the enum values are still used, but yes, the type here shifts.
 
-Do it now.
+> These changes are not included in the changelog - should they be part of
+> this patch?
+> And also the change from enum to u32 is not understood.
 
-[0] aba258b7310167 ("staging: most: cdev: fix chrdev_region leak")
-[1] https://github.com/microchip-ais/linux/commit/a2d8f7ae7ea381
-    ("staging: most: cdev: fix leak for chrdev_region")
+So the intent is to be able to share the kirin_format structure
+between both the kirin620 support and kirin960, where as the
+ade_fb_format enum values are tied to the kirin620, the kirin960 has
+dpe_fb_formats enum which has different values. So the u32 hw_format
+value is just the generic storage for enumerated format types of
+either device. So its just a map from generic pixel_format definition
+-> hardware specific value for that format.
 
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
- drivers/staging/most/cdev/cdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'll try to make that change more clear in the commit message, but if
+you have ideas for a simpler or cleaner way to do the same, let me
+know.
 
-diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/cdev.c
-index f2b347cda8b7..d5f236889021 100644
---- a/drivers/staging/most/cdev/cdev.c
-+++ b/drivers/staging/most/cdev/cdev.c
-@@ -549,7 +549,7 @@ static void __exit mod_exit(void)
- 		destroy_cdev(c);
- 		destroy_channel(c);
- 	}
--	unregister_chrdev_region(comp.devno, 1);
-+	unregister_chrdev_region(comp.devno, CHRDEV_REGION_SIZE);
- 	ida_destroy(&comp.minor_id);
- 	class_destroy(comp.class);
- }
--- 
-2.21.0
-
+thanks
+-john
