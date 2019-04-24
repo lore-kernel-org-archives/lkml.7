@@ -2,139 +2,162 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C76C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B229BC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC882084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF3B2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="mSmraiUl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gjdWXS4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbfDXPCy (ORCPT
+        id S1731042AbfDXPDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:02:54 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:37644 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfDXPCx (ORCPT
+        Wed, 24 Apr 2019 11:03:01 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:44795 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730727AbfDXPC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:02:53 -0400
-Received: by mail-it1-f196.google.com with SMTP id u65so6732508itc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:02:53 -0700 (PDT)
+        Wed, 24 Apr 2019 11:02:59 -0400
+Received: by mail-vs1-f67.google.com with SMTP id j184so10554918vsd.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:02:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZyvU6yfxfMmdoBsp+ARyAtBH3t7rGFLZFFfr9/y649E=;
-        b=mSmraiUl8p5UjOaq2RLtDucSenUILQvaXSh3Gd/DAVeUCSWIBfp9TLCe6Kdp2pKkp6
-         D+aTXw44q4B45WxKyfWbVTFJAATETPnh1jEJ5WtxLAHDUc+IoUZtpFEa7OhbJGnZiEFY
-         5GD0AsWF0ps9zqSovb26OgRxnwMirUBijEKDA=
+        bh=XKLrqEHsZgkXKIFnNrEflMfVKn1F3tCXT6JyQm68SoI=;
+        b=gjdWXS4sz7Pz4Pb7GPMmkRX5Ad+ejIXPsRs+APt+HPnLgpYvEPZXoFQpv/N/f8rnnE
+         ostLMHeZOpMFVt04Tf4VwDP7Hu+SaKLO9Q0VSQe131BuZ6o6Lxb0EH53o1PIKMcLLQEB
+         X79E3KwNfQqvNNgvbmjrNG4ozxnQAbm0nYhUY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZyvU6yfxfMmdoBsp+ARyAtBH3t7rGFLZFFfr9/y649E=;
-        b=QKn9xu5IqEx/UFwH74TYBRTlwyefaHOF/T90sc8m/1qrCU0Sq4V/QX9ZuSAudpxBPR
-         ov3Vwj3siX2rzGQ939ibDHJa4vMlfEPHyRV67TjcB3bygs/eh2mSbGWqhTofKuTSnc56
-         TAG5xxqTFFC4XTKqiUrYtJN7EGNXDhJWXrk0ICOIKJP9DkeHDxwEn3ZCCnbwPN6LoPoe
-         OqGUGYu+TMvcewEhqOXtS/LZ94SoT6KkBXZ1X516qDI+ZuvNGIB3beXyl2gvhZVaqMcY
-         MlTnbOuHqkSaSS6Ulnv1ar2Sia7pFO3b7v0DCz9H7/z3hIRtKc47kjm5W/HTu+7sGASV
-         XFZA==
-X-Gm-Message-State: APjAAAWE+MfhAioC3n+PDjywAmMHIpq95rJyvD1LaGozJYMtDUS/nTEk
-        JSePiPXUNdemLBUme0kLhkU7YlcAjfydz5Mo2myM3Q==
-X-Google-Smtp-Source: APXvYqzvFD8vEjr6dbYDwxvrWo2xzt92CL2M/9UI55x3WH3XQJt7RP7/vi13geKvhNZ2tI6ZJhBsIp4K5o0NmvXOfbk=
-X-Received: by 2002:a02:1a89:: with SMTP id 131mr20815544jai.78.1556118173019;
- Wed, 24 Apr 2019 08:02:53 -0700 (PDT)
+        bh=XKLrqEHsZgkXKIFnNrEflMfVKn1F3tCXT6JyQm68SoI=;
+        b=aKw6r2PsKg+gG1pdLr1U0zqljDrVaaF7ESqeyeiDYuQkPtOgtoeA2BRF2rqpJjQCkV
+         pAzhQOX86ZOBlDL1CXla4gcREfmi4v7SGAPvgx7nGX1178uDLsejQrp/+BRPrFhvbiRA
+         56GV6mEq9UpDVVzHgLbvx1GLpGZHoFpvurKA4kGF+ZGIOimTf8jzpa/aHAeuWnG61UwL
+         /vHdFUT7EIfFq0K+7yAIaU7HZ5T2Xd0kwWT+MV+KxA0Uiw56l6GQa+qk4s5nMkMwspDK
+         z8mUED8pp/8GKF8aPXpRkFEa0y3TSdfpMRqY3vDpI+vHFzR/ZTIxwL8tZtsY87sUPYNC
+         g7Nw==
+X-Gm-Message-State: APjAAAV89Oyz6b9ZEt9Zff1bi2YEzqfPvnbDClr/GwZoEMaFkDTUtKKC
+        /tBMEAFo2p4f8kOTY7sMQP2H5yt1aQ0=
+X-Google-Smtp-Source: APXvYqy4v+kXSN57CIUOBBS0h/ser/UsjKJ0+5GBNZhVkveawZaT7YeYm6h8laZ6f6ZbMEAsqPlioQ==
+X-Received: by 2002:a67:e407:: with SMTP id d7mr16801817vsf.212.1556118178309;
+        Wed, 24 Apr 2019 08:02:58 -0700 (PDT)
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
+        by smtp.gmail.com with ESMTPSA id i2sm3402748vsp.7.2019.04.24.08.02.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 08:02:57 -0700 (PDT)
+Received: by mail-vk1-f173.google.com with SMTP id q189so4088642vkq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:02:57 -0700 (PDT)
+X-Received: by 2002:a1f:3458:: with SMTP id b85mr16977824vka.4.1556118176584;
+ Wed, 24 Apr 2019 08:02:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1553680185.git.kirr@nexedi.com> <12f7d0d98555ee0d174d04bb47644f65c07f035a.1553680185.git.kirr@nexedi.com>
- <CAJfpegv0NvcsD9gh3aN+ngzsLqbNWUc73ZPN1qHox_14eN9Pqg@mail.gmail.com>
- <20190424115620.GA2723@deco.navytux.spb.ru> <CAJfpegsiWuykUsfg=sO8sKo5h86U65q10=e=wYKXTQEHW8DFkw@mail.gmail.com>
- <20190424123107.GA32024@deco.navytux.spb.ru> <CAJfpegupwNbVPenZdMX8F2Z3vKSJdfAsXuiF4YA+nbnj2Kp=sw@mail.gmail.com>
- <20190424142249.GA28070@deco.navytux.spb.ru>
-In-Reply-To: <20190424142249.GA28070@deco.navytux.spb.ru>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 24 Apr 2019 17:02:42 +0200
-Message-ID: <CAJfpegtX6p+j+kRuudZ=yVM9Tgj7x4mBaiGuDoDCrZoRvBOt9Q@mail.gmail.com>
-Subject: Re: [RESEND4, PATCH 1/2] fuse: retrieve: cap requested size to
- negotiated max_write
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Jakob Unterwurzacher <jakobunt@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fuse-devel <fuse-devel@lists.sourceforge.net>,
-        stable <stable@vger.kernel.org>
+References: <1556107369-7655-1-git-send-email-alex.popov@linux.com>
+In-Reply-To: <1556107369-7655-1-git-send-email-alex.popov@linux.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 24 Apr 2019 08:02:45 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jLJeC4oAagPGSquKi_EVvA9+aZkjtASGwriGMeR_dxwnQ@mail.gmail.com>
+Message-ID: <CAGXu5jLJeC4oAagPGSquKi_EVvA9+aZkjtASGwriGMeR_dxwnQ@mail.gmail.com>
+Subject: Re: [v2 1/1] kconfig: Terminate menu blocks with a comment in the
+ generated config
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 4:22 PM Kirill Smelkov <kirr@nexedi.com> wrote:
-> - FUSE_PRECISE_INVAL_DATA:
+On Wed, Apr 24, 2019 at 5:03 AM Alexander Popov <alex.popov@linux.com> wrote:
 >
->     --- b/include/uapi/linux/fuse.h
->     +++ b/include/uapi/linux/fuse.h
->     @@ -266,7 +266,7 @@
->       * FUSE_MAX_PAGES: init_out.max_pages contains the max number of req pages
->       * FUSE_CACHE_SYMLINKS: cache READLINK responses
->       * FUSE_NO_OPENDIR_SUPPORT: kernel supports zero-message opendir
->     - * FUSE_PRECISE_INVAL_DATA: filesystem is fully responsible for data cache invalidation
->     + * FUSE_PRECISE_INVAL_DATA: filesystem is fully responsible for invalidation
->       */
->      #define FUSE_ASYNC_READ                (1 << 0)
->      #define FUSE_POSIX_LOCKS       (1 << 1)
+> Currently menu blocks start with a pretty header but end with nothing in
+> the generated config. So next config options stick together with the
+> options from the menu block.
 >
-> the "data cache" in "for data cache invalidation" has particular meaning
-> and semantic: the filesystem promises to explicitly invalidate data of
-
-Right; better name: FUSE_EXPLICIT_INVAL_DATA.  Will push fixed version.
-
-> Your amendment for FOPEN_STREAM in uapi/linux/fuse.h (see above) also
-> suggests that it is better to be more explicit in that file.
+> Let's terminate menu blocks in the generated config with a comment and
+> a newline if needed. Example:
 >
->     --- b/fs/fuse/inode.c
->     +++ b/fs/fuse/inode.c
->     @@ -913,13 +913,8 @@
->                                     fc->dont_mask = 1;
->                             if (arg->flags & FUSE_AUTO_INVAL_DATA)
->                                     fc->auto_inval_data = 1;
->     -                       if (arg->flags & FUSE_PRECISE_INVAL_DATA)
->     +                       else if (arg->flags & FUSE_PRECISE_INVAL_DATA)
->                                     fc->precise_inval_data = 1;
->     -                       if (fc->auto_inval_data && fc->precise_inval_data) {
->     -                               pr_warn("filesystem requested both auto and "
->     -                                       "precise cache control - using auto\n");
->     -                               fc->precise_inval_data = 0;
->     -                       }
->                             if (arg->flags & FUSE_DO_READDIRPLUS) {
->                                     fc->do_readdirplus = 1;
->                                     if (arg->flags & FUSE_READDIRPLUS_AUTO)
+> ...
+> CONFIG_BPF_STREAM_PARSER=y
+> CONFIG_NET_FLOW_LIMIT=y
 >
-> Even though it is ok for me personally (I could be careful and use only
-> FUSE_PRECISE_INVAL_DATA) I still think usage of both "auto" and "precise"
-> invalidation modes deserves a warning. It is only at filesystem init time. What
-> is the reason not to print it?
-
-The warning makes no sense.  It should either be failure or silent override.
-
-> - "fuse: retrieve: cap requested size to negotiated max_write"
+> #
+> # Network testing
+> #
+> CONFIG_NET_PKTGEN=y
+> CONFIG_NET_DROP_MONITOR=y
+> # end of Network testing
+> # end of Networking options
 >
->      Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
->      Cc: Han-Wen Nienhuys <hanwen@google.com>
->      Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
->     -Cc: <stable@vger.kernel.org> # v2.6.36+
+> CONFIG_HAMRADIO=y
+> ...
 >
-> what is the reason not to include this patch into stable series?
+> Signed-off-by: Alexander Popov <alex.popov@linux.com>
 
-This doens't fix any bugs out there, but there is a slight chance of
-regression (so it might possibly have to be reverted in the future) so
-it absolutely makes no sense to backport it to stable.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Thanks,
-Miklos
+-Kees
+
+> ---
+>  scripts/kconfig/confdata.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+> index 08ba146..486b4c7 100644
+> --- a/scripts/kconfig/confdata.c
+> +++ b/scripts/kconfig/confdata.c
+> @@ -819,6 +819,7 @@ int conf_write(const char *name)
+>         struct menu *menu;
+>         const char *basename;
+>         const char *str;
+> +       bool need_newline = false;
+>         char dirname[PATH_MAX+1], tmpname[PATH_MAX+22], newname[PATH_MAX+8];
+>         char *env;
+>
+> @@ -871,12 +872,16 @@ int conf_write(const char *name)
+>                                      "#\n"
+>                                      "# %s\n"
+>                                      "#\n", str);
+> +                       need_newline = false;
+>                 } else if (!(sym->flags & SYMBOL_CHOICE)) {
+>                         sym_calc_value(sym);
+>                         if (!(sym->flags & SYMBOL_WRITE))
+>                                 goto next;
+> +                       if (need_newline) {
+> +                               fprintf(out, "\n");
+> +                               need_newline = false;
+> +                       }
+>                         sym->flags &= ~SYMBOL_WRITE;
+> -
+>                         conf_write_symbol(out, sym, &kconfig_printer_cb, NULL);
+>                 }
+>
+> @@ -888,6 +893,11 @@ int conf_write(const char *name)
+>                 if (menu->next)
+>                         menu = menu->next;
+>                 else while ((menu = menu->parent)) {
+> +                       if (!menu->sym && menu_is_visible(menu)) {
+> +                               str = menu_get_prompt(menu);
+> +                               fprintf(out, "# end of %s\n", str);
+> +                               need_newline = true;
+> +                       }
+>                         if (menu->next) {
+>                                 menu = menu->next;
+>                                 break;
+> --
+> 2.7.4
+>
+
+
+-- 
+Kees Cook
