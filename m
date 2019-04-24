@@ -2,88 +2,117 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C098CC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0BFC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FFED2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="i2mOYYKH"
+	by mail.kernel.org (Postfix) with ESMTP id 33E4921773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556128283;
+	bh=Z6PeYcYC9ZRi6YMHrIEHW26rZfHvdXYkip5E8n3YpPM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zfz8168nN6vHSylxQfytEfBnXzZ4wzNzSaujR0zB1EGALhU3PLZqxQGsFVTe5BqK4
+	 FrV3/565GDdQd8K93cny1XUGuCLByQxmo9rjKQWcgaPBsrv9PWYxuPG4bwxKrEhiYi
+	 4fFDy1QKjRUQYRLUwVow1SzL1EbGliW7DJzHE/Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391135AbfDXRvR (ORCPT
+        id S2390285AbfDXR2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:51:17 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38236 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390744AbfDXR24 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:28:56 -0400
-Received: by mail-io1-f67.google.com with SMTP id y6so8879859ior.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 10:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lN83+aUhu5iPVQmRA+/A9ER3XqiY5oN0TOslwMtjELs=;
-        b=i2mOYYKHKNvE3s5wxV1VAY5d1U85VE5dw/XzMQ2N61fnvDiv/r8RJyAEFTcy+bYKeA
-         5lwLVwQG8U2phsK3lWFRlU7us40i3b2NmJlGZlxl0Q5211N1BmugmPFcDXecbpbvK9m2
-         q1FUQF8NMqIfNwirokdUznuAaV120kXrz9aD4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lN83+aUhu5iPVQmRA+/A9ER3XqiY5oN0TOslwMtjELs=;
-        b=nJjo5pMIRfCOu3/3Hp804ldmLZKGl/78RpcsquTP+hFXp2oMRKRH/wIbzgP3p5g6iP
-         QCgbBeamSFNqzWNL2jKQEur27e9Xb+RMLy8vfFbCiRD4U65/4s/y6Zu7qWVt4QdfJO9Y
-         7qmFChVNIMcuTHkvIgkBYWVrv6yR+pUAgaTZ4lx+KzwFlaJz4hWq2wzFLrz2gitHsIcq
-         s4NF9GVCjqbVBjHNmU9OYy40BNk2qmZXO/Baett9MdqaiwVFEcq9mivFy/wRAVQXpmlS
-         LvNSRB8O7v2RwolyBhChIncQW8np+bt8IDtVg4V7Xy3O/0DiwlSV4xp4XR347x7bCi2p
-         H8Tw==
-X-Gm-Message-State: APjAAAUjWzd5vuHgmA/0FVHOhxD+Yk0yFqowynsn/Qs0k1vPA7/MVnqK
-        erWbLduQchnNAhuvpMwTGWdSNScqIu3YO3Qi0AZJQA==
-X-Google-Smtp-Source: APXvYqz3cHuXu+wqxN0CPQ6FM2nAGgKq5onzw0iCS/4eLtfmBsY/d8KPFbc2/hMU5jji5J7RO/3qfdGuighQlaMzSnI=
-X-Received: by 2002:a5e:8202:: with SMTP id l2mr18783581iom.144.1556126935594;
- Wed, 24 Apr 2019 10:28:55 -0700 (PDT)
+        Wed, 24 Apr 2019 13:28:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390030AbfDXR2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:28:44 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 955C421903;
+        Wed, 24 Apr 2019 17:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556126924;
+        bh=Z6PeYcYC9ZRi6YMHrIEHW26rZfHvdXYkip5E8n3YpPM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=R9c3LrRNphsWjMapiqCuLPfTlKm6gMPG0iRbLdoLQSISfg2oX/1/3KhCL0uIhjaO3
+         gZ2Gtd90sFtgvAuT8luhbyNBQ1vRBunHB4ANTTlxOCG2QAbmrsCDCFdtpi5DdN5Yft
+         Nk2tYDdapsO8IWI6ZhJoYTs7vcTAjeK+OeOoT2nA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 64/70] ALSA: info: Fix racy addition/deletion of nodes
+Date:   Wed, 24 Apr 2019 19:10:24 +0200
+Message-Id: <20190424170918.853432386@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
+References: <20190424170906.751869122@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
- <155373036414.7602.7964458548629410897.stgit@warthog.procyon.org.uk>
- <CAJfpegvowwePJHEMRkaabx-NxLoJ5f8_QziPFyQUui+bmAaT1w@mail.gmail.com> <3217.1556119323@warthog.procyon.org.uk>
-In-Reply-To: <3217.1556119323@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 24 Apr 2019 19:28:44 +0200
-Message-ID: <CAJfpegssSDWijX2Qnd0fQhCMkfmS3EZWp+=gMn_9S6E3H8wQBg@mail.gmail.com>
-Subject: Re: [RFC PATCH 44/68] vfs: Convert fuse to use the new mount API
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 5:22 PM David Howells <dhowells@redhat.com> wrote:
->
-> Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> > Should I be applying this, together with the vfs dependencies?  Or
-> > will you take care of these?
->
-> I'm hoping Al will take the entire series.
->
-> > One minor comment is that fuse conventionally uses "struct fuse_conn
-> > *fc", so "struct fs_context *fc" is confusing here.  There's one place
-> > you use "struct fs_context *fsc", which seems the right thing to do
-> > for all the cases.
->
-> Except in ceph, where "struct ceph_fs_client *fsc" is a common thing...
+From: Takashi Iwai <tiwai@suse.de>
 
-I'd be happy if it was consistently "struct fs_context *fsc" in just
-fuse/inode.c.
+commit 8c2f870890fd28e023b0fcf49dcee333f2c8bad7 upstream.
 
-Thanks,
-Miklos
+The ALSA proc helper manages the child nodes in a linked list, but its
+addition and deletion is done without any lock.  This leads to a
+corruption if they are operated concurrently.  Usually this isn't a
+problem because the proc entries are added sequentially in the driver
+probe procedure itself.  But the card registrations are done often
+asynchronously, and the crash could be actually reproduced with
+syzkaller.
+
+This patch papers over it by protecting the link addition and deletion
+with the parent's mutex.  There is "access" mutex that is used for the
+file access, and this can be reused for this purpose as well.
+
+Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/core/info.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+--- a/sound/core/info.c
++++ b/sound/core/info.c
+@@ -722,8 +722,11 @@ snd_info_create_entry(const char *name,
+ 	INIT_LIST_HEAD(&entry->children);
+ 	INIT_LIST_HEAD(&entry->list);
+ 	entry->parent = parent;
+-	if (parent)
++	if (parent) {
++		mutex_lock(&parent->access);
+ 		list_add_tail(&entry->list, &parent->children);
++		mutex_unlock(&parent->access);
++	}
+ 	return entry;
+ }
+ 
+@@ -805,7 +808,12 @@ void snd_info_free_entry(struct snd_info
+ 	list_for_each_entry_safe(p, n, &entry->children, list)
+ 		snd_info_free_entry(p);
+ 
+-	list_del(&entry->list);
++	p = entry->parent;
++	if (p) {
++		mutex_lock(&p->access);
++		list_del(&entry->list);
++		mutex_unlock(&p->access);
++	}
+ 	kfree(entry->name);
+ 	if (entry->private_free)
+ 		entry->private_free(entry);
+
+
