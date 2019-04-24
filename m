@@ -2,112 +2,122 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37141C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF097C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1372120684
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E50A20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556129388;
+	bh=4keWdMm/tEZlCwMp8B2v1gf42EFGzm3x08l2s06Jfq8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bi+e0CHQ09h+Srcm/eDEmIFCtEijTaGxA4TP/irUt8EPZY26/FdN2KHmlk8h1VQJP
+	 lNmS+L6G5XBYrMMXgQNOhXTI8Mf23dAhCYKKczoDe5HDixPnOB1H0wsLG9+Iv3g9lW
+	 NRWj0w8QnDjqtN7PTiFNmApWmM/QyyuwzqsvAJ0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389159AbfDXSJl (ORCPT
+        id S2388159AbfDXRPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:09:41 -0400
-Received: from gateway21.websitewelcome.com ([192.185.45.175]:48436 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387432AbfDXSJk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:09:40 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 3F318400E6CCC
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 13:09:39 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id JMKxhYfbO2PzOJMKxh4Qgg; Wed, 24 Apr 2019 13:09:39 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.223] (port=44244 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hJMKv-0046lv-MS; Wed, 24 Apr 2019 13:09:37 -0500
-Date:   Wed, 24 Apr 2019 13:09:34 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Mattia Dongili <malattia@linux.it>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] platform/x86: sony-laptop: Fix unintentional fall-through
-Message-ID: <20190424180934.GA29307@embeddedor>
+        Wed, 24 Apr 2019 13:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388149AbfDXRO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:57 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F361206BA;
+        Wed, 24 Apr 2019 17:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556126097;
+        bh=4keWdMm/tEZlCwMp8B2v1gf42EFGzm3x08l2s06Jfq8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Inqy+8tvqXu5oX5bO2lKAY73jZfixQYbiWpqM0WAoFN0aRRRcnmRwH5SEhsWBQJ/p
+         d/2TrC9EZbhfhDrSp9vE4Lb6OyG4r2LBwzF4+yMGoqDwj82w1J4CjIkIA2ggh0xoZO
+         ZwJ4gtIEHY1KqqdGDpWfAEQhaT5E6PDYTV996+ig=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Wei Wang <weiwan@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 094/104] tcp: tcp_grow_window() needs to respect tcp_space()
+Date:   Wed, 24 Apr 2019 19:09:51 +0200
+Message-Id: <20190424170909.693071532@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
+References: <20190424170839.996641496@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.223
-X-Source-L: No
-X-Exim-ID: 1hJMKv-0046lv-MS
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.223]:44244
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It seems that the default case should return AE_CTRL_TERMINATE, instead
-of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
-otherwise the line of code at the end of the function is unreachable and
-makes no sense:
+From: Eric Dumazet <edumazet@google.com>
 
-return AE_CTRL_TERMINATE;
+[ Upstream commit 50ce163a72d817a99e8974222dcf2886d5deb1ae ]
 
-This fix is based on the following thread of discussion:
+For some reason, tcp_grow_window() correctly tests if enough room
+is present before attempting to increase tp->rcv_ssthresh,
+but does not prevent it to grow past tcp_space()
 
-https://lore.kernel.org/patchwork/patch/959782/
+This is causing hard to debug issues, like failing
+the (__tcp_select_window(sk) >= tp->rcv_wnd) test
+in __tcp_ack_snd_check(), causing ACK delays and possibly
+slow flows.
 
-Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Depending on tcp_rmem[2], MTU, skb->len/skb->truesize ratio,
+we can see the problem happening on "netperf -t TCP_RR -- -r 2000,2000"
+after about 60 round trips, when the active side no longer sends
+immediate acks.
+
+This bug predates git history.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Wei Wang <weiwan@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/platform/x86/sony-laptop.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/ipv4/tcp_input.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index 4bfbfa3f78e6..2058445fc456 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -4424,14 +4424,16 @@ sony_pic_read_possible_resource(struct acpi_resource *resource, void *context)
- 			}
- 			return AE_OK;
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -358,11 +358,12 @@ static int __tcp_grow_window(const struc
+ static void tcp_grow_window(struct sock *sk, const struct sk_buff *skb)
+ {
+ 	struct tcp_sock *tp = tcp_sk(sk);
++	int room;
++
++	room = min_t(int, tp->window_clamp, tcp_space(sk)) - tp->rcv_ssthresh;
+ 
+ 	/* Check #1 */
+-	if (tp->rcv_ssthresh < tp->window_clamp &&
+-	    (int)tp->rcv_ssthresh < tcp_space(sk) &&
+-	    !sk_under_memory_pressure(sk)) {
++	if (room > 0 && !sk_under_memory_pressure(sk)) {
+ 		int incr;
+ 
+ 		/* Check #2. Increase window, if skb with such overhead
+@@ -375,8 +376,7 @@ static void tcp_grow_window(struct sock
+ 
+ 		if (incr) {
+ 			incr = max_t(int, incr, 2 * skb->len);
+-			tp->rcv_ssthresh = min(tp->rcv_ssthresh + incr,
+-					       tp->window_clamp);
++			tp->rcv_ssthresh += min(room, incr);
+ 			inet_csk(sk)->icsk_ack.quick |= 1;
  		}
-+
-+	case ACPI_RESOURCE_TYPE_END_TAG:
-+		return AE_OK;
-+
- 	default:
- 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
- 			resource->type);
-+		return AE_CTRL_TERMINATE;
- 
--	case ACPI_RESOURCE_TYPE_END_TAG:
--		return AE_OK;
  	}
--	return AE_CTRL_TERMINATE;
- }
- 
- static int sony_pic_possible_resources(struct acpi_device *device)
--- 
-2.21.0
+
 
