@@ -2,121 +2,104 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3515C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65778C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9EE221773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:27:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTA8NQVT"
+	by mail.kernel.org (Postfix) with ESMTP id 2923E218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556112531;
+	bh=j/DYxn69slBsMS5sBzngRnW7mY/Ai5Z5oOBTxtONHMc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1tTlRpOtyI4S8wdnfXwxR0lPNvmq8dOTmr1SqMP+86u+zu1lXkYqRynJGcYal/ecS
+	 JQPgpxcqQDnrI1n/+VwqDOfKnAU6cmCS/1cH/p8Q1lZZa8YJ4nQBuVvX3YkawOJu5k
+	 HeInjDshPxPs0i4GFplTxvR1+BH/u/YF7p3o8tzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfDXN1Z (ORCPT
+        id S1728037AbfDXN2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:27:25 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41266 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfDXN1Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:27:24 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v7so14246447oie.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 06:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TiDnhjK/VArowtwPe5AuaHtBqWO5JLqyyuR7HAzGWwI=;
-        b=RTA8NQVTixY3QcCRnFGfQn1eAmUTWMLgy8dlgw0bI/pnDYuTT5Lcj2hqodcJfwy0Xi
-         sh3Ni+db7tJlS8eVdMge409nfSVso4fUqrxRLLJRCvT1LrbfBi/IS2Kcs55xpW4/WZkA
-         5TYuLQIe4fM9TCVIjm3Ie4xXIsc2dE624H54gmR/qoOlXY3Y0xK8mYZnwUMfmd5tecrC
-         bx7aZ+mfAdqgQnYOqb3carGuky9Lw0+JUPlvTvNJbH6nvOLIHHe0spNMAJHY/vYb4B0B
-         Vlz89AT0tWTIw2hAuJlzysIy7xslZLswAyA0DX6R/7j9mbMgGvovud3AZQWUd70xKd6u
-         mdgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=TiDnhjK/VArowtwPe5AuaHtBqWO5JLqyyuR7HAzGWwI=;
-        b=bPrSpV41MeWL3kDvo5MNkZ+3wcEfm0VtD0zMtmv6LrbdTUSrGwQfwTz9cHmjjzcne2
-         j2npV15vKOqGkHvvebADzS6PVz3mx6R6oXaRmsAyS4vtkufO3+JOLmwkAslkiu7bvt5J
-         3og3Is8KAeuLbaPG6Lzra8VlvhFuWQhrTxDnUhBBPMIfA+Wk5ZD4BQYh2QIPyQgltoL0
-         rdAdKsblyqSSk9OxT37nA5GWcEZGFqjwRPbDRoitxIJtZ/sNXAtkqKrScdBG8Vqn6IPT
-         ZMNmwZ3DbtRT1eVGwDWb1mi8Of8yn5BsuHnciTItzRtYzTrYdg3iuqjvpR8Tmnfatww3
-         RZiw==
-X-Gm-Message-State: APjAAAUqUX+j4Ibpzo3XC72tuGrdksEyDp0SozgeePsdjuPVmhSHS8H4
-        CcwcSVqlBuW0eNFkSW0f/MX07zY=
-X-Google-Smtp-Source: APXvYqx1XWm4e1gtQ3pKYSOpp4KEPDQwOCjj3AVd35ACt2b/qGthQUd2uGZCVzainHtaY5AJu4QPGg==
-X-Received: by 2002:aca:abce:: with SMTP id u197mr5254580oie.151.1556112443479;
-        Wed, 24 Apr 2019 06:27:23 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.134.43])
-        by smtp.gmail.com with ESMTPSA id e133sm8291629oif.44.2019.04.24.06.27.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 06:27:22 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:d5e:aa5a:44d8:6907])
-        by serve.minyard.net (Postfix) with ESMTPSA id 041AA1800CF;
-        Wed, 24 Apr 2019 13:27:22 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 08:27:20 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Kamlakant Patel <kamlakantp@marvell.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "openipmi-developer@lists.sourceforge.net" 
-        <openipmi-developer@lists.sourceforge.net>
-Subject: Re: [PATCH] ipmi: fix slave-addr property add to ipmi platform device
-Message-ID: <20190424132720.GC6623@minyard.net>
-Reply-To: minyard@acm.org
-References: <1556102007-14083-1-git-send-email-kamlakantp@marvell.com>
+        Wed, 24 Apr 2019 09:28:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbfDXN2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:28:49 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E5DE21773;
+        Wed, 24 Apr 2019 13:28:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556112528;
+        bh=j/DYxn69slBsMS5sBzngRnW7mY/Ai5Z5oOBTxtONHMc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NQwdyp2HpjHIqRBEr9bCnMlQfASYeukOSHkbVbzMJu/idG+RoAetBw77Xj8y/w7zo
+         dwqhCEWSUrL43eB7KPOKkn7vuX+StnbqomlNtcaayVbR74EUoxsMhGzzXocqPQD/uZ
+         i8PtHDkOrmXNXu8de6FfohIA2A3Fu6cxG/GpK8oM=
+Date:   Wed, 24 Apr 2019 15:28:46 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        heikki.krogerus@linux.intel.com, f.fainelli@gmail.com,
+        rpjday@crashcourse.ca, dvhart@infradead.org
+Subject: Re: [PATCH] mod_devicetable: helper macro for declaring oftree
+ module device table
+Message-ID: <20190424132846.GA19385@kroah.com>
+References: <1556104081-16217-1-git-send-email-info@metux.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556102007-14083-1-git-send-email-kamlakantp@marvell.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1556104081-16217-1-git-send-email-info@metux.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:34:14AM +0000, Kamlakant Patel wrote:
-> Remove check for p->slave_addr while adding 'slave-addr' property entry
-> since it can be 0.
-> Currently, it throws following error:
-> "ipmi_ssif dmi-ipmi-ssif.0: ipmi_ssif: device has no slave-addr
-> property"
+On Wed, Apr 24, 2019 at 01:08:01PM +0200, Enrico Weigelt, metux IT consult wrote:
+> Little helper macro that declares an oftree module device table,
+> if CONFIG_OF is enabled. Otherwise it's just noop.
 > 
-> This patch fixes the issue.
-
-This would cause things that don't supply slave addresses to get
-the wrong address, they will get 0x00 instead of 0x20, like they
-should.
-
-The right thing is to remote the warning, I guess.
-
--corey
-
+> This is also helpful if some drivers can be built w/ or w/o
+> oftree support.
 > 
-> Signed-off-by: Kamlakant Patel <kamlakantp@marvell.com>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+
+As I said before, please drop all "non-name" information from your s-o-b
+line.
+
+
+
 > ---
->  drivers/char/ipmi/ipmi_plat_data.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  include/linux/mod_devicetable.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/drivers/char/ipmi/ipmi_plat_data.c b/drivers/char/ipmi/ipmi_plat_data.c
-> index 8f0ca2a..2b62104 100644
-> --- a/drivers/char/ipmi/ipmi_plat_data.c
-> +++ b/drivers/char/ipmi/ipmi_plat_data.c
-> @@ -34,8 +34,7 @@ struct platform_device *ipmi_platform_add(const char *name, unsigned int inst,
->  		p->regspacing = p->regsize;
+> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+> index 448621c..853e301 100644
+> --- a/include/linux/mod_devicetable.h
+> +++ b/include/linux/mod_devicetable.h
+> @@ -245,6 +245,15 @@ struct of_device_id {
+>  	const void *data;
+>  };
 >  
->  	pr[pidx++] = PROPERTY_ENTRY_U8("ipmi-type", p->type);
-> -	if (p->slave_addr)
-> -		pr[pidx++] = PROPERTY_ENTRY_U8("slave-addr", p->slave_addr);
-> +	pr[pidx++] = PROPERTY_ENTRY_U8("slave-addr", p->slave_addr);
->  	pr[pidx++] = PROPERTY_ENTRY_U8("addr-source", p->addr_source);
->  	if (p->regshift)
->  		pr[pidx++] = PROPERTY_ENTRY_U8("reg-shift", p->regshift);
-> -- 
-> 1.8.3.1
-> 
+> +/*
+> + * macro for adding the of module device table only if CONFIG_OF enabled
+> + */
+> +#ifdef CONFIG_OF
+> +#define MODULE_DEVICE_TABLE_OF(name)	MODULE_DEVICE_TABLE(of,name)
+> +#else
+> +#define MODULE_DEVICE_TABLE_OF(name)
+> +#endif /* CONFIG_OF */
+
+Do you have a real user of this?  We need that for any type of apis that
+people are supposed to use, we do not just add them without users if at
+all possible.
+
+And did you run it through checkpatch.pl before sending this?  :(
+
+thanks,
+
+greg k-h
