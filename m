@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6ACC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16C8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E6720652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F69720652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128927;
-	bh=mB8ZCrl/dzZ8PtIbe73QMd6O3xay+jx2ZN9+xjOg7zk=;
+	s=default; t=1556128939;
+	bh=xH9gPGWKi5J8zkld0hv+6TLySweCf2h9StZ5mh9OL4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/SENtvjTUx9O0j6srzU+JwUj7jssshZVgZtub1Kekg+1B+w+vaEExvNRWI0wmwth
-	 BI/o52L9ObJbMoBZHKl4kMbniM2NrId/5MOXisEq4KPDNgmL8m68yEKqX3yE5Arejr
-	 otuJgU8gj8q8XdE45rQK8btDsFO7fr3I9Qz8QZ9g=
+	b=Kp2n16ZtDfiknY8e+U/F8V5/+OThuudHoE9JvyKQy1lQmm3osORV4g08s7pH4k9MK
+	 keU8qhM5J5a9FenMtCOoR7hcPO3XCFAiAi+dfPZhSgcM+kegqYGftLV8Sn+vCTXqzh
+	 6shGCNWzLWUMm8PIn5xlm4iOZZcZP6/WePAkUDQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389343AbfDXRV2 (ORCPT
+        id S2389715AbfDXSCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:21:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46924 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 14:02:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389329AbfDXRVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:21:24 -0400
+        id S2388928AbfDXRVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:21:16 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8321C21904;
-        Wed, 24 Apr 2019 17:21:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A23E20835;
+        Wed, 24 Apr 2019 17:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126484;
-        bh=mB8ZCrl/dzZ8PtIbe73QMd6O3xay+jx2ZN9+xjOg7zk=;
+        s=default; t=1556126475;
+        bh=xH9gPGWKi5J8zkld0hv+6TLySweCf2h9StZ5mh9OL4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0CKn/KW9ZLbk9odm4YsMHtKDF3pLUQWXqt39emV40Sj3NLjAP4P7JRPHrzabKCFm
-         fnpJTitOezex+QX2qjtfNkqFlbliV4ZtQaU1C7Dcx6mBGKurUyWU8/zUVXcD/VNjut
-         V55Ity/ee+KMy+bvsrUuox0oYP3dPihzcB2QLtoY=
+        b=d4CJj8cb2S0I26gdnPC15gjUIhdnL+sim7ZhF2TFQUbgDSDG7jt8uahRRt1doa6ZB
+         oTY99JiyzqzJLjsuk6jcpvyjIriNvabEizHt+hzdesO/byZ+oFYFtaFPfcfJilunzc
+         5ZSxGXb4VapDMVNVAW6DkUZndPnRYQnerk8rRt4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 124/168] ARM: samsung: Limit SAMSUNG_PM_CHECK config option to non-Exynos platforms
-Date:   Wed, 24 Apr 2019 19:09:28 +0200
-Message-Id: <20190424170930.706308368@linuxfoundation.org>
+Subject: [PATCH 4.4 122/168] f2fs: fix to do sanity check with current segment number
+Date:   Wed, 24 Apr 2019 19:09:26 +0200
+Message-Id: <20190424170930.612035321@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,56 +60,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6862fdf2201ab67cd962dbf0643d37db909f4860 ]
+[ Upstream commit 042be0f849e5fc24116d0afecfaf926eed5cac63 ]
 
-"S3C2410 PM Suspend Memory CRC" feature (controlled by
-SAMSUNG_PM_CHECK config option) is incompatible with highmem
-(uses phys_to_virt() instead of proper mapping) which is used by
-the majority of Exynos boards. The issue manifests itself in OOPS
-on affected boards, i.e. on Odroid-U3 I got the following one:
+https://bugzilla.kernel.org/show_bug.cgi?id=200219
 
-Unable to handle kernel paging request at virtual address f0000000
-pgd = 1c0f9bb4
-[f0000000] *pgd=00000000
-Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-[<c0458034>] (crc32_le) from [<c0121f8c>] (s3c_pm_makecheck+0x34/0x54)
-[<c0121f8c>] (s3c_pm_makecheck) from [<c0121efc>] (s3c_pm_run_res+0x74/0x8c)
-[<c0121efc>] (s3c_pm_run_res) from [<c0121ecc>] (s3c_pm_run_res+0x44/0x8c)
-[<c0121ecc>] (s3c_pm_run_res) from [<c01210b8>] (exynos_suspend_enter+0x64/0x148)
-[<c01210b8>] (exynos_suspend_enter) from [<c018893c>] (suspend_devices_and_enter+0x9ec/0xe74)
-[<c018893c>] (suspend_devices_and_enter) from [<c0189534>] (pm_suspend+0x770/0xc04)
-[<c0189534>] (pm_suspend) from [<c0186ce8>] (state_store+0x6c/0xcc)
-[<c0186ce8>] (state_store) from [<c09db434>] (kobj_attr_store+0x14/0x20)
-[<c09db434>] (kobj_attr_store) from [<c02fa63c>] (sysfs_kf_write+0x4c/0x50)
-[<c02fa63c>] (sysfs_kf_write) from [<c02f97a4>] (kernfs_fop_write+0xfc/0x1e4)
-[<c02f97a4>] (kernfs_fop_write) from [<c027b198>] (__vfs_write+0x2c/0x140)
-[<c027b198>] (__vfs_write) from [<c027b418>] (vfs_write+0xa4/0x160)
-[<c027b418>] (vfs_write) from [<c027b5d8>] (ksys_write+0x40/0x8c)
-[<c027b5d8>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Reproduction way:
+- mount image
+- run poc code
+- umount image
 
-Add PLAT_S3C24XX, ARCH_S3C64XX and ARCH_S5PV210 dependencies to
-SAMSUNG_PM_CHECK config option to hide it on Exynos platforms.
+F2FS-fs (loop1): Bitmap was wrongly set, blk:15364
+------------[ cut here ]------------
+kernel BUG at /home/yuchao/git/devf2fs/segment.c:2061!
+invalid opcode: 0000 [#1] PREEMPT SMP
+CPU: 2 PID: 17686 Comm: umount Tainted: G        W  O      4.18.0-rc2+ #39
+Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+EIP: update_sit_entry+0x459/0x4e0 [f2fs]
+Code: e8 1c b5 fd ff 0f 0b 0f 0b 8b 45 e4 c7 44 24 08 9c 7a 6c f8 c7 44 24 04 bc 4a 6c f8 89 44 24 0c 8b 06 89 04 24 e8 f7 b4 fd ff <0f> 0b 8b 45 e4 0f b6 d2 89 54 24 10 c7 44 24 08 60 7a 6c f8 c7 44
+EAX: 00000032 EBX: 000000f8 ECX: 00000002 EDX: 00000001
+ESI: d7177000 EDI: f520fe68 EBP: d6477c6c ESP: d6477c34
+DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010282
+CR0: 80050033 CR2: b7fbe000 CR3: 2a99b3c0 CR4: 000406f0
+Call Trace:
+ f2fs_allocate_data_block+0x124/0x580 [f2fs]
+ do_write_page+0x78/0x150 [f2fs]
+ f2fs_do_write_node_page+0x25/0xa0 [f2fs]
+ __write_node_page+0x2bf/0x550 [f2fs]
+ f2fs_sync_node_pages+0x60e/0x6d0 [f2fs]
+ ? sync_inode_metadata+0x2f/0x40
+ ? f2fs_write_checkpoint+0x28f/0x7d0 [f2fs]
+ ? up_write+0x1e/0x80
+ f2fs_write_checkpoint+0x2a9/0x7d0 [f2fs]
+ ? mark_held_locks+0x5d/0x80
+ ? _raw_spin_unlock_irq+0x27/0x50
+ kill_f2fs_super+0x68/0x90 [f2fs]
+ deactivate_locked_super+0x3d/0x70
+ deactivate_super+0x40/0x60
+ cleanup_mnt+0x39/0x70
+ __cleanup_mnt+0x10/0x20
+ task_work_run+0x81/0xa0
+ exit_to_usermode_loop+0x59/0xa7
+ do_fast_syscall_32+0x1f5/0x22c
+ entry_SYSENTER_32+0x53/0x86
+EIP: 0xb7f95c51
+Code: c1 1e f7 ff ff 89 e5 8b 55 08 85 d2 8b 81 64 cd ff ff 74 02 89 02 5d c3 8b 0c 24 c3 8b 1c 24 c3 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
+EAX: 00000000 EBX: 0871ab90 ECX: bfb2cd00 EDX: 00000000
+ESI: 00000000 EDI: 0871ab90 EBP: 0871ab90 ESP: bfb2cd7c
+DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
+Modules linked in: f2fs(O) crc32_generic bnep rfcomm bluetooth ecdh_generic snd_intel8x0 snd_ac97_codec ac97_bus snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi snd_seq pcbc joydev aesni_intel snd_seq_device aes_i586 snd_timer crypto_simd snd cryptd soundcore mac_hid serio_raw video i2c_piix4 parport_pc ppdev lp parport hid_generic psmouse usbhid hid e1000 [last unloaded: f2fs]
+---[ end trace d423f83982cfcdc5 ]---
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+The reason is, different log headers using the same segment, once
+one log's next block address is used by another log, it will cause
+panic as above.
+
+Main area: 24 segs, 24 secs 24 zones
+  - COLD  data: 0, 0, 0
+  - WARM  data: 1, 1, 1
+  - HOT   data: 20, 20, 20
+  - Dir   dnode: 22, 22, 22
+  - File   dnode: 22, 22, 22
+  - Indir nodes: 21, 21, 21
+
+So this patch adds sanity check to detect such condition to avoid
+this issue.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-samsung/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/super.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index 57729b915003..b9396dcf836d 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -255,7 +255,7 @@ config S3C_PM_DEBUG_LED_SMDK
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index dbd7adff8b5a..bd0dfaecfac3 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1143,7 +1143,7 @@ int sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 	unsigned int segment_count_main;
+ 	unsigned int cp_pack_start_sum, cp_payload;
+ 	block_t user_block_count;
+-	int i;
++	int i, j;
  
- config SAMSUNG_PM_CHECK
- 	bool "S3C2410 PM Suspend Memory CRC"
--	depends on PM
-+	depends on PM && (PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210)
- 	select CRC32
- 	help
- 	  Enable the PM code's memory area checksum over sleep. This option
+ 	total = le32_to_cpu(raw_super->segment_count);
+ 	fsmeta = le32_to_cpu(raw_super->segment_count_ckpt);
+@@ -1184,11 +1184,43 @@ int sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 		if (le32_to_cpu(ckpt->cur_node_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_node_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_NODE_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_node_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Node segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
+ 	}
+ 	for (i = 0; i < NR_CURSEG_DATA_TYPE; i++) {
+ 		if (le32_to_cpu(ckpt->cur_data_segno[i]) >= main_segs ||
+ 			le16_to_cpu(ckpt->cur_data_blkoff[i]) >= blocks_per_seg)
+ 			return 1;
++		for (j = i + 1; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_data_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u, %u) has the same "
++					"segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_data_segno[i]));
++				return 1;
++			}
++		}
++	}
++	for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
++		for (j = i; j < NR_CURSEG_DATA_TYPE; j++) {
++			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
++				le32_to_cpu(ckpt->cur_data_segno[j])) {
++				f2fs_msg(sbi->sb, KERN_ERR,
++					"Data segment (%u) and Data segment (%u)"
++					" has the same segno: %u", i, j,
++					le32_to_cpu(ckpt->cur_node_segno[i]));
++				return 1;
++			}
++		}
+ 	}
+ 
+ 	sit_bitmap_size = le32_to_cpu(ckpt->sit_ver_bitmap_bytesize);
 -- 
 2.19.1
 
