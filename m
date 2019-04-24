@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46FAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC487C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 748402190A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8E221907
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126834;
-	bh=e+hc7MTEciYpiwdn9M4/ztAcugxgLtvgdIlQgW4t0HI=;
+	s=default; t=1556126837;
+	bh=3tZMqAe4m2tyxH1Km1vnkr2W2uO+Aoqi8LQxBStiESA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F7hSmZXNmG+MdKJrpFGfhe8GXEx6lJDzfxb71b/VN26sLCLiJVd+LJMgMmnBJWm0A
-	 sSwryZasMmIJAMNwQZKWeB7tF873ILnrSyjtp1xM1Sx7gxRjkf7RA0mIyfk3aoDk5k
-	 brZQY909o8zQCwYYCK1I5oeu62HYp/odbT34YwIo=
+	b=iMQ7N3V5GYWEw6H3IDtLLc1+6EWhcO1tKMVtcljbQkS6NiSdXdIqwW3fE6LUQdb5K
+	 M2dAOOaBo8uk62q+bjSAvArUsRMYFMWTM0M+kH7GiwUX6HLJf7YFOjPTJfD8kGBnIA
+	 ya8a2dolKN4oCY0sVuMKJdM257qPIoYduZmjloqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390406AbfDXR1N (ORCPT
+        id S2389987AbfDXR1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:27:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53154 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:27:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390386AbfDXR1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:27:10 -0400
+        id S2390380AbfDXR1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:27:12 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2841B2054F;
-        Wed, 24 Apr 2019 17:27:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB381205ED;
+        Wed, 24 Apr 2019 17:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126829;
-        bh=e+hc7MTEciYpiwdn9M4/ztAcugxgLtvgdIlQgW4t0HI=;
+        s=default; t=1556126832;
+        bh=3tZMqAe4m2tyxH1Km1vnkr2W2uO+Aoqi8LQxBStiESA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e3kZKxAPu+ja52tCVNQMTOnmRkikL0cGp74Y2o/tcku1SR6G+S+15wDWCRyPR+AfI
-         FLfiax4dZ1f+75yHCHb/cdYVqfAECoDOD11i1Knj7kvjuGwnIyyAlPilCpPCtbRV0T
-         TodP2Mj9ClmG9zPjR1XNShK5+HNwkjZGNb2OOfZ0=
+        b=smhf4vzSKCx+9U07ye/dqiJQGzmz3lb/FNES8rqKdFX4nOf0YcOBnpyLM8L+bv9cR
+         AoJlYxBXmqPw+VyflTwmMSKNE2b/RyYfBmLUTkNT+uRfS5xUL8BcWmN60UK7XAb047
+         zi/5g/x86PZ1CAHFTUcNmO3TOb45x+/QHNyREG2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 32/70] ALSA: core: Fix card races between register and disconnect
-Date:   Wed, 24 Apr 2019 19:09:52 +0200
-Message-Id: <20190424170911.344621117@linuxfoundation.org>
+        stable@vger.kernel.org, Jaesoo Lee <jalee@purestorage.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 33/70] scsi: core: set result when the command cannot be dispatched
+Date:   Wed, 24 Apr 2019 19:09:53 +0200
+Message-Id: <20190424170911.461102399@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -60,76 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jaesoo Lee <jalee@purestorage.com>
 
-commit 2a3f7221acddfe1caa9ff09b3a8158c39b2fdeac upstream.
+commit be549d49115422f846b6d96ee8fd7173a5f7ceb0 upstream.
 
-There is a small race window in the card disconnection code that
-allows the registration of another card with the very same card id.
-This leads to a warning in procfs creation as caught by syzkaller.
+When SCSI blk-mq is enabled, there is a bug in handling errors in
+scsi_queue_rq.  Specifically, the bug is not setting result field of
+scsi_request correctly when the dispatch of the command has been
+failed. Since the upper layer code including the sg_io ioctl expects to
+receive any error status from result field of scsi_request, the error is
+silently ignored and this could cause data corruptions for some
+applications.
 
-The problem is that we delete snd_cards and snd_cards_lock entries at
-the very beginning of the disconnection procedure.  This makes the
-slot available to be assigned for another card object while the
-disconnection procedure is being processed.  Then it becomes possible
-to issue a procfs registration with the existing file name although we
-check the conflict beforehand.
-
-The fix is simply to move the snd_cards and snd_cards_lock clearances
-at the end of the disconnection procedure.  The references to these
-entries are merely either from the global proc files like
-/proc/asound/cards or from the card registration / disconnection, so
-it should be fine to shift at the very end.
-
-Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
+Fixes: d285203cf647 ("scsi: add support for a blk-mq based I/O path.")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Jaesoo Lee <jalee@purestorage.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/init.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/scsi/scsi_lib.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/sound/core/init.c
-+++ b/sound/core/init.c
-@@ -406,14 +406,7 @@ int snd_card_disconnect(struct snd_card
- 	card->shutdown = 1;
- 	spin_unlock(&card->files_lock);
- 
--	/* phase 1: disable fops (user space) operations for ALSA API */
--	mutex_lock(&snd_card_mutex);
--	snd_cards[card->number] = NULL;
--	clear_bit(card->number, snd_cards_lock);
--	mutex_unlock(&snd_card_mutex);
--	
--	/* phase 2: replace file->f_op with special dummy operations */
--	
-+	/* replace file->f_op with special dummy operations */
- 	spin_lock(&card->files_lock);
- 	list_for_each_entry(mfile, &card->files_list, list) {
- 		/* it's critical part, use endless loop */
-@@ -429,7 +422,7 @@ int snd_card_disconnect(struct snd_card
- 	}
- 	spin_unlock(&card->files_lock);	
- 
--	/* phase 3: notify all connected devices about disconnection */
-+	/* notify all connected devices about disconnection */
- 	/* at this point, they cannot respond to any calls except release() */
- 
- #if IS_ENABLED(CONFIG_SND_MIXER_OSS)
-@@ -445,6 +438,13 @@ int snd_card_disconnect(struct snd_card
- 		device_del(&card->card_dev);
- 		card->registered = false;
- 	}
-+
-+	/* disable fops (user space) operations for ALSA API */
-+	mutex_lock(&snd_card_mutex);
-+	snd_cards[card->number] = NULL;
-+	clear_bit(card->number, snd_cards_lock);
-+	mutex_unlock(&snd_card_mutex);
-+
- #ifdef CONFIG_PM
- 	wake_up(&card->power_sleep);
- #endif
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -2050,8 +2050,12 @@ out:
+ 			blk_mq_delay_run_hw_queue(hctx, SCSI_QUEUE_DELAY);
+ 		break;
+ 	default:
++		if (unlikely(!scsi_device_online(sdev)))
++			scsi_req(req)->result = DID_NO_CONNECT << 16;
++		else
++			scsi_req(req)->result = DID_ERROR << 16;
+ 		/*
+-		 * Make sure to release all allocated ressources when
++		 * Make sure to release all allocated resources when
+ 		 * we hit an error, as we will never see this command
+ 		 * again.
+ 		 */
 
 
