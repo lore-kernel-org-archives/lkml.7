@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E77DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EE7C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FC3218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05B1218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117162;
-	bh=KwOvcNkNsC0vlWl4PLjhfUA4P8vjXs9I8vVJc8Yr6A8=;
+	s=default; t=1556117182;
+	bh=yQWrj10usIeH9/gR88CrZLg8iZ7FfzQJwVZCdUTvT7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6c2McXTLfWS498i85cMp4hZRb6bVCsY+E+h+2LKPMGLXrWaw0xuU9LlpT6QVWhjh
-	 KiycTtwll9qPTcTRcjfEGxg9kmohU2v4ss+mQjRo+hsx/il8aEhAlJBJM7fTkNO/5v
-	 uj+IMVoVhcMfliSTs6kqVkMv0Xrbkg2cp0L/Gt+M=
+	b=vaB7K4hywcWotCqoUxTGfDNqhTz+B5tT6OAUPpfkFPr5UqDYBY1s/Zqwojis5hBfO
+	 /dM8JWsj0u8zxGavZm347QT29XqVpazmNOXdoUPs0ipknJCx+dCCE8CoUJiSnHC0/R
+	 RIBjVpa28RGCoAL9vP0PrvlxgcO/WqJzqjseXS2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731196AbfDXOey (ORCPT
+        id S1731117AbfDXOem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:34:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38660 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:34:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731166AbfDXOet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:34:49 -0400
+        id S1727327AbfDXOej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:34:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C4A52089F;
-        Wed, 24 Apr 2019 14:34:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB6142089F;
+        Wed, 24 Apr 2019 14:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116488;
-        bh=KwOvcNkNsC0vlWl4PLjhfUA4P8vjXs9I8vVJc8Yr6A8=;
+        s=default; t=1556116479;
+        bh=yQWrj10usIeH9/gR88CrZLg8iZ7FfzQJwVZCdUTvT7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avJpWUz9eN25+0fahGYf6nZO9wcUaLTyeoa6bbqt850D2umQ7j8ZjctcZglapRbxV
-         QYziulBSss1988qMSjdvAROQJQcMnrrDBcnu+uTF/N1ZqkrQC4iLRk6fGgmIMwMEaI
-         UkiZsgvVIennxV88PQfTEe7gJS9WWw6mhKzSilhg=
+        b=ieQ3Wh7JQQM9vM95vigAzadTf6sU2HgmThXvskHGyZ1MycY58xknLGTSNNawl1ODg
+         FHECNV8Ja//2O/jtMYRISNcyacr81wIq+yzZHJQv2hPEqABHtfbLpYQtMRDt6GcjdI
+         Zon1sp5NeZo6end1HAsVBmOVZIMOMPK0bEAVlmmI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khorenko <khorenko@virtuozzo.com>,
+Cc:     Xi Wang <wangxi11@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 26/66] bonding: show full hw address in sysfs for slave entries
-Date:   Wed, 24 Apr 2019 10:33:00 -0400
-Message-Id: <20190424143341.27665-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 22/66] net: hns3: fix compile error
+Date:   Wed, 24 Apr 2019 10:32:56 -0400
+Message-Id: <20190424143341.27665-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -59,43 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khorenko <khorenko@virtuozzo.com>
+From: Xi Wang <wangxi11@huawei.com>
 
-[ Upstream commit 18bebc6dd3281955240062655a4df35eef2c46b3 ]
+[ Upstream commit 669efc76b317b3aa550ffbf0b79d064cb00a5f96 ]
 
-Bond expects ethernet hwaddr for its slave, but it can be longer than 6
-bytes - infiniband interface for example.
+Currently, the rules for configuring search paths in Kbuild have
+changed, this will lead some erros when compiling hns3 with the
+following command:
 
- # cat /sys/devices/<skipped>/net/ib0/address
- 80:00:02:08:fe:80:00:00:00:00:00:00:7c:fe:90:03:00:be:5d:e1
+make O=DIR M=drivers/net/ethernet/hisilicon/hns3
 
- # cat /sys/devices/<skipped>/net/ib0/bonding_slave/perm_hwaddr
- 80:00:02:08:fe:80
+drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c:11:10:
+fatal error: hnae3.h: No such file or directory
 
-So print full hwaddr in sysfs "bonding_slave/perm_hwaddr" as well.
+This patch fix it by adding $(srctree)/ prefix to the serach paths.
 
-Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+Signed-off-by: Xi Wang <wangxi11@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_sysfs_slave.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_sysfs_slave.c b/drivers/net/bonding/bond_sysfs_slave.c
-index 2f120b2ffef0..4985268e2273 100644
---- a/drivers/net/bonding/bond_sysfs_slave.c
-+++ b/drivers/net/bonding/bond_sysfs_slave.c
-@@ -55,7 +55,9 @@ static SLAVE_ATTR_RO(link_failure_count);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile b/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
+index fffe8c1c45d3..0fb61d440d3b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
+@@ -3,7 +3,7 @@
+ # Makefile for the HISILICON network device drivers.
+ #
  
- static ssize_t perm_hwaddr_show(struct slave *slave, char *buf)
- {
--	return sprintf(buf, "%pM\n", slave->perm_hwaddr);
-+	return sprintf(buf, "%*phC\n",
-+		       slave->dev->addr_len,
-+		       slave->perm_hwaddr);
- }
- static SLAVE_ATTR_RO(perm_hwaddr);
+-ccflags-y := -Idrivers/net/ethernet/hisilicon/hns3
++ccflags-y := -I $(srctree)/drivers/net/ethernet/hisilicon/hns3
  
+ obj-$(CONFIG_HNS3_HCLGE) += hclge.o
+ hclge-objs = hclge_main.o hclge_cmd.o hclge_mdio.o hclge_tm.o hclge_mbx.o hclge_err.o  hclge_debugfs.o
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile b/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
+index fb93bbd35845..6193f8fa7cf3 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
+@@ -3,7 +3,7 @@
+ # Makefile for the HISILICON network device drivers.
+ #
+ 
+-ccflags-y := -Idrivers/net/ethernet/hisilicon/hns3
++ccflags-y := -I $(srctree)/drivers/net/ethernet/hisilicon/hns3
+ 
+ obj-$(CONFIG_HNS3_HCLGEVF) += hclgevf.o
+ hclgevf-objs = hclgevf_main.o hclgevf_cmd.o hclgevf_mbx.o
+\ No newline at end of file
 -- 
 2.19.1
 
