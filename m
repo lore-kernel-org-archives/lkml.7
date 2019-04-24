@@ -2,125 +2,181 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859D0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDC7C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514E02148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:00:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="uH0nPsdq"
+	by mail.kernel.org (Postfix) with ESMTP id 7A22C2148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733065AbfDXRA5 (ORCPT
+        id S1733077AbfDXRBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:00:57 -0400
-Received: from mail.efficios.com ([167.114.142.138]:38992 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730260AbfDXRA5 (ORCPT
+        Wed, 24 Apr 2019 13:01:44 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.168]:46031 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732643AbfDXRBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:00:57 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 9DB081DAA44;
-        Wed, 24 Apr 2019 13:00:55 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id NS6s5Twc3ZW5; Wed, 24 Apr 2019 13:00:55 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 2A4271DAA3F;
-        Wed, 24 Apr 2019 13:00:55 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2A4271DAA3F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556125255;
-        bh=Ex/Bez+rbJXKFeKiO+tud5TSRCa9wwv9WZfRFYB+rpU=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=uH0nPsdquveZSmK71XqKTTshkDN2apTeJjhgmdE8bOSuEnyP+nA6mI6k3KZCKnFNm
-         qk0379wSp0C5Dtusi6wYQrCtilibk+BFPUm6ivfXv/YTSmdfT7mhfIprKg8cKiUatu
-         IO9lmP4/kGiXTjiIC5J8ad645I+aI+t3QOKVnUo7KmR1qULq4xcIzbdgOuQjnH9SZV
-         /olZknLqAKk5JfedVeS0reeah2CKPEYwKh1L2TdSFWkcmU+oLReJx6NbOEw8sLK9NR
-         l2bCEz+zByLWgvFyk1I4oM1rK30jKx8Zt7Ltfr5E6NmzJXnn6fjL81Q9nwPuCIbOms
-         97UpKKFQ38Img==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id pdPlonkO4ApW; Wed, 24 Apr 2019 13:00:55 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 0A13C1DAA38;
-        Wed, 24 Apr 2019 13:00:55 -0400 (EDT)
-Date:   Wed, 24 Apr 2019 13:00:54 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>,
-        linux-kselftest <linux-kselftest@vger.kernel.org>
-Message-ID: <697611694.604.1556125254852.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190424165150.GF21101@lakrids.cambridge.arm.com>
-References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com> <20190424152502.14246-9-mathieu.desnoyers@efficios.com> <20190424164538.GC18611@fuggles.cambridge.arm.com> <20190424165150.GF21101@lakrids.cambridge.arm.com>
-Subject: Re: [RFC PATCH for 5.2 08/10] rseq/selftests: aarch64 code
- signature: handle big-endian environment
+        Wed, 24 Apr 2019 13:01:43 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id D081B442A
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:01:42 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id JLHChghcw4FKpJLHCh8ZL9; Wed, 24 Apr 2019 12:01:42 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.127.223] (port=43278 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hJLHB-003TEy-Rn; Wed, 24 Apr 2019 12:01:42 -0500
+Subject: Re: [PATCH] watchdog: machzwd: Mark expected switch fall-through
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20190410184905.GA24283@embeddedor>
+ <20190410203556.GA18676@roeck-us.net>
+ <707a1c55-c185-1227-0a65-136f3bf27617@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <c2e13a6d-0701-414b-ff1d-70e358fc2786@embeddedor.com>
+Date:   Wed, 24 Apr 2019 12:01:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <707a1c55-c185-1227-0a65-136f3bf27617@embeddedor.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/selftests: aarch64 code signature: handle big-endian environment
-Thread-Index: OBjeHUeE7gQ5xyWKTP757DExutwbEw==
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.127.223
+X-Source-L: No
+X-Exim-ID: 1hJLHB-003TEy-Rn
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.250.127.223]:43278
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 24, 2019, at 12:51 PM, Mark Rutland mark.rutland@arm.com wrote:
+Hi Guenter,
 
-> On Wed, Apr 24, 2019 at 05:45:38PM +0100, Will Deacon wrote:
->> On Wed, Apr 24, 2019 at 11:25:00AM -0400, Mathieu Desnoyers wrote:
->> > +/*
->> > + * aarch64 -mbig-endian generates mixed endianness code vs data:
->> > + * little-endian code and big-endian data. Ensure the RSEQ_SIG signature
->> > + * matches code endianness.
->> > + */
->> > +#define RSEQ_SIG_CODE	0xd428bc00	/* BRK #0x45E0.  */
->> > +
->> > +#ifdef __AARCH64EB__
->> > +#define RSEQ_SIG_DATA	0x00bc28d4	/* BRK #0x45E0.  */
->> 
->> It would be neater to implement swab32 and use that with RSEQ_SIG_CODE,
+I wonder if you took this in you watchdog-next branch.
+
+Thanks
+--
+Gustavo
+
+On 4/10/19 3:51 PM, Gustavo A. R. Silva wrote:
 > 
-> If possible, marginally neater than that would be using
-> le32_to_cpu(RSEQ_SIG_CODE), without any ifdeffery necessary.
 > 
-> It looks like that's defined in tools/include/linux/kernel.h, but I'm
-> not sure if that gets pulled into your include path.
-
-Considering that those RSEQ_SIG* define will end up in public bits/rseq.h
-headers within glibc, I'm tempted to keep the amount of dependencies on
-external headers to a minimum, if it's OK with you.
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+> On 4/10/19 3:35 PM, Guenter Roeck wrote:
+>> On Wed, Apr 10, 2019 at 01:49:05PM -0500, Gustavo A. R. Silva wrote:
+>>> In preparation to enabling -Wimplicit-fallthrough, mark switch
+>>> cases where we are expecting to fall through.
+>>>
+>>> This patch fixes the following warnings:
+>>>
+>>> drivers/watchdog/machzwd.c: In function ‘zf_set_timer’:
+>>> ./arch/x86/include/asm/io.h:355:14: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>>>  #define outw outw
+>>> drivers/watchdog/machzwd.c:80:53: note: in expansion of macro ‘outw’
+>>>  #define zf_writew(port, data)  { outb(port, INDEX); outw(data, DATA_W); }
+>>>                                                      ^~~~
+>>> drivers/watchdog/machzwd.c:179:3: note: in expansion of macro ‘zf_writew’
+>>>    zf_writew(COUNTER_1, new);
+>>>    ^~~~~~~~~
+>>> drivers/watchdog/machzwd.c:180:2: note: here
+>>>   case WD2:
+>>>   ^~~~
+>>>
+>>> Warning level 3 was used: -Wimplicit-fallthrough=3
+>>>
+>>> This patch is part of the ongoing efforts to enable
+>>> -Wimplicit-fallthrough.
+>>>
+>>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>>
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>>
+> 
+> Thank you, Guenter.
+> --
+> Gustavo
+> 
+>>> ---
+>>>  drivers/watchdog/machzwd.c | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/drivers/watchdog/machzwd.c b/drivers/watchdog/machzwd.c
+>>> index 88d823d87a4b..108928dbc754 100644
+>>> --- a/drivers/watchdog/machzwd.c
+>>> +++ b/drivers/watchdog/machzwd.c
+>>> @@ -177,6 +177,7 @@ static inline void zf_set_timer(unsigned short new, unsigned char n)
+>>>  	switch (n) {
+>>>  	case WD1:
+>>>  		zf_writew(COUNTER_1, new);
+>>> +		/* fall through */
+>>>  	case WD2:
+>>>  		zf_writeb(COUNTER_2, new > 0xff ? 0xff : new);
+>>>  	default:
+>>> -- 
+>>> 2.21.0
+>>>
