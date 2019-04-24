@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE736C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 273E6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC76E20685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFFD120685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128991;
-	bh=XoFP+4kogK424tY2vshglJa0wPTk4g+k+LJ7SFF1kxI=;
+	s=default; t=1556129006;
+	bh=l918xrfDzjeUIfFFf9zlL1S4EHflc7aq0DdxCFxYMQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1CF5OJI4DW5YOA3943SOcVkja/8uE8fl6Om0gNrAzPgrHJ0eEUUzD3ASCKDZw+JCp
-	 nuN2iY2no6LNutdI57dKgvs2ANxJadBjzEI1katdsxjHLyJYw+ayTWKorFFTIKVtry
-	 NUNp0yi3ci6wZMCAeL4ozS7qx0NZBnCVISO8p45E=
+	b=ncm0P8Zwf9++vGugFdU64pFC/Zo5ot7yoaxU7SoXqibbHyYGd6Q0blP8HYPwtZjhb
+	 drlFd6BQ3S7o+TwyxYHqm0vdg5hEJAVGzMk4KQ9zA1h2jsvHacAPIlOvX3xZ+cjVSm
+	 vQgT3KoeOIdSRUGmyjZk57+HOdFqjSQVAUEB06M4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389214AbfDXRUo (ORCPT
+        id S2389536AbfDXSDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46096 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 14:03:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389205AbfDXRUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:20:43 -0400
+        id S2389159AbfDXRUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:20:25 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5BDC2190A;
-        Wed, 24 Apr 2019 17:20:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5393205ED;
+        Wed, 24 Apr 2019 17:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126442;
-        bh=XoFP+4kogK424tY2vshglJa0wPTk4g+k+LJ7SFF1kxI=;
+        s=default; t=1556126424;
+        bh=l918xrfDzjeUIfFFf9zlL1S4EHflc7aq0DdxCFxYMQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LadEDx0EVPOAN6capQVW2XbG5tWOL9+avmX2uJ+trCT/sPYf88CZOO3E1yKKSwkPu
-         YWgdinVL+l/DcA18zgROpN/Y0JDrov3lrCArVfI8Ian1nHhLthoaFncec3FX9wi85N
-         udeGJhsCEEna3bA5nPXPtBuqY/jD42CGLBjzer6I=
+        b=hxgVNxmySDKdjtND6nWDCAzLwGgBhnG1w1cd2q2reG7aretQLYnjl/QzMgoOJOuuA
+         74C/RXFW1o2HM8bs1goa/Mw55EjoIZR8TWvApMGs/av6j2zjnOcaxFCNu3xgCkrEmg
+         7nIFfFiCKegeb6iTesLtkqNJcWN+O9/yNc5qdHs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
+        Nisha Aram <nisha.aram@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 112/168] perf tests: Fix a memory leak in test__perf_evsel__tp_sched_test()
-Date:   Wed, 24 Apr 2019 19:09:16 +0200
-Message-Id: <20190424170930.134805490@linuxfoundation.org>
+Subject: [PATCH 4.4 106/168] thermal/int340x_thermal: Add additional UUIDs
+Date:   Wed, 24 Apr 2019 19:09:10 +0200
+Message-Id: <20190424170929.851303731@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -66,57 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d982b33133284fa7efa0e52ae06b88f9be3ea764 ]
+[ Upstream commit 16fc8eca1975358111dbd7ce65e4ce42d1a848fb ]
 
-  =================================================================
-  ==20875==ERROR: LeakSanitizer: detected memory leaks
+Add more supported DPTF policies than the driver currently exposes.
 
-  Direct leak of 1160 byte(s) in 1 object(s) allocated from:
-      #0 0x7f1b6fc84138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
-      #1 0x55bd50005599 in zalloc util/util.h:23
-      #2 0x55bd500068f5 in perf_evsel__newtp_idx util/evsel.c:327
-      #3 0x55bd4ff810fc in perf_evsel__newtp /home/work/linux/tools/perf/util/evsel.h:216
-      #4 0x55bd4ff81608 in test__perf_evsel__tp_sched_test tests/evsel-tp-sched.c:69
-      #5 0x55bd4ff528e6 in run_test tests/builtin-test.c:358
-      #6 0x55bd4ff52baf in test_and_print tests/builtin-test.c:388
-      #7 0x55bd4ff543fe in __cmd_test tests/builtin-test.c:583
-      #8 0x55bd4ff5572f in cmd_test tests/builtin-test.c:722
-      #9 0x55bd4ffc4087 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #10 0x55bd4ffc45c6 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #11 0x55bd4ffc49ca in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #12 0x55bd4ffc5138 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #13 0x7f1b6e34809a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
-
-  Indirect leak of 19 byte(s) in 1 object(s) allocated from:
-      #0 0x7f1b6fc83f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
-      #1 0x7f1b6e3ac30f in vasprintf (/lib/x86_64-linux-gnu/libc.so.6+0x8830f)
-
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 6a6cd11d4e57 ("perf test: Add test for the sched tracepoint format fields")
-Link: http://lkml.kernel.org/r/20190316080556.3075-17-changbin.du@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Matthew Garrett <mjg59@google.com>
+Cc: Nisha Aram <nisha.aram@intel.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/evsel-tp-sched.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/thermal/int340x_thermal/int3400_thermal.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-index da474d743b6a..37529f73833d 100644
---- a/tools/perf/tests/evsel-tp-sched.c
-+++ b/tools/perf/tests/evsel-tp-sched.c
-@@ -84,5 +84,6 @@ int test__perf_evsel__tp_sched_test(void)
- 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
- 		ret = -1;
+diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
+index 5836e5554433..0beed2899163 100644
+--- a/drivers/thermal/int340x_thermal/int3400_thermal.c
++++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
+@@ -20,6 +20,13 @@ enum int3400_thermal_uuid {
+ 	INT3400_THERMAL_PASSIVE_1,
+ 	INT3400_THERMAL_ACTIVE,
+ 	INT3400_THERMAL_CRITICAL,
++	INT3400_THERMAL_ADAPTIVE_PERFORMANCE,
++	INT3400_THERMAL_EMERGENCY_CALL_MODE,
++	INT3400_THERMAL_PASSIVE_2,
++	INT3400_THERMAL_POWER_BOSS,
++	INT3400_THERMAL_VIRTUAL_SENSOR,
++	INT3400_THERMAL_COOLING_MODE,
++	INT3400_THERMAL_HARDWARE_DUTY_CYCLING,
+ 	INT3400_THERMAL_MAXIMUM_UUID,
+ };
  
-+	perf_evsel__delete(evsel);
- 	return ret;
- }
+@@ -27,6 +34,13 @@ static u8 *int3400_thermal_uuids[INT3400_THERMAL_MAXIMUM_UUID] = {
+ 	"42A441D6-AE6A-462b-A84B-4A8CE79027D3",
+ 	"3A95C389-E4B8-4629-A526-C52C88626BAE",
+ 	"97C68AE7-15FA-499c-B8C9-5DA81D606E0A",
++	"63BE270F-1C11-48FD-A6F7-3AF253FF3E2D",
++	"5349962F-71E6-431D-9AE8-0A635B710AEE",
++	"9E04115A-AE87-4D1C-9500-0F3E340BFE75",
++	"F5A35014-C209-46A4-993A-EB56DE7530A1",
++	"6ED722A7-9240-48A5-B479-31EEF723D7CF",
++	"16CAF1B7-DD38-40ED-B1C1-1B8A1913D531",
++	"BE84BABF-C4D4-403D-B495-3128FD44dAC1",
+ };
+ 
+ struct int3400_thermal_priv {
 -- 
 2.19.1
 
