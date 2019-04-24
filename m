@@ -2,159 +2,122 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE78C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68293C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 978AA20878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319E920878
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fiWOjvLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfDXENA (ORCPT
+        id S1726520AbfDXENn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 00:13:00 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:45870 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfDXENA (ORCPT
+        Wed, 24 Apr 2019 00:13:43 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44517 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfDXENm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 00:13:00 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hJ9HC-0001md-Vb; Wed, 24 Apr 2019 04:12:55 +0000
-Date:   Wed, 24 Apr 2019 05:12:54 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     dushistov@mail.ru, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/ufs: Force type conversion from __fs16 to u16
-Message-ID: <20190424041254.GO2217@ZenIV.linux.org.uk>
-References: <20190423090118.GA465@bharath12345-Inspiron-5559>
+        Wed, 24 Apr 2019 00:13:42 -0400
+Received: by mail-qk1-f195.google.com with SMTP id y5so10016617qkc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 21:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=gn7rK0B9/eSlSI85DtD0W9jgqm3yeCYqZOhHbw08jS4=;
+        b=fiWOjvLlZOm7gIlf8ejA2rc9r71SLsXuQjK9maF8VGnBgebFo/XytEKm5B3UT3mEFO
+         6jDMJ6SLPvc4HKZ5x69/11mi9IquNfd6I5c6NS+9S72q31JwEbO7qRJaAf7D95WWsnOH
+         mkdTthy5YxsU0LoBnTpImL+jMPHAb+qWHw5atN/x+QK5dcQhRYvXJzGciS7wu+PO58ur
+         E0rrNvbVSJEILAvZ1jK+w/l5ArYHI2OxpJfo9FhFj3q7cFRbu2ylGA9rSqgA/9FyaIpf
+         6DA5zifwQ1m+5TE8ESoMQW/AodjrCs7gE+50b3V5lCihc2KTh2osZF1vl05rS4GzgUki
+         Hi9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=gn7rK0B9/eSlSI85DtD0W9jgqm3yeCYqZOhHbw08jS4=;
+        b=ueXlWsb0jjbbJM3dmleVvLoxdeh7v3l0DxJmbLlRLh/sKNOJGg+G0BJGGvyYprYSki
+         L6pe28sUZ9kPtlr6gmlRBxRtdCuqO3qxOEffterp95VvbxU5HQtrRc01yk59QdWIsglo
+         S8v4lFMRRFAibOg2v/Ip0inQUjSrb37HWN8e46n8Y2OzRf+FBw1XygORsa/FD1zSqaSc
+         6WbZDDWkAkGsFSuFTUNQnMMfmI+0nw92xoo/QUAjaMLL2YoVbW/D83o8/lPBRPebc/Fi
+         Y0TCcy7SuPsedd4A20+LXaTch8dJzUYDQh0KY0lRRV6Z6OiBkcT/7OXyvaTdj3pICks1
+         qe2Q==
+X-Gm-Message-State: APjAAAU1hrNW27BHkUinnVYyQwlnqHsabTYJtukLQf4+Q5UgKA/stEux
+        Zf+knhKfMwuTW/BDeLRZPsR5vA==
+X-Google-Smtp-Source: APXvYqxqUjh7WokEe+vb7gS69ivwktg2BK7z9Scyv6F460xJ1W+ViU3SoxW7BjuRzFSiXqMC5LtjmA==
+X-Received: by 2002:a05:620a:148d:: with SMTP id w13mr22700134qkj.6.1556079221738;
+        Tue, 23 Apr 2019 21:13:41 -0700 (PDT)
+Received: from [192.168.1.169] (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
+        by smtp.gmail.com with ESMTPSA id 50sm5955692qtn.73.2019.04.23.21.13.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 23 Apr 2019 21:13:41 -0700 (PDT)
+Subject: Re: [PATCH V2 1/3] Calculate Thermal Pressure
+To:     Quentin Perret <quentin.perret@arm.com>
+References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+ <1555443521-579-2-git-send-email-thara.gopinath@linaro.org>
+ <20190418101418.5kiw5hkxoflbsvlj@queper01-lin>
+Cc:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        viresh.kumar@linaro.org, javi.merino@kernel.org,
+        edubezval@gmail.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
+        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5CBFE274.8010103@linaro.org>
+Date:   Wed, 24 Apr 2019 00:13:40 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423090118.GA465@bharath12345-Inspiron-5559>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190418101418.5kiw5hkxoflbsvlj@queper01-lin>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 02:31:18PM +0530, Bharath Vedartham wrote:
-> This patch fixes the sparse warning:
-> warning: restricted __fs16 degrades to integer
+On 04/18/2019 06:14 AM, Quentin Perret wrote:
+> On Tuesday 16 Apr 2019 at 15:38:39 (-0400), Thara Gopinath wrote:
+>> +/**
+>> + * Function to update thermal pressure from cooling device
+>> + * or any framework responsible for capping cpu maximum
+>> + * capacity.
+>> + */
+>> +void sched_update_thermal_pressure(struct cpumask *cpus,
+>> +				   unsigned long cap_max_freq,
+>> +				   unsigned long max_freq)
+>> +{
+>> +	int cpu;
+>> +	unsigned long flags = 0;
+>> +	struct thermal_pressure *cpu_thermal;
+>> +
+>> +	for_each_cpu(cpu, cpus) {
 > 
-> inode->ui_u1.oldids.ui_suid is of type __fs16, a restricted integer.
-> 0XFFFF is a 16 bit unsigned integer. Use __force to fix the sparse
-> warning.
+> Is it actually required to do this for each CPU ? You could calculate
+> the whole thing once for the first CPU, and apply the result to all CPUs
+> in the policy no ? All CPUs in a policy are capped and uncapped
+> synchronously.
+Hmm. You are right that all cpus in a policy are capped and uncapped
+synchronously from the thermal framework point of view. But the thermal
+pressure decay can happen at different times for each cpu and hence the
+update has to be done on a per cpu basis(especially to keep track of
+other age and other variables in the averaging and accumulating
+algorithm). It can be separated out but I think it will just make the
+solution more complicated.
+> 
+>> +		cpu_thermal = per_cpu(thermal_pressure_cpu, cpu);
+>> +		if (!cpu_thermal)
+>> +			return;
+>> +		spin_lock_irqsave(&cpu_thermal->lock, flags);
+>> +		thermal_pressure_update(cpu_thermal, cap_max_freq, max_freq, 1);
+>> +	}
+>> +}
 
-NAK.  As always, ask whether the code is correct and if so, why is
-it correct.  Here, of course, the answer is that 16bit value with
-all bits set is the same regardless of endianness.  If it was
-le16, we could simply write cpu_to_le16(0xffff) and let the compiler
-fold the constant expression; for fs16 it's beyond what gcc can
-(reliably) do - you get essentially
-	UFS_SB(sbp)->s_bytesex == BYTESEX_LE
-		? (unsigned short)0xffff
-		: (unsigned short)0xffff
-which would be nice to optimize to 0xffff, but it's not guaranteed
-to happen.
 
-So let's do this:
-
-static inline bool ufs_reserved_uid(__fs16 uid)
-{
-	return (__fs16)~uid == 0;	/* all 16 bits set */
-}
-
-and use it in... wait.  Wait, it *is* broken.  Look:
-static inline u32
-ufs_get_inode_uid(struct super_block *sb, struct ufs_inode *inode)
-{
-        switch (UFS_SB(sb)->s_flags & UFS_UID_MASK) {
-        case UFS_UID_44BSD:
-                return fs32_to_cpu(sb, inode->ui_u3.ui_44.ui_uid);
-        case UFS_UID_EFT:
-                if (inode->ui_u1.oldids.ui_suid == 0xFFFF)
-                        return fs32_to_cpu(sb, inode->ui_u3.ui_sun.ui_uid);
-                /* Fall through */
-        default:
-                return fs16_to_cpu(sb, inode->ui_u1.oldids.ui_suid);
-        }
-}
-
-OK, so
-	* old flavours: 16bit uids, stored in ->ui_u1.oldids.ui_suid
-(offset 4)
-	* new flavours (44bsd, ufs2, openstep): 32bit uids, stored in
-->ui_u3.ui_44.ui_uid (offset 0x70)
-	* Solaris flavours (sun, sunx86): 32bit uids; if smaller than
-0xffff, stored where old flavours used to, if greater or equal -
-stored in ->ui_u3.ui_sun.ui_uid (offset 0x74), with 0xffff stored
-in the old place.
-
-Makes sense, and ufs_set_inode_uid() matches that (with extra
-piece of information - for new flavours the lower 16 bits of uid
-are duplicated into the old place, for solaris - min(uid, 0xffff)
-goes there).  However, the other place with similar logics is
-static inline u32
-ufs_get_inode_gid(struct super_block *sb, struct ufs_inode *inode)
-{
-        switch (UFS_SB(sb)->s_flags & UFS_UID_MASK) {
-        case UFS_UID_44BSD:
-                return fs32_to_cpu(sb, inode->ui_u3.ui_44.ui_gid);
-        case UFS_UID_EFT:
-                if (inode->ui_u1.oldids.ui_suid == 0xFFFF)
-                        return fs32_to_cpu(sb, inode->ui_u3.ui_sun.ui_gid);
-                /* Fall through */
-        default:
-                return fs16_to_cpu(sb, inode->ui_u1.oldids.ui_sgid);
-        }
-}
-
-See the problem?  For Solaris flavours we check the old *UID* location
-to decide whether we want the new GID one or the old GID one.  That
-makes no sense - after all, setting UID=1000, GID=80000 should be possible,
-and that couldn't work; we would get 1000 stored in old UID location,
-80000 - in new GID one, so this ufs_get_inode_gid() would end up
-returning the old GID field, which is 16bit and could not store
-80000, no matter what.
-
-	So we have a braino in ufs_get_inode_gid(), AFAICS since
-252e211e90ce5 ("Add in SunOS 4.1.x compatible mode for UFS").
-It should go
-                if (inode->ui_u1.oldids.ui_sgid == 0xFFFF)
-                        return fs32_to_cpu(sb, inode->ui_u3.ui_sun.ui_gid);
-instead of checking ui_suid...
-
-	The breakage there isn't what sparse complained about, but it
-still needs fixing.  IMO it should go in two steps: first
-
-diff --git a/fs/ufs/util.h b/fs/ufs/util.h
-index 1fd3011ea623..7fd4802222b8 100644
---- a/fs/ufs/util.h
-+++ b/fs/ufs/util.h
-@@ -229,7 +229,7 @@ ufs_get_inode_gid(struct super_block *sb, struct ufs_inode *inode)
- 	case UFS_UID_44BSD:
- 		return fs32_to_cpu(sb, inode->ui_u3.ui_44.ui_gid);
- 	case UFS_UID_EFT:
--		if (inode->ui_u1.oldids.ui_suid == 0xFFFF)
-+		if (inode->ui_u1.oldids.ui_sgid == 0xFFFF)
- 			return fs32_to_cpu(sb, inode->ui_u3.ui_sun.ui_gid);
- 		/* Fall through */
- 	default:
-then introduction of
-
-static inline bool solaris_xid_overflow(__fs16 xid)
-{
-	/*
-	 * Solaris indicates the use of 32bit [UG]ID by storing
-	 * all-ones bit pattern in the corresponding old (16bit) field
-	 */
-	return (__fs16)~xid == 0;	/* all 16 bits set */
-}
-
-with these two lines turned into
-                if (solaris_xid_overflow(inode->ui_u1.oldids.ui_suid))
-and
-                if (solaris_xid_overflow(inode->ui_u1.oldids.ui_sgid))
-resp.
+-- 
+Regards
+Thara
