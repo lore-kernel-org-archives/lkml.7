@@ -2,139 +2,315 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF2CC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA99BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAA52183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:10:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AME1sDCz"
+	by mail.kernel.org (Postfix) with ESMTP id 8A769218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556133205;
+	bh=Q7yKTIdFqDsiagOItbYFdwocuyo/gHt+f/LfswWZbm8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vxwGu3ob0BDhIcMDNJfZyekGZtt++5v1SFZhVO2t9zseW5sGsmQJ8wcYxLkf2tA+R
+	 hKubk+mWRpTrBetgOgMmH3UnTRUX9gm6Q16m7SdaNcaXyIhnujw/09d7mrMgJSdkZv
+	 yHP+GttnTFJ19veh/DqzLUXWz7KDy96T9wVSKHXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbfDXTKc (ORCPT
+        id S1730775AbfDXTNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:10:32 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39482 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729853AbfDXTKb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:10:31 -0400
-Received: by mail-wm1-f68.google.com with SMTP id n25so6618488wmk.4;
-        Wed, 24 Apr 2019 12:10:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=S/zxi2ylVDkqZZBbgyooXrxhGjXILZWxNPyecty54tU=;
-        b=AME1sDCz7IsznAaDKCRLuMso2ULXcX84VgNd/onrA55lmWTjEfne7pilAe89L/ReV1
-         YL9MkF8MqachlqSB3wJTEJH6MOv/gQGRB/O6DAvToz1PH+1DMgeNpO9tu88O2ydj0pnt
-         kTJeApTO6c4GDURe1RXAU3UHmaMbKeM3+mEx1Ec/d8AQj61u9u1ioGmeWYVfwKvsSYDQ
-         EotF34SOSdUwn1gBDqLatg2zIixPBW6W5UjcJteZumeVE0IWtAIalsL6g+2Ga9zeo+pp
-         +2D73T8neDESABr59mxcT8taWO4ION6zMrpk16S+v+ncVCXBdCxaN+Tv7youENwXFOaQ
-         4UDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=S/zxi2ylVDkqZZBbgyooXrxhGjXILZWxNPyecty54tU=;
-        b=EMZ9RW8eeovdBN15lZDL/wlodjNiGYof2z6AAHkawduJsu5Fya3F+DTW/YsS96qUuu
-         7zB/9ieX51JUQO/2O+f6ovKDww7dpRXn9+HuVJcmsFkjnJ1cC5dAyCBjB1QjC2sxP7dJ
-         rArEKsbW+2WJovOWCykivQ5iuL0tH0QiP5gI6qb38I+HEhOEvENHIvF1sfWjCRIp9V24
-         GwvbCmUegmnUor95HkYnhbFwx43rdvn4BVAsuOHXycAgkfGzs5FVA8CRusY3Xkr5nDue
-         nMXvhE32KgMugWNxWMpR+D2H0tssCoESCbSyNM58N7YaOycFXrEKnmkJ4CH0IKFsoPyT
-         2CCg==
-X-Gm-Message-State: APjAAAV8b0gIxFHMWlrjY4EFA7r5htx5pupTm8nhjWE93hHD0Ae+KfUp
-        kwaSMXuxXUGFnPmFBFGn8ogkmb4Zjx7mhg==
-X-Google-Smtp-Source: APXvYqwve8fzbjDfRoaAHshs/aKdK6nujPjOor6S8/pTST7pGm1teWfE5s7YlHOGCSqyrGCrLN3GMw==
-X-Received: by 2002:a1c:4602:: with SMTP id t2mr449512wma.120.1556133029543;
-        Wed, 24 Apr 2019 12:10:29 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd4:5700:c498:ee8f:ff0a:13e5? (p200300EA8BD45700C498EE8FFF0A13E5.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:c498:ee8f:ff0a:13e5])
-        by smtp.googlemail.com with ESMTPSA id t17sm17020471wrr.26.2019.04.24.12.10.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 12:10:28 -0700 (PDT)
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v2 0/9] PCI: add help pci_dev_id
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "open list:AMD KFD" <dri-devel@lists.freedesktop.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        "open list:8169 10/100/1000 GIGABIT ETHERNET DRIVER" 
-        <netdev@vger.kernel.org>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
-Message-ID: <2e1f9a57-6d08-d017-24da-3e6b97fa2449@gmail.com>
-Date:   Wed, 24 Apr 2019 21:10:21 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 15:13:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbfDXTNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 15:13:24 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62F2A205ED;
+        Wed, 24 Apr 2019 19:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556133203;
+        bh=Q7yKTIdFqDsiagOItbYFdwocuyo/gHt+f/LfswWZbm8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ui07t6+ZpR2oxz307PXO/xVs9ijjJL2de8hy5M7fV0Wp4pqA0ewSOkhOhlnVTTacJ
+         BUzqOVcOVpy8j9fHd+Rrhvuskq4QDYMzjiFDoGmUzuOb2y5nwPaugUwSGp2AUDdwMI
+         0bJk29G4NslOG4rM3cDZq+ILIOeLc+RCG423cTSI=
+Date:   Wed, 24 Apr 2019 20:13:17 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Life is hard, and then you die" <ronald@innovation.ch>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mfd: apple-ibridge: Add Apple iBridge MFD driver.
+Message-ID: <20190424201317.2a472120@archlinux>
+In-Reply-To: <20190424104718.GA31301@innovation.ch>
+References: <20190422031251.11968-1-ronald@innovation.ch>
+        <20190422031251.11968-2-ronald@innovation.ch>
+        <20190422123426.2d0b4bdf@archlinux>
+        <20190424104718.GA31301@innovation.ch>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In several places in the kernel we find PCI_DEVID used like this:
-PCI_DEVID(dev->bus->number, dev->devfn) Therefore create a helper
-for it.
+On Wed, 24 Apr 2019 03:47:18 -0700
+"Life is hard, and then you die" <ronald@innovation.ch> wrote:
 
-v2:
-- apply the change to all affected places in the kernel
+>   Hi Jonathan,
+>=20
+> On Mon, Apr 22, 2019 at 12:34:26PM +0100, Jonathan Cameron wrote:
+> > On Sun, 21 Apr 2019 20:12:49 -0700
+> > Ronald Tschal=C3=A4r <ronald@innovation.ch> wrote:
+> >  =20
+> > > The iBridge device provides access to several devices, including:
+> > > - the Touch Bar
+> > > - the iSight webcam
+> > > - the light sensor
+> > > - the fingerprint sensor
+> > >=20
+> > > This driver provides the core support for managing the iBridge device
+> > > and the access to the underlying devices. In particular, since the
+> > > functionality for the touch bar and light sensor is exposed via USB H=
+ID
+> > > interfaces, and the same HID device is used for multiple functions, t=
+his
+> > > driver provides a multiplexing layer that allows multiple HID drivers=
+ to
+> > > be registered for a given HID device. This allows the touch bar and A=
+LS
+> > > driver to be separated out into their own modules.
+> > >=20
+> > > Signed-off-by: Ronald Tschal=C3=A4r <ronald@innovation.ch =20
+> > Hi Ronald,
+> >=20
+> > I've only taken a fairly superficial look at this.  A few global
+> > things to note though. =20
+>=20
+> Thanks for this review.
+>=20
+> > 1. Please either use kernel-doc style for function descriptions, or
+> >    do not.  Right now you are sort of half way there. =20
+>=20
+> Apologies, on re-reading the docs I realize what you mean here. Should
+> be fixed now (next rev).
+>=20
+> > 2. There is quite a complex nest of separate structures being allocated,
+> >    so think about whether they can be simplified.  In particular
+> >    use of container_of macros can allow a lot of forwards and backwards
+> >    pointers to be dropped if you embed the various structures directly.=
+ =20
+>=20
+> Done (see also below).
+>=20
+> [snip]
+> > > +#define	call_void_driver_func(drv_info, fn, ...)			\ =20
+> >=20
+> > This sort of macro may seem like a good idea because it saves a few lin=
+es
+> > of code.  However, that comes at the cost of readability, so just
+> > put the code inline.
+> >  =20
+> > > +	do {								\
+> > > +		if ((drv_info)->driver->fn)				\
+> > > +			(drv_info)->driver->fn(__VA_ARGS__);		\
+> > > +	} while (0)
+> > > +
+> > > +#define	call_driver_func(drv_info, fn, ret_type, ...)			\
+> > > +	({								\
+> > > +		ret_type rc =3D 0;					\
+> > > +									\
+> > > +		if ((drv_info)->driver->fn)				\
+> > > +			rc =3D (drv_info)->driver->fn(__VA_ARGS__);	\
+> > > +									\
+> > > +		rc;							\
+> > > +	}) =20
+>=20
+> Just to clarify, you're only talking about removing/inlining the
+> call_void_driver_func() macro, not the call_driver_func() macro,
+> right?
 
-Heiner Kallweit (9):
-  PCI: add helper pci_dev_id
-  PCI: use helper pci_dev_id
-  r8169: use new helper pci_dev_id
-  powerpc/powernv/npu: use helper pci_dev_id
-  drm/amdkfd: use helper pci_dev_id
-  iommu/amd: use helper pci_dev_id
-  iommu/vt-d: use helper pci_dev_id
-  stmmac: pci: use helper pci_dev_id
-  platform/chrome: chromeos_laptop: use helper pci_dev_id
+Both please. Neither adds much.
 
- arch/powerpc/platforms/powernv/npu-dma.c         | 14 ++++++--------
- drivers/gpu/drm/amd/amdkfd/kfd_topology.c        |  3 +--
- drivers/iommu/amd_iommu.c                        |  2 +-
- drivers/iommu/intel-iommu.c                      |  2 +-
- drivers/iommu/intel_irq_remapping.c              |  2 +-
- drivers/net/ethernet/realtek/r8169.c             |  3 +--
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |  2 +-
- drivers/pci/msi.c                                |  6 +++---
- drivers/pci/search.c                             | 10 +++-------
- drivers/platform/chrome/chromeos_laptop.c        |  2 +-
- include/linux/pci.h                              |  5 +++++
- 11 files changed, 24 insertions(+), 27 deletions(-)
+>=20
+> [snip]
+> > > +static struct appleib_hid_dev_info *
+> > > +appleib_add_device(struct appleib_device *ib_dev, struct hid_device =
+*hdev,
+> > > +		   const struct hid_device_id *id)
+> > > +{
+> > > +	struct appleib_hid_dev_info *dev_info;
+> > > +	struct appleib_hid_drv_info *drv_info;
+> > > +
+> > > +	/* allocate device-info for this device */
+> > > +	dev_info =3D kzalloc(sizeof(*dev_info), GFP_KERNEL);
+> > > +	if (!dev_info)
+> > > +		return NULL;
+> > > +
+> > > +	INIT_LIST_HEAD(&dev_info->drivers);
+> > > +	dev_info->device =3D hdev;
+> > > +	dev_info->device_id =3D id;
+> > > +
+> > > +	/* notify all our sub drivers */
+> > > +	mutex_lock(&ib_dev->update_lock);
+> > > + =20
+> > This is interesting. I'd like to see a comment here on what
+> > this flag is going to do.  =20
+>=20
+> I'm not sure I follow: update_lock is simply a mutex protecting all
+> driver and device update (i.e. add/remove) functions. Are you
+> therefore looking for something like:
 
--- 
-2.21.0
+That ended up in the wrong place...
+It was the in_hid_probe just after here that I was referring to.
+
+>=20
+> 	/* protect driver and device lists against concurrent updates */
+> 	mutex_lock(&ib_dev->update_lock);
+>=20
+> [snip]
+> > > +static int appleib_probe(struct acpi_device *acpi)
+> > > +{
+> > > +	struct appleib_device *ib_dev;
+> > > +	struct appleib_platform_data *pdata; =20
+> > Platform_data has a lot of historical meaning in Linux.
+> > Also you have things in here that are not platform related
+> > at all, such as the dev pointer.  Hence I would rename it
+> > as device_data or private or something like that. =20
+>=20
+> Ok. I guess I called in platform_data because it's stored in the mfd
+> cell's "platform_data" field. Anyway, changed it per your suggestion.
+>=20
+> > > +	int i;
+> > > +	int ret;
+> > > +
+> > > +	if (appleib_dev) =20
+> > This singleton bothers me a bit. I'm really not sure why it
+> > is necessary.  You can just put a pointer to this in
+> > the pdata for the subdevs and I think that covers most of your
+> > usecases.  It's generally a bad idea to limit things to one instance
+> > of a device unless that actually major simplifications.
+> > I'm not seeing them here. =20
+>=20
+> Yes, this one is quite ugly. appleib_dev is static so that
+> appleib_hid_probe() can find it. I could not find any other way to
+> pass the appleib_dev instance to that probe function.
+>=20
+> However, on looking at this again, I realized that hid_device_id has
+> a driver_data field which can be used for this; so if I added the
+> hid_driver and hid_device_id structs to the appleib_device (instead of
+> making them static like now) I could fill in the driver_data and avoid
+> this hack. This looks much cleaner.
+>=20
+> Thanks for pointing this uglyness out again.
+>=20
+> [snip]
+> > > +	if (!ib_dev->subdevs) {
+> > > +		ret =3D -ENOMEM;
+> > > +		goto free_dev;
+> > > +	}
+> > > +
+> > > +	pdata =3D kzalloc(sizeof(*pdata), GFP_KERNEL); =20
+> >=20
+> > Might as well embed this in ib_dev as well. =20
+>=20
+> Agreed.
+>=20
+> > That would let
+> > you used container_of to avoid having to carry the ib_dev pointer
+> > around in side pdata. =20
+>=20
+> I see. I guess my main reservation is that the functions exported to
+> the sub-drivers would now take a 'struct appleib_device_data *'
+> argument instead of a 'struct appleib_device *', which just seems a
+> bit unnatural. E.g.
+>=20
+>   int appleib_register_hid_driver(struct appleib_device_data *ib_ddata,
+>                                   struct hid_driver *driver, void *data);
+>=20
+> instead of (the current)
+>=20
+>   int appleib_register_hid_driver(struct appleib_device *ib_dev,
+>                                   struct hid_driver *driver, void *data)
+
+I'm not totally sure I can see why.  You can go from backwards and forwards
+from any of the pointers...
+
+>=20
+> [snip]
+> > > +	ret =3D mfd_add_devices(&acpi->dev, PLATFORM_DEVID_NONE,
+> > > +			      ib_dev->subdevs, ARRAY_SIZE(appleib_subdevs),
+> > > +			      NULL, 0, NULL);
+> > > +	if (ret) {
+> > > +		dev_err(LOG_DEV(ib_dev), "Error adding MFD devices: %d\n", ret);
+> > > +		goto free_pdata;
+> > > +	}
+> > > +
+> > > +	acpi->driver_data =3D ib_dev;
+> > > +	appleib_dev =3D ib_dev;
+> > > +
+> > > +	ret =3D hid_register_driver(&appleib_hid_driver);
+> > > +	if (ret) {
+> > > +		dev_err(LOG_DEV(ib_dev), "Error registering hid driver: %d\n",
+> > > +			ret);
+> > > +		goto rem_mfd_devs;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +
+> > > +rem_mfd_devs:
+> > > +	mfd_remove_devices(&acpi->dev);
+> > > +free_pdata:
+> > > +	kfree(pdata);
+> > > +free_subdevs:
+> > > +	kfree(ib_dev->subdevs);
+> > > +free_dev:
+> > > +	appleib_dev =3D NULL;
+> > > +	acpi->driver_data =3D NULL; =20
+> > Why at this point?  It's not set to anything until much later in the
+> > probe flow. =20
+>=20
+> If the hid_register_driver() call fails, we get here after driver_data
+> has been assigned. However, looking at this again, acpi->driver_data
+> is only used by the remove, suspend, and resume callbacks, and those
+> will not be called until a successful return from probe; therefore I
+> can safely move the setting of driver_data to after the
+> hid_register_driver() call and avoid having to set it to NULL in the
+> error cleanup.
+>=20
+> > May be worth thinking about devm_ managed allocations
+> > to cleanup some of these allocations automatically and simplify
+> > the error handling. =20
+>=20
+> Good point, thanks.
+>=20
+> [snip]
+> > > +
+> > > +	rc =3D acpi_execute_simple_method(ib_dev->asoc_socw, NULL, 0);
+> > > +	if (ACPI_FAILURE(rc))
+> > > +		dev_warn(LOG_DEV(ib_dev), "SOCW(0) failed: %s\n", =20
+> >=20
+> > I can sort of see you might want to do the LOG_DEV for consistency
+> > but here I'm fairly sure it's just dev which might be clearer. =20
+>=20
+> Sorry, you mean rename the macro LOG_DEV() to just DEV()?
+No, just dev_warn(dev,....)
+
+It's the same one I think at this particular location.
+>=20
+>=20
+>   Cheers,
+>=20
+>   Ronald
+>=20
 
