@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A06C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 787E7C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5279A217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3E3217D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:16:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrMX1ev3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWQhd5l0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbfDXAQD (ORCPT
+        id S1729029AbfDXAQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 20:16:03 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37915 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728948AbfDXAP5 (ORCPT
+        Tue, 23 Apr 2019 20:16:10 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45043 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728899AbfDXAPy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 20:15:57 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 10so8312816pfo.5;
-        Tue, 23 Apr 2019 17:15:57 -0700 (PDT)
+        Tue, 23 Apr 2019 20:15:54 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z16so3807877pgv.11;
+        Tue, 23 Apr 2019 17:15:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Pycg9+C9bswcmRyU8TzuQlgStI2j8eLUrkh/YIs9LC4=;
-        b=jrMX1ev3szbH4DubtpUrkgvcYCNA/Rz6ct/zFlbS4zNaCpStXfXHZZKefr9YCOy5Ec
-         okmVPjfjwSt4enrIurZpPP6VZjxU5kyJx1XgC/S92+//L6oN6JQzyUCCrxMs02zEQnx1
-         u65Y2E3pFFVtWvRJHU0w6NCDq2orkmoVYUZBmXsxws2x0vXiWPUYVVNY5JyGZjVfm/KB
-         2BAAqqIjodcAaXQg8ZtlB/c19p3FZx58vcfvq3w1l+e6z64E4JJtI8CKf5I0HuV6drVN
-         hgH6xel4ey59yEZ2yXJ4GTR4xSCfmc/p/wZ/5IogdP/TOUqW0n4kHSCovo9T0HT1OQm7
-         JMug==
+        bh=89tWsU/OT5SYrbjwn65xtN7OxFoXBZMgUvk/yoALgYk=;
+        b=iWQhd5l06krXIiYuNCaoAfu33B+mMY6XiKj/UqyC5QO9cxDIdEptfEsXgyBCCTi+3K
+         v5gPSSeZQkcCAZ5kYBtN564PrmPc/Fle0qag/MGw9r04/gL4RfpJd1P7IuoKyoXwtX/3
+         DSaVKRcnMdfJGI6N+4LXOroRgyLEv0PywkZSW/IB5poFnaoWrvExUv4b1NM5KpEbbBKD
+         Ec2SA5dTUeXb29Ti+OS5Xvzv+8GjmzaGPIbhXTldnYiw/AXrevqDKoDJ1/2WsVM00FJL
+         OHWoBJpKItxBfPm2w5rgOvEDc2ur/PedQeEfL+LX1I2G1i1fmFIRxIB57o+htk0VL049
+         t5yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Pycg9+C9bswcmRyU8TzuQlgStI2j8eLUrkh/YIs9LC4=;
-        b=PDakXGP/ewfnS1PPAUdvbGbS2YilUnUMxfWaJGdqgvmyG/0WumYE0wzIiSNicAXT16
-         zMmJsMXhvWfXRCLPSS7KNCFff8QMovNJQ5kdrqUfytDWSf01xtlYygMGYplDdZHK3VXw
-         NQdVw9pd46e1QuffT1tcrOaht+hsWVT89W+H4VD7C28Kd8wqrr4kcXzS28DLiv3y8ix8
-         M4eHENUrUO/eifaKIbsnTchvfYELXxnFA7i+SB8z+gz5603kllrv/lC+auCX1SFB1uzl
-         Gd1HoGjelapHtAyj2egBqUxU/LwSfiIaAb60A6X7dsmPN3aSwFG98R2b0aIBIedjb+Og
-         jfaw==
-X-Gm-Message-State: APjAAAUSaNg2CMfVrBELuscdKPK42wEGkNhFywkMWG5gvTc1UbGnyOl3
-        sTsM9YhfC1FKkcz00aVWP7cYu/lJv6o=
-X-Google-Smtp-Source: APXvYqyB5ey/k+LdWtgC5yc8pCGHy1vIKxeiDszzqdgVr8q7n9T6blBkrp4NPkL85O4v4QvhsgoOrA==
-X-Received: by 2002:a62:6807:: with SMTP id d7mr29268317pfc.75.1556064956523;
-        Tue, 23 Apr 2019 17:15:56 -0700 (PDT)
+        bh=89tWsU/OT5SYrbjwn65xtN7OxFoXBZMgUvk/yoALgYk=;
+        b=kFFhcgm6HJdnuFOAyGMvuPKoVlII+bwqBYz4jVlg9H7Ci8pH3xDW6TUZ8CosvDbqlU
+         3YpDZ8bolUkL11KPJRD92eP+QqF+9AV0PxtwIw3oX9D+HI16ln8kOu7UFiC22y59MS5N
+         5Ti7r+lPXfjMIW/C9kJMw8Nb6MAHkg/8witGVHbqZxbzSNbJUJGRe1WMb0d9wp2l4dxv
+         tDjmJ2CNeILQK85xqJt4r/w/a8XkHv2WVEOfLxFMWVZvYqKDSLEL5eYf2FSpRfwZSweT
+         WH01bKEj3Gm+OljDIHalvPQGLMpzlO8E3G3w+eEhcmEyZk5aRVTyo60zkx44NQskRxq1
+         gisg==
+X-Gm-Message-State: APjAAAUBeoEEg7bw3OzLEQpDRgxQZrPmKkS9w+i7o2kbN60FmK9M8SbF
+        HaEPhEII2WWi+f2Y08csSWs9KsIqG3s=
+X-Google-Smtp-Source: APXvYqxyyq3ENNshaZc9kqkGoEhF0igoLz3AtTGKletUoYM2tNx41PFEbisTnOOBusmkrIWloxz+9w==
+X-Received: by 2002:aa7:8208:: with SMTP id k8mr29977580pfi.69.1556064953277;
+        Tue, 23 Apr 2019 17:15:53 -0700 (PDT)
 Received: from prsriva-linux.corp.microsoft.com ([2001:4898:80e8:1:d4f:4d24:45fa:d461])
-        by smtp.gmail.com with ESMTPSA id n21sm58955712pfb.42.2019.04.23.17.15.54
+        by smtp.gmail.com with ESMTPSA id n21sm58955712pfb.42.2019.04.23.17.15.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 17:15:55 -0700 (PDT)
+        Tue, 23 Apr 2019 17:15:51 -0700 (PDT)
 From:   Prakhar Srivastava <prsriva02@gmail.com>
 X-Google-Original-From: Prakhar Srivastava
 To:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
@@ -62,9 +62,9 @@ To:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
 Cc:     zohar@linux.ibm.com, ebiederm@xmission.com, vgoyal@redhat.com,
         Prakhar Srivastava <prsriva02@gmail.com>,
         Prakhar Srivastava <prsriva@microsoft.com>
-Subject: [PATCH v2 5/5 RFC] add the buffer to the event data in ima free entry data if store_template failed added check in templates for buffer
-Date:   Tue, 23 Apr 2019 17:15:44 -0700
-Message-Id: <20190424001544.7188-5-prsriva02@gmail.com>
+Subject: [PATCH v2 3/5 RFC] since cmdline args can be same for multiple kexec, log entry hash will collide. Prepend the kernel file name to the cmdline args to distinguish between cmdline args passed to subsequent kexec calls
+Date:   Tue, 23 Apr 2019 17:15:42 -0700
+Message-Id: <20190424001544.7188-3-prsriva02@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190424001544.7188-1-prsriva02@gmail.com>
 References: <20190424001544.7188-1-prsriva02@gmail.com>
@@ -77,6 +77,7 @@ From: Prakhar Srivastava <prsriva02@gmail.com>
 
 Signed-off-by: Prakhar Srivastava <prsriva@microsoft.com>
 ---
+
 Currently for soft reboot(kexec_file_load) the kernel file and
 signature is measured by IMA. The cmdline args used to load the kernel
 is not measured.
@@ -85,118 +86,132 @@ EFI loader has not been triggered.
 Adding the kexec cmdline args measure and kernel version will add some
 attestable criteria.
 
-This patch adds the buffer to be measured as the event data.
-this also contains changes necessary for template
+Cmdline args can be same for multiple kexec, log entry
+hash will collide. Prepend the kernel file name to the cmdline args to
+distinguish between cmdline args passed to subsequent kexec calls
 
- security/integrity/ima/ima_main.c         | 36 +++++++++++++++++++++--
- security/integrity/ima/ima_template_lib.c |  3 +-
- security/integrity/integrity.h            |  1 +
- 3 files changed, 36 insertions(+), 4 deletions(-)
+ kernel/kexec_core.c     | 57 +++++++++++++++++++++++++++++++++++++++++
+ kernel/kexec_file.c     | 14 ++++++++--
+ kernel/kexec_internal.h |  3 +++
+ 3 files changed, 72 insertions(+), 2 deletions(-)
 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index da82c705a5ed..204a7a1acb86 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -14,7 +14,7 @@
-  *
-  * File: ima_main.c
-  *	implements the IMA hooks: ima_bprm_check, ima_file_mmap,
-- *	and ima_file_check.
-+ *	ima_file_check and ima_buffer_check.
-  */
- #include <linux/module.h>
- #include <linux/file.h>
-@@ -180,16 +180,37 @@ static int process_buffer_measurement(const void *buff, int size,
- 		struct ima_digest_data hdr;
- 		char digest[IMA_MAX_DIGEST_SIZE];
- 	} hash;
-+	struct buffer_xattr {
-+		enum evm_ima_xattr_type type;
-+		u16 buff_length;
-+		unsigned char buff[0];
-+	};
- 	char *name = NULL;
- 	int violation = 0;
- 	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-+	struct buffer_xattr *buffer_event_data = NULL;
-+	int alloc_length = 0;
-+	int action  = 0;
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index ae1a3ba24df5..97b77c780311 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1151,3 +1151,60 @@ void __weak arch_kexec_protect_crashkres(void)
  
- 	if (!buff || size ==  0 || !eventname)
- 		goto err_out;
+ void __weak arch_kexec_unprotect_crashkres(void)
+ {}
++
++/**
++ * kexec_cmdline_prepend_img_name - prepare the buffer with cmdline
++ * that needs to be measured
++ * @outbuf - out buffer that contains the formated string
++ * @kernel_fd - the file identifier for the kerenel image
++ * @cmdline_ptr - ptr to the cmdline buffer
++ * @cmdline_len - len of the buffer.
++ *
++ * This generates a buffer in the format Kerenelfilename::cmdline
++ *
++ * On success return 0.
++ * On failure return -EINVAL.
++ */
++int kexec_cmdline_prepend_img_name(char **outbuf, int kernel_fd,
++				const char *cmdline_ptr,
++				unsigned long cmdline_len)
++{
++	int ret = -EINVAL;
++	struct fd f = {};
++	int size = 0;
++	char *buf = NULL;
++	char delimiter[] = "::";
++
++	if (!outbuf || !cmdline_ptr)
++		goto out;
++
++	f = fdget(kernel_fd);
++	if (!f.file)
++		goto out;
++
++	size = (f.file->f_path.dentry->d_name.len + cmdline_len - 1+
++			ARRAY_SIZE(delimiter)) - 1;
++
++	buf = kzalloc(size, GFP_KERNEL);
++	if (!buf)
++		goto out;
++
++	memcpy(buf, f.file->f_path.dentry->d_name.name,
++		f.file->f_path.dentry->d_name.len);
++	memcpy(buf + f.file->f_path.dentry->d_name.len,
++		delimiter, ARRAY_SIZE(delimiter) - 1);
++	memcpy(buf + f.file->f_path.dentry->d_name.len +
++		ARRAY_SIZE(delimiter) - 1,
++		cmdline_ptr, cmdline_len - 1);
++
++	*outbuf = buf;
++	ret = size;
++
++	pr_debug("kexec cmdline buff: %s\n", buf);
++
++out:
++	if (f.file)
++		fdput(f);
++
++	return ret;
++}
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 2a5234eb4b28..a487491d55b9 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -126,6 +126,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	int ret = 0;
+ 	void *ldata;
+ 	loff_t size;
++	char *buff_to_measure = NULL;
++	int buff_to_measure_size = 0;
  
--	if (ima_get_action(NULL, 0, BUFFER_CHECK, &pcr) != IMA_MEASURE)
-+	action = ima_get_action(NULL, 0, BUFFER_CHECK, &pcr);
-+	if (!(action & IMA_AUDIT) && !(action & IMA_MEASURE))
- 		goto err_out;
+ 	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+ 				       &size, INT_MAX, READING_KEXEC_IMAGE);
+@@ -183,8 +185,13 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 			goto out;
+ 		}
  
-+	alloc_length = sizeof(struct buffer_xattr) + size;
-+	buffer_event_data = kzalloc(alloc_length, GFP_KERNEL);
-+	if (!buffer_event_data)
-+		goto err_out;
+-		ima_buffer_check(image->cmdline_buf, cmdline_len - 1,
+-				"kexec_cmdline");
++		/* IMA measures the cmdline args passed to the next kernel*/
++		buff_to_measure_size = kexec_cmdline_prepend_img_name(&buff_to_measure,
++			kernel_fd, image->cmdline_buf, image->cmdline_buf_len);
 +
-+	buffer_event_data->type = IMA_BUFFER_CHECK;
-+	buffer_event_data->buff_length = size;
-+	memcpy(buffer_event_data->buff, buff, size);
++		ima_buffer_check(buff_to_measure, buff_to_measure_size,
++					"kexec_cmdline");
 +
-+	event_data.xattr_value = (struct evm_ima_xattr_data *)buffer_event_data;
-+	event_data.xattr_len = alloc_length;
-+
- 	name = eventname;
- 	memset(iint, 0, sizeof(*iint));
- 	memset(&hash, 0, sizeof(hash));
-@@ -208,16 +229,25 @@ static int process_buffer_measurement(const void *buff, int size,
- 	if (ret < 0)
- 		goto err_out;
- 
--	ret = ima_store_template(entry, violation, NULL,
-+	if (action & IMA_MEASURE)
-+		ret = ima_store_template(entry, violation, NULL,
- 					buff, pcr);
-+
- 	if (ret < 0) {
- 		ima_free_template_entry(entry);
- 		goto err_out;
  	}
  
-+	if (action & IMA_AUDIT)
-+		ima_audit_measurement(iint, event_data.filename);
+ 	/* Call arch image load handlers */
+@@ -200,6 +207,9 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	/* In case of error, free up all allocated memory in this function */
+ 	if (ret)
+ 		kimage_file_post_load_cleanup(image);
 +
-+	kfree(buffer_event_data);
- 	return 0;
- 
- err_out:
++	kfree(buff_to_measure);
 +
-+	kfree(buffer_event_data);
-+
- 	pr_err("Error in adding buffer measure: %d\n", ret);
  	return ret;
  }
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index f9ba37b3928d..6050ef774355 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -322,7 +322,8 @@ int ima_eventsig_init(struct ima_event_data *event_data,
- 	int xattr_len = event_data->xattr_len;
- 	int rc = 0;
  
--	if ((!xattr_value) || (xattr_value->type != EVM_IMA_XATTR_DIGSIG))
-+	if ((!xattr_value) || !((xattr_value->type == EVM_IMA_XATTR_DIGSIG) ||
-+		 (xattr_value->type == IMA_BUFFER_CHECK)))
- 		goto out;
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index 799a8a452187..4d34a8ef4637 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -11,6 +11,9 @@ int kimage_load_segment(struct kimage *image, struct kexec_segment *segment);
+ void kimage_terminate(struct kimage *image);
+ int kimage_is_destination_range(struct kimage *image,
+ 				unsigned long start, unsigned long end);
++int kexec_cmdline_prepend_img_name(char **outbuf, int kernel_fd,
++				const char *cmdline_ptr,
++				unsigned long cmdline_len);
  
- 	rc = ima_write_template_field_data(xattr_value, xattr_len, fmt,
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 24520b4ef3b0..a674ae5be231 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -58,6 +58,7 @@ enum evm_ima_xattr_type {
- 	EVM_XATTR_HMAC,
- 	EVM_IMA_XATTR_DIGSIG,
- 	IMA_XATTR_DIGEST_NG,
-+	IMA_BUFFER_CHECK,
- 	IMA_XATTR_LAST
- };
+ extern struct mutex kexec_mutex;
  
 -- 
 2.17.1
