@@ -3,150 +3,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 400E3C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A4DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CFAF2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D1C2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730594AbfDXNo3 convert rfc822-to-8bit (ORCPT
+        id S1730612AbfDXNol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:44:29 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:48222 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730573AbfDXNo3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:44:29 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-50-CiFaQrbeNPCHVcud67r0LA-1; Wed, 24 Apr 2019 14:44:26 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
- 24 Apr 2019 14:45:38 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 24 Apr 2019 14:45:38 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Fenghua Yu' <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "Michael Chan" <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Subject: RE: [PATCH v7 15/21] x86/split_lock: Add a sysfs interface to
- enable/disable split lock detection during run time
-Thread-Topic: [PATCH v7 15/21] x86/split_lock: Add a sysfs interface to
- enable/disable split lock detection during run time
-Thread-Index: AQHU+hcuIxO/8RRUC06MiZvP1071Y6ZLUq/w
-Date:   Wed, 24 Apr 2019 13:45:38 +0000
-Message-ID: <4a90dd7bf26f44a795ecf55aa54b8ce5@AcuMS.aculab.com>
-References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
- <1555536851-17462-16-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1904180042090.3174@nanos.tec.linutronix.de>
- <20190418005711.GB18776@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1904180832290.3174@nanos.tec.linutronix.de>
- <20190423204809.GD18776@romley-ivt3.sc.intel.com>
-In-Reply-To: <20190423204809.GD18776@romley-ivt3.sc.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
+        Wed, 24 Apr 2019 09:44:41 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:45158 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730573AbfDXNoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:44:39 -0400
+Received: from dggemi402-hub.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 24782B446D772BE67D1F;
+        Wed, 24 Apr 2019 21:44:36 +0800 (CST)
+Received: from DGGEMI421-HUB.china.huawei.com (10.1.199.150) by
+ dggemi402-hub.china.huawei.com (10.3.17.135) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Wed, 24 Apr 2019 21:44:35 +0800
+Received: from DGGEMI530-MBX.china.huawei.com ([169.254.7.146]) by
+ dggemi421-hub.china.huawei.com ([10.1.199.150]) with mapi id 14.03.0415.000;
+ Wed, 24 Apr 2019 21:44:31 +0800
+From:   weizhenliang <weizhenliang@huawei.com>
+To:     Christian Brauner <christian@brauner.io>
+CC:     "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "colona@arista.com" <colona@arista.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: Re: [PATCH v4] signal: trace_signal_deliver when
+ signal_group_exit
+Thread-Topic: Re: [PATCH v4] signal: trace_signal_deliver when
+ signal_group_exit
+Thread-Index: AdT6omoJGuAXuaa4TgmwwsGmQ23m2A==
+Date:   Wed, 24 Apr 2019 13:44:31 +0000
+Message-ID: <AF4D908CC0E2A24EB308A26962C8C3BDEB1A17@DGGEMI530-MBX.china.huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+x-originating-ip: [10.40.99.192]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MC-Unique: CiFaQrbeNPCHVcud67r0LA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fenghua Yu
-> Sent: 23 April 2019 21:48
-> 
-> On Thu, Apr 18, 2019 at 08:41:30AM +0200, Thomas Gleixner wrote:
-> > On Wed, 17 Apr 2019, Fenghua Yu wrote:
-> > > On Thu, Apr 18, 2019 at 12:47:24AM +0200, Thomas Gleixner wrote:
-> > > > On Wed, 17 Apr 2019, Fenghua Yu wrote:
-> > > >
-> > > > > The interface /sys/device/system/cpu/split_lock_detect is added
-> > > > > to allow user to control split lock detection and show current split
-> > > > > lock detection setting.
-> > > > >
-> > > > > Writing [yY1] or [oO][nN] to the file enables split lock detection and
-> > > > > writing [nN0] or [oO][fF] disables split lock detection. Split lock
-> > > > > detection is enabled or disabled on all CPUs.
-> > > > >
-> > > > > Reading the file returns current global split lock detection setting:
-> > > > > 0: disabled
-> > > > > 1: enabled
-> > > >
-> > > > Again, You explain WHAT this patch does and still there is zero
-> > > > justification why this sysfs knob is needed at all. I still do not see any
-> > > > reason why this knob should exist.
-> > >
-> > > An important application has split lock issues which are already discovered
-> > > and need to be fixed. But before the issues are fixed, sysadmin still wants to
-> > > run the application without rebooting the system, the sysfs knob can be useful
-> > > to turn off split lock detection. After the application is done, split lock
-> > > detection will be enabled again through the sysfs knob.
-> >
-> > Are you sure that you are talking about the real world? I might buy the
-> > 'off' part somehow, but the 'on' part is beyond theoretical.
-> >
-> > Even the 'off' part is dubious on a multi user machine. I personally would
-> > neither think about using the sysfs knob nor about rebooting the machine
-> > simply because I'd consider a lock operation accross a cacheline an malicious
-> > DoS attempt. Why would I allow that?
-> >
-> > So in reality the sysadmin will either move the workload to a machine w/o
-> > the #AC magic or just tell the user to fix his crap.
-> >
-> > > Without the sysfs knob, sysadmin has to reboot the system with kernel option
-> > > "no_split_lock_detect" to run the application before the split lock issues
-> > > are fixed.
-> > >
-> > > Is this a valid justification why the sysfs knob is needed? If it is, I can
-> > > add the justification in the next version.
-> >
-> > Why has this information not been in the changelog right away? I'm really
-> > tired of asking the same questions and pointing you to
-> > Documentation/process over and over.
-> 
-> So should I remove the sysfs knob patches in the next version?
-> 
-> Or add the following justification and still keep the sysfs knob patches?
-> "To workaround or debug a split lock issue, the administrator may need to
-> disable or enable split lock detection during run time without rebooting
-> the system."
-
-I've also not seen patches to fix all the places where 'lock bit' operations
-get used on int [] data.
-Testing had showed one structure that needed 'fixing', there are some others
-that are in .bss/.data.
-A kernel build could suddenly have them misaligned and crossing a cache line.
-
-All the places that cast the pointer to the bit ops are suspect.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+T24gMDQvMjQsIENocmlzdGlhbiBCcmF1bmVyIHdyb3RlOg0KPk9uIFdlZCwgQXByIDI0LCAyMDE5
+IGF0IDA4OjUyOjM4UE0gKzA4MDAsIFpoZW5saWFuZyBXZWkgd3JvdGU6DQo+PiANCj4+IEFja2Vk
+LWJ5OiBDaHJpc3RpYW4gQnJhdW5lciA8Y2hyaXN0aWFuQGJyYXVuZXIuaW8+DQo+DQo+SSB0aGlu
+ayB3ZSdyZSBzdXBwb3NlZCB0byB1c2UgbW9yZSBSZXZpZXdlZC1ieXMgc28gZmVlbCBmcmVlIChv
+ciBBbmRyZXcpIHRvIGNoYW5nZSB0aGlzIHRvOg0KPg0KPlJldmlld2VkLWJ5OiBDaHJpc3RpYW4g
+QnJhdW5lciA8Y2hyaXN0aWFuQGJyYXVuZXIuaW8+DQoNCk9rLCBJIHdpbGwgY2hhbmdlIHRoaXMg
+aW4gcGF0Y2ggdjUuDQoNCj4+IC0tLSBhL2tlcm5lbC9zaWduYWwuYw0KPj4gKysrIGIva2VybmVs
+L3NpZ25hbC5jDQo+PiBAQCAtMjQ0MSw2ICsyNDQxLDggQEAgYm9vbCBnZXRfc2lnbmFsKHN0cnVj
+dCBrc2lnbmFsICprc2lnKQ0KPj4gIAlpZiAoc2lnbmFsX2dyb3VwX2V4aXQoc2lnbmFsKSkgew0K
+Pj4gIAkJa3NpZy0+aW5mby5zaV9zaWdubyA9IHNpZ25yID0gU0lHS0lMTDsNCj4+ICAJCXNpZ2Rl
+bHNldCgmY3VycmVudC0+cGVuZGluZy5zaWduYWwsIFNJR0tJTEwpOw0KPj4gKwkJdHJhY2Vfc2ln
+bmFsX2RlbGl2ZXIoU0lHS0lMTCwgU0VORF9TSUdfTk9JTkZPLA0KPj4gKwkJCSZzaWdoYW5kLT5h
+Y3Rpb25bc2lnbnIgLSAxXSk7DQo+DQo+SG0sIHNvcnJ5IGZvciBiZWluZyB0aGUgcmVhbGx5IG5p
+dHBpY2t5IHBlcnNvbiBoZXJlLiBKdXN0IGZvciB0aGUgc2FrZSBvZiBjb25zaXN0ZW5jeSBob3cg
+YWJvdXQgd2UgZG8gZWl0aGVyOg0KPg0KPisJCXRyYWNlX3NpZ25hbF9kZWxpdmVyKFNJR0tJTEws
+IFNFTkRfU0lHX05PSU5GTywNCj4rCQkJJnNpZ2hhbmQtPmFjdGlvbltTSUdLSUxMIC0gMV0pOw0K
+Pg0KPm9yDQo+DQo+KwkJdHJhY2Vfc2lnbmFsX2RlbGl2ZXIoc2lnbnIsIFNFTkRfU0lHX05PSU5G
+TywNCj4rCQkJJnNpZ2hhbmQtPmFjdGlvbltzaWduciAtIDFdKTsNCj4NCj5JJ20gbm90IGdvaW5n
+IHRvIGFyZ3VlIGFib3V0IHRoaXMgdGhvdWdoLiBDYW4ganVzdCBhbHNvIGxlYXZlIGl0IGFzIGlz
+Lg0KDQpUaGFuayB5b3UgZm9yIHlvdXIgY29tbWVudHMgYW5kIGxlYXJuIGZyb20gcmlnb3JvdXMg
+cGVvcGxlISBJIHdpbGwgdGFrZToNCg0KKwkJdHJhY2Vfc2lnbmFsX2RlbGl2ZXIoU0lHS0lMTCwg
+U0VORF9TSUdfTk9JTkZPLA0KKwkJCSZzaWdoYW5kLT5hY3Rpb25bU0lHS0lMTCAtIDFdKTsNCg0K
+QW55IG90aGVyIHN1Z2dlc3Rpb25zIGFib3V0IHRoZSBwYXRjaD8NCg0KV2VpDQo=
