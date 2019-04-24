@@ -2,50 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A67C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEECCC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC745218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E75218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117019;
-	bh=mnjv9IN1XySjhGBk7+hKmZDXSppSPWoUXqTpe2yI3fs=;
+	s=default; t=1556117027;
+	bh=1LNwZHjWJ2zPQFlMduWIFBWZMYd8nxPSTOwbmCm9I5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lQnyieQxgv5qNVblmM0kQzQSrxMvIqDI6knu4VU3XokyDBsUYRUHm/s7aSh3+nV5h
-	 4WTs09blzsis5f1xS8NjyWB3Pi55gaEWImv4A9A6WJlpQx+CgEjYHLajQ5W+B5F3hk
-	 b8T4iyHz3zIOH7zuqEO0GfqRC4V0MRFHbh/AIvho=
+	b=cotw+yg+aMZgP+8szdr5Izq9FCA8fmPDghBNabo6SnE7fPuagTaBqItSOEULf7Siz
+	 +GJB3j4yQpj+cRZc6jCI5lrEaR/oEKTZc2kzuykt5qBQ7GLqTfwSRdNHwrMUe/gF5+
+	 ioPhg4zkyX78DBPmbXjSdWU8ueNmXscJYI9yXh40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731946AbfDXOni (ORCPT
+        id S1731989AbfDXOnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:43:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42602 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:43:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730960AbfDXOkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:40:07 -0400
+        id S1731499AbfDXOkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:40:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC98C21905;
-        Wed, 24 Apr 2019 14:40:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA46821906;
+        Wed, 24 Apr 2019 14:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116807;
-        bh=mnjv9IN1XySjhGBk7+hKmZDXSppSPWoUXqTpe2yI3fs=;
+        s=default; t=1556116803;
+        bh=1LNwZHjWJ2zPQFlMduWIFBWZMYd8nxPSTOwbmCm9I5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zgnrfE0zLiyfrcBq95KR70AmCw/82Z+V3SCZ+UZW5x4P/nDC27sG6X233sCchs2MU
-         j3jcDnhEDk3wR9jz8Nf33QsenHv9WFkYEWXEVhrgwv5+xUArmc4aNd3OP4AzHndAay
-         8+cwOUOeIway1w9m9I/tbMi6WawxQclTffLktcCc=
+        b=k0uAMJCWBk6vDnHve1DvQk3ohPCiQb4+JaBlBRKfJYEoDvK7zDiJ8bkZi3p2cl773
+         4ub1yli9L9tsvLllPM12PZBRVUhQqRHiGLLeGFvhoqROjzcVRbI8IicdELN/PhfEsF
+         14dZ8XLVLhOLmbxsHDBc4Iv2UxvSqVmN88fVMjPc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/52] net: stmmac: don't log oversized frames
-Date:   Wed, 24 Apr 2019 10:38:42 -0400
-Message-Id: <20190424143911.28890-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 22/52] net: stmmac: don't overwrite discard_frame status
+Date:   Wed, 24 Apr 2019 10:38:40 -0400
+Message-Id: <20190424143911.28890-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
 References: <20190424143911.28890-1-sashal@kernel.org>
@@ -60,31 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-[ Upstream commit 057a0c5642a2ff2db7c421cdcde34294a23bf37b ]
+[ Upstream commit 1b746ce8b397e58f9e40ce5c63b7198de6930482 ]
 
-This is log is harmful as it can trigger multiple times per packet. Delete
-it.
+If we have error bits set, the discard_frame status will get overwritten
+by checksum bit checks, which might set the status back to good one.
+Fix by checking the COE status only if the frame is good.
 
 Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/norm_desc.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/enh_desc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-index c55a9815b394..b7dd4e3c760d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-@@ -91,8 +91,6 @@ static int ndesc_get_rx_status(void *data, struct stmmac_extra_stats *x,
- 		return dma_own;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+index e8855e6adb48..c42ef6c729c0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+@@ -231,9 +231,10 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ 	 * It doesn't match with the information reported into the databook.
+ 	 * At any rate, we need to understand if the CSUM hw computation is ok
+ 	 * and report this info to the upper layers. */
+-	ret = enh_desc_coe_rdes0(!!(rdes0 & RDES0_IPC_CSUM_ERROR),
+-				 !!(rdes0 & RDES0_FRAME_TYPE),
+-				 !!(rdes0 & ERDES0_RX_MAC_ADDR));
++	if (likely(ret == good_frame))
++		ret = enh_desc_coe_rdes0(!!(rdes0 & RDES0_IPC_CSUM_ERROR),
++					 !!(rdes0 & RDES0_FRAME_TYPE),
++					 !!(rdes0 & ERDES0_RX_MAC_ADDR));
  
- 	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
--		pr_warn("%s: Oversized frame spanned multiple buffers\n",
--			__func__);
- 		stats->rx_length_errors++;
- 		return discard_frame;
- 	}
+ 	if (unlikely(rdes0 & RDES0_DRIBBLING))
+ 		x->dribbling_bit++;
 -- 
 2.19.1
 
