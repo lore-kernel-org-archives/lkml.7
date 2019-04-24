@@ -2,112 +2,96 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8F8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBCAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34DF3218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20932084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EyC+f3ya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732396AbfDXQ1x (ORCPT
+        id S1732441AbfDXQ2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:27:53 -0400
-Received: from gateway33.websitewelcome.com ([192.185.146.210]:26888 "EHLO
-        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731034AbfDXQ1u (ORCPT
+        Wed, 24 Apr 2019 12:28:39 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37742 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731712AbfDXQ2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:27:50 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway33.websitewelcome.com (Postfix) with ESMTP id 7E5C71B057
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:27:48 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id JKkOhTVPQiQerJKkOhAXVx; Wed, 24 Apr 2019 11:27:48 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.127.223] (port=40096 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hJKkM-00394d-Qi; Wed, 24 Apr 2019 11:27:48 -0500
-Date:   Wed, 24 Apr 2019 11:27:42 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Casey Leedom <leedom@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH net-next] cxgb4/cxgb4vf_main: Mark expected switch
- fall-through
-Message-ID: <20190424162742.GA10085@embeddedor>
+        Wed, 24 Apr 2019 12:28:39 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w23so9561061ply.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 09:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kEN2W+v6pgouEEfFD37KZh1dWnVdRXyGFpqTmwD1WQ4=;
+        b=EyC+f3yaLCjLCTirXfvokWi9XxT6btSBjFEbUBPGBHs6cQbAFJjZI5MA7NRUM062GA
+         m6XTadILWuKlY7CXbKYA95Wzx5hYNaAJ5NEYUzcu614SOky4Tm+TmSncwkQSFWWIDXAR
+         3qhR68/U6FKaxdZHF+46cIX9YFJfkS/BvyCsE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kEN2W+v6pgouEEfFD37KZh1dWnVdRXyGFpqTmwD1WQ4=;
+        b=crR9b9Fu4W786YoQUvLGlLKmk6cmTBqfBw4UPOH3EsS2YGRzzNbCHBwGKeQ1hcnYWk
+         LlL2PEowSYdDaOfeD3rl7xlHoSUhz6tFygC4/adYjJl1KL5Ohw8Zaavy35oQWimGyfw/
+         Db5H0iljrgw8CJbqvzhemN+esYP9g0cr72b9oZ8prD4+odH3Hjlf94Ie+k15CPIfOzpy
+         SZV74RNpfRMddrPkK0dJe5d+b8tVTT71cxECF+//WgsH+19No4sPv0A89MUwIvRTG3hV
+         X5ZJtlpHU2RXqcAlup3ijTl+6bHA0e31Nh5LHp0/BlNiWsp1pOZoiQs0IInTARuDqBnb
+         rN2A==
+X-Gm-Message-State: APjAAAVi6vcMqDusGhad74FKnonFTg1OAqRzF9VCghsuMbHt8r4SncXI
+        YBYUPmciLLbDpIApXlQiM409SA==
+X-Google-Smtp-Source: APXvYqwFPCfE8+/E8Fov81OeEeHagvauypmx7lx4cxzqzOtjXT7s5MTOPaqGS/OqzlmYKsQNAExZjQ==
+X-Received: by 2002:a17:902:ac1:: with SMTP id 59mr33408584plp.294.1556123317990;
+        Wed, 24 Apr 2019 09:28:37 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id c3sm26089905pfo.2.2019.04.24.09.28.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 09:28:37 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] ARM: dts: rockchip: Add #cooling-cells entry for rk3288 GPU
+Date:   Wed, 24 Apr 2019 09:28:27 -0700
+Message-Id: <20190424162827.5297-1-mka@chromium.org>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.127.223
-X-Source-L: No
-X-Exim-ID: 1hJKkM-00394d-Qi
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.127.223]:40096
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 14
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch
-cases where we are expecting to fall through.
+The Mali GPU of the rk3288 can be used as cooling device, add
+a #cooling-cells entry for it.
 
-This patch fixes the following warning:
-
-drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c: In function ‘fwevtq_handler’:
-drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c:520:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   cpl = (void *)p;
-   ~~~~^~~~~~~~~~~
-drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c:524:2: note: here
-  case CPL_SGE_EGR_UPDATE: {
-  ^~~~
-
-Warning level 3 was used: -Wimplicit-fallthrough=3
-
-Notice that, in this particular case, the code comment is modified
-in accordance with what GCC is expecting to find.
-
-This patch is part of the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3288.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
-index a8c4e0c851e7..6d4cf3d0b2f0 100644
---- a/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c
-@@ -518,8 +518,8 @@ static int fwevtq_handler(struct sge_rspq *rspq, const __be64 *rsp,
- 			break;
- 		}
- 		cpl = (void *)p;
--		/*FALLTHROUGH*/
- 	}
-+		/* Fall through */
- 
- 	case CPL_SGE_EGR_UPDATE: {
- 		/*
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index ca7d52daa8fb..767e62908a6e 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -1275,6 +1275,7 @@
+ 		interrupt-names = "job", "mmu", "gpu";
+ 		clocks = <&cru ACLK_GPU>;
+ 		operating-points-v2 = <&gpu_opp_table>;
++		#cooling-cells = <2>; /* min followed by max */
+ 		power-domains = <&power RK3288_PD_GPU>;
+ 		status = "disabled";
+ 	};
 -- 
-2.21.0
+2.21.0.593.g511ec345e18-goog
 
