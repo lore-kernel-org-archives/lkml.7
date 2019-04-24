@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8366C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1ED9C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790002084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B982084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117775;
-	bh=4+jyzTu6K3qHJTdmixFoQ2l7n20cmKN50JvfRQNKS2U=;
+	s=default; t=1556117784;
+	bh=Rjb6a3GEzf2BBvNdzU2DLUgdHO/qEY97YrpI9k01Bwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wz3fgQ39sut0eF+E9yXBQAkf0AV6OGlOOhTzVM5m5VJMbI1AIw7z38oQSfy3vTE8a
-	 F7R6qN7OKxW6cIiz8tvKAkh5FgcXPGfgNb47DA82L3RsiZwuZl12yJ1ADXKE9kWsh6
-	 IkUUVQWXFiRsXYckc7OvYHjpbseQ3NXx1bd8H6kc=
+	b=zEr/oK+0rLHympWfg3n62XMXmbWicTHGB8cmrD/VOHtLMN7hlPX8HkK6ABwYP8BJU
+	 NEJl6tUJph24cvOTHSnHBGnw9y8aIph0iPgUXWPyYJTETINSzSzXsVz2rsTSbQXUhF
+	 5+DFcEBz2AkDRJvSSbBDN5alHdXGRgSH/quTY22M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732634AbfDXOuj (ORCPT
+        id S1732605AbfDXOud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:50:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49826 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731114AbfDXOug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:50:36 -0400
+        id S1732556AbfDXOu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:50:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72C3D218FC;
-        Wed, 24 Apr 2019 14:50:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3218A21903;
+        Wed, 24 Apr 2019 14:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117435;
-        bh=4+jyzTu6K3qHJTdmixFoQ2l7n20cmKN50JvfRQNKS2U=;
+        s=default; t=1556117425;
+        bh=Rjb6a3GEzf2BBvNdzU2DLUgdHO/qEY97YrpI9k01Bwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bnQk40VOYfIl/l0l4OpepBG4DOoVc90dYHlFHGhbsCI24+Q9QvsFY8vS5tqeXMRha
-         LP4TARpm+ImRhl4IWX0uqima0UwLgIhxhoY4+l8e7lUct8lm5+kgI0mdNPutlJ7K9s
-         ne6+ED2eEvkrbTmG9o/9qQaROrShh7EtGTZkiot8=
+        b=mbYP1yE728SNhkEaxOumlrDLYhznKoW20d1jj6KBhbQjlkJSdikRd0Nz94CrQthp6
+         ZSLItQM4NTc02obaEuziNC9TfoXDKu/MRkzIMvVI7FgcD/UKbic667GH3p0hCvgWjT
+         +zIqW8FW4vXsx42wOrnqkgxjUEceLtBfwoGWpc3k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Omri Kahalon <omrik@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/28] net/mlx5: E-Switch, Fix esw manager vport indication for more vport commands
-Date:   Wed, 24 Apr 2019 10:49:53 -0400
-Message-Id: <20190424145012.30886-9-sashal@kernel.org>
+Cc:     Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/28] batman-adv: Reduce tt_local hash refcnt only for removed entry
+Date:   Wed, 24 Apr 2019 10:49:49 -0400
+Message-Id: <20190424145012.30886-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424145012.30886-1-sashal@kernel.org>
 References: <20190424145012.30886-1-sashal@kernel.org>
@@ -60,50 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omri Kahalon <omrik@mellanox.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit eca4a928585ac08147e5cc8e2111ecbc6279ee31 ]
+[ Upstream commit 3d65b9accab4a7ed5038f6df403fbd5e298398c7 ]
 
-Traditionally, the PF (Physical Function) which resides on vport 0 was
-the E-switch manager. Since the ECPF (Embedded CPU Physical Function),
-which resides on vport 0xfffe, was introduced as the E-Switch manager,
-the assumption that the E-switch manager is on vport 0 is incorrect.
+The batadv_hash_remove is a function which searches the hashtable for an
+entry using a needle, a hashtable bucket selection function and a compare
+function. It will lock the bucket list and delete an entry when the compare
+function matches it with the needle. It returns the pointer to the
+hlist_node which matches or NULL when no entry matches the needle.
 
-Since the eswitch code already uses the actual vport value, all we
-need is to always set other_vport=1.
+The batadv_tt_local_remove is not itself protected in anyway to avoid that
+any other function is modifying the hashtable between the search for the
+entry and the call to batadv_hash_remove. It can therefore happen that the
+entry either doesn't exist anymore or an entry was deleted which is not the
+same object as the needle. In such an situation, the reference counter (for
+the reference stored in the hashtable) must not be reduced for the needle.
+Instead the reference counter of the actually removed entry has to be
+reduced.
 
-Signed-off-by: Omri Kahalon <omrik@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Otherwise the reference counter will underflow and the object might be
+freed before all its references were dropped. The kref helpers reported
+this problem as:
+
+  refcount_t: underflow; use-after-free.
+
+Fixes: ef72706a0543 ("batman-adv: protect tt_local_entry from concurrent delete events")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/batman-adv/translation-table.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-index da9246f6c31e..d1a3a35ba87b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
-@@ -92,8 +92,7 @@ static int arm_vport_context_events_cmd(struct mlx5_core_dev *dev, u16 vport,
- 		 opcode, MLX5_CMD_OP_MODIFY_NIC_VPORT_CONTEXT);
- 	MLX5_SET(modify_nic_vport_context_in, in, field_select.change_event, 1);
- 	MLX5_SET(modify_nic_vport_context_in, in, vport_number, vport);
--	if (vport)
--		MLX5_SET(modify_nic_vport_context_in, in, other_vport, 1);
-+	MLX5_SET(modify_nic_vport_context_in, in, other_vport, 1);
- 	nic_vport_ctx = MLX5_ADDR_OF(modify_nic_vport_context_in,
- 				     in, nic_vport_context);
+diff --git a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
+index b9f9a310eb78..4f18fcd2d3c0 100644
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -1308,9 +1308,10 @@ u16 batadv_tt_local_remove(struct batadv_priv *bat_priv, const u8 *addr,
+ 			   unsigned short vid, const char *message,
+ 			   bool roaming)
+ {
++	struct batadv_tt_local_entry *tt_removed_entry;
+ 	struct batadv_tt_local_entry *tt_local_entry;
+ 	u16 flags, curr_flags = BATADV_NO_FLAGS;
+-	void *tt_entry_exists;
++	struct hlist_node *tt_removed_node;
  
-@@ -121,8 +120,7 @@ static int modify_esw_vport_context_cmd(struct mlx5_core_dev *dev, u16 vport,
- 	MLX5_SET(modify_esw_vport_context_in, in, opcode,
- 		 MLX5_CMD_OP_MODIFY_ESW_VPORT_CONTEXT);
- 	MLX5_SET(modify_esw_vport_context_in, in, vport_number, vport);
--	if (vport)
--		MLX5_SET(modify_esw_vport_context_in, in, other_vport, 1);
-+	MLX5_SET(modify_esw_vport_context_in, in, other_vport, 1);
- 	return mlx5_cmd_exec(dev, in, inlen, out, sizeof(out));
- }
+ 	tt_local_entry = batadv_tt_local_hash_find(bat_priv, addr, vid);
+ 	if (!tt_local_entry)
+@@ -1339,15 +1340,18 @@ u16 batadv_tt_local_remove(struct batadv_priv *bat_priv, const u8 *addr,
+ 	 */
+ 	batadv_tt_local_event(bat_priv, tt_local_entry, BATADV_TT_CLIENT_DEL);
  
+-	tt_entry_exists = batadv_hash_remove(bat_priv->tt.local_hash,
++	tt_removed_node = batadv_hash_remove(bat_priv->tt.local_hash,
+ 					     batadv_compare_tt,
+ 					     batadv_choose_tt,
+ 					     &tt_local_entry->common);
+-	if (!tt_entry_exists)
++	if (!tt_removed_node)
+ 		goto out;
+ 
+-	/* extra call to free the local tt entry */
+-	batadv_tt_local_entry_put(tt_local_entry);
++	/* drop reference of remove hash entry */
++	tt_removed_entry = hlist_entry(tt_removed_node,
++				       struct batadv_tt_local_entry,
++				       common.hash_entry);
++	batadv_tt_local_entry_put(tt_removed_entry);
+ 
+ out:
+ 	if (tt_local_entry)
 -- 
 2.19.1
 
