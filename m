@@ -2,120 +2,88 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87414C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44043C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DDC2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556065319;
-	bh=Bdt1EDkEUlum3F7qDy7HGfQ+9zhzsg34Q4ZJLeltAhY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U1OlZaLnRVgosdr6M+vfttPMvqmwkRS1Tw8W/TlDjfBmg6eQW6NfwXzzM3Kf/qfbX
-	 9+XOLQLSV9QOKqIYZpMHwNmpVcbJDV/lJmQL1lhbxRqX6XWx4h7wNFC8crnQehyS/S
-	 SM7PjL7DtihGo4qJsXeYPBDJA3b+Mh3nny+V535A=
+	by mail.kernel.org (Postfix) with ESMTP id 1189D2089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:22:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HNx8m+hR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbfDXAV6 (ORCPT
+        id S1728901AbfDXAW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 20:21:58 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37365 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728536AbfDXAV6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 20:21:58 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w23so8339899ply.4;
-        Tue, 23 Apr 2019 17:21:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u+YkNJXUH195AbLZVr2IK4q1fxv4Pwzn3yATf1qSgdE=;
-        b=uAbX+O0NBV6Z8+Wl/P2srWv9yBo56rmsOyJ1k3ZwjDiKU0j3LkfFadDx6mvhKoSmRk
-         LHXuT1eo8xTeGawnsdGKrEqQF8gU8Xi0POJ7tES7cE2Kvueke3Jjy9iilpyi4B5iMoRc
-         vXH9FfYAXLc3GwUDQTLCUvXQCMpsVy9qlv06j8pnOayTWUFr7ZsN+fmLsMzf0J+TpnYb
-         trJa8gzXO+nSH7QyQUWXbcmr01AuADjSssOWv2ab4O1Yf1fowxpJWIxco5V1Oc5Dfocv
-         WCLbLzdVKVx2ZuKGf0xPPM0W8jCCzhM/24j4hyZgVNPlMjRDKApJvg+3tB8gjXxVwfly
-         f67g==
-X-Gm-Message-State: APjAAAWAyxd0lui3ZQU/qM4r3pm2ybDQ1HCTr2t6hsRQjU5uftQ8nMPM
-        5jF031Uvj0hCz2pJ9CCQCZ8=
-X-Google-Smtp-Source: APXvYqzH0TJahx3G25QTHrpT7CirvmVa96+uIEUmVk2f0ev6a1QsXlWLIZYTYKkd8mdZRIY/nspAuQ==
-X-Received: by 2002:a17:902:a9c7:: with SMTP id b7mr28826817plr.145.1556065317294;
-        Tue, 23 Apr 2019 17:21:57 -0700 (PDT)
-Received: from localhost ([2601:647:4700:2953:e96c:d7df:9526:1357])
-        by smtp.gmail.com with ESMTPSA id a17sm30480851pfj.123.2019.04.23.17.21.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 17:21:56 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 17:21:55 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Wen Yang <wen.yang99@zte.com.cn>
-Cc:     linux-kernel@vger.kernel.org, wang.yi59@zte.com.cn,
-        Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-fpga@vger.kernel.org
-Subject: Re: [PATCH] fpga: stratix10-soc: fix use-after-free on s10_init()
-Message-ID: <20190424002155.GA15154@archbook>
-References: <1556062325-26141-1-git-send-email-wen.yang99@zte.com.cn>
+        Tue, 23 Apr 2019 20:22:26 -0400
+Received: from ozlabs.org ([203.11.71.1]:59889 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728470AbfDXAWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 20:22:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44pgxV1N2yz9sMQ;
+        Wed, 24 Apr 2019 10:22:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556065343;
+        bh=FYUxV9LLa82IDHDXai28iy34GpB20HFOrlNcpWqR7Gs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HNx8m+hRFHDhjizE4LX7CvLXghzP4Z/Wa8HeZ8Uo/dQioanuhD9xQb7S5p+wFfWq5
+         YGAZHKq57paP+isbd/swTX90Nb9itola3gxz+9499xe3aP0bSudtP+oU1bQRV3k1Gn
+         okEHlQxziRcOFqFTg5LtFWOqAmdPvUQZ1jw4qSI5XEXHa2MclvnF8gs9lKdVrLDAkF
+         E8pg5NkC9uWJyuBjVmv8CUQ9DjLMXR+bp/Hkoy5iglOIVPL827CUSSxbYr3RKIdLdI
+         sC89hnsaQpOnFpnvlVPVTdTOCpDDkDreO9Va4AOS9WTztc7yb2zFStxww/gOPQhzhg
+         UCuPRsQE551bA==
+Date:   Wed, 24 Apr 2019 10:22:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Deepak Rawat <drawat@vmware.com>
+Subject: linux-next: Signed-off-by missing for commit in the drm tree
+Message-ID: <20190424102219.48cfdfe2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556062325-26141-1-git-send-email-wen.yang99@zte.com.cn>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/g3GEeX/qXqHGhYmsJqu=kcG"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wen,
+--Sig_/g3GEeX/qXqHGhYmsJqu=kcG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 24, 2019 at 07:32:05AM +0800, Wen Yang wrote:
-> The refcount of fw_np has already been decreased by of_find_matching_node()
-> so it shouldn't be used anymore.
-> This patch adds an of_node_get() before of_find_matching_node() to avoid
-> the use-after-free problem.
-> 
-> Fixes: e7eef1d7633a ("fpga: add intel stratix10 soc fpga manager driver")
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: Alan Tull <atull@kernel.org>
-> Cc: Moritz Fischer <mdf@kernel.org>
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: linux-fpga@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+Hi all,
 
-Reviewed-by: Moritz Fischer <mdf@kernel.org>
-> ---
->  drivers/fpga/stratix10-soc.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
-> index 13851b3..215d337 100644
-> --- a/drivers/fpga/stratix10-soc.c
-> +++ b/drivers/fpga/stratix10-soc.c
-> @@ -507,12 +507,16 @@ static int __init s10_init(void)
->  	if (!fw_np)
->  		return -ENODEV;
->  
-> +	of_node_get(fw_np);
->  	np = of_find_matching_node(fw_np, s10_of_match);
-> -	if (!np)
-> +	if (!np) {
-> +		of_node_put(fw_np);
->  		return -ENODEV;
-> +	}
->  
->  	of_node_put(np);
->  	ret = of_platform_populate(fw_np, s10_of_match, NULL, NULL);
-> +	of_node_put(fw_np);
->  	if (ret)
->  		return ret;
->  
-> -- 
-> 2.9.5
-> 
+Commit
 
-Thanks,
-Moritz
+  a9f58c456e9d ("drm/vmwgfx: Be more restrictive when dirtying resources")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/g3GEeX/qXqHGhYmsJqu=kcG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/rDsACgkQAVBC80lX
+0GzuPwf/WGX6T5ueRjKbZwlz5mla7w6r7UgwAaZKnzJQvnLU4mud4CCMg3cL2txY
+e3uPutpytd6xUGe9Id+dyJ9H4MwgNqLuttpdXenK/dfhIi4ng4PfJKQstXD9Vvtu
+EL0ZeKTA+M+oddlg3X2Fme3ul9aAYAU7KI1LST332HK8fqYfvC2dNRNa3CxjQclI
+hwnRFVxeawpOQj2beGCDZTdKTSTTqMOkrWEUUkAkORlorf8ONcDcPjNhh8W63kmn
+hWei6mVQXUinemmtInq7k1hY2s6Ve0Vhq5Qekm55vuUQXMKyrv71fB/cOx73ipkY
+pBkZatOAkFuQ9U5qCCARznPONU/btA==
+=swKr
+-----END PGP SIGNATURE-----
+
+--Sig_/g3GEeX/qXqHGhYmsJqu=kcG--
