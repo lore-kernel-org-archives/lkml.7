@@ -2,54 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA85C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7477C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6CF421900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85572206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126089;
-	bh=E5VgPwQf/BXx3c/AFb0hdG4Bbg5q/LJAYvA2TINy27k=;
+	s=default; t=1556126092;
+	bh=CO+Fjam87g0jwVDOPDbtilyalx+JJlz9OvyNFOWDejw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jGbH3HOFQ1gS69Ydm4hx6CdGp85D3e2UXdXgQq+4UgmjL1Hfpm+wn4XrL27I121AT
-	 Zil2DyzXCsJC8xlJxZTwqdq13TIATuk+pbWTkqUsOD4dqNuh/hHirDFNg5CQxSHndE
-	 1/wEIe0BjQWq732PJXrC6pY/Gth4LWnWIROSdkjk=
+	b=ZpskE5ffacXg3o7Io2xQ5uUXyFxdZaHSbSn5jf4OEI6BJGtfDRzCI+vszKhef4lQu
+	 9bg/m28pyDb6a8Uwn9iHNSUVeilTyOM0M/ntNdYvP42xoDk5zsvjItolKPNH6Lb2zX
+	 TCMhSv9isYoIQD1V6HRJ7DcdDPQs37X9Yxrb1VwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388124AbfDXROs (ORCPT
+        id S2388135AbfDXROv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:14:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38940 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:14:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388108AbfDXROo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:14:44 -0400
+        id S2388115AbfDXROr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:47 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FF71206BA;
-        Wed, 24 Apr 2019 17:14:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D16CD21900;
+        Wed, 24 Apr 2019 17:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126083;
-        bh=E5VgPwQf/BXx3c/AFb0hdG4Bbg5q/LJAYvA2TINy27k=;
+        s=default; t=1556126086;
+        bh=CO+Fjam87g0jwVDOPDbtilyalx+JJlz9OvyNFOWDejw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BttJ2DVhRD+yPiQptstlmOIV9RBj/7vy6zh1dFgCXELphfLF/0mTOKvp3tJGmTNdb
-         G16rV6j6wfxjLajasWb6U+jvIUhIO+zALIkbVoQ5YKs5+2Bv2291+sjuw/U7npHxrk
-         N0fBR8Jx7A+gUJszhngby7CgcOqg6Ip2tXiuhxqc=
+        b=0O0vJOI9oP8V4CfizkDg+bSgQXx8rzTTGJPbfYhauhDe4/QBMiEQ13e5AnK3wMLJa
+         VWTE1HbAla40y364JXf5I29BfJpITg1/ls638zIgZe5AmyNgXSqJN5Z38uTNNz7dvl
+         cwpL8LeI3HlOgLo32/NonT4VOubO0mpNA2rPRq3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 089/104] tpm/tpm_i2c_atmel: Return -E2BIG when the transfer is incomplete
-Date:   Wed, 24 Apr 2019 19:09:46 +0200
-Message-Id: <20190424170908.975484628@linuxfoundation.org>
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 090/104] bonding: fix event handling for stacked bonds
+Date:   Wed, 24 Apr 2019 19:09:47 +0200
+Message-Id: <20190424170909.092548995@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -62,44 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 442601e87a4769a8daba4976ec3afa5222ca211d upstream
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-Return -E2BIG when the transfer is incomplete. The upper layer does
-not retry, so not doing that is incorrect behaviour.
+[ Upstream commit 92480b3977fd3884649d404cbbaf839b70035699 ]
 
-Cc: stable@vger.kernel.org
-Fixes: a2871c62e186 ("tpm: Add support for Atmel I2C TPMs")
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+When a bond is enslaved to another bond, bond_netdev_event() only
+handles the event as if the bond is a master, and skips treating the
+bond as a slave.
+
+This leads to a refcount leak on the slave, since we don't remove the
+adjacency to its master and the master holds a reference on the slave.
+
+Reproducer:
+  ip link add bondL type bond
+  ip link add bondU type bond
+  ip link set bondL master bondU
+  ip link del bondL
+
+No "Fixes:" tag, this code is older than git history.
+
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/char/tpm/tpm_i2c_atmel.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/net/bonding/bond_main.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm_i2c_atmel.c b/drivers/char/tpm/tpm_i2c_atmel.c
-index 503a85ae176c..0ea430cc606f 100644
---- a/drivers/char/tpm/tpm_i2c_atmel.c
-+++ b/drivers/char/tpm/tpm_i2c_atmel.c
-@@ -65,7 +65,15 @@ static int i2c_atmel_send(struct tpm_chip *chip, u8 *buf, size_t len)
- 	dev_dbg(chip->dev,
- 		"%s(buf=%*ph len=%0zx) -> sts=%d\n", __func__,
- 		(int)min_t(size_t, 64, len), buf, len, status);
--	return status;
-+
-+	if (status < 0)
-+		return status;
-+
-+	/* The upper layer does not support incomplete sends. */
-+	if (status != len)
-+		return -E2BIG;
-+
-+	return 0;
- }
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2958,8 +2958,12 @@ static int bond_netdev_event(struct noti
+ 		return NOTIFY_DONE;
  
- static int i2c_atmel_recv(struct tpm_chip *chip, u8 *buf, size_t count)
--- 
-2.19.1
-
+ 	if (event_dev->flags & IFF_MASTER) {
++		int ret;
++
+ 		netdev_dbg(event_dev, "IFF_MASTER\n");
+-		return bond_master_netdev_event(event, event_dev);
++		ret = bond_master_netdev_event(event, event_dev);
++		if (ret != NOTIFY_DONE)
++			return ret;
+ 	}
+ 
+ 	if (event_dev->flags & IFF_SLAVE) {
 
 
