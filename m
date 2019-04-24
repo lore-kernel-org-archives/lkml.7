@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9198C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB8AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A872F20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CFCC20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127475;
-	bh=LsHaX6xQcgDK/uYHzVPsRvaJcP+eXZiyMT0Hc/0VLgo=;
+	s=default; t=1556127480;
+	bh=Z38Q4RplQPvZdRj9T13BK59Dr2zpud/8AU35EjdsxFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MZr7QAL7/sNBtgRwDs41hzxo6Dq7Lyvv1WNKFVpqB/lJ/fJzNmV8DJZREGMg4HvMH
-	 NiEjJ4EjFnQ3+noOn7Z2nCPw4SgEyuvMCHDDH/k1tW36Je99jUCo8ZqjAOvTYxshcS
-	 5KgaEcBMLlIBc7fx5KYcMiGRanjTFht/j0PghtJ4=
+	b=u0R9tl9CD9qzJVPuGDqVfh9rBrcJsJ1vMriuKyr93UJ0MOpnOeetxUR7eeVdaNaMb
+	 jgN0Qc1b3/0Y1ULC0rZG0jCdyDrGZ/DlW4D+9ANpwp4Ryk8cTJHDV1x4IBUEo2oWR0
+	 X5VBEOLWEla+dFBpBbGEOeGEemYkOfVMz6Smtupc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392295AbfDXRhy (ORCPT
+        id S1731904AbfDXRh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:37:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36904 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:37:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392273AbfDXRht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:37:49 -0400
+        id S2392294AbfDXRhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:37:54 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DB6C2054F;
-        Wed, 24 Apr 2019 17:37:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E2562054F;
+        Wed, 24 Apr 2019 17:37:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127468;
-        bh=LsHaX6xQcgDK/uYHzVPsRvaJcP+eXZiyMT0Hc/0VLgo=;
+        s=default; t=1556127474;
+        bh=Z38Q4RplQPvZdRj9T13BK59Dr2zpud/8AU35EjdsxFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sC15aiGO0QJX8yIjLX6pNDZaaCKG3nIPLYc9lSLC6pbobppJ61yVWuddJwdvtab6G
-         DWOroCcuB9qvgOK3OSfY7bp/6GJqd9gAZp35+oYseJsudhe7vFUcBmAJRox9njakVu
-         RktFw9ixnr+OjFNkGT2E8NzIS7KjoPrqEu+ruCco=
+        b=o1DJ3Km9n5eNvBcWVc/gW10vt9JQ/La4Bmh0wzVS5TMGggpmx1QEemVl4Hh3E8uy1
+         UaZx0M6H5P1EUyWLg9RDN3AxvKfbKTlWETtNWQCeaNyCMo7PYTEf+q5LB4UKuKVSko
+         vJYD6wdaYsoNUt/35QU1DmF9ItZG44gdwDKZZ94o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erwin Tsaur <erwin.tsaur@oracle.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 102/115] nfit/ars: Allow root to busy-poll the ARS state machine
-Date:   Wed, 24 Apr 2019 19:10:38 +0200
-Message-Id: <20190424170930.705928099@linuxfoundation.org>
+Subject: [PATCH 5.0 104/115] tpm/tpm_i2c_atmel: Return -E2BIG when the transfer is incomplete
+Date:   Wed, 24 Apr 2019 19:10:40 +0200
+Message-Id: <20190424170930.802843924@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -61,64 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 5479b2757f26fe9908fc341d105b2097fe820b6f upstream.
+[ Upstream commit 442601e87a4769a8daba4976ec3afa5222ca211d ]
 
-The ARS implementation implements exponential back-off on the poll
-interval to prevent high-frequency access to the DIMM / platform
-interface. Depending on when the ARS completes the poll interval may
-exceed the completion event by minutes. Allow root to reset the timeout
-each time it probes the status. A one-second timeout is still enforced,
-but root can otherwise can control the poll interval.
+Return -E2BIG when the transfer is incomplete. The upper layer does
+not retry, so not doing that is incorrect behaviour.
 
-Fixes: bc6ba8085842 ("nfit, address-range-scrub: rework and simplify ARS...")
-Cc: <stable@vger.kernel.org>
-Reported-by: Erwin Tsaur <erwin.tsaur@oracle.com>
-Reviewed-by: Toshi Kani <toshi.kani@hpe.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Cc: stable@vger.kernel.org
+Fixes: a2871c62e186 ("tpm: Add support for Atmel I2C TPMs")
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/nfit/core.c | 8 ++++++++
- drivers/acpi/nfit/nfit.h | 1 +
- 2 files changed, 9 insertions(+)
+ drivers/char/tpm/tpm_i2c_atmel.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 64308e669250..61d3fd65fbe9 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -1335,6 +1335,13 @@ static ssize_t scrub_show(struct device *dev,
- 	busy = test_bit(ARS_BUSY, &acpi_desc->scrub_flags)
- 		&& !test_bit(ARS_CANCEL, &acpi_desc->scrub_flags);
- 	rc = sprintf(buf, "%d%s", acpi_desc->scrub_count, busy ? "+\n" : "\n");
-+	/* Allow an admin to poll the busy state at a higher rate */
-+	if (busy && capable(CAP_SYS_RAWIO) && !test_and_set_bit(ARS_POLL,
-+				&acpi_desc->scrub_flags)) {
-+		acpi_desc->scrub_tmo = 1;
-+		mod_delayed_work(nfit_wq, &acpi_desc->dwork, HZ);
-+	}
+diff --git a/drivers/char/tpm/tpm_i2c_atmel.c b/drivers/char/tpm/tpm_i2c_atmel.c
+index 32a8e27c5382..cc4e642d3180 100644
+--- a/drivers/char/tpm/tpm_i2c_atmel.c
++++ b/drivers/char/tpm/tpm_i2c_atmel.c
+@@ -69,6 +69,10 @@ static int i2c_atmel_send(struct tpm_chip *chip, u8 *buf, size_t len)
+ 	if (status < 0)
+ 		return status;
+ 
++	/* The upper layer does not support incomplete sends. */
++	if (status != len)
++		return -E2BIG;
 +
- 	mutex_unlock(&acpi_desc->init_mutex);
- 	device_unlock(dev);
- 	return rc;
-@@ -3196,6 +3203,7 @@ static void acpi_nfit_scrub(struct work_struct *work)
- 	else
- 		notify_ars_done(acpi_desc);
- 	memset(acpi_desc->ars_status, 0, acpi_desc->max_ars);
-+	clear_bit(ARS_POLL, &acpi_desc->scrub_flags);
- 	mutex_unlock(&acpi_desc->init_mutex);
+ 	return 0;
  }
  
-diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
-index 897ce10192a0..d14bad687fb8 100644
---- a/drivers/acpi/nfit/nfit.h
-+++ b/drivers/acpi/nfit/nfit.h
-@@ -213,6 +213,7 @@ struct nfit_mem {
- enum scrub_flags {
- 	ARS_BUSY,
- 	ARS_CANCEL,
-+	ARS_POLL,
- };
- 
- struct acpi_nfit_desc {
 -- 
 2.19.1
 
