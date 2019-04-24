@@ -2,94 +2,90 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B42C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22519C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36A4D208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC59208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:17:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556140656;
+	bh=yhp46mg3Uxs3DPwFeEDrlniIULfxLjxvfc4gfLUfJaY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q5+t1Go7mcZXkWJfQMrGKcs4HImT9AhimSjnDfRnB6SE8L+IJSa0h8JurOxsZ2+2r
+	 jYFgfT04dRrCalC6q5qrotH7ya0nSHCu0l+1WAqJUZ7UDJwN7r0RH4RuboTQRDrYUd
+	 /GARyXXREDtfDTDaOEA+DzPU6M8o9Dku+m1KhaY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731237AbfDXVPl (ORCPT
+        id S1730099AbfDXVRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 17:15:41 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:44884 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728550AbfDXVPk (ORCPT
+        Wed, 24 Apr 2019 17:17:35 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45261 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfDXVRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 17:15:40 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 58059804B1;
-        Wed, 24 Apr 2019 23:15:37 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 23:15:36 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Xu YiPing <xuyiping@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>
-Subject: Re: [PATCH 24/25] drm: kirin: Pass driver data to crtc init and
- plane init
-Message-ID: <20190424211536.GB27952@ravnborg.org>
-References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
- <1556061656-1733-25-git-send-email-john.stultz@linaro.org>
- <20190424170910.GC21067@ravnborg.org>
- <CALAqxLWmrabPxnpN7T_9KCLNrpzj0dnzbNs8vLhz+GBGyRxp_Q@mail.gmail.com>
+        Wed, 24 Apr 2019 17:17:34 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e5so17461787otk.12;
+        Wed, 24 Apr 2019 14:17:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e3Cis35Mfz6t7nF4S+SO9f70xq+1VEeZzlg0kG0AVac=;
+        b=h5MC45YSluJixcP0kT9cCAj6M2OTAMGR3dKjz7Xkj0LwJy5JDRFccAjMs8HQmJwoV1
+         3+2myHpxOnl5KnCaiToOoDdNuEOUA7BBi4YbjP9DsNPb4xQm7Gq8PxpSDhhne81M4J3W
+         LXGQINPyeS0H4V/FcuIxIQ26wmKIoZBcAmCZMuBgI0ZpTZBohwfyZugJ71uUoYZoR9E1
+         DKgMPjExSPjZRNbbnGnjMmLWJHB3oNDUls/1nD9Vlv6Nuj+C0jNNwyMCccDXckysX6Cj
+         3bL3JL17JKfx9UKW3Kd9MvmZEogxey2LNQxd5TXolp7KSbQpD0vjtLbM76kgg/BEEaX0
+         DHLQ==
+X-Gm-Message-State: APjAAAWD9tiulG3xp6OpacfydmLmPzw5R989e1V+l+ycOKwFmokjcrj7
+        aSpNqzn6achemoDcwa2rEA==
+X-Google-Smtp-Source: APXvYqxl/dhWOIJl2SBI0DXQnsZ9JJOKnj3Ki0iEyBxamnsPQkKBxF8gFIHiSCzgMdpVsaYq4B0j5w==
+X-Received: by 2002:a05:6830:1d4:: with SMTP id r20mr21805112ota.106.1556140653581;
+        Wed, 24 Apr 2019 14:17:33 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 96sm8366512otf.17.2019.04.24.14.17.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 14:17:32 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 16:17:32 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        andrew@aj.id.au, joel@jms.id.au, robh+dt@kernel.org,
+        mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl,
+        Eddie James <eajames@linux.ibm.com>
+Subject: Re: [PATCH v2 3/4] media: dt-bindings: aspeed-video: Add missing
+ memory-region property
+Message-ID: <20190424211732.GA18914@bogus>
+References: <1556119020-7609-1-git-send-email-eajames@linux.ibm.com>
+ <1556119020-7609-4-git-send-email-eajames@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALAqxLWmrabPxnpN7T_9KCLNrpzj0dnzbNs8vLhz+GBGyRxp_Q@mail.gmail.com>
+In-Reply-To: <1556119020-7609-4-git-send-email-eajames@linux.ibm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=_3D3e047poz2VFtbk70A:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John.
-
+On Wed, 24 Apr 2019 10:16:59 -0500, Eddie James wrote:
+> Missed documenting this property in the initial commit.
 > 
-> > I missed where ade_driver_data came from.
-> > This looks an extra patch to intoduce driver_data,
-> > that maybe should be merged with an earlier version?
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+> Changes since v1:
+>  - Add missing semi-colon
 > 
-> I'm not sure I'm following you here. Can you clarify a bit more?
+>  Documentation/devicetree/bindings/media/aspeed-video.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
 
-So I looked at this a bit more - and got the bigger picture in place
-again.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-driver_data is assigned using the lookup done at probe() time.
-For now this is just assigned to ade_driver_data as this is the
-only option.
-So an indirection via driver_date or calling ade_driver_data
-direct is the same.
-And you have several patches where you migrate to use driver_data
-rather than calling ade_driver_data direct.
-It confused me that the patch introducing the lookup at probe()
-came before all call sites were migrated to use driver_data.
-But I get it now so it is fine.
-
-Maybe a few words in the commit log like:
-
-This patch refactor to call functions via driver_data,
-rather than hardcoding them via ade_driver_data.
-This is doen so we later can assing another stucture to
-driver_data to support other chips.
-
-PS. I did not complain about your spelling mistakes in the
-changelog. I have a similar (or worse) keyboard from a spelling
-point of view.
-
-	Sam
+If a tag was not added on purpose, please state why and what changed.
