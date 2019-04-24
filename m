@@ -2,51 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFCEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190E9C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D36A218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBCB9218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117211;
-	bh=2akaqfKQ7Bee6kJKY3f2zAEaS7gaY4Ug/ftuDeaskv8=;
+	s=default; t=1556117233;
+	bh=V5GB3aXi80ipnkQvJl9loEgreFbDz9Jlgp4bdhfP/QE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CUZ6PRBvw3FHeTcKhavNS0XwaQ1kGFHhJHAq0+m9jODHko9/bskBPdOzp+sFEkkmj
-	 NpJekbi5sgpbdnsW1zVz2aP6PbgYKRATwV9J+IURfWIsq/35FM+8Dv0it3Ukni2oGJ
-	 7SpelIMCoOOHiMzJAI884S9BH4KDXrjyt81nkKCQ=
+	b=GiaR9LQUSNDQVFhN06ePFRQHICylNBN46t9ZWYmvAKcIPq49E86hA4reo7q6ueVyR
+	 fwNQyIg7iHnuVWAzw7bJFvROjrgovaQYZnvXcWzAq+xoHF8WYB6g5EOupZc3UbJoSQ
+	 m991lT9bFX4zPXnME4vKDac+THBLXxXWu9F1YmRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731880AbfDXOqu (ORCPT
+        id S1731891AbfDXOrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:46:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38230 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:47:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731007AbfDXOeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:34:21 -0400
+        id S1730859AbfDXOeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:34:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F4AB21900;
-        Wed, 24 Apr 2019 14:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E31A218FE;
+        Wed, 24 Apr 2019 14:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116460;
-        bh=2akaqfKQ7Bee6kJKY3f2zAEaS7gaY4Ug/ftuDeaskv8=;
+        s=default; t=1556116455;
+        bh=V5GB3aXi80ipnkQvJl9loEgreFbDz9Jlgp4bdhfP/QE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uFNzaii3PwOMVAKwtG4kPTXly3mZjOOlnCoOmiwGCn21eW/883qBMgwZRqwe0RJL9
-         d9Dg/da1+yp3NN4CG8gr9i2TaRoRWGsDW3c3vN4s84vEuJx1ryn7pjBBy17Mkel+Yt
-         vqfUJUlwmj6e/g7qJNbh8f3ebmr+FqUjb9D+YpBA=
+        b=hmTRk/a7bNNmxkxQlxNYM6260dnJMIyXaS2T/V+EYZoG2yz4CLVCRR4veE+WjFK10
+         C1ejw9kOI6dVQTHooygIxnyEqpHakilW+OoK3+gSSco4SGUdurcvQNNscMiWRc6nFi
+         mtnGqveoWwHcpFXb09kdOMoi5+v+M11KNv18iIdU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arvind Sankar <niveditas98@gmail.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 16/66] igb: Fix WARN_ONCE on runtime suspend
-Date:   Wed, 24 Apr 2019 10:32:50 -0400
-Message-Id: <20190424143341.27665-16-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 14/66] ARM: dts: Fix dcan clkctrl clock for am3
+Date:   Wed, 24 Apr 2019 10:32:48 -0400
+Message-Id: <20190424143341.27665-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -59,155 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <niveditas98@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit dabb8338be533c18f50255cf39ff4f66d4dabdbe ]
+[ Upstream commit 7d56bedb2730dc2ea8abf0fd7240ee99ecfee3c9 ]
 
-The runtime_suspend device callbacks are not supposed to save
-configuration state or change the power state. Commit fb29f76cc566
-("igb: Fix an issue that PME is not enabled during runtime suspend")
-changed the driver to not save configuration state during runtime
-suspend, however the driver callback still put the device into a
-low-power state. This causes a warning in the pci pm core and results in
-pci_pm_runtime_suspend not calling pci_save_state or pci_finish_runtime_suspend.
+We must not use legacy clock defines for dts clckctrl clocks as the offsets
+will be wrong.
 
-Fix this by not changing the power state either, leaving that to pci pm
-core, and make the same change for suspend callback as well.
-
-Also move a couple of defines into the appropriate header file instead
-of inline in the .c file.
-
-Fixes: fb29f76cc566 ("igb: Fix an issue that PME is not enabled during runtime suspend")
-Signed-off-by: Arvind Sankar <niveditas98@gmail.com>
-Reviewed-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 87fc89ced3a7 ("ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc")
+Cc: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- .../net/ethernet/intel/igb/e1000_defines.h    |  2 +
- drivers/net/ethernet/intel/igb/igb_main.c     | 57 +++----------------
- 2 files changed, 10 insertions(+), 49 deletions(-)
+ arch/arm/boot/dts/am33xx-l4.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_defines.h b/drivers/net/ethernet/intel/igb/e1000_defines.h
-index 01fcfc6f3415..d2e2c50ce257 100644
---- a/drivers/net/ethernet/intel/igb/e1000_defines.h
-+++ b/drivers/net/ethernet/intel/igb/e1000_defines.h
-@@ -194,6 +194,8 @@
- /* enable link status from external LINK_0 and LINK_1 pins */
- #define E1000_CTRL_SWDPIN0  0x00040000  /* SWDPIN 0 value */
- #define E1000_CTRL_SWDPIN1  0x00080000  /* SWDPIN 1 value */
-+#define E1000_CTRL_ADVD3WUC 0x00100000  /* D3 WUC */
-+#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000 /* PHY PM enable */
- #define E1000_CTRL_SDP0_DIR 0x00400000  /* SDP0 Data direction */
- #define E1000_CTRL_SDP1_DIR 0x00800000  /* SDP1 Data direction */
- #define E1000_CTRL_RST      0x04000000  /* Global reset */
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 7137e7f9c7f3..21ccadb720d1 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -8755,9 +8755,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	struct e1000_hw *hw = &adapter->hw;
- 	u32 ctrl, rctl, status;
- 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
--#ifdef CONFIG_PM
--	int retval = 0;
--#endif
-+	bool wake;
- 
- 	rtnl_lock();
- 	netif_device_detach(netdev);
-@@ -8770,14 +8768,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	igb_clear_interrupt_scheme(adapter);
- 	rtnl_unlock();
- 
--#ifdef CONFIG_PM
--	if (!runtime) {
--		retval = pci_save_state(pdev);
--		if (retval)
--			return retval;
--	}
--#endif
--
- 	status = rd32(E1000_STATUS);
- 	if (status & E1000_STATUS_LU)
- 		wufc &= ~E1000_WUFC_LNKC;
-@@ -8794,10 +8784,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		}
- 
- 		ctrl = rd32(E1000_CTRL);
--		/* advertise wake from D3Cold */
--		#define E1000_CTRL_ADVD3WUC 0x00100000
--		/* phy power management enable */
--		#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000
- 		ctrl |= E1000_CTRL_ADVD3WUC;
- 		wr32(E1000_CTRL, ctrl);
- 
-@@ -8811,12 +8797,15 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		wr32(E1000_WUFC, 0);
- 	}
- 
--	*enable_wake = wufc || adapter->en_mng_pt;
--	if (!*enable_wake)
-+	wake = wufc || adapter->en_mng_pt;
-+	if (!wake)
- 		igb_power_down_link(adapter);
- 	else
- 		igb_power_up_link(adapter);
- 
-+	if (enable_wake)
-+		*enable_wake = wake;
-+
- 	/* Release control of h/w to f/w.  If f/w is AMT enabled, this
- 	 * would have already happened in close and is redundant.
- 	 */
-@@ -8859,22 +8848,7 @@ static void igb_deliver_wake_packet(struct net_device *netdev)
- 
- static int __maybe_unused igb_suspend(struct device *dev)
- {
--	int retval;
--	bool wake;
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	retval = __igb_shutdown(pdev, &wake, 0);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 0);
- }
- 
- static int __maybe_unused igb_resume(struct device *dev)
-@@ -8945,22 +8919,7 @@ static int __maybe_unused igb_runtime_idle(struct device *dev)
- 
- static int __maybe_unused igb_runtime_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	int retval;
--	bool wake;
--
--	retval = __igb_shutdown(pdev, &wake, 1);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 1);
- }
- 
- static int __maybe_unused igb_runtime_resume(struct device *dev)
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index 7b818d9d2eab..8396faa9ac28 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -1763,7 +1763,7 @@
+ 			reg = <0xcc000 0x4>;
+ 			reg-names = "rev";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+-			clocks = <&l4ls_clkctrl AM3_D_CAN0_CLKCTRL 0>;
++			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>;
+ 			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -1786,7 +1786,7 @@
+ 			reg = <0xd0000 0x4>;
+ 			reg-names = "rev";
+ 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
+-			clocks = <&l4ls_clkctrl AM3_D_CAN1_CLKCTRL 0>;
++			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>;
+ 			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
 -- 
 2.19.1
 
