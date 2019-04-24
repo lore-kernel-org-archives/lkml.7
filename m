@@ -7,69 +7,71 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C45DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C3EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9382175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163472175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="dr2wERG/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QqbyYUtf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388811AbfDXTfy (ORCPT
+        id S2389053AbfDXTgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:35:54 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46074 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfDXTfy (ORCPT
+        Wed, 24 Apr 2019 15:36:42 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34094 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfDXTgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:35:54 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k92so16965471edc.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:35:53 -0700 (PDT)
+        Wed, 24 Apr 2019 15:36:42 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a6so17024174edv.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:36:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=sender:date:from:to:cc:subject:message-id:mail-followup-to
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=34HyKZYcFbb5nEQjRsgdBKbjHsnJQoci/P5SFoI56j8=;
-        b=dr2wERG/4PvII1wnk/c4kxg/3N0Lncv9fscdZt8iycCY12SGA1coKN78En2kc7SmA1
-         VlP6Ejqwk+IEVWpFL9jUPPNFI41KBM+ckxpIw/xE286ELzXoiUeVlXWIfW7A+g0Tqxyg
-         wa3/TWL7RuAtKNdWnBaXKbANt9axdbvIrnvxk=
+        bh=q/yKWZQha9zOHwCzACjXE8LcZSkbRIr+kR0mIguf+4E=;
+        b=QqbyYUtfn3yZz51xKemy3g/LwYvnat2oRUK8RCi3KYzW3xJ6vlJ4YxsWT0PMlbbzI5
+         4hpVfrYg0CyTRaX0U0UBdog8Bg4GqNfkfGnoXhsAwJyi9Te/emFPQRHachmSmyHPaM3B
+         sTDxKkPqhlfIaq8G5BrX250oyCq8eI5m1KsIc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=34HyKZYcFbb5nEQjRsgdBKbjHsnJQoci/P5SFoI56j8=;
-        b=e4f7Ai3P+6Nj+7SvJSNS/xC6jTQSICIk+awmGhstxQ61rI3EKNhCikT/xOR2yORAgS
-         MbPe1p7tvgNdjrQD/aivMSOKSDV1SUW6pbAPsO6sGmCV12uGiaDetLOooRZMXkE/IPv8
-         OMUksHNP86ugZOgaS7U+VnvyDMv6KbaV/YU89orarevWNX1Q8h4WJkvrfoqdVCG3bvpY
-         c9/wmbKq+bSbm8k/budNkSVB8I1SPrb+zbyJFKk6F9R4pKoOhEg9v1qae0b7kuc/fhq+
-         +eflPeB+aIFlDkCCrgPftDQbStwl1quy20m/RbJvH1gc7Wmsk3SLpF9ytBEXh8L5YaK6
-         ThyQ==
-X-Gm-Message-State: APjAAAVW2gjxfHe/nHx8f+06AXvfJwmNWk1MC4522B3syHyZA0k8Jdzu
-        PEzEpMSiNxqcwgROHFoxxXZr/NqzNRg=
-X-Google-Smtp-Source: APXvYqznoceKvTWi158pxtrSIx+iwcKdNuyRthMmP5WoBsFx4jcd4Lyg0EP3dVN91XSDgqtZNICO+A==
-X-Received: by 2002:a17:906:2356:: with SMTP id m22mr6448345eja.255.1556134552894;
-        Wed, 24 Apr 2019 12:35:52 -0700 (PDT)
+        bh=q/yKWZQha9zOHwCzACjXE8LcZSkbRIr+kR0mIguf+4E=;
+        b=CfvM/PshoqVekF4bF+WzsJd96Qzub8pHPK16LRW6UujEk+RQXp9VRr2GO6caXrHoSm
+         9ErD+O3sLk59F7D7003x0y47IbN/NUyDmVQv3fFXvkIQ6BmIJNLYzXVvnvM35QtOV3lc
+         qBjxavFnorubFvW7e0TTUhknvzwjbHM7yIGhc1+plop/Ks5zNCp5dQYZOetkKAO2y26j
+         eCl5E+pe2mD4rlK4Z1CIRXUNyUTxY/I0C2uozm7Qz8W2FmtJ3BdT2Rkp/ae7DGgG5Dy7
+         KBTWz/w/ns/+2DdAalntSQAOL9q0O7u1H4LhE/HTaBnBtwXwSZPisACbQ6KDSZCuEtOg
+         olsw==
+X-Gm-Message-State: APjAAAU2uX+LOhQ4EovUUCWOdp3OFzU6OxJx7JnVEc6D0o4bWD7/MQRu
+        wzJ7daW+NQiLQtXbBnTDl44YdA==
+X-Google-Smtp-Source: APXvYqz4A80128TmpcwY7Jw9RvTz2M6P3GstRBBf+pwR+tTaTJA8S2RzPMzePlc+ZldBFifc3EkuJA==
+X-Received: by 2002:a17:906:1856:: with SMTP id w22mr17495371eje.130.1556134600351;
+        Wed, 24 Apr 2019 12:36:40 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id n64sm5536293edc.82.2019.04.24.12.35.51
+        by smtp.gmail.com with ESMTPSA id s56sm7655edd.35.2019.04.24.12.36.39
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 12:35:51 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 21:35:48 +0200
+        Wed, 24 Apr 2019 12:36:39 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 21:36:36 +0200
 From:   Daniel Vetter <daniel@ffwll.ch>
 To:     Eric Anholt <eric@anholt.net>
 Cc:     dri-devel@lists.freedesktop.org, Dave Airlie <airlied@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] drm/doc: Allow new UAPI to be used once it's in the
- driver's -next.
-Message-ID: <20190424193548.GT9857@phenom.ffwll.local>
+        linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH 2/2] drm/doc: Document expectation that userspace review
+ looks at kernel uAPI.
+Message-ID: <20190424193636.GU9857@phenom.ffwll.local>
 Mail-Followup-To: Eric Anholt <eric@anholt.net>,
         dri-devel@lists.freedesktop.org, Dave Airlie <airlied@gmail.com>,
         linux-kernel@vger.kernel.org
 References: <20190424185617.16865-1-eric@anholt.net>
+ <20190424185617.16865-2-eric@anholt.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190424185617.16865-1-eric@anholt.net>
+In-Reply-To: <20190424185617.16865-2-eric@anholt.net>
 X-Operating-System: Linux phenom 4.19.0-1-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,55 +79,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 11:56:16AM -0700, Eric Anholt wrote:
-> I was trying to figure out if it was permissible to merge the Mesa
-> side of V3D's CSD support yet while it's in drm-misc-next but not
-> drm-next, and developers on #dri-devel IRC had differing opinions of
-> what the requirement was.  Propose a clarification here to see if Dave
-> Airlie agrees.
+On Wed, Apr 24, 2019 at 11:56:17AM -0700, Eric Anholt wrote:
+> The point of this review process is that userspace using the new uAPI
+> can actually live with the uAPI being provided, and it's hard to know
+> that without having actually looked into a kernel patch yourself.
 > 
 > Signed-off-by: Eric Anholt <eric@anholt.net>
+> Suggested-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 > ---
+>  Documentation/gpu/drm-uapi.rst | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Personally, I thought the rule was "has to be in drm-next", but
-> assuming our review processes aren't totally broken, this should be
-> enough.
+> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
+> index 8e5545dfbf82..298424b98d99 100644
+> --- a/Documentation/gpu/drm-uapi.rst
+> +++ b/Documentation/gpu/drm-uapi.rst
+> @@ -85,7 +85,9 @@ leads to a few additional requirements:
+>  - The userspace side must be fully reviewed and tested to the standards of that
+>    userspace project. For e.g. mesa this means piglit testcases and review on the
+>    mailing list. This is again to ensure that the new interface actually gets the
+> -  job done.
+> +  job done.  The userspace-side reviewer should also provide at least an
+> +  Acked-by on the kernel uAPI patch indicating that they've looked at how the
+> +  kernel side is implementing the new feature being used.
 
-Yeah if you end up with a revert on your hands the process failed much
-harder and you get to keep the pieces no matter what. Not sure we should
-clarify whether you need a stable sha1 or not (helps with cross
-referencing uapi header updates), but imo good as is. And matches what
-I've been doing/recommending past few years.
+Answers a question that just recently came up on merging new kms
+properties.
 
 Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-> 
->  Documentation/gpu/drm-uapi.rst | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
-> index c9fd23efd957..8e5545dfbf82 100644
-> --- a/Documentation/gpu/drm-uapi.rst
-> +++ b/Documentation/gpu/drm-uapi.rst
-> @@ -92,8 +92,9 @@ leads to a few additional requirements:
->    requirements by doing a quick fork.
 >  
->  - The kernel patch can only be merged after all the above requirements are met,
-> -  but it **must** be merged **before** the userspace patches land. uAPI always flows
-> -  from the kernel, doing things the other way round risks divergence of the uAPI
-> +  but it **must** be merged to the driver's -next tree (as documented in
-> +  MAINTAINERS) **before** the userspace patches land. uAPI always flows from
-> +  the kernel, doing things the other way round risks divergence of the uAPI
->    definitions and header files.
->  
->  These are fairly steep requirements, but have grown out from years of shared
+>  - The userspace patches must be against the canonical upstream, not some vendor
+>    fork. This is to make sure that no one cheats on the review and testing
 > -- 
 > 2.20.1
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 -- 
 Daniel Vetter
