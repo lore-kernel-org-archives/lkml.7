@@ -2,276 +2,125 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57801C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 859D0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F9921900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:00:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125247;
-	bh=+pDd6c3fAxq4nYdUswqaocisotTnUZOmBN4nojs4KTs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AbEJxrhZw5tMXy7adpoZ4tvZGJ3qrIaoGoTYxBdFofJW1wKyrTw/pJHxG33hRGoMn
-	 Ippu0F5VYJLltJ3974uMNDCKTG+HQRxVQQNrVHnuAVbJONxXqeb5BonljqxnJBjIms
-	 8i3eI7L+DC58iRUlUlwpnMCqFixcwiJg0ofXcNAw=
+	by mail.kernel.org (Postfix) with ESMTP id 514E02148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:00:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="uH0nPsdq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732990AbfDXRAp (ORCPT
+        id S1733065AbfDXRA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:00:45 -0400
-Received: from casper.infradead.org ([85.118.1.10]:36852 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730260AbfDXRAp (ORCPT
+        Wed, 24 Apr 2019 13:00:57 -0400
+Received: from mail.efficios.com ([167.114.142.138]:38992 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730260AbfDXRA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:00:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=aK0gzR8gGZFERodEPv/YFRYrRx82+Bg/wCP9UXD9HUc=; b=VnSnGoShkdkRgzD0PAdCFdd5fU
-        4q8TeiiZdKu38g8Xb86tMv6t00b+KFsfyHBdwZTPLz/OQgdeQeoNhlAXv3nMAFXCzof+wK9iSKsFu
-        ExdCNbZIi3JmMxi9OAbhJ6FCoiPXg8sZ5XD3a0xfu60bnV8LP4rt1k6hvf0YAH7cGB+FGN031crTl
-        s3UURZ0JLHKha93/Pd6oqTV3VqvidUqUUo//HJHVxLy0u3O/0qzDUGSH3ts000y/Zxl8cDktCMZ8D
-        4++JXEP4sLf42Pz1K+M/4HMgI8IsQcQYogjiwVd2NyndZojp+KH5hjp+mv+yy5H2wV/5ai9ENZ7uK
-        +b8/Cj4g==;
-Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJLGD-0005ub-BT; Wed, 24 Apr 2019 17:00:41 +0000
-Date:   Wed, 24 Apr 2019 14:00:35 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        x86@kernel.org, fenghua.yu@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 36/63] Documentation: PCI: convert
- endpoint/pci-test-howto.txt to reST
-Message-ID: <20190424140035.198d34dc@coco.lan>
-In-Reply-To: <20190423162932.21428-37-changbin.du@gmail.com>
-References: <20190423162932.21428-1-changbin.du@gmail.com>
-        <20190423162932.21428-37-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 24 Apr 2019 13:00:57 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 9DB081DAA44;
+        Wed, 24 Apr 2019 13:00:55 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id NS6s5Twc3ZW5; Wed, 24 Apr 2019 13:00:55 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 2A4271DAA3F;
+        Wed, 24 Apr 2019 13:00:55 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2A4271DAA3F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1556125255;
+        bh=Ex/Bez+rbJXKFeKiO+tud5TSRCa9wwv9WZfRFYB+rpU=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=uH0nPsdquveZSmK71XqKTTshkDN2apTeJjhgmdE8bOSuEnyP+nA6mI6k3KZCKnFNm
+         qk0379wSp0C5Dtusi6wYQrCtilibk+BFPUm6ivfXv/YTSmdfT7mhfIprKg8cKiUatu
+         IO9lmP4/kGiXTjiIC5J8ad645I+aI+t3QOKVnUo7KmR1qULq4xcIzbdgOuQjnH9SZV
+         /olZknLqAKk5JfedVeS0reeah2CKPEYwKh1L2TdSFWkcmU+oLReJx6NbOEw8sLK9NR
+         l2bCEz+zByLWgvFyk1I4oM1rK30jKx8Zt7Ltfr5E6NmzJXnn6fjL81Q9nwPuCIbOms
+         97UpKKFQ38Img==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id pdPlonkO4ApW; Wed, 24 Apr 2019 13:00:55 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 0A13C1DAA38;
+        Wed, 24 Apr 2019 13:00:55 -0400 (EDT)
+Date:   Wed, 24 Apr 2019 13:00:54 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>
+Message-ID: <697611694.604.1556125254852.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190424165150.GF21101@lakrids.cambridge.arm.com>
+References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com> <20190424152502.14246-9-mathieu.desnoyers@efficios.com> <20190424164538.GC18611@fuggles.cambridge.arm.com> <20190424165150.GF21101@lakrids.cambridge.arm.com>
+Subject: Re: [RFC PATCH for 5.2 08/10] rseq/selftests: aarch64 code
+ signature: handle big-endian environment
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: rseq/selftests: aarch64 code signature: handle big-endian environment
+Thread-Index: OBjeHUeE7gQ5xyWKTP757DExutwbEw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 24 Apr 2019 00:29:05 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+----- On Apr 24, 2019, at 12:51 PM, Mark Rutland mark.rutland@arm.com wrote:
 
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
+> On Wed, Apr 24, 2019 at 05:45:38PM +0100, Will Deacon wrote:
+>> On Wed, Apr 24, 2019 at 11:25:00AM -0400, Mathieu Desnoyers wrote:
+>> > +/*
+>> > + * aarch64 -mbig-endian generates mixed endianness code vs data:
+>> > + * little-endian code and big-endian data. Ensure the RSEQ_SIG signature
+>> > + * matches code endianness.
+>> > + */
+>> > +#define RSEQ_SIG_CODE	0xd428bc00	/* BRK #0x45E0.  */
+>> > +
+>> > +#ifdef __AARCH64EB__
+>> > +#define RSEQ_SIG_DATA	0x00bc28d4	/* BRK #0x45E0.  */
+>> 
+>> It would be neater to implement swab32 and use that with RSEQ_SIG_CODE,
 > 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-> ---
->  Documentation/PCI/endpoint/index.rst          |  1 +
->  ...{pci-test-howto.txt => pci-test-howto.rst} | 81 +++++++++++++------
->  2 files changed, 56 insertions(+), 26 deletions(-)
->  rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
+> If possible, marginally neater than that would be using
+> le32_to_cpu(RSEQ_SIG_CODE), without any ifdeffery necessary.
 > 
-> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-> index b680a3fc4fec..d114ea74b444 100644
-> --- a/Documentation/PCI/endpoint/index.rst
-> +++ b/Documentation/PCI/endpoint/index.rst
-> @@ -10,3 +10,4 @@ PCI Endpoint Framework
->     pci-endpoint
->     pci-endpoint-cfs
->     pci-test-function
-> +   pci-test-howto
-> diff --git a/Documentation/PCI/endpoint/pci-test-howto.txt b/Documentation/PCI/endpoint/pci-test-howto.rst
-> similarity index 78%
-> rename from Documentation/PCI/endpoint/pci-test-howto.txt
-> rename to Documentation/PCI/endpoint/pci-test-howto.rst
-> index 040479f437a5..909f770a07d6 100644
-> --- a/Documentation/PCI/endpoint/pci-test-howto.txt
-> +++ b/Documentation/PCI/endpoint/pci-test-howto.rst
-> @@ -1,38 +1,51 @@
-> -			    PCI TEST USERGUIDE
-> -		    Kishon Vijay Abraham I <kishon@ti.com>
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +===================
-> +PCI Test User Guide
-> +===================
-> +
-> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
->  
->  This document is a guide to help users use pci-epf-test function driver
->  and pci_endpoint_test host driver for testing PCI. The list of steps to
->  be followed in the host side and EP side is given below.
->  
-> -1. Endpoint Device
-> +Endpoint Device
-> +===============
->  
-> -1.1 Endpoint Controller Devices
-> +Endpoint Controller Devices
-> +---------------------------
->  
-> -To find the list of endpoint controller devices in the system:
-> +To find the list of endpoint controller devices in the system::
->  
->  	# ls /sys/class/pci_epc/
->  	  51000000.pcie_ep
->  
-> -If PCI_ENDPOINT_CONFIGFS is enabled
-> +If PCI_ENDPOINT_CONFIGFS is enabled::
-> +
->  	# ls /sys/kernel/config/pci_ep/controllers
->  	  51000000.pcie_ep
->  
-> -1.2 Endpoint Function Drivers
->  
-> -To find the list of endpoint function drivers in the system:
-> +Endpoint Function Drivers
-> +-------------------------
-> +
-> +To find the list of endpoint function drivers in the system::
->  
->  	# ls /sys/bus/pci-epf/drivers
->  	  pci_epf_test
->  
-> -If PCI_ENDPOINT_CONFIGFS is enabled
-> +If PCI_ENDPOINT_CONFIGFS is enabled::
-> +
->  	# ls /sys/kernel/config/pci_ep/functions
->  	  pci_epf_test
->  
-> -1.3 Creating pci-epf-test Device
-> +
-> +Creating pci-epf-test Device
-> +----------------------------
->  
->  PCI endpoint function device can be created using the configfs. To create
-> -pci-epf-test device, the following commands can be used
-> +pci-epf-test device, the following commands can be used::
->  
->  	# mount -t configfs none /sys/kernel/config
->  	# cd /sys/kernel/config/pci_ep/
-> @@ -42,7 +55,7 @@ The "mkdir func1" above creates the pci-epf-test function device that will
->  be probed by pci_epf_test driver.
->  
->  The PCI endpoint framework populates the directory with the following
-> -configurable fields.
-> +configurable fields::
->  
->  	# ls functions/pci_epf_test/func1
->  	  baseclass_code	interrupt_pin	progif_code	subsys_id
-> @@ -51,67 +64,83 @@ configurable fields.
->  
->  The PCI endpoint function driver populates these entries with default values
->  when the device is bound to the driver. The pci-epf-test driver populates
-> -vendorid with 0xffff and interrupt_pin with 0x0001
-> +vendorid with 0xffff and interrupt_pin with 0x0001::
->  
->  	# cat functions/pci_epf_test/func1/vendorid
->  	  0xffff
->  	# cat functions/pci_epf_test/func1/interrupt_pin
->  	  0x0001
->  
-> -1.4 Configuring pci-epf-test Device
-> +
-> +Configuring pci-epf-test Device
-> +-------------------------------
->  
->  The user can configure the pci-epf-test device using configfs entry. In order
->  to change the vendorid and the number of MSI interrupts used by the function
-> -device, the following commands can be used.
-> +device, the following commands can be used::
->  
->  	# echo 0x104c > functions/pci_epf_test/func1/vendorid
->  	# echo 0xb500 > functions/pci_epf_test/func1/deviceid
->  	# echo 16 > functions/pci_epf_test/func1/msi_interrupts
->  	# echo 8 > functions/pci_epf_test/func1/msix_interrupts
->  
-> -1.5 Binding pci-epf-test Device to EP Controller
-> +
-> +Binding pci-epf-test Device to EP Controller
-> +--------------------------------------------
->  
->  In order for the endpoint function device to be useful, it has to be bound to
->  a PCI endpoint controller driver. Use the configfs to bind the function
-> -device to one of the controller driver present in the system.
-> +device to one of the controller driver present in the system::
->  
->  	# ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
->  
->  Once the above step is completed, the PCI endpoint is ready to establish a link
->  with the host.
->  
-> -1.6 Start the Link
-> +
-> +Start the Link
-> +--------------
->  
->  In order for the endpoint device to establish a link with the host, the _start_
-> -field should be populated with '1'.
-> +field should be populated with '1'::
->  
->  	# echo 1 > controllers/51000000.pcie_ep/start
->  
-> -2. RootComplex Device
->  
-> -2.1 lspci Output
-> +RootComplex Device
-> +==================
-> +
-> +lspci Output
-> +------------
->  
-> -Note that the devices listed here correspond to the value populated in 1.4 above
-> +Note that the devices listed here correspond to the value populated in 1.4
-> +above::
->  
->  	00:00.0 PCI bridge: Texas Instruments Device 8888 (rev 01)
->  	01:00.0 Unassigned class [ff00]: Texas Instruments Device b500
->  
-> -2.2 Using Endpoint Test function Device
-> +
-> +Using Endpoint Test function Device
-> +-----------------------------------
->  
->  pcitest.sh added in tools/pci/ can be used to run all the default PCI endpoint
-> -tests. To compile this tool the following commands should be used:
-> +tests. To compile this tool the following commands should be used::
->  
->  	# cd <kernel-dir>
->  	# make -C tools/pci
->  
-> -or if you desire to compile and install in your system:
-> +or if you desire to compile and install in your system::
->  
->  	# cd <kernel-dir>
->  	# make -C tools/pci install
->  
->  The tool and script will be located in <rootfs>/usr/bin/
->  
-> -2.2.1 pcitest.sh Output
-> +
-> +pcitest.sh Output
-> +~~~~~~~~~~~~~~~~~
-> +::
-> +
->  	# pcitest.sh
->  	BAR tests
->  
+> It looks like that's defined in tools/include/linux/kernel.h, but I'm
+> not sure if that gets pulled into your include path.
 
-
+Considering that those RSEQ_SIG* define will end up in public bits/rseq.h
+headers within glibc, I'm tempted to keep the amount of dependencies on
+external headers to a minimum, if it's OK with you.
 
 Thanks,
-Mauro
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
