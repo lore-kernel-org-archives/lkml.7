@@ -2,112 +2,93 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AECCC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71262C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF86218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317C2218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:47:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbfDXIqO (ORCPT
+        id S1730160AbfDXIrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:46:14 -0400
-Received: from foss.arm.com ([217.140.101.70]:39804 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727441AbfDXIqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:46:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD86680D;
-        Wed, 24 Apr 2019 01:46:13 -0700 (PDT)
-Received: from e107985-lin.cambridge.arm.com (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DB7523F5AF;
-        Wed, 24 Apr 2019 01:46:12 -0700 (PDT)
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] sched/fair: Remove rq->load
-Date:   Wed, 24 Apr 2019 09:45:56 +0100
-Message-Id: <20190424084556.604-1-dietmar.eggemann@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 24 Apr 2019 04:47:35 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52384 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726990AbfDXIre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 04:47:34 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CDD7D1EBDC12C0F9947D;
+        Wed, 24 Apr 2019 16:47:32 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Apr 2019
+ 16:47:29 +0800
+Subject: Re: [PATCH] soc: imx: Fix build error without CONFIG_SOC_BUS
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+References: <20190424075946.23124-1-yuehaibing@huawei.com>
+ <AM0PR04MB6434F319FA56FE9A1AC0572FEE3C0@AM0PR04MB6434.eurprd04.prod.outlook.com>
+CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <2f2b461f-2ad3-c81e-0826-ed7819de5518@huawei.com>
+Date:   Wed, 24 Apr 2019 16:47:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <AM0PR04MB6434F319FA56FE9A1AC0572FEE3C0@AM0PR04MB6434.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CFS class is the only one maintaining and using the CPU wide load
-(rq->load(.weight)). The last use case of the CPU wide load in CFS's
-set_next_entity() can be replaced by using the load of the CFS class
-(rq->cfs.load(.weight)) instead.
+On 2019/4/24 16:11, Leonard Crestez wrote:
+> On 4/24/2019 11:00 AM, Yue Haibing wrote:
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> During randconfig builds, I occasionally run into an invalid configuration
+>>
+>> drivers/soc/imx/soc-imx8.o: In function `imx8_soc_init':
+>> soc-imx8.c:(.init.text+0x144): undefined reference to `soc_device_register'
+>>
+>> while CONFIG_SOC_BUS is not set, the building failed like this. This patch
+>> selects SOC_BUS to fix it.
+>>
+>> diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
+>> @@ -5,6 +5,7 @@ config IMX_GPCV2_PM_DOMAINS
+>>   	depends on ARCH_MXC || (COMPILE_TEST && OF)
+>>   	depends on PM
+>>   	select PM_GENERIC_DOMAINS
+>> +	select SOC_BUS
+>>   	default y if SOC_IMX7D
+> 
+> You should "select SOC_BUS" from "config ARCH_MXC" in arm64 
+> Kconfig.platforms, not from a power domain implementation.
+> 
+> Your patch works because arm64 ARCH_MXC currently does "select 
+> IMX_GPCV2_PM_DOMAINS" but it's silly to use this intermediary.
 
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
----
- kernel/sched/debug.c | 2 --
- kernel/sched/fair.c  | 7 ++-----
- kernel/sched/sched.h | 2 --
- 3 files changed, 2 insertions(+), 9 deletions(-)
+Yes, you are right, thanks!
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index 8039d62ae36e..1148f43dbd42 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -656,8 +656,6 @@ do {									\
- 	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", #x, SPLIT_NS(rq->x))
- 
- 	P(nr_running);
--	SEQ_printf(m, "  .%-30s: %lu\n", "load",
--		   rq->load.weight);
- 	P(nr_switches);
- 	P(nr_load_updates);
- 	P(nr_uninterruptible);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index a4d9e14bf138..73a6718f29cc 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2682,8 +2682,6 @@ static void
- account_entity_enqueue(struct cfs_rq *cfs_rq, struct sched_entity *se)
- {
- 	update_load_add(&cfs_rq->load, se->load.weight);
--	if (!parent_entity(se))
--		update_load_add(&rq_of(cfs_rq)->load, se->load.weight);
- #ifdef CONFIG_SMP
- 	if (entity_is_task(se)) {
- 		struct rq *rq = rq_of(cfs_rq);
-@@ -2699,8 +2697,6 @@ static void
- account_entity_dequeue(struct cfs_rq *cfs_rq, struct sched_entity *se)
- {
- 	update_load_sub(&cfs_rq->load, se->load.weight);
--	if (!parent_entity(se))
--		update_load_sub(&rq_of(cfs_rq)->load, se->load.weight);
- #ifdef CONFIG_SMP
- 	if (entity_is_task(se)) {
- 		account_numa_dequeue(rq_of(cfs_rq), task_of(se));
-@@ -4096,7 +4092,8 @@ set_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
- 	 * least twice that of our own weight (i.e. dont track it
- 	 * when there are only lesser-weight tasks around):
- 	 */
--	if (schedstat_enabled() && rq_of(cfs_rq)->load.weight >= 2*se->load.weight) {
-+	if (schedstat_enabled() &&
-+	    rq_of(cfs_rq)->cfs.load.weight >= 2*se->load.weight) {
- 		schedstat_set(se->statistics.slice_max,
- 			max((u64)schedstat_val(se->statistics.slice_max),
- 			    se->sum_exec_runtime - se->prev_sum_exec_runtime));
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index efa686eeff26..e4059e81e99c 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -830,8 +830,6 @@ struct rq {
- 	atomic_t nohz_flags;
- #endif /* CONFIG_NO_HZ_COMMON */
- 
--	/* capture load from *all* tasks on this CPU: */
--	struct load_weight	load;
- 	unsigned long		nr_load_updates;
- 	u64			nr_switches;
- 
--- 
-2.17.1
+> 
+> --
+> Regards,
+> Leonard
+> 
+> 
 
