@@ -2,291 +2,173 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E1AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD60EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5A92148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A628B20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbfDXH4n (ORCPT
+        id S1729675AbfDXH5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:56:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60372 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbfDXH4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:56:43 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 81FB281DFA;
-        Wed, 24 Apr 2019 07:56:41 +0000 (UTC)
-Received: from gondolin (unknown [10.40.205.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F255600C5;
-        Wed, 24 Apr 2019 07:56:28 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 09:56:24 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "dgilbert@redhat.com" <dgilbert@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [PATCH 1/2] vfio/mdev: add version field as mandatory attribute
- for mdev device
-Message-ID: <20190424095624.0ce97328.cohuck@redhat.com>
-In-Reply-To: <20190424031036.GB26247@joy-OptiPlex-7040>
-References: <20190419083258.19580-1-yan.y.zhao@intel.com>
-        <20190419083505.19654-1-yan.y.zhao@intel.com>
-        <20190423115932.42619422.cohuck@redhat.com>
-        <20190424031036.GB26247@joy-OptiPlex-7040>
-Organization: Red Hat GmbH
+        Wed, 24 Apr 2019 03:57:23 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34074 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726989AbfDXH5X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 03:57:23 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O7nsW8003271
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:57:21 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s2k61syvn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:57:21 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Wed, 24 Apr 2019 08:57:19 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 24 Apr 2019 08:57:10 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3O7v8vK29819118
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Apr 2019 07:57:08 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DA4CA4051;
+        Wed, 24 Apr 2019 07:57:08 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CFE5FA4040;
+        Wed, 24 Apr 2019 07:57:05 +0000 (GMT)
+Received: from [9.145.184.124] (unknown [9.145.184.124])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Apr 2019 07:57:05 +0000 (GMT)
+Subject: Re: [PATCH v12 21/31] mm: Introduce find_vma_rcu()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     akpm@linux-foundation.org, mhocko@kernel.org, kirill@shutemov.name,
+        ak@linux.intel.com, dave@stgolabs.net, jack@suse.cz,
+        Matthew Wilcox <willy@infradead.org>,
+        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
+        mpe@ellerman.id.au, paulus@samba.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        sergey.senozhatsky.work@gmail.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Rientjes <rientjes@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Ganesh Mahendran <opensource.ganesh@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        vinayak menon <vinayakm.list@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
+        Michel Lespinasse <walken@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        haren@linux.vnet.ibm.com, npiggin@gmail.com,
+        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+References: <20190416134522.17540-1-ldufour@linux.ibm.com>
+ <20190416134522.17540-22-ldufour@linux.ibm.com>
+ <20190423092710.GI11158@hirez.programming.kicks-ass.net>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Date:   Wed, 24 Apr 2019 09:57:05 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 24 Apr 2019 07:56:41 +0000 (UTC)
+In-Reply-To: <20190423092710.GI11158@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042407-0012-0000-0000-00000312C636
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042407-0013-0000-0000-0000214B1A4D
+Message-Id: <ea141f88-a0d3-df97-5141-706fa18b7ad3@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=910 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904240068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Apr 2019 23:10:37 -0400
-Yan Zhao <yan.y.zhao@intel.com> wrote:
-
-> On Tue, Apr 23, 2019 at 05:59:32PM +0800, Cornelia Huck wrote:
-> > On Fri, 19 Apr 2019 04:35:04 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> >   
-> > > device version attribute in mdev sysfs is used by user space software
-> > > (e.g. libvirt) to query device compatibility for live migration of VFIO
-> > > mdev devices. This attribute is mandatory if a mdev device supports live
-> > > migration.
-> > >
-> > > It consists of two parts: common part and vendor proprietary part.
-> > > common part: 32 bit. lower 16 bits is vendor id and higher 16 bits
-> > >              identifies device type. e.g., for pci device, it is
-> > >              "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-> > > vendor proprietary part: this part is varied in length. vendor driver can
-> > >              specify any string to identify a device.
-> > >
-> > > When reading this attribute, it should show device version string of the
-> > > device of type <type-id>. If a device does not support live migration, it
-> > > should return errno.  
-> > 
-> > It might make more sense if the driver does not register the attribute
-> > for the device in that case at all.
-> >   
-> yes. what about rephrase like this:
-> "
-> When reading this attribute, it should show device version string of the
-> device of type <type-id>.
-> If a device does not support live migration, it has two choices:
-> 1. do not register this version attribute
-> 2. return -ENODEV on rw this version attribute
-
-"return -ENODEV when accessing the version attribute" ?
-
-> Choice 1 is preferred.
-> "
+Le 23/04/2019 à 11:27, Peter Zijlstra a écrit :
+> On Tue, Apr 16, 2019 at 03:45:12PM +0200, Laurent Dufour wrote:
+>> This allows to search for a VMA structure without holding the mmap_sem.
+>>
+>> The search is repeated while the mm seqlock is changing and until we found
+>> a valid VMA.
+>>
+>> While under the RCU protection, a reference is taken on the VMA, so the
+>> caller must call put_vma() once it not more need the VMA structure.
+>>
+>> At the time a VMA is inserted in the MM RB tree, in vma_rb_insert(), a
+>> reference is taken to the VMA by calling get_vma().
+>>
+>> When removing a VMA from the MM RB tree, the VMA is not release immediately
+>> but at the end of the RCU grace period through vm_rcu_put(). This ensures
+>> that the VMA remains allocated until the end the RCU grace period.
+>>
+>> Since the vm_file pointer, if valid, is released in put_vma(), there is no
+>> guarantee that the file pointer will be valid on the returned VMA.
 > 
-> 
-> > > When writing a string to this attribute, it returns errno for
-> > > incompatibility or returns written string length in compatibility case.
-> > > If a device does not support live migration, it always returns errno.
-> > >
-> > > For user space software to use:
-> > > 1.
-> > > Before starting live migration, user space software first reads source side
-> > > mdev device's version. e.g.
-> > > "#cat \
-> > > /sys/bus/pci/devices/0000\:00\:02.0/5ac1fb20-2bbf-4842-bb7e-36c58c3be9cd/mdev_type/version"
-> > > 00028086-193b-i915-GVTg_V5_4
-> > >
-> > > 2.
-> > > Then, user space software writes the source side returned version string
-> > > to device version attribute in target side, and checks the return value.
-> > > If a negative errno is returned in the target side, then mdev devices in
-> > > source and target sides are not compatible;
-> > > If a positive number is returned and it equals to the length of written
-> > > string, then the two mdev devices in source and target side are compatible.
-> > > e.g.
-> > > (a) compatibility case
-> > > "# echo 00028086-193b-i915-GVTg_V5_4 >
-> > > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
-> > >
-> > > (b) incompatibility case
-> > > "#echo 00028086-193b-i915-GVTg_V5_1 >
-> > > /sys/bus/pci/devices/0000\:00\:02.0/882cc4da-dede-11e7-9180-078a62063ab1/mdev_type/version"
-> > > -bash: echo: write error: Invalid argument
-> > >
-> > > 3. if two mdev devices are compatible, user space software can start
-> > > live migration, and vice versa.
-> > >
-> > > Note: if a mdev device does not support live migration, it either does
-> > > not provide a version attribute, or always returns errno when its version
-> > > attribute is read/written.
-> > >
-> > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > Cc: Erik Skultety <eskultet@redhat.com>
-> > > Cc: "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-> > > Cc: Cornelia Huck <cohuck@redhat.com>
-> > > Cc: "Tian, Kevin" <kevin.tian@intel.com>
-> > > Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
-> > > Cc: "Wang, Zhi A" <zhi.a.wang@intel.com>
-> > > Cc: Neo Jia <cjia@nvidia.com>
-> > > Cc: Kirti Wankhede <kwankhede@nvidia.com>
-> > >
-> > > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > > ---
-> > >  Documentation/vfio-mediated-device.txt | 36 ++++++++++++++++++++++++++
-> > >  samples/vfio-mdev/mbochs.c             | 17 ++++++++++++
-> > >  samples/vfio-mdev/mdpy.c               | 16 ++++++++++++
-> > >  samples/vfio-mdev/mtty.c               | 16 ++++++++++++
-> > >  4 files changed, 85 insertions(+)
-> > >
-> > > diff --git a/Documentation/vfio-mediated-device.txt b/Documentation/vfio-mediated-device.txt
-> > > index c3f69bcaf96e..bc28471c0667 100644
-> > > --- a/Documentation/vfio-mediated-device.txt
-> > > +++ b/Documentation/vfio-mediated-device.txt
-> > > @@ -202,6 +202,7 @@ Directories and files under the sysfs for Each Physical Device
-> > >    |     |   |--- available_instances
-> > >    |     |   |--- device_api
-> > >    |     |   |--- description
-> > > +  |     |   |--- version
-> > >    |     |   |--- [devices]
-> > >    |     |--- [<type-id>]
-> > >    |     |   |--- create
-> > > @@ -209,6 +210,7 @@ Directories and files under the sysfs for Each Physical Device
-> > >    |     |   |--- available_instances
-> > >    |     |   |--- device_api
-> > >    |     |   |--- description
-> > > +  |     |   |--- version
-> > >    |     |   |--- [devices]
-> > >    |     |--- [<type-id>]
-> > >    |          |--- create
-> > > @@ -216,6 +218,7 @@ Directories and files under the sysfs for Each Physical Device
-> > >    |          |--- available_instances
-> > >    |          |--- device_api
-> > >    |          |--- description
-> > > +  |          |--- version
-> > >    |          |--- [devices]
-> > >
-> > >  * [mdev_supported_types]
-> > > @@ -225,6 +228,8 @@ Directories and files under the sysfs for Each Physical Device
-> > >    [<type-id>], device_api, and available_instances are mandatory attributes
-> > >    that should be provided by vendor driver.
-> > >
-> > > +  version is a mandatory attribute if a mdev device supports live migration.  
-> > 
-> > What about "An mdev device wishing to support live migration must
-> > provide the version attribute."?  
-> yes, I just want to keep consistent with the line above it 
-> " [<type-id>], device_api, and available_instances are mandatory attributes
->   that should be provided by vendor driver."
-> what about below one?
->   "version is a mandatory attribute if a mdev device wishing to support live
->   migration."
+> What I'm missing here, and in the previous patch introducing the
+> refcount (also see refcount_t), is _why_ we need the refcount thing at
+> all.
 
-My point is that an attribute is not mandatory if it can be left out :)
-(I'm not a native speaker, though; maybe this makes perfect sense
-after all?)
+The need for the VMA's refcount is to ensure that the VMA will remain 
+until the end of the SPF handler. This is a consequence of the use of 
+RCU instead of SRCU to protect the RB tree.
 
-Maybe "version is a required attribute if live migration is supported
-for an mdev device"?
+I was not aware of the refcount_t type, it would be better here to avoid 
+wrapping.
+
+> My original plan was to use SRCU, which at the time was not complete
+> enough so I abused/hacked preemptible RCU, but that is no longer the
+> case, SRCU has all the required bits and pieces.
+
+When I did test using SRCU it was involving a lot a scheduling to run 
+the SRCU callback mechanism. In some workload the impact on the 
+perfomance was significant [1].
+
+I can't see this overhead using RCU.
 
 > 
-> 
-> > > +
-> > >  * [<type-id>]
-> > >
-> > >    The [<type-id>] name is created by adding the device driver string as a prefix
-> > > @@ -246,6 +251,35 @@ Directories and files under the sysfs for Each Physical Device
-> > >    This attribute should show the number of devices of type <type-id> that can be
-> > >    created.
-> > >
-> > > +* version
-> > > +
-> > > +  This attribute is rw. It is used to check whether two devices are compatible
-> > > +  for live migration. If this attribute is missing, then the corresponding mdev
-> > > +  device is regarded as not supporting live migration.
-> > > +
-> > > +  It consists of two parts: common part and vendor proprietary part.
-> > > +  common part: 32 bit. lower 16 bits is vendor id and higher 16 bits identifies
-> > > +               device type. e.g., for pci device, it is
-> > > +               "pci vendor id" | (VFIO_DEVICE_FLAGS_PCI << 16).
-> > > +  vendor proprietary part: this part is varied in length. vendor driver can
-> > > +               specify any string to identify a device.
-> > > +
-> > > +  When reading this attribute, it should show device version string of the device
-> > > +  of type <type-id>. If a device does not support live migration, it should
-> > > +  return errno.
-> > > +  When writing a string to this attribute, it returns errno for incompatibility
-> > > +  or returns written string length in compatibility case. If a device does not
-> > > +  support live migration, it always returns errno.  
-> > 
-> > I'm not sure whether a device that does not support live migration
-> > should expose this attribute in the first place. Or is that to cover
-> > cases where a driver supports live migration only for some of the
-> > devices it supports?  
-> yes, driver returning error code is to cover the cases where only part of devices it
-> supports can be migrated.
-> 
-> 
-> > Also, I'm not sure if a string that has to be parsed is a good idea...
-> > is this 'version' attribute supposed to convey some human-readable
-> > information as well? The procedure you describe for compatibility
-> > checking does the checking within the vendor driver which I would
-> > expect to have a table/rules for that anyway.  
-> right. if a vendor driver has the confidence to migrate between devices of
-> diffent platform or mdev types, it can maintain a compatibility table for that
-> purpose. That's the reason why we would leave the compatibility check to vendor
-> driver. vendor driver can freely choose its own complicated way to decide
-> which device is migratable to which device.
+> Also; the initial motivation was prefaulting large VMAs and the
+> contention on mmap was killing things; but similarly, the contention on
+> the refcount (I did try that) killed things just the same.
 
-I think there are two scenarios here:
-- Migrating between different device types, which is unlikely to work,
-  except in special cases.
-- Migrating between different versions of the same device type, which
-  may work for some drivers/devices (and at least migrating to a newer
-  version looks quite reasonable).
+Doing prefaulting should be doable, I'll try to think further about that.
 
-But both should be something that is decided by the individual driver;
-I hope we don't want to support migration between different drivers :-O
+Regarding the refcount, I should I missed something, this is an atomic 
+counter, so there should not be contention on it but cache exclusivity, 
+not ideal I agree but I can't see what else to use here.
 
-Can we make this a driver-defined format?
+> So I'm really sad to see the refcount return; and without any apparent
+> justification.
 
-> 
-> > I think you should also specify which errno writing an incompatible id
-> > is supposed to return (probably best something different than if the
-> > device does not support live migration at all, if we stick with
-> > creating the attribute in that case.)  
-> Agree. I'll define it clearly in next revison.
+I'm not opposed to use another mechanism here, but SRCU didn't show good 
+performance with some workload, and I can't see how to use RCU without a 
+reference counter here. So please, advise.
 
-Thanks!
+Thanks,
+Laurent.
+
+[1] 
+https://lore.kernel.org/linux-mm/7ca80231-fe02-a3a7-84bc-ce81690ea051@intel.com/
+
