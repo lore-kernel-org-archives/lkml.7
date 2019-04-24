@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B4CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B5AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6420D218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30EC218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126062;
-	bh=IubD04QLa48Yf/kJXtC8a+ljo4KCWrMVa/iTQBVBW7o=;
+	s=default; t=1556126066;
+	bh=QmKis2BFlJaQlCBpe0IcKs28bpLwZbS6jofxw87qRpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mWTXy61q2HmMfnMFJLp76Zy0WbLQcg328mqijQkzGDYCVG+j2RN8x1XNUj/FBB1RK
-	 ww8sXahoKKkNydBAnmxWFH0brWbr+a7UHo0h7H2vHj1YjthVRUefa+2bptH0hzuKq8
-	 jy80Sa6NTUBMUcb+gYidD5gnr8RUm9iEcmJ3HiGM=
+	b=M7YaN/8UB7GvE5nHSUQkrfz8oqrF033VgKEIcXsDpt6ZjkfwPHu8PVFOX2xW+ixek
+	 InEFNc+krC4jY2r/X+yGYPuXkL9g9R3wo0mc9QR+gF7bZ4nJHsULcEBZdbL1QHb3SP
+	 n0uBwnBTDMD5r1dVizIHuWhJyk9aJczN0sTnNse0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388057AbfDXROV (ORCPT
+        id S2388066AbfDXROY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:14:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38392 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:14:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388030AbfDXRON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:14:13 -0400
+        id S2388055AbfDXROV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:21 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C657218B0;
-        Wed, 24 Apr 2019 17:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94440218B0;
+        Wed, 24 Apr 2019 17:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126053;
-        bh=IubD04QLa48Yf/kJXtC8a+ljo4KCWrMVa/iTQBVBW7o=;
+        s=default; t=1556126061;
+        bh=QmKis2BFlJaQlCBpe0IcKs28bpLwZbS6jofxw87qRpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v0NWyQ71GV7KV3b3ybRzn4jxZByaQiVVryvxW/MdBQsiPbtt+Ve8a6/ZtV8N1ia2o
-         qByUFi2x5EHXbG9fT54etp1CUcwY8YtA6FgcEwgkYY1mDwmQUjAPaWq7DW4/4Qv/i9
-         QuE5unlzPIiARbR58Q1US6OE7BaSBsZPYKbD/FJY=
+        b=Dog0Ax4mxH/UtjzBWFdrCrm5BdLEw/QzQevIMQTCMGmamyUoHJ5hpNCFkkjAitUF1
+         B0yiRDRm+a5p15hkVigtDStUHYJ4zYELm/3p3AR0nv8rY14hUk5BKZy3L7Pl31DCEQ
+         IVFDHNNtF8r0NWgcZwdq26iKYsWBjelbIClR2TRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
+        stable@vger.kernel.org, David Tolnay <dtolnay@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 075/104] fix incorrect error code mapping for OBJECTID_NOT_FOUND
-Date:   Wed, 24 Apr 2019 19:09:32 +0200
-Message-Id: <20190424170906.509046334@linuxfoundation.org>
+Subject: [PATCH 3.18 034/104] hwrng: virtio - Avoid repeated init of completion
+Date:   Wed, 24 Apr 2019 19:08:51 +0200
+Message-Id: <20190424170857.972033622@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -60,38 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 85f9987b236cf46e06ffdb5c225cf1f3c0acb789 ]
+[ Upstream commit aef027db48da56b6f25d0e54c07c8401ada6ce21 ]
 
-It was mapped to EIO which can be confusing when user space
-queries for an object GUID for an object for which the server
-file system doesn't support (or hasn't saved one).
+The virtio-rng driver uses a completion called have_data to wait for a
+virtio read to be fulfilled by the hypervisor. The completion is reset
+before placing a buffer on the virtio queue and completed by the virtio
+callback once data has been written into the buffer.
 
-As Amir Goldstein suggested this is similar to ENOATTR
-(equivalently ENODATA in Linux errno definitions) so
-changing NT STATUS code mapping for OBJECTID_NOT_FOUND
-to ENODATA.
+Prior to this commit, the driver called init_completion on this
+completion both during probe as well as when registering virtio buffers
+as part of a hwrng read operation. The second of these init_completion
+calls should instead be reinit_completion because the have_data
+completion has already been inited by probe. As described in
+Documentation/scheduler/completion.txt, "Calling init_completion() twice
+on the same completion object is most likely a bug".
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Amir Goldstein <amir73il@gmail.com>
+This bug was present in the initial implementation of virtio-rng in
+f7f510ec1957 ("virtio: An entropy device, as suggested by hpa"). Back
+then the have_data completion was a single static completion rather than
+a member of one of potentially multiple virtrng_info structs as
+implemented later by 08e53fbdb85c ("virtio-rng: support multiple
+virtio-rng devices"). The original driver incorrectly used
+init_completion rather than INIT_COMPLETION to reset have_data during
+read.
+
+Tested by running `head -c48 /dev/random | hexdump` within crosvm, the
+Chrome OS virtual machine monitor, and confirming that the virtio-rng
+driver successfully produces random bytes from the host.
+
+Signed-off-by: David Tolnay <dtolnay@gmail.com>
+Tested-by: David Tolnay <dtolnay@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2maperror.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/char/hw_random/virtio-rng.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smb2maperror.c b/fs/cifs/smb2maperror.c
-index 98c25b969ab8..7e93d5706bf6 100644
---- a/fs/cifs/smb2maperror.c
-+++ b/fs/cifs/smb2maperror.c
-@@ -1034,7 +1034,8 @@ static const struct status_to_posix_error smb2_error_map_table[] = {
- 	{STATUS_UNFINISHED_CONTEXT_DELETED, -EIO,
- 	"STATUS_UNFINISHED_CONTEXT_DELETED"},
- 	{STATUS_NO_TGT_REPLY, -EIO, "STATUS_NO_TGT_REPLY"},
--	{STATUS_OBJECTID_NOT_FOUND, -EIO, "STATUS_OBJECTID_NOT_FOUND"},
-+	/* Note that ENOATTTR and ENODATA are the same errno */
-+	{STATUS_OBJECTID_NOT_FOUND, -ENODATA, "STATUS_OBJECTID_NOT_FOUND"},
- 	{STATUS_NO_IP_ADDRESSES, -EIO, "STATUS_NO_IP_ADDRESSES"},
- 	{STATUS_WRONG_CREDENTIAL_HANDLE, -EIO,
- 	"STATUS_WRONG_CREDENTIAL_HANDLE"},
+diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
+index 72295ea2fd1c..5cdc8c534ad4 100644
+--- a/drivers/char/hw_random/virtio-rng.c
++++ b/drivers/char/hw_random/virtio-rng.c
+@@ -74,7 +74,7 @@ static int virtio_read(struct hwrng *rng, void *buf, size_t size, bool wait)
+ 
+ 	if (!vi->busy) {
+ 		vi->busy = true;
+-		init_completion(&vi->have_data);
++		reinit_completion(&vi->have_data);
+ 		register_buffer(vi, buf, size);
+ 	}
+ 
 -- 
 2.19.1
 
