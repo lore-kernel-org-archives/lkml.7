@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC01C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E15C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966B620652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B0C20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390081AbfDXTmo (ORCPT
+        id S2390182AbfDXTm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:42:44 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15202 "EHLO mga09.intel.com"
+        Wed, 24 Apr 2019 15:42:58 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15194 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729841AbfDXTlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:41:44 -0400
+        id S1729810AbfDXTln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 15:41:43 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
   by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 12:41:40 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,390,1549958400"; 
-   d="scan'208";a="340454889"
+   d="scan'208";a="340454892"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
   by fmsmga005.fm.intel.com with ESMTP; 24 Apr 2019 12:41:40 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
@@ -45,9 +45,9 @@ Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, kvm@vger.kernel.org,
         netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v8 08/15] x86/split_lock: Enumerate split lock detection on Icelake mobile processor
-Date:   Wed, 24 Apr 2019 12:32:55 -0700
-Message-Id: <1556134382-58814-9-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v8 09/15] x86/split_lock: Define MSR TEST_CTL register
+Date:   Wed, 24 Apr 2019 12:32:56 -0700
+Message-Id: <1556134382-58814-10-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
 References: <1556134382-58814-1-git-send-email-fenghua.yu@intel.com>
@@ -56,46 +56,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Icelake mobile processor can detect split lock operations although
-the processor doesn't have MSR IA32_CORE_CAPABILITY and split lock
-detection bit in the MSR. Set split lock detection feature bit
-X86_FEATURE_SPLIT_LOCK_DETECT on the processor based on its
-family/model/stepping.
+Setting bit 29 in MSR TEST_CTL (0x33) enables split lock detection and
+clearing the bit disables split lock detection.
 
-In the future, a few other processors may also have the split lock
-detection feature but don't have MSR IA32_CORE_CAPABILITY. The feature
-will be enumerated on those processors once their family/model/stepping
-information is released.
+Define the MSR and the bit. The definitions will be used in enabling or
+disabling split lock detection.
 
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- arch/x86/kernel/cpu/intel.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/msr-index.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 86a3a646e0ce..d7e676c2aebf 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1038,8 +1038,18 @@ void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
- {
- 	u64 ia32_core_cap = 0;
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index f65ef6f783d2..296eeb761ab6 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -39,6 +39,10 @@
  
--	if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITY))
-+	if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITY)) {
-+		/*
-+		 * The following processors have split lock detection feature.
-+		 * But since they don't have MSR IA32_CORE_CAPABILITY, the
-+		 * feature cannot be enumerated by the MSR. So enumerate the
-+		 * feature by family/model/stepping.
-+		 */
-+		if (c->x86 == 6 && c->x86_model == INTEL_FAM6_ICELAKE_MOBILE)
-+			set_split_lock_detect();
+ /* Intel MSRs. Some also available on other CPUs */
+ 
++#define MSR_TEST_CTL				0x00000033
++#define TEST_CTL_SPLIT_LOCK_DETECT_SHIFT	29
++#define TEST_CTL_SPLIT_LOCK_DETECT		BIT(29)
 +
- 		return;
-+	}
- 
- 	/*
- 	 * If MSR_IA32_CORE_CAPABILITY exists, enumerate features that are
+ #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
+ #define SPEC_CTRL_IBRS			(1 << 0)   /* Indirect Branch Restricted Speculation */
+ #define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
 -- 
 2.19.1
 
