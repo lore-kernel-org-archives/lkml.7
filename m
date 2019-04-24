@@ -2,54 +2,58 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6386FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6948EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AAF920652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4B220652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129190;
-	bh=VOb9Bwitmue9DiAYWxTTRHG6niZSlzsQsKGb8HdT0Do=;
+	s=default; t=1556129194;
+	bh=IaPhxYrKNQ/uK9uFrGkBup/9HKUmxI/Nal5ou2OPOiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ehs+LPtgQHeRvJDBU16TbzwyYMEy/0kfwLtBdI6Q/GyMqg7oNpR3uVdC0KA5UKJOP
-	 h5WGxOQrlfhQO0FaKs8bQvRVG8Paxy7EgRiwYh5uFuqdBsLkU2R+ZvfRywhhVn8GKA
-	 rFbhlQStjkQz9J9I6kfj3p4stCWr4Z/YZVVrs+Sk=
+	b=d9sLA9FC4IYxYUiKejeNvlz8R4teNdZoV5kjpjM6ffg69xXwNLbFQjYM+8zWTFtI+
+	 zrqDHSJAsT+INaYwlRDmlgkxrbM4PNRN/MSmLFGdDwXKNUW5uycFAXJaPksCtKcppl
+	 Oq1zzspFT+CswEGgnNCaIaNk4E59HhP6IgEiVVDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387885AbfDXRRv (ORCPT
+        id S2388704AbfDXRRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:17:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42762 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:17:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388715AbfDXRRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:17:47 -0400
+        id S2388658AbfDXRRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:17:42 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99723218B0;
-        Wed, 24 Apr 2019 17:17:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BBEC218B0;
+        Wed, 24 Apr 2019 17:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126267;
-        bh=VOb9Bwitmue9DiAYWxTTRHG6niZSlzsQsKGb8HdT0Do=;
+        s=default; t=1556126261;
+        bh=IaPhxYrKNQ/uK9uFrGkBup/9HKUmxI/Nal5ou2OPOiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BRvVFgBYdrQcz9mXLLQFLcqsjxBaj0+SxnreCPy5iO9izBTDOifN9wqCSnk4q20jR
-         fD9BX1fL6s6nJZdWOAZFjG3xbyx7SpbtSfPYdJqnPrhCe6HnLgxGMWI+lv+u6rPFoF
-         xPD0f2hEoakKFd6wzucP8GMl5gVrNd65NljAWdms=
+        b=dcOU7rdKxGADxOf6uAHhb49hy3oqb62WBUH59lPyHSf274PVoFO2yArQME7jx5vS7
+         vRgEmozGTxWydkq0+7LrGI5mC5q2LAmEP+4IQoEHbQPSDLAfhox+AjNOkMJ6F2Mdj5
+         Io96N+63U0QcpJWIHOoXZSxe0/FW28tZRVIQGHgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+fdc00003f4efff43bc5b@syzkaller.appspotmail.com,
-        Myungho Jung <mhjungk@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Zubin Mithra <zsm@chromium.org>
-Subject: [PATCH 4.4 008/168] Bluetooth: Fix decrementing reference count twice in releasing socket
-Date:   Wed, 24 Apr 2019 19:07:32 +0200
-Message-Id: <20190424170923.969536865@linuxfoundation.org>
+        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Cyril Hrubis <chrubis@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rafael Aquini <aquini@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 006/168] mm: mempolicy: make mbind() return -EIO when MPOL_MF_STRICT is specified
+Date:   Wed, 24 Apr 2019 19:07:30 +0200
+Message-Id: <20190424170923.838945391@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -62,45 +66,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Myungho Jung <mhjungk@gmail.com>
+From: Yang Shi <yang.shi@linux.alibaba.com>
 
-commit e20a2e9c42c9e4002d9e338d74e7819e88d77162 upstream.
+commit a7f40cfe3b7ada57af9b62fd28430eeb4a7cfcb7 upstream.
 
-When releasing socket, it is possible to enter hci_sock_release() and
-hci_sock_dev_event(HCI_DEV_UNREG) at the same time in different thread.
-The reference count of hdev should be decremented only once from one of
-them but if storing hdev to local variable in hci_sock_release() before
-detached from socket and setting to NULL in hci_sock_dev_event(),
-hci_dev_put(hdev) is unexpectedly called twice. This is resolved by
-referencing hdev from socket after bt_sock_unlink() in
-hci_sock_release().
+When MPOL_MF_STRICT was specified and an existing page was already on a
+node that does not follow the policy, mbind() should return -EIO.  But
+commit 6f4576e3687b ("mempolicy: apply page table walker on
+queue_pages_range()") broke the rule.
 
-Reported-by: syzbot+fdc00003f4efff43bc5b@syzkaller.appspotmail.com
-Signed-off-by: Myungho Jung <mhjungk@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Zubin Mithra <zsm@chromium.org>
+And commit c8633798497c ("mm: mempolicy: mbind and migrate_pages support
+thp migration") didn't return the correct value for THP mbind() too.
+
+If MPOL_MF_STRICT is set, ignore vma_migratable() to make sure it
+reaches queue_pages_to_pte_range() or queue_pages_pmd() to check if an
+existing page was already on a node that does not follow the policy.
+And, non-migratable vma may be used, return -EIO too if MPOL_MF_MOVE or
+MPOL_MF_MOVE_ALL was specified.
+
+Tested with https://github.com/metan-ucw/ltp/blob/master/testcases/kernel/syscalls/mbind/mbind02.c
+
+[akpm@linux-foundation.org: tweak code comment]
+Link: http://lkml.kernel.org/r/1553020556-38583-1-git-send-email-yang.shi@linux.alibaba.com
+Fixes: 6f4576e3687b ("mempolicy: apply page table walker on queue_pages_range()")
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Reported-by: Cyril Hrubis <chrubis@suse.cz>
+Suggested-by: Kirill A. Shutemov <kirill@shutemov.name>
+Acked-by: Rafael Aquini <aquini@redhat.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: David Rientjes <rientjes@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- net/bluetooth/hci_sock.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/bluetooth/hci_sock.c
-+++ b/net/bluetooth/hci_sock.c
-@@ -558,13 +558,12 @@ static int hci_sock_release(struct socke
- 	if (!sk)
- 		return 0;
+---
+ mm/mempolicy.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -514,12 +514,16 @@ static int queue_pages_pte_range(pmd_t *
+ 		if (node_isset(nid, *qp->nmask) == !!(flags & MPOL_MF_INVERT))
+ 			continue;
  
--	hdev = hci_pi(sk)->hdev;
--
- 	if (hci_pi(sk)->channel == HCI_CHANNEL_MONITOR)
- 		atomic_dec(&monitor_promisc);
+-		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL))
++		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
++			if (!vma_migratable(vma))
++				break;
+ 			migrate_page_add(page, qp->pagelist, flags);
++		} else
++			break;
+ 	}
+ 	pte_unmap_unlock(pte - 1, ptl);
+ 	cond_resched();
+-	return 0;
++	return addr != end ? -EIO : 0;
+ }
  
- 	bt_sock_unlink(&hci_sk_list, sk);
- 
-+	hdev = hci_pi(sk)->hdev;
- 	if (hdev) {
- 		if (hci_pi(sk)->channel == HCI_CHANNEL_USER) {
- 			/* When releasing an user channel exclusive access,
+ static int queue_pages_hugetlb(pte_t *pte, unsigned long hmask,
 
 
