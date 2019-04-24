@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B594C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF8EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A4120652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661E620652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128791;
-	bh=0pH6giZBP5EWcjVy6UHsSs54vJYzgd7pl1/aNWcWw6U=;
+	s=default; t=1556128804;
+	bh=snUmIis4bvVhHd8W1Cn7UxYwbRGoaED9XQjaqs2tE3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dqhZGqK4H38+Hs0qb3/rRRMdupAMDkY2XZk0lNkVH4OeVSzToBGrzyWsx4N8q130Z
-	 SX0LqXIahJh4x8GVyUXp92Qpy4GcxItVaSOjZeLZpYsMfJzk9yorbl4/YK8d84atB0
-	 YY060GN1fOqOKu+bghmxPu2V6ta6ruGnrbflj3bY=
+	b=OEhkjs1DdhQtTkJ6HUqKPVQhk5IU5EDlzFFwtMtKo7+a35Elh7FlYW1Vy6w/+VK5j
+	 Zi38KDKMdqIdzA3f07YtzvU+PBdn+Yiw169kMG/jr+7l0kMrlYrwuoGRWnI+eAVU7v
+	 o1rubEBCowHuvhM4TCfQNqRZigawsfltVU0qkcnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392212AbfDXR7u (ORCPT
+        id S2389718AbfDXRXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:59:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:23:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389760AbfDXRXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:23:47 -0400
+        id S2389698AbfDXRX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:23:29 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11F6220835;
-        Wed, 24 Apr 2019 17:23:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 706C521907;
+        Wed, 24 Apr 2019 17:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126626;
-        bh=0pH6giZBP5EWcjVy6UHsSs54vJYzgd7pl1/aNWcWw6U=;
+        s=default; t=1556126608;
+        bh=snUmIis4bvVhHd8W1Cn7UxYwbRGoaED9XQjaqs2tE3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aibvh44XGTI1vDL61pT6vVDdyP8Rq/IveIa8uEyy+bJGXS5Hakj9mh3JhV6+eA03O
-         VZPOflrTCFiR5lZQVJ53QrneXmeJKmeMwbcx9o30t5sPIQsgaKz8wwId3NvkdrL3XU
-         VSgAOo6azonpeokd7FQC6jAxgwsNcJMaVul2MwbI=
+        b=rVvWWoTaMc2wQfazocv3fTLIYghBA2Z8Uj1XlQB6HxEi6e250gMEzqfQPsoz+iSRJ
+         sje2t49rafDQYRFtxolq3LMaWKK4akPnHucV46wg75IcT9jY9IFWYncKGDrcTf9v7B
+         MWNmISBfdDijvjbqky/LsMIh4FdY4UCrxgETgySI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.4 150/168] iio: ad_sigma_delta: select channel when reading register
-Date:   Wed, 24 Apr 2019 19:09:54 +0200
-Message-Id: <20190424170932.070584449@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 167/168] mm/vmstat.c: fix /proc/vmstat format for CONFIG_DEBUG_TLBFLUSH=y CONFIG_SMP=n
+Date:   Wed, 24 Apr 2019 19:10:11 +0200
+Message-Id: <20190424170933.141412650@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,35 +63,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Bogdan <dragos.bogdan@analog.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-commit fccfb9ce70ed4ea7a145f77b86de62e38178517f upstream.
+commit e8277b3b52240ec1caad8e6df278863e4bf42eac upstream.
 
-The desired channel has to be selected in order to correctly fill the
-buffer with the corresponding data.
-The `ad_sd_write_reg()` already does this, but for the
-`ad_sd_read_reg_raw()` this was omitted.
+Commit 58bc4c34d249 ("mm/vmstat.c: skip NR_TLB_REMOTE_FLUSH* properly")
+depends on skipping vmstat entries with empty name introduced in
+7aaf77272358 ("mm: don't show nr_indirectly_reclaimable in
+/proc/vmstat") but reverted in b29940c1abd7 ("mm: rename and change
+semantics of nr_indirectly_reclaimable_bytes").
 
-Fixes: af3008485ea03 ("iio:adc: Add common code for ADI Sigma Delta devices")
-Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+So skipping no longer works and /proc/vmstat has misformatted lines " 0".
+
+This patch simply shows debug counters "nr_tlb_remote_*" for UP.
+
+Link: http://lkml.kernel.org/r/155481488468.467.4295519102880913454.stgit@buzz
+Fixes: 58bc4c34d249 ("mm/vmstat.c: skip NR_TLB_REMOTE_FLUSH* properly")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/ad_sigma_delta.c |    1 +
- 1 file changed, 1 insertion(+)
+ mm/vmstat.c |    5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/drivers/iio/adc/ad_sigma_delta.c
-+++ b/drivers/iio/adc/ad_sigma_delta.c
-@@ -121,6 +121,7 @@ static int ad_sd_read_reg_raw(struct ad_
- 	if (sigma_delta->info->has_registers) {
- 		data[0] = reg << sigma_delta->info->addr_shift;
- 		data[0] |= sigma_delta->info->read_mask;
-+		data[0] |= sigma_delta->comm;
- 		spi_message_add_tail(&t[0], &m);
- 	}
- 	spi_message_add_tail(&t[1], &m);
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -857,13 +857,8 @@ const char * const vmstat_text[] = {
+ #endif
+ #endif /* CONFIG_MEMORY_BALLOON */
+ #ifdef CONFIG_DEBUG_TLBFLUSH
+-#ifdef CONFIG_SMP
+ 	"nr_tlb_remote_flush",
+ 	"nr_tlb_remote_flush_received",
+-#else
+-	"", /* nr_tlb_remote_flush */
+-	"", /* nr_tlb_remote_flush_received */
+-#endif /* CONFIG_SMP */
+ 	"nr_tlb_local_flush_all",
+ 	"nr_tlb_local_flush_one",
+ #endif /* CONFIG_DEBUG_TLBFLUSH */
 
 
