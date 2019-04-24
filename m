@@ -2,97 +2,100 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80852C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33ACAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E6F2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9392175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MkCahJzn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sGLX0b8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387784AbfDXTdZ (ORCPT
+        id S2388393AbfDXTeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:33:25 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38626 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727373AbfDXTdY (ORCPT
+        Wed, 24 Apr 2019 15:34:20 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46640 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbfDXTeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:33:24 -0400
-Received: by mail-io1-f67.google.com with SMTP id y6so9212299ior.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:33:24 -0700 (PDT)
+        Wed, 24 Apr 2019 15:34:20 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t17so26703327wrw.13;
+        Wed, 24 Apr 2019 12:34:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wflHOq/5T+ZXCjWUuQ+Otw4+acC/CT36CLZGEdvvwaE=;
-        b=MkCahJznroJgkW0oElWPSJZfpPCaob0MRXbne3p3BT20DPsC6WzDWFDMguURI7KEUc
-         eANX+vUFF7XOTjHjzkp4FeIoH0JkOadAa4TE/mga9BWwa5PLIMpcbSpg/bJZFOSwVKCV
-         4Q7yDEfqH7zZT5ycivz/8LjKPa/uL3SuZxwEwYaUJLUsO5HviFOpxD7/3PxprCQCp6QS
-         0Z/oojm96tqPir32wttihXjEo7Ts9fdxtgme0APOa5EClsFWIwjfz8ARQdsqd7l8fN8h
-         JlnEj4rUMmtRngVS+A9XBCncRgF9xq4HnyQYmm8OF5ZHrqmmgl7tApaprI1Y8fuIB/Md
-         T67A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=1cF8fAhckqCQeBof+LDZOSyFffHGWYmYM1KYpMOwxdg=;
+        b=sGLX0b8OEmpqoxNbr/K+6RQtsVoDuvnmCtdlBIqGdVMZ2f1SloPZprDem5tNH2djpL
+         meXqaCWNPwUnh4krk0PSh1ocVdeNLX9Umdz1LrMRVSisDFKSLz0i6WkIo4Cdy++YIndQ
+         QdajAmu61r3dTb4YC1jWgqUfNLttXAWMv7+VP3d1rLDz4jJ2TV8UXpUih2jui1XFKezc
+         5PhSyvOKmA1fFSyt+B5tggjAmX0B6gh35e5RkukmUAQcPQcXfi8MSRvppQxKgE5c9XGy
+         C+9m7moe2ygd/8buyFKgfo22Kr2pvKnFayOfOW2LqNBpbrx7yMwR+toYUIK6vJ58CIm+
+         oODw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wflHOq/5T+ZXCjWUuQ+Otw4+acC/CT36CLZGEdvvwaE=;
-        b=q4UnXScI5ENOYCUq2hXkrC0mfhcSnDW1nyDrWdvbSYP9x0ZDOPbagd1hIzth59iDUC
-         VLudfr5yjX6fqsaqy1k3TPF60SaHGEWLY5kaWlgjcvkQqZ2tf5NC7ADTLEkLQDVn5C8e
-         YifajaCSheLr+OvJx6sNB8bpHqkulF4BULHoUB8sD/ZWx07EnEtkyTDUF2jbveAdr4Q3
-         qaE10ercKTFpaNSiXinGzoK5YvOGff4094p6MG7bQpWfnj47QNDk6Gv37zEIcLnCJUgb
-         1q9rcsXKMZoRESaMkaKTPi4GJDG7OiF5tU+LKOgQ0jSwdhHH6eYaM1AU1A7YH2gI1hMb
-         9j9g==
-X-Gm-Message-State: APjAAAU4XXWGEuGQWbqu1qnny2Z8CJwHyggpXLFcs2y2Bz8cuVxBncBH
-        y/P5vpH68DRq6jfcqT65z3wNzeiQ+nnZz/uhIlfFINeofCs=
-X-Google-Smtp-Source: APXvYqyZ6gkVfnPB+2Wm+lmoiD9i9oQZ/3gTK2G6IZU6rxzaYekMVKzu1A48tZlKywRxbPgn3/pfxDfejrLw0asL8wg=
-X-Received: by 2002:a5e:8348:: with SMTP id y8mr21067935iom.88.1556134403324;
- Wed, 24 Apr 2019 12:33:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190424191440.170422-1-matthewgarrett@google.com> <20190424192812.GG19031@bombadil.infradead.org>
-In-Reply-To: <20190424192812.GG19031@bombadil.infradead.org>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Wed, 24 Apr 2019 12:33:11 -0700
-Message-ID: <CACdnJutj4K1kQj7yXcCNVWM_hmrUwMfZ-JBi=FHkBvYFfbJNZA@mail.gmail.com>
-Subject: Re: [PATCH] mm: Allow userland to request that the kernel clear
- memory on release
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1cF8fAhckqCQeBof+LDZOSyFffHGWYmYM1KYpMOwxdg=;
+        b=S/Z7FsyjkKllBat93wI3GQyvoipBLKfj3HJ/dwQV2bqJ7OVIPls/z76XhRZ+IEHg1X
+         fZJwyAx5kx6jaW8Oahk8yZB2olX/Q4MVItzcLKAuB44W1gDJ08cRtZAYAXQkQJ7EGEmZ
+         Zpm5mu33+gypajr35opPJK90G3986k2yqyev/B/YeJHe/YLIGgiFI2OjAW/EEyslNUGd
+         z3+cpk9E9krK/ZeROU6DXwmTvBIcKK8A8gu+XwoHwYBxMC2dgcs7msSw1AcTGup7G3NB
+         ldR1zt8jHjuC9TXQa4K/k2R3q16igkGmqjOw32ijcIRfIE/Gcyv6SfZqtBTRVkBR/0nD
+         QB6Q==
+X-Gm-Message-State: APjAAAU7+HfrLC9W7bheZr/mUpaZjECPs54Cb1m8M6yYQ4slnSnGNPkq
+        ieyEVygOVqTh5wM2p0UqmxA=
+X-Google-Smtp-Source: APXvYqw8g1obnBiKQlgqkBfL0g94zAfBKlFMw0mO2YaMAwox22etxdYSNT/GyaaTbsiQyGm/Ryxt5A==
+X-Received: by 2002:a5d:62cf:: with SMTP id o15mr1310611wrv.45.1556134458597;
+        Wed, 24 Apr 2019 12:34:18 -0700 (PDT)
+Received: from myhost.home (bkw231.neoplus.adsl.tpnet.pl. [83.28.190.231])
+        by smtp.gmail.com with ESMTPSA id c2sm18088776wrr.13.2019.04.24.12.34.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 12:34:17 -0700 (PDT)
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        dmurphy@ti.com, jacek.anaszewski@gmail.com
+Subject: [GIT PULL] LED update for 5.1-rc7
+Date:   Wed, 24 Apr 2019 21:34:13 +0200
+Message-Id: <20190424193413.8135-1-jacek.anaszewski@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:28 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Wed, Apr 24, 2019 at 12:14:40PM -0700, Matthew Garrett wrote:
-> > Unfortunately, if an application exits uncleanly, its secrets may still be
-> > present in RAM. This can't be easily fixed in userland (eg, if the OOM
-> > killer decides to kill a process holding secrets, we're not going to be able
-> > to avoid that), so this patch adds a new flag to madvise() to allow userland
-> > to request that the kernel clear the covered pages whenever the page
-> > reference count hits zero. Since vm_flags is already full on 32-bit, it
-> > will only work on 64-bit systems.
->
-> Your request seems reasonable to me.
->
-> > +++ b/include/linux/page-flags.h
-> > @@ -118,6 +118,7 @@ enum pageflags {
-> >       PG_reclaim,             /* To be reclaimed asap */
-> >       PG_swapbacked,          /* Page is backed by RAM/swap */
-> >       PG_unevictable,         /* Page is "unevictable"  */
-> > +     PG_wipeonrelease,
->
-> But you can't have a new PageFlag.  Can you instead zero the memory in
-> unmap_single_vma() where we call uprobe_munmap() and untrack_pfn() today?
+Hi Linus,
 
-Is there any way the page could be referenced by something other than
-a VMA at this point? If so we probably don't want to zero it here, but
-we do want to zero it when the page is finally released (which is why
-I went with a page flag)
+Please pull LED update for 5.1-rc7.
+
+There is a single change to MAINTAINERS.
+
+We announce a new LED reviewer - Dan Murphy.
+
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git tags/leds-for-5.1-rc7
+
+for you to fetch changes up to 52fb56f7b5a9cc23a07b2c237bad91180263a492:
+
+  MAINTAINERS: LEDs: Add designated reviewer for LED subsystem (2019-04-24 21:07:18 +0200)
+
+Thanks,
+Jacek Anaszewski
+
+----------------------------------------------------------------
+LED update for 5.1-rc7.
+----------------------------------------------------------------
+Dan Murphy (1):
+      MAINTAINERS: LEDs: Add designated reviewer for LED subsystem
+
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
