@@ -2,125 +2,106 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0CEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEAFC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C562218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76AC721773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:29:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="PRJhisyH"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rmgLZLWt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731273AbfDXP2C (ORCPT
+        id S1731035AbfDXP3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:28:02 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37275 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbfDXP2B (ORCPT
+        Wed, 24 Apr 2019 11:29:44 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:34104 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727995AbfDXP3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:28:01 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t17so14038712wrr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:28:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9kzDA8V6Uz+l28kyAJYpVzfWGDcT7GA5gjS0BJvhacI=;
-        b=PRJhisyHQZ64UzAo5zvvJNZRGzwRbj2BsBWtviZVOOnhElo1TxHdIXiEEYNnogomCu
-         +OPvtkTAn7QVeEqLYP827Z+unSXTrhpgw71UNnY04NSb/Q5VZKHP+Q5Q1KvUMbVqrrgW
-         5B/9IMTHygy8YAzjvFh24mPC+rMghuBf+RqlhZ2oxZfAFKgJXJkbgJspGsD/udpLCGD7
-         Oti2IjTHuqMu74GMxsBZPzYA8WxS1f5OAS9FMgWiGK/UwItWyAHMnDpwc3ZlU4QDZ5m1
-         PF+BrtU2o0nZHKzG6sksSjhWKDo8QzncDzXSQ7shPLtsPPWqvyq+/tdM1EHT8JmYBgF6
-         KRHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9kzDA8V6Uz+l28kyAJYpVzfWGDcT7GA5gjS0BJvhacI=;
-        b=KeYo/HyWrCmv1YkpmA1EzBKq+bu+G36guLPqUpLlXuQVB8UeVedy1eZj0/h7/Xei5G
-         Xt7eMz6yBBP5nEWK6VxnPYp1w6VZ0nioxMwZLAFXRsYQaKZz5dHOVrDVQcdG15VxqQhq
-         GBWkJTcDthXIcYmx4HjTfpnR7mw4T6e7fxVWQ5iMBnf87Hw7Sf/P3ZNhaCfWVRfSy4MH
-         OnslZPNwSJfoqas4KrgDuG/pYxdlb8dW5QYlmI9mbxqhVw0q/zp6ZdPa4B0AOuvu+xY7
-         9e52HEs+mQijac6FVLjRf/UuT0R0sbc1njFy6G+POnenEVAMmq6+RmaNcvVUSWqGUhQ5
-         q9fw==
-X-Gm-Message-State: APjAAAUSHxe6tFWUdqPCt9vB0r99kY3BgqKz+0uxSzms/pkGiA3sc1Qb
-        yorEI2lNI5VBn2paxP5gpiShdA==
-X-Google-Smtp-Source: APXvYqxtsvr/bJf4sKtGrTjYewNva9VCZV6PN4DhgWnCaoAk0S2fEQE0gT/gDNJ7vNwI+z4PkwpMlA==
-X-Received: by 2002:adf:edc8:: with SMTP id v8mr12759904wro.206.1556119679743;
-        Wed, 24 Apr 2019 08:27:59 -0700 (PDT)
-Received: from brauner.io (p4FC0A32E.dip0.t-ipconnect.de. [79.192.163.46])
-        by smtp.gmail.com with ESMTPSA id j190sm23318472wmb.19.2019.04.24.08.27.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 24 Apr 2019 08:27:59 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 17:27:58 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     keescook@chromium.org, luto@amacapital.net, jannh@google.com,
-        linux-kernel@vger.kernel.org, stgraber@ubuntu.com
-Subject: Re: SECCOMP_RET_USER_NOTIF: listener improvements
-Message-ID: <20190424152757.o5dtrajmg33563x4@brauner.io>
-References: <20190424150423.k3embc2vkho2kixp@brauner.io>
- <20190424152001.GL3758@cisco>
- <20190424152305.32znd5t7r3d3hedj@brauner.io>
+        Wed, 24 Apr 2019 11:29:43 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OFH4d9000566;
+        Wed, 24 Apr 2019 17:28:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=RoPstAPuCUxNTqGt8P8YKt6rQGwssvcBvsdDnN1zA+s=;
+ b=rmgLZLWtmixJL4NaVtUx8q908GL2JPDxaTri0FP+hf+hnBSIPSsvLNXZNmM6yY00nqJW
+ D4G5IOsaTgrHjkSviBx+iLWvetNpYRoqVc5++HpdstoTcCBjex2gzmam6a8m4FdT6JqI
+ fzRmULluDOKzJmpMDrVTjeyJKN8fnqcNo+Hnd8uyNqrnJlul43eZ7JGrnsgDO4Nawqtd
+ 4LdDPP8KiYzfxBJFYh7+jzBZOeIfA5JH/KzBDXRAFYUW8yShTipbqbFJ4diW2xbw8vCf
+ 1X7HxLq2L+bxPOv9zKqzjkskY6UudxbXBYw0XGIG10sNSeqCXh43zy9ghWkPHy6FXQ2K cA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2rytad7e6n-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 24 Apr 2019 17:28:50 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B196C34;
+        Wed, 24 Apr 2019 15:28:49 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7689F292D;
+        Wed, 24 Apr 2019 15:28:49 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Wed, 24 Apr
+ 2019 17:28:49 +0200
+Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr 2019 17:28:48
+ +0200
+From:   Fabien Dessenne <fabien.dessenne@st.com>
+To:     Olivier Moysan <olivier.moysan@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "Alexandre Torgue" <alexandre.torgue@st.com>,
+        <alsa-devel@alsa-project.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@st.com>
+Subject: [PATCH] ASoC: stm32: i2s: return the get_irq error
+Date:   Wed, 24 Apr 2019 17:28:44 +0200
+Message-ID: <1556119724-9873-1-git-send-email-fabien.dessenne@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190424152305.32znd5t7r3d3hedj@brauner.io>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.25]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_09:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 05:23:05PM +0200, Christian Brauner wrote:
-> On Wed, Apr 24, 2019 at 09:20:01AM -0600, Tycho Andersen wrote:
-> > On Wed, Apr 24, 2019 at 05:04:26PM +0200, Christian Brauner wrote:
-> > > Hey everyone,
-> > > 
-> > > So I was working on making use of the seccomp listener stuff and I
-> > > stumbled upon a problem. Imagine a scenario where:
-> > > 
-> > > 1. Task T1 installs Filter F1 and gets and listener fd for that filter FD1
-> > > 2. T1 sends FD1 via SCM_RIGHTS to task T2
-> > >    T2 now holds a reference to the same underlying struct file as FD1 via FD2
-> > > 3. T2 registers FD2 in an event loop and starts listening for events
-> > > 4. T1 exits and wipes FD1
-> > > 
-> > > Now, T2 still holds a reference to the filter via FD2 which references
-> > > the same underlying file as FD1 which has the seccomp filter stashed in
-> > > private_data.
-> > > So T2 will never get notified that the filter is essentially unused and
-> > > doesn't know when to exit, i.e. it has no way of telling when T1 and all
-> > > of its children using the same filter are gone.
-> > > 
-> > > I think we should have a way to do this
-> > 
-> > Since the only way we ever allow creating a struct file * that points
-> > to a struct seccomp_filter *, if there is a notifier attached, the
-> > number of tasks still being monitored by a particular filter should be
-> > filter->usage - 1 (assuming there is a notifier attached). So we could
-> > augment __put_seccomp_filter() to check for this and send out a
-> > message with a SECCOMP_NOTIF_FLAG_DEAD flag or something.
-> > 
-> > > *or* alternatively have a way to attach a process to an existing
-> > > filter.
-> > 
-> > I also think this wouldn't be too hard, since the struct file * has a
-> > reference to the filter. So I guess the question is: which of these
-> > makes more sense?
-> 
-> Or we do both... But overall I'm very much in favor of the option to
+During probe, return the "get_irq" error value instead of -ENOENT. This
+allows the driver to be deferred probed if needed.
 
-The reason why I say both is that you might not always want to join an
-filter and also you still want a way to hand-off listener fds. My main
-scenario is a single watcher that watches listener fds from multiple
-processes each potentially with a different filter.
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+ sound/soc/stm/stm32_i2s.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> attach a task to an existing filter. Re-creating a seccomp context is
-> extremely brittle and error-prone. This would take a way a major pain
-> point.
-> 
-> Christian
+diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
+index 9526342..97d5e99 100644
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -838,8 +838,9 @@ static int stm32_i2s_parse_dt(struct platform_device *pdev,
+ 	/* Get irqs */
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+-		dev_err(&pdev->dev, "no irq for node %s\n", pdev->name);
+-		return -ENOENT;
++		if (irq != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "no irq for node %s\n", pdev->name);
++		return irq;
+ 	}
+ 
+ 	ret = devm_request_irq(&pdev->dev, irq, stm32_i2s_isr, IRQF_ONESHOT,
+-- 
+2.7.4
+
