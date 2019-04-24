@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11525C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608C6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD78621902
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300B62190A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117252;
-	bh=42zLucobqEmFgVv+D4a6FzWWhreOLQKG08CVI6kVrmA=;
+	s=default; t=1556117257;
+	bh=APruXeams0Ij6ex63Q8KCPI9n2LXEryduBZkmuuj9JM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jcVu0x4Y2ZdDTiIzINhfI8XmBTc7XXv2qrZ7isODxPCUEwY0C+rybUoX1d592JOoE
-	 hi/c30/NPBlkpj5sdaofP8k6bVhoo4wh4spBkmkhwDue09pYrB9eOXy0x7Xj8cavXD
-	 UWDHEPx3V2SHgnjqwi0NV+kP1LwqbYZz6mPhgJtQ=
+	b=yaEn+J8dps4172/7gyxtixMhyr8AezBRdx85fBDnUy3s/R+cH6sjwo1QPOXxJxXzk
+	 7/5cZEMsYvMiP65Khg8g/280cuLJSV+0p1HwwrYo6F/kksBsvwkHrzn2RcX1XJ7Zvu
+	 gbzOUh/5MWU1bxc/mOEsyCFNWdng2oBVJNFaQYFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732244AbfDXOrc (ORCPT
+        id S1732264AbfDXOrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:47:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47124 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:47:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731795AbfDXOra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:47:30 -0400
+        id S1732233AbfDXOrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:47:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD306218FD;
-        Wed, 24 Apr 2019 14:47:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C438021900;
+        Wed, 24 Apr 2019 14:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117249;
-        bh=42zLucobqEmFgVv+D4a6FzWWhreOLQKG08CVI6kVrmA=;
+        s=default; t=1556117251;
+        bh=APruXeams0Ij6ex63Q8KCPI9n2LXEryduBZkmuuj9JM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u77eazsEaiENq2/KIo3kbuTgVdRRhmXG+Jn9lv2WhYOJnLs2/z4qc81NxNafxHj15
-         5NpfJhBP8Q+Cb0k7ICzv5hmyWJVA0OLQdfONQNxs3u2SYQtfUCKg8sCO9bKgOB+l+N
-         KMmkGUo8hYRKeUqK1UT6bgfSPlZ1TRKKRbg3cl1o=
+        b=c/I14wBw8crFqZ7ahGLSTmcHqUAZKMB5Y8GZtVF+uOiUgQRuAyIMdnWtSHJTkgZks
+         ESCzWmMvbmMLwORy7aIOS8anKU4OOGD4l9D1N6Piqbuy6W7Mc5bjAPnTuO0wLlB0My
+         Wo1xwgg/w8j7+QMs6c4hBCn+59SEwU0H9oR5t7Uk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arvind Sankar <niveditas98@gmail.com>,
+Cc:     Yue Haibing <yuehaibing@huawei.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/35] igb: Fix WARN_ONCE on runtime suspend
-Date:   Wed, 24 Apr 2019 10:46:42 -0400
-Message-Id: <20190424144709.30215-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 09/35] fm10k: Fix a potential NULL pointer dereference
+Date:   Wed, 24 Apr 2019 10:46:43 -0400
+Message-Id: <20190424144709.30215-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424144709.30215-1-sashal@kernel.org>
 References: <20190424144709.30215-1-sashal@kernel.org>
@@ -59,155 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arvind Sankar <niveditas98@gmail.com>
+From: Yue Haibing <yuehaibing@huawei.com>
 
-[ Upstream commit dabb8338be533c18f50255cf39ff4f66d4dabdbe ]
+[ Upstream commit 01ca667133d019edc9f0a1f70a272447c84ec41f ]
 
-The runtime_suspend device callbacks are not supposed to save
-configuration state or change the power state. Commit fb29f76cc566
-("igb: Fix an issue that PME is not enabled during runtime suspend")
-changed the driver to not save configuration state during runtime
-suspend, however the driver callback still put the device into a
-low-power state. This causes a warning in the pci pm core and results in
-pci_pm_runtime_suspend not calling pci_save_state or pci_finish_runtime_suspend.
+Syzkaller report this:
 
-Fix this by not changing the power state either, leaving that to pci pm
-core, and make the same change for suspend callback as well.
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN PTI
+CPU: 0 PID: 4378 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+RIP: 0010:__lock_acquire+0x95b/0x3200 kernel/locking/lockdep.c:3573
+Code: 00 0f 85 28 1e 00 00 48 81 c4 08 01 00 00 5b 5d 41 5c 41 5d 41 5e 41 5f c3 4c 89 ea 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 24 00 00 49 81 7d 00 e0 de 03 a6 41 bc 00 00
+RSP: 0018:ffff8881e3c07a40 EFLAGS: 00010002
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000010 RSI: 0000000000000000 RDI: 0000000000000080
+RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+R10: ffff8881e3c07d98 R11: ffff8881c7f21f80 R12: 0000000000000001
+R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000001
+FS:  00007fce2252e700(0000) GS:ffff8881f2400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fffc7eb0228 CR3: 00000001e5bea002 CR4: 00000000007606f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ lock_acquire+0xff/0x2c0 kernel/locking/lockdep.c:4211
+ __mutex_lock_common kernel/locking/mutex.c:925 [inline]
+ __mutex_lock+0xdf/0x1050 kernel/locking/mutex.c:1072
+ drain_workqueue+0x24/0x3f0 kernel/workqueue.c:2934
+ destroy_workqueue+0x23/0x630 kernel/workqueue.c:4319
+ __do_sys_delete_module kernel/module.c:1018 [inline]
+ __se_sys_delete_module kernel/module.c:961 [inline]
+ __x64_sys_delete_module+0x30c/0x480 kernel/module.c:961
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fce2252dc58 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000140
+RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fce2252e6bc
+R13: 00000000004bcca9 R14: 00000000006f6b48 R15: 00000000ffffffff
 
-Also move a couple of defines into the appropriate header file instead
-of inline in the .c file.
+If alloc_workqueue fails, it should return -ENOMEM, otherwise may
+trigger this NULL pointer dereference while unloading drivers.
 
-Fixes: fb29f76cc566 ("igb: Fix an issue that PME is not enabled during runtime suspend")
-Signed-off-by: Arvind Sankar <niveditas98@gmail.com>
-Reviewed-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 0a38c17a21a0 ("fm10k: Remove create_workqueue")
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/intel/igb/e1000_defines.h    |  2 +
- drivers/net/ethernet/intel/igb/igb_main.c     | 57 +++----------------
- 2 files changed, 10 insertions(+), 49 deletions(-)
+ drivers/net/ethernet/intel/fm10k/fm10k_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_defines.h b/drivers/net/ethernet/intel/igb/e1000_defines.h
-index 1de82f247312..d258a75c934b 100644
---- a/drivers/net/ethernet/intel/igb/e1000_defines.h
-+++ b/drivers/net/ethernet/intel/igb/e1000_defines.h
-@@ -214,6 +214,8 @@
- /* enable link status from external LINK_0 and LINK_1 pins */
- #define E1000_CTRL_SWDPIN0  0x00040000  /* SWDPIN 0 value */
- #define E1000_CTRL_SWDPIN1  0x00080000  /* SWDPIN 1 value */
-+#define E1000_CTRL_ADVD3WUC 0x00100000  /* D3 WUC */
-+#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000 /* PHY PM enable */
- #define E1000_CTRL_SDP0_DIR 0x00400000  /* SDP0 Data direction */
- #define E1000_CTRL_SDP1_DIR 0x00800000  /* SDP1 Data direction */
- #define E1000_CTRL_RST      0x04000000  /* Global reset */
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 8892ea5cbb01..71b235f935d9 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -7934,9 +7934,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	struct e1000_hw *hw = &adapter->hw;
- 	u32 ctrl, rctl, status;
- 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
--#ifdef CONFIG_PM
--	int retval = 0;
--#endif
-+	bool wake;
+diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_main.c b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
+index 103c0a742d03..fef0bff4a54b 100644
+--- a/drivers/net/ethernet/intel/fm10k/fm10k_main.c
++++ b/drivers/net/ethernet/intel/fm10k/fm10k_main.c
+@@ -58,6 +58,8 @@ static int __init fm10k_init_module(void)
+ 	/* create driver workqueue */
+ 	fm10k_workqueue = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0,
+ 					  fm10k_driver_name);
++	if (!fm10k_workqueue)
++		return -ENOMEM;
  
- 	rtnl_lock();
- 	netif_device_detach(netdev);
-@@ -7949,14 +7947,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	igb_clear_interrupt_scheme(adapter);
- 	rtnl_unlock();
+ 	fm10k_dbg_init();
  
--#ifdef CONFIG_PM
--	if (!runtime) {
--		retval = pci_save_state(pdev);
--		if (retval)
--			return retval;
--	}
--#endif
--
- 	status = rd32(E1000_STATUS);
- 	if (status & E1000_STATUS_LU)
- 		wufc &= ~E1000_WUFC_LNKC;
-@@ -7973,10 +7963,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		}
- 
- 		ctrl = rd32(E1000_CTRL);
--		/* advertise wake from D3Cold */
--		#define E1000_CTRL_ADVD3WUC 0x00100000
--		/* phy power management enable */
--		#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000
- 		ctrl |= E1000_CTRL_ADVD3WUC;
- 		wr32(E1000_CTRL, ctrl);
- 
-@@ -7990,12 +7976,15 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		wr32(E1000_WUFC, 0);
- 	}
- 
--	*enable_wake = wufc || adapter->en_mng_pt;
--	if (!*enable_wake)
-+	wake = wufc || adapter->en_mng_pt;
-+	if (!wake)
- 		igb_power_down_link(adapter);
- 	else
- 		igb_power_up_link(adapter);
- 
-+	if (enable_wake)
-+		*enable_wake = wake;
-+
- 	/* Release control of h/w to f/w.  If f/w is AMT enabled, this
- 	 * would have already happened in close and is redundant.
- 	 */
-@@ -8038,22 +8027,7 @@ static void igb_deliver_wake_packet(struct net_device *netdev)
- 
- static int __maybe_unused igb_suspend(struct device *dev)
- {
--	int retval;
--	bool wake;
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	retval = __igb_shutdown(pdev, &wake, 0);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 0);
- }
- 
- static int __maybe_unused igb_resume(struct device *dev)
-@@ -8124,22 +8098,7 @@ static int __maybe_unused igb_runtime_idle(struct device *dev)
- 
- static int __maybe_unused igb_runtime_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	int retval;
--	bool wake;
--
--	retval = __igb_shutdown(pdev, &wake, 1);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 1);
- }
- 
- static int __maybe_unused igb_runtime_resume(struct device *dev)
 -- 
 2.19.1
 
