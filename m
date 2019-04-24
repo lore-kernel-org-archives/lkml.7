@@ -2,148 +2,146 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5176FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEABFC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29AD12077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4D2218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:00:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="g4VoSO8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfDXN7j (ORCPT
+        id S1728882AbfDXOAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:59:39 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:33622 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbfDXN7i (ORCPT
+        Wed, 24 Apr 2019 10:00:24 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33931 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfDXOAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:59:38 -0400
-Received: from ramsan ([84.194.111.163])
-        by xavier.telenet-ops.be with bizsmtp
-        id 4Dzb2000P3XaVaC01Dzbyr; Wed, 24 Apr 2019 15:59:35 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hJIQx-00088l-DS; Wed, 24 Apr 2019 15:59:35 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hJIQx-0006ek-Be; Wed, 24 Apr 2019 15:59:35 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Benoit Parrot <bparrot@ti.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] gpio: Fix gpiochip_add_data_with_key() error path
-Date:   Wed, 24 Apr 2019 15:59:33 +0200
-Message-Id: <20190424135933.25545-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Wed, 24 Apr 2019 10:00:24 -0400
+Received: by mail-qt1-f194.google.com with SMTP id j6so1104940qtq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 07:00:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KqWzI5RBqkSYwXqu3BP17kOVTF1TJARwl4vmT894iMM=;
+        b=g4VoSO8dKH5SOcZMEaI/VIQ/BJ7wniQFvIu62iQg3UBOmFb2bSugt/L/NF5/pOE6tu
+         GvZMct11fLDysOQEK+av1dMlw27d7BYCQvCr6rmx3gkXGsR/dDfUTnyDMA954RZQofEu
+         6RxPk8Rj101BZ2s8OJMkbVbHIervuZ/nMs7Vs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KqWzI5RBqkSYwXqu3BP17kOVTF1TJARwl4vmT894iMM=;
+        b=RdIsoGqBrr6U/mCsDfv58EoRdh5d9VluH/bA3IjYgkiGhLcz1maWHLZSceVDcRFBcP
+         Gvk1cinjKunlpLdxXhU2Dy5GW1nPVueJGBlbNhWHTIeknY69FI9QUQRgkMAW+rV6L4di
+         pZ8MsO19x4or4TRXMpNwpT2KCQuiPaYSSi2uPCkpKm/porEHn3fvKFVADEa6ZV3PfpVU
+         Nj0708EqfhmypV/G6Tim0yewMnSSuADM+z+qWKDGC7LhC/Ra1cpOEySigs+s4rbDdLwM
+         YZvrkfLuZrm8Xfo4lL+uK7ty4rVXPWUUb8hABs8NqJLQKN3Sccz7BbyvnH+hmarRxTi8
+         vE1Q==
+X-Gm-Message-State: APjAAAWwd+TGb2KpozgC878MB4virfnEJKgZO9Zf4Lsn5ry8CKkP2yb9
+        TmXexUunSAIasspCELfKLomTQQ==
+X-Google-Smtp-Source: APXvYqyMoIp8TJ3Ibdj1jSg0TRyDfu3EUUiNkJy16fYH6qpaxniAT5xbXhzlk2Gv+vCedZq17aqaoA==
+X-Received: by 2002:ac8:72da:: with SMTP id o26mr10222861qtp.138.1556114423054;
+        Wed, 24 Apr 2019 07:00:23 -0700 (PDT)
+Received: from sinkpad (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
+        by smtp.gmail.com with ESMTPSA id z3sm2527228qkc.76.2019.04.24.07.00.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 07:00:22 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 10:00:13 -0400
+From:   Julien Desfossez <jdesfossez@digitalocean.com>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Message-ID: <20190424140013.GA14594@sinkpad>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAERHkrtOCbLQ-tFq9ujjnyaudtd_e0UaSA2GQG64JqdS6cuTKg@mail.gmail.com>
+X-Mailer: Mutt 1.5.24 (2015-08-30)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The err_remove_chip block is too coarse, and may perform cleanup that
-must not be done.  E.g. if of_gpiochip_add() fails, of_gpiochip_remove()
-is still called, causing:
+On 24-Apr-2019 09:13:10 PM, Aubrey Li wrote:
+> On Wed, Apr 24, 2019 at 12:18 AM Vineeth Remanan Pillai
+> <vpillai@digitalocean.com> wrote:
+> >
+> > Second iteration of the core-scheduling feature.
+> >
+> > This version fixes apparent bugs and performance issues in v1. This
+> > doesn't fully address the issue of core sharing between processes
+> > with different tags. Core sharing still happens 1% to 5% of the time
+> > based on the nature of workload and timing of the runnable processes.
+> >
+> > Changes in v2
+> > -------------
+> > - rebased on mainline commit: 6d906f99817951e2257d577656899da02bb33105
+> 
+> Thanks to post v2, based on this version, here is my benchmarks result.
+> 
+> Environment setup
+> --------------------------
+> Skylake server, 2 numa nodes, 104 CPUs (HT on)
+> cgroup1 workload, sysbench (CPU intensive non AVX workload)
+> cgroup2 workload, gemmbench (AVX512 workload)
+> 
+> Case 1: task number < CPU num
+> --------------------------------------------
+> 36 sysbench threads in cgroup1
+> 36 gemmbench threads in cgroup2
+> 
+> core sched off:
+> - sysbench 95th percentile latency(ms): avg = 4.952, stddev = 0.55342
+> core sched on:
+> - sysbench 95th percentile latency(ms): avg = 3.549, stddev = 0.04449
+> 
+> Due to core cookie matching, sysbench tasks won't be affect by AVX512
+> tasks, latency has ~28% improvement!!!
+> 
+> Case 2: task number > CPU number
+> -------------------------------------------------
+> 72 sysbench threads in cgroup1
+> 72 gemmbench threads in cgroup2
+> 
+> core sched off:
+> - sysbench 95th percentile latency(ms): avg = 11.914, stddev = 3.259
+> core sched on:
+> - sysbench 95th percentile latency(ms): avg = 13.289, stddev = 4.863
+> 
+> So not only power, now security and performance is a pair of contradictions.
+> Due to core cookie not matching and forced idle introduced, latency has ~12%
+> regression.
+> 
+> Any comments?
 
-    OF: ERROR: Bad of_node_put() on /soc/gpio@e6050000
-    CPU: 1 PID: 20 Comm: kworker/1:1 Not tainted 5.1.0-rc2-koelsch+ #407
-    Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
-    Workqueue: events deferred_probe_work_func
-    [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
-    [<c020ae58>] (show_stack) from [<c07c1224>] (dump_stack+0x7c/0x9c)
-    [<c07c1224>] (dump_stack) from [<c07c5a80>] (kobject_put+0x94/0xbc)
-    [<c07c5a80>] (kobject_put) from [<c0470420>] (gpiochip_add_data_with_key+0x8d8/0xa3c)
-    [<c0470420>] (gpiochip_add_data_with_key) from [<c0473738>] (gpio_rcar_probe+0x1d4/0x314)
-    [<c0473738>] (gpio_rcar_probe) from [<c052fca8>] (platform_drv_probe+0x48/0x94)
+Would it be possible to post the results with HT off as well ?
 
-and later, if a GPIO consumer tries to use a GPIO from a failed
-controller:
+Thanks,
 
-    WARNING: CPU: 0 PID: 1 at lib/refcount.c:156 kobject_get+0x38/0x4c
-    refcount_t: increment on 0; use-after-free.
-    Modules linked in:
-    CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-rc2-koelsch+ #407
-    Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
-    [<c020ec74>] (unwind_backtrace) from [<c020ae58>] (show_stack+0x10/0x14)
-    [<c020ae58>] (show_stack) from [<c07c1224>] (dump_stack+0x7c/0x9c)
-    [<c07c1224>] (dump_stack) from [<c0221580>] (__warn+0xd0/0xec)
-    [<c0221580>] (__warn) from [<c02215e0>] (warn_slowpath_fmt+0x44/0x6c)
-    [<c02215e0>] (warn_slowpath_fmt) from [<c07c58fc>] (kobject_get+0x38/0x4c)
-    [<c07c58fc>] (kobject_get) from [<c068b3ec>] (of_node_get+0x14/0x1c)
-    [<c068b3ec>] (of_node_get) from [<c0686f24>] (of_find_node_by_phandle+0xc0/0xf0)
-    [<c0686f24>] (of_find_node_by_phandle) from [<c0686fbc>] (of_phandle_iterator_next+0x68/0x154)
-    [<c0686fbc>] (of_phandle_iterator_next) from [<c0687fe4>] (__of_parse_phandle_with_args+0x40/0xd0)
-    [<c0687fe4>] (__of_parse_phandle_with_args) from [<c0688204>] (of_parse_phandle_with_args_map+0x100/0x3ac)
-    [<c0688204>] (of_parse_phandle_with_args_map) from [<c0471240>] (of_get_named_gpiod_flags+0x38/0x380)
-    [<c0471240>] (of_get_named_gpiod_flags) from [<c046f864>] (gpiod_get_from_of_node+0x24/0xd8)
-    [<c046f864>] (gpiod_get_from_of_node) from [<c0470aa4>] (devm_fwnode_get_index_gpiod_from_child+0xa0/0x144)
-    [<c0470aa4>] (devm_fwnode_get_index_gpiod_from_child) from [<c05f425c>] (gpio_keys_probe+0x418/0x7bc)
-    [<c05f425c>] (gpio_keys_probe) from [<c052fca8>] (platform_drv_probe+0x48/0x94)
-
-Fix this by splitting the cleanup block, and adding a missing call to
-gpiochip_irqchip_remove().
-
-Fixes: 28355f81969962cf ("gpio: defer probe if pinctrl cannot be found")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
----
-v2:
-  - s/err_free_irqchip_mask/err_free_gpiochip_mask/,
-  - Add Reviewed-by.
-
----
- drivers/gpio/gpiolib.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 982845e8212cc4e4..6e825258978f6074 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1379,7 +1379,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 
- 	status = gpiochip_add_irqchip(chip, lock_key, request_key);
- 	if (status)
--		goto err_remove_chip;
-+		goto err_free_gpiochip_mask;
- 
- 	status = of_gpiochip_add(chip);
- 	if (status)
-@@ -1387,7 +1387,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 
- 	status = gpiochip_init_valid_mask(chip);
- 	if (status)
--		goto err_remove_chip;
-+		goto err_remove_of_chip;
- 
- 	for (i = 0; i < chip->ngpio; i++) {
- 		struct gpio_desc *desc = &gdev->descs[i];
-@@ -1415,14 +1415,18 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 	if (gpiolib_initialized) {
- 		status = gpiochip_setup_dev(gdev);
- 		if (status)
--			goto err_remove_chip;
-+			goto err_remove_acpi_chip;
- 	}
- 	return 0;
- 
--err_remove_chip:
-+err_remove_acpi_chip:
- 	acpi_gpiochip_remove(chip);
-+err_remove_of_chip:
- 	gpiochip_free_hogs(chip);
- 	of_gpiochip_remove(chip);
-+err_remove_chip:
-+	gpiochip_irqchip_remove(chip);
-+err_free_gpiochip_mask:
- 	gpiochip_free_valid_mask(chip);
- err_remove_irqchip_mask:
- 	gpiochip_irqchip_free_valid_mask(chip);
--- 
-2.17.1
-
+Julien
