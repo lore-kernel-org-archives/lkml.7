@@ -2,109 +2,208 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B74DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123C0C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5940A20684
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD3720684
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:26:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="UlIc1AUL"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="t2qQsbuj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfDXJ0X (ORCPT
+        id S1728665AbfDXJ0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:26:23 -0400
-Received: from mail-eopbgr810054.outbound.protection.outlook.com ([40.107.81.54]:15392
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726921AbfDXJ0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:26:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iuKsvDUqrJn1FbzANfeXXPzAE1V91NrSkla1OnD0kyw=;
- b=UlIc1AULZON8h3BgdruV357GJWCv3jOklAK2d5+db/g9AabIXYMbCgUYihCZMgkHgUK3BgPkeHL6X8Rs+TtXZoq1labYeQ5k8hHwdaEIpMupm97EyTUnL7+2J0v9NO+UNi2WpCt148miMg5aJvRBA3lmxf+PgWiH+pBU1diS6mQ=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6031.namprd05.prod.outlook.com (20.178.243.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.12; Wed, 24 Apr 2019 09:26:15 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::441b:ef64:e316:b294]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::441b:ef64:e316:b294%5]) with mapi id 15.20.1835.010; Wed, 24 Apr 2019
- 09:26:15 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     Deepak Singh Rawat <drawat@vmware.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 8/9] drm/vmwgfx: Implement an infrastructure for
- read-coherent resources
-Thread-Topic: [PATCH 8/9] drm/vmwgfx: Implement an infrastructure for
- read-coherent resources
-Thread-Index: AQHU8UlpMpAuzkwq50Wm+jUUUgLkeaZIrMQAgAJwLwA=
-Date:   Wed, 24 Apr 2019 09:26:15 +0000
-Message-ID: <24023a79de1acee5147dd9b1e061d6df008047ab.camel@vmware.com>
-References: <20190412160338.64994-1-thellstrom@vmware.com>
-         <20190412160338.64994-9-thellstrom@vmware.com>
-         <9181c812a226eaeff5efd96f9f8936bdf37b23e1.camel@vmware.com>
-In-Reply-To: <9181c812a226eaeff5efd96f9f8936bdf37b23e1.camel@vmware.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 73e9b03b-ae5a-429f-7b03-08d6c896e644
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR05MB6031;
-x-ms-traffictypediagnostic: MN2PR05MB6031:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR05MB603137D258D1EA964047B1C5A13C0@MN2PR05MB6031.namprd05.prod.outlook.com>
-x-forefront-prvs: 00179089FD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(366004)(39860400002)(376002)(199004)(189003)(186003)(229853002)(2906002)(73956011)(5660300002)(3846002)(6116002)(66556008)(66476007)(36756003)(64756008)(4744005)(66446008)(76116006)(316002)(97736004)(6486002)(68736007)(91956017)(99286004)(66946007)(66066001)(26005)(102836004)(6506007)(256004)(118296001)(54906003)(76176011)(6862004)(6512007)(486006)(6636002)(6246003)(446003)(7736002)(37006003)(11346002)(14454004)(305945005)(4326008)(476003)(8676002)(53936002)(71200400001)(6436002)(81166006)(8936002)(71190400001)(478600001)(81156014)(2616005)(25786009)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6031;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: TzPKsWG/iFglpu8cFJVofgvzVEPYhr7EDl+XFCSYxKPNJLC+SGa4diGU0vi/OuXk0kVr8Dq4Vu5jnD2jHArJuEt5jk3CC1gaugv1WgORJDhUEa39Ug/IG7PXfFhQKvrJ7qSu97YpiP19Ka/E/XCx/+svcfbugnhXIpLtHnO9f1NBj9HGxU2Le0Ckt1Gk98uEBxjmJRuYY/kl48E8PXw1cNyPk0+R/L/S7aMDzAiGK366tyJD5fJKxC/a/IKpxu2LVXrPmgfd8EuRBixXuyMZFGo5OwgyoY1BfhvSJPZJwM4XFJCyP0PlCpOU4koqcx3ubwvh3TtKqjtW8W0j1/KNQ6S0e6eJoblrCX+mF9Jm99psStzGfeR/SBQtU6fdHFGqALeoG302K+0FQmcqPxSZZjcD6BZvHYU46fp8hMznk8U=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C04C32762B8762479747102E38325C4F@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 24 Apr 2019 05:26:45 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23004 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726952AbfDXJ0o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 05:26:44 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O9H8nr007782;
+        Wed, 24 Apr 2019 11:26:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=Rn0f2TySj0JJUxjbZbCsAXYRY06h389VBpN+U8xL15I=;
+ b=t2qQsbujMFGVxFibeh/Qiu1v3PYLDRoRy2bfqAzXbP57wAbam5jPDYA2X02BO9OY4qG4
+ XDiYZ3+O5e2ZsxXHzboJXdaZHtiGdsGOS90cV0K6rRrFPokjvsb0Y7h1Z93o8V5GFcYr
+ oF9r4U8h1khFISAo2xJEHkNysRnjFXXy8JlzXha9969FSffHPdsywBer6A5wlaH0cCNx
+ 26/T1UPwIdwzDy7FTIYRR3Orcyx2cYPJ1NQHQQeqTDoZUGdgiKyPLbQhzzKBl/KDioqN
+ rNjtP/bm2F0Zc1iRuhzn245GodwIJSDQ8Wbaz5e1l16vfs9Dp9cHYhUwy8hfxgEE7TXa 0g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2ryrj65y2a-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 24 Apr 2019 11:26:32 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E503A31;
+        Wed, 24 Apr 2019 09:26:31 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A064A156F;
+        Wed, 24 Apr 2019 09:26:31 +0000 (GMT)
+Received: from [10.48.1.93] (10.75.127.45) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 24 Apr
+ 2019 11:26:30 +0200
+Subject: Re: [PATCH] dmaengine: stm32-dma: fix residue calculation in
+ stm32-dma
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Vinod Koul <vkoul@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
+References: <1553689316-6231-1-git-send-email-arnaud.pouliquen@st.com>
+ <85a76ca4-6cad-e533-ff7b-64a660d1a2a0@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <16d26967-a222-1dc5-58bd-b0c3fd60b767@st.com>
+Date:   Wed, 24 Apr 2019 11:26:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73e9b03b-ae5a-429f-7b03-08d6c896e644
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 09:26:15.2030
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6031
+In-Reply-To: <85a76ca4-6cad-e533-ff7b-64a660d1a2a0@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-23_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA0LTIyIGF0IDIwOjEyICswMDAwLCBEZWVwYWsgU2luZ2ggUmF3YXQgd3Jv
-dGU6DQo+IE1pbm9yIG5pdHMgYmVsb3csIG90aGVyd2lzZQ0KPiANCj4gUmV2aWV3ZWQtYnk6IERl
-ZXBhayBSYXdhdCA8ZHJhd2F0QHZtd2FyZS5jb20+DQo+IA0KPiBPbiBGcmksIDIwMTktMDQtMTIg
-YXQgMDk6MDQgLTA3MDAsIFRob21hcyBIZWxsc3Ryb20gd3JvdGU6DQo+ID4gU2ltaWxhciB0byB3
-cml0ZS1jb2hlcmVudCByZXNvdXJjZXMsIG1ha2Ugc3VyZSB0aGF0IGZyb20gdGhlIHVzZXItDQo+
-ID4gc3BhY2UNCj4gPiBwb2ludCBvZiB2aWV3LCBHUFUgcmVuZGVyZWQgY29udGVudHMgaXMgYXV0
-b21hdGljYWxseSBhdmFpbGFibGUgZm9yDQo+ID4gcmVhZGluZyBieSB0aGUgQ1BVLg0KPiA+IA0K
-PiA+IFNpZ25lZC1vZmYtYnk6IFRob21hcyBIZWxsc3Ryb20gPHRoZWxsc3Ryb21Adm13YXJlLmNv
-bT4NCj4gPiAtLS0NCj4gPiANCj4gPiArCXdoaWxlIChjdXIpIHsNCj4gPiArCQlzdHJ1Y3Qgdm13
-X3Jlc291cmNlICpjdXJfcmVzID0NCj4gPiArCQkJY29udGFpbmVyX29mKGN1ciwgc3RydWN0IHZt
-d19yZXNvdXJjZSwNCj4gPiBtb2Jfbm9kZSk7DQo+ID4gKw0KPiA+ICsJCWlmIChjdXJfcmVzLT5i
-YWNrdXBfb2Zmc2V0ID49IHJlc19lbmQpIHsNCj4gPiArCQkJY3VyID0gY3VyLT5yYl9sZWZ0Ow0K
-PiA+ICsJCX0gZWxzZSBpZiAoY3VyX3Jlcy0+YmFja3VwX29mZnNldCArIGN1cl9yZXMtDQo+ID4g
-PiBiYWNrdXBfc2l6ZSA8PQ0KPiA+ICsJCQkgICByZXNfc3RhcnQpIHsNCj4gPiArCQkJY3VyID0g
-Y3VyLT5yYl9yaWdodDsNCj4gPiArCQl9IGVsc2Ugew0KPiA+ICsJCQlmb3VuZCA9IGN1cl9yZXM7
-DQo+IA0KPiBJIGRpZG4ndCBsb29rZWQgaW50byBob3cgUkIgdHJlZSB3b3JrcyBidXQgZG8geW91
-IG5lZWQgdG8gYnJlYWsgdGhlDQo+IGxvb3Agd2hlbiByZXNvdXJjZSBpcyBmb3VuZD8NCg0KDQpO
-bywgaGVyZSB3ZSB3aWxsIGNvbnRpbnVlIGxvb2tpbmcgZm9yIGEgcmVzb3VyY2Ugd2l0aCBldmVu
-IGxvd2VyDQpzdGFydGluZyBvZmZzZXQuIEknbGwgYWRkIGEgY29tbWVudCBhYm91dCB0aGF0Lg0K
-DQpUaGFua3MsDQpUaG9tYXMNCg0K
+Hello
+
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+
+Thanks
+
+On 4/23/19 5:18 PM, Arnaud Pouliquen wrote:
+> Hello Vinod,
+> 
+> Just a gentle reminder, if you could take a moment to review this patch.
+> FYI, the patch has already been internally reviewed by Pierre Yves
+> mordret...
+> His sign-off is in the commit message.
+> 
+> Thanks,
+> 
+> Arnaud
+> 
+> 
+> On 3/27/19 1:21 PM, Arnaud Pouliquen wrote:
+>> During residue calculation. the DMA can switch to the next sg. When
+>> this race condition occurs, the residue returned value is not valid.
+>> Indeed the position in the sg returned by the hardware is the position
+>> of the next sg, not the current sg.
+>> Solution is to check the sg after the calculation to verify it.
+>> If a transition is detected we consider that the DMA has switched to
+>> the beginning of next sg.
+>>
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+>> ---
+>>  drivers/dma/stm32-dma.c | 70 ++++++++++++++++++++++++++++++++++++++++---------
+>>  1 file changed, 57 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+>> index 4903a40..30309d2 100644
+>> --- a/drivers/dma/stm32-dma.c
+>> +++ b/drivers/dma/stm32-dma.c
+>> @@ -1038,33 +1038,77 @@ static u32 stm32_dma_get_remaining_bytes(struct stm32_dma_chan *chan)
+>>  	return ndtr << width;
+>>  }
+>>  
+>> +static bool stm32_dma_is_current_sg(struct stm32_dma_chan *chan)
+>> +{
+>> +	struct stm32_dma_device *dmadev = stm32_dma_get_dev(chan);
+>> +	struct stm32_dma_sg_req *sg_req;
+>> +	u32 dma_scr, dma_smar, id;
+>> +
+>> +	id = chan->id;
+>> +	dma_scr = stm32_dma_read(dmadev, STM32_DMA_SCR(id));
+>> +
+>> +	if (!(dma_scr & STM32_DMA_SCR_DBM))
+>> +		return true;
+>> +
+>> +	sg_req = &chan->desc->sg_req[chan->next_sg];
+>> +
+>> +	if (dma_scr & STM32_DMA_SCR_CT) {
+>> +		dma_smar = stm32_dma_read(dmadev, STM32_DMA_SM0AR(id));
+>> +		return (dma_smar == sg_req->chan_reg.dma_sm0ar);
+>> +	}
+>> +
+>> +	dma_smar = stm32_dma_read(dmadev, STM32_DMA_SM1AR(id));
+>> +
+>> +	return (dma_smar == sg_req->chan_reg.dma_sm1ar);
+>> +}
+>> +
+>>  static size_t stm32_dma_desc_residue(struct stm32_dma_chan *chan,
+>>  				     struct stm32_dma_desc *desc,
+>>  				     u32 next_sg)
+>>  {
+>>  	u32 modulo, burst_size;
+>> -	u32 residue = 0;
+>> +	u32 residue;
+>> +	u32 n_sg = next_sg;
+>> +	struct stm32_dma_sg_req *sg_req = &chan->desc->sg_req[chan->next_sg];
+>>  	int i;
+>>  
+>> +	residue = stm32_dma_get_remaining_bytes(chan);
+>> +
+>>  	/*
+>> -	 * In cyclic mode, for the last period, residue = remaining bytes from
+>> -	 * NDTR
+>> +	 * Calculate the residue means compute the descriptors
+>> +	 * information:
+>> +	 * - the sg currently transferred
+>> +	 * - the remaining position in this sg (NDTR).
+>> +	 *
+>> +	 * The issue is that a race condition can occur if DMA is
+>> +	 * running. DMA can have started to transfer the next sg before
+>> +	 * the position in sg is read. In this case the remaing position
+>> +	 * can correspond to the new sg position.
+>> +	 * The strategy implemented in the stm32 driver is to check the
+>> +	 * sg transition. If detected we can not trust the SxNDTR register
+>> +	 * value, this register can not be up to date during the transition.
+>> +	 * In this case we can assume that the dma is at the beginning of next
+>> +	 * sg so we calculate the residue in consequence.
+>>  	 */
+>> -	if (chan->desc->cyclic && next_sg == 0) {
+>> -		residue = stm32_dma_get_remaining_bytes(chan);
+>> -		goto end;
+>> +
+>> +	if (!stm32_dma_is_current_sg(chan)) {
+>> +		n_sg++;
+>> +		if (n_sg == chan->desc->num_sgs)
+>> +			n_sg = 0;
+>> +		residue = sg_req->len;
+>>  	}
+>>  
+>>  	/*
+>> -	 * For all other periods in cyclic mode, and in sg mode,
+>> -	 * residue = remaining bytes from NDTR + remaining periods/sg to be
+>> -	 * transferred
+>> +	 * In cyclic mode, for the last period, residue = remaining bytes
+>> +	 * from NDTR,
+>> +	 * else for all other periods in cyclic mode, and in sg mode,
+>> +	 * residue = remaining bytes from NDTR + remaining
+>> +	 * periods/sg to be transferred
+>>  	 */
+>> -	for (i = next_sg; i < desc->num_sgs; i++)
+>> -		residue += desc->sg_req[i].len;
+>> -	residue += stm32_dma_get_remaining_bytes(chan);
+>> +	if (!chan->desc->cyclic || n_sg != 0)
+>> +		for (i = n_sg; i < desc->num_sgs; i++)
+>> +			residue += desc->sg_req[i].len;
+>>  
+>> -end:
+>>  	if (!chan->mem_burst)
+>>  		return residue;
+>>  
+>>
