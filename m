@@ -2,83 +2,123 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8E2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3AEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CEAD2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556130508;
-	bh=ppHcFL6zapxMV7/RB/euSIWPcUPX3BPdSNKeNM1Qi+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gM4h80WUV7ut8nITk0WBQK0IP7NBFtXc9+39734As8V6ueZ/rHQ94BxmONTrX8BKm
-	 TSdEoR+M3lRrTzNNkZF1Pzgm9NLDVwsus2Va+akktrPAVW/g1/XC5p3HK5Food29IJ
-	 tLYKgH5LKjvoR2XtJdFJ7UiMrHpO5fcQeDwwiS9U=
+	by mail.kernel.org (Postfix) with ESMTP id 8E1A121773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:30:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="N8zwcMg5";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="PaxIg5Aw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387722AbfDXS21 (ORCPT
+        id S2387735AbfDXSaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:28:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733047AbfDXS21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:28:27 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F5E7206A3;
-        Wed, 24 Apr 2019 18:28:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556130506;
-        bh=ppHcFL6zapxMV7/RB/euSIWPcUPX3BPdSNKeNM1Qi+Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l9P+oABbet1Nb/DtFG1cdsxlFvzX1ZXE2rbHyYMACJpZeVnTSjdsQXjnsUh8Gh6BB
-         07RTXoUztbg0pumo9SdBCc6LL/wRy4P1Cy8S5On2vRNwSgPzHce5bB+x0GDG5x45w7
-         hL5mL2qrsdeWq7Eqh/3kSAB3dmpqbL5Cjh6OT8TI=
-Date:   Wed, 24 Apr 2019 13:28:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     David Ober <dober@lenovo.com>, linux-pci@vger.kernel.org,
-        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Karol Herbst <kherbst@redhat.com>,
-        Ben Skeggs <skeggsb@gmail.com>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] pci/quirks: Add quirk to reset nvgpu at boot for the
- Lenovo ThinkPad P50
-Message-ID: <20190424182824.GA11428@google.com>
-References: <20190212220230.1568-1-lyude@redhat.com>
- <20190215004329.GR96272@google.com>
- <2fca9a9feafcd17b27bc71994a71ebc241a93e9a.camel@redhat.com>
- <52b17f8cb24e179e9661d75548d193843ae87b4c.camel@redhat.com>
- <20190321224819.GK251185@google.com>
- <20190322113015.GM251185@google.com>
- <20190404141724.GJ141706@google.com>
- <389c7b3117168209fb4760537d908a477446d013.camel@redhat.com>
+        Wed, 24 Apr 2019 14:30:19 -0400
+Received: from mail133-30.atl131.mandrillapp.com ([198.2.133.30]:4851 "EHLO
+        mail133-30.atl131.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729910AbfDXSaT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:30:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=U7YiiZ0w+nLArJdO6M9QIPXj108+jBLyhc0n0FtMpL4=;
+ b=N8zwcMg5gArLqEIYiT0vPDELC7Ci2aWX1taN/z1lZXyygAY6J4MtIA5zeQnlQL0aty8dNR7XnZ7F
+   l0FooAB7UIes8iSUOJB43aEHSzPw98kk+MKFr3uxj9ZevGnw/ajiOcbsVLpjMv5Jhqmwzlf8N/pC
+   eye2vKaJZT/0BxetsUY=
+Received: from pmta02.mandrill.prod.atl01.rsglab.com (127.0.0.1) by mail133-30.atl131.mandrillapp.com id ho2ljk1sar8t for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 18:30:17 +0000 (envelope-from <bounce-md_31050260.5cc0ab39.v1-830294b1b5614a42aed267a98e82b482@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1556130617; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=U7YiiZ0w+nLArJdO6M9QIPXj108+jBLyhc0n0FtMpL4=; 
+ b=PaxIg5AwbNNeD2BdhCLXBtItI90G0YTjHu/p6tLt/6CfhXTSh0LF7V/rmDt8p6wZxdsH//
+ osCP8708wlI8POz/w3ayM4MNbwm6yup0D5ONO6P1huuePj7Ss3Y3CvGuJK3pLDi5i7OaW3Iu
+ 2JIibjPPHXtvx65gEjW8Hm8pbnI8c=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH AUTOSEL 5.0 59/66] fs: stream_open - opener for stream-like files so that read and write can run simultaneously without deadlock
+Received: from [87.98.221.171] by mandrillapp.com id 830294b1b5614a42aed267a98e82b482; Wed, 24 Apr 2019 18:30:17 +0000
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yongzhi Pan <panyongzhi@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Vrabel <david.vrabel@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Miklos Szeredi <miklos@szeredi.hu>, Tejun Heo <tj@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Nikolaus Rath <Nikolaus@rath.org>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Message-Id: <20190424183012.GB3798@deco.navytux.spb.ru>
+References: <20190424143341.27665-1-sashal@kernel.org> <20190424143341.27665-59-sashal@kernel.org> <20190424163415.GB21413@kroah.com> <CAHk-=wjEOyba5As1PEMk6RitNVOJH9oJ_Jbg4y=5B0fcX1iKGw@mail.gmail.com> <20190424171926.GA17719@sasha-vm> <CAHk-=wgh234SyBG810=vB360PCzVkAhQRqGg8aFdATZd+daCFw@mail.gmail.com>
+In-Reply-To: <CAHk-=wgh234SyBG810=vB360PCzVkAhQRqGg8aFdATZd+daCFw@mail.gmail.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.830294b1b5614a42aed267a98e82b482
+X-Mandrill-User: md_31050260
+Date:   Wed, 24 Apr 2019 18:30:17 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <389c7b3117168209fb4760537d908a477446d013.camel@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 01:31:09PM -0400, Lyude Paul wrote:
-> Any update on this? This has been waiting for a while now
-
-Oh, sorry, I guess we were both waiting for the other.  Let me respond to
-the email with context.
-
-> On Thu, 2019-04-04 at 09:17 -0500, Bjorn Helgaas wrote:
-> > [+cc Hans, author of 0b2fe6594fa2 ("drm/nouveau: Queue hpd_work on (runtime)
-> > resume")]
-> -- 
-> Cheers,
-> 	Lyude Paul
+On Wed, Apr 24, 2019 at 10:26:55AM -0700, Linus Torvalds wrote:
+> On Wed, Apr 24, 2019 at 10:19 AM Sasha Levin <sashal@kernel.org> wrote:
+> >
+> > Hm, I might be confusing something here but I see a bunch of patches
+> > that convert existing callers mentioned in this patch to use
+> > stream_open() which was introduced here.
 > 
+> The only use of stream_open() upstream right now is the xenbus
+> conversion, and that isn't actually a bugfix, because xenbus used to
+> manually do that
+> 
+>         filp->f_mode &= ~FMODE_ATOMIC_POS; /* cdev-style semantics */
+> 
+> that stream_open() does.
+> 
+> So no, there isn't "a bunch of patches" anywhere.
+> 
+> There are *future* cleanups for 5.2 that will happen, and that might
+> have hit linux-next. And there is at least one FUSE patch (again -
+> pending, not upstream) that may get marked for stable.
+> 
+> But I see nothing right now that makes it stable material yet.
+
+Linus, thanks for explaining. Sasha, Greg, there is a FUSE patch that
+should be stable material that will need this stream_open() thing. That
+patch has just entered fuse.git#for-next today:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git/commit/?id=bbd84f33652f
+
+and will hopefully enter 5.2 when merge window opens. I agree we should
+not blindly backport bulk stream_open conversions as performed by
+stream_open.cocci, at least unless there is a bug report indicating that
+it is actually required for a particular driver. On the other hand both
+Xen and FUSE deadlocks were hit for real which justifies stable
+propagation for their fixes.
+
+You can read about the deadlock regression and the plan to fix it in
+original "fs: stream_open - opener for stream-like files so that read
+and write can run simultaneously without deadlock" patch (the 59/66
+patch that was send in this thread), or here:
+
+	https://git.kernel.org/linus/10dce8af3422
+
+
+Hope it clarifies things a bit,
+
+Kirill
