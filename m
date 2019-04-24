@@ -2,111 +2,177 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9E4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E784C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B22621773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:36:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CCWLpbwh"
+	by mail.kernel.org (Postfix) with ESMTP id 01C7521773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731582AbfDXPgK (ORCPT
+        id S1731428AbfDXPhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:36:10 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35336 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731197AbfDXPgK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:36:10 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OFVHvu011482;
-        Wed, 24 Apr 2019 17:35:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
- : from : message-id : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=o5690a6N7UlqqweMDZW/2I4CJGOdIFlBW+/7u7Dqs3A=;
- b=CCWLpbwhEQ9AwmbuT6HCU0SMFnUDYgapBXohYThusKHYkfnfPGMh+9sgqhQwFpz4Rufz
- jieh79mF2ikEZ9tYb8CaLJ+RpbqrbOsp3FbKy5qaP/DimEVWjXld+28lKvuWscv/tOzR
- 0qOroWLGCIygmJkzgxsdoUwLrubLsJw8/gqFL3AV5ElHNqRYm8+xPBSGNsdEGx90mZZT
- F39XFo8qi3G2YBckrfFuZEkwPYNSQZrtPJOkSK7pMArfUtrBDikV5JaLVkMXZZSxd+NR
- NXqRTOybzVVly03R/lCq09VdUvSrHJr5ssfjd98HddkQ54NtyASs51dbTEKkYjiShX3I Ow== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2rytad7faf-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 24 Apr 2019 17:35:57 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 38A5F31;
-        Wed, 24 Apr 2019 15:35:55 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1A2F02948;
-        Wed, 24 Apr 2019 15:35:55 +0000 (GMT)
-Received: from [10.48.0.237] (10.75.127.44) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 24 Apr
- 2019 17:35:54 +0200
-Subject: Re: [PATCH] spi: stm32-qspi: manage the get_irq error case
-To:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Christophe KERELLO <christophe.kerello@st.com>,
-        <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1556119140-3319-1-git-send-email-fabien.dessenne@st.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <a8f7a11e-5aa9-8d91-ac57-641fec2ca899@st.com>
-Date:   Wed, 24 Apr 2019 17:35:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1556119140-3319-1-git-send-email-fabien.dessenne@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_09:,,
- signatures=0
+        Wed, 24 Apr 2019 11:37:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60022 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730825AbfDXPhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 11:37:10 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3260E88E56;
+        Wed, 24 Apr 2019 15:37:09 +0000 (UTC)
+Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C5472608C1;
+        Wed, 24 Apr 2019 15:37:05 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH] futex: Consolidate duplicated timer setup code
+Date:   Wed, 24 Apr 2019 11:36:51 -0400
+Message-Id: <20190424153651.15002-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 24 Apr 2019 15:37:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A new futex_setup_timer() helper function is added to consolidate all
+the hrtimer_sleeper setup code.
 
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/futex.c | 67 ++++++++++++++++++++++++++++----------------------
+ 1 file changed, 37 insertions(+), 30 deletions(-)
 
-On 4/24/19 5:19 PM, Fabien Dessenne wrote:
-> During probe, check the "get_irq" error value.
-> 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+diff --git a/kernel/futex.c b/kernel/futex.c
+index a0514e01c3eb..d24679d75270 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -486,6 +486,35 @@ enum futex_access {
+ 	FUTEX_WRITE
+ };
+ 
++/**
++ * futex_setup_timer - set up the sleeping hrtimer.
++ * @time:	ptr to the given timeout value
++ * @timeout:	the hrtimer_sleeper structure to be set up
++ * @flags:	futex flags
++ * @range_ns:	optional range in ns
++ *
++ * Return: Initialized hrtimer_sleeper structure or NULL if no timeout
++ *	   value given
++ */
++static inline struct hrtimer_sleeper *
++futex_setup_timer(ktime_t *time, struct hrtimer_sleeper *timeout,
++		  int flags, u64 range_ns)
++{
++	if (!time)
++		return NULL;
++
++	hrtimer_init_on_stack(&timeout->timer, (flags & FLAGS_CLOCKRT) ?
++			      CLOCK_REALTIME : CLOCK_MONOTONIC,
++			      HRTIMER_MODE_ABS);
++	hrtimer_init_sleeper(timeout, current);
++	if (range_ns)
++		hrtimer_set_expires_range_ns(&timeout->timer, *time, range_ns);
++	else
++		hrtimer_set_expires(&timeout->timer, *time);
++
++	return timeout;
++}
++
+ /**
+  * get_futex_key() - Get parameters which are the keys for a futex
+  * @uaddr:	virtual address of the futex
+@@ -2679,7 +2708,7 @@ static int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
+ static int futex_wait(u32 __user *uaddr, unsigned int flags, u32 val,
+ 		      ktime_t *abs_time, u32 bitset)
+ {
+-	struct hrtimer_sleeper timeout, *to = NULL;
++	struct hrtimer_sleeper timeout, *to;
+ 	struct restart_block *restart;
+ 	struct futex_hash_bucket *hb;
+ 	struct futex_q q = futex_q_init;
+@@ -2689,17 +2718,8 @@ static int futex_wait(u32 __user *uaddr, unsigned int flags, u32 val,
+ 		return -EINVAL;
+ 	q.bitset = bitset;
+ 
+-	if (abs_time) {
+-		to = &timeout;
+-
+-		hrtimer_init_on_stack(&to->timer, (flags & FLAGS_CLOCKRT) ?
+-				      CLOCK_REALTIME : CLOCK_MONOTONIC,
+-				      HRTIMER_MODE_ABS);
+-		hrtimer_init_sleeper(to, current);
+-		hrtimer_set_expires_range_ns(&to->timer, *abs_time,
+-					     current->timer_slack_ns);
+-	}
+-
++	to = futex_setup_timer(abs_time, &timeout, flags,
++			       current->timer_slack_ns);
+ retry:
+ 	/*
+ 	 * Prepare to wait on uaddr. On success, holds hb lock and increments
+@@ -2779,7 +2799,7 @@ static long futex_wait_restart(struct restart_block *restart)
+ static int futex_lock_pi(u32 __user *uaddr, unsigned int flags,
+ 			 ktime_t *time, int trylock)
+ {
+-	struct hrtimer_sleeper timeout, *to = NULL;
++	struct hrtimer_sleeper timeout, *to;
+ 	struct futex_pi_state *pi_state = NULL;
+ 	struct rt_mutex_waiter rt_waiter;
+ 	struct futex_hash_bucket *hb;
+@@ -2792,13 +2812,7 @@ static int futex_lock_pi(u32 __user *uaddr, unsigned int flags,
+ 	if (refill_pi_state_cache())
+ 		return -ENOMEM;
+ 
+-	if (time) {
+-		to = &timeout;
+-		hrtimer_init_on_stack(&to->timer, CLOCK_REALTIME,
+-				      HRTIMER_MODE_ABS);
+-		hrtimer_init_sleeper(to, current);
+-		hrtimer_set_expires(&to->timer, *time);
+-	}
++	to = futex_setup_timer(time, &timeout, FLAGS_CLOCKRT, 0);
+ 
+ retry:
+ 	ret = get_futex_key(uaddr, flags & FLAGS_SHARED, &q.key, FUTEX_WRITE);
+@@ -3182,7 +3196,7 @@ static int futex_wait_requeue_pi(u32 __user *uaddr, unsigned int flags,
+ 				 u32 val, ktime_t *abs_time, u32 bitset,
+ 				 u32 __user *uaddr2)
+ {
+-	struct hrtimer_sleeper timeout, *to = NULL;
++	struct hrtimer_sleeper timeout, *to;
+ 	struct futex_pi_state *pi_state = NULL;
+ 	struct rt_mutex_waiter rt_waiter;
+ 	struct futex_hash_bucket *hb;
+@@ -3199,15 +3213,8 @@ static int futex_wait_requeue_pi(u32 __user *uaddr, unsigned int flags,
+ 	if (!bitset)
+ 		return -EINVAL;
+ 
+-	if (abs_time) {
+-		to = &timeout;
+-		hrtimer_init_on_stack(&to->timer, (flags & FLAGS_CLOCKRT) ?
+-				      CLOCK_REALTIME : CLOCK_MONOTONIC,
+-				      HRTIMER_MODE_ABS);
+-		hrtimer_init_sleeper(to, current);
+-		hrtimer_set_expires_range_ns(&to->timer, *abs_time,
+-					     current->timer_slack_ns);
+-	}
++	to = futex_setup_timer(abs_time, &timeout, flags,
++			       current->timer_slack_ns);
+ 
+ 	/*
+ 	 * The waiter is allocated on our stack, manipulated by the requeue
+-- 
+2.18.1
 
-Acked-by: Ludovic Barre <ludovic.barre@st.com>
-
-> ---
->   drivers/spi/spi-stm32-qspi.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-> index 11a89aa..42f8e3c 100644
-> --- a/drivers/spi/spi-stm32-qspi.c
-> +++ b/drivers/spi/spi-stm32-qspi.c
-> @@ -574,6 +574,12 @@ static int stm32_qspi_probe(struct platform_device *pdev)
->   	}
->   
->   	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		if (irq != -EPROBE_DEFER)
-> +			dev_err(dev, "IRQ error missing or invalid\n");
-> +		return irq;
-> +	}
-> +
->   	ret = devm_request_irq(dev, irq, stm32_qspi_irq, 0,
->   			       dev_name(dev), qspi);
->   	if (ret) {
-> 
