@@ -2,195 +2,90 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6456AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7820C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37506208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EDA2148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:25:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="U9Blr+R+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732313AbfDXQYE (ORCPT
+        id S1731890AbfDXQZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:24:04 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:44579 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727393AbfDXQYD (ORCPT
+        Wed, 24 Apr 2019 12:25:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55890 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfDXQZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:24:03 -0400
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hJKgY-0003E7-SJ; Wed, 24 Apr 2019 17:23:51 +0100
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1hJKgY-0006Au-Gi; Wed, 24 Apr 2019 17:23:50 +0100
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dma: tegra: add accurate reporting of dma state
-Date:   Wed, 24 Apr 2019 17:23:48 +0100
-Message-Id: <20190424162348.23692-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.20.1
+        Wed, 24 Apr 2019 12:25:42 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o25so5408101wmf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 09:25:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5P883+nbekL7tkGoEkqJv+mjmmFRCk+81sIxPevrat8=;
+        b=U9Blr+R+4kRWjonKLcmrIbYGgw1fNaXecv3XbKQRmt7KES8ymFpCKg1s7/HNxx+95u
+         Rm+DKleAVJajAUmPxIepxlZz0F7kT09IaB9Ycgka/b+LIRRwewURgW+BE4OaFhj9J3Zo
+         zC80HMz1AWJiw2MtHOtblfa/cnhmWMu68mH6Kj0iktXbDGEeAnAGloI9PVzXR2F2MGa2
+         8MqGaNJwzybNPFfEjR/6vsFeJkfYCJ27faaEacNNhq84Ti6k6hnuJgfmDPEVhCb0DtI8
+         LK+Qh/shD97mohuWHZNIyDg4gk4p6uKmtJ2xC2Sbp5FKC7llJYh9rkomBYENI9yN7REW
+         ttsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5P883+nbekL7tkGoEkqJv+mjmmFRCk+81sIxPevrat8=;
+        b=ZqG/f7lPRl1salpzlyqbKePkZsSfFpbonFH1OUYxCM84mi8y8vlN2R67JwZeUbTdyy
+         MfsrSaNlLc18GFwXFN2bvfA0DfssmGz7oFrxwSAhsr4pUQKkoi5PISXOKpGr358dKfud
+         ag0wsoNP8Cfz7I1wGe3fXH8TD1dq7+WS7bPX98CocQ9Zq3eqVNJLo4urFoKKJOl3Pf/k
+         27eHQUkXmiEudVBMSZFUGRXBv06YkRWrRLTYU2fXd3nRj1XUAein1u6qrU5JmO2J5D6X
+         YLYBIPlSr+G2KNfLBLpvk5bsBSS+ZJaXnaUutVcorzk81mA3epAw23/k8hDBpIVzuU8+
+         Fuyw==
+X-Gm-Message-State: APjAAAWPElfoP5FcV1NDSpGcVHi+hrEFxbjCUveDtps9Kp6DSGV0rI8v
+        p5tvDUv2KQ5ETE9OAL6tW658zczvluLctGKCqC3Www==
+X-Google-Smtp-Source: APXvYqy2H3jvaddz9jIkixllTLWFZ6rQhzjz2AEy4XcTGvNc6vCHzVkyfsgDlVd56gY2gl/qzyYRIeHz1/bIWBWuzUw=
+X-Received: by 2002:a7b:cb89:: with SMTP id m9mr4825135wmi.39.1556123140915;
+ Wed, 24 Apr 2019 09:25:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190424141900.8883-1-tmurphy@arista.com> <20190424143246.GA24079@infradead.org>
+ <CAPL0++7w0wR+hid=0XkGtH2wR0qvL1oNheEMQOM=8CtyhNLmag@mail.gmail.com>
+ <20190424145819.GA16141@infradead.org> <20190424155505.GA6731@8bytes.org>
+In-Reply-To: <20190424155505.GA6731@8bytes.org>
+From:   Tom Murphy <tmurphy@arista.com>
+Date:   Wed, 24 Apr 2019 17:25:29 +0100
+Message-ID: <CAPL0++7G-=FChbMnHoDfh=SnUW3B3YGi-z7Wy9Dq2D6zzQshOg@mail.gmail.com>
+Subject: Re: [PATCH] iommu/amd: flush not present cache in iommu_map_page
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Tom Murphy <murphyt7@tcd.ie>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tx_status callback does not report the state of the transfer
-beyond complete segments. This causes problems with users such as
-ALSA when applications want to know accurately how much data has
-been moved.
+On Wed, Apr 24, 2019 at 4:55 PM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> On Wed, Apr 24, 2019 at 07:58:19AM -0700, Christoph Hellwig wrote:
+> > I'd be tempted to do that.  But lets just ask Joerg if he has
+> > any opinion..
+>
+> The reason was that it is an unlikely path, as hardware implementations
+> are not allowed to set this bit. It is purely for emulated AMD IOMMUs.
+> I have not measured whether this annotation has any performance
+> benefit, but I find it more readable at least.
 
-This patch addes a function tegra_dma_update_residual() to query
-the hardware and modify the residual information accordinly. It
-takes into account any hardware issues when trying to read the
-state, such as delays between finishing a buffer and signalling
-the interrupt.
+In that case I will keep it in.
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Dmitry Osipenko <digetx@gmail.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com> (supporter:TEGRA DMA DRIVERS)
-Cc: Jon Hunter <jonathanh@nvidia.com> (supporter:TEGRA DMA DRIVERS)
-Cc: Vinod Koul <vkoul@kernel.org> (maintainer:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM)
-Cc: Dan Williams <dan.j.williams@intel.com> (reviewer:ASYNCHRONOUS TRANSFERS/TRANSFORMS (IOAT) API)
-Cc: Thierry Reding <thierry.reding@gmail.com> (supporter:TEGRA ARCHITECTURE SUPPORT)
-Cc: dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM)
-Cc: linux-tegra@vger.kernel.org (open list:TEGRA ARCHITECTURE SUPPORT)
-Cc: linux-kernel@vger.kernel.org (open list)
----
- drivers/dma/tegra20-apb-dma.c | 92 ++++++++++++++++++++++++++++++++---
- 1 file changed, 86 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index cf462b1abc0b..544e7273e741 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -808,6 +808,90 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	return 0;
- }
- 
-+static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
-+					      struct tegra_dma_sg_req *sg_req,
-+					      struct tegra_dma_desc *dma_desc,
-+					      unsigned int residual)
-+{
-+	unsigned long status = 0x0;
-+	unsigned long wcount;
-+	unsigned long ahbptr;
-+	unsigned long tmp = 0x0;
-+	unsigned int result;
-+	int retries = TEGRA_APBDMA_BURST_COMPLETE_TIME * 10;
-+	int done;
-+
-+	/* if we're not the current request, then don't alter the residual */
-+	if (sg_req != list_first_entry(&tdc->pending_sg_req,
-+				       struct tegra_dma_sg_req, node)) {
-+		result = residual;
-+		ahbptr = 0xffffffff;
-+		goto done;
-+	}
-+
-+	/* loop until we have a reliable result for residual */
-+	do {
-+		ahbptr = tdc_read(tdc, TEGRA_APBDMA_CHAN_AHBPTR);
-+		status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
-+		tmp =  tdc_read(tdc, 0x08);	/* total count for debug */
-+
-+		/* check status, if channel isn't busy then skip */
-+		if (!(status & TEGRA_APBDMA_STATUS_BUSY)) {
-+			result = residual;
-+			break;
-+		}
-+
-+		/* if we've got an interrupt pending on the channel, don't
-+		 * try and deal with the residue as the hardware has likely
-+		 * moved on to the next buffer. return all data moved.
-+		 */
-+		if (status & TEGRA_APBDMA_STATUS_ISE_EOC) {
-+			result = residual - sg_req->req_len;
-+			break;
-+		}
-+
-+		if (tdc->tdma->chip_data->support_separate_wcount_reg)
-+			wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
-+		else
-+			wcount = status;
-+
-+		/* If the request is at the full point, then there is a
-+		 * chance that we have read the status register in the
-+		 * middle of the hardware reloading the next buffer.
-+		 *
-+		 * The sequence seems to be at the end of the buffer, to
-+		 * load the new word count before raising the EOC flag (or
-+		 * changing the ping-pong flag which could have also been
-+		 * used to determine a new buffer). This  means there is a
-+		 * small window where we cannot determine zero-done for the
-+		 * current buffer, or moved to next buffer.
-+		 *
-+		 * If done shows 0, then retry the load, as it may hit the
-+		 * above hardware race. We will either get a new value which
-+		 * is from the first buffer, or we get an EOC (new buffer)
-+		 * or both a new value and an EOC...
-+		 */
-+		done = get_current_xferred_count(tdc, sg_req, wcount);
-+		if (done != 0) {
-+			result = residual - done;
-+			break;
-+		}
-+
-+		ndelay(100);
-+	} while (--retries > 0);
-+
-+	if (retries <= 0) {
-+		dev_err(tdc2dev(tdc), "timeout waiting for dma load\n");
-+		result = residual;
-+	}
-+
-+done:	
-+	dev_dbg(tdc2dev(tdc), "residual: req %08lx, ahb@%08lx, wcount %08lx, done %d\n",
-+		 sg_req->ch_regs.ahb_ptr, ahbptr, wcount, done);
-+
-+	return result;
-+}
-+
- static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 	dma_cookie_t cookie, struct dma_tx_state *txstate)
- {
-@@ -849,6 +933,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 		residual = dma_desc->bytes_requested -
- 			   (dma_desc->bytes_transferred %
- 			    dma_desc->bytes_requested);
-+		residual = tegra_dma_update_residual(tdc, sg_req, dma_desc, residual);
- 		dma_set_residue(txstate, residual);
- 	}
- 
-@@ -1444,12 +1529,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
- 		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
- 	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
--	/*
--	 * XXX The hardware appears to support
--	 * DMA_RESIDUE_GRANULARITY_BURST-level reporting, but it's
--	 * only used by this driver during tegra_dma_terminate_all()
--	 */
--	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
-+	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
- 	tdma->dma_dev.device_config = tegra_dma_slave_config;
- 	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
- 	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
--- 
-2.20.1
-
+>
+> Regards,
+>
+>         Joerg
+>
+> PS: Why did you drop me from the Cc list of the previous replies?
