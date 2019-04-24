@@ -2,211 +2,247 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48256C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D13C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08EA3205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F7D205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="dhsGnqpY";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="AWMhRKj+"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="RlEhoc/k";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="I3YTA9pz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730904AbfDXTRC (ORCPT
+        id S1730920AbfDXTR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:17:02 -0400
-Received: from mail133-30.atl131.mandrillapp.com ([198.2.133.30]:28385 "EHLO
-        mail133-30.atl131.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726083AbfDXTRB (ORCPT
+        Wed, 24 Apr 2019 15:17:28 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45274 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727357AbfDXTR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:17:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=4ZV1+6WWUjQQwp+YJVOZQCaezaAssmtO2tAV4MGZuUk=;
- b=dhsGnqpYB9U+x4Baw7xYl8xFIm5yz0s3LHfzBraSrXlYvN1vIWBbMs8wg2y9Ly2fqi49VmJm2yaK
-   Ss7Ym9g9RFBs0OWHyOzcDam40OkREouiwZ/P197fk/Gc0Z4msCEq+rjtI2ltxo6Y4NxFArSauU+a
-   Yp/D/IAuWbmLzPf5pA4=
-Received: from pmta02.mandrill.prod.atl01.rsglab.com (127.0.0.1) by mail133-30.atl131.mandrillapp.com id ho2r2o1sar8e for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 19:16:59 +0000 (envelope-from <bounce-md_31050260.5cc0b62b.v1-013a07261fae4b1588fbab655730c737@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1556133419; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=4ZV1+6WWUjQQwp+YJVOZQCaezaAssmtO2tAV4MGZuUk=; 
- b=AWMhRKj+XjOnDr2ZZ7rdbLsN29tfKeTshWeRuXNG61WRSLOv5bpH6thN290cW4MXbph/yx
- k3Zkg0qDawE/pJUW3g23Dq4FU6wGIo1wfezxr6NC1A1lziiWtZPtJ+PPiTL8tEDmODnPeiQ6
- t63RBYWq8q+U9+akf3mShrRpA6Tnk=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [RESEND, PATCH 3/3] fuse: Add FOPEN_STREAM and use stream_open() if filesystem returned that from open handler
-Received: from [87.98.221.171] by mandrillapp.com id 013a07261fae4b1588fbab655730c737; Wed, 24 Apr 2019 19:16:59 +0000
-To:     Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Yongzhi Pan <panyongzhi@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Vrabel <david.vrabel@citrix.com>,
-        Juergen Gross <jgross@suse.com>, Tejun Heo <tj@kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Nikolaus Rath <Nikolaus@rath.org>,
-        Han-Wen Nienhuys <hanwen@google.com>, <stable@vger.kernel.org>
-Message-Id: <20190424191652.GE3798@deco.navytux.spb.ru>
-References: <20190424071316.11967-1-kirr@nexedi.com> <20190424160611.2A71321900@mail.kernel.org>
-In-Reply-To: <20190424160611.2A71321900@mail.kernel.org>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.013a07261fae4b1588fbab655730c737
-X-Mandrill-User: md_31050260
-Date:   Wed, 24 Apr 2019 19:16:59 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Wed, 24 Apr 2019 15:17:27 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OJ4XSe008920;
+        Wed, 24 Apr 2019 12:17:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=YaopUjZJy+hmGVptkNC+a3/dCOZGizWEQXEvUySQ7qA=;
+ b=RlEhoc/kw5Roh6ogLWx45qe5yRQZLRK90uQZbGvl048xjbuvSxz6L1g0QKf1OLFJdJcx
+ GDQr6ljSoMzZhmSFe/TDG04R3W3QU5U6Z6Rjg9GUsND7osnxh7zZLPJNMd82mSXnoxGm
+ YVpKwk1aUJ8NOAdarIrBQ4nd8bhvWW0mWeQ= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2s2tvc8xbt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 24 Apr 2019 12:17:17 -0700
+Received: from frc-hub03.TheFacebook.com (2620:10d:c021:18::173) by
+ frc-hub06.TheFacebook.com (2620:10d:c021:18::176) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 24 Apr 2019 12:17:15 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (192.168.183.28)
+ by o365-in.thefacebook.com (192.168.177.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 24 Apr 2019 12:17:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YaopUjZJy+hmGVptkNC+a3/dCOZGizWEQXEvUySQ7qA=;
+ b=I3YTA9pzR9DqPZ7I0CR8A4ZGolLHkHL8FCmbicpxEFSk6a4L74E2khRimiVbgM5P988NkmeQT2lPks7gQ50NxPF9RlFaxyr2n2OMvRZXo2s6pk7ERZCwSvUFqW90/pGoz0+uRo91YIiUp0T/dwMSuWwTorBlGIjs1jcG9vVMAkU=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB3351.namprd15.prod.outlook.com (20.179.58.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.12; Wed, 24 Apr 2019 19:17:13 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d1a1:d74:852:a21e%5]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
+ 19:17:13 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Rik van Riel" <riel@surriel.com>,
+        Christoph Lameter <cl@linux.com>,
+        "Vladimir Davydov" <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] mm: unify SLAB and SLUB page accounting
+Thread-Topic: [PATCH v2 4/6] mm: unify SLAB and SLUB page accounting
+Thread-Index: AQHU+le/pG/VfTvnsEqWX9tIv1e8wqZLkEGAgAAfr4A=
+Date:   Wed, 24 Apr 2019 19:17:12 +0000
+Message-ID: <20190424191706.GA26707@tower.DHCP.thefacebook.com>
+References: <20190423213133.3551969-1-guro@fb.com>
+ <20190423213133.3551969-5-guro@fb.com>
+ <CALvZod6A43nQgkYj38K4h_ZYLSmYp0xJwO7n44kGJx2Ut7-EVg@mail.gmail.com>
+In-Reply-To: <CALvZod6A43nQgkYj38K4h_ZYLSmYp0xJwO7n44kGJx2Ut7-EVg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR19CA0094.namprd19.prod.outlook.com
+ (2603:10b6:320:1f::32) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::3:1630]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a94306f0-9714-4419-3ecf-08d6c8e97480
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3351;
+x-ms-traffictypediagnostic: BYAPR15MB3351:
+x-microsoft-antispam-prvs: <BYAPR15MB33511CB2DDAF72162E02112EBE3C0@BYAPR15MB3351.namprd15.prod.outlook.com>
+x-forefront-prvs: 00179089FD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(346002)(39860400002)(366004)(52314003)(189003)(199004)(6486002)(68736007)(86362001)(71200400001)(8936002)(97736004)(54906003)(6916009)(9686003)(71190400001)(6512007)(478600001)(64756008)(66946007)(81166006)(7416002)(5660300002)(6436002)(73956011)(8676002)(66556008)(66476007)(4326008)(52116002)(66446008)(81156014)(14444005)(256004)(316002)(76176011)(2906002)(99286004)(305945005)(53936002)(14454004)(386003)(33656002)(11346002)(46003)(6506007)(486006)(476003)(229853002)(7736002)(53546011)(102836004)(6116002)(446003)(1076003)(15650500001)(25786009)(186003)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3351;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 0enE/1eOvRPwJXiy46eGZwSRy5wKXaUD4rvakdaIw1tZsHAbMgGmjy6nUxXFdZiVEqCb+XSciDqbhQc64RkaHzVsx9GMcKJCrPElqfzriI4F069eJ9jyzyIurtpZibkOQB9hY1nEqIT8QvzAAlTN2NdiGuYuNaGxbD9oAK7qOL78bTarNJJ8i+FSSCMqVvV6j3zQbmxz0dksjUshoTV5khrjBQIA+X+5SD6Pe/RC8PudgDS6PR3cS2De/Yw+cjMZmfTkCBC6BI10matnFpjngMPAA0yDlu2evXt9UKGw2bQZjwgrMGWMrkr2dsyPv7gOho9uzX2Fvu2g+rdm5BQFgS6lJDxaBHFUYWkNILXkAYVVyBJ3rUOeTKc2+/z3c366wMN0d7/VzJLIcJ4xOArBN8/nikKN4GYcKHlA1ZaK92k=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6FAACE41325E304CBA651E0E42932B9F@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: a94306f0-9714-4419-3ecf-08d6c8e97480
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 19:17:12.9642
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3351
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_12:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello up there,
+On Wed, Apr 24, 2019 at 10:23:45AM -0700, Shakeel Butt wrote:
+> Hi Roman,
+>=20
+> On Tue, Apr 23, 2019 at 9:30 PM Roman Gushchin <guro@fb.com> wrote:
+> >
+> > Currently the page accounting code is duplicated in SLAB and SLUB
+> > internals. Let's move it into new (un)charge_slab_page helpers
+> > in the slab_common.c file. These helpers will be responsible
+> > for statistics (global and memcg-aware) and memcg charging.
+> > So they are replacing direct memcg_(un)charge_slab() calls.
+> >
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > ---
+> >  mm/slab.c | 19 +++----------------
+> >  mm/slab.h | 22 ++++++++++++++++++++++
+> >  mm/slub.c | 14 ++------------
+> >  3 files changed, 27 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/mm/slab.c b/mm/slab.c
+> > index 14466a73d057..53e6b2687102 100644
+> > --- a/mm/slab.c
+> > +++ b/mm/slab.c
+> > @@ -1389,7 +1389,6 @@ static struct page *kmem_getpages(struct kmem_cac=
+he *cachep, gfp_t flags,
+> >                                                                 int nod=
+eid)
+> >  {
+> >         struct page *page;
+> > -       int nr_pages;
+> >
+> >         flags |=3D cachep->allocflags;
+> >
+> > @@ -1399,17 +1398,11 @@ static struct page *kmem_getpages(struct kmem_c=
+ache *cachep, gfp_t flags,
+> >                 return NULL;
+> >         }
+> >
+> > -       if (memcg_charge_slab(page, flags, cachep->gfporder, cachep)) {
+> > +       if (charge_slab_page(page, flags, cachep->gfporder, cachep)) {
+> >                 __free_pages(page, cachep->gfporder);
+> >                 return NULL;
+> >         }
+> >
+> > -       nr_pages =3D (1 << cachep->gfporder);
+> > -       if (cachep->flags & SLAB_RECLAIM_ACCOUNT)
+> > -               mod_lruvec_page_state(page, NR_SLAB_RECLAIMABLE, nr_pag=
+es);
+> > -       else
+> > -               mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE, nr_p=
+ages);
+> > -
+> >         __SetPageSlab(page);
+> >         /* Record if ALLOC_NO_WATERMARKS was set when allocating the sl=
+ab */
+> >         if (sk_memalloc_socks() && page_is_pfmemalloc(page))
+> > @@ -1424,12 +1417,6 @@ static struct page *kmem_getpages(struct kmem_ca=
+che *cachep, gfp_t flags,
+> >  static void kmem_freepages(struct kmem_cache *cachep, struct page *pag=
+e)
+> >  {
+> >         int order =3D cachep->gfporder;
+> > -       unsigned long nr_freed =3D (1 << order);
+> > -
+> > -       if (cachep->flags & SLAB_RECLAIM_ACCOUNT)
+> > -               mod_lruvec_page_state(page, NR_SLAB_RECLAIMABLE, -nr_fr=
+eed);
+> > -       else
+> > -               mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE, -nr_=
+freed);
+> >
+> >         BUG_ON(!PageSlab(page));
+> >         __ClearPageSlabPfmemalloc(page);
+> > @@ -1438,8 +1425,8 @@ static void kmem_freepages(struct kmem_cache *cac=
+hep, struct page *page)
+> >         page->mapping =3D NULL;
+> >
+> >         if (current->reclaim_state)
+> > -               current->reclaim_state->reclaimed_slab +=3D nr_freed;
+> > -       memcg_uncharge_slab(page, order, cachep);
+> > +               current->reclaim_state->reclaimed_slab +=3D 1 << order;
+> > +       uncharge_slab_page(page, order, cachep);
+> >         __free_pages(page, order);
+> >  }
+> >
+> > diff --git a/mm/slab.h b/mm/slab.h
+> > index 4a261c97c138..0f5c5444acf1 100644
+> > --- a/mm/slab.h
+> > +++ b/mm/slab.h
+> > @@ -205,6 +205,12 @@ ssize_t slabinfo_write(struct file *file, const ch=
+ar __user *buffer,
+> >  void __kmem_cache_free_bulk(struct kmem_cache *, size_t, void **);
+> >  int __kmem_cache_alloc_bulk(struct kmem_cache *, gfp_t, size_t, void *=
+*);
+> >
+> > +static inline int cache_vmstat_idx(struct kmem_cache *s)
+> > +{
+> > +       return (s->flags & SLAB_RECLAIM_ACCOUNT) ?
+> > +               NR_SLAB_RECLAIMABLE : NR_SLAB_UNRECLAIMABLE;
+> > +}
+> > +
+> >  #ifdef CONFIG_MEMCG_KMEM
+> >
+> >  /* List of all root caches. */
+> > @@ -352,6 +358,22 @@ static inline void memcg_link_cache(struct kmem_ca=
+che *s,
+> >
+> >  #endif /* CONFIG_MEMCG_KMEM */
+> >
+> > +static __always_inline int charge_slab_page(struct page *page,
+> > +                                           gfp_t gfp, int order,
+> > +                                           struct kmem_cache *s)
+> > +{
+> > +       memcg_charge_slab(page, gfp, order, s);
+>=20
+> This does not seem right. Why the return of memcg_charge_slab is ignored?
 
-On Wed, Apr 24, 2019 at 04:06:10PM +0000, Sasha Levin wrote:
-> Hi,
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a -stable tag.
-> The stable tag indicates that it's relevant for the following trees: 3.14=
-+
-> 
-> The bot has tested the following trees: v5.0.9, v4.19.36, v4.14.113, v4.9=
-.170, v4.4.178, v3.18.138.
-> 
-> v5.0.9: Build failed! Errors:
->     fs/fuse/file.c:185:3: error: implicit declaration of function =E2=80=
-=98stream_open=E2=80=99; did you mean =E2=80=98seq_open=E2=80=99? [-Werror=
-=3Dimplicit-function-declaration]
+Hi Shakeel!
 
-This patch needs "fs: stream_open - opener for stream-like files so that
-read and write can run simultaneously without deadlock" (10dce8af3422)
-as its dependency. It documents so in its commit message. That base
-dependency patch is being discussed here in stable context:
+Right, it's a bug. It's actually fixed later in the patchset
+(in "mm: rework non-root kmem_cache lifecycle management"),
+so the final result looks correct to me. Anyway, I'll fix it.
 
-https://lore.kernel.org/linux-fsdevel/20190424183012.GB3798@deco.navytux.sp=
-b.ru/
+How does everything else look to you?
 
-
-> v4.19.36: Failed to apply! Possible dependencies:
->     6433b8998a21 ("fuse: add FOPEN_CACHE_DIR")
->     88bc7d5097a1 ("fuse: add support for copy_file_range()")
-
-"fuse: add FOPEN_CACHE_DIR" added another nearby constant. The conflict
-with that patch should be trivially resolvable (just add FOPEN_STREAM
-irregardless that there is no FOPEN_CACHE_DIR in context).
-
-> v4.14.113: Failed to apply! Possible dependencies:
->     3b7008b226f3 ("fuse: return -ECONNABORTED on /dev/fuse read after abo=
-rt")
->     6433b8998a21 ("fuse: add FOPEN_CACHE_DIR")
->     88bc7d5097a1 ("fuse: add support for copy_file_range()")
-
-same.
-
-> v4.9.170: Failed to apply! Possible dependencies:
->     3b7008b226f3 ("fuse: return -ECONNABORTED on /dev/fuse read after abo=
-rt")
->     6433b8998a21 ("fuse: add FOPEN_CACHE_DIR")
->     88bc7d5097a1 ("fuse: add support for copy_file_range()")
-
-----//----
-
-> v4.4.178: Failed to apply! Possible dependencies:
->     29433a2991fa ("fuse: get rid of fc->flags")
->     3767e255b390 ("switch ->setxattr() to passing dentry and inode separa=
-tely")
->     60bcc88ad185 ("fuse: Add posix ACL support")
->     6192269444eb ("introduce a parallel variant of ->iterate()")
->     6433b8998a21 ("fuse: add FOPEN_CACHE_DIR")
->     6b2553918d8b ("replace ->follow_link() with new method that could sta=
-y in RCU mode")
->     703c73629f93 ("fuse: Use generic xattr ops")
->     84e710da2a1d ("parallel lookups machinery, part 2")
->     88bc7d5097a1 ("fuse: add support for copy_file_range()")
->     9902af79c01a ("parallel lookups: actual switch to rwsem")
->     9cf843e3f47c ("lookup_open(): lock the parent shared unless O_CREAT i=
-s given")
->     aa80deab33a8 ("namei: page_getlink() and page_follow_link_light() are=
- the same thing")
->     cd3417c8fc95 ("kill free_page_put_link()")
->     ce23e6401334 ("->getxattr(): pass dentry and inode as separate argume=
-nts")
->     fceef393a538 ("switch ->get_link() to delayed_call, kill ->put_link()=
-")
-
-similar
-
-> v3.18.138: Failed to apply! Possible dependencies:
->     09561a53b50d ("lustre: use %p[dD]")
->     29433a2991fa ("fuse: get rid of fc->flags")
->     2b0143b5c986 ("VFS: normal filesystems (and lustre): d_inode() annota=
-tions")
->     3767e255b390 ("switch ->setxattr() to passing dentry and inode separa=
-tely")
->     60bcc88ad185 ("fuse: Add posix ACL support")
->     6192269444eb ("introduce a parallel variant of ->iterate()")
->     6433b8998a21 ("fuse: add FOPEN_CACHE_DIR")
->     680baacbca69 ("new ->follow_link() and ->put_link() calling conventio=
-ns")
->     6b2553918d8b ("replace ->follow_link() with new method that could sta=
-y in RCU mode")
->     6e77137b363b ("don't pass nameidata to ->follow_link()")
->     703c73629f93 ("fuse: Use generic xattr ops")
->     84e710da2a1d ("parallel lookups machinery, part 2")
->     88bc7d5097a1 ("fuse: add support for copy_file_range()")
->     90e4fc8890da ("9p: don't bother with __getname() in ->follow_link()")
->     9902af79c01a ("parallel lookups: actual switch to rwsem")
->     9cf843e3f47c ("lookup_open(): lock the parent shared unless O_CREAT i=
-s given")
->     a06ae8609b3d ("coresight: add CoreSight core layer framework")
->     ce23e6401334 ("->getxattr(): pass dentry and inode as separate argume=
-nts")
->     dab363f938a5 ("Merge tag 'staging-3.19-rc1' of git://git.kernel.org/p=
-ub/scm/linux/kernel/git/gregkh/staging")
->     fceef393a538 ("switch ->get_link() to delayed_call, kill ->put_link()=
-")
-
-similar
-
-> How should we proceed with this patch?
-
-I have backported this patch to above those stable trees. You can pull
-the result from https://lab.nexedi.com/kirr/linux.git, branches:
-
-=09fopen_stream-5.0.y
-=09fopen_stream-4.19.y
-=09fopen_stream-4.14.y
-=09fopen_stream-4.4.y
-=09=09( actually fixed deadlock on /proc/xen/xenbus as
-=09=09  581d21a2d02a was not backported to 4.4 )
-=09fopen_stream-3.18.y
-=09=09( actually fixed deadlock on /proc/xen/xenbus as
-=09=09  581d21a2d02a was not backported to 3.18 )
-
-
-Hope it helps a bit,
-
-Kirill
-
-P.S.
-
-The fact that 4.4 and 3.18 versions of stream_open patch had to
-resolve xenbus conflict in a way that actually fixes /proc/xen/xenbus
-deadlock (introduced in 3.14) suggests that deadlock error messages
-produced by stream_open.cocci should indeed be considered by relevant
-maintainers including stable team...
-
+Thank you!
