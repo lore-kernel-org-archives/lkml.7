@@ -2,109 +2,80 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBA3C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1085BC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B99F2148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:10:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsdnSyt4"
+	by mail.kernel.org (Postfix) with ESMTP id D6C9E2148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfDXBKk (ORCPT
+        id S1729161AbfDXBLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:10:40 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42197 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfDXBKk (ORCPT
+        Tue, 23 Apr 2019 21:11:23 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:50125 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726840AbfDXBLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:10:40 -0400
-Received: by mail-qt1-f196.google.com with SMTP id p20so18430609qtc.9;
-        Tue, 23 Apr 2019 18:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tkHovkGoLeUJmBUAXRcEdP2u6Q/Uk6F1LzPacVk5rJ8=;
-        b=gsdnSyt4gtUMCnRM+azrKEaFIk36F6Mmvah/m9Ubdw7XaljkcKtMQFPWJh2uj7HUwF
-         9ALRfjtxdkmZKf0rUYWCz/D6MA237XSRKdr2SK7Fkw1/iP5/AQbdGiOHBrguVDI4BrsO
-         rUvvUA9CPK/xSD8bEn3TXMI7+RCq+MbL2yLh5Ewkuhgk4QvbP06RcVrvgZczegUqG1En
-         /przdaZi/2UhDpY5Tav1+Ng2uMB8r0X6MN1uwVyrXw3eUDDGsGYdMx077Tpv26OC5cAA
-         DdB+GqvbZBhY+NlogbC+/cBGGAHtgR5Nv/qIQueQZ9N6HONFwVLowAdcVHfG/pzmvCkM
-         gLnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tkHovkGoLeUJmBUAXRcEdP2u6Q/Uk6F1LzPacVk5rJ8=;
-        b=WSj6R3xhJNbLqMsq1d8c/ha581V3Fe7qdZnHuW0NTDXOP5PXkdFjkU0AKyAe9jBrPF
-         /GV9edlnwb7sVGVXY2dUPcSTO75MWOmKAv3oRWfze14nIguokf/UtdqlQgu7RKO5V3UT
-         N0R45XNxSiN5y/kiy5U7v8JzO9H7CKpF4B6PTGdbsQAy57bs4VlVTsKZKTOgey8XR6tU
-         FILDyiQUJJ55SeVz3LBHEw5mLTb1VbN/kR/TjuhfC6NfXGM0cStMQR5tS2Xo5asR0sGo
-         TEAQDrDPl7Destz2LH25raojXs2jGduq0+Q2JJGXpW/oyYd+5+mLWM6VIBYaPK9+NNjz
-         CXBQ==
-X-Gm-Message-State: APjAAAUnSQihUU40g0SAyWfpRZ5qUk3Ktj7LQTcGNMh0ZuAT9Z6ULw6l
-        XSnd2iyBncHQBH8hOdFCJi8nStQgdD4=
-X-Google-Smtp-Source: APXvYqzn9IFQO1GLAIwF4rLgEpLc4SQzDHcjNwDRT6Jzs8JSL/iV2acm2dlR+MGywIAeBpUGEaPYPA==
-X-Received: by 2002:aed:2314:: with SMTP id h20mr24005362qtc.24.1556068238795;
-        Tue, 23 Apr 2019 18:10:38 -0700 (PDT)
-Received: from geeko ([179.183.202.242])
-        by smtp.gmail.com with ESMTPSA id h27sm11319955qtc.1.2019.04.23.18.10.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Apr 2019 18:10:37 -0700 (PDT)
-Date:   Tue, 23 Apr 2019 22:10:28 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk, bvanassche@acm.org,
-        Chaitanya.Kulkarni@wdc.com
-Subject: Re: [PATCH v3 0/3] Add documentation of some blk-mq functions
-Message-ID: <20190424011025.GA32345@geeko>
-References: <20190417021030.82998-1-marcos.souza.org@gmail.com>
+        Tue, 23 Apr 2019 21:11:22 -0400
+X-UUID: 222f0c07db1444ad9b77637cef47a9cb-20190424
+X-UUID: 222f0c07db1444ad9b77637cef47a9cb-20190424
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1747827543; Wed, 24 Apr 2019 09:11:17 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 24 Apr 2019 09:11:16 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 24 Apr 2019 09:11:15 +0800
+From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
+To:     <robh+dt@kernel.org>, <jic23@kernel.org>, <knaack.h@gmx.de>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>
+CC:     <srv_heupstream@mediatek.com>, <hui.liu@mediatek.com>,
+        <yingjoe.chen@mediatek.com>, <sean.wang@mediatek.com>,
+        <erin.lo@mediatek.com>, <eddie.huang@mediatek.com>,
+        <matthias.bgg@gmail.com>, <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-iio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>
+Subject: [PATCH v2 1/2] dt-bindings: adc: mt8183: add binding document
+Date:   Wed, 24 Apr 2019 09:11:11 +0800
+Message-ID: <20190424011112.14283-2-zhiyong.tao@mediatek.com>
+X-Mailer: git-send-email 2.12.5
+In-Reply-To: <20190424011112.14283-1-zhiyong.tao@mediatek.com>
+References: <20190424011112.14283-1-zhiyong.tao@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417021030.82998-1-marcos.souza.org@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gentle ping.
+The commit adds mt8183 compatible node in binding document.
 
-On Tue, Apr 16, 2019 at 11:10:27PM -0300, Marcos Paulo de Souza wrote:
-> blk_mq_init_sq_queue and blk_mq_init_queue are being documented, more will be
-> added in further patches.
-> 
-> I would like to thank Chaitanya and Bart for their reviews.
-> 
-> Changes from v2:
-> * Changed the description of argument @set of blk_mq_init_sq_queue, making it
->   less obvious and more informative. Now this argument has two example of
->   possible flags for tag_set (suggested by Bart)
-> * Cover letter added (suggested by Bart)
-> 
-> Changes from v1:
-> * Change "SQ" to "only one hw_queue (SQ)" in the function signature
->   documentation (suggested by Chaitanya)
-> 
-> Marcos Paulo de Souza (3):
->   blk-mq.c: Add documention of function blk_mq_init_queue
->   blk-mq.c: Rework documention of blk_mq_init_sq_queue function
->   Documentation: kernel-api.rst: Add block/blk-mq.c
-> 
->  Documentation/core-api/kernel-api.rst |  6 ++++++
->  block/blk-mq.c                        | 27 ++++++++++++++++++++++++---
->  2 files changed, 30 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.16.4
-> 
+Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+---
+ Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+index 0df9befdaecc..936a0b4666da 100644
+--- a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+@@ -15,6 +15,7 @@ Required properties:
+     - "mediatek,mt2712-auxadc": For MT2712 family of SoCs
+     - "mediatek,mt7622-auxadc": For MT7622 family of SoCs
+     - "mediatek,mt8173-auxadc": For MT8173 family of SoCs
++    - "mediatek,mt8183-auxadc", "mediatek,mt8173-auxadc": For MT8183 family of SoCs
+   - reg: Address range of the AUXADC unit.
+   - clocks: Should contain a clock specifier for each entry in clock-names
+   - clock-names: Should contain "main".
 -- 
-Thanks,
-Marcos
+2.12.5
+
