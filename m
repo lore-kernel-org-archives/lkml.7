@@ -2,132 +2,171 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57731C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF81CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB0B2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE4D218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbfDXLHT (ORCPT
+        id S1729335AbfDXLHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:07:19 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37532 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728802AbfDXLG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 07:06:56 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B397E317007D3AFDAE85;
-        Wed, 24 Apr 2019 19:06:51 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Apr 2019 19:06:42 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <nhorman@redhat.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>
-Subject: [PATCH V2 net-next 06/12] net: hns3: use a reserved byte to identify need_resp flag
-Date:   Wed, 24 Apr 2019 19:05:25 +0800
-Message-ID: <1556103931-64031-7-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556103931-64031-1-git-send-email-tanhuazhong@huawei.com>
-References: <1556103931-64031-1-git-send-email-tanhuazhong@huawei.com>
+        Wed, 24 Apr 2019 07:07:22 -0400
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:50857 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729236AbfDXLHU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 07:07:20 -0400
+Received: from [IPv6:2001:420:44c1:2579:8575:c0e0:a08:6676] ([IPv6:2001:420:44c1:2579:8575:c0e0:a08:6676])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id JFkAhJpLXZVjxJFkEhaD1V; Wed, 24 Apr 2019 13:07:18 +0200
+Subject: Re: [Patch V3] v4l2-core: fix use-after-free error
+To:     Sumit Gupta <sumitg@nvidia.com>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, paul.kocialkowski@bootlin.com,
+        tfiga@chromium.org, keiichiw@chromium.org, bbasu@nvidia.com
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1555342574-15940-1-git-send-email-sumitg@nvidia.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <16a25e01-7ebe-f0c9-2915-bd811b28c9c0@xs4all.nl>
+Date:   Wed, 24 Apr 2019 13:07:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1555342574-15940-1-git-send-email-sumitg@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfA2XhjIQB4gHBL8JP6auKKD3VejLnQzgLXd6P6csEpG1WFXLG3Zdog5kAv8niRXH6VcZhn3AVR23DKFuarf3QdbeRbmUxDz3PdCGhnDojFBQ8qHYT6a9
+ cHqn4jefYy8ZMxNz36pyQYe0GON2PSgGMuTRUZf4IlevDOf0AbfGiBG+dVkDI7D49OijKbFYmN2lVPSdbIgHGXWh5qxIiSrFaAiJ4pkPAJN+vC15A7Y9Mg82
+ Zt8uZiaG/IrAMHQaLKIIIT48RqbhouM0Whk4fwzeO0+PC/4CXyYviq8JClliSK85D2FH9XtgI91E6z01GpjoTe/Jhfzg/GqQd9pd+xNXWWRmHxIjqNRxMmXK
+ NDEmNYh3l0cmdlCgXPeLwVdGMg4n1ij/EJZo6GDiJzOplFQIAJNeIU8W9/FeSfuQ2TZk6BPHYx3KP/ZDQ0XdeauX8FL6WYGS4ejF3W50hLT+r+Cgxf8sYUI0
+ l2GMTLAZeCwvPVHWmNgEze6N90Gz48R8fHcdrgfChjo5YBIeVx/JMQw4jl3Pj8bKWLHKvRCRm+EazpOW99YSbGvq7D5dVkL1NggeTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch uses a reserved byte in the hclge_mbx_vf_to_pf_cmd
-to save the need_resp flag, so when PF received the mailbox,
-it can use it to decise whether send a response to VF.
+On 4/15/19 5:36 PM, Sumit Gupta wrote:
+> From: sumitg <sumitg@nvidia.com>
+> 
+> Fixing use-after-free within __v4l2_ctrl_handler_setup().
+> Memory is being freed with kfree(new_ref) for duplicate
+> control reference entry but ctrl->cluster pointer is still
+> referring to freed duplicate entry resulting in error on
+> access. Change done to update cluster pointer only when new
+> control reference is added. Also, added check to add new
+> ctrl to handler only if the cluster points to an entry.
+> 
+>  ==================================================================
+>  BUG: KASAN: use-after-free in __v4l2_ctrl_handler_setup+0x388/0x428
+>  Read of size 8 at addr ffffffc324e78618 by task systemd-udevd/312
+> 
+>  Allocated by task 312:
+> 
+>  Freed by task 312:
+> 
+>  The buggy address belongs to the object at ffffffc324e78600
+>   which belongs to the cache kmalloc-64 of size 64
+>  The buggy address is located 24 bytes inside of
+>   64-byte region [ffffffc324e78600, ffffffc324e78640)
+>  The buggy address belongs to the page:
+>  page:ffffffbf0c939e00 count:1 mapcount:0 mapping:
+> 					(null) index:0xffffffc324e78f80
+>  flags: 0x4000000000000100(slab)
+>  raw: 4000000000000100 0000000000000000 ffffffc324e78f80 000000018020001a
+>  raw: 0000000000000000 0000000100000001 ffffffc37040fb80 0000000000000000
+>  page dumped because: kasan: bad access detected
+> 
+>  Memory state around the buggy address:
+>   ffffffc324e78500: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>   ffffffc324e78580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>  >ffffffc324e78600: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>                              ^
+>   ffffffc324e78680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+>   ffffffc324e78700: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+>  ==================================================================
+> 
+> Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+> 
+> v3:
+> * update ctrl->cluster only when new control reference is added.
+> * add new ctrl to handler only if the cluster points to an entry.
+> 
+> v2:
+> * update ctrl->cluster only when new control reference is added.
+> * check ctrl->ncontrols to avoid illegal access when cluster has zero controls.
+> 
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 26 ++++++++++++++------------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index 5e3806f..877c2ab 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -2154,15 +2154,6 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+>  	if (size_extra_req)
+>  		new_ref->p_req.p = &new_ref[1];
+>  
+> -	if (ctrl->handler == hdl) {
+> -		/* By default each control starts in a cluster of its own.
+> -		   new_ref->ctrl is basically a cluster array with one
+> -		   element, so that's perfect to use as the cluster pointer.
+> -		   But only do this for the handler that owns the control. */
+> -		ctrl->cluster = &new_ref->ctrl;
+> -		ctrl->ncontrols = 1;
+> -	}
+> -
+>  	INIT_LIST_HEAD(&new_ref->node);
+>  
+>  	mutex_lock(hdl->lock);
+> @@ -2195,6 +2186,15 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+>  	hdl->buckets[bucket] = new_ref;
+>  	if (ctrl_ref)
+>  		*ctrl_ref = new_ref;
+> +	if (ctrl->handler == hdl) {
+> +		/* By default each control starts in a cluster of its own.
+> +		 * new_ref->ctrl is basically a cluster array with one
+> +		 * element, so that's perfect to use as the cluster pointer.
+> +		 * But only do this for the handler that owns the control.
+> +		 */
+> +		ctrl->cluster = &new_ref->ctrl;
+> +		ctrl->ncontrols = 1;
+> +	}
 
-For hclge_set_vf_uc_mac_addr(), it should use mbx_need_resp flag
-to decide whether send response to VF.
+This is good.
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h          | 5 ++++-
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c   | 7 +++----
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c | 2 ++
- 3 files changed, 9 insertions(+), 5 deletions(-)
+>  
+>  unlock:
+>  	mutex_unlock(hdl->lock);
+> @@ -2346,9 +2346,11 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+>  		kvfree(ctrl);
+>  		return NULL;
+>  	}
+> -	mutex_lock(hdl->lock);
+> -	list_add_tail(&ctrl->node, &hdl->ctrls);
+> -	mutex_unlock(hdl->lock);
+> +	if (ctrl->cluster) {
+> +		mutex_lock(hdl->lock);
+> +		list_add_tail(&ctrl->node, &hdl->ctrls);
+> +		mutex_unlock(hdl->lock);
+> +	}
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-index 8b6191f..83e19c6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h
-@@ -84,12 +84,15 @@ struct hclgevf_mbx_resp_status {
- struct hclge_mbx_vf_to_pf_cmd {
- 	u8 rsv;
- 	u8 mbx_src_vfid; /* Auto filled by IMP */
--	u8 rsv1[2];
-+	u8 mbx_need_resp;
-+	u8 rsv1[1];
- 	u8 msg_len;
- 	u8 rsv2[3];
- 	u8 msg[HCLGE_MBX_MAX_MSG_SIZE];
- };
- 
-+#define HCLGE_MBX_NEED_RESP_BIT		BIT(0)
-+
- struct hclge_mbx_pf_to_vf_cmd {
- 	u8 dest_vfid;
- 	u8 rsv[3];
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-index 24386bd..fe48c56 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
-@@ -212,8 +212,7 @@ static int hclge_set_vf_promisc_mode(struct hclge_vport *vport,
- }
- 
- static int hclge_set_vf_uc_mac_addr(struct hclge_vport *vport,
--				    struct hclge_mbx_vf_to_pf_cmd *mbx_req,
--				    bool gen_resp)
-+				    struct hclge_mbx_vf_to_pf_cmd *mbx_req)
- {
- 	const u8 *mac_addr = (const u8 *)(&mbx_req->msg[2]);
- 	struct hclge_dev *hdev = vport->back;
-@@ -249,7 +248,7 @@ static int hclge_set_vf_uc_mac_addr(struct hclge_vport *vport,
- 		return -EIO;
- 	}
- 
--	if (gen_resp)
-+	if (mbx_req->mbx_need_resp & HCLGE_MBX_NEED_RESP_BIT)
- 		hclge_gen_resp_to_vf(vport, mbx_req, status, NULL, 0);
- 
- 	return 0;
-@@ -597,7 +596,7 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
- 					ret);
- 			break;
- 		case HCLGE_MBX_SET_UNICAST:
--			ret = hclge_set_vf_uc_mac_addr(vport, req, true);
-+			ret = hclge_set_vf_uc_mac_addr(vport, req);
- 			if (ret)
- 				dev_err(&hdev->pdev->dev,
- 					"PF fail(%d) to set VF UC MAC Addr\n",
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-index 3c22639..30f2e93 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c
-@@ -98,6 +98,8 @@ int hclgevf_send_mbx_msg(struct hclgevf_dev *hdev, u16 code, u16 subcode,
- 	}
- 
- 	hclgevf_cmd_setup_basic_desc(&desc, HCLGEVF_OPC_MBX_VF_TO_PF, false);
-+	req->mbx_need_resp |= need_resp ? HCLGE_MBX_NEED_RESP_BIT :
-+					  ~HCLGE_MBX_NEED_RESP_BIT;
- 	req->msg[0] = code;
- 	req->msg[1] = subcode;
- 	memcpy(&req->msg[2], msg_data, msg_len);
--- 
-2.7.4
+But why change this? ctrl->cluster can never be NULL here.
+
+If ctrl->cluster really is NULL for you, then something else
+is wrong.
+
+Regards,
+
+	Hans
+
+>  	return ctrl;
+>  }
+>  
+> 
 
