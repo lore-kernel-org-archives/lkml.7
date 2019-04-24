@@ -2,104 +2,85 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C036C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93D0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D871320835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D7120685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733310AbfDXSTz (ORCPT
+        id S2387410AbfDXSVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:19:55 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:55146 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730476AbfDXSTy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:19:54 -0400
-Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hJMUT-0003TF-8Q; Wed, 24 Apr 2019 20:19:29 +0200
-Date:   Wed, 24 Apr 2019 20:19:22 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Will Deacon <will.deacon@arm.com>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Price <steven.price@arm.com>,
-        Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH v2 5/5] arm64/speculation: Support 'mitigations=' cmdline
- option
-In-Reply-To: <20190424141631.GH14829@fuggles.cambridge.arm.com>
-Message-ID: <alpine.DEB.2.21.1904242019001.1762@nanos.tec.linutronix.de>
-References: <cover.1555085500.git.jpoimboe@redhat.com> <24039e1370ed57e8075730c0b88c505afd9e0ab7.1555085500.git.jpoimboe@redhat.com> <alpine.DEB.2.21.1904162124020.1780@nanos.tec.linutronix.de> <20190424141631.GH14829@fuggles.cambridge.arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Wed, 24 Apr 2019 14:21:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34628 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726473AbfDXSVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:21:40 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 206391393C3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 18:21:40 +0000 (UTC)
+Received: from jsavitz.bos.com (dhcp-17-124.bos.redhat.com [10.18.17.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1EF061884F;
+        Wed, 24 Apr 2019 18:21:37 +0000 (UTC)
+From:   Joel Savitz <jsavitz@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Joel Savitz <jsavitz@redhat.com>, Rafael Aquini <aquini@redhat.com>
+Subject: [PATCH] mm/oom_killer: Add task UID to info message on an oom kill
+Date:   Wed, 24 Apr 2019 14:20:13 -0400
+Message-Id: <1556130013-19021-1-git-send-email-jsavitz@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 24 Apr 2019 18:21:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Apr 2019, Will Deacon wrote:
+In the event of an oom kill, useful information about the killed
+process is printed to dmesg. Users, especially system administrators,
+will find it useful to immediately see the UID of the process.
 
-> Hi Thomas,
-> 
-> On Tue, Apr 16, 2019 at 09:26:13PM +0200, Thomas Gleixner wrote:
-> > On Fri, 12 Apr 2019, Josh Poimboeuf wrote:
-> > 
-> > > Configure arm64 runtime CPU speculation bug mitigations in accordance
-> > > with the 'mitigations=' cmdline option.  This affects Meltdown, Spectre
-> > > v2, and Speculative Store Bypass.
-> > > 
-> > > The default behavior is unchanged.
-> > > 
-> > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > > ---
-> > > NOTE: This is based on top of Jeremy Linton's patches:
-> > >       https://lkml.kernel.org/r/20190410231237.52506-1-jeremy.linton@arm.com
-> > 
-> > So I keep that out and we have to revisit that once the ARM64 stuff hits a
-> > tree, right? I can have a branch with just the 4 first patches applied
-> > which ARM64 folks can pull in when they apply Jeremy's patches before te
-> > merge window.
-> 
-> I'm assuming that this refers to the core/speculation branch in tip:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=core/speculation
-> 
-> but please can you confirm that I'm good to pull that into arm64?
+In the following example, abuse_the_ram is the name of a program
+that attempts to iteratively allocate all available memory until it is
+stopped by force.
 
-Yes. It's all yours :)
+Current message:
 
-Thanks,
+Out of memory: Killed process 35389 (abuse_the_ram)
+total-vm:133718232kB, anon-rss:129624980kB, file-rss:0kB,
+shmem-rss:0kB
 
-	tglx
+Patched message:
+
+Out of memory: Killed process 2739 (abuse_the_ram), UID 0,
+total-vm:133880028kB, anon-rss:129754836kB, file-rss:0kB,
+shmem-rss:0kB
+
+Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+---
+ mm/oom_kill.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 3a2484884cfd..22972648b758 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -874,9 +874,9 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 	 */
+ 	do_send_sig_info(SIGKILL, SEND_SIG_PRIV, victim, PIDTYPE_TGID);
+ 	mark_oom_victim(victim);
+-	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
++	pr_err("%s: Killed process %d (%s), UID %d, total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
+ 		message, task_pid_nr(victim), victim->comm,
+-		K(victim->mm->total_vm),
++		task_uid(victim).val, K(victim->mm->total_vm),
+ 		K(get_mm_counter(victim->mm, MM_ANONPAGES)),
+ 		K(get_mm_counter(victim->mm, MM_FILEPAGES)),
+ 		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)));
+-- 
+2.18.1
+
