@@ -2,86 +2,98 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DBAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D54CC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD47C2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:32:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F4MBxL3d"
+	by mail.kernel.org (Postfix) with ESMTP id 34660218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556116427;
+	bh=TdWE5BTDUGaxS5tgwoFDV4kBVKs/HU08nk+1lrddLv0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KC490zurbtFDEFVpR2bgbR52PBhgfBg92M1Dqs4m4PYOcjhhUckJYarLvxmxTtt3g
+	 A5CX5h74S/Naz1zYfkBDqrAAKGI2JKjQrXXhK1rENwXxACu3GcaehYz6IA5Ix4omqa
+	 PJHCdlSwhLH0+2U0gRmbBvZOMu/OPSU2IenZBohY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbfDXOcr (ORCPT
+        id S1730640AbfDXOdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:32:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60608 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730459AbfDXOcr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:32:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HH6es2owcH1NcV2/iXg+dvHnsEeqH9IglqJIj3+7hj8=; b=F4MBxL3d56lZLKwK2Dt9NbXbG
-        Y6yc9XvLpG4AXRwmThWqtySUpjjaMbKclSBKS+x7vFyIy0ZA+oANaRj6QhwwCwz8VtjlPcVGg9JFC
-        cOL3sF5/EmtJKKT4Q0OGQlx/T3fr9fwc9u+6ca9mMxieBuBYo1hx05k0QfvgterpvNu37rdj8DFHz
-        vee6uyung/Ue7elGZKJiSYTKEfeIpSWUlBUDq+QIu6K58DGk2H2q9BJ83wEkFhTdUuDgs5sQaitxN
-        DngHKU7Q+1iNG6WraZo5JIkwKC2rTNzcZK70jgc8sNF/4oqnn8wklLOhVlczF24mrSbj1zZj07utm
-        eJ9QdC7eg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJIx4-0008FO-5m; Wed, 24 Apr 2019 14:32:46 +0000
-Date:   Wed, 24 Apr 2019 07:32:46 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Tom Murphy <tmurphy@arista.com>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        murphyt7@tcd.ie
-Subject: Re: [PATCH] iommu/amd: flush not present cache in iommu_map_page
-Message-ID: <20190424143246.GA24079@infradead.org>
-References: <20190424141900.8883-1-tmurphy@arista.com>
+        Wed, 24 Apr 2019 10:33:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726481AbfDXOdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:33:45 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8436A2089F;
+        Wed, 24 Apr 2019 14:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556116425;
+        bh=TdWE5BTDUGaxS5tgwoFDV4kBVKs/HU08nk+1lrddLv0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Mg8R/IjCCORKk/TxjCaCGrp6pJLGyUNj6L7+l8s6TivAC3/HjSD1DX662Z+y7kuAF
+         1GOkjYtWAj599QENL2Hl6T8zc1kfauFEUfaRsH7oj3wCj16Nh5SKCNzhzASnFk52FK
+         Iua5YvaIWcmau4ljrCeWixuhK2lVby+MAm9qZKvs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Leonidas P. Papadakos" <papadakospan@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.0 01/66] arm64: dts: rockchip: fix rk3328-roc-cc gmac2io tx/rx_delay
+Date:   Wed, 24 Apr 2019 10:32:35 -0400
+Message-Id: <20190424143341.27665-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424141900.8883-1-tmurphy@arista.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 03:18:59PM +0100, Tom Murphy via iommu wrote:
-> check if there is a not-present cache present and flush it if there is.
-> 
-> Signed-off-by: Tom Murphy <tmurphy@arista.com>
-> ---
->  drivers/iommu/amd_iommu.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-> index f7cdd2ab7f11..8ef43224aae0 100644
-> --- a/drivers/iommu/amd_iommu.c
-> +++ b/drivers/iommu/amd_iommu.c
-> @@ -1636,6 +1636,12 @@ static int iommu_map_page(struct protection_domain *dom,
->  		pte[i] = __pte;
->  
->  	update_domain(dom);
-> +	if (!dom->updated) {
-> +		if (unlikely(amd_iommu_np_cache)) {
-> +			domain_flush_pages(dom, bus_addr, page_size);
-> +			domain_flush_complete(dom);
-> +		}
-> +	}
+From: "Leonidas P. Papadakos" <papadakospan@gmail.com>
 
-The two conditions can go into one if statement to make this a little
-more clear.
+[ Upstream commit 924726888f660b2a86382a5dd051ec9ca1b18190 ]
 
-And I'd really like to understand the unlikely - amd_iommu_np_cache
-is set based on a hardware capability, so it seems rather odd to mark
-it unlikely.  Dynamic branch prediction really should do the right thing
-here usually.
+The rk3328-roc-cc board exhibits tx stability issues with large packets,
+as does the rock64 board, which was fixed with this patch
+https://patchwork.kernel.org/patch/10178969/
+
+A similar patch was merged for the rk3328-roc-cc here
+https://patchwork.kernel.org/patch/10804863/
+but it doesn't include the tx/rx_delay tweaks, and I find that they
+help with an issue where large transfers would bring the ethernet
+link down, causing a link reset regularly.
+
+Signed-off-by: Leonidas P. Papadakos <papadakospan@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index 99d0d9912950..a91f87df662e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -107,8 +107,8 @@
+ 	snps,reset-gpio = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 50000>;
+-	tx_delay = <0x25>;
+-	rx_delay = <0x11>;
++	tx_delay = <0x24>;
++	rx_delay = <0x18>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.19.1
+
