@@ -3,83 +3,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AE5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DF0C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9548218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F85D218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbfDXICc (ORCPT
+        id S1729961AbfDXIDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:02:32 -0400
-Received: from Chamillionaire.breakpoint.cc ([146.0.238.67]:33560 "EHLO
-        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726031AbfDXICb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:02:31 -0400
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.89)
-        (envelope-from <fw@strlen.de>)
-        id 1hJCr8-0007Ga-1T; Wed, 24 Apr 2019 10:02:14 +0200
-Date:   Wed, 24 Apr 2019 10:02:14 +0200
-From:   Florian Westphal <fw@strlen.de>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     pablo@netfilter.org, kadlec@blackhole.kfki.hu, dsahern@gmail.com,
-        davem@davemloft.net, yoshfuji@linux-ipv6.org,
-        netfilter-devel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: [PATCH] net: netfilter: Fix ipv6 rp_filter dropping vrf packets
- by mistake
-Message-ID: <20190424080214.vadrfiufcv6xa3cm@breakpoint.cc>
-References: <094b7376-f796-71b6-7a81-28866b0f882b@huawei.com>
+        Wed, 24 Apr 2019 04:03:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:32912 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728095AbfDXIDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 04:03:19 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 71B50FE4CC8A3E6B8E18;
+        Wed, 24 Apr 2019 16:03:16 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Apr 2019
+ 16:03:09 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <QLogic-Storage-Upstream@cavium.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] scsi: qedi: remove set but not used variables 'cdev' and 'udev'
+Date:   Wed, 24 Apr 2019 16:02:56 +0800
+Message-ID: <20190424080256.30012-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <094b7376-f796-71b6-7a81-28866b0f882b@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-linmiaohe <linmiaohe@huawei.com> wrote:
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ CC dsa, dropped some CCs ]
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-> When firewall is enabled with rp_filter, vrf ipv6 packets
-> will be dropped because in device is vrf but out device
-> is an enslaved device. So rt->rt6i_idev->dev != dev and
-> maybe return false in func rpfilter_lookup_reverse6.
-> 
-> Here is the out message when I ping the peer:
-> ip vrf exec vrf1 ping 2013::2 -c 1
-> 1 packets transmitted, 0 received, 100% packet loss, time 0ms
-> 
-> The drop info in /var/log/message:
-> Apr 24 14:59:45 localhost kernel: [81316.158259] rpfilter_DROP: IN=vrf1
-> OUT= MAC=52:54:00:9e:dd:c1:52:54:00:4f:81:38:86:dd
-> SRC=2013:0000:0000:0000:0000:0000:0000:0002
-> DST=2013:0000:0000:0000:0000:0000:0000:0001 LEN=104 TC=0 HOPLIMIT=64
-> FLOWLBL=1032942 PROTO=ICMPv6 TYPE=129 CODE=0 ID=14943 SEQ=1
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  net/ipv6/netfilter/ip6t_rpfilter.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
-> index c3c6b09acdc4..5cbc91f53736 100644
-> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
-> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
-> @@ -73,6 +73,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
->  		goto out;
->  	}
-> 
-> +	if (netif_is_l3_master(dev)) {
-> +		dev = __dev_get_by_index(dev_net(dev), IP6CB(skb)->iif);
-> +		if (!dev)
-> +			goto out;
+drivers/scsi/qedi/qedi_iscsi.c: In function 'qedi_ep_connect':
+drivers/scsi/qedi/qedi_iscsi.c:813:23: warning: variable 'udev' set but not used [-Wunused-but-set-variable]
+drivers/scsi/qedi/qedi_iscsi.c:812:18: warning: variable 'cdev' set but not used [-Wunused-but-set-variable]
 
-I suspect this should be 'dev_get_by_index_rcu'.
+They are never used since introduction.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/scsi/qedi/qedi_iscsi.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
+index e4391ee..688a6d8 100644
+--- a/drivers/scsi/qedi/qedi_iscsi.c
++++ b/drivers/scsi/qedi/qedi_iscsi.c
+@@ -809,8 +809,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
+ 	struct qedi_endpoint *qedi_ep;
+ 	struct sockaddr_in *addr;
+ 	struct sockaddr_in6 *addr6;
+-	struct qed_dev *cdev  =  NULL;
+-	struct qedi_uio_dev *udev = NULL;
+ 	struct iscsi_path path_req;
+ 	u32 msg_type = ISCSI_KEVENT_IF_DOWN;
+ 	u32 iscsi_cid = QEDI_CID_RESERVED;
+@@ -830,8 +828,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
+ 	}
+ 
+ 	qedi = iscsi_host_priv(shost);
+-	cdev = qedi->cdev;
+-	udev = qedi->udev;
+ 
+ 	if (test_bit(QEDI_IN_OFFLINE, &qedi->flags) ||
+ 	    test_bit(QEDI_IN_RECOVERY, &qedi->flags)) {
+-- 
+2.7.4
+
+
