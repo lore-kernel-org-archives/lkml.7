@@ -2,125 +2,140 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3F2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FA1C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910B92175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A9A2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:23:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V/Bo8PyJ"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="DdJ69+sF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfDXXW4 (ORCPT
+        id S1728133AbfDXXXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 19:22:56 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:46333 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfDXXWz (ORCPT
+        Wed, 24 Apr 2019 19:23:01 -0400
+Received: from mail.efficios.com ([167.114.142.138]:55470 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbfDXXXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 19:22:55 -0400
-Received: by mail-vs1-f65.google.com with SMTP id e2so11403494vsc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zpUP4bgoXDXJmY6a6D8aHitekGFCVxaOvwDg7tgV9BE=;
-        b=V/Bo8PyJkFQNbcYx4omLQnVBlY3dKuCykR0mypN1aYr+Qfq2+/DtqqZWQQinXnCulE
-         VzF322pqv3XB8QT+XWGAd8fpR7iTpRmqqCthhMxr3UZaep766hXqO8vifxf+4ghoqm58
-         eYntXoWneHCQkrW2mNFamxMMmYlZwos47Jx2A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zpUP4bgoXDXJmY6a6D8aHitekGFCVxaOvwDg7tgV9BE=;
-        b=KT/LbmrqxYXgTQHxBIhFhbzyouzzNlpGQPXXyhe/YbYfiKqO0JHVvVqCFzvhR0wVxC
-         zbgjTImC8Ji3R4jnYmZC4BpMgNsx8az9Q9/M1cH9nESmfXdXOLPVZM/IEigtLt+t34Yf
-         u2RcPBH4Q/nOWyJE4ETsUyIjQ0raWLRe3dJVOjAmgnSZr+MYJEMtghzZH9H4d9OutVJe
-         C+CFOG6OmmcDHIxFQJUqe6dRJ+S3tJX3r1KBM+Rx+OvUEQLLj7Zl1rQRpx4vxzlmDygF
-         NWs0LvXgwcMFDflstgEfkjTfWmhgBIKNuBNgFgz7uIb+O4Ab1oWDI+YvPaGppv6ih0VB
-         naZg==
-X-Gm-Message-State: APjAAAWu7pe34dfsG7Dg/MRI5pTDs0l9KHaYZWqHIhGe8mX+ZsNwSJM4
-        +oZoPYK8Tpd5EVsVfiEfCi23sxyroQo=
-X-Google-Smtp-Source: APXvYqxlpDbocwIV0YLhjOUAySEaSkKaKWaVBsQIgQScWzTD0J853Gp9HC5ff75b8X9/OuFtrOeIvQ==
-X-Received: by 2002:a67:bc01:: with SMTP id t1mr19414311vsn.149.1556148173676;
-        Wed, 24 Apr 2019 16:22:53 -0700 (PDT)
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com. [209.85.221.170])
-        by smtp.gmail.com with ESMTPSA id m39sm5348068uae.14.2019.04.24.16.22.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 16:22:51 -0700 (PDT)
-Received: by mail-vk1-f170.google.com with SMTP id d30so2630483vkl.10
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 16:22:51 -0700 (PDT)
-X-Received: by 2002:a1f:a4d:: with SMTP id 74mr18982332vkk.13.1556148170875;
- Wed, 24 Apr 2019 16:22:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190424203408.GA11386@beast> <20190424205117.GA5291@brain-police>
- <CAGXu5jJzzku0xjJAyD3T5SDeeoxVtA51wfHPGPrejjn_tNfJ4w@mail.gmail.com>
-In-Reply-To: <CAGXu5jJzzku0xjJAyD3T5SDeeoxVtA51wfHPGPrejjn_tNfJ4w@mail.gmail.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 24 Apr 2019 16:22:39 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jL5LKDe=yxB4ByZOH-5CaDeJteFPpDtR2AH07wpMunTEQ@mail.gmail.com>
-Message-ID: <CAGXu5jL5LKDe=yxB4ByZOH-5CaDeJteFPpDtR2AH07wpMunTEQ@mail.gmail.com>
-Subject: Re: [PATCH v2] binfmt_elf: Update READ_IMPLIES_EXEC logic for modern CPUs
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Jason Gunthorpe <jgg@mellanox.com>, X86 ML <x86@kernel.org>,
+        Wed, 24 Apr 2019 19:23:01 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 75F6A1DA134;
+        Wed, 24 Apr 2019 19:22:58 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id b_oUwa0eRlQh; Wed, 24 Apr 2019 19:22:57 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id C7C501DA12E;
+        Wed, 24 Apr 2019 19:22:57 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com C7C501DA12E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1556148177;
+        bh=bOog4KPRUXXUl6cu2sBdR7LqNalMNhi5xWWV7wTQ04Q=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=DdJ69+sFlewHwDbesfZ/RdWtCHtVb8Ms7bgH9/na9jCq69oIHDBxIeurxEwRYErvC
+         NkD5QC6HnT+E1IK4a3RqeT82xp1thJ3Ip7PaN/QvUE8F12qpDSmpUz+oI5ylHp2VTT
+         NAmDJAxQI+v8/DxJpZAzdTLns1jh65NfnP5dzCGY3aSuWfUYvseMP3YVw10jt4SvfQ
+         pUH/DZiFXpZoRVkhi/U2nMVqWwYGL0QQhsViSx+4UNrqY4ss4lbBgO55AP9V/iY8gt
+         lF5f3L5d03dPJI2GHoypjWAbUWR5EcdGvT45xJpKi+LtoWm5GLe1djPx8TbKOHo5qK
+         ApND0nypqXQRg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id QXEK4muzn7qh; Wed, 24 Apr 2019 19:22:57 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id A7AB91DA128;
+        Wed, 24 Apr 2019 19:22:57 -0400 (EDT)
+Date:   Wed, 24 Apr 2019 19:22:57 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Andy Lutomirski <luto@amacapital.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>, shuah <shuah@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-mips <linux-mips@linux-mips.org>
+Message-ID: <2047127593.1305.1556148177478.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190424231717.os4p6fq7fbx6afxa@pburton-laptop>
+References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com> <20190424152502.14246-11-mathieu.desnoyers@efficios.com> <20190424220609.4kryfcgsv46iu3ds@pburton-laptop> <2114325810.1301.1556147523476.JavaMail.zimbra@efficios.com> <20190424231717.os4p6fq7fbx6afxa@pburton-laptop>
+Subject: Re: [RFC PATCH for 5.2 10/10] rseq/selftests: mips: use break
+ instruction for RSEQ_SIG
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: rseq/selftests: mips: use break instruction for RSEQ_SIG
+Thread-Index: AQHU+rH+AJnCxtNxUESFNInzrhwEUaZL3nOAYM0M9Xb8+at4gJ21bNWN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 1:54 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Apr 24, 2019 at 1:51 PM Will Deacon <will.deacon@arm.com> wrote:
-> > Don't you need to hack fs/compat_binfmt_elf.c to pick this up, or am I
-> > missing some trick? Should just be something like below.
-> >
-> > Will
-> >
-> > --->8
-> >
-> > diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
-> > index 15f6e96b3bd9..694bc3ee77eb 100644
-> > --- a/fs/compat_binfmt_elf.c
-> > +++ b/fs/compat_binfmt_elf.c
-> > @@ -116,6 +116,11 @@
-> >  #define        arch_setup_additional_pages compat_arch_setup_additional_pages
-> >  #endif
-> >
-> > +#ifdef compat_elf_read_implies_exec
-> > +#undef elf_read_implies_exec
-> > +#define elf_read_implies_exec compat_elf_read_implies_exec
-> > +#endif
-> > +
-> >  /*
-> >   * Rename a few of the symbols that binfmt_elf.c will define.
-> >   * These are all local so the names don't really matter, but it
->
-> Argh. I thought I already saw stuff like this somewhere, but I think I
-> must have been looking at some other compat silliness. I'll fix this
-> and split up the series...
+----- On Apr 24, 2019, at 7:17 PM, Paul Burton paul.burton@mips.com wrote:
 
-Andrew, can you please drop this patch from -mm for now? I'll pursue
-these changes separately through x86 and arm64 trees.
+> Hi Mathieu,
+> 
+> On Wed, Apr 24, 2019 at 07:12:03PM -0400, Mathieu Desnoyers wrote:
+>> Does the following comment above the forest of #ifdef work for you ?
+>> 
+>> /*
+>>  * RSEQ_SIG uses the break instruction. The instruction pattern is:
+>>  *
+>>  * On MIPS:
+>>  *      0350000d        break     0x350
+>>  *
+>>  * On nanoMIPS32:
+>>  *      00100350        break     0x350
+>>  *
+>>  * On microMIPS:
+>>  *      0000d407        break     0x350
+>>  *
+>>  * For nanoMIPS32 and microMIPS, the instruction stream is encoded as 16-bit
+>>  * halfwords, so the signature halfwords need to be swapped accordingly for
+>>  * little-endian.
+>>  */
+> 
+> I'd probably just say nanoMIPS rather than nanoMIPS32, because when we
+> get nanoMIPS64 in the future it'll be a superset of nanoMIPS32 & the
+> break encoding will be the same.
 
-Thanks!
+Done.
+
+> 
+> But otherwise it looks good to me :)
+
+Great! I've added your "Suggested-by" tag to the patch.
+
+Thanks,
+
+Mathieu
+
+> 
+> Thanks,
+>     Paul
 
 -- 
-Kees Cook
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
