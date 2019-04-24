@@ -4,51 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEFBC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4EEC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0242021903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A82521906
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125923;
-	bh=bSv1/JRfhaHy1GxVpDjZGNHnosQy3rr+z3pYJuMFjjk=;
+	s=default; t=1556125927;
+	bh=CEQOLQu/cbUVbOyRH7xxSLmkI0bLKCebSYUX9a7DFuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ndg2i7Z7aeWMPsw7ZA/OGT5WfhKoWXqh4DOUFho3lPVa7ovRii3W/YCAseM8E1ysB
-	 boVk99bMtrjd6bUUT3lTmPbV05KMTx1nr0E9hz/LT+ugG7z+KCjRiSiMWOns4lZLtG
-	 TurLvHBvDPwsAUgOcK9UCfNXqbqDLBjyEoiJiS/A=
+	b=0TA7MtTwrHSkesq20Rzi8rv3aapf1rd1Y0gP0lBc9Aog3FODlV5YZb4EnBDx7AL2a
+	 gQV84xMvETxiimCvMLCr69xqCqMssze9BOg9wPK+ZgOjiuFfm3GJmdmJBLCUPHUl5r
+	 ZF1svjD+73Eg7S/JlcQLTHo6lJ93v0oHGfTlqxT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387523AbfDXRMC (ORCPT
+        id S2387540AbfDXRMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:12:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35590 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:12:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387506AbfDXRL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:11:59 -0400
+        id S2387506AbfDXRME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:12:04 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C3D121900;
-        Wed, 24 Apr 2019 17:11:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85B55218B0;
+        Wed, 24 Apr 2019 17:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125917;
-        bh=bSv1/JRfhaHy1GxVpDjZGNHnosQy3rr+z3pYJuMFjjk=;
+        s=default; t=1556125923;
+        bh=CEQOLQu/cbUVbOyRH7xxSLmkI0bLKCebSYUX9a7DFuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=maSQ6MRxxc+RtJJP7ovsW+l5PV8zBZEkRu7lZL3+o5veT19ZkPYnIlsxSiTRe4fGG
-         jythm4Jv8g7BrE3JE4YFOXrjy9t+PZrRBpjKf4gDZlwCgA9lukCsAgaaf6oy9hF1Pj
-         qBKcJWjSVeT7fe/uGzWYMmlmAR/vFvsHXcPEgNEE=
+        b=hPsigk0iBWygV9cB9/Yz2Rwct7ICbteorlu6dCw4YhYahxOFZLEAjuQZs9ine4bf8
+         cOliH2mdmnB5dGQpXAXT3O+viFp6w068LbQwIQ879tE4FGngijhlmXesfUO2S4U0dI
+         OcWfvvdHN9BZH1OMbbT3VM7/GXncKcTHFdaz+JCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 003/104] tracing: kdb: Fix ftdump to not sleep
-Date:   Wed, 24 Apr 2019 19:08:20 +0200
-Message-Id: <20190424170842.846270019@linuxfoundation.org>
+Subject: [PATCH 3.18 005/104] mm/cma.c: cma_declare_contiguous: correct err handling
+Date:   Wed, 24 Apr 2019 19:08:22 +0200
+Message-Id: <20190424170844.481807507@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -61,141 +69,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 31b265b3baaf55f209229888b7ffea523ddab366 ]
+[ Upstream commit 0d3bd18a5efd66097ef58622b898d3139790aa9d ]
 
-As reported back in 2016-11 [1], the "ftdump" kdb command triggers a
-BUG for "sleeping function called from invalid context".
+In case cma_init_reserved_mem failed, need to free the memblock
+allocated by memblock_reserve or memblock_alloc_range.
 
-kdb's "ftdump" command wants to call ring_buffer_read_prepare() in
-atomic context.  A very simple solution for this is to add allocation
-flags to ring_buffer_read_prepare() so kdb can call it without
-triggering the allocation error.  This patch does that.
+Quote Catalin's comments:
+  https://lkml.org/lkml/2019/2/26/482
 
-Note that in the original email thread about this, it was suggested
-that perhaps the solution for kdb was to either preallocate the buffer
-ahead of time or create our own iterator.  I'm hoping that this
-alternative of adding allocation flags to ring_buffer_read_prepare()
-can be considered since it means I don't need to duplicate more of the
-core trace code into "trace_kdb.c" (for either creating my own
-iterator or re-preparing a ring allocator whose memory was already
-allocated).
+Kmemleak is supposed to work with the memblock_{alloc,free} pair and it
+ignores the memblock_reserve() as a memblock_alloc() implementation
+detail. It is, however, tolerant to memblock_free() being called on
+a sub-range or just a different range from a previous memblock_alloc().
+So the original patch looks fine to me. FWIW:
 
-NOTE: another option for kdb is to actually figure out how to make it
-reuse the existing ftrace_dump() function and totally eliminate the
-duplication.  This sounds very appealing and actually works (the "sr
-z" command can be seen to properly dump the ftrace buffer).  The
-downside here is that ftrace_dump() fully consumes the trace buffer.
-Unless that is changed I'd rather not use it because it means "ftdump
-| grep xyz" won't be very useful to search the ftrace buffer since it
-will throw away the whole trace on the first grep.  A future patch to
-dump only the last few lines of the buffer will also be hard to
-implement.
-
-[1] https://lkml.kernel.org/r/20161117191605.GA21459@google.com
-
-Link: http://lkml.kernel.org/r/20190308193205.213659-1-dianders@chromium.org
-
-Reported-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: http://lkml.kernel.org/r/20190227144631.16708-1-peng.fan@nxp.com
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/ring_buffer.h | 2 +-
- kernel/trace/ring_buffer.c  | 5 +++--
- kernel/trace/trace.c        | 6 ++++--
- kernel/trace/trace_kdb.c    | 6 ++++--
- 4 files changed, 12 insertions(+), 7 deletions(-)
+ mm/cma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 4daa5069cbdb..561f79803c13 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -125,7 +125,7 @@ ring_buffer_consume(struct ring_buffer *buffer, int cpu, u64 *ts,
- 		    unsigned long *lost_events);
+diff --git a/mm/cma.c b/mm/cma.c
+index 7d266e393c44..1f4a7e076a5c 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -340,12 +340,14 @@ int __init cma_declare_contiguous(phys_addr_t base,
  
- struct ring_buffer_iter *
--ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu);
-+ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags);
- void ring_buffer_read_prepare_sync(void);
- void ring_buffer_read_start(struct ring_buffer_iter *iter);
- void ring_buffer_read_finish(struct ring_buffer_iter *iter);
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index d2b609412c3a..173ff025ea75 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4039,6 +4039,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
-  * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
-  * @buffer: The ring buffer to read from
-  * @cpu: The cpu buffer to iterate over
-+ * @flags: gfp flags to use for memory allocation
-  *
-  * This performs the initial preparations necessary to iterate
-  * through the buffer.  Memory is allocated, buffer recording
-@@ -4056,7 +4057,7 @@ EXPORT_SYMBOL_GPL(ring_buffer_consume);
-  * This overall must be paired with ring_buffer_read_finish.
-  */
- struct ring_buffer_iter *
--ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
-+ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu, gfp_t flags)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_iter *iter;
-@@ -4064,7 +4065,7 @@ ring_buffer_read_prepare(struct ring_buffer *buffer, int cpu)
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 		return NULL;
+ 	ret = cma_init_reserved_mem(base, size, order_per_bit, res_cma);
+ 	if (ret)
+-		goto err;
++		goto free_mem;
  
--	iter = kmalloc(sizeof(*iter), GFP_KERNEL);
-+	iter = kmalloc(sizeof(*iter), flags);
- 	if (!iter)
- 		return NULL;
+ 	pr_info("Reserved %ld MiB at %pa\n", (unsigned long)size / SZ_1M,
+ 		&base);
+ 	return 0;
  
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 69af9a1b1031..934c1a1813dd 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3047,7 +3047,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter->buffer_iter[cpu] =
--				ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
-+				ring_buffer_read_prepare(iter->trace_buffer->buffer,
-+							 cpu, GFP_KERNEL);
- 		}
- 		ring_buffer_read_prepare_sync();
- 		for_each_tracing_cpu(cpu) {
-@@ -3057,7 +3058,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	} else {
- 		cpu = iter->cpu_file;
- 		iter->buffer_iter[cpu] =
--			ring_buffer_read_prepare(iter->trace_buffer->buffer, cpu);
-+			ring_buffer_read_prepare(iter->trace_buffer->buffer,
-+						 cpu, GFP_KERNEL);
- 		ring_buffer_read_prepare_sync();
- 		ring_buffer_read_start(iter->buffer_iter[cpu]);
- 		tracing_iter_reset(iter, cpu);
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index bd90e1b06088..ebbf28492573 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -46,14 +46,16 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
- 			iter.buffer_iter[cpu] =
--			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu);
-+			ring_buffer_read_prepare(iter.trace_buffer->buffer,
-+						 cpu, GFP_ATOMIC);
- 			ring_buffer_read_start(iter.buffer_iter[cpu]);
- 			tracing_iter_reset(&iter, cpu);
- 		}
- 	} else {
- 		iter.cpu_file = cpu_file;
- 		iter.buffer_iter[cpu_file] =
--			ring_buffer_read_prepare(iter.trace_buffer->buffer, cpu_file);
-+			ring_buffer_read_prepare(iter.trace_buffer->buffer,
-+						 cpu_file, GFP_ATOMIC);
- 		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
- 		tracing_iter_reset(&iter, cpu_file);
- 	}
++free_mem:
++	memblock_free(base, size);
+ err:
+ 	pr_err("Failed to reserve %ld MiB\n", (unsigned long)size / SZ_1M);
+ 	return ret;
 -- 
 2.19.1
 
