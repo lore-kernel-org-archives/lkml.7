@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E09C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8859C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3599F21900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88718218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117259;
-	bh=G9Bk4vD31SPIxN6xD/wj+xW/JOzU4jjbn2sR94YCRmc=;
+	s=default; t=1556117266;
+	bh=DVLVCKx5gg0srSQnmrlusXkgtaAAed+/6dbzgG8BWFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qyp1hAXRYeIfof6YvYOzOy9ijbKosBA9tH/U3HkLip9KWeDoOP2AVawBIgFnmxkcA
-	 gBYGoQU1AMj3RzV37bR7ZCH/WDhMcPRpYempJ+ljzqdBhywbSsD2woPh3g2jKmYtFL
-	 03yWjt1v0qOvcuxR8PWZZFMiZAyuHgdRQ5Qq1lUA=
+	b=fkiq+vA8f5wmsIhLaaQoYQKSmg5bTsNL+VpzP2Vd+S+hf7fLKbGb2LMdFZye9eTIt
+	 qqZgSDf3DI9ydADVmoFn22NiTPoZiIxXyxvTFdQ2EkQ0m16kB11CXYErai596dJ0ir
+	 ClDYvZvWnxdNjdKZ29WrlzaC1BSKKbTWNCQwXxxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732279AbfDXOri (ORCPT
+        id S1732312AbfDXOrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47222 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732263AbfDXOrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:47:36 -0400
+        id S1732287AbfDXOrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:47:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E29221902;
-        Wed, 24 Apr 2019 14:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E743218FD;
+        Wed, 24 Apr 2019 14:47:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117255;
-        bh=G9Bk4vD31SPIxN6xD/wj+xW/JOzU4jjbn2sR94YCRmc=;
+        s=default; t=1556117260;
+        bh=DVLVCKx5gg0srSQnmrlusXkgtaAAed+/6dbzgG8BWFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MYInLlE5BQsu7wjlM9LU1jc1qan9wDdCl58A1QZWuwuC5uKkyYIkAn4JNWgbmgYwA
-         nbzKIVhu2fQL8XOiEh5oqZkg6X7Yj1OXrRL7E1FV7POUbCvqykjZPXXyRMciFr9w7q
-         j6iyjjDacXOexg9F/eNOT+gKVf2BIaeB8jHbrrA8=
+        b=Bn6jmILuT6aIhMrp3lpd7x1CUgAV7D4ockvBnutFgTzXFod7DCuG7c1ZYEGxyjDTb
+         guOAlnAjH63ojwqgOIYiRPM4qynHjcq0lZE56QgF3A4L0GhDxz8nrtG8hdQ6OEtQbI
+         RhOOc5UWtRsTJwva0BtKo+JmoBKysVrFiJ9Bc5TI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khorenko <khorenko@virtuozzo.com>,
+Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/35] bonding: show full hw address in sysfs for slave entries
-Date:   Wed, 24 Apr 2019 10:46:45 -0400
-Message-Id: <20190424144709.30215-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/35] net: stmmac: don't overwrite discard_frame status
+Date:   Wed, 24 Apr 2019 10:46:47 -0400
+Message-Id: <20190424144709.30215-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424144709.30215-1-sashal@kernel.org>
 References: <20190424144709.30215-1-sashal@kernel.org>
@@ -59,43 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khorenko <khorenko@virtuozzo.com>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-[ Upstream commit 18bebc6dd3281955240062655a4df35eef2c46b3 ]
+[ Upstream commit 1b746ce8b397e58f9e40ce5c63b7198de6930482 ]
 
-Bond expects ethernet hwaddr for its slave, but it can be longer than 6
-bytes - infiniband interface for example.
+If we have error bits set, the discard_frame status will get overwritten
+by checksum bit checks, which might set the status back to good one.
+Fix by checking the COE status only if the frame is good.
 
- # cat /sys/devices/<skipped>/net/ib0/address
- 80:00:02:08:fe:80:00:00:00:00:00:00:7c:fe:90:03:00:be:5d:e1
-
- # cat /sys/devices/<skipped>/net/ib0/bonding_slave/perm_hwaddr
- 80:00:02:08:fe:80
-
-So print full hwaddr in sysfs "bonding_slave/perm_hwaddr" as well.
-
-Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_sysfs_slave.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/enh_desc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_sysfs_slave.c b/drivers/net/bonding/bond_sysfs_slave.c
-index 7d16c51e6913..641a532b67cb 100644
---- a/drivers/net/bonding/bond_sysfs_slave.c
-+++ b/drivers/net/bonding/bond_sysfs_slave.c
-@@ -55,7 +55,9 @@ static SLAVE_ATTR_RO(link_failure_count);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+index acd65a4f94d4..cdfe9a350ac0 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
+@@ -231,9 +231,10 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
+ 	 * It doesn't match with the information reported into the databook.
+ 	 * At any rate, we need to understand if the CSUM hw computation is ok
+ 	 * and report this info to the upper layers. */
+-	ret = enh_desc_coe_rdes0(!!(rdes0 & RDES0_IPC_CSUM_ERROR),
+-				 !!(rdes0 & RDES0_FRAME_TYPE),
+-				 !!(rdes0 & ERDES0_RX_MAC_ADDR));
++	if (likely(ret == good_frame))
++		ret = enh_desc_coe_rdes0(!!(rdes0 & RDES0_IPC_CSUM_ERROR),
++					 !!(rdes0 & RDES0_FRAME_TYPE),
++					 !!(rdes0 & ERDES0_RX_MAC_ADDR));
  
- static ssize_t perm_hwaddr_show(struct slave *slave, char *buf)
- {
--	return sprintf(buf, "%pM\n", slave->perm_hwaddr);
-+	return sprintf(buf, "%*phC\n",
-+		       slave->dev->addr_len,
-+		       slave->perm_hwaddr);
- }
- static SLAVE_ATTR_RO(perm_hwaddr);
- 
+ 	if (unlikely(rdes0 & RDES0_DRIBBLING))
+ 		x->dribbling_bit++;
 -- 
 2.19.1
 
