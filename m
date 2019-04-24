@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A22EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD14C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C409C205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD152054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126792;
-	bh=7rVw9ZJFXF0WuoNp6q4vq4Mvp3lZnTGxCUyzIgj0bKU=;
+	s=default; t=1556126795;
+	bh=qi+/HfV0VHDdIQsv9jFy4YQh3tPo+/I48fm6xPFhd9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vkRQN5hCb1b4m9Jz2lQxh6Ei7YlLDwOdZHfXpvRqhKXjphQJbOnrMO62Mosc0QU/A
-	 S0px1DsVUoSH9Sd05gVQ8wOpjlyl3xZ8nn1L505BnFSnorVhGErGFQiJr+DYCW8FiC
-	 lh+8JfapgSIY0fulxBLTepimHv/qu9bk8ZtkSk2I=
+	b=gzDOeldmqcW9C/kcXPP2HBN9XBEc/EK8xhKxbowdhFr3MSqS42clkxrio/b8ei0tn
+	 UJz7I7nbcb+zARTJBsaR3PzmS25Zq5+xrg0Sk4aBo/pls3AGKJvk5FRRiHUIkEv83K
+	 izoPdPn4T9L0HYni7qfOVBtrA1lNuIAF04ks87bQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389282AbfDXR0a (ORCPT
+        id S2389566AbfDXR0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:26:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52368 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390220AbfDXR00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:26:26 -0400
+        id S2390232AbfDXR0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:26:31 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C13DA2054F;
-        Wed, 24 Apr 2019 17:26:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205092054F;
+        Wed, 24 Apr 2019 17:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126785;
-        bh=7rVw9ZJFXF0WuoNp6q4vq4Mvp3lZnTGxCUyzIgj0bKU=;
+        s=default; t=1556126790;
+        bh=qi+/HfV0VHDdIQsv9jFy4YQh3tPo+/I48fm6xPFhd9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IhMtZM8YrZrHZeIWUtrMCI391mQDKxlO+SaIUaS8SVu6ABM36dCKrC0Pu7nEEJkwd
-         gLi/twG3ppSN5egbNPSlciJ+2V65rRPtPaDUlYeWHbBpe1Q+lip1HVm1gkhVPCIKHg
-         aMBIkfXxG+tBJoUAsA8M1uaGVf2bbGtXX1iqE32s=
+        b=YOdly/HTw9ORzKO2ITCFgC1bJ/GOswTNdlZf5yefh8ab9FFz+cyJ11fL6B9g7gCZ3
+         P3+vRK+c35vf99L2yXUZSYx09zwxHpINw/dIqkKvxYAzp7bK95HQbrtdtHFJgE6hdw
+         bF+cq5qhup7dwsjAlZvGFfD7tPO02FM4Z0Mn5t8E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Pollak <leonardp@tr-host.de>,
+        stable@vger.kernel.org, Sergey Larin <cerg2010cerg2010@mail.ru>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Stable@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 16/70] Staging: iio: meter: fixed typo
-Date:   Wed, 24 Apr 2019 19:09:36 +0200
-Message-Id: <20190424170909.672887607@linuxfoundation.org>
+Subject: [PATCH 4.14 18/70] iio: gyro: mpu3050: fix chip ID reading
+Date:   Wed, 24 Apr 2019 19:09:38 +0200
+Message-Id: <20190424170909.973864311@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -61,33 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Pollak <leonardp@tr-host.de>
+From: Sergey Larin <cerg2010cerg2010@mail.ru>
 
-commit 0a8a29be499cbb67df79370aaf5109085509feb8 upstream.
+commit 409a51e0a4a5f908763191fae2c29008632eb712 upstream.
 
-This patch fixes an obvious typo, which will cause erroneously returning the Peak
-Voltage instead of the Peak Current.
+According to the datasheet, the last bit of CHIP_ID register controls
+I2C bus, and the first one is unused. Handle this correctly.
 
-Signed-off-by: Leonard Pollak <leonardp@tr-host.de>
+Note that there are chips out there that have a value such that
+the id check currently fails.
+
+Signed-off-by: Sergey Larin <cerg2010cerg2010@mail.ru>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Cc: <Stable@vger.kernel.org>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/iio/meter/ade7854.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/gyro/mpu3050-core.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/iio/meter/ade7854.c
-+++ b/drivers/staging/iio/meter/ade7854.c
-@@ -269,7 +269,7 @@ static IIO_DEV_ATTR_VPEAK(0644,
- static IIO_DEV_ATTR_IPEAK(0644,
- 		ade7854_read_32bit,
- 		ade7854_write_32bit,
--		ADE7854_VPEAK);
-+		ADE7854_IPEAK);
- static IIO_DEV_ATTR_APHCAL(0644,
- 		ade7854_read_16bit,
- 		ade7854_write_16bit,
+--- a/drivers/iio/gyro/mpu3050-core.c
++++ b/drivers/iio/gyro/mpu3050-core.c
+@@ -29,7 +29,8 @@
+ 
+ #include "mpu3050.h"
+ 
+-#define MPU3050_CHIP_ID		0x69
++#define MPU3050_CHIP_ID		0x68
++#define MPU3050_CHIP_ID_MASK	0x7E
+ 
+ /*
+  * Register map: anything suffixed *_H is a big-endian high byte and always
+@@ -1178,8 +1179,9 @@ int mpu3050_common_probe(struct device *
+ 		goto err_power_down;
+ 	}
+ 
+-	if (val != MPU3050_CHIP_ID) {
+-		dev_err(dev, "unsupported chip id %02x\n", (u8)val);
++	if ((val & MPU3050_CHIP_ID_MASK) != MPU3050_CHIP_ID) {
++		dev_err(dev, "unsupported chip id %02x\n",
++				(u8)(val & MPU3050_CHIP_ID_MASK));
+ 		ret = -ENODEV;
+ 		goto err_power_down;
+ 	}
 
 
