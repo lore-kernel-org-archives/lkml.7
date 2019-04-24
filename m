@@ -2,123 +2,85 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F166C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11303C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46625218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5476218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:53:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="CTHN3J5e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbfDXNxR (ORCPT
+        id S1730784AbfDXNxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:53:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:61928 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbfDXNxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:53:17 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 06:53:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,390,1549958400"; 
-   d="scan'208";a="294158042"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga004.jf.intel.com with ESMTP; 24 Apr 2019 06:53:16 -0700
-Date:   Wed, 24 Apr 2019 06:53:16 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-Message-ID: <20190424135316.GA18442@linux.intel.com>
-References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
- <20190422183553.GH1236@linux.intel.com>
- <bccc075c-68ce-6324-6f73-4d4e9a1d9683@linux.intel.com>
- <20190423174407.GC10720@linux.intel.com>
- <37c014d8-7562-92e6-d577-ddbe3565ea8e@linux.intel.com>
+        Wed, 24 Apr 2019 09:53:43 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43799 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730096AbfDXNxm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:53:42 -0400
+Received: by mail-io1-f65.google.com with SMTP id v9so51106iol.10
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 06:53:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tf3CjB2PxTkU5TU2/EIND2+4qjOUWPIkBjwis1N6aXo=;
+        b=CTHN3J5er1UnnDYGsGk6fG/x9KcrMTyT0pO9eOPWkrUqFMGNW4b/SFje6V8IyIyph7
+         aPiQWIo+RCw492hYTVhoIEyPEIuGLDWPGebEFrNnR7IkUdMBDz4BE21Qasxk/Kva51FV
+         zsGb3+2dQmu7XEmWsr/TqxnDBE1YyZ0+VjU+M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tf3CjB2PxTkU5TU2/EIND2+4qjOUWPIkBjwis1N6aXo=;
+        b=OAWY9ndA4V4FoyCcwCtYnZjIKT6XuXkXwipE0zCJzYLOpUcoFbMF3d2IDzca1xybQo
+         F37RwM8J4qtMZP84RLLhKOvtmWaUmZDr7BhytvEs9LplrRfCT2RqD0BIhV/jkMLdgT+t
+         8/FXf5JFXbh+r6mMYQ2M6otmNaK+exP3aV2vZSglrkIa9hgusuq6UDgjaMnin2+YLsCv
+         SuyES9uLIzweqlUWRGh9aMR1mjxulcbF3gm5xyOn3o3lnz5rf2oRP4UCwFtu6BZe7M4s
+         kHliqoBn0IpahfTJNz0Ws9O6CU6cbbEnjdMyMyFJobvv4vWPpnu0zqSqgPlXfKasUL0R
+         rPQA==
+X-Gm-Message-State: APjAAAWjDRHO6CBBZlnbdzeQmqYAG/BaN2+s7KyRkM1tVgPPtwyAp/4s
+        XB17M2FdOqH48H0ioQRZMt7vdWZwZtbt4DjaSGK/xQ==
+X-Google-Smtp-Source: APXvYqxxv+5c6L0yVlsd+hDlEzMH7SD5bF2E6fJRJeUAXdiFbsQdCUjqciPfSqc7+kX99Uio9tTWYsiJlr4SAbl5smE=
+X-Received: by 2002:a5e:8202:: with SMTP id l2mr18074592iom.144.1556114021179;
+ Wed, 24 Apr 2019 06:53:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <37c014d8-7562-92e6-d577-ddbe3565ea8e@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <155372999953.7602.13784796495137723805.stgit@warthog.procyon.org.uk>
+ <155373036414.7602.7964458548629410897.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155373036414.7602.7964458548629410897.stgit@warthog.procyon.org.uk>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 24 Apr 2019 15:53:29 +0200
+Message-ID: <CAJfpegvowwePJHEMRkaabx-NxLoJ5f8_QziPFyQUui+bmAaT1w@mail.gmail.com>
+Subject: Re: [RFC PATCH 44/68] vfs: Convert fuse to use the new mount API
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 09:59:50AM +0800, Like Xu wrote:
-> On 2019/4/24 1:44, Sean Christopherson wrote:
-> >Right, but isn't the f_intel_pt check for example completely irrelevant?
-> >f_intel_pt is true if and only if hardware supports PT, i.e. CPUID.0.EAX
-> >and thus entry->eax will already be >=0x14.
-> 
-> The f_intel_pt check is not only about hardware supports check but also
-> module_param (pt_mode) supports check.
-> 
-> So the case is the host does have PT support which means (host CPUID.0.EAX
-> already be >=0x14 for Intel CPUs) but kvm doesn't want advertise it and thus
-> the min() operation is needed.
-> 
-> >
-> >I don't fully understand whether or not KVM needs to raise the minimum to
-> >0xb regardless of h/w XSAVE support, but it's likely irrelevant in the end.
-> >
-> >Anyways, back to 0x1f, kvm_supported_intel_mcp() returns true if and only
-> >if hardware's CPUID.0.EAX >= 0x1f,
-> 
-> According to latest SDM, the max hardware CPUID.0.EAX is 0x1f and BIOS would
-> expose 0x1f only for multi-chip packaging CPUs (at least for now).
-> 
-> >i.e. adjusting entry->eax is always a
-> >nop.  So if KVM wants to advertise leaf 0x1f only when it's supported in
-> >hardware then adjusting entry->eax is unnecessary, and if KVM wants to
-> >unconditionally advertise 0x1f then adjusting entry->eax should also be
-> >done unconditionally.
-> 
-> It we have no check on kvm_supported_intel_mcp() in legacy code,
-> CPUID.0.EAX would be min() and thus less than 0x1f which means the cpuid.1f
-> info is not exposed.
+On Thu, Mar 28, 2019 at 12:46 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Convert the fuse filesystem to the new internal mount API as the old
+> one will be obsoleted and removed.  This allows greater flexibility in
+> communication of mount parameters between userspace, the VFS and the
+> filesystem.
+>
+> See Documentation/filesystems/mount_api.txt for more information.
 
-Ah crud, I'm an idiot.  I just spent two days conflating min() and max().
-So yeah, everything makes total sense now.  My apologies for wasting your
-time, I'll re-review the patch. 
+Should I be applying this, together with the vfs dependencies?  Or
+will you take care of these?
 
-> 
-> I know your point is to avoid min() totally (I thought so at the time) and I
-> have pointed out it's necessary for kvm features setting.
-> 
-> If KVM wants to unconditionally advertise 0x1f (in EMULATED way),
-> kvm needs cover other side effects and this patch only advertises 0x1f
-> when hardware has it.
-> 
-> It's very common that guest wants to set 0x1f regardless of h/w support
-> and this is another story.
-> 
-> >
-> >>>Given that the original code
-> >>>was "entry->eax = min(entry->eax, (u32)0xb);", my *guess* is that the
-> >>>idea was to always report "Extended Topology Enumeration Leaf" as
-> >>>supported so that userspace can enumerate the VM's topology to the guest
-> >>>even when hardware itself doesn't do so.
-> >>
-> >>If the host cpu mode is too antiquated to support 0xb, it wouldn't report
-> >>0xb for sure. The host cpuid.0.eax has been over 0xb for a long time and
-> >>reached 0x1f in the latest SDM.
-> >>
-> >>AFAICT, the original code keeps minimum cpuid.0.eax out of features guest
-> >>just used or at least it claimed to use.
-> >>
-> >>>
-> >>>Assuming we want to allow userspace to use "V2 Extended Topology
-> >>>Enumeration Leaf" regardless of hardware support, then this can simply be:
-> >>>
-> >>>   entry->eax = min(entry->eax, (u32)0x1f);
-> >>>
-> >>>Or am I completely missing something?
-> >
-> 
+One minor comment is that fuse conventionally uses "struct fuse_conn
+*fc", so "struct fs_context *fc" is confusing here.  There's one place
+you use "struct fs_context *fsc", which seems the right thing to do
+for all the cases.
+
+Thanks,
+Miklos
