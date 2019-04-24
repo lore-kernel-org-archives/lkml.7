@@ -2,240 +2,414 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C82A5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35966C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DED120811
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D8D2089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556116190;
+	bh=Kwn0Aue59nm7gbGIJwBk+SRASWzJlK5cH0KkXFtrIzo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TSmhOMfCcC5u2/VC1bsWKRxL3M8Dpgvu8AJjMduyBOWvQKjFDJfo5CL22w7i2LvdS
+	 UYHPpjk6JOu9W3LOJoWrwNSRA3k2b1eNeeyo/vc9omlVfCTfs9FsrcbTQLhE/tkfQ6
+	 Lle3fLsxRblqijQqvi8qc7LMKvVVTLKdRRlPyp4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbfDXO3a (ORCPT
+        id S1730631AbfDXO3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:29:30 -0400
-Received: from foss.arm.com ([217.140.101.70]:44926 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbfDXO33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:29:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F39D80D;
-        Wed, 24 Apr 2019 07:29:29 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B526D3F5AF;
-        Wed, 24 Apr 2019 07:29:27 -0700 (PDT)
-Subject: Re: [PATCH v10 2/5] KVM: arm/arm64: context-switch ptrauth registers
-To:     Dave Martin <Dave.Martin@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <1555994558-26349-1-git-send-email-amit.kachhap@arm.com>
- <1555994558-26349-3-git-send-email-amit.kachhap@arm.com>
- <20190424133903.GU3567@e103592.cambridge.arm.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <4e475e1f-80f2-372a-2c16-a03ac947525a@arm.com>
-Date:   Wed, 24 Apr 2019 15:29:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 10:29:49 -0400
+Received: from casper.infradead.org ([85.118.1.10]:45130 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfDXO3s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:29:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WjR4HTV7qgFEVgSxaDBz+HL+YULhchp0ntpB/fbNwAo=; b=nl0K/trfcEFfl0fgUuvgB/Cy7s
+        p5Su2AVROlsAVpv7mQl2w/BdxTiTlI14jiLTM9n8S4NnERt+Id5SvFsdWx/wMTK1pvf0CrbgBuyOM
+        HA2isB2qRyojA6i8EfF2Fe62oXVCIfY7moAnjrYczDHnHKfbpgObq3KZWDZ8HJ67N9Yd+B+hFcmVG
+        lqRX7u4ffK9zcpt/UK8O64BwSabPiVd0l5YE/dKOw1K4ijUg0JYFs00i36K3y/Wxhz5a2A+1qUH67
+        vqjro7xuJ/aMZ6/hIfl2nVdB/tlj+sdp9jWWNJofmt657NEho5xbxWRx6SOboM5DuLx620VQEXz+A
+        jVfoLK1A==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJIu7-0007Pd-QY; Wed, 24 Apr 2019 14:29:44 +0000
+Date:   Wed, 24 Apr 2019 11:29:37 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 19/63] Documentation: ACPI: move
+ apei/output_format.txt to firmware-guide/acpi and convert to reST
+Message-ID: <20190424112937.7b0f2b01@coco.lan>
+In-Reply-To: <20190423162932.21428-20-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-20-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190424133903.GU3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/04/2019 14:39, Dave Martin wrote:
-> On Tue, Apr 23, 2019 at 10:12:35AM +0530, Amit Daniel Kachhap wrote:
->> From: Mark Rutland <mark.rutland@arm.com>
->>
->> When pointer authentication is supported, a guest may wish to use it.
->> This patch adds the necessary KVM infrastructure for this to work, with
->> a semi-lazy context switch of the pointer auth state.
->>
->> Pointer authentication feature is only enabled when VHE is built
->> in the kernel and present in the CPU implementation so only VHE code
->> paths are modified.
->>
->> When we schedule a vcpu, we disable guest usage of pointer
->> authentication instructions and accesses to the keys. While these are
->> disabled, we avoid context-switching the keys. When we trap the guest
->> trying to use pointer authentication functionality, we change to eagerly
->> context-switching the keys, and enable the feature. The next time the
->> vcpu is scheduled out/in, we start again. However the host key save is
->> optimized and implemented inside ptrauth instruction/register access
->> trap.
->>
->> Pointer authentication consists of address authentication and generic
->> authentication, and CPUs in a system might have varied support for
->> either. Where support for either feature is not uniform, it is hidden
->> from guests via ID register emulation, as a result of the cpufeature
->> framework in the host.
->>
->> Unfortunately, address authentication and generic authentication cannot
->> be trapped separately, as the architecture provides a single EL2 trap
->> covering both. If we wish to expose one without the other, we cannot
->> prevent a (badly-written) guest from intermittently using a feature
->> which is not uniformly supported (when scheduled on a physical CPU which
->> supports the relevant feature). Hence, this patch expects both type of
->> authentication to be present in a cpu.
->>
->> This switch of key is done from guest enter/exit assembly as preparation
->> for the upcoming in-kernel pointer authentication support. Hence, these
->> key switching routines are not implemented in C code as they may cause
->> pointer authentication key signing error in some situations.
->>
->> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
->> [Only VHE, key switch in full assembly, vcpu_has_ptrauth checks
->> , save host key in ptrauth exception trap]
->> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> Reviewed-by: Julien Thierry <julien.thierry@arm.com>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Cc: Christoffer Dall <christoffer.dall@arm.com>
->> Cc: kvmarm@lists.cs.columbia.edu
->> ---
->> Changes since v9:
->>
->> * Removed hardcoding of enum values[Mark Zyngier].
->> * Changed kvm_ptrauth_asm.h to kvm_ptrauth.h[Mark Zyngier].
->> * Removed macro __ptrauth_save_state and applied inline [Marc Zyngier].
->> * Moved kvm_arm_vcpu_ptrauth_setup_lazy, kvm_arm_vcpu_ptrauth_enable and
->>   kvm_arm_vcpu_ptrauth_disable from *.c to kvm_emulate.h file [Marc Zyngier].
->> * Added/Modified comments at few places [Marc Zyngier].
-> 
-> [...]
-> 
->> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> 
-> [...]
-> 
->> @@ -1058,9 +1087,11 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
->>  					 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
->>  					 (0xfUL << ID_AA64ISAR1_GPA_SHIFT) |
->>  					 (0xfUL << ID_AA64ISAR1_GPI_SHIFT);
->> -		if (val & ptrauth_mask)
->> -			kvm_debug("ptrauth unsupported for guests, suppressing\n");
->> -		val &= ~ptrauth_mask;
->> +		if (!vcpu_has_ptrauth(vcpu)) {
->> +			if (val & ptrauth_mask)
->> +				kvm_debug("ptrauth unsupported for guests, suppressing\n");
->> +			val &= ~ptrauth_mask;
->> +		}
-> 
-> Hmmm, didn't spot this before, but this error message no longer makes
-> sense now that KVM _does_ support pointer auth.
-> 
-> Without vcpu_has_ptrauth(vcpu), we should just silently mask out the
-> relevant ID fields now (same as for SVE).
-> 
-> The patch below should achieve that.
-> 
-> --8<--
-> 
-> From c6065122c5cccef57108dff990ce8fb43426f88e Mon Sep 17 00:00:00 2001
-> From: Dave Martin <Dave.Martin@arm.com>
-> Date: Wed, 24 Apr 2019 14:32:29 +0100
-> Subject: [PATCH] KVM: arm64: sys_regs: Remove warning about missing pointer
->  auth support
-> 
-> KVM does support pointer auth for guests now, so it is
-> inappropriate (and confusing) to print a warning to dmesg when
-> userspace explicitly does not ask for pointer auth to be turned on
-> for a vcpu.
-> 
-> So, just squash the virtual ptrauth ID_AA64ISAR1_EL1 fields when
-> appropriate and remove the warning.
-> 
-> Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> ---
->  arch/arm64/kvm/sys_regs.c | 15 +++++----------
->  1 file changed, 5 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 7f06c2e..f599f5e 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1082,16 +1082,11 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
->  
->  	if (id == SYS_ID_AA64PFR0_EL1 && !vcpu_has_sve(vcpu)) {
->  		val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
-> -	} else if (id == SYS_ID_AA64ISAR1_EL1) {
-> -		const u64 ptrauth_mask = (0xfUL << ID_AA64ISAR1_APA_SHIFT) |
-> -					 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
-> -					 (0xfUL << ID_AA64ISAR1_GPA_SHIFT) |
-> -					 (0xfUL << ID_AA64ISAR1_GPI_SHIFT);
-> -		if (!vcpu_has_ptrauth(vcpu)) {
-> -			if (val & ptrauth_mask)
-> -				kvm_debug("ptrauth unsupported for guests, suppressing\n");
-> -			val &= ~ptrauth_mask;
-> -		}
-> +	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
-> +		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
-> +			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
-> +			 (0xfUL << ID_AA64ISAR1_GPA_SHIFT) |
-> +			 (0xfUL << ID_AA64ISAR1_GPI_SHIFT));
->  	}
->  
->  	return val;
-> 
+Em Wed, 24 Apr 2019 00:28:48 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-Since the series isn't in -next yet, I've squashed the above with the
-other nits I had in -queue.
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+
+For the conversion changes:
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+> ---
+>  Documentation/acpi/apei/output_format.txt     | 147 -----------------
+>  .../acpi/apei/output_format.rst               | 150 ++++++++++++++++++
+>  Documentation/firmware-guide/acpi/index.rst   |   1 +
+>  3 files changed, 151 insertions(+), 147 deletions(-)
+>  delete mode 100644 Documentation/acpi/apei/output_format.txt
+>  create mode 100644 Documentation/firmware-guide/acpi/apei/output_format.rst
+> 
+> diff --git a/Documentation/acpi/apei/output_format.txt b/Documentation/acpi/apei/output_format.txt
+> deleted file mode 100644
+> index 0c49c197c47a..000000000000
+> --- a/Documentation/acpi/apei/output_format.txt
+> +++ /dev/null
+> @@ -1,147 +0,0 @@
+> -                     APEI output format
+> -                     ~~~~~~~~~~~~~~~~~~
+> -
+> -APEI uses printk as hardware error reporting interface, the output
+> -format is as follow.
+> -
+> -<error record> :=
+> -APEI generic hardware error status
+> -severity: <integer>, <severity string>
+> -section: <integer>, severity: <integer>, <severity string>
+> -flags: <integer>
+> -<section flags strings>
+> -fru_id: <uuid string>
+> -fru_text: <string>
+> -section_type: <section type string>
+> -<section data>
+> -
+> -<severity string>* := recoverable | fatal | corrected | info
+> -
+> -<section flags strings># :=
+> -[primary][, containment warning][, reset][, threshold exceeded]\
+> -[, resource not accessible][, latent error]
+> -
+> -<section type string> := generic processor error | memory error | \
+> -PCIe error | unknown, <uuid string>
+> -
+> -<section data> :=
+> -<generic processor section data> | <memory section data> | \
+> -<pcie section data> | <null>
+> -
+> -<generic processor section data> :=
+> -[processor_type: <integer>, <proc type string>]
+> -[processor_isa: <integer>, <proc isa string>]
+> -[error_type: <integer>
+> -<proc error type strings>]
+> -[operation: <integer>, <proc operation string>]
+> -[flags: <integer>
+> -<proc flags strings>]
+> -[level: <integer>]
+> -[version_info: <integer>]
+> -[processor_id: <integer>]
+> -[target_address: <integer>]
+> -[requestor_id: <integer>]
+> -[responder_id: <integer>]
+> -[IP: <integer>]
+> -
+> -<proc type string>* := IA32/X64 | IA64
+> -
+> -<proc isa string>* := IA32 | IA64 | X64
+> -
+> -<processor error type strings># :=
+> -[cache error][, TLB error][, bus error][, micro-architectural error]
+> -
+> -<proc operation string>* := unknown or generic | data read | data write | \
+> -instruction execution
+> -
+> -<proc flags strings># :=
+> -[restartable][, precise IP][, overflow][, corrected]
+> -
+> -<memory section data> :=
+> -[error_status: <integer>]
+> -[physical_address: <integer>]
+> -[physical_address_mask: <integer>]
+> -[node: <integer>]
+> -[card: <integer>]
+> -[module: <integer>]
+> -[bank: <integer>]
+> -[device: <integer>]
+> -[row: <integer>]
+> -[column: <integer>]
+> -[bit_position: <integer>]
+> -[requestor_id: <integer>]
+> -[responder_id: <integer>]
+> -[target_id: <integer>]
+> -[error_type: <integer>, <mem error type string>]
+> -
+> -<mem error type string>* :=
+> -unknown | no error | single-bit ECC | multi-bit ECC | \
+> -single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
+> -target abort | parity error | watchdog timeout | invalid address | \
+> -mirror Broken | memory sparing | scrub corrected error | \
+> -scrub uncorrected error
+> -
+> -<pcie section data> :=
+> -[port_type: <integer>, <pcie port type string>]
+> -[version: <integer>.<integer>]
+> -[command: <integer>, status: <integer>]
+> -[device_id: <integer>:<integer>:<integer>.<integer>
+> -slot: <integer>
+> -secondary_bus: <integer>
+> -vendor_id: <integer>, device_id: <integer>
+> -class_code: <integer>]
+> -[serial number: <integer>, <integer>]
+> -[bridge: secondary_status: <integer>, control: <integer>]
+> -[aer_status: <integer>, aer_mask: <integer>
+> -<aer status string>
+> -[aer_uncor_severity: <integer>]
+> -aer_layer=<aer layer string>, aer_agent=<aer agent string>
+> -aer_tlp_header: <integer> <integer> <integer> <integer>]
+> -
+> -<pcie port type string>* := PCIe end point | legacy PCI end point | \
+> -unknown | unknown | root port | upstream switch port | \
+> -downstream switch port | PCIe to PCI/PCI-X bridge | \
+> -PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
+> -root complex event collector
+> -
+> -if section severity is fatal or recoverable
+> -<aer status string># :=
+> -unknown | unknown | unknown | unknown | Data Link Protocol | \
+> -unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
+> -Poisoned TLP | Flow Control Protocol | Completion Timeout | \
+> -Completer Abort | Unexpected Completion | Receiver Overflow | \
+> -Malformed TLP | ECRC | Unsupported Request
+> -else
+> -<aer status string># :=
+> -Receiver Error | unknown | unknown | unknown | unknown | unknown | \
+> -Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
+> -Replay Timer Timeout | Advisory Non-Fatal
+> -fi
+> -
+> -<aer layer string> :=
+> -Physical Layer | Data Link Layer | Transaction Layer
+> -
+> -<aer agent string> :=
+> -Receiver ID | Requester ID | Completer ID | Transmitter ID
+> -
+> -Where, [] designate corresponding content is optional
+> -
+> -All <field string> description with * has the following format:
+> -
+> -field: <integer>, <field string>
+> -
+> -Where value of <integer> should be the position of "string" in <field
+> -string> description. Otherwise, <field string> will be "unknown".  
+> -
+> -All <field strings> description with # has the following format:
+> -
+> -field: <integer>
+> -<field strings>
+> -
+> -Where each string in <fields strings> corresponding to one set bit of
+> -<integer>. The bit position is the position of "string" in <field
+> -strings> description.  
+> -
+> -For more detailed explanation of every field, please refer to UEFI
+> -specification version 2.3 or later, section Appendix N: Common
+> -Platform Error Record.
+> diff --git a/Documentation/firmware-guide/acpi/apei/output_format.rst b/Documentation/firmware-guide/acpi/apei/output_format.rst
+> new file mode 100644
+> index 000000000000..c2e7ebddb529
+> --- /dev/null
+> +++ b/Documentation/firmware-guide/acpi/apei/output_format.rst
+> @@ -0,0 +1,150 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +==================
+> +APEI output format
+> +==================
+> +
+> +APEI uses printk as hardware error reporting interface, the output
+> +format is as follow::
+> +
+> +        <error record> :=
+> +        APEI generic hardware error status
+> +        severity: <integer>, <severity string>
+> +        section: <integer>, severity: <integer>, <severity string>
+> +        flags: <integer>
+> +        <section flags strings>
+> +        fru_id: <uuid string>
+> +        fru_text: <string>
+> +        section_type: <section type string>
+> +        <section data>
+> +
+> +        <severity string>* := recoverable | fatal | corrected | info
+> +
+> +        <section flags strings># :=
+> +        [primary][, containment warning][, reset][, threshold exceeded]\
+> +        [, resource not accessible][, latent error]
+> +
+> +        <section type string> := generic processor error | memory error | \
+> +        PCIe error | unknown, <uuid string>
+> +
+> +        <section data> :=
+> +        <generic processor section data> | <memory section data> | \
+> +        <pcie section data> | <null>
+> +
+> +        <generic processor section data> :=
+> +        [processor_type: <integer>, <proc type string>]
+> +        [processor_isa: <integer>, <proc isa string>]
+> +        [error_type: <integer>
+> +        <proc error type strings>]
+> +        [operation: <integer>, <proc operation string>]
+> +        [flags: <integer>
+> +        <proc flags strings>]
+> +        [level: <integer>]
+> +        [version_info: <integer>]
+> +        [processor_id: <integer>]
+> +        [target_address: <integer>]
+> +        [requestor_id: <integer>]
+> +        [responder_id: <integer>]
+> +        [IP: <integer>]
+> +
+> +        <proc type string>* := IA32/X64 | IA64
+> +
+> +        <proc isa string>* := IA32 | IA64 | X64
+> +
+> +        <processor error type strings># :=
+> +        [cache error][, TLB error][, bus error][, micro-architectural error]
+> +
+> +        <proc operation string>* := unknown or generic | data read | data write | \
+> +        instruction execution
+> +
+> +        <proc flags strings># :=
+> +        [restartable][, precise IP][, overflow][, corrected]
+> +
+> +        <memory section data> :=
+> +        [error_status: <integer>]
+> +        [physical_address: <integer>]
+> +        [physical_address_mask: <integer>]
+> +        [node: <integer>]
+> +        [card: <integer>]
+> +        [module: <integer>]
+> +        [bank: <integer>]
+> +        [device: <integer>]
+> +        [row: <integer>]
+> +        [column: <integer>]
+> +        [bit_position: <integer>]
+> +        [requestor_id: <integer>]
+> +        [responder_id: <integer>]
+> +        [target_id: <integer>]
+> +        [error_type: <integer>, <mem error type string>]
+> +
+> +        <mem error type string>* :=
+> +        unknown | no error | single-bit ECC | multi-bit ECC | \
+> +        single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
+> +        target abort | parity error | watchdog timeout | invalid address | \
+> +        mirror Broken | memory sparing | scrub corrected error | \
+> +        scrub uncorrected error
+> +
+> +        <pcie section data> :=
+> +        [port_type: <integer>, <pcie port type string>]
+> +        [version: <integer>.<integer>]
+> +        [command: <integer>, status: <integer>]
+> +        [device_id: <integer>:<integer>:<integer>.<integer>
+> +        slot: <integer>
+> +        secondary_bus: <integer>
+> +        vendor_id: <integer>, device_id: <integer>
+> +        class_code: <integer>]
+> +        [serial number: <integer>, <integer>]
+> +        [bridge: secondary_status: <integer>, control: <integer>]
+> +        [aer_status: <integer>, aer_mask: <integer>
+> +        <aer status string>
+> +        [aer_uncor_severity: <integer>]
+> +        aer_layer=<aer layer string>, aer_agent=<aer agent string>
+> +        aer_tlp_header: <integer> <integer> <integer> <integer>]
+> +
+> +        <pcie port type string>* := PCIe end point | legacy PCI end point | \
+> +        unknown | unknown | root port | upstream switch port | \
+> +        downstream switch port | PCIe to PCI/PCI-X bridge | \
+> +        PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
+> +        root complex event collector
+> +
+> +        if section severity is fatal or recoverable
+> +        <aer status string># :=
+> +        unknown | unknown | unknown | unknown | Data Link Protocol | \
+> +        unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
+> +        Poisoned TLP | Flow Control Protocol | Completion Timeout | \
+> +        Completer Abort | Unexpected Completion | Receiver Overflow | \
+> +        Malformed TLP | ECRC | Unsupported Request
+> +        else
+> +        <aer status string># :=
+> +        Receiver Error | unknown | unknown | unknown | unknown | unknown | \
+> +        Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
+> +        Replay Timer Timeout | Advisory Non-Fatal
+> +        fi
+> +
+> +        <aer layer string> :=
+> +        Physical Layer | Data Link Layer | Transaction Layer
+> +
+> +        <aer agent string> :=
+> +        Receiver ID | Requester ID | Completer ID | Transmitter ID
+> +
+> +Where, [] designate corresponding content is optional
+> +
+> +All <field string> description with * has the following format::
+> +
+> +        field: <integer>, <field string>
+> +
+> +Where value of <integer> should be the position of "string" in <field
+> +string> description. Otherwise, <field string> will be "unknown".  
+> +
+> +All <field strings> description with # has the following format::
+> +
+> +        field: <integer>
+> +        <field strings>
+> +
+> +Where each string in <fields strings> corresponding to one set bit of
+> +<integer>. The bit position is the position of "string" in <field
+> +strings> description.  
+> +
+> +For more detailed explanation of every field, please refer to UEFI
+> +specification version 2.3 or later, section Appendix N: Common
+> +Platform Error Record.
+> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+> index e9f253d54897..869badba6d7a 100644
+> --- a/Documentation/firmware-guide/acpi/index.rst
+> +++ b/Documentation/firmware-guide/acpi/index.rst
+> @@ -17,6 +17,7 @@ ACPI Support
+>     DSD-properties-rules
+>     debug
+>     aml-debugger
+> +   apei/output_format
+>     gpio-properties
+>     i2c-muxes
+>     acpi-lid
+
+
 
 Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Mauro
