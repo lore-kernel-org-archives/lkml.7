@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131BDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2790C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA1D2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98244206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126070;
-	bh=8SXN7kVEbWneN/fUkuZsPwDRcUCNZxC/qJjPUpWZTNQ=;
+	s=default; t=1556126074;
+	bh=fHm1lQ58fZ+2Oho54RIE+k5BYDeaoq5LDGwRmBj+Do0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xe9LVyj2v50wrLEhbTqH57Raf+sQjoh23zXq065T74EjAF7nFDw41oQpLFR9yyhUR
-	 8025+CexMYtV3Dvqcn/LOdMQKpqRvXjpnpRzW8kA1hXCMY6nqW1lhmaAb8zlxYg9OC
-	 pDmv53qqtZgfUVyD+Y3Hpjb8pIVpTorkOy4q8TeA=
+	b=aedEEVPT7Ti+eDKn/v8go0wGPVnRK4F3vLy8uf6aqvKZPMYeY9wiIkgcXlvNrRi0X
+	 cdeRE3pdi7KC5mtfL6CezuYqsiuv6ypiw6g+IjkcAWmc3+RhcwFByY/qHKXxdFsUrA
+	 BUpUKyox93e+0UF+1ND1dl5OKhydpJz4XVOSnmy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388075AbfDXRO3 (ORCPT
+        id S2388085AbfDXROd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:14:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38592 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:14:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388062AbfDXROY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:14:24 -0400
+        id S2387635AbfDXRO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:27 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B5AD218FE;
-        Wed, 24 Apr 2019 17:14:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1C6C206BA;
+        Wed, 24 Apr 2019 17:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126063;
-        bh=8SXN7kVEbWneN/fUkuZsPwDRcUCNZxC/qJjPUpWZTNQ=;
+        s=default; t=1556126066;
+        bh=fHm1lQ58fZ+2Oho54RIE+k5BYDeaoq5LDGwRmBj+Do0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vnIdkv5U5s+4FK4ORMnAETbJWxn8TS5tLnRt4AIq7bZwNuF6+onedthmtI4vHlb6S
-         dLpueLIem8vYepDApjOXZcbQHa4BRAWLGqAPiuDYA5srps4J8W7ferIz/1W39NWPQL
-         2pw3CuRRwmGwIHB0U30Juw0ADcNe+3BUdwjLzFoo=
+        b=auX+NhqM0l/l4vhAOEJGCfvN2wqYbrzZ9xm1EKPUEFej9eEqolK96zbWHxjMauv3O
+         XGA6LBtU34Dg7H3eW3RUzVxRR7klYoTSLb9nDOfChwgg8R+xfONDWq9GIKRZN+VHIw
+         BsLdjqhXHFaTOr1m6Q1M4Dg7fwkcUX4fRDH8/PP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Buland Singh <bsingh@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 035/104] hpet: Fix missing = character in the __setup() code of hpet_mmap_enable
-Date:   Wed, 24 Apr 2019 19:08:52 +0200
-Message-Id: <20190424170858.170359281@linuxfoundation.org>
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        Fabio Estevam <festevam@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 036/104] dmaengine: imx-dma: fix warning comparison of distinct pointer types
+Date:   Wed, 24 Apr 2019 19:08:53 +0200
+Message-Id: <20190424170858.348804107@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -59,56 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 24d48a61f2666630da130cc2ec2e526eacf229e3 ]
+[ Upstream commit 9227ab5643cb8350449502dd9e3168a873ab0e3b ]
 
-Commit '3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for
-user processes")' introduced a new kernel command line parameter hpet_mmap,
-that is required to expose the memory map of the HPET registers to
-user-space. Unfortunately the kernel command line parameter 'hpet_mmap' is
-broken and never takes effect due to missing '=' character in the __setup()
-code of hpet_mmap_enable.
+The warning got introduced by commit 930507c18304 ("arm64: add basic
+Kconfig symbols for i.MX8"). Since it got enabled for arm64. The warning
+haven't been seen before since size_t was 'unsigned int' when built on
+arm32.
 
-Before this patch:
+../drivers/dma/imx-dma.c: In function ‘imxdma_sg_next’:
+../include/linux/kernel.h:846:29: warning: comparison of distinct pointer types lacks a cast
+   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+                             ^~
+../include/linux/kernel.h:860:4: note: in expansion of macro ‘__typecheck’
+   (__typecheck(x, y) && __no_side_effects(x, y))
+    ^~~~~~~~~~~
+../include/linux/kernel.h:870:24: note: in expansion of macro ‘__safe_cmp’
+  __builtin_choose_expr(__safe_cmp(x, y), \
+                        ^~~~~~~~~~
+../include/linux/kernel.h:879:19: note: in expansion of macro ‘__careful_cmp’
+ #define min(x, y) __careful_cmp(x, y, <)
+                   ^~~~~~~~~~~~~
+../drivers/dma/imx-dma.c:288:8: note: in expansion of macro ‘min’
+  now = min(d->len, sg_dma_len(sg));
+        ^~~
 
-dmesg output with the kernel command line parameter hpet_mmap=1
+Rework so that we use min_t and pass in the size_t that returns the
+minimum of two values, using the specified type.
 
-[    0.204152] HPET mmap disabled
-
-dmesg output with the kernel command line parameter hpet_mmap=0
-
-[    0.204192] HPET mmap disabled
-
-After this patch:
-
-dmesg output with the kernel command line parameter hpet_mmap=1
-
-[    0.203945] HPET mmap enabled
-
-dmesg output with the kernel command line parameter hpet_mmap=0
-
-[    0.204652] HPET mmap disabled
-
-Fixes: 3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for user processes")
-Signed-off-by: Buland Singh <bsingh@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Acked-by: Olof Johansson <olof@lixom.net>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/hpet.c | 2 +-
+ drivers/dma/imx-dma.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index d5d4cd82b9f7..978a782f5e30 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -377,7 +377,7 @@ static __init int hpet_mmap_enable(char *str)
- 	pr_info("HPET mmap %s\n", hpet_mmap_enabled ? "enabled" : "disabled");
- 	return 1;
- }
--__setup("hpet_mmap", hpet_mmap_enable);
-+__setup("hpet_mmap=", hpet_mmap_enable);
+diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+index ddfd8024881e..f0182c5001ad 100644
+--- a/drivers/dma/imx-dma.c
++++ b/drivers/dma/imx-dma.c
+@@ -291,7 +291,7 @@ static inline int imxdma_sg_next(struct imxdma_desc *d)
+ 	struct scatterlist *sg = d->sg;
+ 	unsigned long now;
  
- static int hpet_mmap(struct file *file, struct vm_area_struct *vma)
- {
+-	now = min(d->len, sg_dma_len(sg));
++	now = min_t(size_t, d->len, sg_dma_len(sg));
+ 	if (d->len != IMX_DMA_LENGTH_LOOP)
+ 		d->len -= now;
+ 
 -- 
 2.19.1
 
