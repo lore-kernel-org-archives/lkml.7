@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B288C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BCDC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F8A218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93D821909
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126291;
-	bh=eb+q5GIfKMAJBC6s21ldRNKzV9wxFmml8NNQk0t/fLY=;
+	s=default; t=1556126294;
+	bh=4mZTfEBbLxcObbnbte3iO3ARaV9O/zq8HnfKVNttTYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgyEXdsWAtQFQNw2s5b6DL5GYGXc0bMarSiNsGd45L0OKeO6QNkj6+6gENRj5tJke
-	 SLgPwxJB2ql//lUm3td+AaHs77vtSTHm5yLHKPxi3XuHOkoe1gZyF6BbZO/75rRVB2
-	 BFsnxUIvyzQOhcY0gE+qbsmF14TxPSgiGOjvtaIM=
+	b=w1Fv3BFWFiju3XcmP8c9+CoRVZap6deJFosMIGr8RCmHmvNv0W8toqJOC9lsx4oeg
+	 lQkQhQQ6RzDNwRylPoISpwOpQOAF+C7QA4r8zQH2NQqswisWoKY6dZgatBA4pPp0Mv
+	 y8Fc+EJgoYSIMA30sR756WRph0owbV17T26NJbTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388349AbfDXRSK (ORCPT
+        id S2388115AbfDXRSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43108 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388749AbfDXRSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:18:07 -0400
+        id S2388238AbfDXRSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:18:10 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E74F1218B0;
-        Wed, 24 Apr 2019 17:18:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6648218B0;
+        Wed, 24 Apr 2019 17:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126286;
-        bh=eb+q5GIfKMAJBC6s21ldRNKzV9wxFmml8NNQk0t/fLY=;
+        s=default; t=1556126289;
+        bh=4mZTfEBbLxcObbnbte3iO3ARaV9O/zq8HnfKVNttTYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r9vMcD3XqRkHjlFxx4+GX+Vy2MjjgAOd1Z944miOu62CqVWZok+xztvk7xmbU8SM2
-         bsamPmTodQ6cPzpLPVqiUtukvZbJSH2n12Xy4BPTkHk6RTpTwyyRmJwX8LSrTRLFWY
-         RXFhvzB2EOVnuCa2HbinW6mh7Ow4ppmwUQDGGt/c=
+        b=gK9xYhH9wDkA8g3Tv6uVOfyqz6B2KGkDuAvOVDcvByY85iLPBlttUbTRhahabz+sa
+         nvNROfKiTOfxVEzA73ga6dfd87AywNAIJJtPVMTCg/HG3DSdsUl24dExiudYwFQSGJ
+         gSi08QWRugFZaUsJdSpo+WpRPY3cFalCUXWosGSI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Timo Alho <talho@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Buland Singh <bsingh@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 059/168] soc/tegra: fuse: Fix illegal free of IO base address
-Date:   Wed, 24 Apr 2019 19:08:23 +0200
-Message-Id: <20190424170927.289204298@linuxfoundation.org>
+Subject: [PATCH 4.4 060/168] hpet: Fix missing = character in the __setup() code of hpet_mmap_enable
+Date:   Wed, 24 Apr 2019 19:08:24 +0200
+Message-Id: <20190424170927.345741274@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,106 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 51294bf6b9e897d595466dcda5a3f2751906a200 ]
+[ Upstream commit 24d48a61f2666630da130cc2ec2e526eacf229e3 ]
 
-On cases where device tree entries for fuse and clock provider are in
-different order, fuse driver needs to defer probing. This leads to
-freeing incorrect IO base address as the fuse->base variable gets
-overwritten once during first probe invocation. This leads to the
-following spew during boot:
+Commit '3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for
+user processes")' introduced a new kernel command line parameter hpet_mmap,
+that is required to expose the memory map of the HPET registers to
+user-space. Unfortunately the kernel command line parameter 'hpet_mmap' is
+broken and never takes effect due to missing '=' character in the __setup()
+code of hpet_mmap_enable.
 
-[    3.082285] Trying to vfree() nonexistent vm area (00000000cfe8fd94)
-[    3.082308] WARNING: CPU: 5 PID: 126 at /hdd/l4t/kernel/stable/mm/vmalloc.c:1511 __vunmap+0xcc/0xd8
-[    3.082318] Modules linked in:
-[    3.082330] CPU: 5 PID: 126 Comm: kworker/5:1 Tainted: G S                4.19.7-tegra-gce119d3 #1
-[    3.082340] Hardware name: quill (DT)
-[    3.082353] Workqueue: events deferred_probe_work_func
-[    3.082364] pstate: 40000005 (nZcv daif -PAN -UAO)
-[    3.082372] pc : __vunmap+0xcc/0xd8
-[    3.082379] lr : __vunmap+0xcc/0xd8
-[    3.082385] sp : ffff00000a1d3b60
-[    3.082391] x29: ffff00000a1d3b60 x28: 0000000000000000
-[    3.082402] x27: 0000000000000000 x26: ffff000008e8b610
-[    3.082413] x25: 0000000000000000 x24: 0000000000000009
-[    3.082423] x23: ffff000009221a90 x22: ffff000009f6d000
-[    3.082432] x21: 0000000000000000 x20: 0000000000000000
-[    3.082442] x19: ffff000009f6d000 x18: ffffffffffffffff
-[    3.082452] x17: 0000000000000000 x16: 0000000000000000
-[    3.082462] x15: ffff0000091396c8 x14: 0720072007200720
-[    3.082471] x13: 0720072007200720 x12: 0720072907340739
-[    3.082481] x11: 0764076607380765 x10: 0766076307300730
-[    3.082491] x9 : 0730073007300730 x8 : 0730073007280720
-[    3.082501] x7 : 0761076507720761 x6 : 0000000000000102
-[    3.082510] x5 : 0000000000000000 x4 : 0000000000000000
-[    3.082519] x3 : ffffffffffffffff x2 : ffff000009150ff8
-[    3.082528] x1 : 3d95b1429fff5200 x0 : 0000000000000000
-[    3.082538] Call trace:
-[    3.082545]  __vunmap+0xcc/0xd8
-[    3.082552]  vunmap+0x24/0x30
-[    3.082561]  __iounmap+0x2c/0x38
-[    3.082569]  tegra_fuse_probe+0xc8/0x118
-[    3.082577]  platform_drv_probe+0x50/0xa0
-[    3.082585]  really_probe+0x1b0/0x288
-[    3.082593]  driver_probe_device+0x58/0x100
-[    3.082601]  __device_attach_driver+0x98/0xf0
-[    3.082609]  bus_for_each_drv+0x64/0xc8
-[    3.082616]  __device_attach+0xd8/0x130
-[    3.082624]  device_initial_probe+0x10/0x18
-[    3.082631]  bus_probe_device+0x90/0x98
-[    3.082638]  deferred_probe_work_func+0x74/0xb0
-[    3.082649]  process_one_work+0x1e0/0x318
-[    3.082656]  worker_thread+0x228/0x450
-[    3.082664]  kthread+0x128/0x130
-[    3.082672]  ret_from_fork+0x10/0x18
-[    3.082678] ---[ end trace 0810fe6ba772c1c7 ]---
+Before this patch:
 
-Fix this by retaining the value of fuse->base until driver has
-successfully probed.
+dmesg output with the kernel command line parameter hpet_mmap=1
 
-Signed-off-by: Timo Alho <talho@nvidia.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+[    0.204152] HPET mmap disabled
+
+dmesg output with the kernel command line parameter hpet_mmap=0
+
+[    0.204192] HPET mmap disabled
+
+After this patch:
+
+dmesg output with the kernel command line parameter hpet_mmap=1
+
+[    0.203945] HPET mmap enabled
+
+dmesg output with the kernel command line parameter hpet_mmap=0
+
+[    0.204652] HPET mmap disabled
+
+Fixes: 3d035f580699 ("drivers/char/hpet.c: allow user controlled mmap for user processes")
+Signed-off-by: Buland Singh <bsingh@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/fuse/fuse-tegra.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/char/hpet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
-index de2c1bfe28b5..c4f5e5bbb8dc 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-@@ -131,13 +131,17 @@ static int tegra_fuse_probe(struct platform_device *pdev)
- 	/* take over the memory region from the early initialization */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	fuse->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(fuse->base))
--		return PTR_ERR(fuse->base);
-+	if (IS_ERR(fuse->base)) {
-+		err = PTR_ERR(fuse->base);
-+		fuse->base = base;
-+		return err;
-+	}
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index 240b6cf1d97c..72e073895ed9 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -376,7 +376,7 @@ static __init int hpet_mmap_enable(char *str)
+ 	pr_info("HPET mmap %s\n", hpet_mmap_enabled ? "enabled" : "disabled");
+ 	return 1;
+ }
+-__setup("hpet_mmap", hpet_mmap_enable);
++__setup("hpet_mmap=", hpet_mmap_enable);
  
- 	fuse->clk = devm_clk_get(&pdev->dev, "fuse");
- 	if (IS_ERR(fuse->clk)) {
- 		dev_err(&pdev->dev, "failed to get FUSE clock: %ld",
- 			PTR_ERR(fuse->clk));
-+		fuse->base = base;
- 		return PTR_ERR(fuse->clk);
- 	}
- 
-@@ -146,8 +150,10 @@ static int tegra_fuse_probe(struct platform_device *pdev)
- 
- 	if (fuse->soc->probe) {
- 		err = fuse->soc->probe(fuse);
--		if (err < 0)
-+		if (err < 0) {
-+			fuse->base = base;
- 			return err;
-+		}
- 	}
- 
- 	if (tegra_fuse_create_sysfs(&pdev->dev, fuse->soc->info->size,
+ static int hpet_mmap(struct file *file, struct vm_area_struct *vma)
+ {
 -- 
 2.19.1
 
