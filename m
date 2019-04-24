@@ -2,54 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6B0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69E7C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF5520685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77EF320685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129018;
-	bh=N2YnB61ZX/zEB1o2cpKuTrUAagtS2Ydtq+zcQU7TS6I=;
+	s=default; t=1556129023;
+	bh=XIb/dPGbMf3xTM6F0Lj6BscROZsl+N1zvbyhLojL0Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jvt5hP5U0s+6bdYq3VJAPCLpjxoy89gOKKZC5N9MbuhWS1pT4lNadIEReDQxRe4//
-	 2RGTpG0qRlp6JuVSis2z16HwMBaB/Ty9KvYdovU9XGFC1Xwo7RfmocS7G9KOCwgT/O
-	 HwJWqcMOoCroEn/IXbjFOA5Z8LkTrm9ndKxM5mh4=
+	b=e9wcFIHLK36LryX6YFUEUXu4BRszoVz4S/zLmvkkuERs/fbFPKkpSvHeB0IgjHjKs
+	 a2xxHLVbGIDXokCi4XHkpO6qAgtOMw/kxGf0Obqa33a8sYsvfgAubVBMWeUUcZNUDB
+	 gN0dqKPqTX9kfSgibBJCDpDf9LCD5ozXXUVhEAuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389097AbfDXRTx (ORCPT
+        id S2389088AbfDXRTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:19:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45158 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:19:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389056AbfDXRTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:19:49 -0400
+        id S2389063AbfDXRTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:19:46 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF97521905;
-        Wed, 24 Apr 2019 17:19:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35F7E21907;
+        Wed, 24 Apr 2019 17:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126388;
-        bh=N2YnB61ZX/zEB1o2cpKuTrUAagtS2Ydtq+zcQU7TS6I=;
+        s=default; t=1556126385;
+        bh=XIb/dPGbMf3xTM6F0Lj6BscROZsl+N1zvbyhLojL0Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zHhrCsFozpq+suf+0Jd//xP0pLcSNNndeYAK6VRR0U1NCmJ4btfygO+HYHtLCCcLw
-         20pcgOPvNGIyGqUaVGJEqPW8LnqLkrtvXGtWomFnzwuX+1HevTofLHoXfAGKc7WsyX
-         fOXHU+/7bbdypmSO+/ZQ4PRNoFdJHCg1itAngzCs=
+        b=TVeGwOgRl/RIUKfFr7ja+PXryTkNoUOCJvainx9Rc86DMbakljHmGizCX1h/Gm8Si
+         NfP7uJvFGLuAIipDPV4JbSGhumV5ZJ9JZ0xuL3mEHxSDjWgdRGZxttD8LTaSL1v5FM
+         0Pv6sGJk7kKporYjO2+ut9+DxBxiOYQd8Gm2Y5GQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 051/168] e1000e: fix cyclic resets at link up with active tx
-Date:   Wed, 24 Apr 2019 19:08:15 +0200
-Message-Id: <20190424170926.817047361@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 4.4 093/168] arm64: futex: Fix FUTEX_WAKE_OP atomic ops with non-zero result value
+Date:   Wed, 24 Apr 2019 19:08:57 +0200
+Message-Id: <20190424170929.223729470@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -62,91 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0f9e980bf5ee1a97e2e401c846b2af989eb21c61 ]
+From: Will Deacon <will.deacon@arm.com>
 
-I'm seeing series of e1000e resets (sometimes endless) at system boot
-if something generates tx traffic at this time. In my case this is
-netconsole who sends message "e1000e 0000:02:00.0: Some CPU C-states
-have been disabled in order to enable jumbo frames" from e1000e itself.
-As result e1000_watchdog_task sees used tx buffer while carrier is off
-and start this reset cycle again.
+commit 045afc24124d80c6998d9c770844c67912083506 upstream.
 
-[   17.794359] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
-[   17.794714] IPv6: ADDRCONF(NETDEV_CHANGE): eth1: link becomes ready
-[   22.936455] e1000e 0000:02:00.0 eth1: changing MTU from 1500 to 9000
-[   23.033336] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   26.102364] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
-[   27.174495] 8021q: 802.1Q VLAN Support v1.8
-[   27.174513] 8021q: adding VLAN 0 to HW filter on device eth1
-[   30.671724] cgroup: cgroup: disabling cgroup2 socket matching due to net_prio or net_cls activation
-[   30.898564] netpoll: netconsole: local port 6666
-[   30.898566] netpoll: netconsole: local IPv6 address 2a02:6b8:0:80b:beae:c5ff:fe28:23f8
-[   30.898567] netpoll: netconsole: interface 'eth1'
-[   30.898568] netpoll: netconsole: remote port 6666
-[   30.898568] netpoll: netconsole: remote IPv6 address 2a02:6b8:b000:605c:e61d:2dff:fe03:3790
-[   30.898569] netpoll: netconsole: remote ethernet address b0:a8:6e:f4:ff:c0
-[   30.917747] console [netcon0] enabled
-[   30.917749] netconsole: network logging started
-[   31.453353] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.185730] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.321840] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.465822] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.597423] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.745417] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   34.877356] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   35.005441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   35.157376] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   35.289362] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   35.417441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-[   37.790342] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
+Rather embarrassingly, our futex() FUTEX_WAKE_OP implementation doesn't
+explicitly set the return value on the non-faulting path and instead
+leaves it holding the result of the underlying atomic operation. This
+means that any FUTEX_WAKE_OP atomic operation which computes a non-zero
+value will be reported as having failed. Regrettably, I wrote the buggy
+code back in 2011 and it was upstreamed as part of the initial arm64
+support in 2012.
 
-This patch flushes tx buffers only once when carrier is off
-rather than at each watchdog iteration.
+The reasons we appear to get away with this are:
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  1. FUTEX_WAKE_OP is rarely used and therefore doesn't appear to get
+     exercised by futex() test applications
+
+  2. If the result of the atomic operation is zero, the system call
+     behaves correctly
+
+  3. Prior to version 2.25, the only operation used by GLIBC set the
+     futex to zero, and therefore worked as expected. From 2.25 onwards,
+     FUTEX_WAKE_OP is not used by GLIBC at all.
+
+Fix the implementation by ensuring that the return value is either 0
+to indicate that the atomic operation completed successfully, or -EFAULT
+if we encountered a fault when accessing the user mapping.
+
+Cc: <stable@kernel.org>
+Fixes: 6170a97460db ("arm64: Atomic operations")
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/intel/e1000e/netdev.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ arch/arm64/include/asm/futex.h |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 6b1cacd86c6e..44312962b64e 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -5246,8 +5246,13 @@ static void e1000_watchdog_task(struct work_struct *work)
- 			/* 8000ES2LAN requires a Rx packet buffer work-around
- 			 * on link down event; reset the controller to flush
- 			 * the Rx packet buffer.
-+			 *
-+			 * If the link is lost the controller stops DMA, but
-+			 * if there is queued Tx work it cannot be done.  So
-+			 * reset the controller to flush the Tx packet buffers.
- 			 */
--			if (adapter->flags & FLAG_RX_NEEDS_RESTART)
-+			if ((adapter->flags & FLAG_RX_NEEDS_RESTART) ||
-+			    e1000_desc_unused(tx_ring) + 1 < tx_ring->count)
- 				adapter->flags |= FLAG_RESTART_NOW;
- 			else
- 				pm_schedule_suspend(netdev->dev.parent,
-@@ -5270,14 +5275,6 @@ link_up:
- 	adapter->gotc_old = adapter->stats.gotc;
- 	spin_unlock(&adapter->stats64_lock);
+--- a/arch/arm64/include/asm/futex.h
++++ b/arch/arm64/include/asm/futex.h
+@@ -33,8 +33,8 @@
+ "	prfm	pstl1strm, %2\n"					\
+ "1:	ldxr	%w1, %2\n"						\
+ 	insn "\n"							\
+-"2:	stlxr	%w3, %w0, %2\n"						\
+-"	cbnz	%w3, 1b\n"						\
++"2:	stlxr	%w0, %w3, %2\n"						\
++"	cbnz	%w0, 1b\n"						\
+ "	dmb	ish\n"							\
+ "3:\n"									\
+ "	.pushsection .fixup,\"ax\"\n"					\
+@@ -55,29 +55,29 @@
+ static inline int
+ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ {
+-	int oldval = 0, ret, tmp;
++	int oldval, ret, tmp;
  
--	/* If the link is lost the controller stops DMA, but
--	 * if there is queued Tx work it cannot be done.  So
--	 * reset the controller to flush the Tx packet buffers.
--	 */
--	if (!netif_carrier_ok(netdev) &&
--	    (e1000_desc_unused(tx_ring) + 1 < tx_ring->count))
--		adapter->flags |= FLAG_RESTART_NOW;
--
- 	/* If reset is necessary, do it outside of interrupt context. */
- 	if (adapter->flags & FLAG_RESTART_NOW) {
- 		schedule_work(&adapter->reset_task);
--- 
-2.19.1
-
+ 	pagefault_disable();
+ 
+ 	switch (op) {
+ 	case FUTEX_OP_SET:
+-		__futex_atomic_op("mov	%w0, %w4",
++		__futex_atomic_op("mov	%w3, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_ADD:
+-		__futex_atomic_op("add	%w0, %w1, %w4",
++		__futex_atomic_op("add	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_OR:
+-		__futex_atomic_op("orr	%w0, %w1, %w4",
++		__futex_atomic_op("orr	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_ANDN:
+-		__futex_atomic_op("and	%w0, %w1, %w4",
++		__futex_atomic_op("and	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, ~oparg);
+ 		break;
+ 	case FUTEX_OP_XOR:
+-		__futex_atomic_op("eor	%w0, %w1, %w4",
++		__futex_atomic_op("eor	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	default:
 
 
