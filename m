@@ -2,99 +2,72 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE31C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE24C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95DCE2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:58:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117903;
-	bh=xHlfVqa0kSUgTUE8xzl0rDE5+EV3gOiQhdltomlUzmE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R9/2PZh9dUOUaDkJZ6/Qu4BuRWR1WFWnWZ6mETIqdR2qD2CA92v2PVjdJFaw32tLV
-	 EOaU4KCKuVAoi/K7jI+kYdqDos7iOh67MZuq+G3co3tHW1kKrDEdAOruTvNTvsY/G8
-	 ullao85xWT0vN8KaAW6K96glKyOVmDFQBFkcOJx8=
+	by mail.kernel.org (Postfix) with ESMTP id 6C9192089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:58:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p5YV03+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732631AbfDXO6W (ORCPT
+        id S1733117AbfDXO60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 24 Apr 2019 10:58:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55696 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733098AbfDXO6W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Apr 2019 10:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732299AbfDXOrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:47:42 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01A6B218FE;
-        Wed, 24 Apr 2019 14:47:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117262;
-        bh=xHlfVqa0kSUgTUE8xzl0rDE5+EV3gOiQhdltomlUzmE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XIsGyCI0FG99KXYvuzras4fL2ePUXJ9f4U+dLC9Y73ow7Y0GPE5OWqgI+M/QNFRav
-         XqhkTYaFII4dmNlsLg7fYWqmAgj3XDUvfDz8mHtWITzLGMu1kZ2cvrvVdw7YzZA7Gk
-         MP1BLzzcmc51ky49YWrF4oBqmA3U+ee7fRVJUydo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaro Koskinen <aaro.koskinen@nokia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 14/35] net: stmmac: fix dropping of multi-descriptor RX frames
-Date:   Wed, 24 Apr 2019 10:46:48 -0400
-Message-Id: <20190424144709.30215-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424144709.30215-1-sashal@kernel.org>
-References: <20190424144709.30215-1-sashal@kernel.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1mouZczOeO2A7CdGV7/0QYREGnlTGGd5nVQgKU+H42o=; b=p5YV03+vE+syj+TAByVW/aniU
+        RZYQk9+H/T4WDdbmtLIgHJSQwHfvddmj58rmxH3243LCcDb43RapjFTZZyehzd2BPZyuzhBQgjceh
+        kawuyDSmYFqC01BfHMzV366RiS4MnHby8QhzTPhUDZL5PzjkgN8nEMmwfz0X/V2l6huBX+056QLuS
+        WmjAq3sEUIOw4oDRQDhURe0N+1McX9GiokAECSK2NVu41/jXK8curzbr04PO3GgsSAo0kzhYEK4qd
+        ge2IbIKaKqXeKcs8RU8kvC7xcWqxEXoSuhOic7yX9yZxRaOKuwS2x+X5ZLsZps4lfaAKqhDlAc3xJ
+        CFICgANVw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJJLn-0004P1-Gm; Wed, 24 Apr 2019 14:58:19 +0000
+Date:   Wed, 24 Apr 2019 07:58:19 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Murphy <tmurphy@arista.com>, Joerg Roedel <joro@8bytes.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Tom Murphy <murphyt7@tcd.ie>
+Subject: Re: [PATCH] iommu/amd: flush not present cache in iommu_map_page
+Message-ID: <20190424145819.GA16141@infradead.org>
+References: <20190424141900.8883-1-tmurphy@arista.com>
+ <20190424143246.GA24079@infradead.org>
+ <CAPL0++7w0wR+hid=0XkGtH2wR0qvL1oNheEMQOM=8CtyhNLmag@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPL0++7w0wR+hid=0XkGtH2wR0qvL1oNheEMQOM=8CtyhNLmag@mail.gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+On Wed, Apr 24, 2019 at 03:47:39PM +0100, Tom Murphy wrote:
+> >And I'd really like to understand the unlikely - amd_iommu_np_cache
+> >is set based on a hardware capability, so it seems rather odd to mark
+> >it unlikely.  Dynamic branch prediction really should do the right thing
+> >here usually.
+> 
+> Here is the commit which added it without any explanation:
+> https://github.com/torvalds/linux/commit/270cab2426cdc6307725e4f1f46ecf8ab8e69193
+> 
+> should we remove it seen as there's no explanation given ?
 
-[ Upstream commit 8ac0c24fe1c256af6644caf3d311029440ec2fbd ]
-
-Packets without the last descriptor set should be dropped early. If we
-receive a frame larger than the DMA buffer, the HW will continue using the
-next descriptor. Driver mistakes these as individual frames, and sometimes
-a truncated frame (without the LD set) may look like a valid packet.
-
-This fixes a strange issue where the system replies to 4098-byte ping
-although the MTU/DMA buffer size is set to 4096, and yet at the same
-time it's logging an oversized packet.
-
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/stmicro/stmmac/enh_desc.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-index cdfe9a350ac0..f2150efddc88 100644
---- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-@@ -201,6 +201,11 @@ static int enh_desc_get_rx_status(void *data, struct stmmac_extra_stats *x,
- 	if (unlikely(rdes0 & RDES0_OWN))
- 		return dma_own;
- 
-+	if (unlikely(!(rdes0 & RDES0_LAST_DESCRIPTOR))) {
-+		stats->rx_length_errors++;
-+		return discard_frame;
-+	}
-+
- 	if (unlikely(rdes0 & RDES0_ERROR_SUMMARY)) {
- 		if (unlikely(rdes0 & RDES0_DESCRIPTOR_ERROR)) {
- 			x->rx_desc++;
--- 
-2.19.1
-
+I'd be tempted to do that.  But lets just ask Joerg if he has
+any opinion..
