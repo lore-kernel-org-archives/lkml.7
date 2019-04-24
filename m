@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21E7C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12470C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD40520675
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA39F205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126539;
-	bh=Iipc3dRx1CDZCpkc6w+7RdtCKlUAQm9/Hwze5cPwzxA=;
+	s=default; t=1556126545;
+	bh=KH5b9snLOUk5DzqAfYhhrMg3YJbma3wtUMdegrLnhZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JmqLXPWgLR20fKpRSqLmdpUR5sBOeMoNjEGxMb7kQXaDHwQzPuJb1LbLV3GpwFrJU
-	 GubKIdX2l41RnmDSi9XWfAU064+TG6nFRvAP/1FIlT0fyK/iuvfdsdlgFxT1Ciciin
-	 Rlv7bUc6iqTeUP1BiFB8qMpwGvDNKI66kj4z3Dtw=
+	b=07bhxjmMBposyNHJACIzXnj0+oJnyQgG7b+dLHd4MtFnw4sgKdelXUezwAJgZuxGT
+	 BLsOM0UIoW4MITjTE52znqN1u3jDbVyaizGkSJ1moD6Sm9mbV+LOtvAE6S3XqaM2Sp
+	 juiD0+6oOY0yvFuZBMXSySdEzsAmg9bD1zPQhK+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389535AbfDXRWS (ORCPT
+        id S2389559AbfDXRWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:22:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47808 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389130AbfDXRWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:22:16 -0400
+        id S2389542AbfDXRWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:22:21 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C90220675;
-        Wed, 24 Apr 2019 17:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E62020675;
+        Wed, 24 Apr 2019 17:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126534;
-        bh=Iipc3dRx1CDZCpkc6w+7RdtCKlUAQm9/Hwze5cPwzxA=;
+        s=default; t=1556126540;
+        bh=KH5b9snLOUk5DzqAfYhhrMg3YJbma3wtUMdegrLnhZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TXFJeW8WRbNSW7ovps/yH3mU/CKZmd2Euxagq65Veej7xdEnOOENAH56SpCugySPI
-         ulsNg4riFVOi/biXtAHIP68zRc4KWVw4CfIIm3kr6Rc2LDdIKCrjEbvCPYq8YQ/aV3
-         ZJjba9Yh/21wrIgrCvsp1MxHVBu8kZLSUGrrrsTs=
+        b=mVcHBVeVkER06uOxVLmixvmS9SG/zRtyjbKnPeqf4tNb0bRYnOnSwPiYpberfV1Mz
+         3q/zcY6/wj7WnJB5Ll26Yz7m4cnbE4/QZqIQMk4EWypqeKBV4xvaIDZ53a4gaDC/f4
+         0bT8jLhZiiQIpyw2zalB/wo4jUQANxTWaB8n503A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        stable@vger.kernel.org, Stephen Suryaputra <ssuryaextr@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 140/168] net: fou: do not use guehdr after iptunnel_pull_offloads in gue_udp_recv
-Date:   Wed, 24 Apr 2019 19:09:44 +0200
-Message-Id: <20190424170931.535386004@linuxfoundation.org>
+Subject: [PATCH 4.4 142/168] ipv4: recompile ip options in ipv4_link_failure
+Date:   Wed, 24 Apr 2019 19:09:46 +0200
+Message-Id: <20190424170931.635886532@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -59,48 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+From: Stephen Suryaputra <ssuryaextr@gmail.com>
 
-[ Upstream commit 988dc4a9a3b66be75b30405a5494faf0dc7cffb6 ]
+[ Upstream commit ed0de45a1008991fdaa27a0152befcb74d126a8b ]
 
-gue tunnels run iptunnel_pull_offloads on received skbs. This can
-determine a possible use-after-free accessing guehdr pointer since
-the packet will be 'uncloned' running pskb_expand_head if it is a
-cloned gso skb (e.g if the packet has been sent though a veth device)
+Recompile IP options since IPCB may not be valid anymore when
+ipv4_link_failure is called from arp_error_report.
 
-Fixes: a09a4c8dd1ec ("tunnels: Remove encapsulation offloads on decap")
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Refer to the commit 3da1ed7ac398 ("net: avoid use IPCB in cipso_v4_error")
+and the commit before that (9ef6b42ad6fd) for a similar issue.
+
+Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/fou.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ipv4/route.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/fou.c
-+++ b/net/ipv4/fou.c
-@@ -116,6 +116,7 @@ static int gue_udp_recv(struct sock *sk,
- 	struct guehdr *guehdr;
- 	void *data;
- 	u16 doffset = 0;
-+	u8 proto_ctype;
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1165,8 +1165,16 @@ static struct dst_entry *ipv4_dst_check(
+ static void ipv4_link_failure(struct sk_buff *skb)
+ {
+ 	struct rtable *rt;
++	struct ip_options opt;
  
- 	if (!fou)
- 		return 1;
-@@ -173,13 +174,14 @@ static int gue_udp_recv(struct sock *sk,
- 	if (unlikely(guehdr->control))
- 		return gue_control_message(skb, guehdr);
+-	icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0);
++	/* Recompile ip options since IPCB may not be valid anymore.
++	 */
++	memset(&opt, 0, sizeof(opt));
++	opt.optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
++	if (__ip_options_compile(dev_net(skb->dev), &opt, skb, NULL))
++		return;
++
++	__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt);
  
-+	proto_ctype = guehdr->proto_ctype;
- 	__skb_pull(skb, sizeof(struct udphdr) + hdrlen);
- 	skb_reset_transport_header(skb);
- 
- 	if (iptunnel_pull_offloads(skb))
- 		goto drop;
- 
--	return -guehdr->proto_ctype;
-+	return -proto_ctype;
- 
- drop:
- 	kfree_skb(skb);
+ 	rt = skb_rtable(skb);
+ 	if (rt)
 
 
