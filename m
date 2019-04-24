@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948C3C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCDEC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 646A621903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5D921905
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126724;
-	bh=gBAFjQMtmz1a6GbWCa4VEOItmKknu6xIeU7WTuHI40M=;
+	s=default; t=1556126727;
+	bh=8wu4yTgsNFIBxzInQIbjsakr0ZPYsnFjshjfAtxwaSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xlmqc5TBgaEbkL/7SCLDIXL6x7zk2as2HhFtsX9RkqtRnTnb+/6WEK07sTDhfMqog
-	 sH3Ct52DF6r+5SSQcKGwNGJSZvxAT669hMJBePLc1V3bi8ocYLC8H0jNXgAyQuZshM
-	 pSOzUFO+3oWVC2GdBfRKmQAIxXavEr/suaQ/yJaI=
+	b=tFNE4WIivRE8dO7jdI1YdMjv/Rz1gRcJWLL6v6zCGgHFoqT+oZD732rMfMQDAKOXd
+	 qRSeKSSXLtvAcDb43qPxXYvcQVk6C42c+4AzAyrGpWWAV9geeUoGwed0pLmc72iJnO
+	 pEO3wanGJQXwIFI/bfqIn8DVBWyZyOJ2AHae5iB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390022AbfDXRZX (ORCPT
+        id S2390034AbfDXRZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51206 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390001AbfDXRZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:25:18 -0400
+        id S2390013AbfDXRZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:25:20 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B333B21903;
-        Wed, 24 Apr 2019 17:25:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A315B21903;
+        Wed, 24 Apr 2019 17:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126717;
-        bh=gBAFjQMtmz1a6GbWCa4VEOItmKknu6xIeU7WTuHI40M=;
+        s=default; t=1556126720;
+        bh=8wu4yTgsNFIBxzInQIbjsakr0ZPYsnFjshjfAtxwaSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTkWFxThJXCSpC093pBaCDfS25UpfoX81AkFAivAdJwMO61gM/f/K9OLIw//Az/eq
-         p3KFYZc9rNC9hcvxwOCvRMf12DLWrbJigwnmyPuDjxAwaRInmRMQW7u6yadIdkTABS
-         dMjfECS9RK2P0iFo43AW1reOxh1LwaLE2PIjGiNY=
+        b=MGC5BKWdQwZkDHYtlsMgdGavvgPjqg8VjntVs2W1ch0PbkBsVz9Aus3QO2jOD+R74
+         uNPt3hgrWPiwLSeoznvZkIb5a+TlBNvnJ2TiYTMwnWsYqorBGqP8xKVSHu0ja7DgNo
+         ndUsTsNuYKaO64BXpcbjjG+kGmhtg1hVpSDGedig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vijayakumar Durai <vijayakumar.durai1@vivint.com>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 35/44] rt2x00: do not increment sequence number while re-transmitting
-Date:   Wed, 24 Apr 2019 19:10:13 +0200
-Message-Id: <20190424170900.031608372@linuxfoundation.org>
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.9 36/44] mac80211: do not call driver wake_tx_queue op during reconfig
+Date:   Wed, 24 Apr 2019 19:10:14 +0200
+Message-Id: <20190424170900.142595606@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -61,99 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vijayakumar Durai <vijayakumar.durai1@vivint.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-commit 746ba11f170603bf1eaade817553a6c2e9135bbe upstream.
+commit 4856bfd230985e43e84c26473c91028ff0a533bd upstream.
 
-Currently rt2x00 devices retransmit the management frames with
-incremented sequence number if hardware is assigning the sequence.
+There are several scenarios in which mac80211 can call drv_wake_tx_queue
+after ieee80211_restart_hw has been called and has not yet completed.
+Driver private structs are considered uninitialized until mac80211 has
+uploaded the vifs, stations and keys again, so using private tx queue
+data during that time is not safe.
 
-This is HW bug fixed already for non-QOS data frames, but it should
-be fixed for management frames except beacon.
+The driver can also not rely on drv_reconfig_complete to figure out when
+it is safe to accept drv_wake_tx_queue calls again, because it is only
+called after all tx queues are woken again.
 
-Without fix retransmitted frames have wrong SN:
-
- AlphaNet_e8:fb:36 Vivotek_52:31:51 Authentication, SN=1648, FN=0, Flags=........C Frame is not being retransmitted 1648 1
- AlphaNet_e8:fb:36 Vivotek_52:31:51 Authentication, SN=1649, FN=0, Flags=....R...C Frame is being retransmitted 1649 1
- AlphaNet_e8:fb:36 Vivotek_52:31:51 Authentication, SN=1650, FN=0, Flags=....R...C Frame is being retransmitted 1650 1
-
-With the fix SN stays correctly the same:
-
- 88:6a:e3:e8:f9:a2 8c:f5:a3:88:76:87 Authentication, SN=1450, FN=0, Flags=........C
- 88:6a:e3:e8:f9:a2 8c:f5:a3:88:76:87 Authentication, SN=1450, FN=0, Flags=....R...C
- 88:6a:e3:e8:f9:a2 8c:f5:a3:88:76:87 Authentication, SN=1450, FN=0, Flags=....R...C
+To fix this, bail out early in drv_wake_tx_queue if local->in_reconfig
+is set.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Vijayakumar Durai <vijayakumar.durai1@vivint.com>
-[sgruszka: simplify code, change comments and changelog]
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ralink/rt2x00/rt2x00.h      |    1 -
- drivers/net/wireless/ralink/rt2x00/rt2x00mac.c   |   10 ----------
- drivers/net/wireless/ralink/rt2x00/rt2x00queue.c |   15 +++++++++------
- 3 files changed, 9 insertions(+), 17 deletions(-)
+ net/mac80211/driver-ops.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/wireless/ralink/rt2x00/rt2x00.h
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2x00.h
-@@ -669,7 +669,6 @@ enum rt2x00_state_flags {
- 	CONFIG_CHANNEL_HT40,
- 	CONFIG_POWERSAVING,
- 	CONFIG_HT_DISABLED,
--	CONFIG_QOS_DISABLED,
- 	CONFIG_MONITORING,
+--- a/net/mac80211/driver-ops.h
++++ b/net/mac80211/driver-ops.h
+@@ -1163,6 +1163,9 @@ static inline void drv_wake_tx_queue(str
+ {
+ 	struct ieee80211_sub_if_data *sdata = vif_to_sdata(txq->txq.vif);
  
- 	/*
---- a/drivers/net/wireless/ralink/rt2x00/rt2x00mac.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2x00mac.c
-@@ -666,19 +666,9 @@ void rt2x00mac_bss_info_changed(struct i
- 			rt2x00dev->intf_associated--;
- 
- 		rt2x00leds_led_assoc(rt2x00dev, !!rt2x00dev->intf_associated);
--
--		clear_bit(CONFIG_QOS_DISABLED, &rt2x00dev->flags);
- 	}
- 
- 	/*
--	 * Check for access point which do not support 802.11e . We have to
--	 * generate data frames sequence number in S/W for such AP, because
--	 * of H/W bug.
--	 */
--	if (changes & BSS_CHANGED_QOS && !bss_conf->qos)
--		set_bit(CONFIG_QOS_DISABLED, &rt2x00dev->flags);
--
--	/*
- 	 * When the erp information has changed, we should perform
- 	 * additional configuration steps. For all other changes we are done.
- 	 */
---- a/drivers/net/wireless/ralink/rt2x00/rt2x00queue.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2x00queue.c
-@@ -201,15 +201,18 @@ static void rt2x00queue_create_tx_descri
- 	if (!rt2x00_has_cap_flag(rt2x00dev, REQUIRE_SW_SEQNO)) {
- 		/*
- 		 * rt2800 has a H/W (or F/W) bug, device incorrectly increase
--		 * seqno on retransmited data (non-QOS) frames. To workaround
--		 * the problem let's generate seqno in software if QOS is
--		 * disabled.
-+		 * seqno on retransmitted data (non-QOS) and management frames.
-+		 * To workaround the problem let's generate seqno in software.
-+		 * Except for beacons which are transmitted periodically by H/W
-+		 * hence hardware has to assign seqno for them.
- 		 */
--		if (test_bit(CONFIG_QOS_DISABLED, &rt2x00dev->flags))
--			__clear_bit(ENTRY_TXD_GENERATE_SEQ, &txdesc->flags);
--		else
-+	    	if (ieee80211_is_beacon(hdr->frame_control)) {
-+			__set_bit(ENTRY_TXD_GENERATE_SEQ, &txdesc->flags);
- 			/* H/W will generate sequence number */
- 			return;
-+		}
++	if (local->in_reconfig)
++		return;
 +
-+		__clear_bit(ENTRY_TXD_GENERATE_SEQ, &txdesc->flags);
- 	}
+ 	if (!check_sdata_in_driver(sdata))
+ 		return;
  
- 	/*
 
 
