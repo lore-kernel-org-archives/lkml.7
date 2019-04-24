@@ -2,142 +2,99 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEB4C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C61C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF0F20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+2Kj/VR"
+	by mail.kernel.org (Postfix) with ESMTP id 7A1FF218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbfDXHQX (ORCPT
+        id S1730089AbfDXHQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:16:23 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39846 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729543AbfDXHQW (ORCPT
+        Wed, 24 Apr 2019 03:16:44 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42165 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729244AbfDXHQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:16:22 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l18so8789825pgj.6;
-        Wed, 24 Apr 2019 00:16:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cFWyauVHMRMhPdLJI2BgTJG8Dqk8sJtHkpOrVWo1TWo=;
-        b=r+2Kj/VRRjRMppbQcgkvWYHrVcQigiDcz6vJl9rV4EfqsvTQRWdJlocMu2JlYbXrQN
-         1N804w36cUOIWkihhhKh7QVLbdIdrwRHEfVUudIk7MZjLB6Cd6HO82QRpkR0HpTwfVN+
-         W++PrIdcbxYFZabv7hfwOfJsgvW4FM6KRNbqWw0LByUpma1c/9qvYL75VqNIh8zK7wyy
-         +iCOeaZmAHRjiiD4OH7DEdldLodEaVXt2ue3LDSh+intYykAij0Vm2prclo6KGDDmrpC
-         Wxbbt46JNuTcx9NldOt+nPvWoced7TcPQsL3m1ufH4tUrhHZVwtmcKOoKzGXd5PMi0m8
-         BEKA==
+        Wed, 24 Apr 2019 03:16:44 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c190so6448481qke.9;
+        Wed, 24 Apr 2019 00:16:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cFWyauVHMRMhPdLJI2BgTJG8Dqk8sJtHkpOrVWo1TWo=;
-        b=eKFqIgbvxvrC9WNCXpFD9ZSN9eS5IvhaOkNAnEpObgQmLbdHrADqN4r/DumWbxfC/6
-         uhF9li41M7f0zlY7cwru0H3GtHbQD7WgnRDRCHFoCvEgTy/xFnnemmJ+JkAFkvHkc3s0
-         EuAmd481vqDbrcncoM+BcMnMUuvqb1q7gZstXXJHTBN4L3dfOuD198ZJHfWu0Ldgbcjk
-         Ee/QRwP481IvZlNSIEnswJfIcV+Fr0xIvfmF00DNCLcB1DHZuH8BdEbRA8cLQyx97jKT
-         nLLB90yQxM6AZX1LeLjUgbU3GyHpzjBPZipS7EX7icEx47PJ3grdog8nQl66lGQsIFBU
-         5mTA==
-X-Gm-Message-State: APjAAAXscjAA7nSms4AY6BVX0R15C+szB6VK4hisGHz9vknlIWIyOows
-        Gchkqi/Kmyap02o60p83FV4jA9XqLb4=
-X-Google-Smtp-Source: APXvYqz7uB97zZH3de6DVQLA0w1ZtgCdo3tLgBOpKFilZaIr47oyOLt5sE7s7CAZsN8zMp9A2k7gGw==
-X-Received: by 2002:a63:750c:: with SMTP id q12mr29287336pgc.133.1556090181729;
-        Wed, 24 Apr 2019 00:16:21 -0700 (PDT)
-Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id h4sm18987701pgv.61.2019.04.24.00.16.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 00:16:20 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-pm@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
-Date:   Wed, 24 Apr 2019 00:16:10 -0700
-Message-Id: <20190424071610.22688-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5vtoRdJNYOO5XXJgUqn92NRO5AXTQ17kbZcTRcpqM5M=;
+        b=tY62NZtKmJr69adUJDrNMkv5dMxsNdBHTea1h1IhurKSXN8nzKh6MCavEM1smE/3W4
+         IHX8vp2vaY2D31r4Gi3Ei7ljaH0eH7iWcnYch0UTwf1I7EdWCfRqlsYusHftLu0PaptY
+         XcpJQsUvjD2tQCU/oMvyCLnWAqSOdJ2KnlETLttpKnAFyCspZyyMihMsxaNjRYq/VHV9
+         ggTgPyvHLEZkRaNiEgXmyJhuWy4Zdgdx5FrZ76T9zHqWtN9Zir/UtUVKbn9wqcfIi56X
+         ss+Repxl6t3qVXudJ/hSxdX31xYrT6vFt0IKRtx9XMehna1YfbYFVO1gUYUAjsrRG/yc
+         YMnw==
+X-Gm-Message-State: APjAAAWehSoYHo0QYCE2f1WxVhMYIXjIJpw6rtA9WYGeU0CmLlE/ILHm
+        DqUWtP7NeLlG0N/C1dGNpU635D80YN2zW2NoFpdDJZxB
+X-Google-Smtp-Source: APXvYqyz+NpH/AN9CzMV4SIRQakedWs/eckqDJWHCSHjXUnkX+aEwJkhFYXtiUOU87Bk7DWCP+u0NPXZT5DefWTm1Z4=
+X-Received: by 2002:a37:c402:: with SMTP id d2mr11455272qki.291.1556090202785;
+ Wed, 24 Apr 2019 00:16:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAK8P3a3bT=HO=YQ7PY7wOEsJTzf0jS4PkqNHSqYX4JjwmbhY+g@mail.gmail.com>
+ <20190424004131.GA19764@altlinux.org>
+In-Reply-To: <20190424004131.GA19764@altlinux.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 24 Apr 2019 09:16:26 +0200
+Message-ID: <CAK8P3a2vmEkqN2FLu6C5TPGyDZ4F=tUENJXz_E_oeqdN1RDqQA@mail.gmail.com>
+Subject: Re: [GIT PULL] arch: add pidfd and io_uring syscalls everywhere
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a similar endless event loop as was done in commit
-8dcf32175b4e ("i2c: prevent endless uevent loop with
-CONFIG_I2C_DEBUG_CORE"):
+On Wed, Apr 24, 2019 at 2:41 AM Dmitry V. Levin <ldv@altlinux.org> wrote:
+> On Tue, Apr 23, 2019 at 09:28:48PM +0200, Arnd Bergmann wrote:
+> > The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+> >
+> >   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
+> > syscalls-5.1
+> >
+> > for you to fetch changes up to 39036cd2727395c3369b1051005da74059a85317:
+> >
+> >   arch: add pidfd and io_uring syscalls everywhere (2019-04-15 16:31:17 +0200)
+> >
+> > ----------------------------------------------------------------
+> > arch: add pidfd and io_uring syscalls everywhere
+> >
+> > This comes a bit late, but should be in 5.1 anyway: we want the newly
+> > added system calls to be synchronized across all architectures in
+> > the release.
+> >
+> > I hope that in the future, any newly added system calls can be added
+> > to all architectures at the same time, and tested there while they
+> > are in linux-next, avoiding dependencies between the architecture
+> > maintainer trees and the tree that contains the new system call.
+>
+> Is "everywhere" really means everywhere?
+> The reason I'm asking this question is that sh64 seems to be excluded:
+> arch/sh/kernel/syscalls_64.S hasn't got any syscall entries since commit
+> v4.8-rc1~15^2~3.  Is sh64 supported in any way at all?
 
-  The culprit is the dev_dbg printk in the i2c uevent handler. If
-  this is activated (for instance by CONFIG_I2C_DEBUG_CORE) it results
-  in an endless loop with systemd-journald.
+sh64 is dead, the only reason those files are still there is because nobody
+has bothered to create the patch to remove them.
 
-  This happens if user-space scans the system log and reads the uevent
-  file to get information about a newly created device, which seems
-  fair use to me. Unfortunately reading the "uevent" file uses the
-  same function that runs for creating the uevent for a new device,
-  generating the next syslog entry
+It has not been possible to even build an sh64 kernel for many years,
+and I'm sure none of the prototypes have been turned on for even longer
+if they are still in someone's board pile.
 
-Both CONFIG_I2C_DEBUG_CORE and CONFIG_POWER_SUPPLY_DEBUG were reported
-in https://bugs.freedesktop.org/show_bug.cgi?id=76886 but only former
-seems to have been fixed. Drop debug prints as it was done in I2C
-subsystem to resolve the issue.
-
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
-
-Changes since [v1]:
-
-    - Converted the patch to drop debug print statements
-    
-[v1] lore.kernel.org/lkml/20190405073020.10361-1-andrew.smirnov@gmail.com
-
- drivers/power/supply/power_supply_sysfs.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index dce24f596160..5358a80d854f 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -383,15 +383,11 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	char *prop_buf;
- 	char *attrname;
- 
--	dev_dbg(dev, "uevent\n");
--
- 	if (!psy || !psy->desc) {
- 		dev_dbg(dev, "No power supply yet\n");
- 		return ret;
- 	}
- 
--	dev_dbg(dev, "POWER_SUPPLY_NAME=%s\n", psy->desc->name);
--
- 	ret = add_uevent_var(env, "POWER_SUPPLY_NAME=%s", psy->desc->name);
- 	if (ret)
- 		return ret;
-@@ -427,8 +423,6 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 			goto out;
- 		}
- 
--		dev_dbg(dev, "prop %s=%s\n", attrname, prop_buf);
--
- 		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s", attrname, prop_buf);
- 		kfree(attrname);
- 		if (ret)
--- 
-2.20.1
-
+     Arnd
