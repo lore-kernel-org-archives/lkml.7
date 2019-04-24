@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF075C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9977C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E36B2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7192B2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126668;
-	bh=br7TjRO8WiPXSWzY6ZBR/02D2IfN8dP28bJKrnTqa6Q=;
+	s=default; t=1556126678;
+	bh=0pH6giZBP5EWcjVy6UHsSs54vJYzgd7pl1/aNWcWw6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Df1vRByfih8dJMgyCtWLasq6LhvP2OAKaahXhk6aQuhHhOyOUENlZwY44PhNwpwX+
-	 fN/SFgykL4AVcv0jG6ssZfMrVULE2z2U/4hfoXVqvUqrHW1m8+U64Zx9581RNU78Rc
-	 obS4gL7+yL68v+CKDLsdMmQtxpw6pSAZez4T6yig=
+	b=GkeltF7aDSIUz6DYfTi9kpq7O0+JxOD/OUj1QsgADO7cfTdr1Jb2//5e7ajUBgn1t
+	 No+d4NthNR53O7Wmu7qzFRevmttgfhUkwPUnN1zmSyiBmcIKksm+YPIO4Oz80hms3S
+	 oH09Ccm6vEGDbiiS+63xRqfB7DHdjzTUJDAviiNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389871AbfDXRY1 (ORCPT
+        id S2389901AbfDXRYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:24:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50286 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389862AbfDXRYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:24:24 -0400
+        id S2389877AbfDXRYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:24:32 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A87DD2054F;
-        Wed, 24 Apr 2019 17:24:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92F122054F;
+        Wed, 24 Apr 2019 17:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126663;
-        bh=br7TjRO8WiPXSWzY6ZBR/02D2IfN8dP28bJKrnTqa6Q=;
+        s=default; t=1556126672;
+        bh=0pH6giZBP5EWcjVy6UHsSs54vJYzgd7pl1/aNWcWw6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QhVLV7IdG3mvbNv6K+YPtYoQvNjdvyCbDjj3FQEhsI91d5BMwQEzWze9piOzmy3yJ
-         1z56xSfU4DVFLMNWgL+N8WrzDuW1URfwyl7sdIgTGjSZb/0IFccbvM6I7AnY5dZ4/0
-         Q6wv1rHiXQgZtPTjS2EU6hnRzUSNk3QLomQKXHX4=
+        b=N0ry/X7dQngPUosdGkqEM2QDI9HVw0iik4dydBw0XFQpp6IE2fM+G16YFNyUGGg3A
+         cv+GwMpZ3xgE1ZNpQ8ezSYXCdSofLk+9NQr2YPui86PtJOCOJAQHwTxDAv1rB92NtW
+         Oxs4PCz81BqRpc4AQfhvKAQrZAUv2RvfsGeKT11A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mircea Caprioru <mircea.caprioru@analog.com>,
+        stable@vger.kernel.org, Dragos Bogdan <dragos.bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.9 18/44] staging: iio: ad7192: Fix ad7193 channel address
-Date:   Wed, 24 Apr 2019 19:09:56 +0200
-Message-Id: <20190424170853.577624978@linuxfoundation.org>
+Subject: [PATCH 4.9 20/44] iio: ad_sigma_delta: select channel when reading register
+Date:   Wed, 24 Apr 2019 19:09:58 +0200
+Message-Id: <20190424170854.224412452@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
 References: <20190424170839.924291114@linuxfoundation.org>
@@ -61,37 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mircea Caprioru <mircea.caprioru@analog.com>
+From: Dragos Bogdan <dragos.bogdan@analog.com>
 
-commit 7ce0f216221856a17fc4934b39284678a5fef2e9 upstream.
+commit fccfb9ce70ed4ea7a145f77b86de62e38178517f upstream.
 
-This patch fixes the differential channels addresses for the ad7193.
+The desired channel has to be selected in order to correctly fill the
+buffer with the corresponding data.
+The `ad_sd_write_reg()` already does this, but for the
+`ad_sd_read_reg_raw()` this was omitted.
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+Fixes: af3008485ea03 ("iio:adc: Add common code for ADI Sigma Delta devices")
+Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/iio/adc/ad7192.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/iio/adc/ad_sigma_delta.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -109,10 +109,10 @@
- #define AD7192_CH_AIN3		BIT(6) /* AIN3 - AINCOM */
- #define AD7192_CH_AIN4		BIT(7) /* AIN4 - AINCOM */
- 
--#define AD7193_CH_AIN1P_AIN2M	0x000  /* AIN1(+) - AIN2(-) */
--#define AD7193_CH_AIN3P_AIN4M	0x001  /* AIN3(+) - AIN4(-) */
--#define AD7193_CH_AIN5P_AIN6M	0x002  /* AIN5(+) - AIN6(-) */
--#define AD7193_CH_AIN7P_AIN8M	0x004  /* AIN7(+) - AIN8(-) */
-+#define AD7193_CH_AIN1P_AIN2M	0x001  /* AIN1(+) - AIN2(-) */
-+#define AD7193_CH_AIN3P_AIN4M	0x002  /* AIN3(+) - AIN4(-) */
-+#define AD7193_CH_AIN5P_AIN6M	0x004  /* AIN5(+) - AIN6(-) */
-+#define AD7193_CH_AIN7P_AIN8M	0x008  /* AIN7(+) - AIN8(-) */
- #define AD7193_CH_TEMP		0x100 /* Temp senseor */
- #define AD7193_CH_AIN2P_AIN2M	0x200 /* AIN2(+) - AIN2(-) */
- #define AD7193_CH_AIN1		0x401 /* AIN1 - AINCOM */
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -121,6 +121,7 @@ static int ad_sd_read_reg_raw(struct ad_
+ 	if (sigma_delta->info->has_registers) {
+ 		data[0] = reg << sigma_delta->info->addr_shift;
+ 		data[0] |= sigma_delta->info->read_mask;
++		data[0] |= sigma_delta->comm;
+ 		spi_message_add_tail(&t[0], &m);
+ 	}
+ 	spi_message_add_tail(&t[1], &m);
 
 
