@@ -2,102 +2,96 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB44C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93906C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5063F206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4EA206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:52:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556124761;
+	bh=sM+v7ZDY6mVJzeKMXOV8yBVhyCEOTmgUCZE+PRsJf3o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CaeLkiY+lEZ95qxBOSMddgGGalYu0J+5jYUCUNTcyijc8yMQLbLuj7Pb5zW/cUPlL
+	 Aecfqhz6qyn7eN1zGkxIaFQ9s2vEol3NgmdA1Emk7aXVqTz+TiTx6afwAKg37+5HCk
+	 a85N88DAZNtj728cyP/h1qHz43hhM/vVum0W10fY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732895AbfDXQwb (ORCPT
+        id S1732962AbfDXQwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:52:31 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:60587 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732439AbfDXQwa (ORCPT
+        Wed, 24 Apr 2019 12:52:40 -0400
+Received: from casper.infradead.org ([85.118.1.10]:35990 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732439AbfDXQwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:52:30 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 035BD20090;
-        Wed, 24 Apr 2019 18:52:27 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 18:52:26 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>
-Subject: Re: [PATCH 12/25] drm: kirin: Reanme dc_ops to kirin_drm_data
-Message-ID: <20190424165226.GE20110@ravnborg.org>
-References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
- <1556061656-1733-13-git-send-email-john.stultz@linaro.org>
+        Wed, 24 Apr 2019 12:52:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=dfaDfFq2WMrVb8w8teQDqmRHXr1poGmjBR5SGUSF5kk=; b=apvxgzVONgN/v/y+5LaL4ytTTf
+        Aa8u0hZek6p+EtyIurT9iVqxNcSSG7nAeEDrOgoAuw9O6V4llL44zOETEPP5d3ntzPFIKQKVcgAnP
+        7ai0Fk25T610ebHpVcR4WBFxIQKoTKNbzJZEz3JG6F9+Z9ZqCPxzTbw4XLfcRJKyzrYsD3Wy5QrKu
+        ruL/a/zP2acV+7fXDKqRxByfwOs/eb1KaMUw/uZ3YDdQwSkEpkjg6xdhOjnyR6ISII0T77srkfYKD
+        fO9rWmUEzvYnitf9qITragI3j2bGBreIKETC2eT81k0a29iLQI6DK2/arhQqfqu2VGH4ju9B8b/AA
+        6KiX3mPA==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJL8M-0005a2-V1; Wed, 24 Apr 2019 16:52:35 +0000
+Date:   Wed, 24 Apr 2019 13:52:28 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 00/63] Include linux ACPI/PCI/X86 docs into Sphinx
+ TOC tree
+Message-ID: <20190424135228.58cdb9be@coco.lan>
+In-Reply-To: <20190424101846.7cc4bad7@lwn.net>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190424101846.7cc4bad7@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556061656-1733-13-git-send-email-john.stultz@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=BTeA3XvPAAAA:8
-        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=KKAkSRfTAAAA:8 a=gscqT4CbrNph9keLqk8A:9
-        a=CjuIK1q_8ugA:10 a=tafbbOV3vt1XuEhzTjGK:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=cvBusfyB2V15izCimMoJ:22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John.
+Em Wed, 24 Apr 2019 10:18:46 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-On Tue, Apr 23, 2019 at 04:20:43PM -0700, John Stultz wrote:
-> From: Xu YiPing <xuyiping@hisilicon.com>
+> On Wed, 24 Apr 2019 00:28:29 +0800
+> Changbin Du <changbin.du@gmail.com> wrote:
 > 
-> As part of refactoring the kirin driver to better support
-> different hardware revisions, this patch renames the
-> struct kirin_dc_ops to struct kirin_drm_data and cleans
-> up the related variable names.
+> > The kernel now uses Sphinx to generate intelligent and beautiful documentation
+> > from reStructuredText files. I converted all of the Linux ACPI/PCI/X86 docs to
+> > reST format in this serias.
+> > 
+> > In this version I combined ACPI and PCI docs, and added new x86 docs conversion.  
 > 
-> Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
-> Cc: Rongrong Zou <zourongrong@gmail.com>
-> Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Cc: Chen Feng <puck.chen@hisilicon.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel <dri-devel@lists.freedesktop.org>
-> Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
-> [jstultz: reworded commit message]
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c |  2 +-
->  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 16 ++++++++--------
->  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h |  4 ++--
->  3 files changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> index 69604ad..221bfbb 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> @@ -1055,7 +1055,7 @@ static void ade_drm_cleanup(struct platform_device *pdev)
->  {
->  }
->  
-> -const struct kirin_dc_ops ade_dc_ops = {
-> +struct kirin_drm_data ade_driver_data = {
->  	.init = ade_drm_init,
->  	.cleanup = ade_drm_cleanup
->  };
-This rename does not help readability. An _ops often/always hold
-function pointers. Where _data hold data.
-So it looks wrong to name this _data.
+> As mentioned by others, this is a lot of stuff; I would really rather see
+> each of those groups as separate patch sets.
 
-	Sam
+Yeah, makes sense to me, either to split into separate patchsets or to
+group the changes per sub-dir (or both).
+
+> If you can do a reasonably quick turnaround with Mauro's suggestions
+> addressed and tags applied, we should be able to get at least some of this
+> into 5.2.  Thanks, Mauro, for looking at all of this stuff!
+
+Anytime! Just to make clear, I'm still reviewing it... I'm at patch 35/63
+now. So, expect more comments from my side.
+
+
+Thanks,
+Mauro
