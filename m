@@ -2,103 +2,127 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3844AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267C3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C572175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:43:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XLUWNS1i"
+	by mail.kernel.org (Postfix) with ESMTP id EB1802175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbfDXLnl (ORCPT
+        id S1728155AbfDXLqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:43:41 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44428 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfDXLnl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 07:43:41 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s10so9007526qtc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 04:43:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/wGK5Ub5N8HF3VeoujLt1WRTNlmtW8D+nRF2cORxNps=;
-        b=XLUWNS1ir3CSFZwxFamJXa8kDbaOO7GcRGFi/VpkVZyIlRvlUWJeptzewiDa8Tqkyg
-         SXZr+0UH5fmHNo3MH/0hb2cAv8vDSLfN7nvDBd4r++C3oLW7CTYUe1TZW/oS11QpV6hM
-         hmySWpY+xJGI/A7354hN/C4QbBiUR1NWgUT7bH5KZM8XOAnD4crzG6QyLMmCR39I2AeQ
-         hCRn1CyUJNf77nSCm0gCtYqqsZj9upC/X2TD60Zybn5mB0FyV8dOLQe5Keuwq0t4xAFE
-         rZ8J7dg3QNYQexFBZrqaHCGiG2VWZeXuR19oiHShK/1sMdY1sZArP27CwXBXZgyjZ666
-         ASlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/wGK5Ub5N8HF3VeoujLt1WRTNlmtW8D+nRF2cORxNps=;
-        b=dm4ELpmPZHqQHA2l1VTyjruxp0X8BsLaw6GAIa5lAJp9n1tHdj9JoH3Ozfzwm+SBVN
-         QI4dIWW6V/CeVh4CLkHTwD87Ish0UO5u9/xpbv89CckbRUL+uGOcHDkC9MlQh4f9aLeE
-         DdFv2VLAUqaPJ/P3stTxrvoiGNaUqmhaY3mWNe5e6Co6jb79nMDL/PzT/JXNHIETDjac
-         CVKEE14p5533ANZuqYmTu/AAYKddm0pon8uyIRJtC6/JTICYOoNZqqDczLQ93D2GTdJM
-         H00FcIhwq2vRtOGuQnJ/WkvGAFTzR6ZmsB4MwkMo8HHqPti8V+CJ+/h/F8kPulAwRMSf
-         v1XQ==
-X-Gm-Message-State: APjAAAWLVBrEFIPq+paVxpt9bgq6A04axurLMWNp+DnFos/nAoah+FJ7
-        Y9dtF+lWmrVxQ9AKBs7Z6bx6MjqsydL8JvmCTXg=
-X-Google-Smtp-Source: APXvYqwz54vAMgIsBY6C90mw52lci11QY2/N7hJtPuVqJ/JRjMoGQVaxxua4Pg92crWTXF20SQT62TzXmuZlbEvwBjM=
-X-Received: by 2002:ac8:4603:: with SMTP id p3mr18745290qtn.4.1556106219897;
- Wed, 24 Apr 2019 04:43:39 -0700 (PDT)
+        Wed, 24 Apr 2019 07:46:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42078 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726292AbfDXLqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 07:46:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B0CC2AD7B;
+        Wed, 24 Apr 2019 11:46:02 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 461F81E15B7; Wed, 24 Apr 2019 13:46:02 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 13:46:02 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzbot <syzbot+15927486a4f1bfcbaf91@syzkaller.appspotmail.com>
+Subject: Re: general protection fault in fanotify_handle_event
+Message-ID: <20190424114602.GA29968@quack2.suse.cz>
+References: <00000000000091becf0586d104c6@google.com>
+ <000000000000d97b380586d1205f@google.com>
+ <CAOQ4uxgbAQEok9AqnnVwqBrF=q0UBP6yQuvdG-WDVpHNk8Xi7A@mail.gmail.com>
+ <20190423162755.GF9910@quack2.suse.cz>
+ <CAOQ4uxj83NA0QYP_kqgyRWxicUuQHoPK+vcTLEN-+rL+Vwa2HQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190422093353.61014-1-yuchao0@huawei.com> <20190422093353.61014-2-yuchao0@huawei.com>
-In-Reply-To: <20190422093353.61014-2-yuchao0@huawei.com>
-From:   Ju Hyung Park <qkrwngud825@gmail.com>
-Date:   Wed, 24 Apr 2019 20:43:29 +0900
-Message-ID: <CAD14+f0D9CVmBZGmbMcKB7xAHvBrbGAgVxR4W8Fiu0Vo6czDYQ@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: relocate chksum_offset for
- large_nat_bitmap feature
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxj83NA0QYP_kqgyRWxicUuQHoPK+vcTLEN-+rL+Vwa2HQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+On Tue 23-04-19 21:05:22, Amir Goldstein wrote:
+> On Tue, Apr 23, 2019 at 7:27 PM Jan Kara <jack@suse.cz> wrote:
+> >
+> > On Fri 19-04-19 12:33:02, Amir Goldstein wrote:
+> > > On Thu, Apr 18, 2019 at 8:14 PM syzbot
+> > > <syzbot+15927486a4f1bfcbaf91@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > syzbot has bisected this bug to:
+> > > >
+> > > > commit 77115225acc67d9ac4b15f04dd138006b9cd1ef2
+> > > > Author: Amir Goldstein <amir73il@gmail.com>
+> > > > Date:   Thu Jan 10 17:04:37 2019 +0000
+> > > >
+> > > >      fanotify: cache fsid in fsnotify_mark_connector
+> > > >
+> > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1627632d200000
+> > > > start commit:   3f018f4a Add linux-next specific files for 20190418
+> > > > git tree:       linux-next
+> > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=1527632d200000
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1127632d200000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=faa7bdc352fc157e
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=15927486a4f1bfcbaf91
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=155543d3200000
+> > > >
+> > > > Reported-by: syzbot+15927486a4f1bfcbaf91@syzkaller.appspotmail.com
+> > > > Fixes: 77115225acc6 ("fanotify: cache fsid in fsnotify_mark_connector")
+> > > >
+> >
+> 
+> [...]
+> 
+> >
+> > I'd prefer if we could make only fully initialized marks visible on
+> > connector's list. Just to make things simple in the fast path of handling
+> > events. So I'd just set mark->connector before adding mark to connector's
+> > list and having smp_wmb() there to force ordering in
+> > fsnotify_add_mark_list(). And we should use READ_ONCE() as a counter-part
+> > to this in fanotify_get_fsid(). It is somewhat unfortunate that there are
+> > three different ways how fsnotify_add_mark_list() can add mark to a list so
+> > we may need to either repeat this in three different places or just use
+> > some macro magic like:
+> >
+> > #define fanotify_attach_obj_list(where, mark, conn, head) \
+> >         do { \
+> >                 mark->connector = conn; \
+> >                 smp_wmb(); \
+> >                 hlist_add_##where##_rcu(&mark->obj_list, head); \
+> >         } while (0)
+> >
+> > And I would not really worry about fsnotify_put_mark() - if it ever sees
+> > mark->connector set, mark really is on the connector's list and
+> > fsnotify_put_mark() does the right thing (i.e. locks connector->lock if
+> > needed).
+> >
+> 
+> Sounds good to me.
+> 
+> I was worried about fsnotify_put_mark() NOT seeing mark->connector set
+> even though it is on the list (add mark; get lockless ref; remove
+> mark; put lockless ref).
+> Its subtle, not sure if possible.
 
-On Mon, Apr 22, 2019 at 6:34 PM Chao Yu <yuchao0@huawei.com> wrote:
-> +       if (__is_set_ckpt_flags(*cp_block, CP_LARGE_NAT_BITMAP_FLAG)) {
-> +               if (crc_offset != CP_MIN_CHKSUM_OFFSET) {
-> +                       f2fs_put_page(*cp_page, 1);
-> +                       f2fs_msg(sbi->sb, KERN_WARNING,
-> +                               "layout of large_nat_bitmap is deprecated, "
-> +                               "run fsck to repair, chksum_offset: %zu",
-> +                               crc_offset);
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
+Not possible for the cases it matters. fsnotify_put_mark() just decrements
+the refcount. If someone is adding mark to the list, he is by definition
+holding one reference so racing fsnotify_put_mark() cannot be dropping the
+last one and so the result of the check doesn't really matter.
 
-I try not to be a Grammar Nazi and a jerk on every patches, but since
-this is a message a user would directly encounter, I'd like to see a
-bit less ambiguous message.
+> I am assuming you will be sending the above patch to syzbot for testing.
+> If you want me do help with anything please let me know.
 
-How about "using deprecated layout of large_nat_bitmap, please run
-fsck v1.13.0 or higher to repair, chksum_offset: %zu"?
-The original message seems to suggest that large_nat_bitmap is
-deprecated outright.
+OK, I'll write it and send it.
 
-Also, I'd like to suggest to write down an actual version of
-f2fs-tools here as we've seen older versions of fsck doing even more
-damage and the users might not have the latest f2fs-tools installed.
-
-Btw, what happens if we use the latest fsck to fix the corrupted image
-and use the older kernel to mount it?
-Would it even mount?
-
-Thanks.
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
