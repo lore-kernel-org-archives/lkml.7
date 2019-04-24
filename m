@@ -2,104 +2,108 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EDFC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F85C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08E82084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764092084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556102466;
+	bh=F3A71PrMdLdNdQbOEHMWMx2WAB5ZlMboAMxAGcWPPms=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FmBshi82PanOqd93VDzWIR4ICFGwcddy9q0UlER5djliS3mbug5atuJv89L7WBmd0
+	 2VbD/Rj8h/UWQxfx+csw8MwHyhTH/Eodmz628pyvOimkfEhwVEZe5z17/1yla4Ewwp
+	 RBK/Fqq5h/C7mWL6vbMdTBPrnAzppFM7fug46cx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbfDXKjw (ORCPT
+        id S1728448AbfDXKlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:39:52 -0400
-Received: from lizzard.sbs.de ([194.138.37.39]:34471 "EHLO lizzard.sbs.de"
+        Wed, 24 Apr 2019 06:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbfDXKjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:39:51 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id x3OAdbZr016008
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 12:39:37 +0200
-Received: from [139.22.114.195] ([139.22.114.195])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x3OAdZPt031166;
-        Wed, 24 Apr 2019 12:39:35 +0200
-Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-References: <20190424075816.GU2654@lahna.fi.intel.com>
- <8999d3f8-d169-eb85-bd2f-08c99d184ea2@siemens.com>
- <20190424081802.GV2654@lahna.fi.intel.com>
- <5a28f22c-22f7-760a-d076-68ff19800d44@siemens.com>
- <20190424084259.GW2654@lahna.fi.intel.com>
- <7e328b7e-f4f0-851a-4152-a9ffd058201c@siemens.com>
- <20190424094506.GA2654@lahna.fi.intel.com>
- <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
- <20190424100130.GB2654@lahna.fi.intel.com>
- <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
- <20190424103306.GC2654@lahna.fi.intel.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
-Date:   Wed, 24 Apr 2019 12:39:35 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        id S1726550AbfDXKlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 06:41:05 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3CD62084F;
+        Wed, 24 Apr 2019 10:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556102464;
+        bh=F3A71PrMdLdNdQbOEHMWMx2WAB5ZlMboAMxAGcWPPms=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=m/dNok4jUlWbd9Iq9jF0Vs+HcWQNHf7eUYWPd3IhDapP923nE/2AbVeMKMVmhjD7T
+         IZboCOgXkCyFMfYXL68Ve7U6MrYO7Hm0lAt9KcajgAbbo/h5DpS++buY2XQYVqgn/A
+         gim06cvPhpQhr8AHPXhd2agwt0cy6+iz23eOzRqM=
+Date:   Wed, 24 Apr 2019 12:41:00 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] livepatch: Cleanup message handling in
+ klp_try_switch_task()
+In-Reply-To: <20190424085550.29612-4-pmladek@suse.com>
+Message-ID: <nycvar.YFH.7.76.1904241239260.9803@cbobk.fhfr.pm>
+References: <20190424085550.29612-1-pmladek@suse.com> <20190424085550.29612-4-pmladek@suse.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190424103306.GC2654@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.04.19 12:33, Mika Westerberg wrote:
-> On Wed, Apr 24, 2019 at 12:19:02PM +0200, Jan Kiszka wrote:
->>> I think what you want is "GPIO signaled ACPI event". It works so that
->>> you declare _AEI method below the GPIO controller listing the GPIOs you
->>> want to trigger events for and then either _Lxx, _Exx or _EVT method for
->>> each of them under the same controller. GPIO core then handles it
->>> automatically when you register the GPIO chip. See also
->>> acpi_gpiochip_request_interrupts().
->>
->> Right, that is was I read as well. Let's assume I would be able to patch the
->> tables: Would I describe all the logic of this patch in ACPI terms? Where to
->> enable interrupts, how to dispatch the SCI event, how to acknowledge it
->> etc.? Will it also take care of locking? (BTW, my locking seems to have some
->> remaining inconsistency, on second look.)
-> 
-> The GPIO core would then take care of it by requesting the GPIO in
-> question and dispatching to the correct event handler. In this patch you
-> just leave out the SCI part and only implement the irqchip like you did
-> already.
+On Wed, 24 Apr 2019, Petr Mladek wrote:
 
-Could you point me to a gpio driver that works like that already? Would be 
-easier to learn that from an example. That infrastructure with all its different 
-modes is seriously complex and not very well documented.
-
+> WARN_ON_ONCE() could not be called safely under rq lock because
+> of console deadlock issues. Fortunately, simple printk_deferred()
+> is enough because the warning is printed from a well defined
+> location and context.
 > 
->> And even if that were possible, we would be back to the square of existing
->> devices without those definitions. If this were a recent chipset, I would
->> say, "go, fix future firmware versions". But this one is legacy.
+> Also klp_try_switch_task() is called under klp_mutex.
+> Therefore, the buffer for debug messages could be static.
 > 
-> Is it fixing some real issue with these legacy platforms? I mean without
-> the patch some GPE event is not handled properly? It was not clear to me
-> from the commit message.
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  kernel/livepatch/transition.c | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
 > 
+> diff --git a/kernel/livepatch/transition.c b/kernel/livepatch/transition.c
+> index 9c89ae8b337a..e8183d18227f 100644
+> --- a/kernel/livepatch/transition.c
+> +++ b/kernel/livepatch/transition.c
+> @@ -254,6 +254,7 @@ static int klp_check_stack_func(struct klp_func *func,
+>  static int klp_check_stack(struct task_struct *task, char *err_buf)
+>  {
+>  	static unsigned long entries[MAX_STACK_ENTRIES];
+> +	static int enosys_warned;
+>  	struct stack_trace trace;
+>  	struct klp_object *obj;
+>  	struct klp_func *func;
+> @@ -263,8 +264,16 @@ static int klp_check_stack(struct task_struct *task, char *err_buf)
+>  	trace.nr_entries = 0;
+>  	trace.max_entries = MAX_STACK_ENTRIES;
+>  	trace.entries = entries;
+> +
+>  	ret = save_stack_trace_tsk_reliable(task, &trace);
+> -	WARN_ON_ONCE(ret == -ENOSYS);
+> +	if (ret == -ENOSYS) {
+> +		if (!enosys_warned) {
+> +			printk_deferred(KERN_WARNING "%s: save_stack_trace_tsk_reliable() not supported on this architecture.\n",
+> +					__func__);
+> +			enosys_warned = 1;
 
-Without that patch, you are forced to poll for event changes in your 
-application, timer-driven. There are application that cannot process these GPIOs 
-because they lack such logic (mraa with node-red-node-intel-gpio is a public 
-example).
-
-Jan
+... abusing the fact that you are also printk maintainer :) ... looking at 
+the above, wouldn't it make sense to introduce generic 
+printk_deferred_once() instead?
 
 -- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Jiri Kosina
+SUSE Labs
+
