@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07414C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F2DC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4F321903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D303D21900
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125890;
-	bh=Ek1SctxGzvZAFP9LQADDHcCTI36okv/Uqrd4o58BSoU=;
+	s=default; t=1556125892;
+	bh=44YO3uT0TgbB5C1L3U2VQAsxuWBPwNO+bgecv5NtLZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uO75WsltZMEmAPAZcw3jd6Ka1Aq2lvM2IFUiKZ2RBY4rEwGfAm2bIY22QOPF2oomk
-	 dr/gYdBUaQcut94bbRcjf1xs9m/M90/jciRMnQrVejghlwFxB/gYfzGPIAZ+UjMe0K
-	 N1ORvNyrntVRfyFel7gJTtSJ8SnTOh+rZ2eiDG/w=
+	b=LSsTr4IExdZqZvMsVlXZZHQn79PBtnVtN60lIxEjEzkrbrj3LWkxYQmO/XTksHegm
+	 7jWjMA9aGNwpHAzL/QanneArWt7vRJUVwFnSu9QQ3f7hHGdFO48U+XpYbNvkHPPVy9
+	 CBshh2SpgE+nnKC/yfZjXCh/sNtuDdc9pmSbcTx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733283AbfDXRL3 (ORCPT
+        id S1733296AbfDXRLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:11:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34902 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733263AbfDXRL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:11:26 -0400
+        id S1733271AbfDXRL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:11:29 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E645D21903;
-        Wed, 24 Apr 2019 17:11:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C240C21900;
+        Wed, 24 Apr 2019 17:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125885;
-        bh=Ek1SctxGzvZAFP9LQADDHcCTI36okv/Uqrd4o58BSoU=;
+        s=default; t=1556125888;
+        bh=44YO3uT0TgbB5C1L3U2VQAsxuWBPwNO+bgecv5NtLZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VOoTPVrtMMY+rlBCgrV4tLuQOGqUa/XCaLVRLnjSG7Nly39g2A3RWduxlcr41f149
-         UNhc0kHMnSmyLEMbtERLGiIl52ZeNEKuvAyNi9v7g0ZcIdpuPmbyIrWUwAgdfBX/IL
-         Q7/O6BYUqPTz+ZFyPx074xCglcUBKhi5NWbiArME=
+        b=RnBOqDVmKJM8T0AYYGa9G0AMDsJpTZP7kseUq7wnrSju42o18p6h6z+GZoarDhe/N
+         QWraBmXw2chbenF727k5Ob4cWMfaEaLWOlIJgTQxs+lthT8MEQ/7A5Bfa/mTuuJwVi
+         C1Mp8fg9ZX6JmStS19hzvix8US15yTUIAn9p7omo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Jason Yan <yanaijie@huawei.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 018/104] IB/mlx4: Increase the timeout for CM cache
-Date:   Wed, 24 Apr 2019 19:08:35 +0200
-Message-Id: <20190424170851.094209616@linuxfoundation.org>
+Subject: [PATCH 3.18 019/104] scsi: megaraid_sas: return error when create DMA pool failed
+Date:   Wed, 24 Apr 2019 19:08:36 +0200
+Message-Id: <20190424170851.456873384@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -62,101 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2612d723aadcf8281f9bf8305657129bd9f3cd57 ]
+[ Upstream commit bcf3b67d16a4c8ffae0aa79de5853435e683945c ]
 
-Using CX-3 virtual functions, either from a bare-metal machine or
-pass-through from a VM, MAD packets are proxied through the PF driver.
+when create DMA pool for cmd frames failed, we should return -ENOMEM,
+instead of 0.
+In some case in:
 
-Since the VF drivers have separate name spaces for MAD Transaction Ids
-(TIDs), the PF driver has to re-map the TIDs and keep the book keeping
-in a cache.
+    megasas_init_adapter_fusion()
 
-Following the RDMA Connection Manager (CM) protocol, it is clear when
-an entry has to evicted form the cache. But life is not perfect,
-remote peers may die or be rebooted. Hence, it's a timeout to wipe out
-a cache entry, when the PF driver assumes the remote peer has gone.
+    -->megasas_alloc_cmds()
+       -->megasas_create_frame_pool
+          create DMA pool failed,
+        --> megasas_free_cmds() [1]
 
-During workloads where a high number of QPs are destroyed concurrently,
-excessive amount of CM DREQ retries has been observed
+    -->megasas_alloc_cmds_fusion()
+       failed, then goto fail_alloc_cmds.
+    -->megasas_free_cmds() [2]
 
-The problem can be demonstrated in a bare-metal environment, where two
-nodes have instantiated 8 VFs each. This using dual ported HCAs, so we
-have 16 vPorts per physical server.
+we will call megasas_free_cmds twice, [1] will kfree cmd_list,
+[2] will use cmd_list.it will cause a problem:
 
-64 processes are associated with each vPort and creates and destroys
-one QP for each of the remote 64 processes. That is, 1024 QPs per
-vPort, all in all 16K QPs. The QPs are created/destroyed using the
-CM.
+Unable to handle kernel NULL pointer dereference at virtual address
+00000000
+pgd = ffffffc000f70000
+[00000000] *pgd=0000001fbf893003, *pud=0000001fbf893003,
+*pmd=0000001fbf894003, *pte=006000006d000707
+Internal error: Oops: 96000005 [#1] SMP
+ Modules linked in:
+ CPU: 18 PID: 1 Comm: swapper/0 Not tainted
+ task: ffffffdfb9290000 ti: ffffffdfb923c000 task.ti: ffffffdfb923c000
+ PC is at megasas_free_cmds+0x30/0x70
+ LR is at megasas_free_cmds+0x24/0x70
+ ...
+ Call trace:
+ [<ffffffc0005b779c>] megasas_free_cmds+0x30/0x70
+ [<ffffffc0005bca74>] megasas_init_adapter_fusion+0x2f4/0x4d8
+ [<ffffffc0005b926c>] megasas_init_fw+0x2dc/0x760
+ [<ffffffc0005b9ab0>] megasas_probe_one+0x3c0/0xcd8
+ [<ffffffc0004a5abc>] local_pci_probe+0x4c/0xb4
+ [<ffffffc0004a5c40>] pci_device_probe+0x11c/0x14c
+ [<ffffffc00053a5e4>] driver_probe_device+0x1ec/0x430
+ [<ffffffc00053a92c>] __driver_attach+0xa8/0xb0
+ [<ffffffc000538178>] bus_for_each_dev+0x74/0xc8
+  [<ffffffc000539e88>] driver_attach+0x28/0x34
+ [<ffffffc000539a18>] bus_add_driver+0x16c/0x248
+ [<ffffffc00053b234>] driver_register+0x6c/0x138
+ [<ffffffc0004a5350>] __pci_register_driver+0x5c/0x6c
+ [<ffffffc000ce3868>] megasas_init+0xc0/0x1a8
+ [<ffffffc000082a58>] do_one_initcall+0xe8/0x1ec
+ [<ffffffc000ca7be8>] kernel_init_freeable+0x1c8/0x284
+ [<ffffffc0008d90b8>] kernel_init+0x1c/0xe4
 
-When tearing down these 16K QPs, excessive CM DREQ retries (and
-duplicates) are observed. With some cat/paste/awk wizardry on the
-infiniband_cm sysfs, we observe as sum of the 16 vPorts on one of the
-nodes:
-
-cm_rx_duplicates:
-      dreq  2102
-cm_rx_msgs:
-      drep  1989
-      dreq  6195
-       rep  3968
-       req  4224
-       rtu  4224
-cm_tx_msgs:
-      drep  4093
-      dreq 27568
-       rep  4224
-       req  3968
-       rtu  3968
-cm_tx_retries:
-      dreq 23469
-
-Note that the active/passive side is equally distributed between the
-two nodes.
-
-Enabling pr_debug in cm.c gives tons of:
-
-[171778.814239] <mlx4_ib> mlx4_ib_multiplex_cm_handler: id{slave:
-1,sl_cm_id: 0xd393089f} is NULL!
-
-By increasing the CM_CLEANUP_CACHE_TIMEOUT from 5 to 30 seconds, the
-tear-down phase of the application is reduced from approximately 90 to
-50 seconds. Retries/duplicates are also significantly reduced:
-
-cm_rx_duplicates:
-      dreq  2460
-[]
-cm_tx_retries:
-      dreq  3010
-       req    47
-
-Increasing the timeout further didn't help, as these duplicates and
-retries stems from a too short CMA timeout, which was 20 (~4 seconds)
-on the systems. By increasing the CMA timeout to 22 (~17 seconds), the
-numbers fell down to about 10 for both of them.
-
-Adjustment of the CMA timeout is not part of this commit.
-
-Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-Acked-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/cm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/hw/mlx4/cm.c b/drivers/infiniband/hw/mlx4/cm.c
-index 56a593e0ae5d..2aedbd18ffbc 100644
---- a/drivers/infiniband/hw/mlx4/cm.c
-+++ b/drivers/infiniband/hw/mlx4/cm.c
-@@ -39,7 +39,7 @@
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 1ff0ece87644..24cc8786ff06 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -3743,6 +3743,7 @@ int megasas_alloc_cmds(struct megasas_instance *instance)
+ 	if (megasas_create_frame_pool(instance)) {
+ 		printk(KERN_DEBUG "megasas: Error creating frame DMA pool\n");
+ 		megasas_free_cmds(instance);
++		return -ENOMEM;
+ 	}
  
- #include "mlx4_ib.h"
- 
--#define CM_CLEANUP_CACHE_TIMEOUT  (5 * HZ)
-+#define CM_CLEANUP_CACHE_TIMEOUT  (30 * HZ)
- 
- struct id_map_entry {
- 	struct rb_node node;
+ 	return 0;
 -- 
 2.19.1
 
