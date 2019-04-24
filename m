@@ -2,285 +2,153 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E478AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7455C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0630218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9335A218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:04:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lsk4Okhz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbfDXIDY (ORCPT
+        id S1728976AbfDXIE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:03:24 -0400
-Received: from mga14.intel.com ([192.55.52.115]:44317 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbfDXIDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:03:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 00:58:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,389,1549958400"; 
-   d="scan'208";a="167416330"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 24 Apr 2019 00:58:16 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 24 Apr 2019 10:58:16 +0300
-Date:   Wed, 24 Apr 2019 10:58:16 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
-Message-ID: <20190424075816.GU2654@lahna.fi.intel.com>
-References: <cover.1555579429.git.jan.kiszka@siemens.com>
- <c9f40465c6effc7b8efd6cbf8461d71d80c80033.1555579429.git.jan.kiszka@siemens.com>
+        Wed, 24 Apr 2019 04:04:56 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44526 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfDXIEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 04:04:55 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i13so15020742edf.11
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 01:04:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=f3fvwEXom1LGpxngwni4Uzj3rYvQHtrnJN7iXdOxe2U=;
+        b=Lsk4OkhzrZAPrlJN6mv4NCRKSFlRJzJ9XEGus9hRbJJoJk6NCnOU0Ex0VJ3iK48glP
+         1t8/TZFDFf61aDLLWLqiEXGDyIItHuNRx3LCYEIVINzDViQba45yI5bKOyimIPVj7IjW
+         4MZz28ks4NtKMbma55rPmhChxjIfUiXYZp1Y+3osS/JuJj4NiYnDMvNVsA0dBfSlig39
+         aXORmTo+dGZXD4gzCAJuUzKcwHAwqwz0mTC/lpjGvaMacQd5xE/zAGf6vn8Xc8eGDXSQ
+         BD3RfHZ+LPdLhGAAu2uQcMQeCglSUtEEnLU38L1dWNFrzLj89KiyXCPmTCsyPXq50PAm
+         55yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=f3fvwEXom1LGpxngwni4Uzj3rYvQHtrnJN7iXdOxe2U=;
+        b=aWj+YF+YopB2SmFV4pV6vuuWudXXs0z3l5fQpLql3I1FP0wBuUPiNkU5/EP0p50Cze
+         LMUu3tY3lPLOLSzj+py1tciiNQhU8r1ASl5Xl3NSgoqG3+Wtqmz6/q9fHTHzvIQ9FkJz
+         IH4wMpR6/2mB+d/7nx3u18vf/UX68tgzeIy2OSzbWSr0jsVMdwrGNSW64ePwY5Y2YCQ1
+         xZ+gVP9xaj0UX377Hq0+tVyoeEYA1tGqjEJe3huIQuVqwvBZ8h+FYSn7FH5gGD0ZlfgH
+         oaq3R4G19fkM/iGKNLEs0kdsF6VJp4HN2/mccGfAaLgy868dUWmekjKA0ON1wNVmTLhd
+         Ba8A==
+X-Gm-Message-State: APjAAAWLiebMAfqQFNvP39ylU1sFBYzXX2YxBmMJjz3iY7//HXo00oQr
+        v1G2L3i0+46EFZUT84nqTnNhZSMVQQNGV126nkM=
+X-Google-Smtp-Source: APXvYqwdJvUve5VmpfnocuN3bMT+o2Twgk/QMxONIZDoGfyFmgLOh+CG4KAM/Oz+aHgGs5zxTAsxAUNFJhwqztveVbc=
+X-Received: by 2002:a50:be01:: with SMTP id a1mr19595371edi.12.1556093093668;
+ Wed, 24 Apr 2019 01:04:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9f40465c6effc7b8efd6cbf8461d71d80c80033.1555579429.git.jan.kiszka@siemens.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190423211932.4906-1-ndesaulniers@google.com>
+ <CAEbi=3fn42-rcXOh28N09G9Gng8o9RE8_A8=ow0=JeMEXVF_ig@mail.gmail.com> <CAK7LNAQaPoL=bWzY_HcbJqM_s3j4+RC=-HFL+DwJWNOCTvNOfQ@mail.gmail.com>
+In-Reply-To: <CAK7LNAQaPoL=bWzY_HcbJqM_s3j4+RC=-HFL+DwJWNOCTvNOfQ@mail.gmail.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Wed, 24 Apr 2019 16:04:17 +0800
+Message-ID: <CAEbi=3fSP4OkxkDPYBuae5mQ0U3hwpK1K6W2haqAt1kKDaz43g@mail.gmail.com>
+Subject: Re: [PATCH] nds32: vdso: drop unnecessary cc-ldoption
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        clang-built-linux@googlegroups.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Rafael and linux-acpi.
+Masahiro Yamada <yamada.masahiro@socionext.com> =E6=96=BC 2019=E5=B9=B44=E6=
+=9C=8824=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=883:54=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+>
+> On Wed, Apr 24, 2019 at 3:59 PM Greentime Hu <green.hu@gmail.com> wrote:
+> >
+> > Hi Nick & Yamada,
+> >
+> > Nick Desaulniers <ndesaulniers@google.com> =E6=96=BC 2019=E5=B9=B44=E6=
+=9C=8824=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=885:19=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+> > >
+> > > Towards the goal of removing cc-ldoption, it seems that --hash-style=
+=3D
+> > > was added to binutils 2.17.50.0.2 in 2006. The minimal required versi=
+on
+> > > of binutils for the kernel according to
+> > > Documentation/process/changes.rst is 2.20.
+> > >
+> > > Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
+> > > Cc: clang-built-linux@googlegroups.com
+> > > Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > ---
+> > >  arch/nds32/kernel/vdso/Makefile | 6 ++----
+> > >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso=
+/Makefile
+> > > index e6c50a701313..d379645cad74 100644
+> > > --- a/arch/nds32/kernel/vdso/Makefile
+> > > +++ b/arch/nds32/kernel/vdso/Makefile
+> > > @@ -11,10 +11,8 @@ obj-vdso :=3D note.o datapage.o sigreturn.o gettim=
+eofday.o
+> > >  targets :=3D $(obj-vdso) vdso.so vdso.so.dbg
+> > >  obj-vdso :=3D $(addprefix $(obj)/, $(obj-vdso))
+> > >
+> > > -ccflags-y :=3D -shared -fno-common -fno-builtin
+> > > -ccflags-y +=3D -nostdlib -Wl,-soname=3Dlinux-vdso.so.1 \
+> > > -               $(call cc-ldoption, -Wl$(comma)--hash-style=3Dsysv)
+> > > -ccflags-y +=3D -fPIC -Wl,-shared -g
+> > > +ccflags-y :=3D -shared -fno-common -fno-builtin -nostdlib -fPIC -Wl,=
+-shared -g \
+> > > +       -Wl,-soname=3Dlinux-vdso.so.1 -Wl,--hash-style=3Dsysv
+> > >
+> > >  # Disable gcov profiling for VDSO code
+> > >  GCOV_PROFILE :=3D n
+> >
+> > Thank you.
+> > Acked-by: Greentime Hu <greentime@andestech.com>
+>
+>
+> Who do you expect to pick up this patch?
+>
+> You are the NDS32 maintainer
+> according to MAINTAINERS.
+>
+>
+> ANDES ARCHITECTURE
+> M:      Greentime Hu <green.hu@gmail.com>
+> M:      Vincent Chen <deanbo422@gmail.com>
+> T:      git https://github.com/andestech/linux.git
+> S:      Supported
+> F:      arch/nds32/
+> F:      Documentation/devicetree/bindings/interrupt-controller/andestech,=
+ativic32.txt
+> F:      Documentation/devicetree/bindings/nds32/
+> K:      nds32
+> N:      nds32
+>
+>
+> You do not maintain https://github.com/andestech/linux.git any more, do y=
+ou?
 
-On Thu, Apr 18, 2019 at 11:23:49AM +0200, Jan Kiszka wrote:
-> From: Jan Kiszka <jan.kiszka@siemens.com>
-> 
-> Validated on the Quark platform, this adds interrupt support on rising
-> and/or falling edges.
+Hi Yamada,
 
-The irqchip parts look good to me but but the ACPI SCI handling seems
-weird. This is typically handled by ACPI core based on the values read
-from FADT ACPI table. What does it contain on this Quark platform?
-
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> ---
->  drivers/gpio/gpio-sch.c | 142 +++++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 135 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
-> index fb143f28c386..9459f1920996 100644
-> --- a/drivers/gpio/gpio-sch.c
-> +++ b/drivers/gpio/gpio-sch.c
-> @@ -18,12 +18,17 @@
->  #define GEN	0x00
->  #define GIO	0x04
->  #define GLV	0x08
-> +#define GTPE	0x0c
-> +#define GTNE	0x10
-> +#define GGPE	0x14
-> +#define GTS	0x1c
->  
->  struct sch_gpio {
->  	struct gpio_chip chip;
->  	spinlock_t lock;
->  	unsigned short iobase;
->  	unsigned short resume_base;
-> +	int irq_base;
->  };
->  
->  static unsigned sch_gpio_offset(struct sch_gpio *sch, unsigned gpio,
-> @@ -79,10 +84,11 @@ static void sch_gpio_reg_set(struct sch_gpio *sch, unsigned gpio, unsigned reg,
->  static int sch_gpio_direction_in(struct gpio_chip *gc, unsigned gpio_num)
->  {
->  	struct sch_gpio *sch = gpiochip_get_data(gc);
-> +	unsigned long flags;
->  
-> -	spin_lock(&sch->lock);
-> +	spin_lock_irqsave(&sch->lock, flags);
->  	sch_gpio_reg_set(sch, gpio_num, GIO, 1);
-> -	spin_unlock(&sch->lock);
-> +	spin_unlock_irqrestore(&sch->lock, flags);
->  	return 0;
->  }
->  
-> @@ -95,20 +101,22 @@ static int sch_gpio_get(struct gpio_chip *gc, unsigned gpio_num)
->  static void sch_gpio_set(struct gpio_chip *gc, unsigned gpio_num, int val)
->  {
->  	struct sch_gpio *sch = gpiochip_get_data(gc);
-> +	unsigned long flags;
->  
-> -	spin_lock(&sch->lock);
-> +	spin_lock_irqsave(&sch->lock, flags);
->  	sch_gpio_reg_set(sch, gpio_num, GLV, val);
-> -	spin_unlock(&sch->lock);
-> +	spin_unlock_irqrestore(&sch->lock, flags);
->  }
->  
->  static int sch_gpio_direction_out(struct gpio_chip *gc, unsigned gpio_num,
->  				  int val)
->  {
->  	struct sch_gpio *sch = gpiochip_get_data(gc);
-> +	unsigned long flags;
->  
-> -	spin_lock(&sch->lock);
-> +	spin_lock_irqsave(&sch->lock, flags);
->  	sch_gpio_reg_set(sch, gpio_num, GIO, 0);
-> -	spin_unlock(&sch->lock);
-> +	spin_unlock_irqrestore(&sch->lock, flags);
->  
->  	/*
->  	 * according to the datasheet, writing to the level register has no
-> @@ -130,6 +138,12 @@ static int sch_gpio_get_direction(struct gpio_chip *gc, unsigned gpio_num)
->  	return sch_gpio_reg_get(sch, gpio_num, GIO);
->  }
->  
-> +static int sch_gpio_to_irq(struct gpio_chip *gpio, unsigned int offset)
-> +{
-> +	struct sch_gpio *sch = gpiochip_get_data(gpio);
-> +	return sch->irq_base + offset;
-> +}
-> +
->  static const struct gpio_chip sch_gpio_chip = {
->  	.label			= "sch_gpio",
->  	.owner			= THIS_MODULE,
-> @@ -138,12 +152,94 @@ static const struct gpio_chip sch_gpio_chip = {
->  	.direction_output	= sch_gpio_direction_out,
->  	.set			= sch_gpio_set,
->  	.get_direction		= sch_gpio_get_direction,
-> +	.to_irq			= sch_gpio_to_irq,
->  };
->  
-> +static u32 sch_sci_handler(void *context)
-> +{
-> +	struct sch_gpio *sch = context;
-> +	unsigned long core_status, resume_status;
-> +	unsigned int resume_gpios, offset;
-> +
-> +	core_status = inl(sch->iobase + GTS);
-> +	resume_status = inl(sch->iobase + GTS + 0x20);
-> +
-> +	if (core_status == 0 && resume_status == 0)
-> +		return ACPI_INTERRUPT_NOT_HANDLED;
-> +
-> +	for_each_set_bit(offset, &core_status, sch->resume_base)
-> +		generic_handle_irq(sch->irq_base + offset);
-> +
-> +	resume_gpios = sch->chip.ngpio - sch->resume_base;
-> +	for_each_set_bit(offset, &resume_status, resume_gpios)
-> +		generic_handle_irq(sch->irq_base + sch->resume_base + offset);
-> +
-> +	outl(core_status, sch->iobase + GTS);
-> +	outl(resume_status, sch->iobase + GTS + 0x20);
-> +
-> +	return ACPI_INTERRUPT_HANDLED;
-> +}
-> +
-> +static int sch_irq_type(struct irq_data *d, unsigned int type)
-> +{
-> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> +	struct sch_gpio *sch = gc->private;
-> +	unsigned int gpio_num = d->irq - sch->irq_base;
-> +	int rising = 0;
-> +	int falling = 0;
-> +
-> +	switch (type & IRQ_TYPE_SENSE_MASK) {
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		rising = 1;
-> +		break;
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		falling = 1;
-> +		break;
-> +	case IRQ_TYPE_EDGE_BOTH:
-> +		rising = 1;
-> +		falling = 1;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	spin_lock(&sch->lock);
-> +	sch_gpio_reg_set(sch, gpio_num, GTPE, rising);
-> +	sch_gpio_reg_set(sch, gpio_num, GTNE, falling);
-> +	spin_unlock(&sch->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static void sch_irq_set_enable(struct irq_data *d, int val)
-> +{
-> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> +	struct sch_gpio *sch = gc->private;
-> +	unsigned int gpio_num = d->irq - sch->irq_base;
-> +
-> +	spin_lock(&sch->lock);
-> +	sch_gpio_reg_set(sch, gpio_num, GGPE, val);
-> +	spin_unlock(&sch->lock);
-> +}
-> +
-> +static void sch_irq_mask(struct irq_data *d)
-> +{
-> +	sch_irq_set_enable(d, 0);
-> +}
-> +
-> +static void sch_irq_unmask(struct irq_data *d)
-> +{
-> +	sch_irq_set_enable(d, 1);
-> +}
-> +
->  static int sch_gpio_probe(struct platform_device *pdev)
->  {
-> +	struct irq_chip_generic *gc;
-> +	struct irq_chip_type *ct;
->  	struct sch_gpio *sch;
->  	struct resource *res;
-> +	acpi_status status;
-> +	int irq_base, ret;
->  
->  	sch = devm_kzalloc(&pdev->dev, sizeof(*sch), GFP_KERNEL);
->  	if (!sch)
-> @@ -203,7 +299,39 @@ static int sch_gpio_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, sch);
->  
-> -	return devm_gpiochip_add_data(&pdev->dev, &sch->chip, sch);
-> +	ret = devm_gpiochip_add_data(&pdev->dev, &sch->chip, sch);
-> +	if (ret)
-> +		return ret;
-> +
-> +	irq_base = devm_irq_alloc_descs(&pdev->dev, -1, 0, sch->chip.ngpio,
-> +					NUMA_NO_NODE);
-> +	if (irq_base < 0)
-> +		return irq_base;
-> +	sch->irq_base = irq_base;
-> +
-> +	gc = devm_irq_alloc_generic_chip(&pdev->dev, "sch_gpio", 1, irq_base,
-> +					 NULL, handle_simple_irq);
-> +	if (!gc)
-> +		return -ENOMEM;
-> +
-> +	gc->private = sch;
-> +	ct = gc->chip_types;
-> +
-> +	ct->chip.irq_mask = sch_irq_mask;
-> +	ct->chip.irq_unmask = sch_irq_unmask;
-> +	ct->chip.irq_set_type = sch_irq_type;
-> +
-> +	ret = devm_irq_setup_generic_chip(&pdev->dev, gc,
-> +					  IRQ_MSK(sch->chip.ngpio),
-> +					  0, IRQ_NOREQUEST | IRQ_NOPROBE, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	status = acpi_install_sci_handler(sch_sci_handler, sch);
-> +	if (ACPI_FAILURE(status))
-> +		return -EINVAL;
-> +
-> +	return 0;
->  }
->  
->  static struct platform_driver sch_gpio_driver = {
-> -- 
-> 2.16.4
+I think I should update this MAINTAINERS file.
+I will pick it in this repo
+https://git.kernel.org/pub/scm/linux/kernel/git/greentime/linux.git
