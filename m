@@ -2,163 +2,102 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A11EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA19C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD6A218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4AE2148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:46:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="HBY7dkAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbfDXGpi convert rfc822-to-8bit (ORCPT
+        id S1729866AbfDXGp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:45:38 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:49304 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfDXGph (ORCPT
+        Wed, 24 Apr 2019 02:45:59 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33383 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbfDXGp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:45:37 -0400
-Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 98CD6CF331;
-        Wed, 24 Apr 2019 08:53:45 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] Bluetooth: Ignore CC events not matching the last HCI
- command
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20190424060704.22721-1-jprvita@endlessm.com>
-Date:   Wed, 24 Apr 2019 08:45:33 +0200
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>, bgodavar@codeaurora.org,
-        ytkim@qca.qualcomm.com, "David S. Miller" <davem@davemloft.net>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        =?utf-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@endlessm.com>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <547E8A62-51BF-4545-931E-40734134B27E@holtmann.org>
-References: <20190424054335.30044-1-jprvita@endlessm.com>
- <20190424060704.22721-1-jprvita@endlessm.com>
-To:     =?utf-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Wed, 24 Apr 2019 02:45:58 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a3so13816323wrx.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 23:45:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AyVK2GRakZiSagpjjAHHtZd/+k3S6z9JMKxhTl4oqnk=;
+        b=HBY7dkAyqC/HNR6mbKXMpZUMyhGjlkdKC62ZFnZYR5uBPx8SHDEmBv6ED1ytC9vtH4
+         RTVl6nNHJQbWTzaozEuAwJSbGgIPnbI83yCwU3+gE+YVQDkVtjlRf0ZM2Ouj9KzfYfUp
+         YnWsVi7npWgoTCdpANmv807o7SDGbttPdKMVqK3N9jNvdyr/s2DoGwPdcXav8wGPb1zf
+         OJ/9pxg5K10iquAiPB6zFKbM/xDGiEXIN4wYtSVhxSRn68arFNd9FQj6RRzsOW5Y/8l2
+         qck+ko5bSQm9K4CCVJb9fW605JGurqLUudZz0jhCZI12+1ZlUoMUMkCMg4cpuTUcQWU2
+         uenQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AyVK2GRakZiSagpjjAHHtZd/+k3S6z9JMKxhTl4oqnk=;
+        b=VJvujiSRYoFqVofHFercmgRgJO2LHvTDqVy9acVU6mVb0gGxUNXOHt1N1EmYvf023u
+         IOiMov3xf9kq/YlugvnoQpg4Zmj850a5aar4zw9Un7qUurPleSqesJBckmCwSEwOfWS6
+         Iiwe3135t825eu66WzoR5FMI8P22LLctb/oVwA6IGxTtwvgqaH9tObWqla22b8LupKgq
+         XQXqTeYF1FgfgMfJLTRgLi5ZpslKBcl6OqLrLHxAX2f60q95cRGaPK/MrBCJOn+EeHPL
+         K73KxENwLXmRSoaTazp8DnfNcRe6NMT/aBvvWCMG+HEXvO9m2YCUNxAgk6rVM9XALwHe
+         cl+Q==
+X-Gm-Message-State: APjAAAW2zM/QDea8RiE4ALtvHb+NQxpJAw/qDJbtDOaSutDT0fQW/siN
+        4jDyuwENnYZ/rTnMPCYLBRkw7u6mcy7GHGi+0+XP8kbfNbk=
+X-Google-Smtp-Source: APXvYqxnhEnqYUaQjOU8P7vuX1aGF73xOst194+h6qMRyX7r29YrcCS4BF62VPpUrDDVmD9r4VXvO8hQgndSvryLl2E=
+X-Received: by 2002:a5d:5346:: with SMTP id t6mr21566738wrv.59.1556088357115;
+ Tue, 23 Apr 2019 23:45:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190415093648.7525-1-anup.patel@wdc.com> <20190415093648.7525-3-anup.patel@wdc.com>
+ <20190424062947.GB10400@infradead.org>
+In-Reply-To: <20190424062947.GB10400@infradead.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 24 Apr 2019 12:15:45 +0530
+Message-ID: <CAAhSdy1Xc9AjPKY0RzLL_qsBs6wax23fi2BTVtMhuS0mAoKZmQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] RISC-V: Add interrupt related SCAUSE defines in asm/csr.h
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joao Paulo,
+On Wed, Apr 24, 2019 at 11:59 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Mon, Apr 15, 2019 at 09:37:23AM +0000, Anup Patel wrote:
+> > This patch adds SCAUSE interrupt flag and SCAUSE interrupt related
+> > defines to asm/csr.h. We also use these defines in kernel/irq.c and
+> > express SIE/SIP flags in-terms of SCAUSE interrupt causes.
+>
+> I'm not a fan of this.  For one this pollutes csr.h with bits not really
+> needed by most users, and it makes adding the M-mode nommu port which has
+> to use the M-mode causes much harder:
 
-> This commit makes the kernel not send the next queued HCI command until
-> a command complete arrives for the last HCI command sent to the
-> controller. This change avoids a problem with some buggy controllers
-> (seen on two SKUs of QCA9377) that send an extra command complete event
-> for the previous command after the kernel had already sent a new HCI
-> command to the controller.
-> 
-> The problem was reproduced when starting an active scanning procedure,
-> where an extra command complete event arrives for the LE_SET_RANDOM_ADDR
-> command. When this happends the kernel ends up not processing the
-> command complete for the following commmand, LE_SET_SCAN_PARAM, and
-> ultimately behaving as if a passive scanning procedure was being
-> performed, when in fact controller is performing an active scanning
-> procedure. This makes it impossible to discover BLE devices as no device
-> found events are sent to userspace.
-> 
-> This problem is reproducible on 100% of the attempts on the affected
-> controllers. The extra command complete event can be seen at timestamp
-> 27.420131 on the btmon logs bellow.
-> 
-> Bluetooth monitor ver 5.50
-> = Note: Linux version 5.0.0+ (x86_64)                                  0.352340
-> = Note: Bluetooth subsystem version 2.22                               0.352343
-> = New Index: 80:C5:F2:8F:87:84 (Primary,USB,hci0)               [hci0] 0.352344
-> = Open Index: 80:C5:F2:8F:87:84                                 [hci0] 0.352345
-> = Index Info: 80:C5:F2:8F:87:84 (Qualcomm)                      [hci0] 0.352346
-> @ MGMT Open: bluetoothd (privileged) version 1.14             {0x0001} 0.352347
-> @ MGMT Open: btmon (privileged) version 1.14                  {0x0002} 0.352366
-> @ MGMT Open: btmgmt (privileged) version 1.14                {0x0003} 27.302164
-> @ MGMT Command: Start Discovery (0x0023) plen 1       {0x0003} [hci0] 27.302310
->        Address type: 0x06
->          LE Public
->          LE Random
-> < HCI Command: LE Set Random Address (0x08|0x0005) plen 6   #1 [hci0] 27.302496
->        Address: 15:60:F2:91:B2:24 (Non-Resolvable)
->> HCI Event: Command Complete (0x0e) plen 4                 #2 [hci0] 27.419117
->      LE Set Random Address (0x08|0x0005) ncmd 1
->        Status: Success (0x00)
-> < HCI Command: LE Set Scan Parameters (0x08|0x000b) plen 7  #3 [hci0] 27.419244
->        Type: Active (0x01)
->        Interval: 11.250 msec (0x0012)
->        Window: 11.250 msec (0x0012)
->        Own address type: Random (0x01)
->        Filter policy: Accept all advertisement (0x00)
->> HCI Event: Command Complete (0x0e) plen 4                 #4 [hci0] 27.420131
->      LE Set Random Address (0x08|0x0005) ncmd 1
->        Status: Success (0x00)
-> < HCI Command: LE Set Scan Enable (0x08|0x000c) plen 2      #5 [hci0] 27.420259
->        Scanning: Enabled (0x01)
->        Filter duplicates: Enabled (0x01)
->> HCI Event: Command Complete (0x0e) plen 4                 #6 [hci0] 27.420969
->      LE Set Scan Parameters (0x08|0x000b) ncmd 1
->        Status: Success (0x00)
->> HCI Event: Command Complete (0x0e) plen 4                 #7 [hci0] 27.421983
->      LE Set Scan Enable (0x08|0x000c) ncmd 1
->        Status: Success (0x00)
-> @ MGMT Event: Command Complete (0x0001) plen 4        {0x0003} [hci0] 27.422059
->      Start Discovery (0x0023) plen 1
->        Status: Success (0x00)
->        Address type: 0x06
->          LE Public
->          LE Random
-> @ MGMT Event: Discovering (0x0013) plen 2             {0x0003} [hci0] 27.422067
->        Address type: 0x06
->          LE Public
->          LE Random
->        Discovery: Enabled (0x01)
-> @ MGMT Event: Discovering (0x0013) plen 2             {0x0002} [hci0] 27.422067
->        Address type: 0x06
->          LE Public
->          LE Random
->        Discovery: Enabled (0x01)
-> @ MGMT Event: Discovering (0x0013) plen 2             {0x0001} [hci0] 27.422067
->        Address type: 0x06
->          LE Public
->          LE Random
->        Discovery: Enabled (0x01)
-> 
-> Signed-off-by: João Paulo Rechi Vita <jprvita@endlessm.com>
-> ---
-> net/bluetooth/hci_event.c | 13 +++++++++++++
-> 1 file changed, 13 insertions(+)
-> 
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index 609fd6871c5a..b349fc2b4123 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -3071,6 +3071,19 @@ static void hci_cmd_complete_evt(struct hci_dev *hdev, struct sk_buff *skb,
-> 	*opcode = __le16_to_cpu(ev->opcode);
-> 	*status = skb->data[sizeof(*ev)];
-> 
-> +	if (*opcode != HCI_OP_RESET && !hci_sent_cmd_data(hdev, *opcode)) {
-> +		/* Some buggy controllers generate an extra command complete
-> +		 * event for the previous command after a new commend was
-> +		 * already sent, so if the opcode does not match the last sent
-> +		 * command we should ignore this event.
-> +		 *
-> +		 * HCI_OP_RESET is a special case handled in
-> +		 * hci_req_cmd_complete.
-> +		 */
-> +		bt_dev_err(hdev, "unexpected CC event opcode 0x%4.4x", *opcode);
-> +		return;
-> +	}
-> +
+It's not polluting asm/csr.h because when we get interrupt numer in lower bits
+of SCAUSE CSR.
 
-the return; here is not going to fly. You need to go through the switch statement since it actually does bookkeeping for a lot of features even if the command is not executed by hci_req and instead comes from user space or someone else.
+These defines certainly belong to asm/csr.h because they represent possible
+exception causes when we get interrupt.
 
-What is the problem with handling this in hci_req_cmd_complete. We have hci_sent_cmd_data check there already. Lets extend this to ensure that command complete for random commands don’t trigger us to continue with the request.
+We need these defines for programming HIDELEG CSR in KVM kernel module
+so it will be used at multiple places.
 
-Regards
+>
+> http://git.infradead.org/users/hch/misc.git/commitdiff/1221f5c32345ebe7ea2c1cd6e8a01ad4b422aaba
 
-Marcel
+You can certainly use these defines in your nommu commit by using
+"#ifdef CONFIG_M_MODE" in switch case of do_IRQ().
 
+Regards,
+Anup
