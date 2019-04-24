@@ -2,156 +2,127 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9528BC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC817C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 02:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6894B218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749D4218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 02:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556071697;
+	bh=gvHSlNwytK2oKYnJClL+LsmOetPenEFvr1DB+Sej11Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SyOJZLpZ9jMu/t8RsjvS0OtlulNU9IwVb+W7Ad0fvw/+VtgtF6yP6jLyDQcal9dlk
+	 Mb9Kr7F1rp7TZxXtwQWNbmCiMDIKd8REmHKbBI7euShDhDnYUn5tr1Dy6JfX2/mJbP
+	 K6JrwMALDcCEHcg09Ueo5pcnaENIGxLEaYpqgglM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbfDXB7y (ORCPT
+        id S1729196AbfDXCIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:59:54 -0400
-Received: from mga17.intel.com ([192.55.52.151]:51063 "EHLO mga17.intel.com"
+        Tue, 23 Apr 2019 22:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726461AbfDXB7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:59:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 18:59:53 -0700
-X-IronPort-AV: E=Sophos;i="5.60,387,1549958400"; 
-   d="scan'208";a="136840568"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.239.196.111]) ([10.239.196.111])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES128-SHA; 23 Apr 2019 18:59:51 -0700
-Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
- <20190422183553.GH1236@linux.intel.com>
- <bccc075c-68ce-6324-6f73-4d4e9a1d9683@linux.intel.com>
- <20190423174407.GC10720@linux.intel.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <37c014d8-7562-92e6-d577-ddbe3565ea8e@linux.intel.com>
-Date:   Wed, 24 Apr 2019 09:59:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726840AbfDXCIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 22:08:16 -0400
+Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F987218D2;
+        Wed, 24 Apr 2019 02:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556071694;
+        bh=gvHSlNwytK2oKYnJClL+LsmOetPenEFvr1DB+Sej11Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LhJs262Pkd7I96qWBCSiDSiESMYMcCQDjT7cZEtx5M10Y1qrBt/bFiwG2I6M+bJMb
+         HS7CCGAnnh2lL05VSn1bIKfR3Es8sPhEc9yB/60HVPMAeoNOZy2LLNeCthCZ/xUin5
+         n1/7rZMqFH6zINgVGL1iRC5+Oysv95Gt7ovR6qFU=
+Date:   Wed, 24 Apr 2019 10:08:04 +0800
+From:   Guo Ren <guoren@kernel.org>
+To:     Gary Guo <gary@garyguo.net>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Andrew Waterman <andrew@sifive.com>,
+        Arnd Bergmann <arnd@arndb.de>, Anup Patel <anup.patel@wdc.com>,
+        Xiang Xiaoyan <xiaoyan_xiang@c-sky.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vincent Chen <vincentc@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Scott Wood <swood@redhat.com>,
+        "tech-privileged@lists.riscv.org" <tech-privileged@lists.riscv.org>
+Subject: Re: [PATCH] riscv: Support non-coherency memory model
+Message-ID: <20190424020803.GA27332@guoren-Inspiron-7460>
+References: <1555947870-23014-1-git-send-email-guoren@kernel.org>
+ <20190422161814.GA30694@lst.de>
+ <20190423001348.GA31639@guoren-Inspiron-7460>
+ <20190423055548.GA12365@lst.de>
+ <20190423154642.GA16001@guoren-Inspiron-7460>
+ <d1988350-7da9-37bb-3d8b-93bedea0b732@garyguo.net>
 MIME-Version: 1.0
-In-Reply-To: <20190423174407.GC10720@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d1988350-7da9-37bb-3d8b-93bedea0b732@garyguo.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/24 1:44, Sean Christopherson wrote:
-> On Tue, Apr 23, 2019 at 11:23:59AM +0800, Like Xu wrote:
->> On 2019/4/23 2:35, Sean Christopherson wrote:
->>>>   #define F(x) bit(X86_FEATURE_##x)
->>>>   int kvm_update_cpuid(struct kvm_vcpu *vcpu)
->>>> @@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
->>>>   	switch (function) {
->>>>   	case 0:
->>>>   		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
->>>> +		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry->eax;
->>>
->>> This all seems unnecessary.  And by 'all', I mean the existing Intel PT
->>> and XSAVE leaf checks, as well as the new mcp check.  entry->eax comes
->>> directly from hardware, and unless I missed something, PT and XSAVE are
->>> only exposed to the guest when they're supported in hardware.  In other
->>> words, KVM will never need to adjust entry->eax to expose PT or XSAVE.
->>
->> We call this function for both case KVM_GET_SUPPORTED_CPUID and
->> KVM_GET_EMULATED_CPUID although kvm user could reconfig them via
->> KVM_SET_CPUID* path.
+Hi Gary,
+
+On Tue, Apr 23, 2019 at 03:57:30PM +0000, Gary Guo wrote:
+> >>> Another point is we could get more attribute bits by modify the riscv
+> >>> spec:
+> >>>   - Remove Global bit, I think it's duplicate with the User bit in linux.
+> >>
+> >> It is in Linux, but it is conceptually very different.
+> > Yes, but hardware could ignore one of them and in riscv linux
+> > _PAGE_GLOBAL is no use at all, see:
+> > grep _PAGE_GLOBAL arch/riscv -r
+> > 
+> > In fact, the _PAGE_KERNEL for pte doesn't contain _PAGE_GLOBAL and it
+> > works on FU540 and qemu. As I've mentioned page attribute bits is very
+> > precious, define a useless bit make people confused.
+>  >
 > 
-> Not that it matters, but __do_cpuid_ent() is only used for the non-emulated
-> case, KVM_GET_EMULATED_CPUID goes to __do_cpuid_ent_emulated().
-
-It's true and I have to mention we have two scenarios to get vCPUID:
-
-1. For kvm_dev, we have KVM_GET_EMULATED_CPUID for 
-kvm_dev_ioctl_get_cpuid; (we're talking about this)
-
-2. For kvm_vcpu,we have KVM_GET_CPUID2 for kvm_vcpu_ioctl_get_cpuid2;
-
->   
->>> The original min() check was added by commit 0771671749b5 ("KVM: Enhance
->>> guest cpuid management"), which doesn't provide any explicit information
->>> on why KVM does min() in the first place.
->>
->> Exposing cpuid.0.eax in a blind way (with host hardware support)
->> is not a good practice for guest migration and improves compatibility
->> requirements.
+> The fact that it isn't used yet doesn't imply it is not useful. We don't 
+> use ASIDs at the moment, and without using ASIDs the "global" bit is 
+> indeed not useful. However with ASIDs the bit will be vital for saving 
+> TLB spaces. Without the global bit, the kernel pages become synonyms to 
+> themselves (i.e. they have different tags in TLB but refer to the same 
+> physical page).
 > 
-> Right, but isn't the f_intel_pt check for example completely irrelevant?
-> f_intel_pt is true if and only if hardware supports PT, i.e. CPUID.0.EAX
-> and thus entry->eax will already be >=0x14.
-
-The f_intel_pt check is not only about hardware supports check but also 
-module_param (pt_mode) supports check.
-
-So the case is the host does have PT support which means (host 
-CPUID.0.EAX already be >=0x14 for Intel CPUs) but kvm doesn't want 
-advertise it and thus the min() operation is needed.
-
+> The global bit also exists in many other ISAs as well. It's definitely 
+> not a "useless" bits.
 > 
-> I don't fully understand whether or not KVM needs to raise the minimum to
-> 0xb regardless of h/w XSAVE support, but it's likely irrelevant in the end.
-> 
-> Anyways, back to 0x1f, kvm_supported_intel_mcp() returns true if and only
-> if hardware's CPUID.0.EAX >= 0x1f, 
-
-According to latest SDM, the max hardware CPUID.0.EAX is 0x1f and BIOS 
-would expose 0x1f only for multi-chip packaging CPUs (at least for now).
-
-> i.e. adjusting entry->eax is always a
-> nop.  So if KVM wants to advertise leaf 0x1f only when it's supported in
-> hardware then adjusting entry->eax is unnecessary, and if KVM wants to
-> unconditionally advertise 0x1f then adjusting entry->eax should also be
-> done unconditionally.
-
-It we have no check on kvm_supported_intel_mcp() in legacy code,
-CPUID.0.EAX would be min() and thus less than 0x1f which means the 
-cpuid.1f info is not exposed.
-
-I know your point is to avoid min() totally (I thought so at the time) 
-and I have pointed out it's necessary for kvm features setting.
-
-If KVM wants to unconditionally advertise 0x1f (in EMULATED way),
-kvm needs cover other side effects and this patch only advertises 0x1f
-when hardware has it.
-
-It's very common that guest wants to set 0x1f regardless of h/w support
-and this is another story.
-
-> 
->>> Given that the original code
->>> was "entry->eax = min(entry->eax, (u32)0xb);", my *guess* is that the
->>> idea was to always report "Extended Topology Enumeration Leaf" as
->>> supported so that userspace can enumerate the VM's topology to the guest
->>> even when hardware itself doesn't do so.
->>
->> If the host cpu mode is too antiquated to support 0xb, it wouldn't report
->> 0xb for sure. The host cpuid.0.eax has been over 0xb for a long time and
->> reached 0x1f in the latest SDM.
->>
->> AFAICT, the original code keeps minimum cpuid.0.eax out of features guest
->> just used or at least it claimed to use.
->>
->>>
->>> Assuming we want to allow userspace to use "V2 Extended Topology
->>> Enumeration Leaf" regardless of hardware support, then this can simply be:
->>>
->>>    entry->eax = min(entry->eax, (u32)0x1f);
->>>
->>> Or am I completely missing something?
+> Moreover, this bit is already implemented in both Rocket and Ariane. It 
+> is also in the spec for quite a while. The fact that Linux doesn't use 
+> it at the moment is not a reason for removing it.
 > 
 
+Look:
+linux-next git:(riscv_asid_allocator_v2)$ grep GLOBAL arch/riscv -r
+arch/riscv/include/asm/pgtable-bits.h:#define _PAGE_GLOBAL    (1 << 5)    /* Global */
+arch/riscv/include/asm/pgtable-bits.h:                                    _PAGE_USER | _PAGE_GLOBAL))
+
+Your patch tell us _PAGE_USER and _PAGE_GLOBAL are duplicate and why we
+couldn't make _PAGE_USER implies _PAGE_GLOBAL? Can you give an example
+of a real scene in PTE about:
+  _PAGE_USER:0 + _PAGE_GLOBAL:1
+or
+  _PAGE_USER:1 + _PAGE_GLOBAL:0
+
+Of cause I know USER & GLOBAL are conceptually very different, but
+there are only 10 attribute-bits for riscv (In fact we've wasted two bits
+to support huge RV32-pfn :P). So I think it is time to merge these two bits
+before hardware supports GLOBAL. Reserve them for future!
+
+Best Regards
+ Guo Ren
