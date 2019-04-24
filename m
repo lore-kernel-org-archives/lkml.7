@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC8FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA05DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735F521902
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5EF21902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:26:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="N0nkysab"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="b73xLpSu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731430AbfDXP0K (ORCPT
+        id S1731521AbfDXP00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:26:10 -0400
+        Wed, 24 Apr 2019 11:26:26 -0400
 Received: from mail.efficios.com ([167.114.142.138]:57984 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731233AbfDXPZn (ORCPT
+        with ESMTP id S1731093AbfDXPZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:25:43 -0400
+        Wed, 24 Apr 2019 11:25:42 -0400
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id ECF101D91FB;
-        Wed, 24 Apr 2019 11:25:42 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id 11F361D91C9;
+        Wed, 24 Apr 2019 11:25:41 -0400 (EDT)
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id rcqGGMwzfx31; Wed, 24 Apr 2019 11:25:42 -0400 (EDT)
+        with ESMTP id K9vbXd3f7roD; Wed, 24 Apr 2019 11:25:40 -0400 (EDT)
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 4CD241D91F3;
-        Wed, 24 Apr 2019 11:25:42 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 4CD241D91F3
+        by mail.efficios.com (Postfix) with ESMTP id 853901D91C6;
+        Wed, 24 Apr 2019 11:25:40 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 853901D91C6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1556119542;
-        bh=AuAXMy3iLCz73+j1txs+aAZdmlzykjM9QU0ANC1hzHo=;
+        s=default; t=1556119540;
+        bh=DCmt1f7ebDuw8znshKo0sgR6MYHScO2p10uW028uR5A=;
         h=From:To:Date:Message-Id;
-        b=N0nkysab/vOtfmikmM/vvgwMtJg7Nu6dd5AZ+yTDeRkOp960fQGaCwhWp6Ez8wjj3
-         U2l0ziw8hKSvq6oeWhytQZFgmgO9BHNx2M3hnJIyKUNp09bI/dxAs9yPVwlgBfe3g0
-         tjTG+2KvQEnLsqRdieWSrN1fMqHQ5JqSdOw8W88Ovu4g7OOR87OKb27I9a5dylExaL
-         8ebzsAZSU7oqnH0nUERH8sSwC0qKM/kaFA9YAqEN0A03tqqlO05B41Q7H3kBj84zp4
-         gMGHVdYDJDO23gO3txSwuhSYPFdrduI4oQL91wsKxqTzr6cupX8yZmFP04B1RCVQt8
-         jzNTqcOnJmABQ==
+        b=b73xLpSu+0Si1g8YTW+/YGwwyNQO3usuENff8DS3PAT9RptinZjKtzFE1zCa3+txp
+         qwEaSfiKdfKm+nSB8uNRBqmtHL951ZLesWa4Wwwr4e0UD9EnylAN5Q38gnAy/cJH4J
+         YStmMfqSD/lF09M81YWXEAZCNMNEsn+rOBgjFiDv3y4DFYB638TUIdfcfWOO9//+Bn
+         qRxJ25MEZ8kw/Cr9s3jlqqfekuYNi8wrUz8SSdnXAJZjAhMg7ykBAKKNKBSk2NATz1
+         D7L6WAaYerMHqBuj2Cih1THrKyl554tLc8FfNLNT60UQO2wvnmbSLLmTgX/Vt7q9bB
+         zzKaZ5CLg7rmQ==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id fsFpeYlmSrc1; Wed, 24 Apr 2019 11:25:42 -0400 (EDT)
+        with ESMTP id KTSo_b_kNxZj; Wed, 24 Apr 2019 11:25:40 -0400 (EDT)
 Received: from thinkos.internal.efficios.com (192-222-157-41.qc.cable.ebox.net [192.222.157.41])
-        by mail.efficios.com (Postfix) with ESMTPSA id 228721D91BF;
-        Wed, 24 Apr 2019 11:25:40 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTPSA id 032C81D9199;
+        Wed, 24 Apr 2019 11:25:37 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
@@ -73,12 +73,10 @@ Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Joel Fernandes <joelaf@google.com>,
         Shuah Khan <shuah@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
-Subject: [RFC PATCH for 5.2 10/10] rseq/selftests: mips: use break instruction for RSEQ_SIG
-Date:   Wed, 24 Apr 2019 11:25:02 -0400
-Message-Id: <20190424152502.14246-11-mathieu.desnoyers@efficios.com>
+        linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH for 5.2 07/10] rseq/selftests: arm: use udf instruction for RSEQ_SIG
+Date:   Wed, 24 Apr 2019 11:24:59 -0400
+Message-Id: <20190424152502.14246-8-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190424152502.14246-1-mathieu.desnoyers@efficios.com>
 References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com>
@@ -87,45 +85,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use break as guard instruction for the restartable sequence abort
+Use udf as the guard instruction for the restartable sequence abort
 handler.
 
-Previously, the chosen signature was simply data, based on the
-assumption that it could always sit in a literal pool. However,
-some compilation environments favor disabling literal pool. Therefore,
-ensure the signature is a valid uncommon trap instruction.
+Previously, the chosen signature was not a valid instruction, based
+on the assumption that it could always sit in a literal pool. However,
+there are compilation environments in which literal pools are not
+availble, for instance execute-only code. Therefore, we need to
+choose a signature value that is also a valid instruction.
+
+Handle compiling with -mbig-endian on ARMv6+, which generates binaries
+with mixed code vs data endianness (little endian code, big endian
+data).
+
+Else mismatch between code endianness for the generated signatures and
+data endianness for the RSEQ_SIG parameter passed to the rseq
+registration will trigger application segmentation faults when the
+kernel try to abort rseq critical sections.
+
+Prior to ARMv6, -mbig-endian generates big-endian code and data, so
+endianness should not be reversed in that case.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-CC: Paul Burton <paul.burton@mips.com>
-CC: James Hogan <jhogan@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Joel Fernandes <joelaf@google.com>
+CC: Catalin Marinas <catalin.marinas@arm.com>
+CC: Dave Watson <davejwatson@fb.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Shuah Khan <shuah@kernel.org>
+CC: Andi Kleen <andi@firstfloor.org>
+CC: linux-kselftest@vger.kernel.org
+CC: "H . Peter Anvin" <hpa@zytor.com>
+CC: Chris Lameter <cl@linux.com>
+CC: Russell King <linux@arm.linux.org.uk>
+CC: Michael Kerrisk <mtk.manpages@gmail.com>
+CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Paul Turner <pjt@google.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Josh Triplett <josh@joshtriplett.org>
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: linux-api@vger.kernel.org
+CC: Andy Lutomirski <luto@amacapital.net>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Linus Torvalds <torvalds@linux-foundation.org>
 ---
- tools/testing/selftests/rseq/rseq-mips.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/testing/selftests/rseq/rseq-arm.h | 52 +++++++++++++++++++++++++++++++--
+ 1 file changed, 50 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/rseq/rseq-mips.h b/tools/testing/selftests/rseq/rseq-mips.h
-index fe3eabcdcbe5..eb53a6adfbbb 100644
---- a/tools/testing/selftests/rseq/rseq-mips.h
-+++ b/tools/testing/selftests/rseq/rseq-mips.h
-@@ -7,7 +7,11 @@
+diff --git a/tools/testing/selftests/rseq/rseq-arm.h b/tools/testing/selftests/rseq/rseq-arm.h
+index 5f262c54364f..e8ccfc37d685 100644
+--- a/tools/testing/selftests/rseq/rseq-arm.h
++++ b/tools/testing/selftests/rseq/rseq-arm.h
+@@ -5,7 +5,54 @@
   * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
   */
  
 -#define RSEQ_SIG	0x53053053
 +/*
-+ * RSEQ_SIG uses the break instruction. The instruction pattern is
-+ *	0350000d        break    0x350
++ * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
++ * value 0x5de3. This traps if user-space reaches this instruction by mistake,
++ * and the uncommon operand ensures the kernel does not move the instruction
++ * pointer to attacker-controlled code on rseq abort.
++ *
++ * The instruction pattern in the A32 instruction set is:
++ *
++ * e7f5def3    udf    #24035    ; 0x5de3
++ *
++ * This translates to the following instruction pattern in the T16 instruction
++ * set:
++ *
++ * little endian:
++ * def3        udf    #243      ; 0xf3
++ * e7f5        b.n    <7f5>
++ *
++ * pre-ARMv6 big endian code:
++ * e7f5        b.n    <7f5>
++ * def3        udf    #243      ; 0xf3
++ *
++ * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
++ * code and big-endian data. Ensure the RSEQ_SIG data signature matches code
++ * endianness. Prior to ARMv6, -mbig-endian generates big-endian code and data
++ * (which match), so there is no need to reverse the endianness of the data
++ * representation of the signature. However, the choice between BE32 and BE8
++ * is done by the linker, so we cannot know whether code and data endianness
++ * will be mixed before the linker is invoked.
 + */
-+#define RSEQ_SIG	0x0350000d
++
++#define RSEQ_SIG_CODE	0xe7f5def3
++
++#ifndef __ASSEMBLER__
++
++#define RSEQ_SIG_DATA							\
++	({								\
++		int sig;						\
++		asm volatile (  "b 2f\n\t"				\
++				"1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
++				"2:\n\t"				\
++				"ldr %[sig], 1b\n\t"			\
++				: [sig] "=r" (sig));			\
++		sig;							\
++	})
++
++#define RSEQ_SIG	RSEQ_SIG_DATA
++
++#endif
  
- #define rseq_smp_mb()	__asm__ __volatile__ ("sync" ::: "memory")
- #define rseq_smp_rmb()	rseq_smp_mb()
+ #define rseq_smp_mb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
+ #define rseq_smp_rmb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
+@@ -78,7 +125,8 @@ do {									\
+ 		__rseq_str(table_label) ":\n\t"				\
+ 		".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
+ 		".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, " __rseq_str(abort_ip) ", 0x0\n\t" \
+-		".word " __rseq_str(RSEQ_SIG) "\n\t"			\
++		".arm\n\t"						\
++		".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"		\
+ 		__rseq_str(label) ":\n\t"				\
+ 		teardown						\
+ 		"b %l[" __rseq_str(abort_label) "]\n\t"
 -- 
 2.11.0
 
