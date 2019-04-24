@@ -2,53 +2,60 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B900BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EF1C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8594E21908
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A6021908
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126315;
-	bh=1NOefq52Plzf9Y6G0rPkelexmEIjSQksgDKItgXxqGk=;
+	s=default; t=1556126322;
+	bh=rR7kvEX9uo3Hk4pghdRxf3KczhtYEZ1BS3twhO9/TGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGHcY1f6S9Ko+/8yxyucrscv6htsBugQmWjzjXYfvdoHVOv5r942OVDhZ54C4qqv0
-	 7VQqupGuKWwebITXZfQzAtty0NoTfTSaKV5nfvFnwkNQSrHc+g0cXiWCNSJ2ztW2sk
-	 e/RLTtucmUdhducKKYVwrGheSPeW72Km3yn+MICM=
+	b=eCnqb+3Sd9y8NjGnkG3VLgRwFGuOINlN03p/qMfTm6EAIcIczWZtSyjDLUvCQb0Ck
+	 YTq+FTCj+pPdRDfIxmRbihqOzXV3wpXJPIDKzGKlLfqxPctCCsGk7U2OBGqqMHj/Du
+	 K9cwsI+AAICteJi8W5CbTwQlV+ybvpDEY+plsYfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388856AbfDXRSe (ORCPT
+        id S2388876AbfDXRSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:18:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43592 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:18:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388842AbfDXRSb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:18:31 -0400
+        id S2388857AbfDXRSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:18:36 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E63422054F;
-        Wed, 24 Apr 2019 17:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70F4321905;
+        Wed, 24 Apr 2019 17:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126310;
-        bh=1NOefq52Plzf9Y6G0rPkelexmEIjSQksgDKItgXxqGk=;
+        s=default; t=1556126316;
+        bh=rR7kvEX9uo3Hk4pghdRxf3KczhtYEZ1BS3twhO9/TGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hZvgKpcCWcvr9JGOJbX9L+X5cyNxLWUZn44JGSJeEHrzJid2u02e1O1OAPXw/T+4p
-         JRGW9fuU1//hkIaWUchKZqfkka3o1sMUYJhYrYm8rSd/2qG1YKfMlskMDVH4tPnngN
-         3LtiBf0Px0fGp67BrPGdi40sgycnvLJmWUUcJLGg=
+        b=WT3YtM8abaJKqh7eSlm06D5KhFRPmxXxuQNFiPdGD5UZDLLp1ctQ9tG/zRN4btGq/
+         MXNNe9byPdpiEBtX5lXPlZWSAKXzoQ31u9bDc+Nd4yUGIy7+rxakiMGjLEaxNj6TLK
+         B+q3wXQCm6XVFtEVxvXVjtB8lT7lw/L+wPeNaAKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 067/168] dmaengine: tegra: avoid overflow of byte tracking
-Date:   Wed, 24 Apr 2019 19:08:31 +0200
-Message-Id: <20190424170927.722833531@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Robert=20=C5=9Awi=C4=99cki?= <robert@swiecki.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Willy Tarreau <w@1wt.eu>, Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Federico Manuel Bento <up201407890@fc.up.pt>
+Subject: [PATCH 4.4 069/168] binfmt_elf: switch to new creds when switching to new mm
+Date:   Wed, 24 Apr 2019 19:08:33 +0200
+Message-Id: <20190424170927.836127577@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,55 +68,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e486df39305864604b7e25f2a95d51039517ac57 ]
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-The dma_desc->bytes_transferred counter tracks the number of bytes
-moved by the DMA channel. This is then used to calculate the information
-passed back in the in the tegra_dma_tx_status callback, which is usually
-fine.
+commit 9f834ec18defc369d73ccf9e87a2790bfa05bf46 upstream.
 
-When the DMA channel is configured as continous, then the bytes_transferred
-counter will increase over time and eventually overflow to become negative
-so the residue count will become invalid and the ALSA sound-dma code will
-report invalid hardware pointer values to the application. This results in
-some users becoming confused about the playout position and putting audio
-data in the wrong place.
+We used to delay switching to the new credentials until after we had
+mapped the executable (and possible elf interpreter).  That was kind of
+odd to begin with, since the new executable will actually then _run_
+with the new creds, but whatever.
 
-To fix this issue, always ensure the bytes_transferred field is modulo the
-size of the request. We only do this for the case of the cyclic transfer
-done ISR as anyone attempting to move 2GiB of DMA data in one transfer
-is unlikely.
+The bigger problem was that we also want to make sure that we turn off
+prof events and tracing before we start mapping the new executable
+state.  So while this is a cleanup, it's also a fix for a possible
+information leak.
 
-Note, we don't fix the issue that we should /never/ transfer a negative
-number of bytes so we could make those fields unsigned.
+Reported-by: Robert Święcki <robert@swiecki.net>
+Tested-by: Peter Zijlstra <peterz@infradead.org>
+Acked-by: David Howells <dhowells@redhat.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Andy Lutomirski <luto@amacapital.net>
+Acked-by: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Willy Tarreau <w@1wt.eu>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Federico Manuel Bento <up201407890@fc.up.pt>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra20-apb-dma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/binfmt_elf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index c8f79dcaaee8..67f201b8dcda 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -632,7 +632,10 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -850,6 +850,7 @@ static int load_elf_binary(struct linux_
+ 		current->flags |= PF_RANDOMIZE;
  
- 	sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq), node);
- 	dma_desc = sgreq->dma_desc;
--	dma_desc->bytes_transferred += sgreq->req_len;
-+	/* if we dma for long enough the transfer count will wrap */
-+	dma_desc->bytes_transferred =
-+		(dma_desc->bytes_transferred + sgreq->req_len) %
-+		dma_desc->bytes_requested;
+ 	setup_new_exec(bprm);
++	install_exec_creds(bprm);
  
- 	/* Callback need to be call */
- 	if (!dma_desc->cb_count)
--- 
-2.19.1
-
+ 	/* Do this so that we can load the interpreter, if need be.  We will
+ 	   change some of these later */
+@@ -1084,7 +1085,6 @@ static int load_elf_binary(struct linux_
+ 		goto out;
+ #endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */
+ 
+-	install_exec_creds(bprm);
+ 	retval = create_elf_tables(bprm, &loc->elf_ex,
+ 			  load_addr, interp_load_addr);
+ 	if (retval < 0)
 
 
