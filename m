@@ -2,105 +2,148 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58857C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF99C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2485821773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:15:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SM0gvU5X"
+	by mail.kernel.org (Postfix) with ESMTP id 86BA321773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbfDXMPt (ORCPT
+        id S1729416AbfDXMRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:15:49 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37370 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbfDXMPs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:15:48 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h126so3838561lfh.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:15:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1BwZFno63wZytLE3xAp+LLjJ3VbyMrFIKeO69px4b/8=;
-        b=SM0gvU5XI0ur7wcJDLik+s4+K5IqC4FF6GWc++RcBTnJpAZOMeXI0JLiX0jnlHS7SR
-         VEtwA7+RDJAPhuicFR00DMyDnFOGO47u3oMPts2zih+xC56o7yLpVTJ+tKp6rkXtVsev
-         8xNrL3gtr+dtpspoRXPuiXkKNEtS1FtVo7ZsdTfe/4zd95efp6pgcS7zJzOe6pu9rz5E
-         v7ICLaRm7lNtrha3hFZcuGfVQwe/K4M0AI4lye6T+qyvKdfw/3W35YW7zh2KG2Xj5jD2
-         A4bm+fmsOy0rbxLe0ZTl/QlTkKYOXkcLiVasTR5n0xA5JBF5gmAvHay6roFnYpGaEINC
-         1pmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1BwZFno63wZytLE3xAp+LLjJ3VbyMrFIKeO69px4b/8=;
-        b=GxteKoalMaJDy2s/iLq7Vy6N/pPZxIcv86Yqx9CgIB/gw3CqcaxGPw2LmfrJwHOeFj
-         /F/vkzgV6zZfqveZi/wUiYrWfOEqHDiEPoh37rSmA17aYT7w91nnit87UzgjnEJGB5uo
-         ipQYXfDY+i0hWlaRKFm8NgcLxo4PKp+zyCnIBnV5mydadPPZ8fSQF0Q/q4gXMWx191b+
-         QU0ewy3pdY42qH7g0ybTtFaqDc5b4yzhFz4uWvQXNdkfLuGhdBFp5LMcwzpEv/TmbwCY
-         k/z4RAWr+Djrg7pRTYF1bjQnZMjTqd2fIaxWfGZwDo++v/sKo5bPFFhyOrwZ7tl7h9St
-         dazw==
-X-Gm-Message-State: APjAAAWp2L8/4VTnXOddlYWGTNww2cTXASI6QggMik14bkBRdVDVbLlU
-        J0WieR2NWETR9GGaNt6c2YOczg==
-X-Google-Smtp-Source: APXvYqykqPPNNReAIjNAq+UP8AP4yVdGrunde2oRAdka3qS/4IzoRNbFxe0B14mIAFiPFovgqVlLgw==
-X-Received: by 2002:ac2:55b2:: with SMTP id y18mr18132853lfg.133.1556108146855;
-        Wed, 24 Apr 2019 05:15:46 -0700 (PDT)
-Received: from [192.168.27.209] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id b14sm3995192ljf.53.2019.04.24.05.15.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 05:15:45 -0700 (PDT)
-Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
- codec API
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Vikash Garodia <vgarodia@codeaurora.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Malathi Gottam <mgottam@codeaurora.org>
-References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
- <20190117162008.25217-11-stanimir.varbanov@linaro.org>
- <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org>
-Date:   Wed, 24 Apr 2019 15:15:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 08:17:11 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46204 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727230AbfDXMRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 08:17:11 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 173B18227A5D9DEDBF60;
+        Wed, 24 Apr 2019 20:17:08 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Apr 2019
+ 20:17:05 +0800
+Date:   Wed, 24 Apr 2019 13:16:55 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Mohan Kumar <mohankumar718@gmail.com>,
+        Andreas Klinger <ak@it-klinger.de>,
+        "Hartmut Knaack" <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drivers: iio: proximity: This patch fix the following
+ checkpatch warning.
+Message-ID: <20190424131655.000013bb@huawei.com>
+In-Reply-To: <CAJCx=g=8WEAVxdhOQni1gd2D-mTbuc8kTa6nQhF3nQ9JfGDJKg@mail.gmail.com>
+References: <1555524925-15450-1-git-send-email-mohankumar718@gmail.com>
+        <CAJCx=gmi6=uXbydpE2gY2x-XijtAd=bfufoJ+gbO1KU1n++g3Q@mail.gmail.com>
+        <20190422114821.5955d4fa@archlinux>
+        <CAJCx=g=8WEAVxdhOQni1gd2D-mTbuc8kTa6nQhF3nQ9JfGDJKg@mail.gmail.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+On Wed, 24 Apr 2019 17:23:26 +0800
+Matt Ranostay <matt.ranostay@konsulko.com> wrote:
 
-On 2/15/19 3:44 PM, Hans Verkuil wrote:
-> Hi Stanimir,
+> On Mon, Apr 22, 2019 at 6:48 PM Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Thu, 18 Apr 2019 16:23:51 -0700
+> > Matt Ranostay <matt.ranostay@konsulko.com> wrote:
+> >  
+> > > See comments inline
+> > >
+> > > On Wed, Apr 17, 2019 at 11:15 AM Mohan Kumar <mohankumar718@gmail.com> wrote:  
+> > > >
+> > > > As per Documentation/timers/timers-howto.txt Msleep < 20ms can sleep for
+> > > > up to 20ms. so use usleep_range.
+> > > >
+> > > > Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+> > > > ---
+> > > >  drivers/iio/proximity/mb1232.c | 2 +-
+> > > >  drivers/iio/proximity/srf08.c  | 4 ++--
+> > > >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/iio/proximity/mb1232.c b/drivers/iio/proximity/mb1232.c
+> > > > index 166b3e6..74f7eae 100644
+> > > > --- a/drivers/iio/proximity/mb1232.c
+> > > > +++ b/drivers/iio/proximity/mb1232.c
+> > > > @@ -81,7 +81,7 @@ static s16 mb1232_read_distance(struct mb1232_data *data)
+> > > >                 }
+> > > >         } else {
+> > > >                 /* use simple sleep if announce irq is not connected */
+> > > > -               msleep(15);
+> > > > +               usleep_range(15000, 20000);  
+> > >
+> > > This is actually less than ideal.. because usleep_range uses the
+> > > hrtimers which forces an interrupt.
+> > >
+> > > Unless you actually need to read between 15ms and 20ms it is best just
+> > > to leave the msleep() as it is, and let it take a bit longer
+> > > if required.  
+> > Good response.  Perhaps Mohan could follow up with a patch to add
+> > a comment to this effect to save anyone else trying to 'fix' this
+> > issue in future?  
 > 
-> I never paid much attention to this patch series since others were busy
-> discussing it and I had a lot of other things on my plate, but then I heard
-> that this patch made G_FMT blocking.
+> Change of the warning message in the checkpatch.pl script you mean?
+No. That's basically telling people to 'think about it'.  I meant a comment
+in the source for this driver to say 'We don't care here because...'.
 
-OK, another option could be to block REQBUF(CAPTURE) until event from hw
-is received that the stream is parsed and the resolution is correctly
-set by application. Just to note that I'd think to this like a temporal
-solution until gstreamer implements v4l events.
+That way anyone preparing a patch for this in future will see the comment
+and not bother.
 
-Is that looks good to you?
+Jonathan
 
--- 
-regards,
-Stan
+> 
+> - Matt
+> 
+> >
+> > Thanks,
+> >
+> > Jonathan  
+> > >
+> > > - Matt
+> > >  
+> > > >         }
+> > > >
+> > > >         ret = i2c_master_recv(client, (char *)&buf, sizeof(buf));
+> > > > diff --git a/drivers/iio/proximity/srf08.c b/drivers/iio/proximity/srf08.c
+> > > > index f2bf783..605a582 100644
+> > > > --- a/drivers/iio/proximity/srf08.c
+> > > > +++ b/drivers/iio/proximity/srf08.c
+> > > > @@ -150,7 +150,7 @@ static int srf08_read_ranging(struct srf08_data *data)
+> > > >          * polling for not more than 20 ms should be enough
+> > > >          */
+> > > >         waittime = 1 + data->range_mm / 172;
+> > > > -       msleep(waittime);
+> > > > +       usleep_range(waittime * 1000, (waittime * 1000) + 2000);
+> > > >         for (i = 0; i < 4; i++) {
+> > > >                 ret = i2c_smbus_read_byte_data(data->client,
+> > > >                                                 SRF08_READ_SW_REVISION);
+> > > > @@ -158,7 +158,7 @@ static int srf08_read_ranging(struct srf08_data *data)
+> > > >                 /* check if a valid version number is read */
+> > > >                 if (ret < 255 && ret > 0)
+> > > >                         break;
+> > > > -               msleep(5);
+> > > > +               usleep_range(5000, 15000);
+> > > >         }
+> > > >
+> > > >         if (ret >= 255 || ret <= 0) {
+> > > > --
+> > > > 2.7.4
+> > > >  
+> >  
+
+
