@@ -4,53 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CC0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9607C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7999F21905
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971FA218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126234;
-	bh=zsTpsEuovZz6If4sMcNZfQeTixx+R/rqKdjbCVTDxdQ=;
+	s=default; t=1556126236;
+	bh=YQ36dMMS5YztZVTIyRag1783phpadRbQiYeTrsitKPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=atW7pKqtooUYTlFNE4QvwR9xGKB9rti0MMyKQG4+hAl5Pl9o+ecyTlmvt0896+K23
-	 aANjYTpWg3zXVmg33FeyLu+kSTFzdS27GF1TkKZn/Q+e3SP7c2U6LomqQcLaFVvHzZ
-	 MWVFsWv/LgGDQjBOd83EVKev5mrblTUBcvUwUQTs=
+	b=ef4es7ok/6WIan3hrC2052bVkmlxtxK1Rsspg1vk3k0fbGNCFJw3BWNOWPTBmFPbz
+	 BPyCieLaK1NTpmdi1uDBGcM9nAvpkhDFlX0Byz8TSQsyaNdRHhVVm9NudvO8I97+O4
+	 tB3eumXsIujYTaTdD4dMLtFIIOS5ZL0yQA+yTHQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388579AbfDXRRN (ORCPT
+        id S2388588AbfDXRRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41878 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:17:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388551AbfDXRRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:17:11 -0400
+        id S2388576AbfDXRRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:17:13 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 420252054F;
-        Wed, 24 Apr 2019 17:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C87F12054F;
+        Wed, 24 Apr 2019 17:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126229;
-        bh=zsTpsEuovZz6If4sMcNZfQeTixx+R/rqKdjbCVTDxdQ=;
+        s=default; t=1556126232;
+        bh=YQ36dMMS5YztZVTIyRag1783phpadRbQiYeTrsitKPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vORa4GRz0B/+fEh+5fQDUWFqVtjhVIgrgdIISjWzXHeaEzELxth2Gqq8eYQEpGUSj
-         t1jvikamp9rTPYga1XzfCZh8gC+0ixQ5W56b0x1s2in/3RhZxcFSAcffJqzgWCjbSm
-         GeLru+he28WJvs5kIs8123+9SPgsG+hhIOyr9jG0=
+        b=jC4fevQPAGAO+psm2vLeftkVNryFnWLVkkAh5EFmJMSEri0MHt2Jor5K9iANfHJHL
+         mud8eLcQqGrIm55ATERCArQf8R35f8WuwEiQp7lFW/fb6BKne2oxrtD65pusY6W7VF
+         xeh1SBYbeB5gevyHwTCrzmlYgJOpYEsUumtwAD+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Wen Yang <yellowriver2010@hotmail.com>,
+        Timur Tabi <timur@kernel.org>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 036/168] perf test: Fix failure of evsel-tp-sched test on s390
-Date:   Wed, 24 Apr 2019 19:08:00 +0200
-Message-Id: <20190424170925.888589144@linuxfoundation.org>
+Subject: [PATCH 4.4 037/168] SoC: imx-sgtl5000: add missing put_device()
+Date:   Wed, 24 Apr 2019 19:08:01 +0200
+Message-Id: <20190424170925.954182980@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -63,118 +72,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 03d309711d687460d1345de8a0363f45b1c8cd11 ]
+[ Upstream commit 8fa857da9744f513036df1c43ab57f338941ae7d ]
 
-Commit 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
-causes test case 14 "Parse sched tracepoints fields" to fail on s390.
+The of_find_device_by_node() takes a reference to the underlying device
+structure, we should release that reference.
 
-This test succeeds on x86.
+Detected by coccinelle with the following warnings:
+./sound/soc/fsl/imx-sgtl5000.c:169:1-7: ERROR: missing put_device;
+call of_find_device_by_node on line 105, but without a corresponding
+object release within this function.
+./sound/soc/fsl/imx-sgtl5000.c:177:1-7: ERROR: missing put_device;
+call of_find_device_by_node on line 105, but without a corresponding
+object release within this function.
 
-In fact this test now fails on all architectures with type char treated
-as type unsigned char.
-
-The root cause is the signed-ness of character arrays in the tracepoints
-sched_switch for structure members prev_comm and next_comm.
-
-On s390 the output of:
-
- [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
- name: sched_switch
- ID: 287
- format:
-   field:unsigned short common_type; offset:0; size:2;	signed:0;
-   ...
-   field:char prev_comm[16]; offset:8; size:16;	signed:0;
-   ...
-   field:char next_comm[16]; offset:40; size:16; signed:0;
-
-reveals the character arrays prev_comm and next_comm are per
-default unsigned char and have values in the range of 0..255.
-
-On x86 both fields are signed as this output shows:
- [root@f29]# cat /sys/kernel/debug/tracing/events/sched/sched_switch/format
- name: sched_switch
- ID: 287
- format:
-   field:unsigned short common_type; offset:0; size:2;	signed:0;
-   ...
-   field:char prev_comm[16]; offset:8; size:16;	signed:1;
-   ...
-   field:char next_comm[16]; offset:40; size:16; signed:1;
-
-and the character arrays prev_comm and next_comm are per default signed
-char and have values in the range of -1..127.  The implementation of
-type char is architecture specific.
-
-Since the character arrays in both tracepoints sched_switch and
-sched_wakeup should contain ascii characters, simply omit the check for
-signedness in the test case.
-
-Output before:
-
-  [root@m35lp76 perf]# ./perf test -F 14
-  14: Parse sched tracepoints fields                        :
-  --- start ---
-  sched:sched_switch: "prev_comm" signedness(0) is wrong, should be 1
-  sched:sched_switch: "next_comm" signedness(0) is wrong, should be 1
-  sched:sched_wakeup: "comm" signedness(0) is wrong, should be 1
-  ---- end ----
-  14: Parse sched tracepoints fields                        : FAILED!
-  [root@m35lp76 perf]#
-
-Output after:
-
-  [root@m35lp76 perf]# ./perf test -Fv 14
-  14: Parse sched tracepoints fields                        :
-  --- start ---
-  ---- end ----
-  Parse sched tracepoints fields: Ok
-  [root@m35lp76 perf]#
-
-Fixes: 489338a717a0 ("perf tests evsel-tp-sched: Fix bitwise operator")
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190219153639.31267-1-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Wen Yang <yellowriver2010@hotmail.com>
+Cc: Timur Tabi <timur@kernel.org>
+Cc: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: alsa-devel@alsa-project.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/evsel-tp-sched.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/fsl/imx-sgtl5000.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-index da474d743b6a..1b832e54c04b 100644
---- a/tools/perf/tests/evsel-tp-sched.c
-+++ b/tools/perf/tests/evsel-tp-sched.c
-@@ -42,7 +42,7 @@ int test__perf_evsel__tp_sched_test(void)
- 		return -1;
+diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
+index b99e0b5e00e9..8e525f7ac08d 100644
+--- a/sound/soc/fsl/imx-sgtl5000.c
++++ b/sound/soc/fsl/imx-sgtl5000.c
+@@ -115,6 +115,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
+ 		ret = -EPROBE_DEFER;
+ 		goto fail;
  	}
- 
--	if (perf_evsel__test_field(evsel, "prev_comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "prev_comm", 16, false))
- 		ret = -1;
- 
- 	if (perf_evsel__test_field(evsel, "prev_pid", 4, true))
-@@ -54,7 +54,7 @@ int test__perf_evsel__tp_sched_test(void)
- 	if (perf_evsel__test_field(evsel, "prev_state", sizeof(long), true))
- 		ret = -1;
- 
--	if (perf_evsel__test_field(evsel, "next_comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "next_comm", 16, false))
- 		ret = -1;
- 
- 	if (perf_evsel__test_field(evsel, "next_pid", 4, true))
-@@ -72,7 +72,7 @@ int test__perf_evsel__tp_sched_test(void)
- 		return -1;
- 	}
- 
--	if (perf_evsel__test_field(evsel, "comm", 16, true))
-+	if (perf_evsel__test_field(evsel, "comm", 16, false))
- 		ret = -1;
- 
- 	if (perf_evsel__test_field(evsel, "pid", 4, true))
++	put_device(&ssi_pdev->dev);
+ 	codec_dev = of_find_i2c_device_by_node(codec_np);
+ 	if (!codec_dev) {
+ 		dev_err(&pdev->dev, "failed to find codec platform device\n");
 -- 
 2.19.1
 
