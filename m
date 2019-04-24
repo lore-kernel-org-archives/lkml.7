@@ -2,217 +2,201 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787E7C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB676C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3E3217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:16:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWQhd5l0"
+	by mail.kernel.org (Postfix) with ESMTP id 860182089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 00:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbfDXAQK (ORCPT
+        id S1728946AbfDXARv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 20:16:10 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45043 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728899AbfDXAPy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 20:15:54 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z16so3807877pgv.11;
-        Tue, 23 Apr 2019 17:15:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=89tWsU/OT5SYrbjwn65xtN7OxFoXBZMgUvk/yoALgYk=;
-        b=iWQhd5l06krXIiYuNCaoAfu33B+mMY6XiKj/UqyC5QO9cxDIdEptfEsXgyBCCTi+3K
-         v5gPSSeZQkcCAZ5kYBtN564PrmPc/Fle0qag/MGw9r04/gL4RfpJd1P7IuoKyoXwtX/3
-         DSaVKRcnMdfJGI6N+4LXOroRgyLEv0PywkZSW/IB5poFnaoWrvExUv4b1NM5KpEbbBKD
-         Ec2SA5dTUeXb29Ti+OS5Xvzv+8GjmzaGPIbhXTldnYiw/AXrevqDKoDJ1/2WsVM00FJL
-         OHWoBJpKItxBfPm2w5rgOvEDc2ur/PedQeEfL+LX1I2G1i1fmFIRxIB57o+htk0VL049
-         t5yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=89tWsU/OT5SYrbjwn65xtN7OxFoXBZMgUvk/yoALgYk=;
-        b=kFFhcgm6HJdnuFOAyGMvuPKoVlII+bwqBYz4jVlg9H7Ci8pH3xDW6TUZ8CosvDbqlU
-         3YpDZ8bolUkL11KPJRD92eP+QqF+9AV0PxtwIw3oX9D+HI16ln8kOu7UFiC22y59MS5N
-         5Ti7r+lPXfjMIW/C9kJMw8Nb6MAHkg/8witGVHbqZxbzSNbJUJGRe1WMb0d9wp2l4dxv
-         tDjmJ2CNeILQK85xqJt4r/w/a8XkHv2WVEOfLxFMWVZvYqKDSLEL5eYf2FSpRfwZSweT
-         WH01bKEj3Gm+OljDIHalvPQGLMpzlO8E3G3w+eEhcmEyZk5aRVTyo60zkx44NQskRxq1
-         gisg==
-X-Gm-Message-State: APjAAAUBeoEEg7bw3OzLEQpDRgxQZrPmKkS9w+i7o2kbN60FmK9M8SbF
-        HaEPhEII2WWi+f2Y08csSWs9KsIqG3s=
-X-Google-Smtp-Source: APXvYqxyyq3ENNshaZc9kqkGoEhF0igoLz3AtTGKletUoYM2tNx41PFEbisTnOOBusmkrIWloxz+9w==
-X-Received: by 2002:aa7:8208:: with SMTP id k8mr29977580pfi.69.1556064953277;
-        Tue, 23 Apr 2019 17:15:53 -0700 (PDT)
-Received: from prsriva-linux.corp.microsoft.com ([2001:4898:80e8:1:d4f:4d24:45fa:d461])
-        by smtp.gmail.com with ESMTPSA id n21sm58955712pfb.42.2019.04.23.17.15.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 17:15:51 -0700 (PDT)
-From:   Prakhar Srivastava <prsriva02@gmail.com>
-X-Google-Original-From: Prakhar Srivastava
-To:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        inux-security-module@vger.kernel.org
-Cc:     zohar@linux.ibm.com, ebiederm@xmission.com, vgoyal@redhat.com,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        Prakhar Srivastava <prsriva@microsoft.com>
-Subject: [PATCH v2 3/5 RFC] since cmdline args can be same for multiple kexec, log entry hash will collide. Prepend the kernel file name to the cmdline args to distinguish between cmdline args passed to subsequent kexec calls
-Date:   Tue, 23 Apr 2019 17:15:42 -0700
-Message-Id: <20190424001544.7188-3-prsriva02@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190424001544.7188-1-prsriva02@gmail.com>
-References: <20190424001544.7188-1-prsriva02@gmail.com>
+        Tue, 23 Apr 2019 20:17:51 -0400
+Received: from mga09.intel.com ([134.134.136.24]:10506 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728353AbfDXARu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 20:17:50 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 17:17:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,387,1549958400"; 
+   d="scan'208";a="133826020"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
+  by orsmga007.jf.intel.com with ESMTP; 23 Apr 2019 17:17:49 -0700
+Subject: Re: [RFC PATCH v2 11/17] sched: Basic tracking of matching tasks
+To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <2364f2b65bf50826d881c84d7634b6565dfee527.1556025155.git.vpillai@digitalocean.com>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
+Message-ID: <c2b101e4-4ce4-4aee-b1ec-e4a753cb9590@linux.intel.com>
+Date:   Tue, 23 Apr 2019 17:17:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.1
+MIME-Version: 1.0
+In-Reply-To: <2364f2b65bf50826d881c84d7634b6565dfee527.1556025155.git.vpillai@digitalocean.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prakhar Srivastava <prsriva02@gmail.com>
 
-Signed-off-by: Prakhar Srivastava <prsriva@microsoft.com>
+> +
+> +void sched_core_enqueue(struct rq *rq, struct task_struct *p)
+> +{
+
+...
+
+> +}
+> +
+> +void sched_core_dequeue(struct rq *rq, struct task_struct *p)
+> +{
+
+...
+
+> +}
+> +
+> +/*
+> + * Find left-most (aka, highest priority) task matching @cookie.
+> + */
+> +struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+> +{
+
+...
+
+
+The sched_core_* functions are used only in the core.c
+they are declared in.  We can convert them to static functions.
+
+Thanks.
+
+Tim
+
 ---
+ kernel/sched/core.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Currently for soft reboot(kexec_file_load) the kernel file and
-signature is measured by IMA. The cmdline args used to load the kernel
-is not measured.
-The boot aggregate that gets calculated will have no change since the
-EFI loader has not been triggered.
-Adding the kexec cmdline args measure and kernel version will add some
-attestable criteria.
-
-Cmdline args can be same for multiple kexec, log entry
-hash will collide. Prepend the kernel file name to the cmdline args to
-distinguish between cmdline args passed to subsequent kexec calls
-
- kernel/kexec_core.c     | 57 +++++++++++++++++++++++++++++++++++++++++
- kernel/kexec_file.c     | 14 ++++++++--
- kernel/kexec_internal.h |  3 +++
- 3 files changed, 72 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index ae1a3ba24df5..97b77c780311 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1151,3 +1151,60 @@ void __weak arch_kexec_protect_crashkres(void)
- 
- void __weak arch_kexec_unprotect_crashkres(void)
- {}
-+
-+/**
-+ * kexec_cmdline_prepend_img_name - prepare the buffer with cmdline
-+ * that needs to be measured
-+ * @outbuf - out buffer that contains the formated string
-+ * @kernel_fd - the file identifier for the kerenel image
-+ * @cmdline_ptr - ptr to the cmdline buffer
-+ * @cmdline_len - len of the buffer.
-+ *
-+ * This generates a buffer in the format Kerenelfilename::cmdline
-+ *
-+ * On success return 0.
-+ * On failure return -EINVAL.
-+ */
-+int kexec_cmdline_prepend_img_name(char **outbuf, int kernel_fd,
-+				const char *cmdline_ptr,
-+				unsigned long cmdline_len)
-+{
-+	int ret = -EINVAL;
-+	struct fd f = {};
-+	int size = 0;
-+	char *buf = NULL;
-+	char delimiter[] = "::";
-+
-+	if (!outbuf || !cmdline_ptr)
-+		goto out;
-+
-+	f = fdget(kernel_fd);
-+	if (!f.file)
-+		goto out;
-+
-+	size = (f.file->f_path.dentry->d_name.len + cmdline_len - 1+
-+			ARRAY_SIZE(delimiter)) - 1;
-+
-+	buf = kzalloc(size, GFP_KERNEL);
-+	if (!buf)
-+		goto out;
-+
-+	memcpy(buf, f.file->f_path.dentry->d_name.name,
-+		f.file->f_path.dentry->d_name.len);
-+	memcpy(buf + f.file->f_path.dentry->d_name.len,
-+		delimiter, ARRAY_SIZE(delimiter) - 1);
-+	memcpy(buf + f.file->f_path.dentry->d_name.len +
-+		ARRAY_SIZE(delimiter) - 1,
-+		cmdline_ptr, cmdline_len - 1);
-+
-+	*outbuf = buf;
-+	ret = size;
-+
-+	pr_debug("kexec cmdline buff: %s\n", buf);
-+
-+out:
-+	if (f.file)
-+		fdput(f);
-+
-+	return ret;
-+}
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 2a5234eb4b28..a487491d55b9 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -126,6 +126,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 	int ret = 0;
- 	void *ldata;
- 	loff_t size;
-+	char *buff_to_measure = NULL;
-+	int buff_to_measure_size = 0;
- 
- 	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
- 				       &size, INT_MAX, READING_KEXEC_IMAGE);
-@@ -183,8 +185,13 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 			goto out;
- 		}
- 
--		ima_buffer_check(image->cmdline_buf, cmdline_len - 1,
--				"kexec_cmdline");
-+		/* IMA measures the cmdline args passed to the next kernel*/
-+		buff_to_measure_size = kexec_cmdline_prepend_img_name(&buff_to_measure,
-+			kernel_fd, image->cmdline_buf, image->cmdline_buf_len);
-+
-+		ima_buffer_check(buff_to_measure, buff_to_measure_size,
-+					"kexec_cmdline");
-+
- 	}
- 
- 	/* Call arch image load handlers */
-@@ -200,6 +207,9 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 	/* In case of error, free up all allocated memory in this function */
- 	if (ret)
- 		kimage_file_post_load_cleanup(image);
-+
-+	kfree(buff_to_measure);
-+
- 	return ret;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 14e766d0df99..455e7ecc2f48 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -155,7 +155,7 @@ static inline bool __sched_core_less(struct task_struct *a, struct task_struct *
+ 	return false;
  }
  
-diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
-index 799a8a452187..4d34a8ef4637 100644
---- a/kernel/kexec_internal.h
-+++ b/kernel/kexec_internal.h
-@@ -11,6 +11,9 @@ int kimage_load_segment(struct kimage *image, struct kexec_segment *segment);
- void kimage_terminate(struct kimage *image);
- int kimage_is_destination_range(struct kimage *image,
- 				unsigned long start, unsigned long end);
-+int kexec_cmdline_prepend_img_name(char **outbuf, int kernel_fd,
-+				const char *cmdline_ptr,
-+				unsigned long cmdline_len);
+-void sched_core_enqueue(struct rq *rq, struct task_struct *p)
++static void sched_core_enqueue(struct rq *rq, struct task_struct *p)
+ {
+ 	struct rb_node *parent, **node;
+ 	struct task_struct *node_task;
+@@ -182,7 +182,7 @@ void sched_core_enqueue(struct rq *rq, struct task_struct *p)
+ 	rb_insert_color(&p->core_node, &rq->core_tree);
+ }
  
- extern struct mutex kexec_mutex;
+-void sched_core_dequeue(struct rq *rq, struct task_struct *p)
++static void sched_core_dequeue(struct rq *rq, struct task_struct *p)
+ {
+ 	rq->core->core_task_seq++;
  
+@@ -195,7 +195,7 @@ void sched_core_dequeue(struct rq *rq, struct task_struct *p)
+ /*
+  * Find left-most (aka, highest priority) task matching @cookie.
+  */
+-struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
++static struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+ {
+ 	struct rb_node *node = rq->core_tree.rb_node;
+ 	struct task_struct *node_task, *match;
+@@ -221,7 +221,7 @@ struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+ 	return match;
+ }
+ 
+-struct task_struct *sched_core_next(struct task_struct *p, unsigned long cookie)
++static struct task_struct *sched_core_next(struct task_struct *p, unsigned long cookie)
+ {
+ 	struct rb_node *node = &p->core_node;
+ 
+@@ -282,7 +282,7 @@ static void __sched_core_disable(void)
+ 	printk("core sched disabled\n");
+ }
+ 
+-void sched_core_get(void)
++static void sched_core_get(void)
+ {
+ 	mutex_lock(&sched_core_mutex);
+ 	if (!sched_core_count++)
+@@ -290,7 +290,7 @@ void sched_core_get(void)
+ 	mutex_unlock(&sched_core_mutex);
+ }
+ 
+-void sched_core_put(void)
++static void sched_core_put(void)
+ {
+ 	mutex_lock(&sched_core_mutex);
+ 	if (!--sched_core_count)
 -- 
-2.17.1
+2.20.1
 
