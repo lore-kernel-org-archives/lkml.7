@@ -2,78 +2,58 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CF2C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4CFC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4494218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C591218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbfDXBdE (ORCPT
+        id S1729322AbfDXBeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:33:04 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:41506 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728918AbfDXBdE (ORCPT
+        Tue, 23 Apr 2019 21:34:00 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:47458 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfDXBd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:33:04 -0400
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 00CDD72CC58;
-        Wed, 24 Apr 2019 04:33:02 +0300 (MSK)
-Received: from beacon.altlinux.org (unknown [185.6.174.98])
-        by imap.altlinux.org (Postfix) with ESMTPSA id CE4414A4A14;
-        Wed, 24 Apr 2019 04:33:01 +0300 (MSK)
-From:   Vitaly Chikunov <vt@altlinux.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH v2] crypto: ecrdsa - select ASN1 and OID_REGISTRY for EC-RDSA
-Date:   Wed, 24 Apr 2019 04:32:40 +0300
-Message-Id: <20190424013240.26854-1-vt@altlinux.org>
-X-Mailer: git-send-email 2.11.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 23 Apr 2019 21:33:59 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3720414013FD4;
+        Tue, 23 Apr 2019 18:33:59 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 18:33:56 -0700 (PDT)
+Message-Id: <20190423.183356.286519993392180464.davem@davemloft.net>
+To:     huangfq.daxian@gmail.com
+Cc:     isdn@linux-pingi.de, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] isdn: hisax: Fix misuse of %x in config.c
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190423022528.3595-1-huangfq.daxian@gmail.com>
+References: <20190423022528.3595-1-huangfq.daxian@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Apr 2019 18:33:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix undefined symbol issue in ecrdsa_generic module when ASN1
-or OID_REGISTRY aren't enabled in the config by selecting these
-options for CRYPTO_ECRDSA.
+From: Fuqian Huang <huangfq.daxian@gmail.com>
+Date: Tue, 23 Apr 2019 10:25:28 +0800
 
-ERROR: "asn1_ber_decoder" [crypto/ecrdsa_generic.ko] undefined!
-ERROR: "look_up_OID" [crypto/ecrdsa_generic.ko] undefined!
+> Pointers should be printed with %p or %px rather than
+> cast to (u_long) type and printed with %lX.
+> As the function seems to be for debug purpose.
+> Change %lX to %px to print the pointer value.
+> 
+> Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
----
-Changes since v1:
-- Undo diff.noprefix from the patch.
-
- crypto/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 4446833f6eca..3d056e7da65f 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -264,6 +264,8 @@ config CRYPTO_ECRDSA
- 	select CRYPTO_ECC
- 	select CRYPTO_AKCIPHER
- 	select CRYPTO_STREEBOG
-+	select OID_REGISTRY
-+	select ASN1
- 	help
- 	  Elliptic Curve Russian Digital Signature Algorithm (GOST R 34.10-2012,
- 	  RFC 7091, ISO/IEC 14888-3:2018) is one of the Russian cryptographic
--- 
-2.11.0
-
+I agree with Stephen that we should probably remove this stuff entirely
+but I'll apply this for now.
