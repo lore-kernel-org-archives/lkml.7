@@ -2,102 +2,97 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E1AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80852C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881BA2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E6F2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJgLC5S4"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MkCahJzn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbfDXTcw (ORCPT
+        id S2387784AbfDXTdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:32:52 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33127 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730980AbfDXTcv (ORCPT
+        Wed, 24 Apr 2019 15:33:25 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38626 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfDXTdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:32:51 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z6so157729wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:32:50 -0700 (PDT)
+        Wed, 24 Apr 2019 15:33:24 -0400
+Received: by mail-io1-f67.google.com with SMTP id y6so9212299ior.5
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:33:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BM0o59w29LzTOtXYJkT+N2fBAMozkK2J2RQoo1XWQdg=;
-        b=zJgLC5S4jeK7p8VX3r8/2P49VBXIrNhjElVmFgl48faRKOwa9N9Eu7F3KERsx7eE8X
-         TL3cxg90a8Cm8nnsL8aOHDieoRWVIVrP7W0tyvfi7LCZCnq4qDc7bQM+7XA2mVzMMRSJ
-         UJPpY3uecsoGrg97QIg77CV7JqvGuUfxKik6a8vT68LmS0UU1WPscDSgO6DyEzN/C4ct
-         Fsg2SFB+DsyHOzO0ap5NMCRL1VxBMJgV2heu1L7LHkQzyLPYPan9wMFgz1MRTpnHyiOd
-         ILgTOURNZiNPMRSs5+QKRh3Sf/2oSJtEbpH57AI5G1JRPiBmJIG0iXPGRkHpO3QGwMYW
-         6PXA==
+        bh=wflHOq/5T+ZXCjWUuQ+Otw4+acC/CT36CLZGEdvvwaE=;
+        b=MkCahJznroJgkW0oElWPSJZfpPCaob0MRXbne3p3BT20DPsC6WzDWFDMguURI7KEUc
+         eANX+vUFF7XOTjHjzkp4FeIoH0JkOadAa4TE/mga9BWwa5PLIMpcbSpg/bJZFOSwVKCV
+         4Q7yDEfqH7zZT5ycivz/8LjKPa/uL3SuZxwEwYaUJLUsO5HviFOpxD7/3PxprCQCp6QS
+         0Z/oojm96tqPir32wttihXjEo7Ts9fdxtgme0APOa5EClsFWIwjfz8ARQdsqd7l8fN8h
+         JlnEj4rUMmtRngVS+A9XBCncRgF9xq4HnyQYmm8OF5ZHrqmmgl7tApaprI1Y8fuIB/Md
+         T67A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BM0o59w29LzTOtXYJkT+N2fBAMozkK2J2RQoo1XWQdg=;
-        b=pUd0u9wa7EwZREwZQpcWP2QKVoTjX8xDXbR6UmSPXijgCdge8YuX0dxpgd298mBD6o
-         iHtaoa9PLoomPMV42Vq77DBmyWItFa0x0TLptLGwBLT7Q+VRItCIAx1duEuoTzuK2UqG
-         s7vSnmaRus+xNLvn0nGdkxdI7lqh1K1aIEBU8i3BZwTz7dM/YxkiNZz9QukJtwkJWXGC
-         Dhf2s1iwDbTorXm5G+OtTHgB4B38rCQHRBhp5ZSop6QbqfzU+nHVH9NEO+Vcgpfg6Rw7
-         TcJ970eAZ3lIagKXpcU8jPl1U2LZjFbtlVRtIknFfSb7U5glkiKatzd6XHR8tURc+4H8
-         JG2A==
-X-Gm-Message-State: APjAAAW3ujqbZns1k1taOUA/CjNTR4XTyn/JxG5VKlh7mJTsB3/s/5xr
-        7gHdjjeIpE3Du+2u9sUF0YdpSWoJfrRIKOgu7Gt5ng==
-X-Google-Smtp-Source: APXvYqx2mYf77kZByumpYyncTnogPY+3TP9zTFTzgDGqBf5npj96JwGDwpDksc237hOmqDfrRi1RjIIAa3AGm3a17f8=
-X-Received: by 2002:a7b:c115:: with SMTP id w21mr504911wmi.55.1556134369539;
- Wed, 24 Apr 2019 12:32:49 -0700 (PDT)
+        bh=wflHOq/5T+ZXCjWUuQ+Otw4+acC/CT36CLZGEdvvwaE=;
+        b=q4UnXScI5ENOYCUq2hXkrC0mfhcSnDW1nyDrWdvbSYP9x0ZDOPbagd1hIzth59iDUC
+         VLudfr5yjX6fqsaqy1k3TPF60SaHGEWLY5kaWlgjcvkQqZ2tf5NC7ADTLEkLQDVn5C8e
+         YifajaCSheLr+OvJx6sNB8bpHqkulF4BULHoUB8sD/ZWx07EnEtkyTDUF2jbveAdr4Q3
+         qaE10ercKTFpaNSiXinGzoK5YvOGff4094p6MG7bQpWfnj47QNDk6Gv37zEIcLnCJUgb
+         1q9rcsXKMZoRESaMkaKTPi4GJDG7OiF5tU+LKOgQ0jSwdhHH6eYaM1AU1A7YH2gI1hMb
+         9j9g==
+X-Gm-Message-State: APjAAAU4XXWGEuGQWbqu1qnny2Z8CJwHyggpXLFcs2y2Bz8cuVxBncBH
+        y/P5vpH68DRq6jfcqT65z3wNzeiQ+nnZz/uhIlfFINeofCs=
+X-Google-Smtp-Source: APXvYqyZ6gkVfnPB+2Wm+lmoiD9i9oQZ/3gTK2G6IZU6rxzaYekMVKzu1A48tZlKywRxbPgn3/pfxDfejrLw0asL8wg=
+X-Received: by 2002:a5e:8348:: with SMTP id y8mr21067935iom.88.1556134403324;
+ Wed, 24 Apr 2019 12:33:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
- <1556061656-1733-25-git-send-email-john.stultz@linaro.org> <20190424170910.GC21067@ravnborg.org>
-In-Reply-To: <20190424170910.GC21067@ravnborg.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 24 Apr 2019 12:32:38 -0700
-Message-ID: <CALAqxLWmrabPxnpN7T_9KCLNrpzj0dnzbNs8vLhz+GBGyRxp_Q@mail.gmail.com>
-Subject: Re: [PATCH 24/25] drm: kirin: Pass driver data to crtc init and plane init
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>
+References: <20190424191440.170422-1-matthewgarrett@google.com> <20190424192812.GG19031@bombadil.infradead.org>
+In-Reply-To: <20190424192812.GG19031@bombadil.infradead.org>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Wed, 24 Apr 2019 12:33:11 -0700
+Message-ID: <CACdnJutj4K1kQj7yXcCNVWM_hmrUwMfZ-JBi=FHkBvYFfbJNZA@mail.gmail.com>
+Subject: Re: [PATCH] mm: Allow userland to request that the kernel clear
+ memory on release
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm@kvack.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:09 AM Sam Ravnborg <sam@ravnborg.org> wrote:
-> On Tue, Apr 23, 2019 at 04:20:55PM -0700, John Stultz wrote:
-> >  static int kirin_drm_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
-> > -                      struct drm_plane *plane)
-> > +                             struct drm_plane *plane,
-> > +                             const struct kirin_drm_data *driver_data)
+On Wed, Apr 24, 2019 at 12:28 PM Matthew Wilcox <willy@infradead.org> wrote:
 >
-> Indent looks wrong here.
+> On Wed, Apr 24, 2019 at 12:14:40PM -0700, Matthew Garrett wrote:
+> > Unfortunately, if an application exits uncleanly, its secrets may still be
+> > present in RAM. This can't be easily fixed in userland (eg, if the OOM
+> > killer decides to kill a process holding secrets, we're not going to be able
+> > to avoid that), so this patch adds a new flag to madvise() to allow userland
+> > to request that the kernel clear the covered pages whenever the page
+> > reference count hits zero. Since vm_flags is already full on 32-bit, it
+> > will only work on 64-bit systems.
 >
-..
-> >       ret = drm_universal_plane_init(dev, &kplane->base, 1,
-> > +                             driver_data->plane_funcs,
-> > +                             driver_data->channel_formats,
-> > +                             driver_data->channel_formats_cnt,
-> > +                             NULL, type, NULL);
-> Indent looks wrong here.
+> Your request seems reasonable to me.
+>
+> > +++ b/include/linux/page-flags.h
+> > @@ -118,6 +118,7 @@ enum pageflags {
+> >       PG_reclaim,             /* To be reclaimed asap */
+> >       PG_swapbacked,          /* Page is backed by RAM/swap */
+> >       PG_unevictable,         /* Page is "unevictable"  */
+> > +     PG_wipeonrelease,
+>
+> But you can't have a new PageFlag.  Can you instead zero the memory in
+> unmap_single_vma() where we call uprobe_munmap() and untrack_pfn() today?
 
-Thanks! I've now fixed those up.
-
-> I missed where ade_driver_data came from.
-> This looks an extra patch to intoduce driver_data,
-> that maybe should be merged with an earlier version?
-
-I'm not sure I'm following you here. Can you clarify a bit more?
-
-thanks
--john
+Is there any way the page could be referenced by something other than
+a VMA at this point? If so we probably don't want to zero it here, but
+we do want to zero it when the page is finally released (which is why
+I went with a page flag)
