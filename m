@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACA2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3E3C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9878020675
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260DC21904
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127490;
-	bh=m8a22znsMr2CzsgnMSXMk3mQECatXNqkPecNp57vSzY=;
+	s=default; t=1556127495;
+	bh=F9ig8LkEsyzzSuoa40DAGNDfwFo2YM0P95wj9PKzmHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MTi1BYUr3e7qdVNq3SqvUIpQlBcajQL8prowfjRxYGxwCA9I0v/Jf0t+8LmpR5zh6
-	 vOl/nCrkobPFZuYvufvAoZ/We6lLFwx1aEqo5PsN/zQ3jShyHvaYSIQY71/WXyzt14
-	 zt0rh6hMI/v4w3199NgnDKw62UmlR3YEEIzR07j8=
+	b=bMtcwETXu16DWOJIrS1vr45377bGaZlKmhUqEl9zsz3sZZ4h78HGtO6XKa/IB8egd
+	 FiJHzGrmxunrtssRbDsh9fbtwDcZvp/rh0wSX3dQAAIwZdUR5vc/TGvzyutQF0t7so
+	 YyyHwEciHKp4JT+67LaHBYLtTtp/Hrbu1BYV+FdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392363AbfDXRiJ (ORCPT
+        id S2404010AbfDXRiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:38:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:38:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392345AbfDXRiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:38:07 -0400
+        id S2392345AbfDXRiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:38:11 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B38321903;
-        Wed, 24 Apr 2019 17:38:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40EFA21904;
+        Wed, 24 Apr 2019 17:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127487;
-        bh=m8a22znsMr2CzsgnMSXMk3mQECatXNqkPecNp57vSzY=;
+        s=default; t=1556127489;
+        bh=F9ig8LkEsyzzSuoa40DAGNDfwFo2YM0P95wj9PKzmHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QaPitztHx4bBOEsHBQUUnmZ3fnqJ8AJXV7NamwDWG5cPDMK2MF6E0NGa8lEncoOkZ
-         vccj0K5T3KOUZop4KchwVKCmsgV326Oj86GZYQCuHzHUFmpBMad37k+FWvNgWL91v0
-         u/xx5HOS6yxyL0Ge0nr/T/+K4adJ2PKZrJ5ocfx4=
+        b=ngrGVlnmpb4SRtnMEOGm/I1rTPxFz16sHgZRjzYdqNHrkBYFtxbtxO8aVKDbU669y
+         HDjGLgBv6Z2Efomtt9n9m5Sl7oP9fY3T44L8TbrZ6/6tj4T1Ag8AT8nlp9gA1d9B8c
+         WOjgfh8d4s1DuM+DjIVbS2kkwCRqtGXDpv14sN1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH 5.0 073/115] serial: sh-sci: Fix HSCIF RX sampling point adjustment
-Date:   Wed, 24 Apr 2019 19:10:09 +0200
-Message-Id: <20190424170929.312396893@linuxfoundation.org>
+        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
+        Felix Fietkau <nbd@nbd.name>, Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.0 109/115] mt76x02: avoid status_list.lock and sta->rate_ctrl_lock dependency
+Date:   Wed, 24 Apr 2019 19:10:45 +0200
+Message-Id: <20190424170931.058730562@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -63,36 +59,212 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-commit 6b87784b53592a90d21576be8eff688b56d93cce upstream.
+commit bafdf85dfa59374f927ff597bc8c259193afda30 upstream.
 
-The calculation of the sampling point has min() and max() exchanged.
-Fix this by using the clamp() helper instead.
+Move ieee80211_tx_status_ext() outside of status_list lock section
+in order to avoid locking dependency and possible deadlock reposed by
+LOCKDEP in below warning.
 
-Fixes: 63ba1e00f178a448 ("serial: sh-sci: Support for HSCIF RX sampling point adjustment")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Acked-by: Dirk Behme <dirk.behme@de.bosch.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Also do mt76_tx_status_lock() just before it's needed.
+
+[  440.224832] WARNING: possible circular locking dependency detected
+[  440.224833] 5.1.0-rc2+ #22 Not tainted
+[  440.224834] ------------------------------------------------------
+[  440.224835] kworker/u16:28/2362 is trying to acquire lock:
+[  440.224836] 0000000089b8cacf (&(&q->lock)->rlock#2){+.-.}, at: mt76_wake_tx_queue+0x4c/0xb0 [mt76]
+[  440.224842]
+               but task is already holding lock:
+[  440.224842] 000000002cfedc59 (&(&sta->lock)->rlock){+.-.}, at: ieee80211_stop_tx_ba_cb+0x32/0x1f0 [mac80211]
+[  440.224863]
+               which lock already depends on the new lock.
+
+[  440.224863]
+               the existing dependency chain (in reverse order) is:
+[  440.224864]
+               -> #3 (&(&sta->lock)->rlock){+.-.}:
+[  440.224869]        _raw_spin_lock_bh+0x34/0x40
+[  440.224880]        ieee80211_start_tx_ba_session+0xe4/0x3d0 [mac80211]
+[  440.224894]        minstrel_ht_get_rate+0x45c/0x510 [mac80211]
+[  440.224906]        rate_control_get_rate+0xc1/0x140 [mac80211]
+[  440.224918]        ieee80211_tx_h_rate_ctrl+0x195/0x3c0 [mac80211]
+[  440.224930]        ieee80211_xmit_fast+0x26d/0xa50 [mac80211]
+[  440.224942]        __ieee80211_subif_start_xmit+0xfc/0x310 [mac80211]
+[  440.224954]        ieee80211_subif_start_xmit+0x38/0x390 [mac80211]
+[  440.224956]        dev_hard_start_xmit+0xb8/0x300
+[  440.224957]        __dev_queue_xmit+0x7d4/0xbb0
+[  440.224968]        ip6_finish_output2+0x246/0x860 [ipv6]
+[  440.224978]        mld_sendpack+0x1bd/0x360 [ipv6]
+[  440.224987]        mld_ifc_timer_expire+0x1a4/0x2f0 [ipv6]
+[  440.224989]        call_timer_fn+0x89/0x2a0
+[  440.224990]        run_timer_softirq+0x1bd/0x4d0
+[  440.224992]        __do_softirq+0xdb/0x47c
+[  440.224994]        irq_exit+0xfa/0x100
+[  440.224996]        smp_apic_timer_interrupt+0x9a/0x220
+[  440.224997]        apic_timer_interrupt+0xf/0x20
+[  440.224999]        cpuidle_enter_state+0xc1/0x470
+[  440.225000]        do_idle+0x21a/0x260
+[  440.225001]        cpu_startup_entry+0x19/0x20
+[  440.225004]        start_secondary+0x135/0x170
+[  440.225006]        secondary_startup_64+0xa4/0xb0
+[  440.225007]
+               -> #2 (&(&sta->rate_ctrl_lock)->rlock){+.-.}:
+[  440.225009]        _raw_spin_lock_bh+0x34/0x40
+[  440.225022]        rate_control_tx_status+0x4f/0xb0 [mac80211]
+[  440.225031]        ieee80211_tx_status_ext+0x142/0x1a0 [mac80211]
+[  440.225035]        mt76x02_send_tx_status+0x2e4/0x340 [mt76x02_lib]
+[  440.225037]        mt76x02_tx_status_data+0x31/0x40 [mt76x02_lib]
+[  440.225040]        mt76u_tx_status_data+0x51/0xa0 [mt76_usb]
+[  440.225042]        process_one_work+0x237/0x5d0
+[  440.225043]        worker_thread+0x3c/0x390
+[  440.225045]        kthread+0x11d/0x140
+[  440.225046]        ret_from_fork+0x3a/0x50
+[  440.225047]
+               -> #1 (&(&list->lock)->rlock#8){+.-.}:
+[  440.225049]        _raw_spin_lock_bh+0x34/0x40
+[  440.225052]        mt76_tx_status_skb_add+0x51/0x100 [mt76]
+[  440.225054]        mt76x02u_tx_prepare_skb+0xbd/0x116 [mt76x02_usb]
+[  440.225056]        mt76u_tx_queue_skb+0x5f/0x180 [mt76_usb]
+[  440.225058]        mt76_tx+0x93/0x190 [mt76]
+[  440.225070]        ieee80211_tx_frags+0x148/0x210 [mac80211]
+[  440.225081]        __ieee80211_tx+0x75/0x1b0 [mac80211]
+[  440.225092]        ieee80211_tx+0xde/0x110 [mac80211]
+[  440.225105]        __ieee80211_tx_skb_tid_band+0x72/0x90 [mac80211]
+[  440.225122]        ieee80211_send_auth+0x1f3/0x360 [mac80211]
+[  440.225141]        ieee80211_auth.cold.40+0x6c/0x100 [mac80211]
+[  440.225156]        ieee80211_mgd_auth.cold.50+0x132/0x15f [mac80211]
+[  440.225171]        cfg80211_mlme_auth+0x149/0x360 [cfg80211]
+[  440.225181]        nl80211_authenticate+0x273/0x2e0 [cfg80211]
+[  440.225183]        genl_family_rcv_msg+0x196/0x3a0
+[  440.225184]        genl_rcv_msg+0x47/0x8e
+[  440.225185]        netlink_rcv_skb+0x3a/0xf0
+[  440.225187]        genl_rcv+0x24/0x40
+[  440.225188]        netlink_unicast+0x16d/0x210
+[  440.225189]        netlink_sendmsg+0x204/0x3b0
+[  440.225191]        sock_sendmsg+0x36/0x40
+[  440.225193]        ___sys_sendmsg+0x259/0x2b0
+[  440.225194]        __sys_sendmsg+0x47/0x80
+[  440.225196]        do_syscall_64+0x60/0x1f0
+[  440.225197]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  440.225198]
+               -> #0 (&(&q->lock)->rlock#2){+.-.}:
+[  440.225200]        lock_acquire+0xb9/0x1a0
+[  440.225202]        _raw_spin_lock_bh+0x34/0x40
+[  440.225204]        mt76_wake_tx_queue+0x4c/0xb0 [mt76]
+[  440.225215]        ieee80211_agg_start_txq+0xe8/0x2b0 [mac80211]
+[  440.225225]        ieee80211_stop_tx_ba_cb+0xb8/0x1f0 [mac80211]
+[  440.225235]        ieee80211_ba_session_work+0x1c1/0x2f0 [mac80211]
+[  440.225236]        process_one_work+0x237/0x5d0
+[  440.225237]        worker_thread+0x3c/0x390
+[  440.225239]        kthread+0x11d/0x140
+[  440.225240]        ret_from_fork+0x3a/0x50
+[  440.225240]
+               other info that might help us debug this:
+
+[  440.225241] Chain exists of:
+                 &(&q->lock)->rlock#2 --> &(&sta->rate_ctrl_lock)->rlock --> &(&sta->lock)->rlock
+
+[  440.225243]  Possible unsafe locking scenario:
+
+[  440.225244]        CPU0                    CPU1
+[  440.225244]        ----                    ----
+[  440.225245]   lock(&(&sta->lock)->rlock);
+[  440.225245]                                lock(&(&sta->rate_ctrl_lock)->rlock);
+[  440.225246]                                lock(&(&sta->lock)->rlock);
+[  440.225247]   lock(&(&q->lock)->rlock#2);
+[  440.225248]
+                *** DEADLOCK ***
+
+[  440.225249] 5 locks held by kworker/u16:28/2362:
+[  440.225250]  #0: 0000000048fcd291 ((wq_completion)phy0){+.+.}, at: process_one_work+0x1b5/0x5d0
+[  440.225252]  #1: 00000000f1c6828f ((work_completion)(&sta->ampdu_mlme.work)){+.+.}, at: process_one_work+0x1b5/0x5d0
+[  440.225254]  #2: 00000000433d2b2c (&sta->ampdu_mlme.mtx){+.+.}, at: ieee80211_ba_session_work+0x5c/0x2f0 [mac80211]
+[  440.225265]  #3: 000000002cfedc59 (&(&sta->lock)->rlock){+.-.}, at: ieee80211_stop_tx_ba_cb+0x32/0x1f0 [mac80211]
+[  440.225276]  #4: 000000009d7b9a44 (rcu_read_lock){....}, at: ieee80211_agg_start_txq+0x33/0x2b0 [mac80211]
+[  440.225286]
+               stack backtrace:
+[  440.225288] CPU: 2 PID: 2362 Comm: kworker/u16:28 Not tainted 5.1.0-rc2+ #22
+[  440.225289] Hardware name: LENOVO 20KGS23S0P/20KGS23S0P, BIOS N23ET55W (1.30 ) 08/31/2018
+[  440.225300] Workqueue: phy0 ieee80211_ba_session_work [mac80211]
+[  440.225301] Call Trace:
+[  440.225304]  dump_stack+0x85/0xc0
+[  440.225306]  print_circular_bug.isra.38.cold.58+0x15c/0x195
+[  440.225307]  check_prev_add.constprop.48+0x5f0/0xc00
+[  440.225309]  ? check_prev_add.constprop.48+0x39d/0xc00
+[  440.225311]  ? __lock_acquire+0x41d/0x1100
+[  440.225312]  __lock_acquire+0xd98/0x1100
+[  440.225313]  ? __lock_acquire+0x41d/0x1100
+[  440.225315]  lock_acquire+0xb9/0x1a0
+[  440.225317]  ? mt76_wake_tx_queue+0x4c/0xb0 [mt76]
+[  440.225319]  _raw_spin_lock_bh+0x34/0x40
+[  440.225321]  ? mt76_wake_tx_queue+0x4c/0xb0 [mt76]
+[  440.225323]  mt76_wake_tx_queue+0x4c/0xb0 [mt76]
+[  440.225334]  ieee80211_agg_start_txq+0xe8/0x2b0 [mac80211]
+[  440.225344]  ieee80211_stop_tx_ba_cb+0xb8/0x1f0 [mac80211]
+[  440.225354]  ieee80211_ba_session_work+0x1c1/0x2f0 [mac80211]
+[  440.225356]  process_one_work+0x237/0x5d0
+[  440.225358]  worker_thread+0x3c/0x390
+[  440.225359]  ? wq_calc_node_cpumask+0x70/0x70
+[  440.225360]  kthread+0x11d/0x140
+[  440.225362]  ? kthread_create_on_node+0x40/0x40
+[  440.225363]  ret_from_fork+0x3a/0x50
+
+Cc: stable@vger.kernel.org
+Fixes: 88046b2c9f6d ("mt76: add support for reporting tx status with skb")
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Acked-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sh-sci.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mt76x02_mac.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -2504,7 +2504,7 @@ done:
- 				 * last stop bit; we can increase the error
- 				 * margin by shifting the sampling point.
- 				 */
--				int shift = min(-8, max(7, deviation / 2));
-+				int shift = clamp(deviation / 2, -8, 7);
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c
+@@ -421,7 +421,6 @@ void mt76x02_send_tx_status(struct mt76x
+ 		return;
  
- 				hssrr |= (shift << HSCIF_SRHP_SHIFT) &
- 					 HSCIF_SRHP_MASK;
+ 	rcu_read_lock();
+-	mt76_tx_status_lock(mdev, &list);
+ 
+ 	if (stat->wcid < ARRAY_SIZE(dev->mt76.wcid))
+ 		wcid = rcu_dereference(dev->mt76.wcid[stat->wcid]);
+@@ -434,6 +433,8 @@ void mt76x02_send_tx_status(struct mt76x
+ 					  drv_priv);
+ 	}
+ 
++	mt76_tx_status_lock(mdev, &list);
++
+ 	if (wcid) {
+ 		if (stat->pktid)
+ 			status.skb = mt76_tx_status_skb_get(mdev, wcid,
+@@ -453,7 +454,9 @@ void mt76x02_send_tx_status(struct mt76x
+ 		if (*update == 0 && stat_val == stat_cache &&
+ 		    stat->wcid == msta->status.wcid && msta->n_frames < 32) {
+ 			msta->n_frames++;
+-			goto out;
++			mt76_tx_status_unlock(mdev, &list);
++			rcu_read_unlock();
++			return;
+ 		}
+ 
+ 		mt76x02_mac_fill_tx_status(dev, status.info, &msta->status,
+@@ -469,11 +472,10 @@ void mt76x02_send_tx_status(struct mt76x
+ 
+ 	if (status.skb)
+ 		mt76_tx_status_skb_done(mdev, status.skb, &list);
+-	else
+-		ieee80211_tx_status_ext(mt76_hw(dev), &status);
+-
+-out:
+ 	mt76_tx_status_unlock(mdev, &list);
++
++	if (!status.skb)
++		ieee80211_tx_status_ext(mt76_hw(dev), &status);
+ 	rcu_read_unlock();
+ }
+ 
 
 
