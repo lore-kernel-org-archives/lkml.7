@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04E0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C16EC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71072205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 393102077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126947;
-	bh=SUlnNi4b6mBmBPstDaupwNbpsVVXJ7TszGWbswsiz4g=;
+	s=default; t=1556126951;
+	bh=nI5ZACC/nbEjt+wJO/X1+cndqgeCjb/Y3wGGE/TxdFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kbt9ysyeQ1bINVFvgwlOdM84nrXKGAqtgMZBbTVeJOVx/rWK6C65h0Hfs3DBzFHuI
-	 lbh4mX2YGIKSVOFp9TrrnFkMC3oTW7BATUTA51Y+h0EJNMm/vzkHBvRIDvp8qStB6E
-	 KzRkTEGu87qzN9hnHhgEvPnNTsMOea8gDb9lUZC8=
+	b=ZvOk+s7xRuvM/3e3R2xvFer7cnOBpidoMWrmqdMKfaXYpwMhjW1eGM96N/A+tceUj
+	 7QXTIb3dztXQIsfxt/GNYzitLq7YZxT3vixgewxZeQUuUX2EfxuXAhW13O/hAXKRHr
+	 bIRca80GnJ5/+74xMsT+PLVf2nkL0QuM8lBuhMXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390739AbfDXR3G (ORCPT
+        id S2390758AbfDXR3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:29:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:29:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390315AbfDXR3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:29:04 -0400
+        id S2390344AbfDXR3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:29:06 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00D022054F;
-        Wed, 24 Apr 2019 17:29:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 982CD2054F;
+        Wed, 24 Apr 2019 17:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126943;
-        bh=SUlnNi4b6mBmBPstDaupwNbpsVVXJ7TszGWbswsiz4g=;
+        s=default; t=1556126946;
+        bh=nI5ZACC/nbEjt+wJO/X1+cndqgeCjb/Y3wGGE/TxdFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RX8xCp4A0RPaJJFx8sJbupIWoZuWwKA1GZ/tFo9yFXbP2EBB7GOOvQoFdHsKJLxh0
-         sVO3cX9b7lj9P11PlAbXTolihnVvLLuhLSIcUdwRQ3g8fr/3AHHBHtwOuKAlW0NhKE
-         /F3i3OroqyZ7RzdiOYYbxx4EUFbDFTuepj5ApOxQ=
+        b=m7z6Ij84rJGYIGP/9x52wqQ4itDuZOw9JbdWiF/sfy53ThXMbrZfrDWNJy+jqxM63
+         08+EFsU8ERk+ZXj4mEmj4rkvIhzAoYVBKLt3THGe01hqlZb9U+GOvRu25H7KgPtFPB
+         +oguwMVNZsL0+Np8BTcq9Y4GhjEzH6nw3IKOCji4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.14 30/70] staging: comedi: ni_usb6501: Fix possible double-free of ->usb_rx_buf
-Date:   Wed, 24 Apr 2019 19:09:50 +0200
-Message-Id: <20190424170911.174269572@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 31/70] ALSA: hda/realtek - add two more pin configuration sets to quirk table
+Date:   Wed, 24 Apr 2019 19:09:51 +0200
+Message-Id: <20190424170911.249390448@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -58,44 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit af4b54a2e5ba18259ff9aac445bf546dd60d037e upstream.
+commit b26e36b7ef36a8a3a147b1609b2505f8a4ecf511 upstream.
 
-`ni6501_alloc_usb_buffers()` is called from `ni6501_auto_attach()` to
-allocate RX and TX buffers for USB transfers.  It allocates
-`devpriv->usb_rx_buf` followed by `devpriv->usb_tx_buf`.  If the
-allocation of `devpriv->usb_tx_buf` fails, it frees
-`devpriv->usb_rx_buf`, leaving the pointer set dangling, and returns an
-error.  Later, `ni6501_detach()` will be called from the core comedi
-module code to clean up.  `ni6501_detach()` also frees both
-`devpriv->usb_rx_buf` and `devpriv->usb_tx_buf`, but
-`devpriv->usb_rx_buf` may have already beed freed, leading to a
-double-free error.  Fix it bu removing the call to
-`kfree(devpriv->usb_rx_buf)` from `ni6501_alloc_usb_buffers()`, relying
-on `ni6501_detach()` to free the memory.
+We have two Dell laptops which have the codec 10ec0236 and 10ec0256
+respectively, the headset mic on them can't work, need to apply the
+quirk of ALC255_FIXUP_DELL1_MIC_NO_PRESENCE. So adding their pin
+configurations in the pin quirk table.
 
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Cc: stable <stable@vger.kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/ni_usb6501.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ sound/pci/hda/patch_realtek.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/staging/comedi/drivers/ni_usb6501.c
-+++ b/drivers/staging/comedi/drivers/ni_usb6501.c
-@@ -472,10 +472,8 @@ static int ni6501_alloc_usb_buffers(stru
- 
- 	size = usb_endpoint_maxp(devpriv->ep_tx);
- 	devpriv->usb_tx_buf = kzalloc(size, GFP_KERNEL);
--	if (!devpriv->usb_tx_buf) {
--		kfree(devpriv->usb_rx_buf);
-+	if (!devpriv->usb_tx_buf)
- 		return -ENOMEM;
--	}
- 
- 	return 0;
- }
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6743,6 +6743,8 @@ static const struct snd_hda_pin_quirk al
+ 		{0x12, 0x90a60140},
+ 		{0x14, 0x90170150},
+ 		{0x21, 0x02211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
++		{0x21, 0x02211020}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
+ 		{0x14, 0x90170110},
+ 		{0x21, 0x02211020}),
+@@ -6853,6 +6855,10 @@ static const struct snd_hda_pin_quirk al
+ 		{0x21, 0x0221101f}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0256, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 		ALC256_STANDARD_PINS),
++	SND_HDA_PIN_QUIRK(0x10ec0256, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
++		{0x14, 0x90170110},
++		{0x1b, 0x01011020},
++		{0x21, 0x0221101f}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0256, 0x1043, "ASUS", ALC256_FIXUP_ASUS_MIC,
+ 		{0x14, 0x90170110},
+ 		{0x1b, 0x90a70130},
 
 
