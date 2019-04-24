@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86CCC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 197E2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB5421904
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CA220675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127346;
-	bh=br7TjRO8WiPXSWzY6ZBR/02D2IfN8dP28bJKrnTqa6Q=;
+	s=default; t=1556127349;
+	bh=WdhaBDNuR9iB8CvUZ+0lnq5JFVjmbCZ/SWYeioLM91w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ctDXG19jY3ST6t51zkka07wVHqBto/1xreXMgzZCayqSO7OSueT5uOVSm6BbzWsfv
-	 KnCoh+PsCBW1r0hNEBjrIal4U5W5KG+gKyqNZc7GuclaSGgG4/uefpk/vP/KFCgZNj
-	 FKT5syEJcRzJ+bWuxpcNHLCWt/rDs3VcP04wfaMQ=
+	b=ZGROwzq2ps3WYJARQdFCn+vTBKuQcqucoi7uwYEIeSM+FNaPOdl+C4AI1ZqRhSfIK
+	 5Qq9A5D5lHIqE10IWN7xqMylRoFpvfev/HppoGaYB0D5xocP65a+vIDF0yDJdTQ68C
+	 SDAAUXammxd6puCcIsTMb6tkyoAsvUyL6BXRC1V8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391971AbfDXRfp (ORCPT
+        id S2391983AbfDXRfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:35:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34568 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:35:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391955AbfDXRfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:35:41 -0400
+        id S2391963AbfDXRfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:35:43 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1BC321904;
-        Wed, 24 Apr 2019 17:35:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93FF22054F;
+        Wed, 24 Apr 2019 17:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127340;
-        bh=br7TjRO8WiPXSWzY6ZBR/02D2IfN8dP28bJKrnTqa6Q=;
+        s=default; t=1556127343;
+        bh=WdhaBDNuR9iB8CvUZ+0lnq5JFVjmbCZ/SWYeioLM91w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vg30awZCBk9xDrC5Qn/WtGLFDnYN5lCu+x72UXT2vPdlf8CLWlIyaifb9cRouCu3F
-         i64ffOgciPkK3vnL3GeMS5joyf5EpW5sX1GOMpaCwYxyZ7K3GSZqNSKcpbGQf4oo/w
-         sNIW6dgshBnpnrMmtjC9DURF5YI7i9t78N6kch/I=
+        b=BRJa8pSgZvxjFVwzY2UA/yqyqY6SDKblMVG4TT9ApNJ5tr1PU+NGxMprSyHgOLM6H
+         Js+oQfmQtNLqNtEk8+DMfp3p7qZ6/X4jahMmA5FXbXBvkYy71rK5/5fk9MIaxfFvBV
+         W1uBP0kOlwZJ02AD9QmeT3xu5B0nleQX8KwA96LM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mircea Caprioru <mircea.caprioru@analog.com>,
+        stable@vger.kernel.org, Sergey Larin <cerg2010cerg2010@mail.ru>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.0 053/115] staging: iio: ad7192: Fix ad7193 channel address
-Date:   Wed, 24 Apr 2019 19:09:49 +0200
-Message-Id: <20190424170928.223453077@linuxfoundation.org>
+Subject: [PATCH 5.0 054/115] iio: gyro: mpu3050: fix chip ID reading
+Date:   Wed, 24 Apr 2019 19:09:50 +0200
+Message-Id: <20190424170928.319309961@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -61,37 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mircea Caprioru <mircea.caprioru@analog.com>
+From: Sergey Larin <cerg2010cerg2010@mail.ru>
 
-commit 7ce0f216221856a17fc4934b39284678a5fef2e9 upstream.
+commit 409a51e0a4a5f908763191fae2c29008632eb712 upstream.
 
-This patch fixes the differential channels addresses for the ad7193.
+According to the datasheet, the last bit of CHIP_ID register controls
+I2C bus, and the first one is unused. Handle this correctly.
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+Note that there are chips out there that have a value such that
+the id check currently fails.
+
+Signed-off-by: Sergey Larin <cerg2010cerg2010@mail.ru>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/iio/adc/ad7192.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/iio/gyro/mpu3050-core.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -109,10 +109,10 @@
- #define AD7192_CH_AIN3		BIT(6) /* AIN3 - AINCOM */
- #define AD7192_CH_AIN4		BIT(7) /* AIN4 - AINCOM */
+--- a/drivers/iio/gyro/mpu3050-core.c
++++ b/drivers/iio/gyro/mpu3050-core.c
+@@ -29,7 +29,8 @@
  
--#define AD7193_CH_AIN1P_AIN2M	0x000  /* AIN1(+) - AIN2(-) */
--#define AD7193_CH_AIN3P_AIN4M	0x001  /* AIN3(+) - AIN4(-) */
--#define AD7193_CH_AIN5P_AIN6M	0x002  /* AIN5(+) - AIN6(-) */
--#define AD7193_CH_AIN7P_AIN8M	0x004  /* AIN7(+) - AIN8(-) */
-+#define AD7193_CH_AIN1P_AIN2M	0x001  /* AIN1(+) - AIN2(-) */
-+#define AD7193_CH_AIN3P_AIN4M	0x002  /* AIN3(+) - AIN4(-) */
-+#define AD7193_CH_AIN5P_AIN6M	0x004  /* AIN5(+) - AIN6(-) */
-+#define AD7193_CH_AIN7P_AIN8M	0x008  /* AIN7(+) - AIN8(-) */
- #define AD7193_CH_TEMP		0x100 /* Temp senseor */
- #define AD7193_CH_AIN2P_AIN2M	0x200 /* AIN2(+) - AIN2(-) */
- #define AD7193_CH_AIN1		0x401 /* AIN1 - AINCOM */
+ #include "mpu3050.h"
+ 
+-#define MPU3050_CHIP_ID		0x69
++#define MPU3050_CHIP_ID		0x68
++#define MPU3050_CHIP_ID_MASK	0x7E
+ 
+ /*
+  * Register map: anything suffixed *_H is a big-endian high byte and always
+@@ -1176,8 +1177,9 @@ int mpu3050_common_probe(struct device *
+ 		goto err_power_down;
+ 	}
+ 
+-	if (val != MPU3050_CHIP_ID) {
+-		dev_err(dev, "unsupported chip id %02x\n", (u8)val);
++	if ((val & MPU3050_CHIP_ID_MASK) != MPU3050_CHIP_ID) {
++		dev_err(dev, "unsupported chip id %02x\n",
++				(u8)(val & MPU3050_CHIP_ID_MASK));
+ 		ret = -ENODEV;
+ 		goto err_power_down;
+ 	}
 
 
