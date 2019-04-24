@@ -4,58 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D47C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82941C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBE6218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E5C21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128011;
-	bh=STQznUZze8QDmSf8B+bOGRIkORWLMlYfOgqYld8MiaA=;
+	s=default; t=1556128022;
+	bh=YE1EgZeukspEzv6MCxasg31Wtb1pIL9dwAGoNgFUUdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ECJOd4Z/6qzcFPt8Ci11b9JFyyC3Z0E3Guh6/az5BgTxpQZS9u8lWdMbK8Zcwynhf
-	 QE97LiDOIksiSH6YAYJ0DNfsKaClRRrvVRBp3svTdQ2ZUEoG++UCHUe+daagB1gOYo
-	 XBfWKmHb2bds5cxL+yu4WFywzd5V1/aTyXIO7fmk=
+	b=XVkScqrzGLbigbhdfwXnzro5ZcgvIwKmg/mi5FD23zI/aSpOy7qQ0t8LElb9OOITl
+	 ovuQteQHsI7j+wpx7phMDqii+cz4Y2uJptvn1ifPSrJBawaa051XEGPNEKHoN6FeT7
+	 glydZfRj5/phioQJt7VWfS3tS/iWPF5u3O2zAlF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391920AbfDXRqu (ORCPT
+        id S2403847AbfDXRcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:46:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:32:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389873AbfDXRcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:32:20 -0400
+        id S2390116AbfDXRcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:32:08 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76EC72190A;
-        Wed, 24 Apr 2019 17:32:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89C6D2077C;
+        Wed, 24 Apr 2019 17:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127140;
-        bh=STQznUZze8QDmSf8B+bOGRIkORWLMlYfOgqYld8MiaA=;
+        s=default; t=1556127127;
+        bh=YE1EgZeukspEzv6MCxasg31Wtb1pIL9dwAGoNgFUUdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wmn1kUc5+QAUGFlE3QDlRm7SFwPEvhe90IIj3AUPmcZeYu6kxj34hHNQlItz5lA8T
-         QSE4OcObsR11VyFPVCosGzvgohtlJwz/uFUDWX8veIF+sEmsonscYs1YmMigsbS3a1
-         NCPmn8BkpG7EzDOW0WcUWAx3kRjbKm1m6lyLBpHo=
+        b=kS9UmtEE1up20f7QoukbtW2yD/fpiBnNHG/x5cvwbxhXBZxgznct7CSq9Y2hz7nZ7
+         IE2w6KGCR9w4frUX4k65m0iCol0xyRanoPL/HTOIx6BSOfqZprrSSXbGk1sXWeXbN1
+         qvt6V3DXoybZUtz4WMmIELHC6wnSNJpg0BnEbc/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chang-An Chen <chang-an.chen@mediatek.com>,
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Pu Wen <puwen@hygon.cn>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        kuohong.wang@mediatek.com, freddy.hsin@mediatek.com
-Subject: [PATCH 4.19 76/96] timers/sched_clock: Prevent generic sched_clock wrap caused by tick_freeze()
-Date:   Wed, 24 Apr 2019 19:10:21 +0200
-Message-Id: <20190424170924.889524656@linuxfoundation.org>
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 72/96] perf/x86/amd: Add event map for AMD Family 17h
+Date:   Wed, 24 Apr 2019 19:10:17 +0200
+Message-Id: <20190424170924.624388859@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -68,118 +71,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chang-An Chen <chang-an.chen@mediatek.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit 3f2552f7e9c5abef2775c53f7af66532f8bf65bc upstream.
+commit 3fe3331bb285700ab2253dbb07f8e478fcea2f1b upstream.
 
-tick_freeze() introduced by suspend-to-idle in commit 124cf9117c5f ("PM /
-sleep: Make it possible to quiesce timers during suspend-to-idle") uses
-timekeeping_suspend() instead of syscore_suspend() during
-suspend-to-idle. As a consequence generic sched_clock will keep going
-because sched_clock_suspend() and sched_clock_resume() are not invoked
-during suspend-to-idle which can result in a generic sched_clock wrap.
+Family 17h differs from prior families by:
 
-On a ARM system with suspend-to-idle enabled, sched_clock is registered
-as "56 bits at 13MHz, resolution 76ns, wraps every 4398046511101ns", which
-means the real wrapping duration is 8796093022202ns.
+ - Does not support an L2 cache miss event
+ - It has re-enumerated PMC counters for:
+   - L2 cache references
+   - front & back end stalled cycles
 
-[  134.551779] suspend-to-idle suspend (timekeeping_suspend())
-[ 1204.912239] suspend-to-idle resume (timekeeping_resume())
-......
-[ 1206.912239] suspend-to-idle suspend (timekeeping_suspend())
-[ 5880.502807] suspend-to-idle resume (timekeeping_resume())
-......
-[ 6000.403724] suspend-to-idle suspend (timekeeping_suspend())
-[ 8035.753167] suspend-to-idle resume  (timekeeping_resume())
-......
-[ 8795.786684] (2)[321:charger_thread]......
-[ 8795.788387] (2)[321:charger_thread]......
-[    0.057226] (0)[0:swapper/0]......
-[    0.061447] (2)[0:swapper/2]......
+So we add a new amd_f17h_perfmon_event_map[] so that the generic
+perf event names will resolve to the correct h/w events on
+family 17h and above processors.
 
-sched_clock was not stopped during suspend-to-idle, and sched_clock_poll
-hrtimer was not expired because timekeeping_suspend() was invoked during
-suspend-to-idle. It makes sched_clock wrap at kernel time 8796s.
+Reference sections 2.1.13.3.3 (stalls) and 2.1.13.3.6 (L2):
 
-To prevent this, invoke sched_clock_suspend() and sched_clock_resume() in
-tick_freeze() together with timekeeping_suspend() and timekeeping_resume().
+  https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
 
-Fixes: 124cf9117c5f (PM / sleep: Make it possible to quiesce timers during suspend-to-idle)
-Signed-off-by: Chang-An Chen <chang-an.chen@mediatek.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Corey Minyard <cminyard@mvista.com>
-Cc: <linux-mediatek@lists.infradead.org>
-Cc: <linux-arm-kernel@lists.infradead.org>
-Cc: Stanley Chu <stanley.chu@mediatek.com>
-Cc: <kuohong.wang@mediatek.com>
-Cc: <freddy.hsin@mediatek.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1553828349-8914-1-git-send-email-chang-an.chen@mediatek.com
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Cc: <stable@vger.kernel.org> # v4.9+
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Liška <mliska@suse.cz>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Fixes: e40ed1542dd7 ("perf/x86: Add perf support for AMD family-17h processors")
+[ Improved the formatting a bit. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/sched_clock.c |    4 ++--
- kernel/time/tick-common.c |    2 ++
- kernel/time/timekeeping.h |    7 +++++++
- 3 files changed, 11 insertions(+), 2 deletions(-)
+ arch/x86/events/amd/core.c |   35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
 
---- a/kernel/time/sched_clock.c
-+++ b/kernel/time/sched_clock.c
-@@ -275,7 +275,7 @@ static u64 notrace suspended_sched_clock
- 	return cd.read_data[seq & 1].epoch_cyc;
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -117,22 +117,39 @@ static __initconst const u64 amd_hw_cach
+ };
+ 
+ /*
+- * AMD Performance Monitor K7 and later.
++ * AMD Performance Monitor K7 and later, up to and including Family 16h:
+  */
+ static const u64 amd_perfmon_event_map[PERF_COUNT_HW_MAX] =
+ {
+-  [PERF_COUNT_HW_CPU_CYCLES]			= 0x0076,
+-  [PERF_COUNT_HW_INSTRUCTIONS]			= 0x00c0,
+-  [PERF_COUNT_HW_CACHE_REFERENCES]		= 0x077d,
+-  [PERF_COUNT_HW_CACHE_MISSES]			= 0x077e,
+-  [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]		= 0x00c2,
+-  [PERF_COUNT_HW_BRANCH_MISSES]			= 0x00c3,
+-  [PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x00d0, /* "Decoder empty" event */
+-  [PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x00d1, /* "Dispatch stalls" event */
++	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
++	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
++	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0x077d,
++	[PERF_COUNT_HW_CACHE_MISSES]		= 0x077e,
++	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
++	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
++	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x00d0, /* "Decoder empty" event */
++	[PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x00d1, /* "Dispatch stalls" event */
++};
++
++/*
++ * AMD Performance Monitor Family 17h and later:
++ */
++static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
++{
++	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
++	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
++	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
++	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
++	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
++	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
++	[PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x0187,
+ };
+ 
+ static u64 amd_pmu_event_map(int hw_event)
+ {
++	if (boot_cpu_data.x86 >= 0x17)
++		return amd_f17h_perfmon_event_map[hw_event];
++
+ 	return amd_perfmon_event_map[hw_event];
  }
  
--static int sched_clock_suspend(void)
-+int sched_clock_suspend(void)
- {
- 	struct clock_read_data *rd = &cd.read_data[0];
- 
-@@ -286,7 +286,7 @@ static int sched_clock_suspend(void)
- 	return 0;
- }
- 
--static void sched_clock_resume(void)
-+void sched_clock_resume(void)
- {
- 	struct clock_read_data *rd = &cd.read_data[0];
- 
---- a/kernel/time/tick-common.c
-+++ b/kernel/time/tick-common.c
-@@ -491,6 +491,7 @@ void tick_freeze(void)
- 		trace_suspend_resume(TPS("timekeeping_freeze"),
- 				     smp_processor_id(), true);
- 		system_state = SYSTEM_SUSPEND;
-+		sched_clock_suspend();
- 		timekeeping_suspend();
- 	} else {
- 		tick_suspend_local();
-@@ -514,6 +515,7 @@ void tick_unfreeze(void)
- 
- 	if (tick_freeze_depth == num_online_cpus()) {
- 		timekeeping_resume();
-+		sched_clock_resume();
- 		system_state = SYSTEM_RUNNING;
- 		trace_suspend_resume(TPS("timekeeping_freeze"),
- 				     smp_processor_id(), false);
---- a/kernel/time/timekeeping.h
-+++ b/kernel/time/timekeeping.h
-@@ -14,6 +14,13 @@ extern u64 timekeeping_max_deferment(voi
- extern void timekeeping_warp_clock(void);
- extern int timekeeping_suspend(void);
- extern void timekeeping_resume(void);
-+#ifdef CONFIG_GENERIC_SCHED_CLOCK
-+extern int sched_clock_suspend(void);
-+extern void sched_clock_resume(void);
-+#else
-+static inline int sched_clock_suspend(void) { return 0; }
-+static inline void sched_clock_resume(void) { }
-+#endif
- 
- extern void do_timer(unsigned long ticks);
- extern void update_wall_time(void);
 
 
