@@ -2,117 +2,109 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C99C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55109C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B16F218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21AE7218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ynQJ08oE"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="C8Q2AxbP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbfDXIpC (ORCPT
+        id S1730156AbfDXIpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:45:02 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59856 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbfDXIpC (ORCPT
+        Wed, 24 Apr 2019 04:45:13 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:39690 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729422AbfDXIpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:45:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KNLwmOQKFJyn50Vn9lGxwitkF38o6fhwSXB2kO96yfY=; b=ynQJ08oEAsTTkY5QImOENcAo/
-        el+7t7D2yqBg5FfgiZMjyWo01DPAGp29JcJCZCedbSri3T9g6me0kDaNY/C+zZctc32wVQyLbk7K8
-        98ScqbrgiMG+Uf0x6bPZHuvU8MQmq3QTTah1mGG2az1TiRO2PuttW5xhNUYE0NHe0frW9VnFm6vSf
-        sMuWHg4XXDSNykn70lSEHPUppsAcOvrcWNjMdoLbT/lryqoCpzLy2cXyMKOLEfRweGGFeD6co4GYG
-        UGa8BCtTy5asJnF2gBaWvXoaF+fXfx7/pnXlJhjq+I1JW2KmdwkPSlKwMapyf0cku665tDPAyeemN
-        NGVjgeP8g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJDWA-0001Lt-0t; Wed, 24 Apr 2019 08:44:38 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5C76929BBFB9A; Wed, 24 Apr 2019 10:44:34 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 10:44:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] Documentation: atomic_t.txt: Explain ordering provided
- by smp_mb__{before,after}_atomic()
-Message-ID: <20190424084434.GM12232@hirez.programming.kicks-ass.net>
-References: <20190419180017.GP4038@hirez.programming.kicks-ass.net>
- <20190419182620.GF14111@linux.ibm.com>
- <1555719429.t9n8gkf70y.astroid@bobo.none>
- <20190420085440.GK14111@linux.ibm.com>
- <20190423121715.GQ4038@hirez.programming.kicks-ass.net>
- <20190423132116.GJ3923@linux.ibm.com>
- <20190423132620.GU4038@hirez.programming.kicks-ass.net>
- <20190423201637.GW3923@linux.ibm.com>
- <20190423202831.GA4038@hirez.programming.kicks-ass.net>
- <20190424082948.GG3923@linux.ibm.com>
+        Wed, 24 Apr 2019 04:45:12 -0400
+Received: by mail-it1-f195.google.com with SMTP id e13so4873006itk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 01:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nMprasNgB0HsdZ7Rf0IEpgfmXifCgCUHWARLRGNw5l4=;
+        b=C8Q2AxbPg9IPm8fFhY7BQb+T9m5M9E7cvdXiJtAhdTJMZElIBJRzt7C5xxvO6lwM2M
+         hAIf3kvZJvOF01bHYaosCp6FO2g4dWEzX71vlSy4bjqzkIlTxzhLkBVXt8zuX40Ek956
+         0QYx/BxAP7ARhgF2Kp6+QOJ5j5iWDYL6Pk7KS9B30XapoOL0recjC4UK7/6lQh4Njmdn
+         eE6pnXujoAcgo1NWAb7TNZuW2fM8JpIuhGQ7lV1PXbUfsiSF9IIerDWaAIRm08L9+L9i
+         aoE/okc6ejpC0KiiYTPE5Ik3QUU9mz4r+VSQHswIwTPBhz1ntIXx8boj+5kQqEsnXBn7
+         yP9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nMprasNgB0HsdZ7Rf0IEpgfmXifCgCUHWARLRGNw5l4=;
+        b=IKdhF5rXG7xXvJeIXaRqxmb1kPzrUEAhbUp1tFpaGoIDZWjqCjUgV9ElrpVzyz4TwJ
+         rQ9192OCW8htsTwX/YrSxGSMUIZs0TgUKbo0Tcw1V2+5liK7KDDULOugQ14HE1gvJSHN
+         mW1ukl4v8H2AjPpLSvLpKiqA3XRSO6EzTi5HJVnz44TGQgbzXtG2+wrlplShRzUf6GK9
+         5hyEn3RH503Wynfc6elEcu7ysS9vgigZP5mYO6AmWsetKbL9kZ/OuWqIDc6RJqKzdZHW
+         X8EBGkTYLHYfk8rtJ4cX7UHwk2rvsfC+sawbGEx7fZbD2xHPeUZRIXYZFsrjt0PC2qXQ
+         TcrA==
+X-Gm-Message-State: APjAAAVITWQkaHFlbWa2jY12RV9jCGHWQ/w6Dg6A20aaQpR1kkdWNZuO
+        VBVbiUicD/aF8xI6LHLX4ZDfvXn6odeEvXXlGZv9zw==
+X-Google-Smtp-Source: APXvYqxFAvjlCEyvNCS6bCbAlBurPt3V5umT7fb7BraJ4Bf3bdLENVohU/w7QzXiusJv3+/W4C35UKyNd5XWV737uoU=
+X-Received: by 2002:a02:924d:: with SMTP id y13mr20897713jag.24.1556095511507;
+ Wed, 24 Apr 2019 01:45:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424082948.GG3923@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190423090451.23711-1-brgl@bgdev.pl> <20190424083127.GB6699@amd>
+In-Reply-To: <20190424083127.GB6699@amd>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 24 Apr 2019 10:45:00 +0200
+Message-ID: <CAMRc=McN78_gJw_T4EPucM8veTC9XRUu7TGJ0J+zPsU=0Hu2GQ@mail.gmail.com>
+Subject: Re: [PATCH v10 00/11] mfd: add support for max77650 PMIC
+To:     Pavel Machek <pavel@denx.de>, Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 01:29:48AM -0700, Paul E. McKenney wrote:
-> On Tue, Apr 23, 2019 at 10:28:31PM +0200, Peter Zijlstra wrote:
-> > On Tue, Apr 23, 2019 at 01:16:37PM -0700, Paul E. McKenney wrote:
-> > 
-> > > Agreed, but I thought that one of the ideas going forward was to get
-> > > rid of smp_mb__{before,after}_atomic().
-> > 
-> > It's not one I had considered.. I just wanted to get rid of this
-> > 'surprise' behaviour.
-> 
-> Ah, good point, your patch is in fact a midpoint between those two
-> positions.  Just to make sure I understand:
-> 
-> 1.	Without your patch, smp_mb__{before,after}_atomic() orders
-> 	only against the atomic itself.
+=C5=9Br., 24 kwi 2019 o 10:31 Pavel Machek <pavel@denx.de> napisa=C5=82(a):
+>
+> On Tue 2019-04-23 11:04:40, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > This series adds support for max77650 ultra low-power PMIC. It provides
+> > the core mfd driver and a set of five sub-drivers for the regulator,
+> > power supply, gpio, leds and input subsystems.
+> >
+> > Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_dev=
+ices().
+> > Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for t=
+his
+> > device.
+> >
+> > The regulator part is already upstream.
+>
+> I see v10 in my inbox... and acks from all over the place, but patches
+> not going in. Who takes these? I don't think I need another 10
+> versions in my inbox...
+>                                                                 Pavel
 
-Right, and that was not intentional.
+I think Lee Jones should take them through the MFD tree. With the ack
+from Sebastian Reichel on the driver part and the example in the
+charger binding fixed I think they are ready to be picked up.
 
-> 2.	With your patch, smp_mb__{before,after}_atomic() orders against
-> 	the atomic itself and the accesses on the other side of that
-> 	atomic.  However, it does not order the atomic against the
-> 	accesses on the other side of that atomic.
-
-Right. I'll go make a more complete patch, covering all the
-architectures.
-
-> 	Putting things between the smp_mb__{before,after}_atomic()
-> 	and the atomic is in my opinion a bad idea, but in this case
-> 	they are not necessarily ordered.
-
-Agreed, that is an unsupported idiom and it would be good to have
-something check for this.
-
-> 3.	Dispensing with smp_mb__{before,after}_atomic() would have
-> 	void RMW atomics fully ordered, but I suspect that it results
-> 	in ugly performance regressions.
-> 
-> Or am I still missing something?
-
-I think we're good :-)
+Bart
