@@ -2,211 +2,205 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46876C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B5AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F4920652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024CA20685
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJGipjPl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389933AbfDXSCk (ORCPT
+        id S2390074AbfDXSCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:02:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57954 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390808AbfDXSBk (ORCPT
+        Wed, 24 Apr 2019 14:02:52 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36919 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389617AbfDXSCt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:01:40 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OHsUq3040367
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:01:39 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s2u7umpap-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:01:39 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Wed, 24 Apr 2019 19:01:36 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 24 Apr 2019 19:01:26 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3OI1OxR42663952
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 18:01:24 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 527D2AE057;
-        Wed, 24 Apr 2019 18:01:24 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 688DDAE05F;
-        Wed, 24 Apr 2019 18:01:21 +0000 (GMT)
-Received: from [9.145.176.48] (unknown [9.145.176.48])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 24 Apr 2019 18:01:21 +0000 (GMT)
-Subject: Re: [PATCH v12 00/31] Speculative page faults
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, dave@stgolabs.net,
-        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        mpe@ellerman.id.au, Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, haren@linux.vnet.ibm.com,
-        Nick Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <CANN689F1h9XoHPzr_FQY2WfN5bb2TTd6M3HLqoJ-DQuHkNbA7g@mail.gmail.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Wed, 24 Apr 2019 20:01:20 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Wed, 24 Apr 2019 14:02:49 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v13so5203099ljk.4;
+        Wed, 24 Apr 2019 11:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DjJKtm/R6i9o8qcXqXMBfsK5KZD61RVVhbJADm6TWaU=;
+        b=IJGipjPlKnxVk5DMmHc2huZos0Q6faYN+J2p20gcc4jzRbDYaaP6YvUS2xuXNAL6vQ
+         5B9lwb9gg2hh+5cNtxQZHc75nxlECRO1BwXHGtOPCnYuB/ZHQvFb2f2nDCtnBmorGwB4
+         awjBzR8NNNeDkxgPa2+3Gg+uonNIP07ScX7gcI/ekfoLf+4Twic385QenPx7cJiw2bmr
+         5bzg3DddZ4xukFGxx5cnBGy1Ly28pBN/BIr5u3AxGF9Gxv8le1etlAQ7eYAbNykCLo9g
+         hOCfs4sLeoJUPg7fiLPvV7kxRZtowddrXHtZ8alJ84vDe7+su01E6yOf4uwlsjyKIgdF
+         0bAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DjJKtm/R6i9o8qcXqXMBfsK5KZD61RVVhbJADm6TWaU=;
+        b=JB/aM6dy1WhZIBsLPSny67Y0G0QhKOUi/kMPJTA0W3o1KC5w0n8anuoaeUBq54rTTU
+         HwKw2yytoVFje+2VBUt3YR3Z5BIrYg3lE81OU0mdMslYayiWLK3Z+em9FBTJt9iD3eeS
+         R2h4hxf4UWXKlv0dsuH/KY70ayrQgylJ/jzaGYEPyBbm4pnhF0COvgCJGAAQKr3FUJGS
+         Q0wYvYxXxe2W4w+YWpqWXRnFb3cW6+cEaHfN4XXi30AdqY64nPsIVdA285iZZ1O5Zz/G
+         U3o+jfBIGDIdYyq8XblSATbgvEwI93tKDmwpyGcBNTpEXeb0uHwu3iljelz5FWqQota9
+         jsew==
+X-Gm-Message-State: APjAAAUFMqjDfi2jieHViKN1fFm4GFZAY5USXfiUXwJsKhsEg8tfOQDn
+        j91hkNuW0MTfaMpShlyyh4k=
+X-Google-Smtp-Source: APXvYqxvghpu1QaPhbpWC3coRNnVl0ClUm0loF9I7ldF+kL8zX7fhlOqqEm2dHrp673botHmTqCtqg==
+X-Received: by 2002:a2e:9d59:: with SMTP id y25mr1039278ljj.137.1556128967046;
+        Wed, 24 Apr 2019 11:02:47 -0700 (PDT)
+Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id s21sm5550597lfb.0.2019.04.24.11.02.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 11:02:45 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <bbrezillon@kernel.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: [PATCH v3] mtd: rawnand: ams-delta: Drop board specific partition info
+Date:   Wed, 24 Apr 2019 20:02:12 +0200
+Message-Id: <20190424180212.10830-1-jmkrzyszt@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190324223344.24590-1-jmkrzyszt@gmail.com>
+References: <20190324223344.24590-1-jmkrzyszt@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CANN689F1h9XoHPzr_FQY2WfN5bb2TTd6M3HLqoJ-DQuHkNbA7g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19042418-0016-0000-0000-00000273657C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042418-0017-0000-0000-000032CFD8D0
-Message-Id: <aadc7b03-9121-6800-341b-6f2849088a09@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904240131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 22/04/2019 à 23:29, Michel Lespinasse a écrit :
-> Hi Laurent,
-> 
-> Thanks a lot for copying me on this patchset. It took me a few days to
-> go through it - I had not been following the previous iterations of
-> this series so I had to catch up. I will be sending comments for
-> individual commits, but before tat I would like to discuss the series
-> as a whole.
+After recent modifications, only a hardcoded partition info makes
+the driver device specific.  Other than that, the driver uses GPIO
+exclusively and can be used on any hardware.
 
-Hi Michel,
+Drop the partition info and use MTD partition parser with default list
+of parser names instead.  For the OF parser to work correctly, pass
+device of_node to mtd.
 
-Thanks for reviewing this series.
+Amstrad Delta users should append the following partition info to their
+kernel command line, possibly embedding it in CONFIG_CMDLINE:
 
-> I think these changes are a big step in the right direction. My main
-> reservation about them is that they are additive - adding some complexity
-> for speculative page faults - and I wonder if it'd be possible, over the
-> long term, to replace the existing complexity we have in mmap_sem retry
-> mechanisms instead of adding to it. This is not something that should
-> block your progress, but I think it would be good, as we introduce spf,
-> to evaluate whether we could eventually get all the way to removing the
-> mmap_sem retry mechanism, or if we will actually have to keep both.
+mtdparts=ams-delta-nand:3584k(Kernel),256k(u-boot),256k(u-boot_params),\
+256k(Amstrad_LDR),27m(File_system),768k(PBL_reserved)
 
-Until we get rid of the mmap_sem which seems to be a very long story, I 
-can't see how we could get rid of the retry mechanism.
+For their convenience, that information is added to the board Kconfig
+entry help text, as well as CONFIG_MTD_CMDLINE_PARTS symbol is selected
+automatically from the board Kconfig entry if the NAND driver is also
+selected.
 
-> The proposed spf mechanism only handles anon vmas. Is there a
-> fundamental reason why it couldn't handle mapped files too ?
-> My understanding is that the mechanism of verifying the vma after
-> taking back the ptl at the end of the fault would work there too ?
-> The file has to stay referenced during the fault, but holding the vma's
-> refcount could be made to cover that ? the vm_file refcount would have
-> to be released in __free_vma() instead of remove_vma; I'm not quite sure
-> if that has more implications than I realize ?
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+---
+Changelog:
+v2->v3:
+- add information on the requirement for passing partition info via
+  kernel command line to the board Kconfig entry help text
+v1->v2:
+- fix a typo poitned out by Aaro - thanks!
+- fix device_node not passed to OF parser via mtd_info
+- commit message reworded and reformatted a bit for better readability
 
-The only concern is the flow of operation  done in the vm_ops->fault() 
-processing. Most of the file system relie on the generic filemap_fault() 
-which should be safe to use. But we need a clever way to identify fault 
-processing which are compatible with the SPF handler. This could be done 
-using a tag/flag in the vm_ops structure or in the vma's flags.
+ arch/arm/mach-omap1/Kconfig      |  7 ++++++-
+ drivers/mtd/nand/raw/ams-delta.c | 29 ++---------------------------
+ 2 files changed, 8 insertions(+), 28 deletions(-)
 
-This would be the next step.
-
-
-> The proposed spf mechanism only works at the pte level after the page
-> tables have already been created. The non-spf page fault path takes the
-> mm->page_table_lock to protect against concurrent page table allocation
-> by multiple page faults; I think unmapping/freeing page tables could
-> be done under mm->page_table_lock too so that spf could implement
-> allocating new page tables by verifying the vma after taking the
-> mm->page_table_lock ?
-
-I've to admit that I didn't dig further here.
-Do you have a patch? ;)
-
-> 
-> The proposed spf mechanism depends on ARCH_HAS_PTE_SPECIAL.
-> I am not sure what is the issue there - is this due to the vma->vm_start
-> and vma->vm_pgoff reads in *__vm_normal_page() ?
-
-Yes that's the reason, no way to guarantee the value of these fields in 
-the SPF path.
-
-> 
-> My last potential concern is about performance. The numbers you have
-> look great, but I worry about potential regressions in PF performance
-> for threaded processes that don't currently encounter contention
-> (i.e. there may be just one thread actually doing all the work while
-> the others are blocked). I think one good proxy for measuring that
-> would be to measure a single threaded workload - kernbench would be
-> fine - without the special-case optimization in patch 22 where
-> handle_speculative_fault() immediately aborts in the single-threaded case.
-
-I'll have to give it a try.
-
-> Reviewed-by: Michel Lespinasse <walken@google.com>
-> This is for the series as a whole; I expect to do another review pass on
-> individual commits in the series when we have agreement on the toplevel
-> stuff (I noticed a few things like out-of-date commit messages but that's
-> really minor stuff).
-
-Thanks a lot for reviewing this long series.
-
-> 
-> I want to add a note about mmap_sem. In the past there has been
-> discussions about replacing it with an interval lock, but these never
-> went anywhere because, mostly, of the fact that such mechanisms were
-> too expensive to use in the page fault path. I think adding the spf
-> mechanism would invite us to revisit this issue - interval locks may
-> be a great way to avoid blocking between unrelated mmap_sem writers
-> (for example, do not delay stack creation for new threads while a
-> large mmap or munmap may be going on), and probably also to handle
-> mmap_sem readers that can't easily use the spf mechanism (for example,
-> gup callers which make use of the returned vmas). But again that is a
-> separate topic to explore which doesn't have to get resolved before
-> spf goes in.
-> 
+diff --git a/arch/arm/mach-omap1/Kconfig b/arch/arm/mach-omap1/Kconfig
+index c4694f26b5c4..41a47d251cac 100644
+--- a/arch/arm/mach-omap1/Kconfig
++++ b/arch/arm/mach-omap1/Kconfig
+@@ -164,17 +164,22 @@ config MACH_NOKIA770
+ 	  have such a device.
+ 
+ config MACH_AMS_DELTA
+-	bool "Amstrad E3 (Delta)"
++	bool "Amstrad E3 (Delta) - see help for important information"
+ 	depends on ARCH_OMAP1 && ARCH_OMAP15XX
+ 	select FIQ
+ 	select GPIO_GENERIC_PLATFORM
+ 	select LEDS_GPIO_REGISTER
+ 	select REGULATOR
+ 	select REGULATOR_FIXED_VOLTAGE
++	select MTD_CMDLINE_PARTS if MTD_NAND_AMS_DELTA
+ 	help
+ 	  Support for the Amstrad E3 (codename Delta) videophone. Say Y here
+ 	  if you have such a device.
+ 
++	  If you are using built-in NAND, append the following partition
++	  info to kernel command line:
++	  mtdparts=ams-delta-nand:3584k(Kernel),256k(u-boot),256k(u-boot_params),256k(Amstrad_LDR),27m(File_system),768k(PBL_reserved)
++
+ config MACH_OMAP_GENERIC
+ 	bool "Generic OMAP board"
+ 	depends on ARCH_OMAP1 && (ARCH_OMAP15XX || ARCH_OMAP16XX)
+diff --git a/drivers/mtd/nand/raw/ams-delta.c b/drivers/mtd/nand/raw/ams-delta.c
+index 8312182088c1..e0f09179bbda 100644
+--- a/drivers/mtd/nand/raw/ams-delta.c
++++ b/drivers/mtd/nand/raw/ams-delta.c
+@@ -41,31 +41,6 @@ struct ams_delta_nand {
+ 	bool			data_in;
+ };
+ 
+-/*
+- * Define partitions for flash devices
+- */
+-
+-static const struct mtd_partition partition_info[] = {
+-	{ .name		= "Kernel",
+-	  .offset	= 0,
+-	  .size		= 3 * SZ_1M + SZ_512K },
+-	{ .name		= "u-boot",
+-	  .offset	= 3 * SZ_1M + SZ_512K,
+-	  .size		= SZ_256K },
+-	{ .name		= "u-boot params",
+-	  .offset	= 3 * SZ_1M + SZ_512K + SZ_256K,
+-	  .size		= SZ_256K },
+-	{ .name		= "Amstrad LDR",
+-	  .offset	= 4 * SZ_1M,
+-	  .size		= SZ_256K },
+-	{ .name		= "File system",
+-	  .offset	= 4 * SZ_1M + 1 * SZ_256K,
+-	  .size		= 27 * SZ_1M },
+-	{ .name		= "PBL reserved",
+-	  .offset	= 32 * SZ_1M - 3 * SZ_256K,
+-	  .size		=  3 * SZ_256K },
+-};
+-
+ static void ams_delta_write_commit(struct ams_delta_nand *priv)
+ {
+ 	gpiod_set_value(priv->gpiod_nwe, 0);
+@@ -238,6 +213,7 @@ static int ams_delta_init(struct platform_device *pdev)
+ 	mtd->dev.parent = &pdev->dev;
+ 
+ 	nand_set_controller_data(this, priv);
++	nand_set_flash_node(this, pdev->dev.of_node);
+ 
+ 	priv->gpiod_rdy = devm_gpiod_get_optional(&pdev->dev, "rdy", GPIOD_IN);
+ 	if (IS_ERR(priv->gpiod_rdy)) {
+@@ -315,8 +291,7 @@ static int ams_delta_init(struct platform_device *pdev)
+ 		return err;
+ 
+ 	/* Register the partitions */
+-	err = mtd_device_register(mtd, partition_info,
+-				  ARRAY_SIZE(partition_info));
++	err = mtd_device_parse_register(mtd, NULL, NULL, NULL, 0);
+ 	if (err)
+ 		goto err_nand_cleanup;
+ 
+-- 
+2.21.0
 
