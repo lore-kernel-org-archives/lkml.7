@@ -7,46 +7,58 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A15C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6B7C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576372077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACECF21909
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126867;
-	bh=QvL/+kY3FD1YlgDWcCQblmhCAtfPmRNhjWk+SxrwWfg=;
+	s=default; t=1556126870;
+	bh=YE1EgZeukspEzv6MCxasg31Wtb1pIL9dwAGoNgFUUdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sJVexdVg4UqevO2miDbEPuQvXQufQrlXdSMQcgzHALI2d5i9THpFmwKUr1A9vHJ3G
-	 LXkOU6rKB45nLuy0zr+mhql5KOm/kKw/OZZ/6lyBNQruE81H5d3OREv4T9G7SEXBBV
-	 cXv5/tvsC7c/St45dCRWCCS0dsCo9Ctl1k9cA2Y0=
+	b=xupPEXcgnCSB0tPCWrNN1ERDhtTQrRbXN09LWn3AemjVxmdb9WRJyPGM94GE86amI
+	 W0EfJzjV0SM9ivoZphH9CrrbxhWffxaFM37A3ntuZAAqeszbxDgc8IETPrnaSTB4qo
+	 WWilrEo6va9CDzxyLQxAGxZJSZOQoLjnl67X9nCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390532AbfDXR1p (ORCPT
+        id S2390542AbfDXR1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:27:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53774 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:27:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390503AbfDXR1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:27:42 -0400
+        id S2390530AbfDXR1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:27:45 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABDA221905;
-        Wed, 24 Apr 2019 17:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37C8321905;
+        Wed, 24 Apr 2019 17:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126862;
-        bh=QvL/+kY3FD1YlgDWcCQblmhCAtfPmRNhjWk+SxrwWfg=;
+        s=default; t=1556126864;
+        bh=YE1EgZeukspEzv6MCxasg31Wtb1pIL9dwAGoNgFUUdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFHDwR316Jsc1r1FB2ip2Ym4UAY8Xh82Ap2UpusM+romVq15WGMYxGlSXhmER+YaX
-         2pNDKTFG7IAeiOybqOQyFu+kw9QtTsEj6qWfOZtthkgZX3ZHmqISVLc0xOVgNwZvJM
-         jYEIpMYb9pxw2IiIf2XGmTQmIpPwXZ+D0NqJsnYo=
+        b=GtNPlD0GqkSWmfYFcaK7tiwMBUmy229zaM9nb3J3Ke2lShIGqnh3CdqiCz0Iytk65
+         ZhGcNZ+bLhDa9juoVQ+evew7m5sPjwEKWLv1vIqbbs7w1BztlKAYNONxOK/0VN1p67
+         bw9mObzYyfcgRLqJoRSg191aTmJmR/au3SqPZ0MA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 43/70] mac80211: do not call driver wake_tx_queue op during reconfig
-Date:   Wed, 24 Apr 2019 19:10:03 +0200
-Message-Id: <20190424170913.445982208@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Pu Wen <puwen@hygon.cn>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 44/70] perf/x86/amd: Add event map for AMD Family 17h
+Date:   Wed, 24 Apr 2019 19:10:04 +0200
+Message-Id: <20190424170913.636841483@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -59,43 +71,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit 4856bfd230985e43e84c26473c91028ff0a533bd upstream.
+commit 3fe3331bb285700ab2253dbb07f8e478fcea2f1b upstream.
 
-There are several scenarios in which mac80211 can call drv_wake_tx_queue
-after ieee80211_restart_hw has been called and has not yet completed.
-Driver private structs are considered uninitialized until mac80211 has
-uploaded the vifs, stations and keys again, so using private tx queue
-data during that time is not safe.
+Family 17h differs from prior families by:
 
-The driver can also not rely on drv_reconfig_complete to figure out when
-it is safe to accept drv_wake_tx_queue calls again, because it is only
-called after all tx queues are woken again.
+ - Does not support an L2 cache miss event
+ - It has re-enumerated PMC counters for:
+   - L2 cache references
+   - front & back end stalled cycles
 
-To fix this, bail out early in drv_wake_tx_queue if local->in_reconfig
-is set.
+So we add a new amd_f17h_perfmon_event_map[] so that the generic
+perf event names will resolve to the correct h/w events on
+family 17h and above processors.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reference sections 2.1.13.3.3 (stalls) and 2.1.13.3.6 (L2):
+
+  https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Cc: <stable@vger.kernel.org> # v4.9+
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Liška <mliska@suse.cz>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Fixes: e40ed1542dd7 ("perf/x86: Add perf support for AMD family-17h processors")
+[ Improved the formatting a bit. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/driver-ops.h |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/events/amd/core.c |   35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
 
---- a/net/mac80211/driver-ops.h
-+++ b/net/mac80211/driver-ops.h
-@@ -1164,6 +1164,9 @@ static inline void drv_wake_tx_queue(str
- {
- 	struct ieee80211_sub_if_data *sdata = vif_to_sdata(txq->txq.vif);
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -117,22 +117,39 @@ static __initconst const u64 amd_hw_cach
+ };
  
-+	if (local->in_reconfig)
-+		return;
+ /*
+- * AMD Performance Monitor K7 and later.
++ * AMD Performance Monitor K7 and later, up to and including Family 16h:
+  */
+ static const u64 amd_perfmon_event_map[PERF_COUNT_HW_MAX] =
+ {
+-  [PERF_COUNT_HW_CPU_CYCLES]			= 0x0076,
+-  [PERF_COUNT_HW_INSTRUCTIONS]			= 0x00c0,
+-  [PERF_COUNT_HW_CACHE_REFERENCES]		= 0x077d,
+-  [PERF_COUNT_HW_CACHE_MISSES]			= 0x077e,
+-  [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]		= 0x00c2,
+-  [PERF_COUNT_HW_BRANCH_MISSES]			= 0x00c3,
+-  [PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x00d0, /* "Decoder empty" event */
+-  [PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x00d1, /* "Dispatch stalls" event */
++	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
++	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
++	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0x077d,
++	[PERF_COUNT_HW_CACHE_MISSES]		= 0x077e,
++	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
++	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
++	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x00d0, /* "Decoder empty" event */
++	[PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x00d1, /* "Dispatch stalls" event */
++};
 +
- 	if (!check_sdata_in_driver(sdata))
- 		return;
++/*
++ * AMD Performance Monitor Family 17h and later:
++ */
++static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
++{
++	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
++	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
++	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
++	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
++	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
++	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
++	[PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x0187,
+ };
+ 
+ static u64 amd_pmu_event_map(int hw_event)
+ {
++	if (boot_cpu_data.x86 >= 0x17)
++		return amd_f17h_perfmon_event_map[hw_event];
++
+ 	return amd_perfmon_event_map[hw_event];
+ }
  
 
 
