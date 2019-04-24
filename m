@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC7DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6773DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 134092175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDF12148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128203;
-	bh=UNLLgMKNQAzTuNclvEHKie58NfvodMim7cloLLNN/OY=;
+	s=default; t=1556128212;
+	bh=cLZ7lztzulA87sf+3wEBoKC8pACp6BZjerJWJI7YXaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mPdpcBsqDPzgVOtivzei9G0eiMLXRYHXtDwTlyfHvWKWUZ2YHH9OstpM08PKEZu7d
-	 Q73jmWSWsAvNUKyWjj+7Slp85ordCCIJyrxpZtDcrEE6aENGRIkrfmrTerrVA95Xh2
-	 M8D10h1zLjwDxJu0S7ziESl0k2JtIk4My1mVkvMc=
+	b=sol58JPsVuh6i85c6p7dC4oRXBNDJyFQ6sYU25HTmyy6rJePUL3NhvbDHU9D7dws/
+	 7NJsOhvbPF+R2ls2IJhJEPT8YafVrv9+Wnu0WkHyK42CjGPY9zbb78yTI+Qwi0jLxU
+	 cv5MdPQGdll1LJk55cinlMG3CgsXNfQV/R+O5LQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391267AbfDXRuB (ORCPT
+        id S2390079AbfDXR3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:50:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56272 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:29:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390549AbfDXRaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:30:00 -0400
+        id S2390178AbfDXR3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:29:39 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06F2820811;
-        Wed, 24 Apr 2019 17:29:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AB9921904;
+        Wed, 24 Apr 2019 17:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126999;
-        bh=UNLLgMKNQAzTuNclvEHKie58NfvodMim7cloLLNN/OY=;
+        s=default; t=1556126978;
+        bh=cLZ7lztzulA87sf+3wEBoKC8pACp6BZjerJWJI7YXaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3u7GrbWh3jHJh/pHDgha0cPs76WGNcjIGoLinDb7PMqFoZE0x9GFD9LZ6iy5Z16/
-         1hXOqC+3ZYYT6sYZB/6nn2G6Ekb4zmFCisv9NVJ+68H0E5ilyzRQl+cc3UOx8wSv+G
-         kZmLbbT9TSFhpSZXtrCBgsE40xoyUgZjlxiL4pvU=
+        b=BBDk+w7V9EK+r8I9mAerFwcqpwQkDI+kAcgm3LVslYECOCm9U+9fy9JTG0efYX5X4
+         SrV9YB4w/R5ngu4EiAcBuQfl3Jg4iYqo1HMQHc/uN/VdkkacPk1ET1aebPcEx3st5m
+         ni+OqDrlOjS04VJrki1sro4ENl87i/ojjE0bS4pA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pieter Jansen van Vuuren 
-        <pieter.jansenvanvuuren@netronome.com>,
-        Louis Peens <louis.peens@netronome.com>
-Subject: [PATCH 4.19 23/96] nfp: flower: remove vlan CFI bit from push vlan action
-Date:   Wed, 24 Apr 2019 19:09:28 +0200
-Message-Id: <20190424170921.419526417@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.19 16/96] net/mlx5: FPGA, tls, hold rcu read lock a bit longer
+Date:   Wed, 24 Apr 2019 19:09:21 +0200
+Message-Id: <20190424170920.856647439@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -61,43 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pieter Jansen van Vuuren <pieter.jansenvanvuuren@netronome.com>
+From: Saeed Mahameed <saeedm@mellanox.com>
 
-[ Upstream commit 42cd5484a22f1a1b947e21e2af65fa7dab09d017 ]
+[ Upstream commit 31634bf5dcc418b5b2cacd954394c0c4620db6a2 ]
 
-We no longer set CFI when pushing vlan tags, therefore we remove
-the CFI bit from push vlan.
+To avoid use-after-free, hold the rcu read lock until we are done copying
+flow data into the command buffer.
 
-Fixes: 1a1e586f54bf ("nfp: add basic action capabilities to flower offloads")
-Signed-off-by: Pieter Jansen van Vuuren <pieter.jansenvanvuuren@netronome.com>
-Signed-off-by: Louis Peens <louis.peens@netronome.com>
+Fixes: ab412e1dd7db ("net/mlx5: Accel, add TLS rx offload routines")
+Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/netronome/nfp/flower/action.c |    3 +--
- drivers/net/ethernet/netronome/nfp/flower/cmsg.h   |    1 -
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/drivers/net/ethernet/netronome/nfp/flower/action.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/action.c
-@@ -80,8 +80,7 @@ nfp_fl_push_vlan(struct nfp_fl_push_vlan
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c
+@@ -217,22 +217,22 @@ int mlx5_fpga_tls_resync_rx(struct mlx5_
+ 	void *cmd;
+ 	int ret;
  
- 	tmp_push_vlan_tci =
- 		FIELD_PREP(NFP_FL_PUSH_VLAN_PRIO, tcf_vlan_push_prio(action)) |
--		FIELD_PREP(NFP_FL_PUSH_VLAN_VID, tcf_vlan_push_vid(action)) |
--		NFP_FL_PUSH_VLAN_CFI;
-+		FIELD_PREP(NFP_FL_PUSH_VLAN_VID, tcf_vlan_push_vid(action));
- 	push_vlan->vlan_tci = cpu_to_be16(tmp_push_vlan_tci);
- }
+-	rcu_read_lock();
+-	flow = idr_find(&mdev->fpga->tls->rx_idr, ntohl(handle));
+-	rcu_read_unlock();
+-
+-	if (!flow) {
+-		WARN_ONCE(1, "Received NULL pointer for handle\n");
+-		return -EINVAL;
+-	}
+-
+ 	buf = kzalloc(size, GFP_ATOMIC);
+ 	if (!buf)
+ 		return -ENOMEM;
  
---- a/drivers/net/ethernet/netronome/nfp/flower/cmsg.h
-+++ b/drivers/net/ethernet/netronome/nfp/flower/cmsg.h
-@@ -109,7 +109,6 @@
- #define NFP_FL_OUT_FLAGS_TYPE_IDX	GENMASK(2, 0)
+ 	cmd = (buf + 1);
  
- #define NFP_FL_PUSH_VLAN_PRIO		GENMASK(15, 13)
--#define NFP_FL_PUSH_VLAN_CFI		BIT(12)
- #define NFP_FL_PUSH_VLAN_VID		GENMASK(11, 0)
++	rcu_read_lock();
++	flow = idr_find(&mdev->fpga->tls->rx_idr, ntohl(handle));
++	if (unlikely(!flow)) {
++		rcu_read_unlock();
++		WARN_ONCE(1, "Received NULL pointer for handle\n");
++		kfree(buf);
++		return -EINVAL;
++	}
+ 	mlx5_fpga_tls_flow_to_cmd(flow, cmd);
++	rcu_read_unlock();
  
- /* LAG ports */
+ 	MLX5_SET(tls_cmd, cmd, swid, ntohl(handle));
+ 	MLX5_SET64(tls_cmd, cmd, tls_rcd_sn, be64_to_cpu(rcd_sn));
 
 
