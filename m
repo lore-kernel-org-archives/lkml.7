@@ -2,168 +2,104 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6113EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C036C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5AA20685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D871320835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733276AbfDXSTL (ORCPT
+        id S1733310AbfDXSTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:19:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51408 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731658AbfDXSTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:19:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 650A9AEA1;
-        Wed, 24 Apr 2019 18:19:08 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 20:19:07 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
+        Wed, 24 Apr 2019 14:19:55 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:55146 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730476AbfDXSTy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:19:54 -0400
+Received: from p5de0b374.dip0.t-ipconnect.de ([93.224.179.116] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hJMUT-0003TF-8Q; Wed, 24 Apr 2019 20:19:29 +0200
+Date:   Wed, 24 Apr 2019 20:19:22 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Will Deacon <will.deacon@arm.com>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Jiri Kosina <jikos@kernel.org>,
-        Joao Moreira <jmoreira@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Matz <matz@suse.de>, Nicolai Stange <nstange@suse.de>,
-        Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v3 0/9] klp-convert livepatch build tooling
-In-Reply-To: <20190417201316.GA690@redhat.com>
-Message-ID: <alpine.LSU.2.21.1904242013310.30239@pobox.suse.cz>
-References: <20190410155058.9437-1-joe.lawrence@redhat.com> <20190417201316.GA690@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Waiman Long <longman@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Jon Masters <jcm@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Price <steven.price@arm.com>,
+        Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH v2 5/5] arm64/speculation: Support 'mitigations=' cmdline
+ option
+In-Reply-To: <20190424141631.GH14829@fuggles.cambridge.arm.com>
+Message-ID: <alpine.DEB.2.21.1904242019001.1762@nanos.tec.linutronix.de>
+References: <cover.1555085500.git.jpoimboe@redhat.com> <24039e1370ed57e8075730c0b88c505afd9e0ab7.1555085500.git.jpoimboe@redhat.com> <alpine.DEB.2.21.1904162124020.1780@nanos.tec.linutronix.de> <20190424141631.GH14829@fuggles.cambridge.arm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
+On Wed, 24 Apr 2019, Will Deacon wrote:
 
-> Result: a small tweak to sympos_sanity_check() to relax its symbol
-> uniqueness verification:  allow for duplicate <object, name, position>
-> instances.  Now it will only complain when a supplied symbol references
-> the same <object, name> but a different <position>.
+> Hi Thomas,
 > 
-> diff --git a/scripts/livepatch/klp-convert.c b/scripts/livepatch/klp-convert.c
-> index 82c27d219372..713835dfc9ec 100644
-> --- a/scripts/livepatch/klp-convert.c
-> +++ b/scripts/livepatch/klp-convert.c
-> @@ -194,7 +194,10 @@ static void clear_sympos_annontations(struct elf *klp_elf)
->  	}
->  }
+> On Tue, Apr 16, 2019 at 09:26:13PM +0200, Thomas Gleixner wrote:
+> > On Fri, 12 Apr 2019, Josh Poimboeuf wrote:
+> > 
+> > > Configure arm64 runtime CPU speculation bug mitigations in accordance
+> > > with the 'mitigations=' cmdline option.  This affects Meltdown, Spectre
+> > > v2, and Speculative Store Bypass.
+> > > 
+> > > The default behavior is unchanged.
+> > > 
+> > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > ---
+> > > NOTE: This is based on top of Jeremy Linton's patches:
+> > >       https://lkml.kernel.org/r/20190410231237.52506-1-jeremy.linton@arm.com
+> > 
+> > So I keep that out and we have to revisit that once the ARM64 stuff hits a
+> > tree, right? I can have a branch with just the 4 first patches applied
+> > which ARM64 folks can pull in when they apply Jeremy's patches before te
+> > merge window.
 > 
-> -/* Checks if two or more elements in usr_symbols have the same name */
-> +/*
-> + * Checks if two or more elements in usr_symbols have the same
-> + * object and name, but different symbol position
-> + */
->  static bool sympos_sanity_check(void)
->  {
->  	bool sane = true;
-> @@ -203,7 +206,9 @@ static bool sympos_sanity_check(void)
->  	list_for_each_entry(sp, &usr_symbols, list) {
->  		aux = list_next_entry(sp, list);
->  		list_for_each_entry_from(aux, &usr_symbols, list) {
-> -			if (strcmp(sp->symbol_name, aux->symbol_name) == 0) {
-> +			if (sp->pos != aux->pos &&
-> +			    strcmp(sp->object_name, aux->object_name) == 0 &&
-> +			    strcmp(sp->symbol_name, aux->symbol_name) == 0)
->  				WARN("Conflicting KLP_SYMPOS definition: %s.%s,%d vs. %s.%s,%d.",
->  				sp->object_name, sp->symbol_name, sp->pos,
->  				aux->object_name, aux->symbol_name, aux->pos);
+> I'm assuming that this refers to the core/speculation branch in tip:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=core/speculation
+> 
+> but please can you confirm that I'm good to pull that into arm64?
 
-Looks good and I'd definitely include it in v4.
+Yes. It's all yours :)
 
-> Unique sympos
-> -------------
-> 
-> But even with the above workaround, specifying unique symbol positions
-> will (and should) result in a klp-convert complaint.
-> 
-> When modifying the test module with unique symbol position annotation
-> values (1 and 2 respectively):
-> 
->   test_klp_convert_multi_objs_a.c:
-> 
->     extern void *state_show;
->     ...
->     KLP_MODULE_RELOC(vmlinux) vmlinux_relocs_b[] = {
->             KLP_SYMPOS(state_show, 1)
->     };
-> 
->   test_klp_convert_multi_objs_b.c:
-> 
->     extern void *state_show;
->     ...
->     KLP_MODULE_RELOC(vmlinux) vmlinux_relocs_b[] = {
->             KLP_SYMPOS(state_show, 2)
->     };
-> 
-> 
-> Each object file's symbol table contains a "state_show" instance:
-> 
->   % eu-readelf --symbols lib/livepatch/test_klp_convert_multi_objs_a.o | grep '\<state_show\>'
->      30: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
-> 
->   % eu-readelf --symbols lib/livepatch/test_klp_convert_multi_objs_b.o | grep '\<state_show\>'
->      20: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
-> 
-> and the intermediate test_klp_convert_multi_objs.klp.o file contains a
-> combined .klp.module_relocs.vmlinux relocation section with two
-> KLP_SYMPOS structures, each with a unique <sympos> value:
-> 
->   % objcopy -O binary --only-section=.klp.module_relocs.vmlinux \
->       lib/livepatch/test_klp_convert_multi_objs.klp.o >(hexdump)
-> 
->   0000000 0000 0000 0000 0000 0001 0000 0000 0000
->   0000010 0000 0000 0002 0000
-> 
-> but the symbol tables were merged, sorted and non-unique symbols
-> removed, leaving a *single* unresolved "state_show" instance:
-> 
->   % eu-readelf --symbols lib/livepatch/test_klp_convert_multi_objs.klp.o | grep '\<state_show\>'
->      53: 0000000000000000      0 NOTYPE  GLOBAL DEFAULT    UNDEF state_show
-> 
-> which means that even though we have separate relocations for each
-> "state_show" instance:
-> 
->   Relocation section [ 6] '.rela.text.unlikely' for section [ 5] '.text.unlikely' at offset 0x44510 contains 11 entries:
->     Offset              Type            Value               Addend Name
->     0x0000000000000003  X86_64_32S      000000000000000000      +0 state_show
->     ...
->     0x0000000000000034  X86_64_32S      000000000000000000      +0 state_show
->     ...
-> 
-> they share the same rela->sym and there is no way to distinguish which
-> one correlates to which KLP_SYMPOS structure.
-> 
-> 
-> Future Work
-> -----------
->
-> I don't see an easy way to support multiple homonym <object, name>
-> symbols with unique <position> values in the current livepatch module
-> Elf format.  The only solutions that come to mind right now include
-> renaming homonym symbols somehow to retain the relocation->symbol
-> relationship when separate object files are combined.  Perhaps an
-> intermediate linker step could make annotated symbols unique in some way
-> to achieve this.  /thinking out loud
+Thanks,
 
-I'd set this aside for now and we can return to it later. I think it could 
-be quite rare in practice.
-
-I was thinking about renaming the symbol too. We can extend the symbol 
-naming convention we have now and deal with it in klp_resolve_symbols(), 
-but maybe Josh will come up with something clever and cleaner.
- 
-Miroslav
+	tglx
