@@ -2,73 +2,68 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4C8C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F3CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 444112084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D409D2089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556118422;
+	bh=NYCPHVsbfHe7qGYtQ78VfRIo2zvEfLEToElSUf+m9/8=;
+	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
+	b=Mj8n2FKcOs5CMg37G7lX9o5GvqYvO5ul6w3iErLXn2CMcmU/Yi32tjfdPQQHKajYu
+	 7NTRB55Onx/S8GraivzS2U/K7m8bFnA6O0bYZ+nr177qYTOixyH3K24KAYK6/4BhAR
+	 Vo5+43PwaB8t6gO1rg9nEsaGzOghMxXwY6FqMazA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731315AbfDXPG4 (ORCPT
+        id S1732253AbfDXPHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:06:56 -0400
-Received: from verein.lst.de ([213.95.11.211]:54541 "EHLO newverein.lst.de"
+        Wed, 24 Apr 2019 11:07:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbfDXPG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:06:56 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id EB16368AA6; Wed, 24 Apr 2019 17:06:38 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 17:06:38 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     hch@lst.de, robin.murphy@arm.com, vdumpa@nvidia.com,
-        linux@armlinux.org.uk, catalin.marinas@arm.com,
-        will.deacon@arm.com, joro@8bytes.org, m.szyprowski@samsung.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, tony@atomide.com
-Subject: Re: [PATCH v2 RFC/RFT 1/5] ARM: dma-mapping: Add fallback normal
- page allocations
-Message-ID: <20190424150638.GA22191@lst.de>
-References: <20190326230131.16275-1-nicoleotsuka@gmail.com> <20190326230131.16275-2-nicoleotsuka@gmail.com>
+        id S1727444AbfDXPHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 11:07:00 -0400
+Received: from [192.168.0.101] (unknown [58.212.133.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 522962084F;
+        Wed, 24 Apr 2019 15:06:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556118420;
+        bh=NYCPHVsbfHe7qGYtQ78VfRIo2zvEfLEToElSUf+m9/8=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=P5ZubeEJR55oHtSpYWq/McTAsn21hwvVprFz99xYsIa9nf7E6KSjQp1I+hDxHMHRc
+         SQTlUiMSCj5P6fCERO5tEei/ZdRmAJoLnxjpTTmsDoC1kIxNKZ7IIZiIgdlGa0JQhf
+         2NIBnDqyApLx1Ccl86WbzlH1+aFWTRL4xcSqGUUc=
+Subject: Re: [f2fs-dev] [PATCH] f2fs-tools:fix memory leak in write dquot
+To:     Xiaojun Wang <wangxiaojun11@huawei.com>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+References: <1556088462-21693-1-git-send-email-wangxiaojun11@huawei.com>
+From:   Chao Yu <chao@kernel.org>
+Message-ID: <7a25bd27-345d-57e3-3252-7c9e2f218d8f@kernel.org>
+Date:   Wed, 24 Apr 2019 23:06:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190326230131.16275-2-nicoleotsuka@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1556088462-21693-1-git-send-email-wangxiaojun11@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 26, 2019 at 04:01:27PM -0700, Nicolin Chen wrote:
->  	page = dma_alloc_from_contiguous(dev, count, order, gfp & __GFP_NOWARN);
-> +	if (!page)
-> +		page = alloc_pages(gfp, order);
+On 2019-4-24 14:47, Xiaojun Wang wrote:
+> this patch free ddquot in qtree_write_dquot to avoid memory leak
+> 
+> Signed-off-by: Xiaojun Wang <wangxiaojun11@huawei.com>
 
-We have this fallback in most callers already.  And with me adding
-it to the dma-iommu code in one series, and you to arm here I think
-we really need to take a step back and think of a better way
-to handle this, and the general mess that dma_alloc_from_contiguous.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-So what about:
+Thanks,
 
- (1) change the dma_alloc_from_contiguous prototype to be:
-
-struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp);
-
-     that is: calculate order and count internally, pass the full gfp_t
-     and mask it internally, and drop the pointless from in the name.
-     I'd also use the oppurtunity to forbid a NULL dev argument and
-     opencode those uses.
- 
- (2) handle the alloc_pages fallback internally.  Note that we should
-     use alloc_pages_node as we do in dma-direct.
-
-> +			if (!dma_release_from_contiguous(dev, page, count))
-> +				__free_pages(page, get_order(size));
-
-Same for dma_release_from_contiguous - drop the _from, pass the
-actual size, and handle the free_pages fallback.
