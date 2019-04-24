@@ -2,71 +2,64 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9533FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B40C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62C7F218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556079306;
-	bh=fYiWrylyOX8P30F+1TXuhnjbz5Uc/ZNDwplol9a9iz0=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=AGWp2qaFcoTdcI8aUq35Juy9S2MBzJBNzeqThDEXIqb3efuskG/lQKtLoNGz99mFX
-	 Z/cV2EGkBA3NnELc9oJSE62+YHEi8pmQcDY1QvW+AWbl3NOlvdMDuCAsi3BRIwS9+2
-	 3l6NPCKSqPD/tdMJbYUXUSpLxJMNdE2mM8qFUZRQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8CC1020878
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfDXEPF (ORCPT
+        id S1728909AbfDXEQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 00:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfDXEPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 00:15:05 -0400
-Subject: Re: [git pull] drm fixes (regression special)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556079304;
-        bh=fYiWrylyOX8P30F+1TXuhnjbz5Uc/ZNDwplol9a9iz0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=V1LpjY0/zMEhPCg/x73y+Z+sRCr4ATyxfMqXDX6R7esipAaeasl21FojemxJkiOHN
-         jzk2xQJYziJYQs/eT3w9ejPHU9pR4adZfMi4b3DLvPkskQJHiBOaWyxQULMXrQpAOe
-         U9jf55sVRRDifE7/102IhfaWZLKSHM+TRZsAoqQM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPM=9tygHnQZXS+etRBwYM_sjuQHACtNEOnXyf+KM5CvryVQ7w@mail.gmail.com>
-References: <CAPM=9tygHnQZXS+etRBwYM_sjuQHACtNEOnXyf+KM5CvryVQ7w@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPM=9tygHnQZXS+etRBwYM_sjuQHACtNEOnXyf+KM5CvryVQ7w@mail.gmail.com>
-X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
- tags/drm-fixes-2019-04-24
-X-PR-Tracked-Commit-Id: a0cecc23cfcbf2626497a8c8770856dd56b67917
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ba25b50d582ff6c6021eee80824134aeb9ab8785
-Message-Id: <155607930440.11083.505771189817551998.pr-tracker-bot@kernel.org>
-Date:   Wed, 24 Apr 2019 04:15:04 +0000
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>
+        Wed, 24 Apr 2019 00:16:22 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49800 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfDXEQV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 00:16:21 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A6C801423FDC2;
+        Tue, 23 Apr 2019 21:16:20 -0700 (PDT)
+Date:   Tue, 23 Apr 2019 21:16:18 -0700 (PDT)
+Message-Id: <20190423.211618.1009243431874480506.davem@davemloft.net>
+To:     taoren@fb.com
+Cc:     maximmi@mellanox.com, bgolaszewski@baylibre.com,
+        sam@mendozajonas.com, jakub.kicinski@netronome.com, joel@jms.id.au,
+        andrew@aj.id.au, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Subject: Re: [PATCH net v4] net/ncsi: handle overflow when incrementing mac
+ address
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190424014310.24253-1-taoren@fb.com>
+References: <20190424014310.24253-1-taoren@fb.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 23 Apr 2019 21:16:21 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 24 Apr 2019 11:21:44 +1000:
+From: Tao Ren <taoren@fb.com>
+Date: Wed, 24 Apr 2019 01:43:32 +0000
 
-> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2019-04-24
+> Previously BMC's MAC address is calculated by simply adding 1 to the
+> last byte of network controller's MAC address, and it produces incorrect
+> result when network controller's MAC address ends with 0xFF.
+> 
+> The problem can be fixed by calling eth_addr_inc() function to increment
+> MAC address; besides, the MAC address is also validated before assigning
+> to BMC.
+> 
+> Fixes: cb10c7c0dfd9 ("net/ncsi: Add NCSI Broadcom OEM command")
+> Signed-off-by: Tao Ren <taoren@fb.com>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ba25b50d582ff6c6021eee80824134aeb9ab8785
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Applied and queued up for -stable, thanks everyone.
