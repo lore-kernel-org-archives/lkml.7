@@ -2,170 +2,106 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0E3C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E507AC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65353218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117356;
-	bh=5HDGAh0QbI2VY/kbAiK5FAqvJFcRtvLJDVA3Il/vCuM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=puC/bFYIHVPgbUr0PdIv4SBPR1U/sfnRcYdcWeLbPCEDkFHadyDVdwySJGibDDCiB
-	 R6Wb4XWVSsvep6T3WGtA2rm4Qno9z2Abr5cMuWs0mhlM51ctW6j6hZMEW14IEq4a+j
-	 MCAZnsLjMltLE6i5gHLsXwmDvHKX17FVtx3n/Yus=
+	by mail.kernel.org (Postfix) with ESMTP id B43F8218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbfDXOsc (ORCPT
+        id S1731636AbfDXOt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:48:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732470AbfDXOs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:48:28 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2082D218FE;
-        Wed, 24 Apr 2019 14:48:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117307;
-        bh=5HDGAh0QbI2VY/kbAiK5FAqvJFcRtvLJDVA3Il/vCuM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E+a9eU1wrQsk6nObqZ/8xl7udl4eQ87xlUgJCS1FPmODkgXUSwG97za5zI4KuIsFO
-         ZAfm4xKML72RP4P7wz7aO5nCMN10isHOBDOUtXF/SMM13R9sKtUcq+SNR6hiPV79vE
-         ioW8LARRKUc43W1i37zX7kfggsng+gBr4vXbUv60=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Avi Kivity <avi@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
+        Wed, 24 Apr 2019 10:49:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52016 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730965AbfDXOt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:49:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A0C1FAC61;
+        Wed, 24 Apr 2019 14:49:25 +0000 (UTC)
+Date:   Wed, 24 Apr 2019 16:49:24 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.14 29/35] kmemleak: powerpc: skip scanning holes in the .bss section
-Date:   Wed, 24 Apr 2019 10:47:03 -0400
-Message-Id: <20190424144709.30215-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424144709.30215-1-sashal@kernel.org>
-References: <20190424144709.30215-1-sashal@kernel.org>
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC][PATCH 1/2] printk: lock console_sem before we unregister
+ boot consoles
+Message-ID: <20190424144924.lw5sgl7qa2yrpxsj@pathway.suse.cz>
+References: <20190423062511.1118-1-sergey.senozhatsky@gmail.com>
+ <20190423062511.1118-2-sergey.senozhatsky@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423062511.1118-2-sergey.senozhatsky@gmail.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+On Tue 2019-04-23 15:25:10, Sergey Senozhatsky wrote:
+> The following pattern is not completely safe:
+> 
+>      for_each_console(bcon)
+>          if (bcon->flags & CON_BOOT)
+>              unregister_console(bcon);
+> 
+> Because, in theory, console drivers list and console drivers
+> can be modified concurrently from another CPU. Take console_sem
+> lock, which protects console drivers list and console drivers,
+> before we start iterating console drivers list.
+> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 17102fd4c136..b0e361ca1bea 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2777,62 +2819,34 @@ void register_console(struct console *newcon)
+>  	pr_info("%sconsole [%s%d] enabled\n",
+>  		(newcon->flags & CON_BOOT) ? "boot" : "" ,
+>  		newcon->name, newcon->index);
+> -	if (bcon &&
+> -	    ((newcon->flags & (CON_CONSDEV | CON_BOOT)) == CON_CONSDEV) &&
+> -	    !keep_bootcon) {
+> -		/* We need to iterate through all boot consoles, to make
+> +
+> +	if (keep_bootcon)
+> +		return;
+> +
+> +	if (bcon && (newcon->flags & (CON_CONSDEV|CON_BOOT)) == CON_CONSDEV) {
+> +		console_lock();
+> +		/*
+> +		 * We need to iterate through all boot consoles, to make
+>  		 * sure we print everything out, before we unregister them.
+>  		 */
 
-[ Upstream commit 298a32b132087550d3fa80641ca58323c5dfd4d9 ]
+I wondered if moving the console locking could break the above
+statement.
 
-Commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
-kvm_tmp[] into the .bss section and then free the rest of unused spaces
-back to the page allocator.
+It seems that the comment has been invalid since the commit
+8259cf4342029aad37660e ("printk: Ensure that "console
+enabled" messages are printed on the console").
 
-kernel_init
-  kvm_guest_init
-    kvm_free_tmp
-      free_reserved_area
-        free_unref_page
-          free_unref_page_prepare
+Could we remove it in this patch? It touches it indirectly anyway.
 
-With DEBUG_PAGEALLOC=y, it will unmap those pages from kernel.  As the
-result, kmemleak scan will trigger a panic when it scans the .bss
-section with unmapped pages.
+Otherwise, the patch looks fine to me:
 
-This patch creates dedicated kmemleak objects for the .data, .bss and
-potentially .data..ro_after_init sections to allow partial freeing via
-the kmemleak_free_part() in the powerpc kvm_free_tmp() function.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-Link: http://lkml.kernel.org/r/20190321171917.62049-1-catalin.marinas@arm.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Reported-by: Qian Cai <cai@lca.pw>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Tested-by: Qian Cai <cai@lca.pw>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Avi Kivity <avi@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krcmar <rkrcmar@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/kernel/kvm.c |  7 +++++++
- mm/kmemleak.c             | 16 +++++++++++-----
- 2 files changed, 18 insertions(+), 5 deletions(-)
+>  		for_each_console(bcon)
+>  			if (bcon->flags & CON_BOOT)
+> -				unregister_console(bcon);
+> +				__unregister_console(bcon);
+> +		console_unlock();
+> +		console_sysfs_notify();
+>  	}
+>  }
+>  EXPORT_SYMBOL(register_console);
 
-diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
-index 9ad37f827a97..7b59cc853abf 100644
---- a/arch/powerpc/kernel/kvm.c
-+++ b/arch/powerpc/kernel/kvm.c
-@@ -22,6 +22,7 @@
- #include <linux/kvm_host.h>
- #include <linux/init.h>
- #include <linux/export.h>
-+#include <linux/kmemleak.h>
- #include <linux/kvm_para.h>
- #include <linux/slab.h>
- #include <linux/of.h>
-@@ -712,6 +713,12 @@ static void kvm_use_magic_page(void)
- 
- static __init void kvm_free_tmp(void)
- {
-+	/*
-+	 * Inform kmemleak about the hole in the .bss section since the
-+	 * corresponding pages will be unmapped with DEBUG_PAGEALLOC=y.
-+	 */
-+	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
-+			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
- 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
- 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
- }
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index d9e0be2a8189..337be9aacb7a 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1492,11 +1492,6 @@ static void kmemleak_scan(void)
- 	}
- 	rcu_read_unlock();
- 
--	/* data/bss scanning */
--	scan_large_block(_sdata, _edata);
--	scan_large_block(__bss_start, __bss_stop);
--	scan_large_block(__start_ro_after_init, __end_ro_after_init);
--
- #ifdef CONFIG_SMP
- 	/* per-cpu sections scanning */
- 	for_each_possible_cpu(i)
-@@ -2027,6 +2022,17 @@ void __init kmemleak_init(void)
- 	}
- 	local_irq_restore(flags);
- 
-+	/* register the data/bss sections */
-+	create_object((unsigned long)_sdata, _edata - _sdata,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	create_object((unsigned long)__bss_start, __bss_stop - __bss_start,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	/* only register .data..ro_after_init if not within .data */
-+	if (__start_ro_after_init < _sdata || __end_ro_after_init > _edata)
-+		create_object((unsigned long)__start_ro_after_init,
-+			      __end_ro_after_init - __start_ro_after_init,
-+			      KMEMLEAK_GREY, GFP_ATOMIC);
-+
- 	/*
- 	 * This is the point where tracking allocations is safe. Automatic
- 	 * scanning is started during the late initcall. Add the early logged
--- 
-2.19.1
-
+Best Regards,
+Petr
