@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDE7C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9A4C282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87604218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554D72148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HdXahYQu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eTvgsQAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbfDXHnl (ORCPT
+        id S1729749AbfDXHod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:43:41 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36164 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfDXHnl (ORCPT
+        Wed, 24 Apr 2019 03:44:33 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43045 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfDXHoc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:43:41 -0400
-Received: by mail-oi1-f194.google.com with SMTP id l203so13513796oia.3;
-        Wed, 24 Apr 2019 00:43:40 -0700 (PDT)
+        Wed, 24 Apr 2019 03:44:32 -0400
+Received: by mail-ot1-f68.google.com with SMTP id u15so15266519otq.10;
+        Wed, 24 Apr 2019 00:44:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=InFNilclUTrqr1mnoxwGW58i1daT0nmHbP46Edl3K6s=;
-        b=HdXahYQuBdo3Tj2EM3cJDR7JWEdzuRGrtK7UWzHHxMJxXePdg+/71OSETDGqdOGhlg
-         TD6PG9GEdERYwQ6vzVwavbBeYJfys/DSs4s2Zfu2RRnMN1k+YGRI58q8agAvt/FGOfu/
-         F/jAdLd3tp3JjlAcai3OIXGXVFLHHu/6tUvNxbi8SpvWJCUxW6oLupXt03vHYa8zx5sv
-         nGYDFrWIZAGosVN1ZMMFofLKceMMUpEt6S/Y5EWFGneyNsK/V/Ir1m3cF33B17o/E5IO
-         ZefUtyITM6t8yEjpKH2/s1qwEZ4w60zv5FrOhuB1aI/uzkeGSGFkthVKxjoY0Stoqduf
-         K97A==
+        bh=qCjGxZmiCkiHUTMgOACp/Bx3F7z8GujZGFTCdjAFcSk=;
+        b=eTvgsQADT+MJKUdz1OfDyz/dMeY7rN+YfTH4Q7mCirS/UZCOQiROrioKLI6coQ2lo0
+         Cx688xgSatBKfA7lWqe6HiOkT75vkJieZEHptjeipEApAhT/whEKN1FuiZmoHeXcaTUY
+         LrpXOZ4hIJrLFr3kLi3opf8SZuaEf7MAfYHGJLJxiVWvMJlU5q/mrlsXlBfhu/3YxFOC
+         zPTeM8k3plJEdB7OUhHfks4lPC1FBF1NOoww0iXcE7oNXQXMmNqCS2wl06kQLqpLp0xL
+         HOVbKwvXpgFcXXpLGzgG1LFhI2zT1nykaj/yXXjkK2sYS+bFYmRAdMRMFaz/1hTtN1kK
+         jm9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=InFNilclUTrqr1mnoxwGW58i1daT0nmHbP46Edl3K6s=;
-        b=iSfu5uQmXfY4RqB51rFeBcO+7WzvjLL7FBfwOoKp5BXahGriTPTogZrA1y+j2Syp9O
-         5uzqswDGtPA8Buc24Bx9kxq2WaS/w9PSWt7Ow4qKYrBU0mbD8H0c50dX/DVZ07n5p9nT
-         kZwMkMkt/7cpWVcAyk922i2ELHxuu6VbqZD7H6Dt55j+xolhEOA6Kf2Mrxk2HIgVAdxr
-         4DaE3nLU8/+6eH55iuwmlu/kgAAdW9Y7Lnx1FjSeF9vD8JnyzbcqZTzZqL0X0pR/GzUa
-         4Ymn7iIUtUdBGBxlvIYxZV1I7YIiNhw6JEh3R1ocVMn8yLNtT7yX+BEJ9EQcjadBbbv3
-         RF1w==
-X-Gm-Message-State: APjAAAWWyfhXfKixqmPMMiM4BittvuLJ4extLnixMy23sIkYjlo9uGTG
-        b21jGtMEWgMGTogrAonMGNgvBVC1IRnk8PjnKU8=
-X-Google-Smtp-Source: APXvYqyVuS5W4Dr/jvd8bPO3jYmQODmbuURgbnYK80f2SFZIazj9/c5J4bTBs7quzWfzCgs8dzfYl1K+ymrRHg2/qMA=
-X-Received: by 2002:aca:bb88:: with SMTP id l130mr4325287oif.124.1556091820281;
- Wed, 24 Apr 2019 00:43:40 -0700 (PDT)
+        bh=qCjGxZmiCkiHUTMgOACp/Bx3F7z8GujZGFTCdjAFcSk=;
+        b=CZfw+1HPrRxDB+nL34VrqXBSvWvzMQV43xQnmnp/bsssbMVcmoo5aVJHO/Foif+Kp5
+         Q+I2IrV9p4lhH9mypLtL6IZyLTVGNdH6D8OThJ3lWqcyee9Z/rtb9bUBDJH7lsA7l2sz
+         jxAm6Kg+MM+/O4GCqV1A5DSAaXyRIkU0EZFtHWpVvA39gCX2x4B1t+JJ8uuO0mylRURT
+         pyIaAD/QVagjFKJyrNVC5DKelVRsPEfMDxsxpg1Gnho8UXjKTCd142A+/aoHwOaA+OwD
+         jD6wOrjeQqcO5R06PNbOMe1Vxcf38C2IkhdL2SVFwueHkXuFOQyvHUqk4anCDKUg9R8b
+         E0Cg==
+X-Gm-Message-State: APjAAAU4GJ1gwb+59HeCP34gSxmPybg66l2Tk1k65e1GOwZpgVnY1+xy
+        C5vDJPPHQnxUlxBuEdAOYu0rkoCZGV3miWaYI5s=
+X-Google-Smtp-Source: APXvYqxYORwgO8EaGKmzNTTr7R/pGRbQUBVRAGEUI9TTDcMgc6r6Az8wxniWjXgwq8+hcS8611Ws1y2BussBQyrAkVI=
+X-Received: by 2002:a9d:491a:: with SMTP id e26mr1430678otf.66.1556091871589;
+ Wed, 24 Apr 2019 00:44:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190423200344.7183-1-c.cantanheide@gmail.com>
-In-Reply-To: <20190423200344.7183-1-c.cantanheide@gmail.com>
+References: <20190423200045.6992-1-c.cantanheide@gmail.com>
+In-Reply-To: <20190423200045.6992-1-c.cantanheide@gmail.com>
 From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Wed, 24 Apr 2019 10:43:28 +0300
-Message-ID: <CA+U=DspLM3tuTosQYnPbD1UKMSb6G7qKAa=Kp2k2AjPmwd52Yw@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: adc: ad7766: Change alignment to match paranthesis
+Date:   Wed, 24 Apr 2019 10:44:19 +0300
+Message-ID: <CA+U=DsrH7NmPx0=cEToq=tw4Vk9N5NeJ6zh7GWbyN_z6C+5CYw@mail.gmail.com>
+Subject: Re: [PATCH] Wqiio: adc: ad7766: Change alignment to match paranthesis
 To:     =?UTF-8?Q?Camylla_Gon=C3=A7alves_Cantanheide?= 
         <c.cantanheide@gmail.com>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
@@ -74,7 +74,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 11:04 PM Camylla Gon=C3=A7alves Cantanheide
+On Tue, Apr 23, 2019 at 11:01 PM Camylla Gon=C3=A7alves Cantanheide
 <c.cantanheide@gmail.com> wrote:
 >
 > This commit align broken line to match upper line parenthesis,
@@ -83,11 +83,12 @@ message:
 >
 > CHECK: Alignment should match open parenthesis
 >
->In lines 130, 255, 264 and 293 it was necessary to break a line.
+> In lines 130, 255, 264 and 293 it was necessary to break a line.
 >
 
-This patch is errounous; seems it wasn't generated correctly.
-It does too many things in one commit.
+This patch seems duplicate.
+I can't tell if it's different from the other.
+Has the same problem.
 
 > Signed-off-by: Camylla Gon=C3=A7alves Cantanheide <c.cantanheide@gmail.co=
 m>
