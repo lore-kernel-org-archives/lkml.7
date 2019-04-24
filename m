@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB18C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1728CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43BE20685
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE50120835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556130222;
-	bh=3xhszeeUVH2FrOVdIWT3dp2t54QPqaQWAtm9NgOKf6g=;
+	s=default; t=1556130229;
+	bh=QDIMaILAQNUni/Q3ucBHjT/0GlHlrtqYFFv8ZVrR8zw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KRHmeRQaTYkrVVKONB1TJdzfZhkP1htKZJkzXnIWQQsEXGTXso6U4wYfx53h84xKN
-	 YQSQqzSXehduLvflCRWQk4hujXwVWGZPCq585c2KahjCAgUZ1haHS7lSET7wjBMTHy
-	 mEJqhQFo25wHRliuMZbrTqsX8vDnsfUusQZMqTNE=
+	b=jyjrPbqipa24fWUc6KXgDGUgsykLt87AVUfaGlYFO4oBXbYPTrRFldJxn43AJZ3Jm
+	 +ladoU80AkROnA+IuWwaWh/yaq8GAqHhDjhPak2VXwLiwnxXMHf4vU5FA0MsYKvYOX
+	 fK7AnrIbDpKTBbiYpK2Cqytf6OWhb6TWY8kheuB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbfDXSXk (ORCPT
+        id S2387660AbfDXSXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:23:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35824 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 14:23:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbfDXSXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:23:37 -0400
+        id S2387590AbfDXSXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:23:45 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 004662084F;
-        Wed, 24 Apr 2019 18:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A8A02183E;
+        Wed, 24 Apr 2019 18:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556130217;
-        bh=3xhszeeUVH2FrOVdIWT3dp2t54QPqaQWAtm9NgOKf6g=;
+        s=default; t=1556130225;
+        bh=QDIMaILAQNUni/Q3ucBHjT/0GlHlrtqYFFv8ZVrR8zw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RxyUOlN+T+RSyAQvWFwppwrWmYJsN0nvq5rBrlba/qM/0dr8lksZ/EdttCRp5sJ2v
-         ehfheU6HKQclRx59l4fK+CCWMgK4Tr+N8rpWyBdn5YhajvTv0xNlT/OEDLGucDtKel
-         e2gDMqe8pUlKR4had4Ii3kIwN13V6UmXw/f07JYE=
+        b=ZChwzh4r7hL502mpLIUJh/esEkNabfOToR6oVe4wT7lXxr/a6dJ9hzpeh1TzVL3Hu
+         4H+l2OO/NCZ5inoDabpl8TxeUCTaRPXMcU5zmMtD2xC7UONfOn/ZMuHqBGUHRNvA8v
+         Dk7d9Pfno4gJ3SBfXPU/PXac2tBCRHc28wYTx/tQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,12 +46,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Chen, Hu" <hu1.chen@intel.com>,
         Hans de Goede <hdegoede@redhat.com>, Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 26/70] io: accel: kxcjk1013: restore the range after resume.
-Date:   Wed, 24 Apr 2019 19:09:46 +0200
-Message-Id: <20190424170910.823733351@linuxfoundation.org>
+Subject: [PATCH 5.0 064/115] io: accel: kxcjk1013: restore the range after resume.
+Date:   Wed, 24 Apr 2019 19:10:00 +0200
+Message-Id: <20190424170928.852501516@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
-References: <20190424170906.751869122@linuxfoundation.org>
+In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
+References: <20190424170924.797924502@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -82,7 +82,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/iio/accel/kxcjk-1013.c
 +++ b/drivers/iio/accel/kxcjk-1013.c
-@@ -1340,6 +1340,8 @@ static int kxcjk1013_resume(struct devic
+@@ -1437,6 +1437,8 @@ static int kxcjk1013_resume(struct devic
  
  	mutex_lock(&data->mutex);
  	ret = kxcjk1013_set_mode(data, OPERATION);
