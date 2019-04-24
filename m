@@ -2,117 +2,95 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54953C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096CFC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EED620674
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dVrpil9C"
+	by mail.kernel.org (Postfix) with ESMTP id C8FC220652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731051AbfDXTYT (ORCPT
+        id S1731199AbfDXTZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:24:19 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58550 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfDXTYT (ORCPT
+        Wed, 24 Apr 2019 15:25:03 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:36736 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731054AbfDXTZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:24:19 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3OJOE5w066682;
-        Wed, 24 Apr 2019 14:24:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1556133854;
-        bh=5nU/mChYmQQFCu0ILhVvef64xkJ8yAnIZdsupob8ZTQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=dVrpil9Cyl8Paq9B+G+35W3RnwhXnQIGWOakjQOma+6Pi+WmRyKhc3BpX6FG5zkJd
-         GmxbbNMTyd9/o/VAT3Ew5R2MNCznvZQtMnSP4DDI0a+1dXdM1s/wfrsvBSoVSWpBMU
-         DgicLQ1ChPeikG9EkfZEyudZ0KH5+avTGKqsckMo=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3OJOEID120763
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Apr 2019 14:24:14 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 24
- Apr 2019 14:24:13 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 24 Apr 2019 14:24:13 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3OJODEG059672;
-        Wed, 24 Apr 2019 14:24:13 -0500
-Subject: Re: [PATCH v2 4/6] dt-bindings: ti-lmu: Modify dt bindings for the
- LM3697
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <robh+dt@kernel.org>
-CC:     <pavel@ucw.cz>, <lee.jones@linaro.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>
-References: <20190405142855.3969-1-dmurphy@ti.com>
- <20190405142855.3969-4-dmurphy@ti.com>
- <04e160da-a73e-d330-3df4-8f420b3612b4@gmail.com>
- <1a1482f7-a683-49d5-69a3-aa73a641288e@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <fb03c31e-2050-0975-f737-dcf401c45380@ti.com>
-Date:   Wed, 24 Apr 2019 14:24:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 24 Apr 2019 15:25:03 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 090583C00D1;
+        Wed, 24 Apr 2019 21:25:01 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id c08LAztIh0ZG; Wed, 24 Apr 2019 21:24:53 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id ECE203C0034;
+        Wed, 24 Apr 2019 21:24:52 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 24 Apr
+ 2019 21:24:52 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Christian Gromm <christian.gromm@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>
+CC:     Andrey Shvetsov <andrey.shvetsov@k2l.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>,
+        Marcin Ciupak <marcin.s.ciupak@gmail.com>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: [PATCH] staging: most: cdev: fix chrdev_region leak in mod_exit
+Date:   Wed, 24 Apr 2019 21:23:43 +0200
+Message-ID: <20190424192343.15418-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <1a1482f7-a683-49d5-69a3-aa73a641288e@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bump for Rob
+From: Suresh Udipi <sudipi@jp.adit-jv.com>
 
-On 4/12/19 2:34 PM, Jacek Anaszewski wrote:
-> And one more:
-> 
-> [5] - LED naming patch set v3
-> 
-> On 4/11/19 9:48 PM, Jacek Anaszewski wrote:
->> Hi Rob,
->>
->> I've collected references to the DT patches we're waiting
->> to be reviewed. This is just to make sure that none of them
->> will be missed - recent traffic on the linux-leds list
->> is a bit heavier.
->>
->> [0] - draft of LED multi color class - we would especially like
->>        to get a feedback on the proposed brightness-model DT design
->> [1][2] - LM3697 backlight driver rework
->> [3][4] - LM36274 backlight driver with regulator support
->>
->> On 4/5/19 4:28 PM, Dan Murphy wrote:
->>> The LM3697 is a single function LED driver. The single function LED
->>> driver needs to reside in the LED directory as a dedicated LED driver
->>> and not as a MFD device.  The device does have common brightness and ramp
->>> features and those can be accomodated by a TI LMU framework.
->>>
->>> The LM3697 dt binding needs to be moved from the ti-lmu.txt and a dedicated
->>> LED dt binding needs to be added.  The new LM3697 LED dt binding will then
->>> reside in the Documentation/devicetree/bindings/leds directory and follow the
->>> current LED and general bindings guidelines.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> [...]
->> [0] https://marc.info/?l=linux-kernel&m=155414072611538&w=2
->> [1] https://marc.info/?l=devicetree&m=155447454524411&w=2
->> [2] https://lore.kernel.org/patchwork/patch/1058762/
->> [3] https://marc.info/?l=devicetree&m=155447624324995&w=2
->> [4] https://lore.kernel.org/patchwork/patch/1058779/
->>
-> 
-> [5] - https://marc.info/?l=linux-kernel&m=155405492231039&w=2
-> 
+It looks like v4.18-rc1 commit [0] which upstreams mld-1.8.0
+commit [1] missed to fix the memory leak in mod_exit function.
+
+Do it now.
+
+[0] aba258b7310167 ("staging: most: cdev: fix chrdev_region leak")
+[1] https://github.com/microchip-ais/linux/commit/a2d8f7ae7ea381
+    ("staging: most: cdev: fix leak for chrdev_region")
+
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
+ drivers/staging/most/cdev/cdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/most/cdev/cdev.c b/drivers/staging/most/cdev/cdev.c
+index f2b347cda8b7..d5f236889021 100644
+--- a/drivers/staging/most/cdev/cdev.c
++++ b/drivers/staging/most/cdev/cdev.c
+@@ -549,7 +549,7 @@ static void __exit mod_exit(void)
+ 		destroy_cdev(c);
+ 		destroy_channel(c);
+ 	}
+-	unregister_chrdev_region(comp.devno, 1);
++	unregister_chrdev_region(comp.devno, CHRDEV_REGION_SIZE);
+ 	ida_destroy(&comp.minor_id);
+ 	class_destroy(comp.class);
+ }
+-- 
+2.21.0
+
