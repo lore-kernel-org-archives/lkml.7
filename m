@@ -2,180 +2,142 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3664FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEB4C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C53020835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF0F20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+2Kj/VR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbfDXHO0 (ORCPT
+        id S1730066AbfDXHQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:14:26 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:56692 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbfDXHO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:14:26 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 8209FB1B41D55C96FEDA;
-        Wed, 24 Apr 2019 15:14:23 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 24 Apr 2019 15:14:22 +0800
-Received: from [10.134.22.195] (10.134.22.195) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 24 Apr 2019 15:14:22 +0800
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: allow unfixed
- f2fs_checkpoint.checksum_offset
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190422093353.61014-1-yuchao0@huawei.com>
- <20190423204351.GA87257@jaegeuk-macbookpro.roam.corp.google.com>
- <20190423205619.GB87257@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <a2bf9e24-2c33-b9cd-c214-2887f7f099ba@huawei.com>
-Date:   Wed, 24 Apr 2019 15:14:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 24 Apr 2019 03:16:23 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39846 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729543AbfDXHQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 03:16:22 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l18so8789825pgj.6;
+        Wed, 24 Apr 2019 00:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cFWyauVHMRMhPdLJI2BgTJG8Dqk8sJtHkpOrVWo1TWo=;
+        b=r+2Kj/VRRjRMppbQcgkvWYHrVcQigiDcz6vJl9rV4EfqsvTQRWdJlocMu2JlYbXrQN
+         1N804w36cUOIWkihhhKh7QVLbdIdrwRHEfVUudIk7MZjLB6Cd6HO82QRpkR0HpTwfVN+
+         W++PrIdcbxYFZabv7hfwOfJsgvW4FM6KRNbqWw0LByUpma1c/9qvYL75VqNIh8zK7wyy
+         +iCOeaZmAHRjiiD4OH7DEdldLodEaVXt2ue3LDSh+intYykAij0Vm2prclo6KGDDmrpC
+         Wxbbt46JNuTcx9NldOt+nPvWoced7TcPQsL3m1ufH4tUrhHZVwtmcKOoKzGXd5PMi0m8
+         BEKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cFWyauVHMRMhPdLJI2BgTJG8Dqk8sJtHkpOrVWo1TWo=;
+        b=eKFqIgbvxvrC9WNCXpFD9ZSN9eS5IvhaOkNAnEpObgQmLbdHrADqN4r/DumWbxfC/6
+         uhF9li41M7f0zlY7cwru0H3GtHbQD7WgnRDRCHFoCvEgTy/xFnnemmJ+JkAFkvHkc3s0
+         EuAmd481vqDbrcncoM+BcMnMUuvqb1q7gZstXXJHTBN4L3dfOuD198ZJHfWu0Ldgbcjk
+         Ee/QRwP481IvZlNSIEnswJfIcV+Fr0xIvfmF00DNCLcB1DHZuH8BdEbRA8cLQyx97jKT
+         nLLB90yQxM6AZX1LeLjUgbU3GyHpzjBPZipS7EX7icEx47PJ3grdog8nQl66lGQsIFBU
+         5mTA==
+X-Gm-Message-State: APjAAAXscjAA7nSms4AY6BVX0R15C+szB6VK4hisGHz9vknlIWIyOows
+        Gchkqi/Kmyap02o60p83FV4jA9XqLb4=
+X-Google-Smtp-Source: APXvYqz7uB97zZH3de6DVQLA0w1ZtgCdo3tLgBOpKFilZaIr47oyOLt5sE7s7CAZsN8zMp9A2k7gGw==
+X-Received: by 2002:a63:750c:: with SMTP id q12mr29287336pgc.133.1556090181729;
+        Wed, 24 Apr 2019 00:16:21 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id h4sm18987701pgv.61.2019.04.24.00.16.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 00:16:20 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
+Date:   Wed, 24 Apr 2019 00:16:10 -0700
+Message-Id: <20190424071610.22688-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190423205619.GB87257@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/24 4:56, Jaegeuk Kim wrote:
-> On 04/23, Jaegeuk Kim wrote:
->> On 04/22, Chao Yu wrote:
->>> Previously, f2fs_checkpoint.checksum_offset points fixed position of
->>> f2fs_checkpoint structure:
->>>
->>> "#define CP_CHKSUM_OFFSET	4092"
->>>
->>> It is unnecessary, and it breaks the consecutiveness of nat and sit
->>> bitmap stored across checkpoint park block and payload blocks.
->>>
->>> This patch allows f2fs to handle unfixed .checksum_offset.
->>>
->>> In addition, for the case checksum value is stored in the middle of
->>> checkpoint park, calculating checksum value with superposition method
->>> like we did for inode_checksum.
->>>
->>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>> ---
->>>  fs/f2fs/checkpoint.c    | 27 +++++++++++++++++++++------
->>>  include/linux/f2fs_fs.h |  4 ++++
->>>  2 files changed, 25 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->>> index 441814607b13..a25556aef8cc 100644
->>> --- a/fs/f2fs/checkpoint.c
->>> +++ b/fs/f2fs/checkpoint.c
->>> @@ -794,13 +794,27 @@ static void write_orphan_inodes(struct f2fs_sb_info *sbi, block_t start_blk)
->>>  	}
->>>  }
->>>  
->>> +static __u32 f2fs_checkpoint_chksum(struct f2fs_sb_info *sbi,
->>> +						struct f2fs_checkpoint *ckpt)
->>> +{
->>> +	unsigned int chksum_ofs = le32_to_cpu(ckpt->checksum_offset);
->>> +	__u32 chksum;
->>> +
->>> +	chksum = f2fs_crc32(sbi, ckpt, chksum_ofs);
->>> +	if (chksum_ofs < CP_CHKSUM_OFFSET) {
->>> +		chksum_ofs += sizeof(chksum);
->>> +		chksum = f2fs_chksum(sbi, chksum, (__u8 *)ckpt + chksum_ofs,
->>> +						F2FS_BLKSIZE - chksum_ofs);
->>
->> Do we need to cover __cp_payload(sbi) * blksize - chksum_ofs?
-> 
-> Self answer - it'd be fine to get 4KB only, since payload will be covered
-> by entire checkpoint pack.
+Fix a similar endless event loop as was done in commit
+8dcf32175b4e ("i2c: prevent endless uevent loop with
+CONFIG_I2C_DEBUG_CORE"):
 
-Yup, ;)
+  The culprit is the dev_dbg printk in the i2c uevent handler. If
+  this is activated (for instance by CONFIG_I2C_DEBUG_CORE) it results
+  in an endless loop with systemd-journald.
 
-Thanks,
+  This happens if user-space scans the system log and reads the uevent
+  file to get information about a newly created device, which seems
+  fair use to me. Unfortunately reading the "uevent" file uses the
+  same function that runs for creating the uevent for a new device,
+  generating the next syslog entry
 
-> 
->>
->>> +	}
->>> +	return chksum;
->>> +}
->>> +
->>>  static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
->>>  		struct f2fs_checkpoint **cp_block, struct page **cp_page,
->>>  		unsigned long long *version)
->>>  {
->>> -	unsigned long blk_size = sbi->blocksize;
->>>  	size_t crc_offset = 0;
->>> -	__u32 crc = 0;
->>> +	__u32 crc;
->>>  
->>>  	*cp_page = f2fs_get_meta_page(sbi, cp_addr);
->>>  	if (IS_ERR(*cp_page))
->>> @@ -809,15 +823,16 @@ static int get_checkpoint_version(struct f2fs_sb_info *sbi, block_t cp_addr,
->>>  	*cp_block = (struct f2fs_checkpoint *)page_address(*cp_page);
->>>  
->>>  	crc_offset = le32_to_cpu((*cp_block)->checksum_offset);
->>> -	if (crc_offset > (blk_size - sizeof(__le32))) {
->>> +	if (crc_offset < CP_MIN_CHKSUM_OFFSET ||
->>> +			crc_offset > CP_CHKSUM_OFFSET) {
->>>  		f2fs_put_page(*cp_page, 1);
->>>  		f2fs_msg(sbi->sb, KERN_WARNING,
->>>  			"invalid crc_offset: %zu", crc_offset);
->>>  		return -EINVAL;
->>>  	}
->>>  
->>> -	crc = cur_cp_crc(*cp_block);
->>> -	if (!f2fs_crc_valid(sbi, crc, *cp_block, crc_offset)) {
->>> +	crc = f2fs_checkpoint_chksum(sbi, *cp_block);
->>> +	if (crc != cur_cp_crc(*cp_block)) {
->>>  		f2fs_put_page(*cp_page, 1);
->>>  		f2fs_msg(sbi->sb, KERN_WARNING, "invalid crc value");
->>>  		return -EINVAL;
->>> @@ -1425,7 +1440,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->>>  	get_sit_bitmap(sbi, __bitmap_ptr(sbi, SIT_BITMAP));
->>>  	get_nat_bitmap(sbi, __bitmap_ptr(sbi, NAT_BITMAP));
->>>  
->>> -	crc32 = f2fs_crc32(sbi, ckpt, le32_to_cpu(ckpt->checksum_offset));
->>> +	crc32 = f2fs_checkpoint_chksum(sbi, ckpt);
->>>  	*((__le32 *)((unsigned char *)ckpt +
->>>  				le32_to_cpu(ckpt->checksum_offset)))
->>>  				= cpu_to_le32(crc32);
->>> diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
->>> index 55da9abed023..65559900d4d7 100644
->>> --- a/include/linux/f2fs_fs.h
->>> +++ b/include/linux/f2fs_fs.h
->>> @@ -164,6 +164,10 @@ struct f2fs_checkpoint {
->>>  	unsigned char sit_nat_version_bitmap[1];
->>>  } __packed;
->>>  
->>> +#define CP_CHKSUM_OFFSET	4092	/* default chksum offset in checkpoint */
->>> +#define CP_MIN_CHKSUM_OFFSET						\
->>> +	(offsetof(struct f2fs_checkpoint, sit_nat_version_bitmap))
->>> +
->>>  /*
->>>   * For orphan inode management
->>>   */
->>> -- 
->>> 2.18.0.rc1
->>
->>
->> _______________________________________________
->> Linux-f2fs-devel mailing list
->> Linux-f2fs-devel@lists.sourceforge.net
->> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> .
-> 
+Both CONFIG_I2C_DEBUG_CORE and CONFIG_POWER_SUPPLY_DEBUG were reported
+in https://bugs.freedesktop.org/show_bug.cgi?id=76886 but only former
+seems to have been fixed. Drop debug prints as it was done in I2C
+subsystem to resolve the issue.
+
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+
+Changes since [v1]:
+
+    - Converted the patch to drop debug print statements
+    
+[v1] lore.kernel.org/lkml/20190405073020.10361-1-andrew.smirnov@gmail.com
+
+ drivers/power/supply/power_supply_sysfs.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index dce24f596160..5358a80d854f 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -383,15 +383,11 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	char *prop_buf;
+ 	char *attrname;
+ 
+-	dev_dbg(dev, "uevent\n");
+-
+ 	if (!psy || !psy->desc) {
+ 		dev_dbg(dev, "No power supply yet\n");
+ 		return ret;
+ 	}
+ 
+-	dev_dbg(dev, "POWER_SUPPLY_NAME=%s\n", psy->desc->name);
+-
+ 	ret = add_uevent_var(env, "POWER_SUPPLY_NAME=%s", psy->desc->name);
+ 	if (ret)
+ 		return ret;
+@@ -427,8 +423,6 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 			goto out;
+ 		}
+ 
+-		dev_dbg(dev, "prop %s=%s\n", attrname, prop_buf);
+-
+ 		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s", attrname, prop_buf);
+ 		kfree(attrname);
+ 		if (ret)
+-- 
+2.20.1
+
