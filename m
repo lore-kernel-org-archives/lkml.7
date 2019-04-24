@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8ADC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFE2C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46EE92064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4456B2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127691;
-	bh=2b6I9hwFcX/I2pUyuFEfwL4mTpN65QeBhTUlYYdLM9g=;
+	s=default; t=1556127701;
+	bh=VWHyxyeHkMiBtZhF6modxElnFJhNs2AJGlaG6pbAzsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X3o/BeWE+xZmKEu4HTOn/73L5CMldWxH2ENfHaTBd5xqoQwZ0rkCcM0MdCe65aBE/
-	 PAW9sY3u6Yo4ZvadMLxRTAej/0zIZnXPO6/Cdiur4kCyrWGbI6TAJlzI+mFow2ZUaM
-	 S08jaKf0FAvgtAiznETcsHUvZIFFv2W1TSFbJk8c=
+	b=YSwACHadrvx+Fs6ad4G7yGmB3er7QLqqqiwkLODSNINRw9BiusND29o5CIVpDLUrH
+	 hu8N5C9h+V4oNewIpcUNSZwxROXw5hSei/mMuZFfutj7EgbcbWDqfVY8cR9OWIFu0j
+	 PxAZaVQXMG6nZqWRWDAf9T/xSqx+RIR65fgccbqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404060AbfDXRl3 (ORCPT
+        id S2404070AbfDXRlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:41:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35566 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:41:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403936AbfDXRgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:36:40 -0400
+        id S2392056AbfDXRgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:36:35 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81A752054F;
-        Wed, 24 Apr 2019 17:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37B222054F;
+        Wed, 24 Apr 2019 17:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127400;
-        bh=2b6I9hwFcX/I2pUyuFEfwL4mTpN65QeBhTUlYYdLM9g=;
+        s=default; t=1556127394;
+        bh=VWHyxyeHkMiBtZhF6modxElnFJhNs2AJGlaG6pbAzsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U9V2HSbk4Z0rCvtUaeTskDUwoA0wm5ytqEiAqXkDeGnOtii9Y+Yv66xzyZdZ3gfOJ
-         v2rq9CD/OnGObNsdP2IpK4J4EGyz7C5P0PyBaUOo2k7lRnM2k1MV5usRYcfBDH7obH
-         cumeu/67Qg0p647Rs+g/15XgMORvA+A8mm9SZtRY=
+        b=yZ05ty4N7t7Y77TTh0AFpec+GxGTQonAxQIuTJnPILQUbFdBMR4/VILAl3NJ9oEdy
+         9GixJURfJZH4H8padGJR556MOXY7f0Ktx5rLg9Co3yPy0HSggQAWtJ702Oc7orWrWI
+         sGkCB0wk7McK1A8gFfprW4vdVGi1dV2XxlGKHQSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 070/115] ALSA: hda/realtek - add two more pin configuration sets to quirk table
-Date:   Wed, 24 Apr 2019 19:10:06 +0200
-Message-Id: <20190424170929.161179671@linuxfoundation.org>
+        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.0 031/115] net/mlx5e: Rx, Check ip headers sanity
+Date:   Wed, 24 Apr 2019 19:09:27 +0200
+Message-Id: <20190424170926.856272975@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -59,45 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Saeed Mahameed <saeedm@mellanox.com>
 
-commit b26e36b7ef36a8a3a147b1609b2505f8a4ecf511 upstream.
+[ Upstream commit 0318a7b7fcad9765931146efa7ca3a034194737c ]
 
-We have two Dell laptops which have the codec 10ec0236 and 10ec0256
-respectively, the headset mic on them can't work, need to apply the
-quirk of ALC255_FIXUP_DELL1_MIC_NO_PRESENCE. So adding their pin
-configurations in the pin quirk table.
+In the two places is_last_ethertype_ip is being called, the caller will
+be looking inside the ip header, to be safe, add ip{4,6} header sanity
+check. And return true only on valid ip headers, i.e: the whole header
+is contained in the linear part of the skb.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Note: Such situation is very rare and hard to reproduce, since mlx5e
+allocates a large enough headroom to contain the largest header one can
+imagine.
+
+Fixes: fe1dc069990c ("net/mlx5e: don't set CHECKSUM_COMPLETE on SCTP packets")
+Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/patch_realtek.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7247,6 +7247,8 @@ static const struct snd_hda_pin_quirk al
- 		{0x12, 0x90a60140},
- 		{0x14, 0x90170150},
- 		{0x21, 0x02211020}),
-+	SND_HDA_PIN_QUIRK(0x10ec0236, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
-+		{0x21, 0x02211020}),
- 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1028, "Dell", ALC255_FIXUP_DELL2_MIC_NO_PRESENCE,
- 		{0x14, 0x90170110},
- 		{0x21, 0x02211020}),
-@@ -7357,6 +7359,10 @@ static const struct snd_hda_pin_quirk al
- 		{0x21, 0x0221101f}),
- 	SND_HDA_PIN_QUIRK(0x10ec0256, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
- 		ALC256_STANDARD_PINS),
-+	SND_HDA_PIN_QUIRK(0x10ec0256, 0x1028, "Dell", ALC255_FIXUP_DELL1_MIC_NO_PRESENCE,
-+		{0x14, 0x90170110},
-+		{0x1b, 0x01011020},
-+		{0x21, 0x0221101f}),
- 	SND_HDA_PIN_QUIRK(0x10ec0256, 0x1043, "ASUS", ALC256_FIXUP_ASUS_MIC,
- 		{0x14, 0x90170110},
- 		{0x1b, 0x90a70130},
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -693,7 +693,14 @@ static inline bool is_last_ethertype_ip(
+ {
+ 	*proto = ((struct ethhdr *)skb->data)->h_proto;
+ 	*proto = __vlan_get_protocol(skb, *proto, network_depth);
+-	return (*proto == htons(ETH_P_IP) || *proto == htons(ETH_P_IPV6));
++
++	if (*proto == htons(ETH_P_IP))
++		return pskb_may_pull(skb, *network_depth + sizeof(struct iphdr));
++
++	if (*proto == htons(ETH_P_IPV6))
++		return pskb_may_pull(skb, *network_depth + sizeof(struct ipv6hdr));
++
++	return false;
+ }
+ 
+ static inline void mlx5e_enable_ecn(struct mlx5e_rq *rq, struct sk_buff *skb)
 
 
