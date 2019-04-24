@@ -2,160 +2,73 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15B4C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5788C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11EF218DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FEF4218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:27:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q0ajyNV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbfDXG0j (ORCPT
+        id S1729825AbfDXG1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:26:39 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4222 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfDXG0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:26:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Apr 2019 23:26:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,388,1549958400"; 
-   d="scan'208";a="145368048"
-Received: from bxing-ubuntu.jf.intel.com ([10.23.30.27])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Apr 2019 23:26:24 -0700
-From:   Cedric Xing <cedric.xing@intel.com>
-To:     linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org
-Cc:     cedric.xing@intel.com, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
-        haitao.huang@intel.com, kai.svahn@intel.com, kai.huang@intel.com,
-        jarkko.sakkinen@linux.intel.com
-Subject: [RFC PATCH v2 1/3] selftests/x86: Fixed Makefile for SGX selftest
-Date:   Tue, 23 Apr 2019 23:26:21 -0700
-Message-Id: <20190424062623.4345-2-cedric.xing@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190424062623.4345-1-cedric.xing@intel.com>
-References: <20190424062623.4345-1-cedric.xing@intel.com>
-In-Reply-To: <cover.1555965327.git.cedric.xing@intel.com>
-References: <cover.1555965327.git.cedric.xing@intel.com>
+        Wed, 24 Apr 2019 02:27:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49558 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfDXG1h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 02:27:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8LGS84/xpFnq+gtNsYbwzSZmg6zQw9+84JugkmFuBB8=; b=Q0ajyNV3Fizs2oX9zMVvlpmX2
+        x1sWhCIp5WOzB+YdzpG2UjkqVyEWfZO/ni6YG85vDnWi/mcxkX3fSkd0SHRD3IwzS/p6VmRUQoWnb
+        CKe83lnekyAgJPG5kpujGja3G8Lm8oz15ggGAbe3/0Tcq0o94HZWtN21tdSPrHS71j0NKDVQ5Ie7m
+        Q//8MJWjpW4eLTlI6reUvBe1ouE2YZajY26VJIvfEpEgIjeaOcM8fZ7/ai8qWuMoVKHnB/kGNE+HA
+        To2IbQ+bhn1Difxu5CNV82TIZb+/MnMXaEV6Wfuckm8oKCMvLPnm+TOyzarzVKrsG4t4w380bNLXH
+        2lAlB73dg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJBNY-0004OP-AI; Wed, 24 Apr 2019 06:27:36 +0000
+Date:   Tue, 23 Apr 2019 23:27:36 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: Re: [PATCH v3 1/3] RISC-V: Use tabs to align macro values in
+ asm/csr.h
+Message-ID: <20190424062736.GA10400@infradead.org>
+References: <20190415093648.7525-1-anup.patel@wdc.com>
+ <20190415093648.7525-2-anup.patel@wdc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415093648.7525-2-anup.patel@wdc.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original x86/sgx/Makefile doesn't work when 'x86/sgx' is specified as the
-test target. This patch fixes that problem, along with minor changes to the
-dependencies between 'x86' and 'x86/sgx' in selftests/x86/Makefile.
+On Mon, Apr 15, 2019 at 09:37:17AM +0000, Anup Patel wrote:
+> The spacing between macro name and value is not consistent in
+> asm/csr.h. This patch beautifies asm/csr.h by using tabs to align
+> macro values instead of spaces.
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
 
-Signed-off-by: Cedric Xing <cedric.xing@intel.com>
----
- tools/testing/selftests/x86/Makefile     | 12 +++----
- tools/testing/selftests/x86/sgx/Makefile | 45 +++++++++---------------
- 2 files changed, 22 insertions(+), 35 deletions(-)
+Looks good,
 
-diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-index 4fc9a42f56ea..1294c5f5b6ca 100644
---- a/tools/testing/selftests/x86/Makefile
-+++ b/tools/testing/selftests/x86/Makefile
-@@ -70,11 +70,11 @@ all_32: $(BINARIES_32)
- 
- all_64: $(BINARIES_64)
- 
--all_64: $(SUBDIRS_64)
--	@for DIR in $(SUBDIRS_64); do			\
--		BUILD_TARGET=$(OUTPUT)/$$DIR;		\
--		mkdir $$BUILD_TARGET  -p;		\
--		make OUTPUT=$$BUILD_TARGET -C $$DIR $@;	\
-+all_64: | $(SUBDIRS_64)
-+	@for DIR in $|; do					\
-+		BUILD_TARGET=$(OUTPUT)/$$DIR;			\
-+		mkdir $$BUILD_TARGET  -p;			\
-+		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$DIR $@;	\
- 	done
- 
- EXTRA_CLEAN := $(BINARIES_32) $(BINARIES_64)
-@@ -90,7 +90,7 @@ ifeq ($(CAN_BUILD_I386)$(CAN_BUILD_X86_64),01)
- all: warn_32bit_failure
- 
- warn_32bit_failure:
--	@echo "Warning: you seem to have a broken 32-bit build" 2>&1; 	\
-+	@echo "Warning: you seem to have a broken 32-bit build" 2>&1;	\
- 	echo "environment.  This will reduce test coverage of 64-bit" 2>&1; \
- 	echo "kernels.  If you are using a Debian-like distribution," 2>&1; \
- 	echo "try:"; 2>&1; \
-diff --git a/tools/testing/selftests/x86/sgx/Makefile b/tools/testing/selftests/x86/sgx/Makefile
-index 1fd6f2708e81..3af15d7c8644 100644
---- a/tools/testing/selftests/x86/sgx/Makefile
-+++ b/tools/testing/selftests/x86/sgx/Makefile
-@@ -2,47 +2,34 @@ top_srcdir = ../../../../..
- 
- include ../../lib.mk
- 
--HOST_CFLAGS := -Wall -Werror -g $(INCLUDES) -fPIC
--ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIC \
-+ifeq ($(shell $(CC) -dumpmachine | cut --delimiter=- -f1),x86_64)
-+all: all_64
-+endif
-+
-+HOST_CFLAGS := -Wall -Werror -g $(INCLUDES)
-+ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIE \
- 	       -fno-stack-protector -mrdrnd $(INCLUDES)
- 
- TEST_CUSTOM_PROGS := $(OUTPUT)/test_sgx
- all_64: $(TEST_CUSTOM_PROGS)
- 
--$(TEST_CUSTOM_PROGS): $(OUTPUT)/main.o $(OUTPUT)/sgx_call.o \
--		      $(OUTPUT)/encl_piggy.o
-+$(TEST_CUSTOM_PROGS): main.c sgx_call.S $(OUTPUT)/encl_piggy.o
- 	$(CC) $(HOST_CFLAGS) -o $@ $^
- 
--$(OUTPUT)/main.o: main.c
--	$(CC) $(HOST_CFLAGS) -c $< -o $@
--
--$(OUTPUT)/sgx_call.o: sgx_call.S
--	$(CC) $(HOST_CFLAGS) -c $< -o $@
--
--$(OUTPUT)/encl_piggy.o: $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
--	$(CC) $(HOST_CFLAGS) -c encl_piggy.S -o $@
-+$(OUTPUT)/encl_piggy.o: encl_piggy.S $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
-+	$(CC) $(HOST_CFLAGS) -I$(OUTPUT) -c $< -o $@
- 
--$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf $(OUTPUT)/sgxsign
-+$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf
- 	objcopy --remove-section=.got.plt -O binary $< $@
- 
--$(OUTPUT)/encl.elf: $(OUTPUT)/encl.o $(OUTPUT)/encl_bootstrap.o
--	$(CC) $(ENCL_CFLAGS) -T encl.lds -o $@ $^
-+$(OUTPUT)/encl.elf: encl.lds encl.c encl_bootstrap.S
-+	$(CC) $(ENCL_CFLAGS) -T $^ -o $@
- 
--$(OUTPUT)/encl.o: encl.c
--	$(CC) $(ENCL_CFLAGS) -c $< -o $@
--
--$(OUTPUT)/encl_bootstrap.o: encl_bootstrap.S
--	$(CC) $(ENCL_CFLAGS) -c $< -o $@
--
--$(OUTPUT)/encl.ss: $(OUTPUT)/encl.bin  $(OUTPUT)/sgxsign
--	$(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
-+$(OUTPUT)/encl.ss: $(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin
-+	$^ $@
- 
- $(OUTPUT)/sgxsign: sgxsign.c
- 	$(CC) -o $@ $< -lcrypto
- 
--EXTRA_CLEAN := $(OUTPUT)/sgx-selftest $(OUTPUT)/sgx-selftest.o \
--	       $(OUTPUT)/sgx_call.o $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss \
--	       $(OUTPUT)/encl.elf $(OUTPUT)/encl.o $(OUTPUT)/encl_bootstrap.o \
--	       $(OUTPUT)/sgxsign
--
--.PHONY: clean
-+EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(addprefix $(OUTPUT)/,	\
-+		encl.elf encl.bin encl.ss encl_piggy.o sgxsign)
--- 
-2.17.1
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
