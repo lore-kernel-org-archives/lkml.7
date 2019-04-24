@@ -2,198 +2,176 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E366CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D56CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A83218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4E6218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:53:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="JftZDjdy";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="MXRWUBUM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfDXIvL (ORCPT
+        id S1728732AbfDXIxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:51:11 -0400
-Received: from mga01.intel.com ([192.55.52.88]:63405 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbfDXIvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:51:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 01:51:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,389,1549958400"; 
-   d="scan'208";a="138358394"
-Received: from shbuild999.sh.intel.com ([10.239.146.112])
-  by orsmga006.jf.intel.com with ESMTP; 24 Apr 2019 01:51:08 -0700
-From:   Feng Tang <feng.tang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH v3] panic: add an option to replay all the printk message in buffer
-Date:   Wed, 24 Apr 2019 16:51:12 +0800
-Message-Id: <1556095872-36838-1-git-send-email-feng.tang@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 24 Apr 2019 04:53:08 -0400
+Received: from mail136-22.atl41.mandrillapp.com ([198.2.136.22]:22857 "EHLO
+        mail136-22.atl41.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727546AbfDXIxH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 04:53:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=1IRMmbYJGbRUUy9AkY1TlFVx40THUGy/XUgpLXz3izk=;
+ b=JftZDjdyWHDDtTIXzvGE1c4ySv30fuSpxtUk7VW2vpPsA5hU4fMIKnEumeftMz3s2A0LULyevURL
+   V1lErdak256LWq2DPUnUi5Vs+r+UqmRet+93zH++zeTM84oK78oZCHa1gmZkAd4Tz/m+puxsj/2I
+   hPERgc9lHztqtopGilU=
+Received: from pmta04.mandrill.prod.atl01.rsglab.com (127.0.0.1) by mail136-22.atl41.mandrillapp.com id ho0hv41sb1k0 for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:38:06 +0000 (envelope-from <bounce-md_31050260.5cc0206d.v1-2476866303f9480cbb2a812b10324978@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1556095085; h=From : 
+ Subject : To : Cc : Message-Id : In-Reply-To : Date : MIME-Version : 
+ Content-Type : Content-Transfer-Encoding : From : Subject : Date : 
+ X-Mandrill-User : List-Unsubscribe; 
+ bh=1IRMmbYJGbRUUy9AkY1TlFVx40THUGy/XUgpLXz3izk=; 
+ b=MXRWUBUM1he133Jr8XVuUHrGLLNwRv6XtdG9lX0krgB+KhdjXqWCxYzO0LovMyGGSYc36o
+ Rzq35zUdi+u+y8VM+bJfk/MO2Vp8zDc2OtyyC2Q/WmLGeV7iVxeYQH821ZrD4wCHnPJow72X
+ Bo7RElqWAfmTKDr9zVoRyo2RbEqhw=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: FUSE workflow=? (Re: [RESEND1, PATCH 1/2] fuse: convert printk -> pr_*)
+Received: from [87.98.221.171] by mandrillapp.com id 2476866303f9480cbb2a812b10324978; Wed, 24 Apr 2019 08:38:05 +0000
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Maxim Patlasov <mpatlasov@parallels.com>,
+        Anatol Pomozov <anatol.pomozov@gmail.com>,
+        Pavel Emelyanov <xemul@openvz.org>,
+        Andrew Gallagher <andrewjcg@fb.com>,
+        "Anand V . Avati" <avati@redhat.com>,
+        Alexey Kuznetsov <kuznet@virtuozzo.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Constantine Shulyupin <const@makelinux.com>,
+        Chad Austin <chadaustin@fb.com>,
+        Dan Schatzberg <dschatzberg@fb.com>,
+        <linux-fsdevel@vger.kernel.org>,
+        fuse-devel <fuse-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Message-Id: <20190424083800.GA11722@deco.navytux.spb.ru>
+In-Reply-To: <CAJfpegt9DRmwKksR0QSA7NzQP_=a=yJybdL9mOP1cw5goGkdgw@mail.gmail.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.2476866303f9480cbb2a812b10324978
+X-Mandrill-User: md_31050260
+Date:   Wed, 24 Apr 2019 08:38:05 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently on panic, kernel will lower the loglevel and print out
-pending printk msg only with console_flush_on_panic().
++torvalds
 
-Add an option for users to configure the "panic_print" to replay
-all dmesg in buffer, some of which they may have never seen due
-to the loglevel setting, which will help panic debugging .
+On Tue, Apr 23, 2019 at 04:57:58PM +0200, Miklos Szeredi wrote:
+> On Wed, Mar 27, 2019 at 10:15 AM Kirill Smelkov <kirr@nexedi.com> wrote:
+> >
+> > Functions, like pr_err, are a more modern variant of printing compared to
+> > printk. They could be used to denoise sources by using needed level in
+> > the print function name, and by automatically inserting per-driver /
+> > function / ... print prefix as defined by pr_fmt macro. pr_* are also
+> > said to be used in Documentation/process/coding-style.rst and more
+> > recent code - for example overlayfs - uses them instead of printk.
+> >
+> > Convert CUSE and FUSE to use the new pr_* functions.
+> >
+> > CUSE output stays completely unchanged, while FUSE output is amended a
+> > bit for "trying to steal weird page" warning - the second line now comes
+> > also with "fuse:" prefix. I hope it is ok.
+> 
+> Yep.  Applied, thanks.
 
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Cc: Aaro Koskinen <aaro.koskinen@nokia.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@suse.de>
----
-Changelog:
+Miklos, thanks for feedback. Could you please clarify where the patch is
+applied? Here is what linux/MAINTAINERS says
 
-  v3:
-    - Solve the compile issue when CONFIG_PRINTK=n, found by
-      Andrew Morton
-    - Add enum for parameter of console_flush_on_panic()
-    - move the printk replay code to console_flush_on_panic()
+	FUSE: FILESYSTEM IN USERSPACE
+	M:      Miklos Szeredi <miklos@szeredi.hu>
+	L:      linux-fsdevel@vger.kernel.org
+	W:      http://fuse.sourceforge.net/
+	T:      git git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git
+	S:      Maintained
+	F:      fs/fuse/
+	F:      include/uapi/linux/fuse.h
+	F:      Documentation/filesystems/fuse.txt
 
-  v2:
-    - Add a new func in printk.c dedicated for the replaying, as
-      suggested by Petr Mladek
-    - Combine the 2 patches in v1 into one suggested by both Petr
-      and Sergey
+but git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git was
+not updated for ~ 2 months. I see other "Applied, thanks" replies from
+you on linux-fsdevel in recent days and it suggests that patches are
+indeed applied, but where they are integrated is the question.
+Linux-next also has no post-5.1 fuse patches at all, so I'm really
+puzzled about what is going on.
 
- Documentation/admin-guide/kernel-parameters.txt | 1 +
- arch/powerpc/kernel/traps.c                     | 2 +-
- include/linux/console.h                         | 7 ++++++-
- kernel/panic.c                                  | 8 ++++++--
- kernel/printk/printk.c                          | 8 +++++++-
- 5 files changed, 21 insertions(+), 5 deletions(-)
+Is there any reason not to keep for-next fuse branch publicly available?
+Or am I missing something?
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 858b6c0..e56fe86 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3104,6 +3104,7 @@
- 			bit 2: print timer info
- 			bit 3: print locks info if CONFIG_LOCKDEP is on
- 			bit 4: print ftrace buffer
-+			bit 5: print all printk messages in buffer
- 
- 	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
- 			on a WARN().
-diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index 64936b6..852362c 100644
---- a/arch/powerpc/kernel/traps.c
-+++ b/arch/powerpc/kernel/traps.c
-@@ -178,7 +178,7 @@ extern void panic_flush_kmsg_end(void)
- 	kmsg_dump(KMSG_DUMP_PANIC);
- 	bust_spinlocks(0);
- 	debug_locks_off();
--	console_flush_on_panic();
-+	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
- }
- 
- static unsigned long oops_begin(struct pt_regs *regs)
-diff --git a/include/linux/console.h b/include/linux/console.h
-index ec9bdb3..d09951d 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -166,6 +166,11 @@ struct console {
- extern int console_set_on_cmdline;
- extern struct console *early_console;
- 
-+enum con_flush_mode {
-+	CONSOLE_FLUSH_PENDING,
-+	CONSOLE_REPLAY_ALL,
-+};
-+
- extern int add_preferred_console(char *name, int idx, char *options);
- extern void register_console(struct console *);
- extern int unregister_console(struct console *);
-@@ -175,7 +180,7 @@ extern int console_trylock(void);
- extern void console_unlock(void);
- extern void console_conditional_schedule(void);
- extern void console_unblank(void);
--extern void console_flush_on_panic(void);
-+extern void console_flush_on_panic(enum con_flush_mode mode);
- extern struct tty_driver *console_device(int *);
- extern void console_stop(struct console *);
- extern void console_start(struct console *);
-diff --git a/kernel/panic.c b/kernel/panic.c
-index b9f004e..b9c0eb3 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -53,6 +53,7 @@ int panic_suppress_printk;
- #define PANIC_PRINT_TIMER_INFO		0x00000004
- #define PANIC_PRINT_LOCK_INFO		0x00000008
- #define PANIC_PRINT_FTRACE_INFO		0x00000010
-+#define PANIC_PRINT_ALL_PRINTK_MSG	0x00000020
- unsigned long panic_print;
- 
- ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-@@ -136,6 +137,11 @@ EXPORT_SYMBOL(nmi_panic);
- 
- static void panic_print_sys_info(void)
- {
-+	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
-+		console_flush_on_panic(CONSOLE_REPLAY_ALL);
-+	else
-+		console_flush_on_panic(CONSOLE_FLUSH_PENDING);
-+
- 	if (panic_print & PANIC_PRINT_TASK_INFO)
- 		show_state();
- 
-@@ -279,8 +285,6 @@ void panic(const char *fmt, ...)
- 	 * panic() is not being callled from OOPS.
- 	 */
- 	debug_locks_off();
--	console_flush_on_panic();
--
- 	panic_print_sys_info();
- 
- 	if (!panic_blink)
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index d460144..237191b 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2485,10 +2485,11 @@ void console_unblank(void)
- 
- /**
-  * console_flush_on_panic - flush console content on panic
-+ * @mode: flush all messages in buffer or just the pending ones
-  *
-  * Immediately output all pending messages no matter what.
-  */
--void console_flush_on_panic(void)
-+void console_flush_on_panic(enum con_flush_mode mode)
- {
- 	/*
- 	 * If someone else is holding the console lock, trylock will fail
-@@ -2499,6 +2500,11 @@ void console_flush_on_panic(void)
- 	 */
- 	console_trylock();
- 	console_may_schedule = 0;
-+
-+	if (mode == CONSOLE_REPLAY_ALL) {
-+		console_seq = log_first_seq;
-+		console_idx = log_first_idx;
-+	}
- 	console_unlock();
- }
- 
--- 
-2.7.4
+Could you please also have a look at other posted patches? I'm
+struggling for months sending them to you and not getting feedback. It
+is kind of frustrating to work in this mode. Here they are:
 
+- FOPEN_STREAM to fix read/write deadlock on stream-like files:
+
+  https://lore.kernel.org/linux-fsdevel/20190424071316.11967-1-kirr@nexedi.com/
+
+  the basis for this patch was landed to master already:
+
+  git.kernel.org/linus/10dce8af3422
+
+- FUSE_PRECISE_INVAL_DATA to allow filesystems to have precise control
+  over data cache and in particular not to loose the whole data cache on
+  file size change:
+
+  https://lore.kernel.org/linux-fsdevel/e0b43507976d6ea9010f1bacaef067f18de49f1f.1553677194.git.kirr@nexedi.com/
+  cover letter: https://lore.kernel.org/linux-fsdevel/cover.1553677194.git.kirr@nexedi.com/
+
+  this patch is essential for my filesystem which cares very deeply about
+  not loosing local file cache.
+
+  ( "fuse: convert printk -> pr_*" was only a preparatory patch in that
+    series suggested by Kirill Tkhai )
+
+- don't stuck clients on retrieve_notify with size > max_write
+
+  https://lore.kernel.org/linux-fsdevel/cover.1553680185.git.kirr@nexedi.com/
+    https://lore.kernel.org/linux-fsdevel/12f7d0d98555ee0d174d04bb47644f65c07f035a.1553680185.git.kirr@nexedi.com/
+    https://lore.kernel.org/linux-fsdevel/d74b17b9d33c3dcc7a1f2fa2914fb3c4e7cda127.1553680185.git.kirr@nexedi.com/
+
+  this is kind of no-op if server behaves sanely, but for slightly
+  misbehaving server changes kernel to return a regular error instead of
+  promising to userspace that it will send a reply and not doing so,
+  thus getting userspace stuck.
+
+  when I got my filesystem initially stuck it required to dig a lot to
+  understand what was going on
+
+  https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
+  (starting from "I've hit this bug for real ...")
+
+  Even though go-fuse (the fuse library that was slightly misbehaving) is
+  now fixed https://github.com/hanwen/go-fuse/commit/58dcd77a24, it is a
+  big difference if userspace gets an error, or it gets "ok" return and
+  is further stuck waiting for promised message. Besides libfuse and
+  go-fuse there are several other fuse libraries and by fixing kernel
+  behaviour here we care about all fuse users. In February you set 10
+  lines budget for this "non-bug fix" and this budget is met with the
+  patches which cumulatively are 2 lines of code change and 7 lines of
+  comments.
+
+
+Thanks beforehand,
+Kirill
