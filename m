@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EE7C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E56AC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05B1218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26FD2218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117182;
-	bh=yQWrj10usIeH9/gR88CrZLg8iZ7FfzQJwVZCdUTvT7k=;
+	s=default; t=1556117194;
+	bh=6DehphqxxPwARWBE5ME3ZUahnLAKINS4KsfVTVCj/FM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vaB7K4hywcWotCqoUxTGfDNqhTz+B5tT6OAUPpfkFPr5UqDYBY1s/Zqwojis5hBfO
-	 /dM8JWsj0u8zxGavZm347QT29XqVpazmNOXdoUPs0ipknJCx+dCCE8CoUJiSnHC0/R
-	 RIBjVpa28RGCoAL9vP0PrvlxgcO/WqJzqjseXS2A=
+	b=aJCzfWjK/Z4L0q2O2IpVTZHJha29HsSjMTOcnKLaodZRJpaJcKTNLNC24qKq5ytS5
+	 bn/zWVDY9ldZjn5Uz060IL1745n9VBHuie+RahIc9dOWwN1+fgpBbFTt0znZedmRr1
+	 zutbIpiMOOXaXLDby3dHjeURtdYTiilDXQ1/JXSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbfDXOem (ORCPT
+        id S1731048AbfDXOe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:34:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38550 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:34:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727327AbfDXOej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:34:39 -0400
+        id S1730968AbfDXOeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:34:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB6142089F;
-        Wed, 24 Apr 2019 14:34:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3F5F218FE;
+        Wed, 24 Apr 2019 14:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116479;
-        bh=yQWrj10usIeH9/gR88CrZLg8iZ7FfzQJwVZCdUTvT7k=;
+        s=default; t=1556116464;
+        bh=6DehphqxxPwARWBE5ME3ZUahnLAKINS4KsfVTVCj/FM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ieQ3Wh7JQQM9vM95vigAzadTf6sU2HgmThXvskHGyZ1MycY58xknLGTSNNawl1ODg
-         FHECNV8Ja//2O/jtMYRISNcyacr81wIq+yzZHJQv2hPEqABHtfbLpYQtMRDt6GcjdI
-         Zon1sp5NeZo6end1HAsVBmOVZIMOMPK0bEAVlmmI=
+        b=rA4YtURVoLh8tU8+MQnOPDe/RMCOiTq7dCTU0iKq1pRs+3P0wAGrwtRuu/bJw0wZg
+         4AieL2fiS2NpMOBOWPhRLbwrF/aEOLMPzCyo+X30noTza4oT/u+B4RtmhILWIT0t1a
+         w/W6u/nYmzHVP94sQ+JxpntSU67nHHXz5UUTuHa8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xi Wang <wangxi11@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Stefan Assmann <sassmann@kpanic.de>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 22/66] net: hns3: fix compile error
-Date:   Wed, 24 Apr 2019 10:32:56 -0400
-Message-Id: <20190424143341.27665-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 18/66] i40e: fix WoL support check
+Date:   Wed, 24 Apr 2019 10:32:52 -0400
+Message-Id: <20190424143341.27665-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -58,56 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xi Wang <wangxi11@huawei.com>
+From: Stefan Assmann <sassmann@kpanic.de>
 
-[ Upstream commit 669efc76b317b3aa550ffbf0b79d064cb00a5f96 ]
+[ Upstream commit f669d24f3dd00beab452c0fc9257f6a942ffca9b ]
 
-Currently, the rules for configuring search paths in Kbuild have
-changed, this will lead some erros when compiling hns3 with the
-following command:
+The current check for WoL on i40e is broken. Code comment says only
+magic packet is supported, so only check for that.
 
-make O=DIR M=drivers/net/ethernet/hisilicon/hns3
+Fixes: 540a152da762 (i40e/ixgbe/igb: fail on new WoL flag setting WAKE_MAGICSECURE)
 
-drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c:11:10:
-fatal error: hnae3.h: No such file or directory
-
-This patch fix it by adding $(srctree)/ prefix to the serach paths.
-
-Signed-off-by: Xi Wang <wangxi11@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Stefan Assmann <sassmann@kpanic.de>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e_ethtool.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile b/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
-index fffe8c1c45d3..0fb61d440d3b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/Makefile
-@@ -3,7 +3,7 @@
- # Makefile for the HISILICON network device drivers.
- #
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
+index a6bc7847346b..5d544e661445 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
+@@ -2378,8 +2378,7 @@ static int i40e_set_wol(struct net_device *netdev, struct ethtool_wolinfo *wol)
+ 		return -EOPNOTSUPP;
  
--ccflags-y := -Idrivers/net/ethernet/hisilicon/hns3
-+ccflags-y := -I $(srctree)/drivers/net/ethernet/hisilicon/hns3
+ 	/* only magic packet is supported */
+-	if (wol->wolopts && (wol->wolopts != WAKE_MAGIC)
+-			  | (wol->wolopts != WAKE_FILTER))
++	if (wol->wolopts & ~WAKE_MAGIC)
+ 		return -EOPNOTSUPP;
  
- obj-$(CONFIG_HNS3_HCLGE) += hclge.o
- hclge-objs = hclge_main.o hclge_cmd.o hclge_mdio.o hclge_tm.o hclge_mbx.o hclge_err.o  hclge_debugfs.o
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile b/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
-index fb93bbd35845..6193f8fa7cf3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/Makefile
-@@ -3,7 +3,7 @@
- # Makefile for the HISILICON network device drivers.
- #
- 
--ccflags-y := -Idrivers/net/ethernet/hisilicon/hns3
-+ccflags-y := -I $(srctree)/drivers/net/ethernet/hisilicon/hns3
- 
- obj-$(CONFIG_HNS3_HCLGEVF) += hclgevf.o
- hclgevf-objs = hclgevf_main.o hclgevf_cmd.o hclgevf_mbx.o
-\ No newline at end of file
+ 	/* is this a new value? */
 -- 
 2.19.1
 
