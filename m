@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFE2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82ACC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4456B2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4D72064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127701;
-	bh=VWHyxyeHkMiBtZhF6modxElnFJhNs2AJGlaG6pbAzsU=;
+	s=default; t=1556127709;
+	bh=58m6HmBlYzQtWsLSf1zVanyyXZYFQuwUSk8EsntzOn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YSwACHadrvx+Fs6ad4G7yGmB3er7QLqqqiwkLODSNINRw9BiusND29o5CIVpDLUrH
-	 hu8N5C9h+V4oNewIpcUNSZwxROXw5hSei/mMuZFfutj7EgbcbWDqfVY8cR9OWIFu0j
-	 PxAZaVQXMG6nZqWRWDAf9T/xSqx+RIR65fgccbqw=
+	b=L68zWcXafTVGNzTSwnLv0A06viYiaRopBstKtc9ZFyWyf8jfa+WggBBw/kyrbomLl
+	 k57hEarOHfS7krBieqxquQphTMsCrSCQLObPN4j8ScdqiTtb46nvnsyphAn7sdP6qu
+	 se8/l+UhJO9uNYlQZLL69Wfwx0SkAbiB9b8xHgvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404070AbfDXRlk (ORCPT
+        id S2392081AbfDXRls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:41:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392056AbfDXRgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:36:35 -0400
+        id S2390639AbfDXRga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:36:30 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37B222054F;
-        Wed, 24 Apr 2019 17:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 006E32054F;
+        Wed, 24 Apr 2019 17:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127394;
-        bh=VWHyxyeHkMiBtZhF6modxElnFJhNs2AJGlaG6pbAzsU=;
+        s=default; t=1556127389;
+        bh=58m6HmBlYzQtWsLSf1zVanyyXZYFQuwUSk8EsntzOn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yZ05ty4N7t7Y77TTh0AFpec+GxGTQonAxQIuTJnPILQUbFdBMR4/VILAl3NJ9oEdy
-         9GixJURfJZH4H8padGJR556MOXY7f0Ktx5rLg9Co3yPy0HSggQAWtJ702Oc7orWrWI
-         sGkCB0wk7McK1A8gFfprW4vdVGi1dV2XxlGKHQSY=
+        b=fi5TtgcBMuRxKdPp1l0q1+qFWdC2OUjEcergRoXWUOFdcnx4vRNbAa+pAJyHTsvyB
+         PxoajlCdgNS+oF+D6XjXoC/yllmO5XwbzxqSvz2ep/NIb1DO6HnSDV3jpOFbBzt40+
+         mbUGnZk8BgPSVi11nNhJqo90i7FSed4Pl6K0BCVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         Tariq Toukan <tariqt@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.0 031/115] net/mlx5e: Rx, Check ip headers sanity
-Date:   Wed, 24 Apr 2019 19:09:27 +0200
-Message-Id: <20190424170926.856272975@linuxfoundation.org>
+Subject: [PATCH 5.0 029/115] net/mlx5e: Switch to Toeplitz RSS hash by default
+Date:   Wed, 24 Apr 2019 19:09:25 +0200
+Message-Id: <20190424170926.744433917@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -60,45 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saeed Mahameed <saeedm@mellanox.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 0318a7b7fcad9765931146efa7ca3a034194737c ]
+[ Upstream commit 7ee2ace9c544a0886e02b54b625e521df8692d20 ]
 
-In the two places is_last_ethertype_ip is being called, the caller will
-be looking inside the ip header, to be safe, add ip{4,6} header sanity
-check. And return true only on valid ip headers, i.e: the whole header
-is contained in the linear part of the skb.
+Although XOR hash function can perform very well on some special use
+cases, to align with all drivers, mlx5 driver should use Toeplitz hash
+by default.
+Toeplitz is more stable for the general use case and it is more standard
+and reliable.
 
-Note: Such situation is very rare and hard to reproduce, since mlx5e
-allocates a large enough headroom to contain the largest header one can
-imagine.
+On top of that, since XOR (MLX5_RX_HASH_FN_INVERTED_XOR8) gives only a
+repeated 8 bits pattern. When used for udp tunneling RSS source port
+manipulation it results in fixed source port, which will cause bad RSS
+spread.
 
-Fixes: fe1dc069990c ("net/mlx5e: don't set CHECKSUM_COMPLETE on SCTP packets")
-Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 2be6967cdbc9 ("net/mlx5e: Support ETH_RSS_HASH_XOR")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -693,7 +693,14 @@ static inline bool is_last_ethertype_ip(
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -4574,7 +4574,7 @@ void mlx5e_build_rss_params(struct mlx5e
  {
- 	*proto = ((struct ethhdr *)skb->data)->h_proto;
- 	*proto = __vlan_get_protocol(skb, *proto, network_depth);
--	return (*proto == htons(ETH_P_IP) || *proto == htons(ETH_P_IPV6));
-+
-+	if (*proto == htons(ETH_P_IP))
-+		return pskb_may_pull(skb, *network_depth + sizeof(struct iphdr));
-+
-+	if (*proto == htons(ETH_P_IPV6))
-+		return pskb_may_pull(skb, *network_depth + sizeof(struct ipv6hdr));
-+
-+	return false;
- }
+ 	enum mlx5e_traffic_types tt;
  
- static inline void mlx5e_enable_ecn(struct mlx5e_rq *rq, struct sk_buff *skb)
+-	rss_params->hfunc = ETH_RSS_HASH_XOR;
++	rss_params->hfunc = ETH_RSS_HASH_TOP;
+ 	netdev_rss_key_fill(rss_params->toeplitz_hash_key,
+ 			    sizeof(rss_params->toeplitz_hash_key));
+ 	mlx5e_build_default_indir_rqt(rss_params->indirection_rqt,
 
 
