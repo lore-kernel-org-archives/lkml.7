@@ -2,147 +2,116 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29BAC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E488C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8BD20684
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6DCA20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="RKLxNmld"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="a+og0q+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388267AbfDXVGu (ORCPT
+        id S2388061AbfDXVIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 17:06:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42777 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731973AbfDXVGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 17:06:49 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x15so5541014pln.9
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:06:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bZkshglKcvBU+6PMpXuNp0wARaLPDffIq6iStMQ6XdQ=;
-        b=RKLxNmldM2pr5BbxMF2oAFgODVC5qNpB3prnTXZLfC+J2jtRqMZTDJqQHDx3HM/Zfh
-         vs+ujn3c2UjpEYsFATkXUSzIIAthnd8X+8e07S+SC9jdP8D9F5RAYDv+E32aM5YsQdPP
-         N/Jf8BHBc9iThEZwJnJoN9+HKvltLKYUwiPuWo3Sti0JwhvqxoaTvi0lDbhLklOl3Ik6
-         gR/jpw95F4L6O71W+G+D9cTfKcggHrois1GGfCf/Pc5zM9PrYC05BFFiguRKTW4lhmzt
-         xYcVMG1o5qg0uNWVtE2d9myCNk7X/QhtnR6pW/wXBN575Q9XRDZN6uGSSYpmwp4jnAom
-         TKeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=bZkshglKcvBU+6PMpXuNp0wARaLPDffIq6iStMQ6XdQ=;
-        b=T4WTfOp0VnkolSc1Po0sxyyVJhjKxyima6nDIO20e3HjyZX6R1HlyGknj3IfhvTGDc
-         K926p+/TB+0UhXJ0uBBbdvTQ3a0s6UMZiC/IkjTSt9BetR6mQ65LEjsVC2+M95zkUted
-         si+NPi7BFUMehCVjot30k8zozz3vRazjML0CFjmfl5zbxr2pIGH8eS55hQr4grtDiOzu
-         W1YcXPiMmMsUAaBMQuW4nDYGSWQxJ4EtaRYHw5+/U9feF3MnOqozxCWxtY6LrdLZCVoI
-         4S7WeMobK/TRlLq2mAbLygNDyBtdJPNhNKfCILJP5eT2XADtKWJ4VUvBrheb+QDbKyaj
-         Dvag==
-X-Gm-Message-State: APjAAAXEMm7VHxFCy640dls0zzQLguU2niVgyzMAX3YubyL5+gxahOk4
-        XybQyWt4lFp4ppMnfbsEWuFkdg==
-X-Google-Smtp-Source: APXvYqwiqgHS4Nde3OSvELilWPNt02aegb8UgiVyCbbNbUStwGwHbXrgdZe31DQr92zc4dWpW9rWDQ==
-X-Received: by 2002:a17:902:2ae6:: with SMTP id j93mr35635251plb.18.1556140008705;
-        Wed, 24 Apr 2019 14:06:48 -0700 (PDT)
-Received: from localhost ([134.134.139.92])
-        by smtp.gmail.com with ESMTPSA id i24sm26639846pfo.85.2019.04.24.14.06.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Apr 2019 14:06:47 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 14:06:47 -0700 (PDT)
-X-Google-Original-Date: Wed, 24 Apr 2019 11:29:42 PDT (-0700)
-Subject:     Re: [PATCH v3 2/4] RISC-V: Fix memory reservation in setup_bootmem()
-In-Reply-To: <20190325092234.5451-3-anup.patel@wdc.com>
-CC:     aou@eecs.berkeley.edu, Atish Patra <Atish.Patra@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>, rppt@linux.ibm.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anup.Patel@wdc.com
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Anup.Patel@wdc.com
-Message-ID: <mhng-8cf03f23-1af7-48f0-8be8-60654bc09559@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 24 Apr 2019 17:08:38 -0400
+Received: from mail-eopbgr70084.outbound.protection.outlook.com ([40.107.7.84]:4030
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729032AbfDXVIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 17:08:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D+wEvndaxB2q9nE13nG+m5UVzBdo6Iso7ASKP+rwyZM=;
+ b=a+og0q+28gThIAIJ4sPqVOE4j95NukOITZb4QI2KrSODqGK+nw3b/Mwfb4H/gOEsxwcg1LojDt0J2gHXoGetED73USNeqCddFAieJKSy6+JCwfxRjNqwt/Lxxe1pY5C7Btj7x5LWpHhshYOQGs6VEmz5FlKRfRYT1a4orSK1HzM=
+Received: from AM6PR04MB4967.eurprd04.prod.outlook.com (20.177.33.210) by
+ AM6PR04MB4503.eurprd04.prod.outlook.com (20.177.37.92) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Wed, 24 Apr 2019 21:08:33 +0000
+Received: from AM6PR04MB4967.eurprd04.prod.outlook.com
+ ([fe80::ac11:250f:e99e:8fd3]) by AM6PR04MB4967.eurprd04.prod.outlook.com
+ ([fe80::ac11:250f:e99e:8fd3%5]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
+ 21:08:33 +0000
+From:   Han Xu <han.xu@nxp.com>
+To:     "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>
+CC:     "boris.brezillon@free-electrons.com" 
+        <boris.brezillon@free-electrons.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "kdasu.kdev@gmail.com" <kdasu.kdev@gmail.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "computersforpeace@gmail.com" <computersforpeace@gmail.com>
+Subject: [PATCH] mtd: spi-nor: Add prep/unprep for spi_nor_resume
+Thread-Topic: [PATCH] mtd: spi-nor: Add prep/unprep for spi_nor_resume
+Thread-Index: AQHU+uHfbtBiSaKzx0CN/OQDDONR1g==
+Date:   Wed, 24 Apr 2019 21:08:33 +0000
+Message-ID: <20190424210818.25205-1-han.xu@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR04CA0054.namprd04.prod.outlook.com
+ (2603:10b6:805:2a::31) To AM6PR04MB4967.eurprd04.prod.outlook.com
+ (2603:10a6:20b:7::18)
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=han.xu@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [64.157.242.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b62abdc2-a5df-4fce-4fe6-08d6c8f9021b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM6PR04MB4503;
+x-ms-traffictypediagnostic: AM6PR04MB4503:
+x-microsoft-antispam-prvs: <AM6PR04MB45032F7E6F76985F6297406E973C0@AM6PR04MB4503.eurprd04.prod.outlook.com>
+x-forefront-prvs: 00179089FD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(136003)(396003)(366004)(189003)(199004)(486006)(36756003)(68736007)(2616005)(6512007)(6486002)(6506007)(476003)(386003)(73956011)(256004)(14444005)(4326008)(186003)(44832011)(66446008)(102836004)(64756008)(7736002)(66556008)(53936002)(305945005)(66476007)(25786009)(6436002)(66946007)(54906003)(5660300002)(6116002)(81166006)(8676002)(8936002)(478600001)(14454004)(99286004)(50226002)(1076003)(66066001)(26005)(86362001)(71190400001)(52116002)(2501003)(316002)(2906002)(71200400001)(3846002)(97736004)(110136005)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4503;H:AM6PR04MB4967.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: fsDWoSmcpb5dy0G5txBtKvhhAB4zl1DW/l96pxX9xT8BnLlwt/8Ov7wXRmg3KHu8ugXZhPo1cZEVVEJjnpuQf/AN4yVafvyQIjQ5nx0L+E2NcWhLwkzjIImZOuyp0aQnndqs1efkC/BbTOSYAUHEP28vJCdEnrsAsztqZuCkF/yRYSvmYxdybmgH8mbZy3Lmcgf1zMETgFBB9rzRZRaLuGUsHxketq3NtjGP4u+7uGlMnOwMX0hyRYLcXule/oOYe1OULFlT64sgvJEuU541lPyQEy6Dg+idZ5nVnE4qorhBvh0W9ZysU/qDlx1p3kH+cT4zqZlM+9tBG3xHQnehquxYzNMJDs2q/G++AP3NTGoevJAxt4OqSUH2pP3k6sCg/x3o21/iK4ouZF8G3XIU8cV/iGt+EzPuj6Id6POqKcM=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b62abdc2-a5df-4fce-4fe6-08d6c8f9021b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 21:08:33.1052
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4503
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 Mar 2019 02:23:09 PDT (-0700), Anup.Patel@wdc.com wrote:
-> Currently, the setup_bootmem() reserves memory from RAM start to the
-> kernel end. This prevents us from exploring ways to use the RAM below
-> (or before) the kernel start hence this patch updates setup_bootmem()
-> to only reserve memory from the kernel start to the kernel end.
->
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/riscv/mm/init.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 8cf9ff1f9058..3e66b7cb3a61 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -29,6 +29,8 @@ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
->  							__page_aligned_bss;
->  EXPORT_SYMBOL(empty_zero_page);
->  
-> +extern char _start[];
-> +
->  static void __init zone_sizes_init(void)
->  {
->  	unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
-> @@ -108,23 +110,21 @@ void __init setup_bootmem(void)
->  {
->  	struct memblock_region *reg;
->  	phys_addr_t mem_size = 0;
-> +	phys_addr_t vmlinux_end = __pa(&_end);
-> +	phys_addr_t vmlinux_start = __pa(&_start);
->  
->  	/* Find the memory region containing the kernel */
->  	for_each_memblock(memory, reg) {
-> -		phys_addr_t vmlinux_end = __pa(_end);
->  		phys_addr_t end = reg->base + reg->size;
->  
-> -		if (reg->base <= vmlinux_end && vmlinux_end <= end) {
-> -			/*
-> -			 * Reserve from the start of the region to the end of
-> -			 * the kernel
-> -			 */
-> -			memblock_reserve(reg->base, vmlinux_end - reg->base);
-> +		if (reg->base <= vmlinux_end && vmlinux_end <= end)
->  			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
-> -		}
->  	}
->  	BUG_ON(mem_size == 0);
->  
-> +	/* Reserve from the start of the kernel to the end of the kernel */
-> +	memblock_reserve(vmlinux_start, vmlinux_end - vmlinux_start);
-> +
->  	set_max_mapnr(PFN_DOWN(mem_size));
->  	max_low_pfn = PFN_DOWN(memblock_end_of_DRAM());
->  
-> @@ -196,7 +196,6 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
->   */
->  asmlinkage void __init setup_vm(void)
->  {
-> -	extern char _start;
->  	uintptr_t i;
->  	uintptr_t pa = (uintptr_t) &_start;
->  	pgprot_t prot = __pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_EXEC);
-> -- 
-> 2.17.1
-
-I've already merged your first patch for 5.1, but I'm going through and
-collecting 5.2 patches now and it appears this has a conflict.  Do you mind
-re-submitting the patch set against rc6?
+SW4gdGhlIG5ldyBpbXBsZW1lbnRlZCBzcGlfbm9yX3Jlc3VtZSBmdW5jdGlvbiwgdGhlIHNwaV9u
+b3JfaW5pdCgpDQpzaG91bGQgYmUgYnJhY2VkIGJ5IHByZXAvdW5wcmVwIGZ1bmN0aW9ucy5fDQoN
+ClNpZ25lZC1vZmYtYnk6IEhhbiBYdSA8aGFuLnh1QG54cC5jb20+DQotLS0NCiBkcml2ZXJzL210
+ZC9zcGktbm9yL3NwaS1ub3IuYyB8IDggKysrKysrKysNCiBpbmNsdWRlL2xpbnV4L210ZC9zcGkt
+bm9yLmggICB8IDEgKw0KIDIgZmlsZXMgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspDQoNCmRpZmYg
+LS1naXQgYS9kcml2ZXJzL210ZC9zcGktbm9yL3NwaS1ub3IuYyBiL2RyaXZlcnMvbXRkL3NwaS1u
+b3Ivc3BpLW5vci5jDQppbmRleCA3MzE3MmQ3ZjUxMmIuLmY2NDkxODg1ZmE0ZiAxMDA2NDQNCi0t
+LSBhL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5vci5jDQorKysgYi9kcml2ZXJzL210ZC9zcGkt
+bm9yL3NwaS1ub3IuYw0KQEAgLTM5NTYsMTAgKzM5NTYsMTggQEAgc3RhdGljIHZvaWQgc3BpX25v
+cl9yZXN1bWUoc3RydWN0IG10ZF9pbmZvICptdGQpDQogCXN0cnVjdCBkZXZpY2UgKmRldiA9IG5v
+ci0+ZGV2Ow0KIAlpbnQgcmV0Ow0KIA0KKwlyZXQgPSBzcGlfbm9yX2xvY2tfYW5kX3ByZXAobm9y
+LCBTUElfTk9SX09QU19SRVNVTUUpOw0KKwlpZiAocmV0KSB7DQorCQlkZXZfZXJyKGRldiwgInBy
+ZXBhcmUoKSBmYWlsZWRcbiIpOw0KKwkJcmV0dXJuOw0KKwl9DQorDQogCS8qIHJlLWluaXRpYWxp
+emUgdGhlIG5vciBjaGlwICovDQogCXJldCA9IHNwaV9ub3JfaW5pdChub3IpOw0KIAlpZiAocmV0
+KQ0KIAkJZGV2X2VycihkZXYsICJyZXN1bWUoKSBmYWlsZWRcbiIpOw0KKw0KKwlzcGlfbm9yX3Vu
+bG9ja19hbmRfdW5wcmVwKG5vciwgU1BJX05PUl9PUFNfUkVTVU1FKTsNCiB9DQogDQogdm9pZCBz
+cGlfbm9yX3Jlc3RvcmUoc3RydWN0IHNwaV9ub3IgKm5vcikNCmRpZmYgLS1naXQgYS9pbmNsdWRl
+L2xpbnV4L210ZC9zcGktbm9yLmggYi9pbmNsdWRlL2xpbnV4L210ZC9zcGktbm9yLmgNCmluZGV4
+IGIzZDM2MGIwZWUzZC4uNTBjZjcxZGQ3ZTllIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9t
+dGQvc3BpLW5vci5oDQorKysgYi9pbmNsdWRlL2xpbnV4L210ZC9zcGktbm9yLmgNCkBAIC0yMzEs
+NiArMjMxLDcgQEAgZW51bSBzcGlfbm9yX29wcyB7DQogCVNQSV9OT1JfT1BTX0VSQVNFLA0KIAlT
+UElfTk9SX09QU19MT0NLLA0KIAlTUElfTk9SX09QU19VTkxPQ0ssDQorCVNQSV9OT1JfT1BTX1JF
+U1VNRSwNCiB9Ow0KIA0KIGVudW0gc3BpX25vcl9vcHRpb25fZmxhZ3Mgew0KLS0gDQoyLjE3LjEN
+Cg0K
