@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8678C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E169C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F0D2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403D72054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127351;
-	bh=XL+NTDVkUHk0deZSJSKYKtEdcHz6bmfVzP3Azt4Glc4=;
+	s=default; t=1556127356;
+	bh=58pozoQrwZGzJrIZVdyKAOnCwFuXUwJAhOFdktVPmQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oJL2LVxb8+EqMuTO0mCSp7azIKFsVytLGKKZm6WQjuX94Tp/02C/PPMoepNzXqBr/
-	 zmHYULIsvp0b9OSgQRa0AkkpMFQ6JjxmpgmX2Mw95BzFiVlEoDjTSILYD5KZ1uJwrL
-	 8QCL/kYb5iJABIEcAA6pFRJvI/XpL69YeSHVInnk=
+	b=PwG/ULgf2NVIltqgaC66m+dO5n4uR4CRghocdJtofvrSO3yKXKX/GzGYqc4QbufpV
+	 qYoXkqgk0+Qhi8NQwuRaQnqXkGx2tprB3ld589gEsyjYhPPz0nBHrCpSCotfkI5DPt
+	 feoXiFxemlP4LaFjhISq99LCP5m5L/SyLL5mRsiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391995AbfDXRfu (ORCPT
+        id S2392008AbfDXRfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:35:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34634 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:35:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391973AbfDXRfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:35:46 -0400
+        id S2390953AbfDXRfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:35:48 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F068218B0;
-        Wed, 24 Apr 2019 17:35:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C01562054F;
+        Wed, 24 Apr 2019 17:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127345;
-        bh=XL+NTDVkUHk0deZSJSKYKtEdcHz6bmfVzP3Azt4Glc4=;
+        s=default; t=1556127348;
+        bh=58pozoQrwZGzJrIZVdyKAOnCwFuXUwJAhOFdktVPmQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4Z25e0NHzn3dR+HrMhfMk+1ZsZfJgkVT2jltopvdeTgiKsYTtYgunaRFZ0LczkOU
-         cSL/dbT9wtRI0LDLwTZBtEQNImetdHHz9SGhwEDRsvVS6z1TIEPf72CvcGTzkz1b9J
-         v9omH3XlT0IUI73ar5qcD7OEeM99om1vttuyt04g=
+        b=WaEJQ9qkjDLqV11TDSU/Bpl9b6E+ifMJLYzGFN0pEPkIl9L0LCPFTBTrxRHXCD/vp
+         iIYaZTkYQhud0n7mnMFIbKJnCwTio+ALcFn5vK6EsFqspG1TDuSUogvk6RlIxSZk8k
+         +AfHAeRDE/VY3mvspQklMDTLWyP2DtJe3EfdHZBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.0 055/115] iio/gyro/bmg160: Use millidegrees for temperature scale
-Date:   Wed, 24 Apr 2019 19:09:51 +0200
-Message-Id: <20190424170928.415921404@linuxfoundation.org>
+Subject: [PATCH 5.0 056/115] iio:chemical:bme680: Fix, report temperature in millidegrees
+Date:   Wed, 24 Apr 2019 19:09:52 +0200
+Message-Id: <20190424170928.503115334@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -62,43 +61,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Looijmans <mike.looijmans@topic.nl>
 
-commit 40a7198a4a01037003c7ca714f0d048a61e729ac upstream.
+commit 9436f45dd53595e21566a8c6627411077dfdb776 upstream.
 
-Standard unit for temperature is millidegrees Celcius, whereas this driver
-was reporting in degrees. Fix the scale factor in the driver.
+The standard unit for temperature is millidegrees Celcius. Adapt the
+driver to report in millidegrees instead of degrees.
 
 Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+Fixes: 1b3bd8592780 ("iio: chemical: Add support for Bosch BME680 sensor");
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/gyro/bmg160_core.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/iio/chemical/bme680_core.c |   16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
---- a/drivers/iio/gyro/bmg160_core.c
-+++ b/drivers/iio/gyro/bmg160_core.c
-@@ -582,11 +582,10 @@ static int bmg160_read_raw(struct iio_de
- 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
- 		return bmg160_get_filter(data, val);
- 	case IIO_CHAN_INFO_SCALE:
--		*val = 0;
+--- a/drivers/iio/chemical/bme680_core.c
++++ b/drivers/iio/chemical/bme680_core.c
+@@ -583,8 +583,7 @@ static int bme680_gas_config(struct bme6
+ 	return ret;
+ }
+ 
+-static int bme680_read_temp(struct bme680_data *data,
+-			    int *val, int *val2)
++static int bme680_read_temp(struct bme680_data *data, int *val)
+ {
+ 	struct device *dev = regmap_get_device(data->regmap);
+ 	int ret;
+@@ -617,10 +616,9 @@ static int bme680_read_temp(struct bme68
+ 	 * compensate_press/compensate_humid to get compensated
+ 	 * pressure/humidity readings.
+ 	 */
+-	if (val && val2) {
+-		*val = comp_temp;
+-		*val2 = 100;
+-		return IIO_VAL_FRACTIONAL;
++	if (val) {
++		*val = comp_temp * 10; /* Centidegrees to millidegrees */
++		return IIO_VAL_INT;
+ 	}
+ 
+ 	return ret;
+@@ -635,7 +633,7 @@ static int bme680_read_press(struct bme6
+ 	s32 adc_press;
+ 
+ 	/* Read and compensate temperature to get a reading of t_fine */
+-	ret = bme680_read_temp(data, NULL, NULL);
++	ret = bme680_read_temp(data, NULL);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -668,7 +666,7 @@ static int bme680_read_humid(struct bme6
+ 	u32 comp_humidity;
+ 
+ 	/* Read and compensate temperature to get a reading of t_fine */
+-	ret = bme680_read_temp(data, NULL, NULL);
++	ret = bme680_read_temp(data, NULL);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -761,7 +759,7 @@ static int bme680_read_raw(struct iio_de
+ 	case IIO_CHAN_INFO_PROCESSED:
  		switch (chan->type) {
  		case IIO_TEMP:
--			*val2 = 500000;
--			return IIO_VAL_INT_PLUS_MICRO;
-+			*val = 500;
-+			return IIO_VAL_INT;
- 		case IIO_ANGL_VEL:
- 		{
- 			int i;
-@@ -594,6 +593,7 @@ static int bmg160_read_raw(struct iio_de
- 			for (i = 0; i < ARRAY_SIZE(bmg160_scale_table); ++i) {
- 				if (bmg160_scale_table[i].dps_range ==
- 							data->dps_range) {
-+					*val = 0;
- 					*val2 = bmg160_scale_table[i].scale;
- 					return IIO_VAL_INT_PLUS_MICRO;
- 				}
+-			return bme680_read_temp(data, val, val2);
++			return bme680_read_temp(data, val);
+ 		case IIO_PRESSURE:
+ 			return bme680_read_press(data, val, val2);
+ 		case IIO_HUMIDITYRELATIVE:
 
 
