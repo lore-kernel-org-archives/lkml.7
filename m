@@ -2,73 +2,97 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5788C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BAAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FEF4218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:27:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q0ajyNV3"
+	by mail.kernel.org (Postfix) with ESMTP id E5B6F21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbfDXG1h (ORCPT
+        id S1729837AbfDXG1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:27:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49558 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbfDXG1h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:27:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8LGS84/xpFnq+gtNsYbwzSZmg6zQw9+84JugkmFuBB8=; b=Q0ajyNV3Fizs2oX9zMVvlpmX2
-        x1sWhCIp5WOzB+YdzpG2UjkqVyEWfZO/ni6YG85vDnWi/mcxkX3fSkd0SHRD3IwzS/p6VmRUQoWnb
-        CKe83lnekyAgJPG5kpujGja3G8Lm8oz15ggGAbe3/0Tcq0o94HZWtN21tdSPrHS71j0NKDVQ5Ie7m
-        Q//8MJWjpW4eLTlI6reUvBe1ouE2YZajY26VJIvfEpEgIjeaOcM8fZ7/ai8qWuMoVKHnB/kGNE+HA
-        To2IbQ+bhn1Difxu5CNV82TIZb+/MnMXaEV6Wfuckm8oKCMvLPnm+TOyzarzVKrsG4t4w380bNLXH
-        2lAlB73dg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hJBNY-0004OP-AI; Wed, 24 Apr 2019 06:27:36 +0000
-Date:   Tue, 23 Apr 2019 23:27:36 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v3 1/3] RISC-V: Use tabs to align macro values in
- asm/csr.h
-Message-ID: <20190424062736.GA10400@infradead.org>
-References: <20190415093648.7525-1-anup.patel@wdc.com>
- <20190415093648.7525-2-anup.patel@wdc.com>
+        Wed, 24 Apr 2019 02:27:51 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57614 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726002AbfDXG1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 02:27:51 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DCC82C35206E82B3FDEC;
+        Wed, 24 Apr 2019 14:27:45 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Apr 2019
+ 14:27:38 +0800
+Subject: Re: [PATCH net-next 00/12] code optimizations & bugfixes for HNS3
+ driver
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <nhorman@redhat.com>
+References: <1556076127-61459-1-git-send-email-tanhuazhong@huawei.com>
+From:   tanhuazhong <tanhuazhong@huawei.com>
+Message-ID: <5fdcebca-296f-6943-ea4e-a19b19dfa45f@huawei.com>
+Date:   Wed, 24 Apr 2019 14:27:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415093648.7525-2-anup.patel@wdc.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <1556076127-61459-1-git-send-email-tanhuazhong@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.149.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 09:37:17AM +0000, Anup Patel wrote:
-> The spacing between macro name and value is not consistent in
-> asm/csr.h. This patch beautifies asm/csr.h by using tabs to align
-> macro values instead of spaces.
+Sorry, please ignore this patchset. I will send V2 to fix something else.
+
+On 2019/4/24 11:21, Huazhong Tan wrote:
+> This patch-set includes code optimizations and bugfixes for the HNS3
+> ethernet controller driver.
 > 
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> [patch 1/12 - 3/12] fixes some bugs about the IO path
+> 
+> [patch 4/12 - 6/12] includes some optimization and bugfixes
+> about mailbox message handling
+> 
+> [patch 7/12 - 12/12] adds misc code optimizations and bugfixes.
+> 
+> Huazhong Tan (7):
+>    net: hns3: stop sending keep alive msg when VF command queue needs
+>      reinit
+>    net: hns3: use atomic_t replace u32 for arq's count
+>    net: hns3: use a reserved byte to identify need_resp flag
+>    net: hns3: not reset TQP in the DOWN while VF resetting
+>    net: hns3: stop schedule reset service while unloading driver
+>    net: hns3: fix pause configure fail problem
+>    net: hns3: prevent double free in hns3_put_ring_config()
+> 
+> Weihang Li (1):
+>    net: hns3: remove reset after command send failed
+> 
+> Yunsheng Lin (3):
+>    net: hns3: fix data race between ring->next_to_clean
+>    net: hns3: fix for TX clean num when cleaning TX BD
+>    net: hns3: handle the BD info on the last BD of the packet
+> 
+> liuzhongzhu (1):
+>    net: hns3: extend the loopback state acquisition time
+> 
+>   drivers/net/ethernet/hisilicon/hns3/hclge_mbx.h    |  7 ++-
+>   drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    | 65 +++++++++++++---------
+>   drivers/net/ethernet/hisilicon/hns3/hns3_enet.h    |  7 ++-
+>   .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 10 ----
+>   .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |  8 ++-
+>   .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |  7 +--
+>   .../net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c  |  5 +-
+>   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_cmd.c   |  2 +-
+>   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 12 ++--
+>   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |  1 +
+>   .../ethernet/hisilicon/hns3/hns3vf/hclgevf_mbx.c   |  9 ++-
+>   11 files changed, 76 insertions(+), 57 deletions(-)
+> 
 
-Looks good,
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
