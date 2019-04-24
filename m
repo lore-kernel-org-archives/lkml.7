@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2A3C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE98CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9D721901
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A785921901
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556114295;
-	bh=l6IFbV054H8h7od5b7H/5pNVbZNvscbWGkXTSar9nlM=;
+	s=default; t=1556114300;
+	bh=IoJr28PEMz5n/Dhgxj2n0LUIpvdjDkq8BuvPvwiB3O0=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=PHRk7HMr1sTJWkWzn3iDLVIajPIsqN8IdbL2t9FoFGlglWIOk/B47oqekydL7YcEW
-	 FkJbXuyyGs+4RWQPbHt0+acxWUzOXW2URFWYx8Q/ICp+qLoIDphAcuAwuHuqzGWKL1
-	 vacAVMUFb69OsxXvA6+IVmFpoTtlPXyvCszJiOsw=
+	b=Hc0QCsReiNwCJ/hmpeLXaF4SbCCq/IdRl3Bd3DmdzeEyWuyr7xp/XOIE2qUKr/Afz
+	 Gd0LgGd8EoXbmyG/Oku2f/v8LPqvIWM4tsHrChRWkKVRu6W3e5LUzLwAYAE5r2IAr8
+	 meHcRavSP7QtFmxnQqPxUNNWj5dH4givhfSlCZlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730955AbfDXN6O (ORCPT
+        id S1730971AbfDXN6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51696 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 09:58:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730195AbfDXN6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:58:12 -0400
+        id S1728633AbfDXN6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:58:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04B082077C;
-        Wed, 24 Apr 2019 13:58:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32F1C2077C;
+        Wed, 24 Apr 2019 13:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556114291;
-        bh=l6IFbV054H8h7od5b7H/5pNVbZNvscbWGkXTSar9nlM=;
+        s=default; t=1556114296;
+        bh=IoJr28PEMz5n/Dhgxj2n0LUIpvdjDkq8BuvPvwiB3O0=;
         h=From:To:Cc:Subject:Date:From;
-        b=AcpGXKF+uDpbwZnVuH43aEFyTC0xEzWy7WAJD0yUHlFEaub28+tfDwKF/Sb4I1l/n
-         pFdCgb/Fnwvr5/bcjOOWvIPqPgg+teD+83M4MQ4W1Hfc677BtzE2UH4+oBueXKDv9o
-         MO110x+1/3DmXP5vi59Cj6LHpWhmuFXDHi5LKVBc=
+        b=xlPCd/Kbh5n0LiJqV0Rc1ZMAD79LrOhLtJH65igawfjrFmrmt/OuhjaG01zVXa5+z
+         dDQINKUGb9imCWZaevgvTIcNuF2ice9J3y+at6B/ZsMsWO3j8fq3CvwKSdfNSyHplE
+         v52mKknTxkqJmyN6m4ZeIn33UeqUNiZFlDe3ZwuI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kangjie Lu <kjlu@umn.edu>, Jiri Kosina <jkosina@suse.cz>,
         Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/35] HID: logitech: check the return value of create_singlethread_workqueue
-Date:   Wed, 24 Apr 2019 09:57:33 -0400
-Message-Id: <20190424135807.22994-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 01/28] HID: logitech: check the return value of create_singlethread_workqueue
+Date:   Wed, 24 Apr 2019 09:57:46 -0400
+Message-Id: <20190424135813.23101-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 X-stable: review
@@ -71,10 +71,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 614054af904a..b83d4173fc7f 100644
+index 2e2515a4c070..3198faf5cff4 100644
 --- a/drivers/hid/hid-logitech-hidpp.c
 +++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -1907,6 +1907,13 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+@@ -1282,6 +1282,13 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
  		kfree(data);
  		return -ENOMEM;
  	}
@@ -88,7 +88,7 @@ index 614054af904a..b83d4173fc7f 100644
  	data->hidpp = hidpp;
  	data->feature_index = feature_index;
  	data->version = version;
-@@ -1951,7 +1958,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+@@ -1326,7 +1333,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
  	/* ignore boost value at response.fap.params[2] */
  
  	/* init the hardware command queue */
