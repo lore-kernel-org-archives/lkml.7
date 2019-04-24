@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0DCC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8982BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EAA6218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D23218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:56:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kPXPWp25"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="o462nhkc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbfDXMzn (ORCPT
+        id S1730352AbfDXMz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:55:43 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:43448 "EHLO
+        Wed, 24 Apr 2019 08:55:59 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1356 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729032AbfDXMzm (ORCPT
+        by vger.kernel.org with ESMTP id S1727518AbfDXMz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:55:42 -0400
+        Wed, 24 Apr 2019 08:55:59 -0400
 Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OCpv9C009383;
-        Wed, 24 Apr 2019 14:55:12 +0200
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3OCpuFo009380;
+        Wed, 24 Apr 2019 14:55:30 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
  : from : message-id : date : mime-version : in-reply-to : content-type :
  content-transfer-encoding; s=STMicroelectronics;
- bh=dOnUJ8y4kZt0z4pcCjl7ndBW0lumY8hiF8KW8Mdlx6Y=;
- b=kPXPWp258yiEPV9ouU2l8i+0UDG8ZrqyJGsu2E8ht5JDyulonWwMLpY05P7Ew5sYihoA
- oF0XIpQxRoxlnmeLTAyiDpGcJUGlmZf+Uhgx8T3vptxWD1h129DhVM1LNf5pxiuml35+
- 2Ne84nPn78BA4yw1kBbn9Ri/ePL3uokgc77Zci8NavveNiXgjzG5fiT790gFrjD03LXk
- Z/MnIz7/mHiY8Xc5rSYMdLzjhC2y5CWlAuInOAiodlxCSTgC6dD8/9d3qSmBqBkx46tJ
- 9R5TY1b9em76/tvkf49nPS1U0j/WeDockSG4AOuLlACD9dmHmrqiM5df6b+nloKnDlPj 5w== 
+ bh=zol7OW64xrjcKVIMxusswaeJEktyZ1QS682qLDhJgi0=;
+ b=o462nhkcj6jkUZFSEqHNOHExTnKK+wEn0haXzg9+4B4ASOpMUNOLzb4sTBLI+u7o/fLw
+ NWEQeCcK9a0qKu+1N/K11GK0gRErceo+Gw3wFNeGDYyH309Nao+/YaK1eZklgbZkeYyS
+ 0vf7s4YuMq+YeDQVKAFmZWcpX5hVEe24BNkP+4OoXdbW/Izig+LZq0iKXAd4cW8vNbw6
+ PIdjOjzdY4/0wABiss//ekJ7ia16t/CSYUt3d/ZpD5hgcufaoH3iWeeTZw1K+OSSKRWp
+ 2bZrorifbk/1PK13vfhoG1v2Ek/J9qeaLm8v88g9ko9xs5TalajX0W5bRofaupUd8kRy Hw== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ryrvxdk04-1
+        by mx07-00178001.pphosted.com with ESMTP id 2ryrvxdk1m-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 24 Apr 2019 14:55:12 +0200
+        Wed, 24 Apr 2019 14:55:30 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0A9AA3D;
-        Wed, 24 Apr 2019 12:55:10 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9E75531;
+        Wed, 24 Apr 2019 12:55:29 +0000 (GMT)
 Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CB6A611B5;
-        Wed, 24 Apr 2019 12:55:10 +0000 (GMT)
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7E9AC2473;
+        Wed, 24 Apr 2019 12:55:29 +0000 (GMT)
 Received: from [10.48.0.167] (10.75.127.51) by SFHDAG5NODE3.st.com
  (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 24 Apr
- 2019 14:55:10 +0200
-Subject: Re: [PATCH 1/2] iio: adc: stm32-dfsdm: manage the get_irq error case
+ 2019 14:55:28 +0200
+Subject: Re: [PATCH 2/2] iio: adc: stm32-dfsdm: missing error case during
+ probe
 To:     Fabien Dessenne <fabien.dessenne@st.com>,
         Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -61,19 +62,19 @@ To:     Fabien Dessenne <fabien.dessenne@st.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
 References: <1556110286-1526-1-git-send-email-fabien.dessenne@st.com>
- <1556110286-1526-2-git-send-email-fabien.dessenne@st.com>
+ <1556110286-1526-3-git-send-email-fabien.dessenne@st.com>
 From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <b53b8078-e5ef-1b38-771f-3e34d387c790@st.com>
-Date:   Wed, 24 Apr 2019 14:55:09 +0200
+Message-ID: <b46f9525-53c0-d874-c88f-c6e351736b04@st.com>
+Date:   Wed, 24 Apr 2019 14:55:28 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1556110286-1526-2-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <1556110286-1526-3-git-send-email-fabien.dessenne@st.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG5NODE3.st.com
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG5NODE3.st.com
  (10.75.127.15)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_08:,,
  signatures=0
@@ -83,10 +84,12 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 4/24/19 2:51 PM, Fabien Dessenne wrote:
-> During probe, check the "get_irq" error value.
+> During probe, check the devm_ioremap_resource() error value.
+> Also return the devm_clk_get() error value instead of -EINVAL.
 > 
 > Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 > ---
+
 
 Hi Fabien,
 
@@ -95,24 +98,33 @@ Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 Thanks,
 Fabrice
 
->  drivers/iio/adc/stm32-dfsdm-adc.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  drivers/iio/adc/stm32-dfsdm-core.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index 19adc2b..588907c 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -1456,6 +1456,12 @@ static int stm32_dfsdm_adc_probe(struct platform_device *pdev)
->  	 * So IRQ associated to filter instance 0 is dedicated to the Filter 0.
+> diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
+> index 0a4d374..26e2011 100644
+> --- a/drivers/iio/adc/stm32-dfsdm-core.c
+> +++ b/drivers/iio/adc/stm32-dfsdm-core.c
+> @@ -233,6 +233,8 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
+>  	}
+>  	priv->dfsdm.phys_base = res->start;
+>  	priv->dfsdm.base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(priv->dfsdm.base))
+> +		return PTR_ERR(priv->dfsdm.base);
+>  
+>  	/*
+>  	 * "dfsdm" clock is mandatory for DFSDM peripheral clocking.
+> @@ -242,8 +244,10 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
 >  	 */
->  	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		if (irq != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get IRQ: %d\n", irq);
-> +		return irq;
-> +	}
-> +
->  	ret = devm_request_irq(dev, irq, stm32_dfsdm_irq,
->  			       0, pdev->name, adc);
->  	if (ret < 0) {
+>  	priv->clk = devm_clk_get(&pdev->dev, "dfsdm");
+>  	if (IS_ERR(priv->clk)) {
+> -		dev_err(&pdev->dev, "No stm32_dfsdm_clk clock found\n");
+> -		return -EINVAL;
+> +		ret = PTR_ERR(priv->clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Failed to get clock (%d)\n", ret);
+> +		return ret;
+>  	}
+>  
+>  	priv->aclk = devm_clk_get(&pdev->dev, "audio");
 > 
