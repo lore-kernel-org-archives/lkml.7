@@ -2,134 +2,128 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B90C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6930AC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6726120652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129280;
-	bh=bemYLdN5zAtZkwm5Svm1Nx+pPzBnN5sRRXbbTbwYyhk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=anYyOPimS11MqgBbEXNqgXV2xsMiAlwMHf+lSEOuhd82L/S+FPd8M6D4Zotwhau7O
-	 mnRBJNvcgyDB1wtWtkQzHc1/D9kQkJ3mnJ5BbiX+65t5wu9tfNEYaEtK8wKIoZoCS6
-	 CjgI2w2AHNHe6dGr+nq8LPcPugLu/ltuw3U+sQ8M=
+	by mail.kernel.org (Postfix) with ESMTP id 36AFF20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:08:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="n35r7HLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388482AbfDXSH7 (ORCPT
+        id S2388851AbfDXSIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388406AbfDXRQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:16:25 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBC6A21900;
-        Wed, 24 Apr 2019 17:16:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126184;
-        bh=bemYLdN5zAtZkwm5Svm1Nx+pPzBnN5sRRXbbTbwYyhk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dzKjf5VcGN14lT3p9XG1wOLlvSmeewOKEXry61oMEo3ND6nksBRkMRabyf9FUoF7J
-         jX/uqaPld4GjiFbVDU8UGnRpLPoJ16dfLkCwJiiqqaBhwoDscO1AGz1rAWic3FZbfR
-         CTFuItRGgleVaOttpVvKkSlOic1lvRybknQFoq8Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia Guo <guojia12@huawei.com>,
-        Joseph Qi <jiangqi903@gmail.com>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <ge.changwei@h3c.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 020/168] ocfs2: fix a panic problem caused by o2cb_ctl
-Date:   Wed, 24 Apr 2019 19:07:44 +0200
-Message-Id: <20190424170924.777822790@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
-References: <20190424170923.452349382@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 14:08:05 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41002 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387633AbfDXSIE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 14:08:04 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v7so15051374oie.8
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:08:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8q9yPvjgU1Dmc3BqSRsYFTk9ExzQt5bmVmZcuF82af8=;
+        b=n35r7HLELoguC4+CDnNmcyHD93QJUumktU3TTYTT85K1K93kZndcMpl7JZesyoPmNR
+         jExL9hZ2+RXj4TANemwSx12DYO6BcMPdE5APBpgYQAQodtB0+JR+vmO82L0DVaUiA6Qo
+         quxRikkZsR9RQUFUFtxbtBnY+a1yYn2QZqOnZ4yPEh2uZl2+Bl3jQihIzoRRIP2TqP3O
+         WY3tx1QeXl1tl8V14appaRj2bC+66o204Bey5C/7QXCdJJv7BONvI7a+8z8BLSVRI4oB
+         T8P5fgoJKdXi2KNELRKXOGkWm5p5MiNBceHQv5mw5z2c4ID9RPWjLk0oy43G3O5Q+zNz
+         zG7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8q9yPvjgU1Dmc3BqSRsYFTk9ExzQt5bmVmZcuF82af8=;
+        b=GAaqfooqv8ZIsebsItwlzXr7nje+fYhKdPZOWIFzj1DmC5aeareDLDOnb4wGVctutZ
+         hsK/XbtQVPQ0USQTV0N5YKL9QncvEXT9FoIIz9zyaLthbwBZfW5VJXNOyz+DbnpXX5y1
+         kfrNzQNO5OV7dFZ9dDxSKBrlX4tfBVbKy7fCHWRIpcBFZMht+Wmm5PUT+V7AYyn7XN7a
+         8uR7oZC57VSHDsZkvdzXXEHLIPR34olvH32sOdvdNUq+v6iRw1/u1EAb5KNmHZHQT5mQ
+         J0Ac/vHue3keZXyeyfSXXTiFJuW/9XK2Mt4KhX41BPGSaH0455V3JJ0cpJVxHy3Gdh5o
+         d1rw==
+X-Gm-Message-State: APjAAAVif+msbeIIfRG/ygNd7KJp41zTFQKGcFJl8EY/sjWkiWk0qc/7
+        7bO2MC1fIuH/yfNlkIbJP30ZpHWlKKVBjMWFAKGlug==
+X-Google-Smtp-Source: APXvYqwUscsee1H3tWh0LwutS4rgxqlReQCcuMcrIVSy6LAXYPTW+nyIjR2WiohPRoNbvVXrkWOUWHNWNhknw/nsrb8=
+X-Received: by 2002:aca:b108:: with SMTP id a8mr297824oif.0.1556129283720;
+ Wed, 24 Apr 2019 11:08:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155552636696.2015392.12612320706815016081.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <3dda9d08-a572-65b9-2f2f-da978a008deb@redhat.com>
+In-Reply-To: <3dda9d08-a572-65b9-2f2f-da978a008deb@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 24 Apr 2019 11:07:52 -0700
+Message-ID: <CAPcyv4imzm5reh7d-p4Xyt=Sdoi5WDFC6t9FgLaZVexbWfGG5Q@mail.gmail.com>
+Subject: Re: [PATCH v6 06/12] mm/hotplug: Add mem-hotplug restrictions for remove_memory()
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cc725ef3cb202ef2019a3c67c8913efa05c3cce6 ]
+On Tue, Apr 23, 2019 at 2:21 PM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 17.04.19 20:39, Dan Williams wrote:
+> > Teach the arch_remove_memory() path to consult the same 'struct
+> > mhp_restrictions' context as was specified at arch_add_memory() time.
+> >
+> > No functional change, this is a preparation step for teaching
+> > __remove_pages() about how and when to allow sub-section hot-remove, and
+> > a cleanup for an unnecessary "is_dev_zone()" special case.
+>
+> I am not yet sure if this is the right thing to do. When adding memory,
+> we obviously have to specify the "how". When removing memory, we usually
+> should be able to look such stuff up.
 
-In the process of creating a node, it will cause NULL pointer
-dereference in kernel if o2cb_ctl failed in the interval (mkdir,
-o2cb_set_node_attribute(node_num)] in function o2cb_add_node.
+True, the implementation can just use find_memory_block(), and no need
+to plumb this flag.
 
-The node num is initialized to 0 in function o2nm_node_group_make_item,
-o2nm_node_group_drop_item will mistake the node number 0 for a valid
-node number when we delete the node before the node number is set
-correctly.  If the local node number of the current host happens to be
-0, cluster->cl_local_node will be set to O2NM_INVALID_NODE_NUM while
-o2hb_thread still running.  The panic stack is generated as follows:
+>
+>
+> >  void __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
+> > -                 unsigned long nr_pages, struct vmem_altmap *altmap)
+> > +             unsigned long nr_pages, struct mhp_restrictions *restrictions)
+> >  {
+> >       unsigned long i;
+> > -     unsigned long map_offset = 0;
+> >       int sections_to_remove;
+> > +     unsigned long map_offset = 0;
+> > +     struct vmem_altmap *altmap = restrictions->altmap;
+> >
+> > -     /* In the ZONE_DEVICE case device driver owns the memory region */
+> > -     if (is_dev_zone(zone)) {
+> > -             if (altmap)
+> > -                     map_offset = vmem_altmap_offset(altmap);
+> > -     }
+> > +     if (altmap)
+> > +             map_offset = vmem_altmap_offset(altmap);
+> >
+>
+> Why weren't we able to use this exact same hunk before? (after my
+> resource deletion cleanup of course)
+>
+> IOW, do we really need struct mhp_restrictions here?
 
-  o2hb_thread
-      \-o2hb_do_disk_heartbeat
-          \-o2hb_check_own_slot
-              |-slot = &reg->hr_slots[o2nm_this_node()];
-              //o2nm_this_node() return O2NM_INVALID_NODE_NUM
+We don't need it. It was only the memblock info why I added the
+"restrictions" argument.
 
-We need to check whether the node number is set when we delete the node.
+> After I factor out memory device handling into the caller of
+> arch_remove_memory(), also the next patch ("mm/sparsemem: Prepare for
+> sub-section ranges") should no longer need it. Or am I missing something?
 
-Link: http://lkml.kernel.org/r/133d8045-72cc-863e-8eae-5013f9f6bc51@huawei.com
-Signed-off-by: Jia Guo <guojia12@huawei.com>
-Reviewed-by: Joseph Qi <jiangqi903@gmail.com>
-Acked-by: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <ge.changwei@h3c.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/ocfs2/cluster/nodemanager.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/fs/ocfs2/cluster/nodemanager.c b/fs/ocfs2/cluster/nodemanager.c
-index 3c45a9301a09..a87a08e1bfab 100644
---- a/fs/ocfs2/cluster/nodemanager.c
-+++ b/fs/ocfs2/cluster/nodemanager.c
-@@ -621,13 +621,15 @@ static void o2nm_node_group_drop_item(struct config_group *group,
- 	struct o2nm_node *node = to_o2nm_node(item);
- 	struct o2nm_cluster *cluster = to_o2nm_cluster(group->cg_item.ci_parent);
- 
--	o2net_disconnect_node(node);
-+	if (cluster->cl_nodes[node->nd_num] == node) {
-+		o2net_disconnect_node(node);
- 
--	if (cluster->cl_has_local &&
--	    (cluster->cl_local_node == node->nd_num)) {
--		cluster->cl_has_local = 0;
--		cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
--		o2net_stop_listening(node);
-+		if (cluster->cl_has_local &&
-+		    (cluster->cl_local_node == node->nd_num)) {
-+			cluster->cl_has_local = 0;
-+			cluster->cl_local_node = O2NM_INVALID_NODE_NUM;
-+			o2net_stop_listening(node);
-+		}
- 	}
- 
- 	/* XXX call into net to stop this node from trading messages */
--- 
-2.19.1
-
-
-
+That patch is still needed for the places where it adds the @nr_pages
+argument, but the mhp_restrictions related bits can be dropped. The
+subsection_check() helper needs to be refactored a bit to not rely on
+mhp_restrictions.
