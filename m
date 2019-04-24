@@ -6,105 +6,111 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA32C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5435C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3691C218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA9421773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbfDXKfC (ORCPT
+        id S1728707AbfDXKfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:35:02 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:42655 "EHLO
+        Wed, 24 Apr 2019 06:35:01 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:37775 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728447AbfDXKfA (ORCPT
+        with ESMTP id S1727032AbfDXKe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:35:00 -0400
+        Wed, 24 Apr 2019 06:34:59 -0400
 Received: from orion.localdomain ([95.114.95.254]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MvKGv-1gSvZC2CyP-00rHys; Wed, 24 Apr 2019 12:34:51 +0200
+ 1MIMOy-1hXUrf1As0-00EMiV; Wed, 24 Apr 2019 12:34:51 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     axboe@kernel.dk, linux-ide@vger.kernel.org,
         linux-nvme@lists.infradead.org
-Subject: [PATCH 2/3] drivers: libata: introduce sysctl directory
-Date:   Wed, 24 Apr 2019 12:34:40 +0200
-Message-Id: <1556102081-11820-3-git-send-email-info@metux.net>
+Subject: [PATCH 1/3] drivers: nvme: target: core: fix build break
+Date:   Wed, 24 Apr 2019 12:34:39 +0200
+Message-Id: <1556102081-11820-2-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1556102081-11820-1-git-send-email-info@metux.net>
 References: <1556102081-11820-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:H1/Uq2LSUgMGcAi8IOWYcZdUmY2cjBmhpocX5+nkVqLWDYczkCD
- f5AyOoMlGWLSQl/o3Li9wab/Bke0pRGsFQv5WWNOrUZcM1U2hNlR5vjM23AOZsyzuqmF8Oq
- sKPTF/y9/rtANc+N0aPmCwsG8V8pDoCVXrW5iGd6nCMUKfRT1YvQ2JpiIKxWWl4wwiqE9gH
- 9fTD2vYEsX4SUY3AiRAXQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MOfYQJ2zZCg=:AoeQ+16JtQ1rs6I7dFYaZT
- NT1E/Y7Fi8HdDMUxtWb8HsZzdlurhSJC+KkQrRgonbLT1VviWxFkDpal7FUHrywGwnffiVOHZ
- CfPh+n7/af94TL8AK/oj+LoAvirH05C42f3cmBMND+KG6OWInZLvJX5llTAMEWYFc4+fwN7GI
- xpir2lu6czLW2PX/kUC6nBlofsnzVPgN15l7z1eu/DNuOMuX48sEyPrAVCM2LhEesO6zdae8Q
- nu7xwqkmUvOQ21RHBWON8Y5VnkDOHwU+WlRzfrZXwEyeGg1dw40GsL9sFCnnNUxzZ8+4BvPll
- cfwdHBbFG4nXY3gmVeHyo0Zz+eMRYcxUQhC4mjn9Sg0zhkE4DJc2MlY3al+5L1qgaaHJ9otu+
- Bc3AhGdviYPQHigVV7D6OG6Ul7nD+8S8U9slZ4+TC9ryxnEdt6vqJUxEZkVf3MjRxdhxNM4lc
- 8q1rq2zItXtwFAArrGWAkC67YFpPHTDzHmeJf7X0JrMC1cPY2jlOAUJDR1R4sqcj78Nmigcyd
- K0ef7AMkQYB41ejYZHpxCiXmOk104/Di1S4PVXcsE8RXLOG4UROmKZM31HrFfHS6b5pZ+tWxy
- Z/3Kt03fO8hMSjmbQlC/ObhoftgKHiWazAKvbV06+Qm23VB/nZPNqdGKSFEegnx5iAI+uX6W2
- Rm1ZoIctujsIpP3tmWHIJHsoiRneZ21G0G9eQkvzvZVuWjzd5hS0fF+4ddytdybL6iMlNP4tN
- 1eZg0bnXATqUncjQFcPUt/cWeeUfZYLBb74ZUg==
+X-Provags-ID: V03:K1:JIJa60MgCLYfsCVEtja+ZNwi6Nh7ryNozR5rx1XJQm46Ttr/VAU
+ lhNmBEgXb0AAPxZWu/M6IKARrllglAUgcykj8p5EFE+oSGDc21AcsZRPuEPX03Tkh3G6pWY
+ Bj3XpBEVZuZYgzYG63xE0wX+gpWQJGOkvrQmK6RTkQUcJxgLh+s3spYmTcc0bDQ72ypWH3V
+ +Mh1XGVWRwibM8DC2fAVg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1gDUjChnQmE=:SsOBK/idME24zIhnOurG1i
+ 8FkjY1OOlHMtWD2fU+H7PShKk6HO+TtJRAWYe0CXlbjUfts0eHU7a7zOQDRhNRX14hbmg0dvi
+ LDZT+m3D0h8YlTusr2k2QBByK58KcL/q1Kg4vFDZdC85DQNfux8AzPwvQ1ISMi48LzEqEhwig
+ GhPgEFdq0a3slKoTyRBOGeQkVNLUjwkF9AG+KzB6x8OpcWcFdXIt+N3jSt1itoj9HaXodkQzb
+ 5f4wtV8YuCsMeZcD6opCfztnHJ+qYEujx0sn189bUwEx/mR2ZDJf7zWpjVCn30xOQN1hvx5z2
+ R59qaD5+bwjkXbjeT9lDKMb5FIhQOSoIo7D3jzctBznkHjWFAN6knQp68t5N7A57FNVHB675p
+ T3XyiVEvvkVroXuAWfoj7lB2z/YnwPqcEqWoVjuBwaHWrFpktq9gN3H9F8W5igQrN6Kl0KHr5
+ Zr5RJLCMv7VV0f5OouSBKqPR+lx0jWJIwV+H4UkTXids7IixgPEoyZDHkbi2n5KKjJHWYEpM0
+ IbM+i568qhbtp1/T7gAH0IG8ekIey6NzpJwFpf7yp1dKlMwKeaydbUploI2dPIFmsvG7IoNwV
+ qkQ0fyPXXQm/++Ww39rSpkhLjScYdGuE3lgRRYflRSfkgr7HhZiIFjGX1S4Uhfkb/U1/lplP7
+ 9Ybq3qZ4zDLL1TX1L99owMCNh8mbwCUGObb+LG+GKi8FeMYTjn67UxTVsEthK7L1rI9+URI8K
+ gAkC1KZQP6+XK/pFBVQEib7YVkSUnTXxWvcDiQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register a sysctl directory for libata, so upcoming knobs
-can be added here.
+Build breaks:
+
+    drivers/nvme/target/core.c: In function 'nvmet_req_alloc_sgl':
+    drivers/nvme/target/core.c:939:12: error: implicit declaration of \
+function 'sgl_alloc'; did you mean 'bio_alloc'? \
+[-Werror=implicit-function-declaration]
+      req->sg = sgl_alloc(req->transfer_len, GFP_KERNEL, &req->sg_cnt);
+                ^~~~~~~~~
+                bio_alloc
+    drivers/nvme/target/core.c:939:10: warning: assignment makes pointer \
+from integer without a cast [-Wint-conversion]
+      req->sg = sgl_alloc(req->transfer_len, GFP_KERNEL, &req->sg_cnt);
+              ^
+    drivers/nvme/target/core.c: In function 'nvmet_req_free_sgl':
+    drivers/nvme/target/core.c:952:3: error: implicit declaration of \
+function 'sgl_free'; did you mean 'ida_free'? [-Werror=implicit-function-declaration]
+       sgl_free(req->sg);
+       ^~~~~~~~
+       ida_free
+
+Cause:
+
+    1. missing include to <linux/scatterlist.h>
+    2. SGL_ALLOC needs to be enabled
+
+Therefore adding the missing include, as well as Kconfig dependency.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/ata/libata-core.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/nvme/target/Kconfig | 1 +
+ drivers/nvme/target/core.c  | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index adf2878..d3044c9 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -176,6 +176,21 @@ struct ata_force_ent {
- MODULE_LICENSE("GPL");
- MODULE_VERSION(DRV_VERSION);
+diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
+index d94f25c..3ef0a4e 100644
+--- a/drivers/nvme/target/Kconfig
++++ b/drivers/nvme/target/Kconfig
+@@ -3,6 +3,7 @@ config NVME_TARGET
+ 	tristate "NVMe Target support"
+ 	depends on BLOCK
+ 	depends on CONFIGFS_FS
++	select SGL_ALLOC
+ 	help
+ 	  This enabled target side support for the NVMe protocol, that is
+ 	  it allows the Linux kernel to implement NVMe subsystems and
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index b3e765a..08851f5 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -8,6 +8,7 @@
+ #include <linux/random.h>
+ #include <linux/rculist.h>
+ #include <linux/pci-p2pdma.h>
++#include <linux/scatterlist.h>
  
-+static struct ctl_table ctl_libata[] = {
-+	{}
-+};
-+
-+static struct ctl_table libata_dir_table[] = {
-+	{
-+		.procname	= "libata",
-+		.maxlen		= 0,
-+		.mode		= 0555,
-+		.child		= ctl_libata,
-+	},
-+	{ },
-+};
-+
-+static struct ctl_table_header *libata_sysctl_header;
+ #include "nvmet.h"
  
- static bool ata_sstatus_online(u32 sstatus)
- {
-@@ -7059,6 +7074,8 @@ static int __init ata_init(void)
- 		goto err_out;
- 	}
- 
-+	libata_sysctl_header = register_sysctl_table(libata_dir_table);
-+
- 	printk(KERN_DEBUG "libata version " DRV_VERSION " loaded.\n");
- 	return 0;
- 
-@@ -7072,6 +7089,7 @@ static void __exit ata_exit(void)
- 	libata_transport_exit();
- 	ata_sff_exit();
- 	kfree(ata_force_tbl);
-+	unregister_sysctl_table(libata_sysctl_header);
- }
- 
- subsys_initcall(ata_init);
 -- 
 1.9.1
 
