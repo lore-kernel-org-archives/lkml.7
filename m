@@ -2,159 +2,175 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABADC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EDBC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC2D21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="VOmkjLeR"
+	by mail.kernel.org (Postfix) with ESMTP id 374C621905
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556127121;
+	bh=Hra5CC/kccN76sIH9vxco1aSEHssXT927s3p/imH6tw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GEKuhtdJU1QFlOIvtxt8k8g/IAjdGd29dDzGHeM+JfmUS2656dr6kf0umJDeKbM6u
+	 tfuvIQ0C5EaJnch5a9+qpy/z3+oJ5N8w1dS8qWeWIZoKiSCbkLwEwjSC9EucdU5Kjn
+	 ANyzxN1ywKBOWO3FlYaQljmv0zb5xnhi1fTmPOU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390716AbfDXRb6 (ORCPT
+        id S2391215AbfDXRcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:31:58 -0400
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:44606 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389000AbfDXRbw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:32:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390475AbfDXRbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 24 Apr 2019 13:31:52 -0400
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 327AA2E0DAC;
-        Wed, 24 Apr 2019 20:31:48 +0300 (MSK)
-Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
-        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id mqCwldw3eN-VlUigZfn;
-        Wed, 24 Apr 2019 20:31:48 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1556127108; bh=jBQJ5JzcChYHEUTBM7+Q0xb6++8HR7L/XCmlLDZmeHA=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=VOmkjLeRgNlrXQT1YJBWV7bX9FMQWRpj7TepS467B339zlgIWeogkoJ0tQkhlEDQd
-         W3MVxE2tO74j6ZipojVuteWipthzejrqY+i0dbHMAWuNYuoRlbC7VrqUe0rFHR1qlE
-         17MM87x3B0FTTakDpELzsPToLBEGRMaRFUUn2viI=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:0:c3e::1:2b])
-        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 1dSZiEAmeV-Vl5KJrBl;
-        Wed, 24 Apr 2019 20:31:47 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH 4.4 051/168] e1000e: fix cyclic resets at link up with
- active tx
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20190424170923.452349382@linuxfoundation.org>
- <20190424170926.817047361@linuxfoundation.org>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <0913eebd-edc7-1d33-0c07-08f9640d65ee@yandex-team.ru>
-Date:   Wed, 24 Apr 2019 20:31:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDD8521915;
+        Wed, 24 Apr 2019 17:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556127111;
+        bh=Hra5CC/kccN76sIH9vxco1aSEHssXT927s3p/imH6tw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m5g77h6vf0LpCsk524BOnlsrdMV9u19FQd2NSWfFItUMdUxmRh9UsnxUgUPMYpmVg
+         10Z1mI5dsJ/tUDejAWRFe/5Om4IbBQPLfM5QVsLcxnqX6Wk7BgReRswDA3GeIOYHpN
+         R8pTFkh14lTtKs8oqLvjSAg0KrNE836UDTbf+EMA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 66/96] x86/kprobes: Verify stack frame on kretprobe
+Date:   Wed, 24 Apr 2019 19:10:11 +0200
+Message-Id: <20190424170924.200628922@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
+References: <20190424170919.829037226@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190424170926.817047361@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please skip this. It's going to be reverted upstream:
-https://patchwork.ozlabs.org/patch/1086838/
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-while original problem fixed differently:
-https://patchwork.ozlabs.org/patch/1086839/
+commit 3ff9c075cc767b3060bdac12da72fc94dd7da1b8 upstream.
 
-same for 3.18 branch
+Verify the stack frame pointer on kretprobe trampoline handler,
+If the stack frame pointer does not match, it skips the wrong
+entry and tries to find correct one.
 
-On 24.04.2019 20:08, Greg Kroah-Hartman wrote:
-> [ Upstream commit 0f9e980bf5ee1a97e2e401c846b2af989eb21c61 ]
-> 
-> I'm seeing series of e1000e resets (sometimes endless) at system boot
-> if something generates tx traffic at this time. In my case this is
-> netconsole who sends message "e1000e 0000:02:00.0: Some CPU C-states
-> have been disabled in order to enable jumbo frames" from e1000e itself.
-> As result e1000_watchdog_task sees used tx buffer while carrier is off
-> and start this reset cycle again.
-> 
-> [   17.794359] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
-> [   17.794714] IPv6: ADDRCONF(NETDEV_CHANGE): eth1: link becomes ready
-> [   22.936455] e1000e 0000:02:00.0 eth1: changing MTU from 1500 to 9000
-> [   23.033336] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   26.102364] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
-> [   27.174495] 8021q: 802.1Q VLAN Support v1.8
-> [   27.174513] 8021q: adding VLAN 0 to HW filter on device eth1
-> [   30.671724] cgroup: cgroup: disabling cgroup2 socket matching due to net_prio or net_cls activation
-> [   30.898564] netpoll: netconsole: local port 6666
-> [   30.898566] netpoll: netconsole: local IPv6 address 2a02:6b8:0:80b:beae:c5ff:fe28:23f8
-> [   30.898567] netpoll: netconsole: interface 'eth1'
-> [   30.898568] netpoll: netconsole: remote port 6666
-> [   30.898568] netpoll: netconsole: remote IPv6 address 2a02:6b8:b000:605c:e61d:2dff:fe03:3790
-> [   30.898569] netpoll: netconsole: remote ethernet address b0:a8:6e:f4:ff:c0
-> [   30.917747] console [netcon0] enabled
-> [   30.917749] netconsole: network logging started
-> [   31.453353] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   34.185730] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   34.321840] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   34.465822] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   34.597423] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   34.745417] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   34.877356] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   35.005441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   35.157376] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   35.289362] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   35.417441] e1000e 0000:02:00.0: Some CPU C-states have been disabled in order to enable jumbo frames
-> [   37.790342] e1000e: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: None
-> 
-> This patch flushes tx buffers only once when carrier is off
-> rather than at each watchdog iteration.
-> 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-> Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->   drivers/net/ethernet/intel/e1000e/netdev.c | 15 ++++++---------
->   1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-> index 6b1cacd86c6e..44312962b64e 100644
-> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
-> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-> @@ -5246,8 +5246,13 @@ static void e1000_watchdog_task(struct work_struct *work)
->   			/* 8000ES2LAN requires a Rx packet buffer work-around
->   			 * on link down event; reset the controller to flush
->   			 * the Rx packet buffer.
-> +			 *
-> +			 * If the link is lost the controller stops DMA, but
-> +			 * if there is queued Tx work it cannot be done.  So
-> +			 * reset the controller to flush the Tx packet buffers.
->   			 */
-> -			if (adapter->flags & FLAG_RX_NEEDS_RESTART)
-> +			if ((adapter->flags & FLAG_RX_NEEDS_RESTART) ||
-> +			    e1000_desc_unused(tx_ring) + 1 < tx_ring->count)
->   				adapter->flags |= FLAG_RESTART_NOW;
->   			else
->   				pm_schedule_suspend(netdev->dev.parent,
-> @@ -5270,14 +5275,6 @@ link_up:
->   	adapter->gotc_old = adapter->stats.gotc;
->   	spin_unlock(&adapter->stats64_lock);
->   
-> -	/* If the link is lost the controller stops DMA, but
-> -	 * if there is queued Tx work it cannot be done.  So
-> -	 * reset the controller to flush the Tx packet buffers.
-> -	 */
-> -	if (!netif_carrier_ok(netdev) &&
-> -	    (e1000_desc_unused(tx_ring) + 1 < tx_ring->count))
-> -		adapter->flags |= FLAG_RESTART_NOW;
-> -
->   	/* If reset is necessary, do it outside of interrupt context. */
->   	if (adapter->flags & FLAG_RESTART_NOW) {
->   		schedule_work(&adapter->reset_task);
-> 
+This can happen if user puts the kretprobe on the function
+which can be used in the path of ftrace user-function call.
+Such functions should not be probed, so this adds a warning
+message that reports which function should be blacklisted.
+
+Tested-by: Andrea Righi <righi.andrea@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: http://lkml.kernel.org/r/155094059185.6137.15527904013362842072.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/kernel/kprobes/core.c |   26 ++++++++++++++++++++++++++
+ include/linux/kprobes.h        |    1 +
+ 2 files changed, 27 insertions(+)
+
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -569,6 +569,7 @@ void arch_prepare_kretprobe(struct kretp
+ 	unsigned long *sara = stack_addr(regs);
+ 
+ 	ri->ret_addr = (kprobe_opcode_t *) *sara;
++	ri->fp = sara;
+ 
+ 	/* Replace the return addr with trampoline addr */
+ 	*sara = (unsigned long) &kretprobe_trampoline;
+@@ -759,15 +760,21 @@ __visible __used void *trampoline_handle
+ 	unsigned long flags, orig_ret_address = 0;
+ 	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
+ 	kprobe_opcode_t *correct_ret_addr = NULL;
++	void *frame_pointer;
++	bool skipped = false;
+ 
+ 	INIT_HLIST_HEAD(&empty_rp);
+ 	kretprobe_hash_lock(current, &head, &flags);
+ 	/* fixup registers */
+ #ifdef CONFIG_X86_64
+ 	regs->cs = __KERNEL_CS;
++	/* On x86-64, we use pt_regs->sp for return address holder. */
++	frame_pointer = &regs->sp;
+ #else
+ 	regs->cs = __KERNEL_CS | get_kernel_rpl();
+ 	regs->gs = 0;
++	/* On x86-32, we use pt_regs->flags for return address holder. */
++	frame_pointer = &regs->flags;
+ #endif
+ 	regs->ip = trampoline_address;
+ 	regs->orig_ax = ~0UL;
+@@ -789,8 +796,25 @@ __visible __used void *trampoline_handle
+ 		if (ri->task != current)
+ 			/* another task is sharing our hash bucket */
+ 			continue;
++		/*
++		 * Return probes must be pushed on this hash list correct
++		 * order (same as return order) so that it can be poped
++		 * correctly. However, if we find it is pushed it incorrect
++		 * order, this means we find a function which should not be
++		 * probed, because the wrong order entry is pushed on the
++		 * path of processing other kretprobe itself.
++		 */
++		if (ri->fp != frame_pointer) {
++			if (!skipped)
++				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
++			skipped = true;
++			continue;
++		}
+ 
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
++		if (skipped)
++			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
++				ri->rp->kp.addr);
+ 
+ 		if (orig_ret_address != trampoline_address)
+ 			/*
+@@ -808,6 +832,8 @@ __visible __used void *trampoline_handle
+ 		if (ri->task != current)
+ 			/* another task is sharing our hash bucket */
+ 			continue;
++		if (ri->fp != frame_pointer)
++			continue;
+ 
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
+ 		if (ri->rp && ri->rp->handler) {
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -173,6 +173,7 @@ struct kretprobe_instance {
+ 	struct kretprobe *rp;
+ 	kprobe_opcode_t *ret_addr;
+ 	struct task_struct *task;
++	void *fp;
+ 	char data[0];
+ };
+ 
+
+
