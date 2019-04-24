@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF4AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CB7C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1955421920
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C98521915
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126045;
-	bh=e+QoihR7wtEcXpmrX1KkpwVHk5O1u8/UUrwkoaU3v3k=;
+	s=default; t=1556126048;
+	bh=kzIMiiwCC45VGANYyC4bHrqvtKGqTB2zdY3i9a7Dwy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WCh5XHWQ6Pzyfw75fkqWJiFvaKcu/aIQvQSwdhncRXgyTWVp3xFMvAnMKkGVlcEF1
-	 vZ/7L6/+kQAhQtryVtu2mCdgChXQJfmU2nIrh/fwsGmUTqnvpNvJ24t1FEvrFjde/w
-	 i/pxfe2jSm8GdTTg1GJ7ktSAv4DGBXJK9scGM4J8=
+	b=NQj8iMlAi8K8Jgt8ljVn4umacDndPgwjckjr0i/NHfv6fuQkhOwk23tAZPB4X6BdO
+	 VXYX6f1u85dCscTVs+gheereAZzBKMPJOWdqK1r4IVTKvQrJ0sa7YuDJzpm3I9fXCc
+	 pKnGaBQ+k3OjDj2KvzabqQ1z3iv9Qj84mGhCBpns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387578AbfDXROD (ORCPT
+        id S2388014AbfDXROH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:14:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38138 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:14:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387978AbfDXROA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:14:00 -0400
+        id S2388001AbfDXROD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:03 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 177A021907;
-        Wed, 24 Apr 2019 17:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C07E21905;
+        Wed, 24 Apr 2019 17:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126039;
-        bh=e+QoihR7wtEcXpmrX1KkpwVHk5O1u8/UUrwkoaU3v3k=;
+        s=default; t=1556126042;
+        bh=kzIMiiwCC45VGANYyC4bHrqvtKGqTB2zdY3i9a7Dwy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jgyt5seET/MStmVnCioCLjQLodEEsEAVyVByrCCOBDQ7Uxff0dg+3Vb4wHFrM52QM
-         jZdAtsRUqn6tJMo6JcsHWXITi156aznmgddDicoQ6yBjcpz6hdUGn/e09m81n/6LQz
-         NFEJz6wcQT+g/c8QrbictL9n9ZdwJwz8nS0eeJ2M=
+        b=nD3sz8Dy3bqOZ+HohIkxLv6k8XawoJ9BT21/UCWbADFBCmx8kPJ0s5BaqPvqtT4dg
+         H31Yaknd50qlFxsyEkrAWGGloQDvSnt7w4HnWDvXkb41MmKNHMKxfOfRhn2Nt54ySB
+         FLqcbgKs6vlBXtZdwO3NmuPCjb1PYA8LZ2FUyMW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -51,9 +51,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 070/104] perf top: Fix error handling in cmd_top()
-Date:   Wed, 24 Apr 2019 19:09:27 +0200
-Message-Id: <20190424170905.426772422@linuxfoundation.org>
+Subject: [PATCH 3.18 071/104] perf tests: Fix a memory leak in test__perf_evsel__tp_sched_test()
+Date:   Wed, 24 Apr 2019 19:09:28 +0200
+Message-Id: <20190424170905.818032314@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -66,10 +66,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 70c819e4bf1c5f492768b399d898d458ccdad2b6 ]
+[ Upstream commit d982b33133284fa7efa0e52ae06b88f9be3ea764 ]
 
-We should go to the cleanup path, to avoid leaks, detected using gcc's
-ASan.
+  =================================================================
+  ==20875==ERROR: LeakSanitizer: detected memory leaks
+
+  Direct leak of 1160 byte(s) in 1 object(s) allocated from:
+      #0 0x7f1b6fc84138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
+      #1 0x55bd50005599 in zalloc util/util.h:23
+      #2 0x55bd500068f5 in perf_evsel__newtp_idx util/evsel.c:327
+      #3 0x55bd4ff810fc in perf_evsel__newtp /home/work/linux/tools/perf/util/evsel.h:216
+      #4 0x55bd4ff81608 in test__perf_evsel__tp_sched_test tests/evsel-tp-sched.c:69
+      #5 0x55bd4ff528e6 in run_test tests/builtin-test.c:358
+      #6 0x55bd4ff52baf in test_and_print tests/builtin-test.c:388
+      #7 0x55bd4ff543fe in __cmd_test tests/builtin-test.c:583
+      #8 0x55bd4ff5572f in cmd_test tests/builtin-test.c:722
+      #9 0x55bd4ffc4087 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #10 0x55bd4ffc45c6 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #11 0x55bd4ffc49ca in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #12 0x55bd4ffc5138 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #13 0x7f1b6e34809a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+
+  Indirect leak of 19 byte(s) in 1 object(s) allocated from:
+      #0 0x7f1b6fc83f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
+      #1 0x7f1b6e3ac30f in vasprintf (/lib/x86_64-linux-gnu/libc.so.6+0x8830f)
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -78,29 +98,25 @@ Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20190316080556.3075-9-changbin.du@gmail.com
+Fixes: 6a6cd11d4e57 ("perf test: Add test for the sched tracepoint format fields")
+Link: http://lkml.kernel.org/r/20190316080556.3075-17-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-top.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/tests/evsel-tp-sched.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index c5b9c3f01d85..ea02883c3405 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1256,8 +1256,9 @@ int cmd_top(int argc, const char **argv, const char *prefix __maybe_unused)
- 	symbol_conf.priv_size = sizeof(struct annotation);
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index 5ce11eac4dd3..959bdb4a79ad 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -78,5 +78,6 @@ int test__perf_evsel__tp_sched_test(void)
+ 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
+ 		ret = -1;
  
- 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
--	if (symbol__init(NULL) < 0)
--		return -1;
-+	status = symbol__init(NULL);
-+	if (status < 0)
-+		goto out_delete_evlist;
- 
- 	sort__setup_elide(stdout);
- 
++	perf_evsel__delete(evsel);
+ 	return ret;
+ }
 -- 
 2.19.1
 
