@@ -2,48 +2,49 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A619DC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EB6C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFF22175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F4721773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 23:17:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="uGIU4k4K";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="uGIU4k4K"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="rcEXOMjL";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="uwUn1zET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfDXXRT (ORCPT
+        id S1728056AbfDXXRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 19:17:19 -0400
-Received: from node.akkea.ca ([192.155.83.177]:50370 "EHLO node.akkea.ca"
+        Wed, 24 Apr 2019 19:17:25 -0400
+Received: from node.akkea.ca ([192.155.83.177]:50454 "EHLO node.akkea.ca"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbfDXXRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 19:17:19 -0400
+        id S1727967AbfDXXRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 19:17:21 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id CE60F4E2050;
-        Wed, 24 Apr 2019 23:17:18 +0000 (UTC)
+        by node.akkea.ca (Postfix) with ESMTP id 10E784E2056;
+        Wed, 24 Apr 2019 23:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1556147838; bh=juJJpZhMyz53DoMAc5fTus1bZSg7WH5fi1SYkpVoWoA=;
-        h=From:To:Cc:Subject:Date;
-        b=uGIU4k4KlP9MLWTE7P1L2t15ypQQZPErWTxjtiAG2/54IYYhlVcYipiITY/MuJEVt
-         hEWgsaNCCTnw99e94yh4RwzREVxEWFzwgKUPcHglBxMFj98v+N67PYVOFWt1/BZmsd
-         NoGnTEi14tfHfz8v7pL5JhJbaMZQG5WR4g9l7eg4=
+        t=1556147841; bh=sxy5B7Ps/51CJJ2+Vk/k0HCkeiFsTjkEf5lFm0F+sPo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=rcEXOMjLqFkvNkSUr1hUROOekYYjQ3PULU6HhNhHnyX/ey+F7g53hrJlu9YQhfXEe
+         Vzqg+csBGcOrAuyIj4D+PM/DYyusfsWzc0AF1gvTGwKB/o+3QTqT7DeMuD6kajXK0N
+         Bf4p70fX4jfuTwM6jUq3Lr1wlhQatCw1LbnKOYRo=
 X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
 Received: from node.akkea.ca ([127.0.0.1])
         by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hSSRwhAErVQ8; Wed, 24 Apr 2019 23:17:18 +0000 (UTC)
+        with ESMTP id Opfzvyl4AxDT; Wed, 24 Apr 2019 23:17:20 +0000 (UTC)
 Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id A76E64E204B;
-        Wed, 24 Apr 2019 23:17:17 +0000 (UTC)
+        by node.akkea.ca (Postfix) with ESMTPSA id 112844E204E;
+        Wed, 24 Apr 2019 23:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1556147838; bh=juJJpZhMyz53DoMAc5fTus1bZSg7WH5fi1SYkpVoWoA=;
-        h=From:To:Cc:Subject:Date;
-        b=uGIU4k4KlP9MLWTE7P1L2t15ypQQZPErWTxjtiAG2/54IYYhlVcYipiITY/MuJEVt
-         hEWgsaNCCTnw99e94yh4RwzREVxEWFzwgKUPcHglBxMFj98v+N67PYVOFWt1/BZmsd
-         NoGnTEi14tfHfz8v7pL5JhJbaMZQG5WR4g9l7eg4=
+        t=1556147840; bh=sxy5B7Ps/51CJJ2+Vk/k0HCkeiFsTjkEf5lFm0F+sPo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=uwUn1zETQYvI7rfKNfPiXIC9gCTj71uZz4xgs3N69pzZYwcJdLQBUylck7dFDtRh9
+         64ij7oiStC25YahzYgb59hn0ZtghYAe9xTLAoaug5UH4den0+tvlrRM2WaoFaAK7Nq
+         detzwzpEAklchUCqhozILoKfueKCXmivoocrIDXM=
 From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
 To:     angus@akkea.ca
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -59,77 +60,43 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Aisheng Dong <aisheng.dong@nxp.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, m.felsch@pengutronix.de
-Subject: [PATCH v7 0/3] Add support for the Purism Librem5 devkit
-Date:   Wed, 24 Apr 2019 16:17:08 -0700
-Message-Id: <20190424231711.14156-1-angus@akkea.ca>
+Subject: [PATCH v7 3/3] dt-bindings: arm: fsl: Add the imx8mq boards
+Date:   Wed, 24 Apr 2019 16:17:11 -0700
+Message-Id: <20190424231711.14156-4-angus@akkea.ca>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190424231711.14156-1-angus@akkea.ca>
+References: <20190424231711.14156-1-angus@akkea.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Librem5 devkit is based on the imx8mq from NXP. This is a default
-devicetree to boot the board to a command prompt.
+Add an entry for imx8mq based boards
 
-Changes since v6:
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Dropped unused regulators.
-Fix regulator phandles case.
-Dropped extra whitespace.
-
-Changes since v5:
-
-Added reviewed-by tags.
-Moved USB port links to USB controller node.
-
-Changes since v4:
-
-Compiled against linux-next next-20190415.
-Added imx8mq to the arm yaml file.
-Re-arrange regulator nodes to drop undefined supplies.
-Additional ordering for aesthetics.
-Split some long lines.
-Added lots of blank lines.
-Moved pinctl muxes to where they are used.
-Cleaned out reg defintions from regulator nodes.
-
-Changes since v3:
-
-Freshly sorted and pressed nodes.
-Change the backlight to an interpolated scale.
-Dropped i2c2.
-Dropped devkit version number to match debian MR.
-
-Changes since v2:
-
-Fixed incorrect phy-supply for the fsl-fec.
-Dropped unused regulator property.
-Fixup Makefile for linux-next.
-
-Changes since v1:
-
-Dropped config file.
-Updated the board compatible label.
-Changed node names to follow naming conventions.
-Added a more complete regulator hierachy.
-Removed unused nodes.
-Removed unknown devices.
-Fixed comment style.
-Dropped undocumented properties.
-
-
-Angus Ainslie (Purism) (3):
-  arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
-  dt-bindings: Add an entry for Purism SPC
-  dt-bindings: arm: fsl: Add the imx8mq boards
-
- .../devicetree/bindings/arm/fsl.yaml          |   7 +
- .../devicetree/bindings/vendor-prefixes.txt   |   1 +
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../dts/freescale/imx8mq-librem5-devkit.dts   | 812 ++++++++++++++++++
- 4 files changed, 821 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 06762fe57227..ecf63a123950 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -175,6 +175,13 @@ properties:
+               - fsl,imx8mm-evk            # i.MX8MM EVK Board
+           - const: fsl,imx8mm
+ 
++      - description: i.MX8MQ based Boards
++        items:
++          - enum:
++              - fsl,imx8mq-evk            # i.MX8MQ EVK Board
++              - purism,librem5-devkit     # Purism Librem5 devkit
++          - const: fsl,imx8mq
++
+       - description: i.MX8QXP based Boards
+         items:
+           - enum:
 -- 
 2.17.1
 
