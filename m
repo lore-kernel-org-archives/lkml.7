@@ -2,109 +2,112 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55109C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AECCC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21AE7218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:45:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="C8Q2AxbP"
+	by mail.kernel.org (Postfix) with ESMTP id 1EF86218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbfDXIpN (ORCPT
+        id S1730158AbfDXIqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:45:13 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:39690 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729422AbfDXIpM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:45:12 -0400
-Received: by mail-it1-f195.google.com with SMTP id e13so4873006itk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 01:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nMprasNgB0HsdZ7Rf0IEpgfmXifCgCUHWARLRGNw5l4=;
-        b=C8Q2AxbPg9IPm8fFhY7BQb+T9m5M9E7cvdXiJtAhdTJMZElIBJRzt7C5xxvO6lwM2M
-         hAIf3kvZJvOF01bHYaosCp6FO2g4dWEzX71vlSy4bjqzkIlTxzhLkBVXt8zuX40Ek956
-         0QYx/BxAP7ARhgF2Kp6+QOJ5j5iWDYL6Pk7KS9B30XapoOL0recjC4UK7/6lQh4Njmdn
-         eE6pnXujoAcgo1NWAb7TNZuW2fM8JpIuhGQ7lV1PXbUfsiSF9IIerDWaAIRm08L9+L9i
-         aoE/okc6ejpC0KiiYTPE5Ik3QUU9mz4r+VSQHswIwTPBhz1ntIXx8boj+5kQqEsnXBn7
-         yP9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nMprasNgB0HsdZ7Rf0IEpgfmXifCgCUHWARLRGNw5l4=;
-        b=IKdhF5rXG7xXvJeIXaRqxmb1kPzrUEAhbUp1tFpaGoIDZWjqCjUgV9ElrpVzyz4TwJ
-         rQ9192OCW8htsTwX/YrSxGSMUIZs0TgUKbo0Tcw1V2+5liK7KDDULOugQ14HE1gvJSHN
-         mW1ukl4v8H2AjPpLSvLpKiqA3XRSO6EzTi5HJVnz44TGQgbzXtG2+wrlplShRzUf6GK9
-         5hyEn3RH503Wynfc6elEcu7ysS9vgigZP5mYO6AmWsetKbL9kZ/OuWqIDc6RJqKzdZHW
-         X8EBGkTYLHYfk8rtJ4cX7UHwk2rvsfC+sawbGEx7fZbD2xHPeUZRIXYZFsrjt0PC2qXQ
-         TcrA==
-X-Gm-Message-State: APjAAAVITWQkaHFlbWa2jY12RV9jCGHWQ/w6Dg6A20aaQpR1kkdWNZuO
-        VBVbiUicD/aF8xI6LHLX4ZDfvXn6odeEvXXlGZv9zw==
-X-Google-Smtp-Source: APXvYqxFAvjlCEyvNCS6bCbAlBurPt3V5umT7fb7BraJ4Bf3bdLENVohU/w7QzXiusJv3+/W4C35UKyNd5XWV737uoU=
-X-Received: by 2002:a02:924d:: with SMTP id y13mr20897713jag.24.1556095511507;
- Wed, 24 Apr 2019 01:45:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190423090451.23711-1-brgl@bgdev.pl> <20190424083127.GB6699@amd>
-In-Reply-To: <20190424083127.GB6699@amd>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 24 Apr 2019 10:45:00 +0200
-Message-ID: <CAMRc=McN78_gJw_T4EPucM8veTC9XRUu7TGJ0J+zPsU=0Hu2GQ@mail.gmail.com>
-Subject: Re: [PATCH v10 00/11] mfd: add support for max77650 PMIC
-To:     Pavel Machek <pavel@denx.de>, Lee Jones <lee.jones@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 24 Apr 2019 04:46:14 -0400
+Received: from foss.arm.com ([217.140.101.70]:39804 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727441AbfDXIqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 04:46:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD86680D;
+        Wed, 24 Apr 2019 01:46:13 -0700 (PDT)
+Received: from e107985-lin.cambridge.arm.com (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DB7523F5AF;
+        Wed, 24 Apr 2019 01:46:12 -0700 (PDT)
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] sched/fair: Remove rq->load
+Date:   Wed, 24 Apr 2019 09:45:56 +0100
+Message-Id: <20190424084556.604-1-dietmar.eggemann@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 24 kwi 2019 o 10:31 Pavel Machek <pavel@denx.de> napisa=C5=82(a):
->
-> On Tue 2019-04-23 11:04:40, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > This series adds support for max77650 ultra low-power PMIC. It provides
-> > the core mfd driver and a set of five sub-drivers for the regulator,
-> > power supply, gpio, leds and input subsystems.
-> >
-> > Patches 1-4 add the DT binding documents. Patch 5 documents mfd_add_dev=
-ices().
-> > Patches 6-10 add all drivers. Last patch adds a MAINTAINERS entry for t=
-his
-> > device.
-> >
-> > The regulator part is already upstream.
->
-> I see v10 in my inbox... and acks from all over the place, but patches
-> not going in. Who takes these? I don't think I need another 10
-> versions in my inbox...
->                                                                 Pavel
+The CFS class is the only one maintaining and using the CPU wide load
+(rq->load(.weight)). The last use case of the CPU wide load in CFS's
+set_next_entity() can be replaced by using the load of the CFS class
+(rq->cfs.load(.weight)) instead.
 
-I think Lee Jones should take them through the MFD tree. With the ack
-from Sebastian Reichel on the driver part and the example in the
-charger binding fixed I think they are ready to be picked up.
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+---
+ kernel/sched/debug.c | 2 --
+ kernel/sched/fair.c  | 7 ++-----
+ kernel/sched/sched.h | 2 --
+ 3 files changed, 2 insertions(+), 9 deletions(-)
 
-Bart
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 8039d62ae36e..1148f43dbd42 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -656,8 +656,6 @@ do {									\
+ 	SEQ_printf(m, "  .%-30s: %Ld.%06ld\n", #x, SPLIT_NS(rq->x))
+ 
+ 	P(nr_running);
+-	SEQ_printf(m, "  .%-30s: %lu\n", "load",
+-		   rq->load.weight);
+ 	P(nr_switches);
+ 	P(nr_load_updates);
+ 	P(nr_uninterruptible);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index a4d9e14bf138..73a6718f29cc 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -2682,8 +2682,6 @@ static void
+ account_entity_enqueue(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ {
+ 	update_load_add(&cfs_rq->load, se->load.weight);
+-	if (!parent_entity(se))
+-		update_load_add(&rq_of(cfs_rq)->load, se->load.weight);
+ #ifdef CONFIG_SMP
+ 	if (entity_is_task(se)) {
+ 		struct rq *rq = rq_of(cfs_rq);
+@@ -2699,8 +2697,6 @@ static void
+ account_entity_dequeue(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ {
+ 	update_load_sub(&cfs_rq->load, se->load.weight);
+-	if (!parent_entity(se))
+-		update_load_sub(&rq_of(cfs_rq)->load, se->load.weight);
+ #ifdef CONFIG_SMP
+ 	if (entity_is_task(se)) {
+ 		account_numa_dequeue(rq_of(cfs_rq), task_of(se));
+@@ -4096,7 +4092,8 @@ set_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ 	 * least twice that of our own weight (i.e. dont track it
+ 	 * when there are only lesser-weight tasks around):
+ 	 */
+-	if (schedstat_enabled() && rq_of(cfs_rq)->load.weight >= 2*se->load.weight) {
++	if (schedstat_enabled() &&
++	    rq_of(cfs_rq)->cfs.load.weight >= 2*se->load.weight) {
+ 		schedstat_set(se->statistics.slice_max,
+ 			max((u64)schedstat_val(se->statistics.slice_max),
+ 			    se->sum_exec_runtime - se->prev_sum_exec_runtime));
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index efa686eeff26..e4059e81e99c 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -830,8 +830,6 @@ struct rq {
+ 	atomic_t nohz_flags;
+ #endif /* CONFIG_NO_HZ_COMMON */
+ 
+-	/* capture load from *all* tasks on this CPU: */
+-	struct load_weight	load;
+ 	unsigned long		nr_load_updates;
+ 	u64			nr_switches;
+ 
+-- 
+2.17.1
+
