@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C2FC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDFDC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA0A2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF45A21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:21:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTVzgqPC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zye5Pv5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbfDXKVx (ORCPT
+        id S1729892AbfDXKV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:21:53 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39501 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729836AbfDXKVs (ORCPT
+        Wed, 24 Apr 2019 06:21:56 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40150 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729642AbfDXKVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:21:48 -0400
-Received: by mail-pl1-f195.google.com with SMTP id e92so7285600plb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:21:48 -0700 (PDT)
+        Wed, 24 Apr 2019 06:21:55 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d31so9166204pgl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:21:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iDCj3vcYJ2ba6ECukipCJlwQYuaJnMKHKn0JgJNY2Z8=;
-        b=UTVzgqPCPEmf//BD3SkIj838oTmXB4U6v1tISa/DwaP8JlbMEKUoxf6ZASLwWs0iWe
-         +Zj2ueMi/tjejX3ZxsFDhUxIFbQtqTfFDp+dlUKOpHDSE2MEh3tb9084qUOyOxv96tS0
-         NH8lZ4Svp/logoEakFBHzoQDtWJdfuCfhRDwUUUYlM0t4pNH40qkJDkbVQQVAfmh/xRc
-         IgwTK7iF/obULiCzQpb8esPG16QdQUmwSLikXGfg/WyCRP/wJ+efclXFSBhxaFGFagqw
-         LKFm/TncytRXwtQAK5RwAnT067T+vZRf4wOuSYQU/AlGgshYwkFzDyyaNJ4ukRNogXx3
-         nnkw==
+        bh=a9KulxRHSSh2zFg+VMLczHaM1RFFY8TJzhSl5V4G1aw=;
+        b=Zye5Pv5nKFs0r3n6BfENH+tFbbBzen9Ioo6RSKfLKZDBMQIpHI/LFRFYzX8B9SSfWM
+         3NHK0VWeDbidz5UO5uoEyMq+DwdQTziGRqDD00GTSuEwU2W9rXtLM0sZwfn3K1b/tp+Z
+         wHeeS/x6C2cFZs650Ki68cul3lE9rGeG6M4Zhz+Ogk7pOmz56mphJrmLa7XuATxf37hQ
+         lyLrneXLolcHs1t8XEi0DbQ3BUxVew10GGoheqQ57YQ3wrgoorJH8NePk0PloARHSR14
+         Y/wkHOSFTZWjjCuIGs5EYgV8IDf0k/V4dI0DfRMe3PbpEkaK2CXx1cmrf4HtJY/j8bY6
+         vlDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iDCj3vcYJ2ba6ECukipCJlwQYuaJnMKHKn0JgJNY2Z8=;
-        b=JcxbBKjnRxTWA+FFkPWtCplX+6hj/BKuNAASIMDxm7NR+obcUoSU1YrRv0LeAPUz2M
-         NugtDztO6me37gqHuFdr071bNza3psThENXFOATCjeO5KwMNRwNu1CNU58yfWmaB1C47
-         cnrKeughg0OBUeFl2LCNDly0aMeN3LufKMwwv0XU59hjMjEwENKvXzkSro1JvDyiIMCn
-         m89O0uuDyZwSDDtF6r/Avk1tsEgIsZGzq6ibVjAGJlX0PmTw24js8+e9PxET6NmqT8Ko
-         fYFwJlCecq6WbEkqCsDf0wWcgHUVnRBvHAeDItpn5PCPGAkxinL5lypaWP6zK3GWsqb5
-         gMmg==
-X-Gm-Message-State: APjAAAXGsKVJvMDSOWLX2hBcUz36FA9jqP8SHkJZk2Kwytri7MnZaw2G
-        5VQ2FjEv62jyKoffLw8klG0=
-X-Google-Smtp-Source: APXvYqw+YsW4N2GNhk6FPGmMKHJRv22lyv55tbElxOENS7sruUMCKZ+nNYR80x6tc3jJU1qOIEpwWw==
-X-Received: by 2002:a17:902:b617:: with SMTP id b23mr29988632pls.73.1556101308405;
-        Wed, 24 Apr 2019 03:21:48 -0700 (PDT)
+        bh=a9KulxRHSSh2zFg+VMLczHaM1RFFY8TJzhSl5V4G1aw=;
+        b=YDULf7NctKY3bpZPvQlWg+Y1WSACEVKNw73+A54wxZoEe/9r8vVXpfyeGeGOs2jbqY
+         tCDTEjk88OrMxzk/dqBTKdXEG7v2gA0UcnMhkf+2tuVFZJ+KeoEG19VLWEnOFTCf7xsw
+         kb/89ePJbl0HIL6Zr0SqPX41vaZlI7xReZj8L5VAJtjs2FLk8WigBr1cPgpMTC2pP4GJ
+         3jHHzkypj3p3sT2jVDyBO1imMg56ve8kT281JhSiyRYnDuWzaSUh2DDozOtOzqpOuFNF
+         GVECSGmga44LLkRWEOm+KG1GEcupAhgZxFEpuDFXnh+RmZ4yN4D+nYc1R/SB9un8RmQ7
+         nOCg==
+X-Gm-Message-State: APjAAAWJ8aTa0B5THKKMQlpbGvKOOuZb9vN3JTu6Gx7Q7vbv7Q2PsqKk
+        Im8UGf4M/+u9XliXzc45z4aru55uBmad6w==
+X-Google-Smtp-Source: APXvYqxIegR0ylBbHBxQ59ePlE1ybWfy+wTZp03OnvoBOp4//86O8C4wI3Sq1mKwjrpOKlkfrRpCTg==
+X-Received: by 2002:a62:1d94:: with SMTP id d142mr32624004pfd.83.1556101314502;
+        Wed, 24 Apr 2019 03:21:54 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v19sm25051604pfn.62.2019.04.24.03.21.45
+        by smtp.gmail.com with ESMTPSA id v19sm25051604pfn.62.2019.04.24.03.21.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 03:21:47 -0700 (PDT)
+        Wed, 24 Apr 2019 03:21:54 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 26/28] locking/lockdep: Remove __bfs
-Date:   Wed, 24 Apr 2019 18:19:32 +0800
-Message-Id: <20190424101934.51535-27-duyuyang@gmail.com>
+Subject: [PATCH 28/28] locking/lockdep: Reduce lock_list_entries by half
+Date:   Wed, 24 Apr 2019 18:19:34 +0800
+Message-Id: <20190424101934.51535-29-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190424101934.51535-1-duyuyang@gmail.com>
 References: <20190424101934.51535-1-duyuyang@gmail.com>
@@ -74,88 +74,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since there is no need for backward dependecy searching, remove this
-extra function layer.
+The forward and backward dependencies consume the same number of
+list_entries. Since backward dependencies are removed, the max number of
+list_entries can be halved safely: MAX_LOCKDEP_ENTRIES /= 2, which goes
+from 16384 to 8192 or 32768 to 16384.
+
+Besides memory space reduction, the performance gain is also promising
+with this new IRQ usage checking algorithm. We briefly show the
+performance improvement on a simple workload: Linux kernel build (i.e.,
+make clean; reboot; make vmlinux -j8). It is expected that for complex
+real-world workloads with heavier lock usage and bigger dependency
+graph, the benefits should be more.
+
+Results:
+
+------
+Before
+------
+
+direct dependencies:                  6900 [max: 32768]
+max bfs queue depth:                   272
+find-mask forwards checks:            2875
+find-mask backwards checks:          50229
+
+-----
+After
+-----
+
+direct dependencies:                  3444 [max: 16384]   ( -  50 % )
+max bfs queue depth:                   223                ( -  18 % )
+find-mask forwards checks:             370                ( -  87 % )
+find-mask backwards checks:              0                ( - 100 % )
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 40 +++++++---------------------------------
- 1 file changed, 7 insertions(+), 33 deletions(-)
+ kernel/locking/lockdep_internals.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 06ae87f..acaa3b3 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1393,27 +1393,13 @@ static inline int get_lock_depth(struct lock_list *child)
- }
- 
- /*
-- * Return the forward or backward dependency list.
-- *
-- * @lock:   the lock_list to get its class's dependency list
-- * @offset: the offset to struct lock_class to determine whether it is
-- *          locks_after or locks_before
-- */
--static inline struct list_head *get_dep_list(struct lock_list *lock, int offset)
--{
--	void *lock_class = lock->class;
--
--	return lock_class + offset;
--}
--
--/*
-- * Forward- or backward-dependency search, used for both circular dependency
-+ * Forward-dependency search, used for both circular dependency
-  * checking and hardirq-unsafe/softirq-unsafe checking.
+diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+index 30d021b..3b4b3dd 100644
+--- a/kernel/locking/lockdep_internals.h
++++ b/kernel/locking/lockdep_internals.h
+@@ -92,11 +92,11 @@ enum {
+  * table (if it's not there yet), and we check it for lock order
+  * conflicts and deadlocks.
   */
--static int __bfs(struct lock_list *source_entry, void *data,
--		 int (*match)(struct lock_list *entry, void *data),
--		 struct lock_list **target_entry, int offset, int index,
--		 int distance, struct lock_class *safe_lock, bool reach)
-+static int __bfs_forwards(struct lock_list *source_entry, void *data,
-+			  int (*match)(struct lock_list *entry, void *data),
-+			  struct lock_list **target_entry, int index,
-+			  int distance, struct lock_class *safe_lock, bool reach)
- {
- 	struct lock_list *entry;
- 	struct lock_list *lock;
-@@ -1429,7 +1415,7 @@ static int __bfs(struct lock_list *source_entry, void *data,
- 		goto exit;
- 	}
+-#define MAX_LOCKDEP_ENTRIES	16384UL
++#define MAX_LOCKDEP_ENTRIES	8194UL
+ #define MAX_LOCKDEP_CHAINS_BITS	15
+ #define MAX_STACK_TRACE_ENTRIES	262144UL
+ #else
+-#define MAX_LOCKDEP_ENTRIES	32768UL
++#define MAX_LOCKDEP_ENTRIES	16384UL
  
--	head = get_dep_list(source_entry, offset);
-+	head = &source_entry->class->locks_after;
- 	if (list_empty(head))
- 		goto exit;
+ #define MAX_LOCKDEP_CHAINS_BITS	16
  
-@@ -1443,7 +1429,7 @@ static int __bfs(struct lock_list *source_entry, void *data,
- 			goto exit;
- 		}
- 
--		head = get_dep_list(lock, offset);
-+		head = &lock->class->locks_after;
- 
- 		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
- 
-@@ -1475,18 +1461,6 @@ static int __bfs(struct lock_list *source_entry, void *data,
- 	return ret;
- }
- 
--static inline int __bfs_forwards(struct lock_list *src_entry, void *data,
--				 int (*match)(struct lock_list *entry, void *data),
--				 struct lock_list **target_entry, int index,
--				 int distance, struct lock_class *safe_lock,
--				 bool reach)
--{
--	return __bfs(src_entry, data, match, target_entry,
--		     offsetof(struct lock_class, locks_after),
--		     index, distance, safe_lock, reach);
--
--}
--
- static void print_lock_trace(struct lock_trace *trace, unsigned int spaces)
- {
- 	unsigned long *entries = stack_trace + trace->offset;
 -- 
 1.8.3.1
 
