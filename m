@@ -2,114 +2,73 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E2BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D146C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5C9206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A85F206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 06:57:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t9Vz1mfd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uWXrChd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbfDXG5S (ORCPT
+        id S1729917AbfDXG5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 02:57:18 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35354 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfDXG5S (ORCPT
+        Wed, 24 Apr 2019 02:57:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35852 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfDXG5l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 02:57:18 -0400
-Received: by mail-ed1-f66.google.com with SMTP id y67so14913348ede.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 23:57:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DNh0ufsiWetZMwuUMmUtgMWb+K7Ya3sJmdkxiGc9vsI=;
-        b=t9Vz1mfdXifqgLblOsvyZ1SWzKZagINGMwdZibtbwtHuTN60r0OH9mzyS/Rkj5Z8KW
-         Liy33hB5eabCZQ6ug1VCulshe3XraSh2QVicwEoV5Oce/QtL4hoJ77LsKYrQ3TE5kfuu
-         LRgG2lVeQm4DM3F379pVtDAl0n8Gu6V4vlHWjK8Ky9ZTTE+yqNyTLUe/H4ww5V4R1ZBw
-         ir8PwaiFdMdKK0mgUvElPosL0BV3DHZJZcrPB13+NvvLT6Gs5I90hvKr4J1rMzWQLr+H
-         axY8xvzaz/4+SxZoHLe6/SHzPtZTGC085Nx7Olp4v6McYeSsgSL5hmu+t9kWt2SXbMZ0
-         JfjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DNh0ufsiWetZMwuUMmUtgMWb+K7Ya3sJmdkxiGc9vsI=;
-        b=VILHSswTV9mx0LYbCE+EP0mazmj9dHpXfxSik13g2/WqVIrgC9Hc8ar19AixCP6X+g
-         //FDNb92dwy7MuAKvCati7iGGj4MfIZ0RzdGaSmBmMJY4LXomVX7O/05WPFbwL4pk5jf
-         mDxAuyipR/4Xd6xIWbgVLtFuL+yuVuB3LPLAB0BVJOTU+fH5vRhZJoV/ar+L9a6CbcmX
-         ABE2eeHreYFKxpglXg7ORzBts+q7NqG7Ah0nZaQri/cRbXbUYyqQuQJsbkvjWKaYCIdC
-         xhrCsP1zQ5dg5EQyrcfC4t8RCpiv7Jzs+UUPIl4clUFGaiAtnq2qyBZdJXA6oIurjoz0
-         ubag==
-X-Gm-Message-State: APjAAAXdtH168ATBIveej4NDzzore63GLjvErkbiov7RNAQAzdAz9kcq
-        3zYFzHjCszCzrDL7kwA9rbEen9isbIW4SrRq0vI=
-X-Google-Smtp-Source: APXvYqz3mtijqW0wvTmNd5Yp2Ht4KpvsxGP8iMOxY6YyfJJdIPA1sMaeIa2SVQWhv5MWb3KTRlzcHi8/hVnfesBh13g=
-X-Received: by 2002:a17:906:1811:: with SMTP id v17mr15222117eje.109.1556089036296;
- Tue, 23 Apr 2019 23:57:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190423211932.4906-1-ndesaulniers@google.com>
-In-Reply-To: <20190423211932.4906-1-ndesaulniers@google.com>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Wed, 24 Apr 2019 14:56:39 +0800
-Message-ID: <CAEbi=3fn42-rcXOh28N09G9Gng8o9RE8_A8=ow0=JeMEXVF_ig@mail.gmail.com>
-Subject: Re: [PATCH] nds32: vdso: drop unnecessary cc-ldoption
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Vincent Chen <deanbo422@gmail.com>,
-        clang-built-linux@googlegroups.com,
+        Wed, 24 Apr 2019 02:57:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=9sCcMDZYcNbtZeaitLjtchqK2NzmLraxRXKnsFI1R5E=; b=uWXrChd3swoKeFX4KwO3kZrLb
+        dEgXwQCMc1qT/EhMXMTE1XsxE+5SJOGU9hYAFY/EPN7q4+onrZWQU86Ql8VD30iHC7pvBihzx+bpZ
+        YytJt6kJeq3XnzYpp6tyYEL9sFh96Axe46MRV5A2+aGYmAZWWBPvddC2/fsHiW1LIv0M/pVWNMIsQ
+        JeHJPXCihMucO/87qVf/PkRlf1d6tcBLA5L4kVtOZOtdkG7hXIQz/KfHU97ANqfapPlfH1DSQIJoh
+        65ZFAT3TPdw/VJpjDT3thNSrb1UCu/PDWiMxAjGxiYVt4KILZXhfRDCt2cmrIeBf/W7/lmso33jtx
+        3gvrPNtXw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJBqd-0007kx-NO; Wed, 24 Apr 2019 06:57:39 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1200629BC277F; Wed, 24 Apr 2019 08:57:38 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 08:57:38 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: Does vdso_install attempt to re-compile objects under root
+ privilege?
+Message-ID: <20190424065738.GD4038@hirez.programming.kicks-ass.net>
+References: <CAK7LNAQwHRJL=3yD_7P2mMSVnwZbayww+dHC22+v4oTpMZv58w@mail.gmail.com>
+ <CALCETrVSM0vrMVr2y0ECAQ=tNGvBs=im2Kxongq-jvdzUBevbg@mail.gmail.com>
+ <CAHk-=wiV2gLQkp6JFQYewL1uzgWnwEK9fKWP3AfZbcu2Lv_GrQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiV2gLQkp6JFQYewL1uzgWnwEK9fKWP3AfZbcu2Lv_GrQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick & Yamada,
+On Tue, Apr 23, 2019 at 04:38:35PM -0700, Linus Torvalds wrote:
 
-Nick Desaulniers <ndesaulniers@google.com> =E6=96=BC 2019=E5=B9=B44=E6=9C=
-=8824=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=885:19=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> Towards the goal of removing cc-ldoption, it seems that --hash-style=3D
-> was added to binutils 2.17.50.0.2 in 2006. The minimal required version
-> of binutils for the kernel according to
-> Documentation/process/changes.rst is 2.20.
->
-> Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
-> Cc: clang-built-linux@googlegroups.com
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  arch/nds32/kernel/vdso/Makefile | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso/Mak=
-efile
-> index e6c50a701313..d379645cad74 100644
-> --- a/arch/nds32/kernel/vdso/Makefile
-> +++ b/arch/nds32/kernel/vdso/Makefile
-> @@ -11,10 +11,8 @@ obj-vdso :=3D note.o datapage.o sigreturn.o gettimeofd=
-ay.o
->  targets :=3D $(obj-vdso) vdso.so vdso.so.dbg
->  obj-vdso :=3D $(addprefix $(obj)/, $(obj-vdso))
->
-> -ccflags-y :=3D -shared -fno-common -fno-builtin
-> -ccflags-y +=3D -nostdlib -Wl,-soname=3Dlinux-vdso.so.1 \
-> -               $(call cc-ldoption, -Wl$(comma)--hash-style=3Dsysv)
-> -ccflags-y +=3D -fPIC -Wl,-shared -g
-> +ccflags-y :=3D -shared -fno-common -fno-builtin -nostdlib -fPIC -Wl,-sha=
-red -g \
-> +       -Wl,-soname=3Dlinux-vdso.so.1 -Wl,--hash-style=3Dsysv
->
->  # Disable gcov profiling for VDSO code
->  GCOV_PROFILE :=3D n
+> So anybody who builds the kernel as root is doing something seriously
+> wrong, in my opinion.
 
-Thank you.
-Acked-by: Greentime Hu <greentime@andestech.com>
+Some of my test boxes don't have a user account... if they fall over,
+I'll just re-image them.
+
+So I've been doing it wrong?
