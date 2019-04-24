@@ -2,56 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0645DC282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC3CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE1CD20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E3B204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129350;
-	bh=4PkFK/5JRgPg8+wljYH2Ft6CbTmBcu8x858tE2OoWhE=;
+	s=default; t=1556129354;
+	bh=2SErRLCqs0eCxuxqFUVpnt/ed7rfWF9J62ePGQWR4as=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I3Dh/T7WmGy4KjTFDVxSRgceAX8XsSjn/MwyJ7dCE+WcYcvEqDLjN4WWuyOHsV71/
-	 FhCNZ9sAjyxhLOv05cN1XC1vMHfhMc0Fg6F8r+732zQsgKYkXlNTImYx/yFL6ZWceX
-	 Z9rEJd+nmLjqgdUNHEbs8jwSBVc/OvxDds8D1sIw=
+	b=L4P3U5NlnYGhCdPPVREcXJe9NsJD/ykpwR0a9VQKFCEeYRJs2p/LRDH5s6NEt56Cs
+	 McnkQ/6Dd9YDyndvt9j9va3O+q+J1cVD0p1dXPRVTOPWlM/U/HoBxvcqdQNkMs0dWC
+	 UI/QgJ2SU4QsOwCL4+6roKVRpaGbw3uuaI9jXXyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388233AbfDXRP1 (ORCPT
+        id S2389094AbfDXSJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:15:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39834 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 14:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387854AbfDXRPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:15:25 -0400
+        id S2388231AbfDXRP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:15:27 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33FC6218B0;
-        Wed, 24 Apr 2019 17:15:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D74C621909;
+        Wed, 24 Apr 2019 17:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126124;
-        bh=4PkFK/5JRgPg8+wljYH2Ft6CbTmBcu8x858tE2OoWhE=;
+        s=default; t=1556126127;
+        bh=2SErRLCqs0eCxuxqFUVpnt/ed7rfWF9J62ePGQWR4as=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S/Fo0muj6UIMTB54Pp7qO+EUN9wvIp1WZ8K+QMJeaq08rEXBnPtNyqHp/iF7CEXOi
-         JC8bQJZ5EW///grUq7+ozl6zFr1wqLu7zhVyYjndwJo4r11TFRisUBNBBKPjwx6dkT
-         w9tT6SQvh/B2RcOcocIlk09jQMyjIQv8vwMAcxSo=
+        b=TaByP99sCWMOw0moRRrIbRchx/9RFAbx1OiWgfFSHskNzdrJZnndm1iqeUXim6X9u
+         jpeJs9qKWD4huvhzXP2zgC0RTQL4sSbPYR8HLPingQ2Iqj5AtWY8cExjseL3+zQy7Q
+         W83zxomrxoS0vUjmgxnkDW9xGfjzz+aswZe2VteA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Auld <pauld@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Ben Segall <bsegall@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 103/104] sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup
-Date:   Wed, 24 Apr 2019 19:10:00 +0200
-Message-Id: <20190424170910.825695366@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>
+Subject: [PATCH 3.18 104/104] device_cgroup: fix RCU imbalance in error case
+Date:   Wed, 24 Apr 2019 19:10:01 +0200
+Message-Id: <20190424170910.915755642@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -64,102 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e8e19226398db8265a8e675fcc0118b9e80c9e8 ]
+From: Jann Horn <jannh@google.com>
 
-With extremely short cfs_period_us setting on a parent task group with a large
-number of children the for loop in sched_cfs_period_timer() can run until the
-watchdog fires. There is no guarantee that the call to hrtimer_forward_now()
-will ever return 0.  The large number of children can make
-do_sched_cfs_period_timer() take longer than the period.
+commit 0fcc4c8c044e117ac126ab6df4138ea9a67fa2a9 upstream.
 
- NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
- RIP: 0010:tg_nop+0x0/0x10
-  <IRQ>
-  walk_tg_tree_from+0x29/0xb0
-  unthrottle_cfs_rq+0xe0/0x1a0
-  distribute_cfs_runtime+0xd3/0xf0
-  sched_cfs_period_timer+0xcb/0x160
-  ? sched_cfs_slack_timer+0xd0/0xd0
-  __hrtimer_run_queues+0xfb/0x270
-  hrtimer_interrupt+0x122/0x270
-  smp_apic_timer_interrupt+0x6a/0x140
-  apic_timer_interrupt+0xf/0x20
-  </IRQ>
+When dev_exception_add() returns an error (due to a failed memory
+allocation), make sure that we move the RCU preemption count back to where
+it was before we were called. We dropped the RCU read lock inside the loop
+body, so we can't just "break".
 
-To prevent this we add protection to the loop that detects when the loop has run
-too many times and scales the period and quota up, proportionally, so that the timer
-can complete before then next period expires.  This preserves the relative runtime
-quota while preventing the hard lockup.
+sparse complains about this, too:
 
-A warning is issued reporting this state and the new values.
+$ make -s C=2 security/device_cgroup.o
+./include/linux/rcupdate.h:647:9: warning: context imbalance in
+'propagate_exception' - unexpected unlock
 
-Signed-off-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190319130005.25492-1-pauld@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: d591fb56618f ("device_cgroup: simplify cgroup tree walk in propagate_exception()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jann Horn <jannh@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/sched/fair.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ security/device_cgroup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 4aa559b09e9c..9020fbe8d785 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3771,6 +3771,8 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
- }
- 
-+extern const u64 max_cfs_quota_period;
-+
- static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- {
- 	struct cfs_bandwidth *cfs_b =
-@@ -3778,6 +3780,7 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 	ktime_t now;
- 	int overrun;
- 	int idle = 0;
-+	int count = 0;
- 
- 	raw_spin_lock(&cfs_b->lock);
- 	for (;;) {
-@@ -3787,6 +3790,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 		if (!overrun)
- 			break;
- 
-+		if (++count > 3) {
-+			u64 new, old = ktime_to_ns(cfs_b->period);
-+
-+			new = (old * 147) / 128; /* ~115% */
-+			new = min(new, max_cfs_quota_period);
-+
-+			cfs_b->period = ns_to_ktime(new);
-+
-+			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-+			cfs_b->quota *= new;
-+			cfs_b->quota = div64_u64(cfs_b->quota, old);
-+
-+			pr_warn_ratelimited(
-+        "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-+	                        smp_processor_id(),
-+	                        div_u64(new, NSEC_PER_USEC),
-+                                div_u64(cfs_b->quota, NSEC_PER_USEC));
-+
-+			/* reset count so we don't come right back in here */
-+			count = 0;
-+		}
-+
- 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
- 	}
- 	raw_spin_unlock(&cfs_b->lock);
--- 
-2.19.1
-
+--- a/security/device_cgroup.c
++++ b/security/device_cgroup.c
+@@ -568,7 +568,7 @@ static int propagate_exception(struct de
+ 		    devcg->behavior == DEVCG_DEFAULT_ALLOW) {
+ 			rc = dev_exception_add(devcg, ex);
+ 			if (rc)
+-				break;
++				return rc;
+ 		} else {
+ 			/*
+ 			 * in the other possible cases:
 
 
