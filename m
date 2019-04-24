@@ -2,116 +2,123 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C46DFC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C39C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9EA20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0855C218FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 09:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556097301;
+	bh=Yr/IDKMMqkGJbj7j5S0Z4HCvIM4RuYst75fudGbpuZo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s0BB0CKykbi+21Vy1TCkSN34dH62Psx8pwFaUqFuxvJdPooErDftq08ZTCCP83XEX
+	 jcepqK809ujTtaEvEm6WVVgE2Q8uF/9FzAxlxUxMpnVDTFgMwhtjl4E+ykkoteIz+G
+	 OQ5S1Zpag53cib9bbO412ZVeMXdi/Eoy+Ctv9eqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbfDXJMv (ORCPT
+        id S1727598AbfDXJO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 05:12:51 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:45147 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfDXJMr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 05:12:47 -0400
-Received: from [192.168.1.115] ([95.114.95.254]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MBUuV-1hW71i1mxj-00D1fY; Wed, 24 Apr 2019 11:11:21 +0200
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-To:     Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
-        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-team <kernel-team@android.com>,
-        Tycho Andersen <tycho@tycho.ws>
-References: <20190411175043.31207-1-joel@joelfernandes.org>
- <20190416120430.GA15437@redhat.com> <20190416192051.GA184889@google.com>
- <20190417130940.GC32622@redhat.com>
- <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
- <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
- <20190419190247.GB251571@google.com>
- <20190419191858.iwcvqm6fihbkaata@brauner.io>
- <20190419194902.GE251571@google.com>
- <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
- <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
- <CAKOZueuBTwyrLtpVQaoTAgjGSgeHY7392sKv5uAYdy4XKNHKHQ@mail.gmail.com>
- <CAHrFyr6f_CUP__818e1u6TaHd-XpWY6NOxri4yzzR6rNY5rk_w@mail.gmail.com>
- <CAKOZuetiqFx0qW9rdCVWsKQxwaYK2Vis8EXsDba6=F5dp=da6Q@mail.gmail.com>
- <CAHrFyr6FntUgsCRw2b1B9+pjLQ2+pJMTULywRC1woNW4PvtyiQ@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <c833c78b-445d-93d9-e59f-6bc62376c111@metux.net>
-Date:   Wed, 24 Apr 2019 11:11:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 24 Apr 2019 05:14:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726921AbfDXJO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 05:14:59 -0400
+Received: from localhost (unknown [104.132.45.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 561FD20656;
+        Wed, 24 Apr 2019 09:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556097298;
+        bh=Yr/IDKMMqkGJbj7j5S0Z4HCvIM4RuYst75fudGbpuZo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2UIJESRbkiSEH9tP3TuukI2IzKuHl49JHzDQBxbWsk0GRBoqmXs74y9lrNwP3MiI5
+         6McJX8fkne2wT5cEKHpFt6JvB+PbDJVastLlGvvTt8H5JjioNmWTHmcYWJRZPOyNQv
+         d2Cda/HaQvenGOvxDYzvJBQnfyaaeA1p2vvnJiZg=
+Date:   Wed, 24 Apr 2019 10:14:56 +0100
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH v2 4/5] f2fs: add tracepoint for f2fs_filemap_fault()
+Message-ID: <20190424091456.GB38756@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190415072219.1613-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHrFyr6FntUgsCRw2b1B9+pjLQ2+pJMTULywRC1woNW4PvtyiQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:rfuZyDhvwMC0qajKA4oSQUcfVF6fV7OpPupKGIp4h89kvao9eZD
- x6ggE5LdbabLPDRSmLlxAm1kkfFdsY+DCvCnm4b/0btnh9MbZzixc6+EULjathJ/rAsKIpg
- IdlRcxLtf7LpBhUI0NCAE5lJxQOvG0u9cLUFo7F6rBDmbbGqokOoLuw0hUGw+K6/4KXXmag
- 4bBQtJCOoANQFjHxZ/oNg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cnUjEJ4lKhg=:+ke/mXgvOEYG/qdQx+EOpN
- obEH/jlmTpYtecYRfWrmrCiqz6dO/rTUm3rSUxaf/UOWopdAyTY/YKECfr+KcaWTJNE2Ia9xs
- YFNOGzHl0fCzWt/4xs76e9VrXQvtFTrOc6WWXMgEZPKu5KJVFj9MMu7hP0lsRvIHjTmfUq951
- rNG0rrlzRZe2eIHu0Q8MwHj/KYpoDvA4zpBh3h8kywzfM2H7UAXi6Tl9yuP7NzLJyAJG3td21
- rgkW0vK8mHc5uO01gbxyZoAKUnlXOOGMQrmbbpKud0xBYSFFoOgT3W+KzoL7UVQMrGlI6OGvQ
- VAxmT2oIUYoDJ4/ra9Ft4CZjYQocrI6yPS7XNEab5JjHm3XjKQ9l8lSzQdF+a0vuyy+7BBN8T
- sOK2o+NhkN7LMzjGAC4w3i6luXsWf12uKXjlGj6/fGagdDCAsQTXYfUAUBkrgv2ET2ZT3xuaz
- mm+RWv0S/OX7JFPpUjWi4ZngQVMmwjBdq3YiyBPaR3r5iHJ37eJrvb6veipi9y9jljNl4QRdA
- azaWRtUwcgqNcjlZwhP4D3528NjChjtIStT9vE/j9IFE3ET8B4oCsV7fywpw13j8nOxNiRGsn
- T0LVC8Bcm7h3umSQTCY+VwTWIQNj4yeAs/GzmTnSiGxpjcUuO5sPNiynCegS793mHsdHFXQoY
- 85fWHyxsUaMdXRykVlm9jE8JoyfJ/hYh3XdzymRfPZdaB6Djer+EoGaJa7p3ZP4sEj8H11OJJ
- EtX8x5VOtgBqJgU+k7hrW8Ql9O3aXFUhyFe0m8INm3SJo56VgCnuW8eU2Pc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415072219.1613-1-yuchao0@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.04.19 01:02, Christian Brauner wrote:
+On 04/15, Chao Yu wrote:
+> This patch adds tracepoint for f2fs_filemap_fault().
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+> v2:
+> - fix wrong type of @ret parameter
+>  fs/f2fs/file.c              |  2 ++
+>  include/trace/events/f2fs.h | 26 ++++++++++++++++++++++++++
+>  2 files changed, 28 insertions(+)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 30d49467578e..578486e03427 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -39,6 +39,8 @@ static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
+>  	ret = filemap_fault(vmf);
+>  	up_read(&F2FS_I(inode)->i_mmap_sem);
+>  
+> +	trace_f2fs_filemap_fault(inode, vmf->pgoff, ret);
 
-> I'm sorry, who has agreed that a non-parent should be able to wait for
-> process death?
-> I know you proposed that but has anyone ever substantially supported this?
+In order to avoid wrong casting warning, how about this?
 
-I actually support this.
+---
+ include/trace/events/f2fs.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-One practical usecase I have in mind for some upcoming projects is
-monitoring processes in a container from the outside.
-
-
---mtx
-
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index abe763cc1d0b..c29dea7ac0fe 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -1286,7 +1286,7 @@ DEFINE_EVENT(f2fs__page, f2fs_commit_inmem_page,
+ 
+ TRACE_EVENT(f2fs_filemap_fault,
+ 
+-	TP_PROTO(struct inode *inode, pgoff_t index, enum vm_fault_reason ret),
++	TP_PROTO(struct inode *inode, pgoff_t index, vm_fault_t ret),
+ 
+ 	TP_ARGS(inode, index, ret),
+ 
+@@ -1294,7 +1294,7 @@ TRACE_EVENT(f2fs_filemap_fault,
+ 		__field(dev_t,	dev)
+ 		__field(ino_t,	ino)
+ 		__field(pgoff_t, index)
+-		__field(enum vm_fault_reason, ret)
++		__field(vm_fault_t, ret)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -1304,10 +1304,10 @@ TRACE_EVENT(f2fs_filemap_fault,
+ 		__entry->ret	= ret;
+ 	),
+ 
+-	TP_printk("dev = (%d,%d), ino = %lu, index = %lu, ret = %u",
++	TP_printk("dev = (%d,%d), ino = %lu, index = %lu, ret = %lx",
+ 		show_dev_ino(__entry),
+ 		(unsigned long)__entry->index,
+-		ret)
++		(unsigned long)__entry->ret)
+ );
+ 
+ TRACE_EVENT(f2fs_writepages,
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.19.0.605.g01d371f741-goog
+
