@@ -2,139 +2,97 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BFDC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A7EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1816206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F638218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:47:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bzGEqf/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732639AbfDXQqu (ORCPT
+        id S1732662AbfDXQrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:46:50 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:60004 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730997AbfDXQqu (ORCPT
+        Wed, 24 Apr 2019 12:47:17 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38962 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbfDXQrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:46:50 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 8A9D720090;
-        Wed, 24 Apr 2019 18:46:46 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 18:46:45 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>
-Subject: Re: [PATCH 10/25] drm: kirin: Move workqueue to ade_hw_ctx structure
-Message-ID: <20190424164645.GC20110@ravnborg.org>
-References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
- <1556061656-1733-11-git-send-email-john.stultz@linaro.org>
+        Wed, 24 Apr 2019 12:47:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dNi5KwP4lynMteREQ7r0+h3UYMU5MQJt6J0Mbq7DoEE=; b=bzGEqf/kHAcofHjhwQOzVt69G
+        Y4aVy0iTohaWloSMfdnJSdzF1p58koNbllIzARfxA34coV3qvz043K3MHc3hS7gVSS95N8g8STkjU
+        wX5PWZaxr8ujO24UyWXDcYXsxwV6CrjeblYGVhONOYnct+YOzMEPSGkW91MuAEhMuZi+okElwmFht
+        heThNmOQoyDwQUqK9shLFH2bPoMorIw440bfWtVqy+Ox3LYhWI63ml+ad+TZlrAcDnB1A3H9yPadY
+        zf5v0NJS9vs4+b/ktlx6VTHwQuY62MS3QVkX1EBdO8H3SGhjGqbgxZN8b4aQGGj/hwgXEUJBI6kv1
+        9YjcxFfuQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJL39-0005yK-8C; Wed, 24 Apr 2019 16:47:11 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0556E203C0A58; Wed, 24 Apr 2019 18:47:10 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 18:47:09 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, rui.zhang@intel.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        viresh.kumar@linaro.org, javi.merino@kernel.org,
+        edubezval@gmail.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
+        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
+Subject: Re: [PATCH V3 3/3] thermal/cpu-cooling: Update thermal pressure in
+ case of a maximum frequency capping
+Message-ID: <20190424164709.GJ4038@hirez.programming.kicks-ass.net>
+References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+ <1555443521-579-4-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556061656-1733-11-git-send-email-john.stultz@linaro.org>
+In-Reply-To: <1555443521-579-4-git-send-email-thara.gopinath@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=BTeA3XvPAAAA:8
-        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=KKAkSRfTAAAA:8 a=MpCnRSpsgUjHPVZ81QoA:9
-        a=CjuIK1q_8ugA:10 a=tafbbOV3vt1XuEhzTjGK:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John.
-
-On Tue, Apr 23, 2019 at 04:20:41PM -0700, John Stultz wrote:
-> The workqueue used to reset the display when we hit an LDI
-> underflow error is ADE specific, so since this patch series
-> works to make the kirin_crtc structure more generic, move the
-> workqueue to the ade_hw_ctx structure instead.
+On Tue, Apr 16, 2019 at 03:38:41PM -0400, Thara Gopinath wrote:
+> Enable cpufreq cooling device to update the thermal pressure in
+> event of a capped maximum frequency or removal of capped maximum
+> frequency.
 > 
-> Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
-> Cc: Rongrong Zou <zourongrong@gmail.com>
-> Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Cc: Chen Feng <puck.chen@hisilicon.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel <dri-devel@lists.freedesktop.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 > ---
->  drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
+>  drivers/thermal/cpu_cooling.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> index 94dcad0..f54cf99 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> @@ -52,6 +52,7 @@ struct ade_hw_ctx {
->  	struct clk *media_noc_clk;
->  	struct clk *ade_pix_clk;
->  	struct reset_control *reset;
-> +	struct work_struct drm_device_wq;
-
-The comment probarly belongs to 01/25...
-The name drm_device_wq is not at all descriptive.
-Consider something like: display_reset_wq
-
-Then when the workqueue is started it is much more obvious what it does.
-
->  	bool power_on;
->  	int irq;
+> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+> index 6fff161..d5cc3c3 100644
+> --- a/drivers/thermal/cpu_cooling.c
+> +++ b/drivers/thermal/cpu_cooling.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/cpu.h>
+>  #include <linux/cpu_cooling.h>
+> +#include <linux/sched/thermal.h>
 >  
-> @@ -61,7 +62,6 @@ struct ade_hw_ctx {
->  struct kirin_crtc {
->  	struct drm_crtc base;
->  	void *hw_ctx;
-> -	struct work_struct drm_device_wq;
->  	bool enable;
->  };
+>  #include <trace/events/thermal.h>
 >  
-> @@ -349,9 +349,9 @@ static void ade_crtc_disable_vblank(struct drm_crtc *crtc)
+> @@ -177,6 +178,9 @@ static int cpufreq_thermal_notifier(struct notifier_block *nb,
 >  
->  static void drm_underflow_wq(struct work_struct *work)
->  {
-> -	struct kirin_crtc *acrtc = container_of(work, struct kirin_crtc,
-> +	struct ade_hw_ctx *ctx = container_of(work, struct ade_hw_ctx,
->  					      drm_device_wq);
-> -	struct drm_device *drm_dev = (&acrtc->base)->dev;
-> +	struct drm_device *drm_dev = ctx->crtc->dev;
->  	struct drm_atomic_state *state;
->  
->  	state = drm_atomic_helper_suspend(drm_dev);
-> @@ -362,7 +362,6 @@ static irqreturn_t ade_irq_handler(int irq, void *data)
->  {
->  	struct ade_hw_ctx *ctx = data;
->  	struct drm_crtc *crtc = ctx->crtc;
-> -	struct kirin_crtc *kcrtc = to_kirin_crtc(crtc);
->  	void __iomem *base = ctx->base;
->  	u32 status;
->  
-> @@ -379,7 +378,7 @@ static irqreturn_t ade_irq_handler(int irq, void *data)
->  		ade_update_bits(base + LDI_INT_CLR, UNDERFLOW_INT_EN_OFST,
->  				MASK(1), 1);
->  		DRM_ERROR("LDI underflow!");
-> -		schedule_work(&kcrtc->drm_device_wq);
+>  		if (policy->max > clipped_freq)
+>  			cpufreq_verify_within_limits(policy, 0, clipped_freq);
+> +
+> +		sched_update_thermal_pressure(policy->cpus,
+> +				policy->max, policy->cpuinfo.max_freq);
 
-Compare:
-> +		schedule_work(&ctx->drm_device_wq);
-
-With
-> +		schedule_work(&ctx->display_reset_wq);
-
-The latter wins in readability.
-
-	Sam
+If it's already telling the cpufreq thing, why not get it from sugov
+instead?
