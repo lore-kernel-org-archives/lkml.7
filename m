@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96328C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A691BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 663FB205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7361D205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126431;
-	bh=nG4pVa9jMLB6NoMhhciXMQjdQm5NXSzrGTo7He0y9yg=;
+	s=default; t=1556126434;
+	bh=xuliVB62vRPn6Pbv+iP+x6J3FoVNoO7colQC8fMP2HY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aofKep1FlXYlWf78PUtAWIL+xCkGNXqZdZSbUgO9T0E7aUs7FeaYy7ZWZG7Bew2PW
-	 v8XBKdnemd/bsyZB2SN2T3VzgAugt3QpwFySg6dCHAPxtaI6jnhAapZA92auPsu+Xw
-	 pSN9eGDeWZg+a0pQp8u80V+lQJoVhzdzW8K/nI2E=
+	b=YlyNeL92Dj6+05ibU+nT41SkGp4LhyX1Rvu2uQtZk01nYXIq/gLXO6p18bzfxWpmr
+	 8Fl4WfSnmAlk+nAQlGuDzqOfW3ZhiqGi3mGCkXoRIgF+k3ImHMQBlc0rpOXpxOmWj1
+	 0OeiQrayd9pozGJkgJc5Hh81BAE7VqMzvmvYcGsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389176AbfDXRUa (ORCPT
+        id S2389187AbfDXRUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45766 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389168AbfDXRU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:20:28 -0400
+        id S2389168AbfDXRUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:20:31 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 001F6205ED;
-        Wed, 24 Apr 2019 17:20:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C819320675;
+        Wed, 24 Apr 2019 17:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126427;
-        bh=nG4pVa9jMLB6NoMhhciXMQjdQm5NXSzrGTo7He0y9yg=;
+        s=default; t=1556126430;
+        bh=xuliVB62vRPn6Pbv+iP+x6J3FoVNoO7colQC8fMP2HY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7oB4f/i8WR2tRZRrs+wMzwJsDMVqXwFJxbb26kpwllyHkZwcfPo1PSJAHNSj6Hjb
-         YpHKy89/spc03TWRXS8X20q+yyyb6MDlkASGR00+4wouDbjkvRUz5PsdF3T9F2Klwm
-         3LNErhx8AdlRDPcRpwzyGzijr907Q1N9em0hog30=
+        b=yiWVWnRrtoh6+YHTnJ0XMFXsgrORblfq1GNUgsVcXlbv13APzv198BaDWLqRdjRaT
+         MSzlBYNY7OuwoF35lxZqrdUYpkPuFbAv0/rF9xYtAl2JdA4kO+MWkcwkHXwzO3vZG8
+         CyMAehH2NTiZqvnH0MetUt2SaESzB4qtucYQwhzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Garrett <mjg59@google.com>,
-        Zhang Rui <rui.zhang@intel.com>,
+        stable@vger.kernel.org, David Arcari <darcari@redhat.com>,
+        Len Brown <len.brown@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 107/168] thermal/int340x_thermal: fix mode setting
-Date:   Wed, 24 Apr 2019 19:09:11 +0200
-Message-Id: <20190424170929.896293858@linuxfoundation.org>
+Subject: [PATCH 4.4 108/168] tools/power turbostat: return the exit status of a command
+Date:   Wed, 24 Apr 2019 19:09:12 +0200
+Message-Id: <20190424170929.942284106@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -60,38 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 396ee4d0cd52c13b3f6421b8d324d65da5e7e409 ]
+[ Upstream commit 2a95496634a017c19641f26f00907af75b962f01 ]
 
-int3400 only pushes the UUID into the firmware when the mode is flipped
-to "enable". The current code only exposes the mode flag if the firmware
-supports the PASSIVE_1 UUID, which not all machines do. Remove the
-restriction.
+turbostat failed to return a non-zero exit status even though the
+supplied command (turbostat <command>) failed.  Currently when turbostat
+forks a command it returns zero instead of the actual exit status of the
+command.  Modify the code to return the exit status.
 
-Signed-off-by: Matthew Garrett <mjg59@google.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: David Arcari <darcari@redhat.com>
+Acked-by: Len Brown <len.brown@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/int340x_thermal/int3400_thermal.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/power/x86/turbostat/turbostat.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/thermal/int340x_thermal/int3400_thermal.c b/drivers/thermal/int340x_thermal/int3400_thermal.c
-index 0beed2899163..d4c374cc4f74 100644
---- a/drivers/thermal/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/int340x_thermal/int3400_thermal.c
-@@ -285,10 +285,9 @@ static int int3400_thermal_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, priv);
- 
--	if (priv->uuid_bitmap & 1 << INT3400_THERMAL_PASSIVE_1) {
--		int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
--		int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
--	}
-+	int3400_thermal_ops.get_mode = int3400_thermal_get_mode;
-+	int3400_thermal_ops.set_mode = int3400_thermal_set_mode;
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 33c79e415075..532e7bf06868 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -3089,6 +3089,9 @@ int fork_it(char **argv)
+ 		signal(SIGQUIT, SIG_IGN);
+ 		if (waitpid(child_pid, &status, 0) == -1)
+ 			err(status, "waitpid");
 +
- 	priv->thermal = thermal_zone_device_register("INT3400 Thermal", 0, 0,
- 						priv, &int3400_thermal_ops,
- 						&int3400_thermal_params, 0, 0);
++		if (WIFEXITED(status))
++			status = WEXITSTATUS(status);
+ 	}
+ 	/*
+ 	 * n.b. fork_it() does not check for errors from for_all_cpus()
 -- 
 2.19.1
 
