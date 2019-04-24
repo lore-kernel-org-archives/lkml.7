@@ -2,234 +2,117 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDD0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3084C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C68A921773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8322218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:22:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fS0w0TCX"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P0GKcWNv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbfDXKVd (ORCPT
+        id S1728546AbfDXKWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:21:33 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45676 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729181AbfDXKVa (ORCPT
+        Wed, 24 Apr 2019 06:22:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51935 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726904AbfDXKWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:21:30 -0400
-Received: by mail-pf1-f196.google.com with SMTP id e24so9059090pfi.12
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:21:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=D0Pab/AtTPxB5RWhI2RP6rmxChFSTkmf53xKekTBC6E=;
-        b=fS0w0TCXXl/T2/KdYF6vTF8H+PwTGgkOEZQbojayQKs5xg48MCEr67Bgl0n8xhGEWW
-         kZAauMuQ/jVUVxMAmpB4EIr6iPKiT8dO2TEmPr8TZvitNvPOBmvbaTfK037cl881UE01
-         7M0tPOZdtXKfQeSNX4gA1sFdbuBrUvatEwi1JSR+Whhqdtl0hUTcXN17uC2ND2Uso+UO
-         IvCbg5sdsjefdnvkYTgMviSHzC/lHT50biNqwWgqQ5cqnQzgslCMmH07N+xKNgKFO1Q7
-         rerMt6GD40xu1tynHSXmd6SMcL7F0zzbUp69dKYnd/6NfLM/ymScdLFWpjOvkwirlByA
-         JU9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=D0Pab/AtTPxB5RWhI2RP6rmxChFSTkmf53xKekTBC6E=;
-        b=ObhEWb3xRcoEToyCvWLK7rbLJPw6A3RNkAeYDzC+uuogw1HyfIU4Td5+TNbKji4oZA
-         qFunQm5dBs9Ot/fz9ROE8J4vuopWTYv4xStIA7mTyAWnkeM6oE8Y/yvLeHD0hWZcm3Qu
-         TXm+sGy87txqUeLSWIq8ER0Y1CNQReovPHcmTHvVTa3nh4PrqJVcsuOZ5p8f4vhrny0a
-         zBpCZnPx1uqP0CPYQ0T+Kob3ATGWBjazPSKbI6cy2Floatcrh2vK2dHqVMf7ZIKbKdTd
-         Y/3FZzl11e4MZWzvScNxIe2WfMoUS5jE1D47hxMq6imwud4ddiv2crCsElc43PWqHX81
-         sDGw==
-X-Gm-Message-State: APjAAAVTIw1Qto0KFMgm+0O6Rl5vZowZ2Hf5x9CHGJ2ofOUF8yyJOfip
-        8/lB0c3SRET6j17rYsUjDGM=
-X-Google-Smtp-Source: APXvYqzGgIJZP5O9IhIGD1RNzDTg92FNINK2tj/8a4z5ze/B2A1rqfd/rZmbnDdZOJL87ww8vdO/4g==
-X-Received: by 2002:a63:df50:: with SMTP id h16mr17239035pgj.208.1556101289447;
-        Wed, 24 Apr 2019 03:21:29 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id v19sm25051604pfn.62.2019.04.24.03.21.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 03:21:28 -0700 (PDT)
-From:   Yuyang Du <duyuyang@gmail.com>
-To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 20/28] locking/lockdep: Refactorize check_noncircular and check_redundant
-Date:   Wed, 24 Apr 2019 18:19:26 +0800
-Message-Id: <20190424101934.51535-21-duyuyang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20190424101934.51535-1-duyuyang@gmail.com>
-References: <20190424101934.51535-1-duyuyang@gmail.com>
+        Wed, 24 Apr 2019 06:22:20 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3OAM6hx2530633
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 24 Apr 2019 03:22:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3OAM6hx2530633
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1556101327;
+        bh=CThnB17KZek+nJfRny/Q2A0jVLd+g9IuvBRf3erHD2U=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=P0GKcWNvKn95J8L6Na7isSX/rdosZ5rRnaMyihnE9+vnt2XVmWvXp7RZmEgEPwaZx
+         TBzAeZkd1PIpE9HNWWpGDNVkcit4cGEMLq/CfpX6nE74DSV6jZVF48Lw64gg03fHUZ
+         kRve+3J2y/vgrGF0JXrLEuJBgd6HMu7yqb02PeHlkFEnnjiXveShIZW3dlHLOZ+UUs
+         s0skwhDHUiETZetiCIqISFCFdQeQNZKVOOPpZetX7SupYRz+SX+dhtDwIbX9bsyFcc
+         5hEbKMYe6WB/oB1OovDT2sfqw8qaN4K1jdaLKr6pqEccUNOgoTP1XgV5J0rih5TW3F
+         DvSM9EytbVDgg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3OAM6r62530626;
+        Wed, 24 Apr 2019 03:22:06 -0700
+Date:   Wed, 24 Apr 2019 03:22:06 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Sebastian Andrzej Siewior <tipbot@zytor.com>
+Message-ID: <tip-d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb@git.kernel.org>
+Cc:     paulmck@linux.ibm.com, peterz@infradead.org, mingo@kernel.org,
+        torvalds@linux-foundation.org, lkp@intel.com,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, bigeasy@linutronix.de,
+        tglx@linutronix.de
+Reply-To: tglx@linutronix.de, bigeasy@linutronix.de, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, lkp@intel.com,
+          torvalds@linux-foundation.org, mingo@kernel.org,
+          peterz@infradead.org, paulmck@linux.ibm.com
+In-Reply-To: <20190424085253.12178-1-bigeasy@linutronix.de>
+References: <20190424085253.12178-1-bigeasy@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:smp/hotplug] smpboot: Place the __percpu annotation correctly
+Git-Commit-ID: d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two functions now handle different check results themselves. A new
-check_path function is added to check whether there is a path in the
-dependency graph. No functional change.
+Commit-ID:  d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb
+Gitweb:     https://git.kernel.org/tip/d4645d30b50d1691c26ff0f8fa4e718b08f8d3bb
+Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate: Wed, 24 Apr 2019 10:52:53 +0200
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 24 Apr 2019 12:17:08 +0200
 
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+smpboot: Place the __percpu annotation correctly
+
+The test robot reported a wrong assignment of a per-CPU variable which
+it detected by using sparse and sent a report. The assignment itself is
+correct. The annotation for sparse was wrong and hence the report.
+The first pointer is a "normal" pointer and points to the per-CPU memory
+area. That means that the __percpu annotation has to be moved.
+
+Move the __percpu annotation to pointer which points to the per-CPU
+area. This change affects only the sparse tool (and is ignored by the
+compiler).
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: f97f8f06a49fe ("smpboot: Provide infrastructure for percpu hotplug threads")
+Link: http://lkml.kernel.org/r/20190424085253.12178-1-bigeasy@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/locking/lockdep.c | 98 +++++++++++++++++++++++++++++++-----------------
- 1 file changed, 63 insertions(+), 35 deletions(-)
+ include/linux/smpboot.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index a3138c9..4d42124 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1681,33 +1681,79 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
- }
- 
- /*
-- * Prove that the dependency graph starting at <entry> can not
-- * lead to <target>. Print an error and return 0 if it does.
-+ * Check that the dependency graph starting at <src> can lead to
-+ * <target> or not. Print an error and return 0 if it does.
+diff --git a/include/linux/smpboot.h b/include/linux/smpboot.h
+index d0884b525001..9d1bc65d226c 100644
+--- a/include/linux/smpboot.h
++++ b/include/linux/smpboot.h
+@@ -29,7 +29,7 @@ struct smpboot_thread_data;
+  * @thread_comm:	The base name of the thread
   */
- static noinline int
--check_noncircular(struct lock_list *root, struct lock_class *target,
--		struct lock_list **target_entry)
-+check_path(struct lock_class *target, struct lock_list *src_entry,
-+	   struct lock_list **target_entry)
- {
--	int result;
-+	int ret;
-+
-+	ret = __bfs_forwards(src_entry, (void *)target, class_equal,
-+			     target_entry);
-+
-+	if (unlikely(ret < 0))
-+		print_bfs_bug(ret);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Prove that the dependency graph starting at <src> can not
-+ * lead to <target>. If it can, there is a circle when adding
-+ * <target> -> <src> dependency.
-+ *
-+ * Print an error and return 0 if it does.
-+ */
-+static noinline int
-+check_noncircular(struct held_lock *src, struct held_lock *target)
-+{
-+	int ret;
-+	struct lock_list *uninitialized_var(target_entry);
-+	struct lock_list src_entry = {
-+		.class = hlock_class(src),
-+		.parent = NULL,
-+	};
- 
- 	debug_atomic_inc(nr_cyclic_checks);
- 
--	result = __bfs_forwards(root, target, class_equal, target_entry);
-+	ret = check_path(hlock_class(target), &src_entry, &target_entry);
- 
--	return result;
-+	if (unlikely(!ret))
-+		print_circular_bug(&src_entry, target_entry, src, target);
-+
-+	return ret;
- }
- 
-+/*
-+ * Check that the dependency graph starting at <src> can lead to
-+ * <target> or not. If it can, <src> -> <target> dependency is already
-+ * in the graph.
-+ *
-+ * Print an error and return 2 if it does or 1 if it does not.
-+ */
- static noinline int
--check_redundant(struct lock_list *root, struct lock_class *target,
--		struct lock_list **target_entry)
-+check_redundant(struct held_lock *src, struct held_lock *target)
- {
--	int result;
-+	int ret;
-+	struct lock_list *uninitialized_var(target_entry);
-+	struct lock_list src_entry = {
-+		.class = hlock_class(src),
-+		.parent = NULL,
-+	};
- 
- 	debug_atomic_inc(nr_redundant_checks);
- 
--	result = __bfs_forwards(root, target, class_equal, target_entry);
-+	ret = check_path(hlock_class(target), &src_entry, &target_entry);
- 
--	return result;
-+	if (!ret) {
-+		debug_atomic_inc(nr_redundant);
-+		ret = 2;
-+	} else if (ret < 0)
-+		ret = 0;
-+
-+	return ret;
- }
- 
- #if defined(CONFIG_TRACE_IRQFLAGS)
-@@ -2208,9 +2254,7 @@ static inline void inc_chains(void)
- check_prev_add(struct task_struct *curr, struct held_lock *prev,
- 	       struct held_lock *next, int distance)
- {
--	struct lock_list *uninitialized_var(target_entry);
- 	struct lock_list *entry;
--	struct lock_list this;
- 	struct lock_trace trace;
- 	int ret;
- 
-@@ -2242,17 +2286,9 @@ static inline void inc_chains(void)
- 	 * MAX_CIRCULAR_QUEUE_SIZE) which keeps track of a breadth of nodes
- 	 * in the graph whose neighbours are to be checked.
- 	 */
--	this.class = hlock_class(next);
--	this.parent = NULL;
--	ret = check_noncircular(&this, hlock_class(prev), &target_entry);
--	if (unlikely(!ret)) {
--		print_circular_bug(&this, target_entry, next, prev);
--		return 0;
--	}
--	else if (unlikely(ret < 0)) {
--		print_bfs_bug(ret);
-+	ret = check_noncircular(next, prev);
-+	if (unlikely(ret <= 0))
- 		return 0;
--	}
- 
- 	if (!check_prev_add_irq(curr, prev, next))
- 		return 0;
-@@ -2286,17 +2322,9 @@ static inline void inc_chains(void)
- 	/*
- 	 * Is the <prev> -> <next> link redundant?
- 	 */
--	this.class = hlock_class(prev);
--	this.parent = NULL;
--	ret = check_redundant(&this, hlock_class(next), &target_entry);
--	if (!ret) {
--		debug_atomic_inc(nr_redundant);
--		return 2;
--	}
--	if (ret < 0) {
--		print_bfs_bug(ret);
--		return 0;
--	}
-+	ret = check_redundant(prev, next);
-+	if (ret != 1)
-+		return ret;
- 
- 	if (!save_trace(&trace))
- 		return 0;
--- 
-1.8.3.1
-
+ struct smp_hotplug_thread {
+-	struct task_struct __percpu	**store;
++	struct task_struct		* __percpu *store;
+ 	struct list_head		list;
+ 	int				(*thread_should_run)(unsigned int cpu);
+ 	void				(*thread_fn)(unsigned int cpu);
