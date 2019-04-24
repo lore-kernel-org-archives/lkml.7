@@ -2,58 +2,57 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF656C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E76C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72F721900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C9521902
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556125862;
-	bh=YHcuS02BVF3b/W3jbLLJci+gv5W1bRf1U8QSEpUK9C0=;
+	s=default; t=1556125867;
+	bh=sI0TecyLg18Z0+kAHG2z2kKsfubnYXPRyAilgdjLV1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tQ3yTUIKLy+37gnLK0A2/qeJu9QIMzjNf0DgmP8I6WWprkmVqstjQPZ7aKGewWV/o
-	 xXJscsoxiTqQ3PbxdgzeJBu5VX1jyB3NzUqznovz8lrBHUB+XCPP1uqI+ALjAvPoig
-	 iHiu59/gGvZ6yqKRoATvu1MAx+KRIF8nySw/30r4=
+	b=kkrHXNQMUKMVs+pOUIAXXMGIosn4lUGoju/yvbxY1/9t9YZkm3f62AVoYX6C2JROt
+	 RnpMfSWaXKjbVjve9S17iODmxh0MS8r2gm0OGWXpzQVRx9rsCNtS2zn3A9OVKXkcNa
+	 zaWdCIunldQNsFgHMCz8jJAIf63OLdrXF1JgJvmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733161AbfDXRLB (ORCPT
+        id S1733173AbfDXRLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:11:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34478 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:11:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbfDXRLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:11:01 -0400
+        id S1729842AbfDXRLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:11:04 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 142232148D;
-        Wed, 24 Apr 2019 17:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADC7F218FE;
+        Wed, 24 Apr 2019 17:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125860;
-        bh=YHcuS02BVF3b/W3jbLLJci+gv5W1bRf1U8QSEpUK9C0=;
+        s=default; t=1556125863;
+        bh=sI0TecyLg18Z0+kAHG2z2kKsfubnYXPRyAilgdjLV1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etfcHZOTstGZyRRMbwC0bGkpYJc8TRVi67p/Nbm18ewga1zbq2anXooz5ZvPtMjRm
-         UeNVj0w1S35HrPTrPP3ky6Ab4IN4hmAqzPpqfLBX0hHehyGN4OFRyqiGRCzdy7Q++G
-         BzCLYnTa6Q3WeVmeAZ71xx6NfEqNJ/UAnRBOu7NI=
+        b=BI8wu77wFjX40xB02QTJZf+GjDVa4l61VqjsYPiDgwaPhzTzwUE/k1ZQ/m4TRc+r2
+         rGtJzqbBsix8RyMhHSvS7u/wf9HsXh0fI6Ila8UHEKYCors0XfIH9dRVUkDXJQg/jB
+         PYZJ6ftIrsvMXuT3yPtezqFlKj6gOJZIfN/lhnAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jari Ruusu <jari.ruusu@gmail.com>
-Subject: [PATCH 3.18 001/104] ext4: cleanup bh release code in ext4_ind_remove_space()
-Date:   Wed, 24 Apr 2019 19:08:18 +0200
-Message-Id: <20190424170841.027198396@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Jason Cai (Xiang Feng)" <jason.cai@linux.alibaba.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 010/104] dm thin: add sanity checks to thin-pool and external snapshot creation
+Date:   Wed, 24 Apr 2019 19:08:27 +0200
+Message-Id: <20190424170846.839517240@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,163 +61,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+[ Upstream commit 70de2cbda8a5d788284469e755f8b097d339c240 ]
 
-commit 5e86bdda41534e17621d5a071b294943cae4376e upstream.
+Invoking dm_get_device() twice on the same device path with different
+modes is dangerous.  Because in that case, upgrade_mode() will alloc a
+new 'dm_dev' and free the old one, which may be referenced by a previous
+caller.  Dereferencing the dangling pointer will trigger kernel NULL
+pointer dereference.
 
-Currently, we are releasing the indirect buffer where we are done with
-it in ext4_ind_remove_space(), so we can see the brelse() and
-BUFFER_TRACE() everywhere.  It seems fragile and hard to read, and we
-may probably forget to release the buffer some day.  This patch cleans
-up the code by putting of the code which releases the buffers to the
-end of the function.
+The following two cases can reproduce this issue.  Actually, they are
+invalid setups that must be disallowed, e.g.:
 
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Jari Ruusu <jari.ruusu@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+1. Creating a thin-pool with read_only mode, and the same device as
+both metadata and data.
 
+dmsetup create thinp --table \
+    "0 41943040 thin-pool /dev/vdb /dev/vdb 128 0 1 read_only"
+
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000080
+...
+Call Trace:
+ new_read+0xfb/0x110 [dm_bufio]
+ dm_bm_read_lock+0x43/0x190 [dm_persistent_data]
+ ? kmem_cache_alloc_trace+0x15c/0x1e0
+ __create_persistent_data_objects+0x65/0x3e0 [dm_thin_pool]
+ dm_pool_metadata_open+0x8c/0xf0 [dm_thin_pool]
+ pool_ctr.cold.79+0x213/0x913 [dm_thin_pool]
+ ? realloc_argv+0x50/0x70 [dm_mod]
+ dm_table_add_target+0x14e/0x330 [dm_mod]
+ table_load+0x122/0x2e0 [dm_mod]
+ ? dev_status+0x40/0x40 [dm_mod]
+ ctl_ioctl+0x1aa/0x3e0 [dm_mod]
+ dm_ctl_ioctl+0xa/0x10 [dm_mod]
+ do_vfs_ioctl+0xa2/0x600
+ ? handle_mm_fault+0xda/0x200
+ ? __do_page_fault+0x26c/0x4f0
+ ksys_ioctl+0x60/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x150
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+2. Creating a external snapshot using the same thin-pool device.
+
+dmsetup create thinp --table \
+    "0 41943040 thin-pool /dev/vdc /dev/vdb 128 0 2 ignore_discard"
+dmsetup message /dev/mapper/thinp 0 "create_thin 0"
+dmsetup create snap --table \
+            "0 204800 thin /dev/mapper/thinp 0 /dev/mapper/thinp"
+
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+...
+Call Trace:
+? __alloc_pages_nodemask+0x13c/0x2e0
+retrieve_status+0xa5/0x1f0 [dm_mod]
+? dm_get_live_or_inactive_table.isra.7+0x20/0x20 [dm_mod]
+ table_status+0x61/0xa0 [dm_mod]
+ ctl_ioctl+0x1aa/0x3e0 [dm_mod]
+ dm_ctl_ioctl+0xa/0x10 [dm_mod]
+ do_vfs_ioctl+0xa2/0x600
+ ksys_ioctl+0x60/0x90
+ ? ksys_write+0x4f/0xb0
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x150
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Signed-off-by: Jason Cai (Xiang Feng) <jason.cai@linux.alibaba.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/indirect.c |   47 ++++++++++++++++++++++-------------------------
- 1 file changed, 22 insertions(+), 25 deletions(-)
+ drivers/md/dm-thin.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/fs/ext4/indirect.c
-+++ b/fs/ext4/indirect.c
-@@ -1312,6 +1312,7 @@ int ext4_ind_remove_space(handle_t *hand
- 	ext4_lblk_t offsets[4], offsets2[4];
- 	Indirect chain[4], chain2[4];
- 	Indirect *partial, *partial2;
-+	Indirect *p = NULL, *p2 = NULL;
- 	ext4_lblk_t max_block;
- 	__le32 nr = 0, nr2 = 0;
- 	int n = 0, n2 = 0;
-@@ -1353,7 +1354,7 @@ int ext4_ind_remove_space(handle_t *hand
- 		}
+diff --git a/drivers/md/dm-thin.c b/drivers/md/dm-thin.c
+index 936c57b57539..c50f144bdbcf 100644
+--- a/drivers/md/dm-thin.c
++++ b/drivers/md/dm-thin.c
+@@ -2560,6 +2560,13 @@ static int pool_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ 	as.argc = argc;
+ 	as.argv = argv;
  
- 
--		partial = ext4_find_shared(inode, n, offsets, chain, &nr);
-+		partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
- 		if (nr) {
- 			if (partial == chain) {
- 				/* Shared branch grows from the inode */
-@@ -1378,13 +1379,11 @@ int ext4_ind_remove_space(handle_t *hand
- 				partial->p + 1,
- 				(__le32 *)partial->bh->b_data+addr_per_block,
- 				(chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
- 			partial--;
- 		}
- 
- end_range:
--		partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
-+		partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
- 		if (nr2) {
- 			if (partial2 == chain2) {
- 				/*
-@@ -1414,16 +1413,14 @@ end_range:
- 					   (__le32 *)partial2->bh->b_data,
- 					   partial2->p,
- 					   (chain2+n2-1) - partial2);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
- 			partial2--;
- 		}
- 		goto do_indirects;
- 	}
- 
- 	/* Punch happened within the same level (n == n2) */
--	partial = ext4_find_shared(inode, n, offsets, chain, &nr);
--	partial2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
-+	partial = p = ext4_find_shared(inode, n, offsets, chain, &nr);
-+	partial2 = p2 = ext4_find_shared(inode, n2, offsets2, chain2, &nr2);
- 
- 	/* Free top, but only if partial2 isn't its subtree. */
- 	if (nr) {
-@@ -1480,15 +1477,7 @@ end_range:
- 					   partial->p + 1,
- 					   partial2->p,
- 					   (chain+n-1) - partial);
--			while (partial > chain) {
--				BUFFER_TRACE(partial->bh, "call brelse");
--				brelse(partial->bh);
--			}
--			while (partial2 > chain2) {
--				BUFFER_TRACE(partial2->bh, "call brelse");
--				brelse(partial2->bh);
--			}
--			return 0;
-+			goto cleanup;
- 		}
- 
- 		/*
-@@ -1503,8 +1492,6 @@ end_range:
- 					   partial->p + 1,
- 					   (__le32 *)partial->bh->b_data+addr_per_block,
- 					   (chain+n-1) - partial);
--			BUFFER_TRACE(partial->bh, "call brelse");
--			brelse(partial->bh);
- 			partial--;
- 		}
- 		if (partial2 > chain2 && depth2 <= depth) {
-@@ -1512,11 +1499,21 @@ end_range:
- 					   (__le32 *)partial2->bh->b_data,
- 					   partial2->p,
- 					   (chain2+n2-1) - partial2);
--			BUFFER_TRACE(partial2->bh, "call brelse");
--			brelse(partial2->bh);
- 			partial2--;
- 		}
- 	}
++	/* make sure metadata and data are different devices */
++	if (!strcmp(argv[0], argv[1])) {
++		ti->error = "Error setting metadata or data device";
++		r = -EINVAL;
++		goto out_unlock;
++	}
 +
-+cleanup:
-+	while (p && p > chain) {
-+		BUFFER_TRACE(p->bh, "call brelse");
-+		brelse(p->bh);
-+		p--;
-+	}
-+	while (p2 && p2 > chain2) {
-+		BUFFER_TRACE(p2->bh, "call brelse");
-+		brelse(p2->bh);
-+		p2--;
-+	}
- 	return 0;
+ 	/*
+ 	 * Set default pool features.
+ 	 */
+@@ -3386,6 +3393,12 @@ static int thin_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ 	tc->sort_bio_list = RB_ROOT;
  
- do_indirects:
-@@ -1524,7 +1521,7 @@ do_indirects:
- 	switch (offsets[0]) {
- 	default:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_IND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 1);
-@@ -1532,7 +1529,7 @@ do_indirects:
- 		}
- 	case EXT4_IND_BLOCK:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_DIND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 2);
-@@ -1540,7 +1537,7 @@ do_indirects:
- 		}
- 	case EXT4_DIND_BLOCK:
- 		if (++n >= n2)
--			return 0;
-+			break;
- 		nr = i_data[EXT4_TIND_BLOCK];
- 		if (nr) {
- 			ext4_free_branches(handle, inode, NULL, &nr, &nr+1, 3);
-@@ -1549,5 +1546,5 @@ do_indirects:
- 	case EXT4_TIND_BLOCK:
- 		;
- 	}
--	return 0;
-+	goto cleanup;
- }
+ 	if (argc == 3) {
++		if (!strcmp(argv[0], argv[2])) {
++			ti->error = "Error setting origin device";
++			r = -EINVAL;
++			goto bad_origin_dev;
++		}
++
+ 		r = dm_get_device(ti, argv[2], FMODE_READ, &origin_dev);
+ 		if (r) {
+ 			ti->error = "Error opening origin device";
+-- 
+2.19.1
+
 
 
