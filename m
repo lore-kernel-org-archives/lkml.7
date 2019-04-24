@@ -2,81 +2,57 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE07AC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DF3C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A167520878
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7839221901
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731896AbfDXPwF (ORCPT
+        id S1731775AbfDXPzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:52:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:20185 "EHLO mx1.redhat.com"
+        Wed, 24 Apr 2019 11:55:09 -0400
+Received: from 8bytes.org ([81.169.241.247]:37322 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730625AbfDXPwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:52:05 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EAD1A30A8199;
-        Wed, 24 Apr 2019 15:52:04 +0000 (UTC)
-Received: from treble (ovpn-123-99.rdu2.redhat.com [10.10.123.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F0F55D704;
-        Wed, 24 Apr 2019 15:52:01 +0000 (UTC)
-Date:   Wed, 24 Apr 2019 10:51:54 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] stacktrace: Remove superfluous WARN_ONCE() from
- save_stack_trace_tsk_reliable()
-Message-ID: <20190424155154.h62wc3nt7ib2phdy@treble>
-References: <20190424085550.29612-1-pmladek@suse.com>
- <20190424085550.29612-3-pmladek@suse.com>
+        id S1730620AbfDXPzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 11:55:09 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 4A77C78F; Wed, 24 Apr 2019 17:55:06 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 17:55:06 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Tom Murphy <tmurphy@arista.com>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Tom Murphy <murphyt7@tcd.ie>
+Subject: Re: [PATCH] iommu/amd: flush not present cache in iommu_map_page
+Message-ID: <20190424155505.GA6731@8bytes.org>
+References: <20190424141900.8883-1-tmurphy@arista.com>
+ <20190424143246.GA24079@infradead.org>
+ <CAPL0++7w0wR+hid=0XkGtH2wR0qvL1oNheEMQOM=8CtyhNLmag@mail.gmail.com>
+ <20190424145819.GA16141@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190424085550.29612-3-pmladek@suse.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 24 Apr 2019 15:52:05 +0000 (UTC)
+In-Reply-To: <20190424145819.GA16141@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:55:49AM +0200, Petr Mladek wrote:
-> WARN_ONCE() in the generic save_stack_trace_tsk_reliable() is superfluous.
-> The only current user klp_check_stack() writes its own warning when
-> -ENOSYS is returned.
-> 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  kernel/stacktrace.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
-> index f8edee9c792d..83ac0ac5ffd9 100644
-> --- a/kernel/stacktrace.c
-> +++ b/kernel/stacktrace.c
-> @@ -74,6 +74,5 @@ __weak int
->  save_stack_trace_tsk_reliable(struct task_struct *tsk,
->  			      struct stack_trace *trace)
->  {
-> -	WARN_ONCE(1, KERN_INFO "save_stack_tsk_reliable() not implemented yet.\n");
->  	return -ENOSYS;
->  }
-> -- 
-> 2.16.4
-> 
+On Wed, Apr 24, 2019 at 07:58:19AM -0700, Christoph Hellwig wrote:
+> I'd be tempted to do that.  But lets just ask Joerg if he has
+> any opinion..
 
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+The reason was that it is an unlikely path, as hardware implementations
+are not allowed to set this bit. It is purely for emulated AMD IOMMUs.
+I have not measured whether this annotation has any performance
+benefit, but I find it more readable at least.
 
--- 
-Josh
+Regards,
+
+	Joerg
+
+PS: Why did you drop me from the Cc list of the previous replies?
