@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B02FC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965ECC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2979B2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680732054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127231;
-	bh=sLx4xuODahBR3FznkQjFlKHuWPYfFr3OhJLuAZGD8JQ=;
+	s=default; t=1556127234;
+	bh=h1X2hjkuDRDAxqLcnuW0kO6muFRfT3eHK38aplXowfo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JCdckNyMQzsN5vfRekl8fCaEPupgjL3sPfsNJJd7B6JWXXZqapC+wvMd9iPA7SO3l
-	 p3gzHxYaJOglFOjPijpuEoug4mWY6myUKtLaTJwcEBmf+uSte5BNa88jxRMoctZIgQ
-	 yoyxgXscIFjTg4lvNsOk7z4BXxsGcNLC/c+CK43A=
+	b=aT/PdGShTZmj+YvK7nVYJqucv3SDOj3R9jW2ENwFwPC5aU8U0Qemd6a0mQjO9VFlq
+	 um1ddk1790o2uqGZkge0zWrOUHxwb3zLLzlArC6zcKYVwTWEV+i/UWXABJzJK7Hj6n
+	 V8fBqy9PX3taY9qEtS91+ZQgL17IzZBWzxrbSNHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391583AbfDXRdt (ORCPT
+        id S2391594AbfDXRdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:33:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60798 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391558AbfDXRdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:33:45 -0400
+        id S2391558AbfDXRdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:33:50 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DA332077C;
-        Wed, 24 Apr 2019 17:33:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409F02054F;
+        Wed, 24 Apr 2019 17:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127224;
-        bh=sLx4xuODahBR3FznkQjFlKHuWPYfFr3OhJLuAZGD8JQ=;
+        s=default; t=1556127229;
+        bh=h1X2hjkuDRDAxqLcnuW0kO6muFRfT3eHK38aplXowfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hnJ/y/fi9fhrS3ym/tCB22DZHsH18tYeGASR+HmttnVTQelrH1CN2nYs/wuJbnHdW
-         iWvm7wjMIgwSdScODgHWTNm7uO68e9yh3zt+jtlEPgucKfozhR80Kn5k5jD36zm1OL
-         LsPKPVp6jU1GKVEoHaKMknBkoLmNbzkfm3EmZR3U=
+        b=VfBeEt6d0UsQMZ7BSmTN1Fe28mL3UqinGpo4lqsw+esyJVszGAK76Y9ubF7k2f6k3
+         6WBIVumrY/K5IdtziTPwPO5Ur6JupxoVXeKhi4rVNvIzqQpVSI+4dulpyt/gyEXrOH
+         QNQMXVoFTNOgKpWO3TtPCqXyp/NHXWFicXPQ3bLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Suryaputra <ssuryaextr@gmail.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Alex Kushnarov <alexanderk@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 013/115] ipv4: recompile ip options in ipv4_link_failure
-Date:   Wed, 24 Apr 2019 19:09:09 +0200
-Message-Id: <20190424170925.767534377@linuxfoundation.org>
+Subject: [PATCH 5.0 015/115] mlxsw: spectrum_switchdev: Add MDB entries in prepare phase
+Date:   Wed, 24 Apr 2019 19:09:11 +0200
+Message-Id: <20190424170925.910560208@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -59,42 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Suryaputra <ssuryaextr@gmail.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit ed0de45a1008991fdaa27a0152befcb74d126a8b ]
+[ Upstream commit d4d0e40977ac450f32f2db5e4d8e23c9d2578899 ]
 
-Recompile IP options since IPCB may not be valid anymore when
-ipv4_link_failure is called from arp_error_report.
+The driver cannot guarantee in the prepare phase that it will be able to
+write an MDB entry to the device. In case the driver returned success
+during the prepare phase, but then failed to add the entry in the commit
+phase, a WARNING [1] will be generated by the switchdev core.
 
-Refer to the commit 3da1ed7ac398 ("net: avoid use IPCB in cipso_v4_error")
-and the commit before that (9ef6b42ad6fd) for a similar issue.
+Fix this by doing the work in the prepare phase instead.
 
-Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
+[1]
+[  358.544486] swp12s0: Commit of object (id=2) failed.
+[  358.550061] WARNING: CPU: 0 PID: 30 at net/switchdev/switchdev.c:281 switchdev_port_obj_add_now+0x9b/0xe0
+[  358.560754] CPU: 0 PID: 30 Comm: kworker/0:1 Not tainted 5.0.0-custom-13382-gf2449babf221 #1350
+[  358.570472] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  358.580582] Workqueue: events switchdev_deferred_process_work
+[  358.587001] RIP: 0010:switchdev_port_obj_add_now+0x9b/0xe0
+...
+[  358.614109] RSP: 0018:ffffa6b900d6fe18 EFLAGS: 00010286
+[  358.619943] RAX: 0000000000000000 RBX: ffff8b00797ff000 RCX: 0000000000000000
+[  358.627912] RDX: ffff8b00b7a1d4c0 RSI: ffff8b00b7a152e8 RDI: ffff8b00b7a152e8
+[  358.635881] RBP: ffff8b005c3f5bc0 R08: 000000000000022b R09: 0000000000000000
+[  358.643850] R10: 0000000000000000 R11: ffffa6b900d6fcc8 R12: 0000000000000000
+[  358.651819] R13: dead000000000100 R14: ffff8b00b65a23c0 R15: 0ffff8b00b7a2200
+[  358.659790] FS:  0000000000000000(0000) GS:ffff8b00b7a00000(0000) knlGS:0000000000000000
+[  358.668820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  358.675228] CR2: 00007f00aad90de0 CR3: 00000001ca80d000 CR4: 00000000001006f0
+[  358.683188] Call Trace:
+[  358.685918]  switchdev_port_obj_add_deferred+0x13/0x60
+[  358.691655]  switchdev_deferred_process+0x6b/0xf0
+[  358.696907]  switchdev_deferred_process_work+0xa/0x10
+[  358.702548]  process_one_work+0x1f5/0x3f0
+[  358.707022]  worker_thread+0x28/0x3c0
+[  358.711099]  ? process_one_work+0x3f0/0x3f0
+[  358.715768]  kthread+0x10d/0x130
+[  358.719369]  ? __kthread_create_on_node+0x180/0x180
+[  358.724815]  ret_from_fork+0x35/0x40
+
+Fixes: 3a49b4fde2a1 ("mlxsw: Adding layer 2 multicast support")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
+Tested-by: Alex Kushnarov <alexanderk@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/route.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -1186,8 +1186,16 @@ static struct dst_entry *ipv4_dst_check(
- static void ipv4_link_failure(struct sk_buff *skb)
- {
- 	struct rtable *rt;
-+	struct ip_options opt;
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+@@ -1654,7 +1654,7 @@ static int mlxsw_sp_port_mdb_add(struct
+ 	u16 fid_index;
+ 	int err = 0;
  
--	icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0);
-+	/* Recompile ip options since IPCB may not be valid anymore.
-+	 */
-+	memset(&opt, 0, sizeof(opt));
-+	opt.optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
-+	if (__ip_options_compile(dev_net(skb->dev), &opt, skb, NULL))
-+		return;
-+
-+	__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt);
+-	if (switchdev_trans_ph_prepare(trans))
++	if (switchdev_trans_ph_commit(trans))
+ 		return 0;
  
- 	rt = skb_rtable(skb);
- 	if (rt)
+ 	bridge_port = mlxsw_sp_bridge_port_find(mlxsw_sp->bridge, orig_dev);
 
 
