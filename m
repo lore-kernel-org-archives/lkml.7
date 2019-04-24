@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA3DC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9823BC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2436205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B32205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUzhCOH2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KK4njm5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389704AbfDXTSW (ORCPT
+        id S2388693AbfDXTRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:18:22 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39216 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbfDXTRx (ORCPT
+        Wed, 24 Apr 2019 15:17:49 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43555 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732310AbfDXTRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:17:53 -0400
-Received: by mail-wm1-f67.google.com with SMTP id n25so6647378wmk.4;
-        Wed, 24 Apr 2019 12:17:52 -0700 (PDT)
+        Wed, 24 Apr 2019 15:17:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a12so3432422wrq.10;
+        Wed, 24 Apr 2019 12:17:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IeRjLmIo3+zL+ngn2z6PfEn9LxaA8z9ME0E/GMbJl4A=;
-        b=TUzhCOH2F7RvxialpvgaUFfNbsBpgDv13m50OH+yCHXNzbKgkQ3+3J9fmVotTjHhZ+
-         nT72Tzc880/U6F/39r2rOLBXumQ/j5RU5NezTirLrIrK8HKif6onpzxPkeL9+3b1vQq2
-         1DjaR7ZH62jNLmGYqQQPFRrk8RastcZUjByEctXZYR9dDWVH50TBAdTissGRPJJFAaku
-         yTmszbRe7C6g/MQlgrFC4qFKTUqOyA0NfxLlCq1xXJvcaq0cajMvWvopZxIRGurM8C5w
-         Ky8/X9fshxb+9fnIfYrOG+f4N+cBIWfqByuQioMYFAZ1K6Xx48p3R+XHvkUnajpJttNi
-         B/0A==
+        bh=+k7fklQVC1wXNkIsXxuBFFgxierE2Y58VYjajnqTX8M=;
+        b=KK4njm5c66wApJlm8WGtcK3eINA7bZzqf9jpF/xDcoCSdcuGWR7ygTnW7CxGOT7Zpb
+         ClJa1zpkc0LnLQ3Y9FSdXrMwgQvpBYbm2h61pKGsBRYXBFkHEnXr7h2wDgkaAsAj6P04
+         n+Zhe79BzllwSlP7qQcQ1oNHfpi5n4yGvzSir6Qil6I+8IfT0AGlMW1C3bfb7hbIOrnv
+         /TQKg5FQRX19gB+eGsG3WBIFJCSsQmuhe604FqNiT/pZUC4DClEWV5U3gwAbTgI70ma+
+         +jCLa9iSGj52KBjpTWMg0o/2CwQGRZzVKsI7N71kUDVC8rL8yE29inQ1qfO+L+vf3GA3
+         Zx2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=IeRjLmIo3+zL+ngn2z6PfEn9LxaA8z9ME0E/GMbJl4A=;
-        b=gBYh9EKknFeDZ6vp7h5UEhlflKVpCvgQvVX4iKsPWfvndOlLQd348fhy2z3KpJYAU2
-         Ah58yrVJCtspu92pIUhzmuJQri6cgp7oFw85sg7D8PlvqJ6W3zJO3vLkyORIo38+wnh5
-         Rc/ph9wAB87ydOw+YtzSuo5n+2AiDLw111Z0ubvu4DAOSea4xsO/Tfl/tYrU40rYcO3W
-         GhHGuuRBEAYKX3fCrPKGf6TERadRhrJLqrGXBq1sELuOjbwhU8TdIrvgya02mIZXeWuN
-         2WJZcN+3PPhln+inFvDEBRRk9p9lXXP3HKPCJh37C0pGs3wa7m4NTEAXC8xypSRrNws/
-         dx/Q==
-X-Gm-Message-State: APjAAAUgGxP/DcyzzPy0GoGmSCiZzeLoemI2cLTO80xULyOJekOMME/7
-        7JiHKHxlqVidk4cGBZUhC7cHzXpMYHNKMA==
-X-Google-Smtp-Source: APXvYqwLwnDZWORI7BhpqSdPQhydSnH4TJiDh5p2OFwPcJ1S0/zRXEp6j1rg2GAjg1ue7Rb470bFqw==
-X-Received: by 2002:a1c:4c1a:: with SMTP id z26mr474306wmf.73.1556133471446;
-        Wed, 24 Apr 2019 12:17:51 -0700 (PDT)
+        bh=+k7fklQVC1wXNkIsXxuBFFgxierE2Y58VYjajnqTX8M=;
+        b=Q18H1v0Ex2k8R0yyIHpu9qv+ACIRRSDaxOHPlm2jkA3Nbk+QdULOcFHr1SXD5qhvRf
+         K9nnbaNPuyYDFyXBRkbqGLXE9H54VGUKqzgYwtGNMRMnU2haZun7OjZpm+MNAu38AEQT
+         X4OzBVbR0Eq7kAuJCkGGHCVA1OtKqDOsTW69I9HGwQ8beTtcD8gRWPy2nvDxi9/MnJCm
+         an0JE+g2S2JVC2qMYb6RQTXT3JyATEOUfrsI+cRmZHxVQuV52k9MZom2PeTPLHMR7rjj
+         WgsSOxLFKekyDgUHiCaMKZ9OhZm0Th4qEV2tS/nmYe85opoixPjm4s1iDTpREV0t4Iyy
+         VIKw==
+X-Gm-Message-State: APjAAAXP6lGYk9kRhiUfnxDJb58I2UAcCre2RG9clZ4QISyAPIJrLS7L
+        yUtmRTYNb9XsDdQ5qMhf2QyLxHSyPMAhyQ==
+X-Google-Smtp-Source: APXvYqwDmKBVeUMPZVGyJTnitTfK6cM0z/PsKemtuUUK1m2YTTQaoqWzBVErwIt/ROAiTYboFRIU3w==
+X-Received: by 2002:a5d:5485:: with SMTP id h5mr377002wrv.315.1556133463901;
+        Wed, 24 Apr 2019 12:17:43 -0700 (PDT)
 Received: from ?IPv6:2003:ea:8bd4:5700:c498:ee8f:ff0a:13e5? (p200300EA8BD45700C498EE8FFF0A13E5.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:c498:ee8f:ff0a:13e5])
-        by smtp.googlemail.com with ESMTPSA id a11sm16605685wrx.5.2019.04.24.12.17.49
+        by smtp.googlemail.com with ESMTPSA id u1sm2183653wrp.69.2019.04.24.12.17.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 12:17:50 -0700 (PDT)
-Subject: [PATCH v2 6/9] iommu/amd: use helper pci_dev_id
+        Wed, 24 Apr 2019 12:17:43 -0700 (PDT)
+Subject: [PATCH v2 3/9] r8169: use new helper pci_dev_id
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
@@ -93,8 +93,8 @@ Cc:     open list <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
 References: <2e1f9a57-6d08-d017-24da-3e6b97fa2449@gmail.com>
-Message-ID: <f673e8ac-cc9a-75a6-09b8-35b94bfc868b@gmail.com>
-Date:   Wed, 24 Apr 2019 21:15:25 +0200
+Message-ID: <fec3960e-5e65-3f62-0922-736f26db095f@gmail.com>
+Date:   Wed, 24 Apr 2019 21:13:25 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
@@ -111,23 +111,26 @@ Use new helper pci_dev_id() to simplify the code.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/iommu/amd_iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/realtek/r8169.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index f467cc4b4..5cb201422 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -165,7 +165,7 @@ static inline u16 get_pci_device_id(struct device *dev)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
+diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
+index efaea1a0a..ae476fe8d 100644
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -7020,8 +7020,7 @@ static int r8169_mdio_register(struct rtl8169_private *tp)
+ 	new_bus->priv = tp;
+ 	new_bus->parent = &pdev->dev;
+ 	new_bus->irq[0] = PHY_IGNORE_INTERRUPT;
+-	snprintf(new_bus->id, MII_BUS_ID_SIZE, "r8169-%x",
+-		 PCI_DEVID(pdev->bus->number, pdev->devfn));
++	snprintf(new_bus->id, MII_BUS_ID_SIZE, "r8169-%x", pci_dev_id(pdev));
  
--	return PCI_DEVID(pdev->bus->number, pdev->devfn);
-+	return pci_dev_id(pdev);
- }
- 
- static inline int get_acpihid_device_id(struct device *dev,
+ 	new_bus->read = r8169_mdio_read_reg;
+ 	new_bus->write = r8169_mdio_write_reg;
 -- 
 2.21.0
+
+
 
 
