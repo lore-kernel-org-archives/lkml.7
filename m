@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197E2C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8678C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CA220675
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F0D2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127349;
-	bh=WdhaBDNuR9iB8CvUZ+0lnq5JFVjmbCZ/SWYeioLM91w=;
+	s=default; t=1556127351;
+	bh=XL+NTDVkUHk0deZSJSKYKtEdcHz6bmfVzP3Azt4Glc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZGROwzq2ps3WYJARQdFCn+vTBKuQcqucoi7uwYEIeSM+FNaPOdl+C4AI1ZqRhSfIK
-	 5Qq9A5D5lHIqE10IWN7xqMylRoFpvfev/HppoGaYB0D5xocP65a+vIDF0yDJdTQ68C
-	 SDAAUXammxd6puCcIsTMb6tkyoAsvUyL6BXRC1V8=
+	b=oJL2LVxb8+EqMuTO0mCSp7azIKFsVytLGKKZm6WQjuX94Tp/02C/PPMoepNzXqBr/
+	 zmHYULIsvp0b9OSgQRa0AkkpMFQ6JjxmpgmX2Mw95BzFiVlEoDjTSILYD5KZ1uJwrL
+	 8QCL/kYb5iJABIEcAA6pFRJvI/XpL69YeSHVInnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391983AbfDXRfr (ORCPT
+        id S2391995AbfDXRfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:35:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34604 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:35:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391963AbfDXRfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:35:43 -0400
+        id S2391973AbfDXRfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:35:46 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93FF22054F;
-        Wed, 24 Apr 2019 17:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F068218B0;
+        Wed, 24 Apr 2019 17:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127343;
-        bh=WdhaBDNuR9iB8CvUZ+0lnq5JFVjmbCZ/SWYeioLM91w=;
+        s=default; t=1556127345;
+        bh=XL+NTDVkUHk0deZSJSKYKtEdcHz6bmfVzP3Azt4Glc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BRJa8pSgZvxjFVwzY2UA/yqyqY6SDKblMVG4TT9ApNJ5tr1PU+NGxMprSyHgOLM6H
-         Js+oQfmQtNLqNtEk8+DMfp3p7qZ6/X4jahMmA5FXbXBvkYy71rK5/5fk9MIaxfFvBV
-         W1uBP0kOlwZJ02AD9QmeT3xu5B0nleQX8KwA96LM=
+        b=j4Z25e0NHzn3dR+HrMhfMk+1ZsZfJgkVT2jltopvdeTgiKsYTtYgunaRFZ0LczkOU
+         cSL/dbT9wtRI0LDLwTZBtEQNImetdHHz9SGhwEDRsvVS6z1TIEPf72CvcGTzkz1b9J
+         v9omH3XlT0IUI73ar5qcD7OEeM99om1vttuyt04g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Larin <cerg2010cerg2010@mail.ru>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.0 054/115] iio: gyro: mpu3050: fix chip ID reading
-Date:   Wed, 24 Apr 2019 19:09:50 +0200
-Message-Id: <20190424170928.319309961@linuxfoundation.org>
+Subject: [PATCH 5.0 055/115] iio/gyro/bmg160: Use millidegrees for temperature scale
+Date:   Wed, 24 Apr 2019 19:09:51 +0200
+Message-Id: <20190424170928.415921404@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -61,49 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Larin <cerg2010cerg2010@mail.ru>
+From: Mike Looijmans <mike.looijmans@topic.nl>
 
-commit 409a51e0a4a5f908763191fae2c29008632eb712 upstream.
+commit 40a7198a4a01037003c7ca714f0d048a61e729ac upstream.
 
-According to the datasheet, the last bit of CHIP_ID register controls
-I2C bus, and the first one is unused. Handle this correctly.
+Standard unit for temperature is millidegrees Celcius, whereas this driver
+was reporting in degrees. Fix the scale factor in the driver.
 
-Note that there are chips out there that have a value such that
-the id check currently fails.
-
-Signed-off-by: Sergey Larin <cerg2010cerg2010@mail.ru>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/gyro/mpu3050-core.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/iio/gyro/bmg160_core.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/gyro/mpu3050-core.c
-+++ b/drivers/iio/gyro/mpu3050-core.c
-@@ -29,7 +29,8 @@
- 
- #include "mpu3050.h"
- 
--#define MPU3050_CHIP_ID		0x69
-+#define MPU3050_CHIP_ID		0x68
-+#define MPU3050_CHIP_ID_MASK	0x7E
- 
- /*
-  * Register map: anything suffixed *_H is a big-endian high byte and always
-@@ -1176,8 +1177,9 @@ int mpu3050_common_probe(struct device *
- 		goto err_power_down;
- 	}
- 
--	if (val != MPU3050_CHIP_ID) {
--		dev_err(dev, "unsupported chip id %02x\n", (u8)val);
-+	if ((val & MPU3050_CHIP_ID_MASK) != MPU3050_CHIP_ID) {
-+		dev_err(dev, "unsupported chip id %02x\n",
-+				(u8)(val & MPU3050_CHIP_ID_MASK));
- 		ret = -ENODEV;
- 		goto err_power_down;
- 	}
+--- a/drivers/iio/gyro/bmg160_core.c
++++ b/drivers/iio/gyro/bmg160_core.c
+@@ -582,11 +582,10 @@ static int bmg160_read_raw(struct iio_de
+ 	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
+ 		return bmg160_get_filter(data, val);
+ 	case IIO_CHAN_INFO_SCALE:
+-		*val = 0;
+ 		switch (chan->type) {
+ 		case IIO_TEMP:
+-			*val2 = 500000;
+-			return IIO_VAL_INT_PLUS_MICRO;
++			*val = 500;
++			return IIO_VAL_INT;
+ 		case IIO_ANGL_VEL:
+ 		{
+ 			int i;
+@@ -594,6 +593,7 @@ static int bmg160_read_raw(struct iio_de
+ 			for (i = 0; i < ARRAY_SIZE(bmg160_scale_table); ++i) {
+ 				if (bmg160_scale_table[i].dps_range ==
+ 							data->dps_range) {
++					*val = 0;
+ 					*val2 = bmg160_scale_table[i].scale;
+ 					return IIO_VAL_INT_PLUS_MICRO;
+ 				}
 
 
