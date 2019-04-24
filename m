@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842DBC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD17C282E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5444A20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B6620652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128915;
-	bh=+wDCbQFSIlARIGinIShr3Pj2sMLDdEviy6SpIqXrcxc=;
+	s=default; t=1556128922;
+	bh=SZpf9VjrGuNPYbm/5p0PTRoSFW7LuNFcSU2T55vMh9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d40exSHbxw2pETHrU6/dQOld+FA2NMRBOfgNPzfABHjcg/ZpUAfL+4lwbCgI2knQ1
-	 lhd5E+m30VDdlDfSgsnlVfCkLavGyo4fYqBHQoYaUjXnDjQ3DTatOwBQUsUPs38va/
-	 L91UFhSa9TbYCjpeYaZbqmLsTa1wxo+/8GO+50qk=
+	b=CNvjTKqc20SNkljU8iXyxzZxPWtDoqEBFNt5NrR0GkFhIEVzt9doK+/4CfXdUr0y5
+	 Un0ASjZvfKnZ5bpi1YYEea0B2XYQWIK0D8kkIWtpOISM1JikFzcXsZdS5xfDbn0bqx
+	 VGd6xQOh0yAq44T8VY90dBWp+PHsA2OvsHFg/duE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389453AbfDXRVl (ORCPT
+        id S2389363AbfDXRVc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47088 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:21:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388998AbfDXRVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:21:36 -0400
+        id S2389351AbfDXRVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:21:30 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D95CC21905;
-        Wed, 24 Apr 2019 17:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B636205ED;
+        Wed, 24 Apr 2019 17:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126495;
-        bh=+wDCbQFSIlARIGinIShr3Pj2sMLDdEviy6SpIqXrcxc=;
+        s=default; t=1556126489;
+        bh=SZpf9VjrGuNPYbm/5p0PTRoSFW7LuNFcSU2T55vMh9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gE5haa6tD7xc0EZ6zUt+24LunbUnNeIOjNXT8e+Z0IV6rWe+pRUyeTPi+Meh1+W+s
-         TRpjLbNbUO+1aESXAFKTlLHyAEv+z6STz/WEo9RreT0Ae8HYNgDNnJwNBpQqDNzUjR
-         XXWmlt9uQTQEdjA62POAmi7v88P2KuiTTeHnmfS8=
+        b=2UEvVC8+h/s7dWjdVf9WtZBKSAYCalaHkF9PTZkf5HKnkntVdsAjsnEi/I4pMlv9x
+         mkCUMhxlmjcRsuygNKLdZxeqFMeOjZwQTiOR+uKeALTGJPaSNMohjhBXVAy+U/N7s/
+         fOay4b2ZK6EWn1Q74i6wunXTAF2WX1rglnJkbG4A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 128/168] crypto: sha512/arm - fix crash bug in Thumb2 build
-Date:   Wed, 24 Apr 2019 19:09:32 +0200
-Message-Id: <20190424170930.894874477@linuxfoundation.org>
+Subject: [PATCH 4.4 126/168] cifs: fallback to older infolevels on findfirst queryinfo retry
+Date:   Wed, 24 Apr 2019 19:09:30 +0200
+Message-Id: <20190424170930.798773750@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -60,95 +59,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c64316502008064c158fa40cc250665e461b0f2a ]
+[ Upstream commit 3b7960caceafdfc2cdfe2850487f8d091eb41144 ]
 
-The SHA512 code we adopted from the OpenSSL project uses a rather
-peculiar way to take the address of the round constant table: it
-takes the address of the sha256_block_data_order() routine, and
-substracts a constant known quantity to arrive at the base of the
-table, which is emitted by the same assembler code right before
-the routine's entry point.
+In cases where queryinfo fails, we have cases in cifs (vers=1.0)
+where with backupuid mounts we retry the query info with findfirst.
+This doesn't work to some NetApp servers which don't support
+WindowsXP (and later) infolevel 261 (SMB_FIND_FILE_ID_FULL_DIR_INFO)
+so in this case use other info levels (in this case it will usually
+be level 257, SMB_FIND_FILE_DIRECTORY_INFO).
 
-However, recent versions of binutils have helpfully changed the
-behavior of references emitted via an ADR instruction when running
-in Thumb2 mode: it now takes the Thumb execution mode bit into
-account, which is bit 0 af the address. This means the produced
-table address also has bit 0 set, and so we end up with an address
-value pointing 1 byte past the start of the table, which results
-in crashes such as
+(Also fixes some indentation)
 
-  Unable to handle kernel paging request at virtual address bf825000
-  pgd = 42f44b11
-  [bf825000] *pgd=80000040206003, *pmd=5f1bd003, *pte=00000000
-  Internal error: Oops: 207 [#1] PREEMPT SMP THUMB2
-  Modules linked in: sha256_arm(+) sha1_arm_ce sha1_arm ...
-  CPU: 7 PID: 396 Comm: cryptomgr_test Not tainted 5.0.0-rc6+ #144
-  Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-  PC is at sha256_block_data_order+0xaaa/0xb30 [sha256_arm]
-  LR is at __this_module+0x17fd/0xffffe800 [sha256_arm]
-  pc : [<bf820bca>]    lr : [<bf824ffd>]    psr: 800b0033
-  sp : ebc8bbe8  ip : faaabe1c  fp : 2fdd3433
-  r10: 4c5f1692  r9 : e43037df  r8 : b04b0a5a
-  r7 : c369d722  r6 : 39c3693e  r5 : 7a013189  r4 : 1580d26b
-  r3 : 8762a9b0  r2 : eea9c2cd  r1 : 3e9ab536  r0 : 1dea4ae7
-  Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment user
-  Control: 70c5383d  Table: 6b8467c0  DAC: dbadc0de
-  Process cryptomgr_test (pid: 396, stack limit = 0x69e1fe23)
-  Stack: (0xebc8bbe8 to 0xebc8c000)
-  ...
-  unwind: Unknown symbol address bf820bca
-  unwind: Index not found bf820bca
-  Code: 441a ea80 40f9 440a (f85e) 3b04
-  ---[ end trace e560cce92700ef8a ]---
+See kernel bugzilla 201435
 
-Given that this affects older kernels as well, in case they are built
-with a recent toolchain, apply a minimal backportable fix, which is
-to emit another non-code label at the start of the routine, and
-reference that instead. (This is similar to the current upstream state
-of this file in OpenSSL)
-
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/crypto/sha512-armv4.pl       | 3 ++-
- arch/arm/crypto/sha512-core.S_shipped | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ fs/cifs/inode.c | 69 +++++++++++++++++++++++++++----------------------
+ 1 file changed, 38 insertions(+), 31 deletions(-)
 
-diff --git a/arch/arm/crypto/sha512-armv4.pl b/arch/arm/crypto/sha512-armv4.pl
-index a2b11a844357..5fe336420bcf 100644
---- a/arch/arm/crypto/sha512-armv4.pl
-+++ b/arch/arm/crypto/sha512-armv4.pl
-@@ -267,10 +267,11 @@ WORD64(0x5fcb6fab,0x3ad6faec, 0x6c44198c,0x4a475817)
- .global	sha512_block_data_order
- .type	sha512_block_data_order,%function
- sha512_block_data_order:
-+.Lsha512_block_data_order:
- #if __ARM_ARCH__<7
- 	sub	r3,pc,#8		@ sha512_block_data_order
- #else
--	adr	r3,sha512_block_data_order
-+	adr	r3,.Lsha512_block_data_order
- #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
-diff --git a/arch/arm/crypto/sha512-core.S_shipped b/arch/arm/crypto/sha512-core.S_shipped
-index 3694c4d4ca2b..de9bd7f55242 100644
---- a/arch/arm/crypto/sha512-core.S_shipped
-+++ b/arch/arm/crypto/sha512-core.S_shipped
-@@ -134,10 +134,11 @@ WORD64(0x5fcb6fab,0x3ad6faec, 0x6c44198c,0x4a475817)
- .global	sha512_block_data_order
- .type	sha512_block_data_order,%function
- sha512_block_data_order:
-+.Lsha512_block_data_order:
- #if __ARM_ARCH__<7
- 	sub	r3,pc,#8		@ sha512_block_data_order
- #else
--	adr	r3,sha512_block_data_order
-+	adr	r3,.Lsha512_block_data_order
- #endif
- #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
- 	ldr	r12,.LOPENSSL_armcap
+diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
+index 5c3187df9ab9..d8bd8dd36211 100644
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -759,43 +759,50 @@ cifs_get_inode_info(struct inode **inode, const char *full_path,
+ 	} else if ((rc == -EACCES) && backup_cred(cifs_sb) &&
+ 		   (strcmp(server->vals->version_string, SMB1_VERSION_STRING)
+ 		      == 0)) {
+-			/*
+-			 * For SMB2 and later the backup intent flag is already
+-			 * sent if needed on open and there is no path based
+-			 * FindFirst operation to use to retry with
+-			 */
+-
+-			srchinf = kzalloc(sizeof(struct cifs_search_info),
+-						GFP_KERNEL);
+-			if (srchinf == NULL) {
+-				rc = -ENOMEM;
+-				goto cgii_exit;
+-			}
++		/*
++		 * For SMB2 and later the backup intent flag is already
++		 * sent if needed on open and there is no path based
++		 * FindFirst operation to use to retry with
++		 */
++
++		srchinf = kzalloc(sizeof(struct cifs_search_info),
++					GFP_KERNEL);
++		if (srchinf == NULL) {
++			rc = -ENOMEM;
++			goto cgii_exit;
++		}
+ 
+-			srchinf->endOfSearch = false;
++		srchinf->endOfSearch = false;
++		if (tcon->unix_ext)
++			srchinf->info_level = SMB_FIND_FILE_UNIX;
++		else if ((tcon->ses->capabilities &
++			 tcon->ses->server->vals->cap_nt_find) == 0)
++			srchinf->info_level = SMB_FIND_FILE_INFO_STANDARD;
++		else if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)
+ 			srchinf->info_level = SMB_FIND_FILE_ID_FULL_DIR_INFO;
++		else /* no srvino useful for fallback to some netapp */
++			srchinf->info_level = SMB_FIND_FILE_DIRECTORY_INFO;
+ 
+-			srchflgs = CIFS_SEARCH_CLOSE_ALWAYS |
+-					CIFS_SEARCH_CLOSE_AT_END |
+-					CIFS_SEARCH_BACKUP_SEARCH;
++		srchflgs = CIFS_SEARCH_CLOSE_ALWAYS |
++				CIFS_SEARCH_CLOSE_AT_END |
++				CIFS_SEARCH_BACKUP_SEARCH;
+ 
+-			rc = CIFSFindFirst(xid, tcon, full_path,
+-				cifs_sb, NULL, srchflgs, srchinf, false);
+-			if (!rc) {
+-				data =
+-				(FILE_ALL_INFO *)srchinf->srch_entries_start;
++		rc = CIFSFindFirst(xid, tcon, full_path,
++			cifs_sb, NULL, srchflgs, srchinf, false);
++		if (!rc) {
++			data = (FILE_ALL_INFO *)srchinf->srch_entries_start;
+ 
+-				cifs_dir_info_to_fattr(&fattr,
+-				(FILE_DIRECTORY_INFO *)data, cifs_sb);
+-				fattr.cf_uniqueid = le64_to_cpu(
+-				((SEARCH_ID_FULL_DIR_INFO *)data)->UniqueId);
+-				validinum = true;
++			cifs_dir_info_to_fattr(&fattr,
++			(FILE_DIRECTORY_INFO *)data, cifs_sb);
++			fattr.cf_uniqueid = le64_to_cpu(
++			((SEARCH_ID_FULL_DIR_INFO *)data)->UniqueId);
++			validinum = true;
+ 
+-				cifs_buf_release(srchinf->ntwrk_buf_start);
+-			}
+-			kfree(srchinf);
+-			if (rc)
+-				goto cgii_exit;
++			cifs_buf_release(srchinf->ntwrk_buf_start);
++		}
++		kfree(srchinf);
++		if (rc)
++			goto cgii_exit;
+ 	} else
+ 		goto cgii_exit;
+ 
 -- 
 2.19.1
 
