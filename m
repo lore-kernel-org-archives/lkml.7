@@ -2,75 +2,276 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81517C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57801C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427A02148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:59:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VgMunM/c"
+	by mail.kernel.org (Postfix) with ESMTP id 18F9921900
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556125247;
+	bh=+pDd6c3fAxq4nYdUswqaocisotTnUZOmBN4nojs4KTs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AbEJxrhZw5tMXy7adpoZ4tvZGJ3qrIaoGoTYxBdFofJW1wKyrTw/pJHxG33hRGoMn
+	 Ippu0F5VYJLltJ3974uMNDCKTG+HQRxVQQNrVHnuAVbJONxXqeb5BonljqxnJBjIms
+	 8i3eI7L+DC58iRUlUlwpnMCqFixcwiJg0ofXcNAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733046AbfDXQ7W (ORCPT
+        id S1732990AbfDXRAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:59:22 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40993 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730844AbfDXQ7V (ORCPT
+        Wed, 24 Apr 2019 13:00:45 -0400
+Received: from casper.infradead.org ([85.118.1.10]:36852 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730260AbfDXRAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:59:21 -0400
-Received: by mail-io1-f65.google.com with SMTP id r10so12538841ioc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 09:59:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=lZw1w2iC+8EBuaczyMprPgkKgivlgViKX3QQst1LzcA=;
-        b=VgMunM/cgEbPXCFOPZ3tHsEieHfYavrx6UzM6NZhxNM3edemvDdWhCDk0Yufw/Rg45
-         c35UeE3B/MgP2jpw25Ddu07vDxsmnnsx1OPg1tPrKkhTBuSCSmqLS59n9ktJWVywI2Dn
-         M8l6a3DFG7RRqCBdvFQFpqzrmzQRAfK8fMfJjxz2BReUhTEN4FQaXweXKkHN0LfHx0s7
-         d2c70GH+9DotyBK6cJQf8d34b9UKJX8QyglnUCBHC0zAFE5imX9/QuP7anFB4704r3aB
-         nc+x5pGuBP9vZ09KjV2p4LypZNPevG+CW9AAZ/dLv/O77cUN6nxqUQh5qWazQgecjX4W
-         9HYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=lZw1w2iC+8EBuaczyMprPgkKgivlgViKX3QQst1LzcA=;
-        b=XE61XPoeHH8WUrqj1GnV+/4RrwT1Ip+Oo4R1Ke6ARjuU6ez/QRFpw4EXH2ngXXYvSo
-         ZUJW8RC+8eW3vstrBeIus8Ke2/x6ZcgBitEZuSkR0S/PH8l8gR+qla8I2jBP4Wps+R5V
-         dt1rXXPNP9ClsI2JbhUWtAt9z7em4BTdYblfb+PTx0Tx2PAz6WaNGiYMEaKC3kA+W2Gv
-         ZgQJ3pIlJJqi5KTszKL9wVkMxDB2yC/RDQO284heFfCerIIop2TDmBjP0pbURYtlKfv+
-         gJjS3FLbAJ0/o671wDOYSwIMreDfW26E5QrctlWYNsvtYBf0jFT9JW2PAiWK2YybgKUm
-         WRhw==
-X-Gm-Message-State: APjAAAXE9n+lw1wy2nyQKBfmopFcj8/c9A6nhZtNd1LAlXn3nmmzJRcD
-        0HcuaupJYwUUNKQUF9gsALCfFcwqIkItxKOoM1E9yorE
-X-Google-Smtp-Source: APXvYqxC/NMP7dOMltc8/ruljb8OlrCO9iCgB6F7o2r0IkrJ0HIJFSZ59E6ggytRct/A6pITEC45IRoGKwK5bQaGUz4=
-X-Received: by 2002:a6b:3b53:: with SMTP id i80mr3774004ioa.142.1556125160968;
- Wed, 24 Apr 2019 09:59:20 -0700 (PDT)
+        Wed, 24 Apr 2019 13:00:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=aK0gzR8gGZFERodEPv/YFRYrRx82+Bg/wCP9UXD9HUc=; b=VnSnGoShkdkRgzD0PAdCFdd5fU
+        4q8TeiiZdKu38g8Xb86tMv6t00b+KFsfyHBdwZTPLz/OQgdeQeoNhlAXv3nMAFXCzof+wK9iSKsFu
+        ExdCNbZIi3JmMxi9OAbhJ6FCoiPXg8sZ5XD3a0xfu60bnV8LP4rt1k6hvf0YAH7cGB+FGN031crTl
+        s3UURZ0JLHKha93/Pd6oqTV3VqvidUqUUo//HJHVxLy0u3O/0qzDUGSH3ts000y/Zxl8cDktCMZ8D
+        4++JXEP4sLf42Pz1K+M/4HMgI8IsQcQYogjiwVd2NyndZojp+KH5hjp+mv+yy5H2wV/5ai9ENZ7uK
+        +b8/Cj4g==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJLGD-0005ub-BT; Wed, 24 Apr 2019 17:00:41 +0000
+Date:   Wed, 24 Apr 2019 14:00:35 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 36/63] Documentation: PCI: convert
+ endpoint/pci-test-howto.txt to reST
+Message-ID: <20190424140035.198d34dc@coco.lan>
+In-Reply-To: <20190423162932.21428-37-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-37-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-From:   =?UTF-8?Q?Ambro=C5=BE_Bizjak?= <abizjak.pro@gmail.com>
-Date:   Wed, 24 Apr 2019 18:59:09 +0200
-Message-ID: <CAJ4FQ9AczEXM27=Pn_5iaaAXZ=nA+6FQu7_TRdcC=5RHpDFx4g@mail.gmail.com>
-Subject: Re: Oops in current tree in i2c
-To:     linux-kernel@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everyone,
+Em Wed, 24 Apr 2019 00:29:05 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-This buggy i2c patch (see https://lkml.org/lkml/2018/10/27/248) has
-just landed in stable 4.19.36 without the appropriate fix, causing
-oops on boot on many machines. For example we're experiencing this
-issue with the NixOS distribution
-(https://github.com/NixOS/nixpkgs/issues/60126). I am currently trying
-the fix (https://github.com/torvalds/linux/commit/b59dfdaef173677b0b7e10f375226c0a1114fd20)
-and will report if fixes the crash.
+> This converts the plain text documentation to reStructuredText format and
+> add it to Sphinx TOC tree. No essential content change.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Best regards,
-Ambroz Bizjak
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+> ---
+>  Documentation/PCI/endpoint/index.rst          |  1 +
+>  ...{pci-test-howto.txt => pci-test-howto.rst} | 81 +++++++++++++------
+>  2 files changed, 56 insertions(+), 26 deletions(-)
+>  rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
+> 
+> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+> index b680a3fc4fec..d114ea74b444 100644
+> --- a/Documentation/PCI/endpoint/index.rst
+> +++ b/Documentation/PCI/endpoint/index.rst
+> @@ -10,3 +10,4 @@ PCI Endpoint Framework
+>     pci-endpoint
+>     pci-endpoint-cfs
+>     pci-test-function
+> +   pci-test-howto
+> diff --git a/Documentation/PCI/endpoint/pci-test-howto.txt b/Documentation/PCI/endpoint/pci-test-howto.rst
+> similarity index 78%
+> rename from Documentation/PCI/endpoint/pci-test-howto.txt
+> rename to Documentation/PCI/endpoint/pci-test-howto.rst
+> index 040479f437a5..909f770a07d6 100644
+> --- a/Documentation/PCI/endpoint/pci-test-howto.txt
+> +++ b/Documentation/PCI/endpoint/pci-test-howto.rst
+> @@ -1,38 +1,51 @@
+> -			    PCI TEST USERGUIDE
+> -		    Kishon Vijay Abraham I <kishon@ti.com>
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +===================
+> +PCI Test User Guide
+> +===================
+> +
+> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+>  
+>  This document is a guide to help users use pci-epf-test function driver
+>  and pci_endpoint_test host driver for testing PCI. The list of steps to
+>  be followed in the host side and EP side is given below.
+>  
+> -1. Endpoint Device
+> +Endpoint Device
+> +===============
+>  
+> -1.1 Endpoint Controller Devices
+> +Endpoint Controller Devices
+> +---------------------------
+>  
+> -To find the list of endpoint controller devices in the system:
+> +To find the list of endpoint controller devices in the system::
+>  
+>  	# ls /sys/class/pci_epc/
+>  	  51000000.pcie_ep
+>  
+> -If PCI_ENDPOINT_CONFIGFS is enabled
+> +If PCI_ENDPOINT_CONFIGFS is enabled::
+> +
+>  	# ls /sys/kernel/config/pci_ep/controllers
+>  	  51000000.pcie_ep
+>  
+> -1.2 Endpoint Function Drivers
+>  
+> -To find the list of endpoint function drivers in the system:
+> +Endpoint Function Drivers
+> +-------------------------
+> +
+> +To find the list of endpoint function drivers in the system::
+>  
+>  	# ls /sys/bus/pci-epf/drivers
+>  	  pci_epf_test
+>  
+> -If PCI_ENDPOINT_CONFIGFS is enabled
+> +If PCI_ENDPOINT_CONFIGFS is enabled::
+> +
+>  	# ls /sys/kernel/config/pci_ep/functions
+>  	  pci_epf_test
+>  
+> -1.3 Creating pci-epf-test Device
+> +
+> +Creating pci-epf-test Device
+> +----------------------------
+>  
+>  PCI endpoint function device can be created using the configfs. To create
+> -pci-epf-test device, the following commands can be used
+> +pci-epf-test device, the following commands can be used::
+>  
+>  	# mount -t configfs none /sys/kernel/config
+>  	# cd /sys/kernel/config/pci_ep/
+> @@ -42,7 +55,7 @@ The "mkdir func1" above creates the pci-epf-test function device that will
+>  be probed by pci_epf_test driver.
+>  
+>  The PCI endpoint framework populates the directory with the following
+> -configurable fields.
+> +configurable fields::
+>  
+>  	# ls functions/pci_epf_test/func1
+>  	  baseclass_code	interrupt_pin	progif_code	subsys_id
+> @@ -51,67 +64,83 @@ configurable fields.
+>  
+>  The PCI endpoint function driver populates these entries with default values
+>  when the device is bound to the driver. The pci-epf-test driver populates
+> -vendorid with 0xffff and interrupt_pin with 0x0001
+> +vendorid with 0xffff and interrupt_pin with 0x0001::
+>  
+>  	# cat functions/pci_epf_test/func1/vendorid
+>  	  0xffff
+>  	# cat functions/pci_epf_test/func1/interrupt_pin
+>  	  0x0001
+>  
+> -1.4 Configuring pci-epf-test Device
+> +
+> +Configuring pci-epf-test Device
+> +-------------------------------
+>  
+>  The user can configure the pci-epf-test device using configfs entry. In order
+>  to change the vendorid and the number of MSI interrupts used by the function
+> -device, the following commands can be used.
+> +device, the following commands can be used::
+>  
+>  	# echo 0x104c > functions/pci_epf_test/func1/vendorid
+>  	# echo 0xb500 > functions/pci_epf_test/func1/deviceid
+>  	# echo 16 > functions/pci_epf_test/func1/msi_interrupts
+>  	# echo 8 > functions/pci_epf_test/func1/msix_interrupts
+>  
+> -1.5 Binding pci-epf-test Device to EP Controller
+> +
+> +Binding pci-epf-test Device to EP Controller
+> +--------------------------------------------
+>  
+>  In order for the endpoint function device to be useful, it has to be bound to
+>  a PCI endpoint controller driver. Use the configfs to bind the function
+> -device to one of the controller driver present in the system.
+> +device to one of the controller driver present in the system::
+>  
+>  	# ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
+>  
+>  Once the above step is completed, the PCI endpoint is ready to establish a link
+>  with the host.
+>  
+> -1.6 Start the Link
+> +
+> +Start the Link
+> +--------------
+>  
+>  In order for the endpoint device to establish a link with the host, the _start_
+> -field should be populated with '1'.
+> +field should be populated with '1'::
+>  
+>  	# echo 1 > controllers/51000000.pcie_ep/start
+>  
+> -2. RootComplex Device
+>  
+> -2.1 lspci Output
+> +RootComplex Device
+> +==================
+> +
+> +lspci Output
+> +------------
+>  
+> -Note that the devices listed here correspond to the value populated in 1.4 above
+> +Note that the devices listed here correspond to the value populated in 1.4
+> +above::
+>  
+>  	00:00.0 PCI bridge: Texas Instruments Device 8888 (rev 01)
+>  	01:00.0 Unassigned class [ff00]: Texas Instruments Device b500
+>  
+> -2.2 Using Endpoint Test function Device
+> +
+> +Using Endpoint Test function Device
+> +-----------------------------------
+>  
+>  pcitest.sh added in tools/pci/ can be used to run all the default PCI endpoint
+> -tests. To compile this tool the following commands should be used:
+> +tests. To compile this tool the following commands should be used::
+>  
+>  	# cd <kernel-dir>
+>  	# make -C tools/pci
+>  
+> -or if you desire to compile and install in your system:
+> +or if you desire to compile and install in your system::
+>  
+>  	# cd <kernel-dir>
+>  	# make -C tools/pci install
+>  
+>  The tool and script will be located in <rootfs>/usr/bin/
+>  
+> -2.2.1 pcitest.sh Output
+> +
+> +pcitest.sh Output
+> +~~~~~~~~~~~~~~~~~
+> +::
+> +
+>  	# pcitest.sh
+>  	BAR tests
+>  
+
+
+
+Thanks,
+Mauro
