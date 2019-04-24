@@ -2,73 +2,66 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE80C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC24C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD01218FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B01021901
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730131AbfDXOUo (ORCPT
+        id S1730373AbfDXOUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:20:44 -0400
-Received: from outbound-smtp24.blacknight.com ([81.17.249.192]:36614 "EHLO
-        outbound-smtp24.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725921AbfDXOUl (ORCPT
+        Wed, 24 Apr 2019 10:20:48 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:36800 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725935AbfDXOUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:20:41 -0400
-Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
-        by outbound-smtp24.blacknight.com (Postfix) with ESMTPS id 82BBDB879C
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 15:20:39 +0100 (IST)
-Received: (qmail 25928 invoked from network); 24 Apr 2019 14:20:38 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 24 Apr 2019 14:20:38 -0000
-Date:   Wed, 24 Apr 2019 15:20:37 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/Kconfig: deprecate DISCONTIGMEM support for
- 32-bit
-Message-ID: <20190424142037.GV18914@techsingularity.net>
-References: <1556112252-9339-1-git-send-email-rppt@linux.ibm.com>
- <1556112252-9339-3-git-send-email-rppt@linux.ibm.com>
+        Wed, 24 Apr 2019 10:20:47 -0400
+Received: (qmail 2315 invoked by uid 2102); 24 Apr 2019 10:20:45 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 24 Apr 2019 10:20:45 -0400
+Date:   Wed, 24 Apr 2019 10:20:45 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Jesse Hathaway <jesse@mbuki-mvuki.org>
+cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>
+Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
+In-Reply-To: <CANSNSoXHZf6kb2W1yJ81HztSkc-3BAjxghL6NchTLLyv362mQw@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1904241020110.1443-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <1556112252-9339-3-git-send-email-rppt@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 04:24:12PM +0300, Mike Rapoport wrote:
-> Mel Gorman says:
->   32-bit NUMA systems should be non-existent in practice.  The last NUMA
->   system I'm aware of that was both NUMA and 32-bit only died somewhere
->   between 2004 and 2007. If someone is running a 64-bit capable system in
->   32-bit mode with NUMA, they really are just punishing themselves for fun.
+On Tue, 23 Apr 2019, Jesse Hathaway wrote:
+
+> On Tue, Apr 16, 2019 at 10:00 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > Whatever the source of the problem, I don't think you're going to find
+> > it by looking at the USB code.  Perhaps the early initialization of the
+> > functions that _are_ present on the Comtrol card somehow messes up
+> > other parts of the system.
 > 
-> Mark DISCONTIGMEM broken for now and remove it in a couple of releases.
+> Thanks for all you help Alan,
 > 
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Suggested-by: Mel Gorman <mgorman@techsingularity.net>
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> I think at this point my Linux kernel debugging knowledge has run
+> aground. I would
+> love to crack this nut, but I doubt that will be possible with my
+> current knowledge base.
+> For now I am going to run the patched kernel even if I don't
+> understand precisely why
+> they prevent the box from hanging on boot when the Comtrol card is present.
 
-It was really Christoph that suggested marking it broken but I do agree
-that it should be marked broken to see if anyone complains and if not,
-there is no real reason to keep discontig available on x86.
+Okay, that's understandable.  Sorry I couldn't do more to help.
 
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Alan Stern
 
--- 
-Mel Gorman
-SUSE Labs
