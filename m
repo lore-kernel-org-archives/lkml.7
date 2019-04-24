@@ -2,252 +2,120 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4552AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A173EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6962175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725272089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128403;
-	bh=xB+qP7V/VUd42RU+T8vSy3iDM0C12FwHZkY1o0icspE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VVR04YHc2HAUqDvLI+QIhZqRnGrFtuuYE/1tzLzV3EHF2kxaffHeDD1xamr08MjFR
-	 6a8duOT76Tj4lnTVWcz2n5qUOrubIpJbN/BSYuAIEIi8h9h179TOBuXtQVSaU0/2zS
-	 Dv80vkuEQuxcjDJX3+2NhhGG7VCveJBhv6ngqEN0=
+	s=default; t=1556128407;
+	bh=tKj2nqZUmccPz/ExjPm+btVawzEdjfJGDbvCyifUutY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jAJutb0vPTzkk11g1tVlyhaiY6xrHKFLeD+Q07c+HiKA2dLAJq/h8ydK1+Z8AJtTF
+	 vZM1DTVD+xAiKwJ+IFLeY1rY7LA0AmKHgZrtDihlLPQAO9Cx+OiGTZFhEiDjqMHbr0
+	 riM00N4FZ8i6qhOcI63d4MJOhWB3q8gxe+l8alPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390450AbfDXR10 (ORCPT
+        id S2390430AbfDXR1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:27:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389599AbfDXR1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:27:24 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BA74205ED;
-        Wed, 24 Apr 2019 17:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126843;
-        bh=xB+qP7V/VUd42RU+T8vSy3iDM0C12FwHZkY1o0icspE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MwZ3PXmTbXqentpVla4bA+aFeKQ1nr3K+Z9gYTznkD2y+NacxE4rcFrUHZXU1vnI/
-         9oOHD/ajg6OnzHathwyI+WgG35dYuB7BupcLcI2kpUf7ZzNzPOqZFIlfyVV+svGiPn
-         W3rLimmAsJPZSsv2vspSQ0nW2likbpUwSBOZ98vI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 37/70] crypto: x86/poly1305 - fix overflow during partial reduction
-Date:   Wed, 24 Apr 2019 19:09:57 +0200
-Message-Id: <20190424170912.235330391@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
-References: <20190424170906.751869122@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 24 Apr 2019 13:27:20 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34403 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390415AbfDXR1S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:27:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y16so6854659ljg.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 10:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mUvwogsceCvulZa2xUlZzqWaS6JtW/Sna7ItlzMrws8=;
+        b=YN4Jo9uXoB3q60AtYKnyHSTtEc6TsAfwzhF/zJX/PQx6VjRJ3PvkcCtPFVilfeX6Xf
+         HOEFjQJGN/mLaqgt8SNN2OQbDk0YXQYyaPSqiY8aYj5y6xPtIolLn67PhB974h2zN3oy
+         ZHSPvlpVICdbdrny1N3WILo9pswyAjKPTsNLo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mUvwogsceCvulZa2xUlZzqWaS6JtW/Sna7ItlzMrws8=;
+        b=uelgksCqm4W3q/KlSFPiHmnKhbEJS+nQw8cYo1SKEJCePdbTGAsXBcgJ87V2Q5jomF
+         n6JBw/d+Qz2GBAM6XODcy1ifBqDqHe7VYlNpKut/e1ejfDQCQUV5bcZSYZcRvpu9l8lg
+         P1tKdFXVfwee/CwHww1vnin/BsvNCZ29X+ONxbVTgRFHrBLrWP/6/rAl4eSLSIxBPqje
+         sPSy8trugajyiU/QyL5w4r+pkuTkS8K8QJyT9vlfvWAiqMeG/WEOQuCI59wsjjuzxWk7
+         NY+SrQA4VzmrFFRFmkCVswhp64uEThU5Ndk+9U8733Ty/jO4k2XNoixrTzPaSkEs1m7e
+         0t2g==
+X-Gm-Message-State: APjAAAWfT0UM/ZZJc9pIEZIqzqWv5I83siGoUFM8kyApJKs/p38btk3i
+        RL9I/kCPumlGZY4T3yrf/SrKBg3BLhg=
+X-Google-Smtp-Source: APXvYqxDq17UeGsznbitqY3HPGXU2TYKPBoffypSTPakgxHGvtdoGim1C26Oi8P0K/JxDIWbdzXWJQ==
+X-Received: by 2002:a2e:93c7:: with SMTP id p7mr18205443ljh.32.1556126834458;
+        Wed, 24 Apr 2019 10:27:14 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id r136sm4472846lff.65.2019.04.24.10.27.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 10:27:12 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id j20so15321303lfh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 10:27:12 -0700 (PDT)
+X-Received: by 2002:ac2:4567:: with SMTP id k7mr18527580lfm.166.1556126832009;
+ Wed, 24 Apr 2019 10:27:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190424143341.27665-1-sashal@kernel.org> <20190424143341.27665-59-sashal@kernel.org>
+ <20190424163415.GB21413@kroah.com> <CAHk-=wjEOyba5As1PEMk6RitNVOJH9oJ_Jbg4y=5B0fcX1iKGw@mail.gmail.com>
+ <20190424171926.GA17719@sasha-vm>
+In-Reply-To: <20190424171926.GA17719@sasha-vm>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 24 Apr 2019 10:26:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgh234SyBG810=vB360PCzVkAhQRqGg8aFdATZd+daCFw@mail.gmail.com>
+Message-ID: <CAHk-=wgh234SyBG810=vB360PCzVkAhQRqGg8aFdATZd+daCFw@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.0 59/66] fs: stream_open - opener for
+ stream-like files so that read and write can run simultaneously without deadlock
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Kirill Smelkov <kirr@nexedi.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Yongzhi Pan <panyongzhi@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Vrabel <david.vrabel@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        Miklos Szeredi <miklos@szeredi.hu>, Tejun Heo <tj@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Nikolaus Rath <Nikolaus@rath.org>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Wed, Apr 24, 2019 at 10:19 AM Sasha Levin <sashal@kernel.org> wrote:
+>
+> Hm, I might be confusing something here but I see a bunch of patches
+> that convert existing callers mentioned in this patch to use
+> stream_open() which was introduced here.
 
-commit 678cce4019d746da6c680c48ba9e6d417803e127 upstream.
+The only use of stream_open() upstream right now is the xenbus
+conversion, and that isn't actually a bugfix, because xenbus used to
+manually do that
 
-The x86_64 implementation of Poly1305 produces the wrong result on some
-inputs because poly1305_4block_avx2() incorrectly assumes that when
-partially reducing the accumulator, the bits carried from limb 'd4' to
-limb 'h0' fit in a 32-bit integer.  This is true for poly1305-generic
-which processes only one block at a time.  However, it's not true for
-the AVX2 implementation, which processes 4 blocks at a time and
-therefore can produce intermediate limbs about 4x larger.
+        filp->f_mode &= ~FMODE_ATOMIC_POS; /* cdev-style semantics */
 
-Fix it by making the relevant calculations use 64-bit arithmetic rather
-than 32-bit.  Note that most of the carries already used 64-bit
-arithmetic, but the d4 -> h0 carry was different for some reason.
+that stream_open() does.
 
-To be safe I also made the same change to the corresponding SSE2 code,
-though that only operates on 1 or 2 blocks at a time.  I don't think
-it's really needed for poly1305_block_sse2(), but it doesn't hurt
-because it's already x86_64 code.  It *might* be needed for
-poly1305_2block_sse2(), but overflows aren't easy to reproduce there.
+So no, there isn't "a bunch of patches" anywhere.
 
-This bug was originally detected by my patches that improve testmgr to
-fuzz algorithms against their generic implementation.  But also add a
-test vector which reproduces it directly (in the AVX2 case).
+There are *future* cleanups for 5.2 that will happen, and that might
+have hit linux-next. And there is at least one FUSE patch (again -
+pending, not upstream) that may get marked for stable.
 
-Fixes: b1ccc8f4b631 ("crypto: poly1305 - Add a four block AVX2 variant for x86_64")
-Fixes: c70f4abef07a ("crypto: poly1305 - Add a SSE2 SIMD variant for x86_64")
-Cc: <stable@vger.kernel.org> # v4.3+
-Cc: Martin Willi <martin@strongswan.org>
-Cc: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Martin Willi <martin@strongswan.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+But I see nothing right now that makes it stable material yet.
 
----
- arch/x86/crypto/poly1305-avx2-x86_64.S |   14 +++++++---
- arch/x86/crypto/poly1305-sse2-x86_64.S |   22 ++++++++++------
- crypto/testmgr.h                       |   44 ++++++++++++++++++++++++++++++++-
- 3 files changed, 67 insertions(+), 13 deletions(-)
-
---- a/arch/x86/crypto/poly1305-avx2-x86_64.S
-+++ b/arch/x86/crypto/poly1305-avx2-x86_64.S
-@@ -323,6 +323,12 @@ ENTRY(poly1305_4block_avx2)
- 	vpaddq		t2,t1,t1
- 	vmovq		t1x,d4
- 
-+	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
-+	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
-+	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
-+	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
-+	# integers.  It's true in a single-block implementation, but not here.
-+
- 	# d1 += d0 >> 26
- 	mov		d0,%rax
- 	shr		$26,%rax
-@@ -361,16 +367,16 @@ ENTRY(poly1305_4block_avx2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
- 
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
---- a/arch/x86/crypto/poly1305-sse2-x86_64.S
-+++ b/arch/x86/crypto/poly1305-sse2-x86_64.S
-@@ -253,16 +253,16 @@ ENTRY(poly1305_block_sse2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
- 
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
-@@ -520,6 +520,12 @@ ENTRY(poly1305_2block_sse2)
- 	paddq		t2,t1
- 	movq		t1,d4
- 
-+	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
-+	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
-+	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
-+	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
-+	# integers.  It's true in a single-block implementation, but not here.
-+
- 	# d1 += d0 >> 26
- 	mov		d0,%rax
- 	shr		$26,%rax
-@@ -558,16 +564,16 @@ ENTRY(poly1305_2block_sse2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
- 
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -4660,7 +4660,49 @@ static const struct hash_testvec poly130
- 		.psize		= 80,
- 		.digest		= "\x13\x00\x00\x00\x00\x00\x00\x00"
- 				  "\x00\x00\x00\x00\x00\x00\x00\x00",
--	},
-+	}, { /* Regression test for overflow in AVX2 implementation */
-+		.plaintext	= "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff",
-+		.psize		= 300,
-+		.digest		= "\xfb\x5e\x96\xd8\x61\xd5\xc7\xc8"
-+				  "\x78\xe5\x87\xcc\x2d\x5a\x22\xe1",
-+	}
- };
- 
- /*
-
-
+                Linus
