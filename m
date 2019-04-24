@@ -3,161 +3,143 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B229BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9773EC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF3B2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gjdWXS4s"
+	by mail.kernel.org (Postfix) with ESMTP id 679BC2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556118234;
+	bh=U0chuWLdxheduV1YrZbWEWFde8pTsDKlMF+U4NXHlUg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QjXqiErGnwhaHiA7a8OsakwmqWeVAHjMdztt2gayN0lro6AlZYzPtJyayGHHK/8lt
+	 0QFjlmfZPeQyH/FBm4HSClt0DZqThjDZWMBov+1OpqNixktpliO5msX/L4tnd+qEuI
+	 Phyalr3QQJ0gr/HJgasVO+KS0t+7wCoEHDjc7zBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731042AbfDXPDB (ORCPT
+        id S1731162AbfDXPDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:03:01 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:44795 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730727AbfDXPC7 (ORCPT
+        Wed, 24 Apr 2019 11:03:53 -0400
+Received: from casper.infradead.org ([85.118.1.10]:52764 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730588AbfDXPDw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:02:59 -0400
-Received: by mail-vs1-f67.google.com with SMTP id j184so10554918vsd.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XKLrqEHsZgkXKIFnNrEflMfVKn1F3tCXT6JyQm68SoI=;
-        b=gjdWXS4sz7Pz4Pb7GPMmkRX5Ad+ejIXPsRs+APt+HPnLgpYvEPZXoFQpv/N/f8rnnE
-         ostLMHeZOpMFVt04Tf4VwDP7Hu+SaKLO9Q0VSQe131BuZ6o6Lxb0EH53o1PIKMcLLQEB
-         X79E3KwNfQqvNNgvbmjrNG4ozxnQAbm0nYhUY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XKLrqEHsZgkXKIFnNrEflMfVKn1F3tCXT6JyQm68SoI=;
-        b=aKw6r2PsKg+gG1pdLr1U0zqljDrVaaF7ESqeyeiDYuQkPtOgtoeA2BRF2rqpJjQCkV
-         pAzhQOX86ZOBlDL1CXla4gcREfmi4v7SGAPvgx7nGX1178uDLsejQrp/+BRPrFhvbiRA
-         56GV6mEq9UpDVVzHgLbvx1GLpGZHoFpvurKA4kGF+ZGIOimTf8jzpa/aHAeuWnG61UwL
-         /vHdFUT7EIfFq0K+7yAIaU7HZ5T2Xd0kwWT+MV+KxA0Uiw56l6GQa+qk4s5nMkMwspDK
-         z8mUED8pp/8GKF8aPXpRkFEa0y3TSdfpMRqY3vDpI+vHFzR/ZTIxwL8tZtsY87sUPYNC
-         g7Nw==
-X-Gm-Message-State: APjAAAV89Oyz6b9ZEt9Zff1bi2YEzqfPvnbDClr/GwZoEMaFkDTUtKKC
-        /tBMEAFo2p4f8kOTY7sMQP2H5yt1aQ0=
-X-Google-Smtp-Source: APXvYqy4v+kXSN57CIUOBBS0h/ser/UsjKJ0+5GBNZhVkveawZaT7YeYm6h8laZ6f6ZbMEAsqPlioQ==
-X-Received: by 2002:a67:e407:: with SMTP id d7mr16801817vsf.212.1556118178309;
-        Wed, 24 Apr 2019 08:02:58 -0700 (PDT)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
-        by smtp.gmail.com with ESMTPSA id i2sm3402748vsp.7.2019.04.24.08.02.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 08:02:57 -0700 (PDT)
-Received: by mail-vk1-f173.google.com with SMTP id q189so4088642vkq.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 08:02:57 -0700 (PDT)
-X-Received: by 2002:a1f:3458:: with SMTP id b85mr16977824vka.4.1556118176584;
- Wed, 24 Apr 2019 08:02:56 -0700 (PDT)
+        Wed, 24 Apr 2019 11:03:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jSu9ny5eryGAPEhyPkjGFXlRuxhppqvvRvIzVbMknhY=; b=ifE9egBVhU+e9aqmk3M8nPTP6t
+        JWiIL2BOfDdWP2w4WH/oqB9he+nfAYQqmexFE5UxTsFSSSl9effMr48OF5PAKuTdA+abOe/cujoZs
+        +2EeNAhGIz60DAvRI3fQft77KdMxpHFrK6laY8HrzNK9Re6CsPVYpsPDqhBzdEip+U+a8hzZ+Bm6r
+        eL46kfpx5rG4SmiRyUDzE6hbzI4ABjkrwU18K4lUIF1dt8EcshOD3u/aa6UB07uHI0v9B3LIxSmgD
+        U+94wyMYhJ6wP5MORtopKIAglp12BKsCUvXoB/WB8WMizPb/8SlFg/OShp2nyaQcmHgioVLBf2Hlt
+        uGll19Yg==;
+Received: from 177.17.136.231.dynamic.adsl.gvt.net.br ([177.17.136.231] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJJR7-0001WG-8O; Wed, 24 Apr 2019 15:03:49 +0000
+Date:   Wed, 24 Apr 2019 12:03:43 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, rjw@rjwysocki.net,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        x86@kernel.org, fenghua.yu@intel.com,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 25/63] Documentation: add Linux PCI to Sphinx TOC
+ tree
+Message-ID: <20190424120336.4f66cbb8@coco.lan>
+In-Reply-To: <20190423162932.21428-26-changbin.du@gmail.com>
+References: <20190423162932.21428-1-changbin.du@gmail.com>
+        <20190423162932.21428-26-changbin.du@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <1556107369-7655-1-git-send-email-alex.popov@linux.com>
-In-Reply-To: <1556107369-7655-1-git-send-email-alex.popov@linux.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Wed, 24 Apr 2019 08:02:45 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jLJeC4oAagPGSquKi_EVvA9+aZkjtASGwriGMeR_dxwnQ@mail.gmail.com>
-Message-ID: <CAGXu5jLJeC4oAagPGSquKi_EVvA9+aZkjtASGwriGMeR_dxwnQ@mail.gmail.com>
-Subject: Re: [v2 1/1] kconfig: Terminate menu blocks with a comment in the
- generated config
-To:     Alexander Popov <alex.popov@linux.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 5:03 AM Alexander Popov <alex.popov@linux.com> wrote:
->
-> Currently menu blocks start with a pretty header but end with nothing in
-> the generated config. So next config options stick together with the
-> options from the menu block.
->
-> Let's terminate menu blocks in the generated config with a comment and
-> a newline if needed. Example:
->
-> ...
-> CONFIG_BPF_STREAM_PARSER=y
-> CONFIG_NET_FLOW_LIMIT=y
->
-> #
-> # Network testing
-> #
-> CONFIG_NET_PKTGEN=y
-> CONFIG_NET_DROP_MONITOR=y
-> # end of Network testing
-> # end of Networking options
->
-> CONFIG_HAMRADIO=y
-> ...
->
-> Signed-off-by: Alexander Popov <alex.popov@linux.com>
+Em Wed, 24 Apr 2019 00:28:54 +0800
+Changbin Du <changbin.du@gmail.com> escreveu:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
+> Add a index.rst for PCI subsystem. More docs will be added later.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  scripts/kconfig/confdata.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-> index 08ba146..486b4c7 100644
-> --- a/scripts/kconfig/confdata.c
-> +++ b/scripts/kconfig/confdata.c
-> @@ -819,6 +819,7 @@ int conf_write(const char *name)
->         struct menu *menu;
->         const char *basename;
->         const char *str;
-> +       bool need_newline = false;
->         char dirname[PATH_MAX+1], tmpname[PATH_MAX+22], newname[PATH_MAX+8];
->         char *env;
->
-> @@ -871,12 +872,16 @@ int conf_write(const char *name)
->                                      "#\n"
->                                      "# %s\n"
->                                      "#\n", str);
-> +                       need_newline = false;
->                 } else if (!(sym->flags & SYMBOL_CHOICE)) {
->                         sym_calc_value(sym);
->                         if (!(sym->flags & SYMBOL_WRITE))
->                                 goto next;
-> +                       if (need_newline) {
-> +                               fprintf(out, "\n");
-> +                               need_newline = false;
-> +                       }
->                         sym->flags &= ~SYMBOL_WRITE;
-> -
->                         conf_write_symbol(out, sym, &kconfig_printer_cb, NULL);
->                 }
->
-> @@ -888,6 +893,11 @@ int conf_write(const char *name)
->                 if (menu->next)
->                         menu = menu->next;
->                 else while ((menu = menu->parent)) {
-> +                       if (!menu->sym && menu_is_visible(menu)) {
-> +                               str = menu_get_prompt(menu);
-> +                               fprintf(out, "# end of %s\n", str);
-> +                               need_newline = true;
-> +                       }
->                         if (menu->next) {
->                                 menu = menu->next;
->                                 break;
-> --
-> 2.7.4
->
+>  Documentation/PCI/index.rst | 9 +++++++++
+
+On a past discussion at docs ML, we've agreed to use lowercase for new
+stuff. My suggestion here would be to use lowercase for "pci".
+
+Also, there's already a pci directory under driver-api, added on this
+commit:
+
+	commit fcc78f9c22474d60c65d522e50ea07006ec1b9fc
+	Author: Logan Gunthorpe <logang@deltatee.com>
+	Date:   Thu Oct 4 15:27:39 2018 -0600
+
+	    docs-rst: Add a new directory for PCI documentation
+
+I would just add a new section at Documentation/driver-api/pci/index.rst
+with something like:
+
+	Legacy PCI documentation
+	========================
+
+	.. note::
+
+	   The files here were written a long time ago and need some serious
+	   work. Use their contents with caution.
+
+	.. toctree::
+	    :maxdepth: 1
+
+	    <files converted from Documentation/PCI>
+
+And add those documents from Documentation/PCI into it.
+
+>  Documentation/index.rst     | 1 +
+>  2 files changed, 10 insertions(+)
+>  create mode 100644 Documentation/PCI/index.rst
+> 
+> diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+> new file mode 100644
+> index 000000000000..c2f8728d11cf
+> --- /dev/null
+> +++ b/Documentation/PCI/index.rst
+> @@ -0,0 +1,9 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=======================
+> +Linux PCI Bus Subsystem
+> +=======================
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +   :numbered:
+> diff --git a/Documentation/index.rst b/Documentation/index.rst
+> index fdfa85c56a50..d80138284e0f 100644
+> --- a/Documentation/index.rst
+> +++ b/Documentation/index.rst
+> @@ -100,6 +100,7 @@ needed).
+>     filesystems/index
+>     vm/index
+>     bpf/index
+> +   PCI/index
+>     misc-devices/index
+>  
+>  Architecture-specific documentation
 
 
--- 
-Kees Cook
+
+Thanks,
+Mauro
