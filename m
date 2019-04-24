@@ -2,109 +2,62 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72753C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F70C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69DE21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BE421773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 10:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfDXKs4 (ORCPT
+        id S1728610AbfDXKuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 06:48:56 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:39670 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbfDXKsy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 06:48:54 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 14EBF804D1; Wed, 24 Apr 2019 12:48:42 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 12:48:50 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
-        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
-        linux-next@vger.kernel.org, hdegoede@redhat.com,
-        linux-ide@vger.kernel.org
-Subject: Re: next-20190408..0418: Suspend/resume problems on Thinkpad X60
-Message-ID: <20190424104850.GC32457@amd>
-References: <20190408173928.GB13260@amd>
- <20190412102812.GA24977@amd>
- <20190423102239.GA15531@amd>
- <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
- <20190424095431.GA32457@amd>
+        Wed, 24 Apr 2019 06:50:01 -0400
+Received: from foss.arm.com ([217.140.101.70]:41472 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726830AbfDXKuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 06:50:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFA83A78;
+        Wed, 24 Apr 2019 03:50:00 -0700 (PDT)
+Received: from [10.163.1.68] (unknown [10.163.1.68])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 179573F5AF;
+        Wed, 24 Apr 2019 03:49:58 -0700 (PDT)
+Subject: Re: [PATCH] docs/vm: add documentation of memory models
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1556101715-31966-1-git-send-email-rppt@linux.ibm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <bbde10af-0e9f-08be-30d6-1513c50e0d17@arm.com>
+Date:   Wed, 24 Apr 2019 16:20:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="V88s5gaDVPzZ0KCq"
-Content-Disposition: inline
-In-Reply-To: <20190424095431.GA32457@amd>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1556101715-31966-1-git-send-email-rppt@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---V88s5gaDVPzZ0KCq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed 2019-04-24 11:54:31, Pavel Machek wrote:
-> On Tue 2019-04-23 07:55:05, Jens Axboe wrote:
-> > On 4/23/19 4:22 AM, Pavel Machek wrote:
-> > > Hi!
-> > >=20
-> > >>> It boots ok (unlike mainline -- I'm debugging that), and I can susp=
-end
-> > >>> and resume... but then cursor in X is moving and I can talk to
-> > >>> applications cached in memory, but any access to disk hangs.
-> > >>
-> > >> Mainline problem was identified.
-> > >>
-> > >> But resume is still broken. I took advantage of fact that I can still
-> > >> do cached commands, and got complete dmesg. I'm attaching it.
-> > >=20
-> > > Still broken in 0418. Ideas would be welcome at this point.
-> >=20
-> > Bisect it?
->=20
-> commit fdbbda7b3a0622fcfe630238d0bf6c57c4ba3663
-> Merge: 3c442d5 6c88d73
-> Author: Jens Axboe <axboe@kernel.dk>
-> Date:   Mon Apr 22 13:57:36 2019 -0600
->=20
-> Works ok. So... block is not responsible.
->=20
-> Let me check
->=20
-> commit 91b112cf3b599f06f1e810cfedf37023f25d5588
-> Merge: fb2c4a8 e32d939
-> Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Date:   Mon Apr 22 01:52:48 2019 +0200
+On 04/24/2019 03:58 PM, Mike Rapoport wrote:
+> +To use vmemmap, an architecture has to reserve a range of virtual
+> +addresses that will map the physical pages containing the memory
+> +map. and make sure that `vmemmap` points to that range. In addition,
+> +the architecture should implement :c:func:`vmemmap_populate` method
+> +that will allocate the physical memory and create page tables for the
+> +virtual memory map. If an architecture does not have any special
+> +requirements for the vmemmap mappings, it can use default
+> +:c:func:`vmemmap_populate_basepages` provided by the generic memory
+> +management.
 
-Suspend/resume ok, so pm not responsible. Let me check next-20190423.
-
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---V88s5gaDVPzZ0KCq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlzAPxIACgkQMOfwapXb+vI1uQCgvej4szRBNmj2+c0bvr6nbSwS
-bK8AnRJ6UoIYC5FNDBPHXMoYdG+b7Xp8
-=mYGZ
------END PGP SIGNATURE-----
-
---V88s5gaDVPzZ0KCq--
+Just to complete it, could you also include struct vmem_altmap and how it
+can contribute towards the physical backing for vmemmap virtual mapping.
+Otherwise the write up looks complete.
