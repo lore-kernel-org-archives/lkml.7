@@ -2,233 +2,147 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E306EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29BAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A402320835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8BD20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 21:06:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="NAukeeOG"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="RKLxNmld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732741AbfDXVDA (ORCPT
+        id S2388267AbfDXVGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 17:03:00 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40988 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728550AbfDXVDA (ORCPT
+        Wed, 24 Apr 2019 17:06:50 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42777 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731973AbfDXVGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 17:03:00 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v7so15485348oie.8
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:02:59 -0700 (PDT)
+        Wed, 24 Apr 2019 17:06:49 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x15so5541014pln.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 14:06:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eTUb+CyGt59nJq65ekUidQk0sRQ1YJ2war5KMG5VlY8=;
-        b=NAukeeOG6PbboHAPn1y1UFhEcWiGec24JJlVopk+XSNycRMcGZtbORw6U3suxwh23o
-         vl7A4sfheYJ3vqN0x3G32UCVuOV8JUY8kJuyDE2e25G54lbJ/ehswWI2Y1uLJz0OeD5I
-         AttC7/G1yWgM35Uiya9P6IYV/R2B0cXitG0i4NMh1xI33LraHDjpUoZbt5S6OMGjYTHh
-         U6qkJSk1++rj9NKQt+wQ/csWHyPSEguzpXNhR09OaffSUROEraRjVMamRZmF6X03C7hO
-         fl8BwpjCPKHYDEpuBuJ2SYb89XlzNRWE3jrnf5kij+3aZbBSpcY6jt27cEFSXSTJ1sK3
-         B8wA==
+        d=sifive.com; s=google;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bZkshglKcvBU+6PMpXuNp0wARaLPDffIq6iStMQ6XdQ=;
+        b=RKLxNmldM2pr5BbxMF2oAFgODVC5qNpB3prnTXZLfC+J2jtRqMZTDJqQHDx3HM/Zfh
+         vs+ujn3c2UjpEYsFATkXUSzIIAthnd8X+8e07S+SC9jdP8D9F5RAYDv+E32aM5YsQdPP
+         N/Jf8BHBc9iThEZwJnJoN9+HKvltLKYUwiPuWo3Sti0JwhvqxoaTvi0lDbhLklOl3Ik6
+         gR/jpw95F4L6O71W+G+D9cTfKcggHrois1GGfCf/Pc5zM9PrYC05BFFiguRKTW4lhmzt
+         xYcVMG1o5qg0uNWVtE2d9myCNk7X/QhtnR6pW/wXBN575Q9XRDZN6uGSSYpmwp4jnAom
+         TKeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eTUb+CyGt59nJq65ekUidQk0sRQ1YJ2war5KMG5VlY8=;
-        b=Ha08toTM8eDtUG54J4xhT9vmnLogQ8+/lPV2pJEA2RsxFBgNghIOsaZPRcm0NBUx3a
-         cOZJeub0rH++Gkkw4uTnInDrzfq0Pzn3C3A1J7/HmqlpmiTxwLTFGB5at1jbtK6xqi2M
-         NA+IMx3k0DGaOPOSzYJHDiYxl8I6maPD+fKTS6Rk7NizFmjFmaPSadWl/dx7fyUTr/Rr
-         tb6Wr2WI7MRWnBizXwXth74IbeFZ54g3wpieTN6ZhFfnNUOhLefKz90P5CjWRBTHzSu+
-         tYvlZcpalzWhZB/sZ/KE7O5Yts3nCuGKMVZbuQXyGIO7r/GXMEIejl1NZS2Mk+s0ztjy
-         JQsQ==
-X-Gm-Message-State: APjAAAWW/qB3KtEcy/+DQOKnLlbcqD+mjL1axf6rkXZgiPmCqmLD82S/
-        ZBZdqbIuE6aaFZvQJMgiady6Mg6YSAbXrbEpRiaXwg==
-X-Google-Smtp-Source: APXvYqxgZEdpnQTx7nG5QXoQG3hhm4UWprKyTLs5l7hvH2jUZXoc+vH22rNc5zwYf1mIkKXbN2A6923qXQYp9zpO4lo=
-X-Received: by 2002:aca:de57:: with SMTP id v84mr801588oig.149.1556139779187;
- Wed, 24 Apr 2019 14:02:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190421014429.31206-1-pasha.tatashin@soleen.com>
- <20190421014429.31206-3-pasha.tatashin@soleen.com> <4ad3c587-6ab8-1307-5a13-a3e73cf569a5@redhat.com>
-In-Reply-To: <4ad3c587-6ab8-1307-5a13-a3e73cf569a5@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Apr 2019 14:02:48 -0700
-Message-ID: <CAPcyv4h3+hU=MmB=RCc5GZmjLW_ALoVg_C4Z7aw8NQ=1LzPKaw@mail.gmail.com>
-Subject: Re: [v2 2/2] device-dax: "Hotremove" persistent memory that is used
- like normal RAM
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
-        James Morris <jmorris@namei.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=bZkshglKcvBU+6PMpXuNp0wARaLPDffIq6iStMQ6XdQ=;
+        b=T4WTfOp0VnkolSc1Po0sxyyVJhjKxyima6nDIO20e3HjyZX6R1HlyGknj3IfhvTGDc
+         K926p+/TB+0UhXJ0uBBbdvTQ3a0s6UMZiC/IkjTSt9BetR6mQ65LEjsVC2+M95zkUted
+         si+NPi7BFUMehCVjot30k8zozz3vRazjML0CFjmfl5zbxr2pIGH8eS55hQr4grtDiOzu
+         W1YcXPiMmMsUAaBMQuW4nDYGSWQxJ4EtaRYHw5+/U9feF3MnOqozxCWxtY6LrdLZCVoI
+         4S7WeMobK/TRlLq2mAbLygNDyBtdJPNhNKfCILJP5eT2XADtKWJ4VUvBrheb+QDbKyaj
+         Dvag==
+X-Gm-Message-State: APjAAAXEMm7VHxFCy640dls0zzQLguU2niVgyzMAX3YubyL5+gxahOk4
+        XybQyWt4lFp4ppMnfbsEWuFkdg==
+X-Google-Smtp-Source: APXvYqwiqgHS4Nde3OSvELilWPNt02aegb8UgiVyCbbNbUStwGwHbXrgdZe31DQr92zc4dWpW9rWDQ==
+X-Received: by 2002:a17:902:2ae6:: with SMTP id j93mr35635251plb.18.1556140008705;
+        Wed, 24 Apr 2019 14:06:48 -0700 (PDT)
+Received: from localhost ([134.134.139.92])
+        by smtp.gmail.com with ESMTPSA id i24sm26639846pfo.85.2019.04.24.14.06.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 24 Apr 2019 14:06:47 -0700 (PDT)
+Date:   Wed, 24 Apr 2019 14:06:47 -0700 (PDT)
+X-Google-Original-Date: Wed, 24 Apr 2019 11:29:42 PDT (-0700)
+Subject:     Re: [PATCH v3 2/4] RISC-V: Fix memory reservation in setup_bootmem()
+In-Reply-To: <20190325092234.5451-3-anup.patel@wdc.com>
+CC:     aou@eecs.berkeley.edu, Atish Patra <Atish.Patra@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>, rppt@linux.ibm.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anup.Patel@wdc.com
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Anup.Patel@wdc.com
+Message-ID: <mhng-8cf03f23-1af7-48f0-8be8-60654bc09559@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 1:55 PM David Hildenbrand <david@redhat.com> wrote:
+On Mon, 25 Mar 2019 02:23:09 PDT (-0700), Anup.Patel@wdc.com wrote:
+> Currently, the setup_bootmem() reserves memory from RAM start to the
+> kernel end. This prevents us from exploring ways to use the RAM below
+> (or before) the kernel start hence this patch updates setup_bootmem()
+> to only reserve memory from the kernel start to the kernel end.
 >
-> On 21.04.19 03:44, Pavel Tatashin wrote:
-> > It is now allowed to use persistent memory like a regular RAM, but
-> > currently there is no way to remove this memory until machine is
-> > rebooted.
-> >
-> > This work expands the functionality to also allows hotremoving
-> > previously hotplugged persistent memory, and recover the device for use
-> > for other purposes.
-> >
-> > To hotremove persistent memory, the management software must first
-> > offline all memory blocks of dax region, and than unbind it from
-> > device-dax/kmem driver. So, operations should look like this:
-> >
-> > echo offline > echo offline > /sys/devices/system/memory/memoryN/state
-> > ...
-> > echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
-> >
-> > Note: if unbind is done without offlining memory beforehand, it won't be
-> > possible to do dax0.0 hotremove, and dax's memory is going to be part of
-> > System RAM until reboot.
-> >
-> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > ---
-> >  drivers/dax/dax-private.h |  2 +
-> >  drivers/dax/kmem.c        | 91 +++++++++++++++++++++++++++++++++++++--
-> >  2 files changed, 89 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-> > index a45612148ca0..999aaf3a29b3 100644
-> > --- a/drivers/dax/dax-private.h
-> > +++ b/drivers/dax/dax-private.h
-> > @@ -53,6 +53,7 @@ struct dax_region {
-> >   * @pgmap - pgmap for memmap setup / lifetime (driver owned)
-> >   * @ref: pgmap reference count (driver owned)
-> >   * @cmp: @ref final put completion (driver owned)
-> > + * @dax_mem_res: physical address range of hotadded DAX memory
-> >   */
-> >  struct dev_dax {
-> >       struct dax_region *region;
-> > @@ -62,6 +63,7 @@ struct dev_dax {
-> >       struct dev_pagemap pgmap;
-> >       struct percpu_ref ref;
-> >       struct completion cmp;
-> > +     struct resource *dax_kmem_res;
-> >  };
-> >
-> >  static inline struct dev_dax *to_dev_dax(struct device *dev)
-> > diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> > index 4c0131857133..d4896b281036 100644
-> > --- a/drivers/dax/kmem.c
-> > +++ b/drivers/dax/kmem.c
-> > @@ -71,21 +71,104 @@ int dev_dax_kmem_probe(struct device *dev)
-> >               kfree(new_res);
-> >               return rc;
-> >       }
-> > +     dev_dax->dax_kmem_res = new_res;
-> >
-> >       return 0;
-> >  }
-> >
-> > +#ifdef CONFIG_MEMORY_HOTREMOVE
-> > +/*
-> > + * Check that device-dax's memory_blocks are offline. If a memory_block is not
-> > + * offline a warning is printed and an error is returned. dax hotremove can
-> > + * succeed only when every memory_block is offlined beforehand.
-> > + */
-> > +static int
-> > +offline_memblock_cb(struct memory_block *mem, void *arg)
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/riscv/mm/init.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
 >
-> Function name suggests that you are actually trying to offline memory
-> here. Maybe check_memblocks_offline_cb(), just like we have in
-> mm/memory_hotplug.c.
->
-> > +{
-> > +     struct device *mem_dev = &mem->dev;
-> > +     bool is_offline;
-> > +
-> > +     device_lock(mem_dev);
-> > +     is_offline = mem_dev->offline;
-> > +     device_unlock(mem_dev);
-> > +
-> > +     if (!is_offline) {
-> > +             struct device *dev = (struct device *)arg;
-> > +             unsigned long spfn = section_nr_to_pfn(mem->start_section_nr);
-> > +             unsigned long epfn = section_nr_to_pfn(mem->end_section_nr);
-> > +             phys_addr_t spa = spfn << PAGE_SHIFT;
-> > +             phys_addr_t epa = epfn << PAGE_SHIFT;
-> > +
-> > +             dev_warn(dev, "memory block [%pa-%pa] is not offline\n",
-> > +                      &spa, &epa);
-> > +
-> > +             return -EBUSY;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int dev_dax_kmem_remove(struct device *dev)
-> > +{
-> > +     struct dev_dax *dev_dax = to_dev_dax(dev);
-> > +     struct resource *res = dev_dax->dax_kmem_res;
-> > +     resource_size_t kmem_start;
-> > +     resource_size_t kmem_size;
-> > +     unsigned long start_pfn;
-> > +     unsigned long end_pfn;
-> > +     int rc;
-> > +
-> > +     /*
-> > +      * dax kmem resource does not exist, means memory was never hotplugged.
-> > +      * So, nothing to do here.
-> > +      */
-> > +     if (!res)
-> > +             return 0;
-> > +
-> > +     kmem_start = res->start;
-> > +     kmem_size = resource_size(res);
-> > +     start_pfn = kmem_start >> PAGE_SHIFT;
-> > +     end_pfn = start_pfn + (kmem_size >> PAGE_SHIFT) - 1;
-> > +
-> > +     /*
-> > +      * Walk and check that every singe memory_block of dax region is
-> > +      * offline
-> > +      */
-> > +     lock_device_hotplug();
-> > +     rc = walk_memory_range(start_pfn, end_pfn, dev, offline_memblock_cb);
-> > +     unlock_device_hotplug();
-> > +
-> > +     /*
-> > +      * If admin has not offlined memory beforehand, we cannot hotremove dax.
-> > +      * Unfortunately, because unbind will still succeed there is no way for
-> > +      * user to hotremove dax after this.
-> > +      */
-> > +     if (rc)
-> > +             return rc;
->
-> Can't it happen that there is a race between you checking if memory is
-> offline and an admin onlining memory again? maybe pull the
-> remove_memory() into the locked region, using __remove_memory() instead.
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 8cf9ff1f9058..3e66b7cb3a61 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -29,6 +29,8 @@ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
+>  							__page_aligned_bss;
+>  EXPORT_SYMBOL(empty_zero_page);
+>  
+> +extern char _start[];
+> +
+>  static void __init zone_sizes_init(void)
+>  {
+>  	unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
+> @@ -108,23 +110,21 @@ void __init setup_bootmem(void)
+>  {
+>  	struct memblock_region *reg;
+>  	phys_addr_t mem_size = 0;
+> +	phys_addr_t vmlinux_end = __pa(&_end);
+> +	phys_addr_t vmlinux_start = __pa(&_start);
+>  
+>  	/* Find the memory region containing the kernel */
+>  	for_each_memblock(memory, reg) {
+> -		phys_addr_t vmlinux_end = __pa(_end);
+>  		phys_addr_t end = reg->base + reg->size;
+>  
+> -		if (reg->base <= vmlinux_end && vmlinux_end <= end) {
+> -			/*
+> -			 * Reserve from the start of the region to the end of
+> -			 * the kernel
+> -			 */
+> -			memblock_reserve(reg->base, vmlinux_end - reg->base);
+> +		if (reg->base <= vmlinux_end && vmlinux_end <= end)
+>  			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
+> -		}
+>  	}
+>  	BUG_ON(mem_size == 0);
+>  
+> +	/* Reserve from the start of the kernel to the end of the kernel */
+> +	memblock_reserve(vmlinux_start, vmlinux_end - vmlinux_start);
+> +
+>  	set_max_mapnr(PFN_DOWN(mem_size));
+>  	max_low_pfn = PFN_DOWN(memblock_end_of_DRAM());
+>  
+> @@ -196,7 +196,6 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
+>   */
+>  asmlinkage void __init setup_vm(void)
+>  {
+> -	extern char _start;
+>  	uintptr_t i;
+>  	uintptr_t pa = (uintptr_t) &_start;
+>  	pgprot_t prot = __pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_EXEC);
+> -- 
+> 2.17.1
 
-I think the race is ok. The admin gets to keep the pieces of allowing
-racing updates to the state and the kernel will keep the range active
-until the next reboot.
+I've already merged your first patch for 5.1, but I'm going through and
+collecting 5.2 patches now and it appears this has a conflict.  Do you mind
+re-submitting the patch set against rc6?
