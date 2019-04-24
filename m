@@ -2,179 +2,133 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56078C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2595C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 199CA218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819DB218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 03:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dqpqTtwA"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gm7ZFFdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfDXDM0 (ORCPT
+        id S1729013AbfDXDMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 23:12:26 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:12877 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfDXDMZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 23:12:25 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cbfd4140000>; Tue, 23 Apr 2019 20:12:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 23 Apr 2019 20:12:23 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 23 Apr 2019 20:12:23 -0700
-Received: from [10.25.73.236] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 24 Apr
- 2019 03:12:17 +0000
-Subject: Re: [PATCH V4 06/16] PCI: dwc: Add ext config space capability search
- API
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190423082730.370-1-vidyas@nvidia.com>
- <20190423082730.370-7-vidyas@nvidia.com> <20190423203502.GE14616@google.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <96630790-d567-87a3-358d-1174f05a88e5@nvidia.com>
-Date:   Wed, 24 Apr 2019 08:42:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 23 Apr 2019 23:12:47 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37053 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726422AbfDXDMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 23:12:47 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44plk31kmfz9s47;
+        Wed, 24 Apr 2019 13:12:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1556075564;
+        bh=Pef4uz0152MX4CcOjtSGFDRkpz/wudSxiVW/2mNvbss=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gm7ZFFdmzWcTIh8AnZoZGK9ddaUVgqe7e7zZ/eeQCe00PinfNroUZ/IWnANCWS5bl
+         kNqSWoyTpr89Sqejxr6C0cJQAldK+A4//TJoKvOsha9pKvh56iIutXsQOWWZkO+OQ+
+         bd0j2Gke9JeEZhzFAvodQVaKcfEa63xl0CmP0Huzans1E0KBva6LKvQPMS5uTohcNv
+         Q0jcp6HSTcjVVFoMTaPg5zM2kTtKfoL9cfKI6JMi65ZYTLB9d9p5n1t5XPoEJOCzdN
+         hV8rVHQtcLGHZHaoMLfOzzoafjjabXE+3cUsLorLHTvYNfaXJnM/SvKAoGzlzFZnGd
+         xv/vSKjAhpfUA==
+Date:   Wed, 24 Apr 2019 13:12:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin Poirier <bpoirier@suse.com>
+Subject: Re: linux-next: manual merge of the bpf-next tree with the bpf tree
+Message-ID: <20190424131240.765178fa@canb.auug.org.au>
+In-Reply-To: <20190417110856.54b4ac1c@canb.auug.org.au>
+References: <20190417110856.54b4ac1c@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190423203502.GE14616@google.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556075540; bh=Bu/xgjX162HQNUkgVfXW+gOwGfo59bhjlr7ewao1YT4=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=dqpqTtwAOyVgDv+Lx6Exy8MQH+ZOBQvsjETody3sOEbeH+Py7cLZP9YcKh3HxVmnr
-         rc9Atl3SDfcl5AmRAkDj2hp82BIGK/kUJ6uj+37kCEQLIbUkhx03bXCBnjEmXpG8jC
-         QiY5nHi8boURYYF9/FaqCwWOruibbsKwIs7QfHKg+5mKUE5OkZFRHIpEP2oV9rklUD
-         qifRh30JICi3vHWhuonVpK+gu3OwrxWgGq1qSoLcIpfvoscaDdvhqnBFhPhBujZLZJ
-         At6OM0DgiQSg0PuKJGaXaIPIZ1J8aNVOHkX8I4dqjMcVRzvA/WgxF+gHUbqExxfxy/
-         2aMPNuaFqF+8A==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/hg7Bz6yWY11NDvAbpdPlECU"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/24/2019 2:05 AM, Bjorn Helgaas wrote:
-> On Tue, Apr 23, 2019 at 01:57:20PM +0530, Vidya Sagar wrote:
->> Add extended configuration space capability search API using struct dw_pcie *
->> pointer
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->> ---
->> Changes from [v3]:
->> * None
->>
->> Changes from [v2]:
->> * None
->>
->> Changes from [v1]:
->> * This is a new patch in v2 series
->>
->>   drivers/pci/controller/dwc/pcie-designware.c | 41 ++++++++++++++++++++
->>   drivers/pci/controller/dwc/pcie-designware.h |  1 +
->>   2 files changed, 42 insertions(+)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->> index 6a98135244d6..ecf5fe8842f6 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.c
->> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->> @@ -53,6 +53,47 @@ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->>   	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
->>   }
->>   
-> 
-> Please make sure there's a comment here about why
-> pci_find_ext_capability() can't be used (a comment covering both this
-> and pci_find_capability() is fine, if the reason is the same).
-Reason is same that standard pci_find_ext_capability() uses 'struct pci_dev *dev' pointer
-and can only be used post enumeration whereas APIs being added here use 'struct dw_pcie *pci'
-and can be used before link up also.
-I'll add a comment in the other patch where I'm moving these APIs from pcie-designware-ep.c file
-to pcie-designware.c file.
+--Sig_/hg7Bz6yWY11NDvAbpdPlECU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> 
->> +static int dw_pcie_find_next_ext_capability(struct dw_pcie *pci, int start,
->> +					    int cap)
->> +{
->> +	u32 header;
->> +	int ttl;
->> +	int pos = PCI_CFG_SPACE_SIZE;
->> +
->> +	/* minimum 8 bytes per capability */
->> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
->> +
->> +	if (start)
->> +		pos = start;
->> +
->> +	header = dw_pcie_readl_dbi(pci, pos);
->> +	/*
->> +	 * If we have no capabilities, this is indicated by cap ID,
->> +	 * cap version and next pointer all being 0.
->> +	 */
->> +	if (header == 0)
->> +		return 0;
->> +
->> +	while (ttl-- > 0) {
->> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
->> +			return pos;
->> +
->> +		pos = PCI_EXT_CAP_NEXT(header);
->> +		if (pos < PCI_CFG_SPACE_SIZE)
->> +			break;
->> +
->> +		header = dw_pcie_readl_dbi(pci, pos);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +int dw_pcie_find_ext_capability(struct dw_pcie *pci, int cap)
->> +{
->> +	return dw_pcie_find_next_ext_capability(pci, 0, cap);
->> +}
->> +EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
->> +
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->>   {
->>   	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->> index 35160b4ce929..67307842e003 100644
->> --- a/drivers/pci/controller/dwc/pcie-designware.h
->> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->> @@ -249,6 +249,7 @@ struct dw_pcie {
->>   		container_of((endpoint), struct dw_pcie, ep)
->>   
->>   u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
->> +int dw_pcie_find_ext_capability(struct dw_pcie *pci, int cap);
->>   
->>   int dw_pcie_read(void __iomem *addr, int size, u32 *val);
->>   int dw_pcie_write(void __iomem *addr, int size, u32 val);
->> -- 
->> 2.17.1
->>
+Hi all,
 
+On Wed, 17 Apr 2019 11:08:56 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the bpf-next tree got a conflict in:
+>=20
+>   tools/bpf/bpftool/map.c
+>=20
+> between commit:
+>=20
+>   e0665239e07f ("bpftool: Fix errno variable usage")
+>=20
+> from the bpf tree and commit:
+>=20
+>   0478c3bf8124 ("bpftool: Use print_entry_error() in case of ENOENT when =
+dumping")
+>=20
+> from the bpf-next tree.
+>=20
+> diff --cc tools/bpf/bpftool/map.c
+> index 1744bf61a0b8,44b192e87708..000000000000
+> --- a/tools/bpf/bpftool/map.c
+> +++ b/tools/bpf/bpftool/map.c
+> @@@ -722,11 -715,16 +715,16 @@@ static int dump_map_elem(int fd, void *
+>   		jsonw_string_field(json_wtr, "error", strerror(lookup_errno));
+>   		jsonw_end_object(json_wtr);
+>   	} else {
+> + 		const char *msg =3D NULL;
+> +=20
+>  -		if (errno =3D=3D ENOENT)
+>  +		if (lookup_errno =3D=3D ENOENT)
+> - 			print_entry_plain(map_info, key, NULL);
+> - 		else
+> - 			print_entry_error(map_info, key,
+> - 					  strerror(lookup_errno));
+> + 			msg =3D "<no entry>";
+> + 		else if (lookup_errno =3D=3D ENOSPC &&
+> + 			 map_info->type =3D=3D BPF_MAP_TYPE_REUSEPORT_SOCKARRAY)
+> + 			msg =3D "<cannot read>";
+> +=20
+> + 		print_entry_error(map_info, key,
+> + 				  msg ? : strerror(lookup_errno));
+>   	}
+>  =20
+>   	return 0;
+
+This is now a conflict between the net-next and bpf trees.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/hg7Bz6yWY11NDvAbpdPlECU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly/1CkACgkQAVBC80lX
+0GwexAf/elm7U5ewo/HASPberAvkBUVACmF2FVFV9Y2kc5/P5lTUdiNdRVETtE2T
+7EHmwCU9S5ZGoFo0ya+1R3l+bXLlVpA82qOO3eGl/l3ledV22MBcDpBDHcC8vjvv
+p9YIWZecbXrHyxsqiSSUWQuoe8tEwvg3ycloy4r3K8EwEl0OVpofYzanl8zuMpob
+HYniNf1EUQGI2UW/JvarFduSLrggbuT2OY/e6ISIm7vsMAAXmmXuZ1tUfZLtRsqt
+OOdgA51qhg6TDOt04SuGJPSSw6vPLRSSrRl7dIkWJJ/x/5uN7UKXtE43zSbL4awJ
+z5bHehxyzrrd33ORggzR98D0/VfNSQ==
+=4QhK
+-----END PGP SIGNATURE-----
+
+--Sig_/hg7Bz6yWY11NDvAbpdPlECU--
