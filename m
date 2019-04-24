@@ -2,56 +2,53 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A3CC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C6AC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8359C21903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA99218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126002;
-	bh=oGZ5xI8Dp1eexMFikTVd/nehrKrm13+IE1by5Xej0W0=;
+	s=default; t=1556126007;
+	bh=SfZAlUxGsb7L9dYWfDuiC52WgNrtkFNKkEGOWhDguJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IGwP+0ywW8gk0LPVmOQTZp9vhpWsNxPq96qQLnw5cvxTtdk7HNZKzXbCjfMq0bqzP
-	 9IemwcSTS7mVDHCGt7BdqH1Q1zDoIv9AOtGDjTVTe+/+7oxHR0IOKaVUZdOCmvNL2l
-	 3bdkbEeKk5PbfVnqitbDunVCCFcEKIqwIY05XDd8=
+	b=0C98bASYpyr2Zh9c7kKjbwJJV+wmyOAgBMEl8p9qQzyBeLvIzBSil0I3HZT4D1acs
+	 TgkJd5OzN9n2V6wPdrlkVNukQeOPlxyM2A+sD8Tg49COv9o+rTa8k4fNM5s0f/N385
+	 il7CYkAa0xvvr8j9TioEeaRfh7IEGLxAF40O1CjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387864AbfDXRNV (ORCPT
+        id S2387878AbfDXRN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:13:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37334 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387853AbfDXRNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:13:19 -0400
+        id S2387853AbfDXRNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:13:24 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E4E2218FE;
-        Wed, 24 Apr 2019 17:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0134E21903;
+        Wed, 24 Apr 2019 17:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556125998;
-        bh=oGZ5xI8Dp1eexMFikTVd/nehrKrm13+IE1by5Xej0W0=;
+        s=default; t=1556126003;
+        bh=SfZAlUxGsb7L9dYWfDuiC52WgNrtkFNKkEGOWhDguJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d5YbYZXsA5KRRMbrBjA2ODJ4MieidPVtzqzUg7TJjaxJJy1V8YdyOLDIIcck2CECL
-         Om5rlO4NtcQ7flWl3YER040RkB09Hdio874dI9eqM3ki4d1XwTzQTNo4sqvL/LBwPG
-         Ns7wP+DeL7KSkXvczxD5PvmDg+rcwq+8s7B1+j0o=
+        b=LPrDifWNUu0Zq0ue4WYEJGFT4b0KFi3NEwMxyWazKFYKSulRGXxsS8N7eoKF1jL3f
+         la7zysvBZgl6mjTdCksVcEL0Tmoyiv4bWKVhUG7hqfDzDnj2EFQJxIoysfYsNQC9BD
+         /LmLMCNNlHIroXQ2pkL8SB1IaoY+nQocpKujZbFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 3.18 057/104] sched/fair: Do not re-read ->h_load_next during hierarchical load calculation
-Date:   Wed, 24 Apr 2019 19:09:14 +0200
-Message-Id: <20190424170902.929864376@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Manfred Schlaegl <manfred.schlaegl@ginzinger.com>,
+        Martin Kepplinger <martin.kepplinger@ginzinger.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 032/104] tty: increase the default flip buffer limit to 2*640K
+Date:   Wed, 24 Apr 2019 19:08:49 +0200
+Message-Id: <20190424170857.532188481@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -64,82 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mel Gorman <mgorman@techsingularity.net>
+[ Upstream commit 7ab57b76ebf632bf2231ccabe26bea33868118c6 ]
 
-commit 0e9f02450da07fc7b1346c8c32c771555173e397 upstream.
+We increase the default limit for buffer memory allocation by a factor of
+10 to 640K to prevent data loss when using fast serial interfaces.
 
-A NULL pointer dereference bug was reported on a distribution kernel but
-the same issue should be present on mainline kernel. It occured on s390
-but should not be arch-specific.  A partial oops looks like:
+For example when using RS485 without flow-control at speeds of 1Mbit/s
+an upwards we've run into problems such as applications being too slow
+to read out this buffer (on embedded devices based on imx53 or imx6).
 
-  Unable to handle kernel pointer dereference in virtual kernel address space
-  ...
-  Call Trace:
-    ...
-    try_to_wake_up+0xfc/0x450
-    vhost_poll_wakeup+0x3a/0x50 [vhost]
-    __wake_up_common+0xbc/0x178
-    __wake_up_common_lock+0x9e/0x160
-    __wake_up_sync_key+0x4e/0x60
-    sock_def_readable+0x5e/0x98
+If you want to write transmitted data to a slow SD card and thus have
+realtime requirements, this limit can become a problem.
 
-The bug hits any time between 1 hour to 3 days. The dereference occurs
-in update_cfs_rq_h_load when accumulating h_load. The problem is that
-cfq_rq->h_load_next is not protected by any locking and can be updated
-by parallel calls to task_h_load. Depending on the compiler, code may be
-generated that re-reads cfq_rq->h_load_next after the check for NULL and
-then oops when reading se->avg.load_avg. The dissassembly showed that it
-was possible to reread h_load_next after the check for NULL.
+That shouldn't be the case and 640K buffers fix such problems for us.
 
-While this does not appear to be an issue for later compilers, it's still
-an accident if the correct code is generated. Full locking in this path
-would have high overhead so this patch uses READ_ONCE to read h_load_next
-only once and check for NULL before dereferencing. It was confirmed that
-there were no further oops after 10 days of testing.
+This value is a maximum limit for allocation only. It has no effect
+on systems that currently run fine. When transmission is slow enough
+applications and hardware can keep up and increasing this limit
+doesn't change anything.
 
-As Peter pointed out, it is also necessary to use WRITE_ONCE() to avoid any
-potential problems with store tearing.
+It only _allows_ to allocate more than 2*64K in cases we currently fail to
+allocate memory despite having some.
 
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <stable@vger.kernel.org>
-Fixes: 685207963be9 ("sched: Move h_load calculation to task_h_load()")
-Link: https://lkml.kernel.org/r/20190319123610.nsivgf3mjbjjesxb@techsingularity.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Manfred Schlaegl <manfred.schlaegl@ginzinger.com>
+Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/tty_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5617,10 +5617,10 @@ static void update_cfs_rq_h_load(struct
- 	if (cfs_rq->last_h_load_update == now)
- 		return;
+diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
+index 0d3fc2dae23a..50616c949e8e 100644
+--- a/drivers/tty/tty_buffer.c
++++ b/drivers/tty/tty_buffer.c
+@@ -25,7 +25,7 @@
+  * Byte threshold to limit memory consumption for flip buffers.
+  * The actual memory limit is > 2x this amount.
+  */
+-#define TTYB_DEFAULT_MEM_LIMIT	65536
++#define TTYB_DEFAULT_MEM_LIMIT	(640 * 1024UL)
  
--	cfs_rq->h_load_next = NULL;
-+	WRITE_ONCE(cfs_rq->h_load_next, NULL);
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
--		cfs_rq->h_load_next = se;
-+		WRITE_ONCE(cfs_rq->h_load_next, se);
- 		if (cfs_rq->last_h_load_update == now)
- 			break;
- 	}
-@@ -5630,7 +5630,7 @@ static void update_cfs_rq_h_load(struct
- 		cfs_rq->last_h_load_update = now;
- 	}
- 
--	while ((se = cfs_rq->h_load_next) != NULL) {
-+	while ((se = READ_ONCE(cfs_rq->h_load_next)) != NULL) {
- 		load = cfs_rq->h_load;
- 		load = div64_ul(load * se->avg.load_avg_contrib,
- 				cfs_rq->runnable_load_avg + 1);
+ /*
+  * We default to dicing tty buffer allocations to this many characters
+-- 
+2.19.1
+
 
 
