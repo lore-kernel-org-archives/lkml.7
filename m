@@ -2,140 +2,107 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353B1C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54B4C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3C0218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E1D2183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 20:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733180AbfDXUv2 (ORCPT
+        id S1733279AbfDXUvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 16:51:28 -0400
-Received: from foss.arm.com ([217.140.101.70]:55236 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728083AbfDXUv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 16:51:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB241A78;
-        Wed, 24 Apr 2019 13:51:27 -0700 (PDT)
-Received: from brain-police (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 585253F557;
-        Wed, 24 Apr 2019 13:51:24 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 21:51:17 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hector Marco-Gisbert <hecmargi@upv.es>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Jason Gunthorpe <jgg@mellanox.com>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] binfmt_elf: Update READ_IMPLIES_EXEC logic for modern
- CPUs
-Message-ID: <20190424205117.GA5291@brain-police>
-References: <20190424203408.GA11386@beast>
+        Wed, 24 Apr 2019 16:51:55 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:33525 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbfDXUvy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 16:51:54 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id C3E4B80558; Wed, 24 Apr 2019 22:51:42 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 22:51:50 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Jens Axboe <axboe@kernel.dk>, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, lduncan@suse.com, hare@suse.com,
+        mcgrof@kernel.org, jthumshirn@suse.de, hch@lst.de,
+        gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        bvanassche@acm.org
+Cc:     kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
+        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org, hdegoede@redhat.com,
+        linux-ide@vger.kernel.org
+Subject: Re: regression -next -- scsi: sd: Rely on the driver core for
+ asynchronous probing was Re: next-20190408..0418: Suspend/resume problems on
+ Thinkpad X60
+Message-ID: <20190424205150.GA4582@amd>
+References: <20190408173928.GB13260@amd>
+ <20190412102812.GA24977@amd>
+ <20190423102239.GA15531@amd>
+ <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
+ <20190424095431.GA32457@amd>
+ <20190424104850.GC32457@amd>
+ <20190424202119.GA26357@amd>
+ <20190424204832.GA3111@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
 Content-Disposition: inline
-In-Reply-To: <20190424203408.GA11386@beast>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190424204832.GA3111@amd>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 01:34:08PM -0700, Kees Cook wrote:
-> The READ_IMPLIES_EXEC work-around was designed for old CPUs lacking NX
-> (to have the visible permission flags on memory regions reflect reality:
-> they are all executable), and for old toolchains that lacked the ELF
-> PT_GNU_STACK marking (under the assumption that toolchains that couldn't
-> even specify memory protection flags may have it wrong for all memory
-> regions).
-> 
-> This logic is sensible, but was implemented in a way that equated having
-> a PT_GNU_STACK marked executable as being as "broken" as lacking the
-> PT_GNU_STACK marking entirely. This is not a reasonable assumption
-> for CPUs that have had NX support from the start (or very close to
-> the start). This confusion has led to situations where modern 64-bit
-> programs with explicitly marked executable stack are forced into the
-> READ_IMPLIES_EXEC state when no such thing is needed. (And leads to
-> unexpected failures when mmap()ing regions of device driver memory that
-> wish to disallow VM_EXEC[1].)
-> 
-> To fix this, elf_read_implies_exec() is adjusted on arm64 (where NX has
-> always existed and toolchains have implemented PT_GNU_STACK for a while),
-> and x86 is adjusted to handle this combination of possible outcomes:
-> 
->               CPU: | lacks NX  | has NX, ia32     | has NX, x86_64   |
->  ELF:              |           |                  |                  |
->  ------------------------------|------------------|------------------|
->  missing GNU_STACK | needs RIE | needs RIE        | no RIE           |
->  GNU_STACK == RWX  | needs RIE | no RIE: stack X  | no RIE: stack X  |
->  GNU_STACK == RW   | needs RIE | no RIE: stack NX | no RIE: stack NX |
-> 
-> This has the effect of making binfmt_elf's EXSTACK_DEFAULT actually take
-> on the correct architecture default of being non-executable on arm64 and
-> x86_64, and being executable on ia32.
-> 
-> [1] https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
-> 
-> Suggested-by: Hector Marco-Gisbert <hecmargi@upv.es>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2: adjust arm64 to avoid is_compat_task() (marc.w.gonzalez)
-> ---
->  arch/arm64/include/asm/elf.h |  8 +++++++-
->  arch/x86/include/asm/elf.h   | 24 +++++++++++++++++++++---
->  2 files changed, 28 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
-> index 6adc1a90e7e6..f1bb4b388b8f 100644
-> --- a/arch/arm64/include/asm/elf.h
-> +++ b/arch/arm64/include/asm/elf.h
-> @@ -107,7 +107,13 @@
->   */
->  #define elf_check_arch(x)		((x)->e_machine == EM_AARCH64)
->  
-> -#define elf_read_implies_exec(ex,stk)	(stk != EXSTACK_DISABLE_X)
-> +/*
-> + * 64-bit processes should not automatically gain READ_IMPLIES_EXEC. Only
-> + * 32-bit processes without PT_GNU_STACK should trigger READ_IMPLIES_EXEC
-> + * out of an abundance of caution against ancient toolchains not knowing
-> + * how to mark memory protection flags correctly.
-> + */
-> +#define compat_elf_read_implies_exec(ex, stk)	(stk == EXSTACK_DEFAULT)
 
-Don't you need to hack fs/compat_binfmt_elf.c to pick this up, or am I
-missing some trick? Should just be something like below.
+--WIyZ46R2i8wDzkSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will
+On Wed 2019-04-24 22:48:32, Pavel Machek wrote:
+> Hi!
+>=20
+> > Not block, but it seems scsi subsystem is:
+>=20
+> commit 21e6ba3f0e0257cce1a226c1f15e0a8ba4338ca3
+> Author: Bart Van Assche <bvanassche@acm.org>
+> Date:   Wed Mar 20 13:09:19 2019 -0700
+>=20
+>     scsi: sd: Rely on the driver core for asynchronous probing
+>=20
+>     As explained during the 2018 LSF/MM session about increasing SCSI
+>     disk
+>         probing concurrency, the problems with the current probing
+>     approach are as
+>=20
+> Seems to be responsible. Full log attached.
 
---->8
+Unfortunately, that one does not revert cleanly on top of -next.
 
-diff --git a/fs/compat_binfmt_elf.c b/fs/compat_binfmt_elf.c
-index 15f6e96b3bd9..694bc3ee77eb 100644
---- a/fs/compat_binfmt_elf.c
-+++ b/fs/compat_binfmt_elf.c
-@@ -116,6 +116,11 @@
- #define	arch_setup_additional_pages compat_arch_setup_additional_pages
- #endif
- 
-+#ifdef compat_elf_read_implies_exec
-+#undef elf_read_implies_exec
-+#define elf_read_implies_exec compat_elf_read_implies_exec
-+#endif
-+
- /*
-  * Rename a few of the symbols that binfmt_elf.c will define.
-  * These are all local so the names don't really matter, but it
+Any ideas what is wrong?
+
+Does suspend/resume work for you?
+
+I can test patches.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--WIyZ46R2i8wDzkSu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzAzGYACgkQMOfwapXb+vJq4QCeNjbDQJS2ZM3PimuT0IZmO9cB
+VzAAoLzlKI6Ec0myLfIAxqC1T64C9p6y
+=lQq0
+-----END PGP SIGNATURE-----
+
+--WIyZ46R2i8wDzkSu--
