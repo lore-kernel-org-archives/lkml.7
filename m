@@ -2,108 +2,199 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FD6C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BBCC282E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C19D2175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8631D2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iEhisnPK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HSQGlCAB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfDXTlF (ORCPT
+        id S1727881AbfDXTlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:41:05 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54037 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfDXTlE (ORCPT
+        Wed, 24 Apr 2019 15:41:12 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:42517 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727423AbfDXTlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:41:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 26so288239wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:41:03 -0700 (PDT)
+        Wed, 24 Apr 2019 15:41:11 -0400
+Received: by mail-yw1-f65.google.com with SMTP id y131so4788385ywa.9
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:41:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Eeu0VdWqrZ6e5bSepj8FvMYq/eoETKJmYH05R9Lv9TY=;
-        b=iEhisnPKZ03OhRojrf3cjSN7zDEW4FrDT/DL+INz8tZNk+FgyxN/X8G8b0oTVkq7cU
-         mv33ggxtkq0IV0wOloCdUdNJsZwVxtxQKo43aaovXTHN6+4aigKRch1TjHMsyeVRMGAS
-         3L0nB+XKp+7RFCZU7jiiofw/5eIqN5xr8YkGM45ft6CmkAL23oS0QMQ5slkWARMrU5mS
-         owl+e5uB6NGun+88qpiGCJ/n9e3gTo65mkYn1v58pKFzKewG/js+RJN3z66YJLsQf+IO
-         JJSszhjhluay5f6/Jo9/7JwrcUt0gkD4/hiAljSzVTlw12j7bs81gudVcorPuyk4iQ1O
-         EcgQ==
+        bh=Yniv5sy+5BQNRUjtlaSRpscFDyrU4/SisoLwlgAM2ng=;
+        b=HSQGlCABvRIZPxZA8AOq9czRV7ZfXLMVbzQJ3+KvICA6fAiq4fTXLdIW4I9pcAK5Ar
+         J+DJ/nbaXuY3mcsBwclwSQbl8CvBRvPVpIS3X80Q33eYOZKD7jYDyFucYjA3EpdqGupt
+         K2FB85/z9856MjrPeLO6FF0Jm97fu+CWhTWj1Vdn3CGKACt4d1cJFkbwKCIGLs/yOjCd
+         MngXQA1Gc0EtXw+FzBHSUypHSaaqwPOeSCyBaCn8Hus3JFZtQSJIdPAtrU1hGAOOuF+/
+         g1VzjfOuDMEfuueQgSzVFMoHMKMeE5PDBn3VG6Wr6EjzwrAJY4zJq+5zS72iouyIgmNg
+         XZwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Eeu0VdWqrZ6e5bSepj8FvMYq/eoETKJmYH05R9Lv9TY=;
-        b=MX9WbbWfM33enGpOajLeFGtLkO5tnIPDw1oQCEepFE3ZRfBPy/Kuw6XWfGzEmMzymh
-         Q5vsdT7MC6tLzSn/QlEm8Nwmv6qBpYyDAmTZOqgW1mJDhD7EREzJDcKiYLiQ7Y6+gO5m
-         hETj15MhzBAD1TzFdYcEDvAkq0D9oQZTiW2nw/zUyW+tELItkeAMHX4KUL56TzNa3lsY
-         ZFRVS0rbn1F+VgXgsau1P+bXLuQ3T12+OGrcN8cBBghiBzFDFxoz3SyK52gkfLp197yB
-         xuXAr/iVjVDmDQchjzNRED7CnB4XUNm7uhxouCtIVkdAPFQT4M2p7Dh6N57dSHH6O9y6
-         zaxg==
-X-Gm-Message-State: APjAAAW8V/whJAIDKZPi4BiTJqYOF0SL0SlBlQWj9WhkweS1OBOq/Iya
-        TrPExX0cqCRuEJYv8r79L+RKFIu3l8HHtZn+1NhXzA==
-X-Google-Smtp-Source: APXvYqzMPYOI/UcdRqvu9XnNcNDX7crKpCAhmcSP5LsMA0L+LI9hDUGzBL7sk0aySleP7+zlpBoG3tHTx2LbCp8jw7Y=
-X-Received: by 2002:a1c:9691:: with SMTP id y139mr518954wmd.64.1556134862977;
- Wed, 24 Apr 2019 12:41:02 -0700 (PDT)
+        bh=Yniv5sy+5BQNRUjtlaSRpscFDyrU4/SisoLwlgAM2ng=;
+        b=rndkl+EOVKg3RBZSi0v9dWrSHfuA5fClUVy72GWPqftMFnjRAobXX0feU5nlnLbUeZ
+         aWuwkdY4LXQ1NLHrFKfebVBJWfcC6sxEZane8sDWLLQw2pSpcGrNT/esGyOnZfi1fBG6
+         cfv0NcPNtb5p19Yl9M3GK9myzkihrPRefissraKpHRijP5i4+AceCNCrpSgg5KoAxkZS
+         dD5zxEjLVwVcsv099nAEGzvHfC/yNOlaB3esP7PWgz8yz4oqmkeLVzksGFQmCfrJvRJo
+         Xmm6zaC3gIhR6GB6S7c/nBkdECTGIZrmqyciSPzMvOaHMjtmaGoLITuKJmu+pYGH5ut9
+         xIhw==
+X-Gm-Message-State: APjAAAWB5ybSGDNIHULx/EhqsAlZDmeiBw3R7ouMJIX/ImwjxmNe5p7V
+        jm8rnkEjqan+bs4vHdsEuTgQpLfwrVe/P2f5MnzJVQ==
+X-Google-Smtp-Source: APXvYqxv1u3H9ygt4AZH9qpNsjBSq/NfXcClQxIBs/Dob2wUtNxoudJC/96BrFm+ew0Zx5DOFe/D9zIl/Nygshyc5hM=
+X-Received: by 2002:a0d:f804:: with SMTP id i4mr28081368ywf.345.1556134869972;
+ Wed, 24 Apr 2019 12:41:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org> <20190424171333.GA21290@ravnborg.org>
-In-Reply-To: <20190424171333.GA21290@ravnborg.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 24 Apr 2019 12:40:51 -0700
-Message-ID: <CALAqxLVWf5MYm+gh3JsdCidzBp4XFMM-LeAnVMykmCtP7g9W0w@mail.gmail.com>
-Subject: Re: [PATCH 00/25] drm: Kirin driver cleanups to prep for Kirin960 support
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        YiPing Xu <xuyiping@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>
+References: <20190423213133.3551969-1-guro@fb.com> <20190423213133.3551969-5-guro@fb.com>
+ <CALvZod6A43nQgkYj38K4h_ZYLSmYp0xJwO7n44kGJx2Ut7-EVg@mail.gmail.com> <20190424191706.GA26707@tower.DHCP.thefacebook.com>
+In-Reply-To: <20190424191706.GA26707@tower.DHCP.thefacebook.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 24 Apr 2019 12:40:59 -0700
+Message-ID: <CALvZod7sG+sD76dQmMhXa92=zpXz=wdUcsR9ah7YRj13g=YT+g@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] mm: unify SLAB and SLUB page accounting
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 10:13 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+On Wed, Apr 24, 2019 at 12:17 PM Roman Gushchin <guro@fb.com> wrote:
 >
-> Hi John.
->
-> On Tue, Apr 23, 2019 at 04:20:31PM -0700, John Stultz wrote:
-> > This patchset contains one fix (in the front, so its easier to
-> > eventually backport), and a series of changes from YiPing to
-> > refactor the kirin drm driver so that it can be used on both
-> > kirin620 based devices (like the original HiKey board) as well
-> > as kirin960 based devices (like the HiKey960 board).
+> On Wed, Apr 24, 2019 at 10:23:45AM -0700, Shakeel Butt wrote:
+> > Hi Roman,
 > >
-> > The full kirin960 drm support is still being refactored, but as
-> > this base kirin rework was getting to be substantial, I wanted
-> > to send out the first chunk for some initial review, so that the
-> > review burden wasn't overwhelming.
-> I have been through all 25 patches and it triggered a few minor
-> comments here and there.
-> I know nothing about the hisilicon driver but based on the fact
-> that I know nothing about the driver you can give them all
-> a (smallish)
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > On Tue, Apr 23, 2019 at 9:30 PM Roman Gushchin <guro@fb.com> wrote:
+> > >
+> > > Currently the page accounting code is duplicated in SLAB and SLUB
+> > > internals. Let's move it into new (un)charge_slab_page helpers
+> > > in the slab_common.c file. These helpers will be responsible
+> > > for statistics (global and memcg-aware) and memcg charging.
+> > > So they are replacing direct memcg_(un)charge_slab() calls.
+> > >
+> > > Signed-off-by: Roman Gushchin <guro@fb.com>
+> > > ---
+> > >  mm/slab.c | 19 +++----------------
+> > >  mm/slab.h | 22 ++++++++++++++++++++++
+> > >  mm/slub.c | 14 ++------------
+> > >  3 files changed, 27 insertions(+), 28 deletions(-)
+> > >
+> > > diff --git a/mm/slab.c b/mm/slab.c
+> > > index 14466a73d057..53e6b2687102 100644
+> > > --- a/mm/slab.c
+> > > +++ b/mm/slab.c
+> > > @@ -1389,7 +1389,6 @@ static struct page *kmem_getpages(struct kmem_cache *cachep, gfp_t flags,
+> > >                                                                 int nodeid)
+> > >  {
+> > >         struct page *page;
+> > > -       int nr_pages;
+> > >
+> > >         flags |= cachep->allocflags;
+> > >
+> > > @@ -1399,17 +1398,11 @@ static struct page *kmem_getpages(struct kmem_cache *cachep, gfp_t flags,
+> > >                 return NULL;
+> > >         }
+> > >
+> > > -       if (memcg_charge_slab(page, flags, cachep->gfporder, cachep)) {
+> > > +       if (charge_slab_page(page, flags, cachep->gfporder, cachep)) {
+> > >                 __free_pages(page, cachep->gfporder);
+> > >                 return NULL;
+> > >         }
+> > >
+> > > -       nr_pages = (1 << cachep->gfporder);
+> > > -       if (cachep->flags & SLAB_RECLAIM_ACCOUNT)
+> > > -               mod_lruvec_page_state(page, NR_SLAB_RECLAIMABLE, nr_pages);
+> > > -       else
+> > > -               mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE, nr_pages);
+> > > -
+> > >         __SetPageSlab(page);
+> > >         /* Record if ALLOC_NO_WATERMARKS was set when allocating the slab */
+> > >         if (sk_memalloc_socks() && page_is_pfmemalloc(page))
+> > > @@ -1424,12 +1417,6 @@ static struct page *kmem_getpages(struct kmem_cache *cachep, gfp_t flags,
+> > >  static void kmem_freepages(struct kmem_cache *cachep, struct page *page)
+> > >  {
+> > >         int order = cachep->gfporder;
+> > > -       unsigned long nr_freed = (1 << order);
+> > > -
+> > > -       if (cachep->flags & SLAB_RECLAIM_ACCOUNT)
+> > > -               mod_lruvec_page_state(page, NR_SLAB_RECLAIMABLE, -nr_freed);
+> > > -       else
+> > > -               mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE, -nr_freed);
+> > >
+> > >         BUG_ON(!PageSlab(page));
+> > >         __ClearPageSlabPfmemalloc(page);
+> > > @@ -1438,8 +1425,8 @@ static void kmem_freepages(struct kmem_cache *cachep, struct page *page)
+> > >         page->mapping = NULL;
+> > >
+> > >         if (current->reclaim_state)
+> > > -               current->reclaim_state->reclaimed_slab += nr_freed;
+> > > -       memcg_uncharge_slab(page, order, cachep);
+> > > +               current->reclaim_state->reclaimed_slab += 1 << order;
+> > > +       uncharge_slab_page(page, order, cachep);
+> > >         __free_pages(page, order);
+> > >  }
+> > >
+> > > diff --git a/mm/slab.h b/mm/slab.h
+> > > index 4a261c97c138..0f5c5444acf1 100644
+> > > --- a/mm/slab.h
+> > > +++ b/mm/slab.h
+> > > @@ -205,6 +205,12 @@ ssize_t slabinfo_write(struct file *file, const char __user *buffer,
+> > >  void __kmem_cache_free_bulk(struct kmem_cache *, size_t, void **);
+> > >  int __kmem_cache_alloc_bulk(struct kmem_cache *, gfp_t, size_t, void **);
+> > >
+> > > +static inline int cache_vmstat_idx(struct kmem_cache *s)
+> > > +{
+> > > +       return (s->flags & SLAB_RECLAIM_ACCOUNT) ?
+> > > +               NR_SLAB_RECLAIMABLE : NR_SLAB_UNRECLAIMABLE;
+> > > +}
+> > > +
+> > >  #ifdef CONFIG_MEMCG_KMEM
+> > >
+> > >  /* List of all root caches. */
+> > > @@ -352,6 +358,22 @@ static inline void memcg_link_cache(struct kmem_cache *s,
+> > >
+> > >  #endif /* CONFIG_MEMCG_KMEM */
+> > >
+> > > +static __always_inline int charge_slab_page(struct page *page,
+> > > +                                           gfp_t gfp, int order,
+> > > +                                           struct kmem_cache *s)
+> > > +{
+> > > +       memcg_charge_slab(page, gfp, order, s);
+> >
+> > This does not seem right. Why the return of memcg_charge_slab is ignored?
 >
-> I trust your judgement to decide the feedback you want to address and
-> what to ignore.
+> Hi Shakeel!
+>
+> Right, it's a bug. It's actually fixed later in the patchset
+> (in "mm: rework non-root kmem_cache lifecycle management"),
+> so the final result looks correct to me. Anyway, I'll fix it.
+>
+> How does everything else look to you?
+>
+> Thank you!
 
-Thanks again for your time and thoughts here! I really appreciate it!
+I caught this during quick glance. Another high level issue I found is
+breakage of /proc/kpagecgroup for the slab pages which is easy to fix.
 
-> One request:
-> Could you please in a follow-up patch kill the use of drmP.h.
-> We want to get rid of it one day and three fewer users are one
-> small step towards this goal.
+At the moment I am kind of stuck on some other stuff but will get back
+to this in a week or so.
 
-I'll take a swing at this. Thanks!
--john
+Shakeel
