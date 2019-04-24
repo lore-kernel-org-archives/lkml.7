@@ -2,114 +2,123 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45451C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F220C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12EF62148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009042148D
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GzZRtLAm";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lsnK3pOE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZPwsO6Fb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbfDXHIq (ORCPT
+        id S1730044AbfDXHKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:08:46 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46682 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfDXHIp (ORCPT
+        Wed, 24 Apr 2019 03:10:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41936 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfDXHKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:08:45 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 01D6460741; Wed, 24 Apr 2019 07:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556089725;
-        bh=rbv719mvB1XYN4kQg7t8bSUQ+9vuRm6Kt3M3q0gMIOc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GzZRtLAmhcsPSxyn3CdFy8eOm5WLSPTrx3X8OUzPzhfWt6+pd2x6rGQabzWQDsKW/
-         iNhJ12edv0mrJVHicXpLY9p4VBfItskt5jlFoCSzfa8uaPzAf9aLQD/fkduTvYkJx2
-         lNdPozl1s8Ii8nHOEPg75ROHGRMVxgHLPt3dvNgg=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 579226072E;
-        Wed, 24 Apr 2019 07:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1556089724;
-        bh=rbv719mvB1XYN4kQg7t8bSUQ+9vuRm6Kt3M3q0gMIOc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lsnK3pOEDWw9clKxM8O1T88xy+btYgz9wpgSD313GnrFvvpqBbOiojtthcXVbs/6V
-         fqAAsBJt584SotUc0Cn3VLL6Lpg7tNxps2W80BdpKNMSuGdcwNn38gk7cA5y+xKkMm
-         V51PEDSmKllCVzMkTkRrG//zfYTAVKKc0StgBGbM=
+        Wed, 24 Apr 2019 03:10:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ehC7gqea2vti0BBQFwW9XKtZ4cq4raV9z3lJdyKr98c=; b=ZPwsO6Fb/2SmRiK6MNTYyC0LE
+        3pcn4nDruVwaqF7/BTzEFTCCcBDcvYtZIju21NOTa0hbOpy3RKR+SM2Dw1YN/LxQ2tx8+PfBCxKat
+        8eoe4Hp0buY22S/HPpM/HqQy/Mx2kQ9rLQ/n14H8mQsqw7nWxwBumws6CyitkXLLpAgtN7ZThG3cZ
+        njODZLz/i8d7o54Lqub+xTVctSq7JIvzRMiHQfURWfZvWXe4zPjVW+hxXmfJNR5mI6zP8lQ2uUPNf
+        u5JFbIHi/fAmXjlDfk5E0xuyX3WDPRZh6xRJBm7rZz0rrZAEAMiCXS71KBMChN2UpTusSxPzRk3EI
+        MmfzfJsXw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJC2a-0003eU-LO; Wed, 24 Apr 2019 07:10:00 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 295A229BBFB81; Wed, 24 Apr 2019 09:09:59 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 09:09:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 14/16] locking/rwsem: Guard against making count
+ negative
+Message-ID: <20190424070959.GE4038@hirez.programming.kicks-ass.net>
+References: <4cbd3c18-c9c0-56eb-4e01-ee355a69057a@redhat.com>
+ <20190419102647.GP7905@worktop.programming.kicks-ass.net>
+ <20190419120207.GO4038@hirez.programming.kicks-ass.net>
+ <20190419130304.GV14281@hirez.programming.kicks-ass.net>
+ <20190419131522.GW14281@hirez.programming.kicks-ass.net>
+ <57620139-92a3-4a21-56bd-5d6fff23214f@redhat.com>
+ <7b1bfc26-6e90-bd65-ab46-08413acd80e9@redhat.com>
+ <20190423141714.GO11158@hirez.programming.kicks-ass.net>
+ <CAHk-=whnQJ9YDrkcKteNSACMJxzw1bL0RPfGQsey_9Nm7b8mnw@mail.gmail.com>
+ <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 24 Apr 2019 12:38:44 +0530
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     Harish Bandi <c-hbandi@codeaurora.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-bluetooth-owner@vger.kernel.org
-Subject: Re: [RFC v1] Bluetooth: hci_core: Don't stop BT if the BD address
- missing in dts
-In-Reply-To: <96d661afb42cd4c6605cf7e2fbec7478@codeaurora.org>
-References: <20190418132123.12816-1-bgodavar@codeaurora.org>
- <371A1719-7CDD-4940-9D6F-0F3339FA50E6@holtmann.org>
- <96d661afb42cd4c6605cf7e2fbec7478@codeaurora.org>
-Message-ID: <91deac040a35235e52079cdbdef2f425@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4f62d7f2-e5f6-500e-3e70-b1d1978f7140@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Harish,
+On Tue, Apr 23, 2019 at 03:12:16PM -0400, Waiman Long wrote:
+> That is true in general, but doing preempt_disable/enable across
+> function boundary is ugly and prone to further problems down the road.
 
-On 2019-04-24 12:34, Harish Bandi wrote:
-> Hi Balakrishna,
-> 
-> On 2019-04-23 22:05, Marcel Holtmann wrote:
->> Hi Balakrishna,
->> 
->>> When flag HCI_QUIRK_USE_BDADDR_PROPERTY is set, we will read the
->>> bluetooth address from dts. If the bluetooth address node is missing
->>> from the dts we will enable it controller UNCONFIGURED state.
->>> This patch enables the normal flow even if the BD address is missing
->>> from the dts tree.
->>> 
->>> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->>> ---
->>> net/bluetooth/hci_core.c | 2 --
->>> 1 file changed, 2 deletions(-)
->> 
->> can I get an ACK for this one?
->> 
->> Regards
->> 
->> Marcel
-> 
-> nit: it would be better if we print error message, if bd address 
-> missing in dts.
-> 
-> tested 20 times with bd address missing in dts.
-> tested 20 times with bd address available in dts.
-> 
-> Tested-by: Harish Bandi <c-hbandi@codeaurora.org>
-> 
-> 
-> Thanks,
-> Harish
+We do worse things in this code, and the thing Linus proposes is
+actually quite simple, something like so:
 
-Thanks for testing will note this improvement and send an incremental 
-patch.
-
--- 
-Regards
-Balakrishna.
+---
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -912,7 +904,7 @@ rwsem_down_read_slowpath(struct rw_semap
+ 			raw_spin_unlock_irq(&sem->wait_lock);
+ 			break;
+ 		}
+-		schedule();
++		schedule_preempt_disabled();
+ 		lockevent_inc(rwsem_sleep_reader);
+ 	}
+ 
+@@ -1121,6 +1113,7 @@ static struct rw_semaphore *rwsem_downgr
+  */
+ inline void __down_read(struct rw_semaphore *sem)
+ {
++	preempt_disable();
+ 	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
+ 			&sem->count) & RWSEM_READ_FAILED_MASK)) {
+ 		rwsem_down_read_slowpath(sem, TASK_UNINTERRUPTIBLE);
+@@ -1129,10 +1122,12 @@ inline void __down_read(struct rw_semaph
+ 	} else {
+ 		rwsem_set_reader_owned(sem);
+ 	}
++	preempt_enable();
+ }
+ 
+ static inline int __down_read_killable(struct rw_semaphore *sem)
+ {
++	preempt_disable();
+ 	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
+ 			&sem->count) & RWSEM_READ_FAILED_MASK)) {
+ 		if (IS_ERR(rwsem_down_read_slowpath(sem, TASK_KILLABLE)))
+@@ -1142,6 +1137,7 @@ static inline int __down_read_killable(s
+ 	} else {
+ 		rwsem_set_reader_owned(sem);
+ 	}
++	preempt_enable();
+ 	return 0;
+ }
+ 
