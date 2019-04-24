@@ -2,53 +2,51 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0C2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78014C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC04218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 474B2218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127906;
-	bh=c6VW2EFSkVtPIEegdCI2xFNg/lsV3Ml91WgFKtAnDDA=;
+	s=default; t=1556127914;
+	bh=17UlZXxf8UUS6yaEhvezelVge69t+0V+9R1NjKVqIKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rt0WcoZWA1C/53q8f3yYDNyXw38YpG1ApUxaGkrJHsoaqa2vkkTTVaXrOElCXbLe2
-	 qbPoGErYuGTCZgufk5c2/H483A+QYdTyEnvYOLepCni6VkGIGzqbWJCRvImIl76jMD
-	 F2L8te33W5udXpMSWc3tkggSEPe+GBAHeQypDyl4=
+	b=SFi6SwDYYZfbqGL3Q/cECw3lVKHuJeVQrZorSOmkZD2F4+JLvzrXxC/eqHZKuH9rJ
+	 WhznbccO8D43IfVUhfLzX7vr2gqYPAZOt/r9o6yELQeRxsYNFD3elaUgaX0fMf0pTC
+	 MwONPY2TP9zyMiqcHkmPhjFhQUm1GkGg+OD1F7iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391980AbfDXRpF (ORCPT
+        id S2391544AbfDXRdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:45:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60862 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:33:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391570AbfDXRds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:33:48 -0400
+        id S2390909AbfDXRdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:33:37 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB422077C;
-        Wed, 24 Apr 2019 17:33:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36A662077C;
+        Wed, 24 Apr 2019 17:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127227;
-        bh=c6VW2EFSkVtPIEegdCI2xFNg/lsV3Ml91WgFKtAnDDA=;
+        s=default; t=1556127216;
+        bh=17UlZXxf8UUS6yaEhvezelVge69t+0V+9R1NjKVqIKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PNbtRr94LTNTB/C1LN93SXZG/mqhNNMG0hmvTOQyw8FOJXVt8zi2D1k4ws6gzPaC5
-         6OxIjF/+Mjqsq4bCb5fOJRmwKQ5JWSxH///20fdMGiC2pi1s50H4pdkVnT9hUspxSf
-         IgJZBEMUWUle/rYoOjqakF/KsIKGttZWW9MU5T8c=
+        b=y/590sturmXuWgz3IHf6bbBEtvLiQvP5VbwWuUA7T1fEg5aRT9D7expb6gzTWPs13
+         Mtpl4AXBXY86JfellOPu4uZ9DHs88Sc5Y05Tjk6iQVDdW0eGlds37whjBjKjk9d9ey
+         f1oRqRpipzBar/O+saVVnRp8XJzMKagRyTkcg/Z8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 014/115] ipv4: ensure rcu_read_lock() in ipv4_link_failure()
-Date:   Wed, 24 Apr 2019 19:09:10 +0200
-Message-Id: <20190424170925.838919810@linuxfoundation.org>
+Subject: [PATCH 5.0 010/115] team: set slave to promisc if team is already in promisc mode
+Date:   Wed, 24 Apr 2019 19:09:06 +0200
+Message-Id: <20190424170925.576011522@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -61,88 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit c543cb4a5f07e09237ec0fc2c60c9f131b2c79ad ]
+[ Upstream commit 43c2adb9df7ddd6560fd3546d925b42cef92daa0 ]
 
-fib_compute_spec_dst() needs to be called under rcu protection.
+After adding a team interface to bridge, the team interface will enter
+promisc mode. Then if we add a new slave to team0, the slave will keep
+promisc off. Fix it by setting slave to promisc on if team master is
+already in promisc mode, also do the same for allmulti.
 
-syzbot reported :
+v2: add promisc and allmulti checking when delete ports
 
-WARNING: suspicious RCU usage
-5.1.0-rc4+ #165 Not tainted
-include/linux/inetdevice.h:220 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by swapper/0/0:
- #0: 0000000051b67925 ((&n->timer)){+.-.}, at: lockdep_copy_map include/linux/lockdep.h:170 [inline]
- #0: 0000000051b67925 ((&n->timer)){+.-.}, at: call_timer_fn+0xda/0x720 kernel/time/timer.c:1315
-
-stack backtrace:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.1.0-rc4+ #165
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5162
- __in_dev_get_rcu include/linux/inetdevice.h:220 [inline]
- fib_compute_spec_dst+0xbbd/0x1030 net/ipv4/fib_frontend.c:294
- spec_dst_fill net/ipv4/ip_options.c:245 [inline]
- __ip_options_compile+0x15a7/0x1a10 net/ipv4/ip_options.c:343
- ipv4_link_failure+0x172/0x400 net/ipv4/route.c:1195
- dst_link_failure include/net/dst.h:427 [inline]
- arp_error_report+0xd1/0x1c0 net/ipv4/arp.c:297
- neigh_invalidate+0x24b/0x570 net/core/neighbour.c:995
- neigh_timer_handler+0xc35/0xf30 net/core/neighbour.c:1081
- call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
- expire_timers kernel/time/timer.c:1362 [inline]
- __run_timers kernel/time/timer.c:1681 [inline]
- __run_timers kernel/time/timer.c:1649 [inline]
- run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
- __do_softirq+0x266/0x95a kernel/softirq.c:293
- invoke_softirq kernel/softirq.c:374 [inline]
- irq_exit+0x180/0x1d0 kernel/softirq.c:414
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0x14a/0x570 arch/x86/kernel/apic/apic.c:1062
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
-
-Fixes: ed0de45a1008 ("ipv4: recompile ip options in ipv4_link_failure")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Stephen Suryaputra <ssuryaextr@gmail.com>
+Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/route.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/team/team.c |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -1185,14 +1185,20 @@ static struct dst_entry *ipv4_dst_check(
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -1247,6 +1247,23 @@ static int team_port_add(struct team *te
+ 		goto err_option_port_add;
+ 	}
  
- static void ipv4_link_failure(struct sk_buff *skb)
- {
--	struct rtable *rt;
- 	struct ip_options opt;
-+	struct rtable *rt;
-+	int res;
- 
- 	/* Recompile ip options since IPCB may not be valid anymore.
- 	 */
- 	memset(&opt, 0, sizeof(opt));
- 	opt.optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
--	if (__ip_options_compile(dev_net(skb->dev), &opt, skb, NULL))
++	/* set promiscuity level to new slave */
++	if (dev->flags & IFF_PROMISC) {
++		err = dev_set_promiscuity(port_dev, 1);
++		if (err)
++			goto err_set_slave_promisc;
++	}
 +
-+	rcu_read_lock();
-+	res = __ip_options_compile(dev_net(skb->dev), &opt, skb, NULL);
-+	rcu_read_unlock();
++	/* set allmulti level to new slave */
++	if (dev->flags & IFF_ALLMULTI) {
++		err = dev_set_allmulti(port_dev, 1);
++		if (err) {
++			if (dev->flags & IFF_PROMISC)
++				dev_set_promiscuity(port_dev, -1);
++			goto err_set_slave_promisc;
++		}
++	}
 +
-+	if (res)
- 		return;
+ 	netif_addr_lock_bh(dev);
+ 	dev_uc_sync_multiple(port_dev, dev);
+ 	dev_mc_sync_multiple(port_dev, dev);
+@@ -1263,6 +1280,9 @@ static int team_port_add(struct team *te
  
- 	__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt);
+ 	return 0;
+ 
++err_set_slave_promisc:
++	__team_option_inst_del_port(team, port);
++
+ err_option_port_add:
+ 	team_upper_dev_unlink(team, port);
+ 
+@@ -1308,6 +1328,12 @@ static int team_port_del(struct team *te
+ 
+ 	team_port_disable(team, port);
+ 	list_del_rcu(&port->list);
++
++	if (dev->flags & IFF_PROMISC)
++		dev_set_promiscuity(port_dev, -1);
++	if (dev->flags & IFF_ALLMULTI)
++		dev_set_allmulti(port_dev, -1);
++
+ 	team_upper_dev_unlink(team, port);
+ 	netdev_rx_handler_unregister(port_dev);
+ 	team_port_disable_netpoll(port);
 
 
