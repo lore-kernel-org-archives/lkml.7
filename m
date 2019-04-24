@@ -2,91 +2,91 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72BEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A168C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB9AA208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB4E208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfDXIZw (ORCPT
+        id S1730108AbfDXI0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:25:52 -0400
-Received: from thoth.sbs.de ([192.35.17.2]:51342 "EHLO thoth.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfDXIZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:25:52 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by thoth.sbs.de (8.15.2/8.15.2) with ESMTPS id x3O8PghL032179
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 10:25:42 +0200
-Received: from [167.87.52.237] ([167.87.52.237])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x3O8PfvW007319;
-        Wed, 24 Apr 2019 10:25:41 +0200
-Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-References: <cover.1555579429.git.jan.kiszka@siemens.com>
- <c9f40465c6effc7b8efd6cbf8461d71d80c80033.1555579429.git.jan.kiszka@siemens.com>
- <20190424075816.GU2654@lahna.fi.intel.com>
- <8999d3f8-d169-eb85-bd2f-08c99d184ea2@siemens.com>
- <20190424081802.GV2654@lahna.fi.intel.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <5a28f22c-22f7-760a-d076-68ff19800d44@siemens.com>
-Date:   Wed, 24 Apr 2019 10:25:40 +0200
-User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
- Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
+        Wed, 24 Apr 2019 04:26:22 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55841 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbfDXI0V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 04:26:21 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id D49D18027F; Wed, 24 Apr 2019 10:26:10 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 10:26:19 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     kernel list <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net,
+        linux-pm@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-next@vger.kernel.org, hdegoede@redhat.com,
+        linux-ide@vger.kernel.org
+Subject: Re: next-20190408..0418: Suspend/resume problems on Thinkpad X60
+Message-ID: <20190424082618.GA6699@amd>
+References: <20190408173928.GB13260@amd>
+ <20190412102812.GA24977@amd>
+ <20190423102239.GA15531@amd>
+ <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
 MIME-Version: 1.0
-In-Reply-To: <20190424081802.GV2654@lahna.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Content-Disposition: inline
+In-Reply-To: <41d56ba6-d0cb-5d5e-f5f4-9bca045440dd@kernel.dk>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.04.19 10:18, Mika Westerberg wrote:
-> On Wed, Apr 24, 2019 at 10:12:42AM +0200, Jan Kiszka wrote:
->> On 24.04.19 09:58, Mika Westerberg wrote:
->>> +Rafael and linux-acpi.
->>>
->>> On Thu, Apr 18, 2019 at 11:23:49AM +0200, Jan Kiszka wrote:
->>>> From: Jan Kiszka <jan.kiszka@siemens.com>
->>>>
->>>> Validated on the Quark platform, this adds interrupt support on rising
->>>> and/or falling edges.
->>>
->>> The irqchip parts look good to me but but the ACPI SCI handling seems
->>> weird. This is typically handled by ACPI core based on the values read
->>> from FADT ACPI table. What does it contain on this Quark platform?
->>
->> There is no FADT on the original Quark firmware, nor did we add one. As we
->> are talking about existing devices, possibly not only Quarks, I was going
->> down the ACPI-independent way to hook into the interrupt. But I'm open to
->> learn about better alternatives.
-> 
-> Hmm, if it does not have FADT table why would you need SCI then? Is this
-> implementing some real use case?
-> 
 
-Maybe I'm looking at the wrong place: Where would I find it? There is definitely 
-no separate entry under /sys/firmware/acpi/tables - but that's also true for my 
-workstation.
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In any case: The hardware defines that the GPIO events are sent via SCIs. That 
-fact is probably not expressed in ACPI language.
+On Tue 2019-04-23 07:55:05, Jens Axboe wrote:
+> On 4/23/19 4:22 AM, Pavel Machek wrote:
+> > Hi!
+> >=20
+> >>> It boots ok (unlike mainline -- I'm debugging that), and I can suspend
+> >>> and resume... but then cursor in X is moving and I can talk to
+> >>> applications cached in memory, but any access to disk hangs.
+> >>
+> >> Mainline problem was identified.
+> >>
+> >> But resume is still broken. I took advantage of fact that I can still
+> >> do cached commands, and got complete dmesg. I'm attaching it.
+> >=20
+> > Still broken in 0418. Ideas would be welcome at this point.
+>=20
+> Bisect it?
 
-Jan
+Before I start heavy debugging, it would be interesting to
+know... does suspend/resume work for you in -next?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzAHaoACgkQMOfwapXb+vJTVQCeL08UyO+MXoIE7+XqHb1+5toc
+VTEAnR63BS4swj7ABf8xe1WLhTf+W+rZ
+=crwR
+-----END PGP SIGNATURE-----
+
+--NzB8fVQJ5HfG6fxh--
