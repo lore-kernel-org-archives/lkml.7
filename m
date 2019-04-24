@@ -2,169 +2,147 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09937C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE7FC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBACF2077C
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E072077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 19:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="FWABCsfc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CGKMLquy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732088AbfDXTyj (ORCPT
+        id S1732334AbfDXTyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 15:54:39 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46327 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732031AbfDXTyj (ORCPT
+        Wed, 24 Apr 2019 15:54:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35536 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732031AbfDXTyl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 15:54:39 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d1so17011162edd.13
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 12:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NoQw6rZ1McAuWA48g8wjk6m9xf3EqIUgssJwMcJF7eQ=;
-        b=FWABCsfcDUGiyw2AJKt7/tqGtquTmKrMJwtTDm1UIkIn8sIiysQkYo7zN6jnpoWRJu
-         n8Epr+xkic8xVfW6yServfaij14CAu17uMVbu7rd2T7Vvbprewku9FXUATHZnBIVdbY7
-         45QxR360C3F9+Ll07NAgZN33BbNEPdTtrzen1OEp9crUlA0msc8afRtjDxrK7nKLmdOK
-         bUiuaaAovpjYhEllJzUhXyfQKylPL4N42gNnURUhDynBR3JpC+Rv9eTXRWEp4eZSXHeL
-         4c0w7t8Io4Lqq7Ip/pH4e98jRSL8a0IXICT1C8XkWF01hWJej9QkvoWCQ57PBfig9XLC
-         Dh2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NoQw6rZ1McAuWA48g8wjk6m9xf3EqIUgssJwMcJF7eQ=;
-        b=CBmB488phimThpJDRMrmdlnmHTqb64x6qKLd11KwV4samG+3fVDpZEeAlPsdRoAwN+
-         q8BfHT1f9tYCjCK0ikbiyOBnPzIeerJrBMNg8xcBiJeSiPYPTgcYPBLluAv9eXe1tnQT
-         9n5QkVG1m+y7cfH2zZq3RzKWK8Soi/TbySG/fmsTKttEyiR+80zttzBp5NHhMFFd/rye
-         Nr1Wackit41lJ9RDc1iDBF8yys2WuvDz2R0pUtpiXo4LlifJqV63cnd0d/67w2hNfniQ
-         yqeCgp2OrWZrbbHI0RwZvu9CffGVrNfyFhpqt13Qe50rBeG/Utfq0/YrMUOI4HuTppC/
-         0FEA==
-X-Gm-Message-State: APjAAAVzUSlFurjhmyEoYZi5FDlF/KAcXfdFG/6GfN7jC3KLD3xmZ6DM
-        Q7tHphiKD3XrvwAh2mx9pJAOeex38OewLYEXJVtIsw==
-X-Google-Smtp-Source: APXvYqwIKfB190CTRW4eiQZHchohbyuWQ9ao6ccKR/jzQFiEa1MtpZ8e5nsTiBNSRhDrst2+6ow+bgf4eCZZRpTH1gk=
-X-Received: by 2002:aa7:cf8f:: with SMTP id z15mr18858819edx.190.1556135677145;
- Wed, 24 Apr 2019 12:54:37 -0700 (PDT)
+        Wed, 24 Apr 2019 15:54:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=99fgFGmI2RlIMaGJ8cuAyYvlGKed2b+6TTuCu4KQIO8=; b=CGKMLquyZfNEhXnFLV4HUFDIy
+        o4pkXF6Iw8P6YimY3BEVLUhAEKL4ZIzbpnyl8u1RbN/ThMe8/FchPrek38xUzOvQoEJoI9NaBLviR
+        X5Xd0P3skHP4RE7wrWpSOBGNPYQMYvipotbsZp9jcUARHZofJIBNULi4dLyGEU42UrE0UPcZHOBsz
+        A0IzsvVfxa1t94jYvGQRqfvNvyYniHsp80j1Mjs2D8fFzs8UVhLXbGgiO32Nx5MS+0stEI/MLJgHR
+        6ofN81Qzl0wEg+Bhw9gpRd9/KwXPLnOB+X+wa+OZXX5eUOEeMDgFZd2vmdusQ5qlUZOXoyyMsfbOD
+        7tuovjo3g==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJNya-0007x4-FC; Wed, 24 Apr 2019 19:54:40 +0000
+Subject: Re: linux-next: Tree for Apr 17 (objtool)
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190417173117.196b5ac6@canb.auug.org.au>
+ <7114e2f5-0c1f-c5e4-177c-2a5c61d12d58@infradead.org>
+ <20190424160357.6olyocstevbz7wnw@treble>
+ <20190424162209.GQ11158@hirez.programming.kicks-ass.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f430f7a9-ba11-5545-cfb6-59deb1ff8693@infradead.org>
+Date:   Wed, 24 Apr 2019 12:54:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190423203843.2898-1-pasha.tatashin@soleen.com>
- <7f7499bd-8d48-945b-6d69-60685a02c8da@arm.com> <CA+CK2bCD11x64pJj5gSnsu5jsUqJyU6o+=J4K8oYAsHqz9ULqQ@mail.gmail.com>
-In-Reply-To: <CA+CK2bCD11x64pJj5gSnsu5jsUqJyU6o+=J4K8oYAsHqz9ULqQ@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 24 Apr 2019 15:54:26 -0400
-Message-ID: <CA+CK2bB5ahqLrekkTUSdzTE2BPSPbB9nk6nKs+LjTap2oF8X-w@mail.gmail.com>
-Subject: Re: [PATCH] arm64: configurable sparsemem section size
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>,
-        rppt@linux.vnet.ibm.com,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        andrew.murray@arm.com, james.morse@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>, sboyd@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190424162209.GQ11158@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-<resending> from original email
+On 4/24/19 9:22 AM, Peter Zijlstra wrote:
+> On Wed, Apr 24, 2019 at 11:03:57AM -0500, Josh Poimboeuf wrote:
+>> On Wed, Apr 17, 2019 at 08:41:34AM -0700, Randy Dunlap wrote:
+> 
+>>> on x86_64:
+>>>
+>>>   CC      drivers/gpu/drm/i915/i915_gem_execbuffer.o
+>>> drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x18: redundant UACCESS disable
+> 
+>> I haven't looked at this, do you know if this is the same issue as the
+>> other note from Randy, or something else?
+> 
+> That smells like the below commit went missing... But I cannot reproduce
+> when building next/master myself.
+> 
 
-On Wed, Apr 24, 2019 at 3:48 PM Pavel Tatashin
-<patatash@linux.microsoft.com> wrote:
->
-> On Wed, Apr 24, 2019 at 5:07 AM Anshuman Khandual
-> <anshuman.khandual@arm.com> wrote:
-> >
-> > On 04/24/2019 02:08 AM, Pavel Tatashin wrote:
-> > > sparsemem section size determines the maximum size and alignment that
-> > > is allowed to offline/online memory block. The bigger the size the less
-> > > the clutter in /sys/devices/system/memory/*. On the other hand, however,
-> > > there is less flexability in what granules of memory can be added and
-> > > removed.
-> >
-> > Is there any scenario where less than a 1GB needs to be added on arm64 ?
->
-> Yes, DAX hotplug loses 1G of memory without allowing smaller sections.
-> Machines on which we are going to be using this functionality have 8G
-> of System RAM, therefore losing 1G is a big problem.
->
-> For details about using scenario see this cover letter:
-> https://lore.kernel.org/lkml/20190421014429.31206-1-pasha.tatashin@soleen.com/
->
-> >
-> > >
-> > > Recently, it was enabled in Linux to hotadd persistent memory that
-> > > can be either real NV device, or reserved from regular System RAM
-> > > and has identity of devdax.
-> >
-> > devdax (even ZONE_DEVICE) support has not been enabled on arm64 yet.
->
-> Correct, I use your patches to enable ZONE_DEVICE, and  thus devdax on ARM64:
-> https://lore.kernel.org/lkml/1554265806-11501-1-git-send-email-anshuman.khandual@arm.com/
->
-> >
-> > >
-> > > The problem is that because ARM64's section size is 1G, and devdax must
-> > > have 2M label section, the first 1G is always missed when device is
-> > > attached, because it is not 1G aligned.
-> >
-> > devdax has to be 2M aligned ? Does Linux enforce that right now ?
->
-> Unfortunately, there is no way around this. Part of the memory can be
-> reserved as persistent memory via device tree.
->         memory@40000000 {
->                 device_type = "memory";
->                 reg = < 0x00000000 0x40000000
->                         0x00000002 0x00000000 >;
->         };
->
->         pmem@1c0000000 {
->                 compatible = "pmem-region";
->                 reg = <0x00000001 0xc0000000
->                        0x00000000 0x80000000>;
->                 volatile;
->                 numa-node-id = <0>;
->         };
->
-> So, while pmem is section aligned, as it should be, the dax device is
-> going to be pmem start address + label size, which is 2M. The actual
-> DAX device starts at:
-> 0x1c0000000 + 2M.
->
-> Because section size is 1G, the hotplug will able to add only memory
-> starting from
-> 0x1c0000000 + 1G
->
-> > 27 and 28 do not even compile for ARM64_64_PAGES because of MAX_ORDER and
-> > SECTION_SIZE mismatch.
->
-> Can you please elaborate what configs are you using? I have no
-> problems compiling with 27 and 28 bit.
->
-> Thank you,
-> Pasha
+This patch is already in linux-next of today & of the reported "problem."
+
+> ---
+> commit 8f4faed01e3015955801c8ef066ec7fd7a8b3902
+> Author: Peter Zijlstra <peterz@infradead.org>
+> Date:   Thu Feb 28 13:52:31 2019 +0100
+> 
+>     i915, uaccess: Fix redundant CLAC
+>     
+>     New tooling noticed this:
+>     
+>      drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x3c: redundant UACCESS disable
+>      drivers/gpu/drm/i915/i915_gem_execbuffer.o: warning: objtool: .altinstr_replacement+0x66: redundant UACCESS disable
+>     
+>     You don't need user_access_end() if user_access_begin() fails.
+>     
+>     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>     Cc: Borislav Petkov <bp@alien8.de>
+>     Cc: Chris Wilson <chris@chris-wilson.co.uk>
+>     Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+>     Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>     Cc: Peter Zijlstra <peterz@infradead.org>
+>     Cc: Thomas Gleixner <tglx@linutronix.de>
+>     Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> 
+> diff --git a/drivers/gpu/drm/i915/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
+> index 02adcaf6ebea..16f80a448820 100644
+> --- a/drivers/gpu/drm/i915/i915_gem_execbuffer.c
+> +++ b/drivers/gpu/drm/i915/i915_gem_execbuffer.c
+> @@ -1667,6 +1667,7 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
+>  					     len)) {
+>  end_user:
+>  				user_access_end();
+> +end:
+>  				kvfree(relocs);
+>  				err = -EFAULT;
+>  				goto err;
+> @@ -1686,7 +1687,7 @@ static int eb_copy_relocations(const struct i915_execbuffer *eb)
+>  		 * relocations were valid.
+>  		 */
+>  		if (!user_access_begin(urelocs, size))
+> -			goto end_user;
+> +			goto end;
+>  
+>  		for (copied = 0; copied < nreloc; copied++)
+>  			unsafe_put_user(-1,
+> @@ -2695,7 +2696,7 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
+>  		 * when we did the "copy_from_user()" above.
+>  		 */
+>  		if (!user_access_begin(user_exec_list, count * sizeof(*user_exec_list)))
+> -			goto end_user;
+> +			goto end;
+>  
+>  		for (i = 0; i < args->buffer_count; i++) {
+>  			if (!(exec2_list[i].offset & UPDATE))
+> @@ -2709,6 +2710,7 @@ i915_gem_execbuffer2_ioctl(struct drm_device *dev, void *data,
+>  		}
+>  end_user:
+>  		user_access_end();
+> +end:;
+>  	}
+>  
+>  	args->flags &= ~__I915_EXEC_UNKNOWN_FLAGS;
+> 
+
+
+-- 
+~Randy
