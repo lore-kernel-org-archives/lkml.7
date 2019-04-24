@@ -2,80 +2,203 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BF6C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20306C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12073218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46A121901
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:23:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbfDXOXZ (ORCPT
+        id S1730480AbfDXOXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:23:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:54144 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbfDXOXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:23:24 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 1B95967358; Wed, 24 Apr 2019 16:23:07 +0200 (CEST)
-Date:   Wed, 24 Apr 2019 16:23:06 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Gary Guo <gary@garyguo.net>
-Cc:     Guo Ren <guoren@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Andrew Waterman <andrew@sifive.com>,
-        Arnd Bergmann <arnd@arndb.de>, Anup Patel <anup.patel@wdc.com>,
-        Xiang Xiaoyan <xiaoyan_xiang@c-sky.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Scott Wood <swood@redhat.com>,
-        "tech-privileged@lists.riscv.org" <tech-privileged@lists.riscv.org>
-Subject: Re: [PATCH] riscv: Support non-coherency memory model
-Message-ID: <20190424142306.GB20974@lst.de>
-References: <1555947870-23014-1-git-send-email-guoren@kernel.org> <20190422161814.GA30694@lst.de> <20190423001348.GA31639@guoren-Inspiron-7460> <20190423055548.GA12365@lst.de> <20190423154642.GA16001@guoren-Inspiron-7460> <d1988350-7da9-37bb-3d8b-93bedea0b732@garyguo.net> <20190424020803.GA27332@guoren-Inspiron-7460> <LO2P265MB0847C9F08481E25DABC77335D63C0@LO2P265MB0847.GBRP265.PROD.OUTLOOK.COM> <20190424055703.GA3417@guoren-Inspiron-7460> <4e6b0816-3fe9-8c0b-a749-f7f6ef7e5742@garyguo.net>
+        Wed, 24 Apr 2019 10:23:33 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:38299 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfDXOXd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:23:33 -0400
+Received: from localhost.localdomain (aaubervilliers-681-1-27-33.w90-88.abo.wanadoo.fr [90.88.147.33])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 0FA2D100006;
+        Wed, 24 Apr 2019 14:23:22 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     hans.verkuil@cisco.com, acourbot@chromium.org,
+        sakari.ailus@linux.intel.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     tfiga@chromium.org, posciak@chromium.org,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        nicolas.dufresne@collabora.com, jenskuske@gmail.com,
+        jernej.skrabec@gmail.com, jonas@kwiboo.se, ezequiel@collabora.com,
+        linux-sunxi@googlegroups.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v10 0/4] media: cedrus: Add H264 decoding support
+Date:   Wed, 24 Apr 2019 16:22:33 +0200
+Message-Id: <20190424142237.4979-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e6b0816-3fe9-8c0b-a749-f7f6ef7e5742@garyguo.net>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:45:56PM +0000, Gary Guo wrote:
-> The RISC-V privileged spec is explicitly designed to allow the 
-> techniques described above (this is the sole purpose of MSTATUS.TVM). It 
-> might be as high performance as a hardware with H-extension, but is 
-> definitely a legit use case. In fact, it is vital for use cases like 
-> recursive virtualization.
-> 
-> Also, I believe the PTE format of RISC-V is already frozen -- therefore 
-> it is impossible now to merge GLOBAL and USER bit, nor to replace RSW 
-> bit with another bit.
+Hi,
 
-Yes, I do not think we can just repurpose a bit.  Even using a currently
-unused one would require some gymnastics.
+Here is a new version of the H264 decoding support in the cedrus
+driver.
 
-That being said IFF we want to support non-coherent DMA (and I think we
-do as people glue together their SOCs using shoestring and paper clips,
-as already demonstrated by Andes and C-SKY in RISC-V space, and most
-arm, mips and ppc SOCs) we need something like this flag.  The current
-RISC-V method that only allows M-mode to set up such attributes on
-a small number or PMP regions just doesn't work well with the way how
-Linux and most non-trivial OSes implement DMA memory allocations.
+As you might already know, the cedrus driver relies on the Request
+API, and is a reverse engineered driver for the video decoding engine
+found on the Allwinner SoCs.
 
-Note that I said well - in theory we can have a firmware provided
-uncached pool - that is what Linux does on most nommu (that is without
-pagetables) ports, but the fixed sized pool really does suck and will
-make users very unhappy.
+This work has been possible thanks to the work done by the people
+behind libvdpau-sunxi found here:
+https://github.com/linux-sunxi/libvdpau-sunxi/
+
+I've tested the various ABI using this gdb script:
+http://code.bulix.org/jl4se4-505620?raw
+
+And this test script:
+http://code.bulix.org/8zle4s-505623?raw
+
+The application compiled is quite trivial:
+http://code.bulix.org/e34zp8-505624?raw
+
+The output is:
+arm64:  builds/arm64-test-v4l2-h264-structures
+        SHA1: 1c48d3868ac9049c6b5efed43a74bf97af710aba
+x86:    builds/x86-test-v4l2-h264-structures
+        SHA1: 1c48d3868ac9049c6b5efed43a74bf97af710aba
+arm:    builds/arm-test-v4l2-h264-structures
+        SHA1: 1c48d3868ac9049c6b5efed43a74bf97af710aba
+x64:    builds/x64-test-v4l2-h264-structures
+        SHA1: 1c48d3868ac9049c6b5efed43a74bf97af710aba
+
+Let me know if there's any flaw using that test setup, or if you have
+any comments on the patches.
+
+Maxime and Paul
+
+Changes from v9:
+  - Fixed spare warnings about endianness for le32 types in the driver
+  - Rebased on next
+
+Changes from v8:
+  - Moved the format into a private header and split the controls, format
+    and format doc into three commits
+  - Changed the name of the variables in v4l2_ctrl_ptr
+  - Added a note in the format documentation to mention that the format is
+    not stable yet
+  - Fixed the label of the format documentation
+  - Fixed a reference in the format documentation
+  - Added tags
+  - Rebase on current next
+
+Changes from v7:
+  - Changed the _slice_param and _decode_param to _params
+
+Changes from v6:
+  - Rebased on next
+  - Renamed the timestamp DPB field to reference_ts
+  - Fixed the collision of control type values
+  - Removed unused fields
+  - Fixed the structure layout that was broken on x86 by reducing the
+    num_slices and nal_ref_idc to 16 bits instead of 32
+
+Changes from v5:
+  - Made the references to the H264 spec more explicit
+  - Added a flag for the IDR pic
+  - Fixed typos
+  - Rebased on v5.1-rc1
+
+Changes from v4:
+  - Changed the luma and chroma weight and offset from s8 to s16
+  - Adjusted chroma and luma denominators masks in the driver
+  - Casted the luma and chroma offset to prevent an overflow
+  - ALways write the interrupt status register
+  - Fix a bug in the sram write routine that would write something even if
+    the length was 0
+  - Make the scaling lists mandatory
+  - Made the reference list order explicit in the documentation
+  - Made the fact that the slice structure can be an array
+  - Renamed the slice format to V4L2_PIX_FMT_H264_SLICE_RAW
+  - Rebased on Hans' tag br-v5.1s
+
+Changes from v3:
+  - Reintroduced long term reference flag and documented it
+  - Reintroduced ref_pic_list_p0/b0/b1 and documented it
+  - Documented the DPB flags
+  - Treat the scaling matrix as optional in the driver, as documented
+  - Free the neighbor buffer
+  - Increase the control IDs by a large margin to be safe of collisions
+  - Reorder the fields documentation according to the structure layout
+  - Change the tag documentation by the timestamp
+  - Convert the sram array to size_t
+  - Simplify the buffer retrieval from timestamp
+  - Rebase
+
+Changes from v2:
+  - Simplified _cedrus_write_ref_list as suggested by Jernej
+  - Set whether the frame is used as reference using nal_ref_idc
+  - Respect chroma_format_idc
+  - Fixes for the scaling list and prediction tables
+  - Wrote the documentation for the flags
+  - Added a bunch of defines to the driver bit fields
+  - Reworded the controls and data format descriptions as suggested
+    by Hans
+  - Reworked the controls' structure field size to avoid padding
+  - Removed the long term reference flag
+  - Reintroduced the neighbor info buffer
+  - Removed the ref_pic_list_p0/b0/b1 arrays that are redundant with the
+    one in the DPB
+  - used the timestamps instead of tags
+  - Rebased on 5.0-rc1
+
+Changes from v1:
+  - Rebased on 4.20
+  - Did the documentation for the userspace API
+  - Used the tags instead of buffer IDs
+  - Added a comment to explain why we still needed the swdec trigger
+  - Reworked the MV col buffer in order to have one slot per frame
+  - Removed the unused neighbor info buffer
+  - Made sure to have the same structure offset and alignments across
+    32 bits and 64 bits architecture
+
+Maxime Ripard (3):
+  media: pixfmt: Add H264 Slice format
+  media: pixfmt: Add H264_SLICE_RAW format documentation
+  media: cedrus: Add H264 decoding support
+
+Pawel Osciak (1):
+  media: uapi: Add H264 low-level decoder API compound controls.
+
+ Documentation/media/uapi/v4l/biblio.rst       |   9 +
+ .../media/uapi/v4l/ext-ctrls-codec.rst        | 569 +++++++++++++++++
+ .../media/uapi/v4l/pixfmt-compressed.rst      |  25 +
+ .../media/uapi/v4l/vidioc-queryctrl.rst       |  30 +
+ .../media/videodev2.h.rst.exceptions          |   5 +
+ drivers/media/v4l2-core/v4l2-ctrls.c          |  42 ++
+ drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
+ drivers/staging/media/sunxi/cedrus/Makefile   |   3 +-
+ drivers/staging/media/sunxi/cedrus/cedrus.c   |  31 +
+ drivers/staging/media/sunxi/cedrus/cedrus.h   |  38 +-
+ .../staging/media/sunxi/cedrus/cedrus_dec.c   |  13 +
+ .../staging/media/sunxi/cedrus/cedrus_h264.c  | 576 ++++++++++++++++++
+ .../staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +
+ .../staging/media/sunxi/cedrus/cedrus_regs.h  |  91 +++
+ .../staging/media/sunxi/cedrus/cedrus_video.c |   9 +
+ include/media/h264-ctrls.h                    | 197 ++++++
+ include/media/v4l2-ctrls.h                    |  13 +-
+ 17 files changed, 1653 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+ create mode 100644 include/media/h264-ctrls.h
+
+-- 
+2.21.0
+
