@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B816C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2797C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 522812089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE342089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128229;
-	bh=o6dfvxVLTN6bUyrNkt4QNFimpnMomLKx90wVkhuIxP4=;
+	s=default; t=1556128233;
+	bh=Z5sPNhUHWDF416TEjZmpdxcjJ8RQfnHxWRVnAn9Fx/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wpZvzGWnqLxsgS4Mnpe6cfwJGoY8qsILx1l1pCBYPfaWKI7OztU+VXRO+5Ts1T5t+
-	 J0hJ15fOCSFFxg3s2mJezfUt3Ow9YGyHDsp4lv4sQvKSfLJOuEAuHwaXqeuf9CfQoT
-	 56NKknCJPctHhZXecnAyNjRES9cb4mpTwVgJLROc=
+	b=vaS+ddJzrK6/8YBeaIua5lzU70BLpmwCOsVzy4RMig5cBcJjl1qGeT3iatKSvadub
+	 Nd1blJkwom3Bgt4qAD/sJ3y0w/rysUuh+KaMk+x5F0geLBRPeR6pdg137e6kXMAoMV
+	 4sD5TMaih9IfYlWAwJM1DMgsNS6zMbwSOwWAeyrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390864AbfDXR3r (ORCPT
+        id S2390468AbfDXR3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:29:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55998 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390832AbfDXR3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:29:42 -0400
+        id S2390803AbfDXR3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:29:31 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B342120811;
-        Wed, 24 Apr 2019 17:29:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C8802054F;
+        Wed, 24 Apr 2019 17:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126981;
-        bh=o6dfvxVLTN6bUyrNkt4QNFimpnMomLKx90wVkhuIxP4=;
+        s=default; t=1556126970;
+        bh=Z5sPNhUHWDF416TEjZmpdxcjJ8RQfnHxWRVnAn9Fx/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nB5WTmcajDqhQKJv7nl2PjVX15R8qFZ6v+qmlHyY8Cf9gKSXXWsFzp1xReMgX0129
-         UCRDCcPGYERXRczYD+pnl7s1c75GPEtmegFnlEH2tcZuRUtU4Fltj7e1q5UvdF2oq1
-         Ud4ZhdyMZuvK6hElz4sqY/p5muPsYUaf0ZOq4vqc=
+        b=Wa0+NNB//P5rEcP0R1BcKvxkiWHPZTojZK9DZYBz3gtYtoMQ76Ubj1PpUBQA8VeGh
+         qLcCAOWxjHP6rUNHZvHOPK9vY2vX9F7PpOtHbp/Iah8UgDEbjjQgRdwiowXjZKS/82
+         NncyZyBhYnQN83Qz6u/IEYuHDjFMGmSx3dsp55Mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 17/96] net/tls: prevent bad memory access in tls_is_sk_tx_device_offloaded()
-Date:   Wed, 24 Apr 2019 19:09:22 +0200
-Message-Id: <20190424170920.919405999@linuxfoundation.org>
+Subject: [PATCH 4.19 13/96] ipv4: ensure rcu_read_lock() in ipv4_link_failure()
+Date:   Wed, 24 Apr 2019 19:09:18 +0200
+Message-Id: <20190424170920.679059660@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -62,36 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit b4f47f3848eb70986f75d06112af7b48b7f5f462 ]
+[ Upstream commit c543cb4a5f07e09237ec0fc2c60c9f131b2c79ad ]
 
-Unlike '&&' operator, the '&' does not have short-circuit
-evaluation semantics.  IOW both sides of the operator always
-get evaluated.  Fix the wrong operator in
-tls_is_sk_tx_device_offloaded(), which would lead to
-out-of-bounds access for for non-full sockets.
+fib_compute_spec_dst() needs to be called under rcu protection.
 
-Fixes: 4799ac81e52a ("tls: Add rx inline crypto offload")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+syzbot reported :
+
+WARNING: suspicious RCU usage
+5.1.0-rc4+ #165 Not tainted
+include/linux/inetdevice.h:220 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by swapper/0/0:
+ #0: 0000000051b67925 ((&n->timer)){+.-.}, at: lockdep_copy_map include/linux/lockdep.h:170 [inline]
+ #0: 0000000051b67925 ((&n->timer)){+.-.}, at: call_timer_fn+0xda/0x720 kernel/time/timer.c:1315
+
+stack backtrace:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.1.0-rc4+ #165
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5162
+ __in_dev_get_rcu include/linux/inetdevice.h:220 [inline]
+ fib_compute_spec_dst+0xbbd/0x1030 net/ipv4/fib_frontend.c:294
+ spec_dst_fill net/ipv4/ip_options.c:245 [inline]
+ __ip_options_compile+0x15a7/0x1a10 net/ipv4/ip_options.c:343
+ ipv4_link_failure+0x172/0x400 net/ipv4/route.c:1195
+ dst_link_failure include/net/dst.h:427 [inline]
+ arp_error_report+0xd1/0x1c0 net/ipv4/arp.c:297
+ neigh_invalidate+0x24b/0x570 net/core/neighbour.c:995
+ neigh_timer_handler+0xc35/0xf30 net/core/neighbour.c:1081
+ call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
+ expire_timers kernel/time/timer.c:1362 [inline]
+ __run_timers kernel/time/timer.c:1681 [inline]
+ __run_timers kernel/time/timer.c:1649 [inline]
+ run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
+ __do_softirq+0x266/0x95a kernel/softirq.c:293
+ invoke_softirq kernel/softirq.c:374 [inline]
+ irq_exit+0x180/0x1d0 kernel/softirq.c:414
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0x14a/0x570 arch/x86/kernel/apic/apic.c:1062
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
+
+Fixes: ed0de45a1008 ("ipv4: recompile ip options in ipv4_link_failure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Stephen Suryaputra <ssuryaextr@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/tls.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/route.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/include/net/tls.h
-+++ b/include/net/tls.h
-@@ -317,7 +317,7 @@ tls_validate_xmit_skb(struct sock *sk, s
- static inline bool tls_is_sk_tx_device_offloaded(struct sock *sk)
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1187,14 +1187,20 @@ static struct dst_entry *ipv4_dst_check(
+ 
+ static void ipv4_link_failure(struct sk_buff *skb)
  {
- #ifdef CONFIG_SOCK_VALIDATE_XMIT
--	return sk_fullsock(sk) &
-+	return sk_fullsock(sk) &&
- 	       (smp_load_acquire(&sk->sk_validate_xmit_skb) ==
- 	       &tls_validate_xmit_skb);
- #else
+-	struct rtable *rt;
+ 	struct ip_options opt;
++	struct rtable *rt;
++	int res;
+ 
+ 	/* Recompile ip options since IPCB may not be valid anymore.
+ 	 */
+ 	memset(&opt, 0, sizeof(opt));
+ 	opt.optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
+-	if (__ip_options_compile(dev_net(skb->dev), &opt, skb, NULL))
++
++	rcu_read_lock();
++	res = __ip_options_compile(dev_net(skb->dev), &opt, skb, NULL);
++	rcu_read_unlock();
++
++	if (res)
+ 		return;
+ 
+ 	__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt);
 
 
