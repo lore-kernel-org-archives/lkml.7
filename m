@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A100EC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E005DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7324721773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17F32089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128370;
-	bh=yaNplxSsfZOo+8AP0DyS7wIs6YMZ8vEhqvqmfjteW5Q=;
+	s=default; t=1556128382;
+	bh=f1eq43FuiQ2k2n+uInBQd/LGu9tuEM0gNsybuiYgH+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ooByXwxJZoaLdzIzEoGCb4gPulsmy1CE/0z7/xO4rp7BBENE0IAfUSp7HQyYmUKyE
-	 n7i8JLT63vt8ImOrsvQx1ya7P4x154wBhg6bSjCzxDxA3mvzZ5aT8xvL0IQJSOLddw
-	 Xtxi9ZC2EEO0J8bj/kOv3ep6ImGE0cDTJj74rqHk=
+	b=jSQIo7zrLtCdKDk+pwRYCj59qmXs9TDFA9HERaOmN5Y4B+s4Wwcw0okYGIJiD490b
+	 aap9HNQev1s2IkoY0Ljz4xHI1nVsovwIHje3b/2ecKnN+uDDk66Sh8tv6QEGtrgI/q
+	 MhMCGk1iPO+zVIm3BRqG98AokQCqeePI7h9qPzr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403777AbfDXRwt (ORCPT
+        id S2390771AbfDXRxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:52:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54002 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390546AbfDXR1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:27:53 -0400
+        id S2390060AbfDXR1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:27:40 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55F4721909;
-        Wed, 24 Apr 2019 17:27:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0581221909;
+        Wed, 24 Apr 2019 17:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126872;
-        bh=yaNplxSsfZOo+8AP0DyS7wIs6YMZ8vEhqvqmfjteW5Q=;
+        s=default; t=1556126859;
+        bh=f1eq43FuiQ2k2n+uInBQd/LGu9tuEM0gNsybuiYgH+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yG/XLvITcTORS2HxERT6EwqQe82Qt/W8IavpGZQ9Bs1aVySMjniHR6tiy99r6di4l
-         DBtCBdGKbO57xHgTa3EYflGD3JHHJKZHh8oQFJTD7tILlllTyyrF/nEJeUJMpdKB8F
-         W+JFOT3SoAA6dezAvcjc86yUr3PL15ACOzzmNUWA=
+        b=Sb8tNKJ3GHctdJNshGaFqVcr0mMnzurp3yMw6B5PxQ8NiUqijENTK4pwWVve/IYSC
+         RnfO7b62a1FHbKX6vbyUkg8jlkgX+HPu9vwGCyRxyGhUh0dJE7NVIzT+Xcc2yn4iOx
+         pU+0KTxy7rSq6dOqUML07ExN26iG2ZOCM9QZsu1g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH 4.14 47/70] x86/speculation: Prevent deadlock on ssb_state::lock
-Date:   Wed, 24 Apr 2019 19:10:07 +0200
-Message-Id: <20190424170915.780052601@linuxfoundation.org>
+        Vijayakumar Durai <vijayakumar.durai1@vivint.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 42/70] rt2x00: do not increment sequence number while re-transmitting
+Date:   Wed, 24 Apr 2019 19:10:02 +0200
+Message-Id: <20190424170913.304171827@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
 References: <20190424170906.751869122@linuxfoundation.org>
@@ -61,59 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Vijayakumar Durai <vijayakumar.durai1@vivint.com>
 
-commit 2f5fb19341883bb6e37da351bc3700489d8506a7 upstream.
+commit 746ba11f170603bf1eaade817553a6c2e9135bbe upstream.
 
-Mikhail reported a lockdep splat related to the AMD specific ssb_state
-lock:
+Currently rt2x00 devices retransmit the management frames with
+incremented sequence number if hardware is assigning the sequence.
 
-  CPU0                       CPU1
-  lock(&st->lock);
-                             local_irq_disable();
-                             lock(&(&sighand->siglock)->rlock);
-                             lock(&st->lock);
-  <Interrupt>
-     lock(&(&sighand->siglock)->rlock);
+This is HW bug fixed already for non-QOS data frames, but it should
+be fixed for management frames except beacon.
 
-  *** DEADLOCK ***
+Without fix retransmitted frames have wrong SN:
 
-The connection between sighand->siglock and st->lock comes through seccomp,
-which takes st->lock while holding sighand->siglock.
+ AlphaNet_e8:fb:36 Vivotek_52:31:51 Authentication, SN=1648, FN=0, Flags=........C Frame is not being retransmitted 1648 1
+ AlphaNet_e8:fb:36 Vivotek_52:31:51 Authentication, SN=1649, FN=0, Flags=....R...C Frame is being retransmitted 1649 1
+ AlphaNet_e8:fb:36 Vivotek_52:31:51 Authentication, SN=1650, FN=0, Flags=....R...C Frame is being retransmitted 1650 1
 
-Make sure interrupts are disabled when __speculation_ctrl_update() is
-invoked via prctl() -> speculation_ctrl_update(). Add a lockdep assert to
-catch future offenders.
+With the fix SN stays correctly the same:
 
-Fixes: 1f50ddb4f418 ("x86/speculation: Handle HT correctly on AMD")
-Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Thomas Lendacky <thomas.lendacky@amd.com>
+ 88:6a:e3:e8:f9:a2 8c:f5:a3:88:76:87 Authentication, SN=1450, FN=0, Flags=........C
+ 88:6a:e3:e8:f9:a2 8c:f5:a3:88:76:87 Authentication, SN=1450, FN=0, Flags=....R...C
+ 88:6a:e3:e8:f9:a2 8c:f5:a3:88:76:87 Authentication, SN=1450, FN=0, Flags=....R...C
+
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1904141948200.4917@nanos.tec.linutronix.de
+Signed-off-by: Vijayakumar Durai <vijayakumar.durai1@vivint.com>
+[sgruszka: simplify code, change comments and changelog]
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/process.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ralink/rt2x00/rt2x00.h      |    1 -
+ drivers/net/wireless/ralink/rt2x00/rt2x00mac.c   |   10 ----------
+ drivers/net/wireless/ralink/rt2x00/rt2x00queue.c |   15 +++++++++------
+ 3 files changed, 9 insertions(+), 17 deletions(-)
 
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -465,10 +467,12 @@ static unsigned long speculation_ctrl_up
+--- a/drivers/net/wireless/ralink/rt2x00/rt2x00.h
++++ b/drivers/net/wireless/ralink/rt2x00/rt2x00.h
+@@ -672,7 +672,6 @@ enum rt2x00_state_flags {
+ 	CONFIG_CHANNEL_HT40,
+ 	CONFIG_POWERSAVING,
+ 	CONFIG_HT_DISABLED,
+-	CONFIG_QOS_DISABLED,
+ 	CONFIG_MONITORING,
  
- void speculation_ctrl_update(unsigned long tif)
- {
-+	unsigned long flags;
+ 	/*
+--- a/drivers/net/wireless/ralink/rt2x00/rt2x00mac.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2x00mac.c
+@@ -670,19 +670,9 @@ void rt2x00mac_bss_info_changed(struct i
+ 			rt2x00dev->intf_associated--;
+ 
+ 		rt2x00leds_led_assoc(rt2x00dev, !!rt2x00dev->intf_associated);
+-
+-		clear_bit(CONFIG_QOS_DISABLED, &rt2x00dev->flags);
+ 	}
+ 
+ 	/*
+-	 * Check for access point which do not support 802.11e . We have to
+-	 * generate data frames sequence number in S/W for such AP, because
+-	 * of H/W bug.
+-	 */
+-	if (changes & BSS_CHANGED_QOS && !bss_conf->qos)
+-		set_bit(CONFIG_QOS_DISABLED, &rt2x00dev->flags);
+-
+-	/*
+ 	 * When the erp information has changed, we should perform
+ 	 * additional configuration steps. For all other changes we are done.
+ 	 */
+--- a/drivers/net/wireless/ralink/rt2x00/rt2x00queue.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2x00queue.c
+@@ -200,15 +200,18 @@ static void rt2x00queue_create_tx_descri
+ 	if (!rt2x00_has_cap_flag(rt2x00dev, REQUIRE_SW_SEQNO)) {
+ 		/*
+ 		 * rt2800 has a H/W (or F/W) bug, device incorrectly increase
+-		 * seqno on retransmited data (non-QOS) frames. To workaround
+-		 * the problem let's generate seqno in software if QOS is
+-		 * disabled.
++		 * seqno on retransmitted data (non-QOS) and management frames.
++		 * To workaround the problem let's generate seqno in software.
++		 * Except for beacons which are transmitted periodically by H/W
++		 * hence hardware has to assign seqno for them.
+ 		 */
+-		if (test_bit(CONFIG_QOS_DISABLED, &rt2x00dev->flags))
+-			__clear_bit(ENTRY_TXD_GENERATE_SEQ, &txdesc->flags);
+-		else
++	    	if (ieee80211_is_beacon(hdr->frame_control)) {
++			__set_bit(ENTRY_TXD_GENERATE_SEQ, &txdesc->flags);
+ 			/* H/W will generate sequence number */
+ 			return;
++		}
 +
- 	/* Forced update. Make sure all relevant TIF flags are different */
--	preempt_disable();
-+	local_irq_save(flags);
- 	__speculation_ctrl_update(~tif, tif);
--	preempt_enable();
-+	local_irq_restore(flags);
- }
++		__clear_bit(ENTRY_TXD_GENERATE_SEQ, &txdesc->flags);
+ 	}
  
- /* Called from seccomp/prctl update */
+ 	/*
 
 
