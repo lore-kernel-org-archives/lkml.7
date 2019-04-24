@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50701C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DACC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9372192D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB37921909
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126359;
-	bh=evnLSChIstEjmXuYnv/uCVyHAD2LOd9UMq5k+PhQU/w=;
+	s=default; t=1556126362;
+	bh=P5dZ97Wkndm53pR8GiD58w5qRLknd4jsP/Hjyvvo74s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AGH8CfJQynF/Czt63nSw597IlfhCgzFA8IIgXWT/DaamJE+cRE65yAkz73JT7Eanf
-	 usjdvI9JkWDK59q+t+3t+qDARKWHpz8ZTdcF78tKJEkYFznaYu0bP8IFH6Mooku/nH
-	 k0+kc+ydduaCJfanjcW8qHJDmzF/wUAmVnNpUjzY=
+	b=Efi20UsqOrYy3hKTtuMpku9ujeUPLZESpCxfiTNqP2LrM2FjfnmU472bCEuZR6Hwn
+	 OYr/hREy05oRiLuQB/CDZF9bsL1KQ2yheX48OKw/eXLH3FyPBqmxgz2IawLgyM5SFN
+	 5GNCvxC8iA3vLeRtn8LVNmyLCIwARcXIVKuqITeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388973AbfDXRTS (ORCPT
+        id S2388984AbfDXRTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:19:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44382 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388945AbfDXRTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:19:14 -0400
+        id S2388538AbfDXRTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:19:19 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6B5321908;
-        Wed, 24 Apr 2019 17:19:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D0BD21904;
+        Wed, 24 Apr 2019 17:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126353;
-        bh=evnLSChIstEjmXuYnv/uCVyHAD2LOd9UMq5k+PhQU/w=;
+        s=default; t=1556126358;
+        bh=P5dZ97Wkndm53pR8GiD58w5qRLknd4jsP/Hjyvvo74s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pTGUubLToknx2fWXiwQ4Ta/2LXFrQAl9UYs+HKc9BX6MEj8zin3kDi2RMsCfkklLR
-         7BT+Isc6QOdY400hqK/1xwESqbMYqrSrzaYRPyB+3g9hFUqqQZu8ahAc0fRZp8Edfl
-         8ynlh5TRy6HZZD1PxQ2JcC0Hd5Q72lV5BEckguL8=
+        b=nsBqNEiJCe6rXDXhzIormjRtG/JHojvJ9jgbpPmiYYaC05neIXimexQZFZuwNMe0b
+         tdukw9TkqrHGvllhVQdwVArjFryBQnRDxsvs+HlgemEI85bpu5uG0n/p1zyToQMOeI
+         FCwxXApvkFQv7kRrRq09oUHbtlzQ46gfBda1uRQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Amit Klein <aksecurity@gmail.com>,
+        Benny Pinkas <benny@pinkas.net>,
+        Pavel Emelyanov <xemul@openvz.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 082/168] sctp: initialize _pad of sockaddr_in before copying to user memory
-Date:   Wed, 24 Apr 2019 19:08:46 +0200
-Message-Id: <20190424170928.695052288@linuxfoundation.org>
+Subject: [PATCH 4.4 084/168] netns: provide pure entropy for net_hash_mix()
+Date:   Wed, 24 Apr 2019 19:08:48 +0200
+Message-Id: <20190424170928.781084159@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -63,55 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 09279e615c81ce55e04835970601ae286e3facbe ]
+[ Upstream commit 355b98553789b646ed97ad801a619ff898471b92 ]
 
-Syzbot report a kernel-infoleak:
+net_hash_mix() currently uses kernel address of a struct net,
+and is used in many places that could be used to reveal this
+address to a patient attacker, thus defeating KASLR, for
+the typical case (initial net namespace, &init_net is
+not dynamically allocated)
 
-  BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-  Call Trace:
-    _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-    copy_to_user include/linux/uaccess.h:174 [inline]
-    sctp_getsockopt_peer_addrs net/sctp/socket.c:5911 [inline]
-    sctp_getsockopt+0x1668e/0x17f70 net/sctp/socket.c:7562
-    ...
-  Uninit was stored to memory at:
-    sctp_transport_init net/sctp/transport.c:61 [inline]
-    sctp_transport_new+0x16d/0x9a0 net/sctp/transport.c:115
-    sctp_assoc_add_peer+0x532/0x1f70 net/sctp/associola.c:637
-    sctp_process_param net/sctp/sm_make_chunk.c:2548 [inline]
-    sctp_process_init+0x1a1b/0x3ed0 net/sctp/sm_make_chunk.c:2361
-    ...
-  Bytes 8-15 of 16 are uninitialized
+I believe the original implementation tried to avoid spending
+too many cycles in this function, but security comes first.
 
-It was caused by that th _pad field (the 8-15 bytes) of a v4 addr (saved in
-struct sockaddr_in) wasn't initialized, but directly copied to user memory
-in sctp_getsockopt_peer_addrs().
+Also provide entropy regardless of CONFIG_NET_NS.
 
-So fix it by calling memset(addr->v4.sin_zero, 0, 8) to initialize _pad of
-sockaddr_in before copying it to user memory in sctp_v4_addr_to_user(), as
-sctp_v6_addr_to_user() does.
-
-Reported-by: syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Tested-by: Alexander Potapenko <glider@google.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Fixes: 0b4419162aa6 ("netns: introduce the net_hash_mix "salt" for hashes")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Reported-by: Benny Pinkas <benny@pinkas.net>
+Cc: Pavel Emelyanov <xemul@openvz.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/protocol.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/net/net_namespace.h |    1 +
+ include/net/netns/hash.h    |   15 ++-------------
+ net/core/net_namespace.c    |    1 +
+ 3 files changed, 4 insertions(+), 13 deletions(-)
 
---- a/net/sctp/protocol.c
-+++ b/net/sctp/protocol.c
-@@ -598,6 +598,7 @@ out:
- static int sctp_v4_addr_to_user(struct sctp_sock *sp, union sctp_addr *addr)
- {
- 	/* No address mapping for V4 sockets */
-+	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
- 	return sizeof(struct sockaddr_in);
- }
+--- a/include/net/net_namespace.h
++++ b/include/net/net_namespace.h
+@@ -53,6 +53,7 @@ struct net {
+ 						 */
+ 	spinlock_t		rules_mod_lock;
  
++	u32			hash_mix;
+ 	atomic64_t		cookie_gen;
+ 
+ 	struct list_head	list;		/* list of network namespaces */
+--- a/include/net/netns/hash.h
++++ b/include/net/netns/hash.h
+@@ -1,21 +1,10 @@
+ #ifndef __NET_NS_HASH_H__
+ #define __NET_NS_HASH_H__
+ 
+-#include <asm/cache.h>
+-
+-struct net;
++#include <net/net_namespace.h>
+ 
+ static inline u32 net_hash_mix(const struct net *net)
+ {
+-#ifdef CONFIG_NET_NS
+-	/*
+-	 * shift this right to eliminate bits, that are
+-	 * always zeroed
+-	 */
+-
+-	return (u32)(((unsigned long)net) >> L1_CACHE_SHIFT);
+-#else
+-	return 0;
+-#endif
++	return net->hash_mix;
+ }
+ #endif
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -280,6 +280,7 @@ static __net_init int setup_net(struct n
+ 
+ 	atomic_set(&net->count, 1);
+ 	atomic_set(&net->passive, 1);
++	get_random_bytes(&net->hash_mix, sizeof(u32));
+ 	net->dev_base_seq = 1;
+ 	net->user_ns = user_ns;
+ 	idr_init(&net->netns_ids);
 
 
