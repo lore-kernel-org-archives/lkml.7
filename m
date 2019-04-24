@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6116EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91711C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB69218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61083218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126250;
-	bh=HJThpbhMqvIUOegktlC7h1NB6L0EbJEq6+aPipiyp/U=;
+	s=default; t=1556126252;
+	bh=93q5ndmU19HCY2kp3tFUl2volvmrYtN71ELT/eAbtwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XEY6Kbo/CfbbEKJEo/xVxS4LWsael/l9+o017Pb6FkSLg8sRx6rAeCJRlQz53DxT3
-	 YPOSVG4kw7CcuXHHvVf8uOMnxcDj22LLyi1D+KfUnuSoBs3/gIv/CEbCkNfVglx+VO
-	 bUrYXTOn0DZj+7Irr/aXQRqB2Je+kM8OCtl14nxg=
+	b=RvFrqTLQIw4d1ZQ+gQ13Q0je6iCYeGy/z7v+cYB5Ctw3K9xl5lXNwDpnYBkMpg/Yj
+	 U6pcZPGkp/g9J5AFzGUVU1IqIlzv7lHWuderYTh20SOLtfTq+T1Vw8W6AC/iMvCFuF
+	 9FdJfrU8UrEUQrxzHABcufbYwB+2lB3Uevh+48bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388636AbfDXRR3 (ORCPT
+        id S2388648AbfDXRRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:17:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42328 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388626AbfDXRR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:17:26 -0400
+        id S2387587AbfDXRR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:17:29 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E05021907;
-        Wed, 24 Apr 2019 17:17:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFE6021917;
+        Wed, 24 Apr 2019 17:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126245;
-        bh=HJThpbhMqvIUOegktlC7h1NB6L0EbJEq6+aPipiyp/U=;
+        s=default; t=1556126248;
+        bh=93q5ndmU19HCY2kp3tFUl2volvmrYtN71ELT/eAbtwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qLqybR7J/JUoOaB7Ou72opWFcygFHxyUKpl2ONd6539/eNlUaXwrEaf1eFMSzD9Di
-         HR3WdjCv6QKrmAom7XBXt78llG+LuQWEPZ7QQ0QBoxPiDQWFg7fSPyhj3vETwtVl5v
-         oeiLO5jpaadzXBM7bjdtjkK6k+DcXh+cimtbrvZY=
+        b=bMm5LmgdIMcw8oakQZtDtlFjn47iS5lavMrWxjswPYj4/9wfNr1AnHfWSL+dO17B5
+         8JOWF4KmlhnC6Gzu0cdX8la6ANl1kLtGrsSQpMEmdqhMekneqXv/kW5Cw+DFgC1xym
+         5Dhw1s6D+4QoNcnR4KNjzCRfEiiSUqnnep7Kmy40=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Michal Kazior <michal@plume.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 041/168] media: mx2_emmaprp: Correct return type for mem2mem buffer helpers
-Date:   Wed, 24 Apr 2019 19:08:05 +0200
-Message-Id: <20190424170926.213802410@linuxfoundation.org>
+Subject: [PATCH 4.4 042/168] leds: lp55xx: fix null deref on firmware load failure
+Date:   Wed, 24 Apr 2019 19:08:06 +0200
+Message-Id: <20190424170926.281851255@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,59 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8d20dcefe471763f23ad538369ec65b51993ffff ]
+[ Upstream commit 5ddb0869bfc1bca6cfc592c74c64a026f936638c ]
 
-Fix the assigned type of mem2mem buffer handling API.
-Namely, these functions:
+I've stumbled upon a kernel crash and the logs
+pointed me towards the lp5562 driver:
 
- v4l2_m2m_next_buf
- v4l2_m2m_last_buf
- v4l2_m2m_buf_remove
- v4l2_m2m_next_src_buf
- v4l2_m2m_next_dst_buf
- v4l2_m2m_last_src_buf
- v4l2_m2m_last_dst_buf
- v4l2_m2m_src_buf_remove
- v4l2_m2m_dst_buf_remove
+> <4>[306013.841294] lp5562 0-0030: Direct firmware load for lp5562 failed with error -2
+> <4>[306013.894990] lp5562 0-0030: Falling back to user helper
+> ...
+> <3>[306073.924886] lp5562 0-0030: firmware request failed
+> <1>[306073.939456] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+> <4>[306074.251011] PC is at _raw_spin_lock+0x1c/0x58
+> <4>[306074.255539] LR is at release_firmware+0x6c/0x138
+> ...
 
-return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
+After taking a look I noticed firmware_release()
+could be called with either NULL or a dangling
+pointer.
 
-Fixing this is necessary to fix the mem2mem buffer handling API,
-changing the return to the correct struct vb2_v4l2_buffer instead
-of a void pointer.
-
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: 10c06d178df11 ("leds-lp55xx: support firmware interface")
+Signed-off-by: Michal Kazior <michal@plume.com>
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/mx2_emmaprp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/leds/leds-lp55xx-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/mx2_emmaprp.c b/drivers/media/platform/mx2_emmaprp.c
-index 03a1b606655d..009a4bb77d05 100644
---- a/drivers/media/platform/mx2_emmaprp.c
-+++ b/drivers/media/platform/mx2_emmaprp.c
-@@ -289,7 +289,7 @@ static void emmaprp_device_run(void *priv)
- {
- 	struct emmaprp_ctx *ctx = priv;
- 	struct emmaprp_q_data *s_q_data, *d_q_data;
--	struct vb2_buffer *src_buf, *dst_buf;
-+	struct vb2_v4l2_buffer *src_buf, *dst_buf;
- 	struct emmaprp_dev *pcdev = ctx->dev;
- 	unsigned int s_width, s_height;
- 	unsigned int d_width, d_height;
-@@ -309,8 +309,8 @@ static void emmaprp_device_run(void *priv)
- 	d_height = d_q_data->height;
- 	d_size = d_width * d_height;
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 59b76833f0d3..fd077c176a62 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -200,7 +200,7 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
  
--	p_in = vb2_dma_contig_plane_dma_addr(src_buf, 0);
--	p_out = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
-+	p_in = vb2_dma_contig_plane_dma_addr(&src_buf->vb2_buf, 0);
-+	p_out = vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0);
- 	if (!p_in || !p_out) {
- 		v4l2_err(&pcdev->v4l2_dev,
- 			 "Acquiring kernel pointers to buffers failed\n");
+ 	if (!fw) {
+ 		dev_err(dev, "firmware request failed\n");
+-		goto out;
++		return;
+ 	}
+ 
+ 	/* handling firmware data is chip dependent */
+@@ -213,9 +213,9 @@ static void lp55xx_firmware_loaded(const struct firmware *fw, void *context)
+ 
+ 	mutex_unlock(&chip->lock);
+ 
+-out:
+ 	/* firmware should be released for other channel use */
+ 	release_firmware(chip->fw);
++	chip->fw = NULL;
+ }
+ 
+ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
 -- 
 2.19.1
 
