@@ -1,109 +1,70 @@
 Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.0 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE,MAILING_LIST_MULTI,SPF_PASS,
+	ZIPFILE autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1016FC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E081C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F6A2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117881;
-	bh=F9T/FtYXnbbZzGASU5Trxu76QVW6WM1/e7VxBu3vtuI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NjToPX0WyUilC8N6r8wNSVds2+n9wtW4h2a96Zk1JbYvfJeSgmM5na4tEu99zRSFx
-	 GXhH4+Ma5twomQSd/XjiIJb2BowYcNgocmEsqYl4u0Be595XU9IomAqAMAC7J9CQ57
-	 yVZF9xH+HUvoiMeo8JQgBG8ZBuUX0Ai8wKeepqwc=
+	by mail.kernel.org (Postfix) with ESMTP id 6CED72084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733048AbfDXO6A (ORCPT
+        id S1732704AbfDXO6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:58:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731628AbfDXOrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:47:47 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4A5B218FD;
-        Wed, 24 Apr 2019 14:47:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117266;
-        bh=F9T/FtYXnbbZzGASU5Trxu76QVW6WM1/e7VxBu3vtuI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pvNvq6dM4f0yRzWGNUfT6YQvmdet+be/UZSvSZ8yOvJAlDpo1gJhyLomUbq/XQxX7
-         clGETf6Zdclg+BGR2tOcg/QZFnczy5PL0cfR8inpnYSgWd/xMBwSgHx7JMT7VJ5mqQ
-         9n2kwn0BPbBVZYhkYU5lreDEqLFaSU8Pdy8rszgg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 16/35] jffs2: fix use-after-free on symlink traversal
-Date:   Wed, 24 Apr 2019 10:46:50 -0400
-Message-Id: <20190424144709.30215-16-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190424144709.30215-1-sashal@kernel.org>
-References: <20190424144709.30215-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Wed, 24 Apr 2019 10:58:10 -0400
+Received: from [217.196.19.138] ([217.196.19.138]:61048 "EHLO
+        mail.steklo-service.kz" rhost-flags-FAIL-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732661AbfDXO6I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:58:08 -0400
+Received: by mail.steklo-service.kz (Sendmail, from userid 1005)
+        id 38986262C3; Wed, 24 Apr 2019 14:35:22 +0300 (MSK)
+Authentication-Results: mail.steklo-service.kz; dkim=none
+X-Envelope-Sender: deutsche@mail.steklo-service.kz
+X-Envelope-Recipient: linux-kernel@vger.kernel.org
+From:   Deutsche@mail.steklo-service.kz
+To:     linux-kernel@vger.kernel.org
+Subject: =?UTF-8?B?0J7QsdC90LDRgNGD0LbQtdC9INCy0LjRgNGD0YE=?=
+Date:   Wed, 24 Apr 19 14:35:22 +0300
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary=7d40ba2dcfd155159751d557848c69ea
+Message-Id: <20190424113522.38986262C3@mail.steklo-service.kz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+--7d40ba2dcfd155159751d557848c69ea
+Content-Type: text/plain; charset=UTF-8; format=flowed; delsp=yes
 
-[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
+Письмо содержит вирус!
+Heuristics.Phishing.Email.SpoofedDomain FOUND
 
-free the symlink body after the same RCU delay we have for freeing the
-struct inode itself, so that traversal during RCU pathwalk wouldn't step
-into freed memory.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/jffs2/readinode.c | 5 -----
- fs/jffs2/super.c     | 5 ++++-
- 2 files changed, 4 insertions(+), 6 deletions(-)
+--7d40ba2dcfd155159751d557848c69ea
+Content-Type: application/octet-stream; name="infected.msg.zip"
+Content-Transfer-Encoding:base64
+Content-Disposition:attachment
 
-diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
-index 389ea53ea487..bccfc40b3a74 100644
---- a/fs/jffs2/readinode.c
-+++ b/fs/jffs2/readinode.c
-@@ -1414,11 +1414,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
- 
- 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
- 
--	if (f->target) {
--		kfree(f->target);
--		f->target = NULL;
--	}
--
- 	fds = f->dents;
- 	while(fds) {
- 		fd = fds;
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index 83340496645b..9a9f30eddbbb 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
- static void jffs2_i_callback(struct rcu_head *head)
- {
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
--	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
-+	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
-+
-+	kfree(f->target);
-+	kmem_cache_free(jffs2_inode_cachep, f);
- }
- 
- static void jffs2_destroy_inode(struct inode *inode)
--- 
-2.19.1
+H4sICPpJwFwCAzMzN2ZiZmY2OGY5OGUxMzQ5NTVlMDE1ZGNkNDY4ZTAzSEdjOXNiAMVSYXPaOBD9
+XP2KPW7mJpmLLRsDSYzNBGInzaQ0DHDtZTL5oOAN1mFkV5JD6K+/BZo2vaR300/nGWTk1b59eu+N
+0dZaOSNh8xCiBGtrZjmeLIUsXGNxUZSOQf0gZ+guPvfYn86VlnOpROFMyxAKqepHZ4FaYXHyMEft
+7v67pZ6zMc5QPmAWwr0ul3DjHzddv3Pkeq7fCm5hr1YLVa4U3LTo+7HnHrapcLvP3uz1a5ujsnIm
+LGZgUGWoQ5Dqvjx5wYnO363hdb6wN6HeTW0fVtLmkE6G09GkDzKDNDjy/WbH8/0ue/MRswNotqBf
+aWh6/jH4rTBoh34bfvcCz4O94eRynz2jJUvljNHUhTXhD4Z3IVvIZaxKhey0VJY6nem6QjpPbbIS
+2nJRWNKL4B6wC3dlrTKh13Ej/v7xvbYfHDYDL4jjBhteDFPnA2pDHELwXY9N6ru/cGZDuCQAVEaS
+gzpHadnGI7JBVpKmm2/+9tgZWRLC0x4GQi2gfw43SXobbYXOdiU3o8MJ+RDCC5G8rUheBxzv0PMY
+uy5rkrkoQJWWXEOwuTRkGwjYkhYroXGrFmgU5KnLHOdf7voP2Sw+Wl4VQqouzHKhDdq4IU3pHB21
+jx3/NWW+AmihzD1qJ1WzMpNqHsKnuqRwOZWWyoq74ptHCZqZlpXdggw3ZJdojJgjGZStGYMJ5hrm
+SCuZt9OcDaS1CKRXfHZqP6OCiUS4oHOXhFpCTdCawWq1cr/ois4dSU47Bh8kFtSR0P4AMmHMtjmj
+3/f2nKNeCrVmcK5pSpycoct+XsDcLov/Vb/ol+TqdHo9SuHtdPgORn8M3l2cQsPh/GNwynkyTXaF
+luvBdq7cQImC8/R9o8eiTbEXvU37CW2G6bQPs93kOEgar1wxSJ7dEXJrKwc/1fKBCs/leQJTYolU
+Ok/fp+P+9Gr8HH042TLruJ7ndjxa/E671Wn0Iv6FzuAquabXqPdKRqLBuPc1Jr/92mw3uz9KSsRH
+W5SoDzFjucb7zfQNdRNybqVaV6XJK7Ey7qxc8oNnD8848k3G+JyXPOeSJj+6VV41epS+mL3IX8T7
+vad5P5nEp7ZzvbsOrc2gi+7me8S3WpAyG7v+I6eOw/4Gx3Pjv4gGAAA=
+--7d40ba2dcfd155159751d557848c69ea--
+
 
