@@ -2,54 +2,52 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEF8C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD5EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38EC21904
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0B12190A
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126563;
-	bh=3KK/sY6oes+XgeK9Ogu7sKxdEwBWDiPxdlppRYdlH+8=;
+	s=default; t=1556126565;
+	bh=Y15mdb/FX2OjdgrljJXjBehOVD4p0q/aeD6RWdNMAeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kbdRXoedhvaI40pCVc2MP5Xk+qlahKaFfV8GN0JZvoyBGZjtg53Y8I3xUxCrJaSkg
-	 RXK+oBA7WPag+/VdOEFjEXxvhV1KdNUBnJhRUh3qsce/tYXkz5bITeintmu03AMJWO
-	 fl38xtRthmFjz9CIG6cAXWSQuhQ/bBL3sawMFZIc=
+	b=mSOckD2gKwTtrn3w0hBI+eRgHa1qVHtXKDzkdRMArVfWgHWCOW6YErS1A6RBQXIUb
+	 vszYMwk0V/7pqRBdfSNuduPld1QFPY5WEVchhYVX9CQJU+PjZo0bSJPXtxwASZapbB
+	 MyJ6ISpNDfb5RUKbXWgh4QXDcbyssaoo6xOtKvn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389196AbfDXRWm (ORCPT
+        id S2389614AbfDXRWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:22:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388929AbfDXRWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:22:36 -0400
+        id S1729896AbfDXRWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:22:38 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB06720675;
-        Wed, 24 Apr 2019 17:22:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 065EE21904;
+        Wed, 24 Apr 2019 17:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126555;
-        bh=3KK/sY6oes+XgeK9Ogu7sKxdEwBWDiPxdlppRYdlH+8=;
+        s=default; t=1556126558;
+        bh=Y15mdb/FX2OjdgrljJXjBehOVD4p0q/aeD6RWdNMAeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBQ4PeGpH3CtbJMVpDJn5msa6aKhmqiEGBFfhK82MY89KKTAV6hin7aan7wp31T2G
-         5cMMlLX9AqpZXOuCig/KHeq+A03RRoO9JZLyz/PHrKHykXRI7aURsj1eQehLVvg+Xi
-         tzkcPqVZe+G9gFlvQwZfpkzgEMoTHCtZd01yJVyI=
+        b=LZT5OaGZC0s2zfGIOOoUOK9dKWFAboRR+BKRvz2KZsM3V4r1FpH9gyGAW6047KUdn
+         KYG0xhzk8gg/+RuUPGDQ4aqMng6E75I2skD1k4MG6CwY1ucE+4OJmIIOIN8O5NZYM4
+         rKHWgiGtSelI4FNl2HJGbygWH97ctJJU6Pvm7Ix0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 103/168] IB/mlx4: Fix race condition between catas error reset and aliasguid flows
-Date:   Wed, 24 Apr 2019 19:09:07 +0200
-Message-Id: <20190424170929.721324437@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 4.4 094/168] xen: Prevent buffer overflow in privcmd ioctl
+Date:   Wed, 24 Apr 2019 19:08:58 +0200
+Message-Id: <20190424170929.278349054@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -62,38 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 587443e7773e150ae29e643ee8f41a1eed226565 ]
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Code review revealed a race condition which could allow the catas error
-flow to interrupt the alias guid query post mechanism at random points.
-Thiis is fixed by doing cancel_delayed_work_sync() instead of
-cancel_delayed_work() during the alias guid mechanism destroy flow.
+commit 42d8644bd77dd2d747e004e367cb0c895a606f39 upstream.
 
-Fixes: a0c64a17aba8 ("mlx4: Add alias_guid mechanism")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The "call" variable comes from the user in privcmd_ioctl_hypercall().
+It's an offset into the hypercall_page[] which has (PAGE_SIZE / 32)
+elements.  We need to put an upper bound on it to prevent an out of
+bounds access.
+
+Cc: stable@vger.kernel.org
+Fixes: 1246ae0bb992 ("xen: add variable hypercall caller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/infiniband/hw/mlx4/alias_GUID.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/xen/hypercall.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/hw/mlx4/alias_GUID.c b/drivers/infiniband/hw/mlx4/alias_GUID.c
-index 21cb41a60fe8..3a70b418d913 100644
---- a/drivers/infiniband/hw/mlx4/alias_GUID.c
-+++ b/drivers/infiniband/hw/mlx4/alias_GUID.c
-@@ -805,8 +805,8 @@ void mlx4_ib_destroy_alias_guid_service(struct mlx4_ib_dev *dev)
- 	unsigned long flags;
+--- a/arch/x86/include/asm/xen/hypercall.h
++++ b/arch/x86/include/asm/xen/hypercall.h
+@@ -215,6 +215,9 @@ privcmd_call(unsigned call,
+ 	__HYPERCALL_DECLS;
+ 	__HYPERCALL_5ARG(a1, a2, a3, a4, a5);
  
- 	for (i = 0 ; i < dev->num_ports; i++) {
--		cancel_delayed_work(&dev->sriov.alias_guid.ports_guid[i].alias_guid_work);
- 		det = &sriov->alias_guid.ports_guid[i];
-+		cancel_delayed_work_sync(&det->alias_guid_work);
- 		spin_lock_irqsave(&sriov->alias_guid.ag_work_lock, flags);
- 		while (!list_empty(&det->cb_list)) {
- 			cb_ctx = list_entry(det->cb_list.next,
--- 
-2.19.1
-
++	if (call >= PAGE_SIZE / sizeof(hypercall_page[0]))
++		return -EINVAL;
++
+ 	stac();
+ 	asm volatile(CALL_NOSPEC
+ 		     : __HYPERCALL_5PARAM
 
 
