@@ -2,63 +2,114 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9793C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F46C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76272218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:48:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ys4nh+4k"
+	by mail.kernel.org (Postfix) with ESMTP id 4C844218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 13:49:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfDXNs5 (ORCPT
+        id S1729713AbfDXNtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 09:48:57 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:42674 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbfDXNs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 09:48:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=WTG7g+Jt3yFxCSUC8zLxpm8mRBOIeofCyENLUH/LTQQ=; b=ys4nh+4k6f9GTyhTQaLgj32GCs
-        Kop2OMre4V3jcn1hwHWgTEgPUmldhAR3P8HP8QZBvkgJ9DmtEWgqSYI0MU7BkXuMh437ARE2OHmmT
-        wZ0cKOYWpLrhgs+YCf3nY9c93Ug6IOJVloHbBVcIjHOI6aSZNavT4G16Vek4/9VIuyYE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hJIGc-00019Z-VB; Wed, 24 Apr 2019 15:48:54 +0200
-Date:   Wed, 24 Apr 2019 15:48:54 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Weifeng Voon <weifeng.voon@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Kweh Hock Leong <hock.leong.kweh@intel.com>
-Subject: Re: [PATCH 0/7] net: stmmac: enable EHL SGMII
-Message-ID: <20190424134854.GP28405@lunn.ch>
-References: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
+        Wed, 24 Apr 2019 09:49:19 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:55605 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfDXNtT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 09:49:19 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 86B31801D0; Wed, 24 Apr 2019 15:49:07 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 15:49:15 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh@kernel.org, dtor@google.com,
+        linux@roeck-us.net, Baolin Wang <baolin.wang@linaro.org>,
+        Dan Murphy <dmurphy@ti.com>, Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+Subject: Re: [PATCH v4 04/26] dt-bindings: leds: Add LED_COLOR_ID definitions
+Message-ID: <20190424134915.GB14360@amd>
+References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
+ <20190417205439.17685-5-jacek.anaszewski@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
 Content-Disposition: inline
-In-Reply-To: <1556126241-2774-1-git-send-email-weifeng.voon@intel.com>
+In-Reply-To: <20190417205439.17685-5-jacek.anaszewski@gmail.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 01:17:14AM +0800, Weifeng Voon wrote:
-> From: "Voon, Weifeng" <weifeng.voon@intel.com@intel.com>
-> 
-> This patch-set is to enable Ethernet controller (DW Ethernet QoS
-> and DW Ethernet PCS) with SGMII interface in Elkhart Lake.
 
-Can the hardware also do 1000BaseX?
+--9zSXsLTf0vkW971A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    Andrew
+On Wed 2019-04-17 22:54:17, Jacek Anaszewski wrote:
+> Add common LED color identifiers.
+>=20
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Simon Shields <simon@lineageos.org>
+> ---
+>  include/dt-bindings/leds/common.h | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds=
+/common.h
+> index da0539490cea..d8c8c38700bd 100644
+> --- a/include/dt-bindings/leds/common.h
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -56,4 +56,15 @@
+>  #define LED_FUNCTION_WLAN "wlan"
+>  #define LED_FUNCTION_WPS "wps"
+> =20
+> +/* Standard LED colors */
+> +#define LED_COLOR_ID_WHITE	0
+> +#define LED_COLOR_ID_RED	1
+> +#define LED_COLOR_ID_GREEN	2
+> +#define LED_COLOR_ID_BLUE	3
+> +#define LED_COLOR_ID_AMBER	4
+> +#define LED_COLOR_ID_VIOLET	5
+> +#define LED_COLOR_ID_YELLOW	6
+> +#define LED_COLOR_ID_IR		7
+> +#define LED_COLOR_ID_COUNT	8
+
+The "_COUNT" define confused me. I was trying to figure out what color
+it is. We sometimes have "_MAX" in that meaning.
+
+Probably can be merged with previous patch?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--9zSXsLTf0vkW971A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzAaVsACgkQMOfwapXb+vKlcACeLRg3DUaro1K2Ez6hua8Y7WQ9
+IJ8AnR0VOOi7clRoT8THP7Vd5xiTk6em
+=keiw
+-----END PGP SIGNATURE-----
+
+--9zSXsLTf0vkW971A--
