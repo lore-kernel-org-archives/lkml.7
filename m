@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522FEC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE45C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032A321904
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BDC820675
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126611;
-	bh=2SErRLCqs0eCxuxqFUVpnt/ed7rfWF9J62ePGQWR4as=;
+	s=default; t=1556126617;
+	bh=YoMf8MXUdVRAhakUKjCUZERg4lak23Jtcb5RKtOF4HM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U2CAAxv0qyonpMT+zESULZfdjsE4y7/WP1Yv+gL6AQOkfMUuh1JKvjA153LSZ4hQX
-	 vUZQ8iCVPuBllbnELwyr/RtNFbFmv4ev3EdpCk/n0zBC91EzZspo1a5kGquIx2t5yo
-	 CDGH5PdzHSENLrpcPT0UEf3pVT8gqikCpPY3DMVc=
+	b=f8NpESsdc3bwJwhpJMHhSTNvms4iHK5Uir3JUxe2/Wjp6KBTp4LHO3u5BC1Tdsj+d
+	 ZKALFJDmrseLywQ2Y8N/HzQlEA3DHbKBtXazA8XbR/6ZEj8mEIhzpupM0fdicHeaLz
+	 Xzrs+JSZzpageZutZljKd7eAtLwXytYI7fdV9fmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389706AbfDXRX3 (ORCPT
+        id S2389729AbfDXRXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:23:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49142 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:23:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389682AbfDXRX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:23:26 -0400
+        id S2389327AbfDXRXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:23:32 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CEA5205ED;
-        Wed, 24 Apr 2019 17:23:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1502E2190C;
+        Wed, 24 Apr 2019 17:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126606;
-        bh=2SErRLCqs0eCxuxqFUVpnt/ed7rfWF9J62ePGQWR4as=;
+        s=default; t=1556126611;
+        bh=YoMf8MXUdVRAhakUKjCUZERg4lak23Jtcb5RKtOF4HM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hwrNJ8nUNg4p6tCT6tGDiae7dIBNZYjMRLbkEP+BNac/t72g1POVXmZAp4km2qFAF
-         WB2BDE0D7cPP3E5LU4e/iERgbVJI3P/BQf1zJruWVkcU1GjpcejTm0xn5cMioUUqIG
-         yd4a3t7ugy1e28wq7LXW0+cQP1NB0e5B+aD/d53w=
+        b=gpmhQ7lWpef5IVguqq9BlXFQn3a8uSUPMM4wC5acmevKMSxrSVzordefBj+F5Zstl
+         GUFwWBWRSdbk3mr/TAZ0oquLR1OxI4nNOPLZFqyMhgjyhhnpB70qNfvpPgumJJgZkr
+         zet4L8/N5rdVpo2NoMMCALl5Rw1M1f0XwxmKnm3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.4 166/168] device_cgroup: fix RCU imbalance in error case
-Date:   Wed, 24 Apr 2019 19:10:10 +0200
-Message-Id: <20190424170933.101609252@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 168/168] ALSA: info: Fix racy addition/deletion of nodes
+Date:   Wed, 24 Apr 2019 19:10:12 +0200
+Message-Id: <20190424170933.179251406@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -59,42 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 0fcc4c8c044e117ac126ab6df4138ea9a67fa2a9 upstream.
+commit 8c2f870890fd28e023b0fcf49dcee333f2c8bad7 upstream.
 
-When dev_exception_add() returns an error (due to a failed memory
-allocation), make sure that we move the RCU preemption count back to where
-it was before we were called. We dropped the RCU read lock inside the loop
-body, so we can't just "break".
+The ALSA proc helper manages the child nodes in a linked list, but its
+addition and deletion is done without any lock.  This leads to a
+corruption if they are operated concurrently.  Usually this isn't a
+problem because the proc entries are added sequentially in the driver
+probe procedure itself.  But the card registrations are done often
+asynchronously, and the crash could be actually reproduced with
+syzkaller.
 
-sparse complains about this, too:
+This patch papers over it by protecting the link addition and deletion
+with the parent's mutex.  There is "access" mutex that is used for the
+file access, and this can be reused for this purpose as well.
 
-$ make -s C=2 security/device_cgroup.o
-./include/linux/rcupdate.h:647:9: warning: context imbalance in
-'propagate_exception' - unexpected unlock
-
-Fixes: d591fb56618f ("device_cgroup: simplify cgroup tree walk in propagate_exception()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jann Horn <jannh@google.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/device_cgroup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/info.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/security/device_cgroup.c
-+++ b/security/device_cgroup.c
-@@ -568,7 +568,7 @@ static int propagate_exception(struct de
- 		    devcg->behavior == DEVCG_DEFAULT_ALLOW) {
- 			rc = dev_exception_add(devcg, ex);
- 			if (rc)
--				break;
-+				return rc;
- 		} else {
- 			/*
- 			 * in the other possible cases:
+--- a/sound/core/info.c
++++ b/sound/core/info.c
+@@ -724,8 +724,11 @@ snd_info_create_entry(const char *name,
+ 	INIT_LIST_HEAD(&entry->children);
+ 	INIT_LIST_HEAD(&entry->list);
+ 	entry->parent = parent;
+-	if (parent)
++	if (parent) {
++		mutex_lock(&parent->access);
+ 		list_add_tail(&entry->list, &parent->children);
++		mutex_unlock(&parent->access);
++	}
+ 	return entry;
+ }
+ 
+@@ -809,7 +812,12 @@ void snd_info_free_entry(struct snd_info
+ 	list_for_each_entry_safe(p, n, &entry->children, list)
+ 		snd_info_free_entry(p);
+ 
+-	list_del(&entry->list);
++	p = entry->parent;
++	if (p) {
++		mutex_lock(&p->access);
++		list_del(&entry->list);
++		mutex_unlock(&p->access);
++	}
+ 	kfree(entry->name);
+ 	if (entry->private_free)
+ 		entry->private_free(entry);
 
 
