@@ -5,58 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5156C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B75C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCE421773
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5061B21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:55:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FEYnTqwA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoWJcFnu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391498AbfDXRyy (ORCPT
+        id S2390755AbfDXRzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:54:54 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43984 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390255AbfDXRyx (ORCPT
+        Wed, 24 Apr 2019 13:55:02 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33962 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389958AbfDXRzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:54:53 -0400
-Received: by mail-pl1-f194.google.com with SMTP id n8so9641357plp.10;
-        Wed, 24 Apr 2019 10:54:52 -0700 (PDT)
+        Wed, 24 Apr 2019 13:55:00 -0400
+Received: by mail-pl1-f196.google.com with SMTP id y6so9678707plt.1;
+        Wed, 24 Apr 2019 10:54:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TaCx91wAcR4ikyNBIoUaFJho1ovTMWA1CQykmERd8P8=;
-        b=FEYnTqwAc2fxNRPXY2L0oyc1FvLU0ghDznFRVvTI7RCd68UScVHnw/DkdKxWH5htDb
-         5gkBcFZaWMvLkkjzhGKSfMTJ1Y0wRG2+5sHzRCdbnV6M+71QykRvgc+Zk+ZX6aQL6GgI
-         tp/8yoQtEMwYzoJZyRvH8eDn64CyP48URkA03RSwvlF7xAMyit+C+PVMc2aa14RKGAmE
-         bz6T1CYb1eH9LjtKSibaSdS9LGIpfsnJkM+F9bre/6LQplD7J356sH2+71hy2Ddrin4s
-         xowpyUMOTkvcxb6gWqAO5YjEAUR/Qoy6nV2xXEwNRtkEcY27fR9OXT0zgQL6rmbn4ZU6
-         vdJw==
+        bh=g2q5HZCs0wb1AiehSMCcBp9Dd3YROqUjTWd5HoUyXnI=;
+        b=CoWJcFnunOAoYGAZPfXtUG/w+uDO5BdXNdUPdeFIzVYtFE+wiFWnDa/ELt1wbNwt0F
+         HaryEVM4ql1ZlPMbG2MZxFYjHCeK1E4XEw8dQCksNPegu3JIcWfRAvN/TwpEGWrWMlrJ
+         1SP4GOhKm0Y4WzpR4VByhES2FhYcy16uEsqHxQAfTrvReIDjM8T/6LkVzoL1C1nQfZ41
+         GwQeEqpyIFn94k5ADayeQ3cPEj12pFp2UwZzOzToYxaNLvZ4W4Vt54psMPdKRCVV78Oe
+         jKH6kQnEjZIPJtib0md6Q/a8EuySOEwmWgmLWnOgdMQOTg2JOYyuX8ewq+N0UNccZ70u
+         9b8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TaCx91wAcR4ikyNBIoUaFJho1ovTMWA1CQykmERd8P8=;
-        b=gHSXk18RIk0s6qENYSQMIcgZ2jjz1/ZffjV0bygLwZvR5wuVn3TqHGt5Bc+q7sLQ4l
-         +GvztYpltu2x3OKUGvrLe1IihXYlQfb/z50hxAqtB0GuIPCLaeDoIQtE59DOl7GC/hFO
-         8pkuYnP+C3vhhRJTWMoc0q48YPPBU3V9ssyvHFyaMY2XZw4r+3jPaRC1HnCZH/dCk1Uc
-         XvmDChU4MdPS1DeED2re6rOMSrWSjQLDHrDcRVb76uLZKwF42/WjF8NXSs0bORH0NOIK
-         YQAiaG26W6bhs66OZNAjAO+f/r7wyHLzoT4QW8fS4Vu2aWFQGRhiFAL5sLkNcqJbtYIq
-         edyg==
-X-Gm-Message-State: APjAAAXxHy5J3tvASc3RGfGn3u5pGH1mMLkUQIXj8zuBkb4cPak5MZRy
-        Kt5Id2Vfz9gRXNJZPdpu7lQ=
-X-Google-Smtp-Source: APXvYqw94LJSG6bq/oxV3g25pebeMLlLlm7qpwZ5Gc6UHmRBGwyg81szL5vyrIWlHh2ubVqXtedWIQ==
-X-Received: by 2002:a17:902:362:: with SMTP id 89mr32591775pld.172.1556128491862;
-        Wed, 24 Apr 2019 10:54:51 -0700 (PDT)
+        bh=g2q5HZCs0wb1AiehSMCcBp9Dd3YROqUjTWd5HoUyXnI=;
+        b=j8BmEQB0WCNjU1BRedgt7je0c2dzjZ3NTEDw7jw+/p6DLmwa97iYROwpCd1r3xVfqs
+         Stl89+j5TmRBcriCzU9QB+Y6iQL0F3k+nMn3AP3IrDJPB0t9qfO+UhM/q1Rlpg2tHxbV
+         w90Ba+7D6HwpX3kwKydau+8f/EA2mCtqPOGORiQBIyQfYFhOT39e6cMC1Lx2/+yYjKwA
+         bOlYc650TokbvdGCGJTzMmOX2SOd3njUu4KGBDRXrtOxYhZ10/a4Uy6kTNU22ZyQnvXU
+         dBM4hm/XJ1fc3W0cughZ4MxFw/pAMQHixc1FU2aJtzPZitGgOPe1Qyp1ghUv7YIay1U0
+         vk0w==
+X-Gm-Message-State: APjAAAU6xABDzrdEKvgOmNNeP1RmmCqU24YbERP8CgHmNCKgloictch2
+        F3RVh1virbThB2DqVLP/ZR4=
+X-Google-Smtp-Source: APXvYqwi3HBSqWcsGJtOzr1WLVX/wBqkyIFsg1GbOOKcaK/0wBM7DRqCEhKMYn5y9bqdDZTvWBwkFA==
+X-Received: by 2002:a17:902:864b:: with SMTP id y11mr31962121plt.1.1556128499431;
+        Wed, 24 Apr 2019 10:54:59 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id 6sm29275630pfp.143.2019.04.24.10.54.43
+        by smtp.gmail.com with ESMTPSA id 6sm29275630pfp.143.2019.04.24.10.54.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 24 Apr 2019 10:54:50 -0700 (PDT)
+        Wed, 24 Apr 2019 10:54:58 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     rjw@rjwysocki.net, Jonathan Corbet <corbet@lwn.net>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
@@ -64,9 +63,9 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
         linux-gpio@vger.kernel.org, mchehab+samsung@kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v5 06/23] Documentation: ACPI: move DSD-properties-rules.txt to firmware-guide/acpi and covert to reST
-Date:   Thu, 25 Apr 2019 01:52:49 +0800
-Message-Id: <20190424175306.25880-7-changbin.du@gmail.com>
+Subject: [PATCH v5 07/23] Documentation: ACPI: move gpio-properties.txt to firmware-guide/acpi and convert to reST
+Date:   Thu, 25 Apr 2019 01:52:50 +0800
+Message-Id: <20190424175306.25880-8-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190424175306.25880-1-changbin.du@gmail.com>
 References: <20190424175306.25880-1-changbin.du@gmail.com>
@@ -83,87 +82,216 @@ add it to Sphinx TOC tree. No essential content change.
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../acpi/DSD-properties-rules.rst}            | 21 +++++++++++--------
+ .../acpi/gpio-properties.rst}                 | 78 +++++++++++--------
  Documentation/firmware-guide/acpi/index.rst   |  1 +
- 2 files changed, 13 insertions(+), 9 deletions(-)
- rename Documentation/{acpi/DSD-properties-rules.txt => firmware-guide/acpi/DSD-properties-rules.rst} (88%)
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 46 insertions(+), 35 deletions(-)
+ rename Documentation/{acpi/gpio-properties.txt => firmware-guide/acpi/gpio-properties.rst} (81%)
 
-diff --git a/Documentation/acpi/DSD-properties-rules.txt b/Documentation/firmware-guide/acpi/DSD-properties-rules.rst
-similarity index 88%
-rename from Documentation/acpi/DSD-properties-rules.txt
-rename to Documentation/firmware-guide/acpi/DSD-properties-rules.rst
-index 3e4862bdad98..4306f29b6103 100644
---- a/Documentation/acpi/DSD-properties-rules.txt
-+++ b/Documentation/firmware-guide/acpi/DSD-properties-rules.rst
-@@ -1,8 +1,11 @@
+diff --git a/Documentation/acpi/gpio-properties.txt b/Documentation/firmware-guide/acpi/gpio-properties.rst
+similarity index 81%
+rename from Documentation/acpi/gpio-properties.txt
+rename to Documentation/firmware-guide/acpi/gpio-properties.rst
+index 88c65cb5bf0a..bb6d74f23ee0 100644
+--- a/Documentation/acpi/gpio-properties.txt
++++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
+@@ -1,5 +1,8 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+==================================
- _DSD Device Properties Usage Rules
------------------------------------
-+==================================
- 
- Properties, Property Sets and Property Subsets
------------------------------------------------
-+==============================================
- 
- The _DSD (Device Specific Data) configuration object, introduced in ACPI 5.1,
- allows any type of device configuration data to be provided via the ACPI
-@@ -18,7 +21,7 @@ specific type) associated with it.
- 
- In the ACPI _DSD context it is an element of the sub-package following the
- generic Device Properties UUID in the _DSD return package as specified in the
--Device Properties UUID definition document [1].
-+Device Properties UUID definition document [1]_.
- 
- It also may be regarded as the definition of a key and the associated data type
- that can be returned by _DSD in the Device Properties UUID sub-package for a
-@@ -33,14 +36,14 @@ Property subsets are nested collections of properties.  Each of them is
- associated with an additional key (name) allowing the subset to be referred
- to as a whole (and to be treated as a separate entity).  The canonical
- representation of property subsets is via the mechanism specified in the
--Hierarchical Properties Extension UUID definition document [2].
-+Hierarchical Properties Extension UUID definition document [2]_.
- 
- Property sets may be hierarchical.  That is, a property set may contain
- multiple property subsets that each may contain property subsets of its
- own and so on.
- 
- General Validity Rule for Property Sets
-----------------------------------------
-+=======================================
- 
- Valid property sets must follow the guidance given by the Device Properties UUID
- definition document [1].
-@@ -73,7 +76,7 @@ suitable for the ACPI environment and consequently they cannot belong to a valid
- property set.
- 
- Property Sets and Device Tree Bindings
++======================================
+ _DSD Device Properties Related to GPIO
 ---------------------------------------
 +======================================
  
- It often is useful to make _DSD return property sets that follow Device Tree
- bindings.
-@@ -91,7 +94,7 @@ expected to automatically work in the ACPI environment regardless of their
- contents.
+ With the release of ACPI 5.1, the _DSD configuration object finally
+ allows names to be given to GPIOs (and other things as well) returned
+@@ -8,7 +11,7 @@ the corresponding GPIO, which is pretty error prone (it depends on
+ the _CRS output ordering, for example).
  
- References
------------
-+==========
+ With _DSD we can now query GPIOs using a name instead of an integer
+-index, like the ASL example below shows:
++index, like the ASL example below shows::
  
--[1] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
--[2] http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf
-+.. [1] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
-+.. [2] http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf
+   // Bluetooth device with reset and shutdown GPIOs
+   Device (BTH)
+@@ -34,15 +37,19 @@ index, like the ASL example below shows:
+       })
+   }
+ 
+-The format of the supported GPIO property is:
++The format of the supported GPIO property is::
+ 
+   Package () { "name", Package () { ref, index, pin, active_low }}
+ 
+-  ref - The device that has _CRS containing GpioIo()/GpioInt() resources,
+-        typically this is the device itself (BTH in our case).
+-  index - Index of the GpioIo()/GpioInt() resource in _CRS starting from zero.
+-  pin - Pin in the GpioIo()/GpioInt() resource. Typically this is zero.
+-  active_low - If 1 the GPIO is marked as active_low.
++ref
++  The device that has _CRS containing GpioIo()/GpioInt() resources,
++  typically this is the device itself (BTH in our case).
++index
++  Index of the GpioIo()/GpioInt() resource in _CRS starting from zero.
++pin
++  Pin in the GpioIo()/GpioInt() resource. Typically this is zero.
++active_low
++  If 1 the GPIO is marked as active_low.
+ 
+ Since ACPI GpioIo() resource does not have a field saying whether it is
+ active low or high, the "active_low" argument can be used here.  Setting
+@@ -55,7 +62,7 @@ It is possible to leave holes in the array of GPIOs. This is useful in
+ cases like with SPI host controllers where some chip selects may be
+ implemented as GPIOs and some as native signals. For example a SPI host
+ controller can have chip selects 0 and 2 implemented as GPIOs and 1 as
+-native:
++native::
+ 
+   Package () {
+       "cs-gpios",
+@@ -67,7 +74,7 @@ native:
+   }
+ 
+ Other supported properties
+---------------------------
++==========================
+ 
+ Following Device Tree compatible device properties are also supported by
+ _DSD device properties for GPIO controllers:
+@@ -78,7 +85,7 @@ _DSD device properties for GPIO controllers:
+ - input
+ - line-name
+ 
+-Example:
++Example::
+ 
+   Name (_DSD, Package () {
+       // _DSD Hierarchical Properties Extension UUID
+@@ -100,7 +107,7 @@ Example:
+ 
+ - gpio-line-names
+ 
+-Example:
++Example::
+ 
+   Package () {
+       "gpio-line-names",
+@@ -114,7 +121,7 @@ See Documentation/devicetree/bindings/gpio/gpio.txt for more information
+ about these properties.
+ 
+ ACPI GPIO Mappings Provided by Drivers
+---------------------------------------
++======================================
+ 
+ There are systems in which the ACPI tables do not contain _DSD but provide _CRS
+ with GpioIo()/GpioInt() resources and device drivers still need to work with
+@@ -139,16 +146,16 @@ line in that resource starting from zero, and the active-low flag for that line,
+ respectively, in analogy with the _DSD GPIO property format specified above.
+ 
+ For the example Bluetooth device discussed previously the data structures in
+-question would look like this:
++question would look like this::
+ 
+-static const struct acpi_gpio_params reset_gpio = { 1, 1, false };
+-static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
++  static const struct acpi_gpio_params reset_gpio = { 1, 1, false };
++  static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
+ 
+-static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
+-  { "reset-gpios", &reset_gpio, 1 },
+-  { "shutdown-gpios", &shutdown_gpio, 1 },
+-  { },
+-};
++  static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
++    { "reset-gpios", &reset_gpio, 1 },
++    { "shutdown-gpios", &shutdown_gpio, 1 },
++    { },
++  };
+ 
+ Next, the mapping table needs to be passed as the second argument to
+ acpi_dev_add_driver_gpios() that will register it with the ACPI device object
+@@ -158,12 +165,12 @@ calling acpi_dev_remove_driver_gpios() on the ACPI device object where that
+ table was previously registered.
+ 
+ Using the _CRS fallback
+------------------------
++=======================
+ 
+ If a device does not have _DSD or the driver does not create ACPI GPIO
+ mapping, the Linux GPIO framework refuses to return any GPIOs. This is
+ because the driver does not know what it actually gets. For example if we
+-have a device like below:
++have a device like below::
+ 
+   Device (BTH)
+   {
+@@ -177,7 +184,7 @@ have a device like below:
+       })
+   }
+ 
+-The driver might expect to get the right GPIO when it does:
++The driver might expect to get the right GPIO when it does::
+ 
+   desc = gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+ 
+@@ -193,22 +200,25 @@ the ACPI GPIO mapping tables are hardly linked to ACPI ID and certain
+ objects, as listed in the above chapter, of the device in question.
+ 
+ Getting GPIO descriptor
+------------------------
++=======================
++
++There are two main approaches to get GPIO resource from ACPI::
+ 
+-There are two main approaches to get GPIO resource from ACPI:
+-	desc = gpiod_get(dev, connection_id, flags);
+-	desc = gpiod_get_index(dev, connection_id, index, flags);
++  desc = gpiod_get(dev, connection_id, flags);
++  desc = gpiod_get_index(dev, connection_id, index, flags);
+ 
+ We may consider two different cases here, i.e. when connection ID is
+ provided and otherwise.
+ 
+-Case 1:
+-	desc = gpiod_get(dev, "non-null-connection-id", flags);
+-	desc = gpiod_get_index(dev, "non-null-connection-id", index, flags);
++Case 1::
++
++  desc = gpiod_get(dev, "non-null-connection-id", flags);
++  desc = gpiod_get_index(dev, "non-null-connection-id", index, flags);
++
++Case 2::
+ 
+-Case 2:
+-	desc = gpiod_get(dev, NULL, flags);
+-	desc = gpiod_get_index(dev, NULL, index, flags);
++  desc = gpiod_get(dev, NULL, flags);
++  desc = gpiod_get_index(dev, NULL, index, flags);
+ 
+ Case 1 assumes that corresponding ACPI device description must have
+ defined device properties and will prevent to getting any GPIO resources
 diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
-index 868bd25a3398..0e05b843521c 100644
+index 0e05b843521c..61d67763851b 100644
 --- a/Documentation/firmware-guide/acpi/index.rst
 +++ b/Documentation/firmware-guide/acpi/index.rst
-@@ -10,3 +10,4 @@ ACPI Support
-    namespace
+@@ -11,3 +11,4 @@ ACPI Support
     enumeration
     osi
-+   DSD-properties-rules
+    DSD-properties-rules
++   gpio-properties
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 09f43f1bdd15..87f930bf32ad 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6593,7 +6593,7 @@ M:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+ L:	linux-gpio@vger.kernel.org
+ L:	linux-acpi@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/acpi/gpio-properties.txt
++F:	Documentation/firmware-guide/acpi/gpio-properties.rst
+ F:	drivers/gpio/gpiolib-acpi.c
+ 
+ GPIO IR Transmitter
 -- 
 2.20.1
 
