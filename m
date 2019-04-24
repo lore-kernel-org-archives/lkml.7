@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85224C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215D8C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48EFB20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16D421907
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126531;
-	bh=9o6TVzPYXsXgtz0KAaOI/zyJf6+4hsaJON79tjpoa60=;
+	s=default; t=1556126535;
+	bh=Xee1BMEyw6B/ZcyGAxTLvphFVOjNIvl7eqqSleDbjAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nmW2exETVWVuDKUgW5n3NFjQ+wbVowyrq2xBP/8Ec4LnZCt2IAgPSj0z0eM715tgm
-	 HR/oAhGr4ud+ZlUxkKJfqb6P3urnlzlV8iQq/qzaW3kG9qlmTjDDJXQ8GCa0gS8Tcg
-	 yb6/ET0AvKaB4WV+MxHp+DFZfVSVe2VrFh0K3q7E=
+	b=Snm8DVL2T0aJCUZQk1W6MGzB5bj1ZNg/LNpPx9HNkREtDDngt6LLYw1SBdeKsRPbh
+	 peQCOSVuLNcadIbV5Ehpu5upKyDMw0J4BipSxENbt5dktWYifZkGjTLqacfXcR+z2R
+	 jENZ13xg555BhEfLs0wK0UMy/pMlxryVlZ0aN2JY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389502AbfDXRWJ (ORCPT
+        id S2389526AbfDXRWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47624 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:22:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388872AbfDXRWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:22:06 -0400
+        id S2389511AbfDXRWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:22:12 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4860F20675;
-        Wed, 24 Apr 2019 17:22:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 799DC21909;
+        Wed, 24 Apr 2019 17:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126525;
-        bh=9o6TVzPYXsXgtz0KAaOI/zyJf6+4hsaJON79tjpoa60=;
+        s=default; t=1556126532;
+        bh=Xee1BMEyw6B/ZcyGAxTLvphFVOjNIvl7eqqSleDbjAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BCs6rdvpokf/sQqEupl1QORSp5ioEgREkhfO9gyICJUweigg5h2bsrK5Z7XzFnWR+
-         8IvPwdc74W2DHROFKcLdg1MxclwsUrlPBk276PJqo+x+rKuySslOwlqQE2Snr/puLX
-         TdWKL6VdEKNJ4fBqAq/MdVz8KsSG4/jmcuCa26hg=
+        b=zI4p0WEF8RaTBwDb5OvhhvSPvWeHU22BM3QlWVAihkoVYvaP4yQZL8d8Ae1lE1+Fe
+         uUknmvKZXKK4H5cB96PpiTL2zqIXbVkJCFp+zSEyJ7xQj+Xm7SlimSt1XXDHQbEmb2
+         98HCWyd0KnttaTstXOduSEHrKQ7eh5jL5EVgrQIA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        stable@vger.kernel.org,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 137/168] bonding: fix event handling for stacked bonds
-Date:   Wed, 24 Apr 2019 19:09:41 +0200
-Message-Id: <20190424170931.383793966@linuxfoundation.org>
+Subject: [PATCH 4.4 139/168] net: bridge: multicast: use rcu to access port list from br_multicast_start_querier
+Date:   Wed, 24 Apr 2019 19:09:43 +0200
+Message-Id: <20190424170931.485603527@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -59,47 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-[ Upstream commit 92480b3977fd3884649d404cbbaf839b70035699 ]
+[ Upstream commit c5b493ce192bd7a4e7bd073b5685aad121eeef82 ]
 
-When a bond is enslaved to another bond, bond_netdev_event() only
-handles the event as if the bond is a master, and skips treating the
-bond as a slave.
+br_multicast_start_querier() walks over the port list but it can be
+called from a timer with only multicast_lock held which doesn't protect
+the port list, so use RCU to walk over it.
 
-This leads to a refcount leak on the slave, since we don't remove the
-adjacency to its master and the master holds a reference on the slave.
-
-Reproducer:
-  ip link add bondL type bond
-  ip link add bondU type bond
-  ip link set bondL master bondU
-  ip link del bondL
-
-No "Fixes:" tag, this code is older than git history.
-
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Fixes: c83b8fab06fc ("bridge: Restart queries when last querier expires")
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_main.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/bridge/br_multicast.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3067,8 +3067,12 @@ static int bond_netdev_event(struct noti
- 		return NOTIFY_DONE;
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -1894,7 +1894,8 @@ static void br_multicast_start_querier(s
  
- 	if (event_dev->flags & IFF_MASTER) {
-+		int ret;
-+
- 		netdev_dbg(event_dev, "IFF_MASTER\n");
--		return bond_master_netdev_event(event, event_dev);
-+		ret = bond_master_netdev_event(event, event_dev);
-+		if (ret != NOTIFY_DONE)
-+			return ret;
+ 	__br_multicast_open(br, query);
+ 
+-	list_for_each_entry(port, &br->port_list, list) {
++	rcu_read_lock();
++	list_for_each_entry_rcu(port, &br->port_list, list) {
+ 		if (port->state == BR_STATE_DISABLED ||
+ 		    port->state == BR_STATE_BLOCKING)
+ 			continue;
+@@ -1906,6 +1907,7 @@ static void br_multicast_start_querier(s
+ 			br_multicast_enable(&port->ip6_own_query);
+ #endif
  	}
++	rcu_read_unlock();
+ }
  
- 	if (event_dev->flags & IFF_SLAVE) {
+ int br_multicast_toggle(struct net_bridge *br, unsigned long val)
 
 
