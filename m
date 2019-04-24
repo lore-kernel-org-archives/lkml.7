@@ -2,56 +2,57 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB285C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B731C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C19A20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C92321901
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128815;
-	bh=UhkwRkpNRM6UA0l163+R/d9YWdPL+JC3yZa0ltqgTAU=;
+	s=default; t=1556128821;
+	bh=VrjvUy0eGpI8rf5exHklPhueAayyHnH1mZW3CVDziQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NP3XmA3dzCWfjyxaYAm+NAJZIhbn61njqzRtG44LQqK1NkzT+LcKWL/SLILou7S6f
-	 4kaaX+725DBYbHNVf35UbB2yAYi0RIC8Zg8t7S4exDcgVx2RaxxnW0E7JLQCyoQwHo
-	 Nis1J+v1F5jkw7/bWnbroUwphKO5TaAMCmZZu6y0=
+	b=xQpclZr1FogxN/cQxCukppVw5bZgQJb9F01g4V0A2uTcMFf/sLkEPftuaEZVgjasF
+	 hGVuxDa5dMPcRCrMQPj4gjI6G0Tg6GX0/+ylby+SrW+KojeOkmIC6+Ic3LsRmrd+L4
+	 Jushc1bd4RMD8tuagk6Pm7bhibe9i/OxbkDeqbQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390348AbfDXSAO (ORCPT
+        id S2389300AbfDXRXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49090 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:23:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389306AbfDXRXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:23:24 -0400
+        id S2389665AbfDXRXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:23:12 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B040B21904;
-        Wed, 24 Apr 2019 17:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1D28205ED;
+        Wed, 24 Apr 2019 17:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126603;
-        bh=UhkwRkpNRM6UA0l163+R/d9YWdPL+JC3yZa0ltqgTAU=;
+        s=default; t=1556126591;
+        bh=VrjvUy0eGpI8rf5exHklPhueAayyHnH1mZW3CVDziQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VsFrDyg1gE8GTqzX/z3pGbllXVFXlDl20KfcCvpLoVPab83wz4J3X0cG53tUw6yAg
-         mZ3QJsHjbAtbOTQK8MGNrtjcrOUkWb4UIaMHsJ/km3RhPQZpiX3lIKETFqZO84Ov8H
-         XTnzQW4rQSGTCvvIMyMydvtLhjTs/xrksK+o2j84=
+        b=mq9L3EYtxupArb8MvUbhXWXj0zq3/Df1vlJhS4HJUqxJ/iieYozN8i6dt6GDlqJbw
+         jpGz1aebkxK9layMVyYocDtCD7NVMDRanWWZs4vnM3CsRAP7c3ZfZpXDAo9GpIiQbZ
+         z5AcTWNlufUoA7HiFIdaxbd0BDEiduSGzNMcHzJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Auld <pauld@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Ben Segall <bsegall@google.com>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 165/168] sched/fair: Limit sched_cfs_period_timer() loop to avoid hard lockup
-Date:   Wed, 24 Apr 2019 19:10:09 +0200
-Message-Id: <20190424170933.059711681@linuxfoundation.org>
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.4 162/168] kprobes: Fix error check when reusing optimized probes
+Date:   Wed, 24 Apr 2019 19:10:06 +0200
+Message-Id: <20190424170932.801687407@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -64,101 +65,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2e8e19226398db8265a8e675fcc0118b9e80c9e8 ]
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-With extremely short cfs_period_us setting on a parent task group with a large
-number of children the for loop in sched_cfs_period_timer() can run until the
-watchdog fires. There is no guarantee that the call to hrtimer_forward_now()
-will ever return 0.  The large number of children can make
-do_sched_cfs_period_timer() take longer than the period.
+commit 5f843ed415581cfad4ef8fefe31c138a8346ca8a upstream.
 
- NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
- RIP: 0010:tg_nop+0x0/0x10
-  <IRQ>
-  walk_tg_tree_from+0x29/0xb0
-  unthrottle_cfs_rq+0xe0/0x1a0
-  distribute_cfs_runtime+0xd3/0xf0
-  sched_cfs_period_timer+0xcb/0x160
-  ? sched_cfs_slack_timer+0xd0/0xd0
-  __hrtimer_run_queues+0xfb/0x270
-  hrtimer_interrupt+0x122/0x270
-  smp_apic_timer_interrupt+0x6a/0x140
-  apic_timer_interrupt+0xf/0x20
-  </IRQ>
+The following commit introduced a bug in one of our error paths:
 
-To prevent this we add protection to the loop that detects when the loop has run
-too many times and scales the period and quota up, proportionally, so that the timer
-can complete before then next period expires.  This preserves the relative runtime
-quota while preventing the hard lockup.
+  819319fc9346 ("kprobes: Return error if we fail to reuse kprobe instead of BUG_ON()")
 
-A warning is issued reporting this state and the new values.
+it missed to handle the return value of kprobe_optready() as
+error-value. In reality, the kprobe_optready() returns a bool
+result, so "true" case must be passed instead of 0.
 
-Signed-off-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Ben Segall <bsegall@google.com>
+This causes some errors on kprobe boot-time selftests on ARM:
+
+ [   ] Beginning kprobe tests...
+ [   ] Probe ARM code
+ [   ]     kprobe
+ [   ]     kretprobe
+ [   ] ARM instruction simulation
+ [   ]     Check decoding tables
+ [   ]     Run test cases
+ [   ] FAIL: test_case_handler not run
+ [   ] FAIL: Test andge	r10, r11, r14, asr r7
+ [   ] FAIL: Scenario 11
+ ...
+ [   ] FAIL: Scenario 7
+ [   ] Total instruction simulation tests=1631, pass=1433 fail=198
+ [   ] kprobe tests failed
+
+This can happen if an optimized probe is unregistered and next
+kprobe is registered on same address until the previous probe
+is not reclaimed.
+
+If this happens, a hidden aggregated probe may be kept in memory,
+and no new kprobe can probe same address. Also, in that case
+register_kprobe() will return "1" instead of minus error value,
+which can mislead caller logic.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190319130005.25492-1-pauld@redhat.com
+Cc: stable@vger.kernel.org # v5.0+
+Fixes: 819319fc9346 ("kprobes: Return error if we fail to reuse kprobe instead of BUG_ON()")
+Link: http://lkml.kernel.org/r/155530808559.32517.539898325433642204.stgit@devnote2
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/sched/fair.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ kernel/kprobes.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 7671ae95753f..d706cf4fda99 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4016,12 +4016,15 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
- }
- 
-+extern const u64 max_cfs_quota_period;
-+
- static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -668,7 +668,6 @@ static void unoptimize_kprobe(struct kpr
+ static int reuse_unused_kprobe(struct kprobe *ap)
  {
- 	struct cfs_bandwidth *cfs_b =
- 		container_of(timer, struct cfs_bandwidth, period_timer);
- 	int overrun;
- 	int idle = 0;
-+	int count = 0;
+ 	struct optimized_kprobe *op;
+-	int ret;
  
- 	raw_spin_lock(&cfs_b->lock);
- 	for (;;) {
-@@ -4029,6 +4032,28 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 		if (!overrun)
- 			break;
+ 	BUG_ON(!kprobe_unused(ap));
+ 	/*
+@@ -682,9 +681,8 @@ static int reuse_unused_kprobe(struct kp
+ 	/* Enable the probe again */
+ 	ap->flags &= ~KPROBE_FLAG_DISABLED;
+ 	/* Optimize it again (remove from op->list) */
+-	ret = kprobe_optready(ap);
+-	if (ret)
+-		return ret;
++	if (!kprobe_optready(ap))
++		return -EINVAL;
  
-+		if (++count > 3) {
-+			u64 new, old = ktime_to_ns(cfs_b->period);
-+
-+			new = (old * 147) / 128; /* ~115% */
-+			new = min(new, max_cfs_quota_period);
-+
-+			cfs_b->period = ns_to_ktime(new);
-+
-+			/* since max is 1s, this is limited to 1e9^2, which fits in u64 */
-+			cfs_b->quota *= new;
-+			cfs_b->quota = div64_u64(cfs_b->quota, old);
-+
-+			pr_warn_ratelimited(
-+        "cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-+	                        smp_processor_id(),
-+	                        div_u64(new, NSEC_PER_USEC),
-+                                div_u64(cfs_b->quota, NSEC_PER_USEC));
-+
-+			/* reset count so we don't come right back in here */
-+			count = 0;
-+		}
-+
- 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
- 	}
- 	if (idle)
--- 
-2.19.1
-
+ 	optimize_kprobe(ap);
+ 	return 0;
 
 
