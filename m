@@ -2,169 +2,171 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B216C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFAFC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBADC20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C344A20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128680;
-	bh=kZzlM+teg2cU093if+vR6a5sFUxlD7aQx2guqyJVss8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XtbsVlXIwlOrAdlDSsIRKuJXfgxKoQ9fDoc/4PDlMq6OGLcRMUBhvbgkIDibhWAN5
-	 pfDIp8Ix5aqCZjSWCvnNI7+2FI236/X6GMblX5wAHfEAB0Qlv0m84WEwb5NdZNnvHx
-	 wo/LrDA9xIxlmV4DxsD8VIg42V4k8U3qKoaS1MxM=
+	s=default; t=1556128685;
+	bh=18qPWvhttbQRftXd+LJB8F2ybIqr5XFHfXjCmiU1uRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a7uavabTctv5CnznJOzM6wZr2c9mpWqkz2DaKLDoUof6HhtHaXtdlSe5KzuFOSjwb
+	 M7qT447zOepH177ggHsCNpVWbV64nTgaTuomXa1dk8MAyO0DcNQ2nW4hEDng3SlP8r
+	 CKdnyq5GSB/eNhvGH9XoqgJxaj+friggizwv4zME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391363AbfDXR57 (ORCPT
+        id S2391917AbfDXR6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51296 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:58:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390023AbfDXRZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:25:24 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        id S2391378AbfDXR6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:58:02 -0400
+Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 745BA205ED;
-        Wed, 24 Apr 2019 17:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF11721773;
+        Wed, 24 Apr 2019 17:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126723;
-        bh=kZzlM+teg2cU093if+vR6a5sFUxlD7aQx2guqyJVss8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gIWNTnClY8DS9gSfNCGRdW/j3XS5QmuOAOQPPiVsjbIP5hUg+lkGrRQh0uwpyE0Ox
-         N3SbADnqm9t7CnncpU+x7qZJRYtCOOhZrxufBIVWH/IC5l7obQOgrCiaMvPwhnfo+j
-         tAZT7z/0mpkGjJ9VqLmHM4hdcSu6APz0aSNyI4Zo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Pu Wen <puwen@hygon.cn>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.9 37/44] perf/x86/amd: Add event map for AMD Family 17h
-Date:   Wed, 24 Apr 2019 19:10:15 +0200
-Message-Id: <20190424170900.511642990@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
-References: <20190424170839.924291114@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1556128681;
+        bh=18qPWvhttbQRftXd+LJB8F2ybIqr5XFHfXjCmiU1uRg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1KFHAw71HRB9lwWr6eZPfFX42j1Ffqgrk1FLUuN0GWJtiagiU8YetdmSIrWTPhabX
+         0CZJ6t14Xnp3qU9LLgZ+Chfl7x6p+pyHnOhnwZ1N2DC2lrK+WzEGMz6IgYMeyG1lzW
+         Xjdz7b7WngQNDdLZAu6vvTpZOPZtjxOpuwRWpeZE=
+Date:   Wed, 24 Apr 2019 12:57:58 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     mr.nuke.me@gmail.com, linux-pci@vger.kernel.org,
+        austin_bolen@dell.com, alex_gagniuc@dellteam.com,
+        keith.busch@intel.com, Shyam_Iyer@Dell.com, lukas@wunner.de,
+        okaya@kernel.org, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add link_change error handler and vfio-pci user
+Message-ID: <20190424175758.GC244134@google.com>
+References: <155605909349.3575.13433421148215616375.stgit@gimli.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155605909349.3575.13433421148215616375.stgit@gimli.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+On Tue, Apr 23, 2019 at 04:42:28PM -0600, Alex Williamson wrote:
+> The PCIe bandwidth notification service generates logging any time a
+> link changes speed or width to a state that is considered downgraded.
+> Unfortunately, it cannot differentiate signal integrity related link
+> changes from those intentionally initiated by an endpoint driver,
+> including drivers that may live in userspace or VMs when making use
+> of vfio-pci.  Therefore, allow the driver to have a say in whether
+> the link is indeed downgraded and worth noting in the log, or if the
+> change is perhaps intentional.
+> 
+> For vfio-pci, we don't know the intentions of the user/guest driver
+> either, but we do know that GPU drivers in guests actively manage
+> the link state and therefore trigger the bandwidth notification for
+> what appear to be entirely intentional link changes.
+> 
+> Fixes: e8303bb7a75c PCI/LINK: Report degraded links via link bandwidth notification
+> Link: https://lore.kernel.org/linux-pci/155597243666.19387.1205950870601742062.stgit@gimli.home/T/#u
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+> 
+> Changing to pci_dbg() logging is not super usable, so let's try the
+> previous idea of letting the driver handle link change events as they
+> see fit.  Ideally this might be two patches, but for easier handling,
+> folding the pci and vfio-pci bits together.  Comments?  Thanks,
 
-commit 3fe3331bb285700ab2253dbb07f8e478fcea2f1b upstream.
+I'm a little uneasy about the bandwidth notification logging as a
+whole.  Messages in dmesg don't seem like a solid base for building
+management tools.
 
-Family 17h differs from prior families by:
+I assume the eventual goal would be some sort of digested notification
+along the lines of "hey mr/ms administrator, the link to device X
+unexpectedly became slower, you might want to check that out."
 
- - Does not support an L2 cache miss event
- - It has re-enumerated PMC counters for:
-   - L2 cache references
-   - front & back end stalled cycles
+If I were building that, I don't think I would use dmesg.  I might
+write a daemon that polls /sys/.../current_link_{speed,width}, or
+maybe use some sort of netlink event.  Maybe it would be useful to
+have the admin designate devices of interest.
 
-So we add a new amd_f17h_perfmon_event_map[] so that the generic
-perf event names will resolve to the correct h/w events on
-family 17h and above processors.
+I'm hesitant about adding a .link_change() handler.  If there's
+something useful a driver could do with it, that's one thing.  But
+using it merely to suppress a message doesn't really seem worth the
+trouble, and it seems unfriendly to ask drivers to add it when they
+didn't ask for it and get no benefit from it.
 
-Reference sections 2.1.13.3.3 (stalls) and 2.1.13.3.6 (L2):
-
-  https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
-
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Cc: <stable@vger.kernel.org> # v4.9+
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Martin Liška <mliska@suse.cz>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Pu Wen <puwen@hygon.cn>
-Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Fixes: e40ed1542dd7 ("perf/x86: Add perf support for AMD family-17h processors")
-[ Improved the formatting a bit. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/events/amd/core.c |   35 ++++++++++++++++++++++++++---------
- 1 file changed, 26 insertions(+), 9 deletions(-)
-
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -113,22 +113,39 @@ static __initconst const u64 amd_hw_cach
- };
- 
- /*
-- * AMD Performance Monitor K7 and later.
-+ * AMD Performance Monitor K7 and later, up to and including Family 16h:
-  */
- static const u64 amd_perfmon_event_map[PERF_COUNT_HW_MAX] =
- {
--  [PERF_COUNT_HW_CPU_CYCLES]			= 0x0076,
--  [PERF_COUNT_HW_INSTRUCTIONS]			= 0x00c0,
--  [PERF_COUNT_HW_CACHE_REFERENCES]		= 0x077d,
--  [PERF_COUNT_HW_CACHE_MISSES]			= 0x077e,
--  [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]		= 0x00c2,
--  [PERF_COUNT_HW_BRANCH_MISSES]			= 0x00c3,
--  [PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x00d0, /* "Decoder empty" event */
--  [PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x00d1, /* "Dispatch stalls" event */
-+	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
-+	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
-+	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0x077d,
-+	[PERF_COUNT_HW_CACHE_MISSES]		= 0x077e,
-+	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
-+	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
-+	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x00d0, /* "Decoder empty" event */
-+	[PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x00d1, /* "Dispatch stalls" event */
-+};
-+
-+/*
-+ * AMD Performance Monitor Family 17h and later:
-+ */
-+static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
-+{
-+	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
-+	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
-+	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
-+	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
-+	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
-+	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
-+	[PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= 0x0187,
- };
- 
- static u64 amd_pmu_event_map(int hw_event)
- {
-+	if (boot_cpu_data.x86 >= 0x17)
-+		return amd_f17h_perfmon_event_map[hw_event];
-+
- 	return amd_perfmon_event_map[hw_event];
- }
- 
-
-
+>  drivers/pci/probe.c         |   13 +++++++++++++
+>  drivers/vfio/pci/vfio_pci.c |   10 ++++++++++
+>  include/linux/pci.h         |    3 +++
+>  3 files changed, 26 insertions(+)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 7e12d0163863..233cd4b5b6e8 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2403,6 +2403,19 @@ void pcie_report_downtraining(struct pci_dev *dev)
+>  	if (PCI_FUNC(dev->devfn) != 0 || dev->is_virtfn)
+>  		return;
+>  
+> +	/*
+> +	 * If driver handles link_change event, defer to driver.  PCIe drivers
+> +	 * can call pcie_print_link_status() to print current link info.
+> +	 */
+> +	device_lock(&dev->dev);
+> +	if (dev->driver && dev->driver->err_handler &&
+> +	    dev->driver->err_handler->link_change) {
+> +		dev->driver->err_handler->link_change(dev);
+> +		device_unlock(&dev->dev);
+> +		return;
+> +	}
+> +	device_unlock(&dev->dev);
+> +
+>  	/* Print link status only if the device is constrained by the fabric */
+>  	__pcie_print_link_status(dev, false);
+>  }
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index cab71da46f4a..c9ffc0ccabb3 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -1418,8 +1418,18 @@ static pci_ers_result_t vfio_pci_aer_err_detected(struct pci_dev *pdev,
+>  	return PCI_ERS_RESULT_CAN_RECOVER;
+>  }
+>  
+> +/*
+> + * Ignore link change notification, we can't differentiate signal related
+> + * link changes from user driver power management type operations, so do
+> + * nothing.  Potentially this could be routed out to the user.
+> + */
+> +static void vfio_pci_link_change(struct pci_dev *pdev)
+> +{
+> +}
+> +
+>  static const struct pci_error_handlers vfio_err_handlers = {
+>  	.error_detected = vfio_pci_aer_err_detected,
+> +	.link_change = vfio_pci_link_change,
+>  };
+>  
+>  static struct pci_driver vfio_pci_driver = {
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 27854731afc4..e9194bc03f9e 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -763,6 +763,9 @@ struct pci_error_handlers {
+>  
+>  	/* Device driver may resume normal operations */
+>  	void (*resume)(struct pci_dev *dev);
+> +
+> +	/* PCIe link change notification */
+> +	void (*link_change)(struct pci_dev *dev);
+>  };
+>  
+>  
+> 
