@@ -2,53 +2,53 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA71C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0160C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1EB205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A050D205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126633;
-	bh=lXmPmFari3fcUIko0tqOMsfK9GVESnB74N8MQ7XFwyQ=;
+	s=default; t=1556126637;
+	bh=/zNpXa61ISQHgCJHC95r+Lf0scjNmADhp7Ku7+c5H2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FkhhcwWuYNbFxKFOFI2d4Lt5uemt+R2XdFh2oq5bo/dH4CWa0sM1uIKN/qz9qqPDU
-	 ANAgXFK7333BC+AgwAcdl34K9MsJtyDAfbYclBBTobogoCM7ZZrvRb9NeGzo66YD9i
-	 MukuRvs3thrq8fUykcp2VVpLQnNAy0ldmW9T4CLk=
+	b=v5nKGi1IsvyesfEbzBK9quoD4+639G1GuuBBzOeMzzFOrG1GcI8wFpow+Jp/lD2DJ
+	 KuPUKJ5VM78ZwJ+7witpcOdyvR/h4HSr7Jd4X11O0BgpwgNGBH62dxnmFYhvuTLJM+
+	 Zu494UAAjFYsAsfUrI8V0hPrtS2Ns+ekn7zU99aE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389780AbfDXRXv (ORCPT
+        id S2389788AbfDXRX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49538 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389461AbfDXRXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:23:49 -0400
+        id S2389430AbfDXRXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:23:55 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B270B21904;
-        Wed, 24 Apr 2019 17:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8B29205ED;
+        Wed, 24 Apr 2019 17:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126629;
-        bh=lXmPmFari3fcUIko0tqOMsfK9GVESnB74N8MQ7XFwyQ=;
+        s=default; t=1556126634;
+        bh=/zNpXa61ISQHgCJHC95r+Lf0scjNmADhp7Ku7+c5H2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MeqzOQyIOXDpFOChVVELGcKu9GVeIpJ186jDfbqIMPT9NzuX+RxG8KKbHNJGFcLL7
-         Nqmmv2oM+eECzaTyLelHM0m+j4nEZyhl2oQCgLIsGQ9+Rl5M7u1Gojn1I/L73BErKC
-         f1BBdCahdo+mV5TgyhGAOBXjgUhnumlEu4TAYYRo=
+        b=GYPHL2t7T8R2lBtIrLu++mKdTdJAJhrmnE8jP8px6p91ctQJZ6nkhogG1XgRO0ukE
+         fGrOuR/R8iHd8gTwhhq0f+4gu+xo7dgSk3SQWKH9w+08H0eRSKlHjQCNogY9gftQaw
+         YBCLWq5dTMaYK/n65+nnYocmdz/b6PgwRw16FTA0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Georg Ottinger <g.ottinger@abatec.at>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.4 151/168] iio: adc: at91: disable adc channel interrupt in timeout case
-Date:   Wed, 24 Apr 2019 19:09:55 +0200
-Message-Id: <20190424170932.128459149@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 143/168] ipv4: ensure rcu_read_lock() in ipv4_link_failure()
+Date:   Wed, 24 Apr 2019 19:09:47 +0200
+Message-Id: <20190424170931.686919325@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -61,69 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georg Ottinger <g.ottinger@abatec.at>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 09c6bdee51183a575bf7546890c8c137a75a2b44 upstream.
+[ Upstream commit c543cb4a5f07e09237ec0fc2c60c9f131b2c79ad ]
 
-Having a brief look at at91_adc_read_raw() it is obvious that in the case
-of a timeout the setting of AT91_ADC_CHDR and AT91_ADC_IDR registers is
-omitted. If 2 different channels are queried we can end up with a
-situation where two interrupts are enabled, but only one interrupt is
-cleared in the interrupt handler. Resulting in a interrupt loop and a
-system hang.
+fib_compute_spec_dst() needs to be called under rcu protection.
 
-Signed-off-by: Georg Ottinger <g.ottinger@abatec.at>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+syzbot reported :
+
+WARNING: suspicious RCU usage
+5.1.0-rc4+ #165 Not tainted
+include/linux/inetdevice.h:220 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by swapper/0/0:
+ #0: 0000000051b67925 ((&n->timer)){+.-.}, at: lockdep_copy_map include/linux/lockdep.h:170 [inline]
+ #0: 0000000051b67925 ((&n->timer)){+.-.}, at: call_timer_fn+0xda/0x720 kernel/time/timer.c:1315
+
+stack backtrace:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.1.0-rc4+ #165
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5162
+ __in_dev_get_rcu include/linux/inetdevice.h:220 [inline]
+ fib_compute_spec_dst+0xbbd/0x1030 net/ipv4/fib_frontend.c:294
+ spec_dst_fill net/ipv4/ip_options.c:245 [inline]
+ __ip_options_compile+0x15a7/0x1a10 net/ipv4/ip_options.c:343
+ ipv4_link_failure+0x172/0x400 net/ipv4/route.c:1195
+ dst_link_failure include/net/dst.h:427 [inline]
+ arp_error_report+0xd1/0x1c0 net/ipv4/arp.c:297
+ neigh_invalidate+0x24b/0x570 net/core/neighbour.c:995
+ neigh_timer_handler+0xc35/0xf30 net/core/neighbour.c:1081
+ call_timer_fn+0x190/0x720 kernel/time/timer.c:1325
+ expire_timers kernel/time/timer.c:1362 [inline]
+ __run_timers kernel/time/timer.c:1681 [inline]
+ __run_timers kernel/time/timer.c:1649 [inline]
+ run_timer_softirq+0x652/0x1700 kernel/time/timer.c:1694
+ __do_softirq+0x266/0x95a kernel/softirq.c:293
+ invoke_softirq kernel/softirq.c:374 [inline]
+ irq_exit+0x180/0x1d0 kernel/softirq.c:414
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0x14a/0x570 arch/x86/kernel/apic/apic.c:1062
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:807
+
+Fixes: ed0de45a1008 ("ipv4: recompile ip options in ipv4_link_failure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Stephen Suryaputra <ssuryaextr@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/iio/adc/at91_adc.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ net/ipv4/route.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/iio/adc/at91_adc.c
-+++ b/drivers/iio/adc/at91_adc.c
-@@ -702,23 +702,29 @@ static int at91_adc_read_raw(struct iio_
- 		ret = wait_event_interruptible_timeout(st->wq_data_avail,
- 						       st->done,
- 						       msecs_to_jiffies(1000));
--		if (ret == 0)
--			ret = -ETIMEDOUT;
--		if (ret < 0) {
--			mutex_unlock(&st->lock);
--			return ret;
--		}
--
--		*val = st->last_value;
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1164,14 +1164,20 @@ static struct dst_entry *ipv4_dst_check(
  
-+		/* Disable interrupts, regardless if adc conversion was
-+		 * successful or not
-+		 */
- 		at91_adc_writel(st, AT91_ADC_CHDR,
- 				AT91_ADC_CH(chan->channel));
- 		at91_adc_writel(st, AT91_ADC_IDR, BIT(chan->channel));
+ static void ipv4_link_failure(struct sk_buff *skb)
+ {
+-	struct rtable *rt;
+ 	struct ip_options opt;
++	struct rtable *rt;
++	int res;
  
--		st->last_value = 0;
--		st->done = false;
-+		if (ret > 0) {
-+			/* a valid conversion took place */
-+			*val = st->last_value;
-+			st->last_value = 0;
-+			st->done = false;
-+			ret = IIO_VAL_INT;
-+		} else if (ret == 0) {
-+			/* conversion timeout */
-+			dev_err(&idev->dev, "ADC Channel %d timeout.\n",
-+				chan->channel);
-+			ret = -ETIMEDOUT;
-+		}
+ 	/* Recompile ip options since IPCB may not be valid anymore.
+ 	 */
+ 	memset(&opt, 0, sizeof(opt));
+ 	opt.optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
+-	if (__ip_options_compile(dev_net(skb->dev), &opt, skb, NULL))
 +
- 		mutex_unlock(&st->lock);
--		return IIO_VAL_INT;
-+		return ret;
++	rcu_read_lock();
++	res = __ip_options_compile(dev_net(skb->dev), &opt, skb, NULL);
++	rcu_read_unlock();
++
++	if (res)
+ 		return;
  
- 	case IIO_CHAN_INFO_SCALE:
- 		*val = st->vref_mv;
+ 	__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt);
 
 
