@@ -2,212 +2,118 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924C0C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40339C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513E6218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:46:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fbPk8N3D"
+	by mail.kernel.org (Postfix) with ESMTP id 157DD218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbfDXEqb (ORCPT
+        id S1729015AbfDXEzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 00:46:31 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:36188 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725919AbfDXEqa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 00:46:30 -0400
-Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
-        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O4bkQn025812
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 21:46:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=76gfXMG+0uRElSBO/APtur6FtcIZXTee5d1iEwxVGMw=;
- b=fbPk8N3Dow+holCAQ3pCf4QAbbqddsS6NPrkcJh5/QiNWaTDi9YD90sMkGICKxU3HUQ7
- Rvyu2D2pzHyc6dLas8EtypUUHuMAoloq4yfc5bcS8GewMfvZxKcwHG1ruQn+fVFu5/Ro
- cuCf3AlXQXLrs9x25vA93N1ythjfbpb4Sxc= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0b-00082601.pphosted.com with ESMTP id 2s27u3t2t8-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 21:46:29 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Tue, 23 Apr 2019 21:46:27 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id BFBD71142D2E0; Tue, 23 Apr 2019 14:31:36 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-team@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        <cgroups@vger.kernel.org>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH v2 1/6] mm: postpone kmem_cache memcg pointer initialization to memcg_link_cache()
-Date:   Tue, 23 Apr 2019 14:31:28 -0700
-Message-ID: <20190423213133.3551969-2-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190423213133.3551969-1-guro@fb.com>
-References: <20190423213133.3551969-1-guro@fb.com>
-X-FB-Internal: Safe
+        Wed, 24 Apr 2019 00:55:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56370 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbfDXEzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 00:55:44 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E819030820EA;
+        Wed, 24 Apr 2019 04:55:43 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BA12B5F9AC;
+        Wed, 24 Apr 2019 04:55:42 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id C56391803398;
+        Wed, 24 Apr 2019 04:55:40 +0000 (UTC)
+Date:   Wed, 24 Apr 2019 00:55:40 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        dan j williams <dan.j.williams@intel.com>,
+        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
+        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger kernel <adilger.kernel@dilger.ca>,
+        darrick wong <darrick.wong@oracle.com>, lcapitulino@redhat.com,
+        kwolf@redhat.com, imammedo@redhat.com, jmoyer@redhat.com,
+        nilal@redhat.com, riel@surriel.com, stefanha@redhat.com,
+        aarcange@redhat.com, david@redhat.com, cohuck@redhat.com,
+        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
+        pbonzini@redhat.com, yuval shaia <yuval.shaia@oracle.com>,
+        kilobyte@angband.pl
+Message-ID: <476344290.23160847.1556081740211.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190423220217.GA29573@dread.disaster.area>
+References: <20190423080612.15361-1-pagupta@redhat.com> <20190423080612.15361-7-pagupta@redhat.com> <20190423220217.GA29573@dread.disaster.area>
+Subject: Re: [PATCH v6 6/6] xfs: disable map_sync for async flush
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_02:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.16.97, 10.4.195.22]
+Thread-Topic: disable map_sync for async flush
+Thread-Index: 5A0YRiU1z8c6ah9gJxBL4710YUFt6w==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 24 Apr 2019 04:55:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initialize kmem_cache->memcg_params.memcg pointer in
-memcg_link_cache() rather than in init_memcg_params().
 
-Once kmem_cache will hold a reference to the memory cgroup,
-it will simplify the refcounting.
+> 
+> On Tue, Apr 23, 2019 at 01:36:12PM +0530, Pankaj Gupta wrote:
+> > Dont support 'MAP_SYNC' with non-DAX files and DAX files
+> > with asynchronous dax_device. Virtio pmem provides
+> > asynchronous host page cache flush mechanism. We don't
+> > support 'MAP_SYNC' with virtio pmem and xfs.
+> > 
+> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > ---
+> >  fs/xfs/xfs_file.c | 10 ++++++----
+> >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> > index 1f2e2845eb76..0e59be018511 100644
+> > --- a/fs/xfs/xfs_file.c
+> > +++ b/fs/xfs/xfs_file.c
+> > @@ -1196,11 +1196,13 @@ xfs_file_mmap(
+> >  	struct file	*filp,
+> >  	struct vm_area_struct *vma)
+> >  {
+> > -	/*
+> > -	 * We don't support synchronous mappings for non-DAX files. At least
+> > -	 * until someone comes with a sensible use case.
+> > +	struct dax_device *dax_dev = xfs_find_daxdev_for_inode
+> > +						(file_inode(filp));
+> > +
+> > +	/* We don't support synchronous mappings for non-DAX files and
+> > +	 * for DAX files if underneath dax_device is not synchronous.
+> >  	 */
+> 
+> 	/*
+> 	 * This is the correct multi-line comment format. Please
+> 	 * update the patch to maintain the existing comment format.
+> 	 */
 
-For non-root kmem_caches memcg_link_cache() is always called
-before the kmem_cache becomes visible to a user, so it's safe.
+Sure. Will correct this for both xfs & ext4.
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
----
- mm/slab.c        |  2 +-
- mm/slab.h        |  5 +++--
- mm/slab_common.c | 14 +++++++-------
- mm/slub.c        |  2 +-
- 4 files changed, 12 insertions(+), 11 deletions(-)
+Thanks,
+Pankaj
 
-diff --git a/mm/slab.c b/mm/slab.c
-index b1eefe751d2a..57a332f524cf 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -1268,7 +1268,7 @@ void __init kmem_cache_init(void)
- 				  nr_node_ids * sizeof(struct kmem_cache_node *),
- 				  SLAB_HWCACHE_ALIGN, 0, 0);
- 	list_add(&kmem_cache->list, &slab_caches);
--	memcg_link_cache(kmem_cache);
-+	memcg_link_cache(kmem_cache, NULL);
- 	slab_state = PARTIAL;
- 
- 	/*
-diff --git a/mm/slab.h b/mm/slab.h
-index 43ac818b8592..6a562ca72bca 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -289,7 +289,7 @@ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
- }
- 
- extern void slab_init_memcg_params(struct kmem_cache *);
--extern void memcg_link_cache(struct kmem_cache *s);
-+extern void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *memcg);
- extern void slab_deactivate_memcg_cache_rcu_sched(struct kmem_cache *s,
- 				void (*deact_fn)(struct kmem_cache *));
- 
-@@ -344,7 +344,8 @@ static inline void slab_init_memcg_params(struct kmem_cache *s)
- {
- }
- 
--static inline void memcg_link_cache(struct kmem_cache *s)
-+static inline void memcg_link_cache(struct kmem_cache *s,
-+				    struct mem_cgroup *memcg)
- {
- }
- 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 58251ba63e4a..6e00bdf8618d 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -140,13 +140,12 @@ void slab_init_memcg_params(struct kmem_cache *s)
- }
- 
- static int init_memcg_params(struct kmem_cache *s,
--		struct mem_cgroup *memcg, struct kmem_cache *root_cache)
-+			     struct kmem_cache *root_cache)
- {
- 	struct memcg_cache_array *arr;
- 
- 	if (root_cache) {
- 		s->memcg_params.root_cache = root_cache;
--		s->memcg_params.memcg = memcg;
- 		INIT_LIST_HEAD(&s->memcg_params.children_node);
- 		INIT_LIST_HEAD(&s->memcg_params.kmem_caches_node);
- 		return 0;
-@@ -221,11 +220,12 @@ int memcg_update_all_caches(int num_memcgs)
- 	return ret;
- }
- 
--void memcg_link_cache(struct kmem_cache *s)
-+void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *memcg)
- {
- 	if (is_root_cache(s)) {
- 		list_add(&s->root_caches_node, &slab_root_caches);
- 	} else {
-+		s->memcg_params.memcg = memcg;
- 		list_add(&s->memcg_params.children_node,
- 			 &s->memcg_params.root_cache->memcg_params.children);
- 		list_add(&s->memcg_params.kmem_caches_node,
-@@ -244,7 +244,7 @@ static void memcg_unlink_cache(struct kmem_cache *s)
- }
- #else
- static inline int init_memcg_params(struct kmem_cache *s,
--		struct mem_cgroup *memcg, struct kmem_cache *root_cache)
-+				    struct kmem_cache *root_cache)
- {
- 	return 0;
- }
-@@ -384,7 +384,7 @@ static struct kmem_cache *create_cache(const char *name,
- 	s->useroffset = useroffset;
- 	s->usersize = usersize;
- 
--	err = init_memcg_params(s, memcg, root_cache);
-+	err = init_memcg_params(s, root_cache);
- 	if (err)
- 		goto out_free_cache;
- 
-@@ -394,7 +394,7 @@ static struct kmem_cache *create_cache(const char *name,
- 
- 	s->refcount = 1;
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
-+	memcg_link_cache(s, memcg);
- out:
- 	if (err)
- 		return ERR_PTR(err);
-@@ -997,7 +997,7 @@ struct kmem_cache *__init create_kmalloc_cache(const char *name,
- 
- 	create_boot_cache(s, name, size, flags, useroffset, usersize);
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
-+	memcg_link_cache(s, NULL);
- 	s->refcount = 1;
- 	return s;
- }
-diff --git a/mm/slub.c b/mm/slub.c
-index a34fbe1f6ede..2b9244529d76 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4224,7 +4224,7 @@ static struct kmem_cache * __init bootstrap(struct kmem_cache *static_cache)
- 	}
- 	slab_init_memcg_params(s);
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
-+	memcg_link_cache(s, NULL);
- 	return s;
- }
- 
--- 
-2.20.1
-
+> 
+> Cheers,
+> 
+> Dave.
+> --
+> Dave Chinner
+> david@fromorbit.com
+> 
