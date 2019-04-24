@@ -5,62 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B0AC282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF6CC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF4920835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D8E20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556129117;
-	bh=ym0Ddn8YeYGxQMsWuFozuWsU8JAAVvPsEn53aDxR2jA=;
+	s=default; t=1556129123;
+	bh=kWXPJfvY06BkJm3Sk+VbZxZO6Ewi67Fd68yjaxGDEms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aUh4NsVA8Oran2dmr21vpwbt8DnscajibfxpVmWBb2eJtzFcdZohj5uoH+Fr27mbJ
-	 8GREaEjeRZLax0CW1N+PKsMairKEw+fokAxMs+9DPwnfygM/EyKXEXRpviIVDvP0vT
-	 smjScSBIWGvIXwFGn+0AiMwS6jt0j1i9nYRhbxec=
+	b=ryjgXtTzzpbsMRjEz/58nydSrwp94kd19wr7AebRMuvSD5z9hptnOdJb+IwPpTUZ1
+	 o1HcVXDqBFWL+l2tmN6puERKZF2hBt73+iPR1mdfyUj0UzXtvJ+4PCiz51J1kkGZM2
+	 2uKCJIE7UPj+s9gmbfDYMbpqyD3RT2Dad/55qy0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390188AbfDXSFQ (ORCPT
+        id S2390309AbfDXSFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:05:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43976 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 14:05:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388894AbfDXRSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:18:50 -0400
+        id S2388887AbfDXRSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:18:47 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D40721907;
-        Wed, 24 Apr 2019 17:18:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B64218B0;
+        Wed, 24 Apr 2019 17:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126329;
-        bh=ym0Ddn8YeYGxQMsWuFozuWsU8JAAVvPsEn53aDxR2jA=;
+        s=default; t=1556126326;
+        bh=kWXPJfvY06BkJm3Sk+VbZxZO6Ewi67Fd68yjaxGDEms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pg4YFMJ65wfwc6+4H9LIjezChWsKtioLkFYNjcRC9URw6A995T8gZDwEonqOl7A5u
-         FDtcFRcGJXU3fjPK9pNIigoK81kbiJEM7NmZwAORxU6dpHGSTwrgNYIn5KRh2bO8Dz
-         b8NZywTK3W1TxDrFGvKMwlrDu9Pv/0pOHkeHgkw8=
+        b=08owCiGQhgAMWdlx/GV2ktFojhf9CKR6M+baL2RKwekdVVPYA7bJFVwDh0Bmuhnwu
+         qZ9+l/hv6VdyUJFS+HyXYl5tm6Bn1u6Thk++Yg3GBECdl+SGL9kJfbIKf7thfjX1U1
+         ooHKGbqIh4hsuItOP19IQhzEVlxPgSL5x75mu89A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org, Dmitry Golovin <dima@golovin.in>,
+        Bill Wendling <morbo@google.com>, Rui Ueyama <ruiu@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        Fangrui Song <maskray@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 074/168] lib/string.c: implement a basic bcmp
-Date:   Wed, 24 Apr 2019 19:08:38 +0200
-Message-Id: <20190424170928.220671877@linuxfoundation.org>
+Subject: [PATCH 4.4 073/168] x86/vdso: Drop implicit common-page-size linker flag
+Date:   Wed, 24 Apr 2019 19:08:37 +0200
+Message-Id: <20190424170928.124540980@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -73,109 +68,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5f074f3e192f10c9fade898b9b3b8812e3d83342 ]
+commit ac3e233d29f7f77f28243af0132057d378d3ea58 upstream.
 
-A recent optimization in Clang (r355672) lowers comparisons of the
-return value of memcmp against zero to comparisons of the return value
-of bcmp against zero.  This helps some platforms that implement bcmp
-more efficiently than memcmp.  glibc simply aliases bcmp to memcmp, but
-an optimized implementation is in the works.
+GNU linker's -z common-page-size's default value is based on the target
+architecture. arch/x86/entry/vdso/Makefile sets it to the architecture
+default, which is implicit and redundant. Drop it.
 
-This results in linkage failures for all targets with Clang due to the
-undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
-to unbreak the build.  This routine can be further optimized in the
-future.
-
-Other ideas discussed:
-
- * A weak alias was discussed, but breaks for architectures that define
-   their own implementations of memcmp since aliases to declarations are
-   not permitted (only definitions). Arch-specific memcmp
-   implementations typically declare memcmp in C headers, but implement
-   them in assembly.
-
- * -ffreestanding also is used sporadically throughout the kernel.
-
- * -fno-builtin-bcmp doesn't work when doing LTO.
-
-Link: https://bugs.llvm.org/show_bug.cgi?id=41035
-Link: https://code.woboq.org/userspace/glibc/string/memcmp.c.html#bcmp
-Link: https://github.com/llvm/llvm-project/commit/8e16d73346f8091461319a7dfc4ddd18eedcff13
-Link: https://github.com/ClangBuiltLinux/linux/issues/416
-Link: http://lkml.kernel.org/r/20190313211335.165605-1-ndesaulniers@google.com
+Fixes: 2aae950b21e4 ("x86_64: Add vDSO for x86-64 with gettimeofday/clock_gettime/getcpu")
+Reported-by: Dmitry Golovin <dima@golovin.in>
+Reported-by: Bill Wendling <morbo@google.com>
+Suggested-by: Dmitry Golovin <dima@golovin.in>
+Suggested-by: Rui Ueyama <ruiu@google.com>
 Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: James Y Knight <jyknight@google.com>
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Laight <David.Laight@ACULAB.COM>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Cc: Andi Kleen <andi@firstfloor.org>
+Cc: Fangrui Song <maskray@google.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20181206191231.192355-1-ndesaulniers@google.com
+Link: https://bugs.llvm.org/show_bug.cgi?id=38774
+Link: https://github.com/ClangBuiltLinux/linux/issues/31
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/string.h |  3 +++
- lib/string.c           | 20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+ arch/x86/entry/vdso/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index c026b7a19e26..870268d42ae7 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -110,6 +110,9 @@ extern void * memscan(void *,int,__kernel_size_t);
- #ifndef __HAVE_ARCH_MEMCMP
- extern int memcmp(const void *,const void *,__kernel_size_t);
- #endif
-+#ifndef __HAVE_ARCH_BCMP
-+extern int bcmp(const void *,const void *,__kernel_size_t);
-+#endif
- #ifndef __HAVE_ARCH_MEMCHR
- extern void * memchr(const void *,int,__kernel_size_t);
- #endif
-diff --git a/lib/string.c b/lib/string.c
-index 1a90db9bc6e1..c7cf65ac42ad 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -746,6 +746,26 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
- EXPORT_SYMBOL(memcmp);
- #endif
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 84c4a7105c2a..297dda4d5947 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -42,7 +42,7 @@ targets += $(vdso_img_sodbg)
+ export CPPFLAGS_vdso.lds += -P -C
  
-+#ifndef __HAVE_ARCH_BCMP
-+/**
-+ * bcmp - returns 0 if and only if the buffers have identical contents.
-+ * @a: pointer to first buffer.
-+ * @b: pointer to second buffer.
-+ * @len: size of buffers.
-+ *
-+ * The sign or magnitude of a non-zero return value has no particular
-+ * meaning, and architectures may implement their own more efficient bcmp(). So
-+ * while this particular implementation is a simple (tail) call to memcmp, do
-+ * not rely on anything but whether the return value is zero or non-zero.
-+ */
-+#undef bcmp
-+int bcmp(const void *a, const void *b, size_t len)
-+{
-+	return memcmp(a, b, len);
-+}
-+EXPORT_SYMBOL(bcmp);
-+#endif
-+
- #ifndef __HAVE_ARCH_MEMSCAN
- /**
-  * memscan - Find a character in an area of memory.
+ VDSO_LDFLAGS_vdso.lds = -m elf_x86_64 -soname linux-vdso.so.1 --no-undefined \
+-			-z max-page-size=4096 -z common-page-size=4096
++			-z max-page-size=4096
+ 
+ $(obj)/vdso64.so.dbg: $(src)/vdso.lds $(vobjs) FORCE
+ 	$(call if_changed,vdso)
+@@ -89,7 +89,7 @@ CFLAGS_REMOVE_vvar.o = -pg
+ 
+ CPPFLAGS_vdsox32.lds = $(CPPFLAGS_vdso.lds)
+ VDSO_LDFLAGS_vdsox32.lds = -m elf32_x86_64 -soname linux-vdso.so.1 \
+-			   -z max-page-size=4096 -z common-page-size=4096
++			   -z max-page-size=4096
+ 
+ # 64-bit objects to re-brand as x32
+ vobjs64-for-x32 := $(filter-out $(vobjs-nox32),$(vobjs-y))
 -- 
 2.19.1
 
