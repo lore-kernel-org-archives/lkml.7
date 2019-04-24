@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B09C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F66C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA0120835
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EF8206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126766;
-	bh=YoMf8MXUdVRAhakUKjCUZERg4lak23Jtcb5RKtOF4HM=;
+	s=default; t=1556126773;
+	bh=/oSd5ra3FBmZbWiEooXKuAFQfGVoIo2PzXyStA7gv+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJ8/tascd9HDtdRHNqAb96ofd590VJ032T7PnJPSwae84CEyQtV0nfdg7HOSgvVqN
-	 pPXUICcs4Bq6jzpJmNAoSHrBZgvhkhed/PAyGtWZypZCmdUFBTPhSaGaXV/UYj4Dwr
-	 dtFDrGqHFV/4GI4/8XtX/qCx554OERoLs4tjrN5M=
+	b=Zef5CIvWTNs8ARVVf5yMllyiB8mqqoq+zbRnJTmy7UBG3qR4+k2yrdzOx14iwR5m/
+	 P6YJ3cIuynKpF1869EJ70pNLKsNF9CmQUAeTRJxB3OPInzIVecK7r5c3SX+UqY6LVb
+	 VDtrRaghqZ0Ewl8Wx/M0/IK5FaiqZp3Kf1hLlTAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390158AbfDXR0F (ORCPT
+        id S2390167AbfDXR0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:26:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52022 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:26:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390131AbfDXR0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:26:03 -0400
+        id S1728870AbfDXR0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:26:06 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C20B221903;
-        Wed, 24 Apr 2019 17:26:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CE73206BA;
+        Wed, 24 Apr 2019 17:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126763;
-        bh=YoMf8MXUdVRAhakUKjCUZERg4lak23Jtcb5RKtOF4HM=;
+        s=default; t=1556126766;
+        bh=/oSd5ra3FBmZbWiEooXKuAFQfGVoIo2PzXyStA7gv+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BLpi66kLnqaaODIw1wiViJ1inuDt64igClEHA5K679cngfBej8gPkBbhk4m2Q63yC
-         I1BfOBwM6Chc0yD5C9O3yig/vbq08JW+XcmdWygJKhCwPkrkcNrwA73au0aYT9l/3e
-         4cl4/QUAs7Rg90IbSkHza0uXQNm4r4+6/JHTmPYw=
+        b=Lc2kyqt1x3/wECfXTi4R6djnFMxiUELtHvT/YKvjJ/XoPyjTLfK58rH2yzvPm7UC7
+         fRQ9I7qXEUC0Pt00XLwDEaCUHPvPcGb9bIoSZ3akdCXH+3t4N7dnZ0/p292+KCx5Za
+         JOjpRaHKvEKvz3PpQY9J5OudwmpvejgvXklLHb5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 42/44] ALSA: info: Fix racy addition/deletion of nodes
-Date:   Wed, 24 Apr 2019 19:10:20 +0200
-Message-Id: <20190424170901.662158897@linuxfoundation.org>
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 01/70] bonding: fix event handling for stacked bonds
+Date:   Wed, 24 Apr 2019 19:09:21 +0200
+Message-Id: <20190424170907.092348291@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170839.924291114@linuxfoundation.org>
-References: <20190424170839.924291114@linuxfoundation.org>
+In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
+References: <20190424170906.751869122@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,59 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-commit 8c2f870890fd28e023b0fcf49dcee333f2c8bad7 upstream.
+[ Upstream commit 92480b3977fd3884649d404cbbaf839b70035699 ]
 
-The ALSA proc helper manages the child nodes in a linked list, but its
-addition and deletion is done without any lock.  This leads to a
-corruption if they are operated concurrently.  Usually this isn't a
-problem because the proc entries are added sequentially in the driver
-probe procedure itself.  But the card registrations are done often
-asynchronously, and the crash could be actually reproduced with
-syzkaller.
+When a bond is enslaved to another bond, bond_netdev_event() only
+handles the event as if the bond is a master, and skips treating the
+bond as a slave.
 
-This patch papers over it by protecting the link addition and deletion
-with the parent's mutex.  There is "access" mutex that is used for the
-file access, and this can be reused for this purpose as well.
+This leads to a refcount leak on the slave, since we don't remove the
+adjacency to its master and the master holds a reference on the slave.
 
-Reported-by: syzbot+48df349490c36f9f54ab@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reproducer:
+  ip link add bondL type bond
+  ip link add bondU type bond
+  ip link set bondL master bondU
+  ip link del bondL
+
+No "Fixes:" tag, this code is older than git history.
+
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/core/info.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/bonding/bond_main.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/sound/core/info.c
-+++ b/sound/core/info.c
-@@ -724,8 +724,11 @@ snd_info_create_entry(const char *name,
- 	INIT_LIST_HEAD(&entry->children);
- 	INIT_LIST_HEAD(&entry->list);
- 	entry->parent = parent;
--	if (parent)
-+	if (parent) {
-+		mutex_lock(&parent->access);
- 		list_add_tail(&entry->list, &parent->children);
-+		mutex_unlock(&parent->access);
-+	}
- 	return entry;
- }
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3169,8 +3169,12 @@ static int bond_netdev_event(struct noti
+ 		return NOTIFY_DONE;
  
-@@ -809,7 +812,12 @@ void snd_info_free_entry(struct snd_info
- 	list_for_each_entry_safe(p, n, &entry->children, list)
- 		snd_info_free_entry(p);
+ 	if (event_dev->flags & IFF_MASTER) {
++		int ret;
++
+ 		netdev_dbg(event_dev, "IFF_MASTER\n");
+-		return bond_master_netdev_event(event, event_dev);
++		ret = bond_master_netdev_event(event, event_dev);
++		if (ret != NOTIFY_DONE)
++			return ret;
+ 	}
  
--	list_del(&entry->list);
-+	p = entry->parent;
-+	if (p) {
-+		mutex_lock(&p->access);
-+		list_del(&entry->list);
-+		mutex_unlock(&p->access);
-+	}
- 	kfree(entry->name);
- 	if (entry->private_free)
- 		entry->private_free(entry);
+ 	if (event_dev->flags & IFF_SLAVE) {
 
 
