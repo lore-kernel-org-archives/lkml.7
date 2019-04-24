@@ -2,83 +2,139 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FCFC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DDFC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5055C20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:13:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jpuoB9vv"
+	by mail.kernel.org (Postfix) with ESMTP id EBB2320652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556129609;
+	bh=onuuuUP/JxLBWRPpTrPecDj9JMwAX6HKx7+uvKLH/KI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=za0TSa2/rXHOKN8SHPzL6SAu/lmYivtYVMC/FlQVxTW7GYDzt2MpUZvt/9kcddUNa
+	 NqLDSLErLRGSW+2HKxauBZVuNPoEyDRYy2Ra17mEf5wsd7ISvAMad83NKHmydxyD63
+	 f1p5pZsD/cGOg9ufNRiJRP/6RCIv4ZAolNs31Azw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388803AbfDXSNH (ORCPT
+        id S2387964AbfDXSN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:13:07 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34959 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733146AbfDXSNE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:13:04 -0400
-Received: by mail-pg1-f195.google.com with SMTP id j24so97638pgk.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:13:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/lPnz3iiNJFWLVIVI4pdMnJCAuKJb8MhJ/7UZGvRlGw=;
-        b=jpuoB9vvLYtfALu3v/epDerQViw/ZXHvhGTTCwdHAy0rNeeFUzKYdPmorYMoVY5PH4
-         PXJ8AznFpeAj6fJOQQZL/cW0jdkPvP6wBkx/vR1HaGL/c3KRRyE1rVGsrcyASdI0J5k8
-         Jxhr2+jIql8xPfFEI6kyNUWxdqKDBg6/uHAu6fgz8GSGO2jsekwQSP/vBOs0ZwdltiOM
-         pY/TzgAwhZh1JXH0WxUJSUuMNlzTbIWs7HbIHjKCUlAd/6cSj6zLP9dmzjjdDZbklZuz
-         Z81n1dxsAhBvoeo1lE5haFORM4Zjj9kPWtApnyyhLS9CwXlzM8dWISQBdUo2U8xXSq+1
-         RXLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/lPnz3iiNJFWLVIVI4pdMnJCAuKJb8MhJ/7UZGvRlGw=;
-        b=LN95BAnfz/cCGEgO3Z01gf7H0QRuv49kMhvoRhl7Aqv1u0LoTjh+5dAtPYPd32U4Nq
-         VrbXeSVX+L/I+sju5/8odG0HVOWLXT06Oy9OvTlhe2C1Du8HJpNq99u+oGyVz2EKapAg
-         ou5IR+kKjR9mHPbS15yV3lKxvA3kNjjqsz4fqmA2k2NuKVdPguPg8ApCl1jhNGb6+vFL
-         4Gvnzqu6Qh1UBnMafFO7t5jErZX5nmVxSBxXbmGkdNUjE+iArAE1UFwK8l1CArvn1Dj6
-         VmycPU0Nfa3hbUmuISDa5Xk4ONgYJcV9IC2TlkXY8zAf+CHIVKOlVDxUv2m1kPg86tcP
-         8QWA==
-X-Gm-Message-State: APjAAAUTuCqEjYc4Y1Nk6O10Vgm8orQlU62h9btNWQGECr/6kOQ5xn93
-        X9NuDFJcOm63mi6t8qtUoYeCAd7h6XEiKrNxjUnlBw==
-X-Google-Smtp-Source: APXvYqzwhCB03grTJpBJ854az/AP62CnlurMT4KPH9q65JN89/VdutPBev3zZJOEoLTF0GQtW/qv1c9wqojMald3Jrg=
-X-Received: by 2002:a63:4558:: with SMTP id u24mr30651707pgk.225.1556129583794;
- Wed, 24 Apr 2019 11:13:03 -0700 (PDT)
+        Wed, 24 Apr 2019 14:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733145AbfDXRMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:12:15 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0651218B0;
+        Wed, 24 Apr 2019 17:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556125934;
+        bh=onuuuUP/JxLBWRPpTrPecDj9JMwAX6HKx7+uvKLH/KI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=G2QwfCFcKfln6vR8s3byM2Of+3ITVCC+Qyp7+vtCpLuKxB2W9VhzEIDzD0VSyEnQ2
+         iCifqTey7lZZTcRRCNYknyjW3dkpVHmFux11b+LX84Mz/NJXFbgnyu+HrpJuPWAESR
+         uIq5jZEal/lFUcZDQkVTkulibgQF+FVJf0BB4tV0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Louis Taylor <louis@kragniz.eu>,
+        Steve French <stfrench@microsoft.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 009/104] cifs: use correct format characters
+Date:   Wed, 24 Apr 2019 19:08:26 +0200
+Message-Id: <20190424170846.336312448@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
+References: <20190424170839.996641496@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20181210223133.22667-1-ndesaulniers@google.com>
- <CAK8P3a3At0Znn7BRxVxFdxcCa2=uJ9fAJYazKe3E9688axPj2g@mail.gmail.com> <87a7gfseis.fsf@linux.ibm.com>
-In-Reply-To: <87a7gfseis.fsf@linux.ibm.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 24 Apr 2019 11:12:52 -0700
-Message-ID: <CAKwvOdn2B=410e7yCXNmc=94mQHydh=KzKv4nnpC6+UbKodFKg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: VDSO: Drop implicit common-page-size linker flag
-To:     Nathan Lynch <nathanl@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 6:45 AM Nathan Lynch <nathanl@linux.ibm.com> wrote:
-> Arnd Bergmann <arnd@arndb.de> writes:
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Acked-by: Nathan Lynch <nathanl@linux.ibm.com>
+[ Upstream commit 259594bea574e515a148171b5cd84ce5cbdc028a ]
 
-https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=8859/1
+When compiling with -Wformat, clang emits the following warnings:
+
+fs/cifs/smb1ops.c:312:20: warning: format specifies type 'unsigned
+short' but the argument has type 'unsigned int' [-Wformat]
+                         tgt_total_cnt, total_in_tgt);
+                                        ^~~~~~~~~~~~
+
+fs/cifs/cifs_dfs_ref.c:289:4: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->flags, ref->server_type);
+                 ^~~~~~~~~~
+
+fs/cifs/cifs_dfs_ref.c:289:16: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->flags, ref->server_type);
+                             ^~~~~~~~~~~~~~~~
+
+fs/cifs/cifs_dfs_ref.c:291:4: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->ref_flag, ref->path_consumed);
+                 ^~~~~~~~~~~~~
+
+fs/cifs/cifs_dfs_ref.c:291:19: warning: format specifies type 'short'
+but the argument has type 'int' [-Wformat]
+                 ref->ref_flag, ref->path_consumed);
+                                ^~~~~~~~~~~~~~~~~~
+The types of these arguments are unconditionally defined, so this patch
+updates the format character to the correct ones for ints and unsigned
+ints.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/378
+
+Signed-off-by: Louis Taylor <louis@kragniz.eu>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/cifs/cifs_dfs_ref.c | 4 ++--
+ fs/cifs/smb1ops.c      | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/fs/cifs/cifs_dfs_ref.c b/fs/cifs/cifs_dfs_ref.c
+index b8602f199815..71263ea90810 100644
+--- a/fs/cifs/cifs_dfs_ref.c
++++ b/fs/cifs/cifs_dfs_ref.c
+@@ -265,9 +265,9 @@ static void dump_referral(const struct dfs_info3_param *ref)
+ {
+ 	cifs_dbg(FYI, "DFS: ref path: %s\n", ref->path_name);
+ 	cifs_dbg(FYI, "DFS: node path: %s\n", ref->node_name);
+-	cifs_dbg(FYI, "DFS: fl: %hd, srv_type: %hd\n",
++	cifs_dbg(FYI, "DFS: fl: %d, srv_type: %d\n",
+ 		 ref->flags, ref->server_type);
+-	cifs_dbg(FYI, "DFS: ref_flags: %hd, path_consumed: %hd\n",
++	cifs_dbg(FYI, "DFS: ref_flags: %d, path_consumed: %d\n",
+ 		 ref->ref_flag, ref->path_consumed);
+ }
+ 
+diff --git a/fs/cifs/smb1ops.c b/fs/cifs/smb1ops.c
+index b0f973b2b189..2a43aa6d8e87 100644
+--- a/fs/cifs/smb1ops.c
++++ b/fs/cifs/smb1ops.c
+@@ -305,7 +305,7 @@ coalesce_t2(char *second_buf, struct smb_hdr *target_hdr)
+ 	remaining = tgt_total_cnt - total_in_tgt;
+ 
+ 	if (remaining < 0) {
+-		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%hu\n",
++		cifs_dbg(FYI, "Server sent too much data. tgt_total_cnt=%hu total_in_tgt=%u\n",
+ 			 tgt_total_cnt, total_in_tgt);
+ 		return -EPROTO;
+ 	}
 -- 
-Thanks,
-~Nick Desaulniers
+2.19.1
+
+
+
