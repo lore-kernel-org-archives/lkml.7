@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722F4C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5359DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 376B6218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D20218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117124;
-	bh=5E8ghuCRDC6tBp9SP1QbYoJ2EdMunqEPTBkuiYdcQ00=;
+	s=default; t=1556117128;
+	bh=kSmBxv0RWRKApnBZxeQzBsigputrP6wEjGlv6b3v2sU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FTxNgC66NZ4UoWY4QT809uSfvPiY4lMO6pwGHMMFVOt7klEGnFqhf+m8ia8oq7FEv
-	 0Kbb783wZXISu9YzTat5LYMYlckDzjRMr8u04u/8/KgJmmcQKY+uF1aAVbco395PtB
-	 2kku1tT09OWigCw3C9U+qS7YRmlgw8Eibq+qrgCc=
+	b=SNjbVk7ySuOaKsp9GwaxRKwYzMhlZ4r+lBVXjRjcA/Cr0Ea5AjrA7xTriRnAVImKN
+	 ynAOz0vYmOQKgpa0q2X7RY7ItFWiMJR/54dRWtq/LDCLB4pbwP0T3+YPwp7r6hztkS
+	 fL5JOUCnUryZKbWZopFe9Kl0Oh/FxccoNEuhe/z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbfDXOjU (ORCPT
+        id S1732151AbfDXOp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:39:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41704 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:45:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731250AbfDXOjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:39:18 -0400
+        id S1731645AbfDXOjU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:39:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD4B820684;
-        Wed, 24 Apr 2019 14:39:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF9A521900;
+        Wed, 24 Apr 2019 14:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116757;
-        bh=5E8ghuCRDC6tBp9SP1QbYoJ2EdMunqEPTBkuiYdcQ00=;
+        s=default; t=1556116759;
+        bh=kSmBxv0RWRKApnBZxeQzBsigputrP6wEjGlv6b3v2sU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R0cWwW2vn5vfvLEGDss15u/A/mC/g2D0SmF+beR7TqoNH6Kddfb8i8S4J03g9QFE7
-         cpJkvTy2crbIFC3w+gPz8+v/L/7aZQBB7hlooOAWsgRitVcp9Rdx9tTmbzsfF4zjfy
-         HJg8aGytO4rTYu5/VudrQWFlk0r8YAb5OrhUTJhQ=
+        b=V3vm7xUixtQf8Yx/uCzS/hi1cGSvtkWN3QnlP0fi6pCMVWRsftd3PzUq7o+Gue270
+         xAA5WTT6G+QbCqCWw782bhysvkZzbg7jG60/V3J4jUbqgeMJlLlsRde9Prtwa0B60W
+         agPXFUNFqKi7BYUHpOrN1hj2VGJkNjGgrxqL3iBU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/52] HID: logitech: check the return value of create_singlethread_workqueue
-Date:   Wed, 24 Apr 2019 10:38:20 -0400
-Message-Id: <20190424143911.28890-2-sashal@kernel.org>
+Cc:     "He, Bo" <bo.he@intel.com>, "Zhang, Jun" <jun.zhang@intel.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/52] HID: debug: fix race condition with between rdesc_show() and device removal
+Date:   Wed, 24 Apr 2019 10:38:21 -0400
+Message-Id: <20190424143911.28890-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143911.28890-1-sashal@kernel.org>
 References: <20190424143911.28890-1-sashal@kernel.org>
@@ -58,47 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: "He, Bo" <bo.he@intel.com>
 
-[ Upstream commit 6c44b15e1c9076d925d5236ddadf1318b0a25ce2 ]
+[ Upstream commit cef0d4948cb0a02db37ebfdc320e127c77ab1637 ]
 
-create_singlethread_workqueue may fail and return NULL. The fix checks if it is
-NULL to avoid NULL pointer dereference.  Also, the fix moves the call of
-create_singlethread_workqueue earlier to avoid resource-release issues.
+There is a race condition that could happen if hid_debug_rdesc_show()
+is running while hdev is in the process of going away (device removal,
+system suspend, etc) which could result in NULL pointer dereference:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+	 BUG: unable to handle kernel paging request at 0000000783316040
+	 CPU: 1 PID: 1512 Comm: getevent Tainted: G     U     O 4.19.20-quilt-2e5dc0ac-00029-gc455a447dd55 #1
+	 RIP: 0010:hid_dump_device+0x9b/0x160
+	 Call Trace:
+	  hid_debug_rdesc_show+0x72/0x1d0
+	  seq_read+0xe0/0x410
+	  full_proxy_read+0x5f/0x90
+	  __vfs_read+0x3a/0x170
+	  vfs_read+0xa0/0x150
+	  ksys_read+0x58/0xc0
+	  __x64_sys_read+0x1a/0x20
+	  do_syscall_64+0x55/0x110
+	  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Grab driver_input_lock to make sure the input device exists throughout the
+whole process of dumping the rdesc.
+
+[jkosina@suse.cz: update changelog a bit]
+Signed-off-by: "he, bo" <bo.he@intel.com>
+Signed-off-by: "Zhang, Jun" <jun.zhang@intel.com>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/hid/hid-debug.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 19cc980eebce..8425d3548a41 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -1907,6 +1907,13 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
- 		kfree(data);
- 		return -ENOMEM;
- 	}
-+	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
-+	if (!data->wq) {
-+		kfree(data->effect_ids);
-+		kfree(data);
-+		return -ENOMEM;
-+	}
+diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
+index ebc9ffde41e9..a353a011fbdf 100644
+--- a/drivers/hid/hid-debug.c
++++ b/drivers/hid/hid-debug.c
+@@ -1060,10 +1060,15 @@ static int hid_debug_rdesc_show(struct seq_file *f, void *p)
+ 	seq_printf(f, "\n\n");
+ 
+ 	/* dump parsed data and input mappings */
++	if (down_interruptible(&hdev->driver_input_lock))
++		return 0;
 +
- 	data->hidpp = hidpp;
- 	data->feature_index = feature_index;
- 	data->version = version;
-@@ -1951,7 +1958,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
- 	/* ignore boost value at response.fap.params[2] */
+ 	hid_dump_device(hdev, f);
+ 	seq_printf(f, "\n");
+ 	hid_dump_input_mapping(hdev, f);
  
- 	/* init the hardware command queue */
--	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
- 	atomic_set(&data->workqueue_size, 0);
++	up(&hdev->driver_input_lock);
++
+ 	return 0;
+ }
  
- 	/* initialize with zero autocenter to get wheel in usable state */
 -- 
 2.19.1
 
