@@ -2,63 +2,53 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB07C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAC7C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09A7A21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B0E21909
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126245;
-	bh=GXA9xdz13reXHER/mDTvwROLSlaMVpyXXwYTRcI/7oA=;
+	s=default; t=1556126247;
+	bh=sfOF722TNCF3FSCRFAza7gIMuAbO4yl0a052G13OuWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NUTzYJPS5ncNxMSvdELPAm/nnTU8QLtFWBCjdX74VV/0yZhT42zgIsMNEI2Bwwjcl
-	 KIxorGHe5ATQMqMX1yVHzsdYH8ysGdexkstotJwp3gy4kRe3W4Zlv9RG2nxgg8nEEA
-	 TZeAIqqR9qIa6+Sz8aq3Z4CoAY2NMlGiBOAwnFww=
+	b=Ajb2mzTQy22R13cXId7D+kU7MnOJWp0ekyEkX/AFJALZTBYUjPZ91sp2VChr60Pwu
+	 apSu+z4HSsTXgMHZ8vbY71dW0ydqL+oUs5L6fjFSG/dmnyVXniUTqZJgT+r7agFNBj
+	 jlPwes+juihuPagWS99nq2aW5iMSgaE54QG9FC6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388617AbfDXRRX (ORCPT
+        id S2388193AbfDXRR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:17:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42184 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:17:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388602AbfDXRRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:17:21 -0400
+        id S2388615AbfDXRRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:17:23 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4952218B0;
-        Wed, 24 Apr 2019 17:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90B4F21917;
+        Wed, 24 Apr 2019 17:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126240;
-        bh=GXA9xdz13reXHER/mDTvwROLSlaMVpyXXwYTRcI/7oA=;
+        s=default; t=1556126243;
+        bh=sfOF722TNCF3FSCRFAza7gIMuAbO4yl0a052G13OuWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ksyz7dPnXB81eA0AnFC3uJhzElUdTxbB7fjsjxGEjR6FqtmzuDNhwC7ImCz8YdaUZ
-         8cT5iBtSKENzU8JrtKt4cv/Ag9NvGQJbTPYEx4SRQLEQo2+wvBofhC+DdhH5n9l2aE
-         UQ9tJPt5l5g6ycMAYbDCEa3WW0bR6Z6eDc1DpzD0=
+        b=iQVsibIlCEbCmY8LdFa8eYNOuHRXwEGrN0ZdgPmtr9aS5QetiMnJrhi0LYo6lMd8P
+         46RuFbeWwWObIp2dmzejrCShxuZoyqbXI3ctFZZY8mqB/6BarOcns3iHWWf6MTZURB
+         KzpXG1QnWY4hldhh3wUwBNiGQ0v1zy0oGhuz10UE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Anshul Garg <aksgarg1989@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Miller <davem@davemloft.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <mawilcox@microsoft.com>,
-        Michael Davidson <md@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4.4 004/168] lib/int_sqrt: optimize initial value compute
-Date:   Wed, 24 Apr 2019 19:07:28 +0200
-Message-Id: <20190424170923.713010990@linuxfoundation.org>
+        stable@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 040/168] media: s5p-g2d: Correct return type for mem2mem buffer helpers
+Date:   Wed, 24 Apr 2019 19:08:04 +0200
+Message-Id: <20190424170926.152119632@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -71,91 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+[ Upstream commit 30fa627b32230737bc3f678067e2adfecf956987 ]
 
-commit f8ae107eef209bff29a5816bc1aad40d5cd69a80 upstream.
+Fix the assigned type of mem2mem buffer handling API.
+Namely, these functions:
 
-The initial value (@m) compute is:
+ v4l2_m2m_next_buf
+ v4l2_m2m_last_buf
+ v4l2_m2m_buf_remove
+ v4l2_m2m_next_src_buf
+ v4l2_m2m_next_dst_buf
+ v4l2_m2m_last_src_buf
+ v4l2_m2m_last_dst_buf
+ v4l2_m2m_src_buf_remove
+ v4l2_m2m_dst_buf_remove
 
-	m = 1UL << (BITS_PER_LONG - 2);
-	while (m > x)
-		m >>= 2;
+return a struct vb2_v4l2_buffer, and not a struct vb2_buffer.
 
-Which is a linear search for the highest even bit smaller or equal to @x
-We can implement this using a binary search using __fls() (or better when
-its hardware implemented).
+Fixing this is necessary to fix the mem2mem buffer handling API,
+changing the return to the correct struct vb2_v4l2_buffer instead
+of a void pointer.
 
-	m = 1UL << (__fls(x) & ~1UL);
-
-Especially for small values of @x; which are the more common arguments
-when doing a CDF on idle times; the linear search is near to worst case,
-while the binary search of __fls() is a constant 6 (or 5 on 32bit)
-branches.
-
-      cycles:                 branches:              branch-misses:
-
-PRE:
-
-hot:   43.633557 +- 0.034373  45.333132 +- 0.002277  0.023529 +- 0.000681
-cold: 207.438411 +- 0.125840  45.333132 +- 0.002277  6.976486 +- 0.004219
-
-SOFTWARE FLS:
-
-hot:   29.576176 +- 0.028850  26.666730 +- 0.004511  0.019463 +- 0.000663
-cold: 165.947136 +- 0.188406  26.666746 +- 0.004511  6.133897 +- 0.004386
-
-HARDWARE FLS:
-
-hot:   24.720922 +- 0.025161  20.666784 +- 0.004509  0.020836 +- 0.000677
-cold: 132.777197 +- 0.127471  20.666776 +- 0.004509  5.080285 +- 0.003874
-
-Averages computed over all values <128k using a LFSR to generate order.
-Cold numbers have a LFSR based branch trace buffer 'confuser' ran between
-each int_sqrt() invocation.
-
-Link: http://lkml.kernel.org/r/20171020164644.936577234@infradead.org
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Suggested-by: Joe Perches <joe@perches.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Anshul Garg <aksgarg1989@gmail.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: David Miller <davem@davemloft.net>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <mawilcox@microsoft.com>
-Cc: Michael Davidson <md@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Joe Perches <joe@perches.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/int_sqrt.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/media/platform/s5p-g2d/g2d.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/lib/int_sqrt.c
-+++ b/lib/int_sqrt.c
-@@ -7,6 +7,7 @@
+diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
+index e1936d9d27da..2b939555cccb 100644
+--- a/drivers/media/platform/s5p-g2d/g2d.c
++++ b/drivers/media/platform/s5p-g2d/g2d.c
+@@ -497,7 +497,7 @@ static void device_run(void *prv)
+ {
+ 	struct g2d_ctx *ctx = prv;
+ 	struct g2d_dev *dev = ctx->dev;
+-	struct vb2_buffer *src, *dst;
++	struct vb2_v4l2_buffer *src, *dst;
+ 	unsigned long flags;
+ 	u32 cmd = 0;
  
- #include <linux/kernel.h>
- #include <linux/export.h>
-+#include <linux/bitops.h>
+@@ -512,10 +512,10 @@ static void device_run(void *prv)
+ 	spin_lock_irqsave(&dev->ctrl_lock, flags);
  
- /**
-  * int_sqrt - rough approximation to sqrt
-@@ -21,10 +22,7 @@ unsigned long int_sqrt(unsigned long x)
- 	if (x <= 1)
- 		return x;
+ 	g2d_set_src_size(dev, &ctx->in);
+-	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(src, 0));
++	g2d_set_src_addr(dev, vb2_dma_contig_plane_dma_addr(&src->vb2_buf, 0));
  
--	m = 1UL << (BITS_PER_LONG - 2);
--	while (m > x)
--		m >>= 2;
--
-+	m = 1UL << (__fls(x) & ~1UL);
- 	while (m != 0) {
- 		b = y + m;
- 		y >>= 1;
+ 	g2d_set_dst_size(dev, &ctx->out);
+-	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(dst, 0));
++	g2d_set_dst_addr(dev, vb2_dma_contig_plane_dma_addr(&dst->vb2_buf, 0));
+ 
+ 	g2d_set_rop4(dev, ctx->rop);
+ 	g2d_set_flip(dev, ctx->flip);
+-- 
+2.19.1
+
 
 
