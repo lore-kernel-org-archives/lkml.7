@@ -2,495 +2,142 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F184C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6FBC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62EA3218B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE15218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 05:53:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a27H8GMr"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="EVkCO3GN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfDXFwN (ORCPT
+        id S1729669AbfDXFxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 01:52:13 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37852 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729396AbfDXFwM (ORCPT
+        Wed, 24 Apr 2019 01:53:15 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35808 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729244AbfDXFxP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 01:52:12 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w23so8713033ply.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 22:52:12 -0700 (PDT)
+        Wed, 24 Apr 2019 01:53:15 -0400
+Received: by mail-qk1-f195.google.com with SMTP id n81so6256354qke.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 22:53:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=STIOYtESL/WNUmcd9KoT7I2xMC9Q81ixLxsXzArDi+Q=;
-        b=a27H8GMrtceUVLUAySm3OUNoE4cPnVAAnGEPsPYIox74e2PRN8/YSSZ2/KUNMcki/W
-         ozwZOvgbsORSjCD11v5y6+108jk9jk/KxNWNlnatqn8aVlA6IDz1b/nBnqTfCCiFoOQL
-         ylgr+To/GBiVf6Li4WoaWJT39kwOtEc4waZODR+WJ4Ch25rMD4+gZfGUlXI+kMl2SOTa
-         6XMh2LDl2yT70N+SaN5tsBm2O1nqdrg365oHVgouiu7Q2EWqltQp2vdheHnr4fwTGdMx
-         e0ghZqPEIc3pLHMEX6vRqIqh2RiPJ+j1luHw1F51+mVh5TrTD9pdqqj8GkxJU7QGH5Zh
-         RvgQ==
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=swwar00FpA8AMNE18ADRhjjaugrMNkFTGN7yRfbhtdM=;
+        b=EVkCO3GNVH+G/SXpfTJHuR7/vobA3fiTxX7MO1bfiNuahJlVZmRffUFodYOeJuXFO6
+         ABrR51q5RaD/CTT1f4wra8cECp6ErzknmjzG3Qe74e7pcZnUAt0m3hnichWWPE70O0h5
+         BHh/GDnRdHLSx5lkOaBAxd5GcpVbn7GNfthaW8hHy0ZvcSeDN4qazjt2QWeQcWjelBBQ
+         G5XSXor90o9gwNfGJoW6ZNYTRZdW9gF/noDsgfJ86JDAubwQIBdBWwymvIQ4b6gO4UdV
+         T9p7VfDqz27CkyFU29GmBKp6Xvqpvp37zc1uUbgK10nvyS/vqN9FjsH2C1FoVFxkJKVc
+         oXYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=STIOYtESL/WNUmcd9KoT7I2xMC9Q81ixLxsXzArDi+Q=;
-        b=WPij+noLXEFOPvJca3qGKnIOgh8oe8084tSHEe6GXlkC1WpSlrNAjK5R/v0Tml/W8I
-         IVN/fYR6cPbx74Nn4ofFq7juedPQ+HzRQFoI+151qVGYjphk/ulCkE2LOvbFpPAdsLKO
-         d+19pySngLNQUHEFdl3lIvUPSLQbIn0tJDG1ValvMHYBjaRlpulG7M9JzoLn+M7mncBc
-         +p4uX2QCsoXueGlxCr7ARRbil9RIs6DEBAlb/ejj9f8/60SHlLPFa1OBUms+GkLZjLan
-         YlGrv1IV1RbME+nQRMxVmBGMbBRsIG0I/sYdQyi21zJclGXxbLzbhxGuV1pSFXzocpl4
-         wzug==
-X-Gm-Message-State: APjAAAW7y3YHJWw0W1cb4UETAt43IKpbJs+sZpTHyvX8Pl7ET5LUOisW
-        Wg0e7RDHUYxII7qv8WSr0eUlzQ==
-X-Google-Smtp-Source: APXvYqxQ6QsCbcvVzM4g033Fq8ZGoT2+FEaJ8yYraA9hrmSlJQJu7SD9xqhZyWM8FLJSEKJ1pNgK0w==
-X-Received: by 2002:a17:902:28ab:: with SMTP id f40mr13293312plb.297.1556085131558;
-        Tue, 23 Apr 2019 22:52:11 -0700 (PDT)
-Received: from localhost ([122.166.139.136])
-        by smtp.gmail.com with ESMTPSA id l10sm33998027pfc.46.2019.04.23.22.52.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 22:52:10 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 11:22:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
-        jcrouse@codeaurora.org, vincent.guittot@linaro.org,
-        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
-        seansw@qti.qualcomm.com, daidavid1@codeaurora.org,
-        evgreen@chromium.org, sibis@codeaurora.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] OPP: Add support for parsing the interconnect
- bandwidth
-Message-ID: <20190424055208.kermzymve2foguhl@vireshk-i7>
-References: <20190423132823.7915-1-georgi.djakov@linaro.org>
- <20190423132823.7915-4-georgi.djakov@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=swwar00FpA8AMNE18ADRhjjaugrMNkFTGN7yRfbhtdM=;
+        b=rwaD0yblxWeGH6OKDQakQvCJE/yl5EdA6P8KMBc0CVcuvi2XB9HicfxeR0cVkOBK27
+         p0f+WkQZbLoanre/bZ7SYRyzsDjfpgRkIUIQ6GoNnzTQOK7S+h3ol3liz8rVPTBS2cOD
+         4OnSwEtXAZ1kzbR67s1VtNWnJHqNLYzPblCc2qIufjrArGk50RrI4mwRkYV6jUShiIxr
+         udxVrWhOzLx8asxc5am4TszTrbKfMXntL8lEJwd6ohKhBjU4P7L+mwTkDoIvy7gavb9L
+         4cJXUU9l6tfc9YWcxzUc3kyZVBf/92pWk+uOi8DWr9nP13NyaUG5mcQIOfAeCivMr4Dr
+         /R/w==
+X-Gm-Message-State: APjAAAUuVNa9XKh90S6mtaWiXgA5XYRiFkDdej+ivoeDp3spyd+E1y0P
+        h3490TLosuJgTiK5jw5/jnEQUBo1gk2ZUyJ7DbQVEA==
+X-Google-Smtp-Source: APXvYqxGC/o/7hadFe1K4ZjteAayq/0Vp+0h81tBzalh2wrLn7H98AzldQ4Y8c/lf+7BVT6Vof3iIfzfjSVSm6zVuSA=
+X-Received: by 2002:a05:620a:12bc:: with SMTP id x28mr22520243qki.329.1556085193920;
+ Tue, 23 Apr 2019 22:53:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190423132823.7915-4-georgi.djakov@linaro.org>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+References: <20190422101526.28415-1-drake@endlessm.com> <20190423090849.GH11158@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190423090849.GH11158@hirez.programming.kicks-ass.net>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Wed, 24 Apr 2019 13:53:02 +0800
+Message-ID: <CAD8Lp45C2EsEpxtpdNp6afPvqGOSU1yW4=AB2fi0Rhk3fxZ89Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/tsc: use CPUID.0x16 to calculate missing crystal frequency
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, x86@kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-04-19, 16:28, Georgi Djakov wrote:
-> The OPP bindings now support bandwidth values, so add support to parse it
-> from device tree and store it into the new dev_pm_opp_icc_bw struct, which
-> is part of the dev_pm_opp.
-> 
-> Also add and export the dev_pm_opp_set_paths() and dev_pm_opp_put_paths()
-> helpers, to set (and release) an interconnect paths to a device. The
-> bandwidth of these paths will be updated when the OPPs are switched.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  drivers/opp/core.c     |  87 ++++++++++++++++++++++++++++++++++-
->  drivers/opp/of.c       | 102 +++++++++++++++++++++++++++++++++++++++++
->  drivers/opp/opp.h      |   9 ++++
->  include/linux/pm_opp.h |  14 ++++++
->  4 files changed, 210 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 0420f7e8ad5b..97ee39ecdebd 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -19,6 +19,7 @@
->  #include <linux/slab.h>
->  #include <linux/device.h>
->  #include <linux/export.h>
-> +#include <linux/interconnect.h>
+On Tue, Apr 23, 2019 at 5:08 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> Well, SKX isn't exactly 'missing'; it would be very good if we can
+> confirm the new code is still correct under the below mentioned
+> conditions.
+>
+> commit b511203093489eb1829cb4de86e8214752205ac6
+> Author: Len Brown <len.brown@intel.com>
+> Date:   Fri Dec 22 00:27:55 2017 -0500
+>
+>     x86/tsc: Fix erroneous TSC rate on Skylake Xeon
+>
+>     The INTEL_FAM6_SKYLAKE_X hardcoded crystal_khz value of 25MHZ is
+>     problematic:
+>
+>      - SKX workstations (with same model # as server variants) use a 24 MHz
+>        crystal.  This results in a -4.0% time drift rate on SKX workstations.
 
-Just include this once in opp.h and the other .c files won't need it.
+Checking http://instlatx64.atw.hu/ there are 11 platforms listed as
+00050654 (skylake X), doing the calculations manually:
+18-Core Intel Xeon Gold 6154, 3000 MHz: 25000000
+2x 16-Core Intel Xeon Gold 6130, 2100 MHz: 25000000
+2x 18-Core Intel Xeon Gold 6154, 3000 MHz: 25000000
+2x 28-Core Intel Xeon Platinum 8180, 2500 MHz: 25000000
+2x HexaCore Intel Xeon Bronze 3106: 25000000
+2x OctalCore Intel Xeon Silver 4108, 3000 MHz: 25000000
+10-Core Xeon W-2155: 23913043
+HexaCore Intel Core i7-7800X: 23972602
+10-Core Intel Core i9-7900X, 4000 MHz: 23913043
+18-Core Intel Core i9-7980XE: 24074074
+28-Core Intel Xeon W-3175X: 25000000
 
->  #include <linux/pm_domain.h>
->  #include <linux/regulator/consumer.h>
->  
-> @@ -876,6 +877,8 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
->  				ret);
->  	}
->  
-> +	_of_find_paths(opp_table, dev);
-> +
->  	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
->  	INIT_LIST_HEAD(&opp_table->opp_list);
->  	kref_init(&opp_table->kref);
-> @@ -1129,11 +1132,12 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_remove_all_dynamic);
->  struct dev_pm_opp *_opp_allocate(struct opp_table *table)
->  {
->  	struct dev_pm_opp *opp;
-> -	int count, supply_size;
-> +	int count, supply_size, icc_size;
->  
->  	/* Allocate space for at least one supply */
->  	count = table->regulator_count > 0 ? table->regulator_count : 1;
->  	supply_size = sizeof(*opp->supplies) * count;
-> +	icc_size = sizeof(*opp->bandwidth) * table->path_count;
->  
->  	/* allocate new OPP node and supplies structures */
->  	opp = kzalloc(sizeof(*opp) + supply_size, GFP_KERNEL);
+So given that the results include 24MHz and 25MHz crystal clocks
+calculated on different products then it looks like this variance is
+correctly accounted for.
 
-You never updated this to include icc_size :(
+>      - SKX servers subject the crystal to an EMI reduction circuit that reduces its
+>        actual frequency by (approximately) -0.25%.  This results in -1 second per
+>        10 minute time drift as compared to network time.
+>
+>     This issue can also trigger a timer and power problem, on configurations
+>     that use the LAPIC timer (versus the TSC deadline timer).  Clock ticks
+>     scheduled with the LAPIC timer arrive a few usec before the time they are
+>     expected (according to the slow TSC).  This causes Linux to poll-idle, when
+>     it should be in an idle power saving state.  The idle and clock code do not
+>     graciously recover from this error, sometimes resulting in significant
+>     polling and measurable power impact.
+>
+>     Stop using native_calibrate_tsc() for INTEL_FAM6_SKYLAKE_X.
+>     native_calibrate_tsc() will return 0, boot will run with tsc_khz = cpu_khz,
+>     and the TSC refined calibration will update tsc_khz to correct for the
+>     difference.
 
-> @@ -1141,7 +1145,8 @@ struct dev_pm_opp *_opp_allocate(struct opp_table *table)
->  		return NULL;
->  
->  	/* Put the supplies at the end of the OPP structure as an empty array */
-> -	opp->supplies = (struct dev_pm_opp_supply *)(opp + 1);
-> +	opp->bandwidth = (struct dev_pm_opp_icc_bw *)(opp + 1);
+It sounds like I should add a condition:
+    if (boot_cpu_data.x86_model != INTEL_FAM6_SKYLAKE_X)
+        setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+so that refined TSC calibration will run on SKYLAKE_X.
 
-Keep the order as supplies and then bandwidth.
+That does raise another question though. Taking other platforms such
+as KABYLAKE_MOBILE, the previous code hardcoded a precise 24MHz value,
+but my new code calculates 23893805Hz. Is that small discrepancy small
+enough to trigger the timer and power problem as described for
+SKYLAKE_X above?
 
-> +	opp->supplies = (struct dev_pm_opp_supply *)(opp + icc_size + 1);
+If so, maybe the logic should instead be:
+    if (CPUID.0x15 provided Crystal Hz, i.e. we didn't have to calculate it)
+        setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+This would enable TSC refinement on all variants of skylake and kabylake.
 
-Did you check what address gets assigned here ? I think the pointer
-addition will screw things up for you.
-
->  	INIT_LIST_HEAD(&opp->node);
->  
->  	return opp;
-> @@ -1637,6 +1642,84 @@ void dev_pm_opp_put_clkname(struct opp_table *opp_table)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_put_clkname);
->  
-> +/**
-> + * dev_pm_opp_set_paths() - Set interconnect path for a device
-> + * @dev: Device for which interconnect path is being set.
-> + *
-> + * This must be called before any OPPs are initialized for the device.
-> + */
-> +struct opp_table *dev_pm_opp_set_paths(struct device *dev)
-
-I got a bit confused. Why is this routine required exactly as
-_of_find_paths() would have already done something similar ?
-
-> +{
-> +	struct opp_table *opp_table;
-> +	int ret, i;
-> +
-> +	opp_table = dev_pm_opp_get_opp_table(dev);
-> +	if (!opp_table)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	/* This should be called before OPPs are initialized */
-> +	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
-> +		ret = -EBUSY;
-> +		goto err;
-> +	}
-> +
-> +	/* Another CPU that shares the OPP table has set the path */
-> +	if (opp_table->paths)
-> +		return opp_table;
-> +
-> +	opp_table->paths = kmalloc_array(opp_table->path_count,
-> +					 sizeof(*opp_table->paths), GFP_KERNEL);
-> +
-> +	/* Find interconnect path(s) for the device */
-> +	for (i = 0; i < opp_table->path_count; i++) {
-> +		opp_table->paths[i] = of_icc_get_by_index(dev, i);
-> +		if (IS_ERR(opp_table->paths[i])) {
-> +			ret = PTR_ERR(opp_table->paths[i]);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "%s: Couldn't find path%d: %d\n",
-> +					__func__, i, ret);
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	return opp_table;
-> +
-> +err:
-> +	dev_pm_opp_put_opp_table(opp_table);
-> +
-> +	return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_opp_set_paths);
-> +
-> +/**
-> + * dev_pm_opp_put_paths() - Release interconnect path resources
-> + * @opp_table: OPP table returned from dev_pm_opp_set_paths().
-> + */
-> +void dev_pm_opp_put_paths(struct opp_table *opp_table)
-> +{
-> +	int i;
-> +
-> +	if (!opp_table->paths) {
-> +		pr_err("%s: Doesn't have paths set\n", __func__);
-> +		return;
-> +	}
-> +
-> +	/* Make sure there are no concurrent readers while updating opp_table */
-> +	WARN_ON(!list_empty(&opp_table->opp_list));
-> +
-> +	for (i = opp_table->path_count - 1; i >= 0; i--)
-> +		icc_put(opp_table->paths[i]);
-> +
-> +	_free_set_opp_data(opp_table);
-> +
-> +	kfree(opp_table->paths);
-> +	opp_table->paths = NULL;
-> +	opp_table->path_count = 0;
-> +
-> +	dev_pm_opp_put_opp_table(opp_table);
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_opp_put_paths);
-> +
->  /**
->   * dev_pm_opp_register_set_opp_helper() - Register custom set OPP helper
->   * @dev: Device for which the helper is getting registered.
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index c10c782d15aa..00af23280bc6 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -16,6 +16,7 @@
->  #include <linux/cpu.h>
->  #include <linux/errno.h>
->  #include <linux/device.h>
-> +#include <linux/interconnect.h>
->  #include <linux/of_device.h>
->  #include <linux/pm_domain.h>
->  #include <linux/slab.h>
-> @@ -363,6 +364,45 @@ static int _of_opp_alloc_required_opps(struct opp_table *opp_table,
->  	return ret;
->  }
->  
-> +int _of_find_paths(struct opp_table *opp_table, struct device *dev)
-> +{
-> +	struct device_node *np;
-> +	int ret, i, count, num_paths;
-> +
-> +	np = of_node_get(dev->of_node);
-> +	if (np) {
-
-I would rather do:
-
-        if (!np)
-                return 0;
-
-That will kill unnecessary line breaks and indentation.
-
-> +		count = of_count_phandle_with_args(np, "interconnects",
-> +						   "#interconnect-cells");
-
-You can do of_node_put() right here as it isn't used afterwards.
-
-> +		if (count % 2) {
-
-Shouldn't this be 4 instead of 2 ? Each path is represented as:
-
-<&noc MASTER_CPU &noc SLAVE_DDR>
-
-which has 4 fields.
-
-> +			dev_err(dev, "%s: Invalid interconnects values\n",
-> +				__func__);
-> +			ret = -EINVAL;
-> +			goto put_of_node;
-> +		}
-> +
-> +		num_paths = count / 2;
-> +		opp_table->paths = kcalloc(num_paths, sizeof(*opp_table->paths),
-> +					   GFP_KERNEL);
-> +		if (!opp_table->paths) {
-> +			ret = -ENOMEM;
-> +			goto put_of_node;
-> +		}
-> +
-> +		for (i = 0; i < num_paths; i++)
-> +			opp_table->paths[i] = of_icc_get_by_index(dev, i);
-> +
-> +		opp_table->path_count = num_paths;
-> +		of_node_put(np);
-> +	}
-> +
-> +	return 0;
-> +
-> +put_of_node:
-> +	of_node_put(np);
-> +
-> +	return ret;
-> +}
-> +
->  static bool _opp_is_supported(struct device *dev, struct opp_table *opp_table,
->  			      struct device_node *np)
->  {
-> @@ -539,6 +579,64 @@ static int opp_parse_supplies(struct dev_pm_opp *opp, struct device *dev,
->  	return ret;
->  }
->  
-> +static int opp_parse_icc_bw(struct dev_pm_opp *opp, struct device *dev,
-> +			    struct opp_table *opp_table)
-> +{
-> +	struct property *prop = NULL;
-> +	u32 *bandwidth;
-> +	char name[] = "bandwidth-MBps";
-> +	int count, i, j, ret;
-> +
-> +	/* Search for "bandwidth-MBps" */
-> +	prop = of_find_property(opp->np, name, NULL);
-> +
-> +	/* Missing property is not a problem */
-> +	if (!prop) {
-> +		dev_dbg(dev, "%s: Missing %s property\n", __func__, name);
-> +		return 0;
-> +	}
-> +
-> +	if (!prop->value) {
-> +		dev_dbg(dev, "%s: Missing %s value\n", __func__, name);
-> +		return -ENODATA;
-> +	}
-> +
-> +	/*
-> +	 * Bandwidth consists of average and peak values like:
-> +	 * bandwidth-MBps = <avg-MBps peak-MBps>
-> +	 */
-> +	count = prop->length / sizeof(u32);
-> +	if (count % 2) {
-> +		dev_err(dev, "%s: Invalid %s values\n", __func__, name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (opp_table->path_count != count / 2) {
-> +		dev_err(dev, "%s Mismatch between values and paths (%d %d)\n",
-> +			__func__, opp_table->path_count, count / 2);
-> +		return -EINVAL;
-> +	}
-> +
-> +	bandwidth = kmalloc_array(count, sizeof(*bandwidth), GFP_KERNEL);
-> +	if (!bandwidth)
-> +		return -ENOMEM;
-> +
-> +	ret = of_property_read_u32_array(opp->np, name, bandwidth, count);
-> +	if (ret) {
-> +		dev_err(dev, "%s: Error parsing %s: %d\n", __func__, name, ret);
-> +		goto free_bandwidth;
-> +	}
-> +	for (i = 0, j = 0; i < count; i++) {
-> +		opp->bandwidth[i].avg = MBps_to_icc(bandwidth[j++]);
-> +		opp->bandwidth[i].peak = MBps_to_icc(bandwidth[j++]);
-> +	}
-> +
-> +free_bandwidth:
-> +	kfree(bandwidth);
-> +
-> +	return ret;
-> +}
-> +
->  /**
->   * dev_pm_opp_of_remove_table() - Free OPP table entries created from static DT
->   *				  entries
-> @@ -635,6 +733,10 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
->  	if (opp_table->is_genpd)
->  		new_opp->pstate = pm_genpd_opp_to_performance_state(dev, new_opp);
->  
-> +	ret = opp_parse_icc_bw(new_opp, dev, opp_table);
-> +	if (ret)
-> +		goto free_opp;
-> +
->  	ret = _opp_add(dev, new_opp, opp_table, rate_not_available);
->  	if (ret) {
->  		/* Don't return error for duplicate OPPs */
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index 569b3525aa67..70a537f2dbd3 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -24,6 +24,7 @@
->  
->  struct clk;
->  struct regulator;
-> +struct icc_path;
->  
->  /* Lock to allow exclusive modification to the device and opp lists */
->  extern struct mutex opp_table_lock;
-> @@ -62,6 +63,7 @@ extern struct list_head opp_tables;
->   * @rate:	Frequency in hertz
->   * @level:	Performance level
->   * @supplies:	Power supplies voltage/current values
-> + * @bandwidth:	Interconnect bandwidth values
->   * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
->   *		frequency from any other OPP's frequency.
->   * @required_opps: List of OPPs that are required by this OPP.
-> @@ -84,6 +86,7 @@ struct dev_pm_opp {
->  	unsigned int level;
->  
->  	struct dev_pm_opp_supply *supplies;
-> +	struct dev_pm_opp_icc_bw *bandwidth;
->  
->  	unsigned long clock_latency_ns;
->  
-> @@ -150,6 +153,8 @@ enum opp_table_access {
->   * @regulator_count: Number of power supply regulators. Its value can be -1
->   * (uninitialized), 0 (no opp-microvolt property) or > 0 (has opp-microvolt
->   * property).
-> + * @paths: Interconnect path handles
-> + * @path_count: Number of interconnect paths
->   * @genpd_performance_state: Device's power domain support performance state.
->   * @is_genpd: Marks if the OPP table belongs to a genpd.
->   * @set_opp: Platform specific set_opp callback
-> @@ -194,6 +199,8 @@ struct opp_table {
->  	struct clk *clk;
->  	struct regulator **regulators;
->  	int regulator_count;
-> +	struct icc_path **paths;
-> +	unsigned int path_count;
->  	bool genpd_performance_state;
->  	bool is_genpd;
->  
-> @@ -228,12 +235,14 @@ void _of_clear_opp_table(struct opp_table *opp_table);
->  struct opp_table *_managed_opp(struct device *dev, int index);
->  void _of_opp_free_required_opps(struct opp_table *opp_table,
->  				struct dev_pm_opp *opp);
-> +int _of_find_paths(struct opp_table *opp_table, struct device *dev);
->  #else
->  static inline void _of_init_opp_table(struct opp_table *opp_table, struct device *dev, int index) {}
->  static inline void _of_clear_opp_table(struct opp_table *opp_table) {}
->  static inline struct opp_table *_managed_opp(struct device *dev, int index) { return NULL; }
->  static inline void _of_opp_free_required_opps(struct opp_table *opp_table,
->  					      struct dev_pm_opp *opp) {}
-> +static inline int _of_find_paths(struct opp_table *opp_table, struct device *dev) { return 0; }
->  #endif
->  
->  #ifdef CONFIG_DEBUG_FS
-> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-> index 24c757a32a7b..dabee09a92b8 100644
-> --- a/include/linux/pm_opp.h
-> +++ b/include/linux/pm_opp.h
-> @@ -43,6 +43,18 @@ struct dev_pm_opp_supply {
->  	unsigned long u_amp;
->  };
->  
-> +/**
-> + * struct dev_pm_opp_icc_bw - Interconnect bandwidth values
-> + * @avg:	Average bandwidth corresponding to this OPP (in icc units)
-> + * @peak:	Peak bandwidth corresponding to this OPP (in icc units)
-> + *
-> + * This structure stores the bandwidth values for a single interconnect path.
-> + */
-> +struct dev_pm_opp_icc_bw {
-> +	u32 avg;
-> +	u32 peak;
-> +};
-> +
->  /**
->   * struct dev_pm_opp_info - OPP freq/voltage/current values
->   * @rate:	Target clk rate in hz
-> @@ -127,6 +139,8 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev, const char * con
->  void dev_pm_opp_put_regulators(struct opp_table *opp_table);
->  struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const char * name);
->  void dev_pm_opp_put_clkname(struct opp_table *opp_table);
-> +struct opp_table *dev_pm_opp_set_paths(struct device *dev);
-> +void dev_pm_opp_put_paths(struct opp_table *opp_table);
->  struct opp_table *dev_pm_opp_register_set_opp_helper(struct device *dev, int (*set_opp)(struct dev_pm_set_opp_data *data));
->  void dev_pm_opp_unregister_set_opp_helper(struct opp_table *opp_table);
->  struct opp_table *dev_pm_opp_set_genpd_virt_dev(struct device *dev, struct device *virt_dev, int index);
-
--- 
-viresh
+Daniel
