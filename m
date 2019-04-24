@@ -2,88 +2,102 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21555C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB44C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE0EE218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5063F206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 16:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732945AbfDXQv7 (ORCPT
+        id S1732895AbfDXQwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 12:51:59 -0400
-Received: from foss.arm.com ([217.140.101.70]:49046 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732439AbfDXQv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 12:51:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D691374;
-        Wed, 24 Apr 2019 09:51:57 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB8313F557;
-        Wed, 24 Apr 2019 09:51:52 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 17:51:50 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andi Kleen <andi@firstfloor.org>, Chris Lameter <cl@linux.com>,
-        Ben Maurer <bmaurer@fb.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH for 5.2 08/10] rseq/selftests: aarch64 code
- signature: handle big-endian environment
-Message-ID: <20190424165150.GF21101@lakrids.cambridge.arm.com>
-References: <20190424152502.14246-1-mathieu.desnoyers@efficios.com>
- <20190424152502.14246-9-mathieu.desnoyers@efficios.com>
- <20190424164538.GC18611@fuggles.cambridge.arm.com>
+        Wed, 24 Apr 2019 12:52:31 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:60587 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732439AbfDXQwa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 12:52:30 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 035BD20090;
+        Wed, 24 Apr 2019 18:52:27 +0200 (CEST)
+Date:   Wed, 24 Apr 2019 18:52:26 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Xu YiPing <xuyiping@hisilicon.com>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>
+Subject: Re: [PATCH 12/25] drm: kirin: Reanme dc_ops to kirin_drm_data
+Message-ID: <20190424165226.GE20110@ravnborg.org>
+References: <1556061656-1733-1-git-send-email-john.stultz@linaro.org>
+ <1556061656-1733-13-git-send-email-john.stultz@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190424164538.GC18611@fuggles.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <1556061656-1733-13-git-send-email-john.stultz@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=BTeA3XvPAAAA:8
+        a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=KKAkSRfTAAAA:8 a=gscqT4CbrNph9keLqk8A:9
+        a=CjuIK1q_8ugA:10 a=tafbbOV3vt1XuEhzTjGK:22 a=Vxmtnl_E_bksehYqCbjh:22
+        a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 05:45:38PM +0100, Will Deacon wrote:
-> On Wed, Apr 24, 2019 at 11:25:00AM -0400, Mathieu Desnoyers wrote:
-> > +/*
-> > + * aarch64 -mbig-endian generates mixed endianness code vs data:
-> > + * little-endian code and big-endian data. Ensure the RSEQ_SIG signature
-> > + * matches code endianness.
-> > + */
-> > +#define RSEQ_SIG_CODE	0xd428bc00	/* BRK #0x45E0.  */
-> > +
-> > +#ifdef __AARCH64EB__
-> > +#define RSEQ_SIG_DATA	0x00bc28d4	/* BRK #0x45E0.  */
+Hi John.
+
+On Tue, Apr 23, 2019 at 04:20:43PM -0700, John Stultz wrote:
+> From: Xu YiPing <xuyiping@hisilicon.com>
 > 
-> It would be neater to implement swab32 and use that with RSEQ_SIG_CODE,
+> As part of refactoring the kirin driver to better support
+> different hardware revisions, this patch renames the
+> struct kirin_dc_ops to struct kirin_drm_data and cleans
+> up the related variable names.
+> 
+> Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
+> Cc: Rongrong Zou <zourongrong@gmail.com>
+> Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> Cc: Chen Feng <puck.chen@hisilicon.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: dri-devel <dri-devel@lists.freedesktop.org>
+> Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
+> [jstultz: reworded commit message]
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c |  2 +-
+>  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 16 ++++++++--------
+>  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h |  4 ++--
+>  3 files changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+> index 69604ad..221bfbb 100644
+> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+> @@ -1055,7 +1055,7 @@ static void ade_drm_cleanup(struct platform_device *pdev)
+>  {
+>  }
+>  
+> -const struct kirin_dc_ops ade_dc_ops = {
+> +struct kirin_drm_data ade_driver_data = {
+>  	.init = ade_drm_init,
+>  	.cleanup = ade_drm_cleanup
+>  };
+This rename does not help readability. An _ops often/always hold
+function pointers. Where _data hold data.
+So it looks wrong to name this _data.
 
-If possible, marginally neater than that would be using
-le32_to_cpu(RSEQ_SIG_CODE), without any ifdeffery necessary.
-
-It looks like that's defined in tools/include/linux/kernel.h, but I'm
-not sure if that gets pulled into your include path.
-
-Thanks,
-Mark.
+	Sam
