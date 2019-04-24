@@ -2,132 +2,118 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E208C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED09C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0A8218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9C021773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eg2pNjdc"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="Pa0cExVC";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="lsEuEuFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbfDXM0Q (ORCPT
+        id S1729927AbfDXM0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:26:16 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38767 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbfDXM0P (ORCPT
+        Wed, 24 Apr 2019 08:26:36 -0400
+Received: from mail133-30.atl131.mandrillapp.com ([198.2.133.30]:57609 "EHLO
+        mail133-30.atl131.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726880AbfDXM0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:26:15 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d13so19958803qth.5
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=k/G53At6GpO9p20H7pGhrT8FvlHyaW2wBtqlzxG9UpA=;
-        b=eg2pNjdcN3TTp0Zz+anyu2txkD2KAV89Qi6LLwLSVeAy3gZiIBVCqOc4Ghm8sFs+yv
-         riM6B01w+KmJpFNJWCSxgoX6JNaLwnfmrpHRGgDPeH6wGzSceNeQ44Bgr5U3z1e8qnFL
-         prFr9nw+Cv4vrTter875x1+2fL0FJGu0/t5fjkthVxu0t1g66eJm/cR/OrNCyg6BpLzY
-         P8wktdg7gdWhIRCe5RLC0NPJB1vwjT5CNNt0Ejk6V8aQDBPODh/QEqBS9icMHMeLFS1l
-         ch/jt/p3libNRcsJn4ilA5QqS/b/kN1fa4U/Rzo2PLBnd135cH4jflQQEVPKMPeujBNJ
-         GxWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=k/G53At6GpO9p20H7pGhrT8FvlHyaW2wBtqlzxG9UpA=;
-        b=WyN0rVhZootkP0cl6HKc9AaitO8kwP3B4ufEhmM0g1LkiKhm24+UHe03A3svv5SYm6
-         wvC5epjykFCeriMf9G9b+BkZSPYpfJSgM/7WFskNOKSth8RIXmXGNuCP9jBUg1BLcmv/
-         dw2HSmVkap3mWRcmX7vCxuuSUar/6id+UfVwDbX4FMMxS0ld75OOJzX4PSF3v1rQpZCR
-         EDisgpr/2wNaxyYeN5qvzbEraZl16yBHgYLhLgtm8gf2o582/pLJtFxfChsih/Z6/xhB
-         SJG3NthNdqyIoNt5DVcBrJBWweImPd5Mdr3F3heaGIpgDsBj5RFFqtS/fCpqyBHV8m/q
-         JSIg==
-X-Gm-Message-State: APjAAAUDgmCrOfKn4G2HEWIi1BQMiaJ7qtwKfF91feXHhrqsuKYpzKMy
-        ShtXRgFDPJ9RrCDpyBdV2XqFrVxP5ZRlPd3+CsTKIw==
-X-Google-Smtp-Source: APXvYqx57ALUlPRQ49wlbfJdiVS8H6Riwho98PXRJ3tNyuCbQIKmc3Jthjn7pTxcyjeVjbTyu2FFM7S0W3XeN9CZwQY=
-X-Received: by 2002:ad4:52e3:: with SMTP id p3mr1176233qvu.98.1556108774534;
- Wed, 24 Apr 2019 05:26:14 -0700 (PDT)
+        Wed, 24 Apr 2019 08:26:36 -0400
+X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Apr 2019 08:26:34 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=Y4gh16yRKthXYUFJ18BdzPm1Qo+DH8p1EAbtj3YooGM=;
+ b=Pa0cExVCRZHPlIU6IfYtJafweLQT6X9/0I3j1Cp7BB/5IuB5wXxc8fRqcdzQRBitSV/teeNSyLjS
+   E7om3A+GUyaagd9x2qYllYYV9NJ3uAO19ixKoYnoG/aDD5orDwBl/42LsegYPQPL6G1K/0WEdZ3j
+   RELP9vT9IMd9xKN8lzg=
+Received: from pmta02.mandrill.prod.atl01.rsglab.com (127.0.0.1) by mail133-30.atl131.mandrillapp.com id ho1avk1sar8d for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 11:58:19 +0000 (envelope-from <bounce-md_31050260.5cc04f5b.v1-ce4cab2a23e344bfa7a08370b8b1c832@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1556107099; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=Y4gh16yRKthXYUFJ18BdzPm1Qo+DH8p1EAbtj3YooGM=; 
+ b=lsEuEuFgeOS42WgPIymv9J7fFnHK0dV3C8JR4AmphIydAEoxbiztHHPIOBS86QfnbifAY3
+ x/TgUBVdp+nwGl3BlaRusMnTuGPPUKNsIxSF9+BvD/cMMpwMPtGne42beMw99RL9v5hfAsMd
+ 9eVEhpIL61ZQ2M5GL04ZwjXcOmGrI=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [RESEND4, PATCH 2/2] fuse: require /dev/fuse reads to have enough buffer capacity as negotiated
+Received: from [87.98.221.171] by mandrillapp.com id ce4cab2a23e344bfa7a08370b8b1c832; Wed, 24 Apr 2019 11:58:19 +0000
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Jakob Unterwurzacher <jakobunt@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        fuse-devel <fuse-devel@lists.sourceforge.net>
+Message-Id: <20190424115815.GB2723@deco.navytux.spb.ru>
+References: <cover.1553680185.git.kirr@nexedi.com> <d74b17b9d33c3dcc7a1f2fa2914fb3c4e7cda127.1553680185.git.kirr@nexedi.com> <CAJfpegurLOLoNd9p2avcXPhSvP+ux8V+A=ghBySSpn0pX_Afpg@mail.gmail.com>
+In-Reply-To: <CAJfpegurLOLoNd9p2avcXPhSvP+ux8V+A=ghBySSpn0pX_Afpg@mail.gmail.com>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.ce4cab2a23e344bfa7a08370b8b1c832
+X-Mandrill-User: md_31050260
+Date:   Wed, 24 Apr 2019 11:58:19 +0000
 MIME-Version: 1.0
-References: <1553874548-31366-1-git-send-email-yannick.fertre@st.com> <ef8aa4e8-ebf9-ea01-d8db-fbf7740bc765@st.com>
-In-Reply-To: <ef8aa4e8-ebf9-ea01-d8db-fbf7740bc765@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Wed, 24 Apr 2019 14:26:03 +0200
-Message-ID: <CA+M3ks6RZmXjCh_r5MBLGeNb4vY4g8nOCX=cSbCe8GW4rHc4gQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/stm: ltdc: use DRM_WARN for fifo & transfer error messages
-To:     Philippe CORNU <philippe.cornu@st.com>
-Cc:     Yannick FERTRE <yannick.fertre@st.com>,
-        Vincent ABRIOU <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lun. 1 avr. 2019 =C3=A0 11:20, Philippe CORNU <philippe.cornu@st.com> a =
-=C3=A9crit :
->
-> Dear Yannick,
-> Fully agree with this approach,
->
-> Acked-by: Philippe Cornu <philippe.cornu@st.com>
->
+On Wed, Apr 24, 2019 at 12:48:36PM +0200, Miklos Szeredi wrote:
+> On Wed, Mar 27, 2019 at 11:44 AM Kirill Smelkov <kirr@nexedi.com> wrote:
+> >
+> > A FUSE filesystem server queues /dev/fuse sys_read calls to get
+> > filesystem requests to handle. It does not know in advance what would be
+> > that request as it can be anything that client issues - LOOKUP, READ,
+> > WRITE, ... Many requests are short and retrieve data from the
+> > filesystem. However WRITE and NOTIFY_REPLY write data into filesystem.
+> >
+> > Before getting into operation phase, FUSE filesystem server and kernel
+> > client negotiate what should be the maximum write size the client will
+> > ever issue. After negotiation the contract in between server/client is
+> > that the filesystem server then should queue /dev/fuse sys_read calls with
+> > enough buffer capacity to receive any client request - WRITE in
+> > particular, while FUSE client should not, in particular, send WRITE
+> > requests with > negotiated max_write payload. FUSE client in kernel and
+> > libfuse historically reserve 4K for request header. This way the
+> > contract is that filesystem server should queue sys_reads with
+> > 4K+max_write buffer.
+> >
+> > If the filesystem server does not follow this contract, what can happen
+> > is that fuse_dev_do_read will see that request size is > buffer size,
+> > and then it will return EIO to client who issued the request but won't
+> > indicate in any way that there is a problem to filesystem server.
+> > This can be hard to diagnose because for some requests, e.g. for
+> > NOTIFY_REPLY which mimics WRITE, there is no client thread that is
+> > waiting for request completion and that EIO goes nowhere, while on
+> > filesystem server side things look like the kernel is not replying back
+> > after successful NOTIFY_RETRIEVE request made by the server.
+> >
+> > -> We can make the problem easy to diagnose if we indicate via error
+> > return to filesystem server when it is violating the contract.
+> > This should not practically cause problems because if a filesystem
+> > server is using shorter buffer, writes to it were already very likely to
+> > cause EIO, and if the filesystem is read-only it should be too following
+> > 8K minimum buffer size (= either FUSE_MIN_READ_BUFFER, see 1d3d752b47,
+> > or = 4K + min(max_write)=4k cared to be so by process_init_reply).
+> >
+> > Please see [1] for context where the problem of stuck filesystem was hit
+> > for real (because kernel client was incorrectly sending more than
+> > max_write data with NOTIFY_REPLY; see also previous patch), how the
+> > situation was traced and for more involving patch that did not make it
+> > into the tree.
+> >
+> > [1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
+> 
+> Applied.
 
-Applied on drm-misc-next,
-Thanks,
-Benjamin
+Thanks. Looking forward for it to appear in fuse.git#for-next
 
-> Philippe :-)
->
-> On 3/29/19 4:49 PM, Yannick Fertr=C3=A9 wrote:
-> > From: Philippe Cornu <philippe.cornu@st.com>
-> >
-> > Use DRM_WARN() instead of DRM_DEBUG_DRIVER() to better
-> > inform the user in case of fifo underruns or
-> > transfer errors.
-> >
-> > Signed-off-by: Philippe Cornu <philippe.cornu@st.com>
-> > ---
-> >   drivers/gpu/drm/stm/ltdc.c | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> > index b1741a9..15d8a02 100644
-> > --- a/drivers/gpu/drm/stm/ltdc.c
-> > +++ b/drivers/gpu/drm/stm/ltdc.c
-> > @@ -822,11 +822,11 @@ static void ltdc_plane_atomic_update(struct drm_p=
-lane *plane,
-> >
-> >       mutex_lock(&ldev->err_lock);
-> >       if (ldev->error_status & ISR_FUIF) {
-> > -             DRM_DEBUG_DRIVER("Fifo underrun\n");
-> > +             DRM_WARN("ltdc fifo underrun: please verify display mode\=
-n");
-> >               ldev->error_status &=3D ~ISR_FUIF;
-> >       }
-> >       if (ldev->error_status & ISR_TERRIF) {
-> > -             DRM_DEBUG_DRIVER("Transfer error\n");
-> > +             DRM_WARN("ltdc transfer error\n");
-> >               ldev->error_status &=3D ~ISR_TERRIF;
-> >       }
-> >       mutex_unlock(&ldev->err_lock);
-> >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Kirill
