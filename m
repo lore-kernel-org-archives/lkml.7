@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD17C282E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6ACC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41B6620652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E6720652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556128922;
-	bh=SZpf9VjrGuNPYbm/5p0PTRoSFW7LuNFcSU2T55vMh9c=;
+	s=default; t=1556128927;
+	bh=mB8ZCrl/dzZ8PtIbe73QMd6O3xay+jx2ZN9+xjOg7zk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CNvjTKqc20SNkljU8iXyxzZxPWtDoqEBFNt5NrR0GkFhIEVzt9doK+/4CfXdUr0y5
-	 Un0ASjZvfKnZ5bpi1YYEea0B2XYQWIK0D8kkIWtpOISM1JikFzcXsZdS5xfDbn0bqx
-	 VGd6xQOh0yAq44T8VY90dBWp+PHsA2OvsHFg/duE=
+	b=Z/SENtvjTUx9O0j6srzU+JwUj7jssshZVgZtub1Kekg+1B+w+vaEExvNRWI0wmwth
+	 BI/o52L9ObJbMoBZHKl4kMbniM2NrId/5MOXisEq4KPDNgmL8m68yEKqX3yE5Arejr
+	 otuJgU8gj8q8XdE45rQK8btDsFO7fr3I9Qz8QZ9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389363AbfDXRVc (ORCPT
+        id S2389343AbfDXRV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47002 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:21:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389351AbfDXRVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:21:30 -0400
+        id S2389329AbfDXRVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:21:24 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B636205ED;
-        Wed, 24 Apr 2019 17:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8321C21904;
+        Wed, 24 Apr 2019 17:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126489;
-        bh=SZpf9VjrGuNPYbm/5p0PTRoSFW7LuNFcSU2T55vMh9c=;
+        s=default; t=1556126484;
+        bh=mB8ZCrl/dzZ8PtIbe73QMd6O3xay+jx2ZN9+xjOg7zk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2UEvVC8+h/s7dWjdVf9WtZBKSAYCalaHkF9PTZkf5HKnkntVdsAjsnEi/I4pMlv9x
-         mkCUMhxlmjcRsuygNKLdZxeqFMeOjZwQTiOR+uKeALTGJPaSNMohjhBXVAy+U/N7s/
-         fOay4b2ZK6EWn1Q74i6wunXTAF2WX1rglnJkbG4A=
+        b=n0CKn/KW9ZLbk9odm4YsMHtKDF3pLUQWXqt39emV40Sj3NLjAP4P7JRPHrzabKCFm
+         fnpJTitOezex+QX2qjtfNkqFlbliV4ZtQaU1C7Dcx6mBGKurUyWU8/zUVXcD/VNjut
+         V55Ity/ee+KMy+bvsrUuox0oYP3dPihzcB2QLtoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        stable@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 126/168] cifs: fallback to older infolevels on findfirst queryinfo retry
-Date:   Wed, 24 Apr 2019 19:09:30 +0200
-Message-Id: <20190424170930.798773750@linuxfoundation.org>
+Subject: [PATCH 4.4 124/168] ARM: samsung: Limit SAMSUNG_PM_CHECK config option to non-Exynos platforms
+Date:   Wed, 24 Apr 2019 19:09:28 +0200
+Message-Id: <20190424170930.706308368@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170923.452349382@linuxfoundation.org>
 References: <20190424170923.452349382@linuxfoundation.org>
@@ -59,111 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b7960caceafdfc2cdfe2850487f8d091eb41144 ]
+[ Upstream commit 6862fdf2201ab67cd962dbf0643d37db909f4860 ]
 
-In cases where queryinfo fails, we have cases in cifs (vers=1.0)
-where with backupuid mounts we retry the query info with findfirst.
-This doesn't work to some NetApp servers which don't support
-WindowsXP (and later) infolevel 261 (SMB_FIND_FILE_ID_FULL_DIR_INFO)
-so in this case use other info levels (in this case it will usually
-be level 257, SMB_FIND_FILE_DIRECTORY_INFO).
+"S3C2410 PM Suspend Memory CRC" feature (controlled by
+SAMSUNG_PM_CHECK config option) is incompatible with highmem
+(uses phys_to_virt() instead of proper mapping) which is used by
+the majority of Exynos boards. The issue manifests itself in OOPS
+on affected boards, i.e. on Odroid-U3 I got the following one:
 
-(Also fixes some indentation)
+Unable to handle kernel paging request at virtual address f0000000
+pgd = 1c0f9bb4
+[f0000000] *pgd=00000000
+Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+[<c0458034>] (crc32_le) from [<c0121f8c>] (s3c_pm_makecheck+0x34/0x54)
+[<c0121f8c>] (s3c_pm_makecheck) from [<c0121efc>] (s3c_pm_run_res+0x74/0x8c)
+[<c0121efc>] (s3c_pm_run_res) from [<c0121ecc>] (s3c_pm_run_res+0x44/0x8c)
+[<c0121ecc>] (s3c_pm_run_res) from [<c01210b8>] (exynos_suspend_enter+0x64/0x148)
+[<c01210b8>] (exynos_suspend_enter) from [<c018893c>] (suspend_devices_and_enter+0x9ec/0xe74)
+[<c018893c>] (suspend_devices_and_enter) from [<c0189534>] (pm_suspend+0x770/0xc04)
+[<c0189534>] (pm_suspend) from [<c0186ce8>] (state_store+0x6c/0xcc)
+[<c0186ce8>] (state_store) from [<c09db434>] (kobj_attr_store+0x14/0x20)
+[<c09db434>] (kobj_attr_store) from [<c02fa63c>] (sysfs_kf_write+0x4c/0x50)
+[<c02fa63c>] (sysfs_kf_write) from [<c02f97a4>] (kernfs_fop_write+0xfc/0x1e4)
+[<c02f97a4>] (kernfs_fop_write) from [<c027b198>] (__vfs_write+0x2c/0x140)
+[<c027b198>] (__vfs_write) from [<c027b418>] (vfs_write+0xa4/0x160)
+[<c027b418>] (vfs_write) from [<c027b5d8>] (ksys_write+0x40/0x8c)
+[<c027b5d8>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
 
-See kernel bugzilla 201435
+Add PLAT_S3C24XX, ARCH_S3C64XX and ARCH_S5PV210 dependencies to
+SAMSUNG_PM_CHECK config option to hide it on Exynos platforms.
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/inode.c | 69 +++++++++++++++++++++++++++----------------------
- 1 file changed, 38 insertions(+), 31 deletions(-)
+ arch/arm/plat-samsung/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 5c3187df9ab9..d8bd8dd36211 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -759,43 +759,50 @@ cifs_get_inode_info(struct inode **inode, const char *full_path,
- 	} else if ((rc == -EACCES) && backup_cred(cifs_sb) &&
- 		   (strcmp(server->vals->version_string, SMB1_VERSION_STRING)
- 		      == 0)) {
--			/*
--			 * For SMB2 and later the backup intent flag is already
--			 * sent if needed on open and there is no path based
--			 * FindFirst operation to use to retry with
--			 */
--
--			srchinf = kzalloc(sizeof(struct cifs_search_info),
--						GFP_KERNEL);
--			if (srchinf == NULL) {
--				rc = -ENOMEM;
--				goto cgii_exit;
--			}
-+		/*
-+		 * For SMB2 and later the backup intent flag is already
-+		 * sent if needed on open and there is no path based
-+		 * FindFirst operation to use to retry with
-+		 */
-+
-+		srchinf = kzalloc(sizeof(struct cifs_search_info),
-+					GFP_KERNEL);
-+		if (srchinf == NULL) {
-+			rc = -ENOMEM;
-+			goto cgii_exit;
-+		}
+diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
+index 57729b915003..b9396dcf836d 100644
+--- a/arch/arm/plat-samsung/Kconfig
++++ b/arch/arm/plat-samsung/Kconfig
+@@ -255,7 +255,7 @@ config S3C_PM_DEBUG_LED_SMDK
  
--			srchinf->endOfSearch = false;
-+		srchinf->endOfSearch = false;
-+		if (tcon->unix_ext)
-+			srchinf->info_level = SMB_FIND_FILE_UNIX;
-+		else if ((tcon->ses->capabilities &
-+			 tcon->ses->server->vals->cap_nt_find) == 0)
-+			srchinf->info_level = SMB_FIND_FILE_INFO_STANDARD;
-+		else if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)
- 			srchinf->info_level = SMB_FIND_FILE_ID_FULL_DIR_INFO;
-+		else /* no srvino useful for fallback to some netapp */
-+			srchinf->info_level = SMB_FIND_FILE_DIRECTORY_INFO;
- 
--			srchflgs = CIFS_SEARCH_CLOSE_ALWAYS |
--					CIFS_SEARCH_CLOSE_AT_END |
--					CIFS_SEARCH_BACKUP_SEARCH;
-+		srchflgs = CIFS_SEARCH_CLOSE_ALWAYS |
-+				CIFS_SEARCH_CLOSE_AT_END |
-+				CIFS_SEARCH_BACKUP_SEARCH;
- 
--			rc = CIFSFindFirst(xid, tcon, full_path,
--				cifs_sb, NULL, srchflgs, srchinf, false);
--			if (!rc) {
--				data =
--				(FILE_ALL_INFO *)srchinf->srch_entries_start;
-+		rc = CIFSFindFirst(xid, tcon, full_path,
-+			cifs_sb, NULL, srchflgs, srchinf, false);
-+		if (!rc) {
-+			data = (FILE_ALL_INFO *)srchinf->srch_entries_start;
- 
--				cifs_dir_info_to_fattr(&fattr,
--				(FILE_DIRECTORY_INFO *)data, cifs_sb);
--				fattr.cf_uniqueid = le64_to_cpu(
--				((SEARCH_ID_FULL_DIR_INFO *)data)->UniqueId);
--				validinum = true;
-+			cifs_dir_info_to_fattr(&fattr,
-+			(FILE_DIRECTORY_INFO *)data, cifs_sb);
-+			fattr.cf_uniqueid = le64_to_cpu(
-+			((SEARCH_ID_FULL_DIR_INFO *)data)->UniqueId);
-+			validinum = true;
- 
--				cifs_buf_release(srchinf->ntwrk_buf_start);
--			}
--			kfree(srchinf);
--			if (rc)
--				goto cgii_exit;
-+			cifs_buf_release(srchinf->ntwrk_buf_start);
-+		}
-+		kfree(srchinf);
-+		if (rc)
-+			goto cgii_exit;
- 	} else
- 		goto cgii_exit;
- 
+ config SAMSUNG_PM_CHECK
+ 	bool "S3C2410 PM Suspend Memory CRC"
+-	depends on PM
++	depends on PM && (PLAT_S3C24XX || ARCH_S3C64XX || ARCH_S5PV210)
+ 	select CRC32
+ 	help
+ 	  Enable the PM code's memory area checksum over sleep. This option
 -- 
 2.19.1
 
