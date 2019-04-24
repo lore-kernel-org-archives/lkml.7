@@ -2,159 +2,105 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA20C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58857C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8182F218D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2485821773
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 12:15:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SM0gvU5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfDXMMl (ORCPT
+        id S1729230AbfDXMPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 08:12:41 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:24082 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbfDXMMl (ORCPT
+        Wed, 24 Apr 2019 08:15:49 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37370 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726322AbfDXMPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 08:12:41 -0400
-X-IronPort-AV: E=Sophos;i="5.60,389,1549954800"; 
-   d="scan'208";a="28036781"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 24 Apr 2019 05:12:39 -0700
-Received: from localhost (10.10.76.4) by chn-sv-exch06.mchp-main.com
- (10.10.76.107) with Microsoft SMTP Server id 14.3.352.0; Wed, 24 Apr 2019
- 05:12:39 -0700
-Date:   Wed, 24 Apr 2019 14:12:38 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Paul Burton <paul.burton@mips.com>
-CC:     "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "jhogan@kernel.org" <jhogan@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Resend] arch: mips: Fix initrd_start and initrd_end when read
- from DT
-Message-ID: <20190424121236.uadnsmgg3ctvljdo@soft-dev3.microsemi.net>
-References: <1555409900-31278-1-git-send-email-horatiu.vultur@microchip.com>
- <20190419205456.uylahdin2jlkeyyy@pburton-laptop>
+        Wed, 24 Apr 2019 08:15:48 -0400
+Received: by mail-lf1-f67.google.com with SMTP id h126so3838561lfh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 05:15:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1BwZFno63wZytLE3xAp+LLjJ3VbyMrFIKeO69px4b/8=;
+        b=SM0gvU5XI0ur7wcJDLik+s4+K5IqC4FF6GWc++RcBTnJpAZOMeXI0JLiX0jnlHS7SR
+         VEtwA7+RDJAPhuicFR00DMyDnFOGO47u3oMPts2zih+xC56o7yLpVTJ+tKp6rkXtVsev
+         8xNrL3gtr+dtpspoRXPuiXkKNEtS1FtVo7ZsdTfe/4zd95efp6pgcS7zJzOe6pu9rz5E
+         v7ICLaRm7lNtrha3hFZcuGfVQwe/K4M0AI4lye6T+qyvKdfw/3W35YW7zh2KG2Xj5jD2
+         A4bm+fmsOy0rbxLe0ZTl/QlTkKYOXkcLiVasTR5n0xA5JBF5gmAvHay6roFnYpGaEINC
+         1pmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1BwZFno63wZytLE3xAp+LLjJ3VbyMrFIKeO69px4b/8=;
+        b=GxteKoalMaJDy2s/iLq7Vy6N/pPZxIcv86Yqx9CgIB/gw3CqcaxGPw2LmfrJwHOeFj
+         /F/vkzgV6zZfqveZi/wUiYrWfOEqHDiEPoh37rSmA17aYT7w91nnit87UzgjnEJGB5uo
+         ipQYXfDY+i0hWlaRKFm8NgcLxo4PKp+zyCnIBnV5mydadPPZ8fSQF0Q/q4gXMWx191b+
+         QU0ewy3pdY42qH7g0ybTtFaqDc5b4yzhFz4uWvQXNdkfLuGhdBFp5LMcwzpEv/TmbwCY
+         k/z4RAWr+Djrg7pRTYF1bjQnZMjTqd2fIaxWfGZwDo++v/sKo5bPFFhyOrwZ7tl7h9St
+         dazw==
+X-Gm-Message-State: APjAAAWp2L8/4VTnXOddlYWGTNww2cTXASI6QggMik14bkBRdVDVbLlU
+        J0WieR2NWETR9GGaNt6c2YOczg==
+X-Google-Smtp-Source: APXvYqykqPPNNReAIjNAq+UP8AP4yVdGrunde2oRAdka3qS/4IzoRNbFxe0B14mIAFiPFovgqVlLgw==
+X-Received: by 2002:ac2:55b2:: with SMTP id y18mr18132853lfg.133.1556108146855;
+        Wed, 24 Apr 2019 05:15:46 -0700 (PDT)
+Received: from [192.168.27.209] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id b14sm3995192ljf.53.2019.04.24.05.15.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Apr 2019 05:15:45 -0700 (PDT)
+Subject: Re: [PATCH 10/10] venus: dec: make decoder compliant with stateful
+ codec API
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Vikash Garodia <vgarodia@codeaurora.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Malathi Gottam <mgottam@codeaurora.org>
+References: <20190117162008.25217-1-stanimir.varbanov@linaro.org>
+ <20190117162008.25217-11-stanimir.varbanov@linaro.org>
+ <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <fe51ae1e-6d2e-36bd-485a-d85520ad2386@linaro.org>
+Date:   Wed, 24 Apr 2019 15:15:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20190419205456.uylahdin2jlkeyyy@pburton-laptop>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <60b3efff-31c1-bc04-8af9-deebb8bc013a@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hi Hans,
 
-Thank you for your detail explanation. There are few observations below.
+On 2/15/19 3:44 PM, Hans Verkuil wrote:
+> Hi Stanimir,
+> 
+> I never paid much attention to this patch series since others were busy
+> discussing it and I had a lot of other things on my plate, but then I heard
+> that this patch made G_FMT blocking.
 
-The 04/19/2019 20:55, Paul Burton wrote:
-> External E-Mail
-> 
-> 
-> Hi Horatiu,
-> 
-> On Tue, Apr 16, 2019 at 12:18:20PM +0200, Horatiu Vultur wrote:
-> > When the bootloader passes arguments to linux kernel through device tree,
-> > it passes the address of initrd_start and initrd_stop, which are in kseg0.
-> > But when linux kernel reads these addresses from device tree, it converts
-> > them to virtual addresses inside the function
-> > __early_init_dt_declare_initrd.
-> 
-> I'm not sure I follow - if the bootloader provides an address in kseg0
-> then it's already a virtual address.
+OK, another option could be to block REQBUF(CAPTURE) until event from hw
+is received that the stream is parsed and the resolution is correctly
+set by application. Just to note that I'd think to this like a temporal
+solution until gstreamer implements v4l events.
 
-So I am just a novice in this, but in my case the bootloader(Uboot) passes
-the address in kseg0(e.g 0x9f8a6000), but if I understand correctly
-this is just cached access to location 0x1f8a6000.
-
-> 
-> It looks like __early_init_dt_declare_initrd expects the DT to provide
-> physical addresses, which fits in well with the fact that DTs generally
-> use physical addresses for everything else.
-> 
-> __early_init_dt_declare_initrd calling __va on a virtual address will
-> give you something bogus, and it looks like you're just cancelling this
-> out below. In practice for a typical system where PAGE_OFFSET is the
-> start of kseg0 (0x80000000) the bogus address you get will happen to be
-> the same as the physical address, but that's not guaranteed.
-> 
-> > At a later point then in the function init_initrd, it is checking for
-> > initrd_start to be lower than PAGE_OFFSET, which for a 32 CPU it is not,
-> > therefore it would disable the initrd by setting 0 to initrd_start and
-> > initrd_stop.
-> 
-> The check you mention here is to make sure initrd_start looks like a
-> virtual address - if it's lower than PAGE_OFFSET (typically 0x80000000)
-> then it looks bad & initrd is disabled. I think your comment is
-> backwards - what you have is a physical address, entirely by accident,
-> and you're converting it back to a virtual address again by accident
-> which keeps the check happy.
-
-I am a little bit confused here. so the initrd_start has to have a
-virtual address(in kseg0) inside the function init_initrd. Meaning that
-when the bootloader passes the arguments to linux through a command line,
-then initrd_start has to be already a virtual address? Because I
-couldn't see a place where it converts the initrd_start. But when the
-bootloader pass the arguments through DT it has to be physical address?
-
-> 
-> > The fix consists of checking if linux kernel received a device tree and not
-> > having enable extended virtual address and in that case convert them back
-> > to physical addresses that point in kseg0 as expected.
-> 
-> Can you instead just have your bootloader provide physical addresses in
-> the DT?
-
-Yes, I have done few tests and it seems to work fine, but I need to
-understand it better.
-
-> 
-> Even if we were to have this code try to sanitize the value with
-> something like __va(__pa(initrd_start)), it only covers systems using
-> the UHI boot protocol which isn't the only way we can obtain a DT. If a
-> system builds in its DTB for example it'll get different behaviour to if
-> it's passed via the UHI protocol by the bootloader.
-> 
-> Thanks,
->     Paul
-> 
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> > ---
-> >  arch/mips/kernel/setup.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-> > index 8d1dc6c..774ee00 100644
-> > --- a/arch/mips/kernel/setup.c
-> > +++ b/arch/mips/kernel/setup.c
-> > @@ -264,6 +264,17 @@ static unsigned long __init init_initrd(void)
-> >  		pr_err("initrd start must be page aligned\n");
-> >  		goto disable;
-> >  	}
-> > +
-> > +	/*
-> > +	 * In case the initrd_start and initrd_end are read from DT,
-> > +	 * then they are converted to virtual address, therefore convert
-> > +	 * them back to physical address.
-> > +	 */
-> > +	if (!IS_ENABLED(CONFIG_EVA) && fw_arg0 == -2) {
-> > +		initrd_start = initrd_start - PAGE_OFFSET + PHYS_OFFSET;
-> > +		initrd_end = initrd_end - PAGE_OFFSET + PHYS_OFFSET;
-> > +	}
-> > +
-> >  	if (initrd_start < PAGE_OFFSET) {
-> >  		pr_err("initrd start < PAGE_OFFSET\n");
-> >  		goto disable;
-> > -- 
-> > 2.7.4
-> > 
-> 
+Is that looks good to you?
 
 -- 
-/Horatiu
+regards,
+Stan
