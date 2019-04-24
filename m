@@ -2,157 +2,132 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B87C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5085EC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBB82089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BEF42089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbfDXHeD (ORCPT
+        id S1730243AbfDXHeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:34:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35566 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729381AbfDXHeC (ORCPT
+        Wed, 24 Apr 2019 03:34:31 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:26904 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729381AbfDXHeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:34:02 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3O7VJsq120182
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:34:01 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s2j58m383-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 03:34:01 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Wed, 24 Apr 2019 08:33:59 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 24 Apr 2019 08:33:48 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3O7XluQ58458312
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Apr 2019 07:33:47 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 351E1A4053;
-        Wed, 24 Apr 2019 07:33:47 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C72CFA4059;
-        Wed, 24 Apr 2019 07:33:44 +0000 (GMT)
-Received: from [9.145.184.124] (unknown [9.145.184.124])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 24 Apr 2019 07:33:44 +0000 (GMT)
-Subject: Re: [PATCH v12 00/31] Speculative page faults
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Michel Lespinasse <walken@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, dave@stgolabs.net,
-        Jan Kara <jack@suse.cz>, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        mpe@ellerman.id.au, Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Haiyan Song <haiyanx.song@intel.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, haren@linux.vnet.ibm.com,
-        Nick Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <CANN689F1h9XoHPzr_FQY2WfN5bb2TTd6M3HLqoJ-DQuHkNbA7g@mail.gmail.com>
- <20190423093851.GJ11158@hirez.programming.kicks-ass.net>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Wed, 24 Apr 2019 09:33:44 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190423093851.GJ11158@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19042407-0016-0000-0000-00000272C3E4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042407-0017-0000-0000-000032CF3377
-Message-Id: <05df6720-7130-62fe-a71f-074b6fafff3e@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-24_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904240065
+        Wed, 24 Apr 2019 03:34:31 -0400
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG4.macronix.com with ESMTP id x3O7Y2Y7019703;
+        Wed, 24 Apr 2019 15:34:02 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     broonie@kernel.org, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        lee.jones@linaro.org, sergei.shtylyov@cogentembedded.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
+        Mason Yang <masonccyang@mxic.com.tw>, zhengxunli@mxic.com.tw
+Subject: [PATCH v12 0/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD & SPI driver
+Date:   Wed, 24 Apr 2019 15:55:33 +0800
+Message-Id: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+X-MAIL: TWHMLLG4.macronix.com x3O7Y2Y7019703
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 23/04/2019 à 11:38, Peter Zijlstra a écrit :
-> On Mon, Apr 22, 2019 at 02:29:16PM -0700, Michel Lespinasse wrote:
->> The proposed spf mechanism only handles anon vmas. Is there a
->> fundamental reason why it couldn't handle mapped files too ?
->> My understanding is that the mechanism of verifying the vma after
->> taking back the ptl at the end of the fault would work there too ?
->> The file has to stay referenced during the fault, but holding the vma's
->> refcount could be made to cover that ? the vm_file refcount would have
->> to be released in __free_vma() instead of remove_vma; I'm not quite sure
->> if that has more implications than I realize ?
-> 
-> IIRC (and I really don't remember all that much) the trickiest bit was
-> vs unmount. Since files can stay open past the 'expected' duration,
-> umount could be delayed.
-> 
-> But yes, I think I had a version that did all that just 'fine'. Like
-> mentioned, I didn't keep the refcount because it sucked just as hard as
-> the mmap_sem contention, but the SRCU callback did the fput() just fine
-> (esp. now that we have delayed_fput).
+Hi,
 
-I had to use a refcount for the VMA because I'm using RCU in place of 
-SRCU and only protecting the RB tree using RCU.
+V12 patch including:
+1) add back "wbuf" in dts example.
+2) RPC-IF replace rpc-if in dts.
 
-Regarding the file pointer, I decided to release it synchronously to 
-avoid the latency of RCU during the file closing. As you mentioned this 
-could delayed the umount but not only, as Linus Torvald demonstrated by 
-the past [1]. Anyway, since the file support is not yet here there is no 
-need for that currently.
+v11 patch including:
+1) Patch mfd include header file.
+2) mfd coding style.
+3) add back wbuf description in dts.
 
-Regarding the file mapping support, the concern is to ensure that 
-vm_ops->fault() will not try to release the mmap_sem. This is true for 
-most of the file system operation using the generic one, but there is 
-currently no clever way to identify that except by checking the 
-vm_ops->fault pointer. Adding a flag to the vm_operations_struct 
-structure is another option.
+v10 patch including:
+1) Address range for > 64M byte flash.
+2) Removed dirmap_write due to WBUF 256 bytes transfer issue.
+3) Dummy bytes setting according to spi-nor.c layer.
 
-that's doable as far as the underlying fault() function is not dealing 
-with the mmap_sem, and I made a try by the past but was thinking that 
-first the anonymous case should be accepted before moving forward this way.
+v9 patch is for RPC MFD driver and RPC SPI driver.
 
-[1] 
-https://lore.kernel.org/linux-mm/alpine.LFD.2.00.1001041904250.3630@localhost.localdomain/
+v8 patch including:
+1) Supported SoC-specific values in DTS.
+2) Rename device node name as flash.
+
+v7 patch is according to Geert and Sergei's comments:
+1) Add all R-Car Gen3 model in dts.
+2) patch rpc-if child node search.
+3) minror coding style.
+
+v6 patch is accroding to Geert, Marek and Sergei's comments:
+1) spi_controller for new code.
+2) "renesas,rcar-gen3-rpc" instead of "renesas,r8a77995-rpc."
+3) patch external address read mode w/o u64 readq().
+4) patch dts for write buffer & drop "renesas,rpc-mode".
+5) coding style and so on.
+
+v5 patch is accroding to Sergei's comments:
+1) Read 6 bytes ID from Sergei's patch.
+2) regmap_update_bits().
+3) C++ style comment.
+
+v4 patch is according to Sergei's comments including:
+1) Drop soc_device_match().
+2) Drop unused RPC registers.
+3) Use ilog2() instead of fls().
+4) Patch read 6 bytes ID w/ one command.
+5) Coding style and so on.
+
+v3 patch is according to Marek and Geert's comments including:
+1) soc_device_mach() to set up RPC_PHYCNT_STRTIM.
+2) get_unaligned().
+3) rpc-mode for rpi-spi-flash or rpc-hyperflash.
+4) coding style and so on.
+
+v2 patch including:
+1) remove RPC clock enable/dis-able control,
+2) patch run time PM.
+3) add RPC module software reset,
+4) add regmap.
+5) other coding style and so on.
+
+thanks for your review.
+
+best regards,
+Mason
+
+
+Mason Yang (3):
+  mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
+  spi: Add Renesas R-Car Gen3 RPC-IF SPI controller driver
+  dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF MFD bindings
+
+ .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    |  40 ++
+ drivers/mfd/Kconfig                                |   9 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/renesas-rpc.c                          | 125 +++++
+ drivers/spi/Kconfig                                |   6 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-renesas-rpc.c                      | 571 +++++++++++++++++++++
+ include/linux/mfd/renesas-rpc.h                    | 141 +++++
+ 8 files changed, 894 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+ create mode 100644 drivers/mfd/renesas-rpc.c
+ create mode 100644 drivers/spi/spi-renesas-rpc.c
+ create mode 100644 include/linux/mfd/renesas-rpc.h
+
+-- 
+1.9.1
 
