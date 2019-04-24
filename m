@@ -2,103 +2,172 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1639C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D19C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AEC2218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:01:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FZp1XDmA"
+	by mail.kernel.org (Postfix) with ESMTP id 5A12E218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 04:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbfDXEBR (ORCPT
+        id S1726310AbfDXEFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 00:01:17 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40558 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfDXEBR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 00:01:17 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c207so8562310pfc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 21:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=diRklryQQJnoiQLs7RRdCQUcCRp6YjW5rvtbtHyh1S0=;
-        b=FZp1XDmAv33euV2xXFccCcmPHxIlYbit0UknuHyND8T5CgNOwpKoSgKEAKuDlJKXm7
-         QhIPTL8d4GQIkdHBYv4odoX0CCQHqUGC1UgHh2ODMiSX8nxgQDbZ3biJUk+oa1T0mFLc
-         TId4HnKXwxtuQQdEdMC5+iv90No4VRopC0lPlGfmIu1jdT5GtpYzNpLCPL18/D3oZ2mp
-         Dr8aJRXqmCmNO8QPUpmB4nRCFkTXi3vCbMtiCriJlkCLZn0MCGveUOKllYRPEnCIlih4
-         6bXmBbEU7iRv92X2ofKUgWvKxzrrnTagNOu1hgmx18Egu/xLTZfv4R712To31fSK4u79
-         c1pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=diRklryQQJnoiQLs7RRdCQUcCRp6YjW5rvtbtHyh1S0=;
-        b=cZxO5zKkT4LO20D8E0AqaH7J8NXZEO2RLh9pTKXYB0ZkxmebBLpi308LNlt9vsg3iH
-         MHZC/ipW9dYZX4Js1wlsn66m9/Gq/fZD917DFO374Ffzjg7/EiAQk7dgQ8kjZmp8eX9g
-         0kPvaMtGB5MJotmr7SPfx+KYwXLic0NA3nm3EJebbnikFgYLnO5+eKh9WBxxKXAVfvp1
-         3HLlFt8dqejo3NX9Ll26QHXfSJLkqKp5lfve3hfpwam557vyAE8713S+u8+ebUtAGH4F
-         grYLN/gWovmNv9fqVZwqnlIMgD+OqYoh2TYmY3r+xcP5qq+33mfoDIF7IA1Rp5FvUjg4
-         dkFg==
-X-Gm-Message-State: APjAAAVSuZJ867QrC/33PBM+5HpRIeRwjWbtxh0Hv+kGEY7Ryts4VB8J
-        ebwamt+sMG4sp7fOdOgFTgqewz2gXhc=
-X-Google-Smtp-Source: APXvYqwACHDJwHgzJ4EMy29/HZzw4s4WnbGhvpdWTbvCv0+QcL0w3NDlp1nEfH8m/ISKTZQdZ+7ILg==
-X-Received: by 2002:a63:5d44:: with SMTP id o4mr28435994pgm.15.1556078476263;
-        Tue, 23 Apr 2019 21:01:16 -0700 (PDT)
-Received: from localhost ([122.166.139.136])
-        by smtp.gmail.com with ESMTPSA id o67sm27194130pga.55.2019.04.23.21.01.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 21:01:15 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 09:31:13 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     andy.tang@nxp.com
-Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: qoriq: Add ls1028a chip support
-Message-ID: <20190424040113.aiyaia2p7xrn5ywo@vireshk-i7>
-References: <20190424023223.29614-1-andy.tang@nxp.com>
+        Wed, 24 Apr 2019 00:05:00 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48014 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725440AbfDXEE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 00:04:59 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5571CFDBECB2FABFF52E;
+        Wed, 24 Apr 2019 12:04:57 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 24 Apr 2019
+ 12:04:47 +0800
+Subject: Re: [PATCH next] sysctl: add proc_dointvec_jiffies_minmax to limit
+ the min/max write value
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+To:     <mcgrof@kernel.org>, <keescook@chromium.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <ebiederm@xmission.com>, <pbonzini@redhat.com>,
+        <viro@zeniv.linux.org.uk>, <adobriyan@gmail.com>
+CC:     <mingfangsen@huawei.com>, <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>
+References: <032e024f-2b1b-a980-1b53-d903bc8db297@huawei.com>
+Message-ID: <3e421384-a9cb-e534-3370-953c56883516@huawei.com>
+Date:   Wed, 24 Apr 2019 12:04:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424023223.29614-1-andy.tang@nxp.com>
-User-Agent: NeoMutt/20180323-120-3dd1ac
+In-Reply-To: <032e024f-2b1b-a980-1b53-d903bc8db297@huawei.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-04-19, 10:32, andy.tang@nxp.com wrote:
-> From: Yuantian Tang <andy.tang@nxp.com>
+
+Friendly ping...
+
+> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 > 
-> Enable cpufreq feature on ls1028a chip by adding its compatible
-> string.
+> In proc_dointvec_jiffies func, the write value is only checked
+> whether it is larger than INT_MAX. If the write value is less
+> than zero, it can also be successfully writen in the data.
 > 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> However, in some scenarios, users would adopt the data to
+> set timers or check whether time is expired. Generally, the data
+> will be cast to an unsigned type variable, then the negative data
+> becomes a very large unsigned value, which leads to long waits
+> or other unpredictable problems.
+> 
+> Here, we add a new func, proc_dointvec_jiffies_minmax, to limit the
+> min/max write value, which is similar to the proc_dointvec_minmax func.
+> 
+> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+> Reported-by: Qiang Ning <ningqiang1@huawei.com>
+> Reviewed-by: Jie Liu <liujie165@huawei.com>
 > ---
->  drivers/cpufreq/qoriq-cpufreq.c |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
+>  include/linux/sysctl.h |  2 ++
+>  kernel/sysctl.c        | 44 +++++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 45 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/cpufreq/qoriq-cpufreq.c b/drivers/cpufreq/qoriq-cpufreq.c
-> index 4295e54..d308c4d 100644
-> --- a/drivers/cpufreq/qoriq-cpufreq.c
-> +++ b/drivers/cpufreq/qoriq-cpufreq.c
-> @@ -280,6 +280,7 @@ static int qoriq_cpufreq_target(struct cpufreq_policy *policy,
->  
->  	{ .compatible = "fsl,ls1012a-clockgen", },
->  	{ .compatible = "fsl,ls1021a-clockgen", },
-> +	{ .compatible = "fsl,ls1028a-clockgen", },
->  	{ .compatible = "fsl,ls1043a-clockgen", },
->  	{ .compatible = "fsl,ls1046a-clockgen", },
->  	{ .compatible = "fsl,ls1088a-clockgen", },
+> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+> index b769ecf..8bde8a0 100644
+> --- a/include/linux/sysctl.h
+> +++ b/include/linux/sysctl.h
+> @@ -53,6 +53,8 @@ extern int proc_douintvec_minmax(struct ctl_table *table, int write,
+>  				 loff_t *ppos);
+>  extern int proc_dointvec_jiffies(struct ctl_table *, int,
+>  				 void __user *, size_t *, loff_t *);
+> +extern int proc_dointvec_jiffies_minmax(struct ctl_table *, int,
+> +				 void __user *, size_t *, loff_t *);
+>  extern int proc_dointvec_userhz_jiffies(struct ctl_table *, int,
+>  					void __user *, size_t *, loff_t *);
+>  extern int proc_dointvec_ms_jiffies(struct ctl_table *, int,
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index c9ec050..8e1eb59 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -2967,10 +2967,15 @@ static int do_proc_dointvec_jiffies_conv(bool *negp, unsigned long *lvalp,
+>  					 int *valp,
+>  					 int write, void *data)
+>  {
+> +	struct do_proc_dointvec_minmax_conv_param *param = data;
+> +
+>  	if (write) {
+>  		if (*lvalp > INT_MAX / HZ)
+>  			return 1;
+>  		*valp = *negp ? -(*lvalp*HZ) : (*lvalp*HZ);
+> +		if ((param->min && (*param->min)*HZ > *valp) ||
+> +		    (param->max && (*param->max)*HZ < *valp))
+> +			return -EINVAL;
+>  	} else {
+>  		int val = *valp;
+>  		unsigned long lval;
+> @@ -3053,7 +3058,37 @@ int proc_dointvec_jiffies(struct ctl_table *table, int write,
+>  			  void __user *buffer, size_t *lenp, loff_t *ppos)
+>  {
+>      return do_proc_dointvec(table,write,buffer,lenp,ppos,
+> -		    	    do_proc_dointvec_jiffies_conv,NULL);
+> +			    do_proc_dointvec_jiffies_conv, NULL);
+> +}
+> +
+> +/**
+> + * proc_dointvec_jiffies_minmax - read a vector of integers as seconds with min/max values
+> + * @table: the sysctl table
+> + * @write: %TRUE if this is a write to the sysctl file
+> + * @buffer: the user buffer
+> + * @lenp: the size of the user buffer
+> + * @ppos: file position
+> + *
+> + * Reads/writes up to table->maxlen/sizeof(unsigned int) integer
+> + * values from/to the user buffer, treated as an ASCII string.
+> + * The values read are assumed to be in seconds, and are converted into
+> + * jiffies.
+> + *
+> + * This routine will ensure the values are within the range specified by
+> + * table->extra1 (min) and table->extra2 (max).
+> + *
+> + * Returns 0 on success or -EINVAL on write when the range check fails.
+> + */
+> +int proc_dointvec_jiffies_minmax(struct ctl_table *table, int write,
+> +			  void __user *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	struct do_proc_dointvec_minmax_conv_param param = {
+> +		.min = (int *) table->extra1,
+> +		.max = (int *) table->extra2,
+> +	};
+> +
+> +	return do_proc_dointvec(table, write, buffer, lenp, ppos,
+> +				do_proc_dointvec_jiffies_conv, &param);
+>  }
+> 
+>  /**
+> @@ -3301,6 +3336,12 @@ int proc_dointvec_jiffies(struct ctl_table *table, int write,
+>  	return -ENOSYS;
+>  }
+> 
+> +int proc_dointvec_jiffies_minmax(struct ctl_table *table, int write,
+> +		    void __user *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+>  int proc_dointvec_userhz_jiffies(struct ctl_table *table, int write,
+>  		    void __user *buffer, size_t *lenp, loff_t *ppos)
+>  {
+> @@ -3359,6 +3400,7 @@ static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
+>  EXPORT_SYMBOL(proc_dointvec);
+>  EXPORT_SYMBOL(proc_douintvec);
+>  EXPORT_SYMBOL(proc_dointvec_jiffies);
+> +EXPORT_SYMBOL(proc_dointvec_jiffies_minmax);
+>  EXPORT_SYMBOL(proc_dointvec_minmax);
+>  EXPORT_SYMBOL_GPL(proc_douintvec_minmax);
+>  EXPORT_SYMBOL(proc_dointvec_userhz_jiffies);
+> 
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
