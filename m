@@ -2,135 +2,135 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA12C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE1DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5992148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD86F218B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 07:51:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSYYeM2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729877AbfDXHqs (ORCPT
+        id S1729946AbfDXHv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 03:46:48 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39126 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726707AbfDXHqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 03:46:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C5F680D;
-        Wed, 24 Apr 2019 00:46:47 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCDF93F238;
-        Wed, 24 Apr 2019 00:46:41 -0700 (PDT)
-Subject: Re: [PATCH] KVM: arm/arm64: inject an async abort to host if SEA
- handling failed
-To:     Dongjiu Geng <gengdongjiu@huawei.com>, christoffer.dall@arm.com,
-        james.morse@arm.com, julien.thierry@arm.com,
-        suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        zhengxiang9@huawei.com
-References: <1556080907-25158-1-git-send-email-gengdongjiu@huawei.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <06e33e9a-9c77-09bf-d53f-94496cffe8ef@arm.com>
-Date:   Wed, 24 Apr 2019 08:46:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1556080907-25158-1-git-send-email-gengdongjiu@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 24 Apr 2019 03:51:26 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41905 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728927AbfDXHv0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 03:51:26 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 188so8868110pfd.8
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 00:51:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MUzBcZSYyjNmVAln4pH9+hDa+BhI195V73WdadLwrkU=;
+        b=WSYYeM2z+eSgl8RJu1kf4xsUmWL7TbV5E6Ksim/kAqfLPjA9PZ2Ruuvb75pEEBqmaO
+         hmWO8ZJfjNoZbzzYPXrRpUjgt+lJD3bGSmVjVYN2/NEqvqoD8j0iKTDs2o+VhkFoWGds
+         2h1UGZnLo647Fkru6r8zZyfQfjZNFXTKr9jQeyHFnKf7ysfUwJ7XjFtutT1KGrKFfwRs
+         +1WMMPH3DzHK5klPDLqH4FpXyp+8fnxG4KLx4sguNKZYUyYmi4AeFPShJ9wO/0d1Aky0
+         sdobm3ERFskuhlTX5kM4GeTCYdI9x1W8Jb5znHsCNaQYZE9DWOvN6IULgWk6dDXp8VfP
+         Tagw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MUzBcZSYyjNmVAln4pH9+hDa+BhI195V73WdadLwrkU=;
+        b=MC9ilCj33wD/atcWKFdJEWGHqJr2H0zcZd+kQCYbimazJCT4Zm06ZTt40ec2THEK8W
+         BRGVkt2GYFm3b4fen/igHlWUY2qceM4iUR9ByteCB+D9ctgd7N8ZjbZy5UEhVbbBSvom
+         nLSBOzdO/+elD0+HaiOREeID23ZXK+Js4SqFGQN4kYpVnd5Ag2WSo4/q2aK9O4Vg96SJ
+         j3d/leVc34eItF9Ka4EykX9CtEUgoAr6Rlpkz1zfCE1nXzazliNFFHgEgVW3+LrdanP5
+         4lML6+DUvWJCRsX8/wX7dU5Ydg8jNKo86rKtDv1OqML2NxfJLWhrIq8wyMU7PpSEw8lO
+         bcPw==
+X-Gm-Message-State: APjAAAU+fbXJj6w5q1uS8kUYmp32YErh84aYwWByXugBTtcl/ao6/2Hq
+        SGPKe7Bzf7SDWCqJ+EonuAI=
+X-Google-Smtp-Source: APXvYqxujmGRGHIEdw7D/0pkEzjunqAgdRRM4DDeb4gBYviMbCW/tf7YM7mgvUfEu4nd/i+ZrtWk2g==
+X-Received: by 2002:a63:6e88:: with SMTP id j130mr6603072pgc.452.1556092285074;
+        Wed, 24 Apr 2019 00:51:25 -0700 (PDT)
+Received: from pcliush.allwinnertech.com ([223.197.233.48])
+        by smtp.gmail.com with ESMTPSA id y23sm26230823pfn.25.2019.04.24.00.51.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 24 Apr 2019 00:51:24 -0700 (PDT)
+From:   damon <liush.damon@gmail.com>
+To:     palmer@sifive.com
+Cc:     aou@eecs.berkeley.edu, anup.patel@wdc.com, liush.damon@gmail.com,
+        rppt@linux.ibm.com, sorear2@gmail.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] RISC-V: redefine PTRS_PER_PGD/PTRS_PER_PMD/PTRS_PER_PTE
+Date:   Wed, 24 Apr 2019 15:51:08 +0800
+Message-Id: <1556092268-4646-1-git-send-email-liush.damon@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/04/2019 05:41, Dongjiu Geng wrote:
-> If host failed to handle the SEA, KVM should inject an async abort
-> to guest for both SEA data and instruction abort, but it currently
-> only handles the data abort, so correct it.
-> 
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Xiang Zheng <zhengxiang9@huawei.com>
-> Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
-> ---
->  virt/kvm/arm/mmu.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> index 27c9583..5882516 100644
-> --- a/virt/kvm/arm/mmu.c
-> +++ b/virt/kvm/arm/mmu.c
-> @@ -1924,14 +1924,13 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  		/*
->  		 * For RAS the host kernel may handle this abort.
->  		 * There is no need to pass the error into the guest.
-> +		 * If host failed to handle it, inject an async abort
-> +		 * to guest.
->  		 */
-> -		if (!kvm_handle_guest_sea(fault_ipa, kvm_vcpu_get_hsr(vcpu)))
-> -			return 1;
-> -
-> -		if (unlikely(!is_iabt)) {
-> +		if (kvm_handle_guest_sea(fault_ipa, kvm_vcpu_get_hsr(vcpu)))
+Use the number of addresses to define the relevant macros.
 
-We've so far excluded instruction aborts from the delivery of a virtual
-SError. You now decide to inject an SError in all cases, but your commit
-message doesn't explain *why* this is a sensible thing to do.
+Signed-off-by: damon <liush.damon@gmail.com>
+---
+ arch/riscv/include/asm/pgtable-32.h | 2 ++
+ arch/riscv/include/asm/pgtable-64.h | 3 ++-
+ arch/riscv/include/asm/pgtable.h    | 8 ++++++--
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
-I'm not saying that this patch is wrong (the IABT handling predates RAS
-by several years and was  designed to deal with with badly behaved guest
-rather than flaky HW), but I'd like to understand why you think it is right.
-
-Thanks,
-
-	M.
+diff --git a/arch/riscv/include/asm/pgtable-32.h b/arch/riscv/include/asm/pgtable-32.h
+index d61974b7..433886b 100644
+--- a/arch/riscv/include/asm/pgtable-32.h
++++ b/arch/riscv/include/asm/pgtable-32.h
+@@ -17,6 +17,8 @@
+ #include <asm-generic/pgtable-nopmd.h>
+ #include <linux/const.h>
+ 
++#define __PAGETABLE_PMD_FOLDED    1
++#define MAX_USER_VA_BITS	32
+ /* Size of region mapped by a page global directory */
+ #define PGDIR_SHIFT     22
+ #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
+diff --git a/arch/riscv/include/asm/pgtable-64.h b/arch/riscv/include/asm/pgtable-64.h
+index 7aa0ea9..a56d4d0 100644
+--- a/arch/riscv/include/asm/pgtable-64.h
++++ b/arch/riscv/include/asm/pgtable-64.h
+@@ -16,6 +16,7 @@
+ 
+ #include <linux/const.h>
+ 
++#define MAX_USER_VA_BITS	39
+ #define PGDIR_SHIFT     30
+ /* Size of region mapped by a page global directory */
+ #define PGDIR_SIZE      (_AC(1, UL) << PGDIR_SHIFT)
+@@ -34,7 +35,7 @@
+ #define pmd_val(x)      ((x).pmd)
+ #define __pmd(x)        ((pmd_t) { (x) })
+ 
+-#define PTRS_PER_PMD    (PAGE_SIZE / sizeof(pmd_t))
++#define PTRS_PER_PMD    (1 << (PGDIR_SHIFT - PMD_SHIFT))
+ 
+ static inline int pud_present(pud_t pud)
+ {
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 1141364..9148043 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -33,9 +33,13 @@
+ #endif /* CONFIG_64BIT */
+ 
+ /* Number of entries in the page global directory */
+-#define PTRS_PER_PGD    (PAGE_SIZE / sizeof(pgd_t))
++#define PTRS_PER_PGD (1 << (MAX_USER_VA_BITS - PGDIR_SHIFT))
+ /* Number of entries in the page table */
+-#define PTRS_PER_PTE    (PAGE_SIZE / sizeof(pte_t))
++#ifdef __PAGETABLE_PMD_FOLDED
++#define PTRS_PER_PTE   (1 << (PGDIR_SHIFT - PAGE_SHIFT))
++#else
++#define PTRS_PER_PTE   (1 << (PMD_SHIFT - PAGE_SHIFT))
++#endif
+ 
+ /* Number of PGD entries that a user-mode program can use */
+ #define USER_PTRS_PER_PGD   (TASK_SIZE / PGDIR_SIZE)
 -- 
-Jazz is not dead. It just smells funny...
+1.9.1
+
