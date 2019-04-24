@@ -7,45 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163E4C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A55C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D35B721900
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10BB1218FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116622;
-	bh=rMk+C1vK8BfFTsnhRIYkWgj+ZXryiP+lubAOWx7AcFU=;
+	s=default; t=1556116648;
+	bh=otjoxQm7BFcGcORn54cq0kegkDdiEt5ib0Jw454B8ho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p6hUHecYNUatL/ENbJrAFS3C06rYsl5boqGfkwzOt3GSC6sI4WRFK6Y2uQwP5Ev80
-	 /USk8ArlWduxwNd6gF4+pZdi834R9ECqxJxAZ8WFqVPhgi5KTx5ZabLUMWwaZgjXUC
-	 1NrR4fDstCx979FGFnUyj5aaZc8LEGQnuOSygCzw=
+	b=jqy8xw6DjN00CBPwzyNCncW9RSd85wQpXtKLhqgB0EDQ7pRvgcjrUa8seI77gNF1x
+	 CRKvsjzawmKLlczUIeIWTKDdYiBP34A8sPJ5BZIl7zp9TeYhSkEE6DMNRFIDNrMeWy
+	 UpTSsELph0TfZDBROo6u0dSeoK+gFNBof1IJtPE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731654AbfDXOgs (ORCPT
+        id S1731280AbfDXOh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:36:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40318 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:37:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731149AbfDXOgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:36:42 -0400
+        id S1731505AbfDXOgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:36:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5B2A21909;
-        Wed, 24 Apr 2019 14:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90AF721902;
+        Wed, 24 Apr 2019 14:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116601;
-        bh=rMk+C1vK8BfFTsnhRIYkWgj+ZXryiP+lubAOWx7AcFU=;
+        s=default; t=1556116561;
+        bh=otjoxQm7BFcGcORn54cq0kegkDdiEt5ib0Jw454B8ho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CqGfxkvKcEraPX9+weMvapyAYUzof+dxxOJYNbEjXl8+YDhbyZmMKVYdkFDVhLpM2
-         4jvydA5PEe2xSzGq5fn90LXATokX3P/KXsjUbYAcI6QH4RTYTEOJ1wlDcMcISsqfMT
-         zh9WykLw8n6dlNkcbWGCVNPrhgVFLI0HNbRKoysU=
+        b=VYIBq3GUn86wnPp9qfAOg3aiRLKJN4jdM9YwjDqXiWS2P7lXJ1vSER58icbnJgdok
+         GlQTTeYXlIWoF6TuLZ+igXuslgF8p5utwfaGS4wA/qPBmGpAVl6+U2zet/3/rr9Vd8
+         4zmga4peHSlb1FR0+86vZ2lpbVQ4oCVJTc3LI7Mo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org
-Subject: [PATCH AUTOSEL 5.0 64/66] aio: keep io_event in aio_kiocb
-Date:   Wed, 24 Apr 2019 10:33:38 -0400
-Message-Id: <20190424143341.27665-64-sashal@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Avi Kivity <avi@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 5.0 53/66] kmemleak: powerpc: skip scanning holes in the .bss section
+Date:   Wed, 24 Apr 2019 10:33:27 -0400
+Message-Id: <20190424143341.27665-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -58,107 +66,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Catalin Marinas <catalin.marinas@arm.com>
 
-[ Upstream commit a9339b7855094ba11a97e8822ae038135e879e79 ]
+[ Upstream commit 298a32b132087550d3fa80641ca58323c5dfd4d9 ]
 
-We want to separate forming the resulting io_event from putting it
-into the ring buffer.
+Commit 2d4f567103ff ("KVM: PPC: Introduce kvm_tmp framework") adds
+kvm_tmp[] into the .bss section and then free the rest of unused spaces
+back to the page allocator.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+kernel_init
+  kvm_guest_init
+    kvm_free_tmp
+      free_reserved_area
+        free_unref_page
+          free_unref_page_prepare
+
+With DEBUG_PAGEALLOC=y, it will unmap those pages from kernel.  As the
+result, kmemleak scan will trigger a panic when it scans the .bss
+section with unmapped pages.
+
+This patch creates dedicated kmemleak objects for the .data, .bss and
+potentially .data..ro_after_init sections to allow partial freeing via
+the kmemleak_free_part() in the powerpc kvm_free_tmp() function.
+
+Link: http://lkml.kernel.org/r/20190321171917.62049-1-catalin.marinas@arm.com
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Tested-by: Qian Cai <cai@lca.pw>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Avi Kivity <avi@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krcmar <rkrcmar@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- fs/aio.c | 31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+ arch/powerpc/kernel/kvm.c |  7 +++++++
+ mm/kmemleak.c             | 16 +++++++++++-----
+ 2 files changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/fs/aio.c b/fs/aio.c
-index ae60c29b8a98..387b224217b5 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -204,8 +204,7 @@ struct aio_kiocb {
- 	struct kioctx		*ki_ctx;
- 	kiocb_cancel_fn		*ki_cancel;
+diff --git a/arch/powerpc/kernel/kvm.c b/arch/powerpc/kernel/kvm.c
+index 683b5b3805bd..cd381e2291df 100644
+--- a/arch/powerpc/kernel/kvm.c
++++ b/arch/powerpc/kernel/kvm.c
+@@ -22,6 +22,7 @@
+ #include <linux/kvm_host.h>
+ #include <linux/init.h>
+ #include <linux/export.h>
++#include <linux/kmemleak.h>
+ #include <linux/kvm_para.h>
+ #include <linux/slab.h>
+ #include <linux/of.h>
+@@ -712,6 +713,12 @@ static void kvm_use_magic_page(void)
  
--	struct iocb __user	*ki_user_iocb;	/* user's aiocb */
--	__u64			ki_user_data;	/* user's data for completion */
-+	struct io_event		ki_res;
- 
- 	struct list_head	ki_list;	/* the aio core uses this
- 						 * for cancellation */
-@@ -1084,15 +1083,6 @@ static inline void iocb_put(struct aio_kiocb *iocb)
- 		iocb_destroy(iocb);
+ static __init void kvm_free_tmp(void)
+ {
++	/*
++	 * Inform kmemleak about the hole in the .bss section since the
++	 * corresponding pages will be unmapped with DEBUG_PAGEALLOC=y.
++	 */
++	kmemleak_free_part(&kvm_tmp[kvm_tmp_index],
++			   ARRAY_SIZE(kvm_tmp) - kvm_tmp_index);
+ 	free_reserved_area(&kvm_tmp[kvm_tmp_index],
+ 			   &kvm_tmp[ARRAY_SIZE(kvm_tmp)], -1, NULL);
  }
- 
--static void aio_fill_event(struct io_event *ev, struct aio_kiocb *iocb,
--			   long res, long res2)
--{
--	ev->obj = (u64)(unsigned long)iocb->ki_user_iocb;
--	ev->data = iocb->ki_user_data;
--	ev->res = res;
--	ev->res2 = res2;
--}
--
- /* aio_complete
-  *	Called when the io request on the given iocb is complete.
-  */
-@@ -1104,6 +1094,8 @@ static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
- 	unsigned tail, pos, head;
- 	unsigned long	flags;
- 
-+	iocb->ki_res.res = res;
-+	iocb->ki_res.res2 = res2;
- 	/*
- 	 * Add a completion event to the ring buffer. Must be done holding
- 	 * ctx->completion_lock to prevent other code from messing with the tail
-@@ -1120,14 +1112,14 @@ static void aio_complete(struct aio_kiocb *iocb, long res, long res2)
- 	ev_page = kmap_atomic(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
- 	event = ev_page + pos % AIO_EVENTS_PER_PAGE;
- 
--	aio_fill_event(event, iocb, res, res2);
-+	*event = iocb->ki_res;
- 
- 	kunmap_atomic(ev_page);
- 	flush_dcache_page(ctx->ring_pages[pos / AIO_EVENTS_PER_PAGE]);
- 
--	pr_debug("%p[%u]: %p: %p %Lx %lx %lx\n",
--		 ctx, tail, iocb, iocb->ki_user_iocb, iocb->ki_user_data,
--		 res, res2);
-+	pr_debug("%p[%u]: %p: %p %Lx %Lx %Lx\n", ctx, tail, iocb,
-+		 (void __user *)(unsigned long)iocb->ki_res.obj,
-+		 iocb->ki_res.data, iocb->ki_res.res, iocb->ki_res.res2);
- 
- 	/* after flagging the request as done, we
- 	 * must never even look at it again
-@@ -1844,8 +1836,10 @@ static int __io_submit_one(struct kioctx *ctx, const struct iocb *iocb,
- 		goto out_put_req;
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index 707fa5579f66..6c318f5ac234 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -1529,11 +1529,6 @@ static void kmemleak_scan(void)
  	}
+ 	rcu_read_unlock();
  
--	req->ki_user_iocb = user_iocb;
--	req->ki_user_data = iocb->aio_data;
-+	req->ki_res.obj = (u64)(unsigned long)user_iocb;
-+	req->ki_res.data = iocb->aio_data;
-+	req->ki_res.res = 0;
-+	req->ki_res.res2 = 0;
+-	/* data/bss scanning */
+-	scan_large_block(_sdata, _edata);
+-	scan_large_block(__bss_start, __bss_stop);
+-	scan_large_block(__start_ro_after_init, __end_ro_after_init);
+-
+ #ifdef CONFIG_SMP
+ 	/* per-cpu sections scanning */
+ 	for_each_possible_cpu(i)
+@@ -2071,6 +2066,17 @@ void __init kmemleak_init(void)
+ 	}
+ 	local_irq_restore(flags);
  
- 	switch (iocb->aio_lio_opcode) {
- 	case IOCB_CMD_PREAD:
-@@ -2019,6 +2013,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, struct iocb __user *, iocb,
- 	struct aio_kiocb *kiocb;
- 	int ret = -EINVAL;
- 	u32 key;
-+	u64 obj = (u64)(unsigned long)iocb;
- 
- 	if (unlikely(get_user(key, &iocb->aio_key)))
- 		return -EFAULT;
-@@ -2032,7 +2027,7 @@ SYSCALL_DEFINE3(io_cancel, aio_context_t, ctx_id, struct iocb __user *, iocb,
- 	spin_lock_irq(&ctx->ctx_lock);
- 	/* TODO: use a hash or array, this sucks. */
- 	list_for_each_entry(kiocb, &ctx->active_reqs, ki_list) {
--		if (kiocb->ki_user_iocb == iocb) {
-+		if (kiocb->ki_res.obj == obj) {
- 			ret = kiocb->ki_cancel(&kiocb->rw);
- 			list_del_init(&kiocb->ki_list);
- 			break;
++	/* register the data/bss sections */
++	create_object((unsigned long)_sdata, _edata - _sdata,
++		      KMEMLEAK_GREY, GFP_ATOMIC);
++	create_object((unsigned long)__bss_start, __bss_stop - __bss_start,
++		      KMEMLEAK_GREY, GFP_ATOMIC);
++	/* only register .data..ro_after_init if not within .data */
++	if (__start_ro_after_init < _sdata || __end_ro_after_init > _edata)
++		create_object((unsigned long)__start_ro_after_init,
++			      __end_ro_after_init - __start_ro_after_init,
++			      KMEMLEAK_GREY, GFP_ATOMIC);
++
+ 	/*
+ 	 * This is the point where tracking allocations is safe. Automatic
+ 	 * scanning is started during the late initcall. Add the early logged
 -- 
 2.19.1
 
