@@ -2,129 +2,86 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA1BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DBAC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA6CE2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD47C2089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:32:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F4MBxL3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbfDXOcj (ORCPT
+        id S1730615AbfDXOcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:32:39 -0400
-Received: from mga06.intel.com ([134.134.136.31]:15660 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbfDXOcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:32:39 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Apr 2019 07:32:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,390,1549958400"; 
-   d="scan'208";a="167504859"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Apr 2019 07:32:38 -0700
-Date:   Wed, 24 Apr 2019 07:32:38 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Like Xu <like.xu@linux.intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: Add Intel CPUID.1F cpuid emulation support
-Message-ID: <20190424143238.GB18442@linux.intel.com>
-References: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
+        Wed, 24 Apr 2019 10:32:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60608 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730459AbfDXOcr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:32:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HH6es2owcH1NcV2/iXg+dvHnsEeqH9IglqJIj3+7hj8=; b=F4MBxL3d56lZLKwK2Dt9NbXbG
+        Y6yc9XvLpG4AXRwmThWqtySUpjjaMbKclSBKS+x7vFyIy0ZA+oANaRj6QhwwCwz8VtjlPcVGg9JFC
+        cOL3sF5/EmtJKKT4Q0OGQlx/T3fr9fwc9u+6ca9mMxieBuBYo1hx05k0QfvgterpvNu37rdj8DFHz
+        vee6uyung/Ue7elGZKJiSYTKEfeIpSWUlBUDq+QIu6K58DGk2H2q9BJ83wEkFhTdUuDgs5sQaitxN
+        DngHKU7Q+1iNG6WraZo5JIkwKC2rTNzcZK70jgc8sNF/4oqnn8wklLOhVlczF24mrSbj1zZj07utm
+        eJ9QdC7eg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hJIx4-0008FO-5m; Wed, 24 Apr 2019 14:32:46 +0000
+Date:   Wed, 24 Apr 2019 07:32:46 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Murphy <tmurphy@arista.com>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        murphyt7@tcd.ie
+Subject: Re: [PATCH] iommu/amd: flush not present cache in iommu_map_page
+Message-ID: <20190424143246.GA24079@infradead.org>
+References: <20190424141900.8883-1-tmurphy@arista.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555915234-2536-1-git-send-email-like.xu@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190424141900.8883-1-tmurphy@arista.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that I understand how min() works...
-
-On Mon, Apr 22, 2019 at 02:40:34PM +0800, Like Xu wrote:
-> Expose Intel V2 Extended Topology Enumeration Leaf to guest only when
-> host system has multiple software-visible die within each package.
+On Wed, Apr 24, 2019 at 03:18:59PM +0100, Tom Murphy via iommu wrote:
+> check if there is a not-present cache present and flush it if there is.
 > 
-> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> Signed-off-by: Tom Murphy <tmurphy@arista.com>
 > ---
->  arch/x86/kvm/cpuid.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  drivers/iommu/amd_iommu.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index fd39516..9fc14f2 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -65,6 +65,16 @@ u64 kvm_supported_xcr0(void)
->  	return xcr0;
->  }
+> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+> index f7cdd2ab7f11..8ef43224aae0 100644
+> --- a/drivers/iommu/amd_iommu.c
+> +++ b/drivers/iommu/amd_iommu.c
+> @@ -1636,6 +1636,12 @@ static int iommu_map_page(struct protection_domain *dom,
+>  		pte[i] = __pte;
 >  
-> +/* We need to check if the host cpu has multi-chip packaging technology. */
-> +static bool kvm_supported_intel_mcp(void)
-> +{
-> +	u32 eax, ignored;
-> +
-> +	cpuid_count(0x1f, 0, &eax, &ignored, &ignored, &ignored);
+>  	update_domain(dom);
+> +	if (!dom->updated) {
+> +		if (unlikely(amd_iommu_np_cache)) {
+> +			domain_flush_pages(dom, bus_addr, page_size);
+> +			domain_flush_complete(dom);
+> +		}
+> +	}
 
-This is broken because of how CPUID works for unsupported input leafs:
+The two conditions can go into one if statement to make this a little
+more clear.
 
-  If a value entered for CPUID.EAX is higher than the maximum input value
-  for basic or extended function for that processor then the data for the
-  highest basic information leaf is returned. 
-
-For example, my system with a max basic leaf of 0x16 returns 0x00000e74
-for CPUID.1F.EAX.
-
-> +
-> +	return boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && (eax != 0);
-
-Checking 'eax != 0' is broken as it will be '0' when SMT is disabled.  ecx
-is the obvious choice since bits 15:8 are guaranteed to be non-zero when
-the leaf is valid.
-
-I think we can skip the vendor check.  AFAIK, CPUID.1F isn't used by AMD,
-and since AMD and Intel try to maintain a semblance of CPUID compatibility
-it seems more likely that AMD/Hygon would implement CPUID.1F as-is rather
-than repurpose it to mean something else entirely.
-
-> +}
-> +
->  #define F(x) bit(X86_FEATURE_##x)
->  
->  int kvm_update_cpuid(struct kvm_vcpu *vcpu)
-> @@ -426,6 +436,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
->  	switch (function) {
->  	case 0:
->  		entry->eax = min(entry->eax, (u32)(f_intel_pt ? 0x14 : 0xd));
-> +		entry->eax = kvm_supported_intel_mcp() ? 0x1f : entry->eax;
-
-If we put everything together, I think the code can be reduced to:
-
-		/* comment about multi-chip leaf... */
-		if (entry->eax >= 0x1f && cpuid_ecx(0x1f))
-			entry->eax = 0x1f;
-		else
-			entry->eax = min(entry->eax,
-					 (u32)(f_intel_pt ? 0x14 : 0xd));
->  		break;
->  	case 1:
->  		entry->edx &= kvm_cpuid_1_edx_x86_features;
-> @@ -544,6 +555,8 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
->  		entry->edx = edx.full;
->  		break;
->  	}
-> +	/* function 0x1f has additional index. */
-> +	case 0x1f:
->  	/* function 0xb has additional index. */
->  	case 0xb: {
->  		int i, level_type;
-> -- 
-> 1.8.3.1
-> 
+And I'd really like to understand the unlikely - amd_iommu_np_cache
+is set based on a hardware capability, so it seems rather odd to mark
+it unlikely.  Dynamic branch prediction really should do the right thing
+here usually.
