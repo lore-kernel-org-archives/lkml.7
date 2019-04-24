@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A7EC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D28C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8ADA21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A90621905
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127515;
-	bh=xpVBqCJY58kY47VAjaz+q/BMuLlYfmFiGVlHcxnWGSM=;
+	s=default; t=1556127518;
+	bh=/SCuVEvZ1AypaB4eQaAKoJcaWjN8N/OkT0gc+K1JcAY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y5f1Mt0HJlxEztyL28yT4GqgvOtuoT5T8iJh027l48kBfsN7qzUYnvNPkeghSA4+I
-	 PnRE74T4yyGb9SOo+kxPEqb4CSaGHiFbi3VYSlTzpGVLt/EVbJFWDMK8STUDd2oZfA
-	 yIlobDfZ6+gwUh7Lpys9zS/QbY6SvrkCInOYyHxQ=
+	b=O5ywUXULanYxPqa4KF0I5Cxo1+UFCOrTP1Mi72VUrwgzHpkGuYB3vtfUbaGocbP3L
+	 GeFwxaF2VfAIIAD9pTZ3epUlO9MD+6Zz0OrwQ3C1LiPz4FqTtFh1oKfdLy8n+z4Zwg
+	 hNfbu8l8c7SanZglNRPWK4EJCHq15JnnLOQT9iVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392435AbfDXRie (ORCPT
+        id S2392448AbfDXRih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:38:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37728 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:38:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392421AbfDXRib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:38:31 -0400
+        id S2392434AbfDXRie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:38:34 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BB13218B0;
-        Wed, 24 Apr 2019 17:38:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21004218B0;
+        Wed, 24 Apr 2019 17:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127510;
-        bh=xpVBqCJY58kY47VAjaz+q/BMuLlYfmFiGVlHcxnWGSM=;
+        s=default; t=1556127513;
+        bh=/SCuVEvZ1AypaB4eQaAKoJcaWjN8N/OkT0gc+K1JcAY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QAtGG0PGYekMYcUZkd0j2kk8dENnGlhqS7NveXd06fi3/3NNGQ0uBYJWr1apO3mtN
-         enNPYHfqoMzNqWZhwDkUCZQJET7kcx0SFOtHyDfXeRUcB/YTl/9myNBCCQ6rknUl+m
-         mEW+n1RkNQiqoKl/DvzmIU2G7TQNiJfgO2zciv6M=
+        b=P3/q1qBCk3lXTUdMut0NSlA48Ma0TJakY1IGbb62H4U8Fdi6V7agysKO8EpOK10fs
+         9tpS7N6ftcEy9/i4v04Zdxp0TNK8GF6Vk/PQ+XwCNp6yoH71VpgXFNH9DXYDKkV+LX
+         YrPa0oJwG4QvG6opPoO8yzql29nVgpxeY4lAzUyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Nicolas Pitre <nico@fluxnic.net>
-Subject: [PATCH 5.0 075/115] vt: fix cursor when clearing the screen
-Date:   Wed, 24 Apr 2019 19:10:11 +0200
-Message-Id: <20190424170929.418421921@linuxfoundation.org>
+        stable@vger.kernel.org, Jaesoo Lee <jalee@purestorage.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.0 076/115] scsi: core: set result when the command cannot be dispatched
+Date:   Wed, 24 Apr 2019 19:10:12 +0200
+Message-Id: <20190424170929.464119180@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170924.797924502@linuxfoundation.org>
 References: <20190424170924.797924502@linuxfoundation.org>
@@ -58,50 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Jaesoo Lee <jalee@purestorage.com>
 
-commit b2ecf00631362a83744e5ec249947620db5e240c upstream.
+commit be549d49115422f846b6d96ee8fd7173a5f7ceb0 upstream.
 
-The patch a6dbe4427559 ("vt: perform safe console erase in the right
-order") introduced a bug. The conditional do_update_region() was
-replaced by a call to update_region() that does contain the conditional
-already, but with unwanted extra side effects such as restoring the cursor
-drawing.
+When SCSI blk-mq is enabled, there is a bug in handling errors in
+scsi_queue_rq.  Specifically, the bug is not setting result field of
+scsi_request correctly when the dispatch of the command has been
+failed. Since the upper layer code including the sg_io ioctl expects to
+receive any error status from result field of scsi_request, the error is
+silently ignored and this could cause data corruptions for some
+applications.
 
-In order to reproduce the bug:
-- use framebuffer console with the AMDGPU driver
-- type "links" to start the console www browser
-- press 'q' and space to exit links
-
-Now the cursor will be permanently visible in the center of the
-screen. It will stay there until something overwrites it.
-
-The bug goes away if we change update_region() back to the conditional
-do_update_region().
-
-[ nico: reworded changelog ]
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Reviewed-by: Nicolas Pitre <nico@fluxnic.net>
-Cc: stable@vger.kernel.org
-Fixes: a6dbe4427559 ("vt: perform safe console erase in the right order")
+Fixes: d285203cf647 ("scsi: add support for a blk-mq based I/O path.")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jaesoo Lee <jalee@purestorage.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/scsi_lib.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1518,7 +1518,8 @@ static void csi_J(struct vc_data *vc, in
- 			return;
- 	}
- 	scr_memsetw(start, vc->vc_video_erase_char, 2 * count);
--	update_region(vc, (unsigned long) start, count);
-+	if (con_should_update(vc))
-+		do_update_region(vc, (unsigned long) start, count);
- 	vc->vc_need_wrap = 0;
- }
- 
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1763,8 +1763,12 @@ out_put_budget:
+ 			ret = BLK_STS_DEV_RESOURCE;
+ 		break;
+ 	default:
++		if (unlikely(!scsi_device_online(sdev)))
++			scsi_req(req)->result = DID_NO_CONNECT << 16;
++		else
++			scsi_req(req)->result = DID_ERROR << 16;
+ 		/*
+-		 * Make sure to release all allocated ressources when
++		 * Make sure to release all allocated resources when
+ 		 * we hit an error, as we will never see this command
+ 		 * again.
+ 		 */
 
 
