@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FD0C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A87C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1792C2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCC021904
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127141;
-	bh=KvnMzeYMC+DEtYdigmfzkFAkCX2JLyp/utJM9teUTG0=;
+	s=default; t=1556127144;
+	bh=358TBgmDJPbtbbJnzVm7V9fqPiPkS9zX5pxQpMmgEig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6+It+jSpXvnkBvSd0t/QKo2M7J+D8DCIFq8McSv/w2bLbTCgWAyuSi6NeiaIhsYG
-	 tKgnxV+Lzw/v0r3JNbZcesEaedHx+Ou+Uvoj2LkMNwb0+iaxZamsiivZixUTKjSpy6
-	 +OpVVvRWkiQ4uxS5m6jo6OiMXnEAGGZwhlWYLrug=
+	b=Yd/fShgfm7MvX6IRWA6bflB9U17wVKXqLO+dMv9wdJQW68uucqvvr4aP7gn340FkI
+	 UAem1ZChq1vaN9IVTgv0q2t+7nIlvemEwvstYU0B0V5ehLM2QzxOGgzqXAtDo6Xbpu
+	 1/AJlSc7lV23/p4TedwFW5aSWrIFFQOQP/tPQODQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391322AbfDXRcT (ORCPT
+        id S2403859AbfDXRcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:32:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58926 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:32:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391309AbfDXRcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:32:18 -0400
+        id S2390559AbfDXRcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:32:15 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BCF921906;
-        Wed, 24 Apr 2019 17:32:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67B4521906;
+        Wed, 24 Apr 2019 17:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127137;
-        bh=KvnMzeYMC+DEtYdigmfzkFAkCX2JLyp/utJM9teUTG0=;
+        s=default; t=1556127134;
+        bh=358TBgmDJPbtbbJnzVm7V9fqPiPkS9zX5pxQpMmgEig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UnFInW8FkQxGS2+/5EAd9GW0fHnqExH701TkatrZ2Ulv1cZxlPWQbKsjoxXzLVTBh
-         zYYux3Y/6clJsX6OBNsMJTRtzpzkB81unXkVUMw+G/gLzepc7vL+vVPYRi7XyrstF8
-         N4gzUWjdPzL61PA2aMd035MQN8mL1ln4txZjoC7g=
+        b=mFJOzNV+Dz1GJOjg9l16yOurWuPB8yaQ2Ybqwf8oT6u+6vZzBg9siT8Xogxit6ZME
+         gwWW4HYPOrtBppq7Ln5WCPm/h1/YMuoK2jEyM4vbg6pkIwEQBNHV9AXCgns+HJJodu
+         XtrVhv1S8h2HGpVyvZZSUchJZAPyQaC6DbgXKDM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH 4.19 75/96] x86/speculation: Prevent deadlock on ssb_state::lock
-Date:   Wed, 24 Apr 2019 19:10:20 +0200
-Message-Id: <20190424170924.815623557@linuxfoundation.org>
+        syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.19 48/96] staging: comedi: vmk80xx: Fix use of uninitialized semaphore
+Date:   Wed, 24 Apr 2019 19:09:53 +0200
+Message-Id: <20190424170923.091990090@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -60,68 +59,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 2f5fb19341883bb6e37da351bc3700489d8506a7 upstream.
+commit 08b7c2f9208f0e2a32159e4e7a4831b7adb10a3e upstream.
 
-Mikhail reported a lockdep splat related to the AMD specific ssb_state
-lock:
+If `vmk80xx_auto_attach()` returns an error, the core comedi module code
+will call `vmk80xx_detach()` to clean up.  If `vmk80xx_auto_attach()`
+successfully allocated the comedi device private data,
+`vmk80xx_detach()` assumes that a `struct semaphore limit_sem` contained
+in the private data has been initialized and uses it.  Unfortunately,
+there are a couple of places where `vmk80xx_auto_attach()` can return an
+error after allocating the device private data but before initializing
+the semaphore, so this assumption is invalid.  Fix it by initializing
+the semaphore just after allocating the private data in
+`vmk80xx_auto_attach()` before any other errors can be returned.
 
-  CPU0                       CPU1
-  lock(&st->lock);
-                             local_irq_disable();
-                             lock(&(&sighand->siglock)->rlock);
-                             lock(&st->lock);
-  <Interrupt>
-     lock(&(&sighand->siglock)->rlock);
+I believe this was the cause of the following syzbot crash report
+<https://syzkaller.appspot.com/bug?extid=54c2f58f15fe6876b6ad>:
 
-  *** DEADLOCK ***
+usb 1-1: config 0 has no interface number 0
+usb 1-1: New USB device found, idVendor=10cf, idProduct=8068, bcdDevice=e6.8d
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+vmk80xx 1-1:0.117: driver 'vmk80xx' failed to auto-configure device.
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xe8/0x16e lib/dump_stack.c:113
+ assign_lock_key kernel/locking/lockdep.c:786 [inline]
+ register_lock_class+0x11b8/0x1250 kernel/locking/lockdep.c:1095
+ __lock_acquire+0xfb/0x37c0 kernel/locking/lockdep.c:3582
+ lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
+ down+0x12/0x80 kernel/locking/semaphore.c:58
+ vmk80xx_detach+0x59/0x100 drivers/staging/comedi/drivers/vmk80xx.c:829
+ comedi_device_detach+0xed/0x800 drivers/staging/comedi/drivers.c:204
+ comedi_device_cleanup.part.0+0x68/0x140 drivers/staging/comedi/comedi_fops.c:156
+ comedi_device_cleanup drivers/staging/comedi/comedi_fops.c:187 [inline]
+ comedi_free_board_dev.part.0+0x16/0x90 drivers/staging/comedi/comedi_fops.c:190
+ comedi_free_board_dev drivers/staging/comedi/comedi_fops.c:189 [inline]
+ comedi_release_hardware_device+0x111/0x140 drivers/staging/comedi/comedi_fops.c:2880
+ comedi_auto_config.cold+0x124/0x1b0 drivers/staging/comedi/drivers.c:1068
+ usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+ really_probe+0x2da/0xb10 drivers/base/dd.c:509
+ driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+ __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+ bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+ __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+ bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+ device_add+0xad2/0x16e0 drivers/base/core.c:2106
+ usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+ generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+ usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+ really_probe+0x2da/0xb10 drivers/base/dd.c:509
+ driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+ __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+ bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+ __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+ bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+ device_add+0xad2/0x16e0 drivers/base/core.c:2106
+ usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+ hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+ port_event drivers/usb/core/hub.c:5350 [inline]
+ hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+ process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+ worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
+ kthread+0x313/0x420 kernel/kthread.c:253
+ ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
 
-The connection between sighand->siglock and st->lock comes through seccomp,
-which takes st->lock while holding sighand->siglock.
-
-Make sure interrupts are disabled when __speculation_ctrl_update() is
-invoked via prctl() -> speculation_ctrl_update(). Add a lockdep assert to
-catch future offenders.
-
-Fixes: 1f50ddb4f418 ("x86/speculation: Handle HT correctly on AMD")
-Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Thomas Lendacky <thomas.lendacky@amd.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1904141948200.4917@nanos.tec.linutronix.de
+Reported-by: syzbot+54c2f58f15fe6876b6ad@syzkaller.appspotmail.com
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/process.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/staging/comedi/drivers/vmk80xx.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -411,6 +411,8 @@ static __always_inline void __speculatio
- 	u64 msr = x86_spec_ctrl_base;
- 	bool updmsr = false;
+--- a/drivers/staging/comedi/drivers/vmk80xx.c
++++ b/drivers/staging/comedi/drivers/vmk80xx.c
+@@ -800,6 +800,8 @@ static int vmk80xx_auto_attach(struct co
  
-+	lockdep_assert_irqs_disabled();
+ 	devpriv->model = board->model;
+ 
++	sema_init(&devpriv->limit_sem, 8);
 +
- 	/*
- 	 * If TIF_SSBD is different, select the proper mitigation
- 	 * method. Note that if SSBD mitigation is disabled or permanentely
-@@ -462,10 +464,12 @@ static unsigned long speculation_ctrl_up
+ 	ret = vmk80xx_find_usb_endpoints(dev);
+ 	if (ret)
+ 		return ret;
+@@ -808,8 +810,6 @@ static int vmk80xx_auto_attach(struct co
+ 	if (ret)
+ 		return ret;
  
- void speculation_ctrl_update(unsigned long tif)
- {
-+	unsigned long flags;
-+
- 	/* Forced update. Make sure all relevant TIF flags are different */
--	preempt_disable();
-+	local_irq_save(flags);
- 	__speculation_ctrl_update(~tif, tif);
--	preempt_enable();
-+	local_irq_restore(flags);
- }
+-	sema_init(&devpriv->limit_sem, 8);
+-
+ 	usb_set_intfdata(intf, devpriv);
  
- /* Called from seccomp/prctl update */
+ 	if (devpriv->model == VMK8055_MODEL)
 
 
