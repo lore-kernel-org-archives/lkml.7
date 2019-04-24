@@ -2,151 +2,156 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DB5C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68461C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6260D20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:10:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="hBy+/XgG";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="ANT6Iuyh"
+	by mail.kernel.org (Postfix) with ESMTP id 3618B20684
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 18:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556129422;
+	bh=V6bN5prMbTdZQ2lN3ntnb/ez7g/jmfKbPwmFqI5xO70=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Sk1U6wRID16fVQXOglmZ6Ykj+PYAtpHJfLAUkpWtCaX9n3bULNDHNfaN4Xgk1oib0
+	 VpAfQoJSFDAvD7Tq75vEJZIflmjuH6XXqyyH4W1j7gz0dE16FMq38OqLf7R+sOvcz2
+	 wrruzUu507/ryZ99ep/keZRNdStfz4pJP08KRzLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388740AbfDXSKJ (ORCPT
+        id S2388796AbfDXSKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 14:10:09 -0400
-Received: from mail133-30.atl131.mandrillapp.com ([198.2.133.30]:37211 "EHLO
-        mail133-30.atl131.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388108AbfDXSKF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 14:10:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=02qKTqdOtA4Z41FRFPr/vQwJc4+ocExFqDxvLSC1V3I=;
- b=hBy+/XgGl9OPdchJqvKszqmYAdbps2EGc7JX3gbNj2mTMaBzJWgO37aSb17UlbmhNkWmn6Zh4mU1
-   Igs+PSr27CZHxLRKY1/hdv80UnYUILjTdpo1h+VnherKb7HHEGxQOs+Dli3NaTBYdUDl/H/sFRJb
-   iRqB1gHrIvHwMVhGSEw=
-Received: from pmta02.mandrill.prod.atl01.rsglab.com (127.0.0.1) by mail133-30.atl131.mandrillapp.com id ho2j7q1sar81 for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 18:10:03 +0000 (envelope-from <bounce-md_31050260.5cc0a67a.v1-a99bf3401b104c8aad25811c1c3664ff@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1556129402; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=02qKTqdOtA4Z41FRFPr/vQwJc4+ocExFqDxvLSC1V3I=; 
- b=ANT6IuyhpS1AHjRaFL1t+JrszP6SruyrFpn/jycgP0rehHOjPqgfZTjRz4menycWIOpzhB
- sQ5qmnMgWLwDoz0PyoucSMYv3vqKxu3scky1B9oAMqmVzzRXXi6700Awag1RTHvTjtRS/wRC
- KbU/5Agof2E0jyxiuD0hsr41Wk3vM=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [RESEND4, PATCH 1/2] fuse: retrieve: cap requested size to negotiated max_write
-Received: from [87.98.221.171] by mandrillapp.com id a99bf3401b104c8aad25811c1c3664ff; Wed, 24 Apr 2019 18:10:02 +0000
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Miklos Szeredi <mszeredi@redhat.com>,
-        Han-Wen Nienhuys <hanwen@google.com>,
-        Jakob Unterwurzacher <jakobunt@gmail.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        fuse-devel <fuse-devel@lists.sourceforge.net>,
-        stable <stable@vger.kernel.org>
-Message-Id: <20190424180958.GA3798@deco.navytux.spb.ru>
-References: <cover.1553680185.git.kirr@nexedi.com> <12f7d0d98555ee0d174d04bb47644f65c07f035a.1553680185.git.kirr@nexedi.com> <CAJfpegv0NvcsD9gh3aN+ngzsLqbNWUc73ZPN1qHox_14eN9Pqg@mail.gmail.com> <20190424115620.GA2723@deco.navytux.spb.ru> <CAJfpegsiWuykUsfg=sO8sKo5h86U65q10=e=wYKXTQEHW8DFkw@mail.gmail.com> <20190424123107.GA32024@deco.navytux.spb.ru> <CAJfpegupwNbVPenZdMX8F2Z3vKSJdfAsXuiF4YA+nbnj2Kp=sw@mail.gmail.com> <20190424142249.GA28070@deco.navytux.spb.ru> <CAJfpegtX6p+j+kRuudZ=yVM9Tgj7x4mBaiGuDoDCrZoRvBOt9Q@mail.gmail.com>
-In-Reply-To: <CAJfpegtX6p+j+kRuudZ=yVM9Tgj7x4mBaiGuDoDCrZoRvBOt9Q@mail.gmail.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.a99bf3401b104c8aad25811c1c3664ff
-X-Mandrill-User: md_31050260
-Date:   Wed, 24 Apr 2019 18:10:02 +0000
+        Wed, 24 Apr 2019 14:10:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733297AbfDXROg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:36 -0400
+Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAA972054F;
+        Wed, 24 Apr 2019 17:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556126075;
+        bh=V6bN5prMbTdZQ2lN3ntnb/ez7g/jmfKbPwmFqI5xO70=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2EquYEse+3TeQtSQ5pD5vHtEw6C6so65xdTPb1RWx6lBeEdKvf7+nVnXUW9DzxMOf
+         oYINlF8aeSQw2iDv+lEBcsZzBZMZRHqJt3NITZby6iZ4Bcr//+1sGBfTxdV/312UOR
+         nLr7WfgjeaXyP5wbgyAiOG1vvEmX+T+Ji1lDsLJg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 029/104] cdrom: Fix race condition in cdrom_sysctl_register
+Date:   Wed, 24 Apr 2019 19:08:46 +0200
+Message-Id: <20190424170856.369343305@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
+References: <20190424170839.996641496@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 05:02:42PM +0200, Miklos Szeredi wrote:
-> On Wed, Apr 24, 2019 at 4:22 PM Kirill Smelkov <kirr@nexedi.com> wrote:
-> > - FUSE_PRECISE_INVAL_DATA:
-> >
-> >     --- b/include/uapi/linux/fuse.h
-> >     +++ b/include/uapi/linux/fuse.h
-> >     @@ -266,7 +266,7 @@
-> >       * FUSE_MAX_PAGES: init_out.max_pages contains the max number of req pages
-> >       * FUSE_CACHE_SYMLINKS: cache READLINK responses
-> >       * FUSE_NO_OPENDIR_SUPPORT: kernel supports zero-message opendir
-> >     - * FUSE_PRECISE_INVAL_DATA: filesystem is fully responsible for data cache invalidation
-> >     + * FUSE_PRECISE_INVAL_DATA: filesystem is fully responsible for invalidation
-> >       */
-> >      #define FUSE_ASYNC_READ                (1 << 0)
-> >      #define FUSE_POSIX_LOCKS       (1 << 1)
-> >
-> > the "data cache" in "for data cache invalidation" has particular meaning
-> > and semantic: the filesystem promises to explicitly invalidate data of
-> 
-> Right; better name: FUSE_EXPLICIT_INVAL_DATA.  Will push fixed version.
+[ Upstream commit f25191bb322dec8fa2979ecb8235643aa42470e1 ]
 
-	- * FUSE_PRECISE_INVAL_DATA: filesystem is fully responsible for invalidation
-	+ * FUSE_EXPLICIT_INVAL_DATA: only invalidate cached pages on explicit request
+The following traceback is sometimes seen when booting an image in qemu:
 
-	...
+[   54.608293] cdrom: Uniform CD-ROM driver Revision: 3.20
+[   54.611085] Fusion MPT base driver 3.04.20
+[   54.611877] Copyright (c) 1999-2008 LSI Corporation
+[   54.616234] Fusion MPT SAS Host driver 3.04.20
+[   54.635139] sysctl duplicate entry: /dev/cdrom//info
+[   54.639578] CPU: 0 PID: 266 Comm: kworker/u4:5 Not tainted 5.0.0-rc5 #1
+[   54.639578] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+[   54.641273] Workqueue: events_unbound async_run_entry_fn
+[   54.641273] Call Trace:
+[   54.641273]  dump_stack+0x67/0x90
+[   54.641273]  __register_sysctl_table+0x50b/0x570
+[   54.641273]  ? rcu_read_lock_sched_held+0x6f/0x80
+[   54.641273]  ? kmem_cache_alloc_trace+0x1c7/0x1f0
+[   54.646814]  __register_sysctl_paths+0x1c8/0x1f0
+[   54.646814]  cdrom_sysctl_register.part.7+0xc/0x5f
+[   54.646814]  register_cdrom.cold.24+0x2a/0x33
+[   54.646814]  sr_probe+0x4bd/0x580
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  really_probe+0xd6/0x260
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  driver_probe_device+0x4a/0xb0
+[   54.646814]  ? __driver_attach+0xd0/0xd0
+[   54.646814]  bus_for_each_drv+0x73/0xc0
+[   54.646814]  __device_attach+0xd6/0x130
+[   54.646814]  bus_probe_device+0x9a/0xb0
+[   54.646814]  device_add+0x40c/0x670
+[   54.646814]  ? __pm_runtime_resume+0x4f/0x80
+[   54.646814]  scsi_sysfs_add_sdev+0x81/0x290
+[   54.646814]  scsi_probe_and_add_lun+0x888/0xc00
+[   54.646814]  ? scsi_autopm_get_host+0x21/0x40
+[   54.646814]  __scsi_add_device+0x116/0x130
+[   54.646814]  ata_scsi_scan_host+0x93/0x1c0
+[   54.646814]  async_run_entry_fn+0x34/0x100
+[   54.646814]  process_one_work+0x237/0x5e0
+[   54.646814]  worker_thread+0x37/0x380
+[   54.646814]  ? rescuer_thread+0x360/0x360
+[   54.646814]  kthread+0x118/0x130
+[   54.646814]  ? kthread_create_on_node+0x60/0x60
+[   54.646814]  ret_from_fork+0x3a/0x50
 
-	        /** Filesystem is fully reponsible for page cache invalidation. */
-	-       unsigned precise_inval_data:1;
-	+       unsigned explicit_inval_data:1;
+The only sensible explanation is that cdrom_sysctl_register() is called
+twice, once from the module init function and once from register_cdrom().
+cdrom_sysctl_register() is not mutex protected and may happily execute
+twice if the second call is made before the first call is complete.
 
-Ok, let it be this way.
+Use a static atomic to ensure that the function is executed exactly once.
 
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/cdrom/cdrom.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-> > Your amendment for FOPEN_STREAM in uapi/linux/fuse.h (see above) also
-> > suggests that it is better to be more explicit in that file.
-> >
-> >     --- b/fs/fuse/inode.c
-> >     +++ b/fs/fuse/inode.c
-> >     @@ -913,13 +913,8 @@
-> >                                     fc->dont_mask = 1;
-> >                             if (arg->flags & FUSE_AUTO_INVAL_DATA)
-> >                                     fc->auto_inval_data = 1;
-> >     -                       if (arg->flags & FUSE_PRECISE_INVAL_DATA)
-> >     +                       else if (arg->flags & FUSE_PRECISE_INVAL_DATA)
-> >                                     fc->precise_inval_data = 1;
-> >     -                       if (fc->auto_inval_data && fc->precise_inval_data) {
-> >     -                               pr_warn("filesystem requested both auto and "
-> >     -                                       "precise cache control - using auto\n");
-> >     -                               fc->precise_inval_data = 0;
-> >     -                       }
-> >                             if (arg->flags & FUSE_DO_READDIRPLUS) {
-> >                                     fc->do_readdirplus = 1;
-> >                                     if (arg->flags & FUSE_READDIRPLUS_AUTO)
-> >
-> > Even though it is ok for me personally (I could be careful and use only
-> > FUSE_PRECISE_INVAL_DATA) I still think usage of both "auto" and "precise"
-> > invalidation modes deserves a warning. It is only at filesystem init time. What
-> > is the reason not to print it?
-> 
-> The warning makes no sense.  It should either be failure or silent override.
-
-Ok.
-
-
-> > - "fuse: retrieve: cap requested size to negotiated max_write"
-> >
-> >      Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
-> >      Cc: Han-Wen Nienhuys <hanwen@google.com>
-> >      Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
-> >     -Cc: <stable@vger.kernel.org> # v2.6.36+
-> >
-> > what is the reason not to include this patch into stable series?
-> 
-> This doens't fix any bugs out there, but there is a slight chance of
-> regression (so it might possibly have to be reverted in the future) so
-> it absolutely makes no sense to backport it to stable.
-
-Ok.
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index 2bd91d4943e1..f4f93ca4bdad 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -265,6 +265,7 @@
+ /* #define ERRLOGMASK (CD_WARNING|CD_OPEN|CD_COUNT_TRACKS|CD_CLOSE) */
+ /* #define ERRLOGMASK (CD_WARNING|CD_REG_UNREG|CD_DO_IOCTL|CD_OPEN|CD_CLOSE|CD_COUNT_TRACKS) */
+ 
++#include <linux/atomic.h>
+ #include <linux/module.h>
+ #include <linux/fs.h>
+ #include <linux/major.h>
+@@ -3676,9 +3677,9 @@ static struct ctl_table_header *cdrom_sysctl_header;
+ 
+ static void cdrom_sysctl_register(void)
+ {
+-	static int initialized;
++	static atomic_t initialized = ATOMIC_INIT(0);
+ 
+-	if (initialized == 1)
++	if (!atomic_add_unless(&initialized, 1, 1))
+ 		return;
+ 
+ 	cdrom_sysctl_header = register_sysctl_table(cdrom_root_table);
+@@ -3689,8 +3690,6 @@ static void cdrom_sysctl_register(void)
+ 	cdrom_sysctl_settings.debug = debug;
+ 	cdrom_sysctl_settings.lock = lockdoor;
+ 	cdrom_sysctl_settings.check = check_media_type;
+-
+-	initialized = 1;
+ }
+ 
+ static void cdrom_sysctl_unregister(void)
+-- 
+2.19.1
 
 
-Thanks again for tossing the patches,
 
-Kirill
