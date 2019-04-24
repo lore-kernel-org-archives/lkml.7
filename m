@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CB2C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44BC282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A4D21901
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1B9218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556116475;
-	bh=F6lTXd0B7fKhFIHsmmYGf4oJ9Z1aVjmE960AZiVEA5c=;
+	s=default; t=1556116478;
+	bh=MZOVtwYIxiMB7GuQ7i1fXR3ccGHH9buChcrRgJRJwjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YJJAXf/xSTyVijAndoghJtXdUnEEiB+5QtDxUsGk/Grl8x9UGOIJE91FkOt2EiSgI
-	 XVEvTvtjcnMPas7Ds+5+56rUrCuPka9kYRTBZFWzaRjtpmX93ek7gAsOlBg5DnoC/U
-	 tqFIAqm1iLKz6EaSJYGrs8Un1rhCJ2+qENKNBUBE=
+	b=RpL/36NcN0nXCmZY5abJCawm5KYw0tHr3a1xmHUrwplpQyxWhGpN6WYwLkbnorAn4
+	 ZsE58sXk8aul0+Gcl3X589cdwCaVttFgljVXyEsCuFDpZQIGbbbbGzjIpAM1u/FRyD
+	 HLXh50wLRr0ylFmNlRlnK749776cpb0j93TPph+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbfDXOed (ORCPT
+        id S1731095AbfDXOeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:34:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38436 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:34:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731044AbfDXOec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:34:32 -0400
+        id S1731044AbfDXOee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:34:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6B892089F;
-        Wed, 24 Apr 2019 14:34:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B75D218FE;
+        Wed, 24 Apr 2019 14:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556116471;
-        bh=F6lTXd0B7fKhFIHsmmYGf4oJ9Z1aVjmE960AZiVEA5c=;
+        s=default; t=1556116473;
+        bh=MZOVtwYIxiMB7GuQ7i1fXR3ccGHH9buChcrRgJRJwjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h7tHVjS8Sv1GhQMyDWdzZjeLGsIj95vOQzWkfpHU+P5RaMSHccM+eWMmlq5TWciaC
-         lPzJkTDAlPezB+MOEI/4aQc4aWJn6kj3KSlH7qLBMuaU4m0lv8/mUV2KBt5p62qm+l
-         /NubHLyIWrAnfMjPi7s4G2qXkYss1JwcDuAJWuQA=
+        b=R99oIRn6DQk1QOg6Z1lJ2kZbwK0kVhiHKpDftW9YXC9vUMdUyphGfqVGRKMkKwEUD
+         Qr08AB/Q9Z9I9LgPxSybB0cgIE5qpIhO5tw6zDRWtRIRpXJt+MeASNTbDogpPvEcON
+         i23eiQASvVBMJOXkyMtFvTL+8Jx8pwa0e1652MTY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Kao <alankao@andestech.com>,
-        Greentime Hu <greentime@andestech.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.0 20/66] riscv: fix accessing 8-byte variable from RV32
-Date:   Wed, 24 Apr 2019 10:32:54 -0400
-Message-Id: <20190424143341.27665-20-sashal@kernel.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 21/66] HID: quirks: Fix keyboard + touchpad on Lenovo Miix 630
+Date:   Wed, 24 Apr 2019 10:32:55 -0400
+Message-Id: <20190424143341.27665-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424143341.27665-1-sashal@kernel.org>
 References: <20190424143341.27665-1-sashal@kernel.org>
@@ -62,38 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Kao <alankao@andestech.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit dbee9c9c45846f003ec2f819710c2f4835630a6a ]
+[ Upstream commit 2bafa1e9625400bec4c840a168d70ba52607a58d ]
 
-A memory save operation to 8-byte variable in RV32 is divided into
-two sw instructions in the put_user macro.  The current fixup returns
-execution flow to the second sw instead of the one after it.
+Similar to commit edfc3722cfef ("HID: quirks: Fix keyboard + touchpad on
+Toshiba Click Mini not working"), the Lenovo Miix 630 has a combo
+keyboard/touchpad device with vid:pid of 04F3:0400, which is shared with
+Elan touchpads.  The combo on the Miix 630 has an ACPI id of QTEC0001,
+which is not claimed by the elan_i2c driver, so key on that similar to
+what was done for the Toshiba Click Mini.
 
-This patch fixes this fixup code according to the load access part.
-
-Signed-off-by: Alan Kao<alankao@andestech.com>
-Cc: Greentime Hu <greentime@andestech.com>
-Cc: Vincent Chen <deanbo422@gmail.com>
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/riscv/include/asm/uaccess.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-quirks.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
-index 637b896894fc..aa82df30e38a 100644
---- a/arch/riscv/include/asm/uaccess.h
-+++ b/arch/riscv/include/asm/uaccess.h
-@@ -301,7 +301,7 @@ do {								\
- 		"	.balign 4\n"				\
- 		"4:\n"						\
- 		"	li %0, %6\n"				\
--		"	jump 2b, %1\n"				\
-+		"	jump 3b, %1\n"				\
- 		"	.previous\n"				\
- 		"	.section __ex_table,\"a\"\n"		\
- 		"	.balign " RISCV_SZPTR "\n"			\
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 94088c0ed68a..e24790c988c0 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -744,7 +744,6 @@ static const struct hid_device_id hid_ignore_list[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_DEALEXTREAME, USB_DEVICE_ID_DEALEXTREAME_RADIO_SI4701) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_DELORME, USB_DEVICE_ID_DELORME_EARTHMATE) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_DELORME, USB_DEVICE_ID_DELORME_EM_LT20) },
+-	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, 0x0400) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ESSENTIAL_REALITY, USB_DEVICE_ID_ESSENTIAL_REALITY_P5) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ETT, USB_DEVICE_ID_TC5UH) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ETT, USB_DEVICE_ID_TC4UM) },
+@@ -1025,6 +1024,10 @@ bool hid_ignore(struct hid_device *hdev)
+ 		if (hdev->product == 0x0401 &&
+ 		    strncmp(hdev->name, "ELAN0800", 8) != 0)
+ 			return true;
++		/* Same with product id 0x0400 */
++		if (hdev->product == 0x0400 &&
++		    strncmp(hdev->name, "QTEC0001", 8) != 0)
++			return true;
+ 		break;
+ 	}
+ 
 -- 
 2.19.1
 
