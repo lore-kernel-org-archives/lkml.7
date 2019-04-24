@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D3BC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC53C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD47218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDEE121906
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126083;
-	bh=/SOrtXNBHLSkG+/N7ZeLAWI9sfZ/iI/hZ4E73ywJWQU=;
+	s=default; t=1556126085;
+	bh=34IH/vJnNMvAFPwy+FEzcjOwkv7bhcmRcN66tSBoigk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=exOepQNUEKN+vOMexoR7W5yB/Wn60rCmL7jK/nM5Gj/5QEowCa3bD2xORmjUUIQip
-	 S+lA+AnxfZHW0mLEOSUloY1SG/w7i4C29aUHOc11VICx01D/ejOjNCgParkrn6FPEw
-	 DShKsdp8enhH5yXlnbRT2/O7P9DAsCkS8pwizIic=
+	b=zLdyFAWfcGY1x38CsKyGP8PrYf4GJx7fjYGsZjeoRzJ4V4j6xolVR0S6pVMPi9zcy
+	 dK2Ag68vUOLkTQAvVBa3Wqy4VdtkbUE6p1u9R10RFEpUtH8s6wuGksrttx2CQzSufT
+	 F5u7p+8XaLDn286KIjUgDlNvMESKEwOiSWBs/j58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388103AbfDXROm (ORCPT
+        id S2388114AbfDXROo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38820 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:14:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388079AbfDXROi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:14:38 -0400
+        id S2387451AbfDXROm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:14:42 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9608C206BA;
-        Wed, 24 Apr 2019 17:14:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 397BD218FE;
+        Wed, 24 Apr 2019 17:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126078;
-        bh=/SOrtXNBHLSkG+/N7ZeLAWI9sfZ/iI/hZ4E73ywJWQU=;
+        s=default; t=1556126080;
+        bh=34IH/vJnNMvAFPwy+FEzcjOwkv7bhcmRcN66tSBoigk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QMxqB6hrjfrnUfCBrIk4hKZCDASjA1uJjSRNBI2aoBkhLRZEmU110GqhZzyfUyeqo
-         jICED5BBvl+J6Butp4qvueDOusoSLYGdat0XuhD2uY3EFpkN0H889yl7R4ECmHCroT
-         Cl3gv+FdsSFjWIftRIcEpEdF4KFQkw67sgmY0Ktk=
+        b=r1bdHslj1D8qRguxvd3sAElTDXVX9vzEg0BNCT1sG6uVnpQ+teTr8XvYCuR5tfJRv
+         pc/966AFuoXVjV+tFHELgAdygo9n34Oy/MDLS8gSiH6KDrFknudBa0IiwZay51jhwX
+         RylZgVoiE5WLocwUfsjtn7IeVUMN4vaywxKsPNAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 079/104] serial: uartps: console_setup() cant be placed to init section
-Date:   Wed, 24 Apr 2019 19:09:36 +0200
-Message-Id: <20190424170907.027804591@linuxfoundation.org>
+Subject: [PATCH 3.18 088/104] crypto: crypto4xx - properly set IV after de- and encrypt
+Date:   Wed, 24 Apr 2019 19:09:45 +0200
+Message-Id: <20190424170908.759325720@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170839.996641496@linuxfoundation.org>
 References: <20190424170839.996641496@linuxfoundation.org>
@@ -59,34 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4bb1ce2350a598502b23088b169e16b43d4bc639 ]
+[ Upstream commit fc340115ffb8235c1bbd200c28855e6373d0dd1a ]
 
-When console device is rebinded, console_setup() is called again.
-But marking it as __init means that function will be clear after boot is
-complete. If console device is binded again console_setup() is not found
-and error "Unable to handle kernel paging request at virtual address"
-is reported.
+This patch fixes cts(cbc(aes)) test when cbc-aes-ppc4xx is used.
+alg: skcipher: Test 1 failed (invalid result) on encryption for cts(cbc-aes-ppc4xx)
+00000000: 4b 10 75 fc 2f 14 1b 6a 27 35 37 33 d1 b7 70 05
+00000010: 97
+alg: skcipher: Failed to load transform for cts(cbc(aes)): -2
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The CTS cipher mode expect the IV (req->iv) of skcipher_request
+to contain the last ciphertext block after the {en,de}crypt
+operation is complete.
+
+Fix this issue for the AMCC Crypto4xx hardware engine.
+The tcrypt test case for cts(cbc(aes)) is now correctly passed.
+
+name         : cts(cbc(aes))
+driver       : cts(cbc-aes-ppc4xx)
+module       : cts
+priority     : 300
+refcnt       : 1
+selftest     : passed
+internal     : no
+type         : skcipher
+async        : yes
+blocksize    : 16
+min keysize  : 16
+max keysize  : 32
+ivsize       : 16
+chunksize    : 16
+walksize     : 16
+
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/xilinx_uartps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/amcc/crypto4xx_alg.c  | 3 ++-
+ drivers/crypto/amcc/crypto4xx_core.c | 9 +++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index df28ef14382b..892446cc28fa 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1120,7 +1120,7 @@ static void cdns_uart_console_write(struct console *co, const char *s,
-  *
-  * Return: 0 on success, negative errno otherwise.
-  */
--static int __init cdns_uart_console_setup(struct console *co, char *options)
-+static int cdns_uart_console_setup(struct console *co, char *options)
- {
- 	struct uart_port *port = &cdns_uart_port[co->index];
- 	int baud = 9600;
+diff --git a/drivers/crypto/amcc/crypto4xx_alg.c b/drivers/crypto/amcc/crypto4xx_alg.c
+index 4afca3968773..e3b8bebfdd30 100644
+--- a/drivers/crypto/amcc/crypto4xx_alg.c
++++ b/drivers/crypto/amcc/crypto4xx_alg.c
+@@ -138,7 +138,8 @@ static int crypto4xx_setkey_aes(struct crypto_ablkcipher *cipher,
+ 	sa = (struct dynamic_sa_ctl *) ctx->sa_in;
+ 	ctx->hash_final = 0;
+ 
+-	set_dynamic_sa_command_0(sa, SA_NOT_SAVE_HASH, SA_NOT_SAVE_IV,
++	set_dynamic_sa_command_0(sa, SA_NOT_SAVE_HASH, (cm == CRYPTO_MODE_CBC ?
++				 SA_SAVE_IV : SA_NOT_SAVE_IV),
+ 				 SA_LOAD_HASH_FROM_SA, SA_LOAD_IV_FROM_STATE,
+ 				 SA_NO_HEADER_PROC, SA_HASH_ALG_NULL,
+ 				 SA_CIPHER_ALG_AES, SA_PAD_TYPE_ZERO,
+diff --git a/drivers/crypto/amcc/crypto4xx_core.c b/drivers/crypto/amcc/crypto4xx_core.c
+index 45df1c74fa03..f8fd4f5f0f1a 100644
+--- a/drivers/crypto/amcc/crypto4xx_core.c
++++ b/drivers/crypto/amcc/crypto4xx_core.c
+@@ -645,6 +645,15 @@ static u32 crypto4xx_ablkcipher_done(struct crypto4xx_device *dev,
+ 		addr = dma_map_page(dev->core_dev->device, sg_page(dst),
+ 				    dst->offset, dst->length, DMA_FROM_DEVICE);
+ 	}
++
++	if (pd_uinfo->sa_va->sa_command_0.bf.save_iv == SA_SAVE_IV) {
++		struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
++
++		crypto4xx_memcpy_from_le32((u32 *)req->iv,
++			pd_uinfo->sr_va->save_iv,
++			crypto_skcipher_ivsize(skcipher));
++	}
++
+ 	crypto4xx_ret_sg_desc(dev, pd_uinfo);
+ 	if (ablk_req->base.complete != NULL)
+ 		ablk_req->base.complete(&ablk_req->base, 0);
 -- 
 2.19.1
 
