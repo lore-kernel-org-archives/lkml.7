@@ -2,174 +2,102 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A88C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3067C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4871218FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9578B20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 15:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1556120378;
+	bh=jvxdpg7JNYO7cH9UgE326EZK0YBQDcpNaQukxRtj+Nc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MFrLYVIcu6lBgXlY9zpIFcluhLrJeVpMwdSpl2lDw7FxLTca4dm19INem1Vza3wr2
+	 l1aJnEPFmQeAy6ZtYf0krzHLF7cIJioRsXYAfvxgYK8EZoGTYmKEOvqEVemYoUv1rB
+	 my5OxgoYNFUqttleicmbV64+q2ra/2exOHCLKJjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731605AbfDXPij (ORCPT
+        id S1731032AbfDXPjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 11:38:39 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:13814 "EHLO mx1.mailbox.org"
+        Wed, 24 Apr 2019 11:39:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730724AbfDXPii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 11:38:38 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        id S1730398AbfDXPjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 11:39:37 -0400
+Received: from localhost.localdomain (user-0ccsrjt.cable.mindspring.com [24.206.110.125])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id B15914C942;
-        Wed, 24 Apr 2019 17:38:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id BRyV7buvG8Hj; Wed, 24 Apr 2019 17:38:23 +0200 (CEST)
-Date:   Thu, 25 Apr 2019 01:38:06 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH RESEND v5 0/5] namei: vfs flags to restrict path
- resolution
-Message-ID: <20190424153806.64qkkmkudzodxnz2@yavin>
-References: <20190320143717.2523-1-cyphar@cyphar.com>
- <CALCETrV-Q4qZXGeavBPQbF6-VVz7hqvjRkbhFeYmbGiQgu5Omg@mail.gmail.com>
- <20190325130429.dbrgjxnvq3w5cpb3@yavin>
- <CAGXu5jKPrarixQkWWXOBCu6kRRpQd0aaJsPJbvsAyh0Wvc620A@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id EC61520652;
+        Wed, 24 Apr 2019 15:39:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556120376;
+        bh=jvxdpg7JNYO7cH9UgE326EZK0YBQDcpNaQukxRtj+Nc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kHjo/8cg+RadZoE3zYrmSVm06KnqycNCYpOIhrPwsqle4Mo/cV/9coHtcgVnhxT5S
+         79NYawnKWH9sM9pFd0FwLiFvvukUGuuex3tYRuR/N7TWXj0uVxR3+tIUJ2Bvgj6Uut
+         ZPJkMx/NhsREl2dYDBXmfpxBMGlouMWGaWPy1kTU=
+From:   Alan Tull <atull@kernel.org>
+To:     Dinh Nguyen <dinguyen@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        delicious.quinoa@gmail.com, Alan Tull <atull@kernel.org>
+Subject: [PATCH 1/2] ARM: dts: socfpga: add ltc2497 on arria10 devkit
+Date:   Wed, 24 Apr 2019 10:39:15 -0500
+Message-Id: <20190424153916.30115-1-atull@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gwuxm2y5lqyvv4zh"
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jKPrarixQkWWXOBCu6kRRpQd0aaJsPJbvsAyh0Wvc620A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add the two ltc2497 devices that are on the SoCFPGA Arria10
+Socdk board at addresses 0x14 and 0x16.
 
---gwuxm2y5lqyvv4zh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Alan Tull <atull@kernel.org>
+---
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-On 2019-04-23, Kees Cook <keescook@chromium.org> wrote:
-> On Mon, Mar 25, 2019 at 6:05 AM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > On 2019-03-21, Andy Lutomirski <luto@kernel.org> wrote:
-> > > On Wed, Mar 20, 2019 at 7:38 AM Aleksa Sarai <cyphar@cyphar.com> wrot=
-e:
-> > > > Now that the holiday break is over, it's time to re-send this patch
-> > > > series (with a few additions, due to new information we got from
-> > > > CVE-2019-5736 -- which this patchset mostly protected against but h=
-ad
-> > > > some holes with regards to #!-style scripts).
-> > >
-> > > I generally like this, but, as Linus pointed out, it will be
-> > > unfortunate if application authors see this as just another
-> > > non-portable weird Linux API and don't use it.  Would it be worthwhile
-> > > to put some thought into making it an API that other OSes might be
-> > > willing to implement?  As it stands, the openat(2) flags are getting
-> > > rather crazy in this patch set.
->=20
-> I think many of the issues are specific to Linux (and Linux containers
-> especially), so I'm not sure this should get blocked because we want
-> something more portable.
+diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+index 360dae5a5b12..0efbeccc5cd2 100644
+--- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+@@ -48,6 +48,13 @@
+ 		};
+ 	};
+ 
++	ref_033v: 033-v-ref {
++		compatible = "regulator-fixed";
++		regulator-name = "0.33V";
++		regulator-min-microvolt = <330000>;
++		regulator-max-microvolt = <330000>;
++	};
++
+ 	soc {
+ 		clkmgr@ffd04000 {
+ 			clocks {
+@@ -128,6 +135,18 @@
+ 	i2c-sda-falling-time-ns = <6000>;
+ 	i2c-scl-falling-time-ns = <6000>;
+ 
++	adc@14 {
++		compatible = "lltc,ltc2497";
++		reg = <0x14>;
++		vref-supply = <&ref_033v>;
++	};
++
++	adc@16 {
++		compatible = "lltc,ltc2497";
++		reg = <0x16>;
++		vref-supply = <&ref_033v>;
++	};
++
+ 	eeprom@51 {
+ 		compatible = "atmel,24c32";
+ 		reg = <0x51>;
+-- 
+2.21.0
 
-I agree these issues are quite Linux-specific (*especially* the ability
-to re-open fds through /proc and the existence of "magic links").
-
-However, I feel there are a few more good reasons for resolveat(2):
-
- * openat(2) ignores unknown flags, meaning that old kernels will ignore
-   new programs trying to use O_THISROOT and might end up causing
-   security issues. Yes, it'd be trivial to check whether the new O_*
-   flags are supported at start-up, but I think a security feature
-   shouldn't have a foot-gun associated with it. In fact, I didn't know
-   openat(2) ignored unknown flags until I wrote this patchset -- I
-   doubt many other userspace developers do either.
-
- * resolveat(2) allows for improvement to the O_PATH interface, which I
-   think might be necessary (completely separately to this patchset).
-   I've been working on a patchset which would make nd_jump_link()
-   transitions in trailing_symlink() depend on the mode of the magic
-   link being traversed through (this would allow us to block a
-   read-only fd being re-opened as a read-write fd or similar such
-   nonsense). One aspect of this could be to allow userspace to enable
-   certain re-opening operations by passing a "link mode" to
-   resolveat(2).
-
- * I would argue that O_PATH should've been a separate syscall from the
-   beginning, given how different its semantics are to other openat(2)
-   flags (not to mention how O_PATH is incompatible with and thus
-   ignores so many other openat(2) flags).
-
- * If we end up needing a resolveat(2) for any of the above reasons,
-   then we will have wasted quite a few openat(2) flag slots for naught.
-   (Then again, there are plenty of flag slots still left.)
-
-All of that aside, what I'd really like to know is what I should do to
-get this patchset reviewed and merged. It's been largely radio-silence
-for the last few revisions.
-
-A simple resolveat(2) is fairly trivial (I have a version of it lying
-around somewhere), but it doesn't make sense to polish it if there's no
-chance Al is interested in it.
-
-> This series provides solutions to so many different race and confusion
-> issues, I'd really like to see it land. What's the next step here? Is
-> this planned to go directly to Linus for v5.2, or is it going to live
-> in -mm for a while? I'd really like to see this moving forward.
-
-Given some of the security requirements of this interface, I think
-getting it to live in -mm wouldn't be a bad idea so folks can shake the
-bugs out before it's depended on by container runtimes.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---gwuxm2y5lqyvv4zh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzAgtoACgkQSnvnv3De
-m5+Qng//UgytI5RxPSbDQDbFvQ7hXxQeK7Hj2F//aO1N7wMcdXddaLGl4k2psrcy
-8XV3uLPZGMGIk5O73Ll1vlvikJo6epmauB2Uft0ZmlsseL8lz3cOxnUmrr2DBlAZ
-2amB5VzXSLHjwrr351CKUXnOisEIy9aWlhWqb+hjS5MObaVb2GLqrv1sf8pIcd9k
-fmUwbDYEAhjLLan+WZnaI1OzE5xf/kvCvb2J4XL0nXK5jbcCravxrvTdt/jGh+Bk
-erdQ8n5XdhpQ8bGFKaxQavKkIqmwWf70d7HV4K/pTyWqmE4zdc+F29ZvM4a2XAHa
-cRovUeJY26ZD9yuhWLqaswBCM+AkAYQ4E5k6CbRMpYQyJM9i4B5j/s8ZMeyqHknJ
-IvFN2hWLesU96bQYM8aUxdx8yM5v71fAKwk1O5pAc1QIiDOja3ua8wfSOiyBvKP1
-QXm6wfyqbzj7qBpQ11Gh2cvFKrbq2OLGN59sbM/DHAs8PfhaDvtJstzL7xJ8zaWE
-B+GJorQxpHXP8HIKu+XbE5yezapmBKhcRTJcjaQDBjuzMxk7hUS+4J0+mOBL9cAz
-b885AoiI2QkdaO2bNEmRHj/jHj9Tdbmin91UPFXOMCUqcbDegpYYKb0to9hRX+g3
-IFC9pwuXt7hxEqNbVr8XT73fzA+/eJx7ngaoZU107fUNR0sr8xU=
-=23Y4
------END PGP SIGNATURE-----
-
---gwuxm2y5lqyvv4zh--
