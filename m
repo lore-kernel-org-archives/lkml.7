@@ -3,120 +3,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BA5C282E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3821C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430B92175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D9D2175B
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 11:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfDXLGu (ORCPT
+        id S1727819AbfDXLI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 07:06:50 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:41836 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726271AbfDXLGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 07:06:50 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 30EE86F8BDE6D0F8EBA1;
-        Wed, 24 Apr 2019 19:06:47 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 24 Apr 2019 19:06:40 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <nhorman@redhat.com>,
-        Yunsheng Lin <linyunsheng@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 01/12] net: hns3: fix data race between ring->next_to_clean
-Date:   Wed, 24 Apr 2019 19:05:20 +0800
-Message-ID: <1556103931-64031-2-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556103931-64031-1-git-send-email-tanhuazhong@huawei.com>
-References: <1556103931-64031-1-git-send-email-tanhuazhong@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+        Wed, 24 Apr 2019 07:08:57 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:59817 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfDXLI4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 07:08:56 -0400
+Received: from orion.localdomain ([95.114.95.254]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MvbO4-1gUB2T0Rp0-00sfZK; Wed, 24 Apr 2019 13:08:03 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        heikki.krogerus@linux.intel.com, f.fainelli@gmail.com,
+        rpjday@crashcourse.ca, dvhart@infradead.org
+Subject: [PATCH] mod_devicetable: helper macro for declaring oftree module device table
+Date:   Wed, 24 Apr 2019 13:08:01 +0200
+Message-Id: <1556104081-16217-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:xNhYnH8wYQsF+KSIw+gZMihhQaUQpq9H4YXJS4uLCnEYoLvzWDV
+ w/3BEZxE8+b0xO0p8XIWf/EftK3IAD2EUoO1J8JWgl3lthZpfHossHpHx2nHs14ISHnmIbT
+ UJ9mPdaFu8OFvDJHznSd6sgjOtg+wOaFjnuDdoxbU3k+DLToxa+Yt7yM7t1dr6WdfjyeSN1
+ wNFNR8zRt/t7fSb28/2Yg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dlw6A/Xv5vg=:V1HU7LwvQe9wFZVKKQo20I
+ DOzJ1ByvbvkU37VIaOKqsyurNTHN1znoBrVb++6zHeyXP8PItUEAm4oUn+o0qMHgjPF3E6c9z
+ G7jYOuLKGPPzISOftjiA2EeGzyZgCrlIAJ793gZx9EuALopMrTChR9Kjyre8N2XAt7x/cmv2K
+ Sszo1X9uKPLGXB+kgmZNQOGxsfFm7rQNC4q8lf7f0FOcJNLSyCP0YIESdmp0M5qntetWMbWTk
+ dVATSLVTrubLeXtJ87grPO1hxxeV0MZ37vr7DzPgC8nHmjShXl29DgW7A99dYRZYvg/N92h3y
+ fsDDjSgoJC+AbzYRLp7I812vPshB9EDUu0enCVHMgn5Vrd4Z4IVWYP7EYCc2otbRemy3JbSy5
+ sdSQwzlljS7juORbHqFxgu3kT9ok7buNc9g9mtmSqOkM0lSP+oNtQSzO6+hBTYUv0ogs2gNGv
+ P5xFzTXJ2MrOb4RvUz7OOzKts+X+QJObYOr+Z26ubsegvvq4ceGall4rC1ulJEXHuTDz/Tj9F
+ lDXpI4RtnhMb3E8XupNwUoGP7633XuQjTxpovbYea1sZDbW7zaFgmdjgiI1E15Bjbm6J3fle3
+ 8q7zdCfN74iOF9DpAFBEhJUOuNYfvoNjEjJxln2YtYcZfl+UH51jkarNjSf4fKwPCgswkInO3
+ lwvN2435t3KnFr3qe7sZev7G1YYFdAFqNDkOdU/mxQ0kA97HFXNKnTkH/PGJjuJOwLTqW6wVc
+ uUV3ZVqhWwi0LOtWWqMCQYirtiX+KigFgK33aQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunsheng Lin <linyunsheng@huawei.com>
+Little helper macro that declares an oftree module device table,
+if CONFIG_OF is enabled. Otherwise it's just noop.
 
-hns3_clean_tx_ring calls hns3_nic_reclaim_one_desc to clean
-buffers and set ring->next_to_clean, then hns3_nic_net_xmit
-reuses the cleaned buffers. But there are no memory barriers
-when buffers gets recycled, so the recycled buffers can be
-corrupted.
+This is also helpful if some drivers can be built w/ or w/o
+oftree support.
 
-This patch uses smp_store_release to update ring->next_to_clean
-and smp_load_acquire to read ring->next_to_clean to properly
-hand off buffers from hns3_clean_tx_ring to hns3_nic_net_xmit.
-
-Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 14 +++++++++++---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h |  7 +++++--
- 2 files changed, 16 insertions(+), 5 deletions(-)
+ include/linux/mod_devicetable.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 176d4b9..9fdc87e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -2214,14 +2214,22 @@ static void hns3_reuse_buffer(struct hns3_enet_ring *ring, int i)
- static void hns3_nic_reclaim_one_desc(struct hns3_enet_ring *ring, int *bytes,
- 				      int *pkts)
- {
--	struct hns3_desc_cb *desc_cb = &ring->desc_cb[ring->next_to_clean];
-+	int ntc = ring->next_to_clean;
-+	struct hns3_desc_cb *desc_cb;
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index 448621c..853e301 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -245,6 +245,15 @@ struct of_device_id {
+ 	const void *data;
+ };
  
-+	desc_cb = &ring->desc_cb[ntc];
- 	(*pkts) += (desc_cb->type == DESC_TYPE_SKB);
- 	(*bytes) += desc_cb->length;
- 	/* desc_cb will be cleaned, after hnae3_free_buffer_detach*/
--	hns3_free_buffer_detach(ring, ring->next_to_clean);
-+	hns3_free_buffer_detach(ring, ntc);
- 
--	ring_ptr_move_fw(ring, next_to_clean);
-+	if (++ntc == ring->desc_num)
-+		ntc = 0;
++/*
++ * macro for adding the of module device table only if CONFIG_OF enabled
++ */
++#ifdef CONFIG_OF
++#define MODULE_DEVICE_TABLE_OF(name)	MODULE_DEVICE_TABLE(of,name)
++#else
++#define MODULE_DEVICE_TABLE_OF(name)
++#endif /* CONFIG_OF */
 +
-+	/* This smp_store_release() pairs with smp_load_acquire() in
-+	 * ring_space called by hns3_nic_net_xmit.
-+	 */
-+	smp_store_release(&ring->next_to_clean, ntc);
- }
- 
- static int is_valid_clean_head(struct hns3_enet_ring *ring, int h)
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index cec56a5..2b4f5ea 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -581,8 +581,11 @@ union l4_hdr_info {
- 
- static inline int ring_space(struct hns3_enet_ring *ring)
- {
--	int begin = ring->next_to_clean;
--	int end = ring->next_to_use;
-+	/* This smp_load_acquire() pairs with smp_store_release() in
-+	 * hns3_nic_reclaim_one_desc called by hns3_clean_tx_ring.
-+	 */
-+	int begin = smp_load_acquire(&ring->next_to_clean);
-+	int end = READ_ONCE(ring->next_to_use);
- 
- 	return ((end >= begin) ? (ring->desc_num - end + begin) :
- 			(begin - end)) - 1;
+ /* VIO */
+ struct vio_device_id {
+ 	char type[32];
 -- 
-2.7.4
+1.9.1
 
