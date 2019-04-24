@@ -2,180 +2,271 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE76C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD3DC10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE0C208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF44218DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:20:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Dae8FBa9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbfDXIT2 (ORCPT
+        id S1729908AbfDXIUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:19:28 -0400
-Received: from foss.arm.com ([217.140.101.70]:39542 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfDXIT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:19:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C46380D;
-        Wed, 24 Apr 2019 01:19:27 -0700 (PDT)
-Received: from blommer (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FDCE3F5AF;
-        Wed, 24 Apr 2019 01:19:23 -0700 (PDT)
-Date:   Wed, 24 Apr 2019 09:19:20 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
-        catalin.marinas@arm.com, mhocko@suse.com,
-        mgorman@techsingularity.net, james.morse@arm.com,
-        robin.murphy@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        ira.weiny@intel.com
-Subject: Re: [PATCH V2 2/2] arm64/mm: Enable memory hot remove
-Message-ID: <20190424081837.ldpe74i7uspupxdv@blommer>
-References: <1555221553-18845-3-git-send-email-anshuman.khandual@arm.com>
- <20190415134841.GC13990@lakrids.cambridge.arm.com>
- <2faba38b-ab79-2dda-1b3c-ada5054d91fa@arm.com>
- <20190417142154.GA393@lakrids.cambridge.arm.com>
- <bba0b71c-2d04-d589-e2bf-5de37806548f@arm.com>
- <20190417173948.GB15589@lakrids.cambridge.arm.com>
- <1bdae67b-fcd6-7868-8a92-c8a306c04ec6@arm.com>
- <97413c39-a4a9-ea1b-7093-eb18f950aad7@arm.com>
- <20190423160525.GD56999@lakrids.cambridge.arm.com>
- <ebb9aba0-5ca3-41ed-4183-9d72a354f529@arm.com>
+        Wed, 24 Apr 2019 04:20:37 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:59762 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727361AbfDXIUh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 04:20:37 -0400
+X-Greylist: delayed 594 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Apr 2019 04:20:36 EDT
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 71A03C0AE1;
+        Wed, 24 Apr 2019 08:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1556093443; bh=zgqe5QFb/nyADjudnrLf9sfX09Q+4PBQMHZigRASaiA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=Dae8FBa9Ihtd/cFx0J1nb644e/19l0YsqGmH7iJ8r3nmCGhOYgZh6bF3Q+Gbtt8Hh
+         +Qfz2C4BtCY5z1+syMFkQzXHY14aH0C9cW5s1bxs+tn+IEdfgTBaePCZCQs1v1Y5ur
+         Yrwzp79sgPZZKSzmK6yAevJYS6mswiVkqvUUi40MPcJCtdK61o3aHaKzfx+BbEffFD
+         cYDl5/iY22K8NRpaZdIWaLNAWAc1+22uQmrd9SSJqoUjGp7Psgz+/z94B7HZqOj8FE
+         BnpXxyQmRLTdxex5eciD/CVmqPey8+ShcW91g7uY+mnQko6GA6YcqbgOvx+2TzL/+E
+         VlL298dMXftJg==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 42736A009D;
+        Wed, 24 Apr 2019 08:10:39 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 24 Apr 2019 01:10:20 -0700
+Received: from DE02WEMBXA.internal.synopsys.com ([fe80::a014:7216:77d:d55c])
+ by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
+ 24 Apr 2019 10:10:19 +0200
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>, Vidya Sagar <vidyas@nvidia.com>
+CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>,
+        "mperttunen@nvidia.com" <mperttunen@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Subject: RE: [PATCH V4 05/16] PCI: dwc: Move config space capability search
+ API
+Thread-Topic: [PATCH V4 05/16] PCI: dwc: Move config space capability search
+ API
+Thread-Index: AQHU+a6CvEZAQf+NCUafu6E1lCfth6ZKEoQAgADjv3A=
+Date:   Wed, 24 Apr 2019 08:10:19 +0000
+Message-ID: <305100E33629484CBB767107E4246BBB0A23062F@de02wembxa.internal.synopsys.com>
+References: <20190423082730.370-1-vidyas@nvidia.com>
+ <20190423082730.370-6-vidyas@nvidia.com> <20190423203244.GD14616@google.com>
+In-Reply-To: <20190423203244.GD14616@google.com>
+Accept-Language: pt-PT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTY0OGY0ZTI4LTY2NjgtMTFlOS05ODdkLWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFw2NDhmNGUyYS02NjY4LTExZTktOTg3ZC1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjMzNDAiIHQ9IjEzMjAwNTY3MDE3MTQx?=
+ =?us-ascii?Q?NTU3MSIgaD0iaFNqZElybmVPZjNWZW0vMGVYbURHUlNHZmJ3PSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFB?=
+ =?us-ascii?Q?VGxPY21kZnJVQVp6cmI4VnM2T3dsbk90dnhXem83Q1VPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFGdGJCcHdBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+x-originating-ip: [10.107.25.131]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ebb9aba0-5ca3-41ed-4183-9d72a354f529@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 11:29:28AM +0530, Anshuman Khandual wrote:
-> On 04/23/2019 09:35 PM, Mark Rutland wrote:
-> > On Tue, Apr 23, 2019 at 01:01:58PM +0530, Anshuman Khandual wrote:
-> >> Generic usage for init_mm.pagetable_lock
-> >>
-> >> Unless I have missed something else these are the generic init_mm kernel page table
-> >> modifiers at runtime (at least which uses init_mm.page_table_lock)
-> >>
-> >> 	1. ioremap_page_range()		/* Mapped I/O memory area */
-> >> 	2. apply_to_page_range()	/* Change existing kernel linear map */
-> >> 	3. vmap_page_range()		/* Vmalloc area */
-> > 
-> > Internally, those all use the __p??_alloc() functions to handle racy
-> > additions by transiently taking the PTL when installing a new table, but
-> > otherwise walk kernel tables _without_ the PTL held. Note that none of
-> > these ever free an intermediate level of table.
-> 
-> Right they dont free intermediate level page table but I was curious about the
-> only the leaf level modifications.
+On Tue, Apr 23, 2019 at 21:32:44, Bjorn Helgaas <helgaas@kernel.org>=20
+wrote:
 
-Sure thing; I just wanted to point that out explicitly for everyone else's
-benefit. :)
+> On Tue, Apr 23, 2019 at 01:57:19PM +0530, Vidya Sagar wrote:
+> > Move PCIe config space capability search API to common DesignWare file
+> > as this can be used by both host and ep mode codes.
+> >=20
+> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > ---
+> > Changes from [v3]:
+> > * Rebased to linux-next top of the tree
+> >=20
+> > Changes from [v2]:
+> > * None
+> >=20
+> > Changes from [v1]:
+> > * Removed dw_pcie_find_next_ext_capability() API from here and made a
+> >   separate patch for that
+> >=20
+> >  drivers/pci/controller/dwc/pcie-designware.c | 33 ++++++++++++++++++++
+> >  drivers/pci/controller/dwc/pcie-designware.h |  2 ++
+>=20
+> You claim this is a "move", but I only see adds.  Where did it move
+> *from*?
 
-> > I believe that the idea is that operations on separate VMAs should never
-> 
-> I guess you meant kernel virtual range with 'VMA' but not the actual VMA which is
-> vm_area_struct applicable only for the user space not the kernel.
+I'm guessing something was lost during the rebase. On v3 version, the=20
+removal  was there.
 
-Sure. In the kernel we'd reserve a kernel VA range with a vm_struct via
-get_vm_area() or similar.
+>=20
+> While you're at it, can you add a comment in the code about why we
+> can't use the regular pci_find_capability() interface?  It's really a
+> shame to have to reimplement that.
+>=20
+> >  2 files changed, 35 insertions(+)
+> >=20
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci=
+/controller/dwc/pcie-designware.c
+> > index 8e0081ccf83b..6a98135244d6 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -20,6 +20,39 @@
+> >  #define PCIE_PHY_DEBUG_R1_LINK_UP	(0x1 << 4)
+> >  #define PCIE_PHY_DEBUG_R1_LINK_IN_TRAINING	(0x1 << 29)
+> > =20
+> > +static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+> > +				  u8 cap)
+> > +{
+> > +	u8 cap_id, next_cap_ptr;
+> > +	u16 reg;
+> > +
+> > +	reg =3D dw_pcie_readw_dbi(pci, cap_ptr);
+> > +	next_cap_ptr =3D (reg & 0xff00) >> 8;
+> > +	cap_id =3D (reg & 0x00ff);
+> > +
+> > +	if (!next_cap_ptr || cap_id > PCI_CAP_ID_MAX)
+> > +		return 0;
+> > +
+> > +	if (cap_id =3D=3D cap)
+> > +		return cap_ptr;
+> > +
+> > +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+> > +}
+> > +
+> > +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+> > +{
+> > +	u8 next_cap_ptr;
+> > +	u16 reg;
+> > +
+> > +	reg =3D dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+> > +	next_cap_ptr =3D (reg & 0x00ff);
+> > +
+> > +	if (!next_cap_ptr)
+> > +		return 0;
+> > +
+> > +	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
+> > +}
+> > +
+> >  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+> >  {
+> >  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci=
+/controller/dwc/pcie-designware.h
+> > index 9ee98ced1ef6..35160b4ce929 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -248,6 +248,8 @@ struct dw_pcie {
+> >  #define to_dw_pcie_from_ep(endpoint)   \
+> >  		container_of((endpoint), struct dw_pcie, ep)
+> > =20
+> > +u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+> > +
+> >  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+> >  int dw_pcie_write(void __iomem *addr, int size, u32 val);
+> > =20
+> > --=20
+> > 2.17.1
+> >=20
 
-The key point is that we reserve page-granular VA ranges which cannot overlap
-at the leaf level (but may share intermediate levels of table). Whoever owns
-that area is in charge of necessary mutual exclusion for the leaf entries.
 
-> > conflict at the leaf level, and operations on the same VMA should be
-> > serialised somehow w.r.t. that VMA.
-> 
-> AFAICT see there is nothing other than hotplug lock i.e mem_hotplug_lock which
-> prevents concurrent init_mm modifications and the current situation is only safe
-> because some how these VA areas dont overlap with respect to intermediate page
-> table level spans.
-
-Here I was ignoring hotplug to describe the general principle (which I've
-expanded upon above).
-
-> > AFAICT, these functions are _never_ called on the linear/direct map or
-> > vmemmap VA ranges, and whether or not these can conflict with hot-remove
-> > is entirely dependent on whether those ranges can share a level of table
-> > with the vmalloc region.
-> 
-> Right but all these VA ranges (linear, vmemmap, vmalloc) are wired in on init_mm
-> hence wondering if it is prudent to assume layout scheme which varies a lot based
-> on different architectures while deciding possible race protections.
-
-One thing to consider is that we could turn this implicit assumption into a
-requirement, if this isn't too invasive.
-
-> Wondering why these user should not call [get|put]_online_mems() to prevent
-> race with hotplug.
-
-I suspect that this is because they were written before memory hotplug was
-added, and they were never reconsidered in the presence of hot-remove.
-
-> Will try this out.
-> 
-> Unless generic MM expects these VA ranges (linear, vmemmap, vmalloc) layout to be
-> in certain manner from the platform guaranteeing non-overlap at intermediate level
-> page table spans. Only then we would not a lock.
-
-I think that we might be able to make this a requirement for hot-remove. I
-suspect this happens to be the case in practice by chance, even if it isn't
-strictly guaranteed.
-
-> > Do you know how likely that is to occur? e.g. what proportion of the
-> 
-> TBH I dont know.
-> 
-> > vmalloc region may share a level of table with the linear or vmemmap
-> > regions in a typical arm64 or x86 configuration? Can we deliberately
-> > provoke this failure case?
-> 
-> I have not enumerated those yet but there are multiple configs on arm64 and
-> probably on x86 which decides kernel VA space layout causing these potential
-> races. But regardless its not right to assume on vmalloc range span and not
-> take a lock.
-> 
-> Not sure how to provoke this failure case from user space with simple hotplug
-> because vmalloc physical allocation normally cannot be controlled without a
-> hacked kernel change.
-
-I believe that we can write a module which:
-
- - Looks at the various memory ranges, and determines whether they may share an
-   intermediate level of table.
- - reserves a potentially-conflicting region with __get_vm_area_node()
- - in a loop, maps/unmaps something in that range
-
-... while in parallel, adding/removing a potentially-conflicting region of
-memory.
-
-So long as we have the same sort of serialization we'd have for a regular
-vmalloc(), ioremap() of vmap(), that would be sufficient to demonstrate that
-this is a real problem.
-
-[...]
-
-> > Is it possible to avoid these specific conflicts (ignoring ptdump) by
-> > aligning VA regions such that they cannot share intermediate levels of
-> > table?
-> 
-> Kernel VA space layout is platform specific where core MM does not mandate much. 
-> Hence generic modifiers should not make any assumptions regarding it but protect
-> themselves with locks. Doing any thing other than that is just pushing the problem
-> to future.
-
-My point is that we can make this a _requirement_ of the core code, which we
-could document and enforce.
-
-Thanks,
-Mark.
