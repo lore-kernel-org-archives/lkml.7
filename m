@@ -2,178 +2,221 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B893C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C40FC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195132148D
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26736218D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 01:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M2+pi3lS"
+	dkim=pass (1024-bit key) header.d=fortanix.onmicrosoft.com header.i=@fortanix.onmicrosoft.com header.b="HzduTBnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbfDXBCZ (ORCPT
+        id S1729106AbfDXBEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 23 Apr 2019 21:02:25 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:37095 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbfDXBCZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 23 Apr 2019 21:02:25 -0400
-Received: by mail-ua1-f66.google.com with SMTP id l17so5464925uar.4
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:02:24 -0700 (PDT)
+        Tue, 23 Apr 2019 21:04:25 -0400
+Received: from mail-eopbgr820097.outbound.protection.outlook.com ([40.107.82.97]:53878
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728730AbfDXBEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 23 Apr 2019 21:04:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mgGp/GRBCs0fDORPm8J9/AXYWRoFaNJ2A1fhxlIRTu8=;
-        b=M2+pi3lSxbTZmmC6p50m4pCOE5uptyL8RaaWF3gFDZ4tmq6RSCHrfDyW+SZvTlz9rG
-         tfGy7oWH3hpKPp/TJh4q1fhRNqJvMDWjazlt6t26yEnv2pL4Ym39TAX5OaITuECz4Sbg
-         U2O92RaZnQFtNFB0VzDryJG3BTuR0dOL58H84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mgGp/GRBCs0fDORPm8J9/AXYWRoFaNJ2A1fhxlIRTu8=;
-        b=Q785Aa2IkAxxO/PoBV1f4/KdXsfeP90kfXhjeQh71YjiPnSsZhzJILMVM1O7+gqDis
-         Rp/wHR4ZMwFbGM/OtYa0G0FAhanUU5JBY2zjoMsPKwYJDlwxasaB4svEgrM2/rJmBLmB
-         UCb8wvkAuL7PQ/ZCSfzSUJ6Gh/bglurEW9EWaqXYHhdt4o8DD3lCGu+g/CdSYlle/zOV
-         NdX9xaqlbyBjHVJoI2QdbexPdAzkYPNOGHzhet5lK7FZdE5R41WJzF4ZXCmEk5etOW/B
-         2Fe7Wq2/UvY/Re83Hznd8w7tOjcbncdHvyPuwFG8bn8fAVrfdL18jp6lgv68GrGgO6+T
-         Uxhg==
-X-Gm-Message-State: APjAAAWBYqSX2juWuqiEVIrtsDVhD600UgTwL+QLWhgt58JTNsD9BY/R
-        ylb6RPrewhJZ6wjqMbPxFBC1Cj3vkeU=
-X-Google-Smtp-Source: APXvYqxIjlaGLIT+SPBCG+SZZVVz1pD+wb4G5808wqBJiUCZ7egXilhzkAatJRE6/v3fUJYnRnQnKA==
-X-Received: by 2002:ab0:6983:: with SMTP id t3mr877660uaq.142.1556067742955;
-        Tue, 23 Apr 2019 18:02:22 -0700 (PDT)
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
-        by smtp.gmail.com with ESMTPSA id m23sm26699286vsl.24.2019.04.23.18.02.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 23 Apr 2019 18:02:22 -0700 (PDT)
-Received: by mail-vk1-f172.google.com with SMTP id 204so2318681vkv.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Apr 2019 18:02:21 -0700 (PDT)
-X-Received: by 2002:a1f:7d8e:: with SMTP id y136mr9345556vkc.40.1556067741281;
- Tue, 23 Apr 2019 18:02:21 -0700 (PDT)
+ d=fortanix.onmicrosoft.com; s=selector1-fortanix-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=utwkmlKQC8erdyBC6VJdRKPB2R3NS0VzavhXOCF/kfg=;
+ b=HzduTBnG5JHlDinTMwwLAFAPQmQ5xFxywW1P9RhDPOp5NC5LfRmMnUTEj4tYgKNvJ/9Qha1Q3T556RtFrhtvA0/gT7jVSk1Mr3Cpkq7tCOlMrNrB2WEAfZohE53cczkTP4rxxbl9+P9WeZfUk2Rv/TfAFT91Psvd+AYMNjz/Mt4=
+Received: from SN6PR11MB3167.namprd11.prod.outlook.com (52.135.109.144) by
+ SN6PR11MB3136.namprd11.prod.outlook.com (52.135.127.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.16; Wed, 24 Apr 2019 01:04:21 +0000
+Received: from SN6PR11MB3167.namprd11.prod.outlook.com
+ ([fe80::11b:a687:cd42:570d]) by SN6PR11MB3167.namprd11.prod.outlook.com
+ ([fe80::11b:a687:cd42:570d%3]) with mapi id 15.20.1813.017; Wed, 24 Apr 2019
+ 01:04:21 +0000
+From:   Jethro Beekman <jethro@fortanix.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "serge.ayoun@intel.com" <serge.ayoun@intel.com>,
+        "shay.katz-zamir@intel.com" <shay.katz-zamir@intel.com>,
+        "haitao.huang@intel.com" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "kai.svahn@intel.com" <kai.svahn@intel.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "kai.huang@intel.com" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>
+Subject: Re: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
+Thread-Topic: [PATCH v20 15/28] x86/sgx: Add the Linux SGX Enclave Driver
+Thread-Index: AQHU9Qombksy6NSZXkyI7LD5DH8ik6ZIwveAgAGrtoCAABATgIAACnGA
+Date:   Wed, 24 Apr 2019 01:04:21 +0000
+Message-ID: <77cface6-dcc4-7e26-9910-ea9d13152531@fortanix.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190417103938.7762-16-jarkko.sakkinen@linux.intel.com>
+ <20190422215831.GL1236@linux.intel.com>
+ <6dd981a7-0e38-1273-45c1-b2c0d8bf6fed@fortanix.com>
+ <20190424002653.GB14422@linux.intel.com>
+In-Reply-To: <20190424002653.GB14422@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR11CA0044.namprd11.prod.outlook.com
+ (2603:10b6:a03:80::21) To SN6PR11MB3167.namprd11.prod.outlook.com
+ (2603:10b6:805:c4::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jethro@fortanix.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [172.56.39.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 91e57949-4ca4-4dad-1cb0-08d6c850c8da
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(49563074)(7193020);SRVR:SN6PR11MB3136;
+x-ms-traffictypediagnostic: SN6PR11MB3136:
+x-microsoft-antispam-prvs: <SN6PR11MB31368DDA10D3FC6905DEFFCAAA3C0@SN6PR11MB3136.namprd11.prod.outlook.com>
+x-forefront-prvs: 00179089FD
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39850400004)(136003)(376002)(346002)(366004)(199004)(189003)(6436002)(36756003)(8936002)(66066001)(6916009)(81166006)(86362001)(31696002)(8676002)(64756008)(102836004)(2906002)(386003)(14454004)(66556008)(53546011)(66446008)(6506007)(81156014)(26005)(186003)(508600001)(7416002)(229853002)(5660300002)(66616009)(71190400001)(73956011)(71200400001)(316002)(93886005)(6486002)(54906003)(256004)(52116002)(76176011)(7736002)(4744005)(66946007)(25786009)(3846002)(6116002)(486006)(66476007)(99286004)(4326008)(476003)(6246003)(97736004)(446003)(2616005)(11346002)(53936002)(6512007)(99936001)(305945005)(68736007)(14444005)(31686004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR11MB3136;H:SN6PR11MB3167.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fortanix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XTIM4eNwUMC5dsylZKNE+9OCfTLZr6nD+2MsjQB2IubxfG42PFrGkaJ4K+78QJyIc3uEjt2BMy4jcVd1VTs3jiyluLmlArLnHO0s4CmJjHYU8EoJWPnYvejvhhrX6LwsvvoOcrD7p4RtlYBbDFdq+QELc6da2nfBhZg8QDB2x9bmnsC4vw9cSI0NVz28TDYq06ACQ0po5DYgP5phrX39+FFFLaUUEBYPa2A6jDr6vPE2d1zqHoMO7ecrOpHdsHS2OdcMjyuDT4D7n5vLSpqzbMFJbqt8z7cxmzVQ6qvNbLl58fEKSYnWCD1gCZ7Yz+ap9Ax5+pGATURlfKA50xjVzivs4he9C41exan0mS2z9AhlLWG2RVMXZi9twbYpaQQIVk6ZNLyPdkCvWwCncS0i+PUIx5Ih6K5tK5aoRpiyhuc=
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms040101030608070300080909"
 MIME-Version: 1.0
-References: <20190306201413.14153-1-tycho@tycho.ws> <20190306201413.14153-2-tycho@tycho.ws>
- <CAGXu5jKaK-mTq=Qez7E_fYysz916_xEN7Houj-y8gdmNGkMMVw@mail.gmail.com>
- <CAGXu5jKM1k0roNJEqtns2fe-yY_2G_qhvBHids-ZWimL-ddWsw@mail.gmail.com> <20190423233422.GK3758@cisco>
-In-Reply-To: <20190423233422.GK3758@cisco>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 23 Apr 2019 18:02:08 -0700
-X-Gmail-Original-Message-ID: <CAGXu5jJFdyBGw8OQdWJ2NL54O0qHHkg0b3uyqm6Prg_ym7-p3g@mail.gmail.com>
-Message-ID: <CAGXu5jJFdyBGw8OQdWJ2NL54O0qHHkg0b3uyqm6Prg_ym7-p3g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] seccomp: disallow NEW_LISTENER and TSYNC flags
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     James Morris <jmorris@namei.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: fortanix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91e57949-4ca4-4dad-1cb0-08d6c850c8da
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2019 01:04:21.6052
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: de7becae-4883-43e8-82c7-7dbdbb988ae6
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 23, 2019 at 4:34 PM Tycho Andersen <tycho@tycho.ws> wrote:
->
-> On Tue, Apr 23, 2019 at 04:31:45PM -0700, Kees Cook wrote:
-> > On Tue, Apr 23, 2019 at 3:09 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Wed, Mar 6, 2019 at 12:14 PM Tycho Andersen <tycho@tycho.ws> wrote:
-> > > >
-> > > > As the comment notes, the return codes for TSYNC and NEW_LISTENER conflict,
-> > > > because they both return positive values, one in the case of success and
-> > > > one in the case of error. So, let's disallow both of these flags together.
-> > > >
-> > > > While this is technically a userspace break, all the users I know of are
-> > > > still waiting on me to land this feature in libseccomp, so I think it'll be
-> > > > safe. Also, at present my use case doesn't require TSYNC at all, so this
-> > > > isn't a big deal to disallow. If someone wanted to support this, a path
-> > > > forward would be to add a new flag like
-> > > > TSYNC_AND_LISTENER_YES_I_UNDERSTAND_THAT_TSYNC_WILL_JUST_RETURN_EAGAIN, but
-> > > > the use cases are so different I don't see it really happening.
-> > > >
-> > > > Finally, it's worth noting that this does actually fix a UAF issue: at the end
-> > > > of seccomp_set_mode_filter(), we have:
-> > > >
-> > > >         if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
-> > > >                 if (ret < 0) {
-> > > >                         listener_f->private_data = NULL;
-> > > >                         fput(listener_f);
-> > > >                         put_unused_fd(listener);
-> > > >                 } else {
-> > > >                         fd_install(listener, listener_f);
-> > > >                         ret = listener;
-> > > >                 }
-> > > >         }
-> > > > out_free:
-> > > >         seccomp_filter_free(prepared);
-> > > >
-> > > > But if ret > 0 because TSYNC raced, we'll install the listener fd and then free
-> > > > the filter out from underneath it, causing a UAF when the task closes it or
-> > > > dies. This patch also switches the condition to be simply if (ret), so that
-> > > > if someone does add the flag mentioned above, they won't have to remember
-> > > > to fix this too.
-> > > >
-> > > > Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-> > > > Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-> > > > CC: stable@vger.kernel.org # v5.0+
-> > >
-> > > Thanks! Sorry I missed this. James, can you take this for Linus's
-> > > fixes for v5.1? (Or should I send a pull request to you?)
-> > >
-> > > Acked-by: Kees Cook <keescook@chromium.org>
-> > >
-> > > Let's also add:
-> > >
-> > > Reported-by: syzbot+b562969adb2e04af3442@syzkaller.appspotmail.com
-> > >
-> > > > ---
-> > > >  kernel/seccomp.c | 17 +++++++++++++++--
-> > > >  1 file changed, 15 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> > > > index d0d355ded2f4..79bada51091b 100644
-> > > > --- a/kernel/seccomp.c
-> > > > +++ b/kernel/seccomp.c
-> > > > @@ -500,7 +500,10 @@ seccomp_prepare_user_filter(const char __user *user_filter)
-> > > >   *
-> > > >   * Caller must be holding current->sighand->siglock lock.
-> > > >   *
-> > > > - * Returns 0 on success, -ve on error.
-> > > > + * Returns 0 on success, -ve on error, or
-> > > > + *   - in TSYNC mode: the pid of a thread which was either not in the correct
-> > > > + *     seccomp mode or did not have an ancestral seccomp filter
-> > > > + *   - in NEW_LISTENER mode: the fd of the new listener
-> > > >   */
-> > > >  static long seccomp_attach_filter(unsigned int flags,
-> > > >                                   struct seccomp_filter *filter)
-> > > > @@ -1256,6 +1259,16 @@ static long seccomp_set_mode_filter(unsigned int flags,
-> > > >         if (flags & ~SECCOMP_FILTER_FLAG_MASK)
-> > > >                 return -EINVAL;
-> > > >
-> > > > +       /*
-> > > > +        * In the successful case, NEW_LISTENER returns the new listener fd.
-> > > > +        * But in the failure case, TSYNC returns the thread that died. If you
-> > > > +        * combine these two flags, there's no way to tell whether something
-> > > > +        * succeded or failed. So, let's disallow this combination.
-> > >
-> > > also a tiny typo: succeeded
-> > >
-> > > > +        */
-> > > > +       if ((flags & SECCOMP_FILTER_FLAG_TSYNC) &&
-> > > > +           (flags && SECCOMP_FILTER_FLAG_NEW_LISTENER))
-> >
-> > also a typo: && should be &
->
-> Oh, yes. Do you want me to send another version?
+--------------ms040101030608070300080909
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Nah, I fixed it up. :)
+On 2019-04-23 17:26, Sean Christopherson wrote:
+> On Tue, Apr 23, 2019 at 11:29:24PM +0000, Jethro Beekman wrote:
+>> On 2019-04-22 14:58, Sean Christopherson wrote:
+>>> Now that the core SGX code is approaching stability, I'd like to star=
+t
+>>> sending RFCs for the EPC virtualization and KVM bits to hash out that=
+ side
+>>> of things.  The ACPI crud is the last chunk of code that would requir=
+e
+>>> non-trivial changes to the core SGX code for the proposed virtualizat=
+ion
+>>> implementation.  I'd strongly prefer to get it out of the way before
+>>> sending the KVM RFCs.
+>>
+>> What kind of changes? Wouldn't KVM just be another consumer of the sam=
+e API
+>> used by the driver?
+>=20
+> Nope, userspace "only" needs to be able to mmap() arbitrary chunks of E=
+PC.
+
+I don't think this is sufficient. Don't you need enclave tracking in=20
+order to support paging?
+
+--
+Jethro Beekman | Fortanix
 
 
--- 
-Kees Cook
+--------------ms040101030608070300080909
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+Cx8wggUxMIIEGaADAgECAhBdZC9mIseKJlmxx1xn+g00MA0GCSqGSIb3DQEBCwUAMIGXMQsw
+CQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxm
+b3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBD
+bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAeFw0xODA5MTUwMDAw
+MDBaFw0xOTA5MTUyMzU5NTlaMCQxIjAgBgkqhkiG9w0BCQEWE2pldGhyb0Bmb3J0YW5peC5j
+b20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDRQDOQsroKjy2xAQCXLyqryJt4
+Xwj8hcweJCzOnjILKHIoWlOQ0b9yIbFLIWBRt/9zdxlE5ZabDVHnkIyhcVgtU/BA73e78Wx2
+LOObdg0wfs9U2CVRYhz2EPHFjGvkYKihItt69ye91hj1w7RKCrYC8KZGSZ/+sbkJzQdXVy32
+lxmiNEt17GNRebpkJCaFnznd6C2a8tBAS2Fa/UNyFdEs4eoRoYSKswclRhbe81aVhqY2hjcd
+O6puyyaYp5hkmau2UPih6OpRSOhbe6Tuebceg1yvumoVX3OZtGPS1VdQ+p0bxB0RE6gNs140
+ZKUhrvAJDETuGaaQD4A2/6ksLunjAgMBAAGjggHpMIIB5TAfBgNVHSMEGDAWgBSCr2yM+MX+
+lmF86B89K3FIXsSLwDAdBgNVHQ4EFgQUsFUcmGtaJBU7/52LyTYHC/M+LscwDgYDVR0PAQH/
+BAQDAgWgMAwGA1UdEwEB/wQCMAAwIAYDVR0lBBkwFwYIKwYBBQUHAwQGCysGAQQBsjEBAwUC
+MBEGCWCGSAGG+EIBAQQEAwIFIDBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEBATArMCkGCCsG
+AQUFBwIBFh1odHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBL
+hklodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlv
+bmFuZFNlY3VyZUVtYWlsQ0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0
+dHA6Ly9jcnQuY29tb2RvY2EuY29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5k
+U2VjdXJlRW1haWxDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNv
+bTAeBgNVHREEFzAVgRNqZXRocm9AZm9ydGFuaXguY29tMA0GCSqGSIb3DQEBCwUAA4IBAQB6
+v3tFEUSGv9+yY4wUjvcMyz3126nJrX5LkfEvrnCEpEiImECuoYvxOYNLYYynell7BQGtTaZg
+shMfDvwpy2isoi3w1AWAfbn6npnSKLzu0BMRvcCPWY8VPmePPizTqXoPkLwgTJfSaWkxMP1u
+rfL9S5NeRdkjwjHklX5IWuwwDu1hsKVZrxSSY2unCtvq67UHWz+z6rG1JQrP2YDfb98xun3y
+eLBNe/LFBNnGISbkT5q6D+e5c0bgzoH9nH4bsw3t8aDqJTfT3BqQdWr4pF05ODzzeOmEqeYE
+qGlD9hIL2AbmTZLjunAnARr6Fv7Sfqt23ptsGkmoZ9ZQNjT3TlwvMIIF5jCCA86gAwIBAgIQ
+apvhODv/K2ufAdXZuKdSVjANBgkqhkiG9w0BAQwFADCBhTELMAkGA1UEBhMCR0IxGzAZBgNV
+BAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09N
+T0RPIENBIExpbWl0ZWQxKzApBgNVBAMTIkNPTU9ETyBSU0EgQ2VydGlmaWNhdGlvbiBBdXRo
+b3JpdHkwHhcNMTMwMTEwMDAwMDAwWhcNMjgwMTA5MjM1OTU5WjCBlzELMAkGA1UEBhMCR0Ix
+GzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UE
+ChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+ggEKAoIBAQC+s55XrCh2dUAWxzgDmNPGGHYhUPMleQtMtaDRfTpYPpynMS6n9jR22YRq2tA9
+NEjk6vW7rN/5sYFLIP1of3l0NKZ6fLWfF2VgJ5cijKYy/qlAckY1wgOkUMgzKlWlVJGyK+Ul
+NEQ1/5ErCsHq9x9aU/x1KwTdF/LCrT03Rl/FwFrf1XTCwa2QZYL55AqLPikFlgqOtzk06kb2
+qvGlnHJvijjI03BOrNpo+kZGpcHsgyO1/u1OZTaOo8wvEU17VVeP1cHWse9tGKTDyUGg2hJZ
+jrqck39UIm/nKbpDSZ0JsMoIw/JtOOg0JC56VzQgBo7ictReTQE5LFLG3yQK+xS1AgMBAAGj
+ggE8MIIBODAfBgNVHSMEGDAWgBS7r34CPfqm8TyEjq3uOJjs2TIy1DAdBgNVHQ4EFgQUgq9s
+jPjF/pZhfOgfPStxSF7Ei8AwDgYDVR0PAQH/BAQDAgGGMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+EQYDVR0gBAowCDAGBgRVHSAAMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9jcmwuY29tb2Rv
+Y2EuY29tL0NPTU9ET1JTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHEGCCsGAQUFBwEB
+BGUwYzA7BggrBgEFBQcwAoYvaHR0cDovL2NydC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQWRk
+VHJ1c3RDQS5jcnQwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTANBgkq
+hkiG9w0BAQwFAAOCAgEAeFyygSg0TzzuX1bOn5dW7I+iaxf28/ZJCAbU2C81zd9A/tNx4+js
+QgwRGiHjZrAYayZrrm78hOx7aEpkfNPQIHGG6Fvq3EzWf/Lvx7/hk6zSPwIal9v5IkDcZoFD
+7f3iT7PdkHJY9B51csvU50rxpEg1OyOT8fk2zvvPBuM4qQNqbGWlnhMpIMwpWZT89RY0wpJO
++2V6eXEGGHsROs3njeP9DqqqAJaBa4wBeKOdGCWn1/Jp2oY6dyNmNppI4ZNMUH4Tam85S1j6
+E95u4+1Nuru84OrMIzqvISE2HN/56ebTOWlcrurffade2022O/tUU1gb4jfWCcyvB8czm12F
+gX/y/lRjmDbEA08QJNB2729Y+io1IYO3ztveBdvUCIYZojTq/OCR6MvnzS6X72HP0PRLRTiO
+SEmIDsS5N5w/8IW1Hva5hEFy6fDAfd9yI+O+IMMAj1KcL/Zo9jzJ16HO5m60ttl1Enk8MQkz
+/W3JlHaeI5iKFn4UJu1/cP2YHXYPiWf2JyBzsLBrGk1II+3yL8aorYew6CQvdVifC3HtwlSa
+m9V1niiCfOBe2C12TdKGu05LWIA3ZkFcWJGaNXOZ6Ggyh/TqvXG5v7zmEVDNXFnHn9tFpMpO
+UvxhcsjycBtH0dZ0WrNw6gH+HF8TIhCnH3+zzWuDN0Rk6h9KVkfKehIxggQ1MIIEMQIBATCB
+rDCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UE
+BxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9E
+TyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEF1kL2Yi
+x4omWbHHXGf6DTQwDQYJYIZIAWUDBAIBBQCgggJZMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
+BwEwHAYJKoZIhvcNAQkFMQ8XDTE5MDQyNDAxMDQxNVowLwYJKoZIhvcNAQkEMSIEINQIbBBm
+/MAG5IWbROFIcBeavxP9nF30trk7Xbyc+A3SMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZIAWUD
+BAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcN
+AwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwgb0GCSsGAQQBgjcQBDGBrzCBrDCBlzEL
+MAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2Fs
+Zm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0Eg
+Q2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEF1kL2Yix4omWbHH
+XGf6DTQwgb8GCyqGSIb3DQEJEAILMYGvoIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMS
+R3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8g
+Q0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24g
+YW5kIFNlY3VyZSBFbWFpbCBDQQIQXWQvZiLHiiZZscdcZ/oNNDANBgkqhkiG9w0BAQEFAASC
+AQCJcqGSDeINEkx5A1hqkr4URFbou2c3F2Dx7lDa1Byz35TEHL+3TVZbaXu4HAyKL+8AG2ex
+z5bulcRYnGYmAEM0DSb4IHPHSKekuD68QvEyJWas5Pk7nfmzvIKz9YHWqqAR8yTKjX+q1mww
+uAafTEMt2NBHQ/fSWWQGYrcg2K7qEHQosrgv4PRPDQ4VWzPKspxovLHvH39QW6hOHagDG/um
+LrNpzfQMbVkgR0s+w44zMOphx1i3JyKNzvuLzxftVuWzd6NPPt3uo+JJCIwcHzhqMr3SmNcM
+oSzMGqYIM/EjrKLaEGzjM+4PkzR8fCDN7Nn6/h/q95GA6nTudWqliBz/AAAAAAAA
+
+--------------ms040101030608070300080909--
