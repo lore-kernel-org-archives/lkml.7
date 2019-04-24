@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A318C282CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDC2C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3A121903
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B49721903
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556127107;
-	bh=/2+iDdCDPzyJMldvXlOQTOSTws00xtInIUyTwNpWfMw=;
+	s=default; t=1556127111;
+	bh=uvDQ7J1He+P4kMvTRiXCsL1gRFSKQTQJ4Sz5ob7YAug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NQE9pCREvYuYxtU1C4iyiNWfBEqJzNRkIqXHZY2EjZ9V4Sq8aTe5Ko8SnU/K2QIu8
-	 cUHeORDNhIK7ZjnXwuWdZxzlpPU1iX1Xx+SsfZ75dQanxgxea0KlANMvUnaS9QYNkk
-	 B2GI55FdKOu8EXaCwa0xy4eVzSAhoKEof6A9iSMQ=
+	b=M0tKkE5tLyvlxeJUHEKBBf59pqJqRxMAqhTeWeET4W1vOPdraCQmIrOo9nx4zd8A1
+	 pN7sQJQ+jbwDrSiD4Uqdttmj9zMYwvUqo218v+4SPHB3OkjOmDnn60ODdEI20eybdK
+	 uC9LShqHdgi6Q8TJlXE52hwhTtAx0jwLgtVoRIsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391266AbfDXRbq (ORCPT
+        id S2391277AbfDXRbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:31:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58216 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391183AbfDXRbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:31:42 -0400
+        id S2390475AbfDXRbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:31:46 -0400
 Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A82B2054F;
-        Wed, 24 Apr 2019 17:31:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3CFD2054F;
+        Wed, 24 Apr 2019 17:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556127101;
-        bh=/2+iDdCDPzyJMldvXlOQTOSTws00xtInIUyTwNpWfMw=;
+        s=default; t=1556127106;
+        bh=uvDQ7J1He+P4kMvTRiXCsL1gRFSKQTQJ4Sz5ob7YAug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AbMiEyRVBGzqdacNFhoCcttjItE0sKXK2oikXTmFmTo3WvgL5GtsReo4OjHZHW1t0
-         yzHuSAh1kpWKBwXzFj8/VebV6pvDpHbMp/Bxp/rZpX6qT0j4Md7eYf1h0zTtAhpEYW
-         YSdjITt77fzpbrXjeJHqxrILNyWHPRPULfLYtKK4=
+        b=UwqqntwBzz4De/kUFcL98gFE08LKjWb6S89XUgKQpxbqyaeZeU55g0WOObV1CA9tw
+         25Y02GGvutD5bOBR09bnMiigWwS7MUtmPMyDNVNqsYU7lTWA2fj8aQaMWSTVTzqIme
+         +hK6gFKFDy7rglAjSFHinuhsUGpnK4jYaoCV22mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Willi <martin@strongswan.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 63/96] crypto: x86/poly1305 - fix overflow during partial reduction
-Date:   Wed, 24 Apr 2019 19:10:08 +0200
-Message-Id: <20190424170923.990160705@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Gromm <christian.gromm@microchip.com>
+Subject: [PATCH 4.19 47/96] staging: most: core: use device description as name
+Date:   Wed, 24 Apr 2019 19:09:52 +0200
+Message-Id: <20190424170923.034658273@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190424170919.829037226@linuxfoundation.org>
 References: <20190424170919.829037226@linuxfoundation.org>
@@ -60,193 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Christian Gromm <christian.gromm@microchip.com>
 
-commit 678cce4019d746da6c680c48ba9e6d417803e127 upstream.
+commit 131ac62253dba79daf4a6d83ab12293d2b9863d3 upstream.
 
-The x86_64 implementation of Poly1305 produces the wrong result on some
-inputs because poly1305_4block_avx2() incorrectly assumes that when
-partially reducing the accumulator, the bits carried from limb 'd4' to
-limb 'h0' fit in a 32-bit integer.  This is true for poly1305-generic
-which processes only one block at a time.  However, it's not true for
-the AVX2 implementation, which processes 4 blocks at a time and
-therefore can produce intermediate limbs about 4x larger.
+This patch uses the device description to clearly identity a device
+attached to the bus. It is needed as the currently useed mdevX
+notation is not sufficiant in case more than one network
+interface controller is being used at the same time.
 
-Fix it by making the relevant calculations use 64-bit arithmetic rather
-than 32-bit.  Note that most of the carries already used 64-bit
-arithmetic, but the d4 -> h0 carry was different for some reason.
-
-To be safe I also made the same change to the corresponding SSE2 code,
-though that only operates on 1 or 2 blocks at a time.  I don't think
-it's really needed for poly1305_block_sse2(), but it doesn't hurt
-because it's already x86_64 code.  It *might* be needed for
-poly1305_2block_sse2(), but overflows aren't easy to reproduce there.
-
-This bug was originally detected by my patches that improve testmgr to
-fuzz algorithms against their generic implementation.  But also add a
-test vector which reproduces it directly (in the AVX2 case).
-
-Fixes: b1ccc8f4b631 ("crypto: poly1305 - Add a four block AVX2 variant for x86_64")
-Fixes: c70f4abef07a ("crypto: poly1305 - Add a SSE2 SIMD variant for x86_64")
-Cc: <stable@vger.kernel.org> # v4.3+
-Cc: Martin Willi <martin@strongswan.org>
-Cc: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Martin Willi <martin@strongswan.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Gromm <christian.gromm@microchip.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/crypto/poly1305-avx2-x86_64.S |   14 +++++++---
- arch/x86/crypto/poly1305-sse2-x86_64.S |   22 ++++++++++------
- crypto/testmgr.h                       |   44 ++++++++++++++++++++++++++++++++-
- 3 files changed, 67 insertions(+), 13 deletions(-)
+ drivers/staging/most/core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/crypto/poly1305-avx2-x86_64.S
-+++ b/arch/x86/crypto/poly1305-avx2-x86_64.S
-@@ -323,6 +323,12 @@ ENTRY(poly1305_4block_avx2)
- 	vpaddq		t2,t1,t1
- 	vmovq		t1x,d4
+--- a/drivers/staging/most/core.c
++++ b/drivers/staging/most/core.c
+@@ -1412,7 +1412,7 @@ int most_register_interface(struct most_
  
-+	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
-+	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
-+	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
-+	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
-+	# integers.  It's true in a single-block implementation, but not here.
-+
- 	# d1 += d0 >> 26
- 	mov		d0,%rax
- 	shr		$26,%rax
-@@ -361,16 +367,16 @@ ENTRY(poly1305_4block_avx2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
- 
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
---- a/arch/x86/crypto/poly1305-sse2-x86_64.S
-+++ b/arch/x86/crypto/poly1305-sse2-x86_64.S
-@@ -253,16 +253,16 @@ ENTRY(poly1305_block_sse2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
- 
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
-@@ -520,6 +520,12 @@ ENTRY(poly1305_2block_sse2)
- 	paddq		t2,t1
- 	movq		t1,d4
- 
-+	# Now do a partial reduction mod (2^130)-5, carrying h0 -> h1 -> h2 ->
-+	# h3 -> h4 -> h0 -> h1 to get h0,h2,h3,h4 < 2^26 and h1 < 2^26 + a small
-+	# amount.  Careful: we must not assume the carry bits 'd0 >> 26',
-+	# 'd1 >> 26', 'd2 >> 26', 'd3 >> 26', and '(d4 >> 26) * 5' fit in 32-bit
-+	# integers.  It's true in a single-block implementation, but not here.
-+
- 	# d1 += d0 >> 26
- 	mov		d0,%rax
- 	shr		$26,%rax
-@@ -558,16 +564,16 @@ ENTRY(poly1305_2block_sse2)
- 	# h0 += (d4 >> 26) * 5
- 	mov		d4,%rax
- 	shr		$26,%rax
--	lea		(%eax,%eax,4),%eax
--	add		%eax,%ebx
-+	lea		(%rax,%rax,4),%rax
-+	add		%rax,%rbx
- 	# h4 = d4 & 0x3ffffff
- 	mov		d4,%rax
- 	and		$0x3ffffff,%eax
- 	mov		%eax,h4
- 
- 	# h1 += h0 >> 26
--	mov		%ebx,%eax
--	shr		$26,%eax
-+	mov		%rbx,%rax
-+	shr		$26,%rax
- 	add		%eax,h1
- 	# h0 = h0 & 0x3ffffff
- 	andl		$0x3ffffff,%ebx
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -5592,7 +5592,49 @@ static const struct hash_testvec poly130
- 		.psize		= 80,
- 		.digest		= "\x13\x00\x00\x00\x00\x00\x00\x00"
- 				  "\x00\x00\x00\x00\x00\x00\x00\x00",
--	},
-+	}, { /* Regression test for overflow in AVX2 implementation */
-+		.plaintext	= "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff\xff\xff\xff\xff"
-+				  "\xff\xff\xff\xff",
-+		.psize		= 300,
-+		.digest		= "\xfb\x5e\x96\xd8\x61\xd5\xc7\xc8"
-+				  "\x78\xe5\x87\xcc\x2d\x5a\x22\xe1",
-+	}
- };
- 
- /*
+ 	INIT_LIST_HEAD(&iface->p->channel_list);
+ 	iface->p->dev_id = id;
+-	snprintf(iface->p->name, STRING_SIZE, "mdev%d", id);
++	strcpy(iface->p->name, iface->description);
+ 	iface->dev.init_name = iface->p->name;
+ 	iface->dev.bus = &mc.bus;
+ 	iface->dev.parent = &mc.dev;
 
 
