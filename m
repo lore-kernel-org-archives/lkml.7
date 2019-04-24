@@ -2,153 +2,128 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7455C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A170C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9335A218D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lsk4Okhz"
+	by mail.kernel.org (Postfix) with ESMTP id 6B946218D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 08:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbfDXIE4 (ORCPT
+        id S1729895AbfDXIGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 04:04:56 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44526 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbfDXIEz (ORCPT
+        Wed, 24 Apr 2019 04:06:20 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:52161 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726904AbfDXIGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 04:04:55 -0400
-Received: by mail-ed1-f68.google.com with SMTP id i13so15020742edf.11
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Apr 2019 01:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=f3fvwEXom1LGpxngwni4Uzj3rYvQHtrnJN7iXdOxe2U=;
-        b=Lsk4OkhzrZAPrlJN6mv4NCRKSFlRJzJ9XEGus9hRbJJoJk6NCnOU0Ex0VJ3iK48glP
-         1t8/TZFDFf61aDLLWLqiEXGDyIItHuNRx3LCYEIVINzDViQba45yI5bKOyimIPVj7IjW
-         4MZz28ks4NtKMbma55rPmhChxjIfUiXYZp1Y+3osS/JuJj4NiYnDMvNVsA0dBfSlig39
-         aXORmTo+dGZXD4gzCAJuUzKcwHAwqwz0mTC/lpjGvaMacQd5xE/zAGf6vn8Xc8eGDXSQ
-         BD3RfHZ+LPdLhGAAu2uQcMQeCglSUtEEnLU38L1dWNFrzLj89KiyXCPmTCsyPXq50PAm
-         55yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=f3fvwEXom1LGpxngwni4Uzj3rYvQHtrnJN7iXdOxe2U=;
-        b=aWj+YF+YopB2SmFV4pV6vuuWudXXs0z3l5fQpLql3I1FP0wBuUPiNkU5/EP0p50Cze
-         LMUu3tY3lPLOLSzj+py1tciiNQhU8r1ASl5Xl3NSgoqG3+Wtqmz6/q9fHTHzvIQ9FkJz
-         IH4wMpR6/2mB+d/7nx3u18vf/UX68tgzeIy2OSzbWSr0jsVMdwrGNSW64ePwY5Y2YCQ1
-         xZ+gVP9xaj0UX377Hq0+tVyoeEYA1tGqjEJe3huIQuVqwvBZ8h+FYSn7FH5gGD0ZlfgH
-         oaq3R4G19fkM/iGKNLEs0kdsF6VJp4HN2/mccGfAaLgy868dUWmekjKA0ON1wNVmTLhd
-         Ba8A==
-X-Gm-Message-State: APjAAAWLiebMAfqQFNvP39ylU1sFBYzXX2YxBmMJjz3iY7//HXo00oQr
-        v1G2L3i0+46EFZUT84nqTnNhZSMVQQNGV126nkM=
-X-Google-Smtp-Source: APXvYqwdJvUve5VmpfnocuN3bMT+o2Twgk/QMxONIZDoGfyFmgLOh+CG4KAM/Oz+aHgGs5zxTAsxAUNFJhwqztveVbc=
-X-Received: by 2002:a50:be01:: with SMTP id a1mr19595371edi.12.1556093093668;
- Wed, 24 Apr 2019 01:04:53 -0700 (PDT)
+        Wed, 24 Apr 2019 04:06:19 -0400
+Received: from [192.168.1.115] ([95.114.95.254]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MV6G6-1hCARK2U46-00S4C7; Wed, 24 Apr 2019 10:04:32 +0200
+Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
+To:     Daniel Colascione <dancol@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrei Vagin <avagin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Michal Hocko <mhocko@suse.com>,
+        Nadav Amit <namit@vmware.com>, Serge Hallyn <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-team <kernel-team@android.com>,
+        Tycho Andersen <tycho@tycho.ws>
+References: <20190416120430.GA15437@redhat.com>
+ <20190416192051.GA184889@google.com> <20190417130940.GC32622@redhat.com>
+ <CAG48ez2Q0t2-rZz8wmGeih=NigYL-CT3+E6NgiPT0AkOQAUPMQ@mail.gmail.com>
+ <CEB62F51-E8BF-4EFB-B438-8AF76633FF00@brauner.io>
+ <20190419190247.GB251571@google.com>
+ <20190419191858.iwcvqm6fihbkaata@brauner.io>
+ <20190419194902.GE251571@google.com>
+ <CAKOZueu3PzD_QgROXFRs8FvD=HTKJLsHDK9GrUdbFoMzx_7HEA@mail.gmail.com>
+ <CAHrFyr4REuKFuARAXnhBC67TGzyDGmMONc7XjfUGvf+Qfm7EuQ@mail.gmail.com>
+ <20190419212002.GB44851@google.com>
+ <CAKOZuetkF4zPm-oKMjnoJtvUi4iTnY-ORzPd-JpfpseMXY4yhw@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <34c493c3-993f-39f1-3afc-7f59d5113a30@metux.net>
+Date:   Wed, 24 Apr 2019 10:04:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190423211932.4906-1-ndesaulniers@google.com>
- <CAEbi=3fn42-rcXOh28N09G9Gng8o9RE8_A8=ow0=JeMEXVF_ig@mail.gmail.com> <CAK7LNAQaPoL=bWzY_HcbJqM_s3j4+RC=-HFL+DwJWNOCTvNOfQ@mail.gmail.com>
-In-Reply-To: <CAK7LNAQaPoL=bWzY_HcbJqM_s3j4+RC=-HFL+DwJWNOCTvNOfQ@mail.gmail.com>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Wed, 24 Apr 2019 16:04:17 +0800
-Message-ID: <CAEbi=3fSP4OkxkDPYBuae5mQ0U3hwpK1K6W2haqAt1kKDaz43g@mail.gmail.com>
-Subject: Re: [PATCH] nds32: vdso: drop unnecessary cc-ldoption
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        clang-built-linux@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAKOZuetkF4zPm-oKMjnoJtvUi4iTnY-ORzPd-JpfpseMXY4yhw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:jHk41HQrf7eFSMcKEW+gYQHxdGt0dojWSCn9QycWmgOukdN9B/+
+ UXIlQ2ddjTGxLLKg6cMjiuWG1wW+6RAVoice/8n0FOMODPfKIApg9lZDFbeY8hzlRwERYHC
+ icwzfoPmd4W4o+asNiLBZzRknwKIagmAMuYnVu4iznkgl/d5yqcW82DXdTMfRv6UCbESYf1
+ 8jGlZGWAbQB5yQI8Yd2hw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9TI3qhE1U9A=:Hn4c2h+O6WIDupvtLoKx45
+ +DT77Bz0ob2JWX32qoNDM6oTwe13ksWarqnCWD7cvlipGwGUafYFXkF17hvMaQVR/XkKDTQhE
+ TXL/X7BnUfgaasS76rBoooqJPnc8qnZClWb6P6uLoDddz10EKTaCIVIoYYtR1/7RUnpVw1geG
+ MIgDMb02I1LGm8ok1e+aOIV0If4rPX/p10KZmzIY0Zf8unNJ9a/XIsPvqfunmscNLBp68vkO1
+ 1iU1/b73jxqAwzJ+fueft8/eBQgMV+9X0f5dyiziHoYW/qj8AcfhoyToOSGR79e2LMFjYxD3J
+ qEi6TVbojffiWaa2Tx11cpgbamXTLpnkjJSbrR3xsV4Vvjqi1feWclLHCdEDqQTfltEZHOtUE
+ o70kwhTzCME9h+qDrT71fuVLYrPX+1FOWG1M04Hf6i9aaR+Y9aVtAs4OkT467IFdn6vFWbUpk
+ zVOgbwqCPNzWK4kmmapcGVa1pF5Q2K34BqYiBiC1QO4DSQ7MeraPoEm4VpIezyjXrLtFC/xZG
+ YxqxQ6NvNnWkAxIJ7duHb4JvyBEyt/JfzAtGxorWO7fJVGukt38iaXr5B5PeIGT9bBEVkXZlH
+ gFb0Lak3xo+hRl9B8cN+FlZtuZkZW59AoR8KLS0cwusHQV24GYU8ZKOTnZBXJ/2bp5+tdXGN6
+ ZuyxdeeaqpW29pfGGlTyOzq5dEeOwplxEE3/FX4fqu/AACIIn3jHWqRuCcDfRRx8F1g7QgvVD
+ mWRaKck/Kb4OGQHvj5vOCY4txsbM7SyKEcQthJNTXGa7AnIi5yhJkKsxxt4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masahiro Yamada <yamada.masahiro@socionext.com> =E6=96=BC 2019=E5=B9=B44=E6=
-=9C=8824=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=883:54=E5=AF=AB=E9=81=
-=93=EF=BC=9A
->
-> On Wed, Apr 24, 2019 at 3:59 PM Greentime Hu <green.hu@gmail.com> wrote:
-> >
-> > Hi Nick & Yamada,
-> >
-> > Nick Desaulniers <ndesaulniers@google.com> =E6=96=BC 2019=E5=B9=B44=E6=
-=9C=8824=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=885:19=E5=AF=AB=E9=81=
-=93=EF=BC=9A
-> > >
-> > > Towards the goal of removing cc-ldoption, it seems that --hash-style=
-=3D
-> > > was added to binutils 2.17.50.0.2 in 2006. The minimal required versi=
-on
-> > > of binutils for the kernel according to
-> > > Documentation/process/changes.rst is 2.20.
-> > >
-> > > Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
-> > > Cc: clang-built-linux@googlegroups.com
-> > > Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > ---
-> > >  arch/nds32/kernel/vdso/Makefile | 6 ++----
-> > >  1 file changed, 2 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso=
-/Makefile
-> > > index e6c50a701313..d379645cad74 100644
-> > > --- a/arch/nds32/kernel/vdso/Makefile
-> > > +++ b/arch/nds32/kernel/vdso/Makefile
-> > > @@ -11,10 +11,8 @@ obj-vdso :=3D note.o datapage.o sigreturn.o gettim=
-eofday.o
-> > >  targets :=3D $(obj-vdso) vdso.so vdso.so.dbg
-> > >  obj-vdso :=3D $(addprefix $(obj)/, $(obj-vdso))
-> > >
-> > > -ccflags-y :=3D -shared -fno-common -fno-builtin
-> > > -ccflags-y +=3D -nostdlib -Wl,-soname=3Dlinux-vdso.so.1 \
-> > > -               $(call cc-ldoption, -Wl$(comma)--hash-style=3Dsysv)
-> > > -ccflags-y +=3D -fPIC -Wl,-shared -g
-> > > +ccflags-y :=3D -shared -fno-common -fno-builtin -nostdlib -fPIC -Wl,=
--shared -g \
-> > > +       -Wl,-soname=3Dlinux-vdso.so.1 -Wl,--hash-style=3Dsysv
-> > >
-> > >  # Disable gcov profiling for VDSO code
-> > >  GCOV_PROFILE :=3D n
-> >
-> > Thank you.
-> > Acked-by: Greentime Hu <greentime@andestech.com>
->
->
-> Who do you expect to pick up this patch?
->
-> You are the NDS32 maintainer
-> according to MAINTAINERS.
->
->
-> ANDES ARCHITECTURE
-> M:      Greentime Hu <green.hu@gmail.com>
-> M:      Vincent Chen <deanbo422@gmail.com>
-> T:      git https://github.com/andestech/linux.git
-> S:      Supported
-> F:      arch/nds32/
-> F:      Documentation/devicetree/bindings/interrupt-controller/andestech,=
-ativic32.txt
-> F:      Documentation/devicetree/bindings/nds32/
-> K:      nds32
-> N:      nds32
->
->
-> You do not maintain https://github.com/andestech/linux.git any more, do y=
-ou?
+On 19.04.19 23:24, Daniel Colascione wrote:
 
-Hi Yamada,
+Hi folks,
 
-I think I should update this MAINTAINERS file.
-I will pick it in this repo
-https://git.kernel.org/pub/scm/linux/kernel/git/greentime/linux.git
+<big_snip>
+
+I haven't followed the whole thread, so forgive me if I'm going to
+write something dumb here ... but: this all feels a bit complicated
+to me.
+
+Why not just making the pidfd present a stream of events (which are
+encoded as text lines) ? It would behave just like any stream, eg.
+socket, chardev, ...
+
+An `cat` on a pidfd could look like this:
+
+<timestamp> EXIT <exitcode>
+<timestamp> EXEC <cmdline>
+<timestamp> SIGNAL <sigid>
+...
+
+IOW: just using POLLIN. Let the listener just read all events and
+decide which ones he's actually acting on.
+
+In the other direction we could write in commands, eg. for sending
+signals.
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
