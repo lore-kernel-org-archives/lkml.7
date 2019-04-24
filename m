@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF480C10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF15C282CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27DA218FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33B1218FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 14:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556117600;
-	bh=mgm3x8LCKqZWOBRR7RG4dkkSKeMNPn1t2oZrreztYzE=;
+	s=default; t=1556117604;
+	bh=k6s6SPrZ+cpDv9wyl8UcPCxG02ovHVKjVxP7dVfr3pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1hGbjsrryeJBfPMTrRqWccG7WDWZhZcYMH/WSEyBculXaPiEXyW9d236uA+myYndC
-	 j6ziG+WgUVO4U4y5bJvNq31w/1IAXpllZY9JKLbRL6GmoWNgjBg1QqxgGF2wiFuXtq
-	 H8lkDCcIrfuNQO0149y0hQlXpfApFiZa02y3vu+0=
+	b=DUR35VvfpyvtBTM5+Xr3iCgHZtg3U2JhOR1zAipECCuSSHG5qzuCc5cSKe0ekqWs7
+	 m3Eb6LJDdw4/759oEps+IdF1YcAL1kmuSFokoMojfKyDX9X+dZwrwDNY6fks75E4iE
+	 vnbCP/FVhvtNRHZEKkGfEUVvubMVDJ4s2G0dlUFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733045AbfDXOxS (ORCPT
+        id S1733054AbfDXOxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 10:53:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52848 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 10:53:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730765AbfDXOxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 10:53:14 -0400
+        id S1730765AbfDXOxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 10:53:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32FFC218FC;
-        Wed, 24 Apr 2019 14:53:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4342B21903;
+        Wed, 24 Apr 2019 14:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556117593;
-        bh=mgm3x8LCKqZWOBRR7RG4dkkSKeMNPn1t2oZrreztYzE=;
+        s=default; t=1556117599;
+        bh=k6s6SPrZ+cpDv9wyl8UcPCxG02ovHVKjVxP7dVfr3pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTYOXgQUDDaYus4uUs+Yyurb9swCS1NU67O23Vlw4fzv66Cl5lJ5Y804YKVW/NLf/
-         oPllgubygMy9+djnKizRLldSMp1IbEAsdtnx3GRfgoFSaTJ1OqVTbXgf8F3cwsnR5E
-         7xluATfAEp3+eKTbrbI+Hyyxn3+KjcvOoy9klfOc=
+        b=cah+1d0+oBMT1MwF7EOoiTyWCDDrxcBJ88Wgea5vDTRKLRDapucTephYVNeRC0u5f
+         zPdS5xOHjsQ3YsjfjEQXVzDqJVPmJiYJOBJUHUyfzqP5pSroeoRjgRURSzQ225CcWJ
+         ZW8wUhTnbaf2JmnGeCODoKTjK5snkiKlxWoHIIzA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 3.18 05/10] jffs2: fix use-after-free on symlink traversal
-Date:   Wed, 24 Apr 2019 10:52:54 -0400
-Message-Id: <20190424145259.31639-5-sashal@kernel.org>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 3.18 07/10] hugetlbfs: fix memory leak for resv_map
+Date:   Wed, 24 Apr 2019 10:52:56 -0400
+Message-Id: <20190424145259.31639-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190424145259.31639-1-sashal@kernel.org>
 References: <20190424145259.31639-1-sashal@kernel.org>
@@ -58,53 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
+[ Upstream commit 58b6e5e8f1addd44583d61b0a03c0f5519527e35 ]
 
-free the symlink body after the same RCU delay we have for freeing the
-struct inode itself, so that traversal during RCU pathwalk wouldn't step
-into freed memory.
+When mknod is used to create a block special file in hugetlbfs, it will
+allocate an inode and kmalloc a 'struct resv_map' via resv_map_alloc().
+inode->i_mapping->private_data will point the newly allocated resv_map.
+However, when the device special file is opened bd_acquire() will set
+inode->i_mapping to bd_inode->i_mapping.  Thus the pointer to the
+allocated resv_map is lost and the structure is leaked.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Programs to reproduce:
+        mount -t hugetlbfs nodev hugetlbfs
+        mknod hugetlbfs/dev b 0 0
+        exec 30<> hugetlbfs/dev
+        umount hugetlbfs/
+
+resv_map structures are only needed for inodes which can have associated
+page allocations.  To fix the leak, only allocate resv_map for those
+inodes which could possibly be associated with page allocations.
+
+Link: http://lkml.kernel.org/r/20190401213101.16476-1-mike.kravetz@oracle.com
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Suggested-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jffs2/readinode.c | 5 -----
- fs/jffs2/super.c     | 5 ++++-
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ fs/hugetlbfs/inode.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
-index 386303dca382..4f390be71723 100644
---- a/fs/jffs2/readinode.c
-+++ b/fs/jffs2/readinode.c
-@@ -1429,11 +1429,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
- 
- 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
- 
--	if (f->target) {
--		kfree(f->target);
--		f->target = NULL;
--	}
--
- 	fds = f->dents;
- 	while(fds) {
- 		fd = fds;
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index 0bbc31d10857..d1be5991bb66 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
- static void jffs2_i_callback(struct rcu_head *head)
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index ec1ed7e4b8f3..c3a03f5a1b49 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -484,11 +484,17 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 					umode_t mode, dev_t dev)
  {
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
--	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
-+	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
-+
-+	kfree(f->target);
-+	kmem_cache_free(jffs2_inode_cachep, f);
- }
+ 	struct inode *inode;
+-	struct resv_map *resv_map;
++	struct resv_map *resv_map = NULL;
  
- static void jffs2_destroy_inode(struct inode *inode)
+-	resv_map = resv_map_alloc();
+-	if (!resv_map)
+-		return NULL;
++	/*
++	 * Reserve maps are only needed for inodes that can have associated
++	 * page allocations.
++	 */
++	if (S_ISREG(mode) || S_ISLNK(mode)) {
++		resv_map = resv_map_alloc();
++		if (!resv_map)
++			return NULL;
++	}
+ 
+ 	inode = new_inode(sb);
+ 	if (inode) {
+@@ -530,8 +536,10 @@ static struct inode *hugetlbfs_get_inode(struct super_block *sb,
+ 			break;
+ 		}
+ 		lockdep_annotate_inode_mutex_key(inode);
+-	} else
+-		kref_put(&resv_map->refs, resv_map_release);
++	} else {
++		if (resv_map)
++			kref_put(&resv_map->refs, resv_map_release);
++	}
+ 
+ 	return inode;
+ }
 -- 
 2.19.1
 
