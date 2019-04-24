@@ -2,175 +2,197 @@ Return-Path: <SRS0=L2S5=S2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FCEC10F11
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F95C10F11
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02BA521906
-	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1556126853;
-	bh=Fvn/+z9DE2N8e+SEL3pFB7IPyDTp2jA0yF2crBzI3aw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jGdOEurO0gdraQp3MgKryQuDOfXRh8CNPmABKC/LCR6EIX9ipT5n+4bgEeysLqFi7
-	 SDzMi3I2xaIItKqm0xkSNvaJsef9TAc+kIY8RmW87nOIthE8Hgzc0v8Oq5IVsdmpCm
-	 J6zrA4xDIAjb9KQV3w37D7KuDS5rYOv7cXzTHDg8=
+	by mail.kernel.org (Postfix) with ESMTP id C7EE42190C
+	for <linux-kernel@archiver.kernel.org>; Wed, 24 Apr 2019 17:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390480AbfDXR1c (ORCPT
+        id S2390500AbfDXR1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 24 Apr 2019 13:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53482 "EHLO mail.kernel.org"
+        Wed, 24 Apr 2019 13:27:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:61190 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390451AbfDXR13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 24 Apr 2019 13:27:29 -0400
-Received: from localhost (62-193-50-229.as16211.net [62.193.50.229])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2390485AbfDXR1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 24 Apr 2019 13:27:34 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 525DC205ED;
-        Wed, 24 Apr 2019 17:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556126848;
-        bh=Fvn/+z9DE2N8e+SEL3pFB7IPyDTp2jA0yF2crBzI3aw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F3z2yFnAihVahCI2mHjktHqBbB9EVIis4tQnEiRZzfMmxLbziBaPfISuF8n0qkfwD
-         3WldRkyQ/MxkGmaisp3n7It1xSsroYo3AFrkUNrrTQEDQhVupllHWWirkCHJppCWYQ
-         PGojR22kkGa18eQg5gcby9UnYsL1yHZ+rL3yQE+M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Righi <righi.andrea@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.14 39/70] x86/kprobes: Verify stack frame on kretprobe
-Date:   Wed, 24 Apr 2019 19:09:59 +0200
-Message-Id: <20190424170912.806338347@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190424170906.751869122@linuxfoundation.org>
-References: <20190424170906.751869122@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 301B72DE416;
+        Wed, 24 Apr 2019 17:27:33 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 26BBC60C64;
+        Wed, 24 Apr 2019 17:27:27 +0000 (UTC)
+Subject: Re: [PATCH v2 10/19] iommu/vt-d: Add custom allocator for IOASID
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556062279-64135-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556062279-64135-11-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <7a79c1cd-eef2-2233-3b31-4d93a6c3b48d@redhat.com>
+Date:   Wed, 24 Apr 2019 19:27:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1556062279-64135-11-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 24 Apr 2019 17:27:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+Hi Jacob,
 
-commit 3ff9c075cc767b3060bdac12da72fc94dd7da1b8 upstream.
+On 4/24/19 1:31 AM, Jacob Pan wrote:
+> When VT-d driver runs in the guest, PASID allocation must be
+> performed via virtual command interface. This patch register a
+registers
+> custom IOASID allocator which takes precedence over the default
+> IDR based allocator.
+nit: s/IDR based// . It is xarray based now.
+ The resulting IOASID allocation will always
+> come from the host. This ensures that PASID namespace is system-
+> wide.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel-iommu.c | 58 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/intel-iommu.h |  2 ++
+>  2 files changed, 60 insertions(+)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index d93c4bd..ec6f22d 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -1711,6 +1711,8 @@ static void free_dmar_iommu(struct intel_iommu *iommu)
+>  		if (ecap_prs(iommu->ecap))
+>  			intel_svm_finish_prq(iommu);
+>  	}
+> +	ioasid_unregister_allocator(&iommu->pasid_allocator);
+> +
+>  #endif
+>  }
+>  
+> @@ -4811,6 +4813,46 @@ static int __init platform_optin_force_iommu(void)
+>  	return 1;
+>  }
+>  
+> +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max, void *data)
+> +{
+> +	struct intel_iommu *iommu = data;
+> +	ioasid_t ioasid;
+> +
+> +	/*
+> +	 * VT-d virtual command interface always uses the full 20 bit
+> +	 * PASID range. Host can partition guest PASID range based on
+> +	 * policies but it is out of guest's control.
+> +	 */
+The above comment does not exactly relate to the check below
+> +	if (min < PASID_MIN || max > PASID_MAX)
+> +		return -EINVAL;
+> +
+> +	if (vcmd_alloc_pasid(iommu, &ioasid))
+> +		return INVALID_IOASID;
+> +
+> +	return ioasid;
+> +}
+> +
+> +static int intel_ioasid_free(ioasid_t ioasid, void *data)
+> +{
+> +	struct iommu_pasid_alloc_info *svm;
+> +	struct intel_iommu *iommu = data;
+> +
+> +	if (!iommu || !cap_caching_mode(iommu->cap))
+> +		return -EINVAL;
+can !cap_caching_mode(iommu->cap) be true as the allocator only is set
+if CM?
+> +	/*
+> +	 * Sanity check the ioasid owner is done at upper layer, e.g. VFIO
+> +	 * We can only free the PASID when all the devices are unbond.
+> +	 */
+> +	svm = ioasid_find(NULL, ioasid, NULL);
+> +	if (!svm) {
+you can avoid using the local svm variable.
+> +		pr_warn("Freeing unbond IOASID %d\n", ioasid);
+unbound
+> +		return -EBUSY;
+-EINVAL?
+> +	}
+> +	vcmd_free_pasid(iommu, ioasid);
+> +
+> +	return 0;
+> +}
+> +
+>  int __init intel_iommu_init(void)
+>  {
+>  	int ret = -ENODEV;
+> @@ -4912,6 +4954,22 @@ int __init intel_iommu_init(void)
+>  				       "%s", iommu->name);
+>  		iommu_device_set_ops(&iommu->iommu, &intel_iommu_ops);
+>  		iommu_device_register(&iommu->iommu);
+> +		if (cap_caching_mode(iommu->cap) && sm_supported(iommu)) {
+so shouldn't you test VCCAP_REG as well?
+> +			/*
+> +			 * Register a custom ASID allocator if we are running
+> +			 * in a guest, the purpose is to have a system wide PASID
+> +			 * namespace among all PASID users.
+> +			 * There can be multiple vIOMMUs in each guest but only
+> +			 * one allocator is active. All vIOMMU allocators will
+> +			 * eventually be calling the same host allocator.
+> +			 */
+> +			iommu->pasid_allocator.alloc = intel_ioasid_alloc;
+> +			iommu->pasid_allocator.free = intel_ioasid_free;
+> +			iommu->pasid_allocator.pdata = (void *)iommu;
+> +			ret = ioasid_register_allocator(&iommu->pasid_allocator);
+> +			if (ret)
+> +				pr_warn("Custom PASID allocator registeration failed\n");
+registration
+> +		}
+>  	}
+>  
+>  	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index bff907b..c24c8aa 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -31,6 +31,7 @@
+>  #include <linux/iommu.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/dmar.h>
+> +#include <linux/ioasid.h>
+>  
+>  #include <asm/cacheflush.h>
+>  #include <asm/iommu.h>
+> @@ -549,6 +550,7 @@ struct intel_iommu {
+>  #ifdef CONFIG_INTEL_IOMMU_SVM
+>  	struct page_req_dsc *prq;
+>  	unsigned char prq_name[16];    /* Name for PRQ interrupt */
+> +	struct ioasid_allocator pasid_allocator; /* Custom allocator for PASIDs */
+>  #endif
+>  	struct q_inval  *qi;            /* Queued invalidation info */
+>  	u32 *iommu_state; /* Store iommu states between suspend and resume.*/
+> 
 
-Verify the stack frame pointer on kretprobe trampoline handler,
-If the stack frame pointer does not match, it skips the wrong
-entry and tries to find correct one.
+Thanks
 
-This can happen if user puts the kretprobe on the function
-which can be used in the path of ftrace user-function call.
-Such functions should not be probed, so this adds a warning
-message that reports which function should be blacklisted.
-
-Tested-by: Andrea Righi <righi.andrea@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: http://lkml.kernel.org/r/155094059185.6137.15527904013362842072.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/kernel/kprobes/core.c |   26 ++++++++++++++++++++++++++
- include/linux/kprobes.h        |    1 +
- 2 files changed, 27 insertions(+)
-
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -553,6 +553,7 @@ void arch_prepare_kretprobe(struct kretp
- 	unsigned long *sara = stack_addr(regs);
- 
- 	ri->ret_addr = (kprobe_opcode_t *) *sara;
-+	ri->fp = sara;
- 
- 	/* Replace the return addr with trampoline addr */
- 	*sara = (unsigned long) &kretprobe_trampoline;
-@@ -754,15 +755,21 @@ __visible __used void *trampoline_handle
- 	unsigned long flags, orig_ret_address = 0;
- 	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
- 	kprobe_opcode_t *correct_ret_addr = NULL;
-+	void *frame_pointer;
-+	bool skipped = false;
- 
- 	INIT_HLIST_HEAD(&empty_rp);
- 	kretprobe_hash_lock(current, &head, &flags);
- 	/* fixup registers */
- #ifdef CONFIG_X86_64
- 	regs->cs = __KERNEL_CS;
-+	/* On x86-64, we use pt_regs->sp for return address holder. */
-+	frame_pointer = &regs->sp;
- #else
- 	regs->cs = __KERNEL_CS | get_kernel_rpl();
- 	regs->gs = 0;
-+	/* On x86-32, we use pt_regs->flags for return address holder. */
-+	frame_pointer = &regs->flags;
- #endif
- 	regs->ip = trampoline_address;
- 	regs->orig_ax = ~0UL;
-@@ -784,8 +791,25 @@ __visible __used void *trampoline_handle
- 		if (ri->task != current)
- 			/* another task is sharing our hash bucket */
- 			continue;
-+		/*
-+		 * Return probes must be pushed on this hash list correct
-+		 * order (same as return order) so that it can be poped
-+		 * correctly. However, if we find it is pushed it incorrect
-+		 * order, this means we find a function which should not be
-+		 * probed, because the wrong order entry is pushed on the
-+		 * path of processing other kretprobe itself.
-+		 */
-+		if (ri->fp != frame_pointer) {
-+			if (!skipped)
-+				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
-+			skipped = true;
-+			continue;
-+		}
- 
- 		orig_ret_address = (unsigned long)ri->ret_addr;
-+		if (skipped)
-+			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
-+				ri->rp->kp.addr);
- 
- 		if (orig_ret_address != trampoline_address)
- 			/*
-@@ -803,6 +827,8 @@ __visible __used void *trampoline_handle
- 		if (ri->task != current)
- 			/* another task is sharing our hash bucket */
- 			continue;
-+		if (ri->fp != frame_pointer)
-+			continue;
- 
- 		orig_ret_address = (unsigned long)ri->ret_addr;
- 		if (ri->rp && ri->rp->handler) {
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -198,6 +198,7 @@ struct kretprobe_instance {
- 	struct kretprobe *rp;
- 	kprobe_opcode_t *ret_addr;
- 	struct task_struct *task;
-+	void *fp;
- 	char data[0];
- };
- 
-
-
+Eric
